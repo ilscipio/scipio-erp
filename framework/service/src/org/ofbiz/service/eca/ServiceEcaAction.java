@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.service.eca;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -194,7 +194,7 @@ public class ServiceEcaAction implements java.io.Serializable {
                 } else {
                     List<Object> origErrorMessageList = UtilGenerics.checkList(result.get(ModelService.ERROR_MESSAGE_LIST));
                     if (origErrorMessageList == null) {
-                        origErrorMessageList = new LinkedList<Object>();
+                        origErrorMessageList = new ArrayList<>(); // SCIPIO: switched to ArrayList
                         result.put(ModelService.ERROR_MESSAGE_LIST, origErrorMessageList);
                     }
                     origErrorMessageList.add(0, errorMessage);

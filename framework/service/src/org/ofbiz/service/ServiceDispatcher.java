@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -203,7 +203,7 @@ public class ServiceDispatcher {
     public synchronized void registerCallback(String serviceName, GenericServiceCallback cb) {
         List<GenericServiceCallback> callBackList = callbacks.get(serviceName);
         if (callBackList == null) {
-            callBackList = new LinkedList<GenericServiceCallback>();
+            callBackList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         }
         callBackList.add(cb);
         callbacks.put(serviceName, callBackList);

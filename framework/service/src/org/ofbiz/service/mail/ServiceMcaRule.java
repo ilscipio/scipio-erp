@@ -18,7 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.service.mail;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +35,8 @@ public class ServiceMcaRule implements java.io.Serializable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String ruleName = null;
-    protected List<ServiceMcaCondition> conditions = new LinkedList<ServiceMcaCondition>();
-    protected List<ServiceMcaAction> actions = new LinkedList<ServiceMcaAction>();
+    protected List<ServiceMcaCondition> conditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
+    protected List<ServiceMcaAction> actions = new ArrayList<>(); // SCIPIO: switched to ArrayList
     protected boolean enabled = true;
 
     public ServiceMcaRule(Element mca) {
@@ -57,6 +57,10 @@ public class ServiceMcaRule implements java.io.Serializable {
         for (Element actionElement: UtilXml.childElementList(mca, "action")) {
             actions.add(new ServiceMcaAction(actionElement));
         }
+        
+        // SCIPIO
+        ((ArrayList<ServiceMcaCondition>) conditions).trimToSize();
+        ((ArrayList<ServiceMcaAction>) actions).trimToSize();
     }
 
     public void eval(LocalDispatcher dispatcher, MimeMessageWrapper messageWrapper, Set<String> actionsRun, GenericValue userLogin) throws GenericServiceException {

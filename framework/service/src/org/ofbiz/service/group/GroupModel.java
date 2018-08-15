@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.service.group;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +50,7 @@ public class GroupModel {
     public GroupModel(Element group) {
         this.sendMode = group.getAttribute("send-mode");
         this.groupName = group.getAttribute("name");
-        this.services = new LinkedList<GroupServiceModel>();
+        this.services = new ArrayList<>(); // SCIPIO: switched to ArrayList
         this.lastServiceRan = -1;
 
         if (groupName == null) {
@@ -70,6 +70,8 @@ public class GroupModel {
                     + "] found with OLD 'service' attribute, change to use 'invoke'", module);
         }
 
+        ((ArrayList<GroupServiceModel>) this.services).trimToSize(); // SCIPIO
+        
         if (Debug.verboseOn())
             Debug.logVerbose("Created Service Group Model --> " + this, module);
     }

@@ -18,7 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.service.eca;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -181,7 +181,7 @@ public class ServiceEcaCondition implements java.io.Serializable {
         if (Debug.verboseOn()) Debug.logVerbose("Comparing : " + lhsValue + " " + operator + " " + rhsValue, module);
 
         // evaluate the condition & invoke the action(s)
-        List<Object> messages = new LinkedList<Object>();
+        List<Object> messages = new ArrayList<>(); // SCIPIO: switched to ArrayList
         Boolean cond = ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, format, messages, null, dctx.getClassLoader(), isConstant);
 
         // if any messages were returned send them out

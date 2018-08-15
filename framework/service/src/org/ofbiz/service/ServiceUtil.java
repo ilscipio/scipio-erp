@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -130,7 +129,7 @@ public class ServiceUtil {
             result.put(ModelService.ERROR_MESSAGE, errorMessage);
         }
 
-        List<Object> errorList = new LinkedList<Object>();
+        List<Object> errorList = new ArrayList<Object>(); // SCIPIO: switched to ArrayList
         if (errorMessageList != null) {
             errorList.addAll(errorMessageList);
         }
@@ -643,7 +642,7 @@ public class ServiceUtil {
             boolean beganTx3 = false;
             GenericValue runtimeData = null;
             EntityListIterator runTimeDataIt = null;
-            List<GenericValue> runtimeDataToDelete = new LinkedList<GenericValue>();
+            List<GenericValue> runtimeDataToDelete = new ArrayList<GenericValue>(); // SCIPIO: switched to ArrayList
             long jobsandBoxCount = 0;
             try {
                 // begin this transaction
@@ -808,6 +807,7 @@ public class ServiceUtil {
         return locale;
     }
 
+    @SafeVarargs
     public static <T extends Object> Map<String, Object> makeContext(T... args) {
         if (args != null) {
             for (int i = 0; i < args.length; i += 2) {

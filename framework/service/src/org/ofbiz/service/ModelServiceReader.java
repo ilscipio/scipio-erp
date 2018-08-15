@@ -21,10 +21,10 @@ package org.ofbiz.service;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +43,6 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.model.ModelFieldType;
-import org.ofbiz.service.ModelParam.ModelParamValidator;
 import org.ofbiz.service.group.GroupModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -287,6 +286,18 @@ public class ModelServiceReader implements Serializable {
         if (metricsElement != null) {
             service.metrics = MetricsFactory.getInstance(metricsElement);
         }
+        
+        // SCIPIO
+        if (service.contextParamList instanceof ArrayList) {
+            ((ArrayList<ModelParam>) service.contextParamList).trimToSize();
+        }
+        if (service.notifications instanceof ArrayList) { // SCIPIO
+            ((ArrayList<ModelNotification>) service.notifications).trimToSize();
+        }
+        if (service.permissionGroups instanceof ArrayList) { // SCIPIO
+            ((ArrayList<ModelPermGroup>) service.permissionGroups).trimToSize();
+        }
+
         return service;
     }
 
@@ -390,6 +401,9 @@ public class ModelServiceReader implements Serializable {
                 perm.serviceModel = service;
                 group.permissions.add(perm);
             }
+        }
+        if (group.permissions instanceof ArrayList) { // SCIPIO
+            ((ArrayList<ModelPermission>) group.permissions).trimToSize();
         }
     }
 
@@ -690,7 +704,7 @@ public class ModelServiceReader implements Serializable {
         List<? extends Element> validateElements = UtilXml.childElementList(attribute, "type-validate");
         if (UtilValidate.isNotEmpty(validateElements)) {
             // always clear out old ones; never append
-            param.validators = new LinkedList<ModelParamValidator>();
+            param.validators = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
             Element validate = validateElements.get(0);
             String methodName = validate.getAttribute("method").intern();
@@ -708,6 +722,8 @@ public class ModelServiceReader implements Serializable {
                     param.addValidator(className, methodName, resource, property);
                 }
             }
+
+            ((ArrayList<ModelParam.ModelParamValidator>) param.validators).trimToSize(); // SCIPIO
         }
     }
 

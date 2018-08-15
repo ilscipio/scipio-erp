@@ -19,7 +19,7 @@
 package org.ofbiz.service.mail;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -249,7 +249,7 @@ public class ServiceMcaCondition implements java.io.Serializable {
         if (c instanceof String) {
             return UtilMisc.toList((String) c);
         } else if (c instanceof Multipart) {
-            List<String> textContent = new LinkedList<String>();
+            List<String> textContent = new ArrayList<>(); // SCIPIO: switched to ArrayList
             int count = ((Multipart) c).getCount();
             for (int i = 0; i < count; i++) {
                 BodyPart bp = ((Multipart) c).getBodyPart(i);
@@ -257,7 +257,7 @@ public class ServiceMcaCondition implements java.io.Serializable {
             }
             return textContent;
         } else {
-            return new LinkedList<String>();
+            return new ArrayList<>(); // SCIPIO: switched to ArrayList
         }
     }
 }

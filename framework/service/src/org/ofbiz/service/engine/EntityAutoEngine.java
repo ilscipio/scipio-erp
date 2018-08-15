@@ -18,9 +18,10 @@
  */
 package org.ofbiz.service.engine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -89,7 +90,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
 
         try {
             boolean allPksInOnly = true;
-            LinkedList<String> pkFieldNameOutOnly = null;
+            List<String> pkFieldNameOutOnly = null;
             /* Check for each pk if it's :
              * 1. part IN 
              * 2. or part IN and OUT, but without value but present on parameters map
@@ -101,7 +102,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                 boolean pkValueInParameters = pkParam.isIn() && UtilValidate.isNotEmpty(parameters.get(pkParam.getFieldName()));
                 if (pkParam.isOut() && !pkValueInParameters) {
                     if (pkFieldNameOutOnly == null) {
-                        pkFieldNameOutOnly = new LinkedList();
+                        pkFieldNameOutOnly = new ArrayList<>(); // SCIPIO: switched to ArrayList
                         allPksInOnly = false;
                     }
                     pkFieldNameOutOnly.add(pkField.getName());
@@ -239,7 +240,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                      */
                     if (pkFieldNameOutOnly != null && pkFieldNameOutOnly.size() == 1) {
                         newEntity.setPKFields(parameters, true);
-                        String pkFieldName = pkFieldNameOutOnly.getFirst();
+                        String pkFieldName = pkFieldNameOutOnly.get(0);
                         //if it's a fromDate, don't update it now, it's will be done next step
                         if (! "fromDate".equals(pkFieldName)) { 
                             String pkValue = dctx.getDelegator().getNextSeqId(modelEntity.getEntityName());

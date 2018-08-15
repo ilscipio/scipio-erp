@@ -23,11 +23,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -206,10 +206,10 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public Set<ModelParam> overrideParameters = new LinkedHashSet<ModelParam>();
 
     /** List of permission groups for service invocation */
-    public List<ModelPermGroup> permissionGroups = new LinkedList<ModelPermGroup>();
+    public List<ModelPermGroup> permissionGroups = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** List of email-notifications for this service */
-    public List<ModelNotification> notifications = new LinkedList<ModelNotification>();
+    public List<ModelNotification> notifications = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** Internal Service Group */
     public GroupModel internalGroup = null;
@@ -218,7 +218,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     protected Map<String, ModelParam> contextInfo = new LinkedHashMap<String, ModelParam>();
 
     /** Context Information, a List of parameters used by the service, contains ModelParam objects */
-    protected List<ModelParam> contextParamList = new LinkedList<ModelParam>();
+    protected List<ModelParam> contextParamList = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** Flag to say if we have pulled in our addition parameters from our implemented service(s) */
     protected boolean inheritedParameters = false;
@@ -552,8 +552,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         if (context == null) context = new HashMap<String, Object>();
         requiredTest.putAll(context);
 
-        List<String> requiredButNull = new LinkedList<String>();
-        List<String> keyList = new LinkedList<String>();
+        List<String> requiredButNull = new ArrayList<>(); // SCIPIO: switched to ArrayList
+        List<String> keyList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         keyList.addAll(requiredTest.keySet());
         for (String key: keyList) {
             Object value = requiredTest.get(key);
@@ -568,7 +568,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         // check for requiredButNull fields and return an error since null values are not allowed for required fields
         if (requiredButNull.size() > 0) {
-            List<String> missingMsg = new LinkedList<String>();
+            List<String> missingMsg = new ArrayList<>(); // SCIPIO: switched to ArrayList
             for (String missingKey: requiredButNull) {
                 String message = this.getParam(missingKey).getPrimaryFailMessage(locale);
                 if (message == null) {
@@ -607,7 +607,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         // required and type validation complete, do allow-html validation
         if ("IN".equals(mode)) {
-            List<String> errorMessageList = new LinkedList<String>();
+            List<String> errorMessageList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             for (ModelParam modelParam : this.contextInfo.values()) {
                 // the param is a String, allow-html is not any, and we are looking at an IN parameter during input parameter validation
                 if (context.get(modelParam.name) != null && ("String".equals(modelParam.type) || "java.lang.String".equals(modelParam.type)) 
@@ -644,7 +644,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             Set<String> missing = new TreeSet<String>(keySet);
 
             missing.removeAll(testSet);
-            List<String> missingMsgs = new LinkedList<String>();
+            List<String> missingMsgs = new ArrayList<>(missing.size()); // SCIPIO: switched to ArrayList
             for (String key: missing) {
                 String msg = model.getParam(key).getPrimaryFailMessage(locale);
                 if (msg == null) {
@@ -654,8 +654,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 missingMsgs.add(msg);
             }
 
-            List<String> missingCopy = new LinkedList<String>();
-            missingCopy.addAll(missing);
+            List<String> missingCopy = new ArrayList<>(missing); // SCIPIO: switched to ArrayList
+            //missingCopy.addAll(missing);
             throw new ServiceValidationException(missingMsgs, model, missingCopy, null, mode);
         }
 
@@ -664,7 +664,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             Set<String> extra = new TreeSet<String>(testSet);
 
             extra.removeAll(keySet);
-            List<String> extraMsgs = new LinkedList<String>();
+            List<String> extraMsgs = new ArrayList<>(extra.size()); // SCIPIO: switched to ArrayList
             for (String key: extra) {
                 ModelParam param = model.getParam(key);
                 String msg = null;
@@ -677,13 +677,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 extraMsgs.add(msg);
             }
 
-            List<String> extraCopy = new LinkedList<String>();
-            extraCopy.addAll(extra);
+            List<String> extraCopy = new ArrayList<>(extra); // SCIPIO: switched to ArrayList
+            //extraCopy.addAll(extra);
             throw new ServiceValidationException(extraMsgs, model, null, extraCopy, mode);
         }
 
         // * Validate types next
-        List<String> typeFailMsgs = new LinkedList<String>();
+        List<String> typeFailMsgs = new ArrayList<>(); // SCIPIO: switched to ArrayList
         for (String key: testSet) {
             ModelParam param = model.getParam(key);
 
@@ -804,7 +804,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @return List of parameter names
      */
     public List<String> getParameterNames(String mode, boolean optional, boolean internal) {
-        List<String> names = new LinkedList<String>();
+        List<String> names = new ArrayList<>(contextParamList.size()); // SCIPIO: switched to ArrayList
 
         if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
             return names;
@@ -996,7 +996,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     private List<Object> makeSuffixList(Map<String, ? extends Object> source, ModelParam param) {
-        List<Object> paramList = new LinkedList<Object>();
+        List<Object> paramList = new ArrayList<>(source.size()); // SCIPIO: switched to ArrayList
         for (Map.Entry<String, ? extends Object> entry: source.entrySet()) {
             String key = entry.getKey();
             if (key.endsWith(param.stringListSuffix)) {
@@ -1111,7 +1111,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @return A list of required IN parameters in the order which they were defined.
      */
     public List<Object> getInParameterSequence(Map<String, ? extends Object> source) {
-        List<Object> target = new LinkedList<Object>();
+        List<Object> target = new ArrayList<>(this.contextParamList.size()); // SCIPIO: switched to ArrayList
         if (source == null) {
             return target;
         }
@@ -1135,8 +1135,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * the service was created.
      */
     public List<ModelParam> getModelParamList() {
-        List<ModelParam> newList = new LinkedList<ModelParam>();
-        newList.addAll(this.contextParamList);
+        List<ModelParam> newList = new ArrayList<>(this.contextParamList); // SCIPIO: switched to ArrayList
+        //newList.addAll(this.contextParamList);
         return newList;
     }
 
@@ -1145,7 +1145,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * the service was created.
      */
     public List<ModelParam> getInModelParamList() {
-        List<ModelParam> inList = new LinkedList<ModelParam>();
+        List<ModelParam> inList = new ArrayList<>(this.contextParamList.size()); // SCIPIO: switched to ArrayList
         for (ModelParam modelParam: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
             if ("OUT".equals(modelParam.mode)) continue;

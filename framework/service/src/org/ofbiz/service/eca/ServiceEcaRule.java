@@ -19,7 +19,6 @@
 package org.ofbiz.service.eca;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,6 +80,10 @@ public final class ServiceEcaRule implements java.io.Serializable {
             }
         }
 
+        // SCIPIO
+        ((ArrayList<ServiceEcaCondition>) conditions).trimToSize();
+        ((ArrayList<Object>) actionsAndSets).trimToSize();
+        
         if (Debug.verboseOn()) {
             Debug.logVerbose("actions and sets (intermixed): " + actionsAndSets, module);
         }
@@ -103,7 +106,7 @@ public final class ServiceEcaRule implements java.io.Serializable {
     }
 
     public List<ServiceEcaAction> getEcaActionList() {
-        List<ServiceEcaAction> actionList = new LinkedList<ServiceEcaAction>();
+        List<ServiceEcaAction> actionList = new ArrayList<>(this.actionsAndSets.size()); // SCIPIO: switched to ArrayList
         for (Object actionOrSet: this.actionsAndSets) {
             if (actionOrSet instanceof ServiceEcaAction) {
                 actionList.add((ServiceEcaAction) actionOrSet);
@@ -113,8 +116,8 @@ public final class ServiceEcaRule implements java.io.Serializable {
     }
 
     public List<ServiceEcaCondition> getEcaConditionList() {
-        List<ServiceEcaCondition> condList = new LinkedList<ServiceEcaCondition>();
-        condList.addAll(this.conditions);
+        List<ServiceEcaCondition> condList = new ArrayList<>(this.conditions); // SCIPIO: switched to ArrayList
+        //condList.addAll(this.conditions);
         return condList;
     }
 

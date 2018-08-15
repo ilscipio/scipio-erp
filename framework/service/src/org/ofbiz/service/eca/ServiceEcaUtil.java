@@ -18,9 +18,9 @@
  *******************************************************************************/
 package org.ofbiz.service.eca;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,7 +64,7 @@ public class ServiceEcaUtil {
             return;
         }
 
-        List<Future<List<ServiceEcaRule>>> futures = new LinkedList<Future<List<ServiceEcaRule>>>();
+        List<Future<List<ServiceEcaRule>>> futures = new ArrayList<>(); // SCIPIO: switched to ArrayList
         List<ServiceEcas> serviceEcasList = null;
         try {
             serviceEcasList = ServiceConfigUtil.getServiceEngine().getServiceEcas();
@@ -102,7 +102,7 @@ public class ServiceEcaUtil {
     }
 
     private static List<ServiceEcaRule> getEcaDefinitions(ResourceHandler handler) {
-        List<ServiceEcaRule> handlerRules = new LinkedList<ServiceEcaRule>();
+        List<ServiceEcaRule> handlerRules = new ArrayList<>(); // SCIPIO: switched to ArrayList
         Element rootElement = null;
         try {
             rootElement = handler.getDocument().getDocumentElement();
@@ -135,13 +135,13 @@ public class ServiceEcaUtil {
 
             if (eventMap == null) {
                 eventMap = new HashMap<String, List<ServiceEcaRule>>();
-                rules = new LinkedList<ServiceEcaRule>();
+                rules = new ArrayList<>(); // SCIPIO: switched to ArrayList
                 ecaCache.put(serviceName, eventMap);
                 eventMap.put(eventName, rules);
             } else {
                 rules = eventMap.get(eventName);
                 if (rules == null) {
-                    rules = new LinkedList<ServiceEcaRule>();
+                    rules = new ArrayList<>(); // SCIPIO: switched to ArrayList
                     eventMap.put(eventName, rules);
                 }
             }
@@ -160,7 +160,7 @@ public class ServiceEcaUtil {
             if (event != null) {
                 return eventMap.get(event);
             } else {
-                List<ServiceEcaRule> rules = new LinkedList<ServiceEcaRule>();
+                List<ServiceEcaRule> rules = new ArrayList<>(); // SCIPIO: switched to ArrayList
                 for (Collection<ServiceEcaRule> col: eventMap.values()) {
                     rules.addAll(col);
                 }

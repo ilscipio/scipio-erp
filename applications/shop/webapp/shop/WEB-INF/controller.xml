@@ -24,6 +24,11 @@ under the License.
     <include location="component://common/webcommon/WEB-INF/common-store-controller.xml"/>
     <!-- 2016: new common cms client controller -->
     <include location="component://cms/webcommon/WEB-INF/cms-client-controller.xml"/>
+       
+    <!-- Additional Payment options -->
+    <include location="component://paypal/webapp/paypal/WEB-INF/controller.xml" optional="true" order="post-local" />
+    <include location="component://lightning/webapp/lightning/WEB-INF/controller.xml" optional="true" order="post-local" />
+    
     
     <description>SCIPIO Shop Controller Configuration File</description>
 

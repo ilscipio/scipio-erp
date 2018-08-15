@@ -406,7 +406,7 @@ check_requirements() {
     print_msg "NOTE: The variable SCIPIO_ADDONS_URL_EE is not set. You will only be able to install community addons from Github. \
 If you have purchased an addon from the Scipio store, you must input the base address (ssh://.../SCIPIO-ERP/) provided to you \
 into the git-addons-config file and commit it locally (subtree commands may fail without the commit), or alternatively into the \
-git-addons-config-local file (ignored by git). See './git-addons --help' and the git-addons-config file for more information.\n"
+git-addons-config-local file (ignored by git). See './git-addons help' and the git-addons-config file for more information.\n"
     if [ -z "${SCIPIO_ADDONS_URL_CE}" ]; then
       print_error_req "Could not read any addons URL from git-addons-config script"
       return 2

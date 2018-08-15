@@ -116,9 +116,10 @@ public final class WidgetWorker {
                 // SCIPIO: We want to make sure this goes through encodeURL, and we now also want to send this
                 // through makeLinkAuto so it can produce smarter inter-webapp links.
                 // TODO? widgets currently don't support specifying target webSiteId, so absPath always true
-                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
-                RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
-                externalWriter.append(rh.makeLinkAuto(request, response, tempWriter.toString(), true, true, null, null, fullPath, secure, encode));
+                // SCIPIO: 2018-08-15: this is now static method
+                //ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
+                //RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
+                externalWriter.append(RequestHandler.makeLinkAuto(request, response, tempWriter.toString(), true, true, null, null, fullPath, secure, encode));
             } else {
                 localWriter = tempWriter;
             }

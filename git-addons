@@ -146,31 +146,32 @@ for every database instance you have (e.g. staging vs production).
 
 Examples:
 
-Listing addons:
+List addons:
 * ./git-addons list --all
 
-Pulling, configuring and loading a new addon in a single command into an existing database, 
-for demo or small project:
+Pull, configure and load data for new addon into existing database, in one command (demo or small project):
 * ./git-addons install-demo angular-shop
 * ./git-addons install-production paypal
 
-Pulling addons from Git:
+Pull addons from Scipio Git (always makes a commit; configure is automatically invoked if applicable):
 * ./git-addons pull angular-shop
 * ./git-addons pull angular-shop ignite-admin-theme --dry-run
 * ./git-addons pull --all
+* ./git-addons pull angular-shop --no-config    # skip configure
 
-(Re-)Configuring addon files (already done on first pull):
+(Re-)Configure addon files (usually already done on first pull):
 * ./git-addons config angular-shop
+* ./git-addons config angular-shop --no-commit  # don't commit, for manual commit message later
 
-Loading addon data:
+Load data for addon:
 * ./git-addons load-production paypal
 * ./git-addons load-demo angular-shop
 
-Steps for pulling, configuring and loading an addon, into existing databases, 
-for a production/company project:
+Steps to pull, configure and load data for new addon into existing databases (production/company project):
 1. ./git-addons pull paypal                # Get the addon files, configure (if applicable)
-3. git push                                # Push the addon and configuration back to your own repository
-4. ./git-addons load-production paypal     # Load data - run this for every database (staging, production, etc.)
+2. git push                                # Push the addon and configuration back to your own repository
+3. git pull                                # Pull changes on each server
+3. ./git-addons load-production paypal     # Load data - run once for every database (staging, production, etc.)
 
 "
 }

@@ -138,7 +138,6 @@ under the License.
     <property name="site.dir" value="../site"/>
     <property name="memory.initial.param" value="-Xms128M"/>
     <property name="memory.max.param" value="-Xmx3512M"/>
-    <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=1024M"/>
     
     <!-- SCIPIO: New properties -->
     
@@ -1118,8 +1117,6 @@ under the License.
                     <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
                         <jvmarg value="${memory.initial.param}"/>
                         <jvmarg value="${memory.max.param}"/>
-                        <!-- SCIPIO: NOTE: Ofbiz omitted this for secure targets:
-                        <jvmarg value="${memory.maxpermsize.param}"/>-->
                         <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
                         <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
                         <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
@@ -1142,7 +1139,6 @@ under the License.
                     <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
                         <jvmarg value="${memory.initial.param}"/>
                         <jvmarg value="${memory.max.param}"/>
-                        <jvmarg value="${memory.maxpermsize.param}"/>
                         <!-- SCIPIO: solr home -->
                         <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
                         <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>

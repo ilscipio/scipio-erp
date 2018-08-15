@@ -33,7 +33,7 @@ rm -f $OFBIZ_LOG
 #automatic IP address for linux
 #IPADDR=`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 #RMIIF="-Djava.rmi.server.hostname=$IPADDR"
-MEMIF="-Xms128M -Xmx3512M -XX:MaxPermSize=1024m"
+MEMIF="-Xms128M -Xmx3512M"
 #JMX="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=33333 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
 #MISC="-Duser.language=en"
 MISC="-Dsolr.solr.home=applications/solr/ -Dsolr.log.dir=runtime/logs/solr/"

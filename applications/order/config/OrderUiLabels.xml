@@ -16052,6 +16052,10 @@
         <value xml:lang="en">Orders Received From</value>
     </property>
     <!-- SCIPIO: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but simpler for time being. DO NOT REUSE these for now. -->
+    <property key="OrderPaymentDescBitcoin">
+        <value xml:lang="de">Externe Bitcoin Zahlung.</value>
+        <value xml:lang="en">Pay with Bitcoin externally.</value>
+    </property>
     <property key="OrderPaymentDescCOD">
         <value xml:lang="de">Zahlung bei Lieferung.</value>
         <value xml:lang="en">Pay upon delivery of your item(s).</value>

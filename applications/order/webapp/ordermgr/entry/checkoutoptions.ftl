@@ -328,6 +328,15 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                   </#if>
+                  <#if productStorePaymentMethodTypeIdMap.EXT_LIGHTNING??>
+                  <@tr>
+                    <@td width="1%">
+                      <@field type="radio" name="checkOutPaymentId" value="EXT_LIGHTNING" checked=("EXT_LIGHTNING" == checkOutPaymentId)/>
+                    </@td>
+                    <@td width="50%">${uiLabelMap.AccountingPayWithBitcoin}
+                    </@td>
+                  </@tr>
+                  </#if>
                   <#if productStorePaymentMethodTypeIdMap.EXT_STRIPE??>
                   <@tr>
                     <@td width="1%">

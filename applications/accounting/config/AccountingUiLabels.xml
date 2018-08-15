@@ -11232,6 +11232,23 @@
         <value xml:lang="zh">仅用账单账户支付</value>
         <value xml:lang="zh-TW">僅用帳單帳戶支付</value>
     </property>
+    <property key="AccountingPayWithBitcoin">
+        <value xml:lang="cs">Platba prostřednictvím Bitcoin</value>
+        <value xml:lang="de">Bezahlung mit Bitcoin</value>
+        <value xml:lang="en">Pay With Bitcoin</value>
+        <value xml:lang="es">Pagar con Bitcoin</value>
+        <value xml:lang="fr">Paiement avec Bitcoin</value>
+        <value xml:lang="it">Paga con Bitcoin</value>
+        <value xml:lang="ja">Bitcoinで支払</value>
+        <value xml:lang="nl">Betaal met Bitcoin</value>
+        <value xml:lang="pt">Pagar com Bitcoin</value>
+        <value xml:lang="pt-PT">&gt;Pagar Com Bitcoin</value>
+        <value xml:lang="ro">Plateste cu Bitcoin</value>
+        <value xml:lang="ru">Платить через Bitcoin</value>
+        <value xml:lang="th">ชำระเงินผ่าน Bitcoin</value>
+        <value xml:lang="vi">Thanh toán bằng cổng Bitcoin</value>
+        <value xml:lang="zh-TW">用Bitcoin支付</value>
+    </property>
     <property key="AccountingPayWithPayPal">
         <value xml:lang="cs">Platba prostřednictvím PayPal</value>
         <value xml:lang="de">Bezahlung mit PayPal</value>

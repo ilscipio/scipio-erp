@@ -46,6 +46,9 @@ under the License.
         <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
           <@field type="radio" id="paymentMethodTypeId_EXT_PAYPAL" name="paymentMethodTypeId" value="EXT_PAYPAL" checked=(paymentMethodTypeId?? && paymentMethodTypeId == "EXT_PAYPAL") label=uiLabelMap.AccountingPayWithPayPal/>
         </#if>
+        <#if productStorePaymentMethodTypeIdMap.EXT_LIGHTNING??>
+          <@field type="radio" id="paymentMethodTypeId_EXT_LIGHTNING" name="paymentMethodTypeId" value="EXT_LIGHTNING" checked=(paymentMethodTypeId?? && paymentMethodTypeId == "EXT_LIGHTNING") label=uiLabelMap.AccountingPayBitcoin/>
+        </#if>
       </@fields>
     </fieldset>
     <#--</@field>-->

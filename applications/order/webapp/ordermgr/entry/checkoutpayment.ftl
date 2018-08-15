@@ -118,6 +118,10 @@ var issuerId = "";
               <#macro payMethContent args={}><label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label></#macro>
               <@checkoutInvField type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == checkOutPaymentId) labelContent=payMethContent />
             </#if>
+            <#if productStorePaymentMethodTypeIdMap.EXT_LIGHTNING??>
+              <#macro payMethContent args={}><label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithBitcoinl}</label></#macro>
+              <@checkoutInvField type="radio" id="checkOutPaymentId_LIGHTNING" name="checkOutPaymentId" value="EXT_LIGHTNING" checked=("EXT_LIGHTNING" == checkOutPaymentId) labelContent=payMethContent />
+            </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_IDEAL??>
               <#macro payMethContent args={}>
                 <label for="checkOutPaymentId_IDEAL">${uiLabelMap.AccountingPayWithiDEAL}</label>

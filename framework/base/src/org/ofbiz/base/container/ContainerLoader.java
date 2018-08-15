@@ -65,8 +65,8 @@ public class ContainerLoader implements StartupLoader {
         this.configFile = config.containerConfig;
 
         List<String> loaders = null;
-        for (Map loaderMap: config.loaders) {
-            if (module.equals(loaderMap.get("class"))) {
+        for (Map<String, String> loaderMap: config.loaders) {
+            if (ContainerLoader.class.getName().equals(loaderMap.get("class"))) { // SCIPIO: removed use of module here
                 loaders = StringUtil.split((String)loaderMap.get("profiles"), ",");
             }
         }

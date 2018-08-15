@@ -9,39 +9,93 @@
 TOPDIR=$(pwd)
 
 print_title() {
-  echo "SCIPIO-ERP addons and themes git (subtree) merging script"
-  echo ""
+  echo -e "\nSCIPIO-ERP Addons and Themes Git Merging Script\n"
 }
 
 print_usage() {
   echo "----------
 usage: ./git-addons [action] [addon-names...] [options]
 
-actions:
-  help                Show this help dialog
+[action]:
+
+  help                Show this help dialog.
+
+  config              Configures the specified addon(s) and (by default) commits
+                      any configuration changes made to the Git working copy.
+                      Note: The 'pull' command automatically runs this for newly-added addons.
+                      Note (2018-08-14): This currently does nothing for most addons; reserved for future use.
+                      Command-specific options (see options descriptions):
+                        -t, --no-commit   Do not create a Git commit for the config changes.
+                      
+  install-xxxx        Combines the 'pull', 'config' and 'load-xxx' commands;
+                      runs 'pull' to fetch the specified addons, followed by 'config',
+                      followed by 'load-xxx' to load the specified seed and/or demo data.
+                      This is often enough to fully install an addon in a single copy
+                      of Scipio (for demoing or small setups), but usually this is
+                      not ideal for production setups (see discussion below).
+                      Command-specific options:
+                        -t, --no-commit   Do not create a Git commit for config changes.
+
+  list                List currently installed addons.
+                      Command-specific options:
+                        -a, --all         Show all recognized addons instead of installed ones.
+
+  load-xxxx           Loads seed and/or demo data for the specified addon(s) only,
+                      where load-xxxx is an Ant data load target ('./ant load-xxx') or alias.
+                      This addon must first have been added using 'pull'.
+                      Common targets (for more descriptions and targets, use: './ant -p'):
+                        load-demo         Load all data, including demo data (for demoing Scipio)
+                        load-production   Load seed, seed-initial and ext data (alias for load-extseed)
+                        load-seed         Load only seed data (not seed-initial, demo, or ext*)
+                      Command-specific options:
+                        (none)
+                      
   pull                Add or merge (as appropriate) the named addon into working copy
                       using git subtree.
-                      --all may be specified instead of addon names to update all
-                      addons already present in your working copy.
-  remote-reset        Force reset the remote for the specified addon(s).
-                      --all may be specified instead of addon names to update all
-                      addons already present in your working copy.
-  list                List currently installed addons.
-                      --all may be specified to show all recognized addons instead
+                      In addition, for newly-added addons, this will automatically 
+                      attempt to run the 'config' action if applicable, unless --no-config is passed.
+                      Command-specific options:
+                        -a, --all         Update all existing addons already present.
+                        -g, --no-config   Do not run 'config' action.
 
-options (must come AFTER the action and addon-names):
+  remote-reset        Force reset the remote for the specified addon(s).
+                      Command-specific options:
+                        -a, --all         Update all existing addons already present.
+
+[options] (must come AFTER action and addon-names):
+
   -a, --all           Apply action to all recognized addons; meaning varies by action.
+  
   -n, --dry-run       Dry run (git commands that modify working copy are not run)
+
+  -z, --no-commit     Do not commit configuration changes produced by the 'config'
+                      or 'install' commands.
+                      If you specify this, you may need to manually commit the
+                      changes afterward (if any), using 'git commit' on command line;
+                      this allows specifying a custom commit message.
+                      Note: The 'pull' command always creates a new commit regardless
+                      of this flag (git subtree always creates a new commit).
+
+  -g, --no-config     For 'pull', prevents automatic run of the 'config' action.
+
   -e, --no-msg-edit   Sets GIT_MERGE_AUTOEDIT=no, so no git prompts for merge messages 
                       (unless problems).
-  -v, --verbose       Verbose output
+
   -h, --help          General help or help about specific command
 
+  -v, --verbose       Verbose output
+
+Description:
+
 This script uses the git subtree command to integrate SCIPIO-ERP addons
-into your working copy of ScipioCE/EE.
+into your working copy of ScipioCE/EE. Its primary purpose is to allow
+easy pulling and merging of files from the Scipio Git repositories.
+It can also be used launch addon configuration and data load;
+this functionality is largely a wrapper around existing Ant targets, for which
+you can find further descriptions using: './ant -p'
 
 For more information about Scipio addons and examples, visit:
-https://www.scipioerp.com/community/end-user/addons/
+  https://www.scipioerp.com/community/end-user/addons/
 
 Configuration can be done in the accompanying git-addons-config file (and committed), 
 or instead by creating a git-addons-config-local file (ignored by git).
@@ -64,15 +118,60 @@ NOTE: There is no official support for git submodules at this time, and using
 submodules is not recommended. subtrees should be used for most client projects.
 
 Requirements:
+
 * Bash 4 or higher (for Linux/Mac; for Windows, use Git Bash, Cygwin or other emulation)
 * Git 2.0 or higher (with git subtree command)
 
+Installation:
+
+Addons can be installed at 2 different times: before or after you have loaded the data
+for the Scipio platform ('./ant [load-demo|load-extseed|...]' or install.sh/install.bat).
+
+Before platform data load: If you add the addon before the platform data is loaded, you simply need to
+use the 'pull' command to pull the addon files, and it will trigger 'config'
+automatically if needed. Afterward, when you run the './ant [load-demo|load-extseed|...]'
+or install.sh/install.bat commands, the addon data will be automatically loaded 
+along with all other components.
+
+After platform data load: If you add the addon after your Scipio platform data is already loaded,
+you must run the data load for the specific addon after pulling it. This can be done either
+using the dedicated 'load-xxxx' command (usually load-demo or load-production/load-extseed),
+or all at once including pull using the high-level 'install-xxxx' command.
+
+The 'install-xxxx' command is mainly appropriate for small projects or to demo Scipio,
+where only one database is involved. If you have a development/production setup,
+you will likely need to push the changes of the 'pull' command to your Git repository,
+pull it to your production (and other) branches, and finally run the appropriate 'load-xxxx'
+for every database instance you have (e.g. staging vs production).
+
 Examples:
 
-./git-addons pull angular-shop
-./git-addons pull angular-shop ignite-admin-theme --dry-run
-./git-addons pull --all
-./git-addons list --all
+Listing addons:
+* ./git-addons list --all
+
+Pulling, configuring and loading a new addon in a single command into an existing database, 
+for demo or small project:
+* ./git-addons install-demo angular-shop
+* ./git-addons install-production paypal
+
+Pulling addons from Git:
+* ./git-addons pull angular-shop
+* ./git-addons pull angular-shop ignite-admin-theme --dry-run
+* ./git-addons pull --all
+
+(Re-)Configuring addon files (already done on first pull):
+* ./git-addons config angular-shop
+
+Loading addon data:
+* ./git-addons load-production paypal
+* ./git-addons load-demo angular-shop
+
+Steps for pulling, configuring and loading an addon, into existing databases, 
+for a production/company project:
+1. ./git-addons pull paypal                # Get the addon files, configure (if applicable)
+3. git push                                # Push the addon and configuration back to your own repository
+4. ./git-addons load-production paypal     # Load data - run this for every database (staging, production, etc.)
+
 "
 }
 
@@ -99,8 +198,12 @@ will not override existing remotes.
 "
 }
 
+join_string() { 
+  local IFS="$1"; shift; echo "$*"; 
+}
+
 print_addon_line() {
-  get_addon_info "$2"
+  get_addon_info "$2" || return
   if [ "$1" == "${ADDON_REPOTYPE}" ]; then
     local INSTSTR=$(print_addon_format)
     echo "${ADDON_NAME} -> ${ADDON_DIR} ${INSTSTR}"
@@ -132,16 +235,16 @@ sort_args() {
 list_addons_core() {
   echo -e "\nCommunity addons:"
   for ADDON; do
-    print_addon_line ce "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    print_addon_line ce "${ADDON}"
   done
   echo -e "\nEnterprise addons:"
   for ADDON; do
-    print_addon_line ee "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    print_addon_line ee "${ADDON}"
   done
   if [ ! -z "${SCIPIO_ADDONS_URL_DEV}" ]; then
     echo -e "\nDev addons:"
     for ADDON; do
-      print_addon_line dev "${SCIPIO_ADDON_MAP[${ADDON}]}"
+      print_addon_line dev "${ADDON}"
     done
   fi
 }
@@ -201,10 +304,23 @@ print_error_usage() {
   print_usage
 }
 
+print_targetaddons_msg() {
+  print_msg "\n##############################################\n\
+$1: Target addons: ${@:2}\n\
+##############################################"
+}
+
+print_targetaddons_all_msg() {
+  print_msg "\n##############################################\n\
+$1: Target addons (auto-detected): ${ADDONS}\n\
+NOTE: If any addons appear to not be detected, use list --all command for more details, or specify them explicitly.\n\
+##############################################"
+}
+
 print_subheader() {
-  echo -e "\n==========================="
-  echo -e "$@"
-  echo -e "==========================="
+  echo -e "\n===========================\n\
+${@:2}\n\
+==========================="
 }
 
 callgit() {
@@ -230,10 +346,11 @@ check_min_version() {
   return 0
 }
 
+declare -A SCIPIO_ADDON_DIR_MAP
 process_config() {
-  declare -A SCIPIO_ADDON_DIR_MAP
+  SCIPIO_ADDON_DIR_MAP=()
   for ADDON in "${!SCIPIO_ADDON_MAP[@]}"; do
-    get_addon_info "${ADDON}"
+    get_addon_info "${ADDON}" || return
     if [ ! -z "${SCIPIO_ADDON_DIR_MAP[${ADDON_DIR}]}" ]; then
       print_error "Config error (SCIPIO_ADDON_MAP): Illegal duplicate target addon dir detected: ${ADDON_DIR}"
       return 1
@@ -288,7 +405,7 @@ check_requirements() {
     print_msg "NOTE: The variable SCIPIO_ADDONS_URL_EE is not set. You will only be able to install community addons from Github. \
 If you have purchased an addon from the Scipio store, you must input the base address (ssh://.../SCIPIO-ERP/) provided to you \
 into the git-addons-config file and commit it locally (subtree commands may fail without the commit), or alternatively into the \
-git-addons-config-local file (ignored by git). See the git-addons-config file for more information.\n"
+git-addons-config-local file (ignored by git). See './git-addons --help' and the git-addons-config file for more information.\n"
     if [ -z "${SCIPIO_ADDONS_URL_CE}" ]; then
       print_error_req "Could not read any addons URL from git-addons-config script"
       return 2
@@ -332,11 +449,16 @@ parse_options() {
   HELP=0
   ALLADDONS=0
   DRYRUN=0
+  NOCOMMIT=0
+  NOCONFIG=0
   
   # Unofficial/unsupported options
   REBASE=0
   REPOTYPE=subtree
   DOCHECKOUT=0
+  
+  # Internal
+  DATA_TARGET=""
   
   if [ -z "${ACTION}" ]; then
     print_error_usage "missing action argument"
@@ -349,6 +471,14 @@ parse_options() {
   elif [ "${ACTION}" == "pull" ]; then
     TARGETADDONS=$(extract_pos_args "${@:2}")
   elif [ "${ACTION}" == "remote-reset" ]; then
+    TARGETADDONS=$(extract_pos_args "${@:2}")
+  elif [[ "${ACTION}" == load-* ]]; then
+    TARGETADDONS=$(extract_pos_args "${@:2}")
+    DATA_TARGET="${ACTION}"
+  elif [[ "${ACTION}" == install-* ]]; then
+    TARGETADDONS=$(extract_pos_args "${@:2}")
+    DATA_TARGET="load-${ACTION#install-}"
+  elif [ "${ACTION}" == "config" ]; then
     TARGETADDONS=$(extract_pos_args "${@:2}")
   elif [ "${ACTION}" == "list" ]; then
     true
@@ -372,6 +502,10 @@ parse_options() {
       DRYRUN=1
     elif [ "${ARG}" == "-e" ] || [ "${ARG}" == "--no-msg-edit" ]; then
       export GIT_MERGE_AUTOEDIT=no
+    elif [ "${ARG}" == "-t" ] || [ "${ARG}" == "--no-commit" ]; then
+      NOCOMMIT=1
+    elif [ "${ARG}" == "-g" ] || [ "${ARG}" == "--no-config" ]; then
+      NOCONFIG=1
     elif [ "${ARG}" == "--rebase" ]; then
       REBASE=1
     elif [ "${ARG}" == "--subtree" ]; then
@@ -427,6 +561,27 @@ process_action() {
     else
       list_addons || return
     fi
+  elif [[ "${ACTION}" == load-* ]]; then
+    if [ "${ALLADDONS}" -eq 1 ]; then
+      load_addons_all || return
+    else
+      check_target_addons ${TARGETADDONS} || return
+      load_addons ${TARGETADDONS} || return
+    fi
+  elif [[ "${ACTION}" == install-* ]]; then
+    if [ "${ALLADDONS}" -eq 1 ]; then
+      install_addons_all || return
+    else
+      check_target_addons ${TARGETADDONS} || return
+      install_addons ${TARGETADDONS} || return
+    fi
+  elif [ "${ACTION}" == "config" ]; then
+    if [ "${ALLADDONS}" -eq 1 ]; then
+      config_addons_all || return
+    else
+      check_target_addons ${TARGETADDONS} || return
+      config_addons ${TARGETADDONS} || return
+    fi
   fi
 }
 
@@ -453,7 +608,7 @@ check_target_addons() {
 get_present_addons() {
   ADDONS=
   for ADDON in $(sort_args "${!SCIPIO_ADDON_MAP[@]}"); do
-    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    get_addon_info "${ADDON}" || return
     if is_addon_dir_present; then
       ADDONS="${ADDONS} ${ADDON}"
     fi
@@ -470,7 +625,7 @@ get_present_addons() {
 get_valid_addons() {
   ADDONS=
   for ADDON in $(sort_args "${!SCIPIO_ADDON_MAP[@]}"); do
-    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    get_addon_info "${ADDON}" || return
     if is_addon_supported; then
       ADDONS="${ADDONS} ${ADDON}"
     fi
@@ -584,25 +739,36 @@ check_addon_supported() {
   return 0
 }
 
+declare -a AUTOCONFIG_ADDONS
 pull_addons() {
-  print_msg "Target addons: $@"
+  print_targetaddons_msg "pull" "$@"
+  AUTOCONFIG_ADDONS=()
   for ADDON; do
-    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    get_addon_info "${ADDON}" || return
     pull_addon || return
   done
+  if [ "${NOCONFIG}" -eq 0 ] && [ ${#AUTOCONFIG_ADDONS[@]} -gt 0 ]; then
+    config_addons "${AUTOCONFIG_ADDONS[@]}"
+  fi
 }
 
+declare -a AUTOCONFIG_ADDONS
 pull_addons_all() {
   get_valid_addons || return
-  print_msg "Target addons (auto-detected): ${ADDONS}\nNOTE: If any addons appear to not be detected, use list --all command for more details, or specify them explicitly."
+  print_targetaddons_all_msg "pull"
+  AUTOCONFIG_ADDONS=() 
   for ADDON in ${ADDONS}; do
-    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    get_addon_info "${ADDON}" || return
     pull_addon || return
   done
+  if [ "${NOCONFIG}" -eq 0 ] && [ ${#AUTOCONFIG_ADDONS[@]} -gt 0 ]; then
+    config_addons "${AUTOCONFIG_ADDONS[@]}"
+  fi
 }
 
+# TODO: better missing config detection, using file presence and flags in files (add component name to AUTOCONFIG_ADDONS array)
 pull_addon() {
-  print_subheader "${ADDON_NAME}"
+  print_subheader "pull" "${ADDON_NAME}"
   if is_addon_dir_present; then
     check_addon_supported || return 0
     if is_addon_submodule; then
@@ -647,22 +813,23 @@ pull_addon() {
       print_msg "Running 'git subtree add' for new subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
       callgit subtree add --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Subtree add failed. Please verify."; return 1; }
     fi
+    AUTOCONFIG_ADDONS+=("${ADDON_NAME}")
   fi
 }
 
 remote_reset_addons() {
-  print_msg "Target addons: $@"
+  print_targetaddons_msg "remote-reset" "$@"
   for ADDON; do
-    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    get_addon_info "${ADDON}" || return
     remote_reset_addon || return
   done
 }
 
 remote_reset_addons_all() {
   get_valid_addons || return
-  print_msg "Target addons (auto-detected): ${ADDONS}\nNOTE: If any addons appear to not be detected, use list --all command for more details, or specify them explicitly."
+  print_targetaddons_all_msg "remote-reset"
   for ADDON in ${ADDONS}; do
-    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    get_addon_info "${ADDON}" || return
     # no remotes needed for submodules
     if ! is_addon_submodule; then
       remote_reset_addon || return
@@ -671,7 +838,7 @@ remote_reset_addons_all() {
 }
 
 remote_reset_addon() {
-  print_subheader "${ADDON_NAME}"
+  print_subheader "reset-remote" "${ADDON_NAME}"
   check_addon_supported || return 0
   remote_reset_addon_core
 }
@@ -699,14 +866,83 @@ is_remote_exists() {
   git remote | grep -q '^'"${1}"'$'
 }
 
-get_addon_info() {
-  ADDON_INFO_STR="$1"
-  ADDON_INFO=( ${ADDON_INFO_STR} )
-  if [ ${#ADDON_INFO[@]} -eq 1 ]; then
-    # got name only
-    ADDON_INFO_STR="${SCIPIO_ADDON_MAP[$1]}"
-    ADDON_INFO=( ${ADDON_INFO_STR} )
+load_addons() {
+  print_targetaddons_msg "${DATA_TARGET}" "$@"
+  get_addons_component_names "$@" || return
+  load_addons_exec "$@" || return
+}
+
+load_addons_all() {
+  get_valid_addons || return
+  print_targetaddons_all_msg "${DATA_TARGET}"
+  get_addons_component_names ${ADDONS} || return
+  load_addons_exec ${ADDONS} || return
+}
+
+load_addons_exec() {
+  #print_subheader "${DATA_TARGET}" "$@"
+  if [ ${#ADDONS_COMPONENT_NAMES[@]} -gt 0 ]; then
+    #print_msg "Component names: ${ADDONS_COMPONENT_NAMES[@]}"
+    COMPNAMES_STRING=$(join_string , ${ADDONS_COMPONENT_NAMES[@]})
+    local REAL_DATA_TARGET="${DATA_TARGET}"
+    if [ "${REAL_DATA_TARGET}" == "load-production" ]; then
+      local REAL_DATA_TARGET="load-extseed"
+    fi
+    print_msg "\nExecuting: ./ant ${REAL_DATA_TARGET} -Dcomponent=${COMPNAMES_STRING}\n"
+    ./ant "${REAL_DATA_TARGET}" "-Dcomponent=${COMPNAMES_STRING}"
+  else
+    print_msg "No Scipio components found for data load (addons may not be traditional components)."
   fi
+}
+
+config_addons() {
+  print_targetaddons_msg "config" "$@"
+  for ADDON; do
+    get_addon_info "${ADDON}" || return
+    config_addon || return
+  done
+}
+
+config_addons_all() {
+  get_valid_addons || return
+  print_targetaddons_all_msg "config"
+  for ADDON in ${ADDONS}; do
+    get_addon_info "${ADDON}" || return
+    # no remotes needed for submodules
+    if ! is_addon_submodule; then
+      config_addon || return
+    fi
+  done
+}
+
+config_addon() {
+  print_subheader "config" "${ADDON_NAME}"
+  if is_addon_dir_present; then
+    #check_addon_supported || return 0 # not really needed, and warnings are mostly about pull
+    # TODO
+    print_msg "No interactive configuration available or needed."
+  else
+    print_error "Cannot configure addon '${ADDON_NAME}': does not appear to be present or is invalid. Run 'list' and 'pull' commands first."
+    return 1
+  fi
+}
+
+install_addons() {
+  pull_addons "$@" && load_addons "$@"
+}
+
+install_addons_all() {
+  pull_addons_all && load_addons_all
+}
+
+get_addon_info() {
+  ADDON_INFO_STR="${SCIPIO_ADDON_MAP[$1]}"
+  if [ -z "${ADDON_INFO_STR}" ]; then
+    echo ""
+    print_error "Invalid addon name or definition: '$1'"
+    return 1
+  fi
+  ADDON_INFO=( ${ADDON_INFO_STR} )
   ADDON_NAME="${ADDON_INFO[0]}"
   ADDON_DIR="${ADDON_INFO[1]}"
   ADDON_REPOTYPE="${ADDON_INFO[2]}"
@@ -728,6 +964,33 @@ get_addon_info() {
   ADDON_BRANCHPREFIX=${ADDON_BRANCHPREFIX%"/"}
   ADDON_BRANCH="${ADDON_BRANCHPREFIX}/${SCIPIO_BRANCH}"
   ADDON_BRANCH=${ADDON_BRANCH#"/"}
+}
+
+get_addon_component_info() {
+  ADDON_COMPONENT_NAME=""
+  if [ -f "${ADDON_DIR}/ofbiz-component.xml" ]; then
+    ADDON_COMPONENT_NAME=$(cat "${ADDON_DIR}/ofbiz-component.xml" | sed -rn 's/^.*<ofbiz-component\s(.*\s)?name="([^"]*)".*$/\2/p')
+    if [ -z "${ADDON_COMPONENT_NAME}" ]; then
+      print_error "Could not determine component name for addon ${ADDON_NAME}; please contact support."
+    fi
+  fi
+}
+
+declare -a ADDONS_COMPONENT_NAMES
+get_addons_component_names() {
+  ADDONS_COMPONENT_NAMES=()
+  for ADDON; do
+    get_addon_info "${ADDON}"
+    if is_addon_dir_present; then
+      get_addon_component_info
+      if [ ! -z "${ADDON_COMPONENT_NAME}" ]; then
+        ADDONS_COMPONENT_NAMES+=("${ADDON_COMPONENT_NAME}")
+      fi
+    else
+      print_error "Addon '${ADDON}' is not present or is invalid. Use 'list' and 'pull' commands first."
+      return 1
+    fi
+  done
 }
 
 source "./git-addons-config" || { print_error_req "git-addons-config script file is missing or not sourceable"; exit 2; }

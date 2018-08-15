@@ -189,8 +189,8 @@ public class UtilMisc {
     }
 
     public static <T> List<T> makeListWritable(Collection<? extends T> col) {
-        List<T> result = new LinkedList<T>();
-        if (col != null) result.addAll(col);
+        List<T> result = (col != null) ? new ArrayList<T>(col) : new ArrayList<T>(); // SCIPIO: switched to ArrayList
+        //if (col != null) result.addAll(col);
         return result;
     }
 
@@ -274,7 +274,7 @@ public class UtilMisc {
     public static <K, V> List<V> getListFromMap(Map<K, Object> outerMap, K key) {
         List<V> innerList = UtilGenerics.<V>checkList(outerMap.get(key));
         if (innerList == null) {
-            innerList = new LinkedList<V>();
+            innerList = new ArrayList<V>(); // SCIPIO: switched to ArrayList
             outerMap.put(key, innerList);
         }
         return innerList;
@@ -455,7 +455,7 @@ public class UtilMisc {
      * @return The resulting List
      */
     public static <T> List<T> toList(T obj1) {
-        List<T> list = new LinkedList<T>();
+        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
 
         list.add(obj1);
         return list;
@@ -466,7 +466,7 @@ public class UtilMisc {
      * @return The resulting List
      */
     public static <T> List<T> toList(T obj1, T obj2) {
-        List<T> list = new LinkedList<T>();
+        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
 
         list.add(obj1);
         list.add(obj2);
@@ -478,7 +478,7 @@ public class UtilMisc {
      * @return The resulting List
      */
     public static <T> List<T> toList(T obj1, T obj2, T obj3) {
-        List<T> list = new LinkedList<T>();
+        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
 
         list.add(obj1);
         list.add(obj2);
@@ -491,7 +491,7 @@ public class UtilMisc {
      * @return The resulting List
      */
     public static <T> List<T> toList(T obj1, T obj2, T obj3, T obj4) {
-        List<T> list = new LinkedList<T>();
+        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
 
         list.add(obj1);
         list.add(obj2);
@@ -505,7 +505,7 @@ public class UtilMisc {
      * @return The resulting List
      */
     public static <T> List<T> toList(T obj1, T obj2, T obj3, T obj4, T obj5) {
-        List<T> list = new LinkedList<T>();
+        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
 
         list.add(obj1);
         list.add(obj2);
@@ -520,7 +520,7 @@ public class UtilMisc {
      * @return The resulting List
      */
     public static <T> List<T> toList(T obj1, T obj2, T obj3, T obj4, T obj5, T obj6) {
-        List<T> list = new LinkedList<T>();
+        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
 
         list.add(obj1);
         list.add(obj2);
@@ -532,7 +532,7 @@ public class UtilMisc {
     }
     
     public static <T> List<T> toList(T obj1, T obj2, T obj3, T obj4, T obj5, T obj6, T obj7, T obj8, T obj9) {
-        List<T> list = new LinkedList<T>();
+        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
 
         list.add(obj1);
         list.add(obj2);
@@ -551,8 +551,8 @@ public class UtilMisc {
         if (collection instanceof List<?>) {
             return (List<T>) collection;
         } else {
-            List<T> list = new LinkedList<T>();
-            list.addAll(collection);
+            List<T> list = new ArrayList<T>(collection); // SCIPIO: switched to ArrayList
+            //collection.list.addAll(collection);
             return list;
         }
     }
@@ -561,17 +561,17 @@ public class UtilMisc {
         if (data == null) {
             return null;
         }
-        List<T> list = new LinkedList<T>();
-        for (T value: data) {
-            list.add(value);
-        }
+        List<T> list = new ArrayList<T>(Arrays.asList(data)); // SCIPIO: switched to ArrayList
+        //for (T value: data) {
+        //    list.add(value);
+        //}
         return list;
     }
 
     public static <K, V> void addToListInMap(V element, Map<K, Object> theMap, K listKey) {
         List<V> theList = UtilGenerics.checkList(theMap.get(listKey));
         if (theList == null) {
-            theList = new LinkedList<V>();
+            theList = new ArrayList<V>(); // SCIPIO: switched to ArrayList
             theMap.put(listKey, theList);
         }
         theList.add(element);
@@ -1075,6 +1075,7 @@ public class UtilMisc {
      * <p>
      * Added 2018-07-12.
      */
+    @SafeVarargs
     public static <T> T firstNonNull(T... values) {
         for(T value : values) {
             if (value != null) return value;

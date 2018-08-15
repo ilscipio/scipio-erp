@@ -35,6 +35,9 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     <include location="component://auth-twitter/webapp/twitter/WEB-INF/auth-twitter-controller.xml" optional="true" order="pre-local" />
     <include location="component://auth-linkedin/webapp/linkedin/WEB-INF/auth-linkedin-controller.xml" optional="true" order="pre-local" />
  
+    <!-- Additional Payment options -->
+    <include location="component://paypal/webapp/paypal/WEB-INF/controller.xml" optional="true" order="pre-local" />
+    <include location="component://lightning/webapp/lightning/WEB-INF/controller.xml" optional="true" order="pre-local" />
     
     <description>SCIPIO: Common Framework-level Store Configuration File</description>
 

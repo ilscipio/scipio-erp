@@ -414,15 +414,16 @@ git-addons-config-local file (ignored by git). See './git-addons help' and the g
   fi
   if [ -z "${SCIPIO_BRANCH}" ]; then
     determine_scipio_branch || return
+    print_msg "Detected Scipio Git branch: ${SCIPIO_BRANCH}\n"
   fi
 }
 
 determine_scipio_branch() {
-  local SCPVER=$(grep '^scipio.release.branch=' "framework/base/config/scipiometainfo.properties" | cut -d= -f2)
+  local SCPVER=$(grep '^scipio.release.branch=' "framework/base/config/scipiometainfo.properties" | grep -o '[^= ]*$')
   if [ "${SCPVER}" == "dev" ]; then
     SCIPIO_BRANCH="master"
   elif [ "${SCPVER}" == "main" ]; then
-    local SCPVERSPEC=$(grep '^scipio.release.version.general=' "framework/base/config/scipiometainfo.properties" | cut -d= -f2)
+    local SCPVERSPEC=$(grep '^scipio.release.version.general=' "framework/base/config/scipiometainfo.properties" | grep -o '[^= ]*$')
     if [ -z "${SCPVERSPEC}" ]; then
       print_error_req "Scipio version in framework/base/config/scipiometainfo.properties appears invalid - try updating script?"
       return 2

@@ -508,8 +508,6 @@ public class ProductPromoWorker {
             }
         }
 
-        // Debug.logInfo("Promo [" + productPromoId + "] use limit after per order check: " + candidateUseLimit, module);
-
         Long useLimitPerCustomer = productPromo.getLong("useLimitPerCustomer");
         // check this whether or not there is a party right now
         if (useLimitPerCustomer != null) {
@@ -530,8 +528,6 @@ public class ProductPromoWorker {
             }
         }
 
-        // Debug.logInfo("Promo [" + productPromoId + "] use limit after per customer check: " + candidateUseLimit, module);
-
         Long useLimitPerPromotion = productPromo.getLong("useLimitPerPromotion");
         if (useLimitPerPromotion != null) {
             // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
@@ -545,8 +541,6 @@ public class ProductPromoWorker {
                 candidateUseLimit = Long.valueOf(perPromotionThisOrder);
             }
         }
-
-        // Debug.logInfo("Promo [" + productPromoId + "] use limit after per promotion check: " + candidateUseLimit, module);
 
         return candidateUseLimit;
     }
@@ -919,8 +913,6 @@ public class ProductPromoWorker {
                 amountNeeded = new BigDecimal(condValue);
             }
 
-            // Debug.logInfo("Doing Amount Cond with Value: " + amountNeeded, module);
-
             Set<String> productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
 
             List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
@@ -946,8 +938,6 @@ public class ProductPromoWorker {
                 }
             }
 
-            // Debug.logInfo("Doing Amount Cond with Value after finding applicable cart lines: " + amountNeeded, module);
-
             // if amountNeeded > 0 then the promo condition failed, so remove candidate promo uses and increment the promoQuantityUsed to restore it
             if (amountNeeded.compareTo(BigDecimal.ZERO) > 0) {
                 // failed, reset the entire rule, ie including all other conditions that might have been done before
@@ -963,8 +953,6 @@ public class ProductPromoWorker {
             if (UtilValidate.isNotEmpty(condValue)) {
                 BigDecimal amountNeeded = new BigDecimal(condValue);
                 BigDecimal amountAvailable = BigDecimal.ZERO;
-
-                // Debug.logInfo("Doing Amount Not Counted Cond with Value: " + amountNeeded, module);
 
                 Set<String> productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
 
@@ -982,8 +970,6 @@ public class ProductPromoWorker {
                         amountAvailable = amountAvailable.add(cartItem.getItemSubTotal());
                     }
                 }
-
-                // Debug.logInfo("Doing Amount Not Counted Cond with Value after finding applicable cart lines: " + amountNeeded, module);
 
                 compareBase = Integer.valueOf(amountAvailable.compareTo(amountNeeded));
             }
@@ -1025,63 +1011,6 @@ public class ProductPromoWorker {
                 // NOTE: don't confirm rpomo rule use here, wait until actions are complete for the rule to do that
             }
 
-        /* replaced by PPIP_PRODUCT_QUANT
-        } else if ("PPIP_PRODUCT_ID_IC".equals(inputParamEnumId)) {
-            String candidateProductId = condValue;
-
-            if (candidateProductId == null) {
-                // if null, then it's not in the cart
-                compareBase = Integer.valueOf(1);
-            } else {
-                // Debug.logInfo("Testing to see if productId \"" + candidateProductId + "\" is in the cart", module);
-                List productCartItems = cart.findAllCartItems(candidateProductId);
-
-                // don't count promotion items in this count...
-                Iterator pciIter = productCartItems.iterator();
-                while (pciIter.hasNext()) {
-                    ShoppingCartItem productCartItem = (ShoppingCartItem) pciIter.next();
-                    if (productCartItem.getIsPromo()) pciIter.remove();
-                }
-
-                if (productCartItems.size() > 0) {
-                    //Debug.logError("Item with productId \"" + candidateProductId + "\" IS in the cart", module);
-                    compareBase = Integer.valueOf(0);
-                } else {
-                    //Debug.logError("Item with productId \"" + candidateProductId + "\" IS NOT in the cart", module);
-                    compareBase = Integer.valueOf(1);
-                }
-            }
-        } else if ("PPIP_CATEGORY_ID_IC".equals(inputParamEnumId)) {
-            String productCategoryId = condValue;
-            Set productIds = new HashSet();
-
-            Iterator cartItemIter = cart.iterator();
-            while (cartItemIter.hasNext()) {
-                ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
-                if (!cartItem.getIsPromo()) {
-                    productIds.add(cartItem.getProductId());
-                }
-            }
-
-            compareBase = Integer.valueOf(1);
-            // NOTE: this technique is efficient for a smaller number of items in the cart, if there are a lot of lines
-            //in the cart then a non-cached query with a set of productIds using the IN operator would be better
-            Iterator productIdIter = productIds.iterator();
-            while (productIdIter.hasNext()) {
-                String productId = (String) productIdIter.next();
-
-                // if a ProductCategoryMember exists for this productId and the specified productCategoryId
-                List productCategoryMembers = delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId), null, true);
-                // and from/thru date within range
-                productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, nowTimestamp);
-                if (UtilValidate.isNotEmpty(productCategoryMembers)) {
-                    // if any product is in category, set true and break
-                    // then 0 (equals), otherwise 1 (not equals)
-                    compareBase = Integer.valueOf(0);
-                    break;
-                }
-            }
-        */
         } else if ("PPIP_NEW_ACCT".equals(inputParamEnumId)) {
             if (UtilValidate.isNotEmpty(condValue)) {
                 BigDecimal acctDays = cart.getPartyDaysSinceCreated(nowTimestamp);
@@ -1320,7 +1249,6 @@ public class ProductPromoWorker {
 
     protected static boolean checkConditionForItem(GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, Delegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp) throws GenericEntityException {
         String condValue = productPromoCond.getString("condValue");
-        // String otherValue = productPromoCond.getString("otherValue");
         String inputParamEnumId = productPromoCond.getString("inputParamEnumId");
         String operatorEnumId = productPromoCond.getString("operatorEnumId");
 
@@ -1467,7 +1395,6 @@ public class ProductPromoWorker {
 
                 GenericValue product = null;
                 if (UtilValidate.isNotEmpty(productId)) {
-                    // Debug.logInfo("======== Got GWP productId [" + productId + "]", module);
                     product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
                     if (product == null) {
                         String errMsg = "GWP Product not found with ID [" + productId + "] for ProductPromoAction [" + productPromoAction.get("productPromoId") + ":" + productPromoAction.get("productPromoRuleId") + ":" + productPromoAction.get("productPromoActionSeqId") + "]";
@@ -1481,7 +1408,6 @@ public class ProductPromoWorker {
                         }
                         productId = null;
                         product = null;
-                        // Debug.logInfo("======== GWP productId [" + productId + "] is a virtual with " + productAssocs.size() + " variants", module);
                     } else {
                         // check inventory on this product, make sure it is available before going on
                         //NOTE: even though the store may not require inventory for purchase, we will always require inventory for gifts
@@ -1627,7 +1553,6 @@ public class ProductPromoWorker {
                 GenericValue product = cartItem.getProduct();
                 String parentProductId = cartItem.getParentProductId();
                 boolean passedItemConds = checkConditionsForItem(productPromoAction, cart, cartItem, delegator, dispatcher, nowTimestamp);
-                // Debug.logInfo("Running promo action for cartItem " + cartItem.getName() + ", passedItemConds=" + passedItemConds + ", productPromoAction=" + productPromoAction, module);
                 if (passedItemConds && !cartItem.getIsPromo() &&
                         (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
                         (product == null || !"N".equals(product.getString("includeInPromotions")))) {
@@ -2150,27 +2075,6 @@ public class ProductPromoWorker {
             for (Set<String> productIdSet : productIdSetList) {
                 firstProductIdSet.retainAll(productIdSet);
             }
-
-            /* the old way of doing it, not as efficient, recoded above using the retainAll operation, pretty handy
-            Iterator firstProductIdIter = firstProductIdSet.iterator();
-            while (firstProductIdIter.hasNext()) {
-                String curProductId = (String) firstProductIdIter.next();
-
-                boolean allContainProductId = true;
-                Iterator productIdSetIter = productIdSetList.iterator();
-                while (productIdSetIter.hasNext()) {
-                    Set productIdSet = (Set) productIdSetIter.next();
-                    if (!productIdSet.contains(curProductId)) {
-                        allContainProductId = false;
-                        break;
-                    }
-                }
-
-                if (!allContainProductId) {
-                    firstProductIdIter.remove();
-                }
-            }
-             */
 
             if (firstProductIdSet.size() >= 0) {
                 if (include) {

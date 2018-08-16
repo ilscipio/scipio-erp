@@ -75,7 +75,6 @@ public class OrderListState implements Serializable {
     protected static final Map<String, String> parameterToOrderStatusId;
     protected static final Map<String, String> parameterToOrderTypeId;
     protected static final Map<String, String> parameterToFilterId;
-
     static {
         Map<String, String> map = new HashMap<String, String>();
         map.put("viewcompleted", "ORDER_COMPLETED");
@@ -84,7 +83,6 @@ public class OrderListState implements Serializable {
         map.put("viewapproved", "ORDER_APPROVED");
         map.put("viewcreated", "ORDER_CREATED");
         map.put("viewprocessing", "ORDER_PROCESSING");
-        // map.put("viewsent", "ORDER_SENT");
         map.put("viewhold", "ORDER_HOLD");
         parameterToOrderStatusId = map;
 
@@ -317,7 +315,6 @@ public class OrderListState implements Serializable {
         List<GenericValue> orders = iterator.getPartialList(viewSize * viewIndex, viewSize);
         orderListSize = iterator.getResultsSizeAfterPartialList();
         iterator.close();
-        // Debug.logInfo("### size of list: " + orderListSize, module);
         return orders;
     }
 

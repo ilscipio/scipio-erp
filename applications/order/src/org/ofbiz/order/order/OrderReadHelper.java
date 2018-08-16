@@ -287,7 +287,6 @@ public class OrderReadHelper {
                 refundedToPaymentPref = refundedToPaymentPref.add(returnItemResponse.getBigDecimal("responseAmount")).setScale(scale + 1, rounding);
             }
 
-            // if refundedToPaymentPref > 0
             if (refundedToPaymentPref.compareTo(ZERO) == 1) {
                 String paymentMethodId = paymentPref.getString("paymentMethodId") != null ? paymentPref.getString("paymentMethodId")
                         : paymentPref.getString("paymentMethodTypeId");
@@ -1458,18 +1457,6 @@ public class OrderReadHelper {
     }
 
     public boolean getPastEtaOrderItems(String orderId) {
-        /*
-         * List exprs =
-         * UtilMisc.toList(EntityCondition.makeCondition("statusId",
-         * EntityOperator.EQUALS, "ITEM_APPROVED")); List itemsApproved =
-         * EntityUtil.filterByAnd(getOrderItems(), exprs); Iterator i =
-         * itemsApproved.iterator(); while (i.hasNext()) { GenericValue item =
-         * (GenericValue) i.next(); Timestamp estimatedDeliveryDate =
-         * (Timestamp) item.get("estimatedDeliveryDate"); if
-         * (estimatedDeliveryDate != null &&
-         * UtilDateTime.nowTimestamp().after(estimatedDeliveryDate)) { return
-         * true; } } return false; }
-         */
         Delegator delegator = orderHeader.getDelegator();
         GenericValue orderDeliverySchedule = null;
         try {
@@ -1507,18 +1494,6 @@ public class OrderReadHelper {
     }
 
     public boolean getPartiallyReceivedItems() {
-        /*
-         * List exprs =
-         * UtilMisc.toList(EntityCondition.makeCondition("statusId",
-         * EntityOperator.EQUALS, "ITEM_APPROVED")); List itemsApproved =
-         * EntityUtil.filterByAnd(getOrderItems(), exprs); Iterator i =
-         * itemsApproved.iterator(); while (i.hasNext()) { GenericValue item =
-         * (GenericValue) i.next(); int shippedQuantity = (int)
-         * getItemShippedQuantity(item); BigDecimal orderedQuantity =
-         * (BigDecimal) item.get("quantity"); if (shippedQuantity !=
-         * orderedQuantity.intValue() && shippedQuantity > 0) { return true; } }
-         * return false; }
-         */
         List<GenericValue> items = getOrderItems();
         for (GenericValue item : items) {
             List<GenericValue> receipts = null;
@@ -2533,9 +2508,6 @@ public class OrderReadHelper {
         while (itemIter != null && itemIter.hasNext()) {
             GenericValue orderItem = itemIter.next();
             BigDecimal itemTotal = getOrderItemSubTotal(orderItem, adjustments);
-            // Debug.logInfo("Item : " + orderItem.getString("orderId") + " / "
-            // + orderItem.getString("orderItemSeqId") + " = " + itemTotal,
-            // module);
 
             if (workEfforts != null && orderItem.getString("orderItemTypeId").compareTo("RENTAL_ORDER_ITEM") == 0) {
                 Iterator<GenericValue> weIter = UtilMisc.toIterator(workEfforts);
@@ -2545,9 +2517,6 @@ public class OrderReadHelper {
                         itemTotal = itemTotal.multiply(getWorkEffortRentalQuantity(workEffort)).setScale(scale, rounding);
                         break;
                     }
-                    // Debug.logInfo("Item : " + orderItem.getString("orderId")
-                    // + " / " + orderItem.getString("orderItemSeqId") + " = " +
-                    // itemTotal, module);
                 }
             }
             result = result.add(itemTotal).setScale(scale, rounding);
@@ -2607,8 +2576,6 @@ public class OrderReadHelper {
         // shipping will be calculated using this adjusted value
         result = result.add(getOrderItemAdjustmentsTotal(orderItem, adjustments, true, false, false, forTax, forShipping));
 
-        // Debug.logInfo("In getOrderItemSubTotal result=" + result + ", rounded
-        // result=" + result.setScale(scale, rounding), module);
         return result.setScale(scale, rounding);
     }
 
@@ -2689,10 +2656,6 @@ public class OrderReadHelper {
                                                                       // first
                                                                       // person
         rentalAdjustment = rentalAdjustment.divide(new BigDecimal(100), scale, rounding).multiply(new BigDecimal(String.valueOf(length)));
-        // Debug.logInfo("rental parameters....Nbr of persons:" + persons + "
-        // extra% 2nd person:" + secondPersonPerc + " extra% Nth person:" +
-        // nthPersonPerc + " Length: " + length + " total rental adjustment:" +
-        // rentalAdjustment ,module);
         return rentalAdjustment; // return total rental adjustment
     }
 

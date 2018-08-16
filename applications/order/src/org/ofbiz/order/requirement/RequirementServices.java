@@ -68,7 +68,6 @@ public class RequirementServices {
         String unassignedRequirements = (String) context.get("unassignedRequirements");
         List<String> statusIds = UtilGenerics.checkList(context.get("statusIds"));
         //TODO currencyUomId still not used
-        //String currencyUomId = (String) context.get("currencyUomId");
         try {
             List<EntityCondition> conditions = UtilMisc.toList(
                     EntityCondition.makeCondition("requirementTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"),

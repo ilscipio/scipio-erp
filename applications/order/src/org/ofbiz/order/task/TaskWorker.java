@@ -35,7 +35,6 @@ public class TaskWorker {
     public static String getCustomerName(GenericValue orderTaskList) {
         String lastName = orderTaskList.getString("customerLastName");
         String firstName = orderTaskList.getString("customerFirstName");
-        //String groupName = orderTaskList.getString("customerGroupName");
         if (lastName != null) {
         String name = lastName;
         if (firstName != null)

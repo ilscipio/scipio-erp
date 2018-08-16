@@ -1690,7 +1690,8 @@ public class ShoppingCartEvents {
                                     .filterByDate()
                                     .queryList();
                         } catch (GenericEntityException gee) {
-                            //
+                            request.setAttribute("_ERROR_MESSAGE_", gee.getMessage());
+                            return "error";
                         }
                         if (UtilValidate.isNotEmpty(storeReps)) {
                             hasPermission = true;
@@ -1740,7 +1741,8 @@ public class ShoppingCartEvents {
                 try {
                     thisUserLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userLoginId).queryOne();
                 } catch (GenericEntityException gee) {
-                    //
+                    request.setAttribute("_ERROR_MESSAGE_", gee.getMessage());
+                    return "error";
                 }
                 if (thisUserLogin != null) {
                     partyId = thisUserLogin.getString("partyId");
@@ -1753,7 +1755,8 @@ public class ShoppingCartEvents {
                 try {
                     thisParty = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
                 } catch (GenericEntityException gee) {
-                    //
+                    request.setAttribute("_ERROR_MESSAGE_", gee.getMessage());
+                    return "error";
                 }
                 if (thisParty == null) {
                     request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderCouldNotLocateTheSelectedParty", locale));

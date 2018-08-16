@@ -1975,7 +1975,7 @@ public class DatabaseUtil {
         // first rename the column
         String tempName = makeTempFieldName(field);
         String renamedErr = renameColumn(entity, field, tempName);
-        if (!UtilValidate.isEmpty(renamedErr)) {
+        if (UtilValidate.isNotEmpty(renamedErr)) {
             if (messages != null) messages.add(renamedErr);
             Debug.logError(renamedErr, module);
             return;
@@ -1983,7 +1983,7 @@ public class DatabaseUtil {
 
         // next add back in the column
         String addedErr = addColumn(entity, field);
-        if (!UtilValidate.isEmpty(addedErr)) {
+        if (UtilValidate.isNotEmpty(addedErr)) {
             if (messages != null) messages.add(addedErr);
             Debug.logError(addedErr, module);
             return;
@@ -2431,7 +2431,7 @@ public class DatabaseUtil {
     public void createPrimaryKey(ModelEntity entity, boolean usePkConstraintNames, int constraintNameClipLength, List<String> messages) {
         if (messages == null) messages = new ArrayList<String>();
         String err = createPrimaryKey(entity, usePkConstraintNames, constraintNameClipLength);
-        if (!UtilValidate.isEmpty(err)) {
+        if (UtilValidate.isNotEmpty(err)) {
             messages.add(err);
         }
     }
@@ -2514,7 +2514,7 @@ public class DatabaseUtil {
     public void deletePrimaryKey(ModelEntity entity, boolean usePkConstraintNames, int constraintNameClipLength, List<String> messages) {
         if (messages == null) messages = new ArrayList<String>();
         String err = deletePrimaryKey(entity, usePkConstraintNames, constraintNameClipLength);
-        if (!UtilValidate.isEmpty(err)) {
+        if (UtilValidate.isNotEmpty(err)) {
             messages.add(err);
         }
     }
@@ -2718,7 +2718,7 @@ public class DatabaseUtil {
     public void deleteDeclaredIndices(ModelEntity entity, List<String> messages) {
         if (messages == null) messages = new ArrayList<String>();
         String err = deleteDeclaredIndices(entity);
-        if (!UtilValidate.isEmpty(err)) {
+        if (UtilValidate.isNotEmpty(err)) {
             messages.add(err);
         }
     }
@@ -2932,7 +2932,7 @@ public class DatabaseUtil {
     public void deleteForeignKeyIndices(ModelEntity entity, List<String> messages) {
         if (messages == null) messages = new ArrayList<String>();
         String err = deleteForeignKeyIndices(entity, datasourceInfo.getConstraintNameClipLength());
-        if (!UtilValidate.isEmpty(err)) {
+        if (UtilValidate.isNotEmpty(err)) {
             messages.add(err);
         }
     }

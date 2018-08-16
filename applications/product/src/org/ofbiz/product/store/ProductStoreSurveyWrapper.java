@@ -72,7 +72,7 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
     public Writer render(Map<String, Object> parentContext) throws SurveyWrapperException {
         if (canRespond() && !callResult) {
             return renderSurvey(parentContext);
-        } else if (!UtilValidate.isEmpty(resultTemplate)) {
+        } else if (UtilValidate.isNotEmpty(resultTemplate)) {
             return renderResult(parentContext);
         } else {
             throw new SurveyWrapperException("Error template not implemented yet; cannot update survey; no result template defined!");

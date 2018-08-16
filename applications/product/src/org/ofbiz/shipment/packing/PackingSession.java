@@ -938,7 +938,7 @@ public class PackingSession implements java.io.Serializable {
             Debug.logError(e, module);
         }
 
-        if (!UtilValidate.isEmpty(serviceResult)) {
+        if (UtilValidate.isNotEmpty(serviceResult)) {
             shipmentCostEstimate = (BigDecimal) serviceResult.get("shippingEstimateAmount");
         }
 

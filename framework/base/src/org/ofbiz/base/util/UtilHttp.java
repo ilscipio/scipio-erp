@@ -622,7 +622,7 @@ public final class UtilHttp {
         }
 
         // no user locale? before global default try appDefaultLocale if specified
-        if (localeObject == null && !UtilValidate.isEmpty(appDefaultLocale)) {
+        if (localeObject == null && UtilValidate.isNotEmpty(appDefaultLocale)) {
             localeObject = appDefaultLocale;
         }
 
@@ -763,7 +763,7 @@ public final class UtilHttp {
         }
 
         // no user currency? before global default try appDefaultCurrencyUom if specified
-        if (iso == null && !UtilValidate.isEmpty(appDefaultCurrencyUom)) {
+        if (iso == null && UtilValidate.isNotEmpty(appDefaultCurrencyUom)) {
             iso = appDefaultCurrencyUom;
         }
 

@@ -220,7 +220,7 @@ public class ModelServiceReader implements Serializable {
         // set the semaphore sleep/wait times
         String semaphoreWaitStr = UtilXml.checkEmpty(serviceElement.getAttribute("semaphore-wait-seconds"));
         int semaphoreWait = 300;
-        if (!UtilValidate.isEmpty(semaphoreWaitStr)) {
+        if (UtilValidate.isNotEmpty(semaphoreWaitStr)) {
             try {
                 semaphoreWait = Integer.parseInt(semaphoreWaitStr);
             } catch (NumberFormatException e) {
@@ -232,7 +232,7 @@ public class ModelServiceReader implements Serializable {
 
         String semaphoreSleepStr = UtilXml.checkEmpty(serviceElement.getAttribute("semaphore-sleep"));
         int semaphoreSleep = 500;
-        if (!UtilValidate.isEmpty(semaphoreSleepStr)) {
+        if (UtilValidate.isNotEmpty(semaphoreSleepStr)) {
             try {
                 semaphoreSleep = Integer.parseInt(semaphoreSleepStr);
             } catch (NumberFormatException e) {
@@ -245,7 +245,7 @@ public class ModelServiceReader implements Serializable {
         // set the max retry field
         String maxRetryStr = UtilXml.checkEmpty(serviceElement.getAttribute("max-retry"));
         int maxRetry = -1;
-        if (!UtilValidate.isEmpty(maxRetryStr)) {
+        if (UtilValidate.isNotEmpty(maxRetryStr)) {
             try {
                 maxRetry = Integer.parseInt(maxRetryStr);
             } catch (NumberFormatException e) {
@@ -258,7 +258,7 @@ public class ModelServiceReader implements Serializable {
         // get the timeout and convert to int
         String timeoutStr = UtilXml.checkEmpty(serviceElement.getAttribute("transaction-timeout"), serviceElement.getAttribute("transaction-timout"));
         int timeout = 0;
-        if (!UtilValidate.isEmpty(timeoutStr)) {
+        if (UtilValidate.isNotEmpty(timeoutStr)) {
             try {
                 timeout = Integer.parseInt(timeoutStr);
             } catch (NumberFormatException e) {

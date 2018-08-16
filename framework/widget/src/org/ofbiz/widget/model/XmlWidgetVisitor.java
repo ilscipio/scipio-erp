@@ -328,7 +328,7 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         visitAttribute("position", modelMenuItem.getPosition());
         visitAttribute("associated-content-id", modelMenuItem.getAssociatedContentId());
         visitAttribute("cell-width", modelMenuItem.getCellWidth());
-        visitAttribute("sub-menu", modelMenuItem.getSubMenu());
+        //visitAttribute("sub-menu", modelMenuItem.getSubMenu()); // SCIPIO: has no meaning in Scipio
         writer.append(">");
         if (modelMenuItem.getCondition() != null) {
             modelMenuItem.getCondition().getCondition().accept(conditionVisitor);
@@ -344,7 +344,7 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         
         // SCIPIO: TODO: print sub-menu elements
         
-        for (ModelMenuItem menuItem : modelMenuItem.getLegacyMenuItemList()) {
+        for (ModelMenuItem menuItem : modelMenuItem.getDirectInlineMenuItemList()) {
             menuItem.accept(this);
             ;
         }

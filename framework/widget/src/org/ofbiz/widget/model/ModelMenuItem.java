@@ -724,11 +724,11 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
     
     /**
-     * SCIPIO: This is a variant of getMenuItemList that only returns the legacy inlined
-     * menu-items, but not the ones under sub-menu elements.
+     * SCIPIO: Variant of getMenuItemList that only returns the legacy inlined
+     * menu-items, but not the ones under sub-menu elements. This should
+     * only be needed for xml formatting purposes.
      */
-    @Deprecated
-    public List<ModelMenuItem> getLegacyMenuItemList() {
+    public List<ModelMenuItem> getDirectInlineMenuItemList() {
         ModelSubMenu subMenu = getDefaultSubMenu();
         if (subMenu != null) {
             return subMenu.getExtraMenuItemList();
@@ -739,7 +739,8 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
 
     /**
      * Gets the top model menu associated with this item.
-     * @deprecated SCIPIO: use {@link #getTopMenu} instead because it helps disambiguite in complex menus
+     * @deprecated SCIPIO: use {@link #getTopMenu} instead 
+     * because it helps disambiguate in complex menus.
      */
     @Deprecated
     public ModelMenu getModelMenu() {
@@ -810,7 +811,9 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
 
     /**
-     * SCIPIO: NOTE: This should not be used.
+     * @deprecated SCIPIO: This should not be used 
+     * (represents an old stock ofbiz construct, different from sub-menus in Scipio).
+     * You probably want {@link #getDefaultSubMenu()} or {@link #getSubMenuList()}.
      */
     @Deprecated
     public String getSubMenu() {

@@ -322,7 +322,7 @@ public class TaxAuthorityServices {
         Throwable exception;
 
         TaxAdjustmentsResult() { this.adjustments = new LinkedList<>(); }
-        TaxAdjustmentsResult(Throwable t) { this.exception = exception; this.error = true; }
+        TaxAdjustmentsResult(Throwable t) { this.exception = t; this.error = true; }
         void resetRateProducts(List<GenericValue> rateProducts) {
             origTotalRateProducts = rateProducts.size();
             zeroTaxableRateProducts = 0;

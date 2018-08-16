@@ -1312,7 +1312,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         String dataResourceId = null;
         try {
             dataResourceId = (String) view.get("drDataResourceId");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             dataResourceId = (String) view.get("dataResourceId");
         }
         content.set("dataResourceId", dataResourceId);

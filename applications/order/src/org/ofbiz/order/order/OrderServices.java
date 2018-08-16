@@ -2868,6 +2868,10 @@ public class OrderServices {
         Map<String, Object> sendResp = null;
         try {
             sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, 
+                    "OrderServiceExceptionSeeLogs",locale));
         } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderServiceExceptionSeeLogs", locale));
@@ -6370,9 +6374,8 @@ public class OrderServices {
                     if (rowCountInt == rowNumberInt - 1) {
                         try {
                             message = validateOrderItemShipGroupAssoc(delegator, dispatcher, orderItem, totalQuantity, oisga, userLogin, locale);
-                        } catch (Exception e) {
-                            String errMsg = mainErrorMessage
-                                    + UtilProperties.getMessage(resource_error, "OrderQuantityAssociatedIsLessThanOrderItemQuantity", locale);
+                        } catch (GeneralException e) {
+                            String errMsg = mainErrorMessage + UtilProperties.getMessage(resource_error, "OrderQuantityAssociatedIsLessThanOrderItemQuantity", locale);
                             Debug.logError(errMsg, module);
                             return ServiceUtil.returnError(errMsg);
                         }

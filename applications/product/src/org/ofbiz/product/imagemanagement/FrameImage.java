@@ -55,6 +55,7 @@ import org.ofbiz.common.image.scaler.ImageScaler;
 import org.ofbiz.common.image.scaler.ImageScalers;
 import org.ofbiz.content.layout.LayoutWorker;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -102,6 +103,10 @@ public class FrameImage {
         try {
             GenericValue contentDataResourceView = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", frameContentId, "drDataResourceId", frameDataResourceId).queryOne();
             frameImageName = contentDataResourceView.getString("contentName");
+        } catch (GenericEntityException gee) {
+            Debug.logError(gee, module);
+            result = ServiceUtil.returnError(gee.getMessage());
+            result.putAll(context);
         } catch (Exception e) {
             Debug.logError(e, module);
             result = ServiceUtil.returnError(e.getMessage());
@@ -360,6 +365,9 @@ public class FrameImage {
             contentCtx.put("userLogin", userLogin);
             Map<String, Object> contentResult = dispatcher.runSync("createContent", contentCtx);
             contentId = contentResult.get("contentId").toString();
+        } catch (GenericServiceException gse) {
+            request.setAttribute("_ERROR_MESSAGE_", gse.getMessage());
+            return "error";
         } catch (Exception e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
@@ -408,6 +416,9 @@ public class FrameImage {
         try {
             GenericValue contentDataResourceView = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", frameContentId, "drDataResourceId", frameDataResourceId).queryOne();
             frameImageName = contentDataResourceView.getString("contentName");
+        } catch (GenericEntityException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
         } catch (Exception e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
@@ -475,6 +486,9 @@ public class FrameImage {
         try {
             GenericValue contentDataResource = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", frameContentId).queryFirst();
             frameDataResourceId = contentDataResource.getString("dataResourceId");
+        } catch (GenericEntityException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
         } catch (Exception e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";

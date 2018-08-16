@@ -1291,10 +1291,8 @@ public class WorkEffortServices {
                         parameters);
                 try {
                     dispatcher.runAsync("sendMailFromTemplateSetting", emailCtx);
-                } catch (Exception e) {
-                    Debug.logWarning(
-                            "Error while emailing event reminder - workEffortId = " + reminder.get("workEffortId") + ", contactMechId = "
-                                    + reminder.get("contactMechId") + ": " + e, module);
+                } catch (GenericServiceException e) {
+                    Debug.logWarning("Error while emailing event reminder - workEffortId = " + reminder.get("workEffortId") + ", contactMechId = " + reminder.get("contactMechId") + ": " + e, module);
                 }
             } else {
                 // TODO: Remove this block after the next release 2010-11-29

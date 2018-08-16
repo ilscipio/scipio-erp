@@ -676,6 +676,19 @@ public class CheckOutHelper {
                             Debug.logError(ServiceUtil.getErrorMessage(prunResult) + " for input:" + inputMap, module);
                         }
                     }
+                } catch (GenericEntityException e) {
+                    String service = e.getMessage();
+                    Map<String, String> messageMap = UtilMisc.toMap("service", service);
+                    String errMsg = "Problem accessing the Product entity";
+                    errMsg = errMsg + UtilProperties.getMessage(resource_error, "checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                } catch (GenericServiceException e) {
+                    String service = e.getMessage();
+                    Map<String, String> messageMap = UtilMisc.toMap("service", service);
+                    String errMsg = UtilProperties.getMessage(resource_error, "checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
                 } catch (Exception e) {
                     String service = e.getMessage();
                     Map<String, String> messageMap = UtilMisc.toMap("service", service);
@@ -698,6 +711,12 @@ public class CheckOutHelper {
                     /*Creating OrderRequirementCommitment which will be used to update requirement at the time of approval of PO. OrderRequirementCommitment will also be updated if ordered & required quantity differs*/
                     Map<String, Object> inputMap = UtilMisc.toMap("userLogin", userLogin, "orderId", orderId, "orderItemSeqId", shoppingCartItem.getOrderItemSeqId(), "requirementId", requirementId, "quantity", shoppingCartItem.getQuantity());
                     dispatcher.runSync("createOrderRequirementCommitment", inputMap);
+                } catch (GenericServiceException e) {
+                    String service = e.getMessage();
+                    Map<String, String> messageMap = UtilMisc.toMap("service", service);
+                    String errMsg = UtilProperties.getMessage(resource_error, "checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
                 } catch (Exception e) {
                     String service = e.getMessage();
                     Map<String, String> messageMap = UtilMisc.toMap("service", service);

@@ -182,7 +182,7 @@ public class ShippingEvents {
             }
         }
 
-        // no shippable items; we won't change any shipping at all
+        // no shippable items; we won't charge any shipping at all
         if (shippableQuantity.compareTo(BigDecimal.ZERO) == 0) {
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("shippingTotal", BigDecimal.ZERO);

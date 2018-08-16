@@ -89,7 +89,7 @@ Description:
 
 This script uses the git subtree command to integrate SCIPIO-ERP addons
 into your working copy of ScipioCE/EE. Its primary purpose is to allow
-easy pulling and merging of files from the Scipio Git repositories.
+easy pulling and merging of addon files from the Scipio Git repositories.
 It can also be used launch addon configuration and data load;
 this functionality is largely a wrapper around existing Ant targets, for which
 you can find further descriptions using: './ant -p'
@@ -149,23 +149,23 @@ Examples:
 List addons:
 * ./git-addons list --all
 
-Pull, configure and load data for new addon into existing database, in one command (demo or small project):
-* ./git-addons install-demo angular-shop
-* ./git-addons install-production paypal
-
 Pull addons from Scipio Git (always makes a commit; configure is automatically invoked if applicable):
 * ./git-addons pull angular-shop
 * ./git-addons pull angular-shop ignite-admin-theme --dry-run
 * ./git-addons pull --all
 * ./git-addons pull angular-shop --no-config    # skip configure
 
-(Re-)Configure addon files (usually already done on first pull):
+(Re-)Configure addon files on-demand (usually already done on first pull):
 * ./git-addons config angular-shop
 * ./git-addons config angular-shop --no-commit  # don't commit, for manual commit message later
 
-Load data for addon:
-* ./git-addons load-production paypal
+Load data for addon (using Ant load-xxxx targets or aliases):
 * ./git-addons load-demo angular-shop
+* ./git-addons load-production paypal
+
+Combined pull, configure and load data for new addon into existing database, in one command (demo or small project):
+* ./git-addons install-demo angular-shop
+* ./git-addons install-production paypal
 
 Steps to pull, configure and load data for new addon into existing databases (production/company project):
 1. ./git-addons pull paypal                # Get the addon files, configure (if applicable)

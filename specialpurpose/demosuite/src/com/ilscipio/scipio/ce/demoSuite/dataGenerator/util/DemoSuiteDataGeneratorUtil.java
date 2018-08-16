@@ -47,7 +47,7 @@ public class DemoSuiteDataGeneratorUtil {
 			try {
 				return LocaleClasses.values()[i].locale;
 			} catch (Exception e) {
-				Debug.log(e);
+				Debug.log(e, module);
 				return null;
 			}
 		}

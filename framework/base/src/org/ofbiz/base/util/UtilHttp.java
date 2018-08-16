@@ -60,10 +60,11 @@ import com.ibm.icu.util.Calendar;
 /**
  * HttpUtil - Misc HTTP Utility Functions
  */
-public class UtilHttp {
+public final class UtilHttp {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    // SCIPIO: returned these to public for backward-compat
     public static final String MULTI_ROW_DELIMITER = "_o_";
     public static final String ROW_SUBMIT_PREFIX = "_rowSubmit_o_";
     public static final String COMPOSITE_DELIMITER = "_c_";
@@ -71,7 +72,9 @@ public class UtilHttp {
     public static final int ROW_SUBMIT_PREFIX_LENGTH = ROW_SUBMIT_PREFIX.length();
     public static final int COMPOSITE_DELIMITER_LENGTH = COMPOSITE_DELIMITER.length();
 
-    public static final String SESSION_KEY_TIMEZONE = "timeZone";
+    private static final String SESSION_KEY_TIMEZONE = "timeZone";
+
+    private UtilHttp () {}
 
     /**
      * Create a combined map from servlet context, session, attributes and parameters
@@ -1482,6 +1485,14 @@ public class UtilHttp {
         response.setHeader("Content-Disposition", String.format("%s; filename=\"%s\"", dispositionType, filename));
     }
 
+    public static String getMultiRowDelimiter() {
+        return MULTI_ROW_DELIMITER;
+    }
+
+    public static String getRowSubmitPrefix() {
+        return ROW_SUBMIT_PREFIX;
+    }
+
     /**
      * SCIPIO: Checks if the given uri is a full URL, with strict test.
      * <p>
@@ -1517,7 +1528,7 @@ public class UtilHttp {
         }
         return false;
     }
-    
+
     /**
      * SCIPIO: builds a list of prefixes used for checking full URL presence in permissive fashion.
      * <p>

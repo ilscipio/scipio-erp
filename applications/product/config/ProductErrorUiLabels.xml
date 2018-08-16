@@ -117,6 +117,15 @@
         <value xml:lang="zh">无法缩放原始图像</value>
         <value xml:lang="zh-TW">無法縮放原始圖像</value>
     </property>
+    <property key="ProductCannotCreateTheTargetDirectory">
+        <value xml:lang="en">Cannot create the target directory.</value>
+    </property>
+     <property key="ProductCannotReplaceBecauseBothImagesAreTheSameImage">
+       <value xml:lang="en">Cannot replace because both images are the same image.</value>
+    </property>
+    <property key="ProductCannotReplaceImage">
+        <value xml:lang="en">Cannot replace image.</value>
+    </property>
     <property key="ProductCreateCommunicationEventProductPermissionError">
         <value xml:lang="de">Berechtigungsfehler beim Erstellen des Produkt Communication Events</value>
         <value xml:lang="en">Create Communication Event Product Permission Error</value>
@@ -140,6 +149,12 @@
         <value xml:lang="nl">Orderregels zijn niet geverifieerd</value>
         <value xml:lang="zh">错误：所有订单明细都没有验证</value>
         <value xml:lang="zh-TW">錯誤:所有訂單細項都沒有驗證</value>
+    </property>
+    <property key="ProductErrorCreatingNewVirtualProductFromVariantProducts">
+        <value xml:lang="en">Error creating new virtual product from variant products: ${errorString}</value>
+    </property>
+    <property key="ProductErrorsOccurInParsingImageProperties.xml">
+        <value xml:lang="en">Errors occur in parsing ImageProperties.xml: ${errorString}</value>
     </property>
     <property key="ProductErrorEnteredBothDimensionAndPackageInputBoxField">
         <value xml:lang="de">FEHLER: Maßangaben und Verpackung wurden angegeben, beide Felder zusammen können nicht verarbeitet werden (bitte nur eins von beiden angeben)</value>
@@ -813,6 +828,125 @@
         <value xml:lang="zh">没有指定必须的更新模式。</value>
         <value xml:lang="zh-TW">沒有指定必須的更新模式.</value>
     </property>
+    <property key="ProductFeatureTypeIdMustContainsLettersAndDigits">
+        <value xml:lang="de">Die Produktmerkmal Typ ID darf nur Buchstaben, Zahlen und _ enthalten. Bitte erneut eingeben.</value>
+        <value xml:lang="en">The Product Feature TypeId must contains only letters, underscore and digits. Please re-enter</value>
+        <value xml:lang="fr">La réf. de type de caractéristique d'article ne doit contenir que des lettres, le tiret bas "_" et des chiffres. Recommencez SVP</value>
+        <value xml:lang="it">Il tipo caratteristica prodotto deve contenere solamente lettere, underscore e numeri. Prego reinserire</value>
+        <value xml:lang="ja">製品機能種類IDは文字、アンダースコア、および数字のみで指定してください。再入力してください。</value>
+        <value xml:lang="zh">产品特征类型标识必须只包含字符、下划线和数字。请重新输入</value>
+        <value xml:lang="zh-TW">產品特色類型識別必須只包含字元、下劃線和數字.請重新輸入</value>
+    </property>
+    <property key="ProductFieldEmpty">
+        <value xml:lang="de">Bitte füllen Sie zunächst das Produktfeld</value>
+        <value xml:lang="en">Please, fill the product field before</value>
+        <value xml:lang="fr">Sélectionnez le produit d'abord</value>
+        <value xml:lang="ja">先に製品フィールドを入力してください</value>
+        <value xml:lang="zh">请先填写产品域</value>
+        <value xml:lang="zh-TW">請先填寫產品域</value>
+    </property>
+    <property key="ProductLotIdForbidden">
+        <value xml:lang="de">Die lotId ist nicht erlaubt für das Produkt ${parameters.productId}.</value>
+        <value xml:lang="en">The lotId is forbidden for the product ${parameters.productId}.</value>
+        <value xml:lang="fr">Le numéro de lot est interdit pour ce produit ${parameters.productId}.</value>
+        <value xml:lang="ja">製品 ${parameters.productId} に対するロットIDは許されていません。</value>
+        <value xml:lang="zh">批次标识对产品 ${parameters.productId} 而言是禁用的。</value>
+        <value xml:lang="zh-TW">批次標識對產品 ${parameters.productId} 而言是禁用的.</value>
+    </property>
+    <property key="ProductLotIdMandatory">
+        <value xml:lang="de">Die lotId ist obligatorisch für das Produkt ${parameters.productId}.</value>
+        <value xml:lang="en">The lotId is mandatory for the product ${parameters.productId}.</value>
+        <value xml:lang="fr">Le numéro de lot est obligatoire pour ce produit ${parameters.productId}.</value>
+        <value xml:lang="ja">製品 ${parameters.productId} に対するロットIDは必須です。</value>
+        <value xml:lang="zh">批次标识对产品 ${parameters.productId} 而言是必须的。</value>
+        <value xml:lang="zh-TW">批次標識對產品 ${parameters.productId} 而言是必須的.</value>
+    </property>
+    <property key="ProductNotInAnyLocation">
+        <value xml:lang="de">Dieses Produkt ist an keinem Platz verfügbar</value>
+        <value xml:lang="en">This Product is not in any Location</value>
+        <value xml:lang="fr">Ce produit ne se trouve en aucun emplacement</value>
+        <value xml:lang="ja">この製品はどの場所にも存在しません</value>
+        <value xml:lang="zh">这个产品不在任何地方</value>
+        <value xml:lang="zh-TW">這個產品不在任何地方</value>
+    </property>
+    <property key="ProductNumberOfOrdersMustBeGreaterThenZeroToPrintPickSheet">
+        <value xml:lang="de">Die Anzahl der Bestellungen muss größer als 0 sein. Bitte erneut eingeben um das Kommissionierblatt zu drucken.</value>
+        <value xml:lang="en">The number of orders must be greater then zero. Please re-enter to print pick sheet.</value>
+        <value xml:lang="ja">注文数量はゼロより大きくしてください。ピッキングシートを印刷するため再度入力してください</value>
+        <value xml:lang="zh">订单数量必须大于0。请重新输入打印分拣表单。</value>
+        <value xml:lang="zh-TW">訂單數量必須大於0.請重新輸入列印揀貨表單.</value>
+    </property>
+    <property key="ProductNumberOfOrdersMustNotBeEmptyToPrintPickSheet">
+        <value xml:lang="de">Die Anzahl der Bestellungen darf nicht leer sein. Bitte erneut eingeben um das Kommissionierblatt zu drucken.</value>
+        <value xml:lang="en">The number of orders must not be empty. Please re-enter to print pick sheet.</value>
+        <value xml:lang="ja">注文数量は空にできません。ピッキングシートを印刷するため再度入力してください</value>
+        <value xml:lang="zh">订单数量必须不是空。请重新输入打印分拣表单。</value>
+        <value xml:lang="zh-TW">訂單數量必須不是空.請重新輸入列印揀貨表單.</value>
+    </property>
+    <property key="ProductPleaseChooseImageToReplace">
+        <value xml:lang="en">Please choose image to replace.</value>
+    </property>
+    <property key="ProductPleaseChooseReplacementImage">
+        <value xml:lang="en">Please choose replacement image.</value>
+    </property>
+    <property key="ProductPleaseSelectImage">
+        <value xml:lang="en">Please select Image.</value>
+    </property>
+    <property key="ProductRemoveCommunicationEventProductPermissionError">
+        <value xml:lang="de">Produkt Berechtigungsfehler beim Löschen des Kommunikationsevents</value>
+        <value xml:lang="en">Remove Communication Event Product Permission Error</value>
+        <value xml:lang="it">Errore permesso durante la rimozione dell'evento comunicazione prodotto</value>
+        <value xml:lang="ja">通信イベント製品削除権限エラー</value>
+        <value xml:lang="zh">删除沟通事件时发生产品权限出错</value>
+        <value xml:lang="zh-TW">刪除通訊事件時發生產品權限出錯</value>
+    </property>
+    <property key="ProductReturnNotYetAcceptedOrAlreadyReceived">
+        <value xml:lang="de">Diese Retoure wurde noch nicht akzeptiert oder wurde schon empfangen.</value>
+        <value xml:lang="en">This return is not yet accepted or already received.</value>
+        <value xml:lang="fr">Ce retour n'est pas encore accepté ou déjà reçu.</value>
+        <value xml:lang="it">Questo non è ancora accettato o già ricevuto.</value>
+        <value xml:lang="ja">この返品は未受付または受取済です。</value>
+        <value xml:lang="ru">Этот возврат еще не подтвержден или уже получен.</value>
+        <value xml:lang="th">การคืนค่านี้ไม่ยอมรับหรือได้รับเรียบร้อยแล้ว</value>
+        <value xml:lang="zh">还没有接受或接收到这个退货。</value>
+        <value xml:lang="zh-TW">還沒有接受或接收到這個退貨.</value>
+    </property>
+    <property key="ProductReturnRequestedOK">
+        <value xml:lang="de">Die Retoure wurde angefordert.</value>
+        <value xml:lang="en">The return is requested.</value>
+        <value xml:lang="fr">Le retour est demandé.</value>
+        <value xml:lang="it">Il reso è richiesto.</value>
+        <value xml:lang="ja">返品がリクエストされました。</value>
+        <value xml:lang="ru">Запрошен возврат.</value>
+        <value xml:lang="th">การคืนค่าการร้องขอ</value>
+        <value xml:lang="zh">已请求退货。</value>
+        <value xml:lang="zh-TW">已請求退貨.</value>
+    </property>
+    <property key="ProductReviewErrorCouldNotChangeOrderStatusFromTo">
+        <value xml:lang="de">Ungültiger Statuswechsel: von ${productReview.statusId} nach ${parameters.statusId}</value>
+        <value xml:lang="en">Status is not a valid change: from ${productReview.statusId} to ${parameters.statusId}</value>
+        <value xml:lang="fr">Le changement de statut de ${productReview.statusId} à ${parameters.statusId} n'est pas autorisé</value>
+        <value xml:lang="it">Cambio di stato non è valido: da ${productReview.statusId} a ${parameters.statusId}</value>
+        <value xml:lang="ja">ステータスの変更が有効ではありません: ${productReview.statusId} から ${parameters.statusId}</value>
+        <value xml:lang="zh">状态变化无效：从 ${productReview.statusId} 变为 ${parameters.statusId}</value>
+        <value xml:lang="zh-TW">狀態變化無效:從 ${productReview.statusId} 變為 ${parameters.statusId}</value>
+    </property>
+    <property key="ProductScaleAdditionalImageInAllDifferentSizesIsImpossible">
+        <value xml:lang="en">Scale additional image in all different sizes is impossible: ${errorString}</value>
+    </property>
+    <property key="productSearchEvents.added_param_features">
+        <value xml:lang="de">${numAdded} Merkmale hinzugefügt mit ID ${productFeatureId}</value>
+        <value xml:lang="en">Added ${numAdded} features with ID ${productFeatureId}</value>
+        <value xml:lang="es">Se añadieron ${numAdded} características con códigos ${productFeatureId}</value>
+        <value xml:lang="fr">Ajout de ${numAdded} caractéristiques avec la réf. ${productFeatureId}]</value>
+        <value xml:lang="it">Aggiunta(e) ${numAdded} caratteristiche con Codice ${productFeatureId}</value>
+        <value xml:lang="ja">ID ${productFeatureId} の ${numAdded} 機能を追加しました</value>
+        <value xml:lang="ro">Adauga ${numAdded} caracteristici cu Codul ${productFeatureId}</value>
+        <value xml:lang="ru">Добавлены ${numAdded} особенностей с кодом ${productFeatureId}</value>
+        <value xml:lang="th">เพิ่ม ${numAdded} ลักษณะด้วยรหัส ${productFeatureId}</value>
+        <value xml:lang="zh">已添加 ${numAdded} 特征，标识 ${productFeatureId}</value>
+        <value xml:lang="zh-TW">已增加 ${numAdded} 特色識別 ${productFeatureId}</value>
+    </property>
     <property key="productsearchevents.added_x_product_category_members">
         <value xml:lang="de">${numAdded} Produktkategoriezuordnungen hinzugefügt.</value>
         <value xml:lang="en">Added ${numAdded} product category members.</value>
@@ -1113,6 +1247,9 @@
         <value xml:lang="ja">製品IDが見つかりません。</value>
         <value xml:lang="zh">没有找到产品，标识是</value>
         <value xml:lang="zh-TW">沒有找到產品識別是</value>
+    </property>
+    <property key="ProductSubscriptionCouldntBeExpired">
+        <value xml:lang="en">Subscription couldn't be expired for subscriptionId: ${subscriptionId}</value>
     </property>
     <property key="productutilservices.did_not_find_any_valid_variants_for_virtual_ID">
         <value xml:lang="de">Keine gültigen Varianten gefunden für virtuelles Produkt mit der ID [${productId}], kein Merge durchgeführt...</value>

@@ -64,7 +64,8 @@ import org.ofbiz.service.ServiceUtil;
 public class ImageManagementServices {
     
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String resource = "ProductErrorUiLabels";
+    public static final String resourceError = "ProductErrorUiLabels";
+    public static final String resource = "ProductUiLabels";
     private static int imageCount = 0;
     private static String imagePath;
     
@@ -92,7 +93,7 @@ public class ImageManagementServices {
             if (!rootTargetDir.exists()) {
                 boolean created = rootTargetDir.mkdirs();
                 if (!created) {
-                    String errMsg = "Cannot create the target directory";
+                    String errMsg = UtilProperties.getMessage(resourceError, "ProductCannotCreateTheTargetDirectory", locale);
                     Debug.logFatal(errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
@@ -175,11 +176,11 @@ public class ImageManagementServices {
                     out.close();
                 } catch (FileNotFoundException e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                             "ProductImageViewUnableWriteFile", UtilMisc.toMap("fileName", file.getAbsolutePath()), locale));
                 } catch (IOException e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                             "ProductImageViewUnableWriteBinaryData", UtilMisc.toMap("fileName", file.getAbsolutePath()), locale));
                 }
             }
@@ -195,11 +196,11 @@ public class ImageManagementServices {
                     outFile.close();
                 } catch (FileNotFoundException e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                             "ProductImageViewUnableWriteFile", UtilMisc.toMap("fileName", fileOriginal.getAbsolutePath()), locale));
                 } catch (IOException e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                             "ProductImageViewUnableWriteBinaryData", UtilMisc.toMap("fileName", fileOriginal.getAbsolutePath()), locale));
                 }
                 
@@ -207,7 +208,7 @@ public class ImageManagementServices {
                 try {
                     resultResize.putAll(ImageManagementServices.scaleImageMangementInAllSize(context, imageName, sizeType, productId));
                 } catch (IOException e) {
-                    String errMsg = "Scale additional image in all different sizes is impossible : " + e.toString();
+                    String errMsg = UtilProperties.getMessage(resourceError, "ProductScaleAdditionalImageInAllDifferentSizesIsImpossible", UtilMisc.toMap("errorString", e.toString()), locale);
                     Debug.logError(e, errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
@@ -332,7 +333,7 @@ public class ImageManagementServices {
         if (resultXMLMap.containsKey("responseMessage") && resultXMLMap.get("responseMessage").equals("success")) {
             imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
         } else {
-            String errMsg = UtilProperties.getMessage(resource, "ScaleImage.unable_to_parse", locale) + " : ImageProperties.xml";
+            String errMsg = UtilProperties.getMessage(resourceError, "ScaleImage.unable_to_parse", locale) + " : ImageProperties.xml";
             Debug.logError(errMsg, module);
             result.put("errorMessage", errMsg);
             return result;
@@ -357,7 +358,7 @@ public class ImageManagementServices {
             imgHeight = bufImg.getHeight();
             imgWidth = bufImg.getWidth();
             if (imgHeight == 0.0 || imgWidth == 0.0) {
-                String errMsg = UtilProperties.getMessage(resource, "ScaleImage.one_current_image_dimension_is_null", locale) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth;
+                String errMsg = UtilProperties.getMessage(resourceError, "ScaleImage.one_current_image_dimension_is_null", locale) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth;
                 Debug.logError(errMsg, module);
                 result.put("errorMessage", errMsg);
                 return result;
@@ -377,7 +378,7 @@ public class ImageManagementServices {
                     if (!targetDir.exists()) {
                         boolean created = targetDir.mkdirs();
                         if (!created) {
-                            String errMsg = UtilProperties.getMessage(resource, "ScaleImage.unable_to_create_target_directory", locale) + " - " + targetDirectory;
+                            String errMsg = UtilProperties.getMessage(resourceError, "ScaleImage.unable_to_create_target_directory", locale) + " - " + targetDirectory;
                             Debug.logFatal(errMsg, module);
                             return ServiceUtil.returnError(errMsg);
                         }
@@ -391,12 +392,12 @@ public class ImageManagementServices {
                         //FIXME can be removed ?
                         //  boolean check = deleteFile.delete();
                     } catch (IllegalArgumentException e) {
-                        String errMsg = UtilProperties.getMessage(resource, "ScaleImage.one_parameter_is_null", locale) + e.toString();
+                        String errMsg = UtilProperties.getMessage(resourceError, "ScaleImage.one_parameter_is_null", locale) + e.toString();
                         Debug.logError(errMsg, module);
                         result.put("errorMessage", errMsg);
                         return result;
                     } catch (IOException e) {
-                        String errMsg = UtilProperties.getMessage(resource, "ScaleImage.error_occurs_during_writing", locale) + e.toString();
+                        String errMsg = UtilProperties.getMessage(resourceError, "ScaleImage.error_occurs_during_writing", locale) + e.toString();
                         Debug.logError(errMsg, module);
                         result.put("errorMessage", errMsg);
                         return result;
@@ -415,7 +416,7 @@ public class ImageManagementServices {
             return result;
             
         } else {
-            String errMsg = UtilProperties.getMessage(resource, "ScaleImage.unable_to_scale_original_image", locale) + " : " + filenameToUse;
+            String errMsg = UtilProperties.getMessage(resourceError, "ScaleImage.unable_to_scale_original_image", locale) + " : " + filenameToUse;
             Debug.logError(errMsg, module);
             result.put("errorMessage", errMsg);
             return ServiceUtil.returnError(errMsg);
@@ -573,12 +574,12 @@ public class ImageManagementServices {
             outFileThumb.close();
         } catch (FileNotFoundException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "ProductImageViewUnableWriteFile", 
                     UtilMisc.toMap("fileName", fileOriginalThumb.getAbsolutePath()), locale));
         } catch (IOException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "ProductImageViewUnableWriteBinaryData", 
                     UtilMisc.toMap("fileName", fileOriginalThumb.getAbsolutePath()), locale));
         }
@@ -587,7 +588,7 @@ public class ImageManagementServices {
         try {
             resultResizeThumb.putAll(ImageManagementServices.scaleImageMangementInAllSize(context, filenameToUseThumb, "thumbnail", productId));
         } catch (IOException e) {
-            String errMsg = "Scale additional image in all different sizes is impossible : " + e.toString();
+            String errMsg = UtilProperties.getMessage(resourceError, "ProductScaleAdditionalImageInAllDifferentSizesIsImpossible", UtilMisc.toMap("errorString", e.toString()), locale);
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
@@ -720,6 +721,7 @@ public class ImageManagementServices {
     public static Map<String, Object> createNewImageThumbnail(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dispatcher.getDelegator();
+        Locale locale = (Locale)context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
         String imageServerUrl = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.url", delegator), context);
@@ -778,12 +780,13 @@ public class ImageManagementServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        String successMsg = "Create new thumbnail size successful";
+        String successMsg = UtilProperties.getMessage(resource, "ProductCreateNewThumbnailSizeSuccessful", locale);
         return ServiceUtil.returnSuccess(successMsg);
     }
     
     public static Map<String, Object> resizeImageOfProduct(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
+        Locale locale = (Locale)context.get("locale");
         String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
         String productId = (String) context.get("productId");
         String dataResourceName = (String) context.get("dataResourceName");
@@ -803,13 +806,14 @@ public class ImageManagementServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        String successMsg = "Resize images successful";
+        String successMsg = UtilProperties.getMessage(resource, "ProductResizeImagesSuccessful", locale);
         return ServiceUtil.returnSuccess(successMsg);
     }
     
     public static Map<String, Object> renameImage(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
+        Locale locale = (Locale)context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
         String imageServerUrl = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.url", delegator), context);
@@ -938,7 +942,7 @@ public class ImageManagementServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        String successMsg = "Rename image successfully.";
+        String successMsg = UtilProperties.getMessage(resource, "ProductRenameImageSuccessfully.", locale);
         return ServiceUtil.returnSuccess(successMsg);
     }
 }

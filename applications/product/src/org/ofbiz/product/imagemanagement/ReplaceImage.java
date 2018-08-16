@@ -22,29 +22,35 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
-public class ReplaceImage{
+public class ReplaceImage {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String resource = "ProductErrorUiLabels";
+    public static final String resourceError = "ProductErrorUiLabels";
+    public static final String resource = "ProductUiLabels";
 
     public static Map<String, Object> replaceImageToExistImage(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
+        Locale locale = (Locale)context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
         String productId = (String) context.get("productId");
@@ -56,19 +62,19 @@ public class ReplaceImage{
         if (UtilValidate.isNotEmpty(dataResourceNameExist)) {
             if (UtilValidate.isNotEmpty(contentIdReplace)) {
                 if (contentIdExist.equals(contentIdReplace)) {
-                    String errMsg = "Cannot replace because both images are the same image.";
+                    String errMsg = UtilProperties.getMessage(resourceError, "ProductCannotReplaceBecauseBothImagesAreTheSameImage", locale);
                     Debug.logError(errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
             }
             else{
-                String errMsg = "Please choose image to replace.";
+            	 String errMsg = UtilProperties.getMessage(resourceError, "ProductPleaseChooseImageToReplace", locale);
                 Debug.logError(errMsg, module);
                 return ServiceUtil.returnError(errMsg);
             }
         }
         else{
-            String errMsg = "Please choose replacement image.";
+            String errMsg = UtilProperties.getMessage(resourceError, "ProductPleaseChooseReplacementImage", locale);
             Debug.logError(errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
@@ -110,12 +116,20 @@ public class ReplaceImage{
                 productContentCtx.put("userLogin", userLogin);
                 dispatcher.runSync("removeProductContentAndImageFile", productContentCtx);
             }
-        } catch (Exception e) {
-            String errMsg = "Cannot replace image.";
+        } catch (GenericEntityException gee) {
+            String errMsg = UtilProperties.getMessage(resourceError, "ProductCannotReplaceImage", locale);
+            Debug.logError(errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        } catch (GenericServiceException gse) {
+            String errMsg = UtilProperties.getMessage(resourceError, "ProductCannotReplaceImage", locale);
+            Debug.logError(errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        } catch (Exception gse) {
+            String errMsg = UtilProperties.getMessage(resourceError, "ProductCannotReplaceImage", locale);
             Debug.logError(errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
-        String successMsg = "Replace image successfully.";
+        String successMsg = UtilProperties.getMessage(resource, "ProductReplaceImageSuccessfully", locale);
         return ServiceUtil.returnSuccess(successMsg);
     }
 

@@ -23,12 +23,14 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
@@ -43,12 +45,14 @@ import org.ofbiz.service.ServiceUtil;
 public class CropImage {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String resource = "ProductErrorUiLabels";
+    public static final String resourceError = "ProductErrorUiLabels";
+    public static final String resource = "ProductUiLabels";
 
     public static Map<String, Object> imageCrop(DispatchContext dctx, Map<String, ? extends Object> context)
     throws IOException {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dispatcher.getDelegator();
+        Locale locale = (Locale)context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String nameOfThumb = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.nameofthumbnail", delegator), context);
         
@@ -149,11 +153,11 @@ public class CropImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
         } else {
-            String errMsg = "Please select Image.";
+            String errMsg = UtilProperties.getMessage(resourceError, "ProductPleaseSelectImage", locale);
             Debug.logFatal(errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
-        String successMsg = "Crop image successfully.";
+        String successMsg = UtilProperties.getMessage(resource, "ProductCropImageSuccessfully", locale);
         Map<String, Object> result = ServiceUtil.returnSuccess(successMsg);
         return result;
     }

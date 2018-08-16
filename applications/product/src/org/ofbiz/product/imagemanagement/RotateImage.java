@@ -24,12 +24,14 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
@@ -46,10 +48,12 @@ import org.ofbiz.service.ServiceUtil;
 public class RotateImage {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String resource = "ProductErrorUiLabels";
+    public static final String resourceError = "ProductErrorUiLabels";
+    public static final String resource = "ProductFUiLabels";
 
     public static Map<String, Object> imageRotate(DispatchContext dctx, Map<String, ? extends Object> context)
     throws IOException {
+        Locale locale = (Locale) context.get("locale");
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -161,11 +165,11 @@ public class RotateImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
         } else {
-            String errMsg = "Please select Image.";
+            String errMsg = UtilProperties.getMessage(resourceError, "ProductPleaseSelectImage", locale);
             Debug.logFatal(errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
-        String successMsg = "Rotated image successfully.";
+        String successMsg = UtilProperties.getMessage(resource, "ProductRotatedImageSuccessfully", locale);
         Map<String, Object> result = ServiceUtil.returnSuccess(successMsg);
         return result;
     }

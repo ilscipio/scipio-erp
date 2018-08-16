@@ -67,7 +67,8 @@ import org.ofbiz.service.ServiceUtil;
 public class FrameImage {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String resource = "ProductErrorUiLabels";
+    public static final String resourceError = "ProductErrorUiLabels";
+    public static final String resource = "ProductUiLabels";
 
     public static Map<String, Object> addImageFrame(DispatchContext dctx, Map<String, ? extends Object> context)
     throws IOException {
@@ -86,12 +87,12 @@ public class FrameImage {
         Locale locale = (Locale) context.get("locale");
         
         if (UtilValidate.isEmpty(context.get("frameContentId")) || UtilValidate.isEmpty(context.get("frameDataResourceId"))) {
-            result = ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            result = ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "ProductImageFrameContentIdRequired", locale));
             result.putAll(context);
         }
         if (UtilValidate.isEmpty(context.get("imageWidth")) || UtilValidate.isEmpty(context.get("imageHeight"))) {
-            result = ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            result = ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "ProductImageWidthAndHeightRequired", locale));
             result.putAll(context);
         }
@@ -230,12 +231,12 @@ public class FrameImage {
             }
         }
          else{
-             String errMsg = "Please select Image.";
+             String errMsg = UtilProperties.getMessage(resourceError, "ProductPleaseSelectImage", locale);
              Debug.logFatal(errMsg, module);
              result =  ServiceUtil.returnError(errMsg);
              result.putAll(context);
         }
-        String successMsg = "Frame image successfully.";
+        String successMsg = UtilProperties.getMessage(resource, "ProductFrameImageSuccessfully", locale);
         result = ServiceUtil.returnSuccess(successMsg);
         return result;
     }

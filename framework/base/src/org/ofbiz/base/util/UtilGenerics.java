@@ -27,7 +27,7 @@ import java.util.Stack;
 
 public class UtilGenerics {
 
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     public static <V> V cast(Object object) {
@@ -153,6 +153,7 @@ public class UtilGenerics {
         return map;
     }
 
+    @SafeVarargs
     @SuppressWarnings("hiding")
     public static <K, Object> Map<K, Object> toMap(Class<K> keyType, Object... data) {
         if (data == null) {

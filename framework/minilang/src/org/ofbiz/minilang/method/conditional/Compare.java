@@ -109,7 +109,7 @@ public abstract class Compare {
                 return false;
             }
             try {
-                Collection collection = (Collection) lValue;
+                Collection<?> collection = (Collection<?>) lValue;
                 return collection.contains(rValue);
             } catch (ClassCastException e) {
             }

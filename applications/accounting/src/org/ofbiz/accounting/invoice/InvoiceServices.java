@@ -1937,7 +1937,7 @@ public class InvoiceServices {
 
                             if (isNonPhysicalItemToReturn) {
                                 if (UtilValidate.isEmpty(billItems)) {
-                                    billItems = new ArrayList();
+                                    billItems = new ArrayList<>();
                                 }
 
                                 billItems.add(returnItem);

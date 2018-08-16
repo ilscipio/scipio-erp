@@ -350,6 +350,7 @@ OUTER:
         return list;
     }
 
+    @SafeVarargs
     public static <T> List<T> list(T... list) {
         return new ArrayList<T>(Arrays.asList(list));
     }
@@ -360,6 +361,7 @@ OUTER:
         return set;
     }
 
+    @SafeVarargs
     public static <T> Set<T> set(T... list) {
         return new HashSet<T>(Arrays.asList(list));
     }

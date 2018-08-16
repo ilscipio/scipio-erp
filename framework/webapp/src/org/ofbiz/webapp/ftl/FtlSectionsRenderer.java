@@ -19,7 +19,6 @@ import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker;
 
 import freemarker.core.Environment;
-import freemarker.core.Macro;
 import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
@@ -116,7 +115,7 @@ public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, O
             } finally {
                 env.setOut(prevOut);
             }
-        } else if (section instanceof Macro) {
+        } else if (section instanceof freemarker.core.Macro) {
             // WARN: Macro is deprecated and may be replaced in later versions, at which point this will fail to compile
             Environment env = FreeMarkerWorker.getCurrentEnvironment();
             final String tempMacroName = "_secRenCurMacro"; // DEV NOTE: this should be a fixed name; should not be variable

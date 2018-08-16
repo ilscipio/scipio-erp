@@ -857,7 +857,7 @@ public class InvoiceWorker {
                     if (UtilValidate.isNotEmpty(taxAuthorityRateSeqId)) {
                         if (!result.containsKey(taxAuthorityRateSeqId)) {
                             String taxGlAccountId = null;
-                            GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOneCache("TaxAuthorityRateProduct");
+                            GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOne("TaxAuthorityRateProduct", true); // SCIPIO: fixed deprecated method
                             if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
                                 taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                             }
@@ -975,11 +975,11 @@ public class InvoiceWorker {
             orderAdjustmentsTaxItems = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
                     .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX")).queryList();
             //taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
-            orderAdjustmentsTaxItemsToProcess = new ArrayList(orderAdjustmentsTaxItems);
+            orderAdjustmentsTaxItemsToProcess = new ArrayList<>(orderAdjustmentsTaxItems);
             for (GenericValue orderAdjustment : orderAdjustmentsTaxItems) {
                 String taxGlAccountId = null;
                 // TODO: getTaxGlAccountForInvoiceItem(orderAdjustment);
-                GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOneCache("TaxAuthorityRateProduct");
+                GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOne("TaxAuthorityRateProduct", true); // SCIPIO: fixed deprecated method
                 if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
                     taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                 }

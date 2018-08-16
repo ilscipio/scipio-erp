@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class UtilPlist {
 
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** simple 4 char indentation */
     public static final String indentFourString = "    ";

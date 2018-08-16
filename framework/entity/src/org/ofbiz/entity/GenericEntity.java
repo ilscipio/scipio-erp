@@ -24,11 +24,11 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -854,7 +854,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         if (modelEntity instanceof ModelViewEntity){
             // retrieve pkNames of realEntity
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
-            List<String> pkNamesToUse = new LinkedList<String>();
+            List<String> pkNamesToUse = new ArrayList<>(modelEntityToUse.getPksSize()); // SCIPIO: switched to ArrayList
             // iterate on realEntity for pkField
             Iterator<ModelField> iter = modelEntityToUse.getPksIterator();
             while (iter != null && iter.hasNext()) {
@@ -903,7 +903,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     public GenericPK getPrimaryKey() {
-        Collection<String> pkNames = new LinkedList<String>();
+        Collection<String> pkNames = new ArrayList<>(this.getModelEntity().getPksSize()); // SCIPIO: switched to ArrayList
         Iterator<ModelField> iter = this.getModelEntity().getPksIterator();
         while (iter != null && iter.hasNext()) {
             ModelField curField = iter.next();

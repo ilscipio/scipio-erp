@@ -19,9 +19,9 @@
 package org.ofbiz.entity.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,7 +59,7 @@ public class ModelGroupReader implements Serializable {
     private Set<String> groupNames = null;
 
     public String modelName;
-    public List<ResourceHandler> entityGroupResourceHandlers = new LinkedList<ResourceHandler>();
+    public List<ResourceHandler> entityGroupResourceHandlers = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     public static ModelGroupReader getModelGroupReader(String delegatorName) throws GenericEntityConfException {
         DelegatorElement delegatorInfo = EntityConfig.getInstance().getDelegator(delegatorName);
@@ -94,6 +94,8 @@ public class ModelGroupReader implements Serializable {
                 this.entityGroupResourceHandlers.add(componentResourceInfo.createResourceHandler());
             }
         }
+
+        ((ArrayList<ResourceHandler>) this.entityGroupResourceHandlers).trimToSize(); // SCIPIO
 
         // preload caches...
         getGroupCache();

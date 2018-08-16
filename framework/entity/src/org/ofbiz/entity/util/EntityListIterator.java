@@ -22,7 +22,7 @@ package org.ofbiz.entity.util;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -430,7 +430,9 @@ public class EntityListIterator implements ListIterator<GenericValue> {
                 // do a quick check to see if the ResultSet is empty
                 resultSet.beforeFirst();
             }
-            List<GenericValue> list = new LinkedList<GenericValue>();
+            // SCIPIO: FIXME: ArrayList initialCapacity: we usually will not have non-null result count to use,
+            // due to SQLProcessor design (regardless, ArrayList is still the better choice)
+            List<GenericValue> list = (resultSize != null) ? new ArrayList<>(resultSize) : new ArrayList<>(); // SCIPIO: switched to ArrayList
             GenericValue nextValue = null;
 
             while ((nextValue = this.next()) != null) {
@@ -457,8 +459,8 @@ public class EntityListIterator implements ListIterator<GenericValue> {
      */
     public List<GenericValue> getPartialList(int start, int number) throws GenericEntityException {
         try {
-            if (number == 0) return new LinkedList<GenericValue>();
-            List<GenericValue> list = new LinkedList<GenericValue>();
+            if (number == 0) return new ArrayList<>(); // SCIPIO: switched to ArrayList
+            List<GenericValue> list = new ArrayList<>(number); // SCIPIO: switched to ArrayList
 
             // just in case the caller missed the 1 based thingy
             if (start == 0) start = 1;

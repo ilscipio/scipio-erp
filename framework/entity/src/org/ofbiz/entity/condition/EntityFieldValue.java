@@ -19,7 +19,7 @@
 
 package org.ofbiz.entity.condition;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,8 +64,8 @@ public class EntityFieldValue extends EntityConditionValue {
         this.fieldName = fieldName;
         this.entityAlias = entityAlias;
         if (UtilValidate.isNotEmpty(entityAliasStack)) {
-            this.entityAliasStack = new LinkedList<String>();
-            this.entityAliasStack.addAll(entityAliasStack);
+            this.entityAliasStack = new ArrayList<>(entityAliasStack); // SCIPIO: switched to ArrayList
+            //this.entityAliasStack.addAll(entityAliasStack);
         }
         this.modelViewEntity = modelViewEntity;
         if (UtilValidate.isNotEmpty(this.entityAliasStack) && UtilValidate.isEmpty(this.entityAlias)) {

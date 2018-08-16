@@ -30,10 +30,10 @@ import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -421,9 +421,9 @@ public class SqlJdbcUtil {
             sql.append(makeFromClause(modelEntity, modelFieldTypeReader, datasourceInfo));
             String viewWhereClause = makeViewWhereClause(modelEntity, datasourceInfo.getJoinStyle());
             ModelViewEntity modelViewEntity = (ModelViewEntity)modelEntity;
-            List<EntityCondition> whereConditions = new LinkedList<EntityCondition>();
-            List<EntityCondition> havingConditions = new LinkedList<EntityCondition>();
-            List<String> orderByList = new LinkedList<String>();
+            List<EntityCondition> whereConditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
+            List<EntityCondition> havingConditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
+            List<String> orderByList = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
             modelViewEntity.populateViewEntityConditionInformation(modelFieldTypeReader, whereConditions, havingConditions, orderByList, null);
             String viewConditionClause;

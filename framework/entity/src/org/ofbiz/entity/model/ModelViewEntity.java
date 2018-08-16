@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -95,25 +94,25 @@ public class ModelViewEntity extends ModelEntity {
     protected Map<String, ModelMemberEntity> memberModelMemberEntities = new HashMap<String, ModelMemberEntity>();
 
     /** A list of all ModelMemberEntity entries; this is mainly used to preserve the original order of member entities from the XML file */
-    protected List<ModelMemberEntity> allModelMemberEntities = new LinkedList<ModelMemberEntity>();
+    protected List<ModelMemberEntity> allModelMemberEntities = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
     protected Map<String, String> memberModelEntities = new HashMap<String, String>();
 
     /** List of alias-alls which act as a shortcut for easily pulling over member entity fields */
-    protected List<ModelAliasAll> aliasAlls = new LinkedList<ModelAliasAll>();
+    protected List<ModelAliasAll> aliasAlls = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** List of aliases with information in addition to what is in the standard field list */
-    protected List<ModelAlias> aliases = new LinkedList<ModelAlias>();
+    protected List<ModelAlias> aliases = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** List of view links to define how entities are connected (or "joined") */
-    protected List<ModelViewLink> viewLinks = new LinkedList<ModelViewLink>();
+    protected List<ModelViewLink> viewLinks = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** A List of the Field objects for the View Entity, one for each GROUP BY field */
-    protected List<ModelField> groupBys = new LinkedList<ModelField>();
+    protected List<ModelField> groupBys = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** List of field names to group by */
-    protected List<String> groupByFields = new LinkedList<String>();
+    protected List<String> groupByFields = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     protected Map<String, ModelConversion[]> conversions = new HashMap<String, ModelConversion[]>();
 
@@ -165,6 +164,14 @@ public class ModelViewEntity extends ModelEntity {
 
         // before finishing, make sure the table name is null, this should help bring up errors early...
         this.tableName = null;
+
+        // SCIPIO
+        ((ArrayList<ModelMemberEntity>) allModelMemberEntities).trimToSize();
+        ((ArrayList<ModelAliasAll>) aliasAlls).trimToSize();
+        ((ArrayList<ModelAlias>) aliases).trimToSize();
+        ((ArrayList<ModelViewLink>) viewLinks).trimToSize();
+        ((ArrayList<ModelField>) groupBys).trimToSize();
+        ((ArrayList<String>) groupByFields).trimToSize();
     }
 
     public ModelViewEntity(DynamicViewEntity dynamicViewEntity, ModelReader modelReader) {
@@ -320,7 +327,7 @@ public class ModelViewEntity extends ModelEntity {
 
     public void populateViewEntityConditionInformation(ModelFieldTypeReader modelFieldTypeReader, List<EntityCondition> whereConditions, List<EntityCondition> havingConditions, List<String> orderByList, List<String> entityAliasStack) {
         if (entityAliasStack == null) {
-            entityAliasStack = new LinkedList<String>();
+            entityAliasStack = new ArrayList<>(); // SCIPIO: switched to ArrayList
         }
 
         if (this.viewEntityCondition != null) {
@@ -567,7 +574,7 @@ public class ModelViewEntity extends ModelEntity {
 
             List<String> aliases = containedModelFields.get(alias.getField());
             if (aliases == null) {
-                aliases = new LinkedList<String>();
+                aliases = new ArrayList<>(); // SCIPIO: switched to ArrayList
                 containedModelFields.put(alias.getField(), aliases);
             }
             aliases.add(alias.getName());
@@ -627,7 +634,7 @@ public class ModelViewEntity extends ModelEntity {
     public List<Map<String, Object>> convert(String fromEntityName, Map<String, ? extends Object> data) {
         ModelConversion[] conversions = this.conversions.get(fromEntityName);
         if (conversions == null) return null;
-        List<Map<String, Object>> values = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> values = new ArrayList<>(); // SCIPIO: switched to ArrayList
         for (ModelConversion conversion: conversions) {
             conversion.convert(values, data);
         }
@@ -990,7 +997,7 @@ public class ModelViewEntity extends ModelEntity {
     }
 
     public static final class ComplexAlias implements ComplexAliasMember {
-        protected final List<ComplexAliasMember> complexAliasMembers = new LinkedList<ComplexAliasMember>();
+        protected final List<ComplexAliasMember> complexAliasMembers = new ArrayList<>(); // SCIPIO: switched to ArrayList
         protected final String operator;
 
         public ComplexAlias(String operator) {
@@ -1111,7 +1118,7 @@ public class ModelViewEntity extends ModelEntity {
         protected final String entityAlias;
         protected final String relEntityAlias;
         protected final boolean relOptional;
-        protected final List<ModelKeyMap> keyMaps = new LinkedList<ModelKeyMap>();
+        protected final List<ModelKeyMap> keyMaps = new ArrayList<>(); // SCIPIO: switched to ArrayList
         protected final ViewEntityCondition viewEntityCondition;
 
         public ModelViewLink(ModelViewEntity modelViewEntity, Element viewLinkElement) {
@@ -1134,6 +1141,7 @@ public class ModelViewEntity extends ModelEntity {
             } else {
                 this.viewEntityCondition = null;
             }
+            ((ArrayList<ModelKeyMap>) keyMaps).trimToSize(); // SCIPIO
         }
 
         @Deprecated
@@ -1313,7 +1321,7 @@ public class ModelViewEntity extends ModelEntity {
 
         public EntityCondition getWhereCondition(ModelFieldTypeReader modelFieldTypeReader, List<String> entityAliasStack) {
 
-            List<EntityCondition> conditionList = new LinkedList<EntityCondition>();
+            List<EntityCondition> conditionList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             if(this.filterByDate) {
                 conditionList.add(EntityUtil.getFilterByDateExpr());
             }
@@ -1453,7 +1461,7 @@ public class ModelViewEntity extends ModelEntity {
             }
 
             if(this.viewEntityCondition.filterByDate) {
-                List<EntityCondition> conditionList = new LinkedList<EntityCondition>();
+                List<EntityCondition> conditionList = new ArrayList<>(); // SCIPIO: switched to ArrayList
                 conditionList.add(entityCondition);
                 conditionList.add(EntityUtil.getFilterByDateExpr());
                 return EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -1466,7 +1474,7 @@ public class ModelViewEntity extends ModelEntity {
 
     public static final class ViewConditionList implements ViewCondition {
         protected final ViewEntityCondition viewEntityCondition;
-        protected final List<ViewCondition> conditionList = new LinkedList<ViewCondition>();
+        protected final List<ViewCondition> conditionList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         protected final EntityJoinOperator operator;
 
         public ViewConditionList(ViewEntityCondition viewEntityCondition, Element conditionListElement) {
@@ -1488,6 +1496,7 @@ public class ModelViewEntity extends ModelEntity {
                     throw new IllegalArgumentException("[" + this.viewEntityCondition.modelViewEntity.getEntityName() + "]: Invalid element with name [" + subElement.getNodeName() + "] found under a condition-list element.");
                 }
             }
+            ((ArrayList<ViewCondition>) conditionList).trimToSize(); // SCIPIO
         }
 
         public ViewConditionList(ViewEntityCondition viewEntityCondition, String combine, List<ViewCondition> conditionList) {
@@ -1500,6 +1509,7 @@ public class ModelViewEntity extends ModelEntity {
             if (UtilValidate.isNotEmpty(conditionList)) {
                 this.conditionList.addAll(conditionList);
             }
+            ((ArrayList<ViewCondition>) conditionList).trimToSize(); // SCIPIO
         }
 
         public EntityCondition createCondition(ModelFieldTypeReader modelFieldTypeReader, List<String> entityAliasStack) {
@@ -1511,7 +1521,7 @@ public class ModelViewEntity extends ModelEntity {
                 return condition.createCondition(modelFieldTypeReader, entityAliasStack);
             }
 
-            List<EntityCondition> entityConditionList = new LinkedList<EntityCondition>();
+            List<EntityCondition> entityConditionList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             for (ViewCondition curCondition: conditionList) {
                 EntityCondition econd = curCondition.createCondition(modelFieldTypeReader, entityAliasStack);
                 if (econd != null) {

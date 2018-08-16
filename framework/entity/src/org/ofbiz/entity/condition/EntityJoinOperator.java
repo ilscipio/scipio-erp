@@ -21,7 +21,6 @@ package org.ofbiz.entity.condition;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class EntityJoinOperator extends EntityOperator<EntityCondition, EntityCo
 
     @Override
     public void addSqlValue(StringBuilder sql, ModelEntity modelEntity, List<EntityConditionParam> entityConditionParams, boolean compat, EntityCondition lhs, EntityCondition rhs, Datasource datasourceInfo) {
-        List<EntityCondition> conditions = new LinkedList<EntityCondition>();
+        List<EntityCondition> conditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
         conditions.add(lhs);
         conditions.add(rhs);
         addSqlValue(sql, modelEntity, entityConditionParams, conditions, datasourceInfo);

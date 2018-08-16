@@ -21,12 +21,12 @@ package org.ofbiz.entity.datasource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -200,7 +200,7 @@ public class GenericDAO {
         }
 
         // we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
-        List<ModelField> partialFields = new LinkedList<ModelField>();
+        List<ModelField> partialFields = new ArrayList<>(modelEntity.getNopksSize()); // SCIPIO: switched to ArrayList
         Collection<String> keys = entity.getAllKeys();
 
         Iterator<ModelField> nopkIter = modelEntity.getNopksIterator();
@@ -314,7 +314,7 @@ public class GenericDAO {
 
         StringBuilder sql = new StringBuilder("UPDATE ").append(modelEntity.getTableName(datasource));
         sql.append(" SET ");
-        List<EntityConditionParam> params = new LinkedList<EntityConditionParam>();
+        List<EntityConditionParam> params = new ArrayList<>(fieldsToSet.size()); // SCIPIO: switched to ArrayList
         for (Map.Entry<String, ? extends Object> entry: fieldsToSet.entrySet()) {
             String name = entry.getKey();
             ModelField field = modelEntity.getField(name);
@@ -445,7 +445,7 @@ public class GenericDAO {
             }
 
             // Construct fieldsToSave list for this member entity
-            List<ModelField> meFieldsToSave = new LinkedList<ModelField>();
+            List<ModelField> meFieldsToSave = new ArrayList<>(fieldsToSave.size()); // SCIPIO: switched to ArrayList
             for (ModelField modelField: fieldsToSave) {
                 if (memberModelEntity.isField(modelField.getName())) {
                     ModelField meModelField = memberModelEntity.getField(modelField.getName());
@@ -560,7 +560,7 @@ public class GenericDAO {
          }
          */
         // we don't want to select ALL fields, just the nonpk fields that are in the passed GenericEntity
-        List<ModelField> partialFields = new LinkedList<ModelField>();
+        List<ModelField> partialFields = new ArrayList<>(modelEntity.getFieldsSize()); // SCIPIO: switched to ArrayList
 
         Set<String> tempKeys = new TreeSet<String>(keys);
 
@@ -646,8 +646,9 @@ public class GenericDAO {
         }
 
         // make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
-        List<ModelField> selectFields = new LinkedList<ModelField>();
+        List<ModelField> selectFields;
         if (UtilValidate.isNotEmpty(fieldsToSelect)) {
+            selectFields = new ArrayList<>(); // SCIPIO: switched to ArrayList
             Set<String> tempKeys = new HashSet<String>();
             tempKeys.addAll(fieldsToSelect);
             Set<String> fieldSetsToInclude = new HashSet<String>();
@@ -719,9 +720,9 @@ public class GenericDAO {
         List<EntityCondition> viewHavingConditions = null;
         List<String> viewOrderByList = null;
         if (modelViewEntity != null) {
-            viewWhereConditions = new LinkedList<EntityCondition>();
-            viewHavingConditions = new LinkedList<EntityCondition>();
-            viewOrderByList = new LinkedList<String>();
+            viewWhereConditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
+            viewHavingConditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
+            viewOrderByList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             modelViewEntity.populateViewEntityConditionInformation(modelFieldTypeReader, viewWhereConditions, viewHavingConditions, viewOrderByList, null);
         }
 
@@ -729,7 +730,7 @@ public class GenericDAO {
         sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, modelFieldTypeReader, datasource));
 
         // WHERE clause
-        List<EntityConditionParam> whereEntityConditionParams = new LinkedList<EntityConditionParam>();
+        List<EntityConditionParam> whereEntityConditionParams = new ArrayList<>(); // SCIPIO: switched to ArrayList
         makeConditionWhereString(sqlBuffer, " WHERE ", modelEntity, whereEntityCondition, viewWhereConditions, whereEntityConditionParams);
 
         // GROUP BY clause for view-entity
@@ -738,11 +739,12 @@ public class GenericDAO {
         }
 
         // HAVING clause
-        List<EntityConditionParam> havingEntityConditionParams = new LinkedList<EntityConditionParam>();
+        List<EntityConditionParam> havingEntityConditionParams = new ArrayList<>(); // SCIPIO: switched to ArrayList
         makeConditionHavingString(sqlBuffer, " HAVING ", modelEntity, havingEntityCondition, viewHavingConditions, havingEntityConditionParams);
 
         // ORDER BY clause
-        List<String> orderByExpanded = new LinkedList<String>();
+        List<String> orderByExpanded = new ArrayList<>((orderBy != null ? orderBy.size() : 0)
+                + (viewOrderByList != null ? viewOrderByList.size() : 0)); // SCIPIO: switched to ArrayList
         // add the manually specified ones, then the ones in the view entity's entity-condition
         if (orderBy != null) {
             orderByExpanded.addAll(orderBy);
@@ -806,7 +808,7 @@ public class GenericDAO {
             modelViewEntity = (ModelViewEntity) modelEntity;
         }
 
-        List<EntityCondition> conditions = new LinkedList<EntityCondition>();
+        List<EntityCondition> conditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
         if (UtilValidate.isNotEmpty(whereEntityCondition)) {
             conditions.add(whereEntityCondition);
         }
@@ -910,8 +912,8 @@ public class GenericDAO {
 
         // get the column name string to select
         StringBuilder selsb = new StringBuilder();
-        List<String> collist = new LinkedList<String>();
-        List<String> fldlist = new LinkedList<String>();
+        List<String> collist = new ArrayList<>(modelEntityTwo.getFieldsSize()); // SCIPIO: switched to ArrayList
+        List<String> fldlist = new ArrayList<>(modelEntityTwo.getFieldsSize()); // SCIPIO: switched to ArrayList
 
         for (Iterator<ModelField> iterator = modelEntityTwo.getFieldsIterator(); iterator.hasNext();) {
             ModelField mf = iterator.next();
@@ -969,7 +971,9 @@ public class GenericDAO {
         sqlsb.append(SqlJdbcUtil.makeOrderByClause(modelEntityTwo, orderBy, true, datasource));
 
         // now execute the query
-        List<GenericValue> retlist = new LinkedList<GenericValue>();
+        // SCIPIO: FIXME: ArrayList initialCapacity: not generally available from here
+        // due to SQLProcessor design (regardless, ArrayList is still the better choice)
+        List<GenericValue> retlist = new ArrayList<>(); // SCIPIO: switched to ArrayList
         Delegator gd = value.getDelegator();
 
         try {
@@ -1073,9 +1077,9 @@ public class GenericDAO {
         List<EntityCondition> viewHavingConditions = null;
         List<String> viewOrderByList = null;
         if (modelViewEntity != null) {
-            viewWhereConditions = new LinkedList<EntityCondition>();
-            viewHavingConditions = new LinkedList<EntityCondition>();
-            viewOrderByList = new LinkedList<String>();
+            viewWhereConditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
+            viewHavingConditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
+            viewOrderByList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             modelViewEntity.populateViewEntityConditionInformation(modelFieldTypeReader, viewWhereConditions, viewHavingConditions, viewOrderByList, null);
         }
 
@@ -1083,7 +1087,7 @@ public class GenericDAO {
         sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, modelFieldTypeReader, datasource));
 
         // WHERE clause
-        List<EntityConditionParam> whereEntityConditionParams = new LinkedList<EntityConditionParam>();
+        List<EntityConditionParam> whereEntityConditionParams = new ArrayList<>(); // SCIPIO: switched to ArrayList
         makeConditionWhereString(sqlBuffer, " WHERE ", modelEntity, whereEntityCondition, viewWhereConditions, whereEntityConditionParams);
 
         // GROUP BY clause for view-entity
@@ -1092,7 +1096,7 @@ public class GenericDAO {
         }
 
         // HAVING clause
-        List<EntityConditionParam> havingEntityConditionParams = new LinkedList<EntityConditionParam>();
+        List<EntityConditionParam> havingEntityConditionParams = new ArrayList<>(); // SCIPIO: switched to ArrayList
         makeConditionHavingString(sqlBuffer, " HAVING ", modelEntity, havingEntityCondition, viewHavingConditions, havingEntityConditionParams);
 
         if (isGroupBy) {

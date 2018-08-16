@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.entity.datasource;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -104,7 +104,7 @@ public class GenericHelperDAO implements GenericHelper {
      */
     public List<GenericValue> findAllByPrimaryKeys(List<GenericPK> primaryKeys) throws GenericEntityException {
         if (primaryKeys == null) return null;
-        List<GenericValue> results = new LinkedList<GenericValue>();
+        List<GenericValue> results = new ArrayList<>(primaryKeys.size()); // SCIPIO: switched to ArrayList
 
         for (GenericPK primaryKey: primaryKeys) {
             GenericValue result = this.findByPrimaryKey(primaryKey);

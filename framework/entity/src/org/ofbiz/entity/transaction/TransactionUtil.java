@@ -21,9 +21,9 @@ package org.ofbiz.entity.transaction;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -589,7 +589,7 @@ public class TransactionUtil implements Status {
     public static List<Transaction> getSuspendedTxStack() {
         List<Transaction> tl = suspendedTxStack.get();
         if (tl == null) {
-            tl = new LinkedList<Transaction>();
+            tl = new ArrayList<>(); // SCIPIO: switched to ArrayList
             suspendedTxStack.set(tl);
         }
         return tl;
@@ -598,7 +598,7 @@ public class TransactionUtil implements Status {
     public static List<Exception> getSuspendedTxLocationsStack() {
         List<Exception> tl = suspendedTxLocationStack.get();
         if (tl == null) {
-            tl = new LinkedList<Exception>();
+            tl = new ArrayList<>(); // SCIPIO: switched to ArrayList
             suspendedTxLocationStack.set(tl);
         }
         return tl;
@@ -647,7 +647,7 @@ public class TransactionUtil implements Status {
         // use the ThreadLocal one because it is more reliable than the all threads Map
         List<Exception> el = transactionBeginStackSave.get();
         if (el == null) {
-            el = new LinkedList<Exception>();
+            el = new ArrayList<>(); // SCIPIO: switched to ArrayList
             transactionBeginStackSave.set(el);
         }
         el.add(0, e);
@@ -656,7 +656,7 @@ public class TransactionUtil implements Status {
             Long curThreadId = Thread.currentThread().getId();
             List<Exception> ctEl = allThreadsTransactionBeginStackSave.get(curThreadId);
             if (ctEl == null) {
-                ctEl = new LinkedList<Exception>();
+                ctEl = new ArrayList<>(); // SCIPIO: switched to ArrayList
                 allThreadsTransactionBeginStackSave.put(curThreadId, ctEl);
             }
             ctEl.add(0, e);
@@ -692,7 +692,7 @@ public class TransactionUtil implements Status {
 
     public static List<Exception> getTransactionBeginStackSave() {
         List<Exception> el = transactionBeginStackSave.get();
-        List<Exception> elClone = new LinkedList<Exception>();
+        List<Exception> elClone = new ArrayList<>(); // SCIPIO: switched to ArrayList
         elClone.addAll(el);
         return elClone;
     }
@@ -803,7 +803,7 @@ public class TransactionUtil implements Status {
     private static void pushSetRollbackOnlyCauseSave(RollbackOnlyCause e) {
         List<RollbackOnlyCause> el = setRollbackOnlyCauseSave.get();
         if (el == null) {
-            el = new LinkedList<RollbackOnlyCause>();
+            el = new ArrayList<>(); // SCIPIO: switched to ArrayList
             setRollbackOnlyCauseSave.set(el);
         }
         el.add(0, e);

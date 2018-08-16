@@ -19,7 +19,7 @@
 package org.ofbiz.entity.condition;
 
 import java.sql.Timestamp;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +131,7 @@ public final class EntityDateFilterCondition extends EntityCondition {
      * @return EntityCondition representing the date range filter
      */
     public static EntityCondition makeRangeCondition(Timestamp rangeStart, Timestamp rangeEnd, String fromDateName, String thruDateName) {
-        List<EntityCondition> criteria = new LinkedList<EntityCondition>();
+        List<EntityCondition> criteria = new ArrayList<>(); // SCIPIO: switched to ArrayList
         // fromDate is equal to or after rangeStart but before rangeEnd
         criteria.add(
                 EntityCondition.makeCondition(

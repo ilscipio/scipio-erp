@@ -21,12 +21,12 @@ package org.ofbiz.entity.util;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,6 +53,7 @@ public class EntityUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    @SafeVarargs
     public static <V> Map<String, V> makeFields(V... args) {
         Map<String, V> fields = new HashMap<String, V>();
         if (args != null) {
@@ -188,7 +189,7 @@ public class EntityUtil {
         if (fromDateName == null) fromDateName = "fromDate";
         if (thruDateName == null) thruDateName = "thruDate";
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(datedValues.size()); // SCIPIO: switched to ArrayList
         Iterator<T> iter = datedValues.iterator();
 
         if (allAreSame) {
@@ -263,10 +264,10 @@ public class EntityUtil {
 
         List<T> result = null;
         if (UtilValidate.isEmpty(fields)) {
-            result = new LinkedList<T>();
-            result.addAll(values);
+            result = new ArrayList<>(values); // SCIPIO: switched to ArrayList
+            //result.addAll(values);
         } else {
-            result = new LinkedList<T>();
+            result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
             for (T value: values) {
                 if (value.matchesFields(fields)) {
                     result.add(value);
@@ -290,7 +291,7 @@ public class EntityUtil {
             return values;
         }
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (T value: values) {
             boolean include = true;
 
@@ -318,7 +319,7 @@ public class EntityUtil {
             return values;
         }
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (T value: values) {
             boolean include = false;
 
@@ -343,15 +344,15 @@ public class EntityUtil {
      */
     public static <T extends GenericEntity> List<T> orderBy(Collection<T> values, List<String> orderBy) {
         if (values == null) return null;
-        if (values.size() == 0) return new LinkedList<T>();
+        if (values.size() == 0) return new ArrayList<>(); // SCIPIO: switched to ArrayList
         if (UtilValidate.isEmpty(orderBy)) {
-            List<T> newList = new LinkedList<T>();
-            newList.addAll(values);
+            List<T> newList = new ArrayList<>(values); // SCIPIO: switched to ArrayList
+            //newList.addAll(values);
             return newList;
         }
 
-        List<T> result = new LinkedList<T>();
-        result.addAll(values);
+        List<T> result = new ArrayList<>(values); // SCIPIO: switched to ArrayList
+        //result.addAll(values);
         if (Debug.verboseOn()) Debug.logVerbose("Sorting " + values.size() + " values, orderBy=" + orderBy.toString(), module);
         Collections.sort(result, new OrderByList(orderBy));
         return result;
@@ -392,7 +393,7 @@ public class EntityUtil {
     public static List<GenericValue> getRelated(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values, boolean useCache) throws GenericEntityException {
         if (values == null) return null;
 
-        List<GenericValue> result = new LinkedList<GenericValue>();
+        List<GenericValue> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (GenericValue value: values) {
             result.addAll(value.getRelated(relationName, fields, null, useCache));
         }
@@ -402,7 +403,7 @@ public class EntityUtil {
     public static <T extends GenericEntity> List<T> filterByCondition(List<T> values, EntityCondition condition) {
         if (values == null) return null;
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (T value: values) {
             if (condition.entityMatches(value)) {
                 result.add(value);
@@ -414,7 +415,7 @@ public class EntityUtil {
     public static <T extends GenericEntity> List<T> filterOutByCondition(List<T> values, EntityCondition condition) {
         if (values == null) return null;
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (T value: values) {
             if (!condition.entityMatches(value)) {
                 result.add(value);
@@ -490,7 +491,7 @@ public class EntityUtil {
         if (genericValueList == null || fieldName == null) {
             return null;
         }
-        List<T> fieldList = new LinkedList<T>();
+        List<T> fieldList = new ArrayList<>(genericValueList.size()); // SCIPIO: switched to ArrayList
         Set<T> distinctSet = null;
         if (distinct) {
             distinctSet = new HashSet<T>();
@@ -517,7 +518,7 @@ public class EntityUtil {
         if (genericValueEli == null || fieldName == null) {
             return null;
         }
-        List<T> fieldList = new LinkedList<T>();
+        List<T> fieldList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         Set<T> distinctSet = null;
         if (distinct) {
             distinctSet = new HashSet<T>();

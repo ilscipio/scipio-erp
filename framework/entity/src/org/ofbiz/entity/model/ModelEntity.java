@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -58,6 +57,7 @@ import org.w3c.dom.Element;
  * An object that models the <code>&lt;entity&gt;</code> element.
  *
  */
+@SuppressWarnings("serial")
 public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -216,6 +216,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                 pks.add(pkField);
             }
         }
+        ((ArrayList<ModelField>) fieldsList).trimToSize(); // SCIPIO
         pks.trimToSize();
         nopks.trimToSize();
         reader.incrementFieldCount(fieldsMap.size());
@@ -678,7 +679,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
      * @return field names list, managed by entity-engine
      */
     public List<String> getAutomaticFieldNames() {
-        List<String> nameList = new LinkedList<String>();
+        List<String> nameList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         if (! this.noAutoStamp) {
             nameList.add(STAMP_FIELD);
             nameList.add(STAMP_TX_FIELD);
@@ -713,7 +714,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public List<ModelRelation> getRelationsList(boolean includeOne, boolean includeOneNoFk, boolean includeMany) {
-        List<ModelRelation> relationsList = new LinkedList<ModelRelation>();
+        List<ModelRelation> relationsList = new ArrayList<>(this.getRelationsSize()); // SCIPIO: switched to ArrayList
         Iterator<ModelRelation> allIter = this.getRelationsIterator();
         while (allIter.hasNext()) {
             ModelRelation modelRelation = allIter.next();
@@ -1560,7 +1561,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         topLevelMap.put("className", "EOGenericRecord");
 
         // for classProperties add field names AND relationship names to get a nice, complete chart
-        List<String> classPropertiesList = new LinkedList<String>();
+        List<String> classPropertiesList = new ArrayList<>(this.fieldsList.size() + this.relations.size()); // SCIPIO: switched to ArrayList
         topLevelMap.put("classProperties", classPropertiesList);
         for (ModelField field: this.fieldsList) {
             if (field.getIsAutoCreatedInternal()) continue;
@@ -1578,7 +1579,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         }
 
         // attributes
-        List<Map<String, Object>> attributesList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> attributesList = new ArrayList<>(this.fieldsList.size()); // SCIPIO: switched to ArrayList
         topLevelMap.put("attributes", attributesList);
         for (ModelField field: this.fieldsList) {
             if (field.getIsAutoCreatedInternal()) continue;
@@ -1615,14 +1616,14 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         }
 
         // primaryKeyAttributes
-        List<String> primaryKeyAttributesList = new LinkedList<String>();
+        List<String> primaryKeyAttributesList = new ArrayList<>(getPksSize()); // SCIPIO: switched to ArrayList
         topLevelMap.put("primaryKeyAttributes", primaryKeyAttributesList);
         for (ModelField pkField : getPkFields()) {
             primaryKeyAttributesList.add(pkField.getName());
         }
 
         // relationships
-        List<Map<String, Object>> relationshipsMapList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> relationshipsMapList = new ArrayList<>(this.relations.size()); // SCIPIO: switched to ArrayList
         for (ModelRelation relationship: this.relations) {
             if (entityNameIncludeSet.contains(relationship.getRelEntityName())) {
                 ModelEntity relEntity = entityModelReader.getModelEntity(relationship.getRelEntityName());
@@ -1646,7 +1647,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                 relationshipMap.put("joinSemantic", "EOInnerJoin");
 
 
-                List<Map<String, Object>> joinsMapList = new LinkedList<Map<String, Object>>();
+                List<Map<String, Object>> joinsMapList = new ArrayList<>(relationship.getKeyMaps().size()); // SCIPIO: switched to ArrayList
                 relationshipMap.put("joins", joinsMapList);
                 for (ModelKeyMap keyMap: relationship.getKeyMaps()) {
                     Map<String, Object> joinsMap = new HashMap<String, Object>();

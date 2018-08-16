@@ -71,8 +71,13 @@ public class ContentUrlTag {
      */
     public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer, String webSiteId) throws IOException {
         if (request == null) {
-            Debug.logWarning("Request was null in appendContentPrefix; this probably means this was used where it shouldn't be, like using ofbizContentUrl in a screen rendered through a service; using best-bet behavior: standard prefix from url.properties (no WebSite or security setting known)", module);
-            String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
+            Debug.logWarning("appendContentPrefix: Request was null; this probably means this was used where it"
+                    + " shouldn't be; using best-bet behavior: secure prefix from url.properties (no WebSite or security setting known)", module);
+            String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.secure");
+            if (UtilValidate.isEmpty(prefix)) {
+                Debug.logWarning("appendContentPrefix: INSECURE CONFIG: no content.url.prefix.secure defined; falling back on standard", module);
+                prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
+            }
             if (prefix != null) {
                 urlBuffer.append(prefix.trim());
             }

@@ -381,7 +381,7 @@ public class PriceServices {
                     try {
                         // SCIPIO: TODO: REVIEW: 2017-12-19: IS THERE A WAY TO PASS useCache HERE??
                         Map<String, Object> outMap = dispatcher.runSync(customMethod.getString("customMethodName"), inMap);
-                        if (!ServiceUtil.isError(outMap)) {
+                        if (ServiceUtil.isSuccess(outMap)) {
                             BigDecimal calculatedDefaultPrice = (BigDecimal)outMap.get("price");
                             orderItemPriceInfos = UtilGenerics.checkList(outMap.get("orderItemPriceInfos"));
                             if (UtilValidate.isNotEmpty(calculatedDefaultPrice)) {

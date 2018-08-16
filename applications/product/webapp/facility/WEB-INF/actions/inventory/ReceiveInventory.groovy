@@ -41,9 +41,9 @@ ownerAcctgPref = null;
 if (facility) {
     owner = facility.getRelatedOne("OwnerParty", false);
     if (owner) {
-        result = runService('getPartyAccountingPreferences', [organizationPartyId : owner.partyId, userLogin : request.getAttribute("userLogin")]);
-        if (!ServiceUtil.isError(result) && result.partyAccountingPreference) {
-            ownerAcctgPref = result.partyAccountingPreference;
+        result = runService('getPartyAccountingPreferences', [organizationPartyId : owner.partyId, userLogin : request.getAttribute("userLogin")])
+        if (ServiceUtil.isSuccess(result) && result.partyAccountingPreference) {
+            ownerAcctgPref = result.partyAccountingPreference
         }
     }
 }
@@ -227,9 +227,9 @@ if (ownerAcctgPref) {
             productId = orderItem.productId;
             if (productId) {
                 result = runService('getProductCost', [productId : productId, currencyUomId : ownerAcctgPref.baseCurrencyUomId,
-                                                               costComponentTypePrefix : 'EST_STD', userLogin : request.getAttribute("userLogin")]);
-                if (!ServiceUtil.isError(result)) {
-                    standardCosts.put(productId, result.productCost);
+                                                               costComponentTypePrefix : 'EST_STD', userLogin : request.getAttribute("userLogin")])
+                if (ServiceUtil.isSuccess(result)) {
+                    standardCosts.put(productId, result.productCost)
                 }
             }
         }
@@ -238,9 +238,15 @@ if (ownerAcctgPref) {
     // get the unit cost of a single product
     if (productId) {
         result = runService('getProductCost', [productId : productId, currencyUomId : ownerAcctgPref.baseCurrencyUomId,
+<<<<<<< HEAD:applications/product/webapp/facility/WEB-INF/actions/inventory/ReceiveInventory.groovy
                                                        costComponentTypePrefix : 'EST_STD', userLogin : request.getAttribute("userLogin")]);
         if (!ServiceUtil.isError(result)) {
             standardCosts.put(productId, result.productCost);
+=======
+                                                       costComponentTypePrefix : 'EST_STD', userLogin : request.getAttribute("userLogin")])
+        if (ServiceUtil.isSuccess(result)) {
+            standardCosts.put(productId, result.productCost)
+>>>>>>> 3cf1890b68... Implemented: Accounting: Handle service response effectively:applications/product/groovyScripts/facility/inventory/ReceiveInventory.groovy
         }
     }
 }

@@ -1469,7 +1469,7 @@ public class ShoppingCartEvents {
                     UtilMisc.<String, Object>toMap("quoteId", quoteId,
                             "applyQuoteAdjustments", "true",
                             "userLogin", userLogin));
-            if (!ServiceUtil.isSuccess(outMap)) {
+            if (ServiceUtil.isError(outMap)) {
                 request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(outMap));
                 return "error";
             }
@@ -1508,7 +1508,7 @@ public class ShoppingCartEvents {
                                                 UtilMisc.<String, Object>toMap("orderId", orderId, "createAsNewOrder", createAsNewOrder,
                                                         "skipProductChecks", Boolean.TRUE, // the products have already been checked in the order, no need to check their validity again
                                                         "userLogin", userLogin));
-            if (!ServiceUtil.isSuccess(outMap)) {
+            if (ServiceUtil.isError(outMap)) {
                 request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(outMap));
                 return "error";
              }

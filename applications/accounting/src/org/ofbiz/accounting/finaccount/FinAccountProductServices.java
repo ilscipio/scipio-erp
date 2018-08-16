@@ -220,7 +220,7 @@ public class FinAccountProductServices {
         }
         if (ServiceUtil.isError(createResp)) {
             Debug.logFatal(ServiceUtil.getErrorMessage(createResp), module);
-            return createResp;
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(createResp));
         }
 
         finAccountId = (String) createResp.get("finAccountId");
@@ -241,7 +241,7 @@ public class FinAccountProductServices {
         }
         if (ServiceUtil.isError(roleResp)) {
             Debug.logFatal(ServiceUtil.getErrorMessage(roleResp), module);
-            return roleResp;
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(roleResp));
         }
 
         // create the initial deposit
@@ -265,7 +265,7 @@ public class FinAccountProductServices {
         }
         if (ServiceUtil.isError(depositResp)) {
             Debug.logFatal(ServiceUtil.getErrorMessage(depositResp), module);
-            return depositResp;
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(depositResp));
         }
 
         Map<String, Object> result = ServiceUtil.returnSuccess();

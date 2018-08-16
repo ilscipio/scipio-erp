@@ -89,9 +89,9 @@ baseCurrencyUomId = null;
 if (facility) {
     owner = facility.getRelatedOne("OwnerParty", false);
     if (owner) {
-        result = runService('getPartyAccountingPreferences', [organizationPartyId : owner.partyId, userLogin : request.getAttribute("userLogin")]);
-        if (!ServiceUtil.isError(result) && result.partyAccountingPreference) {
-            ownerAcctgPref = result.partyAccountingPreference;
+        result = runService('getPartyAccountingPreferences', [organizationPartyId : owner.partyId, userLogin : request.getAttribute("userLogin")])
+        if (ServiceUtil.isSuccess(result) && result.partyAccountingPreference) {
+            ownerAcctgPref = result.partyAccountingPreference
         }
     }
     if (ownerAcctgPref) {
@@ -161,9 +161,9 @@ orderItems.each { orderItemAndShipGroupAssoc ->
     // Update the unit cost with the converted value, if any
     if (baseCurrencyUomId && orderHeader.currencyUom) {
         if (product) {
-            result = runService('convertUom', [uomId : orderHeader.currencyUom, uomIdTo : baseCurrencyUomId, originalValue : orderItem.unitPrice]);
-            if (!ServiceUtil.isError(result)) {
-                orderItem.unitPrice = result.convertedValue;
+            result = runService('convertUom', [uomId : orderHeader.currencyUom, uomIdTo : baseCurrencyUomId, originalValue : orderItem.unitPrice])
+            if (ServiceUtil.isSuccess(result)) {
+                orderItem.unitPrice = result.convertedValue
             }
         }
     }

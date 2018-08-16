@@ -190,7 +190,7 @@ under the License.
                                 </@tr>
                             <#elseif paymentMethodType.paymentMethodTypeId == "EXT_LIGHTNING">
                                 <@tr>
-                                  <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertUom(orderGrandTotal!grandTotal!0, currencyUomId!,"XBT",dispatcher)>
+                                  <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(orderDate, orderGrandTotal!grandTotal!0, currencyUomId!,"XBT",dispatcher,true)>
                                   <#assign offPayTitle>${uiLabelMap.AccountingPayWithBitcoin}
                                   </#assign>
                                   <#assign offPayDesc>

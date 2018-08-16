@@ -262,7 +262,9 @@ ToDo: Update menu with Authorize and Capture transaction actions
                 <@td colspan="3">
                     <#if orderPaymentPreference.maxAmount?has_content>
                         <#if paymentMethodType.paymentMethodTypeId == "EXT_LIGHTNING">
-                            <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertUom(orderPaymentPreference.maxAmount?default(0.00), currencyUomId,"XBT",dispatcher)>
+                            <#assign orderDate = .now?iso>
+                            <#if orderHeader?has_content><#assign orderDate = orderHeader.orderDate/></#if>
+                            <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(orderDate, orderPaymentPreference.maxAmount?default(0.00), currencyUomId,"XBT",dispatcher,true)>
                             ${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=xbtAmount rounding="8" isoCode="XBT"/>
                         <#else>
                             ${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
@@ -284,7 +286,9 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <#list paymentList as payment>
                                 <#assign paymentTotal = paymentTotal + payment.amount />
                             </#list>
-                            <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertUom(paymentTotal, currencyUomId,"XBT",dispatcher)>
+                            <#assign orderDate = .now?iso>
+                            <#if orderHeader?has_content><#assign orderDate = orderHeader.orderDate/></#if>
+                            <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(orderDate, paymentTotal, currencyUomId,"XBT",dispatcher,true)>
                             <p>${uiLabelMap.CommonAmount}: <@ofbizCurrency amount=xbtAmount?default(0.00) rounding="8" isoCode="XBT"/></p>
                             <#if paymentTotal &lt; orderPaymentPreference.maxAmount?default(0.00)>
                                 <a href="<@ofbizUrl>receivepayment?${rawString(paramString)}</@ofbizUrl>">${uiLabelMap.AccountingReceivePayment}</a>

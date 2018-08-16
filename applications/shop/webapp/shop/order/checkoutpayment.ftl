@@ -341,7 +341,7 @@ jQuery(document).ready(function(){
             <@section containerId="content_LIGHTNING" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=uiLabelMap.AccountingPayWithBitcoin-->
               <@payMethInfoPanel title=uiLabelMap.AccountingPayWithBitcoin>
                 <p>${uiLabelMap.OrderPaymentDescBitcoin}</p>
-                <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertUom(cart.getDisplayGrandTotal()!0, cart.getCurrency(),"XBT",dispatcher)>
+                <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(cart.getCartCreatedTime(),cart.getDisplayGrandTotal()!0, cart.getCurrency(),"XBT",dispatcher,true)>
                 <p>${uiLabelMap.CommonAmount}: <@ofbizCurrency amount=xbtAmount?default(0.00) rounding="8" isoCode="XBT"/></p>
               </@payMethInfoPanel>
             </@section>

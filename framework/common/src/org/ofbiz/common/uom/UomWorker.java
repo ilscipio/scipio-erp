@@ -20,6 +20,7 @@
 package org.ofbiz.common.uom;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,10 +28,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -98,7 +101,43 @@ public class UomWorker {
     public static Calendar addUomTime(Timestamp startTime, String uomId, int value) {
         return addUomTime(null, startTime, uomId, value);
     }
+    
+    /**
+    * SCIPIO: Method to use a conversion unit from a specific date
+    */
+   public static BigDecimal convertDatedUom(Timestamp timeStamp, BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher,boolean safe) {
+       if (originalValue == null || uomId == null || uomIdTo == null) return null;
+       if (uomId.equals(uomIdTo)) return originalValue;
+       BigDecimal conversionRate = BigDecimal.ONE;
+       BigDecimal convertedValue = BigDecimal.ZERO;
+       Delegator delegator = dispatcher.getDelegator();
+       
+       Map<String, Object> svcInMap = new LinkedHashMap<String, Object>();
+       svcInMap.put("originalValue", originalValue);
+       svcInMap.put("uomId", uomId);
+       svcInMap.put("uomIdTo", uomIdTo);
+       svcInMap.put("asOfDate", timeStamp);
 
+       Map<String, Object> svcOutMap = new LinkedHashMap<String, Object>();
+       try {
+           // SCIPIO: support safe mode: create a new transaction to prevent screen crashes
+           if (safe) {
+               svcOutMap = dispatcher.runSync("convertUom", svcInMap, -1, true);
+           } else {
+               svcOutMap = dispatcher.runSync("convertUom", svcInMap);
+           }
+       } catch (GenericServiceException ex) {
+           Debug.logError(ex, module);
+           return null;
+       }
+
+       if (svcOutMap.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS) && svcOutMap.get("convertedValue") != null) {
+           return (BigDecimal) svcOutMap.get("convertedValue");
+       }
+       Debug.logError("Failed to perform conversion for value [" + originalValue.toPlainString() + "] from Uom [" + uomId + "] to Uom [" + uomIdTo + "]",module);
+       return null;
+   }
+   
     /**
      * Convenience method to call the convertUom service
      * <p>

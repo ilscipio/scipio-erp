@@ -282,10 +282,10 @@
         <dependency org="wsdl4j" name="wsdl4j" rev="1.6.3" conf="base,sources"/>
 
         <!-- testtools component (framework/testtools/ivy.xml) -->
-        <dependency org="org.springframework" name="spring-core" rev="5.0.4.RELEASE" conf="base,sources">
+        <dependency org="org.springframework" name="spring-core" rev="5.0.8.RELEASE" conf="base,sources">
             <exclude module="spring-jcl"/><!-- interferes with commons-logging -->
         </dependency>
-        <dependency org="org.springframework" name="spring-test" rev="5.0.4.RELEASE" conf="base,sources">
+        <dependency org="org.springframework" name="spring-test" rev="5.0.8.RELEASE" conf="base,sources">
             <exclude module="spring-jcl"/><!-- interferes with commons-logging -->
         </dependency>
 

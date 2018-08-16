@@ -178,7 +178,7 @@ public class PreferenceWorker {
     /**
      * Checks for valid userLoginId to get preferences. Returns true if valid.
      * <p>This method applies a small rule set to determine if user preferences
-     * can be retrieved by the current user:
+     * can be retrieved by the current user:</p>
      * <ul>
      * <li>If the user isn't logged in, then the method returns true</li>
      * <li>If the user is logged in and the userPrefLoginId specified in the context Map
@@ -187,7 +187,7 @@ public class PreferenceWorker {
      * is different than the user's userLoginId, then a security permission check is performed.
      * If the user has the <a href="#ADMIN_PERMISSION">ADMIN_PERMISSION</a> permission then the
      *  method returns true.</li>
-     * </ul></p>
+     * </ul>
      *
      * @param ctx The DispatchContext that this service is operating in.
      * @param context Map containing the input arguments.
@@ -213,7 +213,7 @@ public class PreferenceWorker {
     /**
      * Checks for valid userLoginId to set preferences. Returns true if valid.
      * <p>This method applies a small rule set to determine if user preferences
-     * can be set by the current user:
+     * can be set by the current user:</p>
      * <ul>
      * <li>If the user isn't logged in, then the method returns false</li>
      * <li>If the user is logged in and the userPrefLoginId specified in the context Map
@@ -222,7 +222,7 @@ public class PreferenceWorker {
      * is different than the user's userLoginId, then a security permission check is performed.
      * If the user has the <a href="#ADMIN_PERMISSION">ADMIN_PERMISSION</a>
      * permission then the method returns true.</li>
-     * </ul></p>
+     * </ul>
      * @param ctx The DispatchContext that this service is operating in.
      * @param context Map containing the input arguments.
      * @return true if arguments are valid

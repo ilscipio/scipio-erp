@@ -216,11 +216,8 @@ public class OrderReadHelper {
     }
 
     /**
-     * Returns a Map of paymentMethodId -> amount charged (BigDecimal) based on
-     * PaymentGatewayResponse.
-     * 
-     * @return returns a Map of paymentMethodId -> amount charged (BigDecimal)
-     *         based on PaymentGatewayResponse.
+     * Returns a Map of paymentMethodId -&gt; amount charged (BigDecimal) based on PaymentGatewayResponse.
+     * @return returns a Map of paymentMethodId -&gt; amount charged (BigDecimal) based on PaymentGatewayResponse.
      */
     public Map<String, BigDecimal> getReceivedPaymentTotalsByPaymentMethod() {
         Map<String, BigDecimal> paymentMethodAmounts = new HashMap<String, BigDecimal>();
@@ -267,9 +264,8 @@ public class OrderReadHelper {
     }
 
     /**
-     * Returns a Map of paymentMethodId -> amount refunded
-     * 
-     * @return returns a Map of paymentMethodId -> amount refunded
+     * Returns a Map of paymentMethodId -&gt; amount refunded
+     * @return returns a Map of paymentMethodId -&gt; amount refunded
      */
     public Map<String, BigDecimal> getReturnedTotalsByPaymentMethod() {
         Map<String, BigDecimal> paymentMethodAmounts = new HashMap<String, BigDecimal>();
@@ -2905,13 +2901,9 @@ public class OrderReadHelper {
     }
 
     /**
-     * Get the total return adjustments for a set of key -> value condition
-     * pairs. Done for code efficiency.
-     * 
-     * @param delegator
-     *            the delegator
-     * @param condition
-     *            a map of the conditions to use
+     * Get the total return adjustments for a set of key -&gt; value condition pairs.  Done for code efficiency.
+     * @param delegator the delegator
+     * @param condition a map of the conditions to use
      * @return Get the total return adjustments
      */
     public static BigDecimal getReturnAdjustmentTotal(Delegator delegator, Map<String, Object> condition) {

@@ -59,8 +59,8 @@ public class GenericPK extends GenericEntity {
         return newPK;
     }
 
-    /** Clones this GenericPK, this is a shallow clone & uses the default shallow HashMap clone
-     *@return Object that is a clone of this GenericPK
+    /** Clones this GenericPK, this is a shallow clone and uses the default shallow HashMap clone
+     *  @return Object that is a clone of this GenericPK
      */
     @Override
     public Object clone() {

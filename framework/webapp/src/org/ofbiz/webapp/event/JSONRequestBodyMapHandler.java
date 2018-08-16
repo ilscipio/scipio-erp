@@ -26,7 +26,7 @@ import javax.servlet.ServletRequest;
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.UtilGenerics;
 
-/** An implementation of <code>RequestBodyMapHandler</code> that can extract a <code>Map<String, Object></code> from the JSON data in the request body */
+/** An implementation of <code>RequestBodyMapHandler</code> that can extract a <code>Map&lt;String, Object&gt;</code> from the JSON data in the request body */
 public class JSONRequestBodyMapHandler implements RequestBodyMapHandler {
 
     public Map<String, Object> extractMapFromRequestBody(ServletRequest request) throws IOException {

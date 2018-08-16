@@ -74,6 +74,18 @@ public class WebSiteWorker {
         }
         return null;
     }
+    
+    /**
+     * SCIPIO: Extracts the webSiteId from the given context according to its render environment type
+     * automatically determined from the context itself (best-effort).
+     * <p>
+     * NOTE: Partly based on {@link org.ofbiz.common.email.NotificationServices#setBaseUrl}.
+     * <p>
+     * Added 2018-08-17.
+     */
+    public static String getWebSiteIdFromContext(Map<String, Object> context) {
+        return getWebSiteIdFromContext(context, RenderEnvType.fromContext(context));
+    }
 
     public static GenericValue getWebSite(ServletRequest request) {
         String webSiteId = getWebSiteId(request);

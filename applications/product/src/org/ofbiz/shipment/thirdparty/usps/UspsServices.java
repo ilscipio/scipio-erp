@@ -248,16 +248,33 @@ public class UspsServices {
         }
 
         BigDecimal estimateAmount = BigDecimal.ZERO;
+        int packageIndex = 1; // SCIPIO
         for (Element packageElement: rates) {
             try {
-                Element postageElement = UtilXml.firstChildElement(packageElement, "Postage");
-                BigDecimal packageAmount = new BigDecimal(UtilXml.childElementValue(postageElement, "Rate"));
-                estimateAmount = estimateAmount.add(packageAmount);
-            } catch (NumberFormatException e) {
-                Debug.logInfo(e, module);
+                // SCIPIO: 2018-08-16: detect Error element
+                Element errorElement = UtilXml.firstChildElement(packageElement, "Error");
+                if (errorElement != null) {
+                    Element descriptionElement = UtilXml.firstChildElement(errorElement, "Description");
+                    Debug.logInfo("USPS: No valid postage rate in package " + packageIndex + "/" + rates.size()
+                        + " (cause: " + UtilXml.elementValue(descriptionElement) + ")", module);
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceError, 
+                            "FacilityShipmentRateNotAvailable", locale));
+                } else {
+                    Element postageElement = UtilXml.firstChildElement(packageElement, "Postage");
+                    BigDecimal packageAmount = new BigDecimal(UtilXml.childElementValue(postageElement, "Rate"));
+                    estimateAmount = estimateAmount.add(packageAmount);
+                }
+            } catch (NumberFormatException | NullPointerException e) { // SCIPIO: 2018-08-16: added NullPointerException, postageElement may be null?
+                // SCIPIO: makes no sense to log full exception if we're logging to info...
+                //Debug.logInfo(e, module);
+                Debug.logInfo("USPS: No valid postage rate in package " + packageIndex + "/" + rates.size()
+                    + " (cause: " + e.toString() + ")", module);
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceError, 
+                        "FacilityShipmentRateNotAvailable", locale));
             }
+            packageIndex++;
         }
-
+        
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("shippingEstimateAmount", estimateAmount);
         return result;

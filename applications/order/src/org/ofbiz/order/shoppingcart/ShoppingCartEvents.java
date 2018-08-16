@@ -613,7 +613,7 @@ public class ShoppingCartEvents {
                     productList = EntityQuery.use(delegator).select("productId").from("ProductAssoc").where("productIdTo", productId, "productAssocTypeId", "PRODUCT_UPGRADE").queryList();
                     if (productList != null) {
                         for (ShoppingCartItem sci : cart) {
-                            if (productList.contains(sci.getProductId())) {
+                            if (productList.parallelStream().anyMatch(p -> sci.getProductId().equals(p.getString("productId")))) {
                                 try {
                                     cart.removeCartItem(sci, dispatcher);
                                 } catch (CartItemModifyException e) {

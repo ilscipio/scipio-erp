@@ -385,7 +385,7 @@
         -->
 
         <!-- deps for main build.xml ant task: download-activemq -->
-        <dependency org="org.apache.activemq" name="activemq-all" rev="5.15.4" conf="activemq"/>
+        <dependency org="org.apache.activemq" name="activemq-all" rev="5.15.5" conf="activemq"/>
 
         <!-- deps for main build.xml ant task: download-cobertura -->
         <dependency org="net.sourceforge.cobertura" name="cobertura" rev="2.1.1" conf="cobertura">

@@ -608,7 +608,7 @@ public class OrderLookupServices {
 
         // create the main condition
         EntityCondition cond = null;
-        if (conditions.size() > 0 || showAll.equalsIgnoreCase("Y")) {
+        if (conditions.size() > 0 || "Y".equalsIgnoreCase(showAll)) {
             cond = EntityCondition.makeCondition(conditions, EntityOperator.AND);
         }
 

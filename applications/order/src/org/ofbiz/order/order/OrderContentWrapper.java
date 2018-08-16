@@ -113,7 +113,7 @@ public class OrderContentWrapper extends CommonContentWrapper {
          */
         UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
 
-        String orderItemSeqId = (order.getEntityName().equals("OrderItem")? order.getString("orderItemSeqId"): "_NA_");
+        String orderItemSeqId = ("OrderItem".equals(order.getEntityName())? order.getString("orderItemSeqId"): "_NA_");
 
         String cacheKey = (useCache) ? orderContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + order.get("orderId") + SEPARATOR + orderItemSeqId + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : null;
         try {
@@ -153,7 +153,7 @@ public class OrderContentWrapper extends CommonContentWrapper {
             orderId = order.getString("orderId");
         }
         if (orderItemSeqId == null && order != null) {
-            orderItemSeqId = (order.getEntityName().equals("OrderItem")? order.getString("orderItemSeqId"): "_NA_");
+            orderItemSeqId = ("OrderItem".equals(order.getEntityName())? order.getString("orderItemSeqId"): "_NA_");
         }
 
         if (delegator == null && order != null) {

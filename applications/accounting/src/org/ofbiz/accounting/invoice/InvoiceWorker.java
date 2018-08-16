@@ -897,7 +897,7 @@ public class InvoiceWorker {
                 if (UtilValidate.isNotEmpty(taxAuthorityRateSeqId)) {
                     if (!result.containsKey(taxAuthorityRateSeqId)) {
                         String taxGlAccountId = null;
-                        GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOneCache("TaxAuthorityRateProduct");
+                        GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOne("TaxAuthorityRateProduct", true);
                         if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
                             taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                         }
@@ -943,7 +943,7 @@ public class InvoiceWorker {
             for (GenericValue invoiceItem : invoiceTaxItems) {
                 String taxGlAccountId = null;
                 // TODO: getTaxGlAccountForInvoiceItem(invoiceTaxItem);
-                GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOneCache("TaxAuthorityRateProduct");
+                GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOne("TaxAuthorityRateProduct", true);
                 if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
                     taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                 }

@@ -46,6 +46,7 @@
         <logger name="org.ofbiz.base.converter.Converters" level="warn"/>
         <logger name="org.apache" level="warn"/>
         <logger name="freemarker" level="warn"/>
+        <logger name="FOP" level="warn"/>
 
         <!-- SCIPIO: filter third-party libraries -->
         <logger name="net.fortuna.ical4j" level="warn"/>

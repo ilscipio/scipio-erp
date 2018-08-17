@@ -1803,4 +1803,68 @@ nextProd:
         }
         return possibleTrails;
     }
+    
+    
+    
+    /**
+     * SCIPIO: Gets the product's "original" product association. For variant, means its virtual,
+     * for configurable product, means its original unconfigured product.
+     * General, means the "linkable" product.
+     * Added 2018-08-17.
+     */
+    public static GenericValue getOriginalProductAssoc(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        if (productId == null) {
+            Debug.logWarning("Bad product id", module);
+        }
+
+        try {
+            List<EntityCondition> productAssocTypeIdCondList = UtilMisc.toList(
+                    EntityCondition.makeCondition("productAssocTypeId", "PRODUCT_VARIANT"),
+                    EntityCondition.makeCondition("productAssocTypeId", "UNIQUE_ITEM"),
+                    EntityCondition.makeCondition("productAssocTypeId", "PRODUCT_CONF"));
+            EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("productIdTo", productId),
+                    EntityOperator.AND,
+                    EntityCondition.makeCondition(productAssocTypeIdCondList, EntityOperator.OR));
+            List<GenericValue> virtualProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                    .where(cond)
+                    .orderBy("-fromDate")
+                    .cache(useCache)
+                    .filterByDate()
+                    .queryList();
+            return EntityUtil.getFirst(virtualProductAssocs);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Entity engine error while getting original product for '" + productId + "'", module);
+        }
+        return null;
+    }
+    
+    public static GenericValue getOriginalProduct(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        GenericValue origProduct = null;
+        try {
+            GenericValue productAssoc = getOriginalProductAssoc(productId, delegator, useCache);
+            if (productAssoc != null) {
+                origProduct = productAssoc.getRelatedOne("MainProduct", useCache);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Entity engine error while getting original product for '" + productId + "'", module);
+        }
+        return origProduct;
+    }
+    
+    public static GenericValue getOriginalProduct(String productId, Delegator delegator) {
+        return getOriginalProduct(productId, delegator, true);
+    }
+
+    public static String getOriginalProductId(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        String origProduct = null;
+        GenericValue productAssoc = getOriginalProductAssoc(productId, delegator, useCache);
+        if (productAssoc != null) {
+            origProduct = productAssoc.getString("productId");
+        }
+        return origProduct;
+    }
+    
+    public static String getOriginalProductId(String productId, Delegator delegator) {
+        return getOriginalProductId(productId, delegator, true);
+    }
 }

@@ -19,6 +19,7 @@
 package org.ofbiz.webapp.taglib;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,7 +46,7 @@ public class ContentUrlTag {
      */
     public static void appendContentPrefix(HttpServletRequest request, StringBuilder urlBuffer) {
         try {
-            appendContentPrefix(request, (Appendable) urlBuffer);
+            appendContentPrefix(request, (Appendable) urlBuffer, null, null);
         } catch (IOException e) {
             throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
         }
@@ -58,7 +59,7 @@ public class ContentUrlTag {
      */
     public static void appendContentPrefix(HttpServletRequest request, StringBuilder urlBuffer, String webSiteId) {
         try {
-            appendContentPrefix(request, (Appendable) urlBuffer, webSiteId);
+            appendContentPrefix(request, (Appendable) urlBuffer, webSiteId, null);
         } catch (IOException e) {
             throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
         }
@@ -67,20 +68,60 @@ public class ContentUrlTag {
     /**
      * Appends content prefix to buffer.
      * <p>
-     * SCIPIO: Modified to support an explicit webSiteId
+     * SCIPIO: Version that supports optional explicit webSiteId.
+     */
+    public static void appendContentPrefix(HttpServletRequest request, StringBuilder urlBuffer, String webSiteId, Boolean secure) {
+        try {
+            appendContentPrefix(request, (Appendable) urlBuffer, webSiteId, secure);
+        } catch (IOException e) {
+            throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
+        }
+    }
+
+    /**
+     * Appends content prefix to buffer.
+     * <p>
+     * SCIPIO: Version that supports optional explicit webSiteId.
+     */
+    public static void appendContentPrefix(Map<String, Object> context, StringBuilder urlBuffer, String webSiteId, Boolean secure) {
+        try {
+            appendContentPrefix(context, (Appendable) urlBuffer, webSiteId, secure);
+        } catch (IOException e) {
+            throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
+        }
+    }
+
+    /**
+     * Appends content prefix to buffer.
+     * <p>
+     * SCIPIO: NOTE: Orig Ofbiz signature.
+     */
+    public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer) throws IOException {
+        appendContentPrefix(request, urlBuffer, null, null);
+    }
+    
+    /**
+     * SCIPIO: Appends content prefix to buffer, with optional webSiteId.
      */
     public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer, String webSiteId) throws IOException {
+        appendContentPrefix(request, urlBuffer, webSiteId, null);
+    }
+
+    /**
+     * Appends content prefix to buffer.
+     * <p>
+     * SCIPIO: Modified to support an explicit webSiteId and secure flag
+     */
+    public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer, String webSiteId, Boolean secure) throws IOException {
         if (request == null) {
-            Debug.logWarning("appendContentPrefix: Request was null; this probably means this was used where it"
+            Debug.logWarning("appendContentPrefix: Request is null; this probably means this was used where it"
                     + " shouldn't be; using best-bet behavior: secure prefix from url.properties (no WebSite or security setting known)", module);
-            String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.secure");
-            if (UtilValidate.isEmpty(prefix)) {
-                Debug.logWarning("appendContentPrefix: INSECURE CONFIG: no content.url.prefix.secure defined; falling back on standard", module);
-                prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
+            if (secure == null) {
+                secure = true;
             }
-            if (prefix != null) {
-                urlBuffer.append(prefix.trim());
-            }
+            String prefix = secure ? UtilProperties.getPropertyValue("url", "content.url.prefix.secure") : 
+                UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
+            urlBuffer.append(prefix.trim());
             return;
         }
         // SCIPIO: if webSiteId, get that specific one
@@ -92,22 +133,36 @@ public class ContentUrlTag {
             webSite = WebSiteWorker.getWebSite(request);
         }
         // SCIPIO: 2017-11-18: Factored out dispersed secure checks into RequestLinkUtil:
-        appendContentPrefix(webSite, RequestLinkUtil.isEffectiveSecure(request), urlBuffer);
+        appendContentPrefix(webSite, secure != null ? secure : RequestLinkUtil.isEffectiveSecure(request), urlBuffer);
     }
-    
+
     /**
-     * Appends content prefix to buffer.
-     * <p>
-     * SCIPIO: NOTE: Orig Ofbiz signature.
+     * SCIPIO: Appends content prefix to buffer, using a render context.
      */
-    public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer) throws IOException {
-        appendContentPrefix(request, urlBuffer, null);
-    }    
+    public static void appendContentPrefix(Map<String, Object> context, Appendable urlBuffer, String webSiteId, Boolean secure) throws IOException {
+        // SCIPIO: if webSiteId, get that specific one
+        //GenericValue webSite = WebSiteWorker.getWebSite(request);
+        GenericValue webSite;
+        if (webSiteId != null && webSiteId.length() > 0) {
+            webSite = WebSiteWorker.findWebSite((Delegator) context.get("delegator"), webSiteId);
+        } else {
+            webSite = WebSiteWorker.getWebSiteFromContext(context);
+        }
+        // SCIPIO: 2017-11-18: Factored out dispersed secure checks into RequestLinkUtil:
+        StringBuilder sb = new StringBuilder();
+        appendContentPrefix(webSite, secure != null ? secure : true, sb);
+        urlBuffer.append(sb.toString());
+        if (sb.length() == 0) {
+            Debug.logWarning("appendContentPrefix: We appear to be rendering from a non-webapp"
+                    + " render context, but no content prefix is defined in url.properties; cannot"
+                    + " create a full link", module);
+        }
+    }
 
     // SCIPIO: Modified to support Boolean
     public static void appendContentPrefix(GenericValue webSite, Boolean secure, Appendable urlBuffer) throws IOException {
         // SCIPIO: WARN: Don't have request, can't determine sane default when secure null, so assume false
-        secure = Boolean.TRUE.equals(secure); // default false 
+        secure = !Boolean.FALSE.equals(secure); // default TRUE (2018-08) 
         if (secure) {
             if (webSite != null && UtilValidate.isNotEmpty(webSite.getString("secureContentPrefix"))) {
                 urlBuffer.append(webSite.getString("secureContentPrefix").trim());
@@ -131,7 +186,7 @@ public class ContentUrlTag {
 
     public static String getContentPrefix(HttpServletRequest request) {
         StringBuilder buf = new StringBuilder();
-        ContentUrlTag.appendContentPrefix(request, buf);
+        ContentUrlTag.appendContentPrefix(request, buf, null, null);
         return buf.toString();
     }
 }

@@ -24,12 +24,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -58,14 +58,18 @@ public final class EntityUtilProperties implements Serializable {
      * Added 2018-07-27.
      */
     public static String getSystemPropertyValueOrNull(String resource, String name, Delegator delegator) {
-        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
-        return "Y".equals(propMap.get("isExistInDb")) ? propMap.get("value") : null;
+        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        return propMap.isPresent() ? propMap.get() : null;
     }
 
-    private static Map<String, String> getSystemPropertyValue(String resource, String name, Delegator delegator) {
-        Map<String, String> results = new HashMap<>();
-        results.put("isExistInDb", "N");
-        results.put("value", "");
+    /**
+     * Gets the given SystemPropertyValue, or an empty Optional if does not exist or interpreted
+     * to not exist.
+     * <p>
+     * SCIPIO: 2018-08-17: modified to use Optional instead of inappropriate Map.
+     */
+    private static Optional<String> getSystemPropertyValue(String resource, String name, Delegator delegator) {
+        Optional<String> results = Optional.empty(); // SCIPIO: Optional
 
         if (UtilValidate.isEmpty(resource) || UtilValidate.isEmpty(name)) {
             return results;
@@ -91,8 +95,7 @@ public final class EntityUtilProperties implements Serializable {
                 if (value.isEmpty() && !Boolean.TRUE.equals(systemProperty.getBoolean("useEmpty"))) {
                     // keep isExistInDb "N" and value "" (above)
                 } else {
-                    results.put("isExistInDb", "Y");
-                    results.put("value", value);
+                    results = Optional.of(value);
                 }
             }
         } catch (GenericEntityException e) {
@@ -106,19 +109,19 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static boolean propertyValueEqualsIgnoreCase(String resource, String name, String compareString, Delegator delegator) {
-        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
-        if ("Y".equals(propMap.get("isExistInDb"))) {
+        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (propMap.isPresent()) {
             compareString = (compareString == null) ? "" : compareString;
-            return propMap.get("value").equalsIgnoreCase(compareString);
+            return propMap.get().equalsIgnoreCase(compareString);
         } else {
             return UtilProperties.propertyValueEqualsIgnoreCase(resource, name, compareString);
         }
     }
 
     public static String getPropertyValue(String resource, String name, String defaultValue, Delegator delegator) {
-        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
-        if ("Y".equals(propMap.get("isExistInDb"))) {
-            String s = propMap.get("value");
+        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (propMap.isPresent()) {
+            String s = propMap.get();
             return (UtilValidate.isEmpty(s)) ? defaultValue : s;
         } else {
             return UtilProperties.getPropertyValue(resource, name, defaultValue);
@@ -137,9 +140,9 @@ public final class EntityUtilProperties implements Serializable {
                 Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);
             }
         }
-        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
-        if ("Y".equals(propMap.get("isExistInDb"))) {
-            String s = propMap.get("value");
+        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (propMap.isPresent()) {
+            String s = propMap.get();
             return (UtilValidate.isEmpty(s)) ? defaultValue : s;
         } else {
             return UtilProperties.getPropertyValue(resource, name, defaultValue);
@@ -183,9 +186,9 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static String getPropertyValue(String resource, String name, Delegator delegator) {
-        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
-        if ("Y".equals(propMap.get("isExistInDb"))) {
-            return propMap.get("value");
+        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (propMap.isPresent()) {
+            return propMap.get();
         } else {
             return UtilProperties.getPropertyValue(resource, name);
         }
@@ -203,9 +206,9 @@ public final class EntityUtilProperties implements Serializable {
                 Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);
             }
         }
-        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
-        if ("Y".equals(propMap.get("isExistInDb"))) {
-            return propMap.get("value");
+        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (propMap.isPresent()) {
+            return propMap.get();
         } else {
             return UtilProperties.getPropertyValue(resource, name);
         }
@@ -299,9 +302,9 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static String getMessage(String resource, String name, Locale locale, Delegator delegator) {
-        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
-        if ("Y".equals(propMap.get("isExistInDb"))) {
-            return propMap.get("value");
+        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (propMap.isPresent()) {
+            return propMap.get();
         } else {
             return UtilProperties.getMessage(resource, name, locale);
         }

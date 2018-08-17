@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.content.ContentRequestWorker;
@@ -53,7 +54,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class OfbizContentTransform implements TemplateTransformModel {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) throws TemplateModelException {
@@ -75,6 +76,9 @@ public class OfbizContentTransform implements TemplateTransformModel {
         final Integer imgHeight = TransformUtil.getIntegerArg(args, "height");
         final String imgVariantCfg = TransformUtil.getStringNonEscapingArg(args, "variantCfg");
         
+        final String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams);
+        final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO
+
         return new Writer(out) {
             @Override
             public void write(char cbuf[], int off, int len) {
@@ -95,9 +99,25 @@ public class OfbizContentTransform implements TemplateTransformModel {
           
                     String ctxPrefix = getContentPathPrefix(ctxPrefixObj, rawParams, env); // SCIPIO: new
 
-                    // SCIPIO: delegated to our new method    
-                    String url = ContentRequestWorker.makeContentLink(request, response, UtilValidate.isNotEmpty(uri) ? uri : buf.toString(), imgSize, null, 
-                            ctxPrefix, urlDecode, strict, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+                    String srcUri = UtilValidate.isNotEmpty(uri) ? uri : buf.toString();
+
+                    // SCIPIO: delegated to our new methods
+                    String url;
+                    if (request != null) {
+                        url = ContentRequestWorker.makeContentLink(request, response, srcUri, imgSize, webSiteId, 
+                            ctxPrefix, urlDecode, strict, secure, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+                    } else {
+                        Map<String, Object> context = ContextFtlUtil.getContext(env);
+                        if (context != null) {
+                            url = ContentRequestWorker.makeContentLink(context, srcUri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, 
+                                    secure, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+                        } else {
+                            Debug.logWarning("@ofbizContentUrl: no request or render context available - unusual context!", module);
+                            // try anyway (original request-based method in ContentUrlTag will catch it)
+                            url = ContentRequestWorker.makeContentLink(null, null, srcUri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, 
+                                    secure, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+                        }
+                    }
 
                     out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                 } catch (TemplateModelException e) {

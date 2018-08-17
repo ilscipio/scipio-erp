@@ -176,7 +176,10 @@ under the License.
               <#-- product item -->
               <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
               <@td>
-                <#if !printable><a href="<@ofbizCatalogAltUrl productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}" target="_blank"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
+                <#if !printable>
+                    <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(orderItem.productId, delegator)!orderItem.productId><#-- SCIPIO -->
+                    <a href="<@ofbizCatalogAltUrl productId=origProductId/>" class="${styles.link_nav_info_desc!}" target="_blank"><#t/>
+                </#if><#lt/>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
                 <#-- SCIPIO: Link to downloads to consume -->
                 <#-- TODO: delegate status tests -->
                 <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>

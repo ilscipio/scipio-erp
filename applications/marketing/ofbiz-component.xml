@@ -38,13 +38,14 @@ under the License.
     <!-- test suite -->
     <test-suite loader="main" location="testdef/MarketingTests.xml"/>
 
+    <!-- SCIPIO: since redirect was added, this is conflicting mount-point:
     <webapp name="marketing"
         title="Marketing"
         server="default-server"
         location="webapp/marketing"
         app-bar-display="false"
         base-permission="OFBTOOLS,MARKETING"
-        mount-point="/marketing"/>
+        mount-point="/marketing"/>-->
     <webapp name="marketingredirect"
         title="Marketing"
         server="default-server"

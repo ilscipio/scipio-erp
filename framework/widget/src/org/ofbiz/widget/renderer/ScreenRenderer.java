@@ -60,6 +60,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.LoginWorker;
 import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.renderer.FtlContextFetcher;
+import org.ofbiz.webapp.renderer.RenderInfo;
 import org.ofbiz.webapp.renderer.RenderContextFetcher;
 import org.ofbiz.webapp.renderer.SimpleContextFetcher;
 import org.ofbiz.webapp.website.WebSiteWorker;
@@ -82,7 +83,7 @@ import freemarker.ext.servlet.ServletContextHashModel;
 /**
  * Widget Library - Screen model class
  */
-public class ScreenRenderer implements RenderContextFetcher {
+public class ScreenRenderer implements RenderContextFetcher, RenderInfo { // SCIPIO: interfaces
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -803,4 +804,11 @@ public class ScreenRenderer implements RenderContextFetcher {
         }
     }
 
+    /**
+     * SCIPIO: Convenience method to get the screenStringRenderer name.
+     */
+    @Override
+    public String getRendererName() {
+        return screenStringRenderer.getRendererName();
+    }
 }

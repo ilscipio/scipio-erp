@@ -1432,10 +1432,11 @@ public class UtilProperties implements Serializable {
      */
     public static Set<String> getPropertyNamesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
         Set<String> names = new HashSet<>();
+        int prefixLength = (prefix == null) ? 0 : prefix.length();
         int suffixLength = (suffix == null ? 0 : suffix.length());
         for(String name : properties.stringPropertyNames()) {
             if ((prefix == null || name.startsWith(prefix)) && (suffix == null || name.endsWith(suffix))) {
-                String middle = name.substring(prefix.length(), name.length() - suffixLength);
+                String middle = name.substring(prefixLength, name.length() - suffixLength);
                 if (allowDots || !middle.contains(".")) {
                     names.add((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""));
                 }
@@ -1450,10 +1451,11 @@ public class UtilProperties implements Serializable {
      * Added 2017-07-10.
      */
     public static void putPropertiesWithPrefixSuffix(Map<String, ? super String> out, Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
-        int suffixLength = (suffix == null ? 0 : suffix.length());
+        int prefixLength = (prefix == null) ? 0 : prefix.length();
+        int suffixLength = (suffix == null) ? 0 : suffix.length();
         for(String name : properties.stringPropertyNames()) {
             if ((prefix == null || name.startsWith(prefix)) && (suffix == null || name.endsWith(suffix))) {
-                String middle = name.substring(prefix.length(), name.length() - suffixLength);
+                String middle = name.substring(prefixLength, name.length() - suffixLength);
                 if (allowDots || !middle.contains(".")) {
                     String value = properties.getProperty(name);
                     if (value != null) value = value.trim();
@@ -1469,9 +1471,10 @@ public class UtilProperties implements Serializable {
      * Added 2017-07-10.
      */
     public static void putPropertiesWithPrefix(Map<String, ? super String> out, Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
+        int prefixLength = (prefix == null) ? 0 : prefix.length();
         for(String name : properties.stringPropertyNames()) {
             if ((prefix == null || name.startsWith(prefix))) {
-                String middle = name.substring(prefix.length(), name.length());
+                String middle = name.substring(prefixLength, name.length());
                 if (allowDots || !middle.contains(".")) {
                     String value = properties.getProperty(name);
                     if (value != null) value = value.trim();

@@ -869,9 +869,22 @@ NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixe
                                     {{{ctxPrefix}}}, or simply not pre-escaping for javascript.
                               NOTE: The function version of this macro, #makeOfbizContentUrl, uses
                                   true as default for this parameter, unlike this macro.
-                              (New in Scipio) 
-                              
+                              (New in Scipio)
+    secure                  = ((boolean), default: -true, except for xsl-fo-) Force secure or insecure link flag.
+                              Explicit false prevents HTTPS.
+                              xsl-fo uses secure false by default for performance and due to connection limitations.
+                              Added 2018-08-17.
+    type                    = (local|...|, default: -none-) Use alternative "type" content prefix
+                              If true, this link will use alternative content prefix
+                              from url.properties which are suffixed with this type, in the form:
+                                [type].content.url.prefix.secure=https://...
+                                [type].content.url.prefix.standard=http://...
+                              Notably this is useful for renderers such as xsl-fo that fetch
+                              graphics from hosted resources and can be used to speed up such renders.                               
+                              Added 2018-08-17.
+
   * History *
+    Enhanced for 1.14.5 (secure and type flags)
     Enhanced for 1.14.4 (variant parameter enhancement; autoVariant parameters added).
     Enhanced for 1.14.2.
 -->

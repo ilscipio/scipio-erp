@@ -78,7 +78,8 @@ public class OfbizContentTransform implements TemplateTransformModel {
         
         final String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams);
         final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO
-
+        final String type = TransformUtil.getStringNonEscapingArg(args, "type");
+        
         return new Writer(out) {
             @Override
             public void write(char cbuf[], int off, int len) {
@@ -105,17 +106,17 @@ public class OfbizContentTransform implements TemplateTransformModel {
                     String url;
                     if (request != null) {
                         url = ContentRequestWorker.makeContentLink(request, response, srcUri, imgSize, webSiteId, 
-                            ctxPrefix, urlDecode, strict, secure, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+                            ctxPrefix, urlDecode, strict, secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
                     } else {
                         Map<String, Object> context = ContextFtlUtil.getContext(env);
                         if (context != null) {
                             url = ContentRequestWorker.makeContentLink(context, srcUri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, 
-                                    secure, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+                                    secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
                         } else {
                             Debug.logWarning("@ofbizContentUrl: no request or render context available - unusual context!", module);
                             // try anyway (original request-based method in ContentUrlTag will catch it)
                             url = ContentRequestWorker.makeContentLink(null, null, srcUri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, 
-                                    secure, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+                                    secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
                         }
                     }
 

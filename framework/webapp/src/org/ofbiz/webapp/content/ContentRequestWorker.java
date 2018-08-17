@@ -49,20 +49,20 @@ public abstract class ContentRequestWorker {
      * @param strict FALSE by default (for legacy reasons), affects pre-escaped value handling
      */
     public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize, String webSiteId, String ctxPrefix, Boolean urlDecode, Boolean strict,
-            Boolean secure, String autoVariant, Integer imgWidth, Integer imgHeight, String imgVariantCfg) {
-        return makeContentLink(request, response, null, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, secure, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+            Boolean secure, String type, String autoVariant, Integer imgWidth, Integer imgHeight, String imgVariantCfg) {
+        return makeContentLink(request, response, null, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
     }
 
     public static String makeContentLink(Map<String, Object> context, String uri, String imgSize, String webSiteId, String ctxPrefix, Boolean urlDecode, Boolean strict,
-            Boolean secure, String autoVariant, Integer imgWidth, Integer imgHeight, String imgVariantCfg) {
-        return makeContentLink(null, null, context, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, secure, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+            Boolean secure, String type, String autoVariant, Integer imgWidth, Integer imgHeight, String imgVariantCfg) {
+        return makeContentLink(null, null, context, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
     }
 
     private static String makeContentLink(HttpServletRequest request, HttpServletResponse response, Map<String, Object> context, String uri, String imgSize, String webSiteId, String ctxPrefix, Boolean urlDecode, Boolean strict,
-            Boolean secure, String autoVariant, Integer imgWidth, Integer imgHeight, String imgVariantCfg) {
+            Boolean secure, String type, String autoVariant, Integer imgWidth, Integer imgHeight, String imgVariantCfg) {
     
         String requestUrl = uri;
-
+        
         // SCIPIO: Our default behavior is NOT to decode unless requested, in contrast to stock Ofbiz
         if (Boolean.TRUE.equals(urlDecode)) {
             requestUrl = UtilCodec.getUrlDecoder().decode(requestUrl);
@@ -123,12 +123,12 @@ public abstract class ContentRequestWorker {
         // make the link
         StringBuilder newURL = new StringBuilder();
         if (request != null) {
-            ContentUrlTag.appendContentPrefix(request, newURL, webSiteId, secure);
+            ContentUrlTag.appendContentPrefix(request, newURL, webSiteId, secure, type);
         } else if (context != null) {
-            ContentUrlTag.appendContentPrefix(context, newURL, webSiteId, secure);
+            ContentUrlTag.appendContentPrefix(context, newURL, webSiteId, secure, type);
         } else {
             // emergency
-            ContentUrlTag.appendContentPrefix(request, newURL, webSiteId, secure);
+            ContentUrlTag.appendContentPrefix(request, newURL, webSiteId, secure, type);
         }
         // SCIPIO: handled better below
         //if ((newURL.length() > 0 && newURL.charAt(newURL.length() - 1) != '/') 
@@ -173,19 +173,19 @@ public abstract class ContentRequestWorker {
     
     public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize, String webSiteId, String ctxPrefix, Boolean urlDecode, Boolean strict,
             String autoVariant, Integer imgWidth, Integer imgHeight, String imgVariantCfg) {
-        return makeContentLink(request, response, null, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, null, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+        return makeContentLink(request, response, null, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, null, null, autoVariant, imgWidth, imgHeight, imgVariantCfg);
     }
     
     public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize, String webSiteId, String ctxPrefix, Boolean urlDecode, Boolean strict) {
-        return makeContentLink(request, response, null, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, null, null, null, null, null);
+        return makeContentLink(request, response, null, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, null, null, null, null, null, null);
     }
 
     public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize, String webSiteId) {
-        return makeContentLink(request, response, null, uri, imgSize, webSiteId, null, null, null, null, null, null, null, null);
+        return makeContentLink(request, response, null, uri, imgSize, webSiteId, null, null, null, null, null, null, null, null, null);
     }
     
     public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize) {
-        return makeContentLink(request, response, null, uri, imgSize, null, null, null, null, null, null, null, null, null);
+        return makeContentLink(request, response, null, uri, imgSize, null, null, null, null, null, null, null, null, null, null);
     }
     
     /**

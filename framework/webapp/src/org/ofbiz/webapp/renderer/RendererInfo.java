@@ -2,7 +2,7 @@ package org.ofbiz.webapp.renderer;
 
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * SCIPIO: Provides information about the current render.
@@ -16,26 +16,29 @@ import javax.servlet.ServletRequest;
  * Subject to change in the future! The implementations
  * of the fromRequest and fromContext methods below may change.
  */
-public interface RenderInfo {
+public interface RendererInfo {
 
     /**
      * Returns the renderer name; usually "html", "xsl-fo",
      * "xml", "csv", etc. (as used on right side of xxxx.name= in widget.properties).
      */
-    public String getRendererName();
+    String getRendererName();
     
     @SuppressWarnings("unchecked")
-    public static <T extends RenderInfo> T fromRequest(ServletRequest request) {
-        return (T) request.getAttribute("screens");
+    public static <T extends RendererInfo> T fromRequest(HttpServletRequest request) {
+        return (T) request.getAttribute("screens"); // SUBJECT TO CHANGE
     }
-    
+
     @SuppressWarnings("unchecked")
-    public static <T extends RenderInfo> T fromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
-        return (T) context.get("screens");
+    public static <T extends RendererInfo> T fromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
+        return (T) context.get("screens"); // SUBJECT TO CHANGE
     }
-    
-    @SuppressWarnings("unchecked")
-    public static <T extends RenderInfo> T fromContext(Map<String, Object> context) {
-        return (T) context.get("screens");
+
+    public static <T extends RendererInfo> T fromContext(Map<String, Object> context) {
+        return fromContext(context, null);
+    }
+
+    public static <T extends RendererInfo> T fromRequestOrContext(HttpServletRequest request, Map<String, Object> context) {
+        return (request != null) ? fromRequest(request) : (context != null) ? fromContext(context) : null;
     }
 }

@@ -87,6 +87,10 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, null, screenStringRenderer);
             screens.populateContextForRequest(request, response, servletContext);
 
+            // SCIPIO: 2018-10-18: in addition, dump the screens renderer into the request attributes,
+            // for some cases where only request is available
+            request.setAttribute("screens", screens);
+
             // this is the object used to render forms from their definitions
             screens.getContext().put("formStringRenderer", formStringRenderer);
             // SCIPIO: new early encoder

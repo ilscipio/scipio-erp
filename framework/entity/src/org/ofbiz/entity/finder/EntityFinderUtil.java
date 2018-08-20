@@ -55,9 +55,11 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  */
-public class EntityFinderUtil {
+public final class EntityFinderUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private EntityFinderUtil () {}
 
     public static Map<FlexibleMapAccessor<Object>, Object> makeFieldMap(Element element) {
         Map<FlexibleMapAccessor<Object>, Object> fieldMap = null;

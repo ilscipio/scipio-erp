@@ -51,9 +51,11 @@ import org.ofbiz.entity.model.ModelField;
 /**
  * Helper methods when dealing with Entities, especially ones that follow certain conventions
  */
-public class EntityUtil {
+public final class EntityUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private EntityUtil() {}
 
     @SafeVarargs
     public static <V> Map<String, V> makeFields(V... args) {

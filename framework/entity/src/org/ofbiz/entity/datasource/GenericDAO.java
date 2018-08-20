@@ -72,7 +72,6 @@ public class GenericDAO {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final ConcurrentHashMap<String, GenericDAO> genericDAOs = new ConcurrentHashMap<String, GenericDAO>();
-    private static final ThreadGroup GENERIC_DAO_THREAD_GROUP = new ThreadGroup("GenericDAO");
     private final GenericHelperInfo helperInfo;
     private final ModelFieldTypeReader modelFieldTypeReader;
     private final Datasource datasource;

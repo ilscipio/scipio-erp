@@ -305,8 +305,16 @@ public class GenericValue extends GenericEntity {
         return this.getDelegator().getRelatedDummyPK(relationName, byAndFields, this);
     }
 
-    /** Clones this GenericValue, this is a shallow clone and uses the default shallow HashMap clone
-     *  @return Object that is a clone of this GenericValue
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof GenericValue) {
+            return super.equals(obj);
+        }
+        return false;
+    }
+
+    /** Clones this GenericValue, this is a shallow clone & uses the default shallow HashMap clone
+     *@return Object that is a clone of this GenericValue
      */
     @Override
     public Object clone() {

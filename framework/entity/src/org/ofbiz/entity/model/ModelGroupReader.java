@@ -72,12 +72,12 @@ public class ModelGroupReader implements Serializable {
         ModelGroupReader reader = readers.get(tempModelName);
 
         if (reader == null) {
-            reader = readers.putIfAbsentAndGet(tempModelName, new ModelGroupReader(tempModelName));
+            reader = readers.putIfAbsentAndGet(tempModelName, new ModelGroupReader(delegatorName, tempModelName));
         }
         return reader;
     }
 
-    public ModelGroupReader(String modelName) throws GenericEntityConfException {
+    public ModelGroupReader(String delegatorName, String modelName) throws GenericEntityConfException {
         this.modelName = modelName;
         EntityGroupReader entityGroupReaderInfo = EntityConfig.getInstance().getEntityGroupReader(modelName);
 
@@ -98,10 +98,10 @@ public class ModelGroupReader implements Serializable {
         ((ArrayList<ResourceHandler>) this.entityGroupResourceHandlers).trimToSize(); // SCIPIO
 
         // preload caches...
-        getGroupCache();
+        getGroupCache(delegatorName);
     }
 
-    public Map<String, String> getGroupCache() {
+    public Map<String, String> getGroupCache(String delegatorName) {
         if (this.groupCache == null) { // don't want to block here
             synchronized (ModelGroupReader.class) {
                 // must check if null again as one of the blocked threads can still enter
@@ -144,6 +144,13 @@ public class ModelGroupReader implements Serializable {
                                     String groupName = UtilXml.checkEmpty(curEntity.getAttribute("group")).intern();
 
                                     if (groupName == null || entityName == null) continue;
+                                    try {
+                                        if (null == EntityConfig.getInstance().getDelegator(delegatorName).getGroupDataSource(groupName)) {
+                                            Debug.logError("The declared group name " + groupName + " has no corresponding group-map in entityengine.xml: ", module);
+                                        }
+                                    } catch (GenericEntityConfException e) {
+                                        Debug.logWarning(e, "Exception thrown while getting group name: ", module);
+                                    }
                                     this.groupNames.add(groupName);
                                     this.groupCache.put(entityName, groupName);
                                     // utilTimer.timerString("  After entityEntityName -- " + i + " --");
@@ -166,7 +173,7 @@ public class ModelGroupReader implements Serializable {
      * @return A group name
      */
     public String getEntityGroupName(String entityName, String delegatorBaseName) {
-        Map<String, String> gc = getGroupCache();
+        Map<String, String> gc = getGroupCache(delegatorBaseName);
 
         if (gc != null) {
             String groupName = gc.get(entityName);
@@ -195,7 +202,7 @@ public class ModelGroupReader implements Serializable {
         if (delegatorBaseName.indexOf('#') >= 0) {
             delegatorBaseName = delegatorBaseName.substring(0, delegatorBaseName.indexOf('#'));
         }
-        getGroupCache();
+        getGroupCache(delegatorBaseName);
         if (this.groupNames == null) return null;
         Set<String> newSet = new HashSet<String>();
         try {
@@ -211,8 +218,8 @@ public class ModelGroupReader implements Serializable {
      * @param groupName
      * @return A Set of entityName Strings
      */
-    public Set<String> getEntityNamesByGroup(String groupName) {
-        Map<String, String> gc = getGroupCache();
+    public Set<String> getEntityNamesByGroup(String delegatorBaseName, String groupName) {
+        Map<String, String> gc = getGroupCache(delegatorBaseName);
         Set<String> enames = new HashSet<String>();
 
         if (groupName == null || groupName.length() <= 0) return enames;

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.service.test;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.testtools.OFBizTestCase;
 
@@ -152,5 +154,87 @@ public class ServiceEntityAutoTests extends OFBizTestCase {
         results = dispatcher.runSync("testEntityAutoRemoveTesting", testingDeleteFailedMap);
         assertTrue(ServiceUtil.isError(results));
         assertEquals(UtilProperties.getMessage("ServiceErrorUiLabels", "ServiceValueNotFoundForRemove", Locale.ENGLISH), ServiceUtil.getErrorMessage(results));
+    }
+
+    public void testEntityAutoExpireEntity() throws Exception {
+        Timestamp now = UtilDateTime.nowTimestamp();
+        delegator.create("Testing", "testingId", "TESTING_6");
+        delegator.create("TestingNode", "testingNodeId", "TESTNODE_6");
+        Map<String, Object> testingNodeMemberPkMap = UtilMisc.toMap("testingId", "TESTING_6", "testingNodeId", "TESTNODE_6", "fromDate", now);
+        delegator.create("TestingNodeMember", testingNodeMemberPkMap);
+ 
+        //test expire the thruDate
+        Map<String, Object> results = dispatcher.runSync("testEntityAutoExpireTestingNodeMember", testingNodeMemberPkMap);
+        assertTrue(ServiceUtil.isSuccess(results));
+        GenericValue testingNodeMember = EntityQuery.use(delegator).from("TestingNodeMember").where(testingNodeMemberPkMap).queryOne();
+        Timestamp expireDate = testingNodeMember.getTimestamp("thruDate");
+        assertNotNull("Expire thruDate set ", expireDate);
+
+        //test expire to ensure the thruDate isn't update but extendThruDate is
+        results = dispatcher.runSync("testEntityAutoExpireTestingNodeMember", testingNodeMemberPkMap);
+        assertTrue(ServiceUtil.isSuccess(results));
+        testingNodeMember = EntityQuery.use(delegator).from("TestingNodeMember").where(testingNodeMemberPkMap).queryOne();
+        assertTrue(expireDate.compareTo(testingNodeMember.getTimestamp("thruDate")) == 0);
+        assertNotNull("Expire extendThruDate set ", testingNodeMember.getTimestamp("extendThruDate"));
+
+        //test expire a specific field
+        delegator.create("TestFieldType", "testFieldTypeId", "TESTING_6");
+        Map<String, Object> testingExpireMap = UtilMisc.toMap("testFieldTypeId", "TESTING_6");
+        results = dispatcher.runSync("testEntityAutoExpireTestFieldType", testingExpireMap);
+        assertTrue(ServiceUtil.isSuccess(results));
+        GenericValue testFieldType = EntityQuery.use(delegator).from("TestFieldType").where("testFieldTypeId", "TESTING_6").queryOne();
+        assertNotNull("Expire dateTimeField set", testFieldType.getTimestamp("dateTimeField"));
+
+        //test expire a specific field with in value
+        delegator.create("TestFieldType", "testFieldTypeId", "TESTING_6bis");
+        testingExpireMap = UtilMisc.toMap("testFieldTypeId", "TESTING_6bis", "dateTimeField", now);
+        results = dispatcher.runSync("testEntityAutoExpireTestFieldType", testingExpireMap);
+        assertTrue(ServiceUtil.isSuccess(results));
+        testFieldType = EntityQuery.use(delegator).from("TestFieldType").where("testFieldTypeId", "TESTING_6bis").queryOne();
+        assertTrue(now.compareTo(testFieldType.getTimestamp("dateTimeField")) == 0);
+    }
+
+
+    public void testEntityAutoEntityStatusConcept() throws Exception {
+        delegator.create("Testing", "testingId", "TESTING_7");
+        delegator.create("StatusType", "statusTypeId", "TESTINGSTATUS");
+        delegator.create("StatusItem", "statusId", "TESTING_CREATE", "statusTypeId", "TESTINGSTATUS");
+        delegator.create("StatusItem", "statusId", "TESTING_UPDATE", "statusTypeId", "TESTINGSTATUS");
+        GenericValue userLogin = delegator.findOne("UserLogin", true, "userLoginId", "system");
+
+        //test create testingStatus with userlogin
+        Map<String, Object> testingStatusCreateMap = UtilMisc.toMap("testingId", "TESTING_7", "statusId", "TESTING_CREATE", "userLogin", userLogin);
+        Map<String, Object> results = dispatcher.runSync("testEntityAutoCreateTestingStatus", testingStatusCreateMap);
+        assertTrue(ServiceUtil.isSuccess(results));
+        GenericValue testing = EntityQuery.use(delegator).from("TestingStatus").where("testingId", "TESTING_7").queryFirst();
+        assertNotNull(testing.getTimestamp("statusDate"));
+        assertEquals("system", testing.getString("changeByUserLoginId"));
+
+        //test create testingStatus without userLogin
+        try {
+            testingStatusCreateMap = UtilMisc.toMap("testingId", "TESTING_7", "statusId", "TESTING_CREATE");
+            results = dispatcher.runSync("testEntityAutoCreateTestingStatus", testingStatusCreateMap, 10, true);
+            assertTrue(ServiceUtil.isError(results));
+        } catch (GenericServiceException e) {
+            assertEquals(e.toString(),"You call a creation on entity that require the userLogin to track the activity, please controle that your service definition has auth='true'");
+        }
+
+        //test update testingStatus
+        try {
+            Map<String, Object> testingStatusUpdateMap = UtilMisc.toMap("testingStatusId", testing.get("testingStatusId"), "statusId", "TESTING_UPDATE", "userLogin", userLogin);
+            results = dispatcher.runSync("testEntityAutoUpdateTestingStatus", testingStatusUpdateMap, 10, true);
+            assertTrue(ServiceUtil.isError(results));
+        } catch (GenericServiceException e) {
+            assertEquals(e.toString(), "You call a updating operation on entity that track the activity, sorry I can't do that, please amazing developer check your service definition ;)");
+        }
+
+        //test delete testingStatus
+        try {
+            Map<String, Object> testingStatusDeleteMap = UtilMisc.toMap("testingStatusId", testing.get("testingStatusId"), "userLogin", userLogin);
+            results = dispatcher.runSync("testEntityAutoDeleteTestingStatus", testingStatusDeleteMap, 10, true);
+            assertTrue(ServiceUtil.isError(results));
+        } catch (GenericServiceException e) {
+            assertEquals(e.toString(), "You call a deleting operation on entity that track the activity, sorry I can't do that, please amazing developer check your service definition ;)");
+        }
     }
 }

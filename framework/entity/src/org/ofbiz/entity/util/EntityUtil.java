@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -335,6 +336,30 @@ public class EntityUtil {
     }
 
     /**
+     *returns the values in the order specified after with localized value 
+     *
+     *@param values List of GenericValues
+     *@param orderBy The fields of the named entity to order the query by;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     *@param locale Locale use to retreive localized value
+     *@return List of GenericValue's in the proper order
+     */
+    public static <T extends GenericEntity> List<T> localizedOrderBy(Collection<T> values, List<String> orderBy, Locale locale) {
+        if (values == null) return null;
+        if (values.isEmpty()) return new ArrayList<>();
+        //force check entity label before order by
+        List<T> localizedValues = new ArrayList<T>();
+        for (T value : values) {
+            T newValue = (T) value.clone();
+            for (String orderByField : orderBy) {
+                newValue.put(orderByField, value.get(orderByField, locale));
+            }
+            localizedValues.add(newValue);
+        }
+        return orderBy(localizedValues, orderBy);
+    }
+
+    /**
      *returns the values in the order specified
      *
      *@param values List of GenericValues
@@ -344,15 +369,15 @@ public class EntityUtil {
      */
     public static <T extends GenericEntity> List<T> orderBy(Collection<T> values, List<String> orderBy) {
         if (values == null) return null;
-        if (values.size() == 0) return new ArrayList<>(); // SCIPIO: switched to ArrayList
+        if (values.isEmpty()) return new ArrayList<T>();
         if (UtilValidate.isEmpty(orderBy)) {
-            List<T> newList = new ArrayList<>(values); // SCIPIO: switched to ArrayList
-            //newList.addAll(values);
+            List<T> newList = new ArrayList<T>();
+            newList.addAll(values);
             return newList;
         }
 
-        List<T> result = new ArrayList<>(values); // SCIPIO: switched to ArrayList
-        //result.addAll(values);
+        List<T> result = new ArrayList<T>();
+        result.addAll(values);
         if (Debug.verboseOn()) Debug.logVerbose("Sorting " + values.size() + " values, orderBy=" + orderBy.toString(), module);
         Collections.sort(result, new OrderByList(orderBy));
         return result;

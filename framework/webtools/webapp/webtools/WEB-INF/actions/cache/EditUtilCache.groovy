@@ -41,7 +41,6 @@ if (cacheName) {
         cache.maxInMemory = utilCache.getMaxInMemory(); // SCIPIO: this causes issues: UtilFormatOut.formatQuantity(utilCache.getMaxInMemory());
         cache.expireTime = utilCache.getExpireTime(); // SCIPIO: this causes issues: UtilFormatOut.formatQuantity(utilCache.getExpireTime());
         cache.useSoftReference = utilCache.getUseSoftReference().toString();
-        cache.useFileSystemStore = utilCache.getUseFileSystemStore().toString();
         cache.sizeLimit = utilCache.getSizeLimit(); // SCIPIO: added 2017-05-23
 
         exp = utilCache.getExpireTime();

@@ -39,7 +39,6 @@ under the License.
         <field name="maxInMemory" title="${uiLabelMap.WebtoolsMaxInMemory}" sort-field="true"><display/></field>
         <field name="expireTime" title="${uiLabelMap.WebtoolsExpireTime}" sort-field="true"><display/></field>
         <field name="useSoftReference" title="${uiLabelMap.WebtoolsUseSoftRef}" sort-field="true"><display/></field>
-        <field name="useFileSystemStore" title="${uiLabelMap.WebtoolsUseFileStore}" sort-field="true"><display/></field>
         <field name="cacheMemory" title="${uiLabelMap.WebtoolsCacheMemory}" sort-field="true"><display/></field>
         <field name="administration" title=" " widget-style="${styles.link_nav} ${styles.action_find}" use-when="hasUtilCacheEdit">
             <hyperlink description="${uiLabelMap.WebtoolsElements}" target="FindUtilCacheElements">
@@ -90,7 +89,6 @@ under the License.
                 <option key="true" description="${uiLabelMap.CommonTrue}"/>
             </drop-down>
         </field>
-        <field name="useFileSystemStore" title="${uiLabelMap.WebtoolsUseFileStore}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     

@@ -200,10 +200,10 @@ under the License.
                                   <#-- SCIPIO: only show alert after placed and not printable -->
                                   <#if orderHeader?has_content && !printable>
                                      ${offPayDesc}
-                                      <#if requestParameters.paymentRequest?has_content>
-                                          <@qrcode text=requestParameters.paymentRequest width=150 height=150/>
+                                      <#if requestAttributes.paymentRequest?has_content>
+                                          <@qrcode text=requestAttributes.paymentRequest width=150 height=150/>
                                           <@alert type="info" closable=false>
-                                            ${requestParameters.paymentRequest!""}
+                                            ${requestAttributes.paymentRequest!""}
                                           </@alert>
                                       </#if>
                                   <#else>

@@ -46,7 +46,7 @@ public class PartyTypeHelper {
         GenericValue checkedTypeOfParty = null;
         try {
             party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
-            if (UtilValidate.isNotEmpty(party)) {
+            if (party != null) {
                 partyType = party.getRelatedOne("PartyType", true);
                 checkedTypeOfParty = EntityQuery.use(delegator).from("PartyType").where("partyTypeId", checkedPartyType).cache().queryOne();
             } else {

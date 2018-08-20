@@ -1261,7 +1261,7 @@ public class ShipmentServices {
                     .where("productStoreId",productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId,
                              "partyId", carrierPartyId, "roleTypeId", carrierRoleTypeId)
                     .queryFirst();
-            if (UtilValidate.isNotEmpty(productStoreShipmentMeth)) {
+            if (productStoreShipmentMeth != null) {
                 shipmentGatewayConfig.put("shipmentGatewayConfigId", productStoreShipmentMeth.getString("shipmentGatewayConfigId"));
                 shipmentGatewayConfig.put("configProps", productStoreShipmentMeth.getString("configProps"));
             } else {

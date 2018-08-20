@@ -85,4 +85,5 @@ under the License.
     <service-resource type="eca" loader="main" location="servicedef/secas_scipio.xml"/>
 
     <test-suite loader="main" location="testdef/UserLoginTests.xml"/>
+    <test-suite loader="main" location="testdef/PerformFindTests.xml"/>
 </ofbiz-component>

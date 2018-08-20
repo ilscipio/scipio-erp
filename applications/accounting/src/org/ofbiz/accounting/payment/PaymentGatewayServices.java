@@ -3374,7 +3374,7 @@ public class PaymentGatewayServices {
 
 
     /**
-     * Simple test processor; declines all orders < 100.00; approves all orders >= 100.00
+     * Simple test processor; declines all orders &lt; 100.00; approves all orders &gt;= 100.00
      */
     public static Map<String, Object> testProcessor(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
@@ -3404,7 +3404,7 @@ public class PaymentGatewayServices {
 
 
     /**
-     * Simple test processor; declines all orders < 100.00; approves all orders > 100.00
+     * Simple test processor; declines all orders &lt; 100.00; approves all orders &gt; 100.00
      */
     public static Map<String, Object> testProcessorWithCapture(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");

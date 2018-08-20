@@ -67,7 +67,7 @@ import org.w3c.dom.Element;
  * has a model class, and each model class has its own factory.
  * </p>
  * <p>
- * Mini-language can be extended by:<br />
+ * Mini-language can be extended by:</p>
  * <ul>
  * <li>Creating model classes that extend {@link org.ofbiz.minilang.method.MethodOperation}</li>
  * <li>Creating factories for the model classes that implement {@link org.ofbiz.minilang.method.MethodOperation.Factory}</li>

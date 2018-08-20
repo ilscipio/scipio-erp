@@ -5667,7 +5667,7 @@ public class OrderServices {
 
         Transaction trans = null;
         try {
-            // disable transaction procesing
+            // disable transaction processing
             trans = TransactionUtil.suspend();
 
             // get the cart
@@ -5931,12 +5931,14 @@ public class OrderServices {
             List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("automaticExtend", EntityOperator.EQUALS, "Y"),
                     EntityCondition.makeCondition("orderId", EntityOperator.NOT_EQUAL, null),
                     EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
-        try (EntityListIterator eli = EntityQuery.use(delegator)
-                .from("Subscription")
-                .where(exprs)
-                .queryIterator()) {
-
+        try {
             beganTransaction = TransactionUtil.begin();
+        } catch (GenericTransactionException e1) {
+            Debug.logError(e1, "[Delegator] Could not begin transaction: " + e1.toString(), module);
+        }
+        
+        try (EntityListIterator eli = EntityQuery.use(delegator).from("Subscription").where(exprs).queryIterator()) {
+
             if (eli != null) {
                 GenericValue subscription;
                 while (((subscription = eli.next()) != null)) {

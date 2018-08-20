@@ -321,7 +321,7 @@ public class ContactMechWorker {
 
         String donePage = request.getParameter("DONE_PAGE");
         if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
-        if (donePage == null || donePage.length() <= 0) donePage = "viewprofile";
+        if (UtilValidate.isEmpty(donePage)) donePage = "viewprofile";
         target.put("donePage", donePage);
 
         String contactMechTypeId = request.getParameter("preContactMechTypeId");
@@ -632,7 +632,7 @@ public class ContactMechWorker {
 
         String donePage = request.getParameter("DONE_PAGE");
         if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
-        if (donePage == null || donePage.length() <= 0) donePage = "viewprofile";
+        if (UtilValidate.isEmpty(donePage)) donePage = "viewprofile";
         target.put("donePage", donePage);
 
         String contactMechTypeId = request.getParameter("preContactMechTypeId");

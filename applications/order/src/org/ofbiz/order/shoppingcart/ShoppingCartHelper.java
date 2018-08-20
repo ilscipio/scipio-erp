@@ -279,7 +279,7 @@ public class ShoppingCartHelper {
         Map<String, Object> result;
         String errMsg = null;
 
-        if (orderId == null || orderId.length() <= 0) {
+        if (UtilValidate.isEmpty(orderId)) {
             errMsg = UtilProperties.getMessage(resource_error,"cart.order_not_specified_to_add_from", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;
@@ -574,7 +574,7 @@ public class ShoppingCartHelper {
         Map<String, Object> result = null;
         String errMsg = null;
 
-        if (categoryId == null || categoryId.length() <= 0) {
+        if (UtilValidate.isEmpty(categoryId)) {
             errMsg = UtilProperties.getMessage(resource_error,"cart.category_not_specified_to_add_from", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;

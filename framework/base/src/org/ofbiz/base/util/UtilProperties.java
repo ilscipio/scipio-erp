@@ -396,8 +396,8 @@ public class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getPropertyValue(String resource, String name) {
-        if (resource == null || resource.length() <= 0) return "";
-        if (name == null || name.length() <= 0) return "";
+        if (UtilValidate.isEmpty(resource)) return "";
+        if (UtilValidate.isEmpty(name)) return "";
 
         Properties properties = getProperties(resource);
         if (properties == null) {
@@ -512,7 +512,7 @@ public class UtilProperties implements Serializable {
      * @return The properties file
      */
     public static Properties getProperties(String resource) {
-        if (resource == null || resource.length() <= 0) {
+        if (UtilValidate.isEmpty(resource)) {
             return null;
         }
         // SCIPIO: 2018-07-18: Now uses an extra lightweight cache around the URL cache.
@@ -709,7 +709,7 @@ public class UtilProperties implements Serializable {
     public static String getPropertyValue(URL url, String name, String defaultValue) {
         String value = getPropertyValue(url, name);
 
-        if (value == null || value.length() <= 0)
+        if (UtilValidate.isEmpty(value))
             return defaultValue;
         else
             return value;
@@ -739,7 +739,7 @@ public class UtilProperties implements Serializable {
      */
     public static String getPropertyValue(URL url, String name) {
         if (url == null) return "";
-        if (name == null || name.length() <= 0) return "";
+        if (UtilValidate.isEmpty(name)) return "";
         Properties properties = getProperties(url);
 
         if (properties == null) {
@@ -766,7 +766,7 @@ public class UtilProperties implements Serializable {
      */
     public static String getSplitPropertyValue(URL url, String name) {
         if (url == null) return "";
-        if (name == null || name.length() <= 0) return "";
+        if (UtilValidate.isEmpty(name)) return "";
 
         Properties properties = getProperties(url);
 
@@ -798,8 +798,8 @@ public class UtilProperties implements Serializable {
      * @param name The name of the property in the properties file
      * @param value The value of the property in the properties file */
      public static void setPropertyValue(String resource, String name, String value) {
-         if (resource == null || resource.length() <= 0) return;
-         if (name == null || name.length() <= 0) return;
+         if (UtilValidate.isEmpty(resource)) return;
+         if (UtilValidate.isEmpty(name)) return;
 
          Properties properties = getProperties(resource);
          if (properties == null) {
@@ -875,8 +875,8 @@ public class UtilProperties implements Serializable {
       * @param name The name of the property in the resource
       * @param value The value of the property to set in memory */
       public static void setPropertyValueInMemory(String resource, String name, String value) {
-          if (resource == null || resource.length() <= 0) return;
-          if (name == null || name.length() <= 0) return;
+          if (UtilValidate.isEmpty(resource)) return;
+          if (UtilValidate.isEmpty(name)) return;
 
           Properties properties = getProperties(resource);
           if (properties == null) {
@@ -911,8 +911,8 @@ public class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getMessageNoTrim(String resource, String name, Locale locale) {
-        if (resource == null || resource.length() <= 0) return "";
-        if (name == null || name.length() <= 0) return "";
+        if (UtilValidate.isEmpty(resource)) return "";
+        if (UtilValidate.isEmpty(name)) return "";
 
         ResourceBundle bundle = getResourceBundle(resource, locale);
 

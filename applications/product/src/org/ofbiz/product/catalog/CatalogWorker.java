@@ -259,7 +259,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogName(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         try {
@@ -298,7 +298,7 @@ public class CatalogWorker {
     }
 
     public static GenericValue getProdCatalog(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         try {
@@ -314,7 +314,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogTopCategoryId(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_BROWSE_ROOT");
 
@@ -353,7 +353,7 @@ public class CatalogWorker {
         return getCatalogSearchCategoryId((Delegator) request.getAttribute("delegator"), prodCatalogId);
     }
     public static String getCatalogSearchCategoryId(Delegator delegator, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_SEARCH");
         if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
@@ -365,7 +365,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogViewAllowCategoryId(Delegator delegator, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_VIEW_ALLW");
         if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
@@ -377,7 +377,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogPurchaseAllowCategoryId(Delegator delegator, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_PURCH_ALLW");
         if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
@@ -393,7 +393,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogPromotionsCategoryId(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_PROMOTIONS");
 
@@ -411,7 +411,7 @@ public class CatalogWorker {
     }
 
     public static boolean getCatalogQuickaddUse(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return false;
+        if (UtilValidate.isEmpty(prodCatalogId)) return false;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         try {
@@ -431,7 +431,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogQuickaddCategoryPrimary(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_QUICK_ADD");
 
@@ -449,7 +449,7 @@ public class CatalogWorker {
     }
 
     public static Collection<String> getCatalogQuickaddCategories(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         Collection<String> categoryIds = new LinkedList<String>();
 
@@ -465,7 +465,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogTopEbayCategoryId(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_EBAY_ROOT");
 

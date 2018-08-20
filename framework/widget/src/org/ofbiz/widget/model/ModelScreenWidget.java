@@ -868,7 +868,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             this.titleStyleExdr = FlexibleStringExpander.getInstance(screenletElement.getAttribute("title-style"));
             List<? extends Element> subElementList = UtilXml.childElementList(screenletElement);
             // Make a copy of the unmodifiable List so we can modify it.
-            ArrayList<ModelScreenWidget> subWidgets = new ArrayList<ModelScreenWidget>(ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList));
+            List<ModelScreenWidget> subWidgets = new ArrayList<ModelScreenWidget>(ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList));
             Menu navigationMenu = null;
             String navMenuName = screenletElement.getAttribute("navigation-menu-name");
             if (!navMenuName.isEmpty()) {

@@ -176,7 +176,7 @@ public class FormRenderer {
     }
 
     private List<FieldGroupBase> getInbetweenList(FieldGroup startFieldGroup, FieldGroup endFieldGroup) {
-        ArrayList<FieldGroupBase> inbetweenList = new ArrayList<FieldGroupBase>();
+        List<FieldGroupBase> inbetweenList = new ArrayList<FieldGroupBase>();
         boolean firstFound = false;
         String startFieldGroupId = null;
         String endFieldGroupId = null;

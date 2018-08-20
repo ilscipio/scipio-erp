@@ -375,10 +375,7 @@ public class FinAccountServices {
                         EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
                 EntityCondition condition = EntityCondition.makeCondition(exprs, EntityOperator.AND);
 
-                EntityListIterator eli = null;
-                try {
-                    eli = EntityQuery.use(delegator).from("FinAccountTrans").where(condition).orderBy("-transactionDate").queryIterator();
-
+                try (EntityListIterator eli  = EntityQuery.use(delegator).from("FinAccountTrans").where(condition).orderBy("-transactionDate").queryIterator()) {
                     GenericValue trans;
                     while (remainingBalance.compareTo(FinAccountHelper.ZERO) < 0 && (trans = eli.next()) != null) {
                         String orderId = trans.getString("orderId");
@@ -474,14 +471,6 @@ public class FinAccountServices {
                 } catch (GeneralException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(e.getMessage());
-                } finally {
-                    if (eli != null) {
-                        try {
-                            eli.close();
-                        } catch (GenericEntityException e) {
-                            Debug.logWarning(e, module);
-                        }
-                    }
                 }
 
                 // check to make sure we balanced out

@@ -16059,6 +16059,10 @@
         <value xml:lang="de">Externe Bitcoin Zahlung.</value>
         <value xml:lang="en">Pay with Bitcoin externally.</value>
     </property>
+    <property key="OrderPaymentDescBitcoinNote">
+        <value xml:lang="de">Sie haben sich für eine Bitcoin Zahlung entschieden. Um die Transaktion abzuschließen überweisen Sie bitte ${bitcoinAmount} innerhalb der nächsten Stunde an die nachfolgende Adresse.</value>
+        <value xml:lang="en">You selected Bitcoin payments for this transaction. To complete your payment please send ${bitcoinAmount} to the address below within the next hour.</value>
+    </property>
     <property key="OrderPaymentDescCOD">
         <value xml:lang="de">Zahlung bei Lieferung.</value>
         <value xml:lang="en">Pay upon delivery of your item(s).</value>

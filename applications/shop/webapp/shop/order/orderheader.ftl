@@ -191,8 +191,7 @@ under the License.
                             <#elseif paymentMethodType.paymentMethodTypeId == "EXT_LIGHTNING">
                                 <@tr>
                                   <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(orderDate, orderGrandTotal!grandTotal!0, currencyUomId!,"XBT",dispatcher,true)>
-                                  <#assign offPayTitle>${uiLabelMap.AccountingPayWithBitcoin}
-                                  </#assign>
+                                  <#assign offPayTitle>${uiLabelMap.AccountingPayWithBitcoin}</#assign>
                                   <#assign offPayDesc>
                                     <br/><strong><@ofbizCurrency amount=xbtAmount?default(0.00) rounding="8" isoCode="XBT"/></p></strong> 
                                   </#assign>
@@ -200,9 +199,13 @@ under the License.
                                 <@td colspan="3">
                                   <#-- SCIPIO: only show alert after placed and not printable -->
                                   <#if orderHeader?has_content && !printable>
-                                    <@alert type="info" closable=false>
-                                      ${offPayDesc}
-                                    </@alert>
+                                     ${offPayDesc}
+                                      <#if requestParameters.paymentRequest?has_content>
+                                          <@qrcode text=requestParameters.paymentRequest width=150 height=150/>
+                                          <@alert type="info" closable=false>
+                                            ${requestParameters.paymentRequest!""}
+                                          </@alert>
+                                      </#if>
                                   <#else>
                                     ${offPayDesc}
                                   </#if>

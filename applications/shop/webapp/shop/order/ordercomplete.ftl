@@ -30,6 +30,9 @@ under the License.
     <@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert>
   </#if>
 </#if>
+<#if paymentMethodType?has_content && paymentMethodType.paymentMethodTypeId == "EXT_LIGHTNING">
+    <#assign bitcoinAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(orderDate, orderGrandTotal!grandTotal!0, currencyUomId!,"XBT",dispatcher,true)>                            
+</#if>
 
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
   <#if subscriptions && validPaymentMethodTypeForSubscriptions> 

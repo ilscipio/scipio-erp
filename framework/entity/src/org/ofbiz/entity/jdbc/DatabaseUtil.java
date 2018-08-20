@@ -1617,8 +1617,6 @@ public class DatabaseUtil {
         }
 
         Connection connection = null;
-        Statement stmt = null;
-
         try {
             connection = getConnection();
         } catch (SQLException e) {
@@ -1733,17 +1731,11 @@ public class DatabaseUtil {
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("[createTable] sql=" + sqlBuf.toString(), module);
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sqlBuf.toString());
         } catch (SQLException e) {
             return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + e.toString();
         } finally {
-            try {
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -1770,7 +1762,6 @@ public class DatabaseUtil {
         }
 
         Connection connection = getConnectionLogged(messages);
-        Statement stmt = null;
         if (connection == null) {
             return;
         }
@@ -1782,19 +1773,13 @@ public class DatabaseUtil {
         StringBuilder sqlBuf = new StringBuilder("DROP TABLE ");
         sqlBuf.append(entity.getTableName(datasourceInfo));
         if (Debug.verboseOn()) Debug.logVerbose("[deleteTable] sql=" + sqlBuf.toString(), module);
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sqlBuf.toString());
         } catch (SQLException e) {
             String errMsg = "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + e.toString();
             Debug.logError(errMsg, module);
             if (messages != null) messages.add(errMsg);
         } finally {
-            try {
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -1813,7 +1798,6 @@ public class DatabaseUtil {
         }
 
         Connection connection = null;
-        Statement stmt = null;
 
         try {
             connection = getConnection();
@@ -1856,8 +1840,7 @@ public class DatabaseUtil {
 
         String sql = sqlBuf.toString();
         if (Debug.infoOn()) Debug.logInfo("[addColumn] sql=" + sql, module);
-        try {
-            stmt = connection.createStatement();
+        try (Statement  stmt = connection.createStatement()) {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             // if that failed try the alternate syntax real quick
@@ -1884,21 +1867,13 @@ public class DatabaseUtil {
 
             String sql2 = sql2Buf.toString();
             if (Debug.infoOn()) Debug.logInfo("[addColumn] sql failed, trying sql2=" + sql2, module);
-            try {
-                stmt = connection.createStatement();
+            try (Statement  stmt = connection.createStatement()) {
                 stmt.executeUpdate(sql2);
             } catch (SQLException e2) {
                 // if this also fails report original error, not this error...
                 return "SQL Exception while executing the following:\n" + sql + "\nError was: " + e.toString();
             }
         } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -1918,7 +1893,6 @@ public class DatabaseUtil {
         }
 
         Connection connection = null;
-        Statement stmt = null;
 
         try {
             connection = getConnection();
@@ -1947,19 +1921,11 @@ public class DatabaseUtil {
 
         String sql = sqlBuf.toString();
         if (Debug.infoOn()) Debug.logInfo("[renameColumn] sql=" + sql, module);
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) { 
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             return "SQL Exception while executing the following:\n" + sql + "\nError was: " + e.toString();
         } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -1991,7 +1957,6 @@ public class DatabaseUtil {
 
         // need connection
         Connection connection = getConnectionLogged(messages);
-        Statement stmt = null;
         if (connection == null) {
             return;
         }
@@ -2006,8 +1971,7 @@ public class DatabaseUtil {
 
         String sql1 = sqlBuf1.toString();
         if (Debug.infoOn()) Debug.logInfo("[moveData] sql=" + sql1, module);
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) { 
             int changed = stmt.executeUpdate(sql1);
             if (Debug.infoOn()) Debug.logInfo("[moveData] " + changed + " records updated", module);
         } catch (SQLException e) {
@@ -2017,13 +1981,6 @@ public class DatabaseUtil {
             Debug.logError(thisMsg, module);
             return;
         } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -2047,8 +2004,7 @@ public class DatabaseUtil {
 
         String sql2 = sqlBuf2.toString();
         if (Debug.infoOn()) Debug.logInfo("[dropColumn] sql=" + sql2, module);
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sql2);
         } catch (SQLException e) {
             String thisMsg = "SQL Exception while executing the following:\n" + sql2 + "\nError was: " + e.toString();
@@ -2057,13 +2013,6 @@ public class DatabaseUtil {
             Debug.logError(thisMsg, module);
             return;
         } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -2201,7 +2150,6 @@ public class DatabaseUtil {
 
     public String createForeignKey(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred) {
         Connection connection = null;
-        Statement stmt = null;
 
         try {
             connection = getConnection();
@@ -2226,19 +2174,11 @@ public class DatabaseUtil {
         sqlBuf.append(fkConstraintClause);
 
         if (Debug.verboseOn()) Debug.logVerbose("[createForeignKey] sql=" + sqlBuf.toString(), module);
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sqlBuf.toString());
         } catch (SQLException e) {
             return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + e.toString();
         } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -2376,7 +2316,6 @@ public class DatabaseUtil {
 
     public String deleteForeignKey(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity, int constraintNameClipLength) {
         Connection connection = null;
-        Statement stmt = null;
 
         try {
             connection = getConnection();
@@ -2403,18 +2342,11 @@ public class DatabaseUtil {
         sqlBuf.append(relConstraintName);
 
         if (Debug.verboseOn()) Debug.logVerbose("[deleteForeignKey] sql=" + sqlBuf.toString(), module);
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sqlBuf.toString());
         } catch (SQLException e) {
             return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + e.toString();
         } finally {
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -2456,7 +2388,6 @@ public class DatabaseUtil {
         if (entity.getPksSize() > 0) {
             message = "Creating primary key for entity [" + entity.getEntityName() + "]";
             Connection connection = null;
-            Statement stmt = null;
 
             try {
                 connection = getConnection();
@@ -2482,19 +2413,11 @@ public class DatabaseUtil {
             sqlBuf.append(")");
 
             if (Debug.verboseOn()) Debug.logVerbose("[createPrimaryKey] sql=" + sqlBuf.toString(), module);
-            try {
-                stmt = connection.createStatement();
+            try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(sqlBuf.toString());
             } catch (SQLException e) {
                 return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + e.toString();
             } finally {
-                try {
-                    if (stmt != null) {
-                        stmt.close();
-                    }
-                } catch (SQLException e) {
-                    Debug.logError(e, module);
-                }
                 try {
                     if (connection != null) {
                         connection.close();
@@ -2539,7 +2462,6 @@ public class DatabaseUtil {
         if (entity.getPksSize() > 0) {
             message = "Deleting primary key for entity [" + entity.getEntityName() + "]";
             Connection connection = null;
-            Statement stmt = null;
             try {
                 connection = getConnection();
             } catch (SQLException e) {
@@ -2569,20 +2491,13 @@ public class DatabaseUtil {
             }
 
             if (Debug.verboseOn()) Debug.logVerbose("[deletePrimaryKey] sql=" + sqlBuf.toString(), module);
-            try {
-                stmt = connection.createStatement();
+            try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(sqlBuf.toString());
             } catch (SQLException e) {
                 String errMsg = "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 return errMsg;
             } finally {
-                try {
-                    if (stmt != null)
-                        stmt.close();
-                } catch (SQLException e) {
-                    Debug.logError(e, module);
-                }
                 try {
                     if (connection != null) {
                         connection.close();
@@ -2642,7 +2557,6 @@ public class DatabaseUtil {
 
     public String createDeclaredIndex(ModelEntity entity, ModelIndex modelIndex) {
         Connection connection = null;
-        Statement stmt = null;
 
         try {
             connection = getConnection();
@@ -2659,17 +2573,11 @@ public class DatabaseUtil {
         String createIndexSql = makeIndexClause(entity, modelIndex);
         if (Debug.verboseOn()) Debug.logVerbose("[createForeignKeyIndex] index sql=" + createIndexSql, module);
 
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(createIndexSql);
         } catch (SQLException e) {
             return "SQL Exception while executing the following:\n" + createIndexSql + "\nError was: " + e.toString();
         } finally {
-            try {
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -2756,8 +2664,6 @@ public class DatabaseUtil {
 
     public String deleteDeclaredIndex(ModelEntity entity, ModelIndex modelIndex) {
         Connection connection = null;
-        Statement stmt = null;
-
         try {
             connection = getConnection();
         } catch (SQLException e) {
@@ -2784,17 +2690,11 @@ public class DatabaseUtil {
         String deleteIndexSql = indexSqlBuf.toString();
         if (Debug.verboseOn()) Debug.logVerbose("[deleteDeclaredIndex] index sql=" + deleteIndexSql, module);
 
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(deleteIndexSql);
         } catch (SQLException e) {
             return "SQL Exception while executing the following:\n" + deleteIndexSql + "\nError was: " + e.toString();
         } finally {
-            try {
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -2854,8 +2754,6 @@ public class DatabaseUtil {
 
     public String createForeignKeyIndex(ModelEntity entity, ModelRelation modelRelation, int constraintNameClipLength) {
         Connection connection = null;
-        Statement stmt = null;
-
         try {
             connection = getConnection();
         } catch (SQLException e) {
@@ -2875,18 +2773,11 @@ public class DatabaseUtil {
 
         if (Debug.verboseOn()) Debug.logVerbose("[createForeignKeyIndex] index sql=" + createIndexSql, module);
 
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(createIndexSql);
         } catch (SQLException e) {
             return "SQL Exception while executing the following:\n" + createIndexSql + "\nError was: " + e.toString();
         } finally {
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -2973,8 +2864,6 @@ public class DatabaseUtil {
 
     public String deleteForeignKeyIndex(ModelEntity entity, ModelRelation modelRelation, int constraintNameClipLength) {
         Connection connection = null;
-        Statement stmt = null;
-
         try {
             connection = getConnection();
         } catch (SQLException e) {
@@ -3004,19 +2893,11 @@ public class DatabaseUtil {
 
         if (Debug.verboseOn()) Debug.logVerbose("[deleteForeignKeyIndex] index sql=" + deleteIndexSql, module);
 
-        try {
-            stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(deleteIndexSql);
         } catch (SQLException e) {
             return "SQL Exception while executing the following:\n" + deleteIndexSql + "\nError was: " + e.toString();
         } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
             try {
                 if (connection != null) {
                     connection.close();
@@ -3059,8 +2940,6 @@ public class DatabaseUtil {
         Connection connection = null;
 
         try {
-            Statement stmt = null;
-
             connection = getConnectionLogged(messages);
             if (connection == null) {
                 return;
@@ -3083,20 +2962,12 @@ public class DatabaseUtil {
 
             if (Debug.verboseOn()) Debug.logVerbose("[updateCharacterSetAndCollation] character-set and collate sql=" + sqlTableBuf, module);
 
-            try {
-                stmt = connection.createStatement();
+            try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(sqlTableBuf.toString());
             } catch (SQLException e) {
                 String errMsg = "SQL Exception while executing the following:\n" + sqlTableBuf + "\nError was: " + e.toString();
                 messages.add(errMsg);
                 Debug.logError(errMsg, module);
-            } finally {
-                try {
-                    if (stmt != null)
-                        stmt.close();
-                } catch (SQLException e) {
-                    Debug.logError(e, module);
-                }
             }
 
             Iterator<ModelField> fieldIter = entity.getFieldsIterator();
@@ -3138,20 +3009,12 @@ public class DatabaseUtil {
                 }
 
                 if (Debug.verboseOn()) Debug.logVerbose("[updateCharacterSetAndCollation] character-set and collate sql=" + sqlBuf, module);
-                try {
-                    stmt = connection.createStatement();
+                try (Statement stmt = connection.createStatement()) {
                     stmt.executeUpdate(sqlBuf.toString());
                 } catch (SQLException e) {
                     String errMsg = "SQL Exception while executing the following:\n" + sqlBuf + "\nError was: " + e.toString();
                     messages.add(errMsg);
                     Debug.logError(errMsg, module);
-                } finally {
-                    try {
-                        if (stmt != null)
-                            stmt.close();
-                    } catch (SQLException e) {
-                        Debug.logError(e, module);
-                    }
                 }
             }
         } finally {

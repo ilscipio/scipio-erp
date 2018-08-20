@@ -188,6 +188,7 @@ public class PcChargeApi {
             Socket sock = new Socket(host, port);
             PrintStream ps = new PrintStream(sock.getOutputStream());
             DataInputStream dis = new DataInputStream(sock.getInputStream());
+            sock.close();
             ps.print(this.toString());
             ps.flush();
 

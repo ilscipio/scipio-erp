@@ -162,11 +162,15 @@ public class GroovyUtil {
     }
 
     /**
+     * @throws IOException 
      * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
      */
     @Deprecated
-    public static Class<?> loadClass(String path) throws ClassNotFoundException {
-        return new GroovyClassLoader().loadClass(path);
+    public static Class<?> loadClass(String path) throws ClassNotFoundException, IOException {
+        GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+        Class<?> classLoader = groovyClassLoader.loadClass(path);
+        groovyClassLoader.close();
+        return classLoader;
     }
 
     /**
@@ -174,7 +178,10 @@ public class GroovyUtil {
      */
     @Deprecated
     public static Class<?> parseClass(InputStream in, String location) throws IOException {
-        return new GroovyClassLoader().parseClass(UtilIO.readString(in), location);
+        GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+        Class<?> classLoader = groovyClassLoader.parseClass(UtilIO.readString(in), location);
+        groovyClassLoader.close();
+        return classLoader;
     }
     
     public static Class<?> parseClass(InputStream in, String location, GroovyClassLoader groovyClassLoader) throws IOException {
@@ -182,14 +189,18 @@ public class GroovyUtil {
     }
 
     /**
+     * @throws IOException 
      * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
      */
     @Deprecated
-    public static Class<?> parseClass(String text) {
-        return new GroovyClassLoader().parseClass(text);
+    public static Class<?> parseClass(String text) throws IOException {
+        GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+        Class<?> classLoader = groovyClassLoader.parseClass(text);
+        groovyClassLoader.close();
+        return classLoader;
     }
     
-    public static Class<?> parseClass(String text, GroovyClassLoader groovyClassLoader) { // SCIPIO: added 2017-01-27
+    public static Class<?> parseClass(String text, GroovyClassLoader groovyClassLoader) throws IOException { // SCIPIO: added 2017-01-27
         return groovyClassLoader.parseClass(text);
     }
 

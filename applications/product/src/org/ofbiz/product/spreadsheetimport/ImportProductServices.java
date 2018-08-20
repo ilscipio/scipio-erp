@@ -59,8 +59,9 @@ public class ImportProductServices {
      * @param dctx the dispatch context
      * @param context the context
      * @return the result of the service execution
+     * @throws IOException 
      */
-    public static Map<String, Object> productImportFromSpreadsheet(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> productImportFromSpreadsheet(DispatchContext dctx, Map<String, ? extends Object> context) throws IOException {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         // System.getProperty("user.dir") returns the path upto ofbiz home
@@ -110,6 +111,7 @@ public class ImportProductServices {
 
             // get first sheet
             HSSFSheet sheet = wb.getSheetAt(0);
+            wb.close();
             int sheetLastRowNumber = sheet.getLastRowNum();
             for (int j = 1; j <= sheetLastRowNumber; j++) {
                 HSSFRow row = sheet.getRow(j);

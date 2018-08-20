@@ -579,22 +579,17 @@ public class ServiceUtil {
                 try {
                     // begin this transaction
                     beganTx1 = TransactionUtil.begin();
-
-                    EntityListIterator foundJobs = null;
-                    try {
-                        foundJobs = EntityQuery.use(delegator)
+                    EntityQuery eq = EntityQuery.use(delegator)
                                                .select("jobId")
                                                .from("JobSandbox")
                                                .where(EntityCondition.makeCondition(UtilMisc.toList(doneCond, pool)))
                                                .cursorScrollInsensitive()
-                                               .maxRows(1000)
-                                               .queryIterator();
+                            .maxRows(1000); 
+
+                    try (EntityListIterator foundJobs = eq.queryIterator()) {
                         curList = foundJobs.getPartialList(1, 1000);
-                    } finally {
-                        if (foundJobs != null) {
-                            foundJobs.close();
-                         }
                     }
+
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Cannot obtain job data from datasource", module);
                     try {
@@ -641,15 +636,14 @@ public class ServiceUtil {
             // Now JobSandbox data is cleaned up. Now process Runtime data and remove the whole data in single shot that is of no need.
             boolean beganTx3 = false;
             GenericValue runtimeData = null;
-            EntityListIterator runTimeDataIt = null;
             List<GenericValue> runtimeDataToDelete = new ArrayList<GenericValue>(); // SCIPIO: switched to ArrayList
             long jobsandBoxCount = 0;
             try {
                 // begin this transaction
                 beganTx3 = TransactionUtil.begin();
 
-                runTimeDataIt = EntityQuery.use(delegator).select("runtimeDataId").from("RuntimeData").queryIterator();
-                try {
+                EntityQuery eq = EntityQuery.use(delegator).select("runtimeDataId").from("RuntimeData");
+                try (EntityListIterator runTimeDataIt = eq.queryIterator()) {
                     while ((runtimeData = runTimeDataIt.next()) != null) {
                         EntityCondition whereCondition = EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("runtimeDataId", EntityOperator.NOT_EQUAL, null),
                                 EntityCondition.makeCondition("runtimeDataId", EntityOperator.EQUALS, runtimeData.getString("runtimeDataId"))), EntityOperator.AND);
@@ -658,8 +652,6 @@ public class ServiceUtil {
                             runtimeDataToDelete.add(runtimeData);
                         }
                     }
-                } finally {
-                    runTimeDataIt.close();
                 }
                 // Now we are ready to delete runtimeData, we can safely delete complete list that we have recently fetched i.e runtimeDataToDelete.
                 delegator.removeAll(runtimeDataToDelete);

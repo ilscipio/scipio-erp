@@ -503,14 +503,8 @@ public class EntityQuery {
      */
     public long queryCount() throws GenericEntityException {
         if (dynamicViewEntity != null) {
-            EntityListIterator iterator = null;
-            try {
-                iterator = queryIterator();
+            try (EntityListIterator iterator = queryIterator()) {
                 return iterator.getResultsSizeAfterPartialList();
-            } finally {
-                if (iterator != null) {
-                    iterator.close();
-                }
             }
         }
         return delegator.findCountByCondition(entityName, makeWhereCondition(false), havingEntityCondition, makeEntityFindOptions());
@@ -527,9 +521,9 @@ public class EntityQuery {
         if (dynamicViewEntity == null) {
             result = delegator.findList(entityName, makeWhereCondition(useCache), fieldsToSelect, orderBy, findOptions, useCache);
         } else {
-            EntityListIterator it = queryIterator();
+            try (EntityListIterator it = queryIterator()) { 
             result = it.getCompleteList();
-            it.close();
+            }
         }
         if (filterByDate && useCache) {
             return EntityUtil.filterByCondition(result, this.makeDateCondition());
@@ -585,9 +579,7 @@ public class EntityQuery {
     }
 
     public <T> List<T> getFieldList(final String fieldName) throws GenericEntityException {select(fieldName);
-        EntityListIterator genericValueEli = null;
-        try {
-            genericValueEli = queryIterator();
+        try (EntityListIterator genericValueEli = queryIterator()) {
             if (this.distinct) {
                 Set<T> distinctSet = new HashSet<T>();
                 GenericValue value = null;
@@ -611,11 +603,6 @@ public class EntityQuery {
                 return fieldList;
             }
         }
-        finally {
-            if (genericValueEli != null) {
-                genericValueEli.close();
-            }
-        }
     }
 
     /**
@@ -626,15 +613,8 @@ public class EntityQuery {
      * @see EntityUtil#getPagedList
      */
     public PagedList<GenericValue> queryPagedList(final int viewIndex, final int viewSize) throws GenericEntityException {
-        EntityListIterator genericValueEli = null;
-        try {
-            genericValueEli = queryIterator();
+        try (EntityListIterator genericValueEli = queryIterator()) {
             return EntityUtil.getPagedList(genericValueEli, viewIndex, viewSize);
-        }
-        finally {
-            if (genericValueEli != null) {
-                genericValueEli.close();
-            }
         }
     }
 

@@ -168,15 +168,12 @@ public class ContentSearch {
             long startMillis = System.currentTimeMillis();
 
             // do the query
-            EntityListIterator eli = this.doQuery(delegator);
-            ArrayList<String> contentIds = this.makeContentIdList(eli);
-            if (eli != null) {
-                try {
-                    eli.close();
+            ArrayList<String> contentIds = null;
+            try (EntityListIterator eli = this.doQuery(delegator)) {
+                contentIds = this.makeContentIdList(eli);
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Error closing ContentSearch EntityListIterator");
                 }
-            }
 
             long endMillis = System.currentTimeMillis();
             double totalSeconds = ((double)endMillis - (double)startMillis)/1000.0;

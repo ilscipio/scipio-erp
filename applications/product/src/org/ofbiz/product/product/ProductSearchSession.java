@@ -1312,33 +1312,26 @@ public class ProductSearchSession {
         dynamicViewEntity.addViewLink("PFAC", "PFC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productFeatureId"));
         entityConditionList.add(EntityCondition.makeCondition("pfcProductFeatureTypeId", EntityOperator.EQUALS, productFeatureTypeId));
 
-        EntityListIterator eli = null;
-        try {
-            eli = EntityQuery.use(delegator)
+        List<Map<String, String>> featureCountList = null;
+        try (EntityListIterator eli = EntityQuery.use(delegator)
                     .select(UtilMisc.toSet("pfacProductFeatureId", "featureCount", "pfcDescription", "pfcProductFeatureTypeId"))
                     .from(dynamicViewEntity)
                     .where(entityConditionList)
                     .orderBy(productSearchContext.orderByList)
                     .cursorScrollInsensitive()
-                    .queryIterator();
+                    .queryIterator()) {
+
+            featureCountList = new LinkedList<Map<String, String>>();
+            GenericValue searchResult = null;
+            while ((searchResult = eli.next()) != null) {
+                featureCountList.add(UtilMisc.<String, String>toMap("productFeatureId", (String) searchResult.get("pfacProductFeatureId"), "productFeatureTypeId", (String) searchResult.get("pfcProductFeatureTypeId"), "description", (String) searchResult.get("pfcDescription"), "featureCount", Long.toString((Long) searchResult.get("featureCount"))));
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error in product search", module);
             return null;
         }
 
-        List<Map<String, String>> featureCountList = new LinkedList<Map<String, String>>();
-        GenericValue searchResult = null;
-        while ((searchResult = eli.next()) != null) {
-            featureCountList.add(UtilMisc.<String, String>toMap("productFeatureId", (String) searchResult.get("pfacProductFeatureId"), "productFeatureTypeId", (String) searchResult.get("pfcProductFeatureTypeId"), "description", (String) searchResult.get("pfcDescription"), "featureCount", Long.toString((Long) searchResult.get("featureCount"))));
-        }
 
-        if (eli != null) {
-            try {
-                eli.close();
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Error closing ProductSearch EntityListIterator");
-            }
-        }
         return featureCountList;
     }
 
@@ -1391,31 +1384,21 @@ public class ProductSearchSession {
         entityConditionList.add(EntityCondition.makeCondition("ppcPrice", EntityOperator.LESS_THAN_EQUAL_TO, priceHigh));
         entityConditionList.add(EntityCondition.makeCondition("ppcProductPriceTypeId", EntityOperator.EQUALS, "LIST_PRICE"));
 
-        EntityListIterator eli = null;
-        try {
-            eli = EntityQuery.use(delegator).select(UtilMisc.toSet(fieldsToSelect))
+        Long priceRangeCount = Long.valueOf(0);
+        try (EntityListIterator eli = EntityQuery.use(delegator)
+                .select(UtilMisc.toSet(fieldsToSelect))
                     .from(dynamicViewEntity)
                     .where(entityConditionList)
                     .orderBy(productSearchContext.orderByList)
                     .cursorScrollInsensitive()
-                    .queryIterator();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in product search", module);
-            return 0;
-        }
+                .queryIterator()) {
 
         GenericValue searchResult = null;
-        Long priceRangeCount = Long.valueOf(0);
         while ((searchResult = eli.next()) != null) {
             priceRangeCount = searchResult.getLong("priceRangeCount");
         }
-
-        if (eli != null) {
-            try {
-                eli.close();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error closing ProductSearch EntityListIterator");
-            }
+            Debug.logError(e, "Error in product search", module);
         }
         return priceRangeCount;
     }
@@ -1457,31 +1440,21 @@ public class ProductSearchSession {
         ProductSearch.getAllSubCategoryIds(productCategoryId, productCategoryIdSet, delegator, productSearchContext.nowTimestamp);
         entityConditionList.add(EntityCondition.makeCondition("pcmcProductCategoryId", EntityOperator.IN, productCategoryIdSet));
 
-        EntityListIterator eli = null;
-        try {
-            eli = EntityQuery.use(delegator).select(UtilMisc.toSet(fieldsToSelect))
+        Long categoryCount = Long.valueOf(0);
+        try (EntityListIterator eli = EntityQuery.use(delegator)
+                .select(UtilMisc.toSet(fieldsToSelect))
                     .from(dynamicViewEntity)
                     .where(entityConditionList)
                     .orderBy(productSearchContext.orderByList)
                     .cursorScrollInsensitive()
-                    .queryIterator();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in product search", module);
-            return 0;
-        }
+                .queryIterator()) {
 
         GenericValue searchResult = null;
-        Long categoryCount = Long.valueOf(0);
         while ((searchResult = eli.next()) != null) {
             categoryCount = searchResult.getLong("categoryCount");
         }
-
-        if (eli != null) {
-            try {
-                eli.close();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error closing ProductSearch EntityListIterator");
-            }
+            Debug.logError(e, "Error in product search", module);
         }
         return categoryCount;
     }

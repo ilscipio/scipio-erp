@@ -422,9 +422,10 @@ public class EntityDataServices {
         String entityName = (String) context.get("entityName");
         String fieldName = (String) context.get("fieldName");
         Locale locale = (Locale) context.get("locale");
-        EntityListIterator eli = null;
-        try {
-            eli = EntityQuery.use(delegator).from(entityName).queryIterator();
+        try (EntityListIterator eli = EntityQuery.use(delegator)
+                .from(entityName)
+                .queryIterator()) {
+
             GenericValue currentValue;
             while ((currentValue = eli.next()) != null) {
                 byte[] bytes = currentValue.getBytes(fieldName);
@@ -436,15 +437,6 @@ public class EntityDataServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error unwrapping ByteWrapper records: " + e.toString(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityExtErrorUnwrappingRecords", UtilMisc.toMap("errorString", e.toString()), locale));
-        } finally {
-            if (eli != null) {
-                try {
-                    eli.close();
-                } catch (GenericEntityException e) {
-                    String errMsg = "Error closing EntityListIterator: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                }
-            }
         }
 
         return ServiceUtil.returnSuccess();

@@ -1871,7 +1871,7 @@ Creates a QR Code image
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     text                    = (string) Text or Target URL (will be url_encoded)
-    hasLogo                 = ((boolean), default: true) Render overlaying logo on top of qrcode?
+    hasLogo                 = ((boolean), default: false) Render overlaying logo on top of qrcode?
     logo                    = (string) Logo file resource in component:// notation
     export                  = ((string) image|link|url, default:image) Export as image or link ("image"|"link"|"url"; default:image)
     width                   = ((integer)) QRCode width
@@ -1882,7 +1882,7 @@ Creates a QR Code image
     
     -->
 <#assign qrcode_defaultArgs = {
-   "id":"", "class":"", "text":"","hasLogo":true,
+   "id":"", "class":"", "text":"","hasLogo":false,
    "logo":"","export":"image", "width":250,
    "height":250,"linktext":"","alt":"QRCode","passArgs":{}
 }>
@@ -1893,19 +1893,19 @@ Creates a QR Code image
   <@qrcode_markup id=id class=class text=text hasLogo=hasLogo export=export logo=logo export=export width=width height=height linktext=linktext alt=alt origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
 </#macro>
 
-<#-- @pli main markup - theme override -->
+<#-- @qrcode main markup - theme override -->
 <#macro qrcode_markup id="" class="" text="" hasLogo=true export="" logo="" export="" width=250 height=250 linktext="" alt="" origArgs={} passArgs={} catchArgs...>
-  <#local qrURL>/qrcode/?url=escapeFullUrl(text, 'css-html')&hasLogo=${hasLogo?string("true","false")}&width=${width!}&height=${height!}</#local>
+  <#local qrURL>/lightning/qrcode/?url=${escapeFullUrl(text, 'css-html')}&hasLogo=${hasLogo?string("true","false")}&width=${width!}&height=${height!}</#local>
     <div <@compiledClassAttribStr class=class /> id="${escapeVal(id, 'html')}">
         <#switch export>
             <#case "link">
-                <a href="${qrURL!}" alt="${alt!}" target="_external"><#if linktext?has_content>${linktext!}<#else><#nested></#if></a>
+                <a href="${makeOfbizContentUrl(qrURL!)!""}" alt="${alt!}" target="_external"><#if linktext?has_content>${linktext!}<#else><#nested></#if></a>
             <#break>
             <#case "url">
-                ${qrURL!}
+                ${makeOfbizContentUrl(qrURL!)!""}
             <#break>
             <#default>       
-                <img src="${qrURL!}" witdh="${width!}" height="${height!}" alt="${alt!""}"/>
+                <img src="${makeOfbizContentUrl(qrURL!)!""}" witdh="${width!}" height="${height!}" alt="${alt!""}"/>
         </#switch>
     </div>
 </#macro>

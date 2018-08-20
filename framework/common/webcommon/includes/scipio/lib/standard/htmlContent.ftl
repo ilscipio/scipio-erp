@@ -1853,3 +1853,59 @@ Creates a tab element/entry.
         <#nested>
     </div>
 </#macro>
+
+<#-- 
+*************
+* QRCode
+************
+Creates a QR Code image
+
+  * Usage Examples *  
+    <@qrcode url="" />    
+                                 
+
+  * Parameters *
+    id                      = ID for outermost container
+    class                   = ((css-class)) CSS classes or additional classes for outermost container
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    text                    = (string) Text or Target URL (will be url_encoded)
+    hasLogo                 = ((boolean), default: true) Render overlaying logo on top of qrcode?
+    logo                    = (string) Logo file resource in component:// notation
+    export                  = ((string) image|link|url, default:image) Export as image or link ("image"|"link"|"url"; default:image)
+    width                   = ((integer)) QRCode width
+    height                  = ((integer)) QRCode height
+    linktext                = (string) link text 
+    alt                     = (string) alt text (default: "QRCode")
+    
+    
+    -->
+<#assign qrcode_defaultArgs = {
+   "id":"", "class":"", "text":"","hasLogo":true,
+   "logo":"","export":"image", "width":250,
+   "height":250,"linktext":"","alt":"QRCode","passArgs":{}
+}>
+<#macro qrcode args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.qrcode_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <@qrcode_markup id=id class=class text=text hasLogo=hasLogo export=export logo=logo export=export width=width height=height linktext=linktext alt=alt origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
+</#macro>
+
+<#-- @pli main markup - theme override -->
+<#macro qrcode_markup id="" class="" text="" hasLogo=true export="" logo="" export="" width=250 height=250 linktext="" alt="" origArgs={} passArgs={} catchArgs...>
+  <#local qrURL>/qrcode/?url=escapeFullUrl(text, 'css-html')&hasLogo=${hasLogo?string("true","false")}&width=${width!}&height=${height!}</#local>
+    <div <@compiledClassAttribStr class=class /> id="${escapeVal(id, 'html')}">
+        <#switch export>
+            <#case "link">
+                <a href="${qrURL!}" alt="${alt!}" target="_external"><#if linktext?has_content>${linktext!}<#else><#nested></#if></a>
+            <#break>
+            <#case "url">
+                ${qrURL!}
+            <#break>
+            <#default>       
+                <img src="${qrURL!}" witdh="${width!}" height="${height!}" alt="${alt!""}"/>
+        </#switch>
+    </div>
+</#macro>

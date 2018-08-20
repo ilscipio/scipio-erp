@@ -77,7 +77,6 @@ public abstract class ModelFormAction implements Serializable {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    @SuppressWarnings("serial")
     public static class CallParentActions extends AbstractModelAction {
         private final ActionsKind kind;;
         private final ModelForm modelForm;
@@ -127,7 +126,6 @@ public abstract class ModelFormAction implements Serializable {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    @SuppressWarnings("serial")
     public static class Service extends AbstractModelAction {
         private final FlexibleStringExpander autoFieldMapExdr;
         private final Map<FlexibleMapAccessor<Object>, Object> fieldMap;

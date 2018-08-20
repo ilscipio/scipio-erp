@@ -97,7 +97,6 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
 
     protected ICalRecurConverter() {}
 
-    @SuppressWarnings("unchecked")
     protected Recur consolidateRecurs(List<Recur> recurList) {
         // Try to consolidate a list of Recur instances into one instance
         Set<Integer> monthList = new HashSet<Integer>();
@@ -160,7 +159,6 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void visit(HourRange expr) {
         NumberList hourList = new NumberList();
@@ -189,7 +187,6 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void visit(MinuteRange expr) {
         NumberList minuteList = new NumberList();
@@ -225,7 +222,6 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
         this.state.addRecur(recur);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void visit(TemporalExpressions.DayOfMonthRange expr) {
         int startDay = expr.getStartDay();
@@ -241,7 +237,6 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
         this.state.addRecur(recur);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void visit(TemporalExpressions.DayOfWeekRange expr) {
         int startDay = expr.getStartDay();
@@ -289,7 +284,6 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void visit(TemporalExpressions.MonthRange expr) {
         int startMonth = expr.getStartMonth();

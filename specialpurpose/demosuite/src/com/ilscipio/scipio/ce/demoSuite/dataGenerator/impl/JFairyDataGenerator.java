@@ -56,7 +56,6 @@ public class JFairyDataGenerator extends DataGenerator {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public DemoDataObject handleData(Object result, String format) throws UnsupportedOperationException {
 		DemoDataObject handledData = null;

@@ -2360,6 +2360,7 @@ under the License.
     <target name="download-util-all" description="Utility target to download all utilities (except JDBC)">
         <antcall target="download-activemq"/>
         <antcall target="download-cobertura"/>
+        <antcall target="download-jacoco"/>
         <antcall target="download-sonar-ant-task"/>
     </target>
 

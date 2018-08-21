@@ -173,7 +173,6 @@ under the License.
  
             <!-- Optional dependencies, retrieved separately - do not delete! -->
             <filename name="ant-opt/**/*.jar"/>
-            <filename name="activemq-*.jar"/>
         </or>
     </selector>
     

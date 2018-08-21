@@ -256,7 +256,6 @@ under the License.
         
         <delete verbose="true" deleteonexit="true">
             <fileset dir="framework/base/lib/ant-opt" includes="**/*.jar"/>
-            <fileset dir="framework/base/lib" includes="activemq-*.jar"/>
             <!-- SCIPIO: 2017-04-11: for this to be consistent we have to remove all except derby
             <fileset dir="framework/entity/lib/jdbc" includes="postgresql-*.jar"/>
             <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>-->
@@ -2283,8 +2282,9 @@ under the License.
     </target>    
     
     <target name="download-activemq" depends="ivy-init" description="Download activemq for DCC (Distributed Cache Clearing">
-        <delete verbose="on"><fileset dir="framework/base/lib" includes="activemq-*.jar"/></delete>
-        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
+        <delete verbose="on"><fileset dir="framework/base/lib/ant-opt/activemq" includes="*.jar"/></delete>
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="activemq-*.jar"/></delete><!-- compatibility -->
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-opt/activemq/[artifact]-[revision].[ext]" conf="activemq"/>
         <echo> </echo>
         <echo>======================================================</echo>
         <echo>Please check that this version is appropriate for you!</echo>

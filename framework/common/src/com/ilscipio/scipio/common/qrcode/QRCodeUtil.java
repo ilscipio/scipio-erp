@@ -25,9 +25,8 @@ public class QRCodeUtil {
      * @param qrCode Original qrCode File
      * @param logoPath path to overlaying image
      * */
-    public static File drawLogo(File qrCode,String logoPath){
+    public static File drawLogo(BufferedImage qrImage, String format, String logoPath){
         try{
-            BufferedImage qrImage = ImageIO.read(qrCode);
             BufferedImage logo = ImageIO.read(FileUtil.getFile(logoPath));
             double determineImageScale = determineImageScale(logo.getWidth(), logo.getHeight(), qrImage.getWidth(),qrImage.getHeight());
             BufferedImage overlay = resizeImg(logo,determineImageScale);
@@ -41,8 +40,7 @@ public class QRCodeUtil {
             g.drawImage(qrImage, 0, 0, null);
             ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
             g.drawImage(overlay, Math.round(deltaWidth/2), Math.round(deltaHeight/2), null);
-            String extension = FilenameUtils.getExtension(qrCode.getName());
-            File imageFile = File.createTempFile("QRCode", "." + extension);
+            File imageFile = File.createTempFile("QRCode", "." + format);
             ImageIO.write(combined, "PNG", imageFile);
             imageFile.deleteOnExit();
             return imageFile;

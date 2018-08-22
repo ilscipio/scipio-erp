@@ -76,7 +76,7 @@ public abstract class QRCodeEvents {
         // Print response
         String format = request.getParameter("format");
         if (UtilValidate.isEmpty(format)) {
-            format = "png";
+            format = QRCodeServices.QRCODE_DEFAULT_FORMAT;
         }
         String mimeType = "image/" + format;
         response.setContentType(mimeType);
@@ -94,12 +94,12 @@ public abstract class QRCodeEvents {
             }
             File f = qrCode.file();
             if (!Boolean.FALSE.equals(useLogo)) {
-                f = QRCodeUtil.drawLogo(qrCode.file(), logo);
+                f = QRCodeUtil.drawLogo(ImageIO.read(qrCode.file()), format, logo);
             }
             BufferedImage bi = ImageIO.read(f);
-            try (OutputStream out = response.getOutputStream()) {
-                ImageIO.write(bi, format, out);
-            }
+            OutputStream out = response.getOutputStream();
+            ImageIO.write(bi, format, out);
+            out.flush();
         } catch (Exception e) {
             Debug.logError(e, module);
             request.setAttribute("_ERROR_MESSAGE_", "Could not generate qrcode");

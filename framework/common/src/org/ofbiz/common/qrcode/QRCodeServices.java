@@ -122,13 +122,15 @@ public class QRCodeServices {
             return ServiceUtil.returnError(UtilProperties.getMessage("QRCodeUiLabels", "ParameterCannotEmpty", new Object[] { "message" }, locale));
         }
         if (width == null) {
-            width = Integer.parseInt(QRCODE_DEFAULT_WIDTH);
+            //width = Integer.parseInt(QRCODE_DEFAULT_WIDTH);
+            width = QRCODE_DEFAULT_WIDTH_INT; // SCIPIO
         }
         if (width.intValue() < MIN_SIZE || width.intValue() > MAX_SIZE) {
             return ServiceUtil.returnError(UtilProperties.getMessage("QRCodeUiLabels", "SizeOutOfBorderError", new Object[] {"width", String.valueOf(width), String.valueOf(MIN_SIZE), String.valueOf(MAX_SIZE)}, locale));
         }
         if (height == null) {
-            height = Integer.parseInt(QRCODE_DEFAULT_HEIGHT);
+            //height = Integer.parseInt(QRCODE_DEFAULT_HEIGHT);
+            height = QRCODE_DEFAULT_HEIGHT_INT; // SCIPIO
         }
         if (height.intValue() < MIN_SIZE || height.intValue() > MAX_SIZE) {
             return ServiceUtil.returnError(UtilProperties.getMessage("QRCodeUiLabels", "SizeOutOfBorderError", 

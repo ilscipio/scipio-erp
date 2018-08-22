@@ -2207,6 +2207,12 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   <@section title="qrcode (stock) ecLevel H">
     <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="H" targetUri="qrcode"/>
   </@section>
+  <@section title="qrcodedir (scipio) ecLevel H jpg">
+    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="H" format="jpg" targetUri="qrcodedir"/>
+  </@section>
+  <@section title="qrcode (stock) ecLevel H jpg">
+    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="H" format="jpg" targetUri="qrcode"/>
+  </@section>
 </@section>
 
 <@section title="Date formatting (formatDate/formatDateTime/formatTime)">

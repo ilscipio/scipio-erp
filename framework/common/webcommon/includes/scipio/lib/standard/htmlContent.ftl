@@ -1885,11 +1885,12 @@ Creates a QR Code image link.
     linktext                = ((string)) link text 
     alt                     = ((string)) alt text (default: "QRCode")
     targetUri               = ((string), default: qrcodedir)
+    format                  = (png|jpg|bmp, default: -from qrcode.properties-) Image format
     
 -->
 <#assign qrcode_defaultArgs = {
    "id":"", "class":"", "text":"", "logo":false,"export":"image", "width":"",
-   "height":"", "ecLevel":"", "linktext":"","alt":"QRCode","targetUri":"","passArgs":{}
+   "height":"", "ecLevel":"", "format":"", "linktext":"","alt":"QRCode","targetUri":"","passArgs":{}
 }>
 <#macro qrcode args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.qrcode_defaultArgs)>
@@ -1910,12 +1911,12 @@ Creates a QR Code image link.
     <#local logo = false>
   </#if>
   <@qrcode_markup id=id class=class text=text export=export logo=logo export=export 
-    width=width height=height ecLevel=ecLevel linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
+    width=width height=height ecLevel=ecLevel format=format linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
 </#macro>
 
 <#-- @qrcode main markup - theme override -->
-<#macro qrcode_markup id="" class="" text="" export="" logo="" export="" width="" height="" ecLevel="" linktext="" alt="" targetUri="" origArgs={} passArgs={} catchArgs...>
-  <#local qrURL>${targetUri}?message=${escapeVal(text, 'url')}&logo=${logo?string}&width=${width}&height=${height}<#if ecLevel?has_content>&ecLevel=${ecLevel}</#if></#local>
+<#macro qrcode_markup id="" class="" text="" export="" logo="" export="" width="" height="" ecLevel="" format="" linktext="" alt="" targetUri="" origArgs={} passArgs={} catchArgs...>
+  <#local qrURL>${targetUri}?message=${escapeVal(text, 'url')}&logo=${logo?string}&width=${width}&height=${height}<#if ecLevel?has_content>&ecLevel=${ecLevel}</#if><#if format?has_content>&format=${format}</#if></#local>
   <#switch export>
     <#case "link">
       <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>

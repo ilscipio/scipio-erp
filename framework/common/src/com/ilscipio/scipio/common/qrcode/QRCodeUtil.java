@@ -6,52 +6,50 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.io.FilenameUtils;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 
 /**
- * SCIPIO qrcode servlet - NOT associated with stock qrcode at current time
- * (org.ofbiz.common.qrcode).
+ * SCIPIO: qrcode util.
  */
 public class QRCodeUtil {
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
-     * Renders overlay over QRCode
-     * @param qrCode Original qrCode File
-     * @param logoPath path to overlaying image
-     * */
-    public static File drawLogo(BufferedImage qrImage, String format, String logoPath){
-        try{
-            BufferedImage logo = ImageIO.read(FileUtil.getFile(logoPath));
-            double determineImageScale = determineImageScale(logo.getWidth(), logo.getHeight(), qrImage.getWidth(),qrImage.getHeight());
-            BufferedImage overlay = resizeImg(logo,determineImageScale);
-            //BufferedImage overlay = logo;
-
-            int deltaHeight = qrImage.getHeight() - overlay.getHeight();
-            int deltaWidth  = qrImage.getWidth()  - overlay.getWidth();
-
-            BufferedImage combined = new BufferedImage(qrImage.getWidth(),qrImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics g = combined.getGraphics();
-            g.drawImage(qrImage, 0, 0, null);
-            ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-            g.drawImage(overlay, Math.round(deltaWidth/2), Math.round(deltaHeight/2), null);
-            File imageFile = File.createTempFile("QRCode", "." + format);
-            ImageIO.write(combined, "PNG", imageFile);
-            imageFile.deleteOnExit();
-            return imageFile;
-        } catch(Exception e) {
-            Debug.logError("Error while drawing logo in QR Code", module);
-        }
-        return null;
+     * Renders overlay over QRCode (original Scipio method).
+     */
+    public static File drawLogoToFile(BufferedImage qrImage, String format, String logoPath) throws IOException {
+        BufferedImage combined = drawLogo(qrImage, ImageIO.read(FileUtil.getFile(logoPath)));
+        File imageFile = File.createTempFile("QRCode", "." + format);
+        ImageIO.write(combined, "PNG", imageFile);
+        imageFile.deleteOnExit();
+        return imageFile;
     }
 
     /**
-     * Function to scale an image down, requires scaledWidth (determined via {@link #determineImageScale(int, int, int, int)}
+     * Renders overlay over QRCode (original Scipio method).
+     */
+    public static BufferedImage drawLogo(BufferedImage qrImage, BufferedImage logoImage) {
+        double determineImageScale = determineImageScale(logoImage.getWidth(), logoImage.getHeight(), 
+                qrImage.getWidth(), qrImage.getHeight());
+        BufferedImage overlay = resizeImg(logoImage, determineImageScale);
+
+        int deltaHeight = qrImage.getHeight() - overlay.getHeight();
+        int deltaWidth  = qrImage.getWidth()  - overlay.getWidth();
+
+        BufferedImage combined = new BufferedImage(qrImage.getWidth(),qrImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics g = combined.getGraphics();
+        g.drawImage(qrImage, 0, 0, null);
+        ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        g.drawImage(overlay, Math.round(deltaWidth/2), Math.round(deltaHeight/2), null);
+        return combined;
+    }
+    
+    /**
+     * Function to scale an image down, requires scaledWidth (original Scipio method).
      * */
     public static BufferedImage resizeImg(BufferedImage image, double scaledWidth) {
         Image scaledImage = image.getScaledInstance((int) (image.getWidth() * scaledWidth), (int) (image.getHeight() * scaledWidth), Image.SCALE_SMOOTH);
@@ -66,7 +64,7 @@ public class QRCodeUtil {
     }
 
     /**
-     * Function to determine proper aspect ratio
+     * Function to determine proper aspect ratio (original Scipio method).
      * */
     private static double determineImageScale(int sourceWidth, int sourceHeight, int targetWidth, int targetHeight) {
         double scalex = (double) targetWidth / sourceWidth;

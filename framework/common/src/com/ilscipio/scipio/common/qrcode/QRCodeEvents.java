@@ -22,14 +22,14 @@ import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
 
 /**
+ * @deprecated to be replaced by modified {@link org.ofbiz.common.qrcode.QRCodeEvents#serveQRCodeImage}.
  * Scipio-specific QRCode events.
  */
+@Deprecated
 public abstract class QRCodeEvents {
     
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private static final String QR_LOGO_PATH = "component://base-theme/webapp/base/images/scipio-logo.png";
-    
     protected QRCodeEvents() {
     }
 
@@ -39,7 +39,7 @@ public abstract class QRCodeEvents {
     public static String serveQRCodeImageForDirective(HttpServletRequest request, HttpServletResponse response) {
         String logoArg = request.getParameter("logo");
 
-        String logo = QR_LOGO_PATH;
+        String logo = QRCodeServices.QRCODE_DEFAULT_LOGOIMAGE;
         Boolean useLogo = null; // NOTE: stock ofbiz generateQRCodeImage service default is true
         if ("true".equals(logoArg)) {
             useLogo = true;
@@ -94,7 +94,7 @@ public abstract class QRCodeEvents {
             }
             File f = qrCode.file();
             if (!Boolean.FALSE.equals(useLogo)) {
-                f = QRCodeUtil.drawLogo(ImageIO.read(qrCode.file()), format, logo);
+                f = QRCodeUtil.drawLogoToFile(ImageIO.read(qrCode.file()), format, logo);
             }
             BufferedImage bi = ImageIO.read(f);
             OutputStream out = response.getOutputStream();

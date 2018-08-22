@@ -53,18 +53,8 @@ public abstract class QRCodeEvents {
         
         Boolean isVCard = UtilMisc.booleanValue(request.getParameter("isVCard"), false); // currently not implemented
         String message = request.getParameter("message");
-        int width = QRCodeServices.QRCODE_DEFAULT_WIDTH_INT;
-        try {
-            width = Integer.valueOf(request.getParameter("width"));
-        } catch(NumberFormatException e) {
-        }
-        int height = QRCodeServices.QRCODE_DEFAULT_HEIGHT_INT;
-        try {
-            height = Integer.valueOf(request.getParameter("height"));
-        } catch(NumberFormatException e) {
-        }
         if(UtilValidate.isNotEmpty(message)){
-            /* unnecessary, already done by tomcat
+            /* already done by tomcat
             try {
                 message = URLDecoder.decode(message,"UTF-8");
             } catch (UnsupportedEncodingException e) {
@@ -81,20 +71,30 @@ public abstract class QRCodeEvents {
             // Validate if this is a VCard
         }
 
+        String ecLevel = request.getParameter("ecLevel");
+        
         // Print response
         String format = request.getParameter("format");
         if (UtilValidate.isEmpty(format)) {
-            format = "png"; // TODO: REVIEW: "jpg";
+            format = "png";
         }
         String mimeType = "image/" + format;
         response.setContentType(mimeType);
         try {
+            int width = UtilValidate.isNotEmpty(request.getParameter("width")) ? 
+                    Integer.valueOf(request.getParameter("width")) : QRCodeServices.QRCODE_DEFAULT_WIDTH_INT;
+            int height = UtilValidate.isNotEmpty(request.getParameter("height")) ? 
+                    Integer.valueOf(request.getParameter("height")) : QRCodeServices.QRCODE_DEFAULT_HEIGHT_INT;
+
             QRCode qrCode = QRCode.from(message).withSize(width, height).to(ImageType.PNG);
-            //qrCode.withColor(0x3d4a5d, 0xffffff);
-            qrCode.withHint(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            if (UtilValidate.isNotEmpty(ecLevel)) {
+                qrCode.withHint(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.valueOf(ecLevel));
+            } else if (QRCodeServices.QRCODE_DEFAULT_ECLEVEL != null) {
+                qrCode.withHint(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.valueOf(QRCodeServices.QRCODE_DEFAULT_ECLEVEL));
+            }
             File f = qrCode.file();
             if (!Boolean.FALSE.equals(useLogo)) {
-                f = QRCodeUtil.drawLogo(qrCode, logo);
+                f = QRCodeUtil.drawLogo(qrCode.file(), logo);
             }
             BufferedImage bi = ImageIO.read(f);
             try (OutputStream out = response.getOutputStream()) {

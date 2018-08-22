@@ -13,28 +13,12 @@ import org.apache.commons.io.FilenameUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 
-import net.glxn.qrgen.javase.QRCode;
-
 /**
  * SCIPIO qrcode servlet - NOT associated with stock qrcode at current time
  * (org.ofbiz.common.qrcode).
  */
 public class QRCodeUtil {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-
-    /**
-     * Renders overlay over QRCode
-     * Calls {@link QRCodeUtil#drawLogo(File, String) drawLogo}.
-     * */
-    public static File drawLogo(QRCode qrCode,String logoPath){
-        try{
-            return drawLogo(qrCode.file(),logoPath);
-        }catch(Exception e){
-            Debug.logError("Error while drawing logo in QR Code", module);
-        }
-        return null;
-    }
-
 
     /**
      * Renders overlay over QRCode
@@ -62,30 +46,26 @@ public class QRCodeUtil {
             ImageIO.write(combined, "PNG", imageFile);
             imageFile.deleteOnExit();
             return imageFile;
-        }catch(Exception e){
+        } catch(Exception e) {
             Debug.logError("Error while drawing logo in QR Code", module);
         }
         return null;
-
     }
 
     /**
      * Function to scale an image down, requires scaledWidth (determined via {@link #determineImageScale(int, int, int, int)}
      * */
-    public static BufferedImage resizeImg(BufferedImage image, double scaledWidth)
-    {
+    public static BufferedImage resizeImg(BufferedImage image, double scaledWidth) {
         Image scaledImage = image.getScaledInstance((int) (image.getWidth() * scaledWidth), (int) (image.getHeight() * scaledWidth), Image.SCALE_SMOOTH);
         BufferedImage bufferedImage = new BufferedImage(
-        scaledImage.getWidth(null),
-        scaledImage.getHeight(null),
-        BufferedImage.TYPE_INT_RGB
-        );
+                scaledImage.getWidth(null),
+                scaledImage.getHeight(null),
+                BufferedImage.TYPE_INT_RGB);
         Graphics g = bufferedImage.createGraphics();
         g.drawImage(scaledImage, 0, 0, null);
         g.dispose();
         return bufferedImage;
-   }
-
+    }
 
     /**
      * Function to determine proper aspect ratio
@@ -94,5 +74,5 @@ public class QRCodeUtil {
         double scalex = (double) targetWidth / sourceWidth;
         double scaley = (double) targetHeight / sourceHeight;
         return Math.min(scalex, scaley);
-        }
+    }
 }

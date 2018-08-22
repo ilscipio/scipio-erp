@@ -1880,6 +1880,8 @@ Creates a QR Code image link.
                               Default configured in {{{framework/common/config/qrcode.properties}}}.
     height                  = ((integer)) QRCode height
                               Default configured in {{{framework/common/config/qrcode.properties}}}.
+    ecLevel                 = (L|M|Q|H, default: -from qrcode.properties-) Error correction level
+                              See https://en.wikipedia.org/wiki/QR_code#Error_correction
     linktext                = ((string)) link text 
     alt                     = ((string)) alt text (default: "QRCode")
     targetUri               = ((string), default: qrcodedir)
@@ -1887,7 +1889,7 @@ Creates a QR Code image link.
 -->
 <#assign qrcode_defaultArgs = {
    "id":"", "class":"", "text":"", "logo":false,"export":"image", "width":"",
-   "height":"","linktext":"","alt":"QRCode","targetUri":"","passArgs":{}
+   "height":"", "ecLevel":"", "linktext":"","alt":"QRCode","targetUri":"","passArgs":{}
 }>
 <#macro qrcode args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.qrcode_defaultArgs)>
@@ -1908,12 +1910,12 @@ Creates a QR Code image link.
     <#local logo = false>
   </#if>
   <@qrcode_markup id=id class=class text=text export=export logo=logo export=export 
-    width=width height=height linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
+    width=width height=height ecLevel=ecLevel linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
 </#macro>
 
 <#-- @qrcode main markup - theme override -->
-<#macro qrcode_markup id="" class="" text="" export="" logo="" export="" width="" height="" linktext="" alt="" targetUri="" origArgs={} passArgs={} catchArgs...>
-  <#local qrURL>${targetUri}?message=${escapeVal(text, 'url')}&logo=${logo?string}&width=${width}&height=${height}</#local>
+<#macro qrcode_markup id="" class="" text="" export="" logo="" export="" width="" height="" ecLevel="" linktext="" alt="" targetUri="" origArgs={} passArgs={} catchArgs...>
+  <#local qrURL>${targetUri}?message=${escapeVal(text, 'url')}&logo=${logo?string}&width=${width}&height=${height}<#if ecLevel?has_content>&ecLevel=${ecLevel}</#if></#local>
   <#switch export>
     <#case "link">
       <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>

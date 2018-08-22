@@ -116,47 +116,63 @@ under the License.
     
     <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-update" description="Downloads all jars (base component implementation)">
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}">
+        <!-- 2018-08: [organisation] is a workaround for duplicate and badly named artifacts, gets stripped off by regexp -->
+        <ivy:retrieve pattern="lib/[organisation]/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}">
             <firstmatchmapper>
+                <!-- CUSTOM/CLIENT RULES (insert here) -->
+
+                <!-- STOCK SCIPIO RULES -->
+                
                 <!-- Official Servlet API - 2018-04-13: move the servlet API jars to j2eespecs-ref -->
-                <regexpmapper from="^(.*/)?(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?[^/]+/(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
 
                 <!-- Tomcat-provided Servlet API - 2018-04-13: no longer need to do this; we have two different sets of JARs
-                <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)\.jar$" to="\1javax.servlet-api-3.1.0.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)\.jar$" to="\1javax.servlet.jsp-api-2.3.0.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)\.jar$" to="\1javax.el-api-3.0.0.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?[^/]+/tomcat-servlet-api-([^/-]+)\.jar$" to="\1javax.servlet-api-3.1.0.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?[^/]+/tomcat-jsp-api-([^/-]+)\.jar$" to="\1javax.servlet.jsp-api-2.3.0.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?[^/]+/tomcat-el-api-([^/-]+)\.jar$" to="\1javax.el-api-3.0.0.jar" handledirsep="true"/>
                 <!- - FIXME?: annotations official version is unclear - ->
-                <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)\.jar$" to="\1javax.annotation-api-3.0.0.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?[^/]+/tomcat-annotations-api-([^/-]+)\.jar$" to="\1javax.annotation-api-3.0.0.jar" handledirsep="true"/>
                 -->
 
-                <!-- badly named zhing jar -->
-                <regexpmapper from="^(.*/)?core-([0-9.]+\.jar)$" to="\1zxing-core-\2" handledirsep="true"/>
-
                 <!-- ant-ext libs that are also part of base conf, for compatibility reasons -->
-                <regexpmapper from="^(.*/)?((asm|asm-tree)-([0-9.]+\.jar))$" to="\1ant-ext/\2" handledirsep="true"/>
-                
-                <identitymapper/>
+                <regexpmapper from="^(.*?/)?[^/]+/((asm|asm-tree)-([0-9.]+\.jar))$" to="\1ant-ext/\2" handledirsep="true"/>
+
+                <!-- badly named qrcode artifacts -->
+                <regexpmapper from="^(.*?/)?com.google.zxing/([^/]+\.jar)$" to="\1zxing-\2" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?com.github.kenglxn.qrgen/([^/]+\.jar)$" to="\1qrgen-\2" handledirsep="true"/>
+
+                <!-- for rest, strip organization folder -->
+                <regexpmapper from="^(.*?/)?[^/]+/([^/]+)$" to="\1\2" handledirsep="true"/>
+                <identitymapper/><!-- NOTE: this should never match anymore -->
             </firstmatchmapper>
         </ivy:retrieve>
         <if>
             <equals arg1="${lib.update.sources}" arg2="true"/>
             <then>
-                <ivy:retrieve pattern="libsrc/${lib.update.filename.pattern.src.ivy}" conf="${lib.resolve.src.confs}">
+                <!-- 2018-08: [organisation] is a workaround for duplicate and badly named artifacts, gets stripped off by regexp -->
+                <ivy:retrieve pattern="libsrc/[organisation]/${lib.update.filename.pattern.src.ivy}" conf="${lib.resolve.src.confs}">
                     <firstmatchmapper>
+                        <!-- CUSTOM/CLIENT RULES (insert here) -->
+
+                        <!-- STOCK SCIPIO RULES -->
+
                         <!-- Official Servlet API - 2018-04-13: move the servlet API jars to j2eespecs-ref -->
-                        <regexpmapper from="^(.*/)?(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
+                        <regexpmapper from="^(.*?/)?[^/]+/(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
 
                         <!-- Tomcat-provided Servlet API - 2018-04-13: no longer need to do this; we have two different sets of JARs
-                        <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)-sources\.jar$" to="\1javax.servlet-api-3.1.0-sources.jar" handledirsep="true"/>
-                        <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)-sources\.jar$" to="\1javax.servlet.jsp-api-2.3.0-sources.jar" handledirsep="true"/>
-                        <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)-sources\.jar$" to="\1javax.el-api-3.0.0-sources.jar" handledirsep="true"/>
+                        <regexpmapper from="^(.*?/)?[^/]+/tomcat-servlet-api-([^/-]+)-sources\.jar$" to="\1javax.servlet-api-3.1.0-sources.jar" handledirsep="true"/>
+                        <regexpmapper from="^(.*?/)?[^/]+/tomcat-jsp-api-([^/-]+)-sources\.jar$" to="\1javax.servlet.jsp-api-2.3.0-sources.jar" handledirsep="true"/>
+                        <regexpmapper from="^(.*?/)?[^/]+/tomcat-el-api-([^/-]+)-sources\.jar$" to="\1javax.el-api-3.0.0-sources.jar" handledirsep="true"/>
                         <!- - FIXME?: annotations official version is unclear - ->
-                        <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)-sources\.jar$" to="\1javax.annotation-api-3.0.0-sources.jar" handledirsep="true"/>-->
+                        <regexpmapper from="^(.*?/)?[^/]+/tomcat-annotations-api-([^/-]+)-sources\.jar$" to="\1javax.annotation-api-3.0.0-sources.jar" handledirsep="true"/>-->
  
-                        <!-- badly named zhing jar -->
-                        <regexpmapper from="^(.*/)?core-([0-9.]+-sources\.jar)$" to="\1zxing-core-\2" handledirsep="true"/>
+                        <!-- badly named qrcode artifacts -->
+                        <regexpmapper from="^(.*?/)?com.google.zxing/([^/]+\.jar)$" to="\1zxing-\2" handledirsep="true"/>
+                        <regexpmapper from="^(.*?/)?com.github.kenglxn.qrgen/([^/]+\.jar)$" to="\1qrgen-\2" handledirsep="true"/>
 
-                        <identitymapper/>
+                        <!-- for rest, strip organization folder -->
+                        <regexpmapper from="^(.*?/)?[^/]+/([^/]+)$" to="\1\2" handledirsep="true"/>
+                        <identitymapper/><!-- NOTE: this should never match anymore -->
                     </firstmatchmapper>
                 </ivy:retrieve>
             </then>
@@ -167,6 +183,10 @@ under the License.
         NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
     <selector id="lib.update.manual.files">
         <or>
+            <!-- CUSTOM/CLIENT RULES (insert here) -->
+
+            <!-- STOCK SCIPIO RULES -->
+
             <!-- Core build system dependencies (Ant & Ivy) -->
             <filename name="ant/**.jar"/>
             <filename name="oro-*.jar"/><!-- required by Ivy for matcher="glob", committed in filesystem -->

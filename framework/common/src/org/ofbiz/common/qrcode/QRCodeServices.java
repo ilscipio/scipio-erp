@@ -65,6 +65,10 @@ public class QRCodeServices {
 
     public static final String QRCODE_DEFAULT_HEIGHT = UtilProperties.getPropertyValue("qrcode", "qrcode.default.height", "200");
 
+    public static final int QRCODE_DEFAULT_WIDTH_INT = UtilProperties.asInteger(QRCODE_DEFAULT_WIDTH, 200); // SCIPIO: 2018-08-22
+
+    public static final int QRCODE_DEFAULT_HEIGHT_INT = UtilProperties.asInteger(QRCODE_DEFAULT_HEIGHT, 200); // SCIPIO: 2018-08-22
+    
     public static final String QRCODE_DEFAULT_FORMAT = UtilProperties.getPropertyValue("qrcode", "qrcode.default.format", "jpg");
 
     public static final String QRCODE_FORMAT_SUPPORTED = UtilProperties.getPropertyValue("qrcode", "qrcode.format.supported", "jpg|png|bmp");

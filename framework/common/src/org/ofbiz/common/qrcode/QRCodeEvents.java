@@ -61,7 +61,9 @@ public class QRCodeEvents {
         }
         String format = (String) parameters.get("format");
         if (UtilValidate.isEmpty(format)) {
-            format = "jpg";
+            // SCIPIO: 2018-08-22: respect qrcode.properties default here
+            //format = "jpg";
+            format = QRCodeServices.QRCODE_DEFAULT_FORMAT;
         }
         String mimeType = "image/" + format;
         String width = (String) parameters.get("width");

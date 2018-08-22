@@ -2201,17 +2201,17 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <@qrcode text=qrcodeTestText targetUri="qrcode"/>
     <@qrcode text=qrcodeTestText targetUri="qrcode" logo=true/>
   </@section>
-  <@section title="qrcodedir (scipio) ecLevel H">
-    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="H" targetUri="qrcodedir"/>
+  <@section title="qrcodedir (scipio) ecLevel M">
+    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="M" targetUri="qrcodedir"/>
   </@section>
-  <@section title="qrcode (stock) ecLevel H">
-    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="H" targetUri="qrcode"/>
+  <@section title="qrcode (stock) ecLevel M">
+    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="M" targetUri="qrcode"/>
   </@section>
-  <@section title="qrcodedir (scipio) ecLevel H jpg">
-    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="H" format="jpg" targetUri="qrcodedir"/>
+  <@section title="qrcodedir (scipio) ecLevel M jpg">
+    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="M" format="jpg" targetUri="qrcodedir"/>
   </@section>
-  <@section title="qrcode (stock) ecLevel H jpg">
-    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="H" format="jpg" targetUri="qrcode"/>
+  <@section title="qrcode (stock) ecLevel M jpg">
+    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="M" format="jpg" targetUri="qrcode"/>
   </@section>
 </@section>
 

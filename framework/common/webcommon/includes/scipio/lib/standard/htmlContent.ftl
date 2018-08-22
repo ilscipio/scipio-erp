@@ -1858,10 +1858,10 @@ Creates a tab element/entry.
 *************
 * QRCode
 ************
-Creates a QR Code image
+Creates a QR Code image link.
 
   * Usage Examples *  
-    <@qrcode url="" />    
+    <@qrcode text="" />    
                                  
 
   * Parameters *
@@ -1870,42 +1870,62 @@ Creates a QR Code image
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
-    text                    = (string) Text or Target URL (will be url_encoded)
-    hasLogo                 = ((boolean), default: false) Render overlaying logo on top of qrcode?
-    logo                    = (string) Logo file resource in component:// notation
-    export                  = ((string) image|link|url, default:image) Export as image or link ("image"|"link"|"url"; default:image)
+    text                    = (string) Text or Target URL (will be url-encoded)
+    logo                    = ((boolean|string), default: false) Render overlaying logo on top of qrcode?
+                              Can be boolean true/false or a value.
+                              FIXME: does not support specific value here yet due to security issues
+                              Default logo is configured in {{{framework/common/config/qrcode.properties}}}.
+    export                  = ((string) image|link|url, default: image) Export as image or link
     width                   = ((integer)) QRCode width
+                              Default configured in {{{framework/common/config/qrcode.properties}}}.
     height                  = ((integer)) QRCode height
-    linktext                = (string) link text 
-    alt                     = (string) alt text (default: "QRCode")
+                              Default configured in {{{framework/common/config/qrcode.properties}}}.
+    linktext                = ((string)) link text 
+    alt                     = ((string)) alt text (default: "QRCode")
+    targetUri               = ((string), default: qrcodedir)
     
-    
-    -->
+-->
 <#assign qrcode_defaultArgs = {
-   "id":"", "class":"", "text":"","hasLogo":false,
-   "logo":"","export":"image", "width":250,
-   "height":250,"linktext":"","alt":"QRCode","passArgs":{}
+   "id":"", "class":"", "text":"", "logo":false,"export":"image", "width":"",
+   "height":"","linktext":"","alt":"QRCode","targetUri":"","passArgs":{}
 }>
 <#macro qrcode args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.qrcode_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@qrcode_markup id=id class=class text=text hasLogo=hasLogo export=export logo=logo export=export width=width height=height linktext=linktext alt=alt origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
+  <#if !width?has_content>
+    <#local width = Static["org.ofbiz.common.qrcode.QRCodeServices"].QRCODE_DEFAULT_WIDTH_INT>
+  </#if>
+  <#if !height?has_content>
+    <#local height = Static["org.ofbiz.common.qrcode.QRCodeServices"].QRCODE_DEFAULT_HEIGHT_INT>
+  </#if>
+  <#if !targetUri?has_content>
+    <#local targetUri = "qrcodedir">
+  </#if>
+  <#if !logo?is_boolean && !logo?has_content>
+    <#-- NOTE: the stock serveQRCodeImage event used true by default, 
+        so for macro we must explicit decide a true/false default here/above -->
+    <#local logo = false>
+  </#if>
+  <@qrcode_markup id=id class=class text=text export=export logo=logo export=export 
+    width=width height=height linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
 </#macro>
 
 <#-- @qrcode main markup - theme override -->
-<#macro qrcode_markup id="" class="" text="" hasLogo=true export="" logo="" export="" width=250 height=250 linktext="" alt="" origArgs={} passArgs={} catchArgs...>
-  <#local qrURL>/lightning/qrcode/?url=${escapeFullUrl(text, 'css-html')}&hasLogo=${hasLogo?string("true","false")}&width=${width!}&height=${height!}</#local>
-    <div <@compiledClassAttribStr class=class /> id="${escapeVal(id, 'html')}">
-        <#switch export>
-            <#case "link">
-                <a href="${makeOfbizContentUrl(qrURL!)!""}" alt="${alt!}" target="_external"><#if linktext?has_content>${linktext!}<#else><#nested></#if></a>
-            <#break>
-            <#case "url">
-                ${makeOfbizContentUrl(qrURL!)!""}
-            <#break>
-            <#default>       
-                <img src="${makeOfbizContentUrl(qrURL!)!""}" witdh="${width!}" height="${height!}" alt="${alt!""}"/>
-        </#switch>
-    </div>
+<#macro qrcode_markup id="" class="" text="" export="" logo="" export="" width="" height="" linktext="" alt="" targetUri="" origArgs={} passArgs={} catchArgs...>
+  <#local qrURL>${targetUri}?message=${escapeVal(text, 'url')}&logo=${logo?string}&width=${width}&height=${height}</#local>
+  <#switch export>
+    <#case "link">
+      <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
+        <a href="<@ofbizUrl uri=qrURL escapeAs='html'/>" alt="${escapeVal(alt, 'html')}" target="_external"><#if linktext?has_content>${linktext}<#else><#nested></#if></a>
+      </div>
+    <#break>
+    <#case "url">
+      <@ofbizUrl uri=qrURL escapeAs='html'/><#t/>
+    <#break>
+    <#default>
+      <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
+        <img src="<@ofbizUrl uri=qrURL escapeAs='html'/>" width="${width}" height="${height}" alt="${escapeVal(alt, 'html')}"/>
+      </div>
+  </#switch>
 </#macro>

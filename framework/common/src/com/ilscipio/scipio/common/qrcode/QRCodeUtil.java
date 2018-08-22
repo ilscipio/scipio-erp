@@ -1,11 +1,5 @@
 package com.ilscipio.scipio.common.qrcode;
 
-import org.apache.commons.io.FilenameUtils;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.FileUtil;
-
-import net.glxn.qrgen.javase.QRCode;
-
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,12 +9,18 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FilenameUtils;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.FileUtil;
+
+import net.glxn.qrgen.javase.QRCode;
+
 /**
  * SCIPIO qrcode servlet - NOT associated with stock qrcode at current time
  * (org.ofbiz.common.qrcode).
  */
 public class QRCodeUtil {
-    private static final String module = QRCodeUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Renders overlay over QRCode

@@ -14,6 +14,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.qrcode.QRCodeServices;
+import org.ofbiz.common.qrcode.QRCodeUtil;
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;

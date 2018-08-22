@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.common.qrcode;
+package org.ofbiz.common.qrcode;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics;

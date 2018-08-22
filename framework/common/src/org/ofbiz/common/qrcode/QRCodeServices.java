@@ -50,6 +50,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.DecoderResult;
 import com.google.zxing.common.DetectorResult;
 import com.google.zxing.qrcode.decoder.Decoder;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.detector.Detector;
 
 import freemarker.template.utility.StringUtil;
@@ -63,9 +64,9 @@ public class QRCodeServices {
 
     public static final String QRCODE_DEFAULT_WIDTH = UtilProperties.getPropertyValue("qrcode", "qrcode.default.width", "200");
 
-    public static final String QRCODE_DEFAULT_HEIGHT = UtilProperties.getPropertyValue("qrcode", "qrcode.default.height", "200");
-
     public static final int QRCODE_DEFAULT_WIDTH_INT = UtilProperties.asInteger(QRCODE_DEFAULT_WIDTH, 200); // SCIPIO: 2018-08-22
+
+    public static final String QRCODE_DEFAULT_HEIGHT = UtilProperties.getPropertyValue("qrcode", "qrcode.default.height", "200");
 
     public static final int QRCODE_DEFAULT_HEIGHT_INT = UtilProperties.asInteger(QRCODE_DEFAULT_HEIGHT, 200); // SCIPIO: 2018-08-22
     
@@ -73,6 +74,24 @@ public class QRCodeServices {
 
     public static final String QRCODE_FORMAT_SUPPORTED = UtilProperties.getPropertyValue("qrcode", "qrcode.format.supported", "jpg|png|bmp");
     
+    public static final String QRCODE_DEFAULT_ECLEVEL; // SCIPIO: 2018-08-22
+
+    private static final ErrorCorrectionLevel defaultEcLevel;
+    static {
+        String ecLevel = UtilProperties.getPropertyValueOrNull("qrcode", "qrcode.default.eclevel");
+        String defaultEcLevelStr = null;
+        ErrorCorrectionLevel defaultEcLevelEnum = null;
+        try {
+            defaultEcLevelEnum = (ecLevel != null) ? 
+                    ErrorCorrectionLevel.valueOf(ecLevel) : null;
+            defaultEcLevelStr = ecLevel;
+        } catch(Exception e) {
+            Debug.logError("Invalid value for qrcode.default.eclevel: " + e.toString(), module);
+        }
+        QRCODE_DEFAULT_ECLEVEL = defaultEcLevelStr;
+        defaultEcLevel = defaultEcLevelEnum;
+    }
+
     public static final String QRCODE_DEFAULT_LOGOIMAGE = UtilProperties.getPropertyValue("qrcode", "qrcode.default.logoimage");
     
     public static BufferedImage defaultLogoImage;
@@ -146,6 +165,26 @@ public class QRCodeServices {
         if (UtilValidate.isNotEmpty(encoding)) {
             encodeHints = new EnumMap<>(EncodeHintType.class);
             encodeHints.put(EncodeHintType.CHARACTER_SET, encoding);
+        }
+
+        // SCIPIO: 2018-08-22: error correct level
+        String ecLevelStr = (String) context.get("ecLevel");
+        ErrorCorrectionLevel ecLevel = null;
+        if (UtilValidate.isNotEmpty(ecLevelStr)) {
+            try {
+                ecLevel = ErrorCorrectionLevel.valueOf(ecLevelStr);
+            } catch(Exception e) {
+                // TODO: localize
+                return ServiceUtil.returnError("Invalid error correction level");
+            }
+        } else {
+            ecLevel = defaultEcLevel;
+        }
+        if (ecLevel != null) {
+            if (encodeHints == null) {
+                encodeHints = new EnumMap<>(EncodeHintType.class);
+            }
+            encodeHints.put(EncodeHintType.ERROR_CORRECTION, ecLevel);
         }
 
         try {

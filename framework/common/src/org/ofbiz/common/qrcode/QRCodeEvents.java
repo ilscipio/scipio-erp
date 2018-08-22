@@ -84,7 +84,8 @@ public class QRCodeEvents {
             // FIXME: security risk, cannot be specified over request - needs strict mapping system
             //logo = logoArg;
         }
-        
+        String ecLevel = request.getParameter("ecLevel"); // SCIPIO: 2018-08-22
+
         try {
             if (mimeType != null) {
                 response.setContentType(mimeType);
@@ -144,6 +145,8 @@ public class QRCodeEvents {
             //if (logo != null) { 
             //    context.put("logoImage", ...);
             //}
+            // SCIPIO: 2018-08-22
+            context.put("ecLevel", ecLevel);
             Map<String, Object> results = dispatcher.runSync("generateQRCodeImage", context);
             if (!ServiceUtil.isError(results)) {
                 BufferedImage bufferedImage = (BufferedImage) results.get("bufferedImage");

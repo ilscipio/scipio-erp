@@ -39,6 +39,9 @@ under the License.
         <attribute name="verifyOutput" type="Boolean" mode="IN" optional="true"/>
         <attribute name="bufferedImage" type="java.awt.image.BufferedImage" mode="OUT" optional="true"/>
         <attribute name="useLogo" type="Boolean" mode="IN" optional="true" default-value="true"/><!-- SCIPIO: added 2018-08-22 -->
+        <attribute name="ecLevel" type="String" mode="IN" optional="true">
+            <description>Possible values: L, M, Q, H. Default: from qrcode.properties</description>
+        </attribute><!-- SCIPIO: added 2018-08-22 -->
     </service>
 
 </services>

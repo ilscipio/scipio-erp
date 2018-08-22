@@ -38,6 +38,7 @@ under the License.
         <attribute name="logoImageMaxHeight" type="Integer" mode="IN" optional="true"/>
         <attribute name="verifyOutput" type="Boolean" mode="IN" optional="true"/>
         <attribute name="bufferedImage" type="java.awt.image.BufferedImage" mode="OUT" optional="true"/>
+        <attribute name="useLogo" type="Boolean" mode="IN" optional="true" default-value="true"/><!-- SCIPIO: added 2018-08-22 -->
     </service>
 
 </services>

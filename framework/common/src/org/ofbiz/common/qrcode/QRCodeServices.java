@@ -146,19 +146,21 @@ public class QRCodeServices {
             BitMatrix bitMatrix = new MultiFormatWriter().encode(message, BarcodeFormat.QR_CODE, width, height, encodeHints);
             BufferedImage bufferedImage = toBufferedImage(bitMatrix, format);
             BufferedImage logoBufferedImage = null;
-            if (UtilValidate.isNotEmpty(logoImage)) {
-                Map<String, Object> logoImageResult;
-                try {
-                    logoImageResult = ImageTransform.getBufferedImage(FileUtil.getFile(logoImage).getAbsolutePath(), locale);
-                    logoBufferedImage = (BufferedImage) logoImageResult.get("bufferedImage");
-                } catch (IllegalArgumentException e) {
-                    // do nothing
-                } catch (IOException e) {
-                    // do nothing
+            if (!Boolean.FALSE.equals(context.get("useLogo"))) { // SCIPIO: 2018-08-22: useLogoImage flag to prevent logo, when false
+                if (UtilValidate.isNotEmpty(logoImage)) {
+                    Map<String, Object> logoImageResult;
+                    try {
+                        logoImageResult = ImageTransform.getBufferedImage(FileUtil.getFile(logoImage).getAbsolutePath(), locale);
+                        logoBufferedImage = (BufferedImage) logoImageResult.get("bufferedImage");
+                    } catch (IllegalArgumentException e) {
+                        // do nothing
+                    } catch (IOException e) {
+                        // do nothing
+                    }
                 }
-            }
-            if (UtilValidate.isEmpty(logoBufferedImage)) {
-                logoBufferedImage = defaultLogoImage;
+                if (UtilValidate.isEmpty(logoBufferedImage)) {
+                    logoBufferedImage = defaultLogoImage;
+                }
             }
             
             BufferedImage newBufferedImage = null;

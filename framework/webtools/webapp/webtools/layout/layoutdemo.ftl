@@ -2192,14 +2192,14 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   <@section title="qrcodedir (scipio)">
     <@qrcode text=qrcodeTestText width=150 height=150/><#-- targetUri="qrcodedir"/> -->
     <@qrcode text=qrcodeTestText width=150 height=150 logo=true/>
-    <@qrcode text=qrcodeTestText width=250 height=250/><#-- targetUri="qrcodedir"/> -->
-    <@qrcode text=qrcodeTestText width=250 height=250 logo=true/>
+    <@qrcode text=qrcodeTestText/><#-- targetUri="qrcodedir"/> -->
+    <@qrcode text=qrcodeTestText logo=true/>
   </@section>
   <@section title="qrcode (stock)">
     <@qrcode text=qrcodeTestText width=150 height=150 targetUri="qrcode"/>
     <@qrcode text=qrcodeTestText width=150 height=150 targetUri="qrcode" logo=true/>
-    <@qrcode text=qrcodeTestText width=250 height=250 targetUri="qrcode"/>
-    <@qrcode text=qrcodeTestText width=250 height=250 targetUri="qrcode" logo=true/>
+    <@qrcode text=qrcodeTestText targetUri="qrcode"/>
+    <@qrcode text=qrcodeTestText targetUri="qrcode" logo=true/>
   </@section>
 </@section>
 

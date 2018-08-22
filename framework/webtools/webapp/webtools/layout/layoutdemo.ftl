@@ -2187,6 +2187,18 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   </@section>
 </@section>
 
+<@section title="QRCode (@qrcode)">
+  <#assign qrcodeTestText>awefawef2353151234$%#@&$#12412awefawefawefawefawef</#assign>
+  <@section title="qrcodedir (scipio)">
+    <@qrcode text=qrcodeTestText width=150 height=150/><#-- targetUri="qrcodedir"/> -->
+    <@qrcode text=qrcodeTestText width=150 height=150 logo=true/>
+  </@section>
+  <@section title="qrcode (stock)">
+    <@qrcode text=qrcodeTestText width=150 height=150 targetUri="qrcode"/>
+    <@qrcode text=qrcodeTestText width=150 height=150 targetUri="qrcode" logo=true/>
+  </@section>
+</@section>
+
 <@section title="Date formatting (formatDate/formatDateTime/formatTime)">
   <#assign testDate = nowTimestamp>
   <ul>

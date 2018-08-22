@@ -43,7 +43,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class QRCodeEvents {
 
-    public static final String module = QRCodeEvents.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /** Streams QR Code to the output. */
     public static String serveQRCodeImage(HttpServletRequest request, HttpServletResponse response) {

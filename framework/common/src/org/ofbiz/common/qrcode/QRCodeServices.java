@@ -59,7 +59,7 @@ import freemarker.template.utility.StringUtil;
  */
 public class QRCodeServices {
 
-    public static final String module = QRCodeServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String QRCODE_DEFAULT_WIDTH = UtilProperties.getPropertyValue("qrcode", "qrcode.default.width", "200");
 

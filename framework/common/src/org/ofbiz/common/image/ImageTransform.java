@@ -29,6 +29,8 @@ import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +40,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
@@ -106,6 +109,8 @@ public class ImageTransform {
     /**
      * scaleImage
      * <p>
+     * WARNING (SCIPIO): These methods take height before width, due to stock ofbiz original interface.
+     * <p>
      * scale original image related to the ImageProperties.xml dimensions
      * <p>
      * SCIPIO: 2017-07-10: now supports scaling options/algorithm specs.
@@ -130,12 +135,8 @@ public class ImageTransform {
      * @return                  New scaled buffered image
      */
     public static Map<String, Object> scaleImage(BufferedImage bufImg, double imgHeight, double imgWidth, Map<String, Map<String, String>> dimensionMap, String sizeType, Locale locale, Map<String, Object> scalingOptions) {
-
-        /* VARIABLES */
-        BufferedImage bufNewImg;
-        double defaultHeight, defaultWidth, scaleFactor;
-        Map<String, Object> result =  new LinkedHashMap<String, Object>();
-
+        double defaultHeight, defaultWidth;
+        
         /* DIMENSIONS from ImageProperties */
         // A missed dimension is authorized
         if (dimensionMap.get(sizeType).containsKey("height")) {
@@ -148,6 +149,26 @@ public class ImageTransform {
         } else {
             defaultWidth = -1;
         }
+        
+        // SCIPIO: 2018-08-23: now delegating
+        return scaleImage(bufImg, imgHeight, imgWidth, defaultHeight, defaultWidth, locale, scalingOptions);
+    }
+    
+    /**
+     * scaleImage.
+     * <p>
+     * SCIPIO: 2018-08-23: refactored from one above to avoid ugly map parameters.
+     */
+    public static Map<String, Object> scaleImage(BufferedImage bufImg, double imgHeight, double imgWidth, Double maxHeight, Double maxWidth, Locale locale, Map<String, Object> scalingOptions) {
+
+        /* VARIABLES */
+        BufferedImage bufNewImg;
+        double defaultHeight, defaultWidth, scaleFactor;
+        Map<String, Object> result =  new LinkedHashMap<String, Object>();
+
+        defaultHeight = (maxHeight != null) ? maxHeight : -1;
+        defaultWidth = (maxWidth != null) ? maxWidth : -1;
+
         if (defaultHeight == 0.0 || defaultWidth == 0.0) {
             String errMsg = UtilProperties.getMessage(resource, "ImageTransform.one_default_dimension_is_null", locale) + " : defaultHeight = " + defaultHeight + " ; defaultWidth = " + defaultWidth;
             Debug.logError(errMsg, module);
@@ -279,6 +300,83 @@ public class ImageTransform {
         return bufNewImg;
     }
 
+    /**
+     * SCIPIO: scaleImage with more advanced specifications from {@link ImageScaleSpec}.
+     * Returns null image if no operation performed or needed to be performed on the original (rare), exception if error.
+     * <p>
+     * NOTE: This method will never break the ratio between width and height, it only sets limits.
+     * <p>
+     * Canvas height is only needed for ratio specs.
+     * <p>
+     * Added 2018-08-23.
+     */
+    public static Map<String, Object> scaleImageVersatile(BufferedImage bufImg, double imgHeight, double imgWidth, double canvasHeight, double canvasWidth, 
+            ImageScaleSpec scaleSpec, ImageScaleSpec maxScaleSpec, Locale locale, Map<String, Object> scalingOptions) {
+        
+        ImageDim<Double> maxSize = null;
+        if (maxScaleSpec != null) {
+            maxSize = determineScaleSpecSize(imgHeight, imgWidth, canvasHeight, canvasWidth, maxScaleSpec);
+        }
+        ImageDim<Double> targetSize = null;
+        if (scaleSpec != null) {
+            targetSize = determineScaleSpecSize(imgHeight, imgWidth, canvasHeight, canvasWidth, scaleSpec);
+        }
+
+        // TODO: optimizations to detect if requested size (after scale factor, must be delegated) is same
+        // as current size and return null in that case
+        
+        //Debug.logInfo("scaleImageVersatile: scaleSpec: " + scaleSpec + " -> " + targetSize 
+        //        + "\nmaxScaleSpec: " + maxScaleSpec + " -> " + maxSize, module);
+        if (targetSize != null) {
+            return scaleImage(bufImg, imgHeight, imgWidth, 
+                    applyMaxSizeForScale(targetSize.getHeight(), (maxSize != null) ? maxSize.getHeight() : null),
+                    applyMaxSizeForScale(targetSize.getWidth(), (maxSize != null) ? maxSize.getWidth() : null),
+                    locale, scalingOptions);
+        } else if (maxSize != null) {
+            return scaleImage(bufImg, imgHeight, imgWidth, 
+                    maxSize.getHeight(),
+                    maxSize.getWidth(),
+                    locale, scalingOptions);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("responseMessage", "success");
+        return result;
+    }
+
+    private static ImageDim<Double> determineScaleSpecSize(double imgHeight, double imgWidth, double canvasHeight, double canvasWidth, 
+            ImageScaleSpec scaleSpec) {
+        if (scaleSpec.getFixedAny() != null) {
+            // TODO: REVIEW: always use width, unless applying to height makes it fit better?
+            // this is ambiguous compared to getRatioAny...
+            if (scaleSpec.getFixedAny() > canvasWidth && scaleSpec.getFixedAny() <= canvasHeight) {
+                // go by height
+                return new ImageDim<>(null, (double) scaleSpec.getFixedAny());
+            } else {
+                // go by width (default)
+                return new ImageDim<>((double) scaleSpec.getFixedAny(), null);
+            }
+        } else if (scaleSpec.getFixedWidth() != null || scaleSpec.getFixedHeight() != null) {
+            return new ImageDim<>((scaleSpec.getFixedWidth() != null) ? (double) scaleSpec.getFixedWidth() : null, 
+                    (scaleSpec.getFixedHeight() != null) ? (double) scaleSpec.getFixedHeight() : null);
+        } else if (scaleSpec.getRatioAny() != null) {
+            // auto-determine to scale via weight or height (TODO: REVIEW)
+            double scalex = ((double) canvasWidth) / imgWidth;
+            double scaley = ((double) canvasHeight) / imgHeight;
+            double finalScale = Math.min(scalex, scaley) * scaleSpec.getRatioAny();
+            return new ImageDim<>(imgWidth * finalScale, imgHeight * finalScale);
+        } else if (scaleSpec.getRatioWidth() != null || scaleSpec.getRatioHeight() != null) {
+            return new ImageDim<>((scaleSpec.getRatioWidth() != null) ? scaleSpec.getRatioWidth() * canvasWidth : null, 
+                    (scaleSpec.getRatioHeight() != null) ? scaleSpec.getRatioHeight() * canvasHeight : null);
+        }
+        return null;
+    }
+    
+    private static Double applyMaxSizeForScale(Double value, Double maxSize) {
+        if (maxSize == null) return value;
+        else if (value == null) return (double) maxSize;
+        return (value > maxSize) ? maxSize : value;
+    }
+    
     /**
      * getXMLValue
      * <p>
@@ -776,5 +874,174 @@ public class ImageTransform {
         if (renderingHints == null) return new RenderingHints(key, value);
         renderingHints.put(key, value);
         return renderingHints;
+    }
+    
+    /**
+     * SCIPIO: Helps to parse image scaling specification strings in the forms:
+     * 50%
+     * 50%x50.1%
+     * 353
+     * 343x253
+     * 532w
+     * 546h
+     * etc.
+     */
+    @SuppressWarnings("serial")
+    @ThreadSafe
+    public static class ImageScaleSpec implements Serializable {
+        protected final Integer fixedAny;
+        protected final Integer fixedWidth;
+        protected final Integer fixedHeight;
+        protected final Double ratioAny;
+        protected final Double ratioWidth;
+        protected final Double ratioHeight;
+        
+        protected ImageScaleSpec(Integer fixedAny, Integer fixedWidth, Integer fixedHeight, 
+                Double ratioAny, Double ratioWidth, Double ratioHeight) {
+            this.fixedAny = fixedAny;
+            this.fixedWidth = fixedWidth;
+            this.fixedHeight = fixedHeight;
+            this.ratioAny = ratioAny;
+            this.ratioWidth = ratioWidth;
+            this.ratioHeight = ratioHeight;
+        }
+        
+        protected ImageScaleSpec(String expr, Locale locale) {
+            Integer fixedAny = null;
+            Integer fixedWidth = null;
+            Integer fixedHeight = null;
+            Double ratioAny = null;
+            Double ratioWidth = null;
+            Double ratioHeight = null;
+            
+            int splitIndex = expr.indexOf('x');
+            if (splitIndex >= 0) {
+                String widthExpr = expr.substring(0, splitIndex);
+                String heightExpr = expr.substring(splitIndex + 1);
+                if (widthExpr.charAt(widthExpr.length() - 1) == '%') {
+                    ratioWidth = Double.parseDouble(widthExpr.substring(0, widthExpr.length() - 1)) / 100.0;
+                } else {
+                    fixedWidth = Integer.parseInt(widthExpr);
+                }
+                if (heightExpr.charAt(heightExpr.length() - 1) == '%') {
+                    ratioHeight = Double.parseDouble(heightExpr.substring(0, heightExpr.length() - 1)) / 100.0;
+                } else {
+                    fixedHeight = Integer.parseInt(heightExpr);
+                }
+            } else if (splitIndex < 0) {
+                char lastChar = expr.charAt(expr.length() - 1);
+                if (lastChar == 'w') {
+                    if (expr.charAt(expr.length() - 2) == '%') {
+                        ratioWidth = Double.parseDouble(expr.substring(0, expr.length() - 2)) / 100.0;
+                    } else {
+                        fixedWidth = Integer.parseInt(expr.substring(0, expr.length() - 1));
+                    }
+                } else if (lastChar == 'h') {
+                    if (expr.charAt(expr.length() - 2) == '%') {
+                        ratioHeight = Double.parseDouble(expr.substring(0, expr.length() - 2)) / 100.0;
+                    } else {
+                        fixedHeight = Integer.parseInt(expr.substring(0, expr.length() - 1));
+                    }
+                } else {
+                    if (lastChar == '%') {
+                        ratioAny = Double.parseDouble(expr.substring(0, expr.length() - 1)) / 100.0;
+                    } else {
+                        fixedAny = Integer.parseInt(expr);
+                    }
+                }
+            }
+            this.fixedAny = fixedAny;
+            this.fixedWidth = fixedWidth;
+            this.fixedHeight = fixedHeight;
+            this.ratioAny = ratioAny;
+            this.ratioWidth = ratioWidth;
+            this.ratioHeight = ratioHeight;
+        }
+        
+        public static ImageScaleSpec fromFixed(Integer fixedAny) {
+            return new ImageScaleSpec(fixedAny, null, null, null, null, null);
+        }
+        
+        public static ImageScaleSpec fromFixed(Integer fixedWidth, Integer fixedHeight) {
+            return new ImageScaleSpec(null, fixedWidth, fixedHeight, null, null, null);
+        }
+        
+        public static ImageScaleSpec fromRatio(Double ratioAny) {
+            return new ImageScaleSpec(null, null, null, ratioAny, null, null);
+        }
+        
+        public static ImageScaleSpec fromRatio(Double ratioWidth, Double ratioHeight) {
+            return new ImageScaleSpec(null, null, null, null, ratioWidth, ratioHeight);
+        }
+        
+        public static ImageScaleSpec fromExpr(String expr, Locale locale) {
+            if ((expr == null || expr.isEmpty())) {
+                return null;
+            }
+            try {
+                return new ImageScaleSpec(expr, locale);
+            } catch(RuntimeException e) {
+                throw new IllegalArgumentException("Invalid image dimensions expression: " + expr, e);
+            }
+        }
+
+        public Integer getFixedAny() {
+            return fixedAny;
+        }
+
+        public Integer getFixedWidth() {
+            return fixedWidth;
+        }
+
+        public Integer getFixedHeight() {
+            return fixedHeight;
+        }
+
+        public Double getRatioAny() {
+            return ratioAny;
+        }
+
+        public Double getRatioWidth() {
+            return ratioWidth;
+        }
+
+        public Double getRatioHeight() {
+            return ratioHeight;
+        }
+
+        @Override
+        public String toString() { // TODO: rebuild as expr instead
+            return "[fixedAny=" + fixedAny + ", fixedWidth=" + fixedWidth + ", fixedHeight="
+                    + fixedHeight + ", ratioAny=" + ratioAny + ", ratioWidth=" + ratioWidth + ", ratioHeight="
+                    + ratioHeight + "]";
+        }
+
+        Double getIndividualWidth(double canvasWidth) { // TODO: REVIEW: is this ever a good idea?
+            Double width = null;
+            if (getFixedWidth() != null) {
+                width = (double) getFixedWidth();
+            } else if (getRatioWidth() != null) {
+                width = (getRatioWidth() * canvasWidth);
+            } else if (getFixedAny() != null) {
+                width = (double) getFixedAny();
+            } else if (getRatioAny() != null) {
+                width = (getRatioAny() * canvasWidth);
+            }
+            return width;
+        }
+
+        Double getIndividualHeight(double canvasHeight) { // TODO: REVIEW: is this ever a good idea?
+            Double height = null;
+            if (getFixedHeight() != null) {
+                height = (double) getFixedHeight();
+            } else if (getRatioHeight() != null) {
+                height = (getRatioHeight() * canvasHeight);
+            } else if (getFixedAny() != null) {
+                height = (double) getFixedAny();
+            } else if (getRatioAny() != null) {
+                height = (getRatioAny() * canvasHeight);
+            }
+            return height;
+        }
     }
 }

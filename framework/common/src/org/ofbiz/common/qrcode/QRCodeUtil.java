@@ -20,7 +20,9 @@ public class QRCodeUtil {
 
     /**
      * Renders overlay over QRCode (original Scipio method).
+     * @deprecated covered in generateQRCodeImage service
      */
+    @Deprecated
     public static File drawLogoToFile(BufferedImage qrImage, String format, String logoPath) throws IOException {
         BufferedImage combined = drawLogo(qrImage, ImageIO.read(FileUtil.getFile(logoPath)));
         File imageFile = File.createTempFile("QRCode", "." + format);
@@ -31,7 +33,9 @@ public class QRCodeUtil {
 
     /**
      * Renders overlay over QRCode (original Scipio method).
+     * @deprecated covered in generateQRCodeImage service
      */
+    @Deprecated
     public static BufferedImage drawLogo(BufferedImage qrImage, BufferedImage logoImage) {
         double determineImageScale = determineImageScale(logoImage.getWidth(), logoImage.getHeight(), 
                 qrImage.getWidth(), qrImage.getHeight());
@@ -50,7 +54,9 @@ public class QRCodeUtil {
     
     /**
      * Function to scale an image down, requires scaledWidth (original Scipio method).
-     * */
+     * @deprecated covered in generateQRCodeImage service; this does not use the system scalers currently.
+     */
+    @Deprecated
     public static BufferedImage resizeImg(BufferedImage image, double scaledWidth) {
         Image scaledImage = image.getScaledInstance((int) (image.getWidth() * scaledWidth), (int) (image.getHeight() * scaledWidth), Image.SCALE_SMOOTH);
         BufferedImage bufferedImage = new BufferedImage(
@@ -65,7 +71,9 @@ public class QRCodeUtil {
 
     /**
      * Function to determine proper aspect ratio (original Scipio method).
-     * */
+     * @deprecated covered in generateQRCodeImage service
+     */
+    @Deprecated
     private static double determineImageScale(int sourceWidth, int sourceHeight, int targetWidth, int targetHeight) {
         double scalex = (double) targetWidth / sourceWidth;
         double scaley = (double) targetHeight / sourceHeight;

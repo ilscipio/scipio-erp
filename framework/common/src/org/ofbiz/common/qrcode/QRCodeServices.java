@@ -25,7 +25,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,6 +34,7 @@ import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageTransform.ImageScaleSpec;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -186,6 +186,9 @@ public class QRCodeServices {
             }
             encodeHints.put(EncodeHintType.ERROR_CORRECTION, ecLevel);
         }
+        // SCIPIO: logo size mode
+        String logoImageSize = (String) context.get("logoImageSize");
+        String logoImageMaxSize = (String) context.get("logoImageMaxSize");
 
         try {
             BitMatrix bitMatrix = new MultiFormatWriter().encode(message, BarcodeFormat.QR_CODE, width, height, encodeHints);
@@ -210,15 +213,81 @@ public class QRCodeServices {
             
             BufferedImage newBufferedImage = null;
             if (UtilValidate.isNotEmpty(logoBufferedImage)) {
+                // SCIPIO: 2018-08-23: new more versatile code to handle logo image scaling
+                ImageScaleSpec logoScaleMaxSpec;
+                try {
+                    logoScaleMaxSpec = ImageScaleSpec.fromExpr(logoImageMaxSize, locale);
+                    if (logoScaleMaxSpec == null) {
+                        // legacy ofbiz
+                        if (UtilValidate.isNotEmpty(logoImageMaxWidth) || UtilValidate.isNotEmpty(logoImageMaxHeight)) {
+                            logoScaleMaxSpec = ImageScaleSpec.fromFixed(logoImageMaxWidth, logoImageMaxHeight);
+                        }
+                    }
+                } catch(Exception e) {
+                    return ServiceUtil.returnError("Invalid logo max scaling specifications: " + e.toString()); // TODO: localize
+                }
+                ImageScaleSpec logoScaleSpec;
+                try {
+                    logoScaleSpec = ImageScaleSpec.fromExpr(logoImageSize, locale);
+                } catch(Exception e) {
+                    return ServiceUtil.returnError("Invalid logo scaling specifications: " + e.toString()); // TODO: localize
+                }
+                if (logoScaleSpec != null || logoScaleMaxSpec != null) {
+                    try {
+                        Map<String, Object> logoImageResult = ImageTransform.scaleImageVersatile(logoBufferedImage, (double) logoBufferedImage.getHeight(), (double) logoBufferedImage.getWidth(),
+                                bufferedImage.getHeight(), bufferedImage.getWidth(), logoScaleSpec, logoScaleMaxSpec, locale, null);
+                        if (ServiceUtil.isError(logoImageResult)) {
+                            return ServiceUtil.returnError(UtilProperties.getMessage("QRCodeUiLabels", "ErrorGenerateQRCode", new Object[] { ServiceUtil.getErrorMessage(logoImageResult) }, locale));
+                        }
+                        if (logoImageResult.get("bufferedImage") != null) {
+                            logoBufferedImage = (BufferedImage) logoImageResult.get("bufferedImage");
+                        }
+                    } catch(Exception e) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage("QRCodeUiLabels", "ErrorGenerateQRCode", new Object[] { e.getMessage() }, locale));
+                    }
+                }
+                /*
+                if (logoImageSize != null) { // SCIPIO
+                    if (!logoImageSize.endsWith("%")) {
+                        return ServiceUtil.returnError("logoImageSize only currently support percentage (%), must be suffixed with %: " + logoImageSize); // TODO: localize
+                    }
+                    // SCIPIO: 2018-08-23: 
+                    double sizePercent;
+                    try {
+                        sizePercent = Double.parseDouble(logoImageSize.substring(0, logoImageSize.length() - 1));
+                        if (sizePercent <= 0 || sizePercent > 100) {
+                            throw new NumberFormatException();
+                        }
+                    } catch(NumberFormatException e) {
+                        return ServiceUtil.returnError("logoImageSize % must be between 0 and 100, but got: " + logoImageSize); // TODO: localize
+                    }
+                    double scalex = ((double) bufferedImage.getWidth()) / logoBufferedImage.getWidth();
+                    double scaley = ((double) bufferedImage.getHeight()) / logoBufferedImage.getHeight();
+                    double finalScale = Math.min(scalex, scaley) * (sizePercent / 100.0);
+                    Map<String, Object> logoImageResult = ImageTransform.scaleImageExact(logoBufferedImage, (int) (logoBufferedImage.getHeight() * finalScale), (int) (logoBufferedImage.getWidth() * finalScale), locale, null);
+                    if (ServiceUtil.isError(logoImageResult)) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage("QRCodeUiLabels", "ErrorGenerateQRCode", new Object[] { ServiceUtil.getErrorMessage(logoImageResult) }, locale));
+                    }
+                    logoBufferedImage = (BufferedImage) logoImageResult.get("bufferedImage");
+                    // TODO: optimize: we make 2 scaleImage calls if both size and max params are specified; should calculate together...
+                }
+                */
+                /*
                 if (UtilValidate.isNotEmpty(logoImageMaxWidth) && UtilValidate.isNotEmpty(logoImageMaxHeight) && (logoBufferedImage.getWidth() > logoImageMaxWidth.intValue() || logoBufferedImage.getHeight() > logoImageMaxHeight.intValue())) {
                 	Map<String, String> typeMap = new HashMap<String, String>();
                 	typeMap.put("width", logoImageMaxWidth.toString());
                 	typeMap.put("height", logoImageMaxHeight.toString());
                 	Map<String, Map<String, String>> dimensionMap = new HashMap<String, Map<String, String>>();
                 	dimensionMap.put("QRCode", typeMap);
-                    Map<String, Object> logoImageResult = ImageTransform.scaleImage(logoBufferedImage, (double) logoBufferedImage.getWidth(), (double) logoBufferedImage.getHeight(), dimensionMap, "QRCode", locale);
+                	// SCIPIO: 2018-08-23: turns out this overload's height and width are backward, so this was a stock ofbiz bug of sorts...
+                    //Map<String, Object> logoImageResult = ImageTransform.scaleImage(logoBufferedImage, (double) logoBufferedImage.getWidth(), (double) logoBufferedImage.getHeight(), dimensionMap, "QRCode", locale);
+                	Map<String, Object> logoImageResult = ImageTransform.scaleImage(logoBufferedImage, (double) logoBufferedImage.getHeight(), (double) logoBufferedImage.getWidth(), dimensionMap, "QRCode", locale);
+                    if (ServiceUtil.isError(logoImageResult)) { // SCIPIO: 2018-08-23
+                        return ServiceUtil.returnError(UtilProperties.getMessage("QRCodeUiLabels", "ErrorGenerateQRCode", new Object[] { ServiceUtil.getErrorMessage(logoImageResult) }, locale));
+                    }
                     logoBufferedImage = (BufferedImage) logoImageResult.get("bufferedImage");
-                }
+                }*/
+
                 BitMatrix newBitMatrix = bitMatrix.clone();
                 newBufferedImage = toBufferedImage(newBitMatrix, format);
                 Graphics2D graphics = newBufferedImage.createGraphics();

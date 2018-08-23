@@ -205,6 +205,52 @@ public class ImageTransform {
             result.put("errorMessage", errMsg);
             return result;
         }
+
+        // SCIPIO: 2018-08-23: delegated to new method.
+        bufNewImg = scaleImageExactToBufferedImage(bufImg, (int) (imgHeight * scaleFactor), (int) (imgWidth * scaleFactor), locale, scalingOptions);
+
+        result.put("responseMessage", "success");
+        result.put("bufferedImage", bufNewImg);
+        result.put("scaleFactor", scaleFactor);
+        return result;
+    }
+
+    /**
+     * scaleImage
+     * <p>
+     * scale original image related to the ImageProperties.xml dimensions
+     *
+     * @param   bufImg          Buffered image to scale
+     * @param   imgHeight       Original image height
+     * @param   imgWidth        Original image width
+     * @param   dimensionMap    Image dimensions by size type
+     * @param   sizeType        Size type to scale
+     * @return                  New scaled buffered image
+     */
+    public static Map<String, Object> scaleImage(BufferedImage bufImg, double imgHeight, double imgWidth, Map<String, Map<String, String>> dimensionMap, String sizeType, Locale locale) {
+        return scaleImage(bufImg, imgHeight, imgWidth, dimensionMap, sizeType, locale, null);
+    }
+
+    /**
+     * SCIPIO: scaleImage overload that uses exactly imgHeight and imgWidth and calculates nothing itself.
+     * Caller is responsible for all calculations!
+     * Added 2018-08-23.
+     */
+    public static Map<String, Object> scaleImageExact(BufferedImage bufImg, int imgHeight, int imgWidth, Locale locale, Map<String, Object> scalingOptions) {
+        Map<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("responseMessage", "success");
+        result.put("bufferedImage", scaleImageExactToBufferedImage(bufImg, imgHeight, imgWidth, locale, scalingOptions));
+        return result;
+    }
+
+    /**
+     * SCIPIO: scaleImage overload that uses directly imgHeight and imgWidth and calculates nothing itself.
+     * Caller is responsible for all calculations!
+     * Added 2018-08-23.
+     */
+    public static BufferedImage scaleImageExactToBufferedImage(BufferedImage bufImg, int imgHeight, int imgWidth, Locale locale, Map<String, Object> scalingOptions) {
+        BufferedImage bufNewImg;
+
         // SCIPIO: obsolete
 //        int bufImgType;
 //        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
@@ -225,37 +271,14 @@ public class ImageTransform {
             // set PRESERVE_IF_LOWLOSS, which is good enough in most cases; caller can specify.
             // In addition, we set this only if the scaler doesn't have a targettype, so this could be configured per-scaler in imageops.properties.
             scalingOptions = ImageUtil.addImageOpOptionIfDefaultNotSet(ImageUtil.copyOptions(scalingOptions), "targettype", ImageType.COMMON_SCALEIMAGE, imageScaler); 
-            bufNewImg = imageScaler.scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
+            bufNewImg = imageScaler.scaleImage(bufImg, imgWidth, imgHeight, scalingOptions);
         } catch(IOException e) {
             throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
         }
-        
-        // SCIPIO: handled by ImageType.PRESERVE
-        //bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
 
-        result.put("responseMessage", "success");
-        result.put("bufferedImage", bufNewImg);
-        result.put("scaleFactor", scaleFactor);
-        return result;
-
+        return bufNewImg;
     }
 
-    /**
-     * scaleImage
-     * <p>
-     * scale original image related to the ImageProperties.xml dimensions
-     *
-     * @param   bufImg          Buffered image to scale
-     * @param   imgHeight       Original image height
-     * @param   imgWidth        Original image width
-     * @param   dimensionMap    Image dimensions by size type
-     * @param   sizeType        Size type to scale
-     * @return                  New scaled buffered image
-     */
-    public static Map<String, Object> scaleImage(BufferedImage bufImg, double imgHeight, double imgWidth, Map<String, Map<String, String>> dimensionMap, String sizeType, Locale locale) {
-        return scaleImage(bufImg, imgHeight, imgWidth, dimensionMap, sizeType, locale, null);
-    }
-    
     /**
      * getXMLValue
      * <p>

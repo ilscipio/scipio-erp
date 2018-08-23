@@ -73,7 +73,7 @@ public class QRCodeEvents {
         String logoImageMaxWidth = (String) parameters.get("logoImageMaxWidth");
         String logoImageMaxHeight = (String) parameters.get("logoImageMaxHeight");
 
-        // SCIPIO: 2018-08-22: useLogo logic
+        // SCIPIO: 2018-08-22: new parameters
         String logoArg = (String) parameters.get("logo");
         //String logo = null;
         Boolean useLogo = null; // NOTE: stock ofbiz generateQRCodeImage service default is true
@@ -86,8 +86,10 @@ public class QRCodeEvents {
             // FIXME: security risk, cannot be specified over request - needs strict mapping system
             //logo = logoArg;
         }
-        String ecLevel = request.getParameter("ecLevel"); // SCIPIO: 2018-08-22
-
+        String ecLevel = request.getParameter("ecLevel");
+        String logoImageSize = request.getParameter("logoSize");
+        String logoImageMaxSize = request.getParameter("logoMaxSize"); // takes priority over logoImageMaxWidth/Height
+        
         try {
             if (mimeType != null) {
                 response.setContentType(mimeType);
@@ -147,8 +149,9 @@ public class QRCodeEvents {
             //if (logo != null) { 
             //    context.put("logoImage", ...);
             //}
-            // SCIPIO: 2018-08-22
-            context.put("ecLevel", ecLevel);
+            context.put("ecLevel", ecLevel); // SCIPIO: 2018-08-22
+            context.put("logoImageSize", logoImageSize); // SCIPIO: 2018-08-23
+            context.put("logoImageMaxSize", logoImageMaxSize); // SCIPIO: 2018-08-23
             Map<String, Object> results = dispatcher.runSync("generateQRCodeImage", context);
             if (!ServiceUtil.isError(results)) {
                 BufferedImage bufferedImage = (BufferedImage) results.get("bufferedImage");

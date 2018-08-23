@@ -139,7 +139,6 @@ under the License.
 
                 <!-- badly named qrcode artifacts -->
                 <regexpmapper from="^(.*?/)?com.google.zxing/([^/]+\.jar)$" to="\1zxing-\2" handledirsep="true"/>
-                <regexpmapper from="^(.*?/)?com.github.kenglxn.qrgen/([^/]+\.jar)$" to="\1qrgen-\2" handledirsep="true"/>
 
                 <!-- for rest, strip organization folder -->
                 <regexpmapper from="^(.*?/)?[^/]+/([^/]+)$" to="\1\2" handledirsep="true"/>

@@ -162,8 +162,6 @@
 
         <!-- base qrcode jars -->
         <dependency org="com.google.zxing" name="core" rev="3.3.3" conf="base,sources"/><!-- stock qrcode -->
-        <dependency org="com.github.kenglxn.qrgen" name="core" rev="2.5.0" conf="base,sources"/><!-- scipio qrcode lib TODO?: eliminate need, wrapper around zxing -->
-        <dependency org="com.github.kenglxn.qrgen" name="javase" rev="2.5.0" conf="base,sources"/><!-- scipio qrcode lib TODO?: eliminate need, wrapper around zxing -->
 
         <!-- base jars - known to be missing/broken in central (2018-03-20) (see ivy/localRepo) -->
         <dependency org="net.wimpi" name="pim" rev="0.1" conf="base"/><!-- previously "jpim-0.1.jar"; not in central, 3rd-party only -->

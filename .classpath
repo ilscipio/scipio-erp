@@ -83,8 +83,6 @@
 	<classpathentry kind="lib" path="framework/base/lib/pdfbox-2.0.8.jar" sourcepath="framework/base/libsrc/pdfbox-2.0.8-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/pim-0.1.jar" sourcepath="framework/base/libsrc/pim-0.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/poi-3.17.jar" sourcepath="framework/base/libsrc/poi-3.17-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/qrgen-core-2.5.0.jar" sourcepath="framework/base/libsrc/qrgen-core-2.5.0-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/qrgen-javase-2.5.0.jar" sourcepath="framework/base/libsrc/qrgen-javase-2.5.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/rome-1.9.0.jar" sourcepath="framework/base/libsrc/rome-1.9.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/serializer-2.7.2.jar" sourcepath="framework/base/libsrc/serializer-2.7.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/shiro-core-1.4.0.jar" sourcepath="framework/base/libsrc/shiro-core-1.4.0-sources.jar"/>

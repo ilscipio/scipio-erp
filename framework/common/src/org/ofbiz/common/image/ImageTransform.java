@@ -325,18 +325,21 @@ public class ImageTransform {
         // TODO: optimizations to detect if requested size (after scale factor, must be delegated) is same
         // as current size and return null in that case
         
-        //Debug.logInfo("scaleImageVersatile: scaleSpec: " + scaleSpec + " -> " + targetSize 
-        //        + "\nmaxScaleSpec: " + maxScaleSpec + " -> " + maxSize, module);
+        Debug.logInfo("SCALE IMAGE VERSATILE: scaleSpec: " + scaleSpec + " -> " + targetSize 
+                + "\nmaxScaleSpec: " + maxScaleSpec + " -> " + maxSize, module);
         if (targetSize != null) {
             return scaleImage(bufImg, imgHeight, imgWidth, 
                     applyMaxSizeForScale(targetSize.getHeight(), (maxSize != null) ? maxSize.getHeight() : null),
                     applyMaxSizeForScale(targetSize.getWidth(), (maxSize != null) ? maxSize.getWidth() : null),
                     locale, scalingOptions);
         } else if (maxSize != null) {
-            return scaleImage(bufImg, imgHeight, imgWidth, 
-                    maxSize.getHeight(),
-                    maxSize.getWidth(),
-                    locale, scalingOptions);
+            if ((maxSize.getHeight() != null && imgHeight > maxSize.getHeight()) || 
+                (maxSize.getWidth() != null && imgWidth > maxSize.getWidth())) {
+                return scaleImage(bufImg, imgHeight, imgWidth, 
+                        maxSize.getHeight(),
+                        maxSize.getWidth(),
+                        locale, scalingOptions);
+            }
         }
         Map<String, Object> result = new HashMap<>();
         result.put("responseMessage", "success");

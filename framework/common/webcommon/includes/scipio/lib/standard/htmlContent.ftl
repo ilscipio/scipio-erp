@@ -1886,11 +1886,27 @@ Creates a QR Code image link.
     alt                     = ((string)) alt text (default: "QRCode")
     targetUri               = ((string), default: qrcodedir)
     format                  = (png|jpg|bmp, default: -from qrcode.properties-) Image format
-    
+    logoSize                = ((string), default: -not set; use logo natural size-) Logo dimensions in pixels or percent
+                              If specified with "%" sign, (50%, 100%), adjusts relative to image size;
+                              otherwise assumed in pixels.
+                              If only one dimension (no "x"), tries to do the "right thing" using only one of the dimensions;
+                              so 50% is not the same as 50%x50%.
+                              Specific dimension can be targeted alone using "w" (width) and "h" (height).
+                              Specifying a single pixel value (100) with no units, usually means width limit, unless applying to
+                              height instead makes it fit within the qrcode (TODO: REVIEW: recommend avoiding this one for now).
+                              NOTE: This option NEVER changes the aspect ratio of the logo, even if two pixel dimensions given;
+                                  it simply tries to make it best fit within requested square.
+                              Examples:
+                                100% (very useful), 50%, 80x20, 50%x50%, 100
+                                50%w, 50%h, 30w, 30h (explicit dimensions)
+    logoMaxSize             = ((string), default: -none-) Logo max dimensions
+                              Max dimensions for the logo. Supports similar syntax as logoSize.
+                              Examples:
+                                100% (very useful)
 -->
 <#assign qrcode_defaultArgs = {
-   "id":"", "class":"", "text":"", "logo":false,"export":"image", "width":"",
-   "height":"", "ecLevel":"", "format":"", "linktext":"","alt":"QRCode","targetUri":"","passArgs":{}
+   "id":"", "class":"", "text":"", "logo":false, "export":"image", "width":"",
+   "height":"", "ecLevel":"", "format":"", "logoSize":"", "logoMaxSize":"", "linktext":"","alt":"QRCode","targetUri":"","passArgs":{}
 }>
 <#macro qrcode args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.qrcode_defaultArgs)>
@@ -1911,12 +1927,14 @@ Creates a QR Code image link.
     <#local logo = false>
   </#if>
   <@qrcode_markup id=id class=class text=text export=export logo=logo export=export 
-    width=width height=height ecLevel=ecLevel format=format linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
+    width=width height=height ecLevel=ecLevel format=format logoSize=logoSize logoMaxSize=logoMaxSize linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
 </#macro>
 
 <#-- @qrcode main markup - theme override -->
-<#macro qrcode_markup id="" class="" text="" export="" logo="" export="" width="" height="" ecLevel="" format="" linktext="" alt="" targetUri="" origArgs={} passArgs={} catchArgs...>
-  <#local qrURL>${targetUri}?message=${escapeVal(text, 'url')}&logo=${logo?string}&width=${width}&height=${height}<#if ecLevel?has_content>&ecLevel=${ecLevel}</#if><#if format?has_content>&format=${format}</#if></#local>
+<#macro qrcode_markup id="" class="" text="" export="" logo="" export="" width="" height="" ecLevel="" format="" logoSize="" logoMaxSize="" linktext="" alt="" targetUri="" origArgs={} passArgs={} catchArgs...>
+  <#local qrURL>${targetUri}?message=${escapeVal(text, 'url')}&logo=${logo?string}&width=${width}&height=${height}<#t/>
+    <#if ecLevel?has_content>&ecLevel=${ecLevel}</#if><#if format?has_content>&format=${format}</#if><#if logoSize?has_content>&logoSize=${escapeVal(logoSize, "url")}</#if><#t/>
+    <#if logoMaxSize?has_content>&logoMaxSize=${escapeVal(logoMaxSize, "url")}</#if></#local><#t/>
   <#switch export>
     <#case "link">
       <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>

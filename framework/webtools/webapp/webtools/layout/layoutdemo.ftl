@@ -207,6 +207,13 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     </@nav>
 </@section>
 
+<@section title="QRCode (@qrcode)">
+  <#assign qrcodeTestText>awefawef2353151234$%#@&$#12412awefawefawefawefawef</#assign>
+    <@qrcode text=qrcodeTestText width=100 height=100 />
+    <@qrcode text=qrcodeTestText width=150 height=150 logo=true logoMaxSize="100%" format="jpg"/>
+    <@qrcode text=qrcodeTestText width=150 height=150 logo=true logoSize="80%x30%" ecLevel="M" format="png"/>
+</@section>
+
 <#if debugMode>
 <p>Nested sub-menus (markup test only!)</p>
 <@menu type="button" class="+my-button-menu-class" id="my-button-menu">
@@ -2187,33 +2194,6 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   </@section>
 </@section>
 
-<@section title="QRCode (@qrcode)">
-  <#assign qrcodeTestText>awefawef2353151234$%#@&$#12412awefawefawefawefawef</#assign>
-  <@section title="qrcodedir (scipio)">
-    <@qrcode text=qrcodeTestText width=150 height=150 targetUri="qrcodedir"/>
-    <@qrcode text=qrcodeTestText width=150 height=150 logo=true targetUri="qrcodedir"/>
-    <@qrcode text=qrcodeTestText targetUri="qrcodedir"/>
-    <@qrcode text=qrcodeTestText logo=true targetUri="qrcodedir"/>
-  </@section>
-  <@section title="qrcode (stock)">
-    <@qrcode text=qrcodeTestText width=150 height=150 targetUri="qrcode"/>
-    <@qrcode text=qrcodeTestText width=150 height=150 targetUri="qrcode" logo=true/>
-    <@qrcode text=qrcodeTestText targetUri="qrcode"/>
-    <@qrcode text=qrcodeTestText targetUri="qrcode" logo=true/>
-  </@section>
-  <@section title="qrcodedir (scipio) ecLevel M">
-    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="M" targetUri="qrcodedir"/>
-  </@section>
-  <@section title="qrcode (stock) ecLevel M">
-    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="M" targetUri="qrcode"/>
-  </@section>
-  <@section title="qrcodedir (scipio) ecLevel M jpg">
-    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="M" format="jpg" targetUri="qrcodedir"/>
-  </@section>
-  <@section title="qrcode (stock) ecLevel M jpg">
-    <@qrcode text=qrcodeTestText width=150 height=150 ecLevel="M" format="jpg" targetUri="qrcode"/>
-  </@section>
-</@section>
 
 <@section title="Date formatting (formatDate/formatDateTime/formatTime)">
   <#assign testDate = nowTimestamp>

@@ -25,16 +25,19 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageTransform;
 import org.ofbiz.common.image.ImageTransform.ImageScaleSpec;
+import org.ofbiz.common.image.scaler.ImageScalers;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -91,6 +94,8 @@ public class QRCodeServices {
         QRCODE_DEFAULT_ECLEVEL = defaultEcLevelStr;
         defaultEcLevel = defaultEcLevelEnum;
     }
+
+    public static final String QRCODE_SCALER = UtilProperties.getPropertyValueOrNull("qrcode", "qrcode.scaler"); // SCIPIO: 2018-08-23
 
     public static final String QRCODE_DEFAULT_LOGOIMAGE = UtilProperties.getPropertyValue("qrcode", "qrcode.default.logoimage");
     
@@ -189,6 +194,7 @@ public class QRCodeServices {
         // SCIPIO: logo size mode
         String logoImageSize = (String) context.get("logoImageSize");
         String logoImageMaxSize = (String) context.get("logoImageMaxSize");
+        Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));
 
         try {
             BitMatrix bitMatrix = new MultiFormatWriter().encode(message, BarcodeFormat.QR_CODE, width, height, encodeHints);
@@ -234,8 +240,19 @@ public class QRCodeServices {
                 }
                 if (logoScaleSpec != null || logoScaleMaxSpec != null) {
                     try {
+                        if (QRCODE_SCALER != null) {
+                            if (scalingOptions == null) {
+                                scalingOptions = new HashMap<>();
+                                scalingOptions.put(ImageScalers.SCALER_NAME_OPT, QRCODE_SCALER);
+                            } else {
+                                if (!scalingOptions.containsKey(ImageScalers.SCALER_NAME_OPT)) {
+                                    scalingOptions = new HashMap<>(scalingOptions);
+                                    scalingOptions.put(ImageScalers.SCALER_NAME_OPT, QRCODE_SCALER);
+                                }
+                            }
+                        }
                         Map<String, Object> logoImageResult = ImageTransform.scaleImageVersatile(logoBufferedImage, (double) logoBufferedImage.getHeight(), (double) logoBufferedImage.getWidth(),
-                                bufferedImage.getHeight(), bufferedImage.getWidth(), logoScaleSpec, logoScaleMaxSpec, locale, null);
+                                bufferedImage.getHeight(), bufferedImage.getWidth(), logoScaleSpec, logoScaleMaxSpec, locale, scalingOptions);
                         if (ServiceUtil.isError(logoImageResult)) {
                             return ServiceUtil.returnError(UtilProperties.getMessage("QRCodeUiLabels", "ErrorGenerateQRCode", new Object[] { ServiceUtil.getErrorMessage(logoImageResult) }, locale));
                         }

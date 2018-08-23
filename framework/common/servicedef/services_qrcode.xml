@@ -38,17 +38,22 @@ under the License.
         <attribute name="logoImageMaxHeight" type="Integer" mode="IN" optional="true"/>
         <attribute name="verifyOutput" type="Boolean" mode="IN" optional="true"/>
         <attribute name="bufferedImage" type="java.awt.image.BufferedImage" mode="OUT" optional="true"/>
-        <attribute name="useLogo" type="Boolean" mode="IN" optional="true" default-value="true"/><!-- SCIPIO: added 2018-08-22 -->
-        <attribute name="ecLevel" type="String" mode="IN" optional="true"><!-- SCIPIO: added 2018-08-22 -->
-            <description>Possible values: L, M, Q, H. Default: from qrcode.properties</description>
+        <attribute name="useLogo" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>SCIPIO: Explicit logo enable (stock did not permit false). Default: true</description>
         </attribute>
-        <attribute name="logoImageSize" type="String" mode="IN" optional="true"><!-- SCIPIO: added 2018-08-23 -->
-            <description>Logo image target size. Supports formats such as: 100%, 50%, 100x100, 80%x80%
+        <attribute name="ecLevel" type="String" mode="IN" optional="true">
+            <description>SCIPIO: Error correction level. Possible values: L, M, Q, H. Default: from qrcode.properties</description>
+        </attribute>
+        <attribute name="logoImageSize" type="String" mode="IN" optional="true"><!--  added 2018-08-23 -->
+            <description>SCIPIO: Logo image target size. Supports formats such as: 100%, 50%, 100x100, 80%x80%
                 NOTE: Aspect ratio is never changed; two dimensions mean two limits.</description>
         </attribute>
-        <attribute name="logoImageMaxSize" type="String" mode="IN" optional="true"><!-- SCIPIO: added 2018-08-23 -->
-            <description>Logo image max size. Supports formats such as: 100%, 50%, 100x100, 80%x80%
+        <attribute name="logoImageMaxSize" type="String" mode="IN" optional="true"><!--  added 2018-08-23 -->
+            <description>SCIPIO: Logo image max size. Supports formats such as: 100%, 50%, 100x100, 80%x80%
                 NOTE: Aspect ratio is never changed; two dimensions mean two limits.</description>
+        </attribute>
+        <attribute name="scalingOptions" type="Map" mode="IN" optional="true"><!--  added 2018-08-23 -->
+            <description>SCIPIO: Scaling options; scalerName can name a scaler from imageops.properties.</description>
         </attribute>
     </service>
 

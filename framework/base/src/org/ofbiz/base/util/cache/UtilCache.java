@@ -826,4 +826,40 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     public void onEviction(Object key, CacheLine<V> value) {
         ExecutionPool.removePulse(value);
     }
+
+    /**
+     * @deprecated SCIPIO: use overload without useFileSystemStore (flag ignored - 2018-08-20).
+     */
+    @Deprecated
+    public static <K, V> UtilCache<K, V> getOrCreateUtilCache(String name, int sizeLimit, int maxInMemory, long expireTime, boolean useSoftReference, boolean useFileSystemStore, String... names) {
+        Debug.logWarning("Deprecated method called: getOrCreateUtilCache with useFileSystemStore", module);
+        return getOrCreateUtilCache(name, sizeLimit, maxInMemory, expireTime, useSoftReference, names);
+    }
+
+    /**
+     * @deprecated SCIPIO: use overload without useFileSystemStore (flag ignored - 2018-08-20).
+     */
+    @Deprecated
+    public static <K, V> UtilCache<K, V> createUtilCache(String name, int sizeLimit, int maxInMemory, long expireTime, boolean useSoftReference, boolean useFileSystemStore, String... names) {
+        Debug.logWarning("Deprecated method called: createUtilCache with useFileSystemStore", module);
+        return createUtilCache(name, sizeLimit, maxInMemory, expireTime, useSoftReference, names);
+    }
+
+    /**
+     * @deprecated SCIPIO: use overload without useFileSystemStore (flag ignored - 2018-08-20).
+     */
+    @Deprecated
+    public static <K, V> UtilCache<K, V> createUtilCache(String name, int sizeLimit, int maxInMemory, long expireTime, boolean useSoftReference, boolean useFileSystemStore) {
+        Debug.logWarning("Deprecated method called: createUtilCache with useFileSystemStore", module);
+        return createUtilCache(name, sizeLimit, maxInMemory, expireTime, useSoftReference);
+    }
+
+    /**
+     * @deprecated SCIPIO: no longer implemented (always returns false - 2018-08-20).
+     */
+    @Deprecated
+    public boolean getUseFileSystemStore() {
+        Debug.logWarning("Deprecated method called: getUseFileSystemStore", module);
+        return false;
+    }
 }

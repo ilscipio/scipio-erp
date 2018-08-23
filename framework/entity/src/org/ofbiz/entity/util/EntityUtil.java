@@ -630,4 +630,38 @@ public final class EntityUtil {
         Boolean result = toBoolean(indicator);
         return result != null ? result : defaultVal;
     }
+    
+    /*
+     * SCIPIO: COMPLETELY DEPRECATED METHODS
+     * These were removed all the way back in ofbiz 15 and should never be used anymore.
+     * They are moved down here in Scipio to avoid maintenance issues.
+     */
+
+    /**
+     * @deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public static List<GenericValue> getRelatedCache(String relationName, List<GenericValue> values) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedCache", module);
+        return getRelated(relationName, null, values, true);
+    }
+
+    /**
+     * @deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public static List<GenericValue> getRelatedByAnd(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAnd", module);
+        return getRelated(relationName, fields, values, false);
+    }
+
+    /**
+     * @deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public static List<GenericValue> getRelatedByAndCache(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAndCache", module);
+        return getRelated(relationName, fields, values, true);
+    }
+
 }

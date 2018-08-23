@@ -96,7 +96,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelated(String relationName) throws GenericEntityException {
-        Debug.logWarning("deprecated method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
+        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
         return this.getDelegator().getRelated(relationName, null, null, this, false);
     }
 
@@ -109,7 +109,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelated(String relationName, List<String> orderBy) throws GenericEntityException {
-        Debug.logWarning("deprecated method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
+        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
         return this.getDelegator().getRelated(relationName, null, orderBy, this, false);
     }
 
@@ -123,7 +123,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelated(String relationName, Map<String, ? extends Object> byAndFields, List<String> orderBy) throws GenericEntityException {
-        Debug.logWarning("deprecated method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
+        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
         return this.getDelegator().getRelated(relationName, byAndFields, orderBy, this, false);
     }
 
@@ -174,7 +174,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public GenericValue getRelatedOne(String relationName) throws GenericEntityException {
-        Debug.logWarning("deprecated method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
+        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
         return this.getDelegator().getRelatedOne(relationName, this, false);
     }
 
@@ -244,5 +244,116 @@ public class GenericValue extends GenericEntity {
     
     public static String getStackTraceAsString() {
         return Thread.currentThread().getStackTrace().toString();
-    }    
+    }
+    
+    /*
+     * SCIPIO: COMPLETELY DEPRECATED METHODS
+     * These were removed all the way back in ofbiz 15 and should never be used anymore.
+     * They are moved down here in Scipio to avoid maintenance issues.
+     */
+    
+    /** Get the named Related Entity for the GenericValue from the persistent
+     *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     *@return List of GenericValue instances as specified in the relation definition
+     *@deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public List<GenericValue> getRelatedCache(String relationName) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedCache", GenericValue.class.getName());
+        return this.getDelegator().getRelated(relationName, null, null, this, true);
+    }
+
+    /** Get the named Related Entity for the GenericValue from the persistent
+     *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     * @param byAndFields the fields that must equal in order to keep; may be null
+     * @param orderBy The fields of the named entity to order the query by; may be null;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     *@return List of GenericValue instances as specified in the relation definition
+     *@deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public List<GenericValue> getRelatedCache(String relationName, Map<String, ? extends Object> byAndFields, List<String> orderBy) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedCache", GenericValue.class.getName());
+        return this.getDelegator().getRelated(relationName, byAndFields, orderBy, this, true);
+    }
+
+    /** Get the named Related Entity for the GenericValue from the persistent
+     *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     * @param orderBy The fields of the named entity to order the query by; may be null;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     *@return List of GenericValue instances as specified in the relation definition
+     *@deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public List<GenericValue> getRelatedCache(String relationName, List<String> orderBy) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedCache", GenericValue.class.getName());
+        return this.getDelegator().getRelated(relationName, null, orderBy, this, true);
+    }
+
+    /** Get the named Related Entity for the GenericValue from the persistent
+     *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     *@return List of GenericValue instances as specified in the relation definition
+     *@deprecated use {@link #getRelatedOne(String, boolean)}
+     */
+    @Deprecated
+    public GenericValue getRelatedOneCache(String relationName) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedOneCache", GenericValue.class.getName());
+        return this.getDelegator().getRelatedOne(relationName, this, true);
+    }
+
+
+    /** Get the named Related Entity for the GenericValue from the persistent store and filter it
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     *@param fields the fields that must equal in order to keep
+     *@return List of GenericValue instances as specified in the relation definition
+     *@deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public List<GenericValue> getRelatedByAnd(String relationName, Map<String, ? extends Object> fields) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedByAnd", GenericValue.class.getName());
+        return this.getDelegator().getRelated(relationName, fields, null, this, false);
+    }
+
+    /** Get the named Related Entity for the GenericValue from the persistent
+     *  store and filter it, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     *@param fields the fields that must equal in order to keep
+     *@return List of GenericValue instances as specified in the relation definition
+     *@deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public List<GenericValue> getRelatedByAndCache(String relationName, Map<String, ? extends Object> fields) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedByAndCache", GenericValue.class.getName());
+        return this.getDelegator().getRelated(relationName, fields, null, this, true);
+    }
+
+    /** Get the named Related Entity for the GenericValue from the persistent store and order it
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     *@param orderBy the order that they should be returned
+     *@return List of GenericValue instances as specified in the relation definition
+     *@deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public List<GenericValue> getRelatedOrderBy(String relationName, List<String> orderBy) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedOrderBy", GenericValue.class.getName());
+        return this.getDelegator().getRelated(relationName, null, orderBy, this, false);
+    }
+
+    /** Get the named Related Entity for the GenericValue from the persistent
+     *  store and order it, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     *@param orderBy the order that they should be returned
+     *@return List of GenericValue instances as specified in the relation definition
+     *@deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public List<GenericValue> getRelatedOrderByCache(String relationName, List<String> orderBy) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedOrderByCache", GenericValue.class.getName());
+        return this.getDelegator().getRelated(relationName, null, orderBy, this, true);
+    }
+
 }

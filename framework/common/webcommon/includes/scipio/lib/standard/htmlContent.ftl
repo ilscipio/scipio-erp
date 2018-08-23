@@ -1884,7 +1884,7 @@ Creates a QR Code image link.
                               See https://en.wikipedia.org/wiki/QR_code#Error_correction
     linktext                = ((string)) link text 
     alt                     = ((string)) alt text (default: "QRCode")
-    targetUri               = ((string), default: qrcodedir)
+    targetUri               = ((string), default: qrcode) Target controller request
     format                  = (png|jpg|bmp, default: -from qrcode.properties-) Image format
     logoSize                = ((string), default: -not set; use logo natural size-) Logo dimensions in pixels or percent
                               If specified with "%" sign, (50%, 100%), adjusts relative to image size;
@@ -1919,7 +1919,7 @@ Creates a QR Code image link.
     <#local height = Static["org.ofbiz.common.qrcode.QRCodeServices"].QRCODE_DEFAULT_HEIGHT_INT>
   </#if>
   <#if !targetUri?has_content>
-    <#local targetUri = "qrcodedir">
+    <#local targetUri = "qrcode">
   </#if>
   <#if !logo?is_boolean && !logo?has_content>
     <#-- NOTE: the stock serveQRCodeImage event used true by default, 

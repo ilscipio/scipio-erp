@@ -328,13 +328,6 @@ under the License.
         <response name="error" type="none" />
     </request-map>
 
-    <request-map uri="qrcodedir"><!-- SCIPIO: 2018-08-22: qrcode for @qrcode ftl directive (more or less frontend version) -->
-        <security auth="true" https="true" />
-        <event type="java" path="com.ilscipio.scipio.common.qrcode.QRCodeEvents" invoke="serveQRCodeImageForDirective"/>
-        <response name="success" type="none" />
-        <response name="error" type="none" />
-    </request-map>
-
     <!--========================== AJAX events =====================-->
 
     <!-- View Mappings -->

@@ -11,7 +11,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 
 beginText = "";
 endText = "";
-contentCache = UtilCache.getOrCreateUtilCache("stats.order", 0, 0, 0, true, false);
+contentCache = UtilCache.getOrCreateUtilCache("stats.order", 0, 0, 0, true);
 Map processResult() {
     iCount = (context.chartIntervalCount != null) ? context.chartIntervalCount : 0;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year    

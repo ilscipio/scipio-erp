@@ -76,26 +76,6 @@ public class QRCodeServices {
     public static final String QRCODE_DEFAULT_FORMAT = UtilProperties.getPropertyValue("qrcode", "qrcode.default.format", "jpg");
 
     public static final String QRCODE_FORMAT_SUPPORTED = UtilProperties.getPropertyValue("qrcode", "qrcode.format.supported", "jpg|png|bmp");
-    
-    public static final String QRCODE_DEFAULT_ECLEVEL; // SCIPIO: 2018-08-22
-
-    private static final ErrorCorrectionLevel defaultEcLevel;
-    static {
-        String ecLevel = UtilProperties.getPropertyValueOrNull("qrcode", "qrcode.default.eclevel");
-        String defaultEcLevelStr = null;
-        ErrorCorrectionLevel defaultEcLevelEnum = null;
-        try {
-            defaultEcLevelEnum = (ecLevel != null) ? 
-                    ErrorCorrectionLevel.valueOf(ecLevel) : null;
-            defaultEcLevelStr = ecLevel;
-        } catch(Exception e) {
-            Debug.logError("Invalid value for qrcode.default.eclevel: " + e.toString(), module);
-        }
-        QRCODE_DEFAULT_ECLEVEL = defaultEcLevelStr;
-        defaultEcLevel = defaultEcLevelEnum;
-    }
-
-    public static final String QRCODE_SCALER = UtilProperties.getPropertyValueOrNull("qrcode", "qrcode.scaler"); // SCIPIO: 2018-08-23
 
     public static final String QRCODE_DEFAULT_LOGOIMAGE = UtilProperties.getPropertyValue("qrcode", "qrcode.default.logoimage");
     
@@ -128,6 +108,31 @@ public class QRCodeServices {
             }
         }
     }
+
+    // SCIPIO: 2018-08-22: new fields
+ 
+    public static final String QRCODE_DEFAULT_ECLEVEL; 
+
+    private static final ErrorCorrectionLevel defaultEcLevel;
+    static {
+        String ecLevel = UtilProperties.getPropertyValueOrNull("qrcode", "qrcode.default.eclevel");
+        String defaultEcLevelStr = null;
+        ErrorCorrectionLevel defaultEcLevelEnum = null;
+        try {
+            defaultEcLevelEnum = (ecLevel != null) ? 
+                    ErrorCorrectionLevel.valueOf(ecLevel) : null;
+            defaultEcLevelStr = ecLevel;
+        } catch(Exception e) {
+            Debug.logError("Invalid value for qrcode.default.eclevel: " + e.toString(), module);
+        }
+        QRCODE_DEFAULT_ECLEVEL = defaultEcLevelStr;
+        defaultEcLevel = defaultEcLevelEnum;
+    }
+
+    public static final String QRCODE_SCALER = UtilProperties.getPropertyValueOrNull("qrcode", "qrcode.scaler");
+    
+    public static final String QRCODE_DEFAULT_LOGOSIZE = UtilProperties.getPropertyValueOrNull("qrcode", "qrcode.default.logoSize");
+    public static final String QRCODE_DEFAULT_LOGOMAXSIZE = UtilProperties.getPropertyValueOrNull("qrcode", "qrcode.default.logoMaxSize");
 
     /** Streams QR Code to the result. */
     public static Map<String, Object> generateQRCodeImage(DispatchContext ctx,Map<String, Object> context) {
@@ -191,16 +196,31 @@ public class QRCodeServices {
             }
             encodeHints.put(EncodeHintType.ERROR_CORRECTION, ecLevel);
         }
-        // SCIPIO: logo size mode
+        // SCIPIO: logo controls
+        boolean useLogo = !Boolean.FALSE.equals(context.get("useLogo"));
         String logoImageSize = (String) context.get("logoImageSize");
         String logoImageMaxSize = (String) context.get("logoImageMaxSize");
         Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));
-
+        // use default size only if caller specified nothing at all
+        if (useLogo) {
+            if (logoImageSize == null && logoImageMaxSize == null 
+                    && logoImageMaxWidth == null && logoImageMaxHeight == null) {
+                logoImageSize = QRCODE_DEFAULT_LOGOSIZE;
+                logoImageMaxSize = QRCODE_DEFAULT_LOGOMAXSIZE;
+            }
+        }
+        if ("none".equals(logoImageSize)) {
+            logoImageSize = null;
+        }
+        if ("none".equals(logoImageMaxSize)) {
+            logoImageMaxSize = null;
+        }
+        
         try {
             BitMatrix bitMatrix = new MultiFormatWriter().encode(message, BarcodeFormat.QR_CODE, width, height, encodeHints);
             BufferedImage bufferedImage = toBufferedImage(bitMatrix, format);
             BufferedImage logoBufferedImage = null;
-            if (!Boolean.FALSE.equals(context.get("useLogo"))) { // SCIPIO: 2018-08-22: useLogoImage flag to prevent logo, when false
+            if (useLogo) { // SCIPIO: 2018-08-22: useLogoImage flag to prevent logo, when false
                 if (UtilValidate.isNotEmpty(logoImage)) {
                     Map<String, Object> logoImageResult;
                     try {

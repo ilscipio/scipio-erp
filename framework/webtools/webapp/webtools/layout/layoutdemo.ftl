@@ -210,6 +210,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 <@section title="QRCode (@qrcode)">
   <#assign qrcodeTestText>awefawef2353151234$%#@&$#12412awefawefawefawefawef</#assign>
     <@qrcode text=qrcodeTestText width=100 height=100 />
+    <@qrcode text=qrcodeTestText width=100 height=100 logo=true alt="Note: this logo is not constrained and may look terrible"/>
     <@qrcode text=qrcodeTestText width=150 height=150 logo=true logoMaxSize="100%" format="jpg"/>
     <@qrcode text=qrcodeTestText width=150 height=150 logo=true logoSize="80%x30%" ecLevel="M" format="png"/>
 </@section>

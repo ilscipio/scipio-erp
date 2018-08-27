@@ -858,7 +858,7 @@ public class GenericDAO {
 
     protected StringBuilder makeOffsetString(StringBuilder offsetString, EntityFindOptions findOptions) {
         if (UtilValidate.isNotEmpty(datasource.getOffsetStyle())) {
-            if (datasource.getOffsetStyle().equals("limit")) {
+            if ("limit".equals(datasource.getOffsetStyle())) {
                 // use the LIMIT/OFFSET style
                 if (findOptions.getLimit() > -1) {
                     offsetString.append(" LIMIT " + findOptions.getLimit());
@@ -866,7 +866,7 @@ public class GenericDAO {
                         offsetString.append(" OFFSET " + findOptions.getOffset());
                     }
                 }
-            } else if (datasource.getOffsetStyle().equals("fetch")) {
+            } else if ("fetch".equals(datasource.getOffsetStyle())) {
                 // use SQL2008 OFFSET/FETCH style by default
                 if (findOptions.getOffset() > -1) {
                     offsetString.append(" OFFSET ").append(findOptions.getOffset()).append(" ROWS");

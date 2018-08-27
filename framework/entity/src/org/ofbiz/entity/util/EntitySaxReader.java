@@ -400,7 +400,7 @@ public class EntitySaxReader extends DefaultHandler {
                         ModelEntity modelEntity = currentValue.getModelEntity();
                         ModelField modelField = modelEntity.getField(currentFieldName.toString());
                         String type = modelField.getType();
-                        if (type != null && (type.equals("blob") || type.equals("byte-array") || type.equals("object"))) { // SCIPIO: 2017-07-06: added import byte-array and object as base64; not just blob, otherwise can't handle the other two
+                        if (type != null && ("blob".equals(type) || "byte-array".equals(type) || "object".equals(type))) { // SCIPIO: 2017-07-06: added import byte-array and object as base64; not just blob, otherwise can't handle the other two
                             byte[] binData = Base64.base64Decode((new String(currentFieldValue)).getBytes());
                             currentValue.setBytes(currentFieldName.toString(), binData);
                         } else {

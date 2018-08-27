@@ -22,6 +22,7 @@ package org.ofbiz.entity.condition;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -87,7 +88,7 @@ public class EntityConditionBuilder extends BuilderSupport {
 
     @Override
     protected Object createNode(Object methodName) {
-        String operatorName = ((String)methodName).toLowerCase();
+        String operatorName = ((String)methodName).toLowerCase(Locale.getDefault());
         EntityJoinOperator operator = EntityOperator.lookupJoin(operatorName);
         List<EntityCondition> condList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         return new ConditionHolder(EntityCondition.makeCondition(condList, operator));
@@ -103,7 +104,7 @@ public class EntityConditionBuilder extends BuilderSupport {
     @Override
     protected Object createNode(Object methodName, Map mapArg) {
         Map<String, Object> fieldValueMap = UtilGenerics.checkMap(mapArg);
-        String operatorName = ((String)methodName).toLowerCase();
+        String operatorName = ((String)methodName).toLowerCase(Locale.getDefault());
         EntityComparisonOperator<String, Object> operator = EntityOperator.lookupComparison(operatorName);
         List<EntityCondition> conditionList = new ArrayList<>(fieldValueMap.size()); // SCIPIO: switched to ArrayList
         for (Map.Entry<String, Object> entry : fieldValueMap.entrySet()) {
@@ -111,9 +112,8 @@ public class EntityConditionBuilder extends BuilderSupport {
         }
         if (conditionList.size() == 1) {
             return new ConditionHolder(conditionList.get(0));
-        } else {
-            return new ConditionHolder(EntityCondition.makeCondition(conditionList));
         }
+        return new ConditionHolder(EntityCondition.makeCondition(conditionList));
     }
 
     @Override

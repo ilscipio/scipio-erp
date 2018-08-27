@@ -19,6 +19,7 @@
 package org.ofbiz.entity;
 
 import java.util.Map;
+import java.util.Objects;
 
 import org.ofbiz.entity.model.ModelEntity;
 
@@ -60,6 +61,11 @@ public class GenericPK extends GenericEntity {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hashCode(super.hashCode());
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj instanceof GenericPK) {
             return super.equals(obj);
@@ -71,7 +77,7 @@ public class GenericPK extends GenericEntity {
      *  @return Object that is a clone of this GenericPK
      */
     @Override
-    public Object clone() {
+    public GenericPK clone() {
         return GenericPK.create(this);
     }
 }

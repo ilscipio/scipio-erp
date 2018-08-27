@@ -67,14 +67,12 @@ public abstract class AbstractEntityConditionCache<K, V> extends AbstractCache<E
     public void remove(GenericEntity entity) {
         UtilCache.clearCache(getCacheName(entity.getEntityName()));
         ModelEntity model = entity.getModelEntity();
-        if (model != null) {
             Iterator<String> it = model.getViewConvertorsIterator();
             while (it.hasNext()) {
                 String targetEntityName = it.next();
                 UtilCache.clearCache(getCacheName(targetEntityName));
             }
         }
-    }
 
     public void remove(String entityName, EntityCondition condition) {
         UtilCache<EntityCondition, ConcurrentMap<K, V>> cache = getCache(entityName);
@@ -115,7 +113,7 @@ public abstract class AbstractEntityConditionCache<K, V> extends AbstractCache<E
         EntityCondition conditionKey = getConditionKey(condition);
         ConcurrentMap<K, V> conditionCache = utilCache.get(conditionKey);
         if (conditionCache == null) {
-            conditionCache = new ConcurrentHashMap<K, V>();
+            conditionCache = new ConcurrentHashMap<>();
             utilCache.put(conditionKey, conditionCache);
         }
         return conditionCache;
@@ -168,9 +166,6 @@ public abstract class AbstractEntityConditionCache<K, V> extends AbstractCache<E
         ModelEntity model = getModelCheckValid(oldEntity, newEntity);
         String entityName = model.getEntityName();
         // for info about cache clearing
-        if (newEntity == null) {
-            //Debug.logInfo("In storeHook calling sub-storeHook for entity name [" + entityName + "] for the oldEntity: " + oldEntity, module);
-        }
         storeHook(entityName, isPK, UtilMisc.toList(oldEntity), UtilMisc.toList(newEntity));
         Iterator<String> it = model.getViewConvertorsIterator();
         while (it.hasNext()) {
@@ -182,9 +177,6 @@ public abstract class AbstractEntityConditionCache<K, V> extends AbstractCache<E
     protected <T1 extends Map<String, Object>, T2 extends Map<String, Object>> void storeHook(String entityName, boolean isPK, List<T1> oldValues, List<T2> newValues) {
         UtilCache<EntityCondition, Map<K, V>> entityCache = UtilCache.findCache(getCacheName(entityName));
         // for info about cache clearing
-        if (UtilValidate.isEmpty(newValues) || newValues.get(0) == null) {
-            //Debug.logInfo("In storeHook (cache clear) for entity name [" + entityName + "], got entity cache with name: " + (entityCache == null ? "[No cache found to remove from]" : entityCache.getName()), module);
-        }
         if (entityCache == null) {
             return;
         }

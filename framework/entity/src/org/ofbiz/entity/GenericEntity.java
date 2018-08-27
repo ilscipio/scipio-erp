@@ -46,6 +46,7 @@ import org.ofbiz.base.util.Observer;
 import org.ofbiz.base.util.TimeDuration;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -351,7 +352,6 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     public Delegator getDelegator() {
         if (internalDelegator == null) {
             if (delegatorName == null) delegatorName = "default";
-            if (delegatorName != null)
                 internalDelegator = DelegatorFactory.getDelegator(delegatorName);
             if (internalDelegator == null) {
                 throw new IllegalStateException("[GenericEntity.getDelegator] could not find delegator with name " + delegatorName);
@@ -449,7 +449,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             ModelFieldType type = null;
             try {
                 type = getDelegator().getEntityFieldType(getModelEntity(), modelField.getType());
-            } catch (GenericEntityException e) {
+            } catch (IllegalStateException | GenericEntityException e) {
                 Debug.logWarning(e, module);
             }
             if (type == null) {
@@ -471,9 +471,11 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
                 if (value instanceof TimeDuration) {
                     try {
                         value = ObjectType.simpleTypeConvert(value, type.getJavaType(), null, null);
-                    } catch (GeneralException e) {}
+                    } catch (GeneralException e) {
+                        Debug.logError(e, module);
+                    }
                 } else if ((value instanceof String) && "byte[]".equals(type.getJavaType())) {
-                    value = ((String) value).getBytes();
+                    value = ((String) value).getBytes(UtilIO.getUtf8());
                 }
                 if (!ObjectType.instanceOf(value, type.getJavaType())) {
                     if (!("java.sql.Blob".equals(type.getJavaType()) && (value instanceof byte[] || ObjectType.instanceOf(value, ByteBuffer.class)))) {
@@ -529,8 +531,10 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
 
         ModelFieldType type = null;
         try {
+            if (field != null) {
             type = getDelegator().getEntityFieldType(getModelEntity(), field.getType());
-        } catch (GenericEntityException e) {
+            }
+        } catch (IllegalStateException | GenericEntityException e) {
             Debug.logWarning(e, module);
         }
         if (type == null) throw new IllegalArgumentException("Type " + field.getType() + " not found");
@@ -709,7 +713,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         // this "hack" is needed for now until the Double/BigDecimal issues are all resolved
         Object value = get(name);
         if (value instanceof BigDecimal) {
-            return new Double(((BigDecimal) value).doubleValue());
+            return Double.valueOf(((BigDecimal) value).doubleValue());
         }
         return (Double) value;
     }
@@ -1175,7 +1179,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
                 boolean b1 = obj instanceof byte [];
                 if (b1) {
                     byte [] binData = (byte [])obj;
-                    String strData = new String(Base64.base64Encode(binData));
+                    String strData = new String(Base64.base64Encode(binData), UtilIO.getUtf8());
                     cdataMap.put(name, strData);
                 } else {
                     Debug.logWarning("Field:" + name + " is not of type 'byte[]'. obj: " + obj, module);
@@ -1357,7 +1361,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
                 // random encoding; just treat it as a series of raw bytes.
                 // This won't give the same output as the value stored in the
                 // database, but should be good enough for printing
-                curValue = HashCrypt.cryptBytes(null, null, encryptField.getBytes());
+                curValue = HashCrypt.cryptBytes(null, null, encryptField.getBytes(UtilIO.getUtf8()));
             }
             theString.append('[');
             theString.append(curKey);
@@ -1644,8 +1648,18 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             return "[null-field]";
         }
 
+        @Override
+        public int hashCode() {
+            return 42;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return this == o;
+        }
+
         public int compareTo(NullField other) {
-            return this != other ? -1 : 0;
+            return equals(other) ? 0 : -1;
         }
     }
 }

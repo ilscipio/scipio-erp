@@ -115,9 +115,8 @@ public class EntityFieldValue extends EntityConditionValue {
             if (this.entityAlias != null) {
                 ModelEntity memberModelEntity = modelViewEntity.getMemberModelEntity(entityAlias);
                 return getField(memberModelEntity, fieldName);
-            } else {
-                return getField(modelViewEntity, fieldName);
             }
+            return getField(modelViewEntity, fieldName);
         }
         return getField(modelEntity, fieldName);
     }
@@ -181,9 +180,8 @@ public class EntityFieldValue extends EntityConditionValue {
         }
         if (map instanceof GenericEntity.NULL) {
             return null;
-        } else {
-            return map.get(fieldName);
         }
+        return map.get(fieldName);
     }
 
     @Override

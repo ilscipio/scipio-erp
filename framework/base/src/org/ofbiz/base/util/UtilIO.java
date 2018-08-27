@@ -315,4 +315,8 @@ public final class UtilIO {
         writer.write(value.substring(r));
         writer.close();
     }
+
+    public static Charset getUtf8() {
+        return UTF8;
+    }
 }

@@ -88,7 +88,7 @@ public class EntityJoinOperator extends EntityOperator<EntityCondition, EntityCo
     }
 
     public EntityCondition freeze(List<? extends EntityCondition> conditionList) {
-        List<EntityCondition> newList = new ArrayList<EntityCondition>(conditionList.size());
+        List<EntityCondition> newList = new ArrayList<>(conditionList.size());
         for (EntityCondition condition: conditionList) {
             newList.add(condition.freeze());
         }

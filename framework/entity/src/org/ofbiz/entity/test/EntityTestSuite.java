@@ -459,7 +459,7 @@ public class EntityTestSuite extends EntityTestCase {
             for (Map.Entry<String, Object> entry: fields.entrySet()) {
                 String field = entry.getKey();
                 Object value = entry.getValue();
-                Debug.logInfo(field.toString() + " = " + ((value == null) ? "[null]" : value), module);
+                Debug.logInfo(field + " = " + ((value == null) ? "[null]" : value), module);
             }
         }
         long testingcount = EntityQuery.use(delegator).from("Testing").where("testingTypeId", "TEST-COUNT-VIEW").queryCount();
@@ -1257,10 +1257,11 @@ public class EntityTestSuite extends EntityTestCase {
                 totalNumberOfRows = totalNumberOfRows + rows.size();
             }
             TransactionUtil.commit(transactionStarted);
-        } catch (Exception e) {
+        } catch (GenericEntityException e) {
             try {
                 TransactionUtil.rollback(transactionStarted, "", e);
-            } catch (Exception e2) {}
+            } catch (GenericTransactionException e2) {
+            }
             noErrors = false;
         }
         long endTime = System.currentTimeMillis();
@@ -1277,7 +1278,7 @@ public class EntityTestSuite extends EntityTestCase {
                 totalNumberOfRows = totalNumberOfRows + rows.size();
                 TransactionUtil.commit(transactionStarted);
             }
-        } catch (Exception e) {
+        } catch (GenericEntityException e) {
             try {
                 TransactionUtil.rollback(transactionStarted, "", e);
             } catch (Exception e2) {}

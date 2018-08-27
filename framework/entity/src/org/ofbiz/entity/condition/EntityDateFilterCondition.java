@@ -36,8 +36,8 @@ import org.ofbiz.entity.model.ModelEntity;
 @SuppressWarnings("serial")
 public final class EntityDateFilterCondition extends EntityCondition {
 
-    protected final String fromDateName;
-    protected final String thruDateName;
+    private final String fromDateName;
+    private final String thruDateName;
 
     public EntityDateFilterCondition(String fromDateName, String thruDateName) {
         this.fromDateName = fromDateName;

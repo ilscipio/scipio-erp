@@ -316,7 +316,7 @@ public class EntityQueryTestSuite extends EntityTestCase {
             eliByEntityQuery.close();
             
             TransactionUtil.commit(transactionStarted);
-        } catch (Exception e) {
+        } catch (GenericEntityException e) {
             TransactionUtil.rollback(transactionStarted, "Transaction is Rolled Back", e);
         }
     }
@@ -351,7 +351,7 @@ public class EntityQueryTestSuite extends EntityTestCase {
             eliByEntityQuery.close();
             
             TransactionUtil.commit(transactionStarted);
-        } catch (Exception e) {
+        } catch (GenericEntityException e) {
             TransactionUtil.rollback(transactionStarted, "Transaction is Rolled Back", e);
         }
     }
@@ -386,7 +386,7 @@ public class EntityQueryTestSuite extends EntityTestCase {
             eliByEntityQuery.close();
             
             TransactionUtil.commit(transactionStarted);
-        } catch (Exception e) {
+        } catch (GenericEntityException e) {
             TransactionUtil.rollback(transactionStarted, "Transaction is Rolled Back", e);
         }
     }
@@ -421,7 +421,7 @@ public class EntityQueryTestSuite extends EntityTestCase {
             eliByEntityQuery.close();
             
             TransactionUtil.commit(transactionStarted);
-        } catch (Exception e) {
+        } catch (GenericEntityException e) {
             TransactionUtil.rollback(transactionStarted, "Transaction is Rolled Back", e);
         }
     }

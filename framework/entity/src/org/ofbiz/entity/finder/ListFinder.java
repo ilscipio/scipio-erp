@@ -89,7 +89,7 @@ public abstract class ListFinder extends Finder {
         // process order-by
         List<? extends Element> orderByElementList = UtilXml.childElementList(element, "order-by");
         if (orderByElementList.size() > 0) {
-            orderByExpanderList = new ArrayList<FlexibleStringExpander>(orderByElementList.size());
+            orderByExpanderList = new ArrayList<>(orderByElementList.size());
             for (Element orderByElement: orderByElementList) {
                 orderByExpanderList.add(FlexibleStringExpander.getInstance(orderByElement.getAttribute("field-name")));
             }
@@ -132,8 +132,9 @@ public abstract class ListFinder extends Finder {
         boolean filterByDate = "true".equals(filterByDateStr);
         boolean distinct = "true".equals(distinctStr);
         int resultSetType = ResultSet.TYPE_SCROLL_INSENSITIVE;
-        if ("forward".equals(resultSetTypeString))
+        if ("forward".equals(resultSetTypeString)) {
             resultSetType = ResultSet.TYPE_FORWARD_ONLY;
+        }
 
         if (UtilValidate.isNotEmpty(delegatorName)) {
             delegator = DelegatorFactory.getDelegator(delegatorName);

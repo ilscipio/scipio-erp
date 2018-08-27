@@ -69,7 +69,9 @@ public final class EntityDateFilterCondition extends EntityCondition {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof EntityDateFilterCondition)) return false;
+        if (!(obj instanceof EntityDateFilterCondition)) {
+            return false;
+        }
         EntityDateFilterCondition other = (EntityDateFilterCondition) obj;
         return equals(fromDateName, other.fromDateName) && equals(thruDateName, other.thruDateName);
     }

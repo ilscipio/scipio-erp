@@ -99,11 +99,10 @@ public class XmlSerializer {
                 return UtilXml.fromXml(content);
             }
             return deserialize(document, delegator);
-        } else {
+        }
             Debug.logWarning("Serialized document came back null", module);
             return null;
         }
-    }
 
     /** Deserialize a Java object from a DOM <code>Document</code>.
      * <p>This method should be used with caution. If the DOM <code>Document</code>
@@ -129,10 +128,13 @@ public class XmlSerializer {
     }
 
     public static Element serializeSingle(Object object, Document document) throws SerializeException {
-        if (document == null) return null;
+        if (document == null) {
+            return null;
+        }
 
-        if (object == null)
+        if (object == null) {
             return makeElement("null", null, document);
+        }
 
         // - Standard Objects -
         if (object instanceof String) {
@@ -191,8 +193,6 @@ public class XmlSerializer {
                 // no specific type found, do general Collection, will deserialize as LinkedList
                 elementName = "col-Collection";
             }
-
-            // if (elementName == null) return serializeCustom(object, document);
 
             Collection<?> value = UtilGenerics.cast(object);
             Element element = document.createElement(elementName);
@@ -262,17 +262,15 @@ public class XmlSerializer {
             byte[] objBytes = UtilObject.getBytes(object);
             if (objBytes == null) {
                 throw new SerializeException("Unable to serialize object; null byte array returned");
-            } else {
+            }
                 String byteHex = StringUtil.toHexString(objBytes);
                 Element element = document.createElement("cus-obj");
                 // this is hex encoded so does not need to be in a CDATA block
                 element.appendChild(document.createTextNode(byteHex));
                 return element;
             }
-        } else {
             throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
         }
-    }
 
     public static Element makeElement(String elementName, Object value, Document document) {
         if (value == null) {
@@ -293,7 +291,9 @@ public class XmlSerializer {
     public static Object deserializeSingle(Element element, Delegator delegator) throws SerializeException {
         String tagName = element.getLocalName();
 
-        if ("null".equals(tagName)) return null;
+        if ("null".equals(tagName)) {
+            return null;
+        }
 
         if (tagName.startsWith("std-")) {
             // - Standard Objects -
@@ -363,24 +363,24 @@ public class XmlSerializer {
             Collection<Object> value = null;
 
             if ("col-ArrayList".equals(tagName)) {
-                value = new ArrayList<Object>();
+                value = new ArrayList<>();
             } else if ("col-LinkedList".equals(tagName)) {
-                value = new LinkedList<Object>();
+                value = new LinkedList<>();
             } else if ("col-Stack".equals(tagName)) {
-                value = new Stack<Object>();
+                value = new Stack<>();
             } else if ("col-Vector".equals(tagName)) {
-                value = new Vector<Object>();
+                value = new Vector<>();
             } else if ("col-TreeSet".equals(tagName)) {
-                value = new TreeSet<Object>();
+                value = new TreeSet<>();
             } else if ("col-HashSet".equals(tagName)) {
-                value = new HashSet<Object>();
+                value = new HashSet<>();
             } else if ("col-Collection".equals(tagName)) {
-                value = new LinkedList<Object>();
+                value = new LinkedList<>();
             }
 
             if (value == null) {
                 return deserializeCustom(element);
-            } else {
+            }
                 Node curChild = element.getFirstChild();
 
                 while (curChild != null) {
@@ -390,28 +390,27 @@ public class XmlSerializer {
                     curChild = curChild.getNextSibling();
                 }
                 return value;
-            }
         } else if (tagName.startsWith("map-")) {
             // - Maps -
             Map<Object, Object> value = null;
 
             if ("map-HashMap".equals(tagName)) {
-                value = new HashMap<Object, Object>();
+                value = new HashMap<>();
             } else if ("map-Properties".equals(tagName)) {
                 value = new Properties();
             } else if ("map-Hashtable".equals(tagName)) {
-                value = new Hashtable<Object, Object>();
+                value = new Hashtable<>();
             } else if ("map-WeakHashMap".equals(tagName)) {
-                value = new WeakHashMap<Object, Object>();
+                value = new WeakHashMap<>();
             } else if ("map-TreeMap".equals(tagName)) {
-                value = new TreeMap<Object, Object>();
+                value = new TreeMap<>();
             } else if ("map-Map".equals(tagName)) {
-                value = new HashMap<Object, Object>();
+                value = new HashMap<>();
             }
 
             if (value == null) {
                 return deserializeCustom(element);
-            } else {
+            }
                 Node curChild = element.getFirstChild();
 
                 while (curChild != null) {
@@ -431,7 +430,9 @@ public class XmlSerializer {
                                 }
                                 tempNode = tempNode.getNextSibling();
                             }
-                            if (keyElement == null) throw new SerializeException("Could not find an element under the map-Key");
+                        if (keyElement == null) {
+                            throw new SerializeException("Could not find an element under the map-Key");
+                        }
 
                             Element mapValueElement = UtilXml.firstChildElement(curElement, "map-Value");
                             Element valueElement = null;
@@ -444,7 +445,9 @@ public class XmlSerializer {
                                 }
                                 tempNode = tempNode.getNextSibling();
                             }
-                            if (valueElement == null) throw new SerializeException("Could not find an element under the map-Value");
+                        if (valueElement == null) {
+                            throw new SerializeException("Could not find an element under the map-Value");
+                        }
 
                             value.put(deserializeSingle(keyElement, delegator), deserializeSingle(valueElement, delegator));
                         }
@@ -452,7 +455,6 @@ public class XmlSerializer {
                     curChild = curChild.getNextSibling();
                 }
                 return value;
-            }
         } else if (tagName.startsWith("eepk-")) {
             return delegator.makePK(element);
         } else if (tagName.startsWith("eeval-")) {
@@ -476,9 +478,8 @@ public class XmlSerializer {
                 }
             }
             throw new SerializeException("Problem deserializing object from byte array + " + element.getLocalName());
-        } else {
-            throw new SerializeException("Cannot deserialize element named " + element.getLocalName());
         }
+        throw new SerializeException("Cannot deserialize element named " + element.getLocalName());
     }
 
     /**
@@ -497,7 +498,7 @@ public class XmlSerializer {
         }
         if (formatter == null) {
             formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-            simpleDateFormatter = new WeakReference<DateFormat>(formatter);
+            simpleDateFormatter = new WeakReference<>(formatter);
         }
         return formatter;
     }

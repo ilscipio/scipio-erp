@@ -364,7 +364,7 @@ public class ModelEntityChecker {
             "IDENTIFIED", "IDENTIFIELD", "IDENTITY", "IDENTITY_INSERT", "IF",
             "IFDEF", "IGNORE", "IMAGE", "IMMEDIATE", "IMMIDIATE", "IMPLICIT",
             "IN", "INCLUDE", "INCREMENT", "INDEX", "INDEXED", "INDEXNAME",
-            "INDEXPAGES", "INDISCIPIOR", "INFIELD", "INFILE", "INFO", "INGRES",
+            "INDEXPAGES", "INDICATOR", "INFIELD", "INFILE", "INFO", "INGRES",
             "INIT", "INITIAL", "INITIALISE", "INITIALIZE", "INITIALLY",
             "INITTABLE", "INNER", "INOUT", "INPUT", "INQUIRE_EQUEL",
             "INQUIRE_FRS", "INQUIRE_INGRES", "INQUIR_FRS", "INSERT",
@@ -382,7 +382,7 @@ public class ModelEntityChecker {
             "LESS", "LET", "LEVEL", "LIKE", "LIKEPROCEDURETP", "LIMIT",
             "LIMITED", "LINE", "LINENO", "LINES", "LINK", "LIST", "LISTEN",
             "LOAD", "LOADTABLE", "LOADTABLERESUME", "LOCAL", "LOCALTIME",
-            "LOCALTIMESTAMP", "LOCATION", "LOSCIPIOR", "LOCK", "LOCKING", "LOG",
+            "LOCALTIMESTAMP", "LOCATION", "LOCATOR", "LOCK", "LOCKING", "LOG",
             "LOGS", "LONG", "LONGBLOB", "LONGTEXT", "LOOP", "LOW_PRIORITY",
             "LOWER", "LPAD", "LT",
 

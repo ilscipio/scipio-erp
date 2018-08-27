@@ -531,21 +531,20 @@ under the License.
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}"/>
     </target>
 
-    <!-- SCIPIO: 2018-08-27: Now, always clean the libsrc jar sources out whenever cleaning out the binary jars.
-        It makes little sense to keep the sources if the binaries are being deleted, and this ensures
-        predictable behavior.
-        This adds a small file check overhead to clean calls and ivy updates for clients not using
-        sources, but it is too unreliable to detect when sources are enabled because the lib.update.sources
-        flag may be passed on command line on select targets instead of set in build[.local].properties;
-        also, the lib.update.sources flag (and this flag) suffers from too broad scope in multi-target
-        ant calls, e.g. ./ant clean build clean... causing more unpredictable behavior.
-        This forced "true" value is required for "lib-clean". For "lib-update", if we try to set this conditionally (if:set="lib.update.sources"),
-        could be considered more optimal, but in practice all it does is cause developers to scratch their heads as to how they
-        ended up with sources jars of different versions than their binary jars - might as well just clean them out.
-        DEV NOTE: It's recommended for devs to simply set [build.]lib.update.sources=true in build[.local].properties instead of command line. -->
-    <property name="lib.clean.sources" value="true"/>
+    <!-- SCIPIO: 2018-08-27: For lib-update (or any non "explicit clean" target), always trigger clean sources
+        if lib.update.sources is set; otherwise, the libsrc folder accumulates past jars.
+        In previous change, this was set to "true" always, but it adds a small IO penalty to clients who don't need the sources,
+        which is minor but not desirable for daily builds; so, only explicit cleans will get this overhead (see below).
+        NOTE: It's highly recommended for devs to set [build.]lib.update.sources=true in build[.local].properties instead of command line,
+            especially because of this conditional, to help keep lib and libsrc jars in sync. -->
+    <property name="lib.clean.sources" value="${lib.update.sources}" if:set="lib.update.sources"/>
 
     <target name="lib-clean" description="Cleans downloadable jars, if applicable for component">
+        <!-- SCIPIO: 2018-08-27: For explicit clean calls, always clean the libsrc jar sources out whenever cleaning out the binary jars.
+            It makes little sense to keep the sources if the binaries are being deleted, and this ensures
+            predictable behavior. There is only small IO overhead for clients not using sources, but performance not important to clean
+            as it is for build/update targets. -->
+        <property name="lib.clean.sources" value="true"/>
         <if>
             <and>
                 <available file="ivy.xml" type="file"/>

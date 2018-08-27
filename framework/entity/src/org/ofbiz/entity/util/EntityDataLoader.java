@@ -19,10 +19,12 @@
 package org.ofbiz.entity.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.ofbiz.base.component.ComponentConfig;
@@ -47,6 +49,7 @@ import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.model.ModelViewEntity;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * Some utility routines for loading seed data.
@@ -159,15 +162,17 @@ public class EntityDataLoader {
         if (UtilValidate.isNotEmpty(paths)) {
             StringTokenizer tokenizer = new StringTokenizer(paths, ";");
             while (tokenizer.hasMoreTokens()) {
-                String path = tokenizer.nextToken().toLowerCase();
+                String path = tokenizer.nextToken().toLowerCase(Locale.getDefault());
                 File loadDir = new File(path);
                 if (loadDir.exists() && loadDir.isDirectory()) {
                     File[] files = loadDir.listFiles();
                     List<File> tempFileList = new LinkedList<File>();
-                    for (File file: files) {
-                        if (file.getName().toLowerCase().endsWith(".xml")) {
+                    if (files != null) {
+                        for (File file : files) {
+                            if (file.getName().toLowerCase(Locale.getDefault()).endsWith(".xml")) {
                             tempFileList.add(file);
                         }
+                    }
                     }
                     Collections.sort(tempFileList);
                     for (File dataFile: tempFileList) {
@@ -255,7 +260,7 @@ public class EntityDataLoader {
             reader.setCreateDummyFks(dummyFks);
             reader.setMaintainTxStamps(maintainTxs);
             rowsChanged += reader.parse(dataUrl);
-        } catch (Exception e) {
+        } catch (IOException | SAXException e) {
             String xmlError = "[loadData]: Error loading XML Resource \"" + dataUrl.toExternalForm() + "\"; Error was: " + e.getMessage();
             errorMessages.add(xmlError);
             Debug.logError(e, xmlError, module);

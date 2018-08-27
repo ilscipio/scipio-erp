@@ -60,7 +60,7 @@ public class ModelReader implements Serializable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, ModelReader> readers = UtilCache.createUtilCache("entity.ModelReader", 0, 0);
 
-    protected Map<String, ModelEntity> entityCache = null;
+    protected volatile Map<String, ModelEntity> entityCache = null;
 
     protected int numEntities = 0;
     protected int numViewEntities = 0;
@@ -73,10 +73,14 @@ public class ModelReader implements Serializable {
     /** collection of filenames for entity definitions */
     protected Collection<ResourceHandler> entityResourceHandlers;
 
-    /** contains a collection of entity names for each ResourceHandler, populated as they are loaded */
+    /**
+     * contains a collection of entity names for each ResourceHandler, populated as they are loaded
+     */
     protected Map<ResourceHandler, Collection<String>> resourceHandlerEntities;
 
-    /** for each entity contains a map to the ResourceHandler that the entity came from */
+    /**
+     * for each entity contains a map to the ResourceHandler that the entity came from
+     */
     protected Map<String, ResourceHandler> entityResourceHandlerMap;
 
     public static ModelReader getModelReader(String delegatorName) throws GenericEntityException {
@@ -100,9 +104,9 @@ public class ModelReader implements Serializable {
 
     private ModelReader(String modelName) throws GenericEntityException {
         this.modelName = modelName;
-        entityResourceHandlers = new LinkedList<ResourceHandler>();
-        resourceHandlerEntities = new HashMap<ResourceHandler, Collection<String>>();
-        entityResourceHandlerMap = new HashMap<String, ResourceHandler>();
+        entityResourceHandlers = new LinkedList<>();
+        resourceHandlerEntities = new HashMap<>();
+        entityResourceHandlerMap = new HashMap<>();
 
         EntityModelReader entityModelReaderInfo = EntityConfig.getInstance().getEntityModelReader(modelName);
 
@@ -112,19 +116,21 @@ public class ModelReader implements Serializable {
 
         // get all of the main resource model stuff, ie specified in the entityengine.xml file
         for (Resource resourceElement : entityModelReaderInfo.getResourceList()) {
-            ResourceHandler handler = new MainResourceHandler(EntityConfig.ENTITY_ENGINE_XML_FILENAME, resourceElement.getLoader(), resourceElement.getLocation());
+            ResourceHandler handler = new MainResourceHandler(EntityConfig.ENTITY_ENGINE_XML_FILENAME, resourceElement
+                    .getLoader(), resourceElement.getLocation());
             entityResourceHandlers.add(handler);
         }
 
         // get all of the component resource model stuff, ie specified in each ofbiz-component.xml file
-        for (ComponentConfig.EntityResourceInfo componentResourceInfo: ComponentConfig.getAllEntityResourceInfos("model")) {
+        for (ComponentConfig.EntityResourceInfo componentResourceInfo : ComponentConfig.getAllEntityResourceInfos("model")) {
             if (modelName.equals(componentResourceInfo.readerName)) {
                 entityResourceHandlers.add(componentResourceInfo.createResourceHandler());
             }
         }
     }
 
-    private ModelEntity buildEntity(ResourceHandler entityResourceHandler, Element curEntityElement, int i, ModelInfo def) throws GenericEntityException {
+    private ModelEntity buildEntity(ResourceHandler entityResourceHandler, Element curEntityElement, int i, ModelInfo def)
+            throws GenericEntityException {
         boolean isEntity = "entity".equals(curEntityElement.getNodeName());
         String entityName = UtilXml.checkEmpty(curEntityElement.getAttribute("entity-name")).intern();
         boolean redefinedEntity = "true".equals(curEntityElement.getAttribute("redefinition"));
@@ -133,7 +139,7 @@ public class ModelReader implements Serializable {
         Collection<String> resourceHandlerEntityNames = resourceHandlerEntities.get(entityResourceHandler);
 
         if (resourceHandlerEntityNames == null) {
-            resourceHandlerEntityNames = new LinkedList<String>();
+            resourceHandlerEntityNames = new LinkedList<>();
             resourceHandlerEntities.put(entityResourceHandler, resourceHandlerEntityNames);
         }
         resourceHandlerEntityNames.add(entityName);
@@ -141,11 +147,11 @@ public class ModelReader implements Serializable {
         // check to see if entity with same name has already been read
         if (entityCache.containsKey(entityName) && !redefinedEntity) {
             Debug.logWarning("Entity " + entityName +
-                " is defined more than once, most recent will over-write " +
-                "previous definition(s)", module);
+                    " is defined more than once, most recent will over-write " +
+                    "previous definition(s)", module);
             Debug.logWarning("Entity " + entityName + " was found in " +
-                entityResourceHandler + ", but was already defined in " +
-                entityResourceHandlerMap.get(entityName).toString(), module);
+                    entityResourceHandler + ", but was already defined in " +
+                    entityResourceHandlerMap.get(entityName).toString(), module);
         }
 
         // add entityName, entityFileName pair to entityResourceHandlerMap map
@@ -173,9 +179,11 @@ public class ModelReader implements Serializable {
             modelEntity.setLocation(resourceLocation);
             // utilTimer.timerString("  After entityCache.put -- " + i + " --");
             if (isEntity) {
-                if (Debug.verboseOn()) Debug.logVerbose("-- [Entity]: #" + i + ": " + entityName, module);
+                if (Debug.verboseOn())
+                    Debug.logVerbose("-- [Entity]: #" + i + ": " + entityName, module);
             } else {
-                if (Debug.verboseOn()) Debug.logVerbose("-- [ViewEntity]: #" + i + ": " + entityName, module);
+                if (Debug.verboseOn())
+                    Debug.logVerbose("-- [ViewEntity]: #" + i + ": " + entityName, module);
             }
         } else {
             Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create " +
@@ -195,13 +203,13 @@ public class ModelReader implements Serializable {
                     numRelations = 0;
                     numAutoRelations = 0;
 
-                    entityCache = new HashMap<String, ModelEntity>();
-                    List<ModelViewEntity> tempViewEntityList = new LinkedList<ModelViewEntity>();
-                    List<Element> tempExtendEntityElementList = new LinkedList<Element>();
+                    entityCache = new HashMap<>();
+                    List<ModelViewEntity> tempViewEntityList = new LinkedList<>();
+                    List<Element> tempExtendEntityElementList = new LinkedList<>();
 
                     UtilTimer utilTimer = new UtilTimer();
 
-                    for (ResourceHandler entityResourceHandler: entityResourceHandlers) {
+                    for (ResourceHandler entityResourceHandler : entityResourceHandlers) {
 
                         // utilTimer.timerString("Before getDocument in file " + entityFileName);
                         Document document = null;
@@ -215,7 +223,8 @@ public class ModelReader implements Serializable {
                             throw new GenericEntityConfException("Could not get document for " + entityResourceHandler.toString());
                         }
 
-                        // utilTimer.timerString("Before getDocumentElement in " + entityResourceHandler.toString());
+                        // utilTimer.timerString("Before getDocumentElement in " +
+                        // entityResourceHandler.toString());
                         Element docElement = document.getDocumentElement();
 
                         if (docElement == null) {
@@ -254,29 +263,28 @@ public class ModelReader implements Serializable {
                     }
 
                     // all entity elements in, now go through extend-entity elements and add their stuff
-                    for (Element extendEntityElement: tempExtendEntityElementList) {
+                    for (Element extendEntityElement : tempExtendEntityElementList) {
                         String entityName = UtilXml.checkEmpty(extendEntityElement.getAttribute("entity-name"));
                         ModelEntity modelEntity = entityCache.get(entityName);
-                        if (modelEntity == null) throw new GenericEntityConfException("Entity to extend does not exist: " + entityName);
+                        if (modelEntity == null)
+                            throw new GenericEntityConfException("Entity to extend does not exist: " + entityName);
                         modelEntity.addExtendEntity(this, extendEntityElement);
                     }
 
-                    // do a pass on all of the view entities now that all of the entities have
-                    // loaded and populate the fields
+                    // do a pass on all of the view entities now that all of the entities have loaded and populate the fields
                     while (!tempViewEntityList.isEmpty()) {
                         int startSize = tempViewEntityList.size();
                         Iterator<ModelViewEntity> mveIt = tempViewEntityList.iterator();
-TEMP_VIEW_LOOP:
-                        while (mveIt.hasNext()) {
+                        TEMP_VIEW_LOOP: while (mveIt.hasNext()) {
                             ModelViewEntity curViewEntity = mveIt.next();
-                            for (ModelViewEntity.ModelMemberEntity mve: curViewEntity.getAllModelMemberEntities()) {
+                            for (ModelViewEntity.ModelMemberEntity mve : curViewEntity.getAllModelMemberEntities()) {
                                 if (!entityCache.containsKey(mve.getEntityName())) {
                                     continue TEMP_VIEW_LOOP;
                                 }
                             }
                             mveIt.remove();
                             curViewEntity.populateFields(this);
-                            for (ModelViewEntity.ModelMemberEntity mve: curViewEntity.getAllModelMemberEntities()) {
+                            for (ModelViewEntity.ModelMemberEntity mve : curViewEntity.getAllModelMemberEntities()) {
                                 ModelEntity me = entityCache.get(mve.getEntityName());
                                 me.addViewEntity(curViewEntity);
                             }
@@ -291,12 +299,12 @@ TEMP_VIEW_LOOP:
                     }
                     if (!tempViewEntityList.isEmpty()) {
                         StringBuilder sb = new StringBuilder("View entities reference non-existant members:\n");
-                        Set<String> allViews = new HashSet<String>();
-                        for (ModelViewEntity curViewEntity: tempViewEntityList) {
+                        Set<String> allViews = new HashSet<>();
+                        for (ModelViewEntity curViewEntity : tempViewEntityList) {
                             allViews.add(curViewEntity.getEntityName());
                         }
-                        for (ModelViewEntity curViewEntity: tempViewEntityList) {
-                            Set<String> perViewMissingEntities = new HashSet<String>();
+                        for (ModelViewEntity curViewEntity : tempViewEntityList) {
+                            Set<String> perViewMissingEntities = new HashSet<>();
                             Iterator<ModelViewEntity.ModelMemberEntity> mmeIt = curViewEntity.getAllModelMemberEntities().iterator();
                             while (mmeIt.hasNext()) {
                                 ModelViewEntity.ModelMemberEntity mme = mmeIt.next();
@@ -310,7 +318,7 @@ TEMP_VIEW_LOOP:
                                     }
                                 }
                             }
-                            for (String perViewMissingEntity: perViewMissingEntities) {
+                            for (String perViewMissingEntity : perViewMissingEntities) {
                                 sb.append("\t[").append(curViewEntity.getEntityName()).append("] missing member entity [").append(perViewMissingEntity).append("]\n");
                             }
 
@@ -319,48 +327,54 @@ TEMP_VIEW_LOOP:
                     }
 
                     // auto-create relationships
-                    Set<String> orderedMessages = new TreeSet<String>();
-                    for (String curEntityName: new TreeSet<String>(this.getEntityNames())) {
+                    Set<String> orderedMessages = new TreeSet<>();
+                    for (String curEntityName : new TreeSet<>(this.getEntityNames())) {
                         ModelEntity curModelEntity = this.getModelEntity(curEntityName);
                         if (curModelEntity instanceof ModelViewEntity) {
-                            // for view-entities auto-create relationships for all member-entity relationships that have all corresponding fields in the view-entity
+                            // for view-entities auto-create relationships for all member-entity
+                            // relationships that have all corresponding fields in the view-entity
 
                         } else {
                             // for entities auto-create many relationships for all type one relationships
-
-                            // just in case we add a new relation to the same entity, keep in a separate list and add them at the end
-                            List<ModelRelation> newSameEntityRelations = new LinkedList<ModelRelation>();
+                            // just in case we add a new relation to the same entity, keep in a separate
+                            // list and add them at the end
+                            List<ModelRelation> newSameEntityRelations = new LinkedList<>();
 
                             Iterator<ModelRelation> relationsIter = curModelEntity.getRelationsIterator();
                             while (relationsIter.hasNext()) {
                                 ModelRelation modelRelation = relationsIter.next();
-                                if (("one".equals(modelRelation.getType()) || "one-nofk".equals(modelRelation.getType())) && !modelRelation.isAutoRelation()) {
+                                if (("one".equals(modelRelation.getType()) 
+                                        || "one-nofk".equals(modelRelation.getType())) 
+                                        && !modelRelation.isAutoRelation()) {
                                     ModelEntity relatedEnt = null;
                                     try {
                                         relatedEnt = this.getModelEntity(modelRelation.getRelEntityName());
                                     } catch (GenericModelException e) {
-                                        throw new GenericModelException("Error getting related entity [" + modelRelation.getRelEntityName() + "] definition from entity [" + curEntityName + "]", e);
+                                        throw new GenericModelException(
+                                                "Error getting related entity [" + modelRelation.getRelEntityName() + "] definition from entity [" + curEntityName + "]", e);
                                     }
-                                    if (relatedEnt != null) {
-                                        // create the new relationship even if one exists so we can show what we are looking for in the info message
-                                        // don't do relationship to the same entity, unless title is "Parent", then do a "Child" automatically
+                                    // create the new relationship even if one exists so we can show what we are
+                                    // looking for in the info message
+                                    // don't do relationship to the same entity, unless title is "Parent", then do a
+                                    // "Child" automatically
                                         String title = modelRelation.getTitle();
-                                        if (curModelEntity.getEntityName().equals(relatedEnt.getEntityName()) && "Parent".equals(title)) {
+                                    if (curModelEntity.getEntityName().equals(relatedEnt.getEntityName()) && "Parent".equals(title)) {
                                             title = "Child";
                                         }
                                         String description = "";
                                         String type = "";
                                         String relEntityName = curModelEntity.getEntityName();
                                         String fkName = "";
-                                        ArrayList<ModelKeyMap> keyMaps = new ArrayList<ModelKeyMap>();
+                                        ArrayList<ModelKeyMap> keyMaps = new ArrayList<>();
                                         boolean isAutoRelation = true;
-                                        Set<String> curEntityKeyFields = new HashSet<String>();
+                                        Set<String> curEntityKeyFields = new HashSet<>();
                                         for (ModelKeyMap curkm : modelRelation.getKeyMaps()) {
                                             keyMaps.add(new ModelKeyMap(curkm.getRelFieldName(), curkm.getFieldName()));
                                             curEntityKeyFields.add(curkm.getFieldName());
                                         }
                                         keyMaps.trimToSize();
-                                        // decide whether it should be one or many by seeing if the key map represents the complete pk of the relEntity
+                                        // decide whether it should be one or many by seeing if the key map represents
+                                        // the complete pk of the relEntity
                                         if (curModelEntity.containsAllPkFieldNames(curEntityKeyFields)) {
                                             // always use one-nofk, we don't want auto-fks getting in for these automatic ones
                                             type = "one-nofk";
@@ -368,14 +382,14 @@ TEMP_VIEW_LOOP:
                                             List<String> curPkFieldNames = curModelEntity.getPkFieldNames();
                                             Iterator<ModelKeyMap> nrkmIter = keyMaps.iterator();
                                             while (nrkmIter.hasNext()) {
-                                                ModelKeyMap nrkm =nrkmIter.next();
+                                            ModelKeyMap nrkm = nrkmIter.next();
                                                 String checkField = nrkm.getRelFieldName();
                                                 if (!curPkFieldNames.contains(checkField)) {
                                                     nrkmIter.remove();
                                                 }
                                             }
                                         } else {
-                                            type= "many";
+                                            type = "many";
                                         }
                                         ModelRelation newRel = ModelRelation.create(relatedEnt, description, type, title, relEntityName, fkName, keyMaps, isAutoRelation);
 
@@ -390,30 +404,27 @@ TEMP_VIEW_LOOP:
                                         } else {
                                             if (newRel.equals(existingRelation)) {
                                                 // don't warn if the target title+entity = current title+entity
-                                                if (Debug.infoOn() && !(title + curModelEntity.getEntityName()).equals(modelRelation.getTitle() + modelRelation.getRelEntityName())) {
-                                                    //String errorMsg = "Relation already exists to entity [] with title [" + targetTitle + "],from entity []";
-                                                    String message = "Entity [" + relatedEnt.getPackageName() + ":" + relatedEnt.getEntityName() + "] already has identical relationship to entity [" +
-                                                            curModelEntity.getEntityName() + "] title [" + title + "]; would auto-create: type [" +
-                                                            newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
+                                            if (Debug.infoOn() 
+                                                    && !(title + curModelEntity.getEntityName()).equals(modelRelation.getTitle() + modelRelation.getRelEntityName())) {
+                                                // String errorMsg = "Relation already exists to entity [] with title ["
+                                                // + targetTitle + "],from entity []";
+                                                String message = "Entity [" + relatedEnt.getPackageName() + ":" + relatedEnt.getEntityName()
+                                                        + "] already has identical relationship to entity [" + curModelEntity.getEntityName() + "] title [" + title
+                                                        + "]; would auto-create: type [" + newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
                                                     orderedMessages.add(message);
                                                 }
                                             } else {
-                                                String message = "Existing relationship with the same name, but different specs found from what would be auto-created for Entity [" + relatedEnt.getEntityName() + "] and relationship to entity [" +
-                                                        curModelEntity.getEntityName() + "] title [" + title + "]; would auto-create: type [" +
-                                                        newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
-                                                Debug.logVerbose(message, module);
+                                                String message = "Existing relationship with the same name, but different specs found from what would be auto-created for Entity ["
+                                                    + relatedEnt.getEntityName() + "] and relationship to entity [" + curModelEntity.getEntityName() + "] title [" + title
+                                                    + "]; would auto-create: type [" + newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
+                                                if (Debug.verboseOn()) Debug.logVerbose(message, module);
                                             }
                                         }
-                                    } else {
-                                        String errorMsg = "Could not find related entity ["
-                                                + modelRelation.getRelEntityName() + "], no reverse relation added.";
-                                        Debug.logWarning(errorMsg, module);
-                                    }
                                 }
                             }
 
                             if (newSameEntityRelations.size() > 0) {
-                                for (ModelRelation newRel: newSameEntityRelations) {
+                                for (ModelRelation newRel : newSameEntityRelations) {
                                     curModelEntity.addRelation(newRel);
                                 }
                             }
@@ -423,7 +434,9 @@ TEMP_VIEW_LOOP:
                         for (String message : orderedMessages) {
                             Debug.logInfo(message, module);
                         }
-                        Debug.logInfo("Finished loading entities; #Entities=" + numEntities + " #ViewEntities=" + numViewEntities + " #Fields=" + numFields + " #Relationships=" + numRelations + " #AutoRelationships=" + numAutoRelations, module);
+                        Debug.logInfo("Finished loading entities; #Entities=" + numEntities + " #ViewEntities="
+                                + numViewEntities + " #Fields=" + numFields + " #Relationships=" + numRelations
+                                + " #AutoRelationships=" + numAutoRelations, module);
                     }
                 }
             }
@@ -431,12 +444,14 @@ TEMP_VIEW_LOOP:
         return entityCache;
     }
 
-    /** rebuilds the resourceHandlerEntities Map of Collections based on the current
-     *  entityResourceHandlerMap Map, must be done whenever a manual change is made to the
-     *  entityResourceHandlerMap Map after the initial load to make them consistent again.
+    /**
+     * rebuilds the resourceHandlerEntities Map of Collections based on the current
+     * entityResourceHandlerMap Map, must be done whenever a manual change is made
+     * to the entityResourceHandlerMap Map after the initial load to make them
+     * consistent again.
      */
     public void rebuildResourceHandlerEntities() {
-        resourceHandlerEntities = new HashMap<ResourceHandler, Collection<String>>();
+        resourceHandlerEntities = new HashMap<>();
         Iterator<Map.Entry<String, ResourceHandler>> entityResourceIter = entityResourceHandlerMap.entrySet().iterator();
 
         while (entityResourceIter.hasNext()) {
@@ -445,7 +460,7 @@ TEMP_VIEW_LOOP:
             Collection<String> resourceHandlerEntityNames = resourceHandlerEntities.get(entry.getValue());
 
             if (resourceHandlerEntityNames == null) {
-                resourceHandlerEntityNames = new LinkedList<String>();
+                resourceHandlerEntityNames = new LinkedList<>();
                 resourceHandlerEntities.put(entry.getValue(), resourceHandlerEntityNames);
             }
             resourceHandlerEntityNames.add(entry.getKey());
@@ -453,12 +468,14 @@ TEMP_VIEW_LOOP:
     }
 
     public Iterator<ResourceHandler> getResourceHandlerEntitiesKeyIterator() {
-        if (resourceHandlerEntities == null) return null;
+        if (resourceHandlerEntities == null)
+            return null;
         return resourceHandlerEntities.keySet().iterator();
     }
 
     public Collection<String> getResourceHandlerEntities(ResourceHandler resourceHandler) {
-        if (resourceHandlerEntities == null) return null;
+        if (resourceHandlerEntities == null)
+            return null;
         return resourceHandlerEntities.get(resourceHandler);
     }
 
@@ -470,8 +487,11 @@ TEMP_VIEW_LOOP:
         return entityResourceHandlerMap.get(entityName);
     }
 
-    /** Gets an Entity object based on a definition from the specified XML Entity descriptor file.
-     * @param entityName The entityName of the Entity definition to use.
+    /**
+     * Gets an Entity object based on a definition from the specified XML Entity descriptor file.
+     * 
+     * @param entityName
+     *            The entityName of the Entity definition to use.
      * @return An Entity object describing the specified entity of the specified descriptor file.
      */
     public ModelEntity getModelEntity(String entityName) throws GenericEntityException {
@@ -505,7 +525,9 @@ TEMP_VIEW_LOOP:
         return modelEntity;
     }
 
-    /** Creates a Iterator with the entityName of each Entity defined in the specified XML Entity Descriptor file.
+    /**
+     * Creates a Iterator with the entityName of each Entity defined in the specified XML Entity Descriptor file.
+     * 
      * @return A Iterator of entityName Strings
      */
     public Iterator<String> getEntityNamesIterator() throws GenericEntityException {
@@ -517,7 +539,9 @@ TEMP_VIEW_LOOP:
         }
     }
 
-    /** Creates a Set with the entityName of each Entity defined in the specified XML Entity Descriptor file.
+    /**
+     * Creates a Set with the entityName of each Entity defined in the specified XML Entity Descriptor file.
+     * 
      * @return A Set of entityName Strings
      */
     public Set<String> getEntityNames() throws GenericEntityException {
@@ -529,10 +553,11 @@ TEMP_VIEW_LOOP:
     }
 
     /** Get all entities, organized by package */
-    public Map<String, TreeSet<String>> getEntitiesByPackage(Set<String> packageFilterSet, Set<String> entityFilterSet) throws GenericEntityException {
-        Map<String, TreeSet<String>> entitiesByPackage = new HashMap<String, TreeSet<String>>();
+    public Map<String, TreeSet<String>> getEntitiesByPackage(Set<String> packageFilterSet, Set<String> entityFilterSet)
+            throws GenericEntityException {
+        Map<String, TreeSet<String>> entitiesByPackage = new HashMap<>();
 
-        //put the entityNames TreeSets in a HashMap by packageName
+        // put the entityNames TreeSets in a HashMap by packageName
         Iterator<String> ecIter = this.getEntityNames().iterator();
         while (ecIter.hasNext()) {
             String entityName = ecIter.next();
@@ -542,24 +567,26 @@ TEMP_VIEW_LOOP:
             if (UtilValidate.isNotEmpty(packageFilterSet)) {
                 // does it match any of these?
                 boolean foundMatch = false;
-                for (String packageFilter: packageFilterSet) {
+                for (String packageFilter : packageFilterSet) {
                     if (packageName.contains(packageFilter)) {
                         foundMatch = true;
                     }
                 }
                 if (!foundMatch) {
-                    //Debug.logInfo("Not including entity " + entityName + " becuase it is not in the package set: " + packageFilterSet, module);
+                    // Debug.logInfo("Not including entity " + entityName + " becuase it is not in
+                    // the package set: " + packageFilterSet, module);
                     continue;
                 }
             }
             if (UtilValidate.isNotEmpty(entityFilterSet) && !entityFilterSet.contains(entityName)) {
-                //Debug.logInfo("Not including entity " + entityName + " because it is not in the entity set: " + entityFilterSet, module);
+                // Debug.logInfo("Not including entity " + entityName + " because it is not in
+                // the entity set: " + entityFilterSet, module);
                 continue;
             }
 
             TreeSet<String> entities = entitiesByPackage.get(entity.getPackageName());
             if (entities == null) {
-                entities = new TreeSet<String>();
+                entities = new TreeSet<>();
                 entitiesByPackage.put(entity.getPackageName(), entities);
             }
             entities.add(entityName);
@@ -568,9 +595,12 @@ TEMP_VIEW_LOOP:
         return entitiesByPackage;
     }
 
-    /** Util method to validate an entity name; if no entity is found with the name,
-     *  characters are stripped from the beginning of the name until a valid entity name is found.
-     *  It is intended to be used to determine the entity name from a relation name.
+    /**
+     * Util method to validate an entity name; if no entity is found with the name,
+     * characters are stripped from the beginning of the name until a valid entity
+     * name is found. It is intended to be used to determine the entity name from a
+     * relation name.
+     * 
      * @return A valid entityName or null
      */
     public String validateEntityName(String entityName) throws GenericEntityException {
@@ -581,18 +611,20 @@ TEMP_VIEW_LOOP:
         while (!allEntities.contains(entityName) && entityName.length() > 0) {
             entityName = entityName.substring(1);
         }
-        return (entityName.length() > 0? entityName: null);
+        return (entityName.length() > 0 ? entityName : null);
     }
 
     ModelEntity createModelEntity(Element entityElement, UtilTimer utilTimer, ModelInfo def) {
-        if (entityElement == null) return null;
+        if (entityElement == null)
+            return null;
         this.numEntities++;
         ModelEntity entity = new ModelEntity(this, entityElement, utilTimer, def);
         return entity;
     }
 
     ModelEntity createModelViewEntity(Element entityElement, UtilTimer utilTimer, ModelInfo def) {
-        if (entityElement == null) return null;
+        if (entityElement == null)
+            return null;
         this.numViewEntities++;
         ModelViewEntity entity = new ModelViewEntity(this, entityElement, utilTimer, def);
         return entity;

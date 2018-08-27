@@ -21,6 +21,7 @@ package org.ofbiz.entity.model;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
@@ -45,7 +46,7 @@ public final class ModelUtil {
      */
     public static String upperFirstChar(String string) {
         if (string == null) return null;
-        if (string.length() <= 1) return string.toLowerCase();
+        if (string.length() <= 1) return string.toLowerCase(Locale.getDefault());
         StringBuilder sb = new StringBuilder(string);
 
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
@@ -60,7 +61,7 @@ public final class ModelUtil {
      */
     public static String lowerFirstChar(String string) {
         if (string == null) return null;
-        if (string.length() <= 1) return string.toLowerCase();
+        if (string.length() <= 1) return string.toLowerCase(Locale.getDefault());
         StringBuilder sb = new StringBuilder(string);
 
         sb.setCharAt(0, Character.toLowerCase(sb.charAt(0)));
@@ -283,8 +284,7 @@ public final class ModelUtil {
             if (length > 18 || precision > 6) return "invalid-" + sqlTypeName + ":" + length + ":" + precision;
             if (precision == 0) return "numeric";
             if (precision == 2) return "currency-amount";
-            if (precision <= 6) return "floating-point";
-            return "invalid-" + sqlTypeName + ":" + length + ":" + precision;
+            return "floating-point";
         } else if ("BLOB".equalsIgnoreCase(sqlTypeName) || "OID".equalsIgnoreCase(sqlTypeName)) {
             return "blob";
         } else if ("DATETIME".equalsIgnoreCase(sqlTypeName) || "TIMESTAMP".equalsIgnoreCase(sqlTypeName)) {

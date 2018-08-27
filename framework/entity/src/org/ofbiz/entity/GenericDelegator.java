@@ -2338,8 +2338,8 @@ public class GenericDelegator implements Delegator {
                         }
                         try {
                             int seqVal = Integer.parseInt(currentSeqId);
-                            if (highestSeqVal == null || seqVal > highestSeqVal.intValue()) {
-                                highestSeqVal = Integer.valueOf(seqVal);
+                            if (highestSeqVal == null || seqVal > highestSeqVal) {
+                                highestSeqVal = seqVal;
                             }
                         } catch (NumberFormatException e) {
                             Debug.logWarning("Error in make-next-seq-id converting SeqId [" + currentSeqId + "] in field: " + seqFieldName + " from entity: " + value.getEntityName() + " to a number: " + e.toString(), module);
@@ -2347,7 +2347,7 @@ public class GenericDelegator implements Delegator {
                     }
                 }
 
-                int seqValToUse = (highestSeqVal == null ? 1 : highestSeqVal.intValue() + incrementBy);
+                int seqValToUse = (highestSeqVal == null ? 1 : highestSeqVal + incrementBy);
                 String newSeqId = sequencedIdPrefix + UtilFormatOut.formatPaddedNumber(seqValToUse, numericPadding);
                 value.set(seqFieldName, newSeqId);
 
@@ -2660,7 +2660,7 @@ public class GenericDelegator implements Delegator {
                 Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " does not implement the DistributedCacheClear interface, distributed cache clearing will be disabled", module);
             }
         } else {
-            Debug.logVerbose("Distributed Cache Clear System disabled for delegator [" + delegatorFullName + "]", module);
+            if (Debug.verboseOn()) Debug.logVerbose("Distributed Cache Clear System disabled for delegator [" + delegatorFullName + "]", module);
         }
         return null;
     }

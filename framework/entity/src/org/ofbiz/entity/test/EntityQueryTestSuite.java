@@ -113,7 +113,7 @@ public class EntityQueryTestSuite extends EntityTestCase {
         testingTypes.add(delegator.makeValue("TestingType", "testingTypeId", "queryOne-3", "description", "query three"));
         delegator.storeAll(testingTypes);
 
-        GenericValue findOneByEntityEngine = delegator.findOne("TestingType", false, UtilMisc.toMap("testingTypeId", "queryOne-2"));
+        GenericValue findOneByEntityEngine = EntityQuery.use(delegator).from("TestingType").where("testingTypeId", "queryOne-2").queryOne();
         GenericValue queryOneByEntityQuery = EntityQuery.use(delegator).from("TestingType").where("testingTypeId", "queryOne-2").queryOne();
 
         assertEquals("queryOne(): Record matched = testingTypeId", findOneByEntityEngine.getString("testingTypeId"), queryOneByEntityQuery.getString("testingTypeId"));
@@ -279,7 +279,7 @@ public class EntityQueryTestSuite extends EntityTestCase {
         delegator.storeAll(testingTypes);
         
         EntityFindOptions findOptions = new EntityFindOptions();
-        findOptions.setFetchSize(2);;
+        findOptions.setFetchSize(2);
         List<GenericValue> fetchSizeByEntityEngine = delegator.findList("TestingType", null, null, UtilMisc.toList("description"), findOptions, false);
         List<GenericValue> fetchSizeByEntityQuery = EntityQuery.use(delegator).from("TestingType").fetchSize(2).orderBy("description").queryList();
         

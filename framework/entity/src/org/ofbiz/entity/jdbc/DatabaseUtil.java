@@ -887,7 +887,6 @@ public class DatabaseUtil {
                     Object result = detection.method.invoke(dbData, detection.params);
                     Debug.logInfo(String.format(goodFormatStr, detection.name, result, requiredFlag), module);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     Debug.logVerbose(e, module);
                     Debug.logWarning(String.format(badFormatStr, detection.name, requiredFlag), module);
                 }
@@ -1025,7 +1024,7 @@ public class DatabaseUtil {
     private AbstractCountingCallable createPrimaryKeyFetcher(final DatabaseMetaData dbData, final String lookupSchemaName, final boolean needsUpperCase, final Map<String, Map<String, ColumnCheckInfo>> colInfo, final Collection<String> messages, final String curTable) {
         return new AbstractCountingCallable(null, null) {
             public AbstractCountingCallable call() throws Exception {
-                Debug.logVerbose("Fetching primary keys for " + curTable, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Fetching primary keys for " + curTable, module);
                 ResultSet rsPks = dbData.getPrimaryKeys(null, lookupSchemaName, curTable);
                 count = checkPrimaryKeyInfo(rsPks, lookupSchemaName, needsUpperCase, colInfo, messages);
                 return this;

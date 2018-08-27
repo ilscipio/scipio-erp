@@ -248,7 +248,7 @@ public final class TransactionUtil implements Status {
         if (ut != null) {
             try {
                 int status = ut.getStatus();
-                Debug.logVerbose("Current status : " + getTransactionStateString(status), module);
+                if (Debug.verboseOn()) Debug.logVerbose("Current status : " + getTransactionStateString(status), module);
 
                 if (status != STATUS_NO_TRANSACTION && status != STATUS_COMMITTING && status != STATUS_COMMITTED && status != STATUS_ROLLING_BACK && status != STATUS_ROLLEDBACK) {
                     ut.commit();
@@ -259,7 +259,7 @@ public final class TransactionUtil implements Status {
                     clearTransactionBeginStack();
                     clearSetRollbackOnlyCause();
 
-                    Debug.logVerbose("Transaction committed", module);
+                    if (Debug.verboseOn()) Debug.logVerbose("Transaction committed", module);
                 } else {
                     Debug.logWarning("Not committing transaction, status is " + getStatusString(), module);
                 }
@@ -1020,7 +1020,7 @@ public final class TransactionUtil implements Status {
                     TransactionUtil.commit(tx);
                 } else {
                     if (printException) {
-                        transactionAbortCause.printStackTrace();
+                        Debug.logError(transactionAbortCause, module);
                     }
                     TransactionUtil.rollback(tx, ifErrorMessage, transactionAbortCause);
                 }

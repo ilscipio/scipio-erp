@@ -23,9 +23,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
+import org.ofbiz.base.util.Debug;
+
 
 public class CursorConnection extends AbstractCursorHandler {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static Connection newCursorConnection(Connection con, String cursorName, int pageSize) throws Exception {
         return newHandler(new CursorConnection(con, cursorName, pageSize), Connection.class);
     }
@@ -39,12 +42,12 @@ public class CursorConnection extends AbstractCursorHandler {
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if ("prepareStatement".equals(method.getName())) {
-            System.err.println("prepareStatement");
+            Debug.logInfo("prepareStatement", module);
             args[0] = "DECLARE " + cursorName + " CURSOR FOR " + args[0];
             PreparedStatement pstmt = (PreparedStatement) method.invoke(con, args);
             return CursorStatement.newCursorPreparedStatement(pstmt, cursorName, fetchSize);
         } else if ("createStatement".equals(method.getName())) {
-            System.err.println("createStatement");
+            Debug.logInfo("createStatement", module);
             Statement stmt = (Statement) method.invoke(con, args);
             return CursorStatement.newCursorStatement(stmt, cursorName, fetchSize);
         }

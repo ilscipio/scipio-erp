@@ -388,7 +388,7 @@ public class EntityTestSuite extends EntityTestCase {
             testing.put("testingName", "leaf-#" + node.getString("testingNodeId"));
             testing.put("description", "level1 leaf");
             testing.put("comments", "No-comments");
-            testing.put("testingSize", Long.valueOf(10));
+            testing.put("testingSize", 10L);
             testing.put("testingDate", now);
 
             newValues.add(testing);
@@ -484,15 +484,15 @@ public class EntityTestSuite extends EntityTestCase {
         testValue = EntityQuery.use(delegator).from("TestingType").where("testingTypeId", "TEST-DISTINCT-1").cache(true).queryOne();
         assertNotNull("Found newly created type value", testValue);
 
-        delegator.create("Testing", "testingId", "TEST-DISTINCT-1", "testingTypeId", "TEST-DISTINCT-1", "testingSize", Long.valueOf(10), "comments", "No-comments");
-        delegator.create("Testing", "testingId", "TEST-DISTINCT-2", "testingTypeId", "TEST-DISTINCT-1", "testingSize", Long.valueOf(10), "comments", "Some-comments");
-        delegator.create("Testing", "testingId", "TEST-DISTINCT-3", "testingTypeId", "TEST-DISTINCT-1", "testingSize", Long.valueOf(9), "comments", "No-comments");
-        delegator.create("Testing", "testingId", "TEST-DISTINCT-4", "testingTypeId", "TEST-DISTINCT-1", "testingSize", Long.valueOf(11), "comments", "Some-comments");
+        delegator.create("Testing", "testingId", "TEST-DISTINCT-1", "testingTypeId", "TEST-DISTINCT-1", "testingSize", 10L, "comments", "No-comments");
+        delegator.create("Testing", "testingId", "TEST-DISTINCT-2", "testingTypeId", "TEST-DISTINCT-1", "testingSize", 10L, "comments", "Some-comments");
+        delegator.create("Testing", "testingId", "TEST-DISTINCT-3", "testingTypeId", "TEST-DISTINCT-1", "testingSize", 9L, "comments", "No-comments");
+        delegator.create("Testing", "testingId", "TEST-DISTINCT-4", "testingTypeId", "TEST-DISTINCT-1", "testingSize", 11L, "comments", "Some-comments");
 
         List<GenericValue> testingSize10 = EntityQuery.use(delegator)
                                                       .select("testingSize", "comments")
                                                       .from("Testing")
-                                                      .where("testingSize", Long.valueOf(10), "comments", "No-comments")
+                                                      .where("testingSize", 10L, "comments", "No-comments")
                                                       .distinct()
                                                       .cache()
                                                       .queryList();
@@ -1220,7 +1220,7 @@ public class EntityTestSuite extends EntityTestCase {
                         };
         double probabilityOfRefresh = 0.1;
         for (int i = 1; i <= 1000; i++) {
-            Callable randomTask = Math.random() < probabilityOfRefresh ? refreshTask : getSeqIdTask;
+            Callable<Void> randomTask = Math.random() < probabilityOfRefresh ? refreshTask : getSeqIdTask;
             futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(randomTask));
         }
         long startTime = System.currentTimeMillis();

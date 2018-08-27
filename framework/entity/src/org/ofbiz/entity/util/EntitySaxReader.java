@@ -291,7 +291,7 @@ public class EntitySaxReader extends DefaultHandler {
 
     // ======== ContentHandler interface implementation ========
 
-    public void characters(char[] values, int offset, int count) throws org.xml.sax.SAXException {
+    public void characters(char[] values, int offset, int count) throws SAXException {
         if (isParseForTemplate) {
             // if null, don't worry about it
             if (this.currentNodeForTemplate != null) {
@@ -316,7 +316,7 @@ public class EntitySaxReader extends DefaultHandler {
         }
     }
 
-    public void endElement(String namespaceURI, String localName, String fullNameString) throws org.xml.sax.SAXException {
+    public void endElement(String namespaceURI, String localName, String fullNameString) throws SAXException {
         if (Debug.verboseOn()) Debug.logVerbose("endElement: localName=" + localName + ", fullName=" + fullNameString + ", numberRead=" + numberRead, module);
         if ("entity-engine-xml".equals(fullNameString)) {
             return;
@@ -369,13 +369,11 @@ public class EntitySaxReader extends DefaultHandler {
                     try {
                         reader.setTransactionTimeout(this.transactionTimeout);
                     } catch (GenericTransactionException e1) {
-                        // couldn't set tx timeout, shouldn't be a big deal
+                        Debug.logWarning("couldn't set tx timeout, hopefully shouldn't be a big deal", module);
                     }
 
                     numberRead += reader.parse(s);
-                } catch (TemplateException e) {
-                    throw new SAXException("Error storing value", e);
-                } catch (IOException e) {
+                } catch (TemplateException | IOException e) {
                     throw new SAXException("Error storing value", e);
                 }
             }
@@ -429,7 +427,7 @@ public class EntitySaxReader extends DefaultHandler {
                     boolean exist = true;
                     boolean skip = false;
                     //if verbose on, check if entity exist on database for count each action
-                    //It's necessary to check also for specific action CREATE and DELETE to ensure it's ok
+                    //It's necessary to check also for specific action CREATE and DELETE to ensure it's OK
                     if (Action.CREATE == currentAction || Action.DELETE == currentAction || Debug.verboseOn()) {
                         GenericHelper helper = delegator.getEntityHelper(currentValue.getEntityName());
                         if (currentValue.containsPrimaryKey()) {
@@ -495,7 +493,7 @@ public class EntitySaxReader extends DefaultHandler {
         this.locator = locator;
     }
 
-    public void startElement(String namepsaceURI, String localName, String fullNameString, Attributes attributes) throws org.xml.sax.SAXException {
+    public void startElement(String namepsaceURI, String localName, String fullNameString, Attributes attributes) throws SAXException {
         if (Debug.verboseOn()) Debug.logVerbose("startElement: localName=" + localName + ", fullName=" + fullNameString + ", attributes=" + attributes, module);
         if ("entity-engine-xml".equals(fullNameString)) {
             // check the maintain-timestamp flag
@@ -635,16 +633,16 @@ public class EntitySaxReader extends DefaultHandler {
 
     // ======== ErrorHandler interface implementation ========
 
-    public void error(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException {
+    public void error(org.xml.sax.SAXParseException exception) throws SAXException {
         Debug.logWarning(exception, "Error reading XML on line " + exception.getLineNumber() + ", column " + exception.getColumnNumber(), module);
     }
 
-    public void fatalError(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException {
+    public void fatalError(org.xml.sax.SAXParseException exception) throws SAXException {
         Debug.logError(exception, "Fatal Error reading XML on line " + exception.getLineNumber() + ", column " + exception.getColumnNumber(), module);
         throw new SAXException("Fatal Error reading XML on line " + exception.getLineNumber() + ", column " + exception.getColumnNumber(), exception);
     }
 
-    public void warning(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException {
+    public void warning(org.xml.sax.SAXParseException exception) throws SAXException {
         Debug.logWarning(exception, "Warning reading XML on line " + exception.getLineNumber() + ", column " + exception.getColumnNumber(), module);
     }
 }

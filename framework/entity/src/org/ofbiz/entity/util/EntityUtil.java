@@ -604,9 +604,9 @@ public final class EntityUtil {
 
     /**
      * SCIPIO: Type conversion of Strings that resemble "Y" or "N" values to Boolean
-     * @param value
-     * @return
-     * */
+     * @deprecated use {@link org.ofbiz.base.util.UtilMisc#booleanValueIndicator(Object)} instead.
+     */
+    @Deprecated
     public static Boolean toBoolean(String value) {
         if ("Y".equalsIgnoreCase(value)) {
             return true;
@@ -621,11 +621,9 @@ public final class EntityUtil {
     
     /**
      * SCIPIO: Type conversion of Strings that resemble "Y" or "N" values to Boolean
-     * 
-     * @param value
-     * @param defaultVal Default value
-     * @return
+     * @deprecated use {@link org.ofbiz.base.util.UtilMisc#booleanValueIndicator(Object, boolean)} instead.
      */
+    @Deprecated
     public static boolean toBoolean(String indicator, boolean defaultVal) {
         Boolean result = toBoolean(indicator);
         return result != null ? result : defaultVal;

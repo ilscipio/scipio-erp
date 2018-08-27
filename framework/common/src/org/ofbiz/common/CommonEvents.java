@@ -79,7 +79,8 @@ public class CommonEvents {
         "targetRequestUri",
         "_SERVER_ROOT_URL_",
         "_CONTROL_PATH_",
-        "thisRequestUri"
+        "thisRequestUri",
+        "org.apache.tomcat.util.net.secure_protocol_version"
     };
 
     private static final UtilCache<String, Map<String, String>> appletSessions = UtilCache.createUtilCache("AppletSessions", 0, 600000, true);

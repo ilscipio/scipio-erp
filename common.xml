@@ -17,7 +17,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project name="Ant - Common" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="Ant - Common" xmlns:ivy="antlib:org.apache.ivy.ant"
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless">
     <dirname property="Ant - Common.dir" file="${ant.file.Ant - Common}" />
     <!-- SCIPIO: NOTE: macros.xml sets ofbiz.home.dir (if not already inherited) -->
     <import file="${Ant - Common.dir}/macros.xml" />
@@ -528,6 +530,20 @@ under the License.
     <target name="root-lib-update" description="Deploys root lib folder jars">
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}"/>
     </target>
+
+    <!-- SCIPIO: 2018-08-27: Now, always clean the libsrc jar sources out whenever cleaning out the binary jars.
+        It makes little sense to keep the sources if the binaries are being deleted, and this ensures
+        predictable behavior.
+        This adds a small file check overhead to clean calls and ivy updates for clients not using
+        sources, but it is too unreliable to detect when sources are enabled because the lib.update.sources
+        flag may be passed on command line on select targets instead of set in build[.local].properties;
+        also, the lib.update.sources flag (and this flag) suffers from too broad scope in multi-target
+        ant calls, e.g. ./ant clean build clean... causing more unpredictable behavior.
+        This forced "true" value is required for "lib-clean". For "lib-update", if we try to set this conditionally (if:set="lib.update.sources"),
+        could be considered more optimal, but in practice all it does is cause developers to scratch their heads as to how they
+        ended up with sources jars of different versions than their binary jars - might as well just clean them out.
+        DEV NOTE: It's recommended for devs to simply set [build.]lib.update.sources=true in build[.local].properties instead of command line. -->
+    <property name="lib.clean.sources" value="true"/>
 
     <target name="lib-clean" description="Cleans downloadable jars, if applicable for component">
         <if>

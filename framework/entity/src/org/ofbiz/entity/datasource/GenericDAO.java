@@ -109,16 +109,15 @@ public class GenericDAO {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
 
-        SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo);
 
+        try (SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo)) {
         try {
             return singleInsert(entity, modelEntity, modelEntity.getFieldsUnmodifiable(), sqlP);
         } catch (GenericEntityException e) {
             sqlP.rollback();
             // no need to create nested, just throw original which will have all info: throw new GenericEntityException("Exception while inserting the following entity: " + entity.toString(), e);
             throw e;
-        } finally {
-            sqlP.close();
+        }
         }
     }
 
@@ -176,8 +175,6 @@ public class GenericDAO {
             return retVal;
         } catch (GenericEntityException e) {
             throw new GenericEntityException("Error while inserting: " + entity.toString(), e);
-        } finally {
-            sqlP.close();
         }
     }
 
@@ -214,15 +211,14 @@ public class GenericDAO {
     }
 
     private int customUpdate(GenericEntity entity, ModelEntity modelEntity, List<ModelField> fieldsToSave) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo);
+        try (SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo)) {
         try {
             return singleUpdate(entity, modelEntity, fieldsToSave, sqlP);
         } catch (GenericEntityException e) {
             sqlP.rollback();
             // no need to create nested, just throw original which will have all info: throw new GenericEntityException("Exception while updating the following entity: " + entity.toString(), e);
             throw e;
-        } finally {
-            sqlP.close();
+        }
         }
     }
 
@@ -281,8 +277,6 @@ public class GenericDAO {
             entity.synchronizedWithDatasource();
         } catch (GenericEntityException e) {
             throw new GenericEntityException("Error while updating: " + entity.toString(), e);
-        } finally {
-            sqlP.close();
         }
 
         if (retVal == 0) {
@@ -292,15 +286,14 @@ public class GenericDAO {
     }
 
     public int updateByCondition(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fieldsToSet, EntityCondition condition) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor(delegator, helperInfo);
 
+        try (SQLProcessor sqlP = new SQLProcessor(delegator, helperInfo)) {
         try {
             return updateByCondition(modelEntity, fieldsToSet, condition, sqlP);
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
             throw new GenericDataSourceException("Generic Entity Exception occurred in updateByCondition", e);
-        } finally {
-            sqlP.close();
+            }
         }
     }
 
@@ -327,16 +320,12 @@ public class GenericDAO {
         }
         sql.append(" WHERE ").append(condition.makeWhereString(modelEntity, params, this.datasource));
 
-        try {
             sqlP.prepareStatement(sql.toString());
             for (EntityConditionParam param: params) {
                 SqlJdbcUtil.setValue(sqlP, param.getModelField(), modelEntity.getEntityName(), param.getFieldValue(), modelFieldTypeReader);
             }
 
             return sqlP.executeUpdate();
-        } finally {
-            sqlP.close();
-        }
     }
 
     /* ====================================================================== */
@@ -486,12 +475,8 @@ public class GenericDAO {
     /* ====================================================================== */
 
     public void select(GenericEntity entity) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo);
-
-        try {
+        try (SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo)) {
             select(entity, sqlP);
-        } finally {
-            sqlP.close();
         }
     }
 
@@ -517,7 +502,6 @@ public class GenericDAO {
         sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, modelFieldTypeReader, datasource));
         sqlBuffer.append(SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPkFieldsUnmodifiable(), entity, "AND", datasource.getJoinStyle()));
 
-        try {
             sqlP.prepareStatement(sqlBuffer.toString(), true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             sqlP.executeQuery();
@@ -536,9 +520,6 @@ public class GenericDAO {
                 // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString(), module);
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
             }
-        } finally {
-            sqlP.close();
-        }
     }
 
     public void partialSelect(GenericEntity entity, Set<String> keys) throws GenericEntityException {
@@ -586,9 +567,7 @@ public class GenericDAO {
         sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, modelFieldTypeReader, datasource));
         sqlBuffer.append(SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPkFieldsUnmodifiable(), entity, "AND", datasource.getJoinStyle()));
 
-        SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo);
-
-        try {
+        try (SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo)) {
             sqlP.prepareStatement(sqlBuffer.toString(), true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             sqlP.executeQuery();
@@ -604,8 +583,6 @@ public class GenericDAO {
                 // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty.", module);
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
             }
-        } finally {
-            sqlP.close();
         }
     }
 
@@ -904,7 +881,6 @@ public class GenericDAO {
 
     public List<GenericValue> selectByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne,
         ModelRelation modelRelationTwo, ModelEntity modelEntityTwo, List<String> orderBy) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor(value.getDelegator(), helperInfo);
 
         // get the tables names
         String atable = modelEntityOne.getTableName(datasource);
@@ -976,7 +952,7 @@ public class GenericDAO {
         List<GenericValue> retlist = new ArrayList<>(); // SCIPIO: switched to ArrayList
         Delegator gd = value.getDelegator();
 
-        try {
+        try (SQLProcessor sqlP = new SQLProcessor(value.getDelegator(), helperInfo)) {
             sqlP.prepareStatement(sqlsb.toString());
             for (Map.Entry<ModelField, Object> entry: bindMap.entrySet()) {
                 ModelField mf = entry.getKey();
@@ -1000,8 +976,6 @@ public class GenericDAO {
                 }
                 retlist.add(gv);
             }
-        } finally {
-            sqlP.close();
         }
 
         return retlist;
@@ -1106,7 +1080,7 @@ public class GenericDAO {
         String sql = sqlBuffer.toString();
         if (Debug.verboseOn()) Debug.logVerbose("Count select sql: " + sql, module);
 
-        SQLProcessor sqlP = new SQLProcessor(delegator, helperInfo);
+        try (SQLProcessor sqlP = new SQLProcessor(delegator, helperInfo)) {
         sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(),
                 findOptions.getResultSetConcurrency(), findOptions.getFetchSize(), findOptions.getMaxRows());
         if (verboseOn) {
@@ -1138,8 +1112,7 @@ public class GenericDAO {
 
         } catch (SQLException e) {
             throw new GenericDataSourceException("Error getting count value", e);
-        } finally {
-            sqlP.close();
+        }
         }
     }
 
@@ -1148,15 +1121,14 @@ public class GenericDAO {
     /* ====================================================================== */
 
     public int delete(GenericEntity entity) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo);
+        try (SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo)) {
 
         try {
             return delete(entity, sqlP);
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
             throw new GenericDataSourceException("Exception while deleting the following entity: " + entity.toString(), e);
-        } finally {
-            sqlP.close();
+        }
         }
     }
 
@@ -1174,27 +1146,21 @@ public class GenericDAO {
 
         int retVal;
 
-        try {
             sqlP.prepareStatement(sql.toString());
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             retVal = sqlP.executeUpdate();
             entity.removedFromDatasource();
-        } finally {
-            sqlP.close();
-        }
         return retVal;
     }
 
     public int deleteByCondition(Delegator delegator, ModelEntity modelEntity, EntityCondition condition) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor(delegator, helperInfo);
-
+        try (SQLProcessor sqlP = new SQLProcessor(delegator, helperInfo)) {
         try {
             return deleteByCondition(modelEntity, condition, sqlP);
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
             throw new GenericDataSourceException("Generic Entity Exception occurred in deleteByCondition", e);
-        } finally {
-            sqlP.close();
+        }
         }
     }
 
@@ -1212,13 +1178,9 @@ public class GenericDAO {
             sql.append(" WHERE ").append(whereCondition);
         }
 
-        try {
             sqlP.prepareStatement(sql.toString());
 
             return sqlP.executeUpdate();
-        } finally {
-            sqlP.close();
-        }
     }
 
     /* ====================================================================== */

@@ -106,13 +106,13 @@ public class GenericDAO {
         ModelEntity modelEntity = entity.getModelEntity();
 
         try (SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo)) {
-        try {
-            return singleInsert(entity, modelEntity, modelEntity.getFieldsUnmodifiable(), sqlP);
-        } catch (GenericEntityException e) {
-            sqlP.rollback();
-            // no need to create nested, just throw original which will have all info: throw new GenericEntityException("Exception while inserting the following entity: " + entity.toString(), e);
-            throw e;
-        }
+            try {
+                return singleInsert(entity, modelEntity, modelEntity.getFieldsUnmodifiable(), sqlP);
+            } catch (GenericEntityException e) {
+                sqlP.rollback();
+                // no need to create nested, just throw original which will have all info: throw new GenericEntityException("Exception while inserting the following entity: " + entity.toString(), e);
+                throw e;
+            }
         }
     }
 

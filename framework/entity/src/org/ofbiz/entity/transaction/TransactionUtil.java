@@ -274,8 +274,8 @@ public final class TransactionUtil implements Status {
                     Debug.logError(e, "Rollback Only was set when trying to commit transaction here; throwing rollbackOnly cause exception", module);
                     throw new GenericTransactionException("Roll back error, could not commit transaction, was rolled back instead because of: " + rollbackOnlyCause.getCauseMessage(), rollbackOnlyCause.getCauseThrowable());
                 }
-                    Throwable t = e.getCause() == null ? e : e.getCause();
-                    throw new GenericTransactionException("Roll back error (with no rollbackOnly cause found), could not commit transaction, was rolled back instead: " + t.toString(), t);
+                Throwable t = e.getCause() == null ? e : e.getCause();
+                throw new GenericTransactionException("Roll back error (with no rollbackOnly cause found), could not commit transaction, was rolled back instead: " + t.toString(), t);
             } catch (IllegalStateException e) {
                 Throwable t = e.getCause() == null ? e : e.getCause();
                 throw new GenericTransactionException("Could not commit transaction, IllegalStateException exception: " + t.toString(), t);
@@ -336,7 +336,7 @@ public final class TransactionUtil implements Status {
 
                     ut.rollback();
                     if (Debug.infoOn()) {
-                    Debug.logInfo("Transaction rolled back", module);
+                        Debug.logInfo("Transaction rolled back", module);
                     }
                 } else {
                     Debug.logWarning("Transaction not rolled back, status is STATUS_NO_TRANSACTION", module);
@@ -374,13 +374,13 @@ public final class TransactionUtil implements Status {
                         setSetRollbackOnlyCause(causeMessage, causeThrowable);
                     } else {
                         if (Debug.infoOn()) {
-                        Debug.logInfo("Transaction rollback only not set, rollback only is already set.", module);
-                    }
+                            Debug.logInfo("Transaction rollback only not set, rollback only is already set.", module);
+                        }
                     }
                 } else {
                     if (Debug.warningOn()) {
-                    Debug.logWarning("Transaction rollback only not set, status is STATUS_NO_TRANSACTION", module);
-                }
+                        Debug.logWarning("Transaction rollback only not set, status is STATUS_NO_TRANSACTION", module);
+                    }
                 }
             } catch (IllegalStateException e) {
                 Throwable t = e.getCause() == null ? e : e.getCause();
@@ -391,9 +391,9 @@ public final class TransactionUtil implements Status {
             }
         } else {
             if (Debug.infoOn()) {
-            Debug.logInfo("No UserTransaction, transaction rollback only not set", module);
+                Debug.logInfo("No UserTransaction, transaction rollback only not set", module);
+            }
         }
-    }
     }
 
     public static Transaction suspend() throws GenericTransactionException {

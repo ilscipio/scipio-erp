@@ -258,6 +258,7 @@ public class GenericValue extends GenericEntity {
      * SCIPIO: COMPLETELY DEPRECATED METHODS
      * These were removed all the way back in ofbiz 15 and should never be used anymore.
      * They are moved down here in Scipio to avoid maintenance issues.
+     * The main reason these are going away is due to replacement with EntityQuery which is clearer.
      */
     
     /** Get the named Related Entity for the GenericValue from the persistent

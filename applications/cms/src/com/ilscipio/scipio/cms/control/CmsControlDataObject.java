@@ -83,6 +83,9 @@ public abstract class CmsControlDataObject extends CmsDataObject {
             
             T dataObj;
             
+            // FIXME?: 2018-08: the only way to sync this properly now would be to wrap this code in a service
+            // that uses a semaphore... seems like too much overhead for this.
+            // NOTE: this was wanted because the CMS entity PKs are numeric IDs and not the logical candidate keys
             synchronized(getDataObjectOpsSyncObject()) {
                 
                 Map<String, Object> fields = UtilMisc.makeMapWritable(inFields);

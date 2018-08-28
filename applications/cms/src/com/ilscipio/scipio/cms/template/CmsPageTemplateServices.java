@@ -13,7 +13,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
@@ -152,7 +151,7 @@ public abstract class CmsPageTemplateServices {
             Delegator delegator = dctx.getDelegator();
             String pageTemplateId = (String) context.get("pageTemplateId");
             String versionId = (String) context.get("versionId");
-            boolean minimalInfoOnly = EntityUtil.toBoolean((String) context.get("minimalInfoOnly"), false);
+            boolean minimalInfoOnly = UtilMisc.booleanValueIndicator((String) context.get("minimalInfoOnly"), false);
             
             CmsPageTemplateVersion tmpVer = CmsPageTemplate.getVerComTemplateWorker().findSpecificTemplateVersion(delegator, pageTemplateId, versionId);
             
@@ -182,7 +181,7 @@ public abstract class CmsPageTemplateServices {
             List<Map<String, Object>> allVersionsList = new ArrayList<>();
             
             String pageTemplateId = (String) context.get("pageTemplateId");
-            boolean minimalInfoOnly = EntityUtil.toBoolean((String) context.get("minimalInfoOnly"), false);
+            boolean minimalInfoOnly = UtilMisc.booleanValueIndicator((String) context.get("minimalInfoOnly"), false);
             
             CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
             

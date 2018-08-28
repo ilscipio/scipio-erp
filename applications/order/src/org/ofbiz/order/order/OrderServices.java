@@ -6160,7 +6160,7 @@ public class OrderServices {
      * @return result: a map containing out parameters
      * @throws GenericEntityException
      */
-    public static Map deleteOrderItemShipGroup(DispatchContext ctx, Map context) throws GenericEntityException {
+    public static Map<String, Object> deleteOrderItemShipGroup(DispatchContext ctx, Map<String, ? extends Object> context) throws GenericEntityException {
         Delegator delegator = ctx.getDelegator();
         Map<String, Object> result = new HashMap<String, Object>();
 
@@ -6192,7 +6192,7 @@ public class OrderServices {
      * @return
      * @throws GenericEntityException
      */
-    public static Map addOrderItemShipGroupAssoc(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+    public static Map<String, Object> addOrderItemShipGroupAssoc(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -6283,7 +6283,7 @@ public class OrderServices {
      * @return
      * @throws GeneralException
      */
-    public static Map updateOrderItemShipGroupAssoc(DispatchContext dctx, Map context) throws GeneralException {
+    public static Map<String, Object> updateOrderItemShipGroupAssoc(DispatchContext dctx, Map<String, ? extends Object> context) throws GeneralException {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         String message = null;
         Delegator delegator = dctx.getDelegator();

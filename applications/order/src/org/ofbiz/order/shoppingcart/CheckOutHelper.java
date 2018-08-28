@@ -1575,7 +1575,7 @@ public class CheckOutHelper {
         
         // SCIPIO: Patched: We want to consider the pay meths that have no paymentMethodIds!
         // WARN: we are changing the definition of paymentMethods by doing this; some code may need to use paymentMethodsWithPaymentMethodId instead
-        List<String> paymentMethodsWithPaymentMethodId = cart.getPaymentMethodIds();
+        //List<String> paymentMethodsWithPaymentMethodId = cart.getPaymentMethodIds();
         paymentMethods.addAll(cart.getPaymentMethodTypeIdsNoPaymentMethodIds()); // add offline, cod, etc, so they can auto calculate totals
         
         List<String> paymentTypes = cart.getPaymentMethodTypeIds();

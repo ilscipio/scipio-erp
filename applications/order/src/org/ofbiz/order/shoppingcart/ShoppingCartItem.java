@@ -2577,7 +2577,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public List<ShoppingCartItem> explodeItem(ShoppingCart cart, LocalDispatcher dispatcher) throws CartItemModifyException {
         BigDecimal baseQuantity = this.getQuantity();
-        int thisIndex = cart.items().indexOf(this);
+        //int thisIndex = cart.items().indexOf(this); // SCIPIO: unused
         List<ShoppingCartItem> newItems = new ArrayList<ShoppingCartItem>();
 
         if (baseQuantity.compareTo(BigDecimal.ONE) > 0) {

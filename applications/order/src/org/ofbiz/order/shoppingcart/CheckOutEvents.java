@@ -365,11 +365,12 @@ public class CheckOutEvents {
      * TODO?: Currently, this event does nothing. See comments.
      */
     public static String checkPaymentMethodsBeforePayment(HttpServletRequest request, HttpServletResponse response) {
+        /* SCIPIO: TODO?
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
-        
+        */
         // SCIPIO: TODO?: Currently, in this event we do nothing. This is because checkOutHelper.validatePaymentMethods()
         // performs mainly a total amount validation which causes errors when going backward in checkout due
         // to change shipping options which can affect totals and result a negative balance error.
@@ -409,7 +410,7 @@ public class CheckOutEvents {
             request.setAttribute("issuerId", request.getParameter("issuerId"));
         }
 
-        String errMsg = null;
+        //String errMsg = null; // SCIPIO: now unused
 
         if (paymentMethods != null) {
             for (int i = 0; i < paymentMethods.length; i++) {

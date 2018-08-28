@@ -105,7 +105,7 @@ public class OrderEvents {
 
     public static String cancelSelectedOrderItems(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        //Delegator delegator = (Delegator) request.getAttribute("delegator"); // SCIPIO: unused
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         Locale locale = UtilHttp.getLocale(request);

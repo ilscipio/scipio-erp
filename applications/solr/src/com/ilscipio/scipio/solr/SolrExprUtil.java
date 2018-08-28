@@ -263,9 +263,7 @@ public abstract class SolrExprUtil {
         } 
         return -1;
     }
-    
-    private static final Pattern urlUnfilteredCharPat = Pattern.compile("[.*+%-]");
-    
+
     /**
      * Escapes an identifier for use in a Solr field name, in any part
      * of the name EXCEPT the beginning, with best-effort attempt to preserve

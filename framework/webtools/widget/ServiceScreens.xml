@@ -81,7 +81,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonServiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleJobDetails}">
+                        <screenlet><!-- title="${uiLabelMap.PageTitleJobDetails}" -->
                             <include-form name="JobDetails" location="component://webtools/widget/ServiceForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.WebtoolsRunTimeDataInfo}">

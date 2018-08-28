@@ -165,6 +165,7 @@ under the License.
     <Uom abbreviation="XAF" description="Gabon C.f.A Franc" uomId="XAF" uomTypeId="CURRENCY_MEASURE"/>
     <Uom abbreviation="XCD" description="East Carribean Dollar" uomId="XCD" uomTypeId="CURRENCY_MEASURE"/>
     <Uom abbreviation="XOF" description="Benin C.f.A. Franc" uomId="XOF" uomTypeId="CURRENCY_MEASURE"/>
+    <Uom abbreviation="XPF" description="Central Pacific Franc" uomId="XPF" uomTypeId="CURRENCY_MEASURE"/><!-- SCIPIO: 2018-08-28 -->
     <Uom abbreviation="YER" description="Yemeni Ryal" uomId="YER" uomTypeId="CURRENCY_MEASURE"/>
     <Uom abbreviation="ZAR" description="South African Rand" uomId="ZAR" uomTypeId="CURRENCY_MEASURE"/>
     <Uom abbreviation="ZMW" description="Zambian Kwacha" uomId="ZMW" uomTypeId="CURRENCY_MEASURE"/>

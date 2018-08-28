@@ -96,6 +96,8 @@ under the License.
                   <@pli><a href="<@ofbizUrl>runService</@ofbizUrl>">${uiLabelMap.PageTitleRunService}</a></@pli>
                   <@pli><a href="<@ofbizUrl>FindJob</@ofbizUrl>">${uiLabelMap.PageTitleJobList}</a></@pli>
                   <@pli><a href="<@ofbizUrl>threadList</@ofbizUrl>">${uiLabelMap.PageTitleThreadList}</a></@pli>
+                  <#-- SCIPIO: 2018-08-28: TODO: REVIEW: JobManagerLock
+                  <@pli><a href="<@ofbizUrl>FindJobManagerLock</@ofbizUrl>">${uiLabelMap.PageTitleJobManagerLockList}</a></@pli>-->
                   <@pli><a href="<@ofbizUrl>ServiceLog</@ofbizUrl>">${uiLabelMap.WebtoolsServiceLog}</a></@pli>
                 </@pul>
             </li>

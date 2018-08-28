@@ -19,6 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.io.BufferedInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,10 +53,18 @@ public final class UtilIO {
             try {
                 IOUtils.copy(in, out);
             } finally {
-                if (closeIn) IOUtils.closeQuietly(in);
+                // SCIPIO: deprecated
+                //if (closeIn) IOUtils.closeQuietly(in);
+                if (closeIn) {
+                    closeQuietly(in);
+                }
             }
         } finally {
-            if (closeOut) IOUtils.closeQuietly(out);
+            // SCIPIO: deprecated
+            //if (closeIn) IOUtils.closeQuietly(in);
+            if (closeIn) {
+                closeQuietly(in);
+            }
         }
     }
 
@@ -73,10 +82,18 @@ public final class UtilIO {
             try {
                 IOUtils.copy(reader, writer);
             } finally {
-                if (closeIn) IOUtils.closeQuietly(reader);
+                // SCIPIO: deprecated
+                //if (closeIn) IOUtils.closeQuietly(reader);
+                if (closeIn) {
+                    closeQuietly(reader);
+                }
             }
         } finally {
-            if (closeOut) IOUtils.closeQuietly(writer);
+            // SCIPIO: deprecated
+            //if (closeIn) IOUtils.closeQuietly(reader);
+            if (closeIn) {
+                closeQuietly(reader);
+            }
         }
     }
 
@@ -96,7 +113,11 @@ public final class UtilIO {
                 out.append(buffer);
             }
         } finally {
-            if (closeIn) IOUtils.closeQuietly(reader);
+            // SCIPIO: deprecated
+            //if (closeIn) IOUtils.closeQuietly(reader);
+            if (closeIn) {
+                closeQuietly(reader);
+            }
         }
     }
 
@@ -318,5 +339,19 @@ public final class UtilIO {
 
     public static Charset getUtf8() {
         return UTF8;
+    }
+    
+    /**
+     * SCIPIO: added because {@link org.apache.commons.io.IOUtils#closeQuietly(Closeable)} 
+     * is not deprecated.
+     */
+    private static void closeQuietly(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (final IOException ioe) {
+            // ignore
+        }
     }
 }

@@ -37,16 +37,21 @@ import org.ofbiz.base.util.GeneralException;
 
 /**
  * Utility class for doing DESded (3DES) Two-Way Encryption
- *
- * @deprecated SCIPIO: 2018-04: DES is no longer considered secure
+ * <p>
+ * SCIPIO: WARNING: 2018-04: DES is no longer considered secure
  * and should not be used as main cipher in any code; some code may
  * still remain where it is used as pure fallback only, to read back old records.
  */
-@Deprecated
 public class DesCrypt {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    /**
+     * Generate a DES key.
+     * @deprecated SCIPIO: 2018-04: DES is no longer considered secure for encryption
+     * and this class should only be used to decrypt old records, for backward-compatibility
+     * reasons.
+     */
     public static Key generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance("DESede");
 
@@ -54,6 +59,13 @@ public class DesCrypt {
         return keyGen.generateKey();
     }
 
+    /**
+     * Encrypt bytes with DES.
+     * @deprecated SCIPIO: 2018-04: DES is no longer considered secure for encryption
+     * and this class should only be used to decrypt old records, for backward-compatibility
+     * reasons.
+     */
+    @Deprecated
     public static byte[] encrypt(Key key, byte[] bytes) throws GeneralException {
         Cipher cipher = DesCrypt.getCipher(key, Cipher.ENCRYPT_MODE);
         byte[] encBytes = null;

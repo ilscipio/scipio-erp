@@ -45,7 +45,8 @@ public class EntityConditionBuilder extends BuilderSupport {
             this.condition = condition;
         }
 
-        public Object asType(Class clz) {
+        @SuppressWarnings("unused")
+        public Object asType(Class<?> clz) {
             Debug.logInfo("asType(%s): %s", module, clz, condition);
             if (clz == EntityCondition.class) {
                 return condition;
@@ -53,6 +54,7 @@ public class EntityConditionBuilder extends BuilderSupport {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public EntityCondition build() {
             return condition;
         }
@@ -102,7 +104,7 @@ public class EntityConditionBuilder extends BuilderSupport {
     }
 
     @Override
-    protected Object createNode(Object methodName, Map mapArg) {
+    protected Object createNode(Object methodName, @SuppressWarnings("rawtypes") Map mapArg) {
         Map<String, Object> fieldValueMap = UtilGenerics.checkMap(mapArg);
         String operatorName = ((String)methodName).toLowerCase(Locale.getDefault());
         EntityComparisonOperator<String, Object> operator = EntityOperator.lookupComparison(operatorName);
@@ -117,7 +119,7 @@ public class EntityConditionBuilder extends BuilderSupport {
     }
 
     @Override
-    protected Object createNode(Object methodName, Map mapArg, Object objArg) {
+    protected Object createNode(Object methodName, @SuppressWarnings("rawtypes") Map mapArg, Object objArg) {
         return null;
     }
 

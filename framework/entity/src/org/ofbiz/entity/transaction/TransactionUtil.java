@@ -47,7 +47,6 @@ import javax.transaction.xa.Xid;
 import org.apache.commons.collections4.map.ListOrderedMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntityConfException;
 import org.ofbiz.entity.GenericEntityException;
@@ -794,6 +793,7 @@ public final class TransactionUtil implements Status {
             Debug.logError(this.getCauseThrowable(), (message == null ? "" : message) + this.getCauseMessage(), module);
         }
 
+        @SuppressWarnings("unused")
         public boolean isEmpty() {
             return (UtilValidate.isEmpty(this.getCauseMessage()) && this.getCauseThrowable() == null);
         }
@@ -857,7 +857,7 @@ public final class TransactionUtil implements Status {
     private static ThreadLocal<Map<Transaction, Timestamp>> suspendedTxStartStamps = new ThreadLocal<Map<Transaction, Timestamp>>() {
         @Override
         public Map<Transaction, Timestamp> initialValue() {
-            return UtilGenerics.checkMap(new ListOrderedMap<>());
+            return new ListOrderedMap<>();
         }
     };
 
@@ -904,7 +904,7 @@ public final class TransactionUtil implements Status {
     * Remove the stamp from stack (when resuming)
     */
     private static void popTransactionStartStamp() {
-        ListOrderedMap map = (ListOrderedMap) suspendedTxStartStamps.get();
+        ListOrderedMap<Transaction, Timestamp> map = (ListOrderedMap<Transaction, Timestamp>) suspendedTxStartStamps.get();
         if (map.size() > 0) {
             transactionStartStamp.set((Timestamp) map.remove(map.lastKey()));
         } else {

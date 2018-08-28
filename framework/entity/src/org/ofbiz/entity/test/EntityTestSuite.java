@@ -1253,7 +1253,7 @@ public class EntityTestSuite extends EntityTestCase {
         try {
             transactionStarted = TransactionUtil.begin();
             for (int i = 1; i <= numberOfQueries; i++) {
-                List rows = EntityQuery.use(delegator).from("SequenceValueItem").queryList();
+                List<GenericValue> rows = EntityQuery.use(delegator).from("SequenceValueItem").queryList();
                 totalNumberOfRows = totalNumberOfRows + rows.size();
             }
             TransactionUtil.commit(transactionStarted);
@@ -1274,7 +1274,7 @@ public class EntityTestSuite extends EntityTestCase {
         try {
             for (int i = 1; i <= numberOfQueries; i++) {
                 transactionStarted = TransactionUtil.begin();
-                List rows = EntityQuery.use(delegator).from("SequenceValueItem").queryList();
+                List<GenericValue> rows = EntityQuery.use(delegator).from("SequenceValueItem").queryList();
                 totalNumberOfRows = totalNumberOfRows + rows.size();
                 TransactionUtil.commit(transactionStarted);
             }
@@ -1292,6 +1292,7 @@ public class EntityTestSuite extends EntityTestCase {
     }
 
     private final class TestObserver implements Observer {
+        @SuppressWarnings("unused")
         private Observable observable;
         private Object arg;
 

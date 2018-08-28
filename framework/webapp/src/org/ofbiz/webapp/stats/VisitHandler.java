@@ -147,8 +147,8 @@ public class VisitHandler {
                             visit.set("fromDate", new Timestamp(session.getCreationTime()));
 
                             visit.set("initialLocale", initialLocale);
-                            if (initialRequest != null) visit.set("initialRequest", initialRequest.length() > 250 ? initialRequest.substring(0, 250) : initialRequest);
-                            if (initialReferrer != null) visit.set("initialReferrer", initialReferrer.length() > 250 ? initialReferrer.substring(0, 250) : initialReferrer);
+                            if (initialRequest != null) visit.set("initialRequest", initialRequest); // SCIPIO: 2018-08-28: readded null check here in case issues with session
+                            if (initialReferrer != null) visit.set("initialReferrer", initialReferrer); // SCIPIO: 2018-08-28: readded null check here in case issues with session
                             if (initialUserAgent != null) visit.set("initialUserAgent", initialUserAgent.length() > 250 ? initialUserAgent.substring(0, 250) : initialUserAgent);
                             visit.set("webappName", webappName);
                             if (UtilProperties.propertyValueEquals("serverstats", "stats.proxy.enabled", "true")) {

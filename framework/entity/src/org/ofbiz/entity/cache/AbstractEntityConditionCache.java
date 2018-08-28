@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericPK;

@@ -22,7 +22,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -557,6 +556,7 @@ public class EntityQuery {
         if (whereEntityCondition == null && fieldMap != null) {
             if (this.searchPkOnly) {
                 //Resolve if the map contains a sub map parameters, use a containsKeys to avoid error when a GenericValue is given as map
+                @SuppressWarnings("unchecked")
                 Map<String, Object> parameters = fieldMap.containsKey("parameters") ? (Map<String, Object>) fieldMap.get("parameters") : null;
                 GenericPK pk = GenericPK.create(delegator.getModelEntity(entityName));
                 pk.setPKFields(parameters);

@@ -19,10 +19,10 @@
 
 package org.ofbiz.entity;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Arrays;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.model.ModelEntity;

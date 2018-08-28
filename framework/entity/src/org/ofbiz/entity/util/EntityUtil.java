@@ -353,6 +353,7 @@ public final class EntityUtil {
         //force check entity label before order by
         List<T> localizedValues = new ArrayList<T>();
         for (T value : values) {
+            @SuppressWarnings("unchecked")
             T newValue = (T) value.clone();
             for (String orderByField : orderBy) {
                 if (orderByField.endsWith(" DESC")) {

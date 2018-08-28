@@ -263,6 +263,7 @@ public class CategoryWorker {
         return count;
     }
 
+    @SuppressWarnings("unused")
     private static EntityCondition buildCountCondition(String fieldName, String fieldValue) {
         List<EntityCondition> orCondList = new LinkedList<EntityCondition>();
         orCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()));
@@ -557,7 +558,7 @@ public class CategoryWorker {
      *            Map containing the input parameters
      * @return Map organized trail from root point to categoryId.
      */
-    public static Map getCategoryTrail(DispatchContext dctx, Map context) {
+    public static Map<String, Object> getCategoryTrail(DispatchContext dctx, Map<String, ?> context) {
         String productCategoryId = (String) context.get("productCategoryId");
         Map<String, Object> results = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();

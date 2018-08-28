@@ -895,7 +895,6 @@ under the License.
           <fileset dir="${ofbiz.home.dir}/framework/base/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/catalina/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/entity/lib" includes="*.jar"/>
-          <fileset dir="${ofbiz.home.dir}/framework/geronimo/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/service/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/testtools/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/webapp/lib" includes="*.jar"/>
@@ -1952,7 +1951,7 @@ under the License.
 
         <property name="sonar.sources" value="framework/base/src,
             framework/catalina/src, framework/common/src, framework/datafile/src, framework/entity/src, framework/entityext/src,
-            framework/geronimo/src, framework/minilang/src, framework/security/src, framework/service/src, framework/start/src,
+            framework/minilang/src, framework/security/src, framework/service/src, framework/start/src,
             framework/testtools/src, framework/webapp/src, framework/webtools/src, framework/widget/src,
             applications/accounting/src, applications/content/src, applications/humanres/src,
             applications/manufacturing/src, applications/marketing/src, applications/order/src, applications/party/src,

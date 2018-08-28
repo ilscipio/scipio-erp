@@ -21,7 +21,7 @@ under the License.
 <project name="OFBiz Framework Build" basedir=".">
     <filelist id="framework-builds" dir="framework"
         files="start/build.xml,base/build.xml,
-               entity/build.xml,geronimo/build.xml,
+               entity/build.xml,
                catalina/build.xml,
                security/build.xml,service/build.xml,entityext/build.xml,
                minilang/build.xml,

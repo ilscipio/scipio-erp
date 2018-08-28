@@ -136,7 +136,6 @@
 	<classpathentry kind="src" path="framework/datafile/src"/>
 	<classpathentry kind="src" path="framework/entity/src"/>
 	<classpathentry kind="src" path="framework/entityext/src"/>
-	<classpathentry kind="src" path="framework/geronimo/src"/>
 	<classpathentry kind="src" path="framework/minilang/src"/>
 	<classpathentry kind="src" path="framework/security/src"/>
 	<classpathentry kind="src" path="framework/service/src"/>

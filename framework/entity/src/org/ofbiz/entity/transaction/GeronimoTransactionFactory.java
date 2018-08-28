@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.ofbiz.geronimo;
+package org.ofbiz.entity.transaction;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -35,11 +35,7 @@ import org.ofbiz.entity.config.model.Datasource;
 import org.ofbiz.entity.config.model.EntityConfig;
 import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.jdbc.ConnectionFactoryLoader;
-import org.ofbiz.entity.transaction.TransactionFactory;
 
-/**
- * GeronimoTransactionFactory
- */
 public class GeronimoTransactionFactory implements TransactionFactory {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

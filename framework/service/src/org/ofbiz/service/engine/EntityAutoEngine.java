@@ -282,20 +282,20 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                         newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
                     }
                 }
-        if (modelEntity.getField("changeByUserLoginId") != null) {
-            GenericValue userLogin = (GenericValue) parameters.get("userLogin");
-            if (userLogin != null) {
-                newEntity.set("changeByUserLoginId", userLogin.get("userLoginId"));
-            } else {
-                throw new GenericServiceException("You call a creation on entity that require the userLogin to track the activity, please controle that your service definition has auth='true'");
-            }
-            //Oh changeByUserLoginId detected, check if an EntityStatus concept
-            if (modelEntity.getEntityName().endsWith("Status")) {
-                if (modelEntity.getField("statusDate") != null && parameters.get("statusDate") == null) {
-                    newEntity.set("statusDate", UtilDateTime.nowTimestamp());
+                if (modelEntity.getField("changeByUserLoginId") != null) {
+                    GenericValue userLogin = (GenericValue) parameters.get("userLogin");
+                    if (userLogin != null) {
+                        newEntity.set("changeByUserLoginId", userLogin.get("userLoginId"));
+                    } else {
+                        throw new GenericServiceException("You call a creation on entity that require the userLogin to track the activity, please controle that your service definition has auth='true'");
+                    }
+                    //Oh changeByUserLoginId detected, check if an EntityStatus concept
+                    if (modelEntity.getEntityName().endsWith("Status")) {
+                        if (modelEntity.getField("statusDate") != null && parameters.get("statusDate") == null) {
+                            newEntity.set("statusDate", UtilDateTime.nowTimestamp());
+                        }
+                    }
                 }
-            }
-        }
                 newEntity.create();
                 result.putAll(modelService.makeValid(newEntity, "OUT"));
             } else if ("update".equals(modelService.invoke)) {
@@ -376,18 +376,18 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                     }
                 }
 
-        if (modelEntity.getField("changeByUserLoginId") != null ) {
-            if (modelEntity.getEntityName().endsWith("Status")) {
-                //Oh update on EntityStatus concept detected ... not possible, return invalid request
-                throw new GenericServiceException("You call a updating operation on entity that track the activity, sorry I can't do that, please amazing developer check your service definition ;)");
-            }
-            GenericValue userLogin = (GenericValue) parameters.get("userLogin");
-            if (userLogin != null) {
-                lookedUpValue.set("changeByUserLoginId", userLogin.get("userLoginId"));
-            } else {
-                throw new GenericServiceException("You call a updating operation on entity that track the activity, sorry I can't do that, please amazing developer check your service definition ;)");
-            }
-        }
+                if (modelEntity.getField("changeByUserLoginId") != null ) {
+                    if (modelEntity.getEntityName().endsWith("Status")) {
+                        //Oh update on EntityStatus concept detected ... not possible, return invalid request
+                        throw new GenericServiceException("You call a updating operation on entity that track the activity, sorry I can't do that, please amazing developer check your service definition ;)");
+                    }
+                    GenericValue userLogin = (GenericValue) parameters.get("userLogin");
+                    if (userLogin != null) {
+                        lookedUpValue.set("changeByUserLoginId", userLogin.get("userLoginId"));
+                    } else {
+                        throw new GenericServiceException("You call a updating operation on entity that track the activity, sorry I can't do that, please amazing developer check your service definition ;)");
+                    }
+                }
 
                 lookedUpValue.store();
             } else if ("delete".equals(modelService.invoke)) {
@@ -403,12 +403,12 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                     throw new GenericServiceException("In Service [" + modelService.name + "] which uses the entity-auto engine with the delete invoke option not all pk fields have the mode IN");
                 }
 
-        if (modelEntity.getField("changeByUserLoginId") != null ) {
-            if (modelEntity.getEntityName().endsWith("Status")) {
-                //Oh update on EntityStatus concept detected ... not possible, return invalid request
-                throw new GenericServiceException("You call a deleting operation on entity that track the activity, sorry I can't do that, please amazing developer check your service definition ;)");
-            }
-        }
+                if (modelEntity.getField("changeByUserLoginId") != null ) {
+                    if (modelEntity.getEntityName().endsWith("Status")) {
+                        //Oh update on EntityStatus concept detected ... not possible, return invalid request
+                        throw new GenericServiceException("You call a deleting operation on entity that track the activity, sorry I can't do that, please amazing developer check your service definition ;)");
+                    }
+                }
 
                 GenericValue lookedUpValue = PrimaryKeyFinder.runFind(modelEntity, parameters, dctx.getDelegator(), false, true, null, null);
                 if (lookedUpValue != null) {

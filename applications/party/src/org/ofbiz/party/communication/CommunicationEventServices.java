@@ -1205,7 +1205,7 @@ public class CommunicationEventServices {
                     part2Text = "";
                 }
                 if (Debug.verboseOn())
-                    Debug.logVerbose("Part 2 Text :\n\n" + part2Text, module);
+                    if (Debug.verboseOn()) Debug.logVerbose("Part 2 Text :\n\n" + part2Text, module);
 
                 // find the "Action" element and obtain its value (looking for "failed")
                 Pattern p2 = Pattern.compile("^Action: (.*)$", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
@@ -1222,7 +1222,7 @@ public class CommunicationEventServices {
                         part3Text = "";
                     }
                     if (Debug.verboseOn())
-                        Debug.logVerbose("Part 3 Text :\n\n" + part3Text, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("Part 3 Text :\n\n" + part3Text, module);
 
                     // find the "Message-Id" element and obtain its value (looking for "failed")
                     Pattern p3 = Pattern.compile("^Message-Id: (.*)$", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);

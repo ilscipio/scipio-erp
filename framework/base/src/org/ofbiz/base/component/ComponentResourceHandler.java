@@ -50,7 +50,9 @@ public class ComponentResourceHandler implements ResourceHandler {
         this.componentName = componentName;
         this.loaderName = loaderName;
         this.location = location;
-        if (Debug.verboseOn()) Debug.logVerbose("Created " + this.toString(), module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Created " + this.toString(), module);
+        }
     }
 
     public String getLoaderName() {

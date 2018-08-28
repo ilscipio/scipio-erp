@@ -519,16 +519,15 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @param locale the actual locale to use
      */
     public void validate(Map<String, Object> context, String mode, Locale locale) throws ServiceValidationException {
-        Map<String, String> requiredInfo = new HashMap<String, String>();
-        Map<String, String> optionalInfo = new HashMap<String, String>();
-        boolean verboseOn = Debug.verboseOn();
+        Map<String, String> requiredInfo = new HashMap<>();
+        Map<String, String> optionalInfo = new HashMap<>();
 
-        if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : Validating context - " + context, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : Validating context - " + context, module);
 
         // do not validate results with errors
         if (mode.equals(OUT_PARAM) && context != null && context.containsKey(RESPONSE_MESSAGE)) {
             if (RESPOND_ERROR.equals(context.get(RESPONSE_MESSAGE)) || RESPOND_FAIL.equals(context.get(RESPONSE_MESSAGE))) {
-                if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : response was an error, not validating.", module);
+                if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : response was an error, not validating.", module);
                 return;
             }
         }
@@ -580,7 +579,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             throw new ServiceValidationException(missingMsg, this, requiredButNull, null, mode);
         }
 
-        if (verboseOn) {
+        if (Debug.verboseOn()) {
             StringBuilder requiredNames = new StringBuilder();
 
             for (String key: requiredInfo.keySet()) {

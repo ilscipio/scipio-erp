@@ -172,7 +172,7 @@ public class InvoiceServices {
         String invoiceId = (String) context.get("invoiceId");
 
         if (UtilValidate.isEmpty(billItems)) {
-            Debug.logVerbose("No order items to invoice; not creating invoice; returning success", module);
+            if (Debug.verboseOn()) Debug.logVerbose("No order items to invoice; not creating invoice; returning success", module);
             return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, 
                     "AccountingNoOrderItemsToInvoice", locale));
         }

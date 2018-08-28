@@ -114,7 +114,7 @@ public class PersistedServiceJob extends GenericServiceJob {
                 throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + getJobId() + "]; not running!", e);
             }
             if (Debug.verboseOn()) {
-                Debug.logVerbose("Placing job [" + getJobId() + "] in queue", module);
+            Debug.logVerbose("Placing job [" + getJobId() + "] in queue", module);
             }
         }
     }

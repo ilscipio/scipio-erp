@@ -930,7 +930,7 @@ public class CCPaymentServices {
         }
         if (Debug.verboseOn()) Debug.logVerbose("Result severity from clearCommerce:" + getMessageListMaxSev(responseDocument), module);
         if (Debug.verboseOn() && getMessageListMaxSev(responseDocument) > 4)
-                Debug.logVerbose("Returned messages:" + getMessageList(responseDocument),module);
+                if (Debug.verboseOn()) Debug.logVerbose("Returned messages:" + getMessageList(responseDocument),module);
         return responseDocument;
     }
 

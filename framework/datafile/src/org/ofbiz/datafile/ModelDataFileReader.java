@@ -152,7 +152,7 @@ public final class ModelDataFileReader {
             if (dataFile != null) {
                 result.put(dataFileName, dataFile);
                 if (Debug.verboseOn()) {
-                    Debug.logVerbose("Loaded dataFile: " + dataFileName, module);
+                Debug.logVerbose("Loaded dataFile: " + dataFileName, module);
                 }
             } else {
                 Debug.logWarning("Could not create dataFile for dataFileName " + dataFileName, module);

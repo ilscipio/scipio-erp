@@ -1049,7 +1049,7 @@ public class PriceServices {
             Debug.logVerbose("Unchecked Calculated price: " + price, module);
             Debug.logVerbose("PriceInfo:", module);
             for (GenericValue orderItemPriceInfo: orderItemPriceInfos) {
-                Debug.logVerbose(" --- " + orderItemPriceInfo.toString(), module);
+                if (Debug.verboseOn()) Debug.logVerbose(" --- " + orderItemPriceInfo, module);
             }
         }
 

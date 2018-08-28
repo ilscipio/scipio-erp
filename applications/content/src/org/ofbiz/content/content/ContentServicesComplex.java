@@ -142,7 +142,7 @@ public class ContentServicesComplex {
         }
         for (int i=0; i < relatedAssocs.size(); i++) {
             GenericValue a = relatedAssocs.get(i);
-            Debug.logVerbose(" contentId:" + a.get("contentId") + " To:" + a.get("caContentIdTo") + " fromDate:" + a.get("caFromDate") + " thruDate:" + a.get("caThruDate") + " AssocTypeId:" + a.get("caContentAssocTypeId"), module);
+            if (Debug.verboseOn()) Debug.logVerbose(" contentId:" + a.get("contentId") + " To:" + a.get("caContentIdTo") + " fromDate:" + a.get("caFromDate") + " thruDate:" + a.get("caThruDate") + " AssocTypeId:" + a.get("caContentAssocTypeId"), module);
         }
         Map<String, Object> results = new HashMap<String, Object>();
         results.put("entityList", relatedAssocs);

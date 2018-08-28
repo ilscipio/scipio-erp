@@ -167,7 +167,7 @@ public class SOAPEventHandler implements EventHandler {
             throw new EventHandlerException("Cannot get the envelope", e);
         }
 
-        Debug.logVerbose("[Processing]: SOAP Event", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Processing]: SOAP Event", module);
 
         String serviceName = null;
         try {
@@ -193,7 +193,7 @@ public class SOAPEventHandler implements EventHandler {
                 }
 
                 Map<String, Object> serviceResults = dispatcher.runSync(serviceName, parameters);
-                Debug.logVerbose("[EventHandler] : Service invoked", module);
+                if (Debug.verboseOn()) Debug.logVerbose("[EventHandler] : Service invoked", module);
 
                 createAndSendSOAPResponse(serviceResults, serviceName, response);
 
@@ -235,7 +235,7 @@ public class SOAPEventHandler implements EventHandler {
     private void createAndSendSOAPResponse(Map<String, Object> serviceResults, String serviceName, HttpServletResponse response) throws EventHandlerException {
         try {
         // setup the response
-            Debug.logVerbose("[EventHandler] : Setting up response message", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[EventHandler] : Setting up response message", module);
             String xmlResults = SoapSerializer.serialize(serviceResults);
             //Debug.logInfo("xmlResults ==================" + xmlResults, module);
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xmlResults));

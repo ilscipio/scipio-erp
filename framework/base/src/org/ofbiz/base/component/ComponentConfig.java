@@ -641,8 +641,9 @@ public final class ComponentConfig {
         } else {
             this.classpathSpecialInfos = Collections.emptyList();
         }
-        if (Debug.verboseOn())
+        if (Debug.verboseOn()) {
             Debug.logVerbose("Read component config : [" + rootLocation + "]", module);
+        }
     }
     
     /**

@@ -4732,8 +4732,9 @@ public class OrderServices {
             }
         }
 
-        if (Debug.verboseOn())
-            Debug.logVerbose("To Store Contains: " + toStore, module);
+        if (Debug.verboseOn()) {
+             Debug.logVerbose("To Store Contains: " + toStore, module);
+        }
 
         // remove any order item attributes that were set to empty
         try {

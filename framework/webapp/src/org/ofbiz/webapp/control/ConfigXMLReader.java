@@ -216,8 +216,9 @@ public class ConfigXMLReader {
         try {
             Document document = UtilXml.readXmlDocument(location, true);
             Element rootElement = document.getDocumentElement();
-            if (Debug.verboseOn())
-                Debug.logVerbose("Loaded XML Config - " + location, module);
+            if (Debug.verboseOn()) {
+                 Debug.logVerbose("Loaded XML Config - " + location, module);
+            }
             return rootElement;
         } catch (java.io.FileNotFoundException e) { // SCIPIO: special case: let caller log this one, IF necessary
             throw new WebAppConfigurationException(e);

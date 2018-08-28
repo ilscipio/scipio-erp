@@ -272,7 +272,7 @@ public class ServiceDispatcher {
             }
 
             if (Debug.verboseOn() || modelService.debug) {
-                Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service " + modelService.name + " [" + modelService.location +
+                if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service " + modelService.name + " [" + modelService.location +
                     "/" + modelService.invoke + "] (" + modelService.engineName + ")", module);
             }
 
@@ -600,7 +600,7 @@ public class ServiceDispatcher {
             if (resultStr.length() > 10240) {
                 resultStr = resultStr.substring(0, 10226) + "...[truncated]";
             }
-            Debug.logVerbose("Sync service [" + localName + "/" + modelService.name + "] finished with response [" + resultStr + "]", module);
+            if (Debug.verboseOn()) Debug.logVerbose("Sync service [" + localName + "/" + modelService.name + "] finished with response [" + resultStr + "]", module);
         }
         if (modelService.metrics != null) {
             modelService.metrics.recordServiceRate(1, timeToRun);
@@ -624,7 +624,7 @@ public class ServiceDispatcher {
             UtilTimer.timerLog(localName + " / " + service.name, "ASync service started...", module);
         }
         if (Debug.verboseOn() || service.debug) {
-            Debug.logVerbose("[ServiceDispatcher.runAsync] : preparing service " + service.name + " [" + service.location + "/" + service.invoke +
+            if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispatcher.runAsync] : preparing service " + service.name + " [" + service.location + "/" + service.invoke +
                 "] (" + service.engineName + ")", module);
         }
 

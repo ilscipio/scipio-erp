@@ -1601,7 +1601,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             // Output format might not support forms, so make form rendering optional.
             FormStringRenderer formStringRenderer = (FormStringRenderer) context.get("formStringRenderer");
             if (formStringRenderer == null) {
-                Debug.logVerbose("FormStringRenderer instance not found in rendering context, form not rendered.", module);
+                if (Debug.verboseOn()) Debug.logVerbose("FormStringRenderer instance not found in rendering context, form not rendered.", module);
                 return;
             }
             boolean protectScope = !shareScope(context);
@@ -1707,7 +1707,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             // Output format might not support forms, so make form rendering optional.
             FormStringRenderer formStringRenderer = (FormStringRenderer) context.get("formStringRenderer");
             if (formStringRenderer == null) {
-                Debug.logVerbose("FormStringRenderer instance not found in rendering context, form not rendered.", module);
+                if (Debug.verboseOn()) Debug.logVerbose("FormStringRenderer instance not found in rendering context, form not rendered.", module);
                 return;
             }
             boolean protectScope = !shareScope(context);
@@ -1819,7 +1819,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             // Output format might not support trees, so make tree rendering optional.
             TreeStringRenderer treeStringRenderer = (TreeStringRenderer) context.get("treeStringRenderer");
             if (treeStringRenderer == null) {
-                Debug.logVerbose("TreeStringRenderer instance not found in rendering context, tree not rendered.", module);
+                if (Debug.verboseOn()) Debug.logVerbose("TreeStringRenderer instance not found in rendering context, tree not rendered.", module);
                 return;
             }
             boolean protectScope = !shareScope(context);
@@ -2208,7 +2208,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             // Output format might not support menus, so make menu rendering optional.
             MenuStringRenderer menuStringRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
             if (menuStringRenderer == null) {
-                Debug.logVerbose("MenuStringRenderer instance not found in rendering context, menu not rendered.", module);
+                if (Debug.verboseOn()) Debug.logVerbose("MenuStringRenderer instance not found in rendering context, menu not rendered.", module);
                 return;
             }
             

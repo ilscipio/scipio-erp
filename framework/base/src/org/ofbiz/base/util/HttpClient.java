@@ -480,7 +480,7 @@ public class HttpClient {
 
                 if (arguments != null) {
                     out.write(arguments);
-                    if (Debug.verboseOn() || debug) Debug.logVerbose("Wrote arguements (parameters) : " + arguments, module);
+                    if (Debug.verboseOn() || debug) Debug.logVerbose("Wrote arguments (parameters) : " + arguments, module);
                 }
 
                 out.flush();

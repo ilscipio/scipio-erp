@@ -158,11 +158,11 @@ public final class ScriptUtil {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(scriptUrl.openStream()));
                     script = compilableEngine.compile(reader);
                     if (Debug.verboseOn()) {
-                        Debug.logVerbose("Compiled script " + filePath + " using engine " + engine.getClass().getName(), module);
+                    Debug.logVerbose("Compiled script " + filePath + " using engine " + engine.getClass().getName(), module);
                     }
                 } catch (ClassCastException e) {
                     if (Debug.verboseOn()) {
-                        Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
+                    Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
                     }
                 }
             } else {
@@ -203,11 +203,11 @@ public final class ScriptUtil {
                     Compilable compilableEngine = (Compilable) engine;
                     compiledScript = compilableEngine.compile(script);
                     if (Debug.verboseOn()) {
-                        Debug.logVerbose("Compiled script [" + script + "] using engine " + engine.getClass().getName(), module);
+                    Debug.logVerbose("Compiled script [" + script + "] using engine " + engine.getClass().getName(), module);
                     }
                 } catch (ClassCastException e) {
                     if (Debug.verboseOn()) {
-                        Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
+                    Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
                     }
                 }
             } else {

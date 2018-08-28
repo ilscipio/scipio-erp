@@ -21,6 +21,7 @@ package org.ofbiz.securityext.login;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -378,7 +379,9 @@ public class LoginEvents {
     public static String getUsername(HttpServletRequest request) {
         String cookieUsername = null;
         Cookie[] cookies = request.getCookies();
-        if (Debug.verboseOn()) Debug.logVerbose("Cookies:" + cookies, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Cookies:" + Arrays.toString(cookies), module);
+        }
         if (cookies != null) {
             for (Cookie cookie: cookies) {
                 if (cookie.getName().equals(usernameCookieName)) {

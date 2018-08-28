@@ -498,6 +498,7 @@ public abstract class TikaUtil {
     /**
      * FIXME: use something better
      */
+    @SuppressWarnings("unused")
     private static class ByteBufferInputStream extends InputStream {
         private ByteBuffer buf;        
         private int mark;

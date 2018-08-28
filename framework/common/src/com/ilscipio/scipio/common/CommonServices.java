@@ -27,7 +27,6 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.widget.model.ModelScreen;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
@@ -221,17 +220,16 @@ public class CommonServices {
      */
     public static Map<String, Object> clearFileCaches(DispatchContext dctx, Map<String, ?> context) {
         try {
-            if(UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "cache.fileupdate.enable","true"), true)){
+            if (UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "cache.fileupdate.enable","true"), true)){
                 String cacheName = (String) context.get("cacheName");
-                String fileType = (String) context.get("fileType");
-                String fileLocation = (String) context.get("fileLocation");
+                //String fileType = (String) context.get("fileType");
+                //String fileLocation = (String) context.get("fileLocation");
                 UtilCache.clearCache(cacheName);            
                 return ServiceUtil.returnSuccess("Cache cleared for "+cacheName);
-            }else{
+            } else {
                 return ServiceUtil.returnSuccess("Cache-Lock set. Cache not cleared");
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             final String errorMsg = "Exception triggering File Event";
             Debug.logError(e, errorMsg, module);
             return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
@@ -249,7 +247,7 @@ public class CommonServices {
         Map<String, Object> responseMap = ServiceUtil.returnSuccess();
         try {
             Map<String, Object> serviceContext = UtilMisc.makeMapWritable(rServiceContext);
-            LocalDispatcher dispatcher = dctx.getDispatcher();
+            //LocalDispatcher dispatcher = dctx.getDispatcher();
             String webSiteId = (String) serviceContext.remove("webSiteId");
             String resource = (String) serviceContext.remove("resource");
             String screenName = (String) serviceContext.remove("screenName");
@@ -268,12 +266,12 @@ public class CommonServices {
             if (partyId == null) {
                 partyId = (String) bodyParameters.get("partyId");
             }
-            String orderId = (String) bodyParameters.get("orderId");
-            String custRequestId = (String) bodyParameters.get("custRequestId");
+            //String orderId = (String) bodyParameters.get("orderId");
+            //String custRequestId = (String) bodyParameters.get("custRequestId");
             
             bodyParameters.put("communicationEventId", serviceContext.get("communicationEventId"));
             NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
-            String contentType = (String) serviceContext.remove("contentType");
+            //String contentType = (String) serviceContext.remove("contentType");
 
             StringWriter bodyWriter = new StringWriter();
 
@@ -296,8 +294,8 @@ public class CommonServices {
                 }
                 
                 // render the screen
-                ModelScreen modelScreen = null;
-                ScreenStringRenderer renderer = screens.getScreenStringRenderer();
+                //ModelScreen modelScreen = null;
+                //ScreenStringRenderer renderer = screens.getScreenStringRenderer();
                 screens.populateContextForService(dctx, bodyParameters);
                 screenContext.putAll(bodyParameters);
 
@@ -322,8 +320,7 @@ public class CommonServices {
                 Debug.logError(e, "Error rendering screen: " + e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             final String errorMsg = "Exception triggering File Event";
             Debug.logError(e, errorMsg, module);
             return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());

@@ -1,12 +1,6 @@
 package com.ilscipio.scipio.ce.webapp.ftl.template;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Wrapper for strings that get passed to objectAsScript FTL macro to prevent
@@ -17,20 +11,20 @@ import java.util.Set;
  */
 public abstract class RawScript {
 
-    private static Map<String, Set<String>> langParts = Collections.emptyMap();
+//    private static Map<String, Set<String>> langParts = Collections.emptyMap();
     
-    /**
-     * Maps target langs to list of langs that can be used in place of it.
-     */
-    private static final Map<String, Set<String>> substituteLangsMap;
-    static {
-        Map<String, Set<String>> map = new HashMap<>();
-        
-        // Any html-attribute-escaped code can also be used in markup body (but NOT vice-versa!)
-        map.put("htmlmarkup", new HashSet<String>(Arrays.asList(new String[]{ "html" })));
-        
-        substituteLangsMap = map;
-    }
+//    /**
+//     * Maps target langs to list of langs that can be used in place of it.
+//     */
+//    private static final Map<String, Set<String>> substituteLangsMap;
+//    static {
+//        Map<String, Set<String>> map = new HashMap<>();
+//        
+//        // Any html-attribute-escaped code can also be used in markup body (but NOT vice-versa!)
+//        map.put("htmlmarkup", new HashSet<String>(Arrays.asList(new String[]{ "html" })));
+//        
+//        substituteLangsMap = map;
+//    }
     
     public static RawScript wrap(Object value, String lang) {
         return new SingleLangRawScript(value, lang);
@@ -271,25 +265,25 @@ public abstract class RawScript {
         
     }
 
-    private static Set<String> getLangParts(String lang) {
-        // NOTE: this method is a heuristic-like optimization, but it should work out
-        Set<String> parts = langParts.get(lang);
-        if (parts == null) {
-            synchronized(RawScript.class) {
-                parts = langParts.get(lang);
-                if (parts == null) {
-                    Map<String, Set<String>> newLangParts = new HashMap<>(langParts);
-                    
-                    parts = new LinkedHashSet<String>(Arrays.asList(lang.split("-")));
-                    
-                    newLangParts.put(lang, parts);
-                    
-                    // NOTE: the assignment is not synchronized, but the final inner contents of the unmodifiable map should be fine.
-                    langParts = Collections.unmodifiableMap(newLangParts);
-                }
-            }
-        }
-        return parts;
-    }
+//    private static Set<String> getLangParts(String lang) {
+//        // NOTE: this method is a heuristic-like optimization, but it should work out
+//        Set<String> parts = langParts.get(lang);
+//        if (parts == null) {
+//            synchronized(RawScript.class) {
+//                parts = langParts.get(lang);
+//                if (parts == null) {
+//                    Map<String, Set<String>> newLangParts = new HashMap<>(langParts);
+//                    
+//                    parts = new LinkedHashSet<String>(Arrays.asList(lang.split("-")));
+//                    
+//                    newLangParts.put(lang, parts);
+//                    
+//                    // NOTE: the assignment is not synchronized, but the final inner contents of the unmodifiable map should be fine.
+//                    langParts = Collections.unmodifiableMap(newLangParts);
+//                }
+//            }
+//        }
+//        return parts;
+//    }
     
 }

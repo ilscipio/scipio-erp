@@ -17,7 +17,7 @@ public final class TemplateNullModel implements AdapterTemplateModel {
     }
     
     @Override
-    public Object getAdaptedObject(Class arg0) {
+    public Object getAdaptedObject(Class<?> hint) {
         return null;
     }
     

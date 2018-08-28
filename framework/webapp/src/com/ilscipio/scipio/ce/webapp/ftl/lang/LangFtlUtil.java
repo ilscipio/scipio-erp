@@ -994,6 +994,7 @@ public abstract class LangFtlUtil {
      * 
      * @deprecated don't use
      */
+    @SuppressWarnings("unused")
     @Deprecated
     private static TemplateHashModel toSimpleMapRewrapAdapters(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof SimpleMapModel || object instanceof BeanModel || object instanceof DefaultMapAdapter) {
@@ -1032,6 +1033,7 @@ public abstract class LangFtlUtil {
      * 
      * @deprecated don't use
      */
+    @SuppressWarnings("unused")
     @Deprecated
     private static TemplateHashModel toSimpleMapRewrapAny(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof WrapperTemplateModel) {
@@ -1065,7 +1067,7 @@ public abstract class LangFtlUtil {
      * FTL's CollectionModel (subclass of TemplateCollectionModel) is supposed to cover everything and
      * won't suffer from the same problems maps have.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "unused" })
     @Deprecated
     private static TemplateSequenceModel toSimpleSequence(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof TemplateSequenceModel) {

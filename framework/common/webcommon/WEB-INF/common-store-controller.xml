@@ -264,7 +264,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     <!--========================== AJAX events =====================-->
     <!-- Get states related to a country -->
     <!-- SCIPIO: Not for frontend stores for now
-    <request-map uri="getAssociatedStateList">
+    <request-map uri="getAssociatedStateList" track-serverhit="false"><!- - SCIPIO: 2018-08-28: don't track for now, concurrent ServerHits on some pages (TODO: REVIEW) - ->
         <security https="true" auth="false"/>
         <event type="service" invoke="getAssociatedStateList"/>
         <response name="success" type="request" value="json"/>

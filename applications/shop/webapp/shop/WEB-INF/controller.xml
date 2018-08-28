@@ -1570,7 +1570,7 @@ under the License.
         <response name="error" type="request" value="json"/>
     </request-map>
 
-    <request-map uri="getAssociatedStateList">
+    <request-map uri="getAssociatedStateList" track-serverhit="false"><!-- SCIPIO: 2018-08-28: don't track for now, concurrent ServerHits on some pages (TODO: REVIEW) -->
         <security https="true" auth="false"/>
         <event type="service" invoke="getAssociatedStateList"/>
         <response name="success" type="request" value="json"/>

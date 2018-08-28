@@ -50,8 +50,8 @@ public class ObjectType {
     public static final String LANG_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
     public static final String SQL_PACKAGE = "java.sql.";   // We will test both the raw value and this + raw value
 
-    private static final Map<String, String> classAlias = new HashMap<String, String>();
-    private static final Map<String, Class> primitives = new HashMap<String, Class>();
+    private static final Map<String, String> classAlias = new HashMap<>();
+    private static final Map<String, Class<?>> primitives = new HashMap<>();
 
     static {
         classAlias.put("Object", "java.lang.Object");

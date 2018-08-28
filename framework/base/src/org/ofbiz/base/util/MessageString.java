@@ -33,7 +33,7 @@ import java.util.TreeSet;
 @SuppressWarnings("serial")
 public class MessageString implements Serializable {
 
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String message;
     protected String fieldName;

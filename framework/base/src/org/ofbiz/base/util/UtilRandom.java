@@ -90,7 +90,7 @@ public class UtilRandom {
 
     }
 
-    public static int random(List myList) {
+    public static int random(List<?> myList) {
         int size = myList.size();
         int index = new Random().nextInt(size);
         return index;

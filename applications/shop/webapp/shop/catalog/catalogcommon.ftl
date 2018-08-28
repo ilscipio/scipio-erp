@@ -79,31 +79,31 @@
         </p>
     </#if>
     <#if (product.quantityIncluded?? && product.quantityIncluded != 0) || product.quantityUomId?has_content>
-        <#assign quantityUom = product.getRelatedOneCache("QuantityUom")! />
+        <#assign quantityUom = product.getRelatedOne("QuantityUom", true)! />
         <p id="product-specs-quantity-included">
             ${uiLabelMap.CommonQuantity}: ${product.quantityIncluded!} ${((quantityUom.abbreviation)?default(product.quantityUomId))!}
         </p>
     </#if>
     <#if (product.weight?? && product.weight != 0) || product.weightUomId?has_content>
-        <#assign weightUom = product.getRelatedOneCache("WeightUom")! />
+        <#assign weightUom = product.getRelatedOne("WeightUom", true)! />
         <p id="product-specs-weight">
             ${uiLabelMap.CommonWeight}: ${product.weight!} ${((weightUom.abbreviation)?default(product.weightUomId))!}
         </p>
     </#if>
     <#if (product.productHeight?? && product.productHeight != 0) || product.heightUomId?has_content>
-        <#assign heightUom = product.getRelatedOneCache("HeightUom")! />
+        <#assign heightUom = product.getRelatedOne("HeightUom", true)! />
         <p id="product-specs-height">
             ${uiLabelMap.CommonHeight}: ${product.productHeight!} ${((heightUom.abbreviation)?default(product.heightUomId))!}
         </p>
     </#if>
     <#if (product.productWidth?? && product.productWidth != 0) || product.widthUomId?has_content>
-        <#assign widthUom = product.getRelatedOneCache("WidthUom")! />
+        <#assign widthUom = product.getRelatedOne("WidthUom", true)! />
         <p id="product-specs-width">
             ${uiLabelMap.CommonWidth}: ${product.productWidth!} ${((widthUom.abbreviation)?default(product.widthUomId))!}
         </p>
     </#if>
     <#if (product.productDepth?? && product.productDepth != 0) || product.depthUomId?has_content>
-        <#assign depthUom = product.getRelatedOneCache("DepthUom")! />
+        <#assign depthUom = product.getRelatedOne("DepthUom", true)! />
         <p id="product-specs-depth">
             ${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)?default(product.depthUomId))!}
         </p>
@@ -113,7 +113,7 @@
     </#if>
     <#if disFeatureList?? && (0 < disFeatureList.size())>                
         <#list disFeatureList as currentFeature>
-            <#assign disFeatureType = currentFeature.getRelatedOneCache("ProductFeatureType") />
+            <#assign disFeatureType = currentFeature.getRelatedOne("ProductFeatureType", true) />
             <p>
                 <#if disFeatureType.description??>${disFeatureType.get("description", locale)}<#else>${currentFeature.productFeatureTypeId}</#if>:&nbsp;${currentFeature.description}
             </p>

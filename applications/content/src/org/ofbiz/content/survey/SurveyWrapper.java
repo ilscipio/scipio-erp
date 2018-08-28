@@ -41,6 +41,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -205,7 +206,7 @@ public class SurveyWrapper {
         templateContext.put("surveyResults", results);
         templateContext.put("surveyQuestionAndAppls", surveyQuestionAndAppls);
         templateContext.put("sqaaWithColIdListByMultiRespId", sqaaWithColIdListByMultiRespId);
-        templateContext.put("alreadyShownSqaaPkWithColId", new HashSet());
+        templateContext.put("alreadyShownSqaaPkWithColId", new HashSet<GenericPK>());
         templateContext.put("surveyAnswers", currentAnswers);
         templateContext.put("surveyResponseId", responseId);
         templateContext.put("sequenceSort", UtilMisc.toList("sequenceNum"));

@@ -47,7 +47,7 @@ under the License.
     <view-entity entity-name="OrderHeaderAndItems"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Header And Order Items View Entity">
+            title="Order Header And Order Items View">
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <alias entity-alias="OH" name="orderId"/>
@@ -79,7 +79,7 @@ under the License.
 
     <view-entity entity-name="OrderHeaderAndItemFacilityLocation"
             package-name="org.ofbiz.order.order"
-           title="OrderHeader, OrderItemShipGrpInvRes, OrderItemShipGroup, InventoryItem and FacilityLocation View Entity">
+           title="OrderHeader, OrderItemShipGrpInvRes, OrderItemShipGroup, InventoryItem and FacilityLocation View">
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OISGIR" entity-name="OrderItemShipGrpInvRes"/>
       <member-entity entity-alias="OISG" entity-name="OrderItemShipGroup"/>
@@ -116,7 +116,7 @@ under the License.
     <view-entity entity-name="OrderHeaderAndPaymentPref"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Header And Payment Preference View Entity">
+            title="Order Header And Payment Preference View">
       <member-entity entity-alias="PF" entity-name="OrderPaymentPreference"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <alias entity-alias="OH" name="orderId"/>
@@ -144,7 +144,7 @@ under the License.
     <view-entity entity-name="OrderPaymentPrefAndPayment"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Payment Preference and Payment View Entity">
+            title="Payment Preference and Payment View">
       <member-entity entity-alias="PF" entity-name="OrderPaymentPreference"/>
       <member-entity entity-alias="PMT" entity-name="Payment"/>
       <alias entity-alias="PF" name="orderPaymentPreferenceId"/>
@@ -163,7 +163,7 @@ under the License.
     <view-entity entity-name="OrderHeaderAndRoleSummary"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Header And Roles View Entity">
+            title="Order Header And Roles View">
       <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <alias entity-alias="ORLE" name="partyId" group-by="true"/>
@@ -182,7 +182,7 @@ under the License.
     <view-entity entity-name="OrderHeaderAndRoles"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Header And Roles View Entity">
+            title="Order Header And Roles View">
       <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <alias-all entity-alias="ORLE"/>
@@ -266,7 +266,7 @@ under the License.
     <view-entity entity-name="OrderHeaderItemAndInv"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Header And Roles View Entity">
+            title="Order Header And Roles View">
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="IV" entity-name="OrderItemShipGrpInvRes"/>
@@ -377,7 +377,7 @@ under the License.
     <view-entity entity-name="OrderHeaderItemAndInvRoles"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Header And Roles View Entity">
+            title="Order Header And Roles View">
       <member-entity entity-alias="OT" entity-name="OrderRole"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
@@ -494,7 +494,7 @@ under the License.
     <view-entity entity-name="OrderHeaderItemAndRoles"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Header And Roles View Entity">
+            title="Order Header And Roles View">
       <member-entity entity-alias="OT" entity-name="OrderRole"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
@@ -609,7 +609,7 @@ under the License.
     <view-entity entity-name="OrderHeaderNoteView"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Header Note View Entity">
+            title="Order Header Note View">
       <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
       <alias entity-alias="OD" name="orderId"/>
@@ -625,7 +625,7 @@ under the License.
     </view-entity>
     <view-entity entity-name="OrderItemAndProductContentInfo"
         package-name="org.ofbiz.order.order"
-        title="OrderItem And ProductContent Info View Entity">
+        title="OrderItem And ProductContent Info View">
         <member-entity entity-alias="OI" entity-name="OrderItem"/>
         <member-entity entity-alias="PC" entity-name="ProductContent"/>
         <member-entity entity-alias="CNT" entity-name="Content"/>
@@ -661,7 +661,7 @@ under the License.
     <view-entity entity-name="OrderHeaderItemAndShipGroup"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="OrderHeader, OrderItem And ShipGroups View Entity">
+            title="OrderHeader, OrderItem And ShipGroups View">
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="OISGA" entity-name="OrderItemShipGroupAssoc"/>
@@ -722,7 +722,7 @@ under the License.
     <view-entity entity-name="OrderItemAndShipGroupAssoc"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="OrderItem And ShipGroupAssoc View Entity">
+            title="OrderItem And ShipGroupAssoc View">
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="OISGA" entity-name="OrderItemShipGroupAssoc"/>
       <alias-all entity-alias="OI">
@@ -769,7 +769,7 @@ under the License.
     <view-entity entity-name="OrderItemAndShipGrpInvResAndItem"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Item and Inventory Reservation View Entity">
+            title="Order Item and Inventory Reservation View">
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="OISGIR" entity-name="OrderItemShipGrpInvRes"/>
       <member-entity entity-alias="II" entity-name="InventoryItem"/>
@@ -793,7 +793,7 @@ under the License.
     <view-entity entity-name="OrderItemShipGrpInvResAndItem"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Item Inventory Reservation and Inventory Item View Entity">
+            title="Order Item Inventory Reservation and Inventory Item View">
       <member-entity entity-alias="OISGIR" entity-name="OrderItemShipGrpInvRes"/>
       <member-entity entity-alias="II" entity-name="InventoryItem"/>
       <alias-all entity-alias="OISGIR"/>
@@ -805,7 +805,7 @@ under the License.
     <view-entity entity-name="OrderItemShipGrpInvResAndItemLocation"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Item Inventory Reservation and Inventory Item and FacilityLocation View Entity">
+            title="Order Item Inventory Reservation and Inventory Item and FacilityLocation View">
       <member-entity entity-alias="OISGIR" entity-name="OrderItemShipGrpInvRes"/>
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="II" entity-name="InventoryItem"/>
@@ -929,7 +929,7 @@ under the License.
     <view-entity entity-name="OrderPurchasePaymentSummary"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Purchase Payment Summary View Entity">
+            title="Order Purchase Payment Summary View">
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OPP" entity-name="OrderPaymentPreference"/>
       <member-entity entity-alias="PMT" entity-name="PaymentMethodType"/>
@@ -957,7 +957,7 @@ under the License.
     <view-entity entity-name="OrderPurchaseProductSummary"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Purchase Product Summary View Entity">
+            title="Order Purchase Product Summary View">
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="PR" entity-name="Product"/>
@@ -989,7 +989,7 @@ under the License.
     <view-entity entity-name="OrderReportView"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Report View Entity">
+            title="Order Report View">
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OPP" entity-name="OrderPaymentPreference"/>
       <member-entity entity-alias="PMT" entity-name="PaymentMethodType"/>
@@ -1030,7 +1030,7 @@ under the License.
     </view-entity>
     <view-entity entity-name="OrderRoleAndProductContentInfo"
         package-name="org.ofbiz.order.order"
-        title="OrderRole And OrderItem And ProductContent Info View Entity">
+        title="OrderRole And OrderItem And ProductContent Info View">
         <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
         <member-entity entity-alias="OI" entity-name="OrderItem"/>
         <member-entity entity-alias="PC" entity-name="ProductContent"/>
@@ -1271,7 +1271,7 @@ under the License.
 
     <view-entity entity-name="CustRequestAndRole"
             package-name="org.ofbiz.order.request"
-            title="Customer Request And Role View Entity">
+            title="Customer Request And Role View">
       <description>See CustRequest for descriptions of date fields</description>
       <member-entity entity-alias="CR" entity-name="CustRequest"/>
       <member-entity entity-alias="CRP" entity-name="CustRequestParty"/>
@@ -1319,7 +1319,7 @@ under the License.
     </view-entity>
     <view-entity entity-name="CustReqAndTypeAndPartyRel"
             package-name="org.ofbiz.order.request"
-            title="Customer Request And Role View Entity">
+            title="Customer Request And Role View">
       <member-entity entity-alias="CR" entity-name="CustRequest"/>
       <member-entity entity-alias="CRT" entity-name="CustRequestType"/>
       <member-entity entity-alias="PR" entity-name="PartyRelationship"/>
@@ -1418,7 +1418,7 @@ under the License.
     </view-entity>
     <view-entity entity-name="CustRequestNoteView"
             package-name="org.ofbiz.order.request"
-            title="Customer Request and Note View Entity">
+            title="Customer Request and Note View">
       <member-entity entity-alias="PR" entity-name="Person"/>
       <member-entity entity-alias="CR" entity-name="CustRequestNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
@@ -1439,7 +1439,7 @@ under the License.
     </view-entity>
     <view-entity entity-name="CustRequestItemNoteView"
             package-name="org.ofbiz.order.request"
-            title="Customer Request Item and Note View Entity">
+            title="Customer Request Item and Note View">
       <member-entity entity-alias="PR" entity-name="Person"/>
       <member-entity entity-alias="CR" entity-name="CustRequestItemNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
@@ -1462,7 +1462,7 @@ under the License.
     <view-entity entity-name="QuoteNoteView"
             package-name="org.ofbiz.order.quote"
             never-cache="true"
-            title="Quote Note View Entity">
+            title="Quote Note View">
       <member-entity entity-alias="QD" entity-name="QuoteNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
       <alias entity-alias="QD" name="quoteId"/>
@@ -1504,7 +1504,7 @@ under the License.
     </view-entity>
     <view-entity entity-name="RequirementAndRole"
             package-name="org.ofbiz.order.request"
-            title="Requirement And Role View Entity">
+            title="Requirement And Role View">
       <member-entity entity-alias="RQ" entity-name="Requirement"/>
       <member-entity entity-alias="RQR" entity-name="RequirementRole"/>
       <alias entity-alias="RQ" name="requirementId"/>
@@ -1554,7 +1554,7 @@ under the License.
     </view-entity>
     <view-entity entity-name="RequirementCustRequestView"
             package-name="org.ofbiz.order.request"
-            title="Requirement Customer Request View Entity">
+            title="Requirement Customer Request View">
       <member-entity entity-alias="RR" entity-name="RequirementCustRequest"/>
       <member-entity entity-alias="RQ" entity-name="Requirement"/>
       <member-entity entity-alias="RI" entity-name="CustRequestItem"/>
@@ -1606,7 +1606,7 @@ under the License.
     </view-entity>
     <view-entity entity-name="CustRequestAndContent"
       package-name="org.ofbiz.order.request"
-      title="Customer Request And Content View Entity">
+      title="Customer Request And Content View">
       <description>Show Content of CustRequest</description>
       <member-entity entity-alias="CRC" entity-name="CustRequestContent"/>
       <member-entity entity-alias="CT" entity-name="Content"/>
@@ -1625,7 +1625,7 @@ under the License.
 
     <view-entity entity-name="CommunicationEventAndOrder"
                  package-name="org.ofbiz.order.communication"
-                 title="Communication Event And Order View Entity">
+                 title="Communication Event And Order View">
       <member-entity entity-alias="CO" entity-name="CommunicationEventOrder"/>
       <member-entity entity-alias="CE" entity-name="CommunicationEvent"/>
       <alias-all entity-alias="CO"/>
@@ -1649,7 +1649,7 @@ under the License.
     <view-entity entity-name="OrderItemAndShipGrpInvResAndItemSum"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Item and Inventory Reservation View Entity">
+            title="Order Item and Inventory Reservation View">
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="OISGIR" entity-name="OrderItemShipGrpInvRes"/>
       <member-entity entity-alias="II" entity-name="InventoryItem"/>
@@ -1686,7 +1686,7 @@ under the License.
 
   <view-entity entity-name="OrderHeaderAndWorkEffort"
           package-name="org.ofbiz.order.order" 
-          title="Order Header And Work Effort View Entity">
+          title="Order Header And Work Effort View">
     <member-entity entity-alias="WE" entity-name="WorkEffort"/>
     <member-entity entity-alias="OH" entity-name="OrderHeader"/>
     <member-entity entity-alias="OHWE" entity-name="OrderHeaderWorkEffort"/>
@@ -1705,7 +1705,7 @@ under the License.
 
     <view-entity entity-name="OrderItemBillingAndInvoiceAndItem"
           package-name="org.ofbiz.order.order" 
-          title="OrderItemBilling and Invoice and InvoiceItem View Entity">
+          title="OrderItemBilling and Invoice and InvoiceItem View">
     <member-entity entity-alias="OIB" entity-name="OrderItemBilling"/>
     <member-entity entity-alias="INV" entity-name="Invoice"/>
     <member-entity entity-alias="II" entity-name="InvoiceItem"/>
@@ -1730,7 +1730,7 @@ under the License.
   <view-entity entity-name="OrderItemAndProduct"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="OrderItem And Product View Entity">
+            title="OrderItem And Product View">
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="PR" entity-name="Product"/>
       <alias-all entity-alias="OI"/>

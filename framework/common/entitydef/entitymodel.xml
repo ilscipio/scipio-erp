@@ -52,7 +52,7 @@ under the License.
     <entity entity-name="DataSource"
             package-name="org.ofbiz.common.datasource"
             default-resource-name="CommonEntityLabels"
-            title="Data Source Entity">
+            title="Data Source">
       <field name="dataSourceId" type="id-ne"></field>
       <field name="dataSourceTypeId" type="id"></field>
       <field name="description" type="description"></field>
@@ -63,7 +63,7 @@ under the License.
     </entity>
     <entity entity-name="DataSourceType"
             package-name="org.ofbiz.common.datasource"
-            title="Data Source Type Entity">
+            title="Data Source Type">
       <field name="dataSourceTypeId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="dataSourceTypeId"/>
@@ -73,7 +73,7 @@ under the License.
   <!-- org.ofbiz.common.email -->
   <!-- ========================================================= -->
 
-    <entity entity-name="EmailTemplateSetting" package-name="org.ofbiz.common.email" title="Email Template Setting Entity">
+    <entity entity-name="EmailTemplateSetting" package-name="org.ofbiz.common.email" title="Email Template Setting">
         <field name="emailTemplateSettingId" type="id-ne"></field>
         <field name="emailType" type="id-ne"></field>
         <field name="description" type="description"></field>
@@ -97,7 +97,7 @@ under the License.
     <entity entity-name="Enumeration"
             package-name="org.ofbiz.common.enum"
             default-resource-name="CommonEntityLabels"
-            title="Enumeration Entity">
+            title="Enumeration">
       <field name="enumId" type="id-ne"></field>
       <field name="enumTypeId" type="id-ne"></field>
       <field name="enumCode" type="short-varchar"></field>
@@ -111,7 +111,7 @@ under the License.
     <entity entity-name="EnumerationType"
             package-name="org.ofbiz.common.enum"
             default-resource-name="CommonEntityLabels"
-            title="Enumeration Type Entity">
+            title="Enumeration Type">
       <field name="enumTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -147,7 +147,7 @@ under the License.
     <entity entity-name="CountryCapital"
             package-name="org.ofbiz.common.geo"
             dependent-on="CountryCode"
-            title="Country Capital Entity">
+            title="Country Capital">
       <field name="countryCode" type="id-ne"></field>
       <field name="countryCapital" type="description"></field>
       <prim-key field="countryCode"/>
@@ -157,7 +157,7 @@ under the License.
     </entity>
     <entity entity-name="CountryCode"
             package-name="org.ofbiz.common.geo"
-            title="ISO Country Code Entity">
+            title="ISO Country Code">
       <field name="countryCode" type="id-ne"></field>
       <field name="countryAbbr" type="short-varchar"></field>
       <field name="countryNumber" type="short-varchar"></field>
@@ -167,7 +167,7 @@ under the License.
     <entity entity-name="CountryTeleCode"
             package-name="org.ofbiz.common.geo"
             dependent-on="CountryCode"
-            title="Telephone Country Code Entity">
+            title="Telephone Country Code">
       <field name="countryCode" type="id-ne"></field>
       <field name="teleCode" type="short-varchar"></field>
       <prim-key field="countryCode"/>
@@ -206,7 +206,7 @@ under the License.
     </entity>
     <entity entity-name="Geo" package-name="org.ofbiz.common.geo"
             default-resource-name="CommonEntityLabels"
-            title="Geographic Boundary Entity">
+            title="Geographic Boundary">
         <field name="geoId" type="id-ne"></field>
         <field name="geoTypeId" type="id"></field>
         <field name="geoName" type="name"></field>
@@ -220,7 +220,7 @@ under the License.
         </relation>
     </entity>
     <entity entity-name="GeoAssoc" package-name="org.ofbiz.common.geo"
-            title="Geographic Boundary Association Entity">
+            title="Geographic Boundary Association">
         <field name="geoId" type="id-ne">
             <description>The enclosed geo</description>
         </field>
@@ -275,7 +275,7 @@ under the License.
         </view-link>
     </view-entity>
     <entity entity-name="GeoAssocType" package-name="org.ofbiz.common.geo"
-        title="Geographic Boundary Association Entity">
+        title="Geographic Boundary Association">
       <field name="geoAssocTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="geoAssocTypeId"/>
@@ -298,7 +298,7 @@ under the License.
         </relation>
     </entity>
     <entity entity-name="GeoType" package-name="org.ofbiz.common.geo" default-resource-name="CommonEntityLabels"
-        title="Geographic Boundary Type Entity">
+        title="Geographic Boundary Type">
       <field name="geoTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -352,7 +352,7 @@ under the License.
     <entity entity-name="CustomMethod"
         package-name="org.ofbiz.common.method"
         default-resource-name="CommonEntityLabels"
-        title="Custom Method Entity">
+        title="Custom Method">
         <field name="customMethodId" type="id-ne"></field>
         <field name="customMethodTypeId" type="id"></field>
         <field name="customMethodName" type="long-varchar"></field>
@@ -364,7 +364,7 @@ under the License.
     </entity>
     <entity entity-name="CustomMethodType"
         package-name="org.ofbiz.common.method"
-        title="Custom Method Type Entity">
+        title="Custom Method Type">
         <field name="customMethodTypeId" type="id-ne"></field>
         <field name="parentTypeId" type="id-ne"></field>
         <field name="hasTable" type="indicator"></field>
@@ -381,7 +381,7 @@ under the License.
 
     <entity entity-name="NoteData"
             package-name="org.ofbiz.common.note"
-            title="Note Data Entity">
+            title="Note Data">
       <field name="noteId" type="id-ne"></field>
       <field name="noteName" type="name"></field>
       <field name="noteInfo" type="very-long"></field>
@@ -395,7 +395,7 @@ under the License.
 
     <entity entity-name="CustomTimePeriod"
             package-name="org.ofbiz.common.period"
-            title="Custom Time Period Entity">
+            title="Custom Time Period">
       <field name="customTimePeriodId" type="id-ne"></field>
       <field name="parentPeriodId" type="id"></field>
       <field name="periodTypeId" type="id"></field>
@@ -414,7 +414,7 @@ under the License.
     </entity>
     <entity entity-name="PeriodType"
             package-name="org.ofbiz.common.period"
-            title="Period Type Entity">
+            title="Period Type">
       <field name="periodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="periodLength" type="numeric"></field>
@@ -432,7 +432,7 @@ under the License.
     <entity entity-name="StatusItem"
             package-name="org.ofbiz.common.status"
             default-resource-name="CommonEntityLabels"
-            title="Status Entity">
+            title="Status">
       <field name="statusId" type="id-ne"></field>
       <field name="statusTypeId" type="id-ne"></field>
       <field name="statusCode" type="short-varchar"></field>
@@ -446,7 +446,7 @@ under the License.
     <entity entity-name="StatusType"
             package-name="org.ofbiz.common.status"
             default-resource-name="CommonEntityLabels"
-            title="Status Type Entity">
+            title="Status Type">
       <field name="statusTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -459,7 +459,7 @@ under the License.
     <entity entity-name="StatusValidChange"
             package-name="org.ofbiz.common.status"
             default-resource-name="CommonEntityLabels"
-            title="Status Valid Change Entity">
+            title="Status Valid Change">
       <field name="statusId" type="id-ne"></field>
       <field name="statusIdTo" type="id-ne"></field>
       <field name="conditionExpression" type="long-varchar"></field>
@@ -475,7 +475,7 @@ under the License.
     </entity>
     <view-entity entity-name="StatusValidChangeToDetail"
         package-name="org.ofbiz.common.status"
-        title="Status Valid Change To Detail View Entity">
+        title="Status Valid Change To Detail View">
         <member-entity entity-alias="SVC" entity-name="StatusValidChange"/>
         <member-entity entity-alias="SI" entity-name="StatusItem"/>
         <alias-all entity-alias="SVC"/>
@@ -502,7 +502,7 @@ under the License.
     <entity entity-name="Uom"
             package-name="org.ofbiz.common.uom"
             default-resource-name="CommonEntityLabels"
-            title="Unit Of Measure Entity">
+            title="Unit Of Measure">
       <field name="uomId" type="id-ne"></field>
       <field name="uomTypeId" type="id"></field>
       <field name="abbreviation" type="short-varchar"></field>
@@ -514,7 +514,7 @@ under the License.
     </entity>
     <view-entity entity-name="UomAndGroup"
             package-name="org.ofbiz.common.uom"
-            title="Unit Of Measure and Group/Type View Entity">
+            title="Unit Of Measure and Group/Type View">
         <member-entity entity-alias="UOMGP" entity-name="UomGroup"/>
         <member-entity entity-alias="UOM" entity-name="Uom"/>
         <member-entity entity-alias="UOMTP" entity-name="UomType"/>
@@ -530,7 +530,7 @@ under the License.
     </view-entity>
     <view-entity entity-name="UomAndType"
             package-name="org.ofbiz.common.uom"
-            title="Unit Of Measure and Type View Entity">
+            title="Unit Of Measure and Type View">
         <member-entity entity-alias="UOM" entity-name="Uom"/>
         <member-entity entity-alias="UOMTP" entity-name="UomType"/>
         <alias-all entity-alias="UOM"/>
@@ -541,7 +541,7 @@ under the License.
     </view-entity>
     <entity entity-name="UomConversion"
             package-name="org.ofbiz.common.uom"
-            title="Unit Of Measure Conversion Type Entity">
+            title="Unit Of Measure Conversion Type">
       <field name="uomId" type="id-ne"></field>
       <field name="uomIdTo" type="id-ne"></field>
       <field name="conversionFactor" type="floating-point"></field>
@@ -591,7 +591,7 @@ under the License.
     <entity entity-name="UomGroup"
             package-name="org.ofbiz.common.uom"
             default-resource-name="CommonEntityLabels"
-            title="Unit Of Measure Group Entity">
+            title="Unit Of Measure Group">
       <field name="uomGroupId" type="id-ne"></field>
       <field name="uomId" type="id-ne"></field>
       <prim-key field="uomGroupId"/>
@@ -603,7 +603,7 @@ under the License.
     <entity entity-name="UomType"
             package-name="org.ofbiz.common.uom"
             default-resource-name="CommonEntityLabels"
-            title="Unit Of Measure Type Entity">
+            title="Unit Of Measure Type">
       <field name="uomTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -710,7 +710,7 @@ under the License.
         <field name="securityMainAction" type="short-varchar"><description>The main action which can be done with this portlet, possible values: CREATE UPDATE VIEW DELETE</description></field>
         <prim-key field="portalPortletId"/>
     </entity>
-    <entity entity-name="PortletCategory" package-name="org.ofbiz.common.portal" title="Portlet Category Entity">
+    <entity entity-name="PortletCategory" package-name="org.ofbiz.common.portal" title="Portlet Category">
       <field name="portletCategoryId" type="id-ne"/>
       <field name="description" type="description"/>
       <prim-key field="portletCategoryId"/>

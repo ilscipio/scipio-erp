@@ -68,7 +68,7 @@ under the License.
     <entity entity-name="OldOrderItemInventoryRes" table-name="ORDER_ITEM_INVENTORY_RES"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="The OLD Order Item Inventory Reservation Entity">
+            title="The OLD Order Item Inventory Reservation">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
@@ -138,7 +138,7 @@ under the License.
 
     <entity entity-name="OldCustRequestRole" table-name="CUST_REQUEST_ROLE"
             package-name="org.ofbiz.order.request"
-            title="Old Customer Request Role Entity">
+            title="Old Customer Request Role">
       <field name="custRequestId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>

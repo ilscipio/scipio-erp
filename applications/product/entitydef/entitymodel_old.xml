@@ -39,7 +39,7 @@ under the License.
 
     <entity entity-name="OldFacilityRole" table-name="FACILITY_ROLE"
             package-name="org.ofbiz.product.facility"
-            title="Facility Role Entity">
+            title="Facility Role">
       <field name="facilityId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
@@ -58,7 +58,7 @@ under the License.
     </entity>
     <entity entity-name="OldProductKeyword" table-name="PRODUCT_KEYWORD"
             package-name="org.ofbiz.product.facility"
-            title="Old Product Keyword Entity">
+            title="Old Product Keyword">
       <field name="productId" type="id-ne"></field>
       <field name="keyword" type="short-varchar"></field>
       <field name="relevancyWeight" type="numeric"></field>
@@ -74,7 +74,7 @@ under the License.
     <entity entity-name="OldProductKeywordResult" table-name="PRODUCT_KEYWORD_RESULT"
             package-name="org.ofbiz.product.product"
             never-cache="true"
-            title="Product Keyword Result Entity">
+            title="Product Keyword Result">
       <field name="productKeywordResultId" type="id-ne"></field>
       <field name="visitId" type="id"></field>
       <field name="productCategoryId" type="id"></field>

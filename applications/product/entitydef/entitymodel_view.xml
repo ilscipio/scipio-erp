@@ -22,7 +22,7 @@ under the License.
     
     <view-entity entity-name="ContentApprovalProductContentAndInfo"
             package-name="org.ofbiz.content.content"
-            title="ContentApproval, ProductContent, Content and DataResource View Entity">
+            title="ContentApproval, ProductContent, Content and DataResource View">
       <member-entity entity-alias="CA" entity-name="ContentApproval"/>
       <member-entity entity-alias="PRC" entity-name="ProductContent"/>
       <member-entity entity-alias="CO" entity-name="Content"/>

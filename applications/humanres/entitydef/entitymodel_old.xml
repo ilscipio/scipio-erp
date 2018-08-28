@@ -26,7 +26,7 @@ under the License.
 
   <entity entity-name="OldEmplPositionTypeRate" table-name="EMPL_POSITION_TYPE_RATE"
     package-name="org.ofbiz.humanres.position"
-    title="EmplPosition Type Rate Entity">
+    title="EmplPosition Type Rate">
     <field name="emplPositionTypeId" type="id-ne"/>
     <field name="periodTypeId" type="id-ne"/>
     <field name="payGradeId" type="id"/>

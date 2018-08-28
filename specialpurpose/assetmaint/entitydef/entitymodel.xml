@@ -29,7 +29,7 @@
     <version>1.0</version>
 
     <view-entity entity-name="FixedAssetAndIdent" package-name="org.ofbiz.specialpurpose.assetmaint"
-        title="FixedAsset and FixedAssetIdent View Entity">
+        title="FixedAsset and FixedAssetIdent View">
         <member-entity entity-alias="FA" entity-name="FixedAsset"/>
         <member-entity entity-alias="FAI" entity-name="FixedAssetIdent"/>
         <alias-all entity-alias="FA"/>

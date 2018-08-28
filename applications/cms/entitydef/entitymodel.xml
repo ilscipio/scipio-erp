@@ -392,7 +392,7 @@
     </entity>
 
     <entity entity-name="CmsAttributeTemplate" package-name="com.ilscipio.scipio.cms.template"
-        title="Attribute Template Entity" author="Ilscipio GmbH" version="1.0">
+        title="Attribute Template" author="Ilscipio GmbH" version="1.0">
       <field name="attributeTemplateId" type="id-ne"></field>
       <!-- Either assetTemplateId or pageTemplateId should be not-null -->
       <field name="assetTemplateId" type="id"></field>
@@ -433,7 +433,7 @@
     </entity>
 
     <entity entity-name="CmsScriptTemplate" package-name="com.ilscipio.scipio.cms.template"
-        title="Script Template Entity" author="Ilscipio GmbH" version="1.0">
+        title="Script Template" author="Ilscipio GmbH" version="1.0">
       <field name="scriptTemplateId" type="id-ne"></field>
       
       <field name="templateName" type="name"></field>
@@ -461,7 +461,7 @@
     <!-- ========================================================= -->
 
     <entity entity-name="CmsViewMapping" package-name="com.ilscipio.scipio.cms.control"
-        title="View to Page Mapping Entity" author="Ilscipio GmbH" version="1.0">
+        title="View to Page Mapping" author="Ilscipio GmbH" version="1.0">
       <field name="viewMappingId" type="id-ne"></field>
       
       <!-- webSiteId+targetServletPath+targetViewName is the main candidate key -->
@@ -497,7 +497,7 @@
     </entity>
 
     <entity entity-name="CmsProcessMapping" package-name="com.ilscipio.scipio.cms.control"
-        title="Process to Page Mapping Entity" author="Ilscipio GmbH" version="1.0">
+        title="Process to Page Mapping" author="Ilscipio GmbH" version="1.0">
       <field name="processMappingId" type="id-ne"></field>
       
       <!-- 2016: NOTE: as per index below, sourceWebSiteId+sourcePath+sourceFromContextRoot is a candidate key and must be unique and non-null -->
@@ -594,7 +594,7 @@
     </view-entity>
 
     <entity entity-name="CmsProcessViewMapping" package-name="com.ilscipio.scipio.cms.control"
-        title="Process View Mapping Entity" author="Ilscipio GmbH" version="1.0">
+        title="Process View Mapping" author="Ilscipio GmbH" version="1.0">
       <field name="processViewMappingId" type="id-ne"></field>
       
       <field name="processMappingId" type="id-ne" not-null="true"><description>Parent process mapping</description></field>
@@ -689,7 +689,7 @@
 
     <!-- NOTE: DataResourceFileView currently relies on the datastructure outlined by the content component. As the rest of the content component
         is rather superfluous by now, it is possible that the datamodel may be migrated to this component in future releases. -->
-    <view-entity entity-name="DataResourceMediaFileView" title="DataResource View Entity"
+    <view-entity entity-name="DataResourceMediaFileView" title="DataResource View"
         package-name="com.ilscipio.scipio.cms.media">
       <member-entity entity-alias="DR" entity-name="DataResource"/>
       <member-entity entity-alias="CNT" entity-name="Content"/>

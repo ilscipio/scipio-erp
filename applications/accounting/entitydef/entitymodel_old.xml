@@ -73,7 +73,7 @@ under the License.
     </entity>
     <entity entity-name="OldPartyRate" table-name="PARTY_RATE"
             package-name="org.ofbiz.workeffort.timesheet"
-            title="Party Rate Entity">
+            title="Party Rate">
       <field name="partyId" type="id-ne"></field>
       <field name="rateTypeId" type="id-ne"></field>
       <field name="currencyUomId" type="id-ne"/>

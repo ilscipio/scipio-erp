@@ -88,10 +88,10 @@ under the License.
       <relation type="one" fk-name="SERVER_HIT_VISIT" rel-entity-name="Visit">
         <key-map field-name="visitId"/>
       </relation>
-      <index name="SERVER_HIT_START_IDX" unique="false">
-            <index-field name="hitTypeId"/>
-            <index-field name="hitStartDateTime"/>
-       </index>
+      <index name="SERVER_HIT_STRTIDX" unique="false"><!-- SCIPIO: 2018-08-28: name shortened to 18 char (NOTE: this index not in stock ofbiz) -->
+        <index-field name="hitTypeId"/>
+        <index-field name="hitStartDateTime"/>
+      </index>
     </entity>
     <entity entity-name="ServerHitBin" package-name="org.ofbiz.webapp.visit" never-cache="true" title="Server Hit Bin">
       <field name="serverHitBinId" type="id-ne"></field>

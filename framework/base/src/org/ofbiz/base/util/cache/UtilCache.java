@@ -683,6 +683,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return lineInfo;
     }
 
+    @SuppressWarnings("unused")
     private Map<String, Object> createLineInfo(int keyNum, K key, V value) {
         Map<String, Object> lineInfo = new HashMap<String, Object>();
         lineInfo.put("elementKey", key);

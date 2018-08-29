@@ -70,6 +70,18 @@
         <logger name="com.ilscipio.scipio.camel.endpoint" level="info"/>
         <logger name="com.ilscipio.scipio.camel.route" level="info"/>
 
+        <!-- 
+            CUSTOM loggers
+
+            To avoid merge conflicts in client projects, custom
+            loggers may be defined below this comment.
+        -->
+
+
+        <!-- 
+            /CUSTOM loggers (END)
+        -->
+
         <Root level="all">
             <AppenderRef ref="async"/>
         </Root>

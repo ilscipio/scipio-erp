@@ -20,6 +20,9 @@ package org.ofbiz.service.engine
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.util.EntityQuery
+import org.ofbiz.service.DispatchContext
+import org.ofbiz.service.LocalDispatcher
+import org.ofbiz.service.ModelService
 import org.ofbiz.service.ServiceUtil
 import org.ofbiz.service.ExecutionServiceException
 
@@ -27,6 +30,8 @@ abstract class GroovyBaseScript extends Script {
     public static final String module = GroovyBaseScript.class.getName();
 
     Map runService(String serviceName, Map inputMap) throws ExecutionServiceException {
+        LocalDispatcher dispatcher = binding.getVariable('dispatcher');
+        DispatchContext dctx = dispatcher.getDispatchContext();
         if (!inputMap.userLogin) {
             inputMap.userLogin = this.binding.getVariable('parameters').userLogin;
         }
@@ -36,7 +41,8 @@ abstract class GroovyBaseScript extends Script {
         if (!inputMap.locale) {
             inputMap.locale = this.binding.getVariable('parameters').locale;
         }
-        Map result = binding.getVariable('dispatcher').runSync(serviceName, inputMap);
+        Map serviceContext = dctx.makeValidContext(serviceName, ModelService.IN_PARAM, inputMap)
+        Map result = dispatcher.runSync(serviceName, serviceContext)
         if (ServiceUtil.isError(result)) {
             throw new ExecutionServiceException(ServiceUtil.getErrorMessage(result))
         }

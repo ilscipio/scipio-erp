@@ -29,6 +29,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -84,7 +85,7 @@ public class XmlRpcTests extends AbstractXmlRpcTestCase {
         Integer num1 = 125;
         Integer num2 = 365;
         try {
-            Map<String, Object> localMap = dctx.makeValidContext("testXmlRpcLocalEngine", "IN", context);
+            Map<String, Object> localMap = dctx.makeValidContext("testXmlRpcLocalEngine", ModelService.IN_PARAM, context);
             localMap.put("num1", num1);
             localMap.put("num2", num2);
             result = dctx.getDispatcher().runSync("testXmlRpcLocalEngine", localMap);

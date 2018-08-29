@@ -93,7 +93,9 @@ public class XmlRpcTests extends AbstractXmlRpcTestCase {
         catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getLocalizedMessage());
         }
-        if (ServiceUtil.isError(result)) return result;
+        if (ServiceUtil.isError(result)) {
+            return result;
+        }
         Integer res = (Integer) result.get("resulting");
         if (res == (num1 + num2)) { 
             result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "ServiceTestXmlRpcCalculationOK", locale) + res);

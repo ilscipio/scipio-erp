@@ -112,14 +112,12 @@ public class GroupServiceModel {
             if (requiredOut.size() > 0) {
                 Debug.logWarning("Grouped service (" + getName() + ") requested 'async' invocation; running sync because of required OUT parameters.", module);
                 return dispatcher.runSync(localName, model, thisContext);
-            } else {
-                dispatcher.runAsync(localName, model, thisContext, false);
-                return new HashMap<String, Object>();
             }
-        } else {
+                dispatcher.runAsync(localName, model, thisContext, false);
+            return new HashMap<>();
+            }
             return dispatcher.runSync(localName, model, thisContext);
         }
-    }
 
     /**
      * @see java.lang.Object#toString()

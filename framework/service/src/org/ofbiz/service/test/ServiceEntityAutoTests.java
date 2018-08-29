@@ -48,7 +48,7 @@ public class ServiceEntityAutoTests extends OFBizTestCase {
 
     public void testEntityAutoCreateSinglPkEntity() throws Exception {
         //test create with given pk
-        Map<String, Object> testingPkPresentMap = new HashMap<String, Object>();
+        Map<String, Object> testingPkPresentMap = new HashMap<>();
         testingPkPresentMap.put("testingId", "TESTING_1");
         testingPkPresentMap.put("testingName", "entity auto testing");
         Map<String, Object> results = dispatcher.runSync("testEntityAutoCreateTestingPkPresent", testingPkPresentMap);
@@ -57,7 +57,7 @@ public class ServiceEntityAutoTests extends OFBizTestCase {
         assertNotNull(testing);
 
         //test create with auto sequence
-        Map<String, Object> testingPkMissingMap = new HashMap<String, Object>();
+        Map<String, Object> testingPkMissingMap = new HashMap<>();
         testingPkPresentMap.put("testingName", "entity auto testing without pk part in");
         results = dispatcher.runSync("testEntityAutoCreateTestingPkMissing", testingPkMissingMap);
         assertTrue(ServiceUtil.isSuccess(results));

@@ -445,8 +445,7 @@ public final class JobManager {
                         newJob.set("tempExprId", null);
                         newJob.set("recurrenceInfoId", null);
                         delegator.createSetNextSeqId(newJob);
-                    }
-                    else {
+                    } else {
                         if (Debug.infoOn()) Debug.logInfo("Scipio: Not rescheduling crashed job '" + job.getString("jobId") + 
                                 "' with event ID '" + job.getString("eventId") + "'", module);
                     }
@@ -460,11 +459,13 @@ public final class JobManager {
                     Debug.logWarning(e, module);
                 }
             }
-            if (Debug.infoOn())
+            if (Debug.infoOn()) {
                 Debug.logInfo("-- " + rescheduled + " jobs re-scheduled", module);
+            }
         } else {
-            if (Debug.infoOn())
+            if (Debug.infoOn()) {
                 Debug.logInfo("No crashed jobs to re-schedule", module);
+        }
         }
         crashedJobsReloaded = true;
     }

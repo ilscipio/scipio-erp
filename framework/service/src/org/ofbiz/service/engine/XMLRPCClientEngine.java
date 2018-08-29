@@ -66,8 +66,9 @@ public class XMLRPCClientEngine extends GenericAsyncEngine {
     public Map<String, Object> runSync(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
         Map<String, Object> result = serviceInvoker(modelService, context);
 
-        if (result == null)
+        if (result == null) {
             throw new GenericServiceException("Service did not return expected result");
+        }
         return result;
     }
     
@@ -75,8 +76,9 @@ public class XMLRPCClientEngine extends GenericAsyncEngine {
      *  Invoke the remote XMLRPC SERVICE : This engine convert all value in IN mode to one struct.
      */
     private Map<String, Object> serviceInvoker(ModelService modelService, Map<String, Object> context) throws GenericServiceException {
-        if (modelService.location == null || modelService.invoke == null)
+        if (modelService.location == null || modelService.invoke == null) {
             throw new GenericServiceException("Cannot locate service to invoke");
+        }
         
         XmlRpcClientConfigImpl config = null;
         XmlRpcClient client = null;
@@ -105,16 +107,12 @@ public class XMLRPCClientEngine extends GenericAsyncEngine {
             config.setBasicUserName(login);
             config.setBasicPassword(password);
             config.setServerURL(new URL(url));
-        }catch (MalformedURLException e) {
+        } catch (MalformedURLException | GenericConfigException e) {
             throw new GenericServiceException("Cannot invoke service : engine parameters are not correct");
         }
-        catch (GenericConfigException e) {
-            throw new GenericServiceException("Cannot invoke service : engine parameters are not correct");
-        }
-        if(UtilValidate.isNotEmpty(keyStoreComponent) && UtilValidate.isNotEmpty(keyStoreName) && UtilValidate.isNotEmpty(keyAlias)){
+        if (UtilValidate.isNotEmpty(keyStoreComponent) && UtilValidate.isNotEmpty(keyStoreName) && UtilValidate.isNotEmpty(keyAlias)) {
             client = new XmlRpcClient(config, keyStoreComponent, keyStoreName, keyAlias);
-        }
-        else{
+        } else {
             client = new XmlRpcClient(config);
         }
         List<ModelParam> inModelParamList = modelService.getInModelParamList();
@@ -127,10 +125,12 @@ public class XMLRPCClientEngine extends GenericAsyncEngine {
         }
 
         Map<String, Object> result = null;
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         for (ModelParam modelParam: modelService.getModelParamList()) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if (ModelService.OUT_PARAM.equals(modelParam.mode) || modelParam.internal) continue;
+            if (ModelService.OUT_PARAM.equals(modelParam.mode) || modelParam.internal) {
+                continue;
+            }
 
             Object paramValue = context.get(modelParam.name);
             if (paramValue != null) {
@@ -139,9 +139,9 @@ public class XMLRPCClientEngine extends GenericAsyncEngine {
         }
         
         List<Map<String,Object>> listParams = UtilMisc.toList(params);
-        try{
+        try {
             result = UtilGenerics.cast(client.execute(serviceName, listParams.toArray()));
-        }catch (XmlRpcException e) {
+        } catch (XmlRpcException e) {
             result = ServiceUtil.returnError(e.getLocalizedMessage());
         }
         return result;

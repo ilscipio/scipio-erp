@@ -180,7 +180,9 @@ public class JavaMailContainer implements Container {
         // re-write the URLName including the password for this store
         if (store != null && store.getURLName() != null) {
             URLName urlName = this.updateUrlName(store.getURLName(), session.getProperties());
-            if (Debug.verboseOn()) Debug.logVerbose("URLName - " + urlName.toString(), module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("URLName - " + urlName.toString(), module);
+            }
             try {
                 store = session.getStore(urlName);
             } catch (NoSuchProviderException e) {
@@ -260,7 +262,9 @@ public class JavaMailContainer implements Container {
             port = portProps;
         }
  
-        if (Debug.verboseOn()) Debug.logVerbose("Update URL - " + protocol + "://" + userName + "@" + host + ":" + port + "!" + password + ";" + file, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Update URL - " + protocol + "://" + userName + "@" + host + ":" + port + "!" + password + ";" + file, module);
+        }
         return new URLName(protocol, host, port, file, userName, password);
     }
 
@@ -280,7 +284,9 @@ public class JavaMailContainer implements Container {
                     Debug.logWarning("There was a case error in LoggingStoreListener.notification", module);
             }
 
-            if (Debug.verboseOn()) Debug.logVerbose("JavaMail " + typeString + event.getMessage(), module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("JavaMail " + typeString + event.getMessage(), module);
+            }
         }
     }
 
@@ -360,13 +366,19 @@ public class JavaMailContainer implements Container {
                         message.setFlag(Flags.Flag.SEEN, true);
                     } else {
                         this.processMessage(message, session);
-                        if (Debug.verboseOn()) Debug.logVerbose("Message from " + UtilMisc.toListArray(message.getFrom()) + " with subject [" + message.getSubject() + "]  has been processed." , module);
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("Message from " + UtilMisc.toListArray(message.getFrom()) + " with subject [" + message.getSubject() + "]  has been processed." , module);
+                        }
                         message.setFlag(Flags.Flag.SEEN, true);
-                        if (Debug.verboseOn()) Debug.logVerbose("Message [" + message.getSubject() + "] is marked seen", module);
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("Message [" + message.getSubject() + "] is marked seen", module);
+                        }
 
                         // delete the message after processing
                         if (deleteMail) {
-                            if (Debug.verboseOn()) Debug.logVerbose("Message [" + message.getSubject() + "] is being deleted", module);
+                            if (Debug.verboseOn()) {
+                                Debug.logVerbose("Message [" + message.getSubject() + "] is being deleted", module);
+                            }
                             message.setFlag(Flags.Flag.DELETED, true);
                         }
                     }

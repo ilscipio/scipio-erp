@@ -113,22 +113,18 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
             switch (modelService.invoke) {
             case "create":
                 result = invokeCreate(dctx, parameters, modelService, modelEntity, allPksInOnly, pkFieldNameOutOnly);
-                result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage("ServiceUiLabels", "EntityCreatedSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
                 break;
             case "update":
                 result = invokeUpdate(dctx, parameters, modelService, modelEntity, allPksInOnly);
-                result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage("ServiceUiLabels", "EntityUpdatedSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
                 break;
             case "delete":
                 result = invokeDelete(dctx, parameters, modelService, modelEntity, allPksInOnly);
-                result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage("ServiceUiLabels", "EntityDeletedSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
                 break;
             case "expire":
                 result = invokeExpire(dctx, parameters, modelService, modelEntity, allPksInOnly);
                 if (ServiceUtil.isSuccess(result)) {
                     result = invokeUpdate(dctx, parameters, modelService, modelEntity, allPksInOnly);
                 }
-                result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage("ServiceUiLabels", "EntityExpiredSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
                 break;
             default:
                 break;
@@ -149,7 +145,6 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
     private static Map<String, Object> invokeCreate(DispatchContext dctx, Map<String, Object> parameters, ModelService modelService, ModelEntity modelEntity, boolean allPksInOnly, List<String> pkFieldNameOutOnly)
             throws GeneralException {
         Locale locale = (Locale) parameters.get("locale");
-        Map<String, Object> result = ServiceUtil.returnSuccess();
 
                 GenericValue newEntity = dctx.getDelegator().makeValue(modelEntity.getEntityName());
 
@@ -361,6 +356,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                     }
                 }
                 newEntity.create();
+        Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage("ServiceUiLabels", "EntityCreatedSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
         result.put("crudValue", newEntity);
         return result;
     }
@@ -473,6 +469,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
 
                 lookedUpValue.store();
         result.put("crudValue", lookedUpValue);
+        result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage("ServiceUiLabels", "EntityUpdatedSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
         return result;
     }
 
@@ -503,7 +500,8 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceValueNotFoundForRemove", locale));
                 }
         lookedUpValue.remove();
-        return ServiceUtil.returnSuccess();
+        Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage("ServiceUiLabels", "EntityDeletedSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
+        return result;
             }
 
     /**
@@ -567,6 +565,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
         }
         if (Debug.infoOn())
             Debug.logInfo(" parameters OUT  : " + parameters, module);
-        return ServiceUtil.returnSuccess();
+        Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage("ServiceUiLabels", "EntityExpiredSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
+        return result;
     }
 }

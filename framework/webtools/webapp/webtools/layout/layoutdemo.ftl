@@ -141,62 +141,64 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 <@section close=true open=false />
 
 <@section class="+my-section-headings">
-<@heading attribs=makeMagTargetAttribMap("buttons") id="buttons">Buttons</@heading>
-<@heading relLevel=+1>Heading</@heading>
-<@heading level=1>h1.</@heading>
-<@heading level=2>h2.</@heading>
-<@heading level=3>h3.</@heading>
-<@heading level=4>h4.</@heading>
-<@heading level=5>h5.</@heading>
-<@heading level=6>h6.</@heading>
-<@heading level=7 class="+my-additional-heading-class">Heading level 7</@heading>
-<@heading level=8 class="my-replace-default-heading-class-level-8">Heading level 8 (custom class)</@heading>
-<@heading level=9>Heading level 9</@heading>
-<@heading level=2 containerElemType="div" containerClass="+my-heading-container-class" 
-    containerId="my-heading-container-1" class="+my-heading-class" id="my-heading">Heading level 2 with container</@heading>
+    <@heading attribs=makeMagTargetAttribMap("buttons") id="buttons">Buttons</@heading>
+    <@heading relLevel=+1>Heading</@heading>
+    <@heading level=1>h1.</@heading>
+    <@heading level=2>h2.</@heading>
+    <@heading level=3>h3.</@heading>
+    <@heading level=4>h4.</@heading>
+    <@heading level=5>h5.</@heading>
+    <@heading level=6>h6.</@heading>
+    <@heading level=7 class="+my-additional-heading-class">Heading level 7</@heading>
+    <@heading level=8 class="my-replace-default-heading-class-level-8">Heading level 8 (custom class)</@heading>
+    <@heading level=9>Heading level 9</@heading>
+    <@heading level=2 containerElemType="div" containerClass="+my-heading-container-class" 
+        containerId="my-heading-container-1" class="+my-heading-class" id="my-heading">Heading level 2 with container</@heading>
+    
+    <@heading relLevel=+1>Shapes</@heading>
+    <a href="#" class="${styles.button!} ${styles.tiny!} ${styles.button_color_default}">Tiny Button</a>
+    <a href="#" class="${styles.button!} ${styles.small!} ${styles.button_color_default}">Small Button</a>
+    <a href="#" class="${styles.button!} ${styles.button_color_default}">Default Button</a>
+    <a href="#" class="${styles.button!} ${styles.disabled!} ${styles.button_color_default}">Disabled Button</a>
+    <a href="#" class="${styles.button!} ${styles.large!} ${styles.button_color_default}">Large Button</a>
+    <a href="#" class="${styles.button!} ${styles.expand!} ${styles.button_color_default}">Expanded Button</a>
+    <a href="#" class="${styles.button!} ${styles.round!} ${styles.button_color_default}">Round Button</a>
+    <a href="#" class="${styles.button!} ${styles.radius!} ${styles.button_color_default}">Radius Button</a>
+    
+    <@heading relLevel=+1>Colors</@heading>
+    <a href="#" class="${styles.button!} ${styles.button_color_default}">Default Button</a>
+    <a href="#" class="${styles.button!} ${styles.button_color_success!}">Success Button</a>
+    <a href="#" class="${styles.button!} ${styles.button_color_primary!}">Primary Button</a>
+    <a href="#" class="${styles.button!} ${styles.button_color_secondary!}">Secondary Button</a>
+    <a href="#" class="${styles.button!} ${styles.button_color_alert!}">Alert Button</a>
+    <a href="#" class="${styles.button!} ${styles.button_color_warning!}">Warning Button</a>
+    <a href="#" class="${styles.button!} ${styles.button_color_info!}">Info Button</a>
+    <a href="#" class="${styles.button!} ${styles.button_color_default} ${styles.disabled}">Disabled Button</a>
+</@section>
 
-<@heading relLevel=+1>Shapes</@heading>
-<a href="#" class="${styles.button!} ${styles.tiny!} ${styles.button_color_default}">Tiny Button</a>
-<a href="#" class="${styles.button!} ${styles.small!} ${styles.button_color_default}">Small Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_default}">Default Button</a>
-<a href="#" class="${styles.button!} ${styles.disabled!} ${styles.button_color_default}">Disabled Button</a>
-<a href="#" class="${styles.button!} ${styles.large!} ${styles.button_color_default}">Large Button</a>
-<a href="#" class="${styles.button!} ${styles.expand!} ${styles.button_color_default}">Expanded Button</a>
-<a href="#" class="${styles.button!} ${styles.round!} ${styles.button_color_default}">Round Button</a>
-<a href="#" class="${styles.button!} ${styles.radius!} ${styles.button_color_default}">Radius Button</a>
+<@section title="Button Groups">
+    <@menu type="button" class="+my-button-menu-class" id="my-button-menu">
+      <@menuitem type="link" text="Menu Button 1" />
+      <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
+      <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}">
+        <!-- nested menu item comment -->
+      </@menuitem>
+      <@menuitem type="generic">
+        <!-- NOTE: this will only look right if the outer menu is a button menu of some sort -->
+        <@menu type="button-dropdown" title="Sub-menu, as button-dropdown">
+          <@menuitem type="link" text="Menu Button 1" />
+          <@menuitem type="link" text="Menu Button 2" />
+          <@menuitem type="link" text="Menu Button 3" />
+        </@menu>
+      </@menuitem>
+    </@menu>
 
-<@heading relLevel=+1>Colors</@heading>
-<a href="#" class="${styles.button!} ${styles.button_color_default}">Default Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_success!}">Success Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_primary!}">Primary Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_secondary!}">Secondary Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_alert!}">Alert Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_warning!}">Warning Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_info!}">Info Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_default} ${styles.disabled}">Disabled Button</a>
-
-<@heading relLevel=+1>Button Groups</@heading>
-<@menu type="button" class="+my-button-menu-class" id="my-button-menu">
-  <@menuitem type="link" text="Menu Button 1" />
-  <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
-  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}">
-    <!-- nested menu item comment -->
-  </@menuitem>
-  <@menuitem type="generic">
-    <!-- NOTE: this will only look right if the outer menu is a button menu of some sort -->
-    <@menu type="button-dropdown" title="Sub-menu, as button-dropdown">
+    <@menu type="button-dropdown" title="Single dropdown button menu">
       <@menuitem type="link" text="Menu Button 1" />
       <@menuitem type="link" text="Menu Button 2" />
       <@menuitem type="link" text="Menu Button 3" />
     </@menu>
-  </@menuitem>
-</@menu>
-
-<@menu type="button-dropdown" title="Single dropdown button menu">
-  <@menuitem type="link" text="Menu Button 1" />
-  <@menuitem type="link" text="Menu Button 2" />
-  <@menuitem type="link" text="Menu Button 3" />
-</@menu>
+</@section>
 
 <@section title="Step navigation">
     <@nav type="steps">
@@ -216,28 +218,29 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 </@section>
 
 <#if debugMode>
-<p>Nested sub-menus (markup test only!)</p>
-<@menu type="button" class="+my-button-menu-class" id="my-button-menu">
-  <@menuitem type="link" text="Menu Button 1" />
-  <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
-  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}">
-    <@menu class="+my-button-submenu-class" id="my-button-menu-sub">
-      <@menuitem type="link" text="Menu Button 4" />
-      <@menuitem type="link" text="Menu Button 5" contentClass="+${styles.disabled}">
-        <@menu class="+my-button-subsubmenu-class" id="my-button-menu-sub-sub">
-          <@menuitem type="link" text="Menu Button 7" />
-          <@menuitem type="link" text="Menu Button 8" contentClass="+${styles.disabled}"/>
-          <@menuitem type="link" text="Menu Button 9" contentClass="+${styles.button_color_green}">
-            <!-- nested menu item comment -->
+<@section title="Nested sub-menus (markup test only!)">
+    <@menu type="button" class="+my-button-menu-class" id="my-button-menu">
+      <@menuitem type="link" text="Menu Button 1" />
+      <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
+      <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}">
+        <@menu class="+my-button-submenu-class" id="my-button-menu-sub">
+          <@menuitem type="link" text="Menu Button 4" />
+          <@menuitem type="link" text="Menu Button 5" contentClass="+${styles.disabled}">
+            <@menu class="+my-button-subsubmenu-class" id="my-button-menu-sub-sub">
+              <@menuitem type="link" text="Menu Button 7" />
+              <@menuitem type="link" text="Menu Button 8" contentClass="+${styles.disabled}"/>
+              <@menuitem type="link" text="Menu Button 9" contentClass="+${styles.button_color_green}">
+                <!-- nested menu item comment -->
+              </@menuitem>
+            </@menu>
           </@menuitem>
+          <@menuitem type="link" text="Menu Button 6" contentClass="+${styles.button_color_green}"/>
         </@menu>
       </@menuitem>
-      <@menuitem type="link" text="Menu Button 6" contentClass="+${styles.button_color_green}"/>
     </@menu>
-  </@menuitem>
-</@menu>
+</@section>
 </#if>
-</@section>                                     
+                                     
 
 <@section>
     <@heading attribs=makeMagTargetAttribMap("panel") id="panel">Panel</@heading>

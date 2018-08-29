@@ -97,6 +97,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public static final String TNS = "http://ofbiz.apache.org/service/";
     public static final String OUT_PARAM = "OUT";
     public static final String IN_PARAM = "IN";
+    public static final String IN_OUT_PARAM = "INOUT";
 
     public static final String RESPONSE_MESSAGE = "responseMessage";
     public static final String RESPOND_SUCCESS = "success";
@@ -495,7 +496,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         List<ModelParam> params = this.getModelParamList();
         if (params != null) {
             for (ModelParam param: params) {
-                if ("INOUT".equals(param.mode) || mode.equals(param.mode)) {
+                if (IN_OUT_PARAM.equals(param.mode) || mode.equals(param.mode)) {
                     Object defaultValueObj = param.getDefaultValue();
                     if (defaultValueObj != null && context.get(param.name) == null) {
                         context.put(param.name, defaultValueObj);
@@ -535,7 +536,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         // get the info values
         for (ModelParam modelParam: this.contextParamList) {
             // Debug.logInfo("In ModelService.validate preparing parameter [" + modelParam.name + (modelParam.optional?"(optional):":"(required):") + modelParam.mode + "] for service [" + this.name + "]", module);
-            if ("INOUT".equals(modelParam.mode) || mode.equals(modelParam.mode)) {
+            if (IN_OUT_PARAM.equals(modelParam.mode) || mode.equals(modelParam.mode)) {
                 if (modelParam.optional) {
                     optionalInfo.put(modelParam.name, modelParam.type);
                 } else {
@@ -605,12 +606,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
 
         // required and type validation complete, do allow-html validation
-        if ("IN".equals(mode)) {
+        if (IN_PARAM.equals(mode)) {
             List<String> errorMessageList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             for (ModelParam modelParam : this.contextInfo.values()) {
                 // the param is a String, allow-html is not any, and we are looking at an IN parameter during input parameter validation
                 if (context.get(modelParam.name) != null && ("String".equals(modelParam.type) || "java.lang.String".equals(modelParam.type)) 
-                        && !"any".equals(modelParam.allowHtml) && ("INOUT".equals(modelParam.mode) || "IN".equals(modelParam.mode))) {
+                        && !"any".equals(modelParam.allowHtml) && (IN_OUT_PARAM.equals(modelParam.mode) || IN_PARAM.equals(modelParam.mode))) {
                     String value = (String) context.get(modelParam.name);
                     UtilCodec.checkStringForHtmlStrictNone(modelParam.name, value, errorMessageList);
                 }
@@ -821,14 +822,14 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public List<String> getParameterNames(String mode, boolean optional, boolean internal) {
         List<String> names = new ArrayList<>(contextParamList.size()); // SCIPIO: switched to ArrayList
 
-        if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
+        if (!IN_PARAM.equals(mode) && !OUT_PARAM.equals(mode) && !IN_OUT_PARAM.equals(mode)) {
             return names;
         }
         if (contextInfo.size() == 0) {
             return names;
         }
         for (ModelParam param: contextParamList) {
-            if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
+            if (param.mode.equals(IN_OUT_PARAM) || param.mode.equals(mode)) {
                 if (optional || !param.optional) {
                     if (internal || !param.internal) {
                         names.add(param.name);
@@ -892,7 +893,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         if (source == null) {
             return target;
         }
-        if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
+        if (!IN_PARAM.equals(mode) && !OUT_PARAM.equals(mode) && !IN_OUT_PARAM.equals(mode)) {
             return target;
         }
         if (contextInfo.size() == 0) {
@@ -958,7 +959,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         for (ModelParam param: contextParamList) {
             //boolean internalParam = param.internal;
 
-            if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
+            if (param.mode.equals(IN_OUT_PARAM) || param.mode.equals(mode)) {
                 String key = param.name;
 
                 // internal map of strings
@@ -1046,7 +1047,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 return result;
             }
             if (permission != null) {
-                Map<String, Object> ctx = permission.makeValid(context, ModelService.IN_PARAM);
+                Map<String, Object> ctx = permission.makeValid(context, IN_PARAM);
                 if (UtilValidate.isNotEmpty(this.permissionMainAction)) {
                     ctx.put("mainAction", this.permissionMainAction);
                 }
@@ -1133,7 +1134,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
         for (ModelParam modelParam: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if ("OUT".equals(modelParam.mode)) continue;
+            if (OUT_PARAM.equals(modelParam.mode)) continue;
 
             Object srcObject = source.get(modelParam.name);
             if (srcObject != null) {
@@ -1161,7 +1162,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         List<ModelParam> inList = new ArrayList<>(this.contextParamList.size()); // SCIPIO: switched to ArrayList
         for (ModelParam modelParam: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if ("OUT".equals(modelParam.mode)) continue;
+            if (OUT_PARAM.equals(modelParam.mode)) continue;
 
             inList.add(modelParam);
         }
@@ -1201,8 +1202,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                             if (existingParam != null) {
                                 // if the existing param is not INOUT and the newParam.mode is different from existingParam.mode, make the existing param optional and INOUT
                                 // TODO: this is another case where having different optional/required settings for IN and OUT would be quite valuable...
-                                if (!"INOUT".equals(existingParam.mode) && !existingParam.mode.equals(newParam.mode)) {
-                                    existingParam.mode = "INOUT";
+                                if (!IN_OUT_PARAM.equals(existingParam.mode) && !existingParam.mode.equals(newParam.mode)) {
+                                    existingParam.mode = IN_OUT_PARAM;
                                     if (existingParam.optional || newParam.optional) {
                                         existingParam.optional = true;
                                     }

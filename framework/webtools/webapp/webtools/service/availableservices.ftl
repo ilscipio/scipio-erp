@@ -39,27 +39,16 @@ under the License.
           <@menuitem type="link" href=makeOfbizUrl("scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />
           <@menuitem type="link" href=makeOfbizUrl("setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&POOL_NAME=pool&_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
         </@menu>
-<#-- SCIPIO: TODO
-    <#if selectedServiceMap.deprecatedUseInstead?has_content>
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.WebtoolsWarningLogLevel?upper_case} : ${uiLabelMap.WebtoolsDeprecated}</h3>
-      </div>
-        <table class="basic-table" cellspacing='0'>
-          <tr>
-            <td class="label">${uiLabelMap.WebtoolsDeprecatedUseInstead}</td>
-            <td>${selectedServiceMap.deprecatedUseInstead}</td>
-            <td class="label">${uiLabelMap.CommonSince}</td>
-            <td>${selectedServiceMap.deprecatedSince}</td>
-          </tr>
-          <tr>
-            <td class="label">${uiLabelMap.CommonReason}</td>
-            <td colspan="3">${selectedServiceMap.deprecatedReason}</td>
-          </tr>
-        </table>
-    </div>
-    </#if>
--->
+
+        <#if selectedServiceMap.deprecatedUseInstead?has_content>
+          <@section title=rawLabel('WebtoolsWarningLogLevel')?upper_case+": "+rawLabel('WebtoolsDeprecated')>
+            <@field type="display" label=uiLabelMap.WebtoolsDeprecatedUseInstead><#if rawString(selectedServiceMap.deprecatedUseInstead)?lower_case == "none">${uiLabelMap.CommonNone}<#else><#rt/>
+                <a href="<@ofbizUrl>ServiceList?sel_service_name=${selectedServiceMap.deprecatedUseInstead}</@ofbizUrl>">${selectedServiceMap.deprecatedUseInstead}</a></#if></@field><#lt/>
+            <@field type="display" label=uiLabelMap.CommonSince>${selectedServiceMap.deprecatedSince!}</@field>
+            <@field type="display" label=uiLabelMap.CommonReason>${selectedServiceMap.deprecatedReason!}</@field>
+          </@section>
+        </#if>
+
     <#-- Show a little form for exportServiceEoModelBundle -->
     <@row>
         <@cell columns=6>
@@ -411,7 +400,7 @@ under the License.
             <#assign anchorAttribs = {}>
           </#if>
           <@tr>
-            <@td id=anchorId attribs=anchorAttribs><a href="<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>">${service.serviceName}</a></@td>
+            <@td id=anchorId attribs=anchorAttribs><#if service.deprecated?has_content><strike></#if><a href="<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>">${service.serviceName}</a><#if service.deprecated?has_content></strike> (${uiLabelMap.WebtoolsDeprecated})</#if></@td>
             <@td><a href="<@ofbizUrl>${url}?constraint=engine_name@${service.engineName!uiLabelMap.CommonNA}</@ofbizUrl>">${service.engineName}</a></@td>
             <@td><a href="<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName!uiLabelMap.CommonNA}</@ofbizUrl>">${service.defaultEntityName}</a></@td>
             <@td>${service.invoke}</@td>

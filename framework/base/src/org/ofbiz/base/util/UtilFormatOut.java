@@ -482,7 +482,10 @@ public class UtilFormatOut {
     }
 
     // ------------------- web encode handlers -------------------
-    /** Encodes an HTTP URL query String, replacing characters used for other things in HTTP URL query strings, but not touching the separator characters '?', '=', and '&'
+    /** 
+     * Encodes an HTTP URL query String, replacing characters used for other
+     * things in HTTP URL query strings, but not touching the separator
+     * characters '?', '=', and '&amp;'
      * @param query The plain query String
      * @return The encoded String
      */
@@ -535,7 +538,8 @@ public class UtilFormatOut {
     }
 
     // ------------------- web encode handlers -------------------
-    /** Encodes an XML string replacing the characters '<', '>', '"', ''', '&'
+    /** 
+     * Encodes an XML string replacing the characters '&lt;', '&gt;', '&quot;', '&#39;', '&amp;'
      * @param inString The plain value String
      * @return The encoded String
      */

@@ -657,17 +657,15 @@ public class WorkEffortServices {
     * key/value pairs:
     * </p>
     * <ul>
-    * <li>start - TimeStamp (Period start date/time)</li>
-    * <li>end - TimeStamp (Period end date/time)</li>
-    * <li>calendarEntries - List of Maps. Each Map contains the following
-    * key/value pairs:</li>
-    * <ul>
-    * <li>workEffort - GenericValue</li>
-    * <li>periodSpan - Integer (Number of periods this Work Effort spans)</li>
-    * <li>startOfPeriod - Boolean (true if this is the first occurrence in the
-    * period range)</li>
-    * </ul>
-    * </ul>
+     *   <li>start - TimeStamp (Period start date/time)</li>
+     *   <li>end - TimeStamp (Period end date/time)</li>
+     *   <li>calendarEntries - List of Maps. Each Map contains the following key/value pairs</li>
+     *   <li><ul>
+     *       <li>workEffort - GenericValue</li>
+     *       <li>periodSpan - Integer (Number of periods this Work Effort spans)</li>
+     *       <li>startOfPeriod - Boolean (true if this is the first occurrence in the period range)</li>
+     *   </ul></li>
+     * </ul>
     */
 
     public static Map<String, Object> getWorkEffortEventsByPeriod(DispatchContext ctx, Map<String, ? extends Object> context) {

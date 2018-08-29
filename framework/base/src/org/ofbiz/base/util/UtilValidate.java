@@ -32,33 +32,33 @@ import com.ibm.icu.util.Calendar;
  * Utility methods for validating data, especially input.
  * See detailed description below.
  *
- * <br/> SUMMARY
- * <br/>
- * <br/> This is a set of meethods for validating input. Functions are provided to validate:
- * <br/>    - U.S. and international phone/fax numbers
- * <br/>    - U.S. ZIP codes(5 or 9 digit postal codes)
- * <br/>    - U.S. Postal Codes(2 letter abbreviations for names of states)
- * <br/>    - U.S. Social Security Numbers(abbreviated as SSNs)
- * <br/>    - email addresses
- * <br/>       - dates(entry of year, month, and day and validity of combined date)
- * <br/>       - credit card numbers
- * <br/>
- * <br/> Supporting utility functions validate that:
- * <br/>    - characters are Letter, Digit, or LetterOrDigit
- * <br/>    - strings are a Signed, Positive, Negative, Nonpositive, or Nonnegative integer
- * <br/>    - strings are a Float or a SignedFloat
- * <br/>    - strings are Alphabetic, Alphanumeric, or Whitespace
- * <br/>    - strings contain an integer within a specified range
- * <br/>
- * <br/> Other utility functions are provided to:
- * <br/>    - remove from a string characters which are/are not in a "bag" of selected characters
- * <br/>       - strip whitespace/leading whitespace from a string
- * <br/>
- * <br/> ==============================================================================
- * <br/> NOTE: This code was adapted from the Netscape JavaScript form validation code,
- * <br/> usually found in "FormChek.js". Credit card verification functions Originally
- * <br/> included as Starter Application 1.0.0 in LivePayment.
- * <br/> ==============================================================================
+ * <br> SUMMARY
+ * <br>
+ * <br> This is a set of meethods for validating input. Functions are provided to validate:
+ * <br>    - U.S. and international phone/fax numbers
+ * <br>    - U.S. ZIP codes(5 or 9 digit postal codes)
+ * <br>    - U.S. Postal Codes(2 letter abbreviations for names of states)
+ * <br>    - U.S. Social Security Numbers(abbreviated as SSNs)
+ * <br>    - email addresses
+ * <br>       - dates(entry of year, month, and day and validity of combined date)
+ * <br>       - credit card numbers
+ * <br>
+ * <br> Supporting utility functions validate that:
+ * <br>    - characters are Letter, Digit, or LetterOrDigit
+ * <br>    - strings are a Signed, Positive, Negative, Nonpositive, or Nonnegative integer
+ * <br>    - strings are a Float or a SignedFloat
+ * <br>    - strings are Alphabetic, Alphanumeric, or Whitespace
+ * <br>    - strings contain an integer within a specified range
+ * <br>
+ * <br> Other utility functions are provided to:
+ * <br>    - remove from a string characters which are/are not in a "bag" of selected characters
+ * <br>       - strip whitespace/leading whitespace from a string
+ * <br>
+ * <br> ==============================================================================
+ * <br> NOTE: This code was adapted from the Netscape JavaScript form validation code,
+ * <br> usually found in "FormChek.js". Credit card verification functions Originally
+ * <br> included as Starter Application 1.0.0 in LivePayment.
+ * <br> ==============================================================================
  */
 public class UtilValidate {
 
@@ -401,7 +401,10 @@ public class UtilValidate {
         }
     }
 
-    /** Returns true if string s is an integer > 0. NOTE: using the Java Long object for greatest precision */
+    /**
+     * Returns true if string s is an integer &gt; 0.
+     * NOTE: using the Java Long object for greatest precision
+     */
     public static boolean isPositiveInteger(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
 
@@ -418,7 +421,9 @@ public class UtilValidate {
         // &&((isEmpty(s) && secondArg)  ||(parseInt(s) > 0)));
     }
 
-    /** Returns true if string s is an integer >= 0. */
+    /**
+     * Returns true if string s is an integer &gt;= 0
+     */
     public static boolean isNonnegativeInteger(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
 
@@ -435,7 +440,9 @@ public class UtilValidate {
         // &&((isEmpty(s) && secondArg)  ||(parseInt(s) >= 0)));
     }
 
-    /** Returns true if string s is an integer < 0. */
+    /**
+     * Returns true if string s is an integer &lt; 0
+     */
     public static boolean isNegativeInteger(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
 
@@ -452,7 +459,9 @@ public class UtilValidate {
         // &&((isEmpty(s) && secondArg)  ||(parseInt(s) < 0)));
     }
 
-    /** Returns true if string s is an integer <= 0. */
+    /** 
+     * Returns true if string s is an integer &lt;= 0
+     */
     public static boolean isNonpositiveInteger(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
 

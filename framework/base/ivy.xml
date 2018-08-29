@@ -108,10 +108,10 @@
         <dependency org="net.sf.barcode4j" name="barcode4j-fop-ext" rev="2.1" conf="base,sources"/>
         <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.10" conf="base,sources"/><!-- NOTE: deps are excluded further below -->
         <dependency org="org.apache.xmlgraphics" name="fop" rev="2.2" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.5.5" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.5.5" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.5.6" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.5.6" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.10" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.5.5" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.5.6" conf="base,sources"/>
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.22" conf="base,sources"/>
         <dependency org="com.ibm.icu" name="icu4j" rev="61.1" conf="base,sources"/>
         <dependency org="javolution" name="javolution" rev="5.5.1" conf="base,sources"/><!-- TODO: increase: blocked by EntitySaxReader -->

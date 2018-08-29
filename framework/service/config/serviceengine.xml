@@ -48,11 +48,11 @@ under the License.
         <engine name="simple" class="org.ofbiz.minilang.SimpleServiceEngine"/>
         <engine name="script" class="org.ofbiz.service.engine.ScriptEngine"/>
         <!-- Engines that can be replaced by the generic script engine -->
-        <engine name="bsh" class="org.ofbiz.service.engine.BeanShellEngine"/>
+        <engine name="bsh" class="org.ofbiz.service.engine.BeanShellEngine"/><!-- SCIPIO: 2018-08: WARN: Limited support, may be removed in future -->
         <engine name="groovy" class="org.ofbiz.service.engine.GroovyEngine"/>
-        <engine name="jacl" class="org.ofbiz.service.engine.BSFEngine"/>
+        <engine name="jacl" class="org.ofbiz.service.engine.BSFEngine"/><!-- SCIPIO: 2018-08: WARN: Unsupported, may be removed in future -->
         <engine name="javascript" class="org.ofbiz.service.engine.ScriptEngine"/>
-        <engine name="jpython" class="org.ofbiz.service.engine.BSFEngine"/>
+        <engine name="jpython" class="org.ofbiz.service.engine.BSFEngine"/><!-- SCIPIO: 2018-08: WARN: Unsupported, may be removed in future -->
         <!--  -->
         <engine name="route" class="org.ofbiz.service.engine.RouteEngine"/>
         <engine name="http" class="org.ofbiz.service.engine.HttpEngine"/>

@@ -57,10 +57,16 @@ under the License.
                     <decorator-section name="body">
                         <!-- SCIPIO: 2018-08-28: TODO: REVIEW: JobManagerLock 
                         <include-screen name="JobManagerLockEnable"/>-->
-                        <platform-specific><html><html-template location="component://common/webcommon/includes/ServerHour24HourFormatJs.ftl"/></html></platform-specific>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
-                                <include-form name="FindJobs" location="component://webtools/widget/ServiceForms.xml"/>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_medium}9 ${styles.grid_cell}">
+                                        <include-form name="FindJobs" location="component://webtools/widget/ServiceForms.xml"/>
+                                    </container>
+                                    <container style="${styles.grid_medium}3 ${styles.grid_cell}">
+                                        <include-screen name="serverTimeClock"/>
+                                    </container>
+                                </container>
                             </decorator-section>
                             <decorator-section name="search-results">
                                 <include-form name="ListJobs" location="component://webtools/widget/ServiceForms.xml"/>
@@ -89,6 +95,21 @@ under the License.
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: replaces the old FindJobs.clock field (broken JS) -->
+    <screen name="serverTimeClock">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/ServerHour24HourFormatJs.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template><![CDATA[
+                    <p class="${styles.text_right!}">
+                      <label for="${clockField}">${uiLabelMap.CommonServerHour}:</label> <span id="${clockField}">...</span>
+                    </p>
+                ]]></html-template></html></platform-specific>
             </widgets>
         </section>
     </screen>

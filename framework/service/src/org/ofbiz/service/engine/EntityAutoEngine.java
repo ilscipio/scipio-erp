@@ -21,6 +21,7 @@ package org.ofbiz.service.engine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,6 +50,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ServiceErrorUiLabels";
+    private static final List<String> availableInvokeActionNames = UtilMisc.toList("create", "update", "delete", "expire");
 
     public EntityAutoEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
@@ -70,12 +72,10 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
         // static java service methods should be: public Map<String, Object> methodName(DispatchContext dctx, Map<String, Object> context)
         DispatchContext dctx = dispatcher.getLocalContext(localName);
         Locale locale = (Locale) parameters.get("locale");
-        Map<String, Object> localContext = new HashMap<String, Object>();
-        localContext.put("parameters", parameters);
         Map<String, Object> result = ServiceUtil.returnSuccess();
 
         // check the package and method names
-        if (modelService.invoke == null || (!"create".equals(modelService.invoke) && !"update".equals(modelService.invoke) && !"delete".equals(modelService.invoke))) {
+        if (modelService.invoke == null || !availableInvokeActionNames.contains(modelService.invoke)) {
             throw new GenericServiceException("In Service [" + modelService.name + "] the invoke value must be create, update, or delete for entity-auto engine");
         }
 
@@ -109,7 +109,43 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                 }
             }
 
-            if ("create".equals(modelService.invoke)) {
+            switch (modelService.invoke) {
+            case "create":
+                result = invokeCreate(dctx, parameters, modelService, modelEntity, allPksInOnly, pkFieldNameOutOnly);
+                break;
+            case "update":
+                result = invokeUpdate(dctx, parameters, modelService, modelEntity, allPksInOnly);
+                break;
+            case "delete":
+                result = invokeDelete(dctx, parameters, modelService, modelEntity, allPksInOnly);
+                break;
+            case "expire":
+                result = invokeExpire(dctx, parameters, modelService, modelEntity, allPksInOnly);
+                if (ServiceUtil.isSuccess(result)) {
+                    result = invokeUpdate(dctx, parameters, modelService, modelEntity, allPksInOnly);
+                }
+                break;
+            default:
+                break;
+            }
+            GenericValue crudValue = (GenericValue) result.get("crudValue");
+            if (crudValue != null) {
+                result.remove("crudValue");
+                result.putAll(modelService.makeValid(crudValue, "OUT"));
+            }
+        } catch (GeneralException e) {
+            Debug.logError(e, "Error doing entity-auto operation for entity [" + modelEntity.getEntityName() + "] in service [" + modelService.name + "]: " + e.toString(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceEntityAutoOperation", UtilMisc.toMap("entityName", modelEntity.getEntityName(), "serviceName", modelService.name,"errorString", e.toString()), locale));
+        }
+
+        return result;
+    }
+
+    private static Map<String, Object> invokeCreate(DispatchContext dctx, Map<String, Object> parameters, ModelService modelService, ModelEntity modelEntity, boolean allPksInOnly, List<String> pkFieldNameOutOnly)
+            throws GeneralException {
+        Locale locale = (Locale) parameters.get("locale");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
                 GenericValue newEntity = dctx.getDelegator().makeValue(modelEntity.getEntityName());
 
                 boolean isSinglePk = modelEntity.getPksSize() == 1;
@@ -275,11 +311,15 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                             newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
                             if (modelEntity.getField("lastModifiedByUserLogin") != null) {
                                 newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+                    } else if (modelEntity.getField("changedByUserLogin") != null) {
+                        newEntity.set("changedByUserLogin", userLogin.get("userLoginId"));
                             }
                         }
                     }
                     if (modelEntity.getField("lastModifiedDate") != null) {
                         newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+            } else if (modelEntity.getField("changedDate") != null) {
+                newEntity.set("changedDate", UtilDateTime.nowTimestamp());
                     }
                 }
                 if (modelEntity.getField("changeByUserLoginId") != null) {
@@ -297,8 +337,16 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                     }
                 }
                 newEntity.create();
-                result.putAll(modelService.makeValid(newEntity, "OUT"));
-            } else if ("update".equals(modelService.invoke)) {
+        result.put("crudValue", newEntity);
+        return result;
+    }
+
+    private static Map<String, Object> invokeUpdate(DispatchContext dctx, Map<String, Object> parameters, ModelService modelService, ModelEntity modelEntity, boolean allPksInOnly)
+            throws GeneralException {
+        Locale locale = (Locale) parameters.get("locale");
+        Map<String, Object> localContext = new HashMap<String, Object>();
+        localContext.put("parameters", parameters);
+        Map<String, Object> result = ServiceUtil.returnSuccess();
                 /*
                 <auto-attributes include="pk" mode="IN" optional="false"/>
                  *
@@ -317,7 +365,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceValueNotFound", locale));
                 }
 
-                localContext.put("lookedUpValue", lookedUpValue);
+        //        localContext.put("lookedUpValue", lookedUpValue);
 
                 // populate the oldStatusId out if there is a service parameter for it, and before we do the set non-pk fields
                 /*
@@ -366,12 +414,22 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                 // NOTE: nothing here to maintain the status history, that should be done with a custom service called by SECA rule
 
                 lookedUpValue.setNonPKFields(parameters, true);
+        if (modelEntity.getField("lastModifiedDate") != null
+                || modelEntity.getField("changedDate") != null) {
                 if (modelEntity.getField("lastModifiedDate") != null) {
                     lookedUpValue.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-                    if (modelEntity.getField("lastModifiedByUserLogin") != null) {
+            } else {
+                lookedUpValue.set("changedDate", UtilDateTime.nowTimestamp());
+            }
+            if (modelEntity.getField("lastModifiedByUserLogin") != null
+                    || modelEntity.getField("changedByUserLogin") != null) {
                         GenericValue userLogin = (GenericValue) parameters.get("userLogin");
                         if (userLogin != null) {
+                    if (modelEntity.getField("lastModifiedByUserLogin") != null) {
                             lookedUpValue.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+                    } else {
+                        lookedUpValue.set("changedByUserLogin", userLogin.get("userLoginId"));
+                    }
                         }
                     }
                 }
@@ -390,7 +448,13 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                 }
 
                 lookedUpValue.store();
-            } else if ("delete".equals(modelService.invoke)) {
+        result.put("crudValue", lookedUpValue);
+        return result;
+    }
+
+    private static Map<String, Object> invokeDelete(DispatchContext dctx, Map<String, Object> parameters, ModelService modelService, ModelEntity modelEntity, boolean allPksInOnly)
+            throws GeneralException {
+        Locale locale = (Locale) parameters.get("locale");
                 /*
                 <auto-attributes include="pk" mode="IN" optional="false"/>
                  *
@@ -411,17 +475,74 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                 }
 
                 GenericValue lookedUpValue = PrimaryKeyFinder.runFind(modelEntity, parameters, dctx.getDelegator(), false, true, null, null);
-                if (lookedUpValue != null) {
-                    lookedUpValue.remove();
-                } else {
+        if (lookedUpValue == null) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceValueNotFoundForRemove", locale));
                 }
+        lookedUpValue.remove();
+        return ServiceUtil.returnSuccess();
             }
-        } catch (GeneralException e) {
-            Debug.logError(e, "Error doing entity-auto operation for entity [" + modelEntity.getEntityName() + "] in service [" + modelService.name + "]: " + e.toString(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceEntityAutoOperation", UtilMisc.toMap("entityName", modelEntity.getEntityName(), "serviceName", modelService.name,"errorString", e.toString()), locale));
+
+    /**
+     * Analyse the entity, service and parameter to resolve the field to update with what value
+     * @param dctx
+     * @param parameters
+     * @param modelService
+     * @param modelEntity
+     * @param lookedUpValue
+     * @param allPksInOnly
+     * @return
+     * @throws GeneralException
+     */
+    private static Map<String, Object> invokeExpire(DispatchContext dctx, Map<String, Object> parameters, ModelService modelService, ModelEntity modelEntity, boolean allPksInOnly)
+            throws GeneralException {
+        Locale locale = (Locale) parameters.get("locale");
+        LinkedList<String> fieldThruDates = new LinkedList<String>();
+        boolean thruDatePresent = false;
+        String fieldDateNameIn = null;
+
+        // check to make sure that all primary key fields are defined as IN attributes
+        if (!allPksInOnly) {
+            throw new GenericServiceException("In Service [" + modelService.name + "] which uses the entity-auto engine with the update invoke option not all pk fields have the mode IN");
+        }
+        GenericValue lookedUpValue = PrimaryKeyFinder.runFind(modelEntity, parameters, dctx.getDelegator(), false, true, null, null);
+        if (lookedUpValue == null) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceValueNotFound", locale));
         }
 
-        return result;
+        //check if a non pk date field is present on parameters
+        for (String fieldDateName : modelEntity.getNoPkFieldNames()) {
+            if ("thruDate".equals(fieldDateName)) {
+                thruDatePresent = true;
+            } else if (fieldDateName.endsWith("ThruDate")) {
+                fieldThruDates.add(fieldDateName);
+            } else if (fieldDateName.startsWith("thru") && fieldDateName.endsWith("Date")) {
+                fieldThruDates.add(fieldDateName);
+            } else if (fieldDateNameIn == null && modelService.getParam(fieldDateName) != null
+                    && modelEntity.getField(fieldDateName).getType().contains("date")) {
+                fieldDateNameIn = fieldDateName;
+            }
+        }
+
+        if (Debug.infoOn())
+            Debug.logInfo(" FIELD FOUND : " + fieldDateNameIn + " ## # " + fieldThruDates + " ### " + thruDatePresent, module);
+
+        if (Debug.infoOn())
+            Debug.logInfo(" parameters IN  : " + parameters, module);
+        // Resolve the field without value to expire and check if the value is present on parameters or use now
+        if (fieldDateNameIn != null) {
+            if (parameters.get(fieldDateNameIn) == null) parameters.put(fieldDateNameIn, UtilDateTime.nowTimestamp());
+        } else if (thruDatePresent && UtilValidate.isEmpty(lookedUpValue.getTimestamp("thruDate"))) {
+            if (UtilValidate.isEmpty(parameters.get("thruDate"))) parameters.put("thruDate", UtilDateTime.nowTimestamp());
+        } else {
+            for (String fieldDateName: fieldThruDates) {
+                if (UtilValidate.isEmpty(lookedUpValue.getTimestamp(fieldDateName))) {
+                    if (UtilValidate.isEmpty(parameters.get(fieldDateName))) parameters.put(fieldDateName, UtilDateTime.nowTimestamp());
+                    break;
+                }
+            }
+        }
+        if (Debug.infoOn())
+            Debug.logInfo(" parameters OUT  : " + parameters, module);
+        return ServiceUtil.returnSuccess();
     }
 }

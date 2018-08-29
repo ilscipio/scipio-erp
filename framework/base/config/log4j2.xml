@@ -63,6 +63,13 @@
         <!-- SCIPIO: Scipio Solr auth/security plugins -->
         <logger name="com.ilscipio.scipio.solr.plugin.security" level="info"/>
 
+        <!-- SCIPIO: Scipio Camel plugins (max verbosity) 
+            NOTE: This is only needed because some Camel superclasses and utilities
+            log directly to log4j under our name; otherwise our Scipio code checks the enabled ofbiz log levels (info, verbose, etc.).
+            There is a small chance you may need to change these to "warn" on production systems. -->
+        <logger name="com.ilscipio.scipio.camel.endpoint" level="info"/>
+        <logger name="com.ilscipio.scipio.camel.route" level="info"/>
+
         <Root level="all">
             <AppenderRef ref="async"/>
         </Root>

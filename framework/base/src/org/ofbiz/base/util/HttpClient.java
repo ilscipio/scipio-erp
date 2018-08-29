@@ -39,7 +39,7 @@ public class HttpClient {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private int hostVerification = SSLUtil.HOSTCERT_NORMAL_CHECK;
+    private int hostVerification = SSLUtil.getHostCertNormalCheck();
     private int timeout = 30000;
     private boolean debug = false;
     private boolean lineFeed = true;

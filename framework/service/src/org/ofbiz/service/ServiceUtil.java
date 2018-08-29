@@ -129,7 +129,7 @@ public final class ServiceUtil {
             result.put(ModelService.ERROR_MESSAGE, errorMessage);
         }
 
-        List<Object> errorList = new ArrayList<Object>(); // SCIPIO: switched to ArrayList
+        List<Object> errorList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         if (errorMessageList != null) {
             errorList.addAll(errorMessageList);
         }
@@ -157,6 +157,8 @@ public final class ServiceUtil {
         if (errorMap.size() > 0) {
             result.put(ModelService.ERROR_MESSAGE_MAP, errorMap);
         }
+        // SCIPIO: NOTE: 2018-08-29: upstream added this, I do not agree with it, enough logs already
+        //Debug.logError(result.toString(), module);
         return result;
     }
 
@@ -183,8 +185,12 @@ public final class ServiceUtil {
      */
     public static Map<String, Object> returnMessage(String code, String message) {
         Map<String, Object> result = new HashMap<>();
-        if (code != null) result.put(ModelService.RESPONSE_MESSAGE, code);
-        if (message != null) result.put(ModelService.SUCCESS_MESSAGE, message);
+        if (code != null) {
+            result.put(ModelService.RESPONSE_MESSAGE, code);
+        }
+        if (message != null) {
+            result.put(ModelService.SUCCESS_MESSAGE, message);
+        }
         return result;
     }
     
@@ -270,14 +276,17 @@ public final class ServiceUtil {
     }
 
     public static void setMessages(HttpServletRequest request, String errorMessage, String eventMessage, String defaultMessage) {
-        if (UtilValidate.isNotEmpty(errorMessage))
+        if (UtilValidate.isNotEmpty(errorMessage)) {
             request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+        }
 
-        if (UtilValidate.isNotEmpty(eventMessage))
+        if (UtilValidate.isNotEmpty(eventMessage)) {
             request.setAttribute("_EVENT_MESSAGE_", eventMessage);
+        }
 
-        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(eventMessage) && UtilValidate.isNotEmpty(defaultMessage))
+        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(eventMessage) && UtilValidate.isNotEmpty(defaultMessage)) {
             request.setAttribute("_EVENT_MESSAGE_", defaultMessage);
+        }
 
     }
 
@@ -328,7 +337,9 @@ public final class ServiceUtil {
     public static String getErrorMessage(Map<String, ? extends Object> result) {
         StringBuilder errorMessage = new StringBuilder();
 
-        if (result.get(ModelService.ERROR_MESSAGE) != null) errorMessage.append((String) result.get(ModelService.ERROR_MESSAGE));
+        if (result.get(ModelService.ERROR_MESSAGE) != null) {
+            errorMessage.append((String) result.get(ModelService.ERROR_MESSAGE));
+        }
 
         if (result.get(ModelService.ERROR_MESSAGE_LIST) != null) {
             List<? extends Object> errors = UtilGenerics.checkList(result.get(ModelService.ERROR_MESSAGE_LIST));
@@ -356,9 +367,13 @@ public final class ServiceUtil {
         StringBuilder outMsg = new StringBuilder();
 
         if (errorMsg != null) {
-            if (msgPrefix != null) outMsg.append(msgPrefix);
+            if (msgPrefix != null) {
+                outMsg.append(msgPrefix);
+            }
             outMsg.append(errorMsg);
-            if (msgSuffix != null) outMsg.append(msgSuffix);
+            if (msgSuffix != null) {
+                outMsg.append(msgSuffix);
+            }
         }
 
         outMsg.append(makeMessageList(errorMsgList, msgPrefix, msgSuffix));
@@ -376,9 +391,13 @@ public final class ServiceUtil {
         if (outMsg.length() > 0) {
             StringBuilder strBuf = new StringBuilder();
 
-            if (errorPrefix != null) strBuf.append(errorPrefix);
+            if (errorPrefix != null) {
+                strBuf.append(errorPrefix);
+            }
             strBuf.append(outMsg.toString());
-            if (errorSuffix != null) strBuf.append(errorSuffix);
+            if (errorSuffix != null) {
+                strBuf.append(errorSuffix);
+            }
             return strBuf.toString();
         }
         return null;
@@ -420,16 +439,24 @@ public final class ServiceUtil {
         outMsg.append(makeMessageList(successMsgList, msgPrefix, msgSuffix));
 
         if (successMsg != null) {
-            if (msgPrefix != null) outMsg.append(msgPrefix);
+            if (msgPrefix != null) {
+                outMsg.append(msgPrefix);
+            }
             outMsg.append(successMsg);
-            if (msgSuffix != null) outMsg.append(msgSuffix);
+            if (msgSuffix != null) {
+                outMsg.append(msgSuffix);
+            }
         }
 
         if (outMsg.length() > 0) {
             StringBuilder strBuf = new StringBuilder();
-            if (successPrefix != null) strBuf.append(successPrefix);
+            if (successPrefix != null) {
+                strBuf.append(successPrefix);
+            }
             strBuf.append(outMsg.toString());
-            if (successSuffix != null) strBuf.append(successSuffix);
+            if (successSuffix != null) {
+                strBuf.append(successSuffix);
+            }
             return strBuf.toString();
         }
         return null;
@@ -489,11 +516,17 @@ public final class ServiceUtil {
         }
         if (UtilValidate.isNotEmpty(msgList)) {
             for (Object msg: msgList) {
-                if (msg == null) continue;
+                if (msg == null) {
+                    continue;
+                }
                 String curMsg = msg.toString();
-                if (msgPrefix != null) outMsg.append(msgPrefix);
+                if (msgPrefix != null) {
+                    outMsg.append(msgPrefix);
+                }
                 outMsg.append(curMsg);
-                if (msgSuffix != null) outMsg.append(msgSuffix);
+                if (msgSuffix != null) {
+                    outMsg.append(msgSuffix);
+                }
             }
         }
         return outMsg.toString();
@@ -635,7 +668,7 @@ public final class ServiceUtil {
             // Now JobSandbox data is cleaned up. Now process Runtime data and remove the whole data in single shot that is of no need.
             boolean beganTx3 = false;
             GenericValue runtimeData = null;
-            List<GenericValue> runtimeDataToDelete = new ArrayList<GenericValue>(); // SCIPIO: switched to ArrayList
+            List<GenericValue> runtimeDataToDelete = new ArrayList<>(); // SCIPIO: switched to ArrayList
             long jobsandBoxCount = 0;
             try {
                 // begin this transaction
@@ -741,7 +774,7 @@ public final class ServiceUtil {
         try {
             job = EntityQuery.use(delegator).from("JobSandbox").where("jobId", jobId).queryOne();
             if (job != null) {
-                job.set("maxRetry", Long.valueOf(0));
+                job.set("maxRetry", 0L);
                 job.store();
             }
         } catch (GenericEntityException e) {
@@ -763,8 +796,12 @@ public final class ServiceUtil {
         Timestamp now = UtilDateTime.nowTimestamp();
         boolean reply = true;
 
-        if (fromDate != null && fromDate.after(now)) reply = false;
-        if (thruDate != null && thruDate.before(now)) reply = false;
+        if (fromDate != null && fromDate.after(now)) {
+            reply = false;
+        }
+        if (thruDate != null && thruDate.before(now)) {
+            reply = false;
+        }
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("conditionReply", reply);
@@ -801,7 +838,9 @@ public final class ServiceUtil {
             throw new IllegalArgumentException("args is null in makeContext, this would throw a NullPointerExcption.");
         }
             for (int i = 0; i < args.length; i += 2) {
-                if (!(args[i] instanceof String)) throw new IllegalArgumentException("Arg(" + i + "), value(" + args[i] + ") is not a string.");
+            if (!(args[i] instanceof String)) {
+                throw new IllegalArgumentException("Arg(" + i + "), value(" + args[i] + ") is not a string.");
+            }
             }
         return UtilGenerics.checkMap(UtilMisc.toMap(args));
     }

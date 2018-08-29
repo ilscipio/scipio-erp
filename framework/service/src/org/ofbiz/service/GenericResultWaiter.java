@@ -50,8 +50,7 @@ public class GenericResultWaiter implements GenericRequester {
         completed = true;
         status = SERVICE_FINISHED;
         notify();
-        if (Debug.verboseOn())
-            Debug.logVerbose("Received Result (" + completed + ") -- " + result, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Received Result (" + completed + ") -- " + result, module);
     }
 
     /**

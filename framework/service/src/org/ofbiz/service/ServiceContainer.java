@@ -35,7 +35,7 @@ import org.ofbiz.service.job.JobManager;
  */
 public class ServiceContainer implements Container {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final ConcurrentHashMap<String, LocalDispatcher> dispatcherCache = new ConcurrentHashMap<String, LocalDispatcher>();
+    private static final ConcurrentHashMap<String, LocalDispatcher> dispatcherCache = new ConcurrentHashMap<>();
     private static LocalDispatcherFactory dispatcherFactory;
 
     private String name;
@@ -90,7 +90,7 @@ public class ServiceContainer implements Container {
             dispatcher = dispatcherFactory.createLocalDispatcher(dispatcherName, delegator);
             dispatcherCache.putIfAbsent(dispatcherName, dispatcher);
             dispatcher = dispatcherCache.get(dispatcherName);
-            if (Debug.infoOn()) Debug.logInfo("Created new dispatcher: " + dispatcherName, module);
+            Debug.logInfo("Created new dispatcher: " + dispatcherName, module);
         }
         return dispatcher;
     }
@@ -103,7 +103,7 @@ public class ServiceContainer implements Container {
     }
 
     public static LocalDispatcher removeFromCache(String dispatcherName) {
-        if (Debug.infoOn()) Debug.logInfo("Removing from cache dispatcher: " + dispatcherName, module);
+        Debug.logInfo("Removing from cache dispatcher: " + dispatcherName, module);
         return dispatcherCache.remove(dispatcherName);
     }
 

@@ -307,12 +307,12 @@ public class ServiceXaWrapper extends GenericXaResource {
                     // invoke based on mode
                     switch (mode) {
                         case MODE_ASYNC:
-                            if (Debug.infoOn()) Debug.logInfo(msgPrefix + "Invoking [" + service + "] via runAsync", module);
+                            Debug.logInfo(msgPrefix + "Invoking [" + service + "] via runAsync", module);
                             dctx.getDispatcher().runAsync(service, thisContext, persist);
                             break;
 
                         case MODE_SYNC:
-                            if (Debug.infoOn()) Debug.logInfo(msgPrefix + "Invoking [" + service + "] via runSyncIgnore", module);
+                            Debug.logInfo(msgPrefix + "Invoking [" + service + "] via runSyncIgnore", module);
                             dctx.getDispatcher().runSyncIgnore(service, thisContext);
                             break;
                     }

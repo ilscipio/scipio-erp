@@ -38,6 +38,11 @@ public class ModelPermission implements Serializable {
 
     public static final int PERMISSION = 1;
     public static final int ENTITY_PERMISSION = 2;
+    /**
+     * SCIPIO: WARN: 2018-08-29: this feature was removed in ofbiz 17,
+     * because it appeared to never have worked (?).
+     * TODO: REVIEW: Must be fixed or removed in Scipio.
+     */
     public static final int ROLE_MEMBER = 3;
     public static final int PERMISSION_SERVICE = 4;
 
@@ -150,6 +155,6 @@ public class ModelPermission implements Serializable {
             Debug.logError(failMessage, module);
             return false;
         }
-        return ((Boolean) resp.get("hasPermission")).booleanValue();
+        return (Boolean) resp.get("hasPermission");
     }
 }

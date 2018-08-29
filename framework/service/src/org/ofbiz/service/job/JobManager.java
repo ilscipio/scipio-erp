@@ -219,8 +219,6 @@ public final class JobManager {
         EntityCondition commonCondition = mainCondition;
         mainCondition = EntityCondition.makeCondition(commonCondition, EntityCondition.makeCondition("eventId", null));
         
-        EntityListIterator jobsIterator = null;
-        
         boolean beganTransaction = false;
         
         // SCIPIO: first, add the run-at-startup jobs
@@ -232,19 +230,22 @@ public final class JobManager {
                     return poll;
                 }
                 
-                jobsIterator = queryStartupJobs(commonCondition);
-                
-                // NOTE: due to synchronization, we could have null here
-                if (jobsIterator != null) {
-                    // SCIPIO: FIXME?: We currently ignore the limit for the startup jobs;
-                    // might want to find way to delay them to next poll, because we violate the limit request from caller...
-                    ownAndCollectJobs(dctx, delegator, -1, jobsIterator, poll);
-                    
-                    if (Debug.infoOn()) {
-                        Debug.logInfo("Scipio: Collected " + poll.size() + 
-                                " SCH_EVENT_STARTUP run-at-startup jobs for queuing", module);
+                try (EntityListIterator jobsIterator = queryStartupJobs(commonCondition)) {
+                    // NOTE: due to synchronization, we could have null here
+                    if (jobsIterator != null) {
+                        // SCIPIO: FIXME?: We currently ignore the limit for the startup jobs;
+                        // might want to find way to delay them to next poll, because we violate the limit request from caller...
+                        ownAndCollectJobs(dctx, delegator, -1, jobsIterator, poll);
+                        
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Scipio: Collected " + poll.size() + 
+                                    " SCH_EVENT_STARTUP run-at-startup jobs for queuing", module);
+                        }
                     }
                 }
+                //} catch (GenericEntityException e) { // SCIPIO: 2018-08-29: this catch is counter-productive
+                //    Debug.logWarning(e, module);
+                //}
 
                 TransactionUtil.commit(beganTransaction);
             } catch (Throwable t) {
@@ -256,18 +257,9 @@ public final class JobManager {
                 }
                 Debug.logWarning(t, errMsg, module);
                 return Collections.emptyList();
-            } finally {
-                if (jobsIterator != null) {
-                    try {
-                        jobsIterator.close();
-                    } catch (GenericEntityException e) {
-                        Debug.logWarning(e, module);
-                    }
-                }
             }
         }
         
-        jobsIterator = null;
         beganTransaction = false;
         try {
             beganTransaction = TransactionUtil.begin();
@@ -276,11 +268,14 @@ public final class JobManager {
                 return poll;
             }
 
-            jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator();
-            
-            // SCIPIO: factored out into method
-            ownAndCollectJobs(dctx, delegator, limit, jobsIterator, poll);
-            
+            try (EntityListIterator jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator()) {
+                // SCIPIO: factored out into method
+                ownAndCollectJobs(dctx, delegator, limit, jobsIterator, poll);
+            }
+            //} catch (GenericEntityException e) { // SCIPIO: 2018-08-29: this catch is counter-productive
+            //    Debug.logWarning(e, module);
+            //}
+
             TransactionUtil.commit(beganTransaction);
         } catch (Throwable t) {
             String errMsg = "Exception thrown while polling JobSandbox: ";
@@ -291,14 +286,6 @@ public final class JobManager {
             }
             Debug.logWarning(t, errMsg, module);
             return Collections.emptyList();
-        } finally {
-            if (jobsIterator != null) {
-                try {
-                    jobsIterator.close();
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e, module);
-                }
-            }
         }
         if (poll.isEmpty()) {
             // No jobs to run, see if there are any jobs to purge
@@ -316,22 +303,25 @@ public final class JobManager {
             EntityCondition doneCond = EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(canExp), EntityCondition.makeCondition(finExp)), EntityOperator.OR);
             mainCondition = EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("runByInstanceId", instanceId), doneCond));
             beganTransaction = false;
-            jobsIterator = null;
             try {
                 beganTransaction = TransactionUtil.begin();
                 if (!beganTransaction) {
                     Debug.logWarning("Unable to poll JobSandbox for jobs; unable to begin transaction.", module);
                     return Collections.emptyList();
                 }
-                jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("jobId").queryIterator();
-                GenericValue jobValue = jobsIterator.next();
-                while (jobValue != null) {
-                    poll.add(new PurgeJob(jobValue));
-                    if (poll.size() == limit) {
-                        break;
+                try (EntityListIterator jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("jobId").queryIterator()) {
+                    GenericValue jobValue = jobsIterator.next();
+                    while (jobValue != null) {
+                        poll.add(new PurgeJob(jobValue));
+                        if (poll.size() == limit) {
+                            break;
+                        }
+                        jobValue = jobsIterator.next();
                     }
-                    jobValue = jobsIterator.next();
-                }
+                }    
+                //} catch (GenericEntityException e) { // SCIPIO: 2018-08-29: this catch is counter-productive
+                //    Debug.logWarning(e, module);
+                //}
                 TransactionUtil.commit(beganTransaction);
             } catch (Throwable t) {
                 String errMsg = "Exception thrown while polling JobSandbox: ";
@@ -342,14 +332,6 @@ public final class JobManager {
                 }
                 Debug.logWarning(t, errMsg, module);
                 return Collections.emptyList();
-            } finally {
-                if (jobsIterator != null) {
-                    try {
-                        jobsIterator.close();
-                    } catch (GenericEntityException e) {
-                        Debug.logWarning(e, module);
-                    }
-                }
             }
         }
         return poll;
@@ -424,7 +406,9 @@ public final class JobManager {
             Timestamp now = UtilDateTime.nowTimestamp();
             for (GenericValue job : crashed) {
                 try {
-                    if (Debug.infoOn()) Debug.logInfo("Scheduling Job : " + job, module);
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("Scheduling Job : " + job, module);
+                    }
                     
                     // SCIPIO: IMPORTANT: If the job was supposed to trigger on specific event, DO NOT
                     // reschedule anything. Otherwise, we may be running services during times at
@@ -722,8 +706,8 @@ public final class JobManager {
         // set the loader name
         jFields.put("loaderName", delegator.getDelegatorName());
         // set the max retry
-        jFields.put("maxRetry", Long.valueOf(maxRetry));
-        jFields.put("currentRetryCount", Long.valueOf(0));
+        jFields.put("maxRetry", (long) maxRetry);
+        jFields.put("currentRetryCount", 0L);
         // create the value and store
         GenericValue jobV;
         try {

@@ -25,6 +25,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.service.GenericServiceException;
 
 /** An example of how to remotely access the Service Engine's RemoteDispatcher.
@@ -47,6 +48,7 @@ import org.ofbiz.service.GenericServiceException;
  */
 public class ExampleRemoteClient {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected final static String RMI_URL = "rmi://localhost:1099/RMIDispatcher"; // change to match the remote server
     protected RemoteDispatcher rd = null;
 
@@ -71,6 +73,6 @@ public class ExampleRemoteClient {
     public static void main(String[] args) throws Exception {
         ExampleRemoteClient rm = new ExampleRemoteClient();
         Map<String, Object> result = rm.runTestService();
-        System.out.println("Service Result Map: " + result);
+        Debug.logInfo("Service Result Map: " + result, module);
     }
 }

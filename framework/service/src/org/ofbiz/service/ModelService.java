@@ -321,7 +321,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         @Override
         public boolean equals(Object o) {
-            if (!(o instanceof ModelServiceMapEntry)) return false;
+            if (!(o instanceof ModelServiceMapEntry)) {
+                return false;
+            }
             ModelServiceMapEntry other = (ModelServiceMapEntry) o;
             return field.equals(other.field) && ModelService.this == other.getModelService();
         }
@@ -463,7 +465,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         Set<String> nameList = new TreeSet<>();
         for (ModelParam p: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if (p.isIn()) nameList.add(p.name);
+            if (p.isIn()) {
+                nameList.add(p.name);
+            }
         }
         return nameList;
     }
@@ -474,7 +478,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         for (ModelParam p: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if (p.isIn() && !p.internal) count++;
+            if (p.isIn() && !p.internal) {
+                count++;
+            }
         }
 
         return count;
@@ -484,7 +490,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         Set<String> nameList = new TreeSet<>();
         for (ModelParam p: this.contextParamList) {
             // don't include IN parameters in this list, only OUT and INOUT
-            if (p.isOut()) nameList.add(p.name);
+            if (p.isOut()) {
+                nameList.add(p.name);
+            }
         }
         return nameList;
     }
@@ -495,7 +503,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         for (ModelParam p: this.contextParamList) {
             // don't include IN parameters in this list, only OUT and INOUT
-            if (p.isOut() && !p.internal) count++;
+            if (p.isOut() && !p.internal) {
+                count++;
+            }
         }
 
         return count;
@@ -542,7 +552,6 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         // get the info values
         for (ModelParam modelParam: this.contextParamList) {
-            // Debug.logInfo("In ModelService.validate preparing parameter [" + modelParam.name + (modelParam.optional?"(optional):":"(required):") + modelParam.mode + "] for service [" + this.name + "]", module);
             if (IN_OUT_PARAM.equals(modelParam.mode) || mode.equals(modelParam.mode)) {
                 if (modelParam.optional) {
                     optionalInfo.put(modelParam.name, modelParam.type);
@@ -556,7 +565,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         Map<String, Object> requiredTest = new HashMap<>();
         Map<String, Object> optionalTest = new HashMap<>();
 
-        if (context == null) context = new HashMap<>();
+        if (context == null) {
+            context = new HashMap<>();
+        }
         requiredTest.putAll(context);
 
         List<String> requiredButNull = new ArrayList<>(); // SCIPIO: switched to ArrayList
@@ -596,11 +607,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 }
                 requiredNames.append(key);
             }
-            Debug.logVerbose("[ModelService.validate] : required fields - " + requiredNames, module);
+            if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : required fields - " + requiredNames, module);
 
-            Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Required - " +
+            if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Required - " +
                 requiredTest.size() + " / " + requiredInfo.size(), module);
-            Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Optional - " +
+            if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Optional - " +
                 optionalTest.size() + " / " + optionalInfo.size(), module);
         }
 
@@ -661,7 +672,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         Set<String> keySet = info.keySet();
 
         // Quick check for sizes
-        if (info.size() == 0 && test.size() == 0) return;
+        if (info.size() == 0 && test.size() == 0) {
+            return;
+        }
         // This is to see if the test set contains all from the info set (reverse)
         if (reverse && !testSet.containsAll(keySet)) {
             Set<String> missing = new TreeSet<>(keySet);
@@ -814,7 +827,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             throw new GeneralException("Unable to run validation method [" + vali.getMethodName() + "] in class [" + vali.getClassName() + "]");
         }
 
-        return resultBool.booleanValue();
+        return resultBool;
     }
 
     /**
@@ -964,8 +977,6 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
 
         for (ModelParam param: contextParamList) {
-            //boolean internalParam = param.internal;
-
             if (param.mode.equals(IN_OUT_PARAM) || param.mode.equals(mode)) {
                 String key = param.name;
 
@@ -1132,7 +1143,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
         for (ModelParam modelParam: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if (OUT_PARAM.equals(modelParam.mode)) continue;
+            if (OUT_PARAM.equals(modelParam.mode)) {
+                continue;
+            }
 
             Object srcObject = source.get(modelParam.name);
             if (srcObject != null) {
@@ -1160,7 +1173,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         List<ModelParam> inList = new ArrayList<>(this.contextParamList.size()); // SCIPIO: switched to ArrayList
         for (ModelParam modelParam: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if (OUT_PARAM.equals(modelParam.mode)) continue;
+            if (OUT_PARAM.equals(modelParam.mode)) {
+                continue;
+            }
 
             inList.add(modelParam);
         }
@@ -1308,7 +1323,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             builder = factory.newDocumentBuilder();
             document = builder.newDocument();
         } catch (Exception e) {
-            throw new WSDLException("can not create WSDL", module.toString());
+            throw new WSDLException("can not create WSDL", ModelService.class.getName()); // SCIPIO: changed variable used for module name
         }
         def.setTypes(this.getTypes(document, def));
 

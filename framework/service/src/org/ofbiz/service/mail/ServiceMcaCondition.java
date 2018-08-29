@@ -92,15 +92,15 @@ public class ServiceMcaCondition implements java.io.Serializable {
                 Debug.logError("Service MCA Condition Service [" + serviceName + "] returned null!", module);
                 return false;
             }
-                if (ServiceUtil.isError(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), module);
-                    return false;
+            if (ServiceUtil.isError(result)) {
+                Debug.logError(ServiceUtil.getErrorMessage(result), module);
+                return false;
             }
-                    Boolean reply = (Boolean) result.get("conditionReply");
-                    if (reply == null) {
-                        reply = Boolean.FALSE;
-                    }
-                    return reply.booleanValue();
+            Boolean reply = (Boolean) result.get("conditionReply");
+            if (reply == null) {
+                reply = Boolean.FALSE;
+            }
+            return reply;
         } else if (headerName != null) {
             // compare the header field
             MimeMessage message = messageWrapper.getMessage();

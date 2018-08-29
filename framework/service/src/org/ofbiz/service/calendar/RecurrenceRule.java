@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -195,7 +196,7 @@ public class RecurrenceRule {
      *@return String The name of this frequency.
      */
     public String getFrequencyName() {
-        return rule.getString("frequency").toUpperCase();
+        return rule.getString("frequency").toUpperCase(Locale.getDefault());
     }
 
     /**
@@ -721,7 +722,8 @@ public class RecurrenceRule {
 
     // Returns the Calendar day of the rule day string
     private int getCalendarDay(String day) {
-        if (day != null) day = day.trim();
+        if (day != null) {
+            day = day.trim();
         if (day.equalsIgnoreCase("MO"))
             return Calendar.MONDAY;
         if (day.equalsIgnoreCase("TU"))
@@ -736,6 +738,7 @@ public class RecurrenceRule {
             return Calendar.SATURDAY;
         if (day.equalsIgnoreCase("SU"))
             return Calendar.SUNDAY;
+        }
         return 0;
     }
 

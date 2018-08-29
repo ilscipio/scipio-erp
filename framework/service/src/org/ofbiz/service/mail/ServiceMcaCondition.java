@@ -73,6 +73,8 @@ public class ServiceMcaCondition implements java.io.Serializable {
             case CONDITION_SERVICE:
                 this.serviceName = condElement.getAttribute("service-name");
                 break;
+            default:
+                Debug.logWarning("There was an error in the switch-case in ServiceMcaCondition", module);
         }
     }
 
@@ -89,19 +91,16 @@ public class ServiceMcaCondition implements java.io.Serializable {
             if (result == null) {
                 Debug.logError("Service MCA Condition Service [" + serviceName + "] returned null!", module);
                 return false;
-            } else {
+            }
                 if (ServiceUtil.isError(result)) {
                     Debug.logError(ServiceUtil.getErrorMessage(result), module);
                     return false;
-                } else {
+            }
                     Boolean reply = (Boolean) result.get("conditionReply");
                     if (reply == null) {
                         reply = Boolean.FALSE;
                     }
                     return reply.booleanValue();
-                }
-            }
-            // invoke the condition service
         } else if (headerName != null) {
             // compare the header field
             MimeMessage message = messageWrapper.getMessage();

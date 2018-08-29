@@ -123,7 +123,7 @@ public final class ServiceUtil {
     }
 
     public static Map<String, Object> returnProblem(String returnType, String errorMessage, List<? extends Object> errorMessageList, Map<String, ? extends Object> errorMessageMap, Map<String, ? extends Object> nestedResult) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         result.put(ModelService.RESPONSE_MESSAGE, returnType);
         if (errorMessage != null) {
             result.put(ModelService.ERROR_MESSAGE, errorMessage);
@@ -134,7 +134,7 @@ public final class ServiceUtil {
             errorList.addAll(errorMessageList);
         }
 
-        Map<String, Object> errorMap = new HashMap<String, Object>();
+        Map<String, Object> errorMap = new HashMap<>();
         if (errorMessageMap != null) {
             errorMap.putAll(errorMessageMap);
         }
@@ -182,7 +182,7 @@ public final class ServiceUtil {
      *  and what type of message that is should be determined by the RESPONSE_MESSAGE (and there's another annoyance, it should be RESPONSE_CODE)
      */
     public static Map<String, Object> returnMessage(String code, String message) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         if (code != null) result.put(ModelService.RESPONSE_MESSAGE, code);
         if (message != null) result.put(ModelService.SUCCESS_MESSAGE, message);
         return result;
@@ -380,9 +380,8 @@ public final class ServiceUtil {
             strBuf.append(outMsg.toString());
             if (errorSuffix != null) strBuf.append(errorSuffix);
             return strBuf.toString();
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -432,9 +431,8 @@ public final class ServiceUtil {
             strBuf.append(outMsg.toString());
             if (successSuffix != null) strBuf.append(successSuffix);
             return strBuf.toString();
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -715,16 +713,15 @@ public final class ServiceUtil {
             return ServiceUtil.returnError(errMsg);
         }
 
+        if (job != null) {
         Timestamp cancelDate = job.getTimestamp("cancelDateTime");
-        if (cancelDate != null) {
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("cancelDateTime", cancelDate);
             result.put("statusId", "SERVICE_PENDING"); // To more easily see current pending jobs and possibly cancel some others
             return result;
-        } else {
-            String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.unable_to_cancel_job", locale) + " : " + job;
-            return ServiceUtil.returnError(errMsg);
         }
+        String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.unable_to_cancel_job", locale) + " : " + null;
+        return ServiceUtil.returnError(errMsg);
     }
 
     public static Map<String, Object> cancelJobRetries(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -753,13 +750,11 @@ public final class ServiceUtil {
             return ServiceUtil.returnError(errMsg);
         }
 
-        Timestamp cancelDate = job.getTimestamp("cancelDateTime");
-        if (cancelDate != null) {
+        if (job != null) {
             return ServiceUtil.returnSuccess();
-        } else {
-            String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.unable_to_cancel_job_retries", locale) + " : " + job;
-            return ServiceUtil.returnError(errMsg);
         }
+        String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.unable_to_cancel_job_retries", locale) + " : " + null;
+        return ServiceUtil.returnError(errMsg);
     }
 
     public static Map<String, Object> genericDateCondition(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -802,11 +797,12 @@ public final class ServiceUtil {
 
     @SafeVarargs
     public static <T extends Object> Map<String, Object> makeContext(T... args) {
-        if (args != null) {
+        if (args == null) {
+            throw new IllegalArgumentException("args is null in makeContext, this would throw a NullPointerExcption.");
+        }
             for (int i = 0; i < args.length; i += 2) {
                 if (!(args[i] instanceof String)) throw new IllegalArgumentException("Arg(" + i + "), value(" + args[i] + ") is not a string.");
             }
-        }
         return UtilGenerics.checkMap(UtilMisc.toMap(args));
     }
 
@@ -867,7 +863,7 @@ public final class ServiceUtil {
      */
     public static Map<String, Object> setServiceFields(LocalDispatcher dispatcher, String serviceName, Map<String, Object> fromMap, GenericValue userLogin,
             TimeZone timeZone, Locale locale) throws GeneralServiceException {
-        Map<String, Object> outMap = new HashMap<String, Object>();
+        Map<String, Object> outMap = new HashMap<>();
 
         ModelService modelService = null;
         try {

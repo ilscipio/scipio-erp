@@ -20,6 +20,7 @@ package org.ofbiz.service.mail;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -83,7 +84,7 @@ public class JavaMailContainer implements Container {
     public void init(String[] args, String name, String configFile) throws ContainerException {
         this.name = name;
         this.configFile = configFile;
-        this.stores = new LinkedHashMap<Store, Session>();
+        this.stores = new LinkedHashMap<>();
         this.pollTimer = Executors.newScheduledThreadPool(1);
     }
 
@@ -123,11 +124,9 @@ public class JavaMailContainer implements Container {
         for (ContainerConfig.Container.Property prop: configs) {
             Session session = this.makeSession(prop);
             Store store = this.getStore(session);
-            if (store != null) {
                 stores.put(store, session);
                 store.addStoreListener(new LoggingStoreListener());
             }
-        }
 
         // start the polling timer
         if (stores != null) {
@@ -163,7 +162,7 @@ public class JavaMailContainer implements Container {
         Map<String, ContainerConfig.Container.Property> clientProps = client.properties;
         if (clientProps != null) {
             for (ContainerConfig.Container.Property p: clientProps.values()) {
-                props.setProperty(p.name.toLowerCase(), p.value);
+                props.setProperty(p.name.toLowerCase(Locale.getDefault()), p.value);
             }
         }
         return Session.getInstance(props);
@@ -241,7 +240,7 @@ public class JavaMailContainer implements Container {
         String portStr = props.getProperty("mail." + protocol + ".port");
         if (UtilValidate.isNotEmpty(portStr)) {
             try {
-                portProps = Integer.valueOf(portStr);
+                portProps = Integer.parseInt(portStr);
             } catch (NumberFormatException e) {
                 Debug.logError("The port given in property mail." + protocol + ".port is wrong, please check", module);
             }
@@ -250,7 +249,7 @@ public class JavaMailContainer implements Container {
             portStr = props.getProperty("mail.port");
             if (UtilValidate.isNotEmpty(portStr)) {
                 try {
-                    portProps = Integer.valueOf(props.getProperty("mail.port"));
+                    portProps = Integer.parseInt(props.getProperty("mail.port"));
                 } catch (NumberFormatException e) {
                     Debug.logError("The port given in property mail.port is wrong, please check", module);
                 }
@@ -265,7 +264,7 @@ public class JavaMailContainer implements Container {
         return new URLName(protocol, host, port, file, userName, password);
     }
 
-    class LoggingStoreListener implements StoreListener {
+    static class LoggingStoreListener implements StoreListener {
 
         @Override
         public void notification(StoreEvent event) {
@@ -277,6 +276,8 @@ public class JavaMailContainer implements Container {
                 case StoreEvent.NOTICE:
                     typeString = "NOTICE: ";
                     break;
+                default:
+                    Debug.logWarning("There was a case error in LoggingStoreListener.notification", module);
             }
 
             if (Debug.verboseOn()) Debug.logVerbose("JavaMail " + typeString + event.getMessage(), module);

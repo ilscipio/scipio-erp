@@ -71,7 +71,7 @@ public final class JobManager {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String instanceId = UtilProperties.getPropertyValue("general", "unique.instanceId", "ofbiz0");
-    private static final ConcurrentHashMap<String, JobManager> registeredManagers = new ConcurrentHashMap<String, JobManager>();
+    private static final ConcurrentHashMap<String, JobManager> registeredManagers = new ConcurrentHashMap<>();
     private static boolean isShutDown = false;
 
     private static void assertIsRunning() {
@@ -168,7 +168,7 @@ public final class JobManager {
 
     private static List<String> getRunPools() throws GenericConfigException {
         List<RunFromPool> runFromPools = ServiceConfigUtil.getServiceEngine().getThreadPool().getRunFromPools();
-        List<String> readPools = new ArrayList<String>(runFromPools.size());
+        List<String> readPools = new ArrayList<>(runFromPools.size());
         for (RunFromPool runFromPool : runFromPools) {
             readPools.add(runFromPool.getName());
         }
@@ -209,7 +209,7 @@ public final class JobManager {
                 poolsExpr.add(EntityCondition.makeCondition("poolId", EntityOperator.EQUALS, poolName));
             }
         }
-        List<Job> poll = new ArrayList<Job>(limit);
+        List<Job> poll = new ArrayList<>(limit);
         // make the conditions
         EntityCondition baseCondition = EntityCondition.makeCondition(expressions);
         EntityCondition poolCondition = EntityCondition.makeCondition(poolsExpr, EntityOperator.OR);
@@ -620,12 +620,8 @@ public final class JobManager {
             runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
             runtimeData = delegator.createSetNextSeqId(runtimeData);
             dataId = runtimeData.getString("runtimeDataId");
-        } catch (GenericEntityException ee) {
-            throw new JobManagerException(ee.getMessage(), ee);
-        } catch (SerializeException se) {
-            throw new JobManagerException(se.getMessage(), se);
-        } catch (IOException ioe) {
-            throw new JobManagerException(ioe.getMessage(), ioe);
+        } catch (GenericEntityException | SerializeException | IOException e) {
+            throw new JobManagerException(e.getMessage(), e);
         }
         // schedule the job
         schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, eventId);
@@ -726,7 +722,7 @@ public final class JobManager {
         jFields.put("loaderName", delegator.getDelegatorName());
         // set the max retry
         jFields.put("maxRetry", Long.valueOf(maxRetry));
-        jFields.put("currentRetryCount", new Long(0));
+        jFields.put("currentRetryCount", Long.valueOf(0));
         // create the value and store
         GenericValue jobV;
         try {

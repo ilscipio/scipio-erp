@@ -106,7 +106,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         if (cancelTime != null || startTime != null) {
             // job not available
             throw new InvalidJobException("Job [" + getJobId() + "] is not available");
-        } else {
+        }
             jobValue.set("statusId", "SERVICE_QUEUED");
             try {
                 jobValue.store();
@@ -117,7 +117,6 @@ public class PersistedServiceJob extends GenericServiceJob {
             Debug.logVerbose("Placing job [" + getJobId() + "] in queue", module);
             }
         }
-    }
 
     @Override
     protected void init() throws InvalidJobException {
@@ -203,9 +202,9 @@ public class PersistedServiceJob extends GenericServiceJob {
             newJob.set("runByInstanceId", null);
             newJob.set("runTime", new java.sql.Timestamp(next));
             if (isRetryOnFailure) {
-                newJob.set("currentRetryCount", new Long(currentRetryCount + 1));
+                newJob.set("currentRetryCount", Long.valueOf(currentRetryCount + 1));
             } else {
-                newJob.set("currentRetryCount", new Long(0));
+                newJob.set("currentRetryCount", Long.valueOf(0));
             }
             nextRecurrence = next;
             
@@ -315,7 +314,7 @@ public class PersistedServiceJob extends GenericServiceJob {
                 }
             }
             if (context == null) {
-                context = new HashMap<String, Object>();
+                context = new HashMap<>();
             }
             // check the runAsUser
             if (UtilValidate.isNotEmpty(jobValue.getString("runAsUser"))) {

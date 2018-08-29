@@ -53,7 +53,7 @@ public class GroupModel {
         this.services = new ArrayList<>(); // SCIPIO: switched to ArrayList
         this.lastServiceRan = -1;
 
-        if (groupName == null) {
+        if (groupName.isEmpty()) {
             throw new IllegalArgumentException("Group Definition found with no name attribute! : " + group);
         }
 

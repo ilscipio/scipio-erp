@@ -52,8 +52,7 @@ public class ModelPermGroup implements Serializable {
                 }
             }
             return foundOne;
-        } else {
-            return true;
         }
+        return true;
     }
 }

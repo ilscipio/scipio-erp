@@ -39,7 +39,7 @@ public class XmlRpcTests extends AbstractXmlRpcTestCase {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ServiceErrorUiLabels";
-    public static String url = "http://localhost:8080/admin/control/xmlrpc";
+    private static String url = "http://localhost:8080/admin/control/xmlrpc";
 
     public XmlRpcTests(String name) {
         super(name);

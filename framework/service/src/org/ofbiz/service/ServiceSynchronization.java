@@ -34,22 +34,18 @@ public class ServiceSynchronization implements Synchronization, ServiceSyncRegis
 
     public static final String MODULE = ServiceSynchronization.class.getName();
 
-    private static Map<Transaction, ServiceSynchronization> syncingleton = new WeakHashMap<Transaction, ServiceSynchronization>();
-    private List<ServiceExecution> services = new ArrayList<ServiceExecution>();
+    private static Map<Transaction, ServiceSynchronization> syncingleton = new WeakHashMap<>();
+    private List<ServiceExecution> services = new ArrayList<>();
 
     public static void registerCommitService(DispatchContext dctx, String serviceName, String runAsUser, Map<String, ? extends Object> context, boolean async, boolean persist) throws GenericServiceException {
         ServiceSynchronization sync = ServiceSynchronization.getInstance();
-        if (sync != null) {
             sync.services.add(new ServiceExecution(dctx, serviceName, runAsUser, context, async, persist, false));
         }
-    }
 
     public static void registerRollbackService(DispatchContext dctx, String serviceName, String runAsUser, Map<String, ? extends Object> context, boolean async, boolean persist) throws GenericServiceException {
         ServiceSynchronization sync = ServiceSynchronization.getInstance();
-        if (sync != null) {
             sync.services.add(new ServiceExecution(dctx, serviceName, runAsUser, context, async, persist, true));
         }
-    }
 
     protected static ServiceSynchronization getInstance() throws GenericServiceException {
         ServiceSynchronization sync = null;
@@ -128,7 +124,7 @@ public class ServiceSynchronization implements Synchronization, ServiceSyncRegis
                                 if (model.validate) {
                                     thisContext = model.makeValid(context, ModelService.IN_PARAM);
                                 } else {
-                                    thisContext = new HashMap<String, Object>();
+                                    thisContext = new HashMap<>();
                                     thisContext.putAll(context);
                                 }
 

@@ -31,6 +31,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
@@ -84,7 +85,7 @@ import com.ibm.wsdl.extensions.soap.SOAPOperationImpl;
 @SuppressWarnings("serial")
 public class ModelService extends AbstractMap<String, Object> implements Serializable {
     private static final Field[] MODEL_SERVICE_FIELDS;
-    private static final Map<String, Field> MODEL_SERVICE_FIELD_MAP = new LinkedHashMap<String, Field>();
+    private static final Map<String, Field> MODEL_SERVICE_FIELD_MAP = new LinkedHashMap<>();
     static {
         MODEL_SERVICE_FIELDS = ModelService.class.getFields();
         for (Field field: MODEL_SERVICE_FIELDS) {
@@ -201,10 +202,10 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public boolean hideResultInLog;
     
     /** Set of services this service implements */
-    public Set<ModelServiceIface> implServices = new LinkedHashSet<ModelServiceIface>();
+    public Set<ModelServiceIface> implServices = new LinkedHashSet<>();
 
     /** Set of override parameters */
-    public Set<ModelParam> overrideParameters = new LinkedHashSet<ModelParam>();
+    public Set<ModelParam> overrideParameters = new LinkedHashSet<>();
 
     /** List of permission groups for service invocation */
     public List<ModelPermGroup> permissionGroups = new ArrayList<>(); // SCIPIO: switched to ArrayList
@@ -221,7 +222,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public String deprecatedReason = null;
 
     /** Context Information, a Map of parameters used by the service, contains ModelParam objects */
-    protected Map<String, ModelParam> contextInfo = new LinkedHashMap<String, ModelParam>();
+    protected Map<String, ModelParam> contextInfo = new LinkedHashMap<>();
 
     /** Context Information, a List of parameters used by the service, contains ModelParam objects */
     protected List<ModelParam> contextParamList = new ArrayList<>(); // SCIPIO: switched to ArrayList
@@ -348,6 +349,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     }
 
                     public Map.Entry<String, Object> next() {
+                        if (!hasNext()) {
+                            throw new NoSuchElementException();
+                        }
                         return new ModelServiceMapEntry(MODEL_SERVICE_FIELDS[i++]);
                     }
 
@@ -401,7 +405,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * Test if we have already inherited our interface parameters
      * @return boolean
      */
-    public boolean inheritedParameters() {
+    public synchronized boolean inheritedParameters() {
         return this.inheritedParameters;
     }
 
@@ -448,7 +452,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     public Set<String> getAllParamNames() {
-        Set<String> nameList = new TreeSet<String>();
+        Set<String> nameList = new TreeSet<>();
         for (ModelParam p: this.contextParamList) {
             nameList.add(p.name);
         }
@@ -456,7 +460,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     public Set<String> getInParamNames() {
-        Set<String> nameList = new TreeSet<String>();
+        Set<String> nameList = new TreeSet<>();
         for (ModelParam p: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
             if (p.isIn()) nameList.add(p.name);
@@ -477,7 +481,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     public Set<String> getOutParamNames() {
-        Set<String> nameList = new TreeSet<String>();
+        Set<String> nameList = new TreeSet<>();
         for (ModelParam p: this.contextParamList) {
             // don't include IN parameters in this list, only OUT and INOUT
             if (p.isOut()) nameList.add(p.name);
@@ -499,19 +503,17 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     public void updateDefaultValues(Map<String, Object> context, String mode) {
         List<ModelParam> params = this.getModelParamList();
-        if (params != null) {
-            for (ModelParam param: params) {
-                if (IN_OUT_PARAM.equals(param.mode) || mode.equals(param.mode)) {
-                    Object defaultValueObj = param.getDefaultValue();
-                    if (defaultValueObj != null && context.get(param.name) == null) {
-                        context.put(param.name, defaultValueObj);
-                        // SCIPIO: 2017-09-13: This message is extremely verbose and counterproductive as info level;
-                        // it makes developers avoid the default-value attribute altogether.
-                        // so, only log if debug flag or verbose are enabled (added conditions). verbose is configurable.
-                        //Debug.logInfo(...);
-                        if (Debug.isOn(logParamLevel) || this.debug) {
-                            Debug.logInfo("Set default value [" + defaultValueObj + "] for parameter [" + param.name + "]", module);
-                        }
+        for (ModelParam param: params) {
+            if (IN_OUT_PARAM.equals(param.mode) || mode.equals(param.mode)) {
+                Object defaultValueObj = param.getDefaultValue();
+                if (defaultValueObj != null && context.get(param.name) == null) {
+                    context.put(param.name, defaultValueObj);
+                    // SCIPIO: 2017-09-13: This message is extremely verbose and counterproductive as info level;
+                    // it makes developers avoid the default-value attribute altogether.
+                    // so, only log if debug flag or verbose are enabled (added conditions). verbose is configurable.
+                    //Debug.logInfo(...);
+                    if (Debug.isOn(logParamLevel) || this.debug) {
+                        Debug.logInfo("Set default value [" + defaultValueObj + "] for parameter [" + param.name + "]", module);
                     }
                 }
             }
@@ -551,10 +553,10 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
 
         // get the test values
-        Map<String, Object> requiredTest = new HashMap<String, Object>();
-        Map<String, Object> optionalTest = new HashMap<String, Object>();
+        Map<String, Object> requiredTest = new HashMap<>();
+        Map<String, Object> optionalTest = new HashMap<>();
 
-        if (context == null) context = new HashMap<String, Object>();
+        if (context == null) context = new HashMap<>();
         requiredTest.putAll(context);
 
         List<String> requiredButNull = new ArrayList<>(); // SCIPIO: switched to ArrayList
@@ -662,7 +664,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         if (info.size() == 0 && test.size() == 0) return;
         // This is to see if the test set contains all from the info set (reverse)
         if (reverse && !testSet.containsAll(keySet)) {
-            Set<String> missing = new TreeSet<String>(keySet);
+            Set<String> missing = new TreeSet<>(keySet);
 
             missing.removeAll(testSet);
             List<String> missingMsgs = new ArrayList<>(missing.size()); // SCIPIO: switched to ArrayList
@@ -682,7 +684,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         // This is to see if the info set contains all from the test set
         if (!keySet.containsAll(testSet)) {
-            Set<String> extra = new TreeSet<String>(testSet);
+            Set<String> extra = new TreeSet<>(testSet);
 
             extra.removeAll(keySet);
             List<String> extraMsgs = new ArrayList<>(extra.size()); // SCIPIO: switched to ArrayList
@@ -893,7 +895,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @param locale Locale to use to do some type conversion
      */
     public Map<String, Object> makeValid(Map<String, ? extends Object> source, String mode, boolean includeInternal, List<Object> errorMessages, TimeZone timeZone, Locale locale) {
-        Map<String, Object> target = new HashMap<String, Object>();
+        Map<String, Object> target = new HashMap<>();
 
         if (source == null) {
             return target;
@@ -1005,7 +1007,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     private Map<String, Object> makePrefixMap(Map<String, ? extends Object> source, ModelParam param) {
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        Map<String, Object> paramMap = new HashMap<>();
         for (Map.Entry<String, ? extends Object> entry: source.entrySet()) {
             String key = entry.getKey();
             if (key.startsWith(param.stringMapPrefix)) {
@@ -1051,16 +1053,14 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 result.put("failMessage", e.getMessage());
                 return result;
             }
-            if (permission != null) {
                 Map<String, Object> ctx = permission.makeValid(context, IN_PARAM);
                 if (UtilValidate.isNotEmpty(this.permissionMainAction)) {
                     ctx.put("mainAction", this.permissionMainAction);
                 }
                 if (UtilValidate.isNotEmpty(this.permissionResourceDesc)) {
                     ctx.put("resourceDescription", this.permissionResourceDesc);
-                } else if (thisService != null) {
-                    ctx.put("resourceDescription", thisService.name);
                 }
+            ctx.put("resourceDescription", thisService.name);
 
                 LocalDispatcher dispatcher = dctx.getDispatcher();
                 Map<String, Object> resp;
@@ -1084,19 +1084,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     return result;
                 }
                 return resp;
-            } else {
-                Map<String, Object> result = ServiceUtil.returnSuccess();
-                result.put("hasPermission", Boolean.FALSE);
-                result.put("failMessage", "No ModelService found with the name [" + this.permissionServiceName + "]");
-                return result;
             }
-        } else {
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("hasPermission", Boolean.FALSE);
             result.put("failMessage", "No ModelService found; no service name specified!");
             return result;
         }
-    }
 
     /**
      * Evaluates notifications
@@ -1322,7 +1315,6 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         // set the IN parameters
         Input input = def.createInput();
         Set<String> inParam = this.getInParamNames();
-        if (inParam != null) {
             Message inMessage = def.createMessage();
             inMessage.setQName(new QName(TNS, this.name + "Request"));
             inMessage.setUndefined(false);
@@ -1331,7 +1323,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             parametersPart.setTypeName(new QName(TNS, "map-Map"));
             inMessage.addPart(parametersPart);
             Element documentation = document.createElement("wsdl:documentation");
-            for (String paramName: inParam) {
+        for (String paramName : inParam) {
                 ModelParam param = this.getParam(paramName);
                 if (!param.internal) {
                     Part part = param.getWSDLPart(def);
@@ -1363,12 +1355,10 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             parametersPart.setDocumentationElement(documentation);
             def.addMessage(inMessage);
             input.setMessage(inMessage);
-        }
 
         // set the OUT parameters
         Output output = def.createOutput();
         Set<String> outParam = this.getOutParamNames();
-        if (outParam != null) {
             Message outMessage = def.createMessage();
             outMessage.setQName(new QName(TNS, this.name + "Response"));
             outMessage.setUndefined(false);
@@ -1376,8 +1366,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             resultsPart.setName("map-Map");
             resultsPart.setTypeName(new QName(TNS, "map-Map"));
             outMessage.addPart(resultsPart);
-            Element documentation = document.createElement("wsdl:documentation");
-            for (String paramName: outParam) {
+        documentation = document.createElement("wsdl:documentation");
+        for (String paramName : outParam) {
                 ModelParam param = this.getParam(paramName);
                 if (!param.internal) {
                     Part part = param.getWSDLPart(def);
@@ -1393,7 +1383,6 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             resultsPart.setDocumentationElement(documentation);
             def.addMessage(outMessage);
             output.setMessage(outMessage);
-        }
 
         // set port type
         Operation operation = def.createOperation();

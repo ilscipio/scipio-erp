@@ -106,10 +106,7 @@ public class ModelServiceReader implements Serializable {
             }
         }
 
-        Map<String, ModelService> modelServices = new HashMap<String, ModelService>();
-        if (this.isFromURL) {// utilTimer.timerString("Before getDocumentElement in file " + readerURL);
-        } else {// utilTimer.timerString("Before getDocumentElement in " + handler);
-        }
+        Map<String, ModelService> modelServices = new HashMap<>();
 
         Element docElement = document.getDocumentElement();
         if (docElement == null) {
@@ -150,7 +147,6 @@ public class ModelServiceReader implements Serializable {
                     ModelService service = createModelService(curServiceElement, resourceLocation);
 
                     // utilTimer.timerString("  After createModelService -- " + i + " --");
-                    if (service != null) {
                         modelServices.put(serviceName, service);
                         // utilTimer.timerString("  After modelServices.put -- " + i + " --");
                         /*
@@ -166,11 +162,6 @@ public class ModelServiceReader implements Serializable {
                             Debug.logVerbose(msg, module);
                         }
                         */
-                    } else {
-                        Debug.logWarning(
-                            "-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " +
-                            serviceName, module);
-                    }
 
                 }
             } while ((curChild = curChild.getNextSibling()) != null);
@@ -272,7 +263,7 @@ public class ModelServiceReader implements Serializable {
         service.nameSpace = getCDATADef(serviceElement, "namespace");
 
         // construct the context
-        service.contextInfo = new HashMap<String, ModelParam>();
+        service.contextInfo = new HashMap<>();
         this.createNotification(serviceElement, service);
         this.createPermission(serviceElement, service);
         this.createPermGroups(serviceElement, service);
@@ -455,14 +446,13 @@ public class ModelServiceReader implements Serializable {
         }
 
         if (delegator != null && entityName != null) {
-            Map<String, ModelParam> modelParamMap = new LinkedHashMap<String, ModelParam>();
+            Map<String, ModelParam> modelParamMap = new LinkedHashMap<>();
             try {
                 ModelEntity entity = delegator.getModelEntity(entityName);
                 if (entity == null) {
                     throw new GeneralException("Could not find entity with name [" + entityName + "]");
                 }
                 Iterator<ModelField> fieldsIter = entity.getFieldsIterator();
-                if (fieldsIter != null) {
                     while (fieldsIter.hasNext()) {
                         ModelField field = fieldsIter.next();
                         if ((!field.getIsAutoCreatedInternal()) && ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk))) {
@@ -490,17 +480,16 @@ public class ModelServiceReader implements Serializable {
                     // get the excludes list; and remove those from the map
                     List<? extends Element> excludes = UtilXml.childElementList(autoElement, "exclude");
                     if (excludes != null) {
-                        for (Element exclude: excludes) {
+                    for (Element exclude : excludes) {
                             modelParamMap.remove(UtilXml.checkEmpty(exclude.getAttribute("field-name")));
                         }
                     }
 
                     // now add in all the remaining params
-                    for (ModelParam thisParam: modelParamMap.values()) {
+                for (ModelParam thisParam : modelParamMap.values()) {
                         //Debug.logInfo("Adding Param to " + service.name + ": " + thisParam.name + " [" + thisParam.mode + "] " + thisParam.type + " (" + thisParam.optional + ")", module);
                         service.addParam(thisParam);
                     }
-                }
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problem loading auto-attributes [" + entityName + "] for " + service.name, module);
             } catch (GeneralException e) {

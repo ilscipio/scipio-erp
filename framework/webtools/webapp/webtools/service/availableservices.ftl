@@ -39,7 +39,27 @@ under the License.
           <@menuitem type="link" href=makeOfbizUrl("scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />
           <@menuitem type="link" href=makeOfbizUrl("setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&POOL_NAME=pool&_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
         </@menu>
-
+<#-- SCIPIO: TODO
+    <#if selectedServiceMap.deprecatedUseInstead?has_content>
+    <div class="screenlet">
+      <div class="screenlet-title-bar">
+        <h3>${uiLabelMap.WebtoolsWarningLogLevel?upper_case} : ${uiLabelMap.WebtoolsDeprecated}</h3>
+      </div>
+        <table class="basic-table" cellspacing='0'>
+          <tr>
+            <td class="label">${uiLabelMap.WebtoolsDeprecatedUseInstead}</td>
+            <td>${selectedServiceMap.deprecatedUseInstead}</td>
+            <td class="label">${uiLabelMap.CommonSince}</td>
+            <td>${selectedServiceMap.deprecatedSince}</td>
+          </tr>
+          <tr>
+            <td class="label">${uiLabelMap.CommonReason}</td>
+            <td colspan="3">${selectedServiceMap.deprecatedReason}</td>
+          </tr>
+        </table>
+    </div>
+    </#if>
+-->
     <#-- Show a little form for exportServiceEoModelBundle -->
     <@row>
         <@cell columns=6>
@@ -379,6 +399,9 @@ under the License.
         </@thead>
         <#assign lastChar = "">
         <#list servicesList as service>
+          <#-- SCIPIO: TODO: deprecation warning
+            <td><#if service.deprecated?has_content><strike></#if><a href='<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>'>${service.serviceName}</a><#if service.deprecated?has_content></strike> @deprecated</#if></td>
+          -->
           <#assign firstChar = service.serviceName?substring(0, 1)>
           <#if firstChar != lastChar>
             <#assign anchorId = "Service_${firstChar}">

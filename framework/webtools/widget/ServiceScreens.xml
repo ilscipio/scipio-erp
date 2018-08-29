@@ -63,7 +63,7 @@ under the License.
                                     <container style="${styles.grid_medium}9 ${styles.grid_cell}">
                                         <include-form name="FindJobs" location="component://webtools/widget/ServiceForms.xml"/>
                                     </container>
-                                    <container style="${styles.grid_medium}3 ${styles.grid_cell}">
+                                    <container style="${styles.grid_medium}3 ${styles.grid_cell} ${styles.text_right}">
                                         <include-screen name="serverTimeClock"/>
                                     </container>
                                 </container>
@@ -106,9 +106,8 @@ under the License.
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/ServerHour24HourFormatJs.ftl"/></html></platform-specific>
                 <platform-specific><html><html-template><![CDATA[
-                    <p class="${styles.text_right!}">
-                      <label for="${clockField}">${uiLabelMap.CommonServerHour}:</label> <span id="${clockField}">...</span>
-                    </p>
+                    <label for="${clockField}" class="serverTimeClock-label">${uiLabelMap.CommonServerHour}:</label> <#t/>
+                    <span id="${clockField}" style="white-space: nowrap;" class="serverTimeClock-value">...</span><#t/>
                 ]]></html-template></html></platform-specific>
             </widgets>
         </section>

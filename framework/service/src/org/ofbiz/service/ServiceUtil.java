@@ -57,10 +57,10 @@ import com.ibm.icu.util.Calendar;
 /**
  * Generic Service Utility Class
  */
-public class ServiceUtil {
+public final class ServiceUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String resource = "ServiceErrorUiLabels";
+    public static final String resource = "ServiceErrorUiLabels"; // SCIPIO: 2018-08-29: keep public for backward-compat
 
     /** A little short-cut method to check to see if a service returned an error */
     public static boolean isError(Map<String, ? extends Object> results) {
@@ -883,6 +883,10 @@ public class ServiceUtil {
         }
 
         return outMap;
+    }
+    
+    public static String getResource() {
+        return resource;
     }
     
     /**

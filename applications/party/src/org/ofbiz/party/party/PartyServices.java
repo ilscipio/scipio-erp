@@ -285,7 +285,7 @@ public class PartyServices {
 
         String partyId = getPartyId(context);
         if (UtilValidate.isEmpty(partyId)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(ServiceUtil.resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(ServiceUtil.getResource(), 
                     "serviceUtil.party_id_missing", locale));
         }
 
@@ -463,7 +463,7 @@ public class PartyServices {
 
         String partyId = getPartyId(context);
         if (UtilValidate.isEmpty(partyId)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(ServiceUtil.resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(ServiceUtil.getResource(), 
                     "serviceUtil.party_id_missing", locale));
         }
 
@@ -603,7 +603,7 @@ public class PartyServices {
 
         String partyId = getPartyId(context);
         if (UtilValidate.isEmpty(partyId)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(ServiceUtil.resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(ServiceUtil.getResource(), 
                     "serviceUtil.party_id_missing", locale));
         }
 

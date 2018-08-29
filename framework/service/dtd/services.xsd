@@ -232,7 +232,9 @@ under the License.
     <xs:element name="check-role-member">
         <xs:annotation>
             <xs:documentation>
-                    This is deprecated
+                    This is deprecated [WARN: NON-WORKING]
+                    SCIPIO: This is not only deprecated, it simply does not work properly.
+                    May be removed or rewritten in the future...
             </xs:documentation>
         </xs:annotation>   
         <xs:complexType>

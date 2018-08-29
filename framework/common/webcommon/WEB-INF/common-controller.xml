@@ -320,7 +320,14 @@ under the License.
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    
+
+    <request-map uri="getServerTimestampAsString"><!-- SCIPIO: added 2018-08-28 -->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getServerTimestampAsString"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
     <request-map uri="qrcode">
         <security auth="true" https="true" /><!-- SCIPIO: 2018-07-09: set https true -->
         <event type="java" path="org.ofbiz.common.qrcode.QRCodeEvents" invoke="serveQRCodeImage"/>

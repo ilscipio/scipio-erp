@@ -379,5 +379,35 @@ under the License.
         <now field="serverTimestamp" type="java.lang.Long"/>
         <field-to-result field="serverTimestamp"/>
     </simple-method>
-    
+
+    <!-- SCIPIO: added 2018-08-28 -->
+    <simple-method method-name="getServerTimestampAsString" login-required="false">
+        <now field="serverTimestamp" type="java.sql.Timestamp"/>
+        <log level="info" message="args: ${parameters}"/>
+        <set field="dateTimeFormat" from-field="parameters.dateTimeFormat"/>
+        <if-empty field="dateTimeFormat">
+            <set field="dateTimeFormat" value="yyyy-MM-dd HH:mm:ss.SSS"/>
+        </if-empty>
+        <set field="targetTimeZone" from-field="parameters.timeZone"/>
+        <if>
+            <condition>
+                <or>
+                    <if-empty field="targetTimeZone"/>
+                    <if-compare field="parameters.useServerTz" operator="equals" value="true"/>
+                </or>
+            </condition>
+            <then>
+                <set field="targetTimeZone" type="TimeZone" value="${util:defaultTimeZone()}"/>
+                <log level="info" message="targetTimeZone: ${targetTimeZone}"/>
+            </then>
+        </if>
+        <call-class-method method-name="timeStampToString" class-name="org.ofbiz.base.util.UtilDateTime" ret-field="serverTimestamp">
+            <field type="Timestamp" field="serverTimestamp"/>
+            <field type="String" field="dateTimeFormat"/>
+            <field type="TimeZone" field="targetTimeZone"/>
+            <field type="Locale" field="parameters.locale"/>
+        </call-class-method>
+        <field-to-result field="serverTimestamp"/>
+    </simple-method>
+
 </simple-methods>

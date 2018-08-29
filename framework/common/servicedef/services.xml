@@ -799,7 +799,15 @@ under the License.
         location="component://common/script/org/ofbiz/common/CommonServices.xml" invoke="getServerTimestampAsLong">
         <attribute name="serverTimestamp" mode="OUT" type="Long"/>
     </service>
-    
+
+    <!-- SCIPIO: added 2018-08-28 -->
+    <service name="getServerTimestampAsString" engine="simple" auth="false"
+        location="component://common/script/org/ofbiz/common/CommonServices.xml" invoke="getServerTimestampAsString">
+        <attribute name="dateTimeFormat" mode="IN" type="String" optional="true"/>
+        <attribute name="useServerTz" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="serverTimestamp" mode="OUT" type="String"/>
+    </service>
+
     <service name="createJsLanguageFileMapping" engine="java" auth="false" use-transaction="false"
         location="org.ofbiz.common.JsLanguageFileMappingCreator" invoke="createJsLanguageFileMapping">
         <description>Create or update the JsLanguageFilesMapping.java. You still need to compile thereafter</description>

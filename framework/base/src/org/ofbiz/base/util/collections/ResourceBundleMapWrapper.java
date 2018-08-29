@@ -27,6 +27,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 
@@ -37,6 +38,7 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 @SuppressWarnings("serial")
 public class ResourceBundleMapWrapper implements Map<String, Object>, Serializable {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected MapStack<String> rbmwStack;
     protected ResourceBundle initialResourceBundle;
     protected Map<String, Object> context;
@@ -128,8 +130,8 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
             try {
                 String str = (String) value;
                 return FlexibleStringExpander.expandString(str, context);
-            } catch (Exception e) {
-                // Potential ClassCastException - do nothing
+            } catch (ClassCastException e) {
+                Debug.logInfo(e.getMessage(), module);
             }
         }
         return value;

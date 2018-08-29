@@ -244,7 +244,9 @@ public class UelUtil {
             try {
                 ReadOnlyExpression other = (ReadOnlyExpression) obj;
                 return this.object.equals(other.object);
-            } catch (ClassCastException e) {}
+            } catch (ClassCastException e) {
+                Debug.logInfo(e.getMessage(), module);
+            }
             return false;
         }
 
@@ -281,7 +283,9 @@ public class UelUtil {
             try {
                 BasicValueExpression other = (BasicValueExpression) obj;
                 return this.varName.equals(other.varName);
-            } catch (ClassCastException e) {}
+            } catch (ClassCastException e) {
+                Debug.logInfo(e.getMessage(), module);
+            }
             return false;
         }
         @Override
@@ -338,7 +342,9 @@ public class UelUtil {
                     BasicContext elContext = (BasicContext) context;
                     elContext.variables.put(property.toString(), val);
                     context.setPropertyResolved(true);
-                } catch (ClassCastException e) {}
+                } catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
+                }
             }
         }
     }

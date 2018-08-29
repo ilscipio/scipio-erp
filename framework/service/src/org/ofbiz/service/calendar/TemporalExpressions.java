@@ -58,6 +58,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a range of dates. */
     public static class DateRange extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final org.ofbiz.base.util.DateRange range;
 
         public DateRange(Date date) {
@@ -95,6 +96,7 @@ public class TemporalExpressions implements Serializable {
                 return this.range.equals(((DateRange) obj).range);
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -135,6 +137,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a day in the month. */
     public static class DayInMonth extends TemporalExpression {
+        public static final String module = DayInMonth.class.getName();
         protected final int dayOfWeek;
         protected final int occurrence;
 
@@ -207,6 +210,7 @@ public class TemporalExpressions implements Serializable {
                 return this.dayOfWeek == that.dayOfWeek && this.occurrence == that.occurrence;
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -287,6 +291,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a day of month range. */
     public static class DayOfMonthRange extends TemporalExpression {
+        public static final String module = DayOfMonthRange.class.getName();
         protected final int end;
         protected final int start;
 
@@ -338,6 +343,7 @@ public class TemporalExpressions implements Serializable {
                 return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -403,6 +409,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a day of week range. */
     public static class DayOfWeekRange extends TemporalExpression {
+        public static final String module = DayOfWeekRange.class.getName();
         protected final int end;
         protected final int start;
 
@@ -456,6 +463,7 @@ public class TemporalExpressions implements Serializable {
                 return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -543,6 +551,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a difference of two temporal expressions. */
     public static class Difference extends TemporalExpression {
+        public static final String module = Difference.class.getName();
         protected final TemporalExpression excluded;
         protected final TemporalExpression included;
 
@@ -591,6 +600,7 @@ public class TemporalExpressions implements Serializable {
                 return this.included.equals(that.included) && this.excluded.equals(that.excluded);
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -644,8 +654,9 @@ public class TemporalExpressions implements Serializable {
         }
     }
 
-    /** A temporal expression that represents a frequency. */
+    /* A temporal expression that represents a frequency. */
     public static class Frequency extends TemporalExpression {
+        public static final String module = Frequency.class.getName();
         protected final int freqCount;
         protected final int freqType;
         protected final Date start;
@@ -705,6 +716,7 @@ public class TemporalExpressions implements Serializable {
                 return this.start.equals(that.start) && this.freqType == that.freqType && this.freqCount == that.freqCount;
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -807,6 +819,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents an hour range. */
     public static class HourRange extends TemporalExpression {
+        public static final String module = HourRange.class.getName();
         protected final int end;
         protected final int start;
 
@@ -861,6 +874,7 @@ public class TemporalExpressions implements Serializable {
                 return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -961,6 +975,7 @@ public class TemporalExpressions implements Serializable {
     /** A temporal expression that represents a mathematical intersection of all of its
      * member expressions. */
     public static class Intersection extends TemporalExpression {
+        public static final String module = Intersection.class.getName();
         protected final Set<TemporalExpression> expressionSet;
 
         public Intersection(Set<TemporalExpression> expressionSet) {
@@ -1020,6 +1035,7 @@ public class TemporalExpressions implements Serializable {
                 return this.expressionSet.equals(((Intersection) obj).expressionSet);
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -1088,6 +1104,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a minute range. */
     public static class MinuteRange extends TemporalExpression {
+        public static final String module = MinuteRange.class.getName();
         protected final int end;
         protected final int start;
 
@@ -1142,6 +1159,7 @@ public class TemporalExpressions implements Serializable {
                 return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -1238,6 +1256,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a month range. */
     public static class MonthRange extends TemporalExpression {
+        public static final String module = MonthRange.class.getName();
         protected final int end;
         protected final int start;
 
@@ -1291,6 +1310,7 @@ public class TemporalExpressions implements Serializable {
                 return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -1395,6 +1415,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that provides a substitution for an excluded temporal expression. */
     public static class Substitution extends TemporalExpression {
+        public static final String module = Substitution.class.getName();
         protected final TemporalExpression excluded;
         protected final TemporalExpression included;
         protected final TemporalExpression substitute;
@@ -1452,6 +1473,7 @@ public class TemporalExpressions implements Serializable {
                 return this.included.equals(that.included) && this.excluded.equals(that.excluded) && this.substitute.equals(that.substitute);
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;
@@ -1518,6 +1540,7 @@ public class TemporalExpressions implements Serializable {
     /** A temporal expression that represents a mathematical union of all of its
      * member expressions. */
     public static class Union extends TemporalExpression {
+        public static final String module = Union.class.getName();
         protected final Set<TemporalExpression> expressionSet;
 
         public Union(Set<TemporalExpression> expressionSet) {
@@ -1570,6 +1593,7 @@ public class TemporalExpressions implements Serializable {
                 return this.expressionSet.equals(((Union) obj).expressionSet);
                 }
                 catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
                 }
             }
             return false;

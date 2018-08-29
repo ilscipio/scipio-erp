@@ -441,13 +441,11 @@ public class FindServices {
         int start = viewIndex.intValue() * viewSize.intValue();
         List<GenericValue> list = null;
         Integer listSize = 0;
-        try {
-            EntityListIterator it = (EntityListIterator) result.get("listIt");
+        try (EntityListIterator it = (EntityListIterator) result.get("listIt")) {
             list = it.getPartialList(start+1, viewSize); // list starts at '1'
             listSize = it.getResultsSizeAfterPartialList();
-            it.close();
-        } catch (Exception e) {
-            Debug.logInfo("Problem getting partial list" + e,module);
+        } catch (ClassCastException | NullPointerException | GenericEntityException e) {
+            Debug.logInfo("Problem getting partial list" + e, module);
         }
 
         result.put("listSize", listSize);

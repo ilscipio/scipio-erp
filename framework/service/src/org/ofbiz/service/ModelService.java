@@ -1088,7 +1088,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     /**
      * Evaluates permissions for a service.
      * @param dctx DispatchContext from the invoked service
-     * @param context Map containing userLogin infromation
+     * @param context Map containing userLogin information
      * @return true if all permissions evaluate true.
      */
     public boolean evalPermissions(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -1099,10 +1099,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     return false;
                 }
             }
-            return true;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**

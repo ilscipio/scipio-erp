@@ -1,4 +1,4 @@
-package com.scipio.order.quote.content;
+package com.ilscipio.scipio.order.quote.content;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

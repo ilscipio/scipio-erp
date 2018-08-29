@@ -207,7 +207,7 @@ under the License.
     <!-- custRequest content services -->
     <!-- SCIPIO: New service for content files upload -->
     <service name="CustRequestUploadContentFile" engine="java"
-        location="com.scipio.order.quote.content.CustRequestServices" invoke="createCustRequestContent" auth="true" transaction-timeout="7200">        
+        location="com.ilscipio.scipio.order.quote.content.CustRequestServices" invoke="createCustRequestContent" auth="true" transaction-timeout="7200">        
         <description>Imports and processes a media file and stores it in the database. Autodetects content-type, defaulting to Binary.</description>
         <permission-service service-name="custRequestPermissionCheck" main-action="CREATE"/>      
         <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="false"/>

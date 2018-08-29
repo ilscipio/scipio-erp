@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.service.jms;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.JNDIContextFactory;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.GenericRequester;
@@ -94,7 +96,7 @@ public class JmsServiceEngine extends AbstractEngine {
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Serializing Context --> " + context, module);
             xmlContext = JmsSerializer.serialize(context);
-        } catch (Exception e) {
+        } catch (SerializeException | IOException e) {
             throw new GenericServiceException("Cannot serialize context.", e);
         }
         MapMessage message = session.createMapMessage();
@@ -266,7 +268,7 @@ public class JmsServiceEngine extends AbstractEngine {
         try {
             con = factory.createXAQueueConnection(userName, password);
 
-            if (clientId != null && clientId.length() > 1)
+            if (clientId.length() > 1)
                 con.setClientID(userName);
             con.start();
 

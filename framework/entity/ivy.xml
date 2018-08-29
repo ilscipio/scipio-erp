@@ -26,7 +26,7 @@
         <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk18" rev="3.0.4" transitive="false" conf="jdbc,firebird,jaybird"/>
         <dependency org="org.hsqldb" name="hsqldb" rev="2.4.1" transitive="false" conf="jdbc,hsqldb,hsql"/>
         <dependency org="com.microsoft.sqlserver" name="mssql-jdbc" rev="6.5.3.jre8-preview" transitive="false" conf="jdbc,mssql"/>
-        <dependency org="mysql" name="mysql-connector-java" rev="5.1.46" transitive="false" conf="jdbc,mysql"/>
+        <dependency org="mysql" name="mysql-connector-java" rev="5.1.47" transitive="false" conf="jdbc,mysql"/>
         <dependency org="org.mariadb.jdbc" name="mariadb-java-client" rev="2.2.5" transitive="false" conf="jdbc,mariadb"/>
         <dependency org="org.postgresql" name="postgresql" rev="42.2.2" transitive="false" conf="jdbc,postgresql"/>
     </dependencies>

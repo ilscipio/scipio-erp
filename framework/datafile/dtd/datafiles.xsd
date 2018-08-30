@@ -39,6 +39,7 @@ under the License.
         <xs:attribute name="sender"/>
         <xs:attribute name="receiver"/>
         <xs:attribute name="delimiter"/>
+        <xs:attribute name="start-line"/>
         <xs:attribute name="text-delimiter"/>
         <xs:attribute name="record-length"/>
         <xs:attribute name="separator-style" use="required">
@@ -47,6 +48,14 @@ under the License.
                     <xs:enumeration value="fixed-length"/>
                     <xs:enumeration value="fixed-record"/>
                     <xs:enumeration value="delimited"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="eol-type" default="CR">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="CR"/>
+                    <xs:enumeration value="CRLF"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>

@@ -39,19 +39,18 @@ import com.ibm.icu.util.Calendar;
 /**
  * Utility class for handling java.util.Date, the java.sql data/time classes and related
  */
-public class UtilDateTime {
-    public static final String[] months = {// // to be translated over CommonMonthName, see example in accounting
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November",
-        "December"
-    };
+public final class UtilDateTime {
 
+    /**
+     * @deprecated SCIPIO: 2018-08: this will become private/removed, do not use from outside
+     */
+    @Deprecated
     public static final String[] days = {// to be translated over CommonDayName, see example in accounting
         "Monday", "Tuesday", "Wednesday",
         "Thursday", "Friday", "Saturday", "Sunday"
     };
 
-    public static final String[][] timevals = {
+    private static final String[][] timevals = {
         {"1000", "millisecond"},
         {"60", "second"},
         {"60", "minute"},
@@ -62,11 +61,11 @@ public class UtilDateTime {
     public static final String[] TIME_INTERVALS =  {"hour", "day", "week", "month", "quarter", "semester", "year"};
 
 
-    public static final DecimalFormat df = new DecimalFormat("0.00;-0.00");
+    private static final DecimalFormat df = new DecimalFormat("0.00;-0.00");
     /**
      * JDBC escape format for java.sql.Date conversions.
      */
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DATE_FORMAT = "yyyy-MM-dd"; // SCIPIO: 2018-08-30: keeping public for backward-compat
     /**
      * JDBC escape format for java.sql.Timestamp conversions.
      */
@@ -75,6 +74,8 @@ public class UtilDateTime {
      * JDBC escape format for java.sql.Time conversions.
      */
     public static final String TIME_FORMAT = "HH:mm:ss";
+
+    private UtilDateTime() {}
 
     public static double getInterval(Date from, Date thru) {
         return thru != null ? thru.getTime() - from.getTime() : 0;
@@ -125,9 +126,9 @@ public class UtilDateTime {
     }
 
     public static String formatInterval(double interval, int count, Locale locale) {
-        List<Double> parts = new ArrayList<Double>(timevals.length);
+        List<Double> parts = new ArrayList<>(timevals.length);
         for (String[] timeval: timevals) {
-            int value = Integer.valueOf(timeval[0]);
+            int value = Integer.parseInt(timeval[0]);
             double remainder = interval % value;
             interval = interval / value;
             parts.add(remainder);
@@ -138,9 +139,13 @@ public class UtilDateTime {
         StringBuilder sb = new StringBuilder();
         for (int i = parts.size() - 1; i >= 0 && count > 0; i--) {
             Double D = parts.get(i);
-            double d = D.doubleValue();
-            if (d < 1) continue;
-            if (sb.length() > 0) sb.append(", ");
+            double d = D;
+            if (d < 1) {
+                continue;
+            }
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
             count--;
             sb.append(count == 0 ? df.format(d) : Integer.toString(D.intValue()));
             sb.append(' ');
@@ -232,7 +237,7 @@ public class UtilDateTime {
     }
 
     public static java.sql.Timestamp getDayEnd(java.sql.Timestamp stamp) {
-        return getDayEnd(stamp, Long.valueOf(0));
+        return getDayEnd(stamp, 0L);
     }
 
     public static java.sql.Timestamp getDayEnd(java.sql.Timestamp stamp, Long daysLater) {
@@ -323,9 +328,8 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Date(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -341,9 +345,8 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Date(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -359,9 +362,8 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Date(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -375,9 +377,8 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Time(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -393,9 +394,8 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Time(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -411,9 +411,8 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Time(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -427,9 +426,8 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Timestamp(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -444,9 +442,8 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Timestamp(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -466,9 +463,8 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Timestamp(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -487,13 +483,14 @@ public class UtilDateTime {
 
         if (newDate != null) {
             return new java.sql.Timestamp(newDate.getTime());
-        } else {
-            return null;
         }
+        return null;
     }
 
     public static java.sql.Timestamp toTimestamp(Date date) {
-        if (date == null) return null;
+        if (date == null) {
+            return null;
+        }
         return new Timestamp(date.getTime());
     }
     
@@ -536,7 +533,9 @@ public class UtilDateTime {
      * @return A Date made from the date and time Strings
      */
     public static java.util.Date toDate(String date, String time) {
-        if (date == null || time == null) return null;
+        if (date == null || time == null) {
+            return null;
+        }
         String month;
         String day;
         String year;
@@ -547,11 +546,15 @@ public class UtilDateTime {
         int dateSlash1 = date.indexOf("/");
         int dateSlash2 = date.lastIndexOf("/");
 
-        if (dateSlash1 <= 0 || dateSlash1 == dateSlash2) return null;
+        if (dateSlash1 <= 0 || dateSlash1 == dateSlash2) {
+            return null;
+        }
         int timeColon1 = time.indexOf(":");
         int timeColon2 = time.lastIndexOf(":");
 
-        if (timeColon1 <= 0) return null;
+        if (timeColon1 <= 0) {
+            return null;
+        }
         month = date.substring(0, dateSlash1);
         day = date.substring(dateSlash1 + 1, dateSlash2);
         year = date.substring(dateSlash2 + 1);
@@ -581,8 +584,8 @@ public class UtilDateTime {
      */
     public static java.util.Date toDate(String monthStr, String dayStr, String yearStr, String hourStr,
             String minuteStr, String secondStr) {
-        int month, day, year, hour, minute, second;
 
+        int month, day, year, hour, minute, second;
         try {
             month = Integer.parseInt(monthStr);
             day = Integer.parseInt(dayStr);
@@ -591,9 +594,11 @@ public class UtilDateTime {
             minute = Integer.parseInt(minuteStr);
             second = Integer.parseInt(secondStr);
         } catch (Exception e) {
+            //Debug.logError(e, module); // SCIPIO: 2018-08-30: do not do this, caller may want to test
             return null;
         }
         return toDate(month, day, year, hour, minute, second);
+
     }
 
     /**
@@ -626,7 +631,9 @@ public class UtilDateTime {
      * @return A date String in the given format
      */
     public static String toDateString(java.util.Date date, String format) {
-        if (date == null) return "";
+        if (date == null) {
+            return "";
+        }
         SimpleDateFormat dateFormat = null;
         if (format != null) {
             dateFormat = new SimpleDateFormat(format);
@@ -657,7 +664,9 @@ public class UtilDateTime {
      * @return A time String in the format HH:MM:SS or HH:MM
      */
     public static String toTimeString(java.util.Date date) {
-        if (date == null) return "";
+        if (date == null) {
+            return "";
+        }
         Calendar calendar = Calendar.getInstance();
 
         calendar.setTime(date);
@@ -694,9 +703,8 @@ public class UtilDateTime {
         }
         if (second == 0) {
             return hourStr + ":" + minuteStr;
-        } else {
-            return hourStr + ":" + minuteStr + ":" + secondStr;
         }
+        return hourStr + ":" + minuteStr + ":" + secondStr;
     }
 
     /**
@@ -706,15 +714,16 @@ public class UtilDateTime {
      * @return A combined data and time string in the format "MM/DD/YYYY HH:MM:SS" where the seconds are left off if they are 0.
      */
     public static String toDateTimeString(java.util.Date date) {
-        if (date == null) return "";
+        if (date == null) {
+            return "";
+        }
         String dateString = toDateString(date);
         String timeString = toTimeString(date);
 
-        if (dateString != null && timeString != null) {
+        if (!dateString.isEmpty() && !timeString.isEmpty()) {
             return dateString + " " + timeString;
-        } else {
-            return "";
         }
+        return "";
     }
 
     public static String toGmtTimestampString(Timestamp timestamp) {
@@ -864,7 +873,7 @@ public class UtilDateTime {
     }
 
     public static Timestamp getDayEnd(Timestamp stamp, TimeZone timeZone, Locale locale) {
-        return getDayEnd(stamp, Long.valueOf(0), timeZone, locale);
+        return getDayEnd(stamp, 0L, timeZone, locale);
     }
 
     public static Timestamp getDayEnd(Timestamp stamp, Long daysLater, TimeZone timeZone, Locale locale) {
@@ -874,7 +883,6 @@ public class UtilDateTime {
         Timestamp retStamp = new Timestamp(tempCal.getTimeInMillis());
         retStamp.setNanos(0);
         //MSSQL datetime field has accuracy of 3 milliseconds and setting the nano seconds cause the date to be rounded to next day
-        //retStamp.setNanos(999999999);
         return retStamp;
     }
 
@@ -976,7 +984,7 @@ public class UtilDateTime {
         Calendar tempCal = Calendar.getInstance(locale);
         tempCal.set(Calendar.DAY_OF_WEEK, tempCal.getFirstDayOfWeek());
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE", locale);
-        List<String> resultList = new ArrayList<String>();
+        List<String> resultList = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             resultList.add(dateFormat.format(tempCal.getTime()));
             tempCal.roll(Calendar.DAY_OF_WEEK, 1);
@@ -994,7 +1002,7 @@ public class UtilDateTime {
         Calendar tempCal = Calendar.getInstance(locale);
         tempCal.set(Calendar.MONTH, Calendar.JANUARY);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM", locale);
-        List<String> resultList = new ArrayList<String>();
+        List<String> resultList = new ArrayList<>();
         for (int i = Calendar.JANUARY; i <= tempCal.getActualMaximum(Calendar.MONTH); i++) {
             resultList.add(dateFormat.format(tempCal.getTime()));
             tempCal.roll(Calendar.MONTH, 1);
@@ -1095,7 +1103,7 @@ public class UtilDateTime {
         private static final List<TimeZone> availableTimeZoneList = getTimeZones();
 
         private static List<TimeZone> getTimeZones() {
-            ArrayList<TimeZone> availableTimeZoneList = new ArrayList<TimeZone>();
+            ArrayList<TimeZone> availableTimeZoneList = new ArrayList<>();
             List<String> idList = null;
             String tzString = UtilProperties.getPropertyValue("general", "timeZones.available");
             if (UtilValidate.isNotEmpty(tzString)) {
@@ -1127,9 +1135,8 @@ public class UtilDateTime {
     public static TimeZone toTimeZone(String tzId) {
         if (UtilValidate.isEmpty(tzId)) {
             return TimeZone.getDefault();
-        } else {
-            return TimeZone.getTimeZone(tzId);
         }
+        return TimeZone.getTimeZone(tzId);
     }
 
     /** Returns a TimeZone object based upon an hour offset from GMT.
@@ -1238,32 +1245,32 @@ public class UtilDateTime {
             return this;
         }
 
-        @Override
+        @Deprecated
         public void setYear(int year) {
             throw new UnsupportedOperationException();
         }
 
-        @Override
+        @Deprecated
         public void setMonth(int month) {
             throw new UnsupportedOperationException();
         }
 
-        @Override
+        @Deprecated
         public void setDate(int date) {
             throw new UnsupportedOperationException();
         }
 
-        @Override
+        @Deprecated
         public void setHours(int hours) {
             throw new UnsupportedOperationException();
         }
 
-        @Override
+        @Deprecated
         public void setMinutes(int minutes) {
             throw new UnsupportedOperationException();
         }
 
-        @Override
+        @Deprecated
         public void setSeconds(int seconds) {
             throw new UnsupportedOperationException();
         }
@@ -1275,6 +1282,18 @@ public class UtilDateTime {
 
     }
     
+    public static String getDateFormat() {
+        return DATE_FORMAT;
+    }
+
+    public static String getDateTimeFormat() {
+        return DATE_TIME_FORMAT;
+    }
+
+    public static String getTimeFormat() {
+        return TIME_FORMAT;
+    }
+
     /**
      * SCIPIO: Returns a map with begin/end timestamp for a given period. Defaults to month.
      * @param period

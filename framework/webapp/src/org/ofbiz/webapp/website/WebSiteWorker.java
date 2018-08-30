@@ -58,7 +58,7 @@ public class WebSiteWorker {
             return null;
         }
 
-        return findWebSite((Delegator) request.getAttribute("delegator"), webSiteId);
+        return findWebSite((Delegator) request.getAttribute("delegator"), webSiteId, true);
     }
 
     /**
@@ -78,7 +78,7 @@ public class WebSiteWorker {
      * @param delegator
      * @param webSiteId
      * @param useCache
-     * @return
+     * @return GenericValue
      */
     public static GenericValue findWebSite(Delegator delegator, String webSiteId, boolean useCache) {
         GenericValue result = null;

@@ -77,10 +77,10 @@ public class JavaEventHandler implements EventHandler {
         if (Debug.verboseOn()) Debug.logVerbose("*[[Event invocation]]*", module);
         Object[] params = new Object[] {request, response};
 
-        return invoke(event.path, event.invoke, eventClass, paramTypes, params, event); // SCIPIO: pass the event
+        return invoke(event.path, event.invoke, eventClass, paramTypes, params, event, event.transactionTimeout); // SCIPIO: pass the event
     }
 
-    private String invoke(String eventPath, String eventMethod, Class<?> eventClass, Class<?>[] paramTypes, Object[] params, Event event) throws EventHandlerException {
+    private String invoke(String eventPath, String eventMethod, Class<?> eventClass, Class<?>[] paramTypes, Object[] params, Event event, int transactionTimeout) throws EventHandlerException {
         boolean beganTransaction = false;
         boolean rollback = false;
         if (eventClass == null) {
@@ -92,7 +92,11 @@ public class JavaEventHandler implements EventHandler {
 
         if (Debug.verboseOn()) Debug.logVerbose("[Processing]: JAVA Event", module);
         try {
-            beganTransaction = TransactionUtil.begin();
+            if (transactionTimeout > 0) {
+                beganTransaction = TransactionUtil.begin(transactionTimeout);
+            } else {
+                beganTransaction = TransactionUtil.begin();
+            }
             Method m = eventClass.getMethod(eventMethod, paramTypes);
             String eventReturn = (String) m.invoke(null, params);
 

@@ -63,33 +63,33 @@ public final class ApacheFopWorker {
     
     private static final int encryptionLengthBitsDefault = 128;
     
-    public static final String encryptionLengthDefault = UtilProperties.getPropertyValue("fop", "fop.encryption-length.default", String.valueOf(encryptionLengthBitsDefault));
+    private static final String encryptionLengthDefault = UtilProperties.getPropertyValue("fop", "fop.encryption-length.default", String.valueOf(encryptionLengthBitsDefault));
 
-    public static final String userPasswordDefault = UtilProperties.getPropertyValue("fop", "fop.userPassword.default");
+    private static final String userPasswordDefault = UtilProperties.getPropertyValue("fop", "fop.userPassword.default");
 
-    public static final String ownerPasswordDefault = UtilProperties.getPropertyValue("fop", "fop.ownerPassword.default");
+    private static final String ownerPasswordDefault = UtilProperties.getPropertyValue("fop", "fop.ownerPassword.default");
 
-    public static final String allowPrintDefault = UtilProperties.getPropertyValue("fop", "fop.allowPrint.default", "true");
+    private static final String allowPrintDefault = UtilProperties.getPropertyValue("fop", "fop.allowPrint.default", "true");
 
-    public static final String allowCopyContentDefault = UtilProperties.getPropertyValue("fop", "fop.allowCopyContent.default", "true");
+    private static final String allowCopyContentDefault = UtilProperties.getPropertyValue("fop", "fop.allowCopyContent.default", "true");
 
-    public static final String allowEditContentDefault = UtilProperties.getPropertyValue("fop", "fop.allowEditContent.default", "true");
+    private static final String allowEditContentDefault = UtilProperties.getPropertyValue("fop", "fop.allowEditContent.default", "true");
 
-    public static final String allowEditAnnotationsDefault = UtilProperties.getPropertyValue("fop", "fop.allowEditAnnotations.default", "true");
+    private static final String allowEditAnnotationsDefault = UtilProperties.getPropertyValue("fop", "fop.allowEditAnnotations.default", "true");
 
-    public static final String allowFillInFormsDefault = UtilProperties.getPropertyValue("fop", "fop.allowFillInForms.default", "true");
+    private static final String allowFillInFormsDefault = UtilProperties.getPropertyValue("fop", "fop.allowFillInForms.default", "true");
 
-    public static final String allowAccessContentDefault = UtilProperties.getPropertyValue("fop", "fop.allowAccessContent.default", "true");
+    private static final String allowAccessContentDefault = UtilProperties.getPropertyValue("fop", "fop.allowAccessContent.default", "true");
 
-    public static final String allowAssembleDocumentDefault = UtilProperties.getPropertyValue("fop", "fop.allowAssembleDocument.default", "true");
+    private static final String allowAssembleDocumentDefault = UtilProperties.getPropertyValue("fop", "fop.allowAssembleDocument.default", "true");
 
-    public static final String allowPrintHqDefault = UtilProperties.getPropertyValue("fop", "fop.allowPrintHq.default", "true");
+    private static final String allowPrintHqDefault = UtilProperties.getPropertyValue("fop", "fop.allowPrintHq.default", "true");
 
-    public static final String encryptMetadataDefault = UtilProperties.getPropertyValue("fop", "fop.encrypt-metadata.default", "true");
+    private static final String encryptMetadataDefault = UtilProperties.getPropertyValue("fop", "fop.encrypt-metadata.default", "true");
     
-    public static final String fopPath = UtilProperties.getPropertyValue("fop", "fop.path", "/framework/webapp/config");
+    private static final String fopPath = UtilProperties.getPropertyValue("fop", "fop.path", "/framework/webapp/config");
     
-    public static final String fopFontBaseProperty = UtilProperties.getPropertyValue("fop", "fop.font.base.url", "/framework/webapp/config/");
+    private static final String fopFontBaseProperty = UtilProperties.getPropertyValue("fop", "fop.font.base.url", "/framework/webapp/config/");
 
     private ApacheFopWorker() {}
 
@@ -105,14 +105,16 @@ public final class ApacheFopWorker {
                 }
 
                 try {
-                    String ofbizHome = System.getProperty("ofbiz.home");
-                    File userConfigFile = FileUtil.getFile(ofbizHome + fopPath + "/fop.xconf");
+                    URL configFilePath = FlexibleLocation.resolveLocation(fopPath + "/fop.xconf");
+                    File userConfigFile = FileUtil.getFile(configFilePath.getFile());
                     if (userConfigFile.exists()) {
                         fopFactory = FopFactory.newInstance(userConfigFile);
                     } else {
                         Debug.logWarning("FOP configuration file not found: " + userConfigFile, module);
                     }
-                    File fontBaseFile = FileUtil.getFile(ofbizHome + fopFontBaseProperty);
+                    URL fontBaseFileUrl = FlexibleLocation.resolveLocation(fopFontBaseProperty);
+                    File fontBaseFile = FileUtil.getFile(fontBaseFileUrl.getFile());
+
                     if (fontBaseFile.isDirectory()) {
                         fopFactory.getFontManager().setResourceResolver(ResourceResolverFactory.createDefaultInternalResourceResolver(fontBaseFile.toURI()));
                     } else {

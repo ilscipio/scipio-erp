@@ -948,7 +948,7 @@ public class ConfigXMLReader {
             if (firstvisitElement != null) {
                 for (Element eventElement : UtilXml.childElementList(firstvisitElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.firstVisitEventList.put(eventName, new Event(eventElement));
@@ -959,7 +959,7 @@ public class ConfigXMLReader {
             if (preprocessorElement != null) {
                 for (Element eventElement : UtilXml.childElementList(preprocessorElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.preprocessorEventList.put(eventName, new Event(eventElement));
@@ -970,7 +970,7 @@ public class ConfigXMLReader {
             if (postprocessorElement != null) {
                 for (Element eventElement : UtilXml.childElementList(postprocessorElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.postprocessorEventList.put(eventName, new Event(eventElement));
@@ -981,7 +981,7 @@ public class ConfigXMLReader {
             if (afterLoginElement != null) {
                 for (Element eventElement : UtilXml.childElementList(afterLoginElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.afterLoginEventList.put(eventName, new Event(eventElement));
@@ -992,7 +992,7 @@ public class ConfigXMLReader {
             if (beforeLogoutElement != null) {
                 for (Element eventElement : UtilXml.childElementList(beforeLogoutElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.beforeLogoutEventList.put(eventName, new Event(eventElement));
@@ -1051,7 +1051,7 @@ public class ConfigXMLReader {
         protected void loadIncludes(Element rootElement) {
             for (Element includeElement : UtilXml.childElementList(rootElement, "include")) {
                 String includeLocation = includeElement.getAttribute("location");
-                if (UtilValidate.isNotEmpty(includeLocation)) {
+                if (!includeLocation.isEmpty()) {
                     // SCIPIO: support non-recursive
                     boolean recursive = !"no".equals(includeElement.getAttribute("recursive"));
                     boolean optional = "true".equals(includeElement.getAttribute("optional"));
@@ -1331,6 +1331,7 @@ public class ConfigXMLReader {
         public String path;
         public String invoke;
         public boolean globalTransaction = true;
+        public int transactionTimeout;
         public Metrics metrics = null;
         public Boolean transaction = null; // SCIPIO: A generic transaction flag
         public String abortTransaction = ""; // SCIPIO: Allow aborting transaction 
@@ -1340,6 +1341,10 @@ public class ConfigXMLReader {
             this.path = eventElement.getAttribute("path");
             this.invoke = eventElement.getAttribute("invoke");
             this.globalTransaction = !"false".equals(eventElement.getAttribute("global-transaction"));
+            String tt = eventElement.getAttribute("transaction-timeout");
+            if(!tt.isEmpty()) {
+                this.transactionTimeout = Integer.valueOf(tt);
+            }
             // Get metrics.
             Element metricsElement = UtilXml.firstChildElement(eventElement, "metric");
             if (metricsElement != null) {

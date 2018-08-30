@@ -1081,7 +1081,7 @@ public class RequestHandler {
         }
         
         GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
-        // workaraound if we are in the root webapp
+        // workaround if we are in the root webapp
         String cname = UtilHttp.getApplicationName(req);
         String oldView = view;
 
@@ -1206,7 +1206,7 @@ public class RequestHandler {
         }
 
         if (!viewAsJson) {
-            if (charset.length() > 0 && !"none".equals(charset)) {
+            if (UtilValidate.isNotEmpty(charset) && !"none".equals(charset)) {
                 resp.setContentType(contentType + "; charset=" + charset);
             } else {
                 resp.setContentType(contentType);
@@ -1227,7 +1227,7 @@ public class RequestHandler {
         // default to sameorigin
         if (UtilValidate.isNotEmpty(xFrameOption)) {
             if(!"none".equals(xFrameOption)) {
-            resp.addHeader("x-frame-options", xFrameOption);
+                resp.addHeader("x-frame-options", xFrameOption);
             }
         } else {
             resp.addHeader("x-frame-options", "sameorigin");
@@ -2396,7 +2396,7 @@ public class RequestHandler {
             for (ConfigXMLReader.Event event: getControllerConfig().getAfterLoginEventList().values()) {
                 try {
                     String returnString = this.runEvent(request, response, event, null, "after-login");
-                    if (returnString != null && !returnString.equalsIgnoreCase("success")) {
+                    if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                         throw new EventHandlerException("Pre-Processor event did not return 'success'.");
                     }
                 } catch (EventHandlerException e) {
@@ -2413,7 +2413,7 @@ public class RequestHandler {
             for (ConfigXMLReader.Event event: getControllerConfig().getBeforeLogoutEventList().values()) {
                 try {
                     String returnString = this.runEvent(request, response, event, null, "before-logout");
-                    if (returnString != null && !returnString.equalsIgnoreCase("success")) {
+                    if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                         throw new EventHandlerException("Pre-Processor event did not return 'success'.");
                     }
                 } catch (EventHandlerException e) {

@@ -221,7 +221,7 @@ public class ServiceEventHandler implements EventHandler {
                             }
                         }
                         multiPartMap.put(fieldName, ByteBuffer.wrap(item.get()));
-                        multiPartMap.put("_" + fieldName + "_size", Long.valueOf(item.getSize()));
+                        multiPartMap.put("_" + fieldName + "_size", item.getSize());
                         multiPartMap.put("_" + fieldName + "_fileName", fileName);
                         multiPartMap.put("_" + fieldName + "_contentType", item.getContentType());
                     }
@@ -406,7 +406,8 @@ public class ServiceEventHandler implements EventHandler {
 
     public static void checkSecureParameter(RequestMap requestMap, Set<String> urlOnlyParameterNames, String name, HttpSession session, String serviceName, Delegator delegator) throws EventHandlerException {
         // special case for security: if this is a request-map defined as secure in controller.xml then only accept body parameters coming in, ie don't allow the insecure URL parameters
-        // NOTE: the RequestHandler will check the HttpSerletRequest security to make sure it is secure if the request-map -> security -> https=true, but we can't just look at the request.isSecure() method here because it is allowed to send secure requests for request-map with https=false
+        // NOTE: the RequestHandler will check the HttpSerletRequest security to make sure it is secure if the request-map -> security -> https=true, 
+        // but we can't just look at the request.isSecure() method here because it is allowed to send secure requests for request-map with https=false
         if (requestMap != null && requestMap.securityHttps) {
             if (urlOnlyParameterNames.contains(name)) {
                 String errMsg = "Found URL parameter [" + name + "] passed to secure (https) request-map with uri ["
@@ -415,7 +416,7 @@ public class ServiceEventHandler implements EventHandler {
                     + "(a form field) instead of the request URL."
                     + " Moreover it would be kind if you could create a Jira sub-task of https://issues.apache.org/jira/browse/OFBIZ-2330 "
                     + "(check before if a sub-task for this error does not exist)."
-                    + " If you are not sure how to create a Jira issue please have a look before at http://cwiki.apache.org/confluence/x/JIB2"
+                    + " If you are not sure how to create a Jira issue please have a look before at https://cwiki.apache.org/confluence/display/OFBIZ/OFBiz+Contributors+Best+Practices"
                     + " Thank you in advance for your help.";
                 Debug.logError("=============== " + errMsg + "; In session [" + ControlActivationEventListener.showSessionId(session) + "]; Note that this can be changed using the service.http.parameters.require.encrypted property in the url.properties file", module);
 

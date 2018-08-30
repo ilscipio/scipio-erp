@@ -176,7 +176,9 @@ public class LoginWorker {
 
     public static void setLoggedOut(String userLoginId, Delegator delegator) {
         if (UtilValidate.isEmpty(userLoginId)) {
-            Debug.logWarning("Called setLogged out with empty userLoginId", module);
+            if (Debug.warningOn()) {
+                Debug.logWarning("Called setLogged out with empty userLoginId", module);
+            }
         }
 
         Transaction parentTx = null;
@@ -219,7 +221,9 @@ public class LoginWorker {
             if (parentTx != null) {
                 try {
                     TransactionUtil.resume(parentTx);
-                    Debug.logVerbose("Resumed the parent transaction.", module);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Resumed the parent transaction.", module);
+                    }
                 } catch (GenericTransactionException ite) {
                     Debug.logError(ite, "Cannot resume transaction: " + ite.getMessage(), module);
                 }
@@ -248,7 +252,9 @@ public class LoginWorker {
                     request.setAttribute("_ERROR_MESSAGE_LIST", errorMessageList);
                 }
                 errorMessageList.add("User does not have permission or is flagged as logged out");
-                Debug.logInfo("User does not have permission or is flagged as logged out", module);
+                if (Debug.infoOn()) {
+                    Debug.logInfo("User does not have permission or is flagged as logged out", module);
+                }
                 doBasicLogout(userLogin, request, response);
                 userLogin = null;
             }
@@ -441,37 +447,6 @@ public class LoginWorker {
             }
 
             if (delegatorNameHashIndex == -1 || (currentDelegatorTenantId != null && !tenantId.equals(currentDelegatorTenantId))) {
-                /* don't require this, allow a user to authenticate inside the tenant as long as the userLoginId and
-                 * password match what is in that tenant's database; instead just set things up below
-                try {
-                    List<GenericValue> tenantUserLoginList = delegator.findList("TenantUserLogin", EntityCondition.makeCondition(EntityOperator.AND, "tenantId", tenantId, "userLoginId", username), null, null, null, false);
-                    if (tenantUserLoginList != null && tenantUserLoginList.size() > 0) {
-                        ServletContext servletContext = session.getServletContext();
-
-                        // if so make that tenant active, setup a new delegator and a new dispatcher
-                        String delegatorName = delegator.getDelegatorName() + "#" + tenantId;
-
-                        // after this line the delegator is replaced with the new per-tenant delegator
-                        delegator = DelegatorFactory.getDelegator(delegatorName);
-                        dispatcher = ContextFilter.makeWebappDispatcher(servletContext, delegator);
-
-                        // NOTE: these will be local for now and set in the request and session later, after we've verified that the user
-                        setupNewDelegatorEtc = true;
-                    } else {
-                        // not associated with this tenant, can't login
-                        String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.unable_to_login_tenant", UtilHttp.getLocale(request));
-                        request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                        return "error";
-                    }
-                } catch (GenericEntityException e) {
-                    String errMsg = "Error checking TenantUserLogin: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                    return "error";
-                }
-                */
-
-
                 // make that tenant active, setup a new delegator and a new dispatcher
                 String delegatorName = delegator.getDelegatorBaseName() + "#" + tenantId;
 
@@ -500,7 +475,9 @@ public class LoginWorker {
             }
         } else {
             // Set default delegator
-            Debug.logInfo("Setting default delegator", module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("Setting default delegator", module);
+            }
             String delegatorName = delegator.getDelegatorBaseName();
             try {
                 // after this line the delegator is replaced with default delegator
@@ -513,7 +490,6 @@ public class LoginWorker {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-           
             setupNewDelegatorEtc = true;
         }
 
@@ -616,7 +592,7 @@ public class LoginWorker {
         }
     }
 
-    private static void setWebContextObjects(HttpServletRequest request, HttpServletResponse response, Delegator delegator, LocalDispatcher dispatcher) {
+    protected static void setWebContextObjects(HttpServletRequest request, HttpServletResponse response, Delegator delegator, LocalDispatcher dispatcher) {
         HttpSession session = request.getSession();
         // NOTE: we do NOT want to set this in the servletContext, only in the request and session
         // We also need to setup the security objects since they are dependent on the delegator
@@ -689,7 +665,7 @@ public class LoginWorker {
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error getting user preference", module);
         }
-        session.setAttribute("javaScriptEnabled", Boolean.valueOf("Y".equals(javaScriptEnabled)));
+        session.setAttribute("javaScriptEnabled", "Y".equals(javaScriptEnabled));
 
         ModelEntity modelUserLogin = userLogin.getModelEntity();
         if (modelUserLogin.isField("partyId")) {
@@ -720,7 +696,6 @@ public class LoginWorker {
         // run the before-logout events
         RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext()); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         rh.runBeforeLogoutEvents(request, response);
-
 
         // invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
@@ -836,6 +811,10 @@ public class LoginWorker {
         return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
     }
 
+    protected static String getAutoLoginCookieName(String webappName) {
+        return webappName + ".autoUserLoginId";
+    }
+    
     public static String getAutoUserLoginId(HttpServletRequest request) {
         String autoUserLoginId = null;
         Cookie[] cookies = request.getCookies();
@@ -863,7 +842,9 @@ public class LoginWorker {
 
     private static String autoLoginCheck(Delegator delegator, HttpSession session, String autoUserLoginId) {
         if (autoUserLoginId != null) {
-            Debug.logInfo("Running autoLogin check.", module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("Running autoLogin check.", module);
+            }
             try {
                 GenericValue autoUserLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", autoUserLoginId).queryOne();
                 GenericValue person = null;
@@ -1051,7 +1032,9 @@ public class LoginWorker {
                             if (m.matches()) {
                                 userLoginId = m.group(1);
                             } else {
-                                Debug.logInfo("Client certificate CN does not match pattern: [" + cnPattern + "]", module);
+                                if (Debug.infoOn()) {
+                                    Debug.logInfo("Client certificate CN does not match pattern: [" + cnPattern + "]", module);
+                                }
                             }
                         }
 
@@ -1116,7 +1099,9 @@ public class LoginWorker {
                 EntityCondition.makeConditionMap("serialNumber", "")));
 
         EntityConditionList<EntityCondition> condition = EntityCondition.makeCondition(conds);
-        Debug.logInfo("Doing issuer lookup: " + condition.toString(), module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("Doing issuer lookup: " + condition.toString(), module);
+        }
         long count = EntityQuery.use(delegator).from("X509IssuerProvision").where(condition).queryCount();
         return count > 0;
     }
@@ -1184,7 +1169,9 @@ public class LoginWorker {
         try {
             userLogin.refreshFromCache();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Unable to refresh UserLogin", module);
+            if (Debug.warningOn()) {
+                Debug.logWarning(e, "Unable to refresh UserLogin", module);
+            }
         }
         return (userLogin.get("hasLoggedOut") != null ?
                 "Y".equalsIgnoreCase(userLogin.getString("hasLoggedOut")) : false);
@@ -1239,7 +1226,9 @@ public class LoginWorker {
         if (info != null) {
             return hasApplicationPermission(info, security, userLogin);
         } else {
-            Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
+            }
         }
         return true;
     }
@@ -1277,24 +1266,27 @@ public class LoginWorker {
                 userLoginSessionMap = checkMap(deserObj, String.class, Object.class);
             }
         } catch (GenericEntityException ge) {
-            Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " +
-                    userLogin.getString("userLoginId"), module);
+            if (Debug.warningOn()) {
+                Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " + userLogin.getString("userLoginId"), module);
+            }
         } catch (Exception e) {
-            Debug.logWarning(e, "Problems deserializing UserLoginSession", module);
+            if (Debug.warningOn()) {
+                Debug.logWarning(e, "Problems deserializing UserLoginSession", module);
+            }
         }
         return userLoginSessionMap;
     }
 
     public static boolean isAjax(HttpServletRequest request) {
-       return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
     }
 
     public static String autoChangePassword(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String userName = request.getParameter("USERNAME");
         Timestamp now = UtilDateTime.nowTimestamp();
-        Integer reqToChangePwdInDays = Integer.valueOf(EntityUtilProperties.getPropertyValue("security", "user.change.password.days", "0", delegator));
-        Integer passwordNoticePeriod = Integer.valueOf(EntityUtilProperties.getPropertyValue("security", "user.change.password.notification.days", "0", delegator));
+        Integer reqToChangePwdInDays = EntityUtilProperties.getPropertyAsInteger("security", "user.change.password.days", 0);
+        Integer passwordNoticePeriod = EntityUtilProperties.getPropertyAsInteger("security", "user.change.password.notification.days", 0);
         if (reqToChangePwdInDays > 0) {
             List<GenericValue> passwordHistories = null;
             try {

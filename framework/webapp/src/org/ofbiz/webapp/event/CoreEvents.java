@@ -130,13 +130,13 @@ public class CoreEvents {
         // the frequency map
         Map<String, Integer> freqMap = new HashMap<String, Integer>();
 
-        freqMap.put("SECONDLY", Integer.valueOf(1));
-        freqMap.put("MINUTELY", Integer.valueOf(2));
-        freqMap.put("HOURLY", Integer.valueOf(3));
-        freqMap.put("DAILY", Integer.valueOf(4));
-        freqMap.put("WEEKLY", Integer.valueOf(5));
-        freqMap.put("MONTHLY", Integer.valueOf(6));
-        freqMap.put("YEARLY", Integer.valueOf(7));
+        freqMap.put("SECONDLY", 1);
+        freqMap.put("MINUTELY", 2);
+        freqMap.put("HOURLY", 3);
+        freqMap.put("DAILY", 4);
+        freqMap.put("WEEKLY", 5);
+        freqMap.put("MONTHLY", 6);
+        freqMap.put("YEARLY", 7);
 
         // some defaults
         long startTime = (new Date()).getTime();
@@ -244,7 +244,7 @@ public class CoreEvents {
                 endTime = ts1.getTime();
             } catch (IllegalArgumentException e) {
                 try {
-                    endTime = Long.parseLong(serviceTime);
+                    endTime = Long.parseLong(serviceEndTime);
                 } catch (NumberFormatException nfe) {
                     String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.invalid_format_time", locale);
                     errorBuf.append(errMsg);
@@ -286,7 +286,7 @@ public class CoreEvents {
                     String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.invalid_format_frequency", locale);
                     errorBuf.append(errMsg);
                 } else {
-                    frequency = freqMap.get(serviceFreq.toUpperCase()).intValue();
+                    frequency = freqMap.get(serviceFreq.toUpperCase());
                 }
             }
         }
@@ -322,7 +322,7 @@ public class CoreEvents {
         Map<String, Object> syncServiceResult = null;
         // schedule service
         try {
-            if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").equals("Y")) {
+            if (null!=request.getParameter("_RUN_SYNC_") && "Y".equals(request.getParameter("_RUN_SYNC_"))) {
                 syncServiceResult = dispatcher.runSync(serviceName, serviceContext);
             } else if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").startsWith("ASYNC")) {
                 // SCIPIO: 2018-02-16: new ability to run async services without need to go through Job Manager (starts quicker)
@@ -362,7 +362,7 @@ public class CoreEvents {
             return "error";
         }
 
-        if (null!=request.getParameter("_CLEAR_PREVIOUS_PARAMS_") && request.getParameter("_CLEAR_PREVIOUS_PARAMS_").equalsIgnoreCase("on"))
+        if (null!=request.getParameter("_CLEAR_PREVIOUS_PARAMS_") && "on".equalsIgnoreCase(request.getParameter("_CLEAR_PREVIOUS_PARAMS_")))
             session.removeAttribute("_SAVED_SYNC_RESULT_");
 
         Map<String, String[]> serviceFieldsToSave = checkMap(request.getParameterMap(), String.class, String[].class);
@@ -499,7 +499,7 @@ public class CoreEvents {
         // load the file
         File file = new File(filePath);
         if (file.exists()) {
-            Long longLen = Long.valueOf(file.length());
+            Long longLen = file.length();
             int length = longLen.intValue();
             try {
                 FileInputStream fis = new FileInputStream(file);

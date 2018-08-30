@@ -71,19 +71,13 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="optional" default="false">
+        <xs:attribute type="xs:boolean" name="optional" default="false">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: If true, the include will not cause or report as error if resource is missing.
                     Added 2017-05-03.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="order" default="pre-local">
             <xs:annotation>
@@ -259,7 +253,7 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.view-as-json">
-        <xs:attribute name="enabled" use="required">
+        <xs:attribute type="xs:boolean" name="enabled" use="required">
             <xs:annotation>
                 <xs:documentation>
                     If set to true, view-as-json will run for any request that receives
@@ -267,12 +261,6 @@ under the License.
                     If set to false, view-as-json will never execute for this webapp.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="json-request-uri" use="required">
             <xs:annotation>
@@ -282,7 +270,7 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="update-session" default="false">
+        <xs:attribute type="xs:boolean" name="update-session" default="false">
             <xs:annotation>
                 <xs:documentation>
                     If set to true, by default, view-as-json renders will still update
@@ -293,26 +281,14 @@ under the License.
                         session writes, but at least prevents updating the view-last/view-home/etc. attributes.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="regular-login" default="false">
+        <xs:attribute type="xs:boolean" name="regular-login" default="false">
             <xs:annotation>
                 <xs:documentation>
                     If set to true, the regular login view will be used when not logged in.
                     If set to false, the special ajaxLogin view will be used when not logged in.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="common-settings">
@@ -344,20 +320,13 @@ under the License.
     <xs:attributeGroup name="attlist.common-settings">
     </xs:attributeGroup>
     <xs:attributeGroup name="attlist.name-filter">
-        <xs:attribute name="value">
+        <xs:attribute type="xs:boolean" name="value">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: Common name filtering attributes.
                     Added 2018-06-13. 
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value=""/>
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:complexType name="name-filter">
@@ -400,19 +369,13 @@ under the License.
                                         </xs:restriction>
                                     </xs:simpleType>
                                 </xs:attribute>
-                                <xs:attribute name="use-value" use="required">
+                                <xs:attribute type="xs:boolean" name="use-value" use="required">
                                     <xs:annotation>
                                         <xs:documentation>
                                             SCIPIO: If the name matches this filter, sets this value.
                                             Added 2018-06-13. 
                                         </xs:documentation>
-                                    </xs:annotation>
-                                    <xs:simpleType>
-                                        <xs:restriction base="xs:token">
-                                            <xs:enumeration value="true"/>
-                                            <xs:enumeration value="false"/>
-                                        </xs:restriction>
-                                    </xs:simpleType>
+                                    </xs:annotation>          
                                 </xs:attribute>
                             </xs:extension>
                         </xs:complexContent>
@@ -423,7 +386,7 @@ under the License.
          </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.allow-view-save-default">
-        <xs:attribute name="value">
+        <xs:attribute type="xs:boolean" name="value">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: Global default for allow-view-save.
@@ -431,12 +394,6 @@ under the License.
                     Added 2018-06-13. 
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="request-map">
@@ -497,19 +454,12 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.security">
-        <xs:attribute name="https" default="true"><!-- SCIPIO: 2018-07-09: default is now true -->
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true">
-                        <xs:annotation>
-                            <xs:documentation>
-                                Redirects to/uses/generates the secured HTTPS protocol if necessary and possible
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:enumeration>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
+        <xs:attribute type="xs:boolean" name="https" default="true"><!-- SCIPIO: 2018-07-09: default is now true -->
+            <xs:annotation>
+                <xs:documentation>
+                    If https=true, redirect to/use/generate the secured HTTPS protocol if necessary and possible.
+                </xs:documentation>
+            </xs:annotation>
         </xs:attribute>
         <xs:attribute type="xs:boolean" name="auth" default="false">
             <xs:annotation>
@@ -667,22 +617,15 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="transaction" default="">
+        <xs:attribute type="xs:boolean" name="transaction">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: General event transaction enable/disable.
                     NOTE: Currently this has NO effect on stock behavior and is here for future use/compatibility.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value=""/>
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="abort-transaction" default="">
+        <xs:attribute name="abort-transaction">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: If on-error-result and the event returned "error", abort running transaction.
@@ -691,7 +634,6 @@ under the License.
             </xs:annotation>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value=""/>
                     <xs:enumeration value="on-error-result"/>
                     <xs:enumeration value="on-exception"/>
                     <xs:enumeration value="on-any-error"/>
@@ -867,7 +809,7 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="allow-view-save">
+        <xs:attribute type="xs:boolean" name="allow-view-save">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: If set to false, explicitly prevents saving this view (to session), such that it will
@@ -878,13 +820,6 @@ under the License.
                     Added 2018-06-13.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value=""/>
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:boolean" name="save-last-view" default="false">
             <xs:annotation>

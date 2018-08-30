@@ -517,7 +517,9 @@ public final class SimpleMethod extends MiniLangElement {
             boolean forceError = false;
             String tempErrorMsg = (String) methodContext.getEnv(serviceErrorMessageName);
             if (errorMsg.length() > 0 || UtilValidate.isNotEmpty(tempErrorMsg)) {
-                errorMsg += tempErrorMsg;
+                if (UtilValidate.isNotEmpty(tempErrorMsg)) { // SCIPIO: 2018-08-30: missing check: this could add "null"
+                    errorMsg += tempErrorMsg;
+                }
                 methodContext.putResult(ModelService.ERROR_MESSAGE, errorMsg);
                 forceError = true;
                 summaryErrorStringBuffer.append(errorMsg);

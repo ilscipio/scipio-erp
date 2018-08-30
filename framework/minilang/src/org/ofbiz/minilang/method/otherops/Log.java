@@ -19,6 +19,7 @@
 package org.ofbiz.minilang.method.otherops;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.MiniLangValidate;
@@ -30,7 +31,7 @@ import org.w3c.dom.Element;
 /**
  * Implements the &lt;log&gt; element.
  * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
  */
 public final class Log extends MethodOperation {
 
@@ -50,7 +51,7 @@ public final class Log extends MethodOperation {
             MiniLangValidate.noChildElements(simpleMethod, element);
         }
         this.messageFse = FlexibleStringExpander.getInstance(element.getAttribute("message"));
-        String levelAttribute = element.getAttribute("level");
+        String levelAttribute = UtilXml.getAttributeValueIgnorePrefix(element, "level");
         if (levelAttribute.length() == 0) {
             levelAttribute = "info";
         }
@@ -59,7 +60,7 @@ public final class Log extends MethodOperation {
             MiniLangValidate.handleError("Invalid level attribute", simpleMethod, element);
             this.level = Debug.INFO;
         } else {
-            this.level = levelInt.intValue();
+            this.level = levelInt;
         }
     }
 

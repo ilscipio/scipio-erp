@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
 /**
  * Implements the &lt;iterate&gt; element.
  * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
  */
 public final class Iterate extends MethodOperation {
 
@@ -76,9 +76,8 @@ public final class Iterate extends MethodOperation {
         Object oldEntryValue = entryFma.get(methodContext.getEnvMap());
         Object objList = listFma.get(methodContext.getEnvMap());
         if (objList instanceof EntityListIterator) {
-            EntityListIterator eli = (EntityListIterator) objList;
-            GenericValue theEntry;
-            try {
+            try (EntityListIterator eli = (EntityListIterator) objList) {
+                GenericValue theEntry;
                 while ((theEntry = eli.next()) != null) {
                     entryFma.put(methodContext.getEnvMap(), theEntry);
                     try {
@@ -97,12 +96,8 @@ public final class Iterate extends MethodOperation {
                         throw e;
                     }
                 }
-            } finally {
-                try {
-                    eli.close();
-                } catch (GenericEntityException e) {
-                    throw new MiniLangRuntimeException("Error closing entityListIterator: " + e.getMessage(), this);
-                }
+            } catch (GenericEntityException e) {
+                throw new MiniLangRuntimeException("Error with entityListIterator: " + e.getMessage(), this);
             }
         } else if (objList instanceof Collection<?>) {
             Collection<Object> theCollection = UtilGenerics.checkCollection(objList);

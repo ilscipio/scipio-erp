@@ -29,6 +29,7 @@ import java.util.TimeZone;
 
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.minilang.MiniLangUtil;
 
@@ -108,10 +109,9 @@ public abstract class Compare {
             if (lValue == null || lValue == GenericEntity.NULL_FIELD) {
                 return false;
             }
-            try {
-                Collection<?> collection = (Collection<?>) lValue;
+            if (lValue instanceof Collection) {
+                Collection<Object> collection = UtilGenerics.checkCollection(lValue);
                 return collection.contains(rValue);
-            } catch (ClassCastException e) {
             }
             if (lValue instanceof String && rValue instanceof String) {
                 return ((String) lValue).contains((String) rValue);

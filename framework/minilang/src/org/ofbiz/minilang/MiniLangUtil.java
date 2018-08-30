@@ -69,6 +69,8 @@ public final class MiniLangUtil {
         SCRIPT_PREFIXES = Collections.unmodifiableSet(scriptPrefixes);
     }
 
+    private MiniLangUtil() {}
+
     /**
      * Returns <code>true</code> if <code>str</code> contains a script.
      * @deprecated SCIPIO: FIXME?: this stock code fails to ensure the lang prefix
@@ -199,7 +201,7 @@ public final class MiniLangUtil {
         }
         Converter<Object, Object> converter = (Converter<Object, Object>) Converters.getConverter(sourceClass, targetClass);
         LocalizedConverter<Object, Object> localizedConverter = null;
-        try {
+        if (converter instanceof LocalizedConverter) {
             localizedConverter = (LocalizedConverter) converter;
             if (locale == null) {
                 locale = Locale.getDefault();
@@ -211,7 +213,7 @@ public final class MiniLangUtil {
                 format = null;
             }
             return localizedConverter.convert(obj, locale, timeZone, format);
-        } catch (ClassCastException e) {}
+        }
         return converter.convert(obj);
     }
 
@@ -350,5 +352,4 @@ public final class MiniLangUtil {
 
     public static class PlainString {}
 
-    private MiniLangUtil() {}
 }

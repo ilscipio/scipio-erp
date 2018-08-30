@@ -26,18 +26,20 @@ public abstract class PayMethPlugins {
     public static final String CONFIG_PROPRES = "scipio-codeplugins.properties";
     public static final String CONFIG_PROPPREFIX = "paymethplugin.handlerFactory";
     
-    private static final List<PayMethPluginHandler> payMethPluginHandlers = Collections.unmodifiableList(readPayMethPluginHandlers());
-
+    private static class Handlers { // prevents accident init too soon
+        private static final List<PayMethPluginHandler> payMethPluginHandlers = Collections.unmodifiableList(readPayMethPluginHandlers());
+    }
+    
     protected PayMethPlugins() {
     }
 
     public static List<PayMethPluginHandler> getAllPayMethPluginHandlers() {
-        return payMethPluginHandlers;
+        return Handlers.payMethPluginHandlers;
     }
     
     public static <T extends PayMethPluginHandler> List<T> getPayMethPluginHandlersOfType(Class<T> targetCls) {
-        ArrayList<T> filteredHandlers = new ArrayList<>(payMethPluginHandlers.size());
-        for(PayMethPluginHandler handler : payMethPluginHandlers) {
+        ArrayList<T> filteredHandlers = new ArrayList<>(getAllPayMethPluginHandlers().size());
+        for(PayMethPluginHandler handler : getAllPayMethPluginHandlers()) {
             if (targetCls.isAssignableFrom(handler.getClass())) {
                 @SuppressWarnings("unchecked")
                 T convertedHandler = (T) handler;

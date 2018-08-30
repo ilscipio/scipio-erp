@@ -14,15 +14,9 @@ import com.ilscipio.scipio.ce.base.util.AdvancedPropertyUtil.ClassDefFactory;
 /**
  * SCIPIO: Reads payment code plugins (callback handlers)
  * from all "config/scipio-codeplugins.properties" files in
- * all components having entries prefixed with "paymethplugin.handler.".
+ * all components having entries prefixed with "paymethplugin.handlerFactory".
  * <p>
- * Entries are in one of these forms:
- * <ul>
- * <li>paymethplugin.handler.[name].class=[class] / paymethplugin.handler.[name].prio=[priority] (name-based format)</li>
- * <li>paymethplugin.handler[priority]=[class] / paymethplugin.handler.name=[name] (priority-based start.properties format)</li>
- * </ul>
- * The class must implement {@link PayMethPluginHandler}, automatically through
- * OrderPayMethPluginHandler and/or AccountingPayMethPluginHandler
+ * The class must implement {@link PayMethPluginFactory}.
  */
 public abstract class PayMethPlugins {
 
@@ -30,7 +24,7 @@ public abstract class PayMethPlugins {
 
     // DEV NOTE: DO NOT strip the .properties prefix here
     public static final String CONFIG_PROPRES = "scipio-codeplugins.properties";
-    public static final String CONFIG_PROPPREFIX = "paymethplugin.handler";
+    public static final String CONFIG_PROPPREFIX = "paymethplugin.handlerFactory";
     
     private static final List<PayMethPluginHandler> payMethPluginHandlers = Collections.unmodifiableList(readPayMethPluginHandlers());
 
@@ -54,17 +48,23 @@ public abstract class PayMethPlugins {
         return filteredHandlers;
     }
     
+    /**
+     * Reads the plugin handlers. The handler instances are created only once
+     * for the whole system so that the same instances will be used across
+     * all components (accounting, order, etc.).
+     */
     private static List<PayMethPluginHandler> readPayMethPluginHandlers() {
-        List<ClassDef<PayMethPluginHandler>> pluginDefs = readPayMethPluginHandlers(CONFIG_PROPRES, 
-                CONFIG_PROPPREFIX, PayMethPluginHandler.class);
+        List<ClassDef<PayMethPluginFactory>> pluginDefs = readClassDefs(CONFIG_PROPRES, 
+                CONFIG_PROPPREFIX, PayMethPluginFactory.class);
         List<PayMethPluginHandler> handlers = new ArrayList<>(pluginDefs.size());
-        for(ClassDef<PayMethPluginHandler> pluginDef : pluginDefs) {
-            handlers.add(pluginDef.getInstance());
+        for(ClassDef<PayMethPluginFactory> pluginDef : pluginDefs) {
+            PayMethPluginHandler handler = pluginDef.getInstance().getHandler();
+            handlers.add(handler);
         }
         return handlers;
     }
     
-    protected static <H> List<ClassDef<H>> readPayMethPluginHandlers(String resource, String propPrefix, Class<H> handlerIf) {
+    protected static <H> List<ClassDef<H>> readClassDefs(String resource, String propPrefix, Class<H> handlerIf) {
         return AdvancedPropertyUtil.readClassDefsFromAllComponents(resource, 
                 propPrefix, new ClassDefFactory<ClassDef<H>, H>() {
             @Override

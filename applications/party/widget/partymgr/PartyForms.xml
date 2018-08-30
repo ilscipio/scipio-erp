@@ -862,6 +862,8 @@ under the License.
         <field name="securityGroupId" title="${uiLabelMap.CommonSecurityGroupId}">
             <drop-down allow-empty="true" text-size="60">
                 <entity-options entity-name="SecurityGroup" key-field-name="groupId" description="${description} [${groupId}]">
+                    <!-- SCIPIO: 2018-08-30: TODO: REVIEW: this needs better fallback support for backward-compat
+                    <entity-order-by field-name="groupName"/>-->
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>

@@ -134,6 +134,7 @@ under the License.
             default-resource-name="SecurityEntityLabels"
             title="Security Component - Security Group">
       <field name="groupId" type="id-ne"></field>
+      <field name="groupName" type="value"></field>
       <field name="description" type="description"></field>
       <prim-key field="groupId"/>
     </entity>

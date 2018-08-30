@@ -90,6 +90,8 @@ under the License.
         <field name="userLoginId"><hidden/></field>
         <field name="groupId" title="${uiLabelMap.CommonGroup}">
             <drop-down allow-empty="false">
+                <!-- SCIPIO: 2018-08-30: TODO: REVIEW: this needs better fallback support for backward-compat
+                <entity-options entity-name="SecurityGroup" description="${groupId} ${groupName}">-->
                 <entity-options entity-name="SecurityGroup" description="${groupId} ${description}">
                     <entity-order-by field-name="groupId"/>
                 </entity-options>
@@ -110,6 +112,7 @@ under the License.
 
     <form name="CreateSecurityGroup" type="single" target="createSecurityGroup" default-map-name="securityGroup">
         <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" required-field="true"><text size="20" maxlength="20"/></field>
+        <field name="groupName" title="${uiLabelMap.CommonName}"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="60" maxlength="250"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
@@ -121,6 +124,7 @@ under the License.
 
     <form name="EditSecurityGroup" type="single" target="updateSecurityGroup" default-map-name="securityGroup">
         <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field name="groupName" title="${uiLabelMap.CommonName}"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="60" maxlength="250"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>

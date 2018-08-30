@@ -431,7 +431,7 @@ public final class UtilXml {
         Document document = null;
 
         /* Standard JAXP (mostly), but doesn't seem to be doing XML Schema validation, so making sure that is on... */
-        DocumentBuilderFactory factory = new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(validate);
         factory.setNamespaceAware(true);
 
@@ -439,8 +439,6 @@ public final class UtilXml {
         factory.setAttribute("http://apache.org/xml/features/validation/schema", validate);
 
         // with a SchemaUrl, a URL object
-        //factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
-        //factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", SchemaUrl);
         DocumentBuilder builder = factory.newDocumentBuilder();
         if (validate) {
             LocalResolver lr = new LocalResolver(new DefaultHandler());

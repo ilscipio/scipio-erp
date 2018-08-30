@@ -89,7 +89,7 @@ under the License.
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="currentPassword" type="short-varchar"></field><field name="currentPassword" type="short-varchar"></field><!-- SCIPIO: WARN: FIXME: 2018-08-30: must change this to "long-varchar" for full PBKDF2 support -->
+      <field name="currentPassword" type="short-varchar"></field><!-- SCIPIO: WARN: FIXME: 2018-08-30: must change this to "long-varchar" for full PBKDF2 support -->
       <prim-key field="userLoginId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="USER_LPH_USER" rel-entity-name="UserLogin">

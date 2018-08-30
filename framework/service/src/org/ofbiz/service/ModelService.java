@@ -1064,43 +1064,43 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 result.put("failMessage", e.getMessage());
                 return result;
             }
-                Map<String, Object> ctx = permission.makeValid(context, IN_PARAM);
-                if (UtilValidate.isNotEmpty(this.permissionMainAction)) {
-                    ctx.put("mainAction", this.permissionMainAction);
-                }
-                if (UtilValidate.isNotEmpty(this.permissionResourceDesc)) {
-                    ctx.put("resourceDescription", this.permissionResourceDesc);
-                }
+            Map<String, Object> ctx = permission.makeValid(context, IN_PARAM);
+            if (UtilValidate.isNotEmpty(this.permissionMainAction)) {
+                ctx.put("mainAction", this.permissionMainAction);
+            }
+            if (UtilValidate.isNotEmpty(this.permissionResourceDesc)) {
+                ctx.put("resourceDescription", this.permissionResourceDesc);
+            }
             ctx.put("resourceDescription", thisService.name);
 
-                LocalDispatcher dispatcher = dctx.getDispatcher();
-                Map<String, Object> resp;
-                try {
-                    resp = dispatcher.runSync(permission.name,  ctx, 300, true);
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
-                    Map<String, Object> result = ServiceUtil.returnSuccess();
-                    result.put("hasPermission", Boolean.FALSE);
-                    result.put("failMessage", e.getMessage());
-                    return result;
-                }
-                if (ServiceUtil.isError(resp) || ServiceUtil.isFailure(resp)) {
-                    Map<String, Object> result = ServiceUtil.returnSuccess();
-                    result.put("hasPermission", Boolean.FALSE);
-                    String failMessage = (String) resp.get("failMessage");
-                    if (UtilValidate.isEmpty(failMessage)) {
-                        failMessage = ServiceUtil.getErrorMessage(resp);
-                    }
-                    result.put("failMessage", failMessage);
-                    return result;
-                }
-                return resp;
+            LocalDispatcher dispatcher = dctx.getDispatcher();
+            Map<String, Object> resp;
+            try {
+                resp = dispatcher.runSync(permission.name,  ctx, 300, true);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                Map<String, Object> result = ServiceUtil.returnSuccess();
+                result.put("hasPermission", Boolean.FALSE);
+                result.put("failMessage", e.getMessage());
+                return result;
             }
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            result.put("hasPermission", Boolean.FALSE);
-            result.put("failMessage", "No ModelService found; no service name specified!");
-            return result;
+            if (ServiceUtil.isError(resp) || ServiceUtil.isFailure(resp)) {
+                Map<String, Object> result = ServiceUtil.returnSuccess();
+                result.put("hasPermission", Boolean.FALSE);
+                String failMessage = (String) resp.get("failMessage");
+                if (UtilValidate.isEmpty(failMessage)) {
+                    failMessage = ServiceUtil.getErrorMessage(resp);
+                }
+                result.put("failMessage", failMessage);
+                return result;
+            }
+            return resp;
         }
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("hasPermission", Boolean.FALSE);
+        result.put("failMessage", "No ModelService found; no service name specified!");
+        return result;
+    }
 
     /**
      * Evaluates notifications

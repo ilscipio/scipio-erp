@@ -784,20 +784,13 @@ under the License.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="always-expand-selected-or-ancestor">
+            <xs:attribute type="xs:boolean" name="always-expand-selected-or-ancestor">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Per-menu-item override of the top menu always-expand-selected-or-ancestor setting.
                         This can be used to create exceptions to the resolved top menu always-expand-selected-or-ancestor setting.
                         WARN/FIXME: Currently the overrides only work on menu items. Overrides won't work if set on sub menu definitions.
                         Default: (empty/unset)</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="" />
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <!-- 
             <xs:attribute type="xs:string" name="selected">

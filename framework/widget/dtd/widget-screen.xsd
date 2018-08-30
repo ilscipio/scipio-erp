@@ -921,14 +921,11 @@ under the License.
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" use="required" />
             <xs:attribute type="xs:string" name="share-scope" default="false">
-                <!-- SCIPIO: Should resolve to empty, true or false, but flexible expressions are supported.
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="" />
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>-->
+                <xs:annotation>
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.</xs:documentation>
+                </xs:annotation>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -947,14 +944,11 @@ under the License.
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" use="required" />
             <xs:attribute type="xs:string" name="share-scope" default="false">
-                <!-- SCIPIO: Should resolve to empty, true or false, but flexible expressions are supported.
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="" />
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>-->
+                <xs:annotation>
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.</xs:documentation>
+                </xs:annotation>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -974,19 +968,13 @@ under the License.
             <xs:attribute type="xs:string" name="location" use="required" />
             <xs:attribute type="xs:string" name="share-scope" default="false">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Support for share-scope for menu widgets.
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.
                         NOTE: Because this was missing in stock Ofbiz, we have effectively
                             changed the default behavior to protecting scope around menu
                             renders.</xs:documentation>
                 </xs:annotation>
-                <!-- SCIPIO: Should resolve to empty, true or false, but flexible expressions are supported.
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="" />
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>-->
             </xs:attribute>
             <xs:attribute type="xs:string" name="max-depth">
                 <xs:annotation>
@@ -1022,14 +1010,11 @@ under the License.
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" />
             <xs:attribute type="xs:string" name="share-scope" default="false">
-                <!-- SCIPIO: Should resolve to empty, true or false, but flexible expressions are supported.
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="" />
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>-->
+                <xs:annotation>
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.</xs:documentation>
+                </xs:annotation>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -1048,14 +1033,11 @@ under the License.
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" use="required" />
             <xs:attribute type="xs:string" name="share-scope" default="false">
-                <!-- SCIPIO: Should resolve to empty, true or false, but flexible expressions are supported.
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="" />
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>-->
+                <xs:annotation>
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.</xs:documentation>
+                </xs:annotation>
             </xs:attribute>
         </xs:complexType>
     </xs:element>

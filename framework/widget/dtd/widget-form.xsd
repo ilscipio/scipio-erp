@@ -1198,7 +1198,7 @@ under the License.
                         Added 2017-04-20.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="use-hidden" default="">
+            <xs:attribute type="xs:boolean" name="use-hidden">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: (boolean) If true, checkbox alt-key will be submitted when the check field is off using hidden inputs.
                         Requires dynamic script (javascript).
@@ -1206,13 +1206,6 @@ under the License.
                         NOTE: to prevent submitting empty value, 
                         Added 2017-04-20.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="" />
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>

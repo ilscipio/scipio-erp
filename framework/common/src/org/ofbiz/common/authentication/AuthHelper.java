@@ -35,15 +35,22 @@ import org.ofbiz.service.LocalDispatcher;
 /**
  * AuthHelper
  */
-public class AuthHelper {
+public final class AuthHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    protected static List<Authenticator> authenticators = new ArrayList<Authenticator>();
-    protected static boolean authenticatorsLoaded = false;
+    // SCIPIO: 2018-08-30: added volatile for thread safety
+    private static volatile List<Authenticator> authenticators = new ArrayList<>(); 
+    private static volatile boolean authenticatorsLoaded = false;
 
+    private AuthHelper() {
+    }
 
-    public static boolean authenticate(String username, String password, boolean isServiceAuth) throws AuthenticatorException {
-        if (!authenticatorsLoaded) throw new AuthenticatorException("Authenticators never loaded; be sure to call AuthHelper.loadAuthenticators()");
+    public static boolean authenticate(String username, String password, boolean isServiceAuth)
+            throws AuthenticatorException {
+        if (!authenticatorsLoaded) {
+            throw new AuthenticatorException(
+                    "Authenticators never loaded; be sure to call AuthHelper.loadAuthenticators()");
+        }
         for (Authenticator auth : authenticators) {
             boolean pass = auth.authenticate(username, password, isServiceAuth);
             if (pass) {
@@ -56,14 +63,20 @@ public class AuthHelper {
     }
 
     public static void logout(String username) throws AuthenticatorException {
-        if (!authenticatorsLoaded) throw new AuthenticatorException("Authenticators never loaded; be sure to call AuthHelper.loadAuthenticators()");
+        if (!authenticatorsLoaded) {
+            throw new AuthenticatorException(
+                    "Authenticators never loaded; be sure to call AuthHelper.loadAuthenticators()");
+        }
         for (Authenticator auth : authenticators) {
             auth.logout(username);
         }
     }
 
     public static void syncUser(String username) throws AuthenticatorException {
-        if (!authenticatorsLoaded) throw new AuthenticatorException("Authenticators never loaded; be sure to call AuthHelper.loadAuthenticators()");
+        if (!authenticatorsLoaded) {
+            throw new AuthenticatorException(
+                    "Authenticators never loaded; be sure to call AuthHelper.loadAuthenticators()");
+        }
         for (Authenticator auth : authenticators) {
             if (auth.isUserSynchronized()) {
                 auth.syncUser(username);
@@ -71,8 +84,12 @@ public class AuthHelper {
         }
     }
 
-    public static void updatePassword(String username, String password, String newPassword) throws AuthenticatorException {
-        if (!authenticatorsLoaded) throw new AuthenticatorException("Authenticators never loaded; be sure to call AuthHelper.loadAuthenticators()");
+    public static void updatePassword(String username, String password, String newPassword)
+            throws AuthenticatorException {
+        if (!authenticatorsLoaded) {
+            throw new AuthenticatorException(
+                    "Authenticators never loaded; be sure to call AuthHelper.loadAuthenticators()");
+        }
         for (Authenticator auth : authenticators) {
             auth.updatePassword(username, password, newPassword);
         }
@@ -90,6 +107,7 @@ public class AuthHelper {
 
     private synchronized static void loadAuthenticators_internal(LocalDispatcher dispatcher) {
         if (!authenticatorsLoaded) {
+            ArrayList<Authenticator> authenticators = new ArrayList<>(); // SCIPIO
             Iterator<Authenticator> it = ServiceLoader.load(Authenticator.class, getContextClassLoader()).iterator();
             while (it.hasNext()) {
                 try {
@@ -104,13 +122,16 @@ public class AuthHelper {
             }
 
             Collections.sort(authenticators, new AuthenticationComparator());
+            authenticators.trimToSize(); // SCIPIO            
+            AuthHelper.authenticators = Collections.unmodifiableList(authenticators); // SCIPIO: fix for thread safety
             authenticatorsLoaded = true;
         }
     }
 
-    /* Do not move this into a shared global util class; doing so
-     * would mean the method would have to be public, and then it
-     * could be called by any other non-secure source.
+    /*
+     * Do not move this into a shared global util class; doing so would mean the
+     * method would have to be public, and then it could be called by any other
+     * non-secure source.
      */
     private static ClassLoader getContextClassLoader() {
         return AccessController.doPrivileged(

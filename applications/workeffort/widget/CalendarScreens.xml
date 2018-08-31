@@ -127,7 +127,7 @@ under the License.
                         <include-screen name="${eventDetailWidgetName}" location="${eventDetailWidgetLocation}"/>
                     </widgets>
                 </section>
-                <!--<screenlet padded="false">--><!-- navigation-menu-name="Day" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortDayView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;EEEE MMMM d, yyyy&quot;, timeZone, locale)}" -->                
+                <!--<screenlet padded="false">--><!-- navigation-menu-name="Day" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortDayView}: ${groovy:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;EEEE MMMM d, yyyy&quot;, timeZone, locale)}" -->                
                     <!--<include-menu name="Day" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
                 <platform-specific>
                     <html><html-template location="component://workeffort/webapp/workeffort/calendar/day.ftl"/></html>
@@ -151,7 +151,7 @@ under the License.
                         <include-screen name="${eventDetailWidgetName}" location="${eventDetailWidgetLocation}"/>
                     </widgets>
                 </section>
-                <!--<screenlet padded="false">--><!-- navigation-menu-name="Week" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortWeekView}: ${uiLabelMap.CommonWeek} ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;w&quot;, timeZone, locale)}" -->
+                <!--<screenlet padded="false">--><!-- navigation-menu-name="Week" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortWeekView}: ${uiLabelMap.CommonWeek} ${groovy:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;w&quot;, timeZone, locale)}" -->
                     <!--<include-menu name="Week" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
                 <platform-specific>
                     <html><html-template location="component://workeffort/webapp/workeffort/calendar/week.ftl"/></html>
@@ -175,7 +175,7 @@ under the License.
                         <include-screen name="${eventDetailWidgetName}" location="${eventDetailWidgetLocation}"/>
                     </widgets>
                 </section>
-                <!--<screenlet padded="false">--><!-- navigation-menu-name="Month"  --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortMonthView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;MMMM yyyy&quot;, timeZone, locale)}" -->
+                <!--<screenlet padded="false">--><!-- navigation-menu-name="Month"  --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortMonthView}: ${groovy:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;MMMM yyyy&quot;, timeZone, locale)}" -->
                     <!--<include-menu name="Month" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
                 <platform-specific>
                     <html><html-template location="component://workeffort/webapp/workeffort/calendar/month.ftl"/></html>

@@ -85,22 +85,25 @@ public class LoginServices {
                 String errMsg = UtilProperties.getMessage(resource, "loginservices.ldap_authentication_failed", locale);
                 if ("true".equals(EntityUtilProperties.getPropertyValue("security", "security.ldap.fail.login", delegator))) {
                     return ServiceUtil.returnError(errMsg);
-                } else {
-                    Debug.logInfo(errMsg, module);
                 }
+                Debug.logInfo(errMsg, module);
             }
         }
 
-        Map<String, Object> result =  new LinkedHashMap<String, Object>();
+        Map<String, Object> result =  new LinkedHashMap<>();
         boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator));
 
         // if isServiceAuth is not specified, default to not a service auth
-        boolean isServiceAuth = context.get("isServiceAuth") != null && ((Boolean) context.get("isServiceAuth")).booleanValue();
+        boolean isServiceAuth = context.get("isServiceAuth") != null && (Boolean) context.get("isServiceAuth");
 
         String username = (String) context.get("login.username");
-        if (username == null) username = (String) context.get("username");
+        if (username == null) {
+            username = (String) context.get("username");
+        }
         String password = (String) context.get("login.password");
-        if (password == null) password = (String) context.get("password");
+        if (password == null) {
+            password = (String) context.get("password");
+        }
 
         // get the visitId for the history entity
         String visitId = (String) context.get("visitId");
@@ -113,10 +116,10 @@ public class LoginServices {
         } else {
 
             if ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security", "username.lowercase", delegator))) {
-                username = username.toLowerCase();
+                username = username.toLowerCase(Locale.getDefault());
             }
             if ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security", "password.lowercase", delegator))) {
-                password = password.toLowerCase();
+                password = password.toLowerCase(Locale.getDefault());
             }
 
             boolean repeat = true;
@@ -156,7 +159,7 @@ public class LoginServices {
 
                 if (userLogin != null) {
                     String ldmStr = EntityUtilProperties.getPropertyValue("security", "login.disable.minutes", delegator);
-                    long loginDisableMinutes = 30;
+                    long loginDisableMinutes;
 
                     try {
                         loginDisableMinutes = Long.parseLong(ldmStr);
@@ -240,8 +243,6 @@ public class LoginServices {
                             result.put("userLogin", userLogin);
                             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                         } else {
-                            //Debug.logInfo("Entered password [" + encodedPassword + "], Entered password OldFunnyHexEncode [" + encodedPasswordOldFunnyHexEncode + "], db password [" + userLogin.getString("currentPassword") + "]", module);
-
                             // password is incorrect, but this may be the result of a stale cache entry,
                             // so lets clear the cache and try again if this is the first pass
                             // but only if authFatalError is not true; this would mean the single authenticator failed
@@ -259,9 +260,9 @@ public class LoginServices {
                             Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
 
                             if (currentFailedLogins == null) {
-                                currentFailedLogins = Long.valueOf(1);
+                                currentFailedLogins = 1L;
                             } else {
-                                currentFailedLogins = Long.valueOf(currentFailedLogins.longValue() + 1);
+                                currentFailedLogins = currentFailedLogins + 1;
                             }
                             userLogin.set("successiveFailedLogins", currentFailedLogins);
 
@@ -275,7 +276,7 @@ public class LoginServices {
                                 Debug.logWarning("Could not parse max.failed.logins from security.properties, using default of 3", module);
                             }
 
-                            if (maxFailedLogins > 0 && currentFailedLogins.longValue() >= maxFailedLogins) {
+                            if (maxFailedLogins > 0 && currentFailedLogins >= maxFailedLogins) {
                                 userLogin.set("enabled", "N");
                                 userLogin.set("disabledDateTime", UtilDateTime.nowTimestamp());
                             }
@@ -325,7 +326,6 @@ public class LoginServices {
                                             ulhCreateMap.put("passwordUsed", password);
                                         }
 
-                                        //Debug.logInfo(new Exception(), "=================== Creating new UserLoginHistory at " + UtilDateTime.nowTimestamp(), module);
                                         delegator.create("UserLoginHistory", ulhCreateMap);
                                     }
                                 }
@@ -426,7 +426,7 @@ public class LoginServices {
     public static void createUserLoginPasswordHistory(Delegator delegator,String userLoginId, String currentPassword) throws GenericEntityException{
         int passwordChangeHistoryLimit = 0;
         try {
-            passwordChangeHistoryLimit = Integer.parseInt(EntityUtilProperties.getPropertyValue("security", "password.change.history.limit", "0", delegator));
+            passwordChangeHistoryLimit = EntityUtilProperties.getPropertyAsInteger("security", "password.change.history.limit", 0);
         } catch (NumberFormatException nfe) {
             //No valid value is found so don't bother to save any password history
             passwordChangeHistoryLimit = 0;
@@ -435,29 +435,29 @@ public class LoginServices {
             // Not saving password history, so return from here.
             return;
         }
-
-        EntityListIterator eli = EntityQuery.use(delegator)
-                                            .from("UserLoginPasswordHistory")
-                                            .where("userLoginId", userLoginId)
-                                            .orderBy("-fromDate")
-                                            .cursorScrollInsensitive()
-                                            .queryIterator();
+        EntityQuery eq = EntityQuery.use(delegator)
+                .from("UserLoginPasswordHistory")
+                .where("userLoginId", userLoginId)
+                .orderBy("-fromDate")
+                .cursorScrollInsensitive();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        GenericValue pwdHist;
-        if ((pwdHist = eli.next()) != null) {
-            // updating password so set end date on previous password in history
-            pwdHist.set("thruDate", nowTimestamp);
-            pwdHist.store();
-            // check if we have hit the limit on number of password changes to be saved. If we did then delete the oldest password from history.
-            eli.last();
-            int rowIndex = eli.currentIndex();
-            if (rowIndex==passwordChangeHistoryLimit) {
-                eli.afterLast();
-                pwdHist = eli.previous();
-                pwdHist.remove();
+        
+        try (EntityListIterator eli = eq.queryIterator()) {
+            GenericValue pwdHist;
+            if ((pwdHist = eli.next()) != null) {
+                // updating password so set end date on previous password in history
+                pwdHist.set("thruDate", nowTimestamp);
+                pwdHist.store();
+                // check if we have hit the limit on number of password changes to be saved. If we did then delete the oldest password from history.
+                eli.last();
+                int rowIndex = eli.currentIndex();
+                if (rowIndex==passwordChangeHistoryLimit) {
+                    eli.afterLast();
+                    pwdHist = eli.previous();
+                    pwdHist.remove();
+                }
             }
         }
-        eli.close();
 
         // save this password in history
         GenericValue userLoginPwdHistToCreate = delegator.makeValue("UserLoginPasswordHistory", UtilMisc.toMap("userLoginId", userLoginId,"fromDate", nowTimestamp));
@@ -472,11 +472,11 @@ public class LoginServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createUserLogin(DispatchContext ctx, Map<String, ?> context) {
-        Map<String, Object> result =  new LinkedHashMap<String, Object>();
+        Map<String, Object> result =  new LinkedHashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
-        List<String> errorMessageList = new LinkedList<String>();
+        List<String> errorMessageList = new LinkedList<>();
         Locale locale = (Locale) context.get("locale");
 
         boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator));
@@ -625,7 +625,7 @@ public class LoginServices {
             try {
                 authenticated = AuthHelper.authenticate(userLoginId, currentPassword, true);
             } catch (AuthenticatorException e) {
-                // safe to ingore this; but we'll log it just in case
+                // safe to ignore this; but we'll log it just in case
                 Debug.logWarning(e, e.getMessage(), module);
             }
 
@@ -642,20 +642,19 @@ public class LoginServices {
                 //result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                 result.put("updatedUserLogin", userLoginToUpdate);
                 return result;
-            } else {
-                Map<String, String> messageMap = UtilMisc.toMap("userLoginId", userLoginId);
-                errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_change_password_userlogin_with_id_not_exist", messageMap, locale);
-                return ServiceUtil.returnError(errMsg);
             }
+            Map<String, String> messageMap = UtilMisc.toMap("userLoginId", userLoginId);
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_change_password_userlogin_with_id_not_exist", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         if ("true".equals(EntityUtilProperties.getPropertyValue("security", "password.lowercase", delegator))) {
-            currentPassword = currentPassword.toLowerCase();
-            newPassword = newPassword.toLowerCase();
-            newPasswordVerify = newPasswordVerify.toLowerCase();
+            currentPassword = currentPassword.toLowerCase(Locale.getDefault());
+            newPassword = newPassword.toLowerCase(Locale.getDefault());
+            newPasswordVerify = newPasswordVerify.toLowerCase(Locale.getDefault());
         }
 
-        List<String> errorMessageList = new LinkedList<String>();
+        List<String> errorMessageList = new LinkedList<>();
         if (newPassword != null) {
             checkNewPassword(userLoginToUpdate, currentPassword, newPassword, newPasswordVerify,
                 passwordHint, errorMessageList, adminUser, locale);
@@ -691,7 +690,6 @@ public class LoginServices {
             }
         }
 
-        //result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         result.put("updatedUserLogin", userLoginToUpdate);
         return result;
     }
@@ -703,19 +701,17 @@ public class LoginServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateUserLoginId(DispatchContext ctx, Map<String, ?> context) {
-        Map<String, Object> result =  new LinkedHashMap<String, Object>();
+        Map<String, Object> result =  new LinkedHashMap<>();
         Delegator delegator = ctx.getDelegator();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
-        List<String> errorMessageList = new LinkedList<String>();
+        List<String> errorMessageList = new LinkedList<>();
         Locale locale = (Locale) context.get("locale");
-
-        //boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
 
         String userLoginId = (String) context.get("userLoginId");
         String errMsg = null;
 
         if ((userLoginId != null) && ("true".equals(EntityUtilProperties.getPropertyValue("security", "username.lowercase", delegator)))) {
-            userLoginId = userLoginId.toLowerCase();
+            userLoginId = userLoginId.toLowerCase(Locale.getDefault());
         }
 
         String partyId = loggedInUserLogin.getString("partyId");
@@ -725,13 +721,6 @@ public class LoginServices {
         // security: don't create a user login if the specified partyId (if not empty) already exists
         // unless the logged in user has permission to do so (same partyId or PARTYMGR_CREATE)
         if (UtilValidate.isNotEmpty(partyId)) {
-            //GenericValue party = null;
-            //try {
-            //    party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
-            //} catch (GenericEntityException e) {
-            //    Debug.logWarning(e, "", module);
-            //}
-
             if (!loggedInUserLogin.isEmpty()) {
                 // security check: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
                 if (!partyId.equals(loggedInUserLogin.getString("partyId"))) {
@@ -816,7 +805,7 @@ public class LoginServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateUserLoginSecurity(DispatchContext ctx, Map<String, ?> context) {
-        Map<String, Object> result =  new LinkedHashMap<String, Object>();
+        Map<String, Object> result =  new LinkedHashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
@@ -896,7 +885,7 @@ public class LoginServices {
 
     public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List<String> errorMessageList, boolean ignoreCurrentPassword, Locale locale) {
         Delegator delegator = userLogin.getDelegator();
-    	boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator));
+        boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator));
 
         String errMsg = null;
 
@@ -904,7 +893,7 @@ public class LoginServices {
             // if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
             // if this is a system account don't bother checking the passwords
             boolean passwordMatches = checkPassword(userLogin.getString("currentPassword"), useEncryption, currentPassword);
-            if ((currentPassword == null) || (userLogin != null && currentPassword != null && !passwordMatches)) {
+            if ((currentPassword == null) || (!passwordMatches)) {
                 errMsg = UtilProperties.getMessage(resource,"loginservices.old_password_not_correct_reenter", locale);
                 errorMessageList.add(errMsg);
             }
@@ -925,13 +914,13 @@ public class LoginServices {
 
         int passwordChangeHistoryLimit = 0;
         try {
-            passwordChangeHistoryLimit = Integer.parseInt(EntityUtilProperties.getPropertyValue("security", "password.change.history.limit", "0", delegator));
+            passwordChangeHistoryLimit = EntityUtilProperties.getPropertyAsInteger("security", "password.change.history.limit", 0);
         } catch (NumberFormatException nfe) {
             //No valid value is found so don't bother to save any password history
             passwordChangeHistoryLimit = 0;
         }
         Debug.logInfo(" password.change.history.limit is set to " + passwordChangeHistoryLimit, module);
-        if (passwordChangeHistoryLimit > 0 && userLogin != null) {
+        if (passwordChangeHistoryLimit > 0) {
             Debug.logInfo(" checkNewPassword Checking if user is tyring to use old password " + passwordChangeHistoryLimit, module);
             try {
                 List<GenericValue> pwdHistList = EntityQuery.use(delegator)
@@ -958,7 +947,7 @@ public class LoginServices {
         int minPasswordLength = 0;
 
         try {
-            minPasswordLength = Integer.parseInt(EntityUtilProperties.getPropertyValue("security", "password.length.min", "0", delegator));
+            minPasswordLength = EntityUtilProperties.getPropertyAsInteger("security", "password.length.min", 0);
         } catch (NumberFormatException nfe) {
             minPasswordLength = 0;
         }
@@ -987,11 +976,11 @@ public class LoginServices {
                     errorMessageList.add(errMsg);
                 }
             }
-            if (userLogin != null && newPassword.equalsIgnoreCase(userLogin.getString("userLoginId"))) {
+            if (newPassword.equalsIgnoreCase(userLogin.getString("userLoginId"))) {
                 errMsg = UtilProperties.getMessage(resource,"loginservices.password_may_not_equal_username", locale);
                 errorMessageList.add(errMsg);
             }
-            if (UtilValidate.isNotEmpty(passwordHint) && (passwordHint.toUpperCase().indexOf(newPassword.toUpperCase()) >= 0)) {
+            if (UtilValidate.isNotEmpty(passwordHint) && (passwordHint.toUpperCase(Locale.getDefault()).indexOf(newPassword.toUpperCase(Locale.getDefault())) >= 0)) {
                 errMsg = UtilProperties.getMessage(resource,"loginservices.password_hint_may_not_contain_password", locale);
                 errorMessageList.add(errMsg);
             }
@@ -1009,7 +998,7 @@ public class LoginServices {
         return hashType;
     }
 
-    private static boolean checkPassword(String oldPassword, boolean useEncryption, String currentPassword) {
+    public static boolean checkPassword(String oldPassword, boolean useEncryption, String currentPassword) {
         boolean passwordMatches = false;
         if (oldPassword != null) {
             if (useEncryption) {

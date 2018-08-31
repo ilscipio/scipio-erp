@@ -85,9 +85,6 @@ public class PreferenceServices {
             if (preference != null) {
                 userPrefMap = PreferenceWorker.createUserPrefMap(preference);
             }
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "getPreference.readFailure", new Object[] { e.getMessage() }, locale));
         } catch (GeneralException e) {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "getPreference.readFailure", new Object[] { e.getMessage() }, locale));
@@ -135,9 +132,6 @@ public class PreferenceServices {
                 fieldMap.put("userLoginId", userLoginId);
                 userPrefMap.putAll(PreferenceWorker.createUserPrefMap(EntityQuery.use(delegator).from("UserPreference").where(fieldMap).cache(true).queryList()));
             }
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "getPreference.readFailure", new Object[] { e.getMessage() }, locale));
         } catch (GeneralException e) {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "getPreference.readFailure", new Object[] { e.getMessage() }, locale));
@@ -185,9 +179,6 @@ public class PreferenceServices {
             }
             GenericValue rec = delegator.makeValidValue("UserPreference", PreferenceWorker.toFieldMap(userLoginId, userPrefTypeId, userPrefGroupTypeId, userPrefValue));
             delegator.createOrStore(rec);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "setPreference.writeFailure", new Object[] { e.getMessage() }, locale));
         } catch (GeneralException e) {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "setPreference.writeFailure", new Object[] { e.getMessage() }, locale));
@@ -202,7 +193,6 @@ public class PreferenceServices {
 
         String userLoginId = PreferenceWorker.getUserLoginId(context, false);
         String userPrefTypeId = (String) context.get("userPrefTypeId");
-        //Debug.logError("In removeUserPreference userLoginId=" + userLoginId + ", userPrefTypeId=" + userPrefTypeId, module);
         if (UtilValidate.isEmpty(userLoginId) || UtilValidate.isEmpty(userPrefTypeId)) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "setPreference.invalidArgument", locale));
         }
@@ -248,9 +238,6 @@ public class PreferenceServices {
                 GenericValue rec = delegator.makeValidValue("UserPreference", PreferenceWorker.toFieldMap(userLoginId, mapEntry.getKey(), userPrefGroupTypeId, mapEntry.getValue()));
                 delegator.createOrStore(rec);
             }
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "setPreference.writeFailure", new Object[] { e.getMessage() }, locale));
         } catch (GeneralException e) {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "setPreference.writeFailure", new Object[] { e.getMessage() }, locale));

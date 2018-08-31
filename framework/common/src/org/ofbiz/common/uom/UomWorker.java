@@ -105,9 +105,9 @@ public class UomWorker {
    public static BigDecimal convertDatedUom(Timestamp timeStamp, BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher,boolean safe) {
        if (originalValue == null || uomId == null || uomIdTo == null) return null;
        if (uomId.equals(uomIdTo)) return originalValue;
-       BigDecimal conversionRate = BigDecimal.ONE;
-       BigDecimal convertedValue = BigDecimal.ZERO;
-       Delegator delegator = dispatcher.getDelegator();
+       //BigDecimal conversionRate = BigDecimal.ONE;
+       //BigDecimal convertedValue = BigDecimal.ZERO;
+       //Delegator delegator = dispatcher.getDelegator();
        
        Map<String, Object> svcInMap = new LinkedHashMap<String, Object>();
        svcInMap.put("originalValue", originalValue);
@@ -144,12 +144,12 @@ public class UomWorker {
         if (originalValue == null || uomId == null || uomIdTo == null) return null;
         if (uomId.equals(uomIdTo)) return originalValue;
 
-        Map<String, Object> svcInMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> svcInMap =  new LinkedHashMap<>();
         svcInMap.put("originalValue", originalValue);
         svcInMap.put("uomId", uomId);
         svcInMap.put("uomIdTo", uomIdTo);
 
-        Map<String, Object> svcOutMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> svcOutMap;
         try {
             // SCIPIO: support safe mode: create a new transaction to prevent screen crashes
             if (safe) {

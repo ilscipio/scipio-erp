@@ -44,18 +44,22 @@ import org.ofbiz.service.ServiceUtil;
 public class QRCodeEvents {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /** Streams QR Code to the output. */
     public static String serveQRCodeImage(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = ((HttpServletRequest) request).getSession();
+        HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map<String, Object> parameters = UtilHttp.getParameterMap(request);
         String message = (String) parameters.get("message");
         GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
-        if (userLogin == null) userLogin = (GenericValue) session.getAttribute("userLogin");
-        if (userLogin == null) userLogin = (GenericValue) session.getAttribute("autoUserLogin");
+        if (userLogin == null) {
+            userLogin = (GenericValue) session.getAttribute("userLogin");
+        }
+        if (userLogin == null) {
+            userLogin = (GenericValue) session.getAttribute("autoUserLogin");
+        }
         Locale locale = UtilHttp.getLocale(request);
-        
+
         if (UtilValidate.isEmpty(message)) {
             message = "Error get message parameter.";
         }
@@ -89,71 +93,69 @@ public class QRCodeEvents {
         String ecLevel = request.getParameter("ecLevel");
         String logoImageSize = request.getParameter("logoSize");
         String logoImageMaxSize = request.getParameter("logoMaxSize"); // takes priority over logoImageMaxWidth/Height
-        
+
         try {
-            if (mimeType != null) {
-                response.setContentType(mimeType);
-            }
+            response.setContentType(mimeType);
             OutputStream os = response.getOutputStream();
             Map<String, Object> context = UtilMisc.<String, Object>toMap("message", message, "format", format, "userLogin", userLogin, "locale", locale);
             if (UtilValidate.isNotEmpty(width)) {
-            	try {
+                try {
                     context.put("width", Integer.parseInt(width));
-            	} catch (NumberFormatException e) {
-            		// do nothing
-            	}
+                } catch (NumberFormatException e) {
+                    // do nothing
+                }
                 if (UtilValidate.isEmpty(height)) {
-                	try {
+                    try {
                         context.put("height", Integer.parseInt(width));
-                	} catch (NumberFormatException e) {
-                		// do nothing
-                	}
+                    } catch (NumberFormatException e) {
+                        // do nothing
+                    }
                 }
             }
             if (UtilValidate.isNotEmpty(height)) {
-            	try {
+                try {
                     context.put("height", Integer.parseInt(height));
-            	} catch (NumberFormatException e) {
-            		// do nothing
-            	}
+                } catch (NumberFormatException e) {
+                    // do nothing
+                }
                 if (UtilValidate.isEmpty(width)) {
-                	try {
+                    try {
                         context.put("width", Integer.parseInt(height));
-                	} catch (NumberFormatException e) {
-                		// do nothing
-                	}
+                    } catch (NumberFormatException e) {
+                        // do nothing
+                    }
                 }
             }
             if (UtilValidate.isNotEmpty(encoding)) {
                 context.put("encoding", encoding);
             }
-            if (UtilValidate.isNotEmpty(verifyOutput) && verifyOutput.booleanValue()) {
-            	context.put("verifyOutput", verifyOutput);
+            if (UtilValidate.isNotEmpty(verifyOutput) && verifyOutput) {
+                context.put("verifyOutput", verifyOutput);
             }
             if (UtilValidate.isNotEmpty(logoImageMaxWidth)) {
-            	try {
+                try {
                     context.put("logoImageMaxWidth", Integer.parseInt(logoImageMaxWidth));
-            	} catch (NumberFormatException e) {
-            		// do nothing
-            	}
+                } catch (NumberFormatException e) {
+                    // do nothing
+                }
             }
             if (UtilValidate.isNotEmpty(logoImageMaxHeight)) {
-            	try {
+                try {
                     context.put("logoImageMaxHeight", Integer.parseInt(logoImageMaxHeight));
-            	} catch (NumberFormatException e) {
-            		// do nothing
-            	}
+                } catch (NumberFormatException e) {
+                    // do nothing
+                }
             }
             context.put("useLogo", useLogo); // SCIPIO: 2018-08-22
             // SCIPIO: TODO?: future
-            //if (logo != null) { 
+            //if (logo != null) {
             //    context.put("logoImage", ...);
             //}
             context.put("ecLevel", ecLevel); // SCIPIO: 2018-08-22
             context.put("logoImageSize", logoImageSize); // SCIPIO: 2018-08-23
             context.put("logoImageMaxSize", logoImageMaxSize); // SCIPIO: 2018-08-23
             Map<String, Object> results = dispatcher.runSync("generateQRCodeImage", context);
-            if (!ServiceUtil.isError(results)) {
+            if (ServiceUtil.isSuccess(results)) {
                 BufferedImage bufferedImage = (BufferedImage) results.get("bufferedImage");
                 if (!ImageIO.write(bufferedImage, format, os)) {
                     String errMsg = UtilProperties.getMessage("QRCodeUiLabels", "ErrorWriteFormatToFile", new Object[] { format }, locale);
@@ -166,11 +168,7 @@ public class QRCodeEvents {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-        } catch (IOException e) {
-            String errMsg = UtilProperties.getMessage("QRCodeUiLabels", "ErrorGenerateQRCode", new Object[] { e.getMessage() }, locale);
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
-        } catch (GenericServiceException e) {
+        } catch (IOException | GenericServiceException e) {
             String errMsg = UtilProperties.getMessage("QRCodeUiLabels", "ErrorGenerateQRCode", new Object[] { e.getMessage() }, locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";

@@ -1948,7 +1948,7 @@
         <value xml:lang="de">Ist grösser oder gleich als</value>
         <value xml:lang="en">Is Greater Than or Equal To</value>
         <value xml:lang="es">Mayor o igual que</value>
-        <value xml:lang="fr">Est plus grand ou égal  à</value>
+        <value xml:lang="fr">Est plus grand ou égal à</value>
         <value xml:lang="it">E' maggiore di o uguale a</value>
         <value xml:lang="ja">≧</value>
         <value xml:lang="nl">Groter of gelijk aan</value>
@@ -12661,7 +12661,7 @@
     <property key="StatusItem.description.ROU_ACTIVE">
         <value xml:lang="en">Active</value>
         <value xml:lang="es">Ruta activa</value>
-        <value xml:lang="fr">Bien défini et utilisable</value>
+        <value xml:lang="fr">Défini et utilisable</value>
         <value xml:lang="it">Attiva</value>
         <value xml:lang="ja">有効</value>
         <value xml:lang="nl">Actief</value>
@@ -12671,6 +12671,10 @@
         <value xml:lang="vi">ROU_ACTIVE</value>
         <value xml:lang="zh">有效</value>
         <value xml:lang="zh-TW">有效</value>
+    </property>
+    <property key="StatusItem.description.ROU_INACTIVE">
+        <value xml:lang="en">Inactive</value>
+        <value xml:lang="fr">Inutilisable</value>
     </property>
     <property key="StatusItem.description.ROU_PROD_TEMPLATE">
         <value xml:lang="en">Production Template</value>
@@ -17289,6 +17293,36 @@
         <value xml:lang="zh">安道尔比塞塔</value>
         <value xml:lang="zh-TW">安道爾比薩斜塔</value>
     </property>
+    <property key="Uom.abbreviation.LEN_in">
+        <value xml:lang="en">in</value>
+        <value xml:lang="it">in</value>
+        <value xml:lang="ja">インチ</value>
+        <value xml:lang="vi">trong</value>
+        <value xml:lang="zh">英寸</value>
+        <value xml:lang="zh-TW">英寸</value>
+    </property>
+    <property key="Uom.abbreviation.WT_g">
+        <value xml:lang="en">g</value>
+    </property>
+    <property key="Uom.abbreviation.WT_kg">
+        <value xml:lang="en">kg</value>
+        <value xml:lang="ru">кг</value>
+        <value xml:lang="th">กิโลกรัม</value>
+        <value xml:lang="vi">cân</value>
+        <value xml:lang="zh">公斤</value>
+        <value xml:lang="zh-TW">公斤</value>
+    </property>
+    <property key="Uom.abbreviation.WT_lb">
+        <value xml:lang="de">Pfund (Gewicht)</value>
+        <value xml:lang="en">lbs</value>
+        <value xml:lang="es">libras</value>
+        <value xml:lang="fr">livres</value>
+        <value xml:lang="it">libre</value>
+        <value xml:lang="ja">ポンド</value>
+        <value xml:lang="ru">фнт</value>
+        <value xml:lang="zh">磅</value>
+        <value xml:lang="zh-TW">磅</value>
+        </property>
     <property key="Uom.description.AED">
         <value xml:lang="ar">درهم أماراتي</value>
         <value xml:lang="cs">Emirátský dirham</value>
@@ -20467,17 +20501,6 @@
         <value xml:lang="zh">卡塔尔里亚尔</value>
         <value xml:lang="zh-TW">卡塔爾裡亞爾</value>
     </property>
-  <!-- see https://issues.apache.org/jira/browse/OFBIZ-3246 property key="Uom.description.RMB">
-            <value xml:lang="en">Chinese Renminbi Yuan</value>
-            <value xml:lang="fr">Yuan Renmimbi chinois</value>
-            <value xml:lang="it">Chinese Renminbi Yuan</value>
-            <value xml:lang="ja">中国人民元</value>
-            <value xml:lang="pt">Chinese Renminbi Yuan</value>
-            <value xml:lang="ro">Chinese Renminbi Yuan</value>
-            <value xml:lang="ru">Китайский юань</value>
-            <value xml:lang="th">หยวน จีนเหรินหมินปี้</value>
-            <value xml:lang="zh">中国人民币元</value>
-      </property-->
     <property key="Uom.description.ROL">
         <value xml:lang="ar">ليو روماني</value>
         <value xml:lang="de">Leu Rumänien</value>

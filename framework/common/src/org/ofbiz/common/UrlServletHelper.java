@@ -41,7 +41,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
-public class UrlServletHelper extends ContextFilter {
+public final class UrlServletHelper extends ContextFilter {
     
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
@@ -175,9 +175,7 @@ public class UrlServletHelper extends ContextFilter {
                 try {
                     rd.forward(request, response);
                     return;
-                } catch (ServletException e) {
-                    Debug.logWarning(e, module);
-                } catch (IOException e) {
+                } catch (ServletException | IOException e) {
                     Debug.logWarning(e, module);
                 }
             }
@@ -192,9 +190,7 @@ public class UrlServletHelper extends ContextFilter {
                     httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND, "Not Found");
                     return;
                 }
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-            } catch (IOException e) {
+            } catch (GenericEntityException | IOException e) {
                 Debug.logError(e, module);
             }
         }

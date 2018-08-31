@@ -29,9 +29,11 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 
-public class PeriodWorker {
+public final class PeriodWorker {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private PeriodWorker() {}
 
     /**
      * Method to get a condition that checks that the given fieldName is in a given timePeriod.

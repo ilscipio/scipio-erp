@@ -38,12 +38,14 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 /**
  * Common Workers
  */
-public class CommonWorkers {
+public final class CommonWorkers {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    private CommonWorkers() {}
+
     public static List<GenericValue> getCountryList(Delegator delegator) {
-        List<GenericValue> geoList = new LinkedList<GenericValue>();
+        List<GenericValue> geoList = new LinkedList<>();
         String defaultCountry = EntityUtilProperties.getPropertyValue("general", "country.geo.id.default", delegator);
         GenericValue defaultGeo = null;
         if (UtilValidate.isNotEmpty(defaultCountry)) {
@@ -61,7 +63,7 @@ public class CommonWorkers {
             exprs.add(EntityCondition.makeCondition("geoId", EntityOperator.IN, countriesAvailable));
         }
 
-        List<GenericValue> countriesList = new LinkedList<GenericValue>();
+        List<GenericValue> countriesList = new LinkedList<>();
         try {
             countriesList = EntityQuery.use(delegator).from("Geo").where(exprs).orderBy("geoName").cache(true).queryList();
         } catch (GenericEntityException e) {
@@ -88,7 +90,7 @@ public class CommonWorkers {
     }
 
     public static List<GenericValue> getStateList(Delegator delegator) {
-        List<GenericValue> geoList = new LinkedList<GenericValue>();
+        List<GenericValue> geoList = new LinkedList<>();
         EntityCondition condition = EntityCondition.makeCondition(EntityOperator.OR, EntityCondition.makeCondition("geoTypeId", "STATE"), EntityCondition.makeCondition("geoTypeId", "PROVINCE"), EntityCondition.makeCondition("geoTypeId", "TERRITORY"),
                 EntityCondition.makeCondition("geoTypeId", "MUNICIPALITY"));
         try {
@@ -117,7 +119,7 @@ public class CommonWorkers {
         }
         List<String> sortList = UtilMisc.toList(listOrderBy);
 
-        List<GenericValue> geoList = new LinkedList<GenericValue>();
+        List<GenericValue> geoList = new LinkedList<>();
         try {
             // Check if the country is a country group and get recursively the
             // states
@@ -146,7 +148,7 @@ public class CommonWorkers {
                     EntityCondition.makeCondition("geoIdFrom", country),
                     EntityCondition.makeCondition("geoAssocTypeId", "REGIONS"),
                     EntityCondition.makeCondition(EntityOperator.OR, EntityCondition.makeCondition("geoTypeId", "STATE"), EntityCondition.makeCondition("geoTypeId", "PROVINCE"), EntityCondition.makeCondition("geoTypeId", "MUNICIPALITY"),
-                            EntityCondition.makeCondition("geoTypeId", "COUNTY")));
+                    		EntityCondition.makeCondition("geoTypeId", "TERRITORY"), EntityCondition.makeCondition("geoTypeId", "COUNTY")));
             geoList.addAll(EntityQuery.use(delegator)
                                       .from("GeoAssocAndGeoToWithState")
                                       .where(stateProvinceFindCond)

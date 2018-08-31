@@ -291,8 +291,8 @@ public class CommonEvents {
         }
         try {
             JSON json = JSON.from(attrMap);
-            writeJSONtoResponse(json, request.getMethod(), response);
-        } catch (Exception e) {
+            writeJSONtoResponse(json, request, response);
+        } catch (IOException e) {
             return "error";
         }
         return "success";
@@ -308,32 +308,32 @@ public class CommonEvents {
         Map<String, Object> attrMap = ViewAsJsonUtil.collectRenderOutAttributes(request);
         try {
             JSON json = JSON.from(attrMap);
-            writeJSONtoResponse(json, request.getMethod(), response);
-        } catch (Exception e) {
+            writeJSONtoResponse(json, request, response);
+        } catch (IOException e) {
             return "error";
         }
         return "success";
     }
 
-    private static void writeJSONtoResponse(JSON json, String httpMethod, HttpServletResponse response) throws UnsupportedEncodingException {
+    private static void writeJSONtoResponse(JSON json, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         String jsonStr = json.toString();
-        if (jsonStr == null) {
-            Debug.logError("JSON Object was empty; fatal error!", module);
-            return;
-        }
+        String httpMethod = request.getMethod();
 
         // This was added for security reason (OFBIZ-5409), you might need to remove the "//" prefix when handling the JSON response
         // Though normally you simply have to access the data you want, so should not be annoyed by the "//" prefix
         if ("GET".equalsIgnoreCase(httpMethod)) {
-            Debug.logWarning("for security reason (OFBIZ-5409) the the '//' prefix was added handling the JSON response.  "
+            Debug.logWarning("for security reason (OFBIZ-5409) the '//' prefix was added handling the JSON response.  "
                     + "Normally you simply have to access the data you want, so should not be annoyed by the '//' prefix."
                     + "You might need to remove it if you use Ajax GET responses (not recommended)."
-                    + "In case, the util.js scrpt is there to help you", module);
-            jsonStr = "//" + jsonStr;
+                    + "In case, the util.js scrpt is there to help you."
+                    + "This can be customized in general.properties with the http.json.xssi.prefix property", module);
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            String xssiPrefix =EntityUtilProperties.getPropertyValue("general", "http.json.xssi.prefix", delegator);
+            jsonStr = xssiPrefix + jsonStr;
         }
 
-        // set the X-JSON content type
-        response.setContentType("application/x-json");
+        // set the JSON content type
+        response.setContentType("application/json");
         // jsonStr.length is not reliable for unicode characters
         response.setContentLength(jsonStr.getBytes("UTF8").length);
 
@@ -362,13 +362,13 @@ public class CommonEvents {
             return "error";
         }
         Locale locale = UtilHttp.getLocale(request);
-        Map<String, List<String>> uiLabelMap = new HashMap<String, List<String>>();
+        Map<String, List<String>> uiLabelMap = new HashMap<>();
         Set<Map.Entry<String, List<String>>> entrySet = uiLabelObject.entrySet();
         for (Map.Entry<String, List<String>> entry : entrySet) {
             String resource = entry.getKey();
             List<String> resourceKeys = entry.getValue();
             if (resourceKeys != null) {
-                List<String> labels = new ArrayList<String>(resourceKeys.size());
+                List<String> labels = new ArrayList<>(resourceKeys.size());
                 for (String resourceKey : resourceKeys) {
                     String label = UtilProperties.getMessage(resource, resourceKey, locale);
                     labels.add(label);
@@ -376,7 +376,7 @@ public class CommonEvents {
                 uiLabelMap.put(resource, labels);
             }
         }
-        writeJSONtoResponse(JSON.from(uiLabelMap), request.getMethod(), response);
+        writeJSONtoResponse(JSON.from(uiLabelMap), request, response);
         return "success";
     }
 
@@ -396,7 +396,7 @@ public class CommonEvents {
             return "error";
         }
         Locale locale = UtilHttp.getLocale(request);
-        Map<String, String> uiLabelMap = new HashMap<String, String>();
+        Map<String, String> uiLabelMap = new HashMap<>();
         Set<Map.Entry<String, String>> entrySet = uiLabelObject.entrySet();
         for (Map.Entry<String, String> entry : entrySet) {
             String resource = entry.getKey();
@@ -406,7 +406,7 @@ public class CommonEvents {
                 uiLabelMap.put(resource, label);
             }
         }
-        writeJSONtoResponse(JSON.from(uiLabelMap), request.getMethod(), response);
+        writeJSONtoResponse(JSON.from(uiLabelMap), request, response);
         return "success";
     }
 
@@ -497,11 +497,11 @@ public class CommonEvents {
             HttpSession session = request.getSession();
             Map<String, String> captchaCodeMap = UtilGenerics.checkMap(session.getAttribute("_CAPTCHA_CODE_"));
             if (captchaCodeMap == null) {
-                captchaCodeMap = new HashMap<String, String>();
+                captchaCodeMap = new HashMap<>();
                 session.setAttribute("_CAPTCHA_CODE_", captchaCodeMap);
             }
             captchaCodeMap.put(captchaCodeId, captchaCode);
-        } catch (Exception ioe) {
+        } catch (IOException | IllegalArgumentException | IllegalStateException ioe) {
             Debug.logError(ioe.getMessage(), module);
         }
         return "success";

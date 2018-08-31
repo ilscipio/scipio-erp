@@ -77,14 +77,14 @@ public class ImageTransform {
      * @param   fileLocation    Full file Path or URL
      * @return  URL images for all different size types
      * @throws  IOException Error prevents the document from being fully parsed
-     * @throws  JDOMException Errors occur in parsing
+     * @throws  IllegalArgumentException Errors occur in parsing
      */
     public static  Map<String, Object> getBufferedImage(String fileLocation, Locale locale)
         throws IllegalArgumentException, IOException {
 
         /* VARIABLES */
         BufferedImage bufImg;
-        Map<String, Object> result =  new LinkedHashMap<String, Object>();
+        Map<String, Object> result =  new LinkedHashMap<>();
 
         /* BUFFERED IMAGE */
         try {
@@ -141,12 +141,12 @@ public class ImageTransform {
         /* DIMENSIONS from ImageProperties */
         // A missed dimension is authorized
         if (dimensionMap.get(sizeType).containsKey("height")) {
-            defaultHeight = Double.parseDouble(dimensionMap.get(sizeType).get("height").toString());
+            defaultHeight = Double.parseDouble(dimensionMap.get(sizeType).get("height"));
         } else {
             defaultHeight = -1;
         }
         if (dimensionMap.get(sizeType).containsKey("width")) {
-            defaultWidth = Double.parseDouble(dimensionMap.get(sizeType).get("width").toString());
+            defaultWidth = Double.parseDouble(dimensionMap.get(sizeType).get("width"));
         } else {
             defaultWidth = -1;
         }
@@ -395,18 +395,13 @@ public class ImageTransform {
         /* VARIABLES */
         Document document;
         Element rootElt;
-        Map<String, Map<String, String>> valueMap =  new LinkedHashMap<String, Map<String, String>>();
-        Map<String, Object> result =  new LinkedHashMap<String, Object>();
+        Map<String, Map<String, String>> valueMap =  new LinkedHashMap<>();
+        Map<String, Object> result =  new LinkedHashMap<>();
 
         /* PARSING */
         try {
             document = UtilXml.readXmlDocument(new FileInputStream(fileFullPath), fileFullPath);
-        } catch (ParserConfigurationException e) {
-            String errMsg = UtilProperties.getMessage(resource, "ImageTransform.errors_occurred_during_parsing", locale) +  " ImageProperties.xml " + e.toString();
-            Debug.logError(errMsg, module);
-            result.put(ModelService.ERROR_MESSAGE, "error");
-            return result;
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             String errMsg = UtilProperties.getMessage(resource, "ImageTransform.errors_occurred_during_parsing", locale) +  " ImageProperties.xml " + e.toString();
             Debug.logError(errMsg, module);
             result.put(ModelService.ERROR_MESSAGE, "error");
@@ -430,10 +425,10 @@ public class ImageTransform {
         /* get NAME and VALUE */
         List<? extends Element> children = UtilXml.childElementList(rootElt); // FIXME : despite upgrading to jdom 1.1, it seems that getChildren is pre 1.5 java code (ie getChildren does not retun List<Element> but only List)
         for (Element currentElt : children) {
-            Map<String, String> eltMap =  new LinkedHashMap<String, String>();
+            Map<String, String> eltMap =  new LinkedHashMap<>();
             List<? extends Element> children2 = UtilXml.childElementList(currentElt);
             if (children2.size() > 0) {
-                Map<String, String> childMap =  new LinkedHashMap<String, String>();
+                Map<String, String> childMap =  new LinkedHashMap<>();
                 // loop over Children 1st level
                 for (Element currentChild : children2) {
                     childMap.put(currentChild.getAttribute("name"), currentChild.getAttribute("value"));

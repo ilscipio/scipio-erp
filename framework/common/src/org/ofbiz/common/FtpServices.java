@@ -59,13 +59,13 @@ public class FtpServices {
             Debug.logError(ioe, "[putFile] Problem opening local file", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonFtpFileCannotBeOpen", locale));
         }
-        List<String> errorList = new LinkedList<String>();
+        List<String> errorList = new LinkedList<>();
         FTPClient ftp = new FTPClient();
         try {
             Integer defaultTimeout = (Integer) context.get("defaultTimeout");
             if (UtilValidate.isNotEmpty(defaultTimeout)) {
-                Debug.logInfo("[putFile] set default timeout to: " + defaultTimeout.intValue() + " milliseconds", module);
-                ftp.setDefaultTimeout(defaultTimeout.intValue());
+                Debug.logInfo("[putFile] set default timeout to: " + defaultTimeout + " milliseconds", module);
+                ftp.setDefaultTimeout(defaultTimeout);
             }
             Debug.logInfo("[putFile] connecting to: " + (String) context.get("hostname"), module);
             ftp.connect((String) context.get("hostname"));
@@ -81,12 +81,12 @@ public class FtpServices {
                     errorList.add(UtilProperties.getMessage(resource, "CommonFtpLoginFailure", UtilMisc.toMap("username", username, "password", password), locale));
                 } else {
                     Boolean binaryTransfer = (Boolean) context.get("binaryTransfer");
-                    boolean binary = (binaryTransfer == null) ? false : binaryTransfer.booleanValue();
+                    boolean binary = (binaryTransfer == null) ? false : binaryTransfer;
                     if (binary) {
                         ftp.setFileType(FTP.BINARY_FILE_TYPE);
                     }
                     Boolean passiveMode = (Boolean) context.get("passiveMode");
-                    boolean passive = (passiveMode == null) ? true : passiveMode.booleanValue();
+                    boolean passive = (passiveMode == null) ? true : passiveMode;
                     if (passive) {
                         ftp.enterLocalPassiveMode();
                     }
@@ -144,13 +144,13 @@ public class FtpServices {
             Debug.logError(ioe, "[getFile] Problem opening local file", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonFtpFileCannotBeOpen", locale));
         }
-        List<String> errorList = new LinkedList<String>();
+        List<String> errorList = new LinkedList<>();
         FTPClient ftp = new FTPClient();
         try {
             Integer defaultTimeout = (Integer) context.get("defaultTimeout");
             if (UtilValidate.isNotEmpty(defaultTimeout)) {
-                Debug.logInfo("[getFile] Set default timeout to: " + defaultTimeout.intValue() + " milliseconds", module);
-                ftp.setDefaultTimeout(defaultTimeout.intValue());
+                Debug.logInfo("[getFile] Set default timeout to: " + defaultTimeout + " milliseconds", module);
+                ftp.setDefaultTimeout(defaultTimeout);
             }
             ftp.connect((String) context.get("hostname"));
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
@@ -162,12 +162,12 @@ public class FtpServices {
                     errorList.add(UtilProperties.getMessage(resource, "CommonFtpLoginFailure", UtilMisc.toMap("username", username, "password", password), locale));
                 } else {
                     Boolean binaryTransfer = (Boolean) context.get("binaryTransfer");
-                    boolean binary = (binaryTransfer == null) ? false : binaryTransfer.booleanValue();
+                    boolean binary = (binaryTransfer == null) ? false : binaryTransfer;
                     if (binary) {
                         ftp.setFileType(FTP.BINARY_FILE_TYPE);
                     }
                     Boolean passiveMode = (Boolean) context.get("passiveMode");
-                    boolean passive = (passiveMode == null) ? false : passiveMode.booleanValue();
+                    boolean passive = (passiveMode == null) ? false : passiveMode;
                     if (passive) {
                         ftp.enterLocalPassiveMode();
                     }

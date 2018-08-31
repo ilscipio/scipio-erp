@@ -18,17 +18,15 @@
  *******************************************************************************/
 package org.ofbiz.base.start;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 /**
- * StartupException
+ * StartupException is an exception that is thrown when something wrong happens
+ * during executing any OFBiz high level commands.
  *
+ * If StartupException is not handled then it will bubble up to main
+ * and lead to system termination.
  */
 @SuppressWarnings("serial")
-public class StartupException extends Exception {
-
-    Throwable nested = null;
+public final class StartupException extends Exception {
 
     /**
      * Creates new <code>StartupException</code> without detail message.
@@ -51,8 +49,7 @@ public class StartupException extends Exception {
      * @param nested the chained exception.
      */
     public StartupException(String msg, Throwable nested) {
-        super(msg);
-        this.nested = nested;
+        super(msg, nested);
     }
 
     /**
@@ -60,57 +57,20 @@ public class StartupException extends Exception {
      * @param nested the chained exception.
      */
     public StartupException(Throwable nested) {
-        super();
-        this.nested = nested;
+        super(nested);
     }
 
     /** Returns the detail message, including the message from the nested exception if there is one. */
     @Override
     public String getMessage() {
-        if (nested != null) {
-            return super.getMessage() + " (" + nested.getMessage() + ")";
-        } else {
-            return super.getMessage();
+        if (getCause() != null) {
+            return super.getMessage() + " (" + getCause().getMessage() + ")";
         }
+        return super.getMessage();
     }
 
     /** Returns the detail message, NOT including the message from the nested exception. */
     public String getNonNestedMessage() {
         return super.getMessage();
-    }
-
-    /** Returns the nested exception if there is one, null if there is not. */
-    public Throwable getNested() {
-        if (nested == null) {
-            return this;
-        }
-        return nested;
-    }
-
-    /** Prints the composite message to System.err. */
-    @Override
-    public void printStackTrace() {
-        super.printStackTrace();
-        if (nested != null) {
-            nested.printStackTrace();
-        }
-    }
-
-    /** Prints the composite message and the embedded stack trace to the specified stream ps. */
-    @Override
-    public void printStackTrace(PrintStream ps) {
-        super.printStackTrace(ps);
-        if (nested != null) {
-            nested.printStackTrace(ps);
-        }
-    }
-
-    /** Prints the composite message and the embedded stack trace to the specified print writer pw. */
-    @Override
-    public void printStackTrace(PrintWriter pw) {
-        super.printStackTrace(pw);
-        if (nested != null) {
-            nested.printStackTrace(pw);
-        }
     }
 }

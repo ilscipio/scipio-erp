@@ -18,12 +18,15 @@
  *******************************************************************************/
 package org.ofbiz.testtools;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.GroovyUtil;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -90,13 +93,13 @@ public class ModelTestSuite {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void parseTestElement(String caseName, Element testElement) {
         String nodeName = testElement.getNodeName();
         if ("junit-test-suite".equals(nodeName)) {
             String className = testElement.getAttribute("class-name");
 
             try {
-                @SuppressWarnings("unchecked")
                 Class<? extends TestCase> clz = (Class<? extends TestCase>) ObjectType.loadClass(className);
                 TestSuite suite = new TestSuite();
                 suite.addTestSuite(clz);
@@ -113,6 +116,14 @@ public class ModelTestSuite {
             } catch (Exception e) {
                 String errMsg = "Unable to load test suite class : " + className;
                 Debug.logError(e, errMsg, module);
+            }
+        } else if ("groovy-test-suite".equals(nodeName)) {
+            try {
+                // SCIPIO: this section was changed for unused variable and exceptions, see previous...
+                Class<?> testClass = GroovyUtil.getScriptClassFromLocation(testElement.getAttribute("location"));
+                this.testList.add(new TestSuite((Class<? extends TestCase>) testClass, testElement.getAttribute("name")));
+            } catch (GeneralException e) {
+                Debug.logError(e, module);
             }
         } else if ("service-test".equals(nodeName)) {
             this.testList.add(new ServiceTest(caseName, testElement));
@@ -133,6 +144,16 @@ public class ModelTestSuite {
                 } catch (MiniLangException e) {
                     Debug.logError(e, module);
                 }
+            }
+        } else if ("webdriver-test".equals(nodeName)) {
+            try {
+                String className = "org.ofbiz.testtools.WebDriverTest";
+                Class<?> cl;
+                cl = Class.forName(className);
+                Constructor<?> con = cl.getConstructor(String.class, Element.class);
+                this.testList.add((Test)con.newInstance(caseName, testElement));
+            } catch (Exception e) {
+                Debug.logError(e, module);
             }
         } else if ("entity-xml".equals(nodeName)) {
             this.testList.add(new EntityXmlAssertTest(caseName, testElement));
@@ -178,6 +199,10 @@ public class ModelTestSuite {
             if (test instanceof OFBizTestCase) {
                 ((OFBizTestCase)test).setDispatcher(dispatcher);
             }
+        } else if (test instanceof GroovyScriptTestCase) {
+            ((GroovyScriptTestCase)test).setDelegator(delegator);
+            ((GroovyScriptTestCase)test).setDispatcher(dispatcher);
+            ((GroovyScriptTestCase)test).setSecurity(dispatcher.getSecurity());
         }
     }
 }

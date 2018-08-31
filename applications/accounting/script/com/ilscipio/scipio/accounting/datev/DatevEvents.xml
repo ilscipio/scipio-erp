@@ -19,7 +19,7 @@ under the License.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <simple-method method-name="importDatevDataCategory" short-description="Import Datev Data Category" login-required="true">    
         <script location="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevCSVUpload.groovy"></script>

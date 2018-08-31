@@ -80,7 +80,9 @@ public class CrossSubdomainSessionValve extends ValveBase {
                         break;
                     }
                 }
-                if (isIpAddress) return;
+                if (isIpAddress) {
+                    return;
+                }
             }
             if (domainArray.length > 2) {
                 cookieDomain = "." + domainArray[domainArray.length - 2] + "." + domainArray[domainArray.length - 1];
@@ -100,7 +102,6 @@ public class CrossSubdomainSessionValve extends ValveBase {
                 newCookie.setComment(cookie.getComment());
             }
             newCookie.setSecure(cookie.getSecure());
-            // SCIPIO: 2018-07-10: http-only flag
             newCookie.setHttpOnly(cookie.isHttpOnly());
 
             // if the response has already been committed, our replacement strategy will have no effect

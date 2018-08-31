@@ -2368,6 +2368,11 @@ under the License.
         <xs:annotation>
             <xs:documentation>
                 Executes a BSH script. Deprecated - replace with script.
+
+                SCIPIO: WARNING: 2018: Do not use this in any new code; this is likely to be 
+                removed in the near future due to low maintenance of the beanshell project,
+                causing potential security concerns. 
+                Use groovy instead ("script" element with CDATA and "groovy:" at the beginning of the content).
                 
                 The script can be contained in a Java resource, and/or a short
                 script can be included in the element body.
@@ -2926,6 +2931,10 @@ under the License.
             <xs:documentation>
                 Runs an external script and/or a short inline script (scriptlet). The scriptlet can be
                 included in the script attribute or in the element body.
+
+                SCIPIO: TODO: Currently this does not yet recognize the "lang" attribute in simple-methods
+                the way that it's recognized in screen definitions; for inline scripts, simply
+                prefix the script element content with "groovy:" or appropriate language name.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType mixed="true">

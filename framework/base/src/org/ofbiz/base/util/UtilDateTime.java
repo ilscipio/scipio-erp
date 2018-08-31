@@ -41,6 +41,8 @@ import com.ibm.icu.util.Calendar;
  */
 public final class UtilDateTime {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     /**
      * @deprecated SCIPIO: 2018-08: this will become private/removed, do not use from outside
      */
@@ -594,7 +596,11 @@ public final class UtilDateTime {
             minute = Integer.parseInt(minuteStr);
             second = Integer.parseInt(secondStr);
         } catch (Exception e) {
-            //Debug.logError(e, module); // SCIPIO: 2018-08-30: do not do this, caller may want to test
+            // SCIPIO: 2018-08-30: do not do this, caller may want to test
+            //Debug.logError(e, module);
+            if (Debug.verboseOn()) {
+                Debug.logWarning(e, "Could not convert to date", module);
+            }
             return null;
         }
         return toDate(month, day, year, hour, minute, second);

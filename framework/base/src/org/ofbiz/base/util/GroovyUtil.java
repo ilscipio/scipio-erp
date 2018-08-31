@@ -117,7 +117,7 @@ public class GroovyUtil {
      * @return A <code>Binding</code> instance
      */
     public static Binding getBinding(Map<String, Object> context) {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         if (context != null) {
             vars.putAll(context);
             vars.put("context", context);
@@ -156,6 +156,8 @@ public class GroovyUtil {
                 }
             }
             return scriptClass;
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             throw new GeneralException("Error loading Groovy script at [" + location + "]: ", e);
         }

@@ -35,9 +35,9 @@ import org.ofbiz.base.util.UtilGenerics;
 public class Converters {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final String DELIMITER = "->";
-    protected static final ConcurrentHashMap<String, Converter<?, ?>> converterMap = new ConcurrentHashMap<String, Converter<?, ?>>();
-    protected static final Set<ConverterCreator> creators = new HashSet<ConverterCreator>();
-    protected static final Set<String> noConversions = new HashSet<String>();
+    protected static final ConcurrentHashMap<String, Converter<?, ?>> converterMap = new ConcurrentHashMap<>();
+    private static final Set<ConverterCreator> creators = new HashSet<>();
+    private static final Set<String> noConversions = new HashSet<>();
 
     static {
         registerCreator(new PassThruConverterCreator());
@@ -204,10 +204,9 @@ OUTER:
 
         public <S, T> Converter<S, T> createConverter(Class<S> sourceClass, Class<T> targetClass) {
             if (ObjectType.instanceOf(sourceClass, targetClass)) {
-                return new PassThruConverter<S, T>(sourceClass, targetClass);
-            } else {
-                return null;
+                return new PassThruConverter<>(sourceClass, targetClass);
             }
+            return null;
         }
     }
 

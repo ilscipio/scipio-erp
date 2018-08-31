@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -46,17 +47,17 @@ public class StringUtil {
 
     public static final StringUtil INSTANCE = new StringUtil();
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    // FIXME: Not thread safe
-    protected static final Map<String, Pattern> substitutionPatternMap;
+    private static final Map<String, Pattern> substitutionPatternMap = createSubstitutionPatternMap();
 
-    static {
-        substitutionPatternMap = new LinkedHashMap<String, Pattern>();
+    private static Map<String, Pattern> createSubstitutionPatternMap() {
+        Map<String, Pattern> substitutionPatternMap = new LinkedHashMap<>();  // Preserve insertion order
         substitutionPatternMap.put("&&", Pattern.compile("@and", Pattern.LITERAL));
         substitutionPatternMap.put("||", Pattern.compile("@or", Pattern.LITERAL));
         substitutionPatternMap.put("<=", Pattern.compile("@lteq", Pattern.LITERAL));
         substitutionPatternMap.put(">=", Pattern.compile("@gteq", Pattern.LITERAL));
         substitutionPatternMap.put("<", Pattern.compile("@lt", Pattern.LITERAL));
         substitutionPatternMap.put(">", Pattern.compile("@gt", Pattern.LITERAL));
+        return Collections.unmodifiableMap(substitutionPatternMap);
     }
     
     private static final Pattern listElemDelim = Pattern.compile("\\,\\s"); // SCIPIO
@@ -88,7 +89,9 @@ public class StringUtil {
 
         int i = mainString.lastIndexOf(oldString);
 
-        if (i < 0) return mainString;
+        if (i < 0) {
+            return mainString;
+        }
 
         StringBuilder mainSb = new StringBuilder(mainString);
 
@@ -116,15 +119,17 @@ public class StringUtil {
      * @return a String of all values in the collection seperated by the delimiter
      */
     public static String join(Collection<?> col, String delim) {
-        if (UtilValidate.isEmpty(col))
+        if (UtilValidate.isEmpty(col)) {
             return null;
+        }
         StringBuilder buf = new StringBuilder();
         Iterator<?> i = col.iterator();
 
         while (i.hasNext()) {
             buf.append(i.next());
-            if (i.hasNext())
+            if (i.hasNext()) {
                 buf.append(delim);
+            }
         }
         return buf.toString();
     }
@@ -137,18 +142,20 @@ public class StringUtil {
      */
     public static List<String> split(String str, String delim) {
         List<String> splitList = null;
-        StringTokenizer st = null;
+        StringTokenizer st;
 
-        if (str == null) return splitList;
+        if (str == null) {
+            return null;
+        }
 
-        if (delim != null) st = new StringTokenizer(str, delim);
-        else               st = new StringTokenizer(str);
+        st = (delim != null? new StringTokenizer(str, delim): new StringTokenizer(str));
 
-        if (st.hasMoreTokens()) { // SCIPIO: 2018-10-18: removed silly unnecessary null check: (st != null)
+        if (st.hasMoreTokens()) {
             splitList = new ArrayList<String>(); // SCIPIO: switched to ArrayList (default capacity is usually good here)
 
-            while (st.hasMoreTokens())
+            while (st.hasMoreTokens()) {
                 splitList.add(st.nextToken());
+            }
         }
         return splitList;
     }
@@ -164,12 +171,17 @@ public class StringUtil {
         List<String> splitList = null;
         String[] st = null;
 
-        if (str == null) return splitList;
+        if (str == null) {
+            return splitList;
+        }
 
         // SCIPIO: 2018-10-18: switched to String.split because is better optimized for single-char case than Pattern.compile
         //if (delim != null) st = Pattern.compile(delim).split(str, limit);
-        if (delim != null) st = str.split(delim, limit);
-        else               st = str.split("\\s", limit); // SCIPIO: 2018-10-18: fixed missing limit in this case (stock bug)
+        if (delim != null) {
+            st = str.split(delim, limit);
+        } else {
+            st = str.split("\\s", limit); // SCIPIO: 2018-10-18: fixed missing limit in this case (stock bug)
+        }
 
         if (st != null && st.length > 0) {
             // SCIPIO: NOTE: Can't safely do Arrays.asList from here, because throws exception if tries to add items,
@@ -218,8 +230,10 @@ public class StringUtil {
      * @return a Map of name/value pairs
      */
     public static Map<String, String> strToMap(String str, String delim, boolean trim, String pairsSeparator) {
-        if (str == null) return null;
-        Map<String, String> decodedMap = new HashMap<String, String>();
+        if (str == null) {
+            return null;
+        }
+        Map<String, String> decodedMap = new HashMap<>();
         List<String> elements = split(str, delim);
         pairsSeparator = pairsSeparator == null ? "=" : pairsSeparator;
 
@@ -241,7 +255,9 @@ public class StringUtil {
             }
 
             try {
-                decodedMap.put(URLDecoder.decode(name, "UTF-8"), URLDecoder.decode(value, "UTF-8"));
+                if (value != null && name != null) {
+                    decodedMap.put(URLDecoder.decode(name, "UTF-8"), URLDecoder.decode(value, "UTF-8"));
+                }
             } catch (UnsupportedEncodingException e1) {
                 Debug.logError(e1, module);
             }
@@ -285,7 +301,9 @@ public class StringUtil {
      * @return String The encoded String
      */
     public static String mapToStr(Map<? extends Object, ? extends Object> map) {
-        if (map == null) return null;
+        if (map == null) {
+            return null;
+        }
         StringBuilder buf = new StringBuilder();
         boolean first = true;
 
@@ -293,8 +311,9 @@ public class StringUtil {
             Object key = entry.getKey();
             Object value = entry.getValue();
 
-            if (!(key instanceof String) || !(value instanceof String))
+            if (!(key instanceof String) || !(value instanceof String)) {
                 continue;
+            }
             String encodedName = null;
             try {
                 encodedName = URLEncoder.encode((String) key, "UTF-8");
@@ -308,10 +327,11 @@ public class StringUtil {
                 Debug.logError(e, module);
             }
 
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 buf.append("|");
+            }
 
             buf.append(encodedName);
             buf.append("=");
@@ -329,7 +349,7 @@ public class StringUtil {
      * @return new Map
      */
     public static Map<String, String> toMap(String s) {
-        Map<String, String> newMap = new HashMap<String, String>();
+        Map<String, String> newMap = new HashMap<>();
         if (s.startsWith("{") && s.endsWith("}")) {
             s = s.substring(1, s.length() - 1);
             // SCIPIO: Pre-compiled delim Pattern, because more than 2 chars (not optimized by String.split)
@@ -371,7 +391,6 @@ public class StringUtil {
         } else {
             throw new IllegalArgumentException("String is not from List.toString()");
         }
-        //return newList; // SCIPIO
     }
 
     /**
@@ -381,7 +400,7 @@ public class StringUtil {
      * @return new List
      */
     public static Set<String> toSet(String s) {
-        Set<String> newSet = new LinkedHashSet<String>();
+        Set<String> newSet = new LinkedHashSet<>();
         if (s.startsWith("[") && s.endsWith("]")) {
             s = s.substring(1, s.length() - 1);
             String[] entries = s.split("\\,\\s");
@@ -406,7 +425,7 @@ public class StringUtil {
         if (keys == null || values == null || keys.size() != values.size()) {
             throw new IllegalArgumentException("Keys and Values cannot be null and must be the same size");
         }
-        Map<K, V> newMap = new HashMap<K, V>();
+        Map<K, V> newMap = new HashMap<>();
         for (int i = 0; i < keys.size(); i++) {
             newMap.put(keys.get(i), values.get(i));
         }
@@ -415,7 +434,9 @@ public class StringUtil {
 
     /** Make sure the string starts with a forward slash but does not end with one; converts back-slashes to forward-slashes; if in String is null or empty, returns zero length string. */
     public static String cleanUpPathPrefix(String prefix) {
-        if (UtilValidate.isEmpty(prefix)) return "";
+        if (UtilValidate.isEmpty(prefix)) {
+            return "";
+        }
 
         StringBuilder cppBuff = new StringBuilder(prefix.replace('\\', '/'));
 
@@ -506,7 +527,9 @@ public class StringUtil {
      * @return the new value
      */
     public static String addToNumberString(String numberString, long addAmount) {
-        if (numberString == null) return null;
+        if (numberString == null) {
+            return null;
+        }
         int origLength = numberString.length();
         long number = Long.parseLong(numberString);
         return padNumberString(Long.toString(number + addAmount), origLength);
@@ -526,19 +549,19 @@ public class StringUtil {
      * <table border="1" cellpadding="2">
      *   <caption>OFBiz XML operators</caption>
      *   <tr><th>OFBiz operator</th><th>Substitution</th></tr>
-     * <tr><td><strong>@and</strong></td><td>&amp;&amp;</td></tr>
-     * <tr><td><strong>@or</strong></td><td>||</td></tr>
-     * <tr><td><strong>@gt</strong></td><td>&gt;</td></tr>
-     * <tr><td><strong>@gteq</strong></td><td>&gt;=</td></tr>
-     * <tr><td><strong>@lt</strong></td><td>&lt;</td></tr>
-     * <tr><td><strong>@lteq</strong></td><td>&lt;=</td></tr>
+     *   <tr><td><strong>@and</strong></td><td>&amp;&amp;</td></tr>
+     *   <tr><td><strong>@or</strong></td><td>||</td></tr>
+     *   <tr><td><strong>@gt</strong></td><td>&gt;</td></tr>
+     *   <tr><td><strong>@gteq</strong></td><td>&gt;=</td></tr>
+     *   <tr><td><strong>@lt</strong></td><td>&lt;</td></tr>
+     *   <tr><td><strong>@lteq</strong></td><td>&lt;=</td></tr>
      * </table>
      * @param expression The <code>String</code> to convert
      * @return The converted <code>String</code>
      */
     public static String convertOperatorSubstitutions(String expression) {
         String result = expression;
-        if (result != null && (result.contains("@") || result.contains("'"))) {
+        if (result != null && (result.contains("@"))) {
             for (Map.Entry<String, Pattern> entry: substitutionPatternMap.entrySet()) {
                 Pattern pattern = entry.getValue();
                 result = pattern.matcher(result).replaceAll(entry.getKey());
@@ -596,8 +619,12 @@ public class StringUtil {
         return makeStringWrapper(theString);
     }
     public static StringWrapper makeStringWrapper(String theString) {
-        if (theString == null) return null;
-        if (theString.length() == 0) return StringWrapper.EMPTY_STRING_WRAPPER;
+        if (theString == null) {
+            return null;
+        }
+        if (theString.length() == 0) {
+            return StringWrapper.EMPTY_STRING_WRAPPER;
+        }
         return new StringWrapper(theString);
     }
 
@@ -608,13 +635,21 @@ public class StringUtil {
     public static StringBuilder appendTo(StringBuilder sb, Iterable<? extends Appender<StringBuilder>> iterable, String prefix, String suffix, String sepPrefix, String sep, String sepSuffix) {
         Iterator<? extends Appender<StringBuilder>> it = iterable.iterator();
         while (it.hasNext()) {
-            if (prefix != null) sb.append(prefix);
+            if (prefix != null) {
+                sb.append(prefix);
+            }
             it.next().appendTo(sb);
-            if (suffix != null) sb.append(suffix);
+            if (suffix != null) {
+                sb.append(suffix);
+            }
             if (it.hasNext() && sep != null) {
-                if (sepPrefix != null) sb.append(sepPrefix);
+                if (sepPrefix != null) {
+                    sb.append(sepPrefix);
+                }
                 sb.append(sep);
-                if (sepSuffix != null) sb.append(sepSuffix);
+                if (sepSuffix != null) {
+                    sb.append(sepSuffix);
+                }
             }
         }
         return sb;
@@ -627,13 +662,21 @@ public class StringUtil {
     public static StringBuilder append(StringBuilder sb, Iterable<? extends Object> iterable, String prefix, String suffix, String sepPrefix, String sep, String sepSuffix) {
         Iterator<? extends Object> it = iterable.iterator();
         while (it.hasNext()) {
-            if (prefix != null) sb.append(prefix);
+            if (prefix != null) {
+                sb.append(prefix);
+            }
             sb.append(it.next());
-            if (suffix != null) sb.append(suffix);
+            if (suffix != null) {
+                sb.append(suffix);
+            }
             if (it.hasNext() && sep != null) {
-                if (sepPrefix != null) sb.append(sepPrefix);
+                if (sepPrefix != null) {
+                    sb.append(sepPrefix);
+                }
                 sb.append(sep);
-                if (sepSuffix != null) sb.append(sepSuffix);
+                if (sepSuffix != null) {
+                    sb.append(sepSuffix);
+                }
             }
         }
         return sb;

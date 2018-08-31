@@ -114,12 +114,14 @@ public class ObjectType {
         }
 
         int genericsStart = className.indexOf("<");
-        if (genericsStart != -1) className = className.substring(0, genericsStart);
+        if (genericsStart != -1) {
+            className = className.substring(0, genericsStart);
+        }
 
         // Handle array classes. Details in http://java.sun.com/j2se/1.5.0/docs/guide/jni/spec/types.html#wp16437
         if (className.endsWith("[]")) {
             if (Character.isLowerCase(className.charAt(0)) && className.indexOf(".") < 0) {
-               String prefix = className.substring(0, 1).toUpperCase();
+                String prefix = className.substring(0, 1).toUpperCase(Locale.getDefault());
                // long and boolean have other prefix than first letter
                if (className.startsWith("long")) {
                    prefix = "J";
@@ -138,7 +140,9 @@ public class ObjectType {
             className = classAlias.get(className);
         }
 
-        if (loader == null) loader = Thread.currentThread().getContextClassLoader();
+        if (loader == null) {
+            loader = Thread.currentThread().getContextClassLoader();
+        }
 
         theClass = Class.forName(className, true, loader);
 
@@ -159,7 +163,9 @@ public class ObjectType {
         Class<?> c = loadClass(className);
         Object o = c.newInstance();
 
-        if (Debug.verboseOn()) Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        }
         return o;
     }
 
@@ -207,7 +213,9 @@ public class ObjectType {
         Constructor<?> con = c.getConstructor(sig);
         Object o = con.newInstance(parameters);
 
-        if (Debug.verboseOn()) Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        }
         return o;
     }
 
@@ -262,7 +270,9 @@ public class ObjectType {
             List<Class<?>> ifaces = ClassUtils.getAllInterfaces(objectClass);
 
             for (Class<?> iface: ifaces) {
-                if (iface == interfaceClass) return true;
+                if (iface == interfaceClass) {
+                    return true;
+                }
             }
             objectClass = objectClass.getSuperclass();
         }
@@ -338,9 +348,10 @@ public class ObjectType {
      * @return true if objectClass is a class of or a sub-class of the parent
      */
     public static boolean isOrSubOf(Class<?> objectClass, Class<?> parentClass) {
-        //Debug.logInfo("Checking isOrSubOf for [" + objectClass.getName() + "] and [" + objectClass.getName() + "]", module);
         while (objectClass != null) {
-            if (objectClass == parentClass) return true;
+            if (objectClass == parentClass) {
+                return true;
+            }
             objectClass = objectClass.getSuperclass();
         }
         return false;
@@ -400,8 +411,9 @@ public class ObjectType {
     public static boolean instanceOf(Class<?> objectClass, String typeName, ClassLoader loader) {
         Class<?> infoClass = loadInfoClass(typeName, loader);
 
-        if (infoClass == null)
+        if (infoClass == null) {
             throw new IllegalArgumentException("Illegal type found in info map (could not load class for specified type)");
+        }
 
         return instanceOf(objectClass, infoClass);
     }
@@ -424,21 +436,20 @@ public class ObjectType {
     }
 
     public static Class<?> loadInfoClass(String typeName, ClassLoader loader) {
-        //Class infoClass = null;
         try {
-            return ObjectType.loadClass(typeName, loader);
+            return loadClass(typeName, loader);
         } catch (SecurityException se1) {
             throw new IllegalArgumentException("Problems with classloader: security exception (" +
                     se1.getMessage() + ")");
         } catch (ClassNotFoundException e1) {
             try {
-                return ObjectType.loadClass(LANG_PACKAGE + typeName, loader);
+                return loadClass(LANG_PACKAGE + typeName, loader);
             } catch (SecurityException se2) {
                 throw new IllegalArgumentException("Problems with classloader: security exception (" +
                         se2.getMessage() + ")");
             } catch (ClassNotFoundException e2) {
                 try {
-                    return ObjectType.loadClass(SQL_PACKAGE + typeName, loader);
+                    return loadClass(SQL_PACKAGE + typeName, loader);
                 } catch (SecurityException se3) {
                     throw new IllegalArgumentException("Problems with classloader: security exception (" +
                             se3.getMessage() + ")");
@@ -458,7 +469,9 @@ public class ObjectType {
      * @return true if obj is an instance of a sub-class of typeClass
      */
     public static boolean instanceOf(Object obj, Class<?> typeClass) {
-        if (obj == null) return true;
+        if (obj == null) {
+            return true;
+        }
         Class<?> objectClass = obj.getClass();
         return instanceOf(objectClass, typeClass);
     }
@@ -472,9 +485,8 @@ public class ObjectType {
     public static boolean instanceOf(Class<?> objectClass, Class<?> typeClass) {
         if (typeClass.isInterface() && !objectClass.isInterface()) {
             return interfaceOf(objectClass, typeClass);
-        } else {
-            return isOrSubOf(objectClass, typeClass);
         }
+        return isOrSubOf(objectClass, typeClass);
     }
 
     public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale, boolean noTypeFail) throws GeneralException {
@@ -508,9 +520,8 @@ public class ObjectType {
             String nodeValue =  node.getTextContent();
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 return nodeValue;
-            } else {
-                return simpleTypeConvert(nodeValue, type, format, timeZone, locale, noTypeFail);
             }
+            return simpleTypeConvert(nodeValue, type, format, timeZone, locale, noTypeFail);
         }
         int genericsStart = type.indexOf("<");
         if (genericsStart != -1) {
@@ -532,13 +543,17 @@ public class ObjectType {
         Converter<Object, Object> converter = null;
         try {
             converter = (Converter<Object, Object>) Converters.getConverter(sourceClass, targetClass);
-        } catch (ClassNotFoundException e) {}
+        } catch (ClassNotFoundException e) {
+            // SCIPIO: 2018-08-30: do not do this for now, callers may not expect it
+            //Debug.logError(e, module);
+            if (Debug.verboseOn()) {
+                Debug.logWarning("Could not convert object: " + e.toString(), module);
+            }
+        }
+
         if (converter != null) {
-            LocalizedConverter<Object, Object> localizedConverter = null;
-            try {
-                localizedConverter = (LocalizedConverter) converter;
-            } catch (ClassCastException e) {}
-            if (localizedConverter != null) {
+            if (converter instanceof LocalizedConverter) {
+                LocalizedConverter<Object, Object> localizedConverter = (LocalizedConverter) converter;
                 if (timeZone == null) {
                     timeZone = TimeZone.getDefault();
                 }
@@ -566,10 +581,11 @@ public class ObjectType {
         }
         if (noTypeFail) {
             throw new GeneralException("Conversion from " + obj.getClass().getName() + " to " + type + " not currently supported");
-        } else {
-            if (Debug.infoOn()) Debug.logInfo("No type conversion available for " + obj.getClass().getName() + " to " + targetClass.getName() + ", returning original object.", module);
-            return obj;
         }
+        if (Debug.infoOn()) {
+            Debug.logInfo("No type conversion available for " + obj.getClass().getName() + " to " + targetClass.getName() + ", returning original object.", module);
+        }
+        return obj;
     }
 
     public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
@@ -580,11 +596,13 @@ public class ObjectType {
         List<Object> messages, Locale locale, ClassLoader loader, boolean value2InlineConstant) {
         boolean verboseOn = Debug.verboseOn();
 
-        if (verboseOn) Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"", module);
+        if (verboseOn) {
+            Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"", module);
+        }
 
         try {
             if (!"PlainString".equals(type)) {
-                Class<?> clz = ObjectType.loadClass(type, loader);
+                Class<?> clz = loadClass(type, loader);
                 type = clz.getName();
             }
         } catch (ClassNotFoundException e) {
@@ -615,7 +633,7 @@ public class ObjectType {
                 value2Locale = UtilMisc.parseLocale("en");
             }
             try {
-                convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format, value2Locale);
+                convertedValue2 = simpleTypeConvert(value2, type, format, value2Locale);
             } catch (GeneralException e) {
                 Debug.logError(e, module);
                 messages.add("Could not convert value2 for comparison: " + e.getMessage());
@@ -631,7 +649,7 @@ public class ObjectType {
 
         Object convertedValue1 = null;
         try {
-            convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format, locale);
+            convertedValue1 = simpleTypeConvert(value1, type, format, locale);
         } catch (GeneralException e) {
             Debug.logError(e, module);
             messages.add("Could not convert value1 for comparison: " + e.getMessage());
@@ -664,29 +682,36 @@ public class ObjectType {
                 String str2 = (String) convertedValue2;
 
                 return str1.indexOf(str2) < 0 ? Boolean.FALSE : Boolean.TRUE;
-            } else {
-                messages.add("Error in XML file: cannot do a contains compare between a String and a non-String type");
-                return null;
             }
+            messages.add("Error in XML file: cannot do a contains compare between a String and a non-String type");
+            return null;
         } else if ("is-empty".equals(operator)) {
-            if (convertedValue1 == null)
+            if (convertedValue1 == null) {
                 return Boolean.TRUE;
-            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0)
+            }
+            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0) {
                 return Boolean.TRUE;
-            if (convertedValue1 instanceof List<?> && ((List<?>) convertedValue1).size() == 0)
+            }
+            if (convertedValue1 instanceof List<?> && ((List<?>) convertedValue1).size() == 0) {
                 return Boolean.TRUE;
-            if (convertedValue1 instanceof Map<?, ?> && ((Map<?, ?>) convertedValue1).size() == 0)
+            }
+            if (convertedValue1 instanceof Map<?, ?> && ((Map<?, ?>) convertedValue1).size() == 0) {
                 return Boolean.TRUE;
+            }
             return Boolean.FALSE;
         } else if ("is-not-empty".equals(operator)) {
-            if (convertedValue1 == null)
+            if (convertedValue1 == null) {
                 return Boolean.FALSE;
-            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0)
+            }
+            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0) {
                 return Boolean.FALSE;
-            if (convertedValue1 instanceof List<?> && ((List<?>) convertedValue1).size() == 0)
+            }
+            if (convertedValue1 instanceof List<?> && ((List<?>) convertedValue1).size() == 0) {
                 return Boolean.FALSE;
-            if (convertedValue1 instanceof Map<?, ?> && ((Map<?, ?>) convertedValue1).size() == 0)
+            }
+            if (convertedValue1 instanceof Map<?, ?> && ((Map<?, ?>) convertedValue1).size() == 0) {
                 return Boolean.FALSE;
+            }
             return Boolean.TRUE;
         }
 
@@ -712,12 +737,13 @@ public class ObjectType {
             tempNum = (Number) convertedValue2;
             double value2Double = tempNum.doubleValue();
 
-            if (value1Double < value2Double)
+            if (value1Double < value2Double) {
                 result = -1;
-            else if (value1Double > value2Double)
+            } else if (value1Double > value2Double) {
                 result = 1;
-            else
+            } else {
                 result = 0;
+            }
         } else if ("java.sql.Date".equals(type)) {
             java.sql.Date value1Date = (java.sql.Date) convertedValue1;
             java.sql.Date value2Date = (java.sql.Date) convertedValue2;
@@ -734,15 +760,17 @@ public class ObjectType {
             Boolean value1Boolean = (Boolean) convertedValue1;
             Boolean value2Boolean = (Boolean) convertedValue2;
             if ("equals".equals(operator)) {
-                if ((value1Boolean.booleanValue() && value2Boolean.booleanValue()) || (!value1Boolean.booleanValue() && !value2Boolean.booleanValue()))
+                if ((value1Boolean && value2Boolean) || (!value1Boolean && !value2Boolean)) {
                     result = 0;
-                else
+                } else {
                     result = 1;
+                }
             } else if ("not-equals".equals(operator)) {
-                if ((!value1Boolean.booleanValue() && value2Boolean.booleanValue()) || (value1Boolean.booleanValue() && !value2Boolean.booleanValue()))
+                if ((!value1Boolean && value2Boolean) || (value1Boolean && !value2Boolean)) {
                     result = 0;
-                else
+                } else {
                     result = 1;
+                }
             } else {
                 messages.add("Can only compare Booleans using the operators 'equals' or 'not-equals'");
                 return null;
@@ -758,50 +786,80 @@ public class ObjectType {
             return null;
         }
 
-        if (verboseOn) Debug.logVerbose("Got Compare result: " + result + ", operator: " + operator, module);
+        if (verboseOn) {
+            Debug.logVerbose("Got Compare result: " + result + ", operator: " + operator, module);
+        }
         if ("less".equals(operator)) {
-            if (result >= 0)
+            if (result >= 0) {
                 return Boolean.FALSE;
+            }
         } else if ("greater".equals(operator)) {
-            if (result <= 0)
+            if (result <= 0) {
                 return Boolean.FALSE;
+            }
         } else if ("less-equals".equals(operator)) {
-            if (result > 0)
+            if (result > 0) {
                 return Boolean.FALSE;
+            }
         } else if ("greater-equals".equals(operator)) {
-            if (result < 0)
+            if (result < 0) {
                 return Boolean.FALSE;
+            }
         } else if ("equals".equals(operator)) {
-            if (result != 0)
+            if (result != 0) {
                 return Boolean.FALSE;
+            }
         } else if ("not-equals".equals(operator)) {
-            if (result == 0)
+            if (result == 0) {
                 return Boolean.FALSE;
+            }
         } else {
             messages.add("Specified compare operator \"" + operator + "\" not known.");
             return null;
         }
 
-        if (verboseOn) Debug.logVerbose("Returning true", module);
+        if (verboseOn) {
+            Debug.logVerbose("Returning true", module);
+        }
         return Boolean.TRUE;
     }
 
     @SuppressWarnings("unchecked")
     public static boolean isEmpty(Object value) {
-        if (value == null) return true;
+        if (value == null) {
+            return true;
+        }
 
-        if (value instanceof String) return ((String) value).length() == 0;
-        if (value instanceof Collection) return ((Collection<? extends Object>) value).size() == 0;
-        if (value instanceof Map) return ((Map<? extends Object, ? extends Object>) value).size() == 0;
-        if (value instanceof CharSequence) return ((CharSequence) value).length() == 0;
-        if (value instanceof IsEmpty) return ((IsEmpty) value).isEmpty();
+        if (value instanceof String) {
+            return ((String) value).length() == 0;
+        }
+        if (value instanceof Collection) {
+            return ((Collection<? extends Object>) value).size() == 0;
+        }
+        if (value instanceof Map) {
+            return ((Map<? extends Object, ? extends Object>) value).size() == 0;
+        }
+        if (value instanceof CharSequence) {
+            return ((CharSequence) value).length() == 0;
+        }
+        if (value instanceof IsEmpty) {
+            return ((IsEmpty) value).isEmpty();
+        }
 
         // These types would flood the log
         // Number covers: BigDecimal, BigInteger, Byte, Double, Float, Integer, Long, Short
-        if (value instanceof Boolean) return false;
-        if (value instanceof Number) return false;
-        if (value instanceof Character) return false;
-        if (value instanceof java.util.Date) return false;
+        if (value instanceof Boolean) {
+            return false;
+        }
+        if (value instanceof Number) {
+            return false;
+        }
+        if (value instanceof Character) {
+            return false;
+        }
+        if (value instanceof java.util.Date) {
+            return false;
+        }
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("In ObjectType.isEmpty(Object value) returning false for " + value.getClass() + " Object.", module);
@@ -828,9 +886,8 @@ public class ObjectType {
             if (other instanceof NullObject) {
                 // should do equality of object? don't think so, just same type
                 return true;
-            } else {
-                return false;
             }
+            return false;
         }
     }
 }

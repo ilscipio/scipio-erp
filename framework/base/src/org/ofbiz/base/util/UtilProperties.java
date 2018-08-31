@@ -68,9 +68,11 @@ import org.w3c.dom.Element;
  * method).</p>
  */
 @SuppressWarnings("serial")
-public class UtilProperties implements Serializable {
+public final class UtilProperties implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private UtilProperties() {}
 
     /**
      * A cache for storing Properties instances. Each Properties instance is keyed by its URL.
@@ -105,7 +107,6 @@ public class UtilProperties implements Serializable {
     public static boolean propertyValueEquals(String resource, String name, String compareString) {
         String value = getPropertyValue(resource, name);
 
-        if (value == null) return false;
         return value.trim().equals(compareString);
     }
 
@@ -118,7 +119,6 @@ public class UtilProperties implements Serializable {
     public static boolean propertyValueEqualsIgnoreCase(String resource, String name, String compareString) {
         String value = getPropertyValue(resource, name);
 
-        if (value == null) return false;
         return value.trim().equalsIgnoreCase(compareString);
     }
 
@@ -132,10 +132,10 @@ public class UtilProperties implements Serializable {
     public static String getPropertyValue(String resource, String name, String defaultValue) {
         String value = getPropertyValue(resource, name);
 
-        if (UtilValidate.isEmpty(value))
+        if (UtilValidate.isEmpty(value)) {
             return defaultValue;
-        else
-            return value;
+        }
+        return value;
     }
 
     /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file.
@@ -149,17 +149,14 @@ public class UtilProperties implements Serializable {
     public static String getPropertyValue(Properties properties, String name, String defaultValue) {
         String value = getPropertyValue(properties, name);
 
-        if (UtilValidate.isEmpty(value))
+        if (UtilValidate.isEmpty(value)) {
             return defaultValue;
-        else
-            return value;
+        }
+        return value;
     }
 
     public static double getPropertyNumber(String resource, String name, double defaultValue) {
         String str = getPropertyValue(resource, name);
-        if (str == null) {
-            return defaultValue;
-        }
 
         try {
             return Double.parseDouble(str);
@@ -188,14 +185,13 @@ public class UtilProperties implements Serializable {
             //Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
             Debug.logInfo("Property [" + resource + "/" + name + "] empty; using defaultNumber " + defaultNumber + ".", module);
             return defaultNumber;
-        } else {
-            try {
-                return (Number)(ObjectType.simpleTypeConvert(str, type, null, null));
-            } catch (GeneralException e) {
-                Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
-            }
-            return defaultNumber;
         }
+        try {
+            return (Number)(ObjectType.simpleTypeConvert(str, type, null, null));
+        } catch (GeneralException e) {
+            Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
+        }
+        return defaultNumber;
     }
 
     /**
@@ -203,14 +199,18 @@ public class UtilProperties implements Serializable {
      * If the specified property name or properties file is not found, the defaultValue is returned.
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
      * @param name The name of the property in the properties file
-     * @param defaultValue Optional: The Value to return if the property is not found or not the correct format. [SCIPIO: 2017-08-29: now boxed type]
+     * @param defaultValue Optional: The Value to return if the property is not found or not the correct format.
      * @return A Boolean-Object of the property; or if not found the defaultValue
      */
     public static Boolean getPropertyAsBoolean(String resource, String name, boolean defaultValue) {
         String str = getPropertyValue(resource, name);
-        if ("true".equalsIgnoreCase(str)) return Boolean.TRUE;
-        else if ("false".equalsIgnoreCase(str)) return Boolean.FALSE;
-        else return defaultValue;
+        if ("true".equalsIgnoreCase(str)) {
+            return Boolean.TRUE;
+        } else if ("false".equalsIgnoreCase(str)) {
+            return Boolean.FALSE;
+        } else {
+            return defaultValue;
+        }
     }
     
     /**
@@ -223,9 +223,13 @@ public class UtilProperties implements Serializable {
      */
     public static Boolean getPropertyAsBoolean(String resource, String name, Boolean defaultValue) {
         String str = getPropertyValue(resource, name);
-        if ("true".equalsIgnoreCase(str)) return Boolean.TRUE;
-        else if ("false".equalsIgnoreCase(str)) return Boolean.FALSE;
-        else return defaultValue;
+        if ("true".equalsIgnoreCase(str)) {
+            return Boolean.TRUE;
+        } else if ("false".equalsIgnoreCase(str)) {
+            return Boolean.FALSE;
+        } else {
+            return defaultValue;
+        }
     }
     
     /**
@@ -396,8 +400,12 @@ public class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getPropertyValue(String resource, String name) {
-        if (UtilValidate.isEmpty(resource)) return "";
-        if (UtilValidate.isEmpty(name)) return "";
+        if (UtilValidate.isEmpty(resource)) {
+            return "";
+        }
+        if (UtilValidate.isEmpty(name)) {
+            return "";
+        }
 
         Properties properties = getProperties(resource);
         if (properties == null) {
@@ -421,8 +429,9 @@ public class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getPropertyValue(Properties properties, String name) {
-        if (name == null || name.length() <= 0) return "";
-
+        if (UtilValidate.isEmpty(name)) {
+            return "";
+        }
         if (properties == null) {
             return "";
         }
@@ -491,7 +500,7 @@ public class UtilProperties implements Serializable {
                 try {
                     inStream.close();
                 } catch (IOException e) {
-                    System.out.println("Exception thrown while closing InputStream: " + e);
+                    Debug.logError(e, "Exception thrown while closing InputStream", module);
                 }
             }
         }
@@ -682,7 +691,9 @@ public class UtilProperties implements Serializable {
     public static boolean propertyValueEquals(URL url, String name, String compareString) {
         String value = getPropertyValue(url, name);
 
-        if (value == null) return false;
+        if (value == null) {
+            return false;
+        }
         return value.trim().equals(compareString);
     }
 
@@ -695,7 +706,9 @@ public class UtilProperties implements Serializable {
     public static boolean propertyValueEqualsIgnoreCase(URL url, String name, String compareString) {
         String value = getPropertyValue(url, name);
 
-        if (value == null) return false;
+        if (value == null) {
+            return false;
+        }
         return value.trim().equalsIgnoreCase(compareString);
     }
 
@@ -709,10 +722,10 @@ public class UtilProperties implements Serializable {
     public static String getPropertyValue(URL url, String name, String defaultValue) {
         String value = getPropertyValue(url, name);
 
-        if (UtilValidate.isEmpty(value))
+        if (UtilValidate.isEmpty(value)) {
             return defaultValue;
-        else
-            return value;
+        }
+        return value;
     }
 
     public static double getPropertyNumber(URL url, String name, double defaultValue) {
@@ -738,8 +751,12 @@ public class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getPropertyValue(URL url, String name) {
-        if (url == null) return "";
-        if (UtilValidate.isEmpty(name)) return "";
+        if (url == null) {
+            return "";
+        }
+        if (UtilValidate.isEmpty(name)) {
+            return "";
+        }
         Properties properties = getProperties(url);
 
         if (properties == null) {
@@ -765,8 +782,12 @@ public class UtilProperties implements Serializable {
      * @return The value of the split property from the properties file
      */
     public static String getSplitPropertyValue(URL url, String name) {
-        if (url == null) return "";
-        if (UtilValidate.isEmpty(name)) return "";
+        if (url == null) {
+            return "";
+        }
+        if (UtilValidate.isEmpty(name)) {
+            return "";
+        }
 
         Properties properties = getProperties(url);
 
@@ -798,17 +819,21 @@ public class UtilProperties implements Serializable {
      * @param name The name of the property in the properties file
      * @param value The value of the property in the properties file */
      public static void setPropertyValue(String resource, String name, String value) {
-         if (UtilValidate.isEmpty(resource)) return;
-         if (UtilValidate.isEmpty(name)) return;
+         if (UtilValidate.isEmpty(resource)) {
+            return;
+        }
+         if (UtilValidate.isEmpty(name)) {
+            return;
+        }
 
          Properties properties = getProperties(resource);
          if (properties == null) {
              return;
          }
 
-         try {
+        try (
+                FileOutputStream propFile = new FileOutputStream(resource);) {
              properties.setProperty(name, value);
-             FileOutputStream propFile = new FileOutputStream(resource);
              if ("XuiLabels".equals(name)) {
                  properties.store(propFile,
                      "##############################################################################\n"
@@ -862,7 +887,7 @@ public class UtilProperties implements Serializable {
                      +"#");
              }
 
-             propFile.close();
+             //propFile.close(); // SCIPIO: 2018-08-30: covered by try-with-resources
          } catch (FileNotFoundException e) {
              Debug.logInfo(e, "Unable to located the resource file.", module);
          } catch (IOException e) {
@@ -875,8 +900,12 @@ public class UtilProperties implements Serializable {
       * @param name The name of the property in the resource
       * @param value The value of the property to set in memory */
       public static void setPropertyValueInMemory(String resource, String name, String value) {
-          if (UtilValidate.isEmpty(resource)) return;
-          if (UtilValidate.isEmpty(name)) return;
+          if (UtilValidate.isEmpty(resource)) {
+            return;
+        }
+          if (UtilValidate.isEmpty(name)) {
+            return;
+        }
 
           Properties properties = getProperties(resource);
           if (properties == null) {
@@ -903,7 +932,7 @@ public class UtilProperties implements Serializable {
     /** Returns the value of the specified property name from the specified
      *  resource/properties file corresponding to the given locale.
      * <p>
-     * SCIPIO: Version that guarantees no trim() operation. 
+     * SCIPIO: Version that guarantees there be no trim() operation. 
      *  
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -911,12 +940,18 @@ public class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getMessageNoTrim(String resource, String name, Locale locale) {
-        if (UtilValidate.isEmpty(resource)) return "";
-        if (UtilValidate.isEmpty(name)) return "";
+        if (UtilValidate.isEmpty(resource)) {
+            return "";
+        }
+        if (UtilValidate.isEmpty(name)) {
+            return "";
+        }
 
         ResourceBundle bundle = getResourceBundle(resource, locale);
 
-        if (bundle == null) return name;
+        if (bundle == null) {
+            return name;
+        }
 
         String value = null;
         if (bundle.containsKey(name)) {
@@ -925,7 +960,7 @@ public class UtilProperties implements Serializable {
             Debug.logInfo(name + " misses in " + resource + " for locale " + locale, module);
             return name;
         }
-        return value == null ? name : value;
+        return value == null ? name : value; // SCIPIO: TODO: REVIEW: some redundancy in this statement?...
     }    
 
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
@@ -941,12 +976,11 @@ public class UtilProperties implements Serializable {
 
         if (UtilValidate.isEmpty(value)) {
             return "";
-        } else {
-            if (arguments != null && arguments.length > 0) {
-                value = MessageFormat.format(value, arguments);
-            }
-            return value;
         }
+        if (arguments != null && arguments.length > 0) {
+            value = MessageFormat.format(value, arguments);
+        }
+        return value;
     }
 
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
@@ -962,18 +996,17 @@ public class UtilProperties implements Serializable {
 
         if (UtilValidate.isEmpty(value)) {
             return "";
-        } else {
-            if (UtilValidate.isNotEmpty(arguments)) {
-                value = MessageFormat.format(value, arguments.toArray());
-            }
-            return value;
         }
+        if (UtilValidate.isNotEmpty(arguments)) {
+            value = MessageFormat.format(value, arguments.toArray());
+        }
+        return value;
     }
     
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
      * <p>
-     * SCIPIO: Version that guarantees no trim() operation.
+     * SCIPIO: Version that guarantees there to be no trim() operation.
      * 
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -986,12 +1019,11 @@ public class UtilProperties implements Serializable {
 
         if (UtilValidate.isEmpty(value)) {
             return "";
-        } else {
-            if (UtilValidate.isNotEmpty(arguments)) {
-                value = MessageFormat.format(value, arguments.toArray());
-            }
-            return value;
         }
+        if (UtilValidate.isNotEmpty(arguments)) {
+            value = MessageFormat.format(value, arguments.toArray());
+        }
+        return value;
     }
 
     public static String getMessageList(String resource, String name, Locale locale, Object... arguments) {
@@ -1011,18 +1043,17 @@ public class UtilProperties implements Serializable {
 
         if (UtilValidate.isEmpty(value)) {
             return "";
-        } else {
-            if (UtilValidate.isNotEmpty(context)) {
-                value = FlexibleStringExpander.expandString(value, context, locale);
-            }
-            return value;
         }
+        if (UtilValidate.isNotEmpty(context)) {
+            value = FlexibleStringExpander.expandString(value, context, locale);
+        }
+        return value;
     }
     
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the FlexibleStringExpander class
      * <p>
-     * SCIPIO: Version that guarantees no trim() operation.
+     * SCIPIO: Version that guarantees there to be no trim() operation.
      * 
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -1035,19 +1066,18 @@ public class UtilProperties implements Serializable {
 
         if (UtilValidate.isEmpty(value)) {
             return "";
-        } else {
-            if (UtilValidate.isNotEmpty(context)) {
-                value = FlexibleStringExpander.expandString(value, context, locale);
-            }
-            return value;
         }
+        if (UtilValidate.isNotEmpty(context)) {
+            value = FlexibleStringExpander.expandString(value, context, locale);
+        }
+        return value;
     }    
 
     public static String getMessageMap(String resource, String name, Locale locale, Object... context) {
         return getMessage(resource, name, UtilGenerics.toMap(String.class, context), locale);
     }
 
-    protected static Set<String> resourceNotFoundMessagesShown = new HashSet<String>();
+    private static Set<String> resourceNotFoundMessagesShown = new HashSet<>();
     /** Returns the specified resource/properties file as a ResourceBundle
      * @param resource The name of the resource - can be a file, class, or URL
      * @param locale The locale that the given resource will correspond to
@@ -1127,7 +1157,9 @@ public class UtilProperties implements Serializable {
             }
         }
         if (UtilValidate.isNotEmpty(properties)) {
-            if (Debug.verboseOn()) Debug.logVerbose("Loaded " + properties.size() + " properties for: " + resource + " (" + locale + ")", module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Loaded " + properties.size() + " properties for: " + resource + " (" + locale + ")", module);
+            }
         }
         return properties;
     }
@@ -1168,7 +1200,7 @@ public class UtilProperties implements Serializable {
      * @return A list of candidate locales.
      */
     public static List<Locale> localeToCandidateList(Locale locale) {
-        List<Locale> localeList = new LinkedList<Locale>();
+        List<Locale> localeList = new LinkedList<>();
         localeList.add(locale);
         String localeString = locale.toString();
         int pos = localeString.lastIndexOf("_", localeString.length());
@@ -1185,7 +1217,7 @@ public class UtilProperties implements Serializable {
         private static Set<Locale> defaultCandidateLocales = getDefaultCandidateLocales();
 
         private static Set<Locale> getDefaultCandidateLocales() {
-            Set<Locale> defaultCandidateLocales = new LinkedHashSet<Locale>();
+            Set<Locale> defaultCandidateLocales = new LinkedHashSet<>();
             defaultCandidateLocales.addAll(localeToCandidateList(Locale.getDefault()));
             defaultCandidateLocales.addAll(localeToCandidateList(getFallbackLocale()));
             defaultCandidateLocales.add(Locale.ROOT);
@@ -1214,10 +1246,10 @@ public class UtilProperties implements Serializable {
         if (Locale.ROOT.equals(locale)) {
             return UtilMisc.toList(locale);
         }
-        Set<Locale> localeSet = new LinkedHashSet<Locale>();
+        Set<Locale> localeSet = new LinkedHashSet<>();
         localeSet.addAll(localeToCandidateList(locale));
         localeSet.addAll(getDefaultCandidateLocales());
-        List<Locale> localeList = new ArrayList<Locale>(localeSet);
+        List<Locale> localeList = new ArrayList<>(localeSet);
         return localeList;
     }
 
@@ -1253,16 +1285,16 @@ public class UtilProperties implements Serializable {
      * Resolve a properties file URL.
      * <p>This method uses the following strategy:</p>
      * <ul>
-     * <li>Locate the XML file specified in <code>resource (MyProps.xml)</code></li>
-     * <li>Locate the file that starts with the name specified in
-     * <code>resource</code> and ends with the locale's string and
+     *   <li>Locate the XML file specified in <code>resource (MyProps.xml)</code></li>
+     *   <li>Locate the file that starts with the name specified in
+     *     <code>resource</code> and ends with the locale's string and
      *     <code>.xml (MyProps_en.xml)</code>
      *   </li>
-     * <li>Locate the file that starts with the name specified in
-     * <code>resource</code> and ends with the locale's string and
+     *   <li>Locate the file that starts with the name specified in
+     *     <code>resource</code> and ends with the locale's string and
      *     <code>.properties (MyProps_en.properties)</code>
      *   </li>
-     * <li>Locate the file that starts with the name specified in
+     *   <li>Locate the file that starts with the name specified in
      *     <code>resource and ends with the locale's string (MyProps_en)</code>
      *   </li>
      * </ul>
@@ -1996,37 +2028,37 @@ public class UtilProperties implements Serializable {
             String resourceName = createResourceName(resource, locale, true);
             UtilResourceBundle bundle = bundleCache.get(resourceName);
             if (bundle == null) {
-                    double startTime = System.currentTimeMillis();
-                    List<Locale> candidateLocales = (List<Locale>) getCandidateLocales(locale);
-                    UtilResourceBundle parentBundle = null;
-                    int numProperties = 0;
-                    while (candidateLocales.size() > 0) {
+                double startTime = System.currentTimeMillis();
+                List<Locale> candidateLocales = getCandidateLocales(locale);
+                UtilResourceBundle parentBundle = null;
+                int numProperties = 0;
+                while (candidateLocales.size() > 0) {
                     Locale candidateLocale = candidateLocales.remove(candidateLocales.size() - 1);
-                        // ResourceBundles are connected together as a singly-linked list
-                        String lookupName = createResourceName(resource, candidateLocale, true);
-                        UtilResourceBundle lookupBundle = bundleCache.get(lookupName);
-                        if (lookupBundle == null) {
-                            Properties newProps = getProperties(resource, candidateLocale);
-                            if (UtilValidate.isNotEmpty(newProps)) {
-                                // The last bundle we found becomes the parent of the new bundle
-                                parentBundle = bundle;
-                                bundle = new UtilResourceBundle(newProps, candidateLocale, parentBundle);
-                            bundleCache.putIfAbsent(lookupName, bundle);
-                                numProperties = newProps.size();
-                            }
-                        } else {
+                    // ResourceBundles are connected together as a singly-linked list
+                    String lookupName = createResourceName(resource, candidateLocale, true);
+                    UtilResourceBundle lookupBundle = bundleCache.get(lookupName);
+                    if (lookupBundle == null) {
+                        Properties newProps = getProperties(resource, candidateLocale);
+                        if (UtilValidate.isNotEmpty(newProps)) {
+                            // The last bundle we found becomes the parent of the new bundle
                             parentBundle = bundle;
-                            bundle = lookupBundle;
+                            bundle = new UtilResourceBundle(newProps, candidateLocale, parentBundle);
+                            bundleCache.putIfAbsent(lookupName, bundle);
+                            numProperties = newProps.size();
                         }
+                    } else {
+                        parentBundle = bundle;
+                        bundle = lookupBundle;
                     }
-                    if (bundle == null) {
-                        throw new MissingResourceException("Resource " + resource + ", locale " + locale + " not found", null, null);
-                    } else if (!bundle.getLocale().equals(locale)) {
-                        // Create a "dummy" bundle for the requested locale
-                        bundle = new UtilResourceBundle(bundle.properties, locale, parentBundle);
-                    }
-                    double totalTime = System.currentTimeMillis() - startTime;
-                    if (Debug.infoOn()) {
+                }
+                if (bundle == null) {
+                    throw new MissingResourceException("Resource " + resource + ", locale " + locale + " not found", null, null);
+                } else if (!bundle.getLocale().equals(locale)) {
+                    // Create a "dummy" bundle for the requested locale
+                    bundle = new UtilResourceBundle(bundle.properties, locale, parentBundle);
+                }
+                double totalTime = System.currentTimeMillis() - startTime;
+                if (Debug.infoOn()) {
                     Debug.logInfo("ResourceBundle " + resource + " (" + locale + ") created in " + totalTime / 1000.0 + "s with "
                             + numProperties + " properties", module);
                 }
@@ -2084,24 +2116,24 @@ public class UtilProperties implements Serializable {
             InputStream in = null;
             try {
                 in = new BufferedInputStream(url.openStream());
-            if (url.getFile().endsWith(".xml")) {
-                xmlToProperties(in, locale, this);
-            } else {
-                load(in);
-            }
+                if (url.getFile().endsWith(".xml")) {
+                    xmlToProperties(in, locale, this);
+                } else {
+                    load(in);
+                }
             } finally {
                 if (in != null) {
-            in.close();
-        }
+                    in.close();
+                }
             }
         }
         @Override
         public void loadFromXML(InputStream in) throws IOException, InvalidPropertiesFormatException {
             try {
-            xmlToProperties(in, null, this);
+                xmlToProperties(in, null, this);
             } finally {
-            in.close();
+                in.close();
+            }
         }
-    }
     }
 }

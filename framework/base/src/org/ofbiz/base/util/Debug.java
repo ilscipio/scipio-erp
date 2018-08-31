@@ -20,6 +20,7 @@ package org.ofbiz.base.util;
 
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -67,9 +68,9 @@ public final class Debug {
         // initialize levelOnCache
         Properties properties = UtilProperties.createProperties("debug.properties");
         if (properties != null) {
-        for (int i = 0; i < levelOnCache.length; i++) {
-            levelOnCache[i] = (i == Debug.ALWAYS || "true".equalsIgnoreCase(properties.getProperty(levelProps[i])));
-        }
+            for (int i = 0; i < levelOnCache.length; i++) {
+                levelOnCache[i] = (i == Debug.ALWAYS || "true".equalsIgnoreCase(properties.getProperty(levelProps[i])));
+            }
         } else {
             throw new IllegalStateException("debug.properties file not found");
         }
@@ -92,8 +93,10 @@ public final class Debug {
 
     /** Gets an Integer representing the level number from a String representing the level name; will return null if not found */
     public static Integer getLevelFromString(String levelName) {
-        if (levelName == null) return null;
-        return levelStringMap.get(levelName.toLowerCase());
+        if (levelName == null) {
+            return null;
+        }
+        return levelStringMap.get(levelName.toLowerCase(Locale.getDefault()));
     }
 
     public static void log(int level, Throwable t, String msg, String module) {

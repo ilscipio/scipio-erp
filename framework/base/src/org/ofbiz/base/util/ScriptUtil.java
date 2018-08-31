@@ -19,8 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -89,7 +88,7 @@ public final class ScriptUtil {
         // SCIPIO: sanity check
         Debug.logInfo("ScriptUtil engine manager class loader: " + ScriptUtil.class.getClassLoader().getClass().getName(), module);
         
-        Set<String> writableScriptNames = new HashSet<String>();
+        Set<String> writableScriptNames = new HashSet<>();
         ScriptEngineManager manager = getScriptEngineManager();
         List<ScriptEngineFactory> engines = manager.getEngineFactories();
         if (engines.isEmpty()) {
@@ -155,14 +154,15 @@ public final class ScriptUtil {
                 try {
                     Compilable compilableEngine = (Compilable) engine;
                     URL scriptUrl = FlexibleLocation.resolveLocation(filePath);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(scriptUrl.openStream()));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(scriptUrl.openStream(), UtilIO
+                        .getUtf8()));
                     script = compilableEngine.compile(reader);
                     if (Debug.verboseOn()) {
-                    Debug.logVerbose("Compiled script " + filePath + " using engine " + engine.getClass().getName(), module);
+                        Debug.logVerbose("Compiled script " + filePath + " using engine " + engine.getClass().getName(), module);
                     }
                 } catch (ClassCastException e) {
                     if (Debug.verboseOn()) {
-                    Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
+                        Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
                     }
                 }
             } else {
@@ -203,11 +203,11 @@ public final class ScriptUtil {
                     Compilable compilableEngine = (Compilable) engine;
                     compiledScript = compilableEngine.compile(script);
                     if (Debug.verboseOn()) {
-                    Debug.logVerbose("Compiled script [" + script + "] using engine " + engine.getClass().getName(), module);
+                        Debug.logVerbose("Compiled script [" + script + "] using engine " + engine.getClass().getName(), module);
                     }
                 } catch (ClassCastException e) {
                     if (Debug.verboseOn()) {
-                    Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
+                        Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
                     }
                 }
             } else {
@@ -233,7 +233,7 @@ public final class ScriptUtil {
      */
     public static ScriptContext createScriptContext(Map<String, Object> context) {
         Assert.notNull("context", context);
-        Map<String, Object> localContext = new HashMap<String, Object>(context);
+        Map<String, Object> localContext = new HashMap<>(context);
         localContext.put(WIDGET_CONTEXT_KEY, context);
         localContext.put("context", context);
         ScriptContext scriptContext = new SimpleScriptContext();
@@ -258,7 +258,7 @@ public final class ScriptUtil {
      */
     public static ScriptContext createScriptContext(Map<String, Object> context, Set<String> protectedKeys) {
         Assert.notNull("context", context, "protectedKeys", protectedKeys);
-        Map<String, Object> localContext = new HashMap<String, Object>(context);
+        Map<String, Object> localContext = new HashMap<>(context);
         localContext.put(WIDGET_CONTEXT_KEY, context);
         localContext.put("context", context);
         ScriptContext scriptContext = new SimpleScriptContext();
@@ -417,17 +417,21 @@ public final class ScriptUtil {
         }
         engine.setContext(scriptContext);
         URL scriptUrl = FlexibleLocation.resolveLocation(filePath);
-        FileReader reader = new FileReader(new File(scriptUrl.getFile()));
-        Object result = engine.eval(reader);
-        if (UtilValidate.isNotEmpty(functionName)) {
-            try {
-                Invocable invocableEngine = (Invocable) engine;
-                result = invocableEngine.invokeFunction(functionName, args == null ? EMPTY_ARGS : args);
-            } catch (ClassCastException e) {
-                throw new ScriptException("Script engine " + engine.getClass().getName() + " does not support function/method invocations");
+        try (
+                InputStreamReader reader = new InputStreamReader(new FileInputStream(scriptUrl.getFile()), UtilIO
+                        .getUtf8());) {
+            Object result = engine.eval(reader);
+            if (UtilValidate.isNotEmpty(functionName)) {
+                try {
+                    Invocable invocableEngine = (Invocable) engine;
+                    result = invocableEngine.invokeFunction(functionName, args == null ? EMPTY_ARGS : args);
+                } catch (ClassCastException e) {
+                    throw new ScriptException("Script engine " + engine.getClass().getName()
+                            + " does not support function/method invocations");
+                }
             }
+            return result;
         }
-        return result;
     }
 
     private static String getFileExtension(String filePath) {

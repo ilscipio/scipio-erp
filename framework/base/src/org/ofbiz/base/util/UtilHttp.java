@@ -44,12 +44,19 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import javax.net.ssl.SSLContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternMatcher;
@@ -64,8 +71,7 @@ public final class UtilHttp {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    // SCIPIO: returned these to public for backward-compat
-    public static final String MULTI_ROW_DELIMITER = "_o_";
+    public static final String MULTI_ROW_DELIMITER = "_o_"; // SCIPIO: 2018-08: keeping public for backward-compat
     public static final String ROW_SUBMIT_PREFIX = "_rowSubmit_o_";
     public static final String COMPOSITE_DELIMITER = "_c_";
     public static final int MULTI_ROW_DELIMITER_LENGTH = MULTI_ROW_DELIMITER.length();
@@ -90,7 +96,7 @@ public final class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getCombinedMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        Map<String, Object> combinedMap = new HashMap<String, Object>();
+        Map<String, Object> combinedMap = new HashMap<>();
         combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
         combinedMap.putAll(getServletContextMap(request, namesToSkip)); // bottom level application attributes
         combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
@@ -117,8 +123,8 @@ public final class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip) {
-        boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip.booleanValue();
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip;
+        Map<String, Object> paramMap = new HashMap<>();
 
         // add all the actual HTTP request parameters
         Enumeration<String> e = UtilGenerics.cast(request.getParameterNames());
@@ -153,27 +159,24 @@ public final class UtilHttp {
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("Made Request Parameter Map with [" + paramMap.size() + "] Entries", module);
-          //Debug.logVerbose("Request Parameter Map Entries: " + System.getProperty("line.separator") + UtilMisc.printMap(paramMap), module); see OFBIZ-9310
         }
 
         return canonicalizeParameterMap(paramMap);
     }
 
     public static Map<String, Object> getQueryStringOnlyParameterMap(String queryString) {
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        Map<String, Object> paramMap = new HashMap<>();
         if (UtilValidate.isNotEmpty(queryString)) {
             StringTokenizer queryTokens = new StringTokenizer(queryString, "&");
             while (queryTokens.hasMoreTokens()) {
                 String token = queryTokens.nextToken();
                 if (token.startsWith("amp;")) {
                     // this is most likely a split value that had an &amp; in it, so don't consider this a name; note that some old code just stripped the "amp;" and went with it
-                    //token = token.substring(4);
                     continue;
                 }
                 int equalsIndex = token.indexOf("=");
-                String name = token;
                 if (equalsIndex > 0) {
-                    name = token.substring(0, equalsIndex);
+                    String name = token.substring(0, equalsIndex);
                     paramMap.put(name, token.substring(equalsIndex + 1));
                 }
             }
@@ -186,15 +189,17 @@ public final class UtilHttp {
     }
 
     public static Map<String, Object> getPathInfoOnlyParameterMap(String pathInfoStr, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip) {
-        boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip.booleanValue();
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip;
+        Map<String, Object> paramMap = new HashMap<>();
 
         // now add in all path info parameters /~name1=value1/~name2=value2/
         // note that if a parameter with a given name already exists it will be put into a list with all values
 
         if (UtilValidate.isNotEmpty(pathInfoStr)) {
             // make sure string ends with a trailing '/' so we get all values
-            if (!pathInfoStr.endsWith("/")) pathInfoStr += "/";
+            if (!pathInfoStr.endsWith("/")) {
+                pathInfoStr += "/";
+            }
 
             int current = pathInfoStr.indexOf('/');
             int last = current;
@@ -216,7 +221,7 @@ public final class UtilHttp {
                             paramList.add(value);
                         } else {
                             String paramString = (String) curValue;
-                            paramList = new LinkedList<String>();
+                            paramList = new LinkedList<>();
                             paramList.add(paramString);
                             paramList.add(value);
                         }
@@ -243,7 +248,7 @@ public final class UtilHttp {
             if (paramEntry.getValue() instanceof String) {
                 paramEntry.setValue(canonicalizeParameter((String) paramEntry.getValue()));
             } else if (paramEntry.getValue() instanceof Collection<?>) {
-                List<String> newList = new LinkedList<String>();
+                List<String> newList = new LinkedList<>();
                 for (String listEntry: UtilGenerics.<String>checkCollection(paramEntry.getValue())) {
                     newList.add(canonicalizeParameter(listEntry));
                 }
@@ -257,7 +262,9 @@ public final class UtilHttp {
         try {
             /** calling canonicalize with strict flag set to false so we only get warnings about double encoding, etc; can be set to true for exceptions and more security */
             String cannedStr = UtilCodec.canonicalize(paramValue, false);
-            if (Debug.verboseOn()) Debug.logVerbose("Canonicalized parameter with " + (cannedStr.equals(paramValue) ? "no " : "") + "change: original [" + paramValue + "] canned [" + cannedStr + "]", module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Canonicalized parameter with " + (cannedStr.equals(paramValue) ? "no " : "") + "change: original [" + paramValue + "] canned [" + cannedStr + "]", module);
+            }
             return cannedStr;
         } catch (Exception e) {
             Debug.logError(e, "Error in canonicalize parameter value [" + paramValue + "]: " + e.toString(), module);
@@ -279,7 +286,7 @@ public final class UtilHttp {
      * Added 2017-05-01.
      */
     public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> attrMap) {
-        Map<String, Object> returnMap = new HashMap<String, Object>();
+        Map<String, Object> returnMap = new HashMap<>();
         for (Map.Entry<String, Object> entry : attrMap.entrySet()) {
             String key = entry.getKey();
             Object val = entry.getValue();
@@ -287,7 +294,9 @@ public final class UtilHttp {
                 val = val.toString();
             }
             if (val instanceof String || val instanceof Number || val instanceof Map<?, ?> || val instanceof List<?> || val instanceof Boolean) {
-                if (Debug.verboseOn()) Debug.logVerbose("Adding attribute to JSON output: " + key, module);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Adding attribute to JSON output: " + key, module);
+                }
                 returnMap.put(key, val);
             }
         }
@@ -308,14 +317,15 @@ public final class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getAttributeMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        Map<String, Object> attributeMap = new HashMap<String, Object>();
+        Map<String, Object> attributeMap = new HashMap<>();
 
         // look at all request attributes
         Enumeration<String> requestAttrNames = UtilGenerics.cast(request.getAttributeNames());
         while (requestAttrNames.hasMoreElements()) {
             String attrName = requestAttrNames.nextElement();
-            if (namesToSkip != null && namesToSkip.contains(attrName))
+            if (namesToSkip != null && namesToSkip.contains(attrName)) {
                 continue;
+            }
 
             Object attrValue = request.getAttribute(attrName);
             attributeMap.put(attrName, attrValue);
@@ -342,15 +352,16 @@ public final class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getSessionMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        Map<String, Object> sessionMap = new HashMap<String, Object>();
+        Map<String, Object> sessionMap = new HashMap<>();
         HttpSession session = request.getSession();
 
         // look at all the session attributes
         Enumeration<String> sessionAttrNames = UtilGenerics.cast(session.getAttributeNames());
         while (sessionAttrNames.hasMoreElements()) {
             String attrName = sessionAttrNames.nextElement();
-            if (namesToSkip != null && namesToSkip.contains(attrName))
+            if (namesToSkip != null && namesToSkip.contains(attrName)) {
                 continue;
+            }
 
             Object attrValue = session.getAttribute(attrName);
             sessionMap.put(attrName, attrValue);
@@ -377,15 +388,16 @@ public final class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getServletContextMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        Map<String, Object> servletCtxMap = new HashMap<String, Object>();
+        Map<String, Object> servletCtxMap = new HashMap<>();
 
         // look at all servlet context attributes
         ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
         Enumeration<String> applicationAttrNames = UtilGenerics.cast(servletContext.getAttributeNames());
         while (applicationAttrNames.hasMoreElements()) {
             String attrName = applicationAttrNames.nextElement();
-            if (namesToSkip != null && namesToSkip.contains(attrName))
+            if (namesToSkip != null && namesToSkip.contains(attrName)) {
                 continue;
+            }
 
             Object attrValue = servletContext.getAttribute(attrName);
             servletCtxMap.put(attrName, attrValue);
@@ -408,7 +420,7 @@ public final class UtilHttp {
     }
 
     public static Map<String, Object> makeParamMapWithPrefix(Map<String, ? extends Object> context, Map<String, ? extends Object> additionalFields, String prefix, String suffix) {
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        Map<String, Object> paramMap = new HashMap<>();
         for (Map.Entry<String, ? extends Object> entry: context.entrySet()) {
             String parameterName = entry.getKey();
             if (parameterName.startsWith(prefix)) {
@@ -503,7 +515,7 @@ public final class UtilHttp {
     }
 
     public static List<Object> makeParamListWithSuffix(HttpServletRequest request, Map<String, ? extends Object> additionalFields, String suffix, String prefix) {
-        List<Object> paramList = new ArrayList<Object>();
+        List<Object> paramList = new ArrayList<>();
         Enumeration<String> parameterNames = UtilGenerics.cast(request.getParameterNames());
         while (parameterNames.hasMoreElements()) {
             String parameterName = parameterNames.nextElement();
@@ -587,8 +599,9 @@ public final class UtilHttp {
         StringBuilder requestUrl = new StringBuilder();
         requestUrl.append(request.getScheme());
         requestUrl.append("://" + request.getServerName());
-        if (request.getServerPort() != 80 && request.getServerPort() != 443)
+        if (request.getServerPort() != 80 && request.getServerPort() != 443) {
             requestUrl.append(":" + request.getServerPort());
+        }
         return requestUrl;
     }
 
@@ -640,7 +653,9 @@ public final class UtilHttp {
      * @return Locale The current Locale to use
      */
     public static Locale getLocale(HttpServletRequest request) {
-        if (request == null) return Locale.getDefault();
+        if (request == null) {
+            return Locale.getDefault();
+        }
         return getLocale(request, request.getSession(), null);
     }
 
@@ -651,7 +666,9 @@ public final class UtilHttp {
      * @return Locale The current Locale to use
      */
     public static Locale getLocale(HttpSession session) {
-        if (session == null) return Locale.getDefault();
+        if (session == null) {
+            return Locale.getDefault();
+        }
         return getLocale(null, session, null);
     }
 
@@ -851,18 +868,8 @@ public final class UtilHttp {
                             }
                         }
                         buf.append(UtilCodec.getEncoder("url").encode(name));
-                        /* the old way: try {
-                            buf.append(URLEncoder.encode(name, "UTF-8"));
-                        } catch (UnsupportedEncodingException e) {
-                            Debug.logError(e, module);
-                        } */
                         buf.append('=');
                         buf.append(UtilCodec.getEncoder("url").encode(valueStr));
-                        /* the old way: try {
-                            buf.append(URLEncoder.encode(valueStr, "UTF-8"));
-                        } catch (UnsupportedEncodingException e) {
-                            Debug.logError(e, module);
-                        } */
                     }
                 }
             }
@@ -871,7 +878,9 @@ public final class UtilHttp {
     }
 
     public static String getRequestUriFromTarget(String target) {
-        if (UtilValidate.isEmpty(target)) return null;
+        if (UtilValidate.isEmpty(target)) {
+            return null;
+        }
         int endOfRequestUri = target.length();
         if (target.indexOf('?') > 0) {
             endOfRequestUri = target.indexOf('?');
@@ -892,7 +901,9 @@ public final class UtilHttp {
      * @return The query string
      */
     public static String getQueryStringFromTarget(String target) {
-        if (UtilValidate.isEmpty(target)) return "";
+        if (UtilValidate.isEmpty(target)) {
+            return "";
+        }
         int queryStart = target.indexOf('?');
         if (queryStart != -1) {
             return target.substring(queryStart);
@@ -906,7 +917,9 @@ public final class UtilHttp {
      * @return The request target string
      */
     public static String removeQueryStringFromTarget(String target) {
-        if (UtilValidate.isEmpty(target)) return null;
+        if (UtilValidate.isEmpty(target)) {
+            return null;
+        }
         int queryStart = target.indexOf('?');
         if (queryStart < 0) {
             return target;
@@ -916,8 +929,12 @@ public final class UtilHttp {
 
     public static String getWebappMountPointFromTarget(String target) {
         int firstChar = 0;
-        if (UtilValidate.isEmpty(target)) return null;
-        if (target.charAt(0) == '/') firstChar = 1;
+        if (UtilValidate.isEmpty(target)) {
+            return null;
+        }
+        if (target.charAt(0) == '/') {
+            firstChar = 1;
+        }
         int pathSep = target.indexOf('/', 1);
         String webappMountPoint = null;
         if (pathSep > 0) {
@@ -963,8 +980,7 @@ public final class UtilHttp {
         long nowMillis = System.currentTimeMillis();
         response.setDateHeader("Expires", nowMillis);
         response.setDateHeader("Last-Modified", nowMillis); // always modified
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate"); // HTTP/1.1
-        response.addHeader("Cache-Control", "post-check=0, pre-check=0, false");
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private"); // HTTP/1.1
         response.setHeader("Pragma", "no-cache"); // HTTP/1.0
     }
 
@@ -997,24 +1013,15 @@ public final class UtilHttp {
         }
 
         // create the streams
-        OutputStream out = response.getOutputStream();
-        InputStream in = new ByteArrayInputStream(bytes);
 
         // stream the content
-        try {
+        try (OutputStream out = response.getOutputStream();
+                InputStream in = new ByteArrayInputStream(bytes)) {
             streamContent(out, in, bytes.length);
+            out.flush();
         } catch (IOException e) {
-            in.close();
-            out.close(); // should we close the ServletOutputStream on error??
             throw e;
         }
-
-        // close the input stream
-        in.close();
-
-        // close the servlet output stream
-        out.flush();
-        out.close();
     }
 
     public static void streamContentToBrowser(HttpServletResponse response, byte[] bytes, String contentType) throws IOException {
@@ -1046,17 +1053,12 @@ public final class UtilHttp {
         }
 
         // stream the content
-        OutputStream out = response.getOutputStream();
-        try {
+        try (OutputStream out = response.getOutputStream()) {
             streamContent(out, in, length);
+            out.flush();
         } catch (IOException e) {
-            out.close();
             throw e;
         }
-
-        // close the servlet output stream
-        out.flush();
-        out.close();
     }
 
     public static void streamContentToBrowser(HttpServletResponse response, InputStream in, int length, String contentType) throws IOException {
@@ -1073,8 +1075,6 @@ public final class UtilHttp {
      * @throws IOException
      */
     public static void streamContent(OutputStream out, InputStream in, int length) throws IOException {
-        int bufferSize = 512; // same as the default buffer size; change as needed
-
         // make sure we have something to write to
         if (out == null) {
             throw new IOException("Attempt to write to null output stream");
@@ -1091,28 +1091,19 @@ public final class UtilHttp {
         }
 
         // initialize the buffered streams
-        BufferedOutputStream bos = new BufferedOutputStream(out, bufferSize);
-        BufferedInputStream bis = new BufferedInputStream(in, bufferSize);
-
-        byte[] buffer = new byte[length];
+        // SCIPIO: 2018-08-30: not available from base at current time (FIXME?)
+        //int bufferSize = EntityUtilProperties.getPropertyAsInteger("content", "stream.buffersize", 8192);
+        int bufferSize = UtilProperties.getPropertyAsInteger("content", "stream.buffersize", 8192);
+        byte[] buffer = new byte[bufferSize];
         int read = 0;
-        try {
+        try (BufferedOutputStream bos = new BufferedOutputStream(out, bufferSize);
+                BufferedInputStream bis = new BufferedInputStream(in, bufferSize)) {
             while ((read = bis.read(buffer, 0, buffer.length)) != -1) {
                 bos.write(buffer, 0, read);
             }
         } catch (IOException e) {
             Debug.logError(e, "Problem reading/writing buffers", module);
-            bis.close();
-            bos.close();
             throw e;
-        } finally {
-            if (bis != null) {
-                bis.close();
-            }
-            if (bos != null) {
-                bos.flush();
-                bos.close();
-            }
         }
     }
 
@@ -1121,7 +1112,7 @@ public final class UtilHttp {
     }
 
     public static String stripViewParamsFromQueryString(String queryString, String paginatorNumber) {
-        Set<String> paramNames = new HashSet<String>();
+        Set<String> paramNames = new HashSet<>();
         if (UtilValidate.isNotEmpty(paginatorNumber)) {
             paginatorNumber = "_" + paginatorNumber;
         }
@@ -1167,19 +1158,28 @@ public final class UtilHttp {
      * index of the row.
      */
     public static Collection<Map<String, Object>> parseMultiFormData(Map<String, Object> parameters) {
-        Map<Integer, Map<String, Object>> rows = new HashMap<Integer, Map<String, Object>>(); // stores the rows keyed by row number
+        Map<Integer, Map<String, Object>> rows = new HashMap<>(); // stores the rows keyed by row number
 
         // first loop through all the keys and create a hashmap for each ${ROW_SUBMIT_PREFIX}${N} = Y
-        for (String key: parameters.keySet()) {
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            String key = entry.getKey();
             // skip everything that is not ${ROW_SUBMIT_PREFIX}N
-            if (key == null || key.length() <= ROW_SUBMIT_PREFIX_LENGTH) continue;
-            if (key.indexOf(MULTI_ROW_DELIMITER) <= 0) continue;
-            if (!key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) continue;
-            if (!parameters.get(key).equals("Y")) continue;
+            if (key == null || key.length() <= ROW_SUBMIT_PREFIX_LENGTH) {
+                continue;
+            }
+            if (key.indexOf(MULTI_ROW_DELIMITER) <= 0) {
+                continue;
+            }
+            if (!key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) {
+                continue;
+            }
+            if (!"Y".equals(entry.getValue())) {
+                continue;
+            }
 
             // decode the value of N and create a new map for it
             Integer n = Integer.decode(key.substring(ROW_SUBMIT_PREFIX_LENGTH, key.length()));
-            Map<String, Object> m = new HashMap<String, Object>();
+            Map<String, Object> m = new HashMap<>();
             m.put("row", n); // special "row" = N tuple
             rows.put(n, m); // key it to N
         }
@@ -1188,15 +1188,23 @@ public final class UtilHttp {
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             String key = entry.getKey();
             // skip keys without DELIMITER and skip ROW_SUBMIT_PREFIX
-            if (key == null) continue;
+            if (key == null) {
+                continue;
+            }
             int index = key.indexOf(MULTI_ROW_DELIMITER);
-            if (index <= 0) continue;
-            if (key.length() > ROW_SUBMIT_PREFIX_LENGTH && key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) continue;
+            if (index <= 0) {
+                continue;
+            }
+            if (key.length() > ROW_SUBMIT_PREFIX_LENGTH && key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) {
+                continue;
+            }
 
             // get the map with index N
             Integer n = Integer.decode(key.substring(index + MULTI_ROW_DELIMITER_LENGTH, key.length())); // N from ${param}${DELIMITER}${N}
             Map<String, Object> map = rows.get(n);
-            if (map == null) continue;
+            if (map == null) {
+                continue;
+            }
 
             // get the key without the <DELIMITER>N suffix and store it and its value
             String newKey = key.substring(0, index);
@@ -1211,7 +1219,7 @@ public final class UtilHttp {
      * multi form parameters (usually named according to the ${param}_o_N notation).
      */
     public static <V> Map<String, V> removeMultiFormParameters(Map<String, V> parameters) {
-        Map<String, V> filteredParameters = new HashMap<String, V>();
+        Map<String, V> filteredParameters = new HashMap<>();
         for (Map.Entry<String, V> entry : parameters.entrySet()) {
             String key = entry.getKey();
             if (key != null && (key.indexOf(MULTI_ROW_DELIMITER) != -1 || key.indexOf("_useRowSubmit") != -1 || key.indexOf("_rowCount") != -1)) {
@@ -1225,7 +1233,7 @@ public final class UtilHttp {
 
     /**
      * Utility to make a composite parameter from the given prefix and suffix.
-     * The prefix should be a regular paramter name such as meetingDate. The
+     * The prefix should be a regular parameter name such as meetingDate. The
      * suffix is the composite field, such as the hour of the meeting. The
      * result would be meetingDate_${COMPOSITE_DELIMITER}_hour.
      *
@@ -1244,9 +1252,9 @@ public final class UtilHttp {
      *
      * <pre>
      * {@code
-     *   <field name="meetingDate">
+     * <field name="meetingDate">
      *     <date-time type="timestamp" input-method="time-dropdown">
-     *   </field>
+     * </field>
      * }
      * </pre>
      *
@@ -1262,13 +1270,17 @@ public final class UtilHttp {
      */
     public static Object makeParamValueFromComposite(HttpServletRequest request, String prefix, Locale locale) {
         String compositeType = request.getParameter(makeCompositeParam(prefix, "compositeType"));
-        if (UtilValidate.isEmpty(compositeType)) return null;
+        if (UtilValidate.isEmpty(compositeType)) {
+            return null;
+        }
 
         // collect the composite fields into a map
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
         for (Enumeration<String> names = UtilGenerics.cast(request.getParameterNames()); names.hasMoreElements();) {
             String name = names.nextElement();
-            if (!name.startsWith(prefix + COMPOSITE_DELIMITER)) continue;
+            if (!name.startsWith(prefix + COMPOSITE_DELIMITER)) {
+                continue;
+            }
 
             // extract the suffix of the composite name
             String suffix = name.substring(name.indexOf(COMPOSITE_DELIMITER) + COMPOSITE_DELIMITER_LENGTH);
@@ -1287,9 +1299,15 @@ public final class UtilHttp {
             String hour = data.get("hour");
             String minutes = data.get("minutes");
             String ampm = data.get("ampm");
-            if (date == null || date.length() < 10) return null;
-            if (UtilValidate.isEmpty(hour)) return null;
-            if (UtilValidate.isEmpty(minutes)) return null;
+            if (date == null || date.length() < 10) {
+                return null;
+            }
+            if (UtilValidate.isEmpty(hour)) {
+                return null;
+            }
+            if (UtilValidate.isEmpty(minutes)) {
+                return null;
+            }
             boolean isTwelveHour = UtilValidate.isNotEmpty(ampm);
 
             // create the timestamp from the data
@@ -1300,8 +1318,12 @@ public final class UtilHttp {
                 cal.setTime(timestamp);
                 if (isTwelveHour) {
                     boolean isAM = ("AM".equals(ampm) ? true : false);
-                    if (isAM && h == 12) h = 0;
-                    if (!isAM && h < 12) h += 12;
+                    if (isAM && h == 12) {
+                        h = 0;
+                    }
+                    if (!isAM && h < 12) {
+                        h += 12;
+                    }
                 }
                 cal.set(Calendar.HOUR_OF_DAY, h);
                 cal.set(Calendar.MINUTE, Integer.parseInt(minutes));
@@ -1354,27 +1376,25 @@ public final class UtilHttp {
         if (UtilValidate.isNotEmpty(spiderRequest)) {
             if ("Y".equals(spiderRequest)) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            String initialUserAgent = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
-            List<String> spiderList = StringUtil.split(UtilProperties.getPropertyValue("url", "link.remove_lsessionid.user_agent_list"), ",");
+            return false;
+        }
+        String initialUserAgent = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
+        List<String> spiderList = StringUtil.split(UtilProperties.getPropertyValue("url", "link.remove_lsessionid.user_agent_list"), ",");
 
-            if (UtilValidate.isNotEmpty(spiderList)) {
-                for (String spiderNameElement : spiderList) {
-                    Pattern pattern = null;
-                    try {
-                        pattern = PatternFactory.createOrGetPerl5CompiledPattern(spiderNameElement, false);
-                    } catch (MalformedPatternException e) {
-                        Debug.logError(e, module);
-                    }
-                    PatternMatcher matcher = new Perl5Matcher();
-                    if (matcher.contains(initialUserAgent, pattern)) {
-                        request.setAttribute("_REQUEST_FROM_SPIDER_", "Y");
-                        result = true;
-                        break;
-                    }
+        if (UtilValidate.isNotEmpty(spiderList)) {
+            for (String spiderNameElement : spiderList) {
+                Pattern pattern = null;
+                try {
+                    pattern = PatternFactory.createOrGetPerl5CompiledPattern(spiderNameElement, false);
+                } catch (MalformedPatternException e) {
+                    Debug.logError(e, module);
+                }
+                PatternMatcher matcher = new Perl5Matcher();
+                if (matcher.contains(initialUserAgent, pattern)) {
+                    request.setAttribute("_REQUEST_FROM_SPIDER_", "Y");
+                    result = true;
+                    break;
                 }
             }
         }
@@ -1394,7 +1414,7 @@ public final class UtilHttp {
         HttpSession session = request.getSession();
         Boolean javaScriptEnabled = (Boolean) session.getAttribute("javaScriptEnabled");
         if (javaScriptEnabled != null) {
-            return javaScriptEnabled.booleanValue();
+            return javaScriptEnabled;
         }
         // SCIPIO: 2018-06-07: javascript should be assumed enabled by default in Scipio, unless detected as off
         //return false;
@@ -1442,7 +1462,7 @@ public final class UtilHttp {
         HttpSession session = request.getSession();
         Map<String, Map<String, Object>> paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
         if (paramMapStore == null) {
-            paramMapStore = new HashMap<String, Map<String, Object>>();
+            paramMapStore = new HashMap<>();
             session.setAttribute("_PARAM_MAP_STORE_", paramMapStore);
         }
         Map<String, Object> parameters = getParameterMap(request);
@@ -1477,16 +1497,42 @@ public final class UtilHttp {
     public static String getNextUniqueId(HttpServletRequest request) {
         Integer uniqueIdNumber= (Integer)request.getAttribute("UNIQUE_ID");
         if (uniqueIdNumber == null) {
-            uniqueIdNumber = Integer.valueOf(1);
+            uniqueIdNumber = 1;
         }
 
-        request.setAttribute("UNIQUE_ID", Integer.valueOf(uniqueIdNumber.intValue() + 1));
+        request.setAttribute("UNIQUE_ID", uniqueIdNumber + 1);
         return "autoId_" + uniqueIdNumber;
     }
     
     public static void setContentDisposition(final HttpServletResponse response, final String filename) {
         String dispositionType = UtilProperties.getPropertyValue("requestHandler", "content-disposition-type", "attachment");
         response.setHeader("Content-Disposition", String.format("%s; filename=\"%s\"", dispositionType, filename));
+    }
+
+    public static CloseableHttpClient getAllowAllHttpClient() {
+        return getAllowAllHttpClient("component://base/config/ofbizssl.jks", "changeit");
+    }
+
+    public static CloseableHttpClient getAllowAllHttpClient(String jksStoreFileName, String jksStorePassword) {
+        try {
+            // Trust own CA and all self-signed certs
+            SSLContext sslContext = SSLContexts.custom()
+                    .loadTrustMaterial(FileUtil.getFile(jksStoreFileName), jksStorePassword.toCharArray(),
+                            new TrustSelfSignedStrategy())
+                    .build();
+            // No host name verifier
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                    sslContext,
+                    NoopHostnameVerifier.INSTANCE);
+            CloseableHttpClient httpClient = HttpClients.custom()
+                    .setSSLSocketFactory(sslsf)
+                    .build();
+            return httpClient;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            return HttpClients.createDefault();
+        }
     }
 
     public static String getMultiRowDelimiter() {

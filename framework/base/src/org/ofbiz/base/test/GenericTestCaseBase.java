@@ -44,7 +44,7 @@ public abstract class GenericTestCaseBase extends TestCase {
     }
 
     public static void useAllMemory() throws Exception {
-        List<long[]> dummy = new LinkedList<long[]>();
+        List<long[]> dummy = new LinkedList<>();
         try {
             do {
                 dummy.add(new long[1048576]);
@@ -123,7 +123,9 @@ public abstract class GenericTestCaseBase extends TestCase {
             assertEqualsListArray(msg, wanted, got);
             return;
         }
-        if (!(got instanceof Collection<?>)) fail(msg + "expected a collection, got a " + got.getClass());
+        if (!(got instanceof Collection<?>)) {
+            fail(msg + "expected a collection, got a " + got.getClass());
+        }
         Iterator<T> leftIt = wanted.iterator();
         Iterator<?> rightIt = ((Collection<?>) got).iterator();
         int i = 0;
@@ -144,17 +146,27 @@ public abstract class GenericTestCaseBase extends TestCase {
     public static <T> void assertEquals(String msg, Collection<T> wanted, Object got) {
         if (wanted instanceof List<?> || wanted instanceof Set<?>) {
             // list.equals(list) and set.equals(set), see docs for Collection.equals
-            if (got instanceof Set<?>) fail("Not a collection, is a set");
-            if (got instanceof List<?>) fail("Not a collection, is a list");
+            if (got instanceof Set<?>) {
+                fail("Not a collection, is a set");
+            }
+            if (got instanceof List<?>) {
+                fail("Not a collection, is a list");
+            }
         }
-        if (wanted.equals(got)) return;
-        if (!(got instanceof Collection<?>)) fail(msg + "not a collection");
+        if (wanted.equals(got)) {
+            return;
+        }
+        if (!(got instanceof Collection<?>)) {
+            fail(msg + "not a collection");
+        }
         // Need to check the reverse, wanted may not implement equals,
         // which is the case for HashMap.values()
-        if (got.equals(wanted)) return;
+        if (got.equals(wanted)) {
+            return;
+        }
         msg = msg == null ? "" : msg + ' ';
         assertNotNull(msg + "expected a value", got);
-        List<T> list = new ArrayList<T>(wanted);
+        List<T> list = new ArrayList<>(wanted);
         Iterator<?> rightIt = ((Collection<?>) got).iterator();
 OUTER:
         while (rightIt.hasNext()) {
@@ -173,7 +185,9 @@ OUTER:
             }
             fail(msg + "couldn't find " + right);
         }
-        if (!list.isEmpty()) fail(msg + "not enough items: " + list);
+        if (!list.isEmpty()) {
+            fail(msg + "not enough items: " + list);
+        }
     }
 
     public static <T> void assertEquals(Set<T> wanted, Object got) {
@@ -181,14 +195,20 @@ OUTER:
     }
 
     public static <T> void assertEquals(String msg, Set<T> wanted, Object got) {
-        if (wanted.equals(got)) return;
-        if (!(got instanceof Set<?>)) fail(msg + "not a set");
+        if (wanted.equals(got)) {
+            return;
+        }
+        if (!(got instanceof Set<?>)) {
+            fail(msg + "not a set");
+        }
         // Need to check the reverse, wanted may not implement equals,
         // which is the case for HashMap.values()
-        if (got.equals(wanted)) return;
+        if (got.equals(wanted)) {
+            return;
+        }
         msg = msg == null ? "" : msg + ' ';
         assertNotNull(msg + "expected a value", got);
-        Set<T> wantedSet = new HashSet<T>(wanted);
+        Set<T> wantedSet = new HashSet<>(wanted);
         Iterator<?> rightIt = ((Set<?>) got).iterator();
         while (rightIt.hasNext()) {
             Object right = rightIt.next();
@@ -198,7 +218,9 @@ OUTER:
                 fail(msg + "couldn't find " + right);
             }
         }
-        if (!wantedSet.isEmpty()) fail(msg + "not enough items: " + wantedSet);
+        if (!wantedSet.isEmpty()) {
+            fail(msg + "not enough items: " + wantedSet);
+        }
     }
 
     private static <T> void assertEqualsArrayArray(String msg, Object wanted, Object got) {
@@ -296,11 +318,13 @@ OUTER:
     public static <T> void assertEquals(String msg, Map<T, ?> wanted, Object got) {
         msg = msg == null ? "" : msg + ' ';
         assertNotNull(msg + "expected a value", got);
-        if (!(got instanceof Map<?, ?>)) fail(msg + "expected a map");
+        if (!(got instanceof Map<?, ?>)) {
+            fail(msg + "expected a map");
+        }
         Map<?, ?> gotMap = (Map<?, ?>) got;
         if (!got.equals(wanted)) {
-            Set<T> leftKeys = new LinkedHashSet<T>(wanted.keySet());
-            Set<Object> rightKeys = new HashSet<Object>(gotMap.keySet());
+            Set<T> leftKeys = new LinkedHashSet<>(wanted.keySet());
+            Set<Object> rightKeys = new HashSet<>(gotMap.keySet());
             for (T key: leftKeys) {
                 assertTrue(msg + "got key(" + key + ")", rightKeys.remove(key));
                 assertEquals(msg + "key(" + key + ") value", wanted.get(key), gotMap.get(key));
@@ -345,25 +369,25 @@ OUTER:
     }
 
     public static <T> List<T> list(T value) {
-        List<T> list = new ArrayList<T>(1);
+        List<T> list = new ArrayList<>(1);
         list.add(value);
         return list;
     }
 
     @SafeVarargs
     public static <T> List<T> list(T... list) {
-        return new ArrayList<T>(Arrays.asList(list));
+        return new ArrayList<>(Arrays.asList(list));
     }
 
     public static <T> Set<T> set(T value) {
-        Set<T> set = new HashSet<T>(1);
+        Set<T> set = new HashSet<>(1);
         set.add(value);
         return set;
     }
 
     @SafeVarargs
     public static <T> Set<T> set(T... list) {
-        return new HashSet<T>(Arrays.asList(list));
+        return new HashSet<>(Arrays.asList(list));
     }
 
     public static <T> Set<T> set(Iterable<T> iterable) {
@@ -371,7 +395,7 @@ OUTER:
     }
 
     public static <T> Set<T> set(Iterator<T> it) {
-        Set<T> set = new HashSet<T>();
+        Set<T> set = new HashSet<>();
         while (it.hasNext()) {
             T item = it.next();
             set.add(item);
@@ -382,7 +406,7 @@ OUTER:
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> map(Object... list) {
         assertEquals("list has even number of elements", 0, list.length % 2);
-        Map<K, V> map = new LinkedHashMap<K, V>();
+        Map<K, V> map = new LinkedHashMap<>();
         for (int i = 0; i < list.length; i += 2) {
             map.put((K) list[i], (V) list[i + 1]);
         }

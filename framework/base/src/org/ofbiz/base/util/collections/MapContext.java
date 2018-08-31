@@ -306,6 +306,16 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         return null;
     }
 
+    /**
+     * SCIPIO: Gets from top of stack only
+     */
+    protected V getFromTopOnly(K name) {
+        if (this.stackList.size() == 0) {
+            return null;
+        }
+        return this.stackList.get(stackList.size() - 1).get(name);
+    }
+
     /* (non-Javadoc)
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */

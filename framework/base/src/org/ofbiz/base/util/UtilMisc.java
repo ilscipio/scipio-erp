@@ -48,11 +48,11 @@ import org.ofbiz.base.util.collections.MapComparator;
 /**
  * UtilMisc - Misc Utility Functions
  */
-public class UtilMisc {
+public final class UtilMisc {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final BigDecimal ZERO_BD = BigDecimal.ZERO;
+    public static final BigDecimal ZERO_BD = BigDecimal.ZERO; // SCIPIO: 2018-08-30: keeping public for backward-compat
 
     private UtilMisc () {}
 
@@ -65,12 +65,10 @@ public class UtilMisc {
         if (obj1 == null) {
             if (obj2 == null) {
                 return 0;
-            } else {
-                return 1;
             }
-        } else {
-            return obj1.compareTo(obj2);
+            return 1;
         }
+        return obj1.compareTo(obj2);
     }
 
     public static <E> int compare(List<E> obj1, List<E> obj2) {
@@ -82,7 +80,11 @@ public class UtilMisc {
                 return 0;
             }
 
-        } catch (Exception e) {}
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            Debug.log(e, module);
+        }
         return 1;
     }
 
@@ -92,58 +94,10 @@ public class UtilMisc {
      * @return The resulting Iterator
      */
     public static <T> Iterator<T> toIterator(Collection<T> col) {
-        if (col == null)
+        if (col == null) {
             return null;
-        else
-            return col.iterator();
-    }
-
-    /**
-     * Create a map from passed nameX, valueX parameters
-     * @return The resulting Map
-     */
-    public static <V, V1 extends V> Map<String, V> toMap(String name1, V1 value1) {
-        return populateMap(new HashMap<String, V>(), name1, value1);
-    }
-
-    /**
-     * Create a map from passed nameX, valueX parameters
-     * @return The resulting Map
-     */
-    public static <V, V1 extends V, V2 extends V> Map<String, V> toMap(String name1, V1 value1, String name2, V2 value2) {
-        return populateMap(new HashMap<String, V>(), name1, value1, name2, value2);
-    }
-
-    /**
-     * Create a map from passed nameX, valueX parameters
-     * @return The resulting Map
-     */
-    public static <V, V1 extends V, V2 extends V, V3 extends V> Map<String, V> toMap(String name1, V1 value1, String name2, V2 value2, String name3, V3 value3) {
-        return populateMap(new HashMap<String, V>(), name1, value1, name2, value2, name3, value3);
-    }
-
-    /**
-     * Create a map from passed nameX, valueX parameters
-     * @return The resulting Map
-     */
-    public static <V, V1 extends V, V2 extends V, V3 extends V, V4 extends V> Map<String, V> toMap(String name1, V1 value1, String name2, V2 value2, String name3, V3 value3, String name4, V4 value4) {
-        return populateMap(new HashMap<String, V>(), name1, value1, name2, value2, name3, value3, name4, value4);
-    }
-
-    /**
-     * Create a map from passed nameX, valueX parameters
-     * @return The resulting Map
-     */
-    public static <V, V1 extends V, V2 extends V, V3 extends V, V4 extends V, V5 extends V> Map<String, V> toMap(String name1, V1 value1, String name2, V2 value2, String name3, V3 value3, String name4, V4 value4, String name5, V5 value5) {
-        return populateMap(new HashMap<String, V>(), name1, value1, name2, value2, name3, value3, name4, value4, name5, value5);
-    }
-
-    /**
-     * Create a map from passed nameX, valueX parameters
-     * @return The resulting Map
-     */
-    public static <V, V1 extends V, V2 extends V, V3 extends V, V4 extends V, V5 extends V, V6 extends V> Map<String, V> toMap(String name1, V1 value1, String name2, V2 value2, String name3, V3 value3, String name4, V4 value4, String name5, V5 value5, String name6, V6 value6) {
-        return populateMap(new HashMap<String, V>(), name1, value1, name2, value2, name3, value3, name4, value4, name5, value5, name6, value6);
+        }
+        return col.iterator();
     }
 
     /**
@@ -151,28 +105,18 @@ public class UtilMisc {
      * @return The resulting Map
      */
     @SuppressWarnings("unchecked")
-    public static <K, V> Map<String, V> toMap(Object... data) {
+    public static <K, V> Map<K, V> toMap(Object... data) {
         if (data.length == 1 && data[0] instanceof Map) {
-            // Logging a warning here because a lot of code misuses this method and that code needs to be fixed.
-            //Debug.logWarning("UtilMisc.toMap called with a Map. Use UtilGenerics.checkMap instead.", module);
-            return UtilGenerics.<String, V>checkMap(data[0]);
+            return UtilGenerics.<K, V>checkMap(data[0]);
         }
         if (data.length % 2 == 1) {
             IllegalArgumentException e = new IllegalArgumentException("You must pass an even sized array to the toMap method (size = " + data.length + ")");
             Debug.logInfo(e, module);
             throw e;
         }
-        Map<String, V> map = new HashMap<String, V>();
+        Map<K, V> map = new HashMap<>();
         for (int i = 0; i < data.length;) {
-            map.put((String) data[i++], (V) data[i++]);
-        }
-        return map;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <K, V> Map<String, V> populateMap(Map<String, V> map, Object... data) {
-        for (int i = 0; i < data.length;) {
-            map.put((String) data[i++], (V) data[i++]);
+            map.put((K) data[i++], (V) data[i++]);
         }
         return map;
     }
@@ -189,23 +133,25 @@ public class UtilMisc {
     }
 
     public static <T> List<T> makeListWritable(Collection<? extends T> col) {
-        List<T> result = (col != null) ? new ArrayList<T>(col) : new ArrayList<T>(); // SCIPIO: switched to ArrayList
+        List<T> result = (col != null) ? new ArrayList<>(col) : new ArrayList<>(); // SCIPIO: switched to ArrayList
         //if (col != null) result.addAll(col);
         return result;
     }
 
     public static <K, V> Map<K, V> makeMapWritable(Map<K, ? extends V> map) {
         if (map == null) {
-            return new HashMap<K, V>();
+            return new HashMap<>();
         }
-        Map<K, V> result = new HashMap<K, V>(map.size());
+        Map<K, V> result = new HashMap<>(map.size());
         result.putAll(map);
         return result;
     }
 
     public static <T> Set<T> makeSetWritable(Collection<? extends T> col) {
-        Set<T> result = new LinkedHashSet<T>();
-        if (col != null) result.addAll(col);
+        Set<T> result = new LinkedHashSet<>();
+        if (col != null) {
+            result.addAll(col);
+        }
         return result;
     }
 
@@ -217,22 +163,18 @@ public class UtilMisc {
      */
     public static <V> void makeMapSerializable(Map<String, V> map) {
         // now filter out all non-serializable values
-        Set<String> keysToRemove = new LinkedHashSet<String>();
+        Set<String> keysToRemove = new LinkedHashSet<>();
         for (Map.Entry<String, V> mapEntry: map.entrySet()) {
             Object entryValue = mapEntry.getValue();
             if (entryValue != null && !(entryValue instanceof Serializable)) {
                 keysToRemove.add(mapEntry.getKey());
-                //Debug.logInfo("Found Map value that is not Serializable: " + mapEntry.getKey() + "=" + mapEntry.getValue(), module);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Found Map value that is not Serializable: " + mapEntry.getKey() + "=" + mapEntry.getValue(), module);
+                }
+                
             }
         }
         for (String keyToRemove: keysToRemove) { map.remove(keyToRemove); }
-        //if (!(map instanceof Serializable)) {
-        //    Debug.logInfo("Parameter Map is not Serializable!", module);
-        //}
-
-        //for (Map.Entry<String, V> mapEntry: map.entrySet()) {
-        //    Debug.logInfo("Entry in Map made serializable: " + mapEntry.getKey() + "=" + mapEntry.getValue(), module);
-        //}
     }
 
     /**
@@ -242,9 +184,10 @@ public class UtilMisc {
      * @return a new List of sorted Maps.
      */
     public static List<Map<Object, Object>> sortMaps(List<Map<Object, Object>> listOfMaps, List<? extends String> sortKeys) {
-        if (listOfMaps == null || sortKeys == null)
+        if (listOfMaps == null || sortKeys == null) {
             return null;
-        List<Map<Object, Object>> toSort = new ArrayList<Map<Object, Object>>(listOfMaps.size());
+        }
+        List<Map<Object, Object>> toSort = new ArrayList<>(listOfMaps.size());
         toSort.addAll(listOfMaps);
         try {
             MapComparator mc = new MapComparator(sortKeys);
@@ -262,7 +205,7 @@ public class UtilMisc {
     public static <K, IK, V> Map<IK, V> getMapFromMap(Map<K, Object> outerMap, K key) {
         Map<IK, V> innerMap = UtilGenerics.<IK, V>checkMap(outerMap.get(key));
         if (innerMap == null) {
-            innerMap = new HashMap<IK, V>();
+            innerMap = new HashMap<>();
             outerMap.put(key, innerMap);
         }
         return innerMap;
@@ -274,7 +217,7 @@ public class UtilMisc {
     public static <K, V> List<V> getListFromMap(Map<K, Object> outerMap, K key) {
         List<V> innerList = UtilGenerics.<V>checkList(outerMap.get(key));
         if (innerList == null) {
-            innerList = new ArrayList<V>(); // SCIPIO: switched to ArrayList
+            innerList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             outerMap.put(key, innerList);
         }
         return innerList;
@@ -291,9 +234,9 @@ public class UtilMisc {
         } else if (currentNumberObj instanceof BigDecimal) {
             currentNumber = (BigDecimal) currentNumberObj;
         } else if (currentNumberObj instanceof Double) {
-            currentNumber = new BigDecimal(((Double) currentNumberObj).doubleValue());
+            currentNumber = new BigDecimal((Double) currentNumberObj);
         } else if (currentNumberObj instanceof Long) {
-            currentNumber = new BigDecimal(((Long) currentNumberObj).longValue());
+            currentNumber = new BigDecimal((Long) currentNumberObj);
         } else {
             throw new IllegalArgumentException("In addToBigDecimalInMap found a Map value of a type not supported: " + currentNumberObj.getClass().getName());
         }
@@ -311,12 +254,14 @@ public class UtilMisc {
     }
 
     public static <T> Set<T> collectionToSet(Collection<T> c) {
-        if (c == null) return null;
+        if (c == null) {
+            return null;
+        }
         Set<T> theSet = null;
         if (c instanceof Set<?>) {
             theSet = (Set<T>) c;
         } else {
-            theSet = new LinkedHashSet<T>();
+            theSet = new LinkedHashSet<>();
             c.remove(null);
             theSet.addAll(c);
         }
@@ -324,113 +269,74 @@ public class UtilMisc {
     }
 
     /**
-     * Create a Set from passed objX parameters
-     * @return The resulting Set
+     * Generates a String from given values delimited by delimiter.
+     *
+     * @param values
+     * @param delimiter
+     * @return String
      */
-    public static <T> Set<T> toSet(T obj1) {
-        Set<T> theSet = new LinkedHashSet<T>();
-        theSet.add(obj1);
-        return theSet;
+    public static String collectionToString(Collection<? extends Object> values, String delimiter) {
+        if (UtilValidate.isEmpty(values)) {
+            return null;
+        }
+        if (delimiter == null) {
+            delimiter = "";
+        }
+        StringBuilder out = new StringBuilder();
+
+        for (Object val : values) {
+            out.append(UtilFormatOut.safeToString(val)).append(delimiter);
+        }
+        return out.toString();
     }
 
     /**
-     * Create a Set from passed objX parameters
-     * @return The resulting Set
+     * Create a set from the passed objects.
+     * @param data
+     * @return theSet
      */
-    public static <T> Set<T> toSet(T obj1, T obj2) {
-        Set<T> theSet = new LinkedHashSet<T>();
-        theSet.add(obj1);
-        theSet.add(obj2);
-        return theSet;
-    }
-
-    /**
-     * Create a Set from passed objX parameters
-     * @return The resulting Set
-     */
-    public static <T> Set<T> toSet(T obj1, T obj2, T obj3) {
-        Set<T> theSet = new LinkedHashSet<T>();
-        theSet.add(obj1);
-        theSet.add(obj2);
-        theSet.add(obj3);
-        return theSet;
-    }
-
-    /**
-     * Create a Set from passed objX parameters
-     * @return The resulting Set
-     */
-    public static <T> Set<T> toSet(T obj1, T obj2, T obj3, T obj4) {
-        Set<T> theSet = new LinkedHashSet<T>();
-        theSet.add(obj1);
-        theSet.add(obj2);
-        theSet.add(obj3);
-        theSet.add(obj4);
-        return theSet;
-    }
-
-    /**
-     * Create a Set from passed objX parameters
-     * @return The resulting Set
-     */
-    public static <T> Set<T> toSet(T obj1, T obj2, T obj3, T obj4, T obj5) {
-        Set<T> theSet = new LinkedHashSet<T>();
-        theSet.add(obj1);
-        theSet.add(obj2);
-        theSet.add(obj3);
-        theSet.add(obj4);
-        theSet.add(obj5);
-        return theSet;
-    }
-
-    /**
-     * Create a Set from passed objX parameters
-     * @return The resulting Set
-     */
-    public static <T> Set<T> toSet(T obj1, T obj2, T obj3, T obj4, T obj5, T obj6) {
-        Set<T> theSet = new LinkedHashSet<T>();
-        theSet.add(obj1);
-        theSet.add(obj2);
-        theSet.add(obj3);
-        theSet.add(obj4);
-        theSet.add(obj5);
-        theSet.add(obj6);
-        return theSet;
-    }
-    
-    public static <T> Set<T> toSet(T obj1, T obj2, T obj3, T obj4, T obj5, T obj6, T obj7, T obj8) {
-        Set<T> theSet = new LinkedHashSet<T>();
-        theSet.add(obj1);
-        theSet.add(obj2);
-        theSet.add(obj3);
-        theSet.add(obj4);
-        theSet.add(obj5);
-        theSet.add(obj6);
-        theSet.add(obj7);
-        theSet.add(obj8);
+    @SafeVarargs
+    public static <T> Set<T> toSet(T... data) {
+        if (data == null) {
+            return null;
+        }
+        Set<T> theSet = new LinkedHashSet<>();
+        for (T elem : data) {
+            theSet.add(elem);
+        }
         return theSet;
     }
 
     public static <T> Set<T> toSet(Collection<T> collection) {
-        if (collection == null) return null;
+        if (collection == null) {
+            return null;
+        }
         if (collection instanceof Set<?>) {
             return (Set<T>) collection;
-        } else {
-            Set<T> theSet = new LinkedHashSet<T>();
-            theSet.addAll(collection);
-            return theSet;
         }
+        Set<T> theSet = new LinkedHashSet<>();
+        theSet.addAll(collection);
+        return theSet;
     }
 
     public static <T> Set<T> toSetArray(T[] data) {
         if (data == null) {
             return null;
         }
-        Set<T> set = new LinkedHashSet<T>();
+        Set<T> set = new LinkedHashSet<>();
         for (T value: data) {
             set.add(value);
         }
         return set;
+    }
+
+    /**
+     * SCIPIO: Create a HashSet from passed objX parameters
+     * @return The resulting HashSet
+     */
+    @SafeVarargs
+    public static <T> Set<T> toHashSet(T... obj) {
+        return new HashSet<T>(Arrays.asList(obj));
     }
 
     /**
@@ -440,121 +346,39 @@ public class UtilMisc {
     public static <T> Set<T> toHashSet(Collection<? extends T> collection) {
         return new HashSet<T>(collection);
     }
-    
+
     /**
-     * SCIPIO: Create a HashSet from passed objX parameters
-     * @return The resulting HashSet
+     * Creates a list from passed objects.
+     * @param data
+     * @return list
      */
     @SafeVarargs
-    public static <T> Set<T> toHashSet(T... obj) {
-        return new HashSet<T>(Arrays.asList(obj));
-    }
-    
-    /**
-     * Create a list from passed objX parameters
-     * @return The resulting List
-     */
-    public static <T> List<T> toList(T obj1) {
-        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
+    public static <T> List<T> toList(T... data) {
+        if(data == null){
+            return null;
+        }
+        /* SCIPIO: switched to ArrayList
+        List<T> list = new LinkedList<>();
 
-        list.add(obj1);
+        for(T t : data){
+            list.add(t);
+        }
+
         return list;
-    }
-
-    /**
-     * Create a list from passed objX parameters
-     * @return The resulting List
-     */
-    public static <T> List<T> toList(T obj1, T obj2) {
-        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
-
-        list.add(obj1);
-        list.add(obj2);
-        return list;
-    }
-
-    /**
-     * Create a list from passed objX parameters
-     * @return The resulting List
-     */
-    public static <T> List<T> toList(T obj1, T obj2, T obj3) {
-        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
-
-        list.add(obj1);
-        list.add(obj2);
-        list.add(obj3);
-        return list;
-    }
-
-    /**
-     * Create a list from passed objX parameters
-     * @return The resulting List
-     */
-    public static <T> List<T> toList(T obj1, T obj2, T obj3, T obj4) {
-        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
-
-        list.add(obj1);
-        list.add(obj2);
-        list.add(obj3);
-        list.add(obj4);
-        return list;
-    }
-
-    /**
-     * Create a list from passed objX parameters
-     * @return The resulting List
-     */
-    public static <T> List<T> toList(T obj1, T obj2, T obj3, T obj4, T obj5) {
-        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
-
-        list.add(obj1);
-        list.add(obj2);
-        list.add(obj3);
-        list.add(obj4);
-        list.add(obj5);
-        return list;
-    }
-
-    /**
-     * Create a list from passed objX parameters
-     * @return The resulting List
-     */
-    public static <T> List<T> toList(T obj1, T obj2, T obj3, T obj4, T obj5, T obj6) {
-        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
-
-        list.add(obj1);
-        list.add(obj2);
-        list.add(obj3);
-        list.add(obj4);
-        list.add(obj5);
-        list.add(obj6);
-        return list;
-    }
-    
-    public static <T> List<T> toList(T obj1, T obj2, T obj3, T obj4, T obj5, T obj6, T obj7, T obj8, T obj9) {
-        List<T> list = new ArrayList<T>(); // SCIPIO: switched to ArrayList
-
-        list.add(obj1);
-        list.add(obj2);
-        list.add(obj3);
-        list.add(obj4);
-        list.add(obj5);
-        list.add(obj6);
-        list.add(obj7);
-        list.add(obj8);
-        list.add(obj9);
-        return list;
+        */
+        return new ArrayList<>(Arrays.asList(data));
     }
 
     public static <T> List<T> toList(Collection<T> collection) {
-        if (collection == null) return null;
+        if (collection == null) {
+            return null;
+        }
         if (collection instanceof List<?>) {
             return (List<T>) collection;
-        } else {
-            List<T> list = new ArrayList<T>(collection); // SCIPIO: switched to ArrayList
-            //collection.list.addAll(collection);
-            return list;
         }
+        List<T> list = new ArrayList<>(collection); // SCIPIO: switched to ArrayList
+        //collection.list.addAll(collection);
+        return list;
     }
 
     public static <T> List<T> toListArray(T[] data) {
@@ -571,7 +395,7 @@ public class UtilMisc {
     public static <K, V> void addToListInMap(V element, Map<K, Object> theMap, K listKey) {
         List<V> theList = UtilGenerics.checkList(theMap.get(listKey));
         if (theList == null) {
-            theList = new ArrayList<V>(); // SCIPIO: switched to ArrayList
+            theList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             theMap.put(listKey, theList);
         }
         theList.add(element);
@@ -580,7 +404,7 @@ public class UtilMisc {
     public static <K, V> void addToSetInMap(V element, Map<K, Set<V>> theMap, K setKey) {
         Set<V> theSet = UtilGenerics.checkSet(theMap.get(setKey));
         if (theSet == null) {
-            theSet = new LinkedHashSet<V>();
+            theSet = new LinkedHashSet<>();
             theMap.put(setKey, theSet);
         }
         theSet.add(element);
@@ -589,7 +413,7 @@ public class UtilMisc {
     public static <K, V> void addToSortedSetInMap(V element, Map<K, Set<V>> theMap, K setKey) {
         Set<V> theSet = UtilGenerics.checkSet(theMap.get(setKey));
         if (theSet == null) {
-            theSet = new TreeSet<V>();
+            theSet = new TreeSet<>();
             theMap.put(setKey, theSet);
         }
         theSet.add(element);
@@ -602,7 +426,7 @@ public class UtilMisc {
      */
     public static double toDouble(Object obj) {
         Double result = toDoubleObject(obj);
-        return result == null ? 0.0 : result.doubleValue();
+        return result == null ? 0.0 : result;
     }
 
     /** Converts an <code>Object</code> to a <code>Double</code>. Returns
@@ -618,7 +442,7 @@ public class UtilMisc {
             return (Double) obj;
         }
         if (obj instanceof Number) {
-            return new Double(((Number)obj).doubleValue());
+            return ((Number) obj).doubleValue();
         }
         Double result = null;
         try {
@@ -634,7 +458,7 @@ public class UtilMisc {
      */
     public static int toInteger(Object obj) {
         Integer result = toIntegerObject(obj);
-        return result == null ? 0 : result.intValue();
+        return result == null ? 0 : result;
     }
 
     /** Converts an <code>Object</code> to an <code>Integer</code>. Returns
@@ -666,7 +490,7 @@ public class UtilMisc {
      */
     public static long toLong(Object obj) {
         Long result = toLongObject(obj);
-        return result == null ? 0 : result.longValue();
+        return result == null ? 0 : result;
     }
 
     /** Converts an <code>Object</code> to a <code>Long</code>. Returns
@@ -682,7 +506,7 @@ public class UtilMisc {
             return (Long) obj;
         }
         if (obj instanceof Number) {
-            return new Long(((Number)obj).longValue());
+            return ((Number) obj).longValue();
         }
         Long result = null;
         try {
@@ -719,12 +543,12 @@ public class UtilMisc {
         Locale locale = null;
         if (localeString.length() == 2) {
             // two letter language code
-            locale = new Locale(localeString);
+            locale = new Locale.Builder().setLanguage(localeString).build();
         } else if (localeString.length() == 5) {
             // positions 0-1 language, 3-4 are country
             String language = localeString.substring(0, 2);
             String country = localeString.substring(3, 5);
-            locale = new Locale(language, country);
+            locale = new Locale.Builder().setLanguage(language).setRegion(country).build();
         } else if (localeString.length() > 6) {
             // positions 0-1 language, 3-4 are country, 6 and on are special extensions
             String language = localeString.substring(0, 2);
@@ -764,7 +588,7 @@ public class UtilMisc {
         private static final List<Locale> availableLocaleExpandedCountryOptionalList = getAvailableLocaleExpandedCountryOptionalList();
         
         private static List<Locale> getAvailableLocaleList() {
-            TreeMap<String, Locale> localeMap = new TreeMap<String, Locale>();
+            TreeMap<String, Locale> localeMap = new TreeMap<>();
             String localesString = UtilProperties.getPropertyValue("general", "locales.available");
             if (UtilValidate.isNotEmpty(localesString)) {
                 List<String> idList = StringUtil.split(localesString, ",");
@@ -781,7 +605,7 @@ public class UtilMisc {
                     }
                 }
             }
-            return Collections.unmodifiableList(new ArrayList<Locale>(localeMap.values()));
+            return Collections.unmodifiableList(new ArrayList<>(localeMap.values()));
         }
         
         /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes (added 2017-10-11) */
@@ -799,7 +623,7 @@ public class UtilMisc {
         
         /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes and also without country codes (added 2017-10-11) */
         private static List<Locale> getAvailableLocaleExpandedCountryOptionalList() {
-            TreeMap<String, Locale> localeMap = new TreeMap<String, Locale>();
+            TreeMap<String, Locale> localeMap = new TreeMap<>();
             String localesString = UtilProperties.getPropertyValue("general", "locales.available");
             if (UtilValidate.isNotEmpty(localesString)) {
                 List<String> idList = StringUtil.split(localesString, ",");
@@ -829,7 +653,7 @@ public class UtilMisc {
                     }
                 }
             }
-            return Collections.unmodifiableList(new ArrayList<Locale>(localeMap.values()));
+            return Collections.unmodifiableList(new ArrayList<>(localeMap.values()));
         }
     }
 
@@ -859,31 +683,62 @@ public class UtilMisc {
     public static void copyFile(File sourceLocation , File targetLocation) throws IOException {
         if (sourceLocation.isDirectory()) {
             throw new IOException("File is a directory, not a file, cannot copy") ;
-        } else {
-
-            InputStream in = new FileInputStream(sourceLocation);
-            OutputStream out = new FileOutputStream(targetLocation);
-
+        }
+        try (
+                InputStream in = new FileInputStream(sourceLocation);
+                OutputStream out = new FileOutputStream(targetLocation);
+        ) {
             // Copy the bits from instream to outstream
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
-            in.close();
-            out.close();
         }
     }
 
     public static int getViewLastIndex(int listSize, int viewSize) {
         return (int)Math.ceil(listSize / (float) viewSize) - 1;
     }
-    
+
+    // SCIPIO: 2018-08-30: these methods cannot exist here because Delegator
+    // is not available from base component; they are moved to:
+    // org.ofbiz.common.address.AddressUtil
+//    public static Map<String, String> splitPhoneNumber(String phoneNumber, Delegator delegator) {
+//        Map<String, String> result = new HashMap<>();
+//        try {
+//            PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+//            String defaultCountry = EntityUtilProperties.getPropertyValue("general", "country.geo.id.default", delegator);
+//            GenericValue defaultGeo = EntityQuery.use(delegator).from("Geo").where("geoId", defaultCountry).cache().queryOne();
+//            String defaultGeoCode = defaultGeo != null ? defaultGeo.getString("geoCode") : "US";
+//            PhoneNumber phNumber = phoneUtil.parse(phoneNumber, defaultGeoCode);
+//            if (phoneUtil.isValidNumber(phNumber) || phoneUtil.isPossibleNumber(phNumber)) {
+//                String nationalSignificantNumber = phoneUtil.getNationalSignificantNumber(phNumber);
+//                int areaCodeLength = phoneUtil.getLengthOfGeographicalAreaCode(phNumber);
+//                result.put("countryCode", Integer.toString(phNumber.getCountryCode()));
+//                if (areaCodeLength > 0) {
+//                    result.put("areaCode", nationalSignificantNumber.substring(0, areaCodeLength));
+//                    result.put("contactNumber", nationalSignificantNumber.substring(areaCodeLength));
+//                } else {
+//                    result.put("areaCode", "");
+//                    result.put("contactNumber", nationalSignificantNumber);
+//                }
+//            } else {
+//                Debug.logError("Invalid phone number " + phoneNumber, module);
+//                result.put(ModelService.ERROR_MESSAGE, "Invalid phone number");
+//            }
+//        } catch (GenericEntityException | NumberParseException ex) {
+//            Debug.logError(ex, module);
+//            result.put(ModelService.ERROR_MESSAGE, ex.getMessage());
+//        }
+//        return result;
+//    }
+
     /**
      * SCIPIO: Gets map entries matching the given prefix.
      */
     public static Map<String, Object> getPrefixedMapEntries(Map<String, Object> map, String prefix) {
-        Map<String, Object> res = new HashMap<String, Object>();
+        Map<String, Object> res = new HashMap<>();
         for(Map.Entry<String, Object> entry : map.entrySet()) {
             String name = entry.getKey();
             if (name != null && name.startsWith(prefix)) {
@@ -903,7 +758,7 @@ public class UtilMisc {
      * is of the same type as the other toMap calls in this class.
      */
     public static <K, V> Map<K, V> newMap() {
-        return new HashMap<K, V>();
+        return new HashMap<>();
     }
     
     /**
@@ -914,7 +769,7 @@ public class UtilMisc {
      * @see #newMap()
      */
     public static <K, V> Map<K, V> newMap(Map<? extends K, ? extends V> map) {
-        return new HashMap<K, V>(map);
+        return new HashMap<>(map);
     }
     
     /**
@@ -926,7 +781,7 @@ public class UtilMisc {
      * @see #newMap()
      */
     public static <K, V> Map<K, V> newMap(int initialCapacity) {
-        return new HashMap<K, V>(initialCapacity);
+        return new HashMap<>(initialCapacity);
     }
     
     /**
@@ -938,7 +793,7 @@ public class UtilMisc {
      * is of the same type as the other toMap calls in this class.
      */
     public static <K, V> Map<K, V> newInsertOrderMap() {
-        return new LinkedHashMap<K, V>();
+        return new LinkedHashMap<>();
     }
     
     /**
@@ -949,7 +804,7 @@ public class UtilMisc {
      * @see #newInsertOrderMap()
      */
     public static <K, V> Map<K, V> newInsertOrderMap(Map<? extends K, ? extends V> map) {
-        return new LinkedHashMap<K, V>(map);
+        return new LinkedHashMap<>(map);
     }
     
     /**
@@ -968,7 +823,7 @@ public class UtilMisc {
      * is of a type common used by Scipio code.
      */
     public static <V> List<V> newList() {
-        return new ArrayList<V>(); // new LinkedList<V>()
+        return new ArrayList<>(); // new LinkedList<V>()
     }
     
     /**
@@ -986,7 +841,7 @@ public class UtilMisc {
      * @see #newList()
      */
     public static <V> List<V> newList(Collection<? extends V> c) {
-        return new ArrayList<V>(c); // new LinkedList<V>(c)
+        return new ArrayList<>(c); // new LinkedList<V>(c)
     }
     
     /**
@@ -1004,7 +859,7 @@ public class UtilMisc {
      * @see #newList()
      */
     public static <V> List<V> newList(int initialCapacity) {
-        return new ArrayList<V>(initialCapacity); // new LinkedList<V>()
+        return new ArrayList<>(initialCapacity); // new LinkedList<V>()
     }
     
     /**
@@ -1018,7 +873,7 @@ public class UtilMisc {
      * is of a type common used by Scipio code.
      */
     public static <V> Set<V> newSet() {
-        return new HashSet<V>();
+        return new HashSet<>();
     }
     
     /**
@@ -1030,7 +885,7 @@ public class UtilMisc {
      * @see #newSet()
      */
     public static <V> Set<V> newSet(Collection<? extends V> c) {
-        return new HashSet<V>(c);
+        return new HashSet<>(c);
     }
     
     /**
@@ -1044,7 +899,7 @@ public class UtilMisc {
      * is of a type common used by Scipio code.
      */
     public static <V> Set<V> newInsertOrderSet() {
-        return new LinkedHashSet<V>();
+        return new LinkedHashSet<>();
     }
     
     /**
@@ -1055,7 +910,7 @@ public class UtilMisc {
      * @see #newInsertOrderSet()
      */
     public static <V> Set<V> newInsertOrderSet(Collection<? extends V> c) {
-        return new LinkedHashSet<V>(c);
+        return new LinkedHashSet<>(c);
     }
     
     /**

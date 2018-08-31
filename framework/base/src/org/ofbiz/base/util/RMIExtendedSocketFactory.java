@@ -66,7 +66,7 @@ public class RMIExtendedSocketFactory extends RMISocketFactory {
         if ( hostIpAddress != null && hostIpAddress.length() >= 7 ) {
             String[] octets = hostIpAddress.split( "\\." );
             
-            if ( octets == null || octets.length != 4 ) {
+            if (octets.length != 4) {
                 throw new UnknownHostException( "Invalid IP address: " + hostIpAddress );
             }
             
@@ -83,16 +83,14 @@ public class RMIExtendedSocketFactory extends RMISocketFactory {
             
         }
         
-        
     }
     
     @Override
     public ServerSocket createServerSocket(int port) throws IOException {
         if ( hostInetAddress !=  null ) {
             return new ServerSocket( port, 0, hostInetAddress );
-        } else {
-            return new ServerSocket( port );
         }
+        return new ServerSocket( port );
     }
 
     @Override

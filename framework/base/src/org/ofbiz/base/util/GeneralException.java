@@ -41,9 +41,15 @@ public class GeneralException extends Exception implements SettablePropertyMessa
     }
 
     public static <T> T checkException(String message, Throwable t) throws GeneralException {
-        if (t instanceof Error) throw (Error) t;
-        if (t instanceof RuntimeException) throw (RuntimeException) t;
-        if (t instanceof GeneralException) throw (GeneralException) t;
+        if (t instanceof Error) {
+            throw (Error) t;
+        }
+        if (t instanceof RuntimeException) {
+            throw (RuntimeException) t;
+        }
+        if (t instanceof GeneralException) {
+            throw (GeneralException) t;
+        }
         throw (GeneralException) new GeneralException(message).initCause(t);
     }
 

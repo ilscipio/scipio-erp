@@ -44,8 +44,7 @@ import org.ofbiz.base.util.string.UelUtil;
 public final class FlexibleMapAccessor<T> implements Serializable, IsEmpty {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, FlexibleMapAccessor<?>> fmaCache = UtilCache.createUtilCache("flexibleMapAccessor.ExpressionCache");
-    @SuppressWarnings("unchecked")
-    private static final FlexibleMapAccessor nullFma = new FlexibleMapAccessor("");
+    private static final FlexibleMapAccessor<Void> nullFma = new FlexibleMapAccessor<>("");
 
     private final boolean isEmpty;
     private final String original;
@@ -88,7 +87,7 @@ public final class FlexibleMapAccessor<T> implements Serializable, IsEmpty {
     @SuppressWarnings("unchecked")
     public static <T> FlexibleMapAccessor<T> getInstance(String original) {
         if (UtilValidate.isEmpty(original) || "null".equals(original)) {
-            return nullFma;
+            return (FlexibleMapAccessor<T>) nullFma;
         }
         FlexibleMapAccessor fma = fmaCache.get(original);
         if (fma == null) {
@@ -139,11 +138,10 @@ public final class FlexibleMapAccessor<T> implements Serializable, IsEmpty {
         if (base == null || this.isEmpty) {
             return null;
         }
-        if (locale != null && !base.containsKey(UelUtil.localizedMapLocaleKey)) {
+        if (locale != null && !base.containsKey(UelUtil.getLocalizedMapLocaleKey())) {
             // This method is a hot spot, so placing the cast here instead of in another class.
-            // Map<String, Object> writableMap = UtilGenerics.cast(base);
             Map<String, Object> writableMap = (Map<String, Object>) base;
-            writableMap.put(UelUtil.localizedMapLocaleKey, locale);
+            writableMap.put(UelUtil.getLocalizedMapLocaleKey(), locale);
         }
         Object obj = null;
         try {
@@ -157,7 +155,6 @@ public final class FlexibleMapAccessor<T> implements Serializable, IsEmpty {
             Debug.logError("UEL exception while getting value: " + e + ", original = " + this.original, module);
         }
         // This method is a hot spot, so placing the cast here instead of in another class.
-        // return UtilGenerics.<T>cast(obj);
         return (T) obj;
     }
 
@@ -220,13 +217,12 @@ public final class FlexibleMapAccessor<T> implements Serializable, IsEmpty {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
         try {
-            FlexibleMapAccessor that = (FlexibleMapAccessor) obj;
+            FlexibleMapAccessor<?> that = (FlexibleMapAccessor<?>) obj;
             return UtilObject.equalsHelper(this.original, that.original);
         } catch (Exception e) {}
         return false;

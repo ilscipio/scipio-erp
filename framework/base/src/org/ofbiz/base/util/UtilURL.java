@@ -28,16 +28,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * URL Utilities - Simple Class for flexibly working with properties files
  *
  */
-public class UtilURL {
+public final class UtilURL {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final Map<String, URL> urlMap = new ConcurrentHashMap<String, URL>();
+    private static final Map<String, URL> urlMap = new ConcurrentHashMap<>();
+
+    private UtilURL() {}
 
     public static <C> URL fromClass(Class<C> contextClass) {
         String resourceName = contextClass.getName();
         int dotIndex = resourceName.lastIndexOf('.');
 
-        if (dotIndex != -1) resourceName = resourceName.substring(0, dotIndex);
+        if (dotIndex != -1) {
+            resourceName = resourceName.substring(0, dotIndex);
+        }
         resourceName += ".properties";
 
         return fromResource(contextClass, resourceName);
@@ -58,10 +62,10 @@ public class UtilURL {
     }
 
     public static <C> URL fromResource(Class<C> contextClass, String resourceName) {
-        if (contextClass == null)
+        if (contextClass == null) {
             return fromResource(resourceName, null);
-        else
-            return fromResource(resourceName, contextClass.getClassLoader());
+        }
+        return fromResource(resourceName, contextClass.getClassLoader());
     }
 
     /**
@@ -89,15 +93,14 @@ public class UtilURL {
                 loader = Thread.currentThread().getContextClassLoader();
             } catch (SecurityException e) {
                 // Huh? The new object will be created by the current thread, so how is this any different than the previous code?
-                UtilURL utilURL = new UtilURL();
-                loader = utilURL.getClass().getClassLoader();
+                loader = UtilURL.class.getClassLoader();
             }
         }
         url = loader.getResource(resourceName);
-            if (url != null) {
+        if (url != null) {
             urlMap.put(resourceName, url);
-                return url;
-            }
+            return url;
+        }
         url = ClassLoader.getSystemResource(resourceName);
         if (url != null) {
             urlMap.put(resourceName, url);
@@ -121,14 +124,18 @@ public class UtilURL {
     }
 
     public static URL fromFilename(String filename) {
-        if (filename == null) return null;
+        if (filename == null) {
+            return null;
+        }
         File file = new File(filename);
         URL url = null;
 
         try {
-            if (file.exists()) url = file.toURI().toURL();
+            if (file.exists()) {
+                url = file.toURI().toURL();
+            }
         } catch (java.net.MalformedURLException e) {
-            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
+            Debug.logError(e, "unable to retrieve URL for file: " + filename, module);
             url = null;
         }
         return url;

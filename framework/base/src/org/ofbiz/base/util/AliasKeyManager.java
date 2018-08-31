@@ -49,8 +49,9 @@ public class AliasKeyManager implements X509KeyManager {
             if (aliases != null && aliases.length > 0) {
                 for (String alias: aliases) {
                     if (this.alias.equals(alias)) {
-                        if (Debug.verboseOn()) Debug.logVerbose("chooseClientAlias for keyType [" + keyType + "] got alias " + this.alias, module);
-                        //Debug.logInfo(new Exception(), "Location where chooseClientAlias is called", module);
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("chooseClientAlias for keyType [" + keyType + "] got alias " + this.alias, module);
+                        }
                         return this.alias;
                     }
                 }
@@ -71,7 +72,9 @@ public class AliasKeyManager implements X509KeyManager {
 
     public X509Certificate[] getCertificateChain(String alias) {
         X509Certificate[] certArray = keyManager.getCertificateChain(alias);
-        if (Debug.verboseOn()) Debug.logVerbose("getCertificateChain for alias [" + alias + "] got " + certArray.length + " results", module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("getCertificateChain for alias [" + alias + "] got " + certArray.length + " results", module);
+        }
         return certArray;
     }
 
@@ -81,8 +84,9 @@ public class AliasKeyManager implements X509KeyManager {
 
     public PrivateKey getPrivateKey(String alias) {
         PrivateKey pk = keyManager.getPrivateKey(alias);
-        if (Debug.verboseOn()) Debug.logVerbose("getPrivateKey for alias [" + alias + "] got " + (pk == null ? "[Not Found!]" : "[alg:" + pk.getAlgorithm() + ";format:" + pk.getFormat() + "]"), module);
-        //Debug.logInfo(new Exception(), "Location where getPrivateKey is called", module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("getPrivateKey for alias [" + alias + "] got " + (pk == null ? "[Not Found!]" : "[alg:" + pk.getAlgorithm() + ";format:" + pk.getFormat() + "]"), module);
+        }
         return pk;
     }
 

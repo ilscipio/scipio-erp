@@ -57,9 +57,11 @@ import org.ofbiz.base.config.GenericConfigException;
  * KeyStoreUtil - Utilities for getting KeyManagers and TrustManagers
  *
  */
-public class KeyStoreUtil {
+public final class KeyStoreUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private KeyStoreUtil () {}
 
     public static void storeComponentKeyStore(String componentName, String keyStoreName, KeyStore store) throws IOException, GenericConfigException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
         ComponentConfig.KeystoreInfo ks = ComponentConfig.getKeystoreInfo(componentName, keyStoreName);
@@ -177,7 +179,7 @@ public class KeyStoreUtil {
     }
 
     public static Map<String, String> getX500Map(Principal x500) {
-        Map<String, String> x500Map = new HashMap<String, String>();
+        Map<String, String> x500Map = new HashMap<>();
 
         String name = x500.getName().replaceAll("\\\\,", "&com;");
         String[] x500Opts = name.split("\\,");
@@ -220,7 +222,7 @@ public class KeyStoreUtil {
         byte[] certBuf = cert.getEncoded();
         StringBuilder buf = new StringBuilder();
         buf.append("-----BEGIN CERTIFICATE-----\n");
-        buf.append(new String(Base64.encodeBase64Chunked(certBuf)));
+        buf.append(new String(Base64.encodeBase64Chunked(certBuf), UtilIO.getUtf8()));
         buf.append("\n-----END CERTIFICATE-----\n");
         return buf.toString();
     }
@@ -234,7 +236,7 @@ public class KeyStoreUtil {
     }
 
     public static Certificate pemToCert(InputStream is) throws IOException, CertificateException {
-        return pemToCert(new InputStreamReader(is));
+        return pemToCert(new InputStreamReader(is, UtilIO.getUtf8()));
     }
 
     public static Certificate pemToCert(Reader r) throws IOException, CertificateException {
@@ -243,7 +245,7 @@ public class KeyStoreUtil {
 
         BufferedReader reader = new BufferedReader(r);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos);
+        PrintStream ps = new PrintStream(baos, false, UtilIO.getUtf8().toString());
 
         String line;
 

@@ -32,92 +32,13 @@ import org.ofbiz.base.component.ComponentConfig;
  * NOTE: the approach here is not the best and it may be better to use a parser, line one based on antlr, or using a Java Bytecode parser to look at .class files.
  *
  */
-public class UtilJavaParse {
+public final class UtilJavaParse {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static String findRealPathAndFileForClass(String fullyQualifiedClassName) {
-        // search through the component directories, in the src directory for each, using the class path as the path within it
-
-        String sourceSubPath = fullyQualifiedClassName.substring(0, fullyQualifiedClassName.lastIndexOf(".")).replace('.', File.separatorChar);
-        String classFileName = fullyQualifiedClassName.substring(fullyQualifiedClassName.lastIndexOf(".")+1) + ".java";
-
-        Collection<ComponentConfig> allComponentConfigs = ComponentConfig.getAllComponents();
-        for (ComponentConfig cc: allComponentConfigs) {
-            String rootDirectory = cc.getRootLocation();
-            if (!rootDirectory.endsWith(File.separatorChar + "")) rootDirectory += File.separatorChar;
-            rootDirectory += "src" + File.separatorChar;
-
-            File rootDirFile = new File(rootDirectory);
-            if (!rootDirFile.exists()) {
-                // no src directory, move along
-                continue;
-            }
-
-            String classDir = rootDirectory + sourceSubPath;
-            File classDirFile = new File(classDir);
-            if (!classDirFile.exists()) {
-                // no src class sub-directory, move along
-                continue;
-            }
-
-            String fullPathAndFile = classDir + File.separatorChar + classFileName;
-            File classFile = new File(fullPathAndFile);
-            if (classFile.exists()) {
-                if (Debug.verboseOn()) Debug.logVerbose("In findRealPathAndFileForClass for [" + fullyQualifiedClassName + "]: [" + fullPathAndFile + "]", module);
-                return fullPathAndFile;
-            }
-        }
-
-        return null;
-    }
-
-    public static int findServiceMethodBlockStart(String methodName, String javaFile) {
-        if (Debug.verboseOn()) Debug.logVerbose("In findServiceMethodBlockStart for " + methodName, module);
-
-        // starts with something like this: public static Map exportServiceEoModelBundle(DispatchContext dctx, Map context) {
-
-        // start with the main pattern
-        int methodNameIndex = javaFile.indexOf("public static Map " + methodName + "(DispatchContext dctx, Map context) {");
-        // try a little less... and some nice messy variations...
-        if (methodNameIndex < 0) methodNameIndex = javaFile.indexOf(" Map " + methodName + "(DispatchContext ");
-        if (methodNameIndex < 0) methodNameIndex = javaFile.indexOf(" Map  " + methodName + "(DispatchContext ");
-        if (methodNameIndex < 0) methodNameIndex = javaFile.indexOf(" Map " + methodName + " (DispatchContext ");
-        if (methodNameIndex < 0) methodNameIndex = javaFile.indexOf(" Map " + methodName + "(DispatchContext ");
-        if (methodNameIndex < 0) methodNameIndex = javaFile.indexOf(" Map " + methodName + " (DispatchContext ");
-
-        // not found!
-        if (methodNameIndex < 0) return -1;
-
-        // find the open brace and return its position
-        return javaFile.indexOf("{", methodNameIndex);
-    }
-
-    public static int findEndOfBlock(int blockStart, String javaFile) {
-        //Debug.logInfo("In findEndOfBlock for blockStart " + blockStart, module);
-
-        int nextOpen = javaFile.indexOf("{", blockStart+1);
-        int nextClose = javaFile.indexOf("}", blockStart+1);
-        if (nextOpen > 0 && nextClose > 0 && nextClose > nextOpen) {
-            javaFile.substring(nextOpen, nextClose);
-        }
-        // if no close, end with couldn't find
-        if (nextClose < 0) return -1;
-        // while nextOpen is found and is before the next close, then recurse (list
-        while (nextOpen > -1 && nextOpen < nextClose) {
-            int endOfSubBlock = findEndOfBlock(nextOpen, javaFile);
-            if (endOfSubBlock < 0) return -1;
-            nextOpen = javaFile.indexOf("{", endOfSubBlock+1);
-            nextClose = javaFile.indexOf("}", endOfSubBlock+1);
-            //Debug.logInfo("In loop in findEndOfBlock for nextOpen=" + nextOpen + ", nextClose=" + nextClose + ", endOfSubBlock=" + endOfSubBlock, module);
-        }
-
-        // at this point there should be no nextOpen or nextOpen is after the nextClose, meaning we're at the end of the block
-        return nextClose;
-    }
-
     // FIXME: Not thread safe
-    public static Set<String> serviceMethodNames = new HashSet<String>();
+    private static Set<String> serviceMethodNames = new HashSet<>();
+    private static Set<String> entityMethodNames = new HashSet<>();
     static {
         serviceMethodNames.add("runSync");
         serviceMethodNames.add("runSyncIgnore");
@@ -127,36 +48,7 @@ public class UtilJavaParse {
         serviceMethodNames.add("schedule"); // NOTE: the service name may be the 1st, 2nd or 3rd param for variations on this
         serviceMethodNames.add("addRollbackService");
         serviceMethodNames.add("addCommitService");
-    }
-    public static Set<String> findServiceCallsInBlock(int blockStart, int blockEnd, String javaFile) {
-        Set<String> serviceNameSet = new HashSet<String>();
 
-        int dispatcherIndex = javaFile.indexOf("dispatcher.", blockStart+1);
-        while (dispatcherIndex > 0 && dispatcherIndex < blockEnd) {
-            // verify it is a call we're looking for
-            int openParenIndex = javaFile.indexOf("(", dispatcherIndex);
-            String curMethodName = javaFile.substring(dispatcherIndex + 11, openParenIndex).trim();
-            if (serviceMethodNames.contains(curMethodName)) {
-                // find the service name
-                int openQuoteIndex = javaFile.indexOf("\"", openParenIndex);
-                int closeQuoteIndex = javaFile.indexOf("\"", openQuoteIndex+1);
-                if (openQuoteIndex - openParenIndex <= 3 && openQuoteIndex >= 0 && closeQuoteIndex >= 0) {
-                    //more than two spaces/chars between quote and open paren... consider it something other than what we are looking for
-                    String serviceName = javaFile.substring(openQuoteIndex+1, closeQuoteIndex).trim();
-                    //Debug.logInfo("In findServiceCallsInBlock found serviceName [" + serviceName + "]", module);
-                    serviceNameSet.add(serviceName);
-                }
-            }
-
-            dispatcherIndex = javaFile.indexOf("dispatcher.", openParenIndex);
-        }
-
-        return serviceNameSet;
-    }
-
-    // FIXME: Not thread safe
-    public static Set<String> entityMethodNames = new HashSet<String>();
-    static {
         entityMethodNames.add("getModelEntity");
         entityMethodNames.add("getEntityGroupName");
         entityMethodNames.add("getModelEntityMapByGroup");
@@ -197,8 +89,136 @@ public class UtilJavaParse {
         entityMethodNames.add("findCountByAnd");
         entityMethodNames.add("findCountByCondition");
     }
+
+    private UtilJavaParse () {}
+
+    public static String findRealPathAndFileForClass(String fullyQualifiedClassName) {
+        // search through the component directories, in the src directory for each, using the class path as the path within it
+
+        String sourceSubPath = fullyQualifiedClassName.substring(0, fullyQualifiedClassName.lastIndexOf(".")).replace('.', File.separatorChar);
+        String classFileName = fullyQualifiedClassName.substring(fullyQualifiedClassName.lastIndexOf(".")+1) + ".java";
+
+        Collection<ComponentConfig> allComponentConfigs = ComponentConfig.getAllComponents();
+        for (ComponentConfig cc: allComponentConfigs) {
+            String rootDirectory = cc.getRootLocation();
+            if (!rootDirectory.endsWith(File.separatorChar + "")) {
+                rootDirectory += File.separatorChar;
+            }
+            rootDirectory += "src" + File.separatorChar;
+
+            File rootDirFile = new File(rootDirectory);
+            if (!rootDirFile.exists()) {
+                // no src directory, move along
+                continue;
+            }
+
+            String classDir = rootDirectory + sourceSubPath;
+            File classDirFile = new File(classDir);
+            if (!classDirFile.exists()) {
+                // no src class sub-directory, move along
+                continue;
+            }
+
+            String fullPathAndFile = classDir + File.separatorChar + classFileName;
+            File classFile = new File(fullPathAndFile);
+            if (classFile.exists()) {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("In findRealPathAndFileForClass for [" + fullyQualifiedClassName + "]: [" + fullPathAndFile + "]", module);
+                }
+                return fullPathAndFile;
+            }
+        }
+
+        return null;
+    }
+
+    public static int findServiceMethodBlockStart(String methodName, String javaFile) {
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("In findServiceMethodBlockStart for " + methodName, module);
+        }
+
+        // starts with something like this: public static Map exportServiceEoModelBundle(DispatchContext dctx, Map context) {
+
+        // start with the main pattern
+        int methodNameIndex = javaFile.indexOf("public static Map " + methodName + "(DispatchContext dctx, Map context) {");
+        // try a little less... and some nice messy variations...
+        if (methodNameIndex < 0) {
+            methodNameIndex = javaFile.indexOf(" Map " + methodName + "(DispatchContext ");
+        }
+        if (methodNameIndex < 0) {
+            methodNameIndex = javaFile.indexOf(" Map  " + methodName + "(DispatchContext ");
+        }
+        if (methodNameIndex < 0) {
+            methodNameIndex = javaFile.indexOf(" Map " + methodName + " (DispatchContext ");
+        }
+        if (methodNameIndex < 0) {
+            methodNameIndex = javaFile.indexOf(" Map " + methodName + "(DispatchContext ");
+        }
+        if (methodNameIndex < 0) {
+            methodNameIndex = javaFile.indexOf(" Map " + methodName + " (DispatchContext ");
+        }
+
+        // not found!
+        if (methodNameIndex < 0) {
+            return -1;
+        }
+
+        // find the open brace and return its position
+        return javaFile.indexOf("{", methodNameIndex);
+    }
+
+    public static int findEndOfBlock(int blockStart, String javaFile) {
+
+        int nextOpen = javaFile.indexOf("{", blockStart+1);
+        int nextClose = javaFile.indexOf("}", blockStart+1);
+        if (nextOpen > 0 && nextClose > 0 && nextClose > nextOpen) {
+            javaFile = javaFile.substring(nextOpen, nextClose);
+        }
+        // if no close, end with couldn't find
+        if (nextClose < 0) {
+            return -1;
+        }
+        // while nextOpen is found and is before the next close, then recurse (list
+        while (nextOpen > -1 && nextOpen < nextClose) {
+            int endOfSubBlock = findEndOfBlock(nextOpen, javaFile);
+            if (endOfSubBlock < 0) {
+                return -1;
+            }
+            nextOpen = javaFile.indexOf("{", endOfSubBlock+1);
+            nextClose = javaFile.indexOf("}", endOfSubBlock+1);
+        }
+
+        // at this point there should be no nextOpen or nextOpen is after the nextClose, meaning we're at the end of the block
+        return nextClose;
+    }
+
+    public static Set<String> findServiceCallsInBlock(int blockStart, int blockEnd, String javaFile) {
+        Set<String> serviceNameSet = new HashSet<>();
+
+        int dispatcherIndex = javaFile.indexOf("dispatcher.", blockStart+1);
+        while (dispatcherIndex > 0 && dispatcherIndex < blockEnd) {
+            // verify it is a call we're looking for
+            int openParenIndex = javaFile.indexOf("(", dispatcherIndex);
+            String curMethodName = javaFile.substring(dispatcherIndex + 11, openParenIndex).trim();
+            if (serviceMethodNames.contains(curMethodName)) {
+                // find the service name
+                int openQuoteIndex = javaFile.indexOf("\"", openParenIndex);
+                int closeQuoteIndex = javaFile.indexOf("\"", openQuoteIndex+1);
+                if (openQuoteIndex - openParenIndex <= 3 && openQuoteIndex >= 0 && closeQuoteIndex >= 0) {
+                    //more than two spaces/chars between quote and open paren... consider it something other than what we are looking for
+                    String serviceName = javaFile.substring(openQuoteIndex+1, closeQuoteIndex).trim();
+                    serviceNameSet.add(serviceName);
+                }
+            }
+
+            dispatcherIndex = javaFile.indexOf("dispatcher.", openParenIndex);
+        }
+
+        return serviceNameSet;
+    }
+
     public static Set<String> findEntityUseInBlock(int blockStart, int blockEnd, String javaFile) {
-        Set<String> entityNameSet = new HashSet<String>();
+        Set<String> entityNameSet = new HashSet<>();
 
         int delegatorIndex = javaFile.indexOf("delegator.", blockStart+1);
         while (delegatorIndex > 0 && delegatorIndex < blockEnd) {
@@ -212,7 +232,6 @@ public class UtilJavaParse {
                 if (openQuoteIndex - openParenIndex <= 3 && openQuoteIndex >= 0 && closeQuoteIndex >= 0) {
                     //more than two spaces/chars between quote and open paren... consider it something other than what we are looking for
                     String entityName = javaFile.substring(openQuoteIndex+1, closeQuoteIndex).trim();
-                    //Debug.logInfo("In findServiceCallsInBlock found valid entityName [" + entityName + "]", module);
                     entityNameSet.add(entityName);
                 }
             }

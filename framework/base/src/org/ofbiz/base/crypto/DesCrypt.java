@@ -71,11 +71,7 @@ public class DesCrypt {
         byte[] encBytes = null;
         try {
             encBytes = cipher.doFinal(bytes);
-        } catch (IllegalStateException e) {
-            throw new GeneralException(e);
-        } catch (IllegalBlockSizeException e) {
-            throw new GeneralException(e);
-        } catch (BadPaddingException e) {
+        } catch (IllegalStateException | IllegalBlockSizeException | BadPaddingException e) {
             throw new GeneralException(e);
         }
         return encBytes;
@@ -86,11 +82,7 @@ public class DesCrypt {
         byte[] decBytes = null;
         try {
             decBytes = cipher.doFinal(bytes);
-        } catch (IllegalStateException e) {
-            throw new GeneralException(e);
-        } catch (IllegalBlockSizeException e) {
-            throw new GeneralException(e);
-        } catch (BadPaddingException e) {
+        } catch (IllegalStateException | IllegalBlockSizeException | BadPaddingException e) {
             throw new GeneralException(e);
         }
         return decBytes;
@@ -121,9 +113,8 @@ public class DesCrypt {
                 throw new GeneralException(e);
             }
             return key;
-        } else {
-            throw new GeneralException("Not a valid DESede key!");
         }
+        throw new GeneralException("Not a valid DESede key!");
     }
 
     // return a cipher for a key - DESede/CBC/PKCS5Padding IV = 0
@@ -135,16 +126,12 @@ public class DesCrypt {
         Cipher encCipher = null;
         try {
             encCipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-        } catch (NoSuchAlgorithmException e) {
-            throw new GeneralException(e);
-        } catch (NoSuchPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new GeneralException(e);
         }
         try {
             encCipher.init(mode, key, iv);
-        } catch (InvalidKeyException e) {
-            throw new GeneralException(e);
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
             throw new GeneralException(e);
         }
         return encCipher;

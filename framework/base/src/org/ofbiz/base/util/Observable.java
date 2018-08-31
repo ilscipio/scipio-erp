@@ -25,17 +25,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * An observable object.
  * <p>This class is similar to <code>java.util.Observable</code> but it has some differences:</p>
  * <ul>
- * <li>It has improved concurrency</li>
- * <li>It cannot be subclassed</li>
- * <li>The <code>notifyObservers</code> method does not clear the changed flag</li>
- * <li>Protected methods have been made public</li>
+ *   <li>It has improved concurrency</li>
+ *   <li>It cannot be subclassed</li>
+ *   <li>The <code>notifyObservers</code> method does not clear the changed flag</li>
+ *   <li>Protected methods have been made public</li>
  * </ul>
  *
  */
 public final class Observable {
 
-    private final AtomicBoolean changed = new AtomicBoolean();;
-    private final CopyOnWriteArrayList<Observer> observers = new CopyOnWriteArrayList<Observer>();
+    private final AtomicBoolean changed = new AtomicBoolean();
+    private final CopyOnWriteArrayList<Observer> observers = new CopyOnWriteArrayList<>();
 
     public Observable() {}
 

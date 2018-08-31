@@ -72,7 +72,7 @@ public class UtilCodec {
     private static final UrlCodec urlCodec = new UrlCodec(); // SCIPIO: FIXME: this needs to be split between encode and decode...
     private static final List<Codec> codecs;
     static {
-        List<Codec> tmpCodecs = new ArrayList<Codec>();
+        List<Codec> tmpCodecs = new ArrayList<>();
         tmpCodecs.add(new HTMLEntityCodec());
         tmpCodecs.add(new PercentCodec());
         codecs = Collections.unmodifiableList(tmpCodecs);
@@ -592,34 +592,36 @@ public class UtilCodec {
         if (foundCount >= 2 && mixedCount > 1) {
             if (restrictMultiple || restrictMixed) {
                 throw new IntrusionException("Input validation failure");
-            } else {
-                Debug.logWarning("Multiple (" + foundCount + "x) and mixed encoding (" + mixedCount + "x) detected in " + input, module);
             }
+            Debug.logWarning("Multiple (" + foundCount + "x) and mixed encoding (" + mixedCount + "x) detected in " + input, module);
         } else if (foundCount >= 2) {
             if (restrictMultiple) {
                 throw new IntrusionException("Input validation failure");
-            } else {
-                Debug.logWarning("Multiple (" + foundCount + "x) encoding detected in " + input, module);
             }
+            Debug.logWarning("Multiple (" + foundCount + "x) encoding detected in " + input, module);
         } else if (mixedCount > 1) {
             if (restrictMixed) {
                 throw new IntrusionException("Input validation failure");
-            } else {
-                Debug.logWarning("Mixed encoding (" + mixedCount + "x) detected in " + input, module);
             }
+            Debug.logWarning("Mixed encoding (" + mixedCount + "x) detected in " + input, module);
         }
         return working;
     }
 
     /**
      * Uses a black-list approach for necessary characters for HTML.
-     * Does not allow various characters (after canonicalization), including "<", ">", "&" (if not followed by a space), and "%" (if not followed by a space).
+     * <p>
+     * Does not allow various characters (after canonicalization), including
+     * "&lt;", "&gt;", "&amp;" (if not followed by a space), and "%" (if not
+     * followed by a space).
      *
      * @param value
      * @param errorMessageList
      */
     public static String checkStringForHtmlStrictNone(String valueName, String value, List<String> errorMessageList) {
-        if (UtilValidate.isEmpty(value)) return value;
+        if (UtilValidate.isEmpty(value)) {
+            return value;
+        }
 
         // canonicalize, strict (error on double-encoding)
         try {
@@ -634,34 +636,6 @@ public class UtilCodec {
         if (value.indexOf("<") >= 0 || value.indexOf(">") >= 0) {
             errorMessageList.add("In field [" + valueName + "] less-than (<) and greater-than (>) symbols are not allowed.");
         }
-
-        /* NOTE DEJ 20090311: After playing with this more this doesn't seem to be necessary; the canonicalize will convert all such characters into actual text before this check is done, including other illegal chars like &lt; which will canonicalize to < and then get caught
-        // check for & followed a semicolon within 7 characters, no spaces in-between (and perhaps other things sometime?)
-        int curAmpIndex = value.indexOf("&");
-        while (curAmpIndex > -1) {
-            int semicolonIndex = value.indexOf(";", curAmpIndex + 1);
-            int spaceIndex = value.indexOf(" ", curAmpIndex + 1);
-            if (semicolonIndex > -1 && (semicolonIndex - curAmpIndex <= 7) && (spaceIndex < 0 || (spaceIndex > curAmpIndex && spaceIndex < semicolonIndex))) {
-                errorMessageList.add("In field [" + valueName + "] the ampersand (&) symbol is only allowed if not used as an encoded character: no semicolon (;) within 7 spaces or there is a space between.");
-                // once we find one like this we have the message so no need to check for more
-                break;
-            }
-            curAmpIndex = value.indexOf("&", curAmpIndex + 1);
-        }
-         */
-
-        /* NOTE DEJ 20090311: After playing with this more this doesn't seem to be necessary; the canonicalize will convert all such characters into actual text before this check is done, including other illegal chars like %3C which will canonicalize to < and then get caught
-        // check for % followed by 2 hex characters
-        int curPercIndex = value.indexOf("%");
-        while (curPercIndex >= 0) {
-            if (value.length() > (curPercIndex + 3) && UtilValidate.isHexDigit(value.charAt(curPercIndex + 1)) && UtilValidate.isHexDigit(value.charAt(curPercIndex + 2))) {
-                errorMessageList.add("In field [" + valueName + "] the percent (%) symbol is only allowed if followed by a space.");
-                // once we find one like this we have the message so no need to check for more
-                break;
-            }
-            curPercIndex = value.indexOf("%", curPercIndex + 1);
-        }
-         */
 
         // TODO: anything else to check for that can be used to get HTML or JavaScript going without these characters?
 
@@ -704,11 +678,10 @@ public class UtilCodec {
             if (theObject instanceof String) {
                 if (this.encoder != null) {
                     return encoder.encode((String) theObject);
-                } else {
-                    // SCIPIO: removed HTML bias
-                    //return UtilCodec.getEncoder("html").encode((String) theObject);
-                    return (String) theObject;
                 }
+                // SCIPIO: removed HTML bias
+                //return UtilCodec.getEncoder("html").encode((String) theObject);
+                return (String) theObject;
             } else if (theObject instanceof Map<?, ?>) {
                 return EncodingMapWrapper.getEncodingMapWrapper(UtilGenerics.<K, Object>checkMap(theObject), this.encoder);
             }

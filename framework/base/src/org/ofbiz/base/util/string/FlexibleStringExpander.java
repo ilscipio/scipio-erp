@@ -31,6 +31,7 @@ import javax.el.PropertyNotFoundException;
 import org.ofbiz.base.lang.IsEmpty;
 import org.ofbiz.base.lang.SourceMonitored;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.UtilDateTime;
@@ -41,8 +42,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
 /** Expands String values that contain Unified Expression Language (JSR 245)
- * syntax. This class also supports the execution of bsh scripts by using the
- * 'bsh:' prefix, and Groovy scripts by using the 'groovy:' prefix.
+ * syntax. This class also supports the execution of Groovy scripts
+ * by using the 'groovy:' prefix.
  * Further it is possible to control the output by specifying the suffix
  * '?currency(XXX)' to format the output according to the supplied locale
  * and specified (XXX) currency.<p>This class extends the UEL by allowing
@@ -444,7 +445,8 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
                     buffer.append(ObjectType.simpleTypeConvert(obj, "String", null, timeZone, locale, true));
                 }
             }
-        } catch (Exception e) {
+        } catch (GeneralException | RuntimeException e) {
+            Debug.log(e, module);
             buffer.append(obj);
         }
         if (buffer.length() > this.hint) {
@@ -604,9 +606,8 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
                     // SCIPIO: 2017-01-13: added BigDecimal instanceof check to avoid string overhead and potential loss of information
                     if (obj instanceof BigDecimal) {
                         return UtilFormatOut.formatCurrency((BigDecimal) obj, currencyCode, locale);
-                    } else {
-                        return UtilFormatOut.formatCurrency(new BigDecimal(obj.toString()), currencyCode, locale);
                     }
+                    return UtilFormatOut.formatCurrency(new BigDecimal(obj.toString()), currencyCode, locale);
                 }
             } catch (PropertyNotFoundException e) {
                 if (Debug.verboseOn()) {

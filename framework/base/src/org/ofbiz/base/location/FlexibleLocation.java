@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
@@ -37,7 +38,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public final class FlexibleLocation {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Map<String, LocationResolver> locationResolvers;
 
     static {
@@ -67,7 +68,7 @@ public final class FlexibleLocation {
                 }
             }
         } catch (Throwable e) {
-            System.out.println("Exception thrown while loading locationresolvers.properties: " + e);
+            Debug.logError(e, "Exception thrown while loading locationresolvers.properties", module);
         }
         locationResolvers = Collections.unmodifiableMap(resolverMap);
     }
@@ -102,7 +103,7 @@ public final class FlexibleLocation {
      *
      * The general format of the location is like a URL: {locationType}://location/path/file.ext
      *
-     * Supports standard locationTypes like http, https, ftp, jar, & file
+     * Supports standard locationTypes like http, https, ftp, jar and file
      * Supports a classpath location type for when desired to be used like any other URL
      * Supports OFBiz specific location types like ofbizhome and component
      * Supports additional locationTypes specified in the locationresolvers.properties file

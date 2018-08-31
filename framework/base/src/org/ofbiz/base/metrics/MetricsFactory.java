@@ -31,7 +31,6 @@ package org.ofbiz.base.metrics;
 import java.util.Collection;
 import java.util.TreeSet;
 
-import org.ofbiz.base.lang.LockedBy;
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.UtilProperties;
@@ -54,7 +53,7 @@ public final class MetricsFactory {
      * If an instance with the same name already exists, it will be returned.
      * <table border="1">
      *   <caption><strong>Element Attributes</strong></caption>
-     * <tr><th>Attribute Name</th><th>Requirements</th><th>Description</th><th>Notes</th></tr>
+     *   <tr><th>Attribute Name</th><th>Requirements</th><th>Description</th><th>Notes</th></tr>
      *   <tr>
      *     <td>name</td>
      *     <td>Required</td>
@@ -161,18 +160,12 @@ public final class MetricsFactory {
     }
 
     private static final class MetricsImpl implements Metrics, Comparable<Metrics> {
-        @LockedBy("this")
         private int count = 0;
-        @LockedBy("this")
         private long lastTime = System.currentTimeMillis();
-        @LockedBy("this")
         private double serviceRate = 0.0;
-        @LockedBy("this")
         private long totalServiceTime = 0;
-        @LockedBy("this")
         private long totalEvents = 0;
-        @LockedBy("this")
-        private long cumulativeEvents;
+        private long cumulativeEvents = 0;
         private final String name;
         private final int estimationSize;
         private final long estimationTime;

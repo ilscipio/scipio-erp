@@ -18,13 +18,12 @@
  *******************************************************************************/
 package org.ofbiz.base.crypto;
 
-import static org.ofbiz.base.util.UtilIO.UTF8;
-
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -40,7 +39,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 
 /**
- * Utility class for doing SHA-1/MD5/PBKDF2 One-Way Hash Encryption
+ * Utility class for doing SHA-1/PBKDF2 One-Way Hash Encryption
  *
  */
 public class HashCrypt {
@@ -63,16 +62,14 @@ public class HashCrypt {
     }
 
     public static boolean comparePassword(String crypted, String defaultCrypt, String password) {
-    	if (crypted.startsWith("{PBKDF2")) {
+        if (crypted.startsWith("{PBKDF2")) {
             return doComparePbkdf2(crypted, password);
-    	} else if (crypted.startsWith("{")) {
-            // FIXME: should have been getBytes("UTF-8") originally
-            return doCompareTypePrefix(crypted, defaultCrypt, password.getBytes());
+        } else if (crypted.startsWith("{")) {
+            return doCompareTypePrefix(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()));
         } else if (crypted.startsWith("$")) {
             return doComparePosix(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()));
         } else {
-            // FIXME: should have been getBytes("UTF-8") originally
-            return doCompareBare(crypted, defaultCrypt, password.getBytes());
+            return doCompareBare(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()));
         }
     }
 
@@ -121,25 +118,24 @@ public class HashCrypt {
      */
     @Deprecated
     public static String cryptPassword(String hashType, String salt, String password) {
-    	if (hashType.startsWith("PBKDF2")) {
+        if (hashType.startsWith("PBKDF2")) {
             return password != null ? pbkdf2HashCrypt(hashType, salt, password) : null;
         }
-        // FIXME: should have been getBytes("UTF-8") originally
-        return password != null ? cryptBytes(hashType, salt, password.getBytes()) : null;
+        return password != null ? cryptBytes(hashType, salt, password.getBytes(UtilIO.getUtf8())) : null;
     }
 
     public static String cryptUTF8(String hashType, String salt, String value) {
-    	if (hashType.startsWith("PBKDF2")) {
+        if (hashType.startsWith("PBKDF2")) {
             return value != null ? pbkdf2HashCrypt(hashType, salt, value) : null;
         }
         return value != null ? cryptBytes(hashType, salt, value.getBytes(UtilIO.getUtf8())) : null;
     }
 
     public static String cryptValue(String hashType, String salt, String value) {
-    	if (hashType.startsWith("PBKDF2")) {
+        if (hashType.startsWith("PBKDF2")) {
             return value != null ? pbkdf2HashCrypt(hashType, salt, value) : null;
         }
-        return value != null ? cryptBytes(hashType, salt, value.getBytes()) : null;
+        return value != null ? cryptBytes(hashType, salt, value.getBytes(UtilIO.getUtf8())) : null;
     }
 
     public static String cryptBytes(String hashType, String salt, byte[] bytes) {
@@ -158,7 +154,7 @@ public class HashCrypt {
     private static String getCryptedBytes(String hashType, String salt, byte[] bytes) {
         try {
             MessageDigest messagedigest = MessageDigest.getInstance(hashType);
-            messagedigest.update(salt.getBytes(UTF8));
+            messagedigest.update(salt.getBytes(UtilIO.getUtf8()));
             messagedigest.update(bytes);
             return Base64.encodeBase64URLSafeString(messagedigest.digest()).replace('+', '.');
         } catch (NoSuchAlgorithmException e) {
@@ -196,7 +192,7 @@ public class HashCrypt {
             sb.append("{").append(pbkdf2Type).append("}");
             sb.append(PBKDF2_ITERATIONS).append("$");
             sb.append(org.ofbiz.base.util.Base64.base64Encode(salt)).append("$");
-            sb.append(new String(hash)).toString();
+            sb.append(new String(hash));
             return sb.toString();
         } catch (InvalidKeySpecException e) {
             throw new GeneralRuntimeException("Error while creating SecretKey", e);
@@ -207,12 +203,12 @@ public class HashCrypt {
     
     public static boolean doComparePbkdf2(String crypted, String password){
         try {
-        	int typeEnd = crypted.indexOf("}");
+            int typeEnd = crypted.indexOf("}");
             String hashType = crypted.substring(1, typeEnd);
             String[] parts = crypted.split("\\$");
             int iterations = Integer.parseInt(parts[0].substring(typeEnd+1));
-            byte[] salt = org.ofbiz.base.util.Base64.base64Decode(parts[1]).getBytes();
-            byte[] hash = Base64.decodeBase64(parts[2].getBytes());
+            byte[] salt = org.ofbiz.base.util.Base64.base64Decode(parts[1]).getBytes(UtilIO.getUtf8());
+            byte[] hash = Base64.decodeBase64(parts[2].getBytes(UtilIO.getUtf8()));
             
             PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, hash.length * 8);
             switch (hashType.substring(hashType.indexOf("-")+1)) {
@@ -249,7 +245,7 @@ public class HashCrypt {
             SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
             byte[] salt = new byte[16];
             sr.nextBytes(salt);
-            return salt.toString();
+            return Arrays.toString(salt);
         } catch (NoSuchAlgorithmException e) {
             throw new GeneralRuntimeException("Error while creating salt", e);
         }
@@ -280,11 +276,16 @@ public class HashCrypt {
     }
 
     public static String digestHash(String hashType, String code, String str) {
-        if (str == null) return null;
+        if (str == null) {
+            return null;
+        }
         byte[] codeBytes;
         try {
-            if (code == null) codeBytes = str.getBytes();
-            else codeBytes = str.getBytes(code);
+            if (code == null) {
+                codeBytes = str.getBytes(UtilIO.getUtf8());
+            } else {
+                codeBytes = str.getBytes(code);
+            }
         } catch (UnsupportedEncodingException e) {
             throw new GeneralRuntimeException("Error while computing hash of type " + hashType, e);
         }
@@ -358,11 +359,15 @@ public class HashCrypt {
     }
 
     public static String digestHashOldFunnyHex(String hashType, String str) {
-        if (UtilValidate.isEmpty(hashType)) hashType = "SHA";
-        if (str == null) return null;
+        if (UtilValidate.isEmpty(hashType)) {
+            hashType = "SHA";
+        }
+        if (str == null) {
+            return null;
+        }
         try {
             MessageDigest messagedigest = MessageDigest.getInstance(hashType);
-            byte[] strBytes = str.getBytes();
+            byte[] strBytes = str.getBytes(UtilIO.getUtf8());
 
             messagedigest.update(strBytes);
             return oldFunnyHex(messagedigest.digest());
@@ -376,8 +381,8 @@ public class HashCrypt {
     private static String oldFunnyHex(byte[] bytes) {
         int k = 0;
         char[] digestChars = new char[bytes.length * 2];
-        for (int l = 0; l < bytes.length; l++) {
-            int i1 = bytes[l];
+        for (byte b : bytes) {
+            int i1 = b;
 
             if (i1 < 0) {
                 i1 = 127 + i1 * -1;

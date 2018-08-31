@@ -79,11 +79,13 @@ import freemarker.template.utility.DeepUnwrap;
  * SCIPIO: 2017-04-03: All ObjectWrappers are now made from custom types in ScipioFtlWrappers and
  * they support custom plugin wrapping logic.
  */
-public class FreeMarkerWorker {
+public final class FreeMarkerWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Version version = Configuration.VERSION_2_3_28;
+
+    private FreeMarkerWorker () {}
 
     // use soft references for this so that things from Content records don't kill all of our memory, or maybe not for performance reasons... hmmm, leave to config file...
     private static final UtilCache<String, Template> cachedTemplates = UtilCache.createUtilCache("template.ftl.general", 0, 0, false);
@@ -218,12 +220,9 @@ public class FreeMarkerWorker {
         return defaultUrlEscapingCharset;
     }
     
-    /**
-     * Protected helper method.
-     */
-    protected static void loadTransforms(ClassLoader loader, Properties props, Configuration config) {
-        for (Iterator<Object> i = props.keySet().iterator(); i.hasNext();) {
-            String key = (String) i.next();
+    private static void loadTransforms(ClassLoader loader, Properties props, Configuration config) {
+        for (Object object : props.keySet()) {
+            String key = (String) object;
             String className = props.getProperty(key);
             if (Debug.verboseOn()) {
                 Debug.logVerbose("Adding FTL Transform " + key + " with class " + className, module);
@@ -510,7 +509,6 @@ public class FreeMarkerWorker {
     }
 
     public static String getArg(Map<String, ? extends Object> args, String key, Map<String, ? extends Object> templateContext) {
-        //SimpleScalar s = null;
         Object o = args.get(key);
         String returnVal = (String) unwrap(o);
         if (returnVal == null) {
@@ -519,14 +517,13 @@ public class FreeMarkerWorker {
                     returnVal = (String) templateContext.get(key);
                 }
             } catch (ClassCastException e2) {
-                //return null;
+                Debug.logInfo(e2.getMessage(), module);
             }
         }
         return returnVal;
     }
 
     public static Object getArgObject(Map<String, ? extends Object> args, String key, Map<String, ? extends Object> templateContext) {
-        //SimpleScalar s = null;
         Object o = args.get(key);
         Object returnVal = unwrap(o);
         if (returnVal == null) {
@@ -535,7 +532,7 @@ public class FreeMarkerWorker {
                     returnVal = templateContext.get(key);
                 }
             } catch (ClassCastException e2) {
-                //return null;
+                Debug.logInfo(e2.getMessage(), module);
             }
         }
         return returnVal;
@@ -568,9 +565,11 @@ public class FreeMarkerWorker {
 
    /**
     * Gets BeanModel from FreeMarker context and returns the object that it wraps.
+    * @deprecated SCIPIO: 2018-08-30: use ContextFtlUtil or LangFtlUtil instead
     * @param varName the name of the variable in the FreeMarker context.
     * @param env the FreeMarker Environment
     */
+    @Deprecated
     public static BeanModel getBeanModel(String varName, Environment env) {
         BeanModel bean = null;
         try {
@@ -581,6 +580,10 @@ public class FreeMarkerWorker {
         return bean;
     }
 
+   /**
+    * @deprecated SCIPIO: 2018-08-30: use ContextFtlUtil or LangFtlUtil instead
+    */
+    @Deprecated
     public static Object get(SimpleHash args, String key) {
         Object o = null;
         try {
@@ -605,16 +608,6 @@ public class FreeMarkerWorker {
                 ctx = UtilGenerics.cast(((BeanModel) ctxObj).getWrappedObject());
                 returnObj = ctx.get(key);
             }
-            /*
-            try {
-                Map templateContext = (Map) FreeMarkerWorker.getWrappedObject("context", env);
-                if (templateContext != null) {
-                    returnObj = (String) templateContext.get(key);
-                }
-            } catch (ClassCastException e2) {
-                //return null;
-            }
-            */
         }
         return returnObj;
     }
@@ -648,7 +641,7 @@ public class FreeMarkerWorker {
     }
 
     public static Map<String, Object> createEnvironmentMap(Environment env) {
-        Map<String, Object> templateRoot = new HashMap<String, Object>();
+        Map<String, Object> templateRoot = new HashMap<>();
         Set<String> varNames = null;
         try {
             varNames = UtilGenerics.checkSet(env.getKnownVariableNames());
@@ -657,9 +650,6 @@ public class FreeMarkerWorker {
         }
         if (varNames != null) {
             for (String varName: varNames) {
-                //freemarker.ext.beans.StringModel varObj = (freemarker.ext.beans.StringModel) varNameIter.next();
-                //Object varObj =  varNameIter.next();
-                //String varName = varObj.toString();
                 templateRoot.put(varName, FreeMarkerWorker.getWrappedObject(varName, env));
             }
         }
@@ -667,7 +657,6 @@ public class FreeMarkerWorker {
     }
 
     public static void saveContextValues(Map<String, Object> context, String [] saveKeyNames, Map<String, Object> saveMap) {
-        //Map saveMap = new HashMap();
         for (String key: saveKeyNames) {
             Object o = context.get(key);
             if (o instanceof Map<?, ?>) {
@@ -680,7 +669,7 @@ public class FreeMarkerWorker {
     }
 
     public static Map<String, Object> saveValues(Map<String, Object> context, String [] saveKeyNames) {
-        Map<String, Object> saveMap = new HashMap<String, Object>();
+        Map<String, Object> saveMap = new HashMap<>();
         for (String key: saveKeyNames) {
             Object o = context.get(key);
             if (o instanceof Map<?, ?>) {
@@ -693,7 +682,6 @@ public class FreeMarkerWorker {
         return saveMap;
     }
 
-
     public static void reloadValues(Map<String, Object> context, Map<String, Object> saveValues, Environment env) {
         for (Map.Entry<String, Object> entry: saveValues.entrySet()) {
             String key = entry.getKey();
@@ -701,7 +689,7 @@ public class FreeMarkerWorker {
             if (o instanceof Map<?, ?>) {
                 context.put(key, UtilMisc.makeMapWritable(UtilGenerics.checkMap(o)));
             } else if (o instanceof List<?>) {
-                List<Object> list = new ArrayList<Object>();
+                List<Object> list = new ArrayList<>();
                 list.addAll(UtilGenerics.checkList(o));
                 context.put(key, list);
             } else {
@@ -721,7 +709,6 @@ public class FreeMarkerWorker {
         for (Map.Entry<String, Object> entry: args.entrySet()) {
             String key = entry.getKey();
             Object obj = entry.getValue();
-            //if (Debug.infoOn()) Debug.logInfo("in overrideWithArgs, key(3):" + key + " obj:" + obj + " class:" + obj.getClass().getName() , module);
             if (obj != null) {
                 if (obj == TemplateModel.NOTHING) {
                     ctx.put(key, null);
@@ -738,6 +725,10 @@ public class FreeMarkerWorker {
         }
     }
 
+   /**
+    * @deprecated SCIPIO: 2018-08-30: do not use
+    */
+    @Deprecated
     public static void convertContext(Map<String, Object> ctx) {
         for (Map.Entry<String, Object> entry: ctx.entrySet()) {
             Object obj = entry.getValue();

@@ -233,15 +233,22 @@ under the License.
     </xs:element>
     <xs:attributeGroup name="attlist.webapp">
         <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="title"/>
+        <xs:attribute type="xs:string" name="title">
+            <xs:annotation>
+                <xs:documentation>
+                    This value is shown in the application menu, when no uiLabelMap is available.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="description"/>
-        <xs:attribute name="menu-name" default="main">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="main"/>
-                    <xs:enumeration value="secondary"/>
-                </xs:restriction>
-            </xs:simpleType>
+        <xs:attribute name="menu-name" use="optional" default="main">
+            <xs:annotation>
+                <xs:documentation>
+                    This value determines in which application menu the application is shown. 
+                    For instance "secondary" is used by plugins and webtools webapps to put their menu-names in the second menu.
+                    Note that not all OOTB themes use this "secondary" option, for instance Flat-Grey does not.
+                </xs:documentation>
+            </xs:annotation>
         </xs:attribute>
         <xs:attribute type="xs:string" name="position"/>
         <xs:attribute type="xs:string" name="server" use="required"/>
@@ -372,24 +379,3 @@ under the License.
         </xs:sequence>
     </xs:complexType>
 </xs:schema>
-<!--
-    <ofbiz-component name="core">
-        <resource-loader name="maincomponent" type="component"/>
-        <resource-loader name="mainfile" type="file" prepend-env="ofbiz.home" prefix=""/>
-        <resource-loader name="maincp" type="classpath"/>
-        <resource-loader name="mainurl" type="url"/>
-
-        <classpath type="jar" location="lib/product.jar"/>
-        <classpath type="dir" location="classes"/>
-
-        <entity-resource type="model" reader-name="main" loader="maincomponent" location="entity/entitymodel.xml"/>
-        <entity-resource type="group" reader-name="main" loader="maincomponent" location="entity/entitygroup.xml"/>
-        <entity-resource type="eca" reader-name="main" loader="maincomponent" location="entity/eecas.xml"/>
-
-        <service-resource type="model" loader="maincomponent" location="service/services_test.xml"/>
-        <service-resource type="group" loader="maincomponent" location="service/groups_test.xml"/>
-        <service-resource type="eca" loader="maincomponent" location="service/secas_test.xml"/>
-
-        <webapp name="webtools" title="WebTools" server="default" location="webtools" mount-point="/webtools"/>
-    </ofbiz-component>
--->

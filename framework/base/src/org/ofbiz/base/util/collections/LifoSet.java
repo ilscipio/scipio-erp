@@ -1,4 +1,5 @@
 /*******************************************************************************
+
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -32,7 +33,7 @@ import java.util.LinkedList;
 public class LifoSet<V> extends AbstractSet<V> implements Serializable {
 
     // This set's back LinkedList
-    private LinkedList<V> backedList = new LinkedList<V>();
+    private LinkedList<V> backedList = new LinkedList<>();
     private int maxCapacity = 10;
 
     /**
@@ -78,8 +79,9 @@ public class LifoSet<V> extends AbstractSet<V> implements Serializable {
 
         if (index == -1) {
             backedList.addFirst(obj);
-            while (size() > maxCapacity)
+            while (size() > maxCapacity) {
                 backedList.removeLast();
+            }
         } else {
             backedList.remove(index);
             backedList.addFirst(obj);

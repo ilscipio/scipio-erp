@@ -39,7 +39,6 @@ public class MapStack<K> extends MapContext<K, Object> {
         return newValue;
     }
 
-    //@SuppressWarnings("unchecked")
     public static <K> MapStack<K> create(Map<K, Object> baseMap) {
         // SCIPIO: use constructors
         //MapStack<K> newValue = new MapStack<K>();

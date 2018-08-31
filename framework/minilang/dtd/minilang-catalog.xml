@@ -26,7 +26,10 @@ under the License.
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <!-- <public publicId="-//W3C//DTD SVG 1.0//EN" uri="svg10.dtd"/> -->
 
-    <system systemId="http://ofbiz.apache.org/dtds/simple-methods.xsd" uri="simple-methods.xsd" />
+    <!-- SCIPIO: 2018-08-30: both now points to v2. 
+        TODO: REVIEW: may want to rename v2 and switch this around... but this assumes no client has
+            need to edit the xsd. -->
+    <system systemId="http://ofbiz.apache.org/dtds/simple-methods.xsd" uri="simple-methods-v2.xsd" />
     <system systemId="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd" uri="simple-methods-v2.xsd" />
 
 </catalog>

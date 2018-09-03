@@ -30,7 +30,7 @@ under the License.
             <fail-property resource="CommonUiLabels" property="CommonGenericPermissionError"/>
         </check-permission>
         <check-errors/>
-        <make-value value-field="newEntity" entity-name="KeywordThesaurus"/>
+        <make-value entity-name="KeywordThesaurus" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <call-object-method obj-field="newEntity.enteredKeyword" method-name="toLowerCase" ret-field="newEntity.enteredKeyword"/>
@@ -42,7 +42,7 @@ under the License.
             <fail-property resource="CommonUiLabels" property="CommonGenericPermissionError"/>
         </check-permission>
         <check-errors/>
-        <make-value value-field="newEntity" entity-name="KeywordThesaurus"/>
+        <make-value entity-name="KeywordThesaurus" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <store-value value-field="newEntity"/>
@@ -52,14 +52,14 @@ under the License.
             <fail-property resource="CommonUiLabels" property="CommonGenericPermissionError"/>
         </check-permission>
         <check-errors/>
-        <make-value value-field="newEntity" entity-name="KeywordThesaurus"/>
+        <make-value entity-name="KeywordThesaurus" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <remove-by-and entity-name="KeywordThesaurus" map="newEntity"/>
     </simple-method>
 
     <!-- Uom Conversion service -->
     <simple-method method-name="createUomConversionDated" short-description="Create a new dated UOM conversion entity">
-        <make-value value-field="newEntity" entity-name="UomConversionDated"/>
+        <make-value entity-name="UomConversionDated" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
@@ -124,13 +124,13 @@ under the License.
 
         <if-empty field="uomConversion">
             <!-- if still no uom conversion entity, then no conversion is possible -->
-            <add-error><fail-property property="CommonNoUomConversionFound" resource="CommonUiLabels"/></add-error>
+            <add-error><fail-property resource="CommonUiLabels" property="CommonNoUomConversionFound"/></add-error>
             <check-errors/>
         <else>
             <!-- Do custom conversion, if we have customMethodId -->
             <if-not-empty field="uomConversion.customMethodId">  <!-- custom conversion? -->
                 <log level="verbose" message="using custom conversion customMethodId=${uomConversion.customMethodId}"/>
-                <set-service-fields service-name="convertUomCustom" to-map="customParms" map="parameters"/>
+                <set-service-fields service-name="convertUomCustom" map="parameters" to-map="customParms"/>
                 <set field="customParms.uomConversion" from-field="uomConversion"/>
                 <call-service service-name="convertUomCustom" in-map-name="customParms">
                     <result-to-field result-name="convertedValue"/>
@@ -171,7 +171,7 @@ under the License.
         <entity-one entity-name="CustomMethod" value-field="customMethod" auto-field-map="true" use-cache="true"/>
 
         <if-empty field="customMethod.customMethodName">
-            <add-error> <fail-property property="CommonNoCustomMethodName" resource="CommonUiLabels"/> </add-error>
+            <add-error> <fail-property resource="CommonUiLabels" property="CommonNoCustomMethodName"/> </add-error>
             <check-errors/>
         <else>
             <log level="verbose" message="calling custom method ${customMethod.customMethodName}"/>
@@ -182,6 +182,7 @@ under the License.
         </else>
         </if-empty>
     </simple-method>
+
     <simple-method method-name="getFileUploadProgressStatus" short-description="Look up progress made in File Upload process">
         <set field="uploadProgressListener" from-field="parameters.uploadProgressListener"/>
         <if-not-empty field="uploadProgressListener">
@@ -192,10 +193,10 @@ under the License.
             <call-object-method obj-field="uploadProgressListener" method-name="hasStarted" ret-field="parameters.hasStarted"/>
             <field-to-result field="parameters.hasStarted" result-name="hasStarted"/>
             <script>groovy:
-                contentLength = parameters.get("contentLength");
-                bytesRead = parameters.get("bytesRead");
-                int readPercent = (bytesRead* 100)/contentLength;
-                parameters.put("readPercent", readPercent);
+                contentLength = parameters.get("contentLength")
+                bytesRead = parameters.get("bytesRead")
+                int readPercent = (bytesRead* 100)/contentLength
+                parameters.put("readPercent", readPercent)
             </script>
             <field-to-result field="parameters.readPercent" result-name="readPercent"/>
             <field-to-result field="parameters.hasStarted" result-name="hasStarted"/>
@@ -205,7 +206,7 @@ under the License.
     <simple-method method-name="getVisualThemeResources" short-description="Get visual theme resources" login-required="false">
         <set field="visualThemeId" from-field="parameters.visualThemeId"/>
         <set field="themeResources" from-field="parameters.themeResources"/>
-        <entity-condition list="resourceList" entity-name="VisualThemeResource" use-cache="true">
+        <entity-condition entity-name="VisualThemeResource" list="resourceList" use-cache="true">
             <condition-expr field-name="visualThemeId" from-field="visualThemeId"/>
             <order-by field-name="resourceTypeEnumId"/>
             <order-by field-name="sequenceId"/>
@@ -217,7 +218,7 @@ under the License.
             <set field="visualThemeId" value="" />
             <property-to-field resource="general" property="VISUAL_THEME" field="defaultVisualThemeId" />
             <if-not-empty field="defaultVisualThemeId">
-                <entity-condition list="resourceList" entity-name="VisualThemeResource" use-cache="true">
+                <entity-condition entity-name="VisualThemeResource" list="resourceList" use-cache="true">
                     <condition-expr field-name="visualThemeId" from-field="defaultVisualThemeId"/>
                     <order-by field-name="resourceTypeEnumId"/>
                     <order-by field-name="sequenceId"/>
@@ -226,7 +227,7 @@ under the License.
             </if-not-empty>
         </if-empty>
         <if-empty field="resourceList">
-            <add-error><fail-property property="CommonVisualThemeResourcesNotFound" resource="CommonUiLabels"/></add-error>
+            <add-error><fail-property resource="CommonUiLabels" property="CommonVisualThemeResourcesNotFound"/></add-error>
             <check-errors/>
         </if-empty>
         <iterate list="resourceList" entry="resourceRecord">
@@ -304,7 +305,7 @@ under the License.
                     </entity-one>
                     <if-empty field="oldGeoAssoc">                    
                         <!-- Add as it does not exist -->
-                        <make-value value-field="newGeoAssoc" entity-name="GeoAssoc"/>
+                        <make-value entity-name="GeoAssoc" value-field="newGeoAssoc"/>
                         <set field="newGeoAssoc.geoId" from-field="parameters.geoId"/>
                         <set field="newGeoAssoc.geoIdTo" from-field="geoIdTo"/>
                         <set field="newGeoAssoc.geoAssocTypeId" from-field="parameters.geoAssocTypeId"/>
@@ -362,8 +363,7 @@ under the License.
             </else>
         </if-not-empty>
         <field-to-result field="exist"/>
-    </simple-method>
-    
+    </simple-method>    
 
     <simple-method method-name="getServerTimestamp" login-required="false">
         <now field="serverTimestamp" type="java.sql.Timestamp"/>

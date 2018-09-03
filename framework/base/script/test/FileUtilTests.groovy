@@ -30,8 +30,11 @@ class FileUtilTests extends GroovyScriptTestCase {
      */
     void testZipReadme() {
         String zipFilePath = UtilProperties.getPropertyValue("general", "http.upload.tmprepository", "runtime/tmp")
-        String zipName = 'README.adoc.zip'
-        String fileName = 'README.adoc'
+        // SCIPIO
+        //String zipName = 'README.adoc.zip'
+        //String fileName = 'README.adoc'
+        String zipName = 'README.md.zip'
+        String fileName = 'README.md'
         File originalReadme = new File(fileName)
 
         //validate zipStream from README.adoc is not null

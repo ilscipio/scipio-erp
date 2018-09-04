@@ -915,10 +915,10 @@ under the License.
 
         <prim-key field="messageId"/>
 
-        <relation type="one" fk-name="FROM_PARTY" rel-entity-name="Party">
+        <relation type="one" fk-name="SYSMSGS_FROM_PARTY" rel-entity-name="Party" title="From">
             <key-map field-name="fromPartyId" rel-field-name="partyId"/>
         </relation>
-        <relation type="one" fk-name="TO_PARTY" rel-entity-name="Party">
+        <relation type="one" fk-name="SYSMSGS_TO_PARTY" rel-entity-name="Party" title="To">
             <key-map field-name="toPartyId" rel-field-name="partyId"/>
         </relation>
     </entity>

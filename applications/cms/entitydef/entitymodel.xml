@@ -587,7 +587,9 @@
         <member-entity entity-alias="PG" entity-name="CmsPage"/>
         <member-entity entity-alias="PPM" entity-name="CmsProcessMapping"/>
         <alias-all entity-alias="PG"/>
-        <alias-all entity-alias="PPM"/>
+        <alias-all entity-alias="PPM">
+            <exclude field="pageId"/>
+        </alias-all>
         <view-link entity-alias="PG" rel-entity-alias="PPM">
             <key-map field-name="pageId" rel-field-name="primaryForPageId"/>
         </view-link>

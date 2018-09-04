@@ -4311,7 +4311,8 @@ under the License.
     <!-- SCIPIO: Datev (https://www.datev.de/dnlexom/client/app/index.html#/search) -->
     <entity entity-name="DatevFieldDefinition"
             package-name="com.ilscipio.scipio.accounting.external.datev"
-            title="DATEV - Field definitions for different data categories (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
+            title="DATEV - Field definition">
+        <description>DATEV - Field definitions for different data categories (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)</description>
         <field name="fieldId" type="id-ne"></field>
         <field name="dataCategoryId" type="id-long"></field>
         <field name="fieldName" type="short-varchar"></field>
@@ -4334,7 +4335,8 @@ under the License.
   	</entity>
 
     <entity entity-name="DatevGeneralSetting" package-name="com.ilscipio.scipio.accounting.external.datev"
-        title="DATEV -  General settings of the ASCII data format">
+        title="DATEV - General settings">
+        <description>DATEV - General settings of the ASCII data format</description>
         <field name="dataCategoryId" type="id-long"></field>
         <field name="charset" type="short-varchar"></field>
         <field name="recordLayout" type="short-varchar"></field>
@@ -4353,7 +4355,8 @@ under the License.
     
      <entity entity-name="DatevMetadata"
             package-name="com.ilscipio.scipio.accounting.external.datev"
-            title="DATEV - Metadata. If present, first CSV row. Don't be confused with the header row. (Should be the same for all data categories)">
+            title="DATEV - Metadata">
+        <description>DATEV - Metadata. If present, first CSV row. Don't be confused with the header row. (Should be the same for all data categories)</description>
         <field name="metadataId" type="id-vlong"></field>            
         <field name="typeEnumId" type="id-ne" not-null="true"></field><!-- SCIPIO: 2018-09-04: changed to id-ne due to short-varchar relation warning -->
         <field name="length" type="numeric"></field>      
@@ -4387,21 +4390,23 @@ under the License.
     
     <entity entity-name="DatevDataCategory"
             package-name="com.ilscipio.scipio.accounting.external.datev"
-            title="DATEV - Available Data Categories (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
-            <field name="dataCategoryId" type="id-long"></field>
-            <field name="dataCategoryName" type="short-varchar"></field>
-            <field name="dataCategoryClass" type="long-varchar"></field>
-            <field name="description" type="long-varchar"></field>
-            <prim-key field="dataCategoryId"/>
-            <relation rel-entity-name="DatevFieldDefinition" type="many">
-                <key-map field-name="dataCategoryId"/>
-            </relation>
+            title="DATEV - Available Data Categories">
+        <description>DATEV - Available Data Categories (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)</description>
+        <field name="dataCategoryId" type="id-long"></field>
+        <field name="dataCategoryName" type="short-varchar"></field>
+        <field name="dataCategoryClass" type="long-varchar"></field>
+        <field name="description" type="long-varchar"></field>
+        <prim-key field="dataCategoryId"/>
+        <relation rel-entity-name="DatevFieldDefinition" type="many">
+            <key-map field-name="dataCategoryId"/>
+        </relation>
     </entity>
     
     <!-- TODO: Not used yet -->
     <entity entity-name="DatevFieldDefinitionVersion"
             package-name="com.ilscipio.scipio.accounting.external.datev"
-            title="DATEV - Field definition version (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
+            title="DATEV - Field definition version">
+        <description>DATEV - Field definition version (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)</description>
         <field name="fieldId" type="id-ne"></field>
         <field name="dataCategoryId" type="id-long"></field>
         <field name="version" type="short-varchar"></field>

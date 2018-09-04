@@ -55,33 +55,41 @@ public class ExportServlet extends HttpServlet {
                 //ServletContext application = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 
                 byte[] mediaData = dataResource.getBytes("fileData");
-                long mediaLength;
                 if (mediaData == null) {
-                    mediaData = new byte[0];
-                    mediaLength = 0;
-                    Debug.logWarning("EntityExport exportId '" + exportId 
-                            + "' contains no fileData; this could be either due"
-                            + " to an unexpected error or database modification OR because the EntityExport.file field"
-                            + " was renamed to EntityExport.fileData on 2018-09-04; for the latter, please try a fresh export"
-                            + " and delete this old export ('" + exportId + "') (no backward-compatible workaround was possible, sorry for the inconvenience)", module);
-                } else {
-                    // dead code
-                    //ByteArrayInputStream mediaStream = new ByteArrayInputStream(mediaData);
-                    
-                    // extra warning, will help users figure out what happened because we were forced to rename a field...
-                    long fileSize = (long) dataResource.get("fileSize"); 
-                    if (fileSize != mediaData.length) {
-                        Debug.logWarning("EntityExport exportId '" + exportId 
-                                + "' has a fileSize field different from the actual file data size; this could be either due"
-                                + " to an unexpected error or database modification OR because the EntityExport.file field"
-                                + " was renamed to EntityExport.fileData on 2018-09-04; for the latter, please try a fresh export"
-                                + " and delete this old export ('" + exportId + "') (no backward-compatible workaround was possible, sorry for the inconvenience)", module);
+                    if (dataResource.getModelEntity().isField("file")) {
+                        mediaData = dataResource.getBytes("file");
+                        if (mediaData != null) {
+                            Debug.logWarning("DEPRECATED: EntityExport exportId '" + exportId 
+                                    + "' is using the old EntityExport.file field; this field is deprecated as of 2018-09-04"
+                                    + " and will be removed. Please save your old data if needed, delete this record, and re-export as needed."
+                                    + " Sorry for the inconvenience.", module);
+                        }
                     }
+                    
+                    if (mediaData == null) {
+                        mediaData = new byte[0];
+                        Debug.logWarning("EntityExport exportId '" + exportId 
+                                + "' contains no file data; this could be either due"
+                                + " to an unexpected error or database modification OR because the EntityExport.file field has been removed"
+                                + " ; in the latter case, if you still need this data, simply temporarily uncomment the EntityExport \"file\" field"
+                                + " in framework/webtools/entitydef/entitymodel_scipio.xml to retrieve your data", module);
+                    }
+                } 
 
-                    // TODO: REVIEW: why use anything other than mediaData.length here? can only cause problems
-                    //mediaLength = fileSize;
-                    mediaLength = mediaData.length;
+                // dead code
+                //ByteArrayInputStream mediaStream = new ByteArrayInputStream(mediaData);
+                
+                // extra warning, will help users figure out what happened because we were forced to rename a field...
+                long fileSize = (long) dataResource.get("fileSize"); 
+                if (fileSize != mediaData.length) {
+                    Debug.logWarning("EntityExport exportId '" + exportId 
+                            + "' has a fileSize field different from the actual file data size; this could be either due"
+                            + " to an unexpected error or database modification", module);
                 }
+
+                // TODO: REVIEW: why use anything other than mediaData.length here? can only cause problems
+                //long mediaLength = fileSize;
+                long mediaLength = mediaData.length;
 
                 response.setContentType("application/zip");
                 response.setHeader("Content-Disposition", "inline; filename= " + exportId+".zip");

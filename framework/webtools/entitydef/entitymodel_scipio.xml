@@ -31,12 +31,11 @@ under the License.
         title="Entity Export" author="Ilscipio GmbH" version="1.0">
       <field name="exportId" type="id-ne"></field>
       <field name="fileData" type="byte-array"></field>
-      <!-- 2018-09-04: This field was using a reserved database name, so had to be renamed;
-        unfortunately no backward-compatible workaround was possible, so all we can do is print
-        a warning during export... In the rare event you needed to retrieve an old export,
-        can temporarily uncomment this field and temporarily change "fileData" to "file" in 
-        com.ilscipio.scipio.webtools.ExportServlet and recompile. Sorry for the inconvenience.
-      <field name="file" type="byte-array"></field>-->
+      <!-- 2018-09-04: TODO: REMOVE: This field is using a reserved database name ("FILE"), so fileData has
+          been created instead. We will give a grace period for users to notice the warnings,
+          but later this has to be removed (no backward-compatible workaround is possible at that time). 
+          In the future, if you need to retrieve old records, you can uncomment this field again. -->
+      <field name="file" type="byte-array"></field>
       <field name="fileSize" type="numeric"></field>
       <field name="description" type="very-long"></field>
       <field name="createdBy" type="id"></field>

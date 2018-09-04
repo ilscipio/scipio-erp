@@ -1,7 +1,6 @@
 
 package com.ilscipio.scipio.webtools;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -56,25 +54,49 @@ public class ExportServlet extends HttpServlet {
                 // see org.ofbiz.content.data.DataEvents#serveImage for reference code
                 //ServletContext application = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 
-                byte[] mediaData = (byte[]) dataResource.get("fileData");
-                ByteArrayInputStream mediaStream = new ByteArrayInputStream(mediaData);
+                byte[] mediaData = dataResource.getBytes("fileData");
+                long mediaLength;
+                if (mediaData == null) {
+                    mediaData = new byte[0];
+                    mediaLength = 0;
+                    Debug.logWarning("EntityExport exportId '" + exportId 
+                            + "' contains no fileData; this could be either due"
+                            + " to an unexpected error or database modification OR because the EntityExport.file field"
+                            + " was renamed to EntityExport.fileData on 2018-09-04; for the latter, please try a fresh export"
+                            + " and delete this old export ('" + exportId + "') (no backward-compatible workaround was possible, sorry for the inconvenience)", module);
+                } else {
+                    // dead code
+                    //ByteArrayInputStream mediaStream = new ByteArrayInputStream(mediaData);
+                    
+                    // extra warning, will help users figure out what happened because we were forced to rename a field...
+                    long fileSize = (long) dataResource.get("fileSize"); 
+                    if (fileSize != mediaData.length) {
+                        Debug.logWarning("EntityExport exportId '" + exportId 
+                                + "' has a fileSize field different from the actual file data size; this could be either due"
+                                + " to an unexpected error or database modification OR because the EntityExport.file field"
+                                + " was renamed to EntityExport.fileData on 2018-09-04; for the latter, please try a fresh export"
+                                + " and delete this old export ('" + exportId + "') (no backward-compatible workaround was possible, sorry for the inconvenience)", module);
+                    }
 
-                long mediaLength = (long) dataResource.get("fileSize");
-                
+                    // TODO: REVIEW: why use anything other than mediaData.length here? can only cause problems
+                    //mediaLength = fileSize;
+                    mediaLength = mediaData.length;
+                }
+
                 response.setContentType("application/zip");
                 response.setHeader("Content-Disposition", "inline; filename= " + exportId+".zip");
                 response.setContentLengthLong(mediaLength);
                 if (mediaData != null) {
                     response.getOutputStream().write(mediaData, 0, (int) mediaLength);
-                } else if (mediaStream != null) {
-                    UtilHttp.streamContent(response.getOutputStream(), mediaStream, (int) mediaLength);
-                } 
-                /* will never be run
-                else {
-                    Debug.logError("Webtools: Bad stream/bytes source [effective exportId: " + exportId + "]", module);
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal error"); // WARN: DO NOT send details, for security reasons
-                    return;
-                }*/
+                }
+                // dead code, mediaData cannot be null
+                //else if (mediaStream != null) {
+                //    UtilHttp.streamContent(response.getOutputStream(), mediaStream, (int) mediaLength);
+                //} else {
+                //    Debug.logError("Webtools: Bad stream/bytes source [effective exportId: " + exportId + "]", module);
+                //    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal error"); // WARN: DO NOT send details, for security reasons
+                //    return;
+                //}
             }
         } catch (Exception e) {
             Debug.logError(e, module);

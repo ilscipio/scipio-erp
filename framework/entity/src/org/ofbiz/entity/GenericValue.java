@@ -34,7 +34,9 @@ import org.ofbiz.entity.model.ModelEntity;
  */
 @SuppressWarnings("serial")
 public class GenericValue extends GenericEntity {
-    
+
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     public static final GenericValue NULL_VALUE = new NullGenericValue();
 
     /** Creates new GenericValue */
@@ -99,7 +101,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelated(String relationName) throws GenericEntityException {
-        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
+        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc: getRelated(String)", module); // SCIPIO: fixed message (removed stack trace, not that useful for us)
         return this.getDelegator().getRelated(relationName, null, null, this, false);
     }
 
@@ -112,7 +114,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelated(String relationName, List<String> orderBy) throws GenericEntityException {
-        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
+        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc: getRelated(String, List)", module); // SCIPIO: fixed message
         return this.getDelegator().getRelated(relationName, null, orderBy, this, false);
     }
 
@@ -126,7 +128,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelated(String relationName, Map<String, ? extends Object> byAndFields, List<String> orderBy) throws GenericEntityException {
-        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
+        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc: getRelated(String, Map, List)", module); // SCIPIO: fixed message
         return this.getDelegator().getRelated(relationName, byAndFields, orderBy, this, false);
     }
 
@@ -177,7 +179,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public GenericValue getRelatedOne(String relationName) throws GenericEntityException {
-        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", getStackTraceAsString());
+        Debug.logWarning("deprecated GenericValue method, please replace as suggested in API Java Doc: getRelatedOne(String)", module); // SCIPIO: fixed message
         return this.getDelegator().getRelatedOne(relationName, this, false);
     }
 
@@ -269,7 +271,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelatedCache(String relationName) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedCache", GenericValue.class.getName());
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedCache(String)", module);
         return this.getDelegator().getRelated(relationName, null, null, this, true);
     }
 
@@ -284,7 +286,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelatedCache(String relationName, Map<String, ? extends Object> byAndFields, List<String> orderBy) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedCache", GenericValue.class.getName());
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedCache(String, Map, List)", module);
         return this.getDelegator().getRelated(relationName, byAndFields, orderBy, this, true);
     }
 
@@ -298,7 +300,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelatedCache(String relationName, List<String> orderBy) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedCache", GenericValue.class.getName());
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedCache(String, List)", module);
         return this.getDelegator().getRelated(relationName, null, orderBy, this, true);
     }
 
@@ -310,7 +312,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public GenericValue getRelatedOneCache(String relationName) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedOneCache", GenericValue.class.getName());
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedOneCache(String)", module);
         return this.getDelegator().getRelatedOne(relationName, this, true);
     }
 
@@ -323,7 +325,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelatedByAnd(String relationName, Map<String, ? extends Object> fields) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedByAnd", GenericValue.class.getName());
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedByAnd(String, Map)", module);
         return this.getDelegator().getRelated(relationName, fields, null, this, false);
     }
 
@@ -336,7 +338,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelatedByAndCache(String relationName, Map<String, ? extends Object> fields) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedByAndCache", GenericValue.class.getName());
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedByAndCache(String, Map)", module);
         return this.getDelegator().getRelated(relationName, fields, null, this, true);
     }
 
@@ -348,7 +350,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelatedOrderBy(String relationName, List<String> orderBy) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedOrderBy", GenericValue.class.getName());
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedOrderBy(String, List)", module);
         return this.getDelegator().getRelated(relationName, null, orderBy, this, false);
     }
 
@@ -361,7 +363,7 @@ public class GenericValue extends GenericEntity {
      */
     @Deprecated
     public List<GenericValue> getRelatedOrderByCache(String relationName, List<String> orderBy) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedOrderByCache", GenericValue.class.getName());
+        Debug.logWarning("Scipio: highly deprecated GenericValue method called, please replace call: getRelatedOrderByCache(String, List)", module);
         return this.getDelegator().getRelated(relationName, null, orderBy, this, true);
     }
 

@@ -400,7 +400,7 @@ public final class EntityUtil {
      */
     @Deprecated
     public static List<GenericValue> getRelated(String relationName, List<GenericValue> values) throws GenericEntityException {
-        Debug.logWarning("deprecated method, please replace as suggested in API Java Doc, and link to OFBIZ-6651", GenericValue.getStackTraceAsString());
+        Debug.logWarning("deprecated EntityUtil method, please replace as suggested in API Java Doc: getRelated(String, List)", module); // SCIPIO: fixed message (removed stack trace, not that useful for us)
         return getRelated(relationName, null, values, false);
     }
 
@@ -641,7 +641,7 @@ public final class EntityUtil {
      */
     @Deprecated
     public static List<GenericValue> getRelatedCache(String relationName, List<GenericValue> values) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedCache", module);
+        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedCache(String, List)", module);
         return getRelated(relationName, null, values, true);
     }
 
@@ -650,7 +650,7 @@ public final class EntityUtil {
      */
     @Deprecated
     public static List<GenericValue> getRelatedByAnd(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAnd", module);
+        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAnd(String, Map, List)", module);
         return getRelated(relationName, fields, values, false);
     }
 
@@ -659,7 +659,7 @@ public final class EntityUtil {
      */
     @Deprecated
     public static List<GenericValue> getRelatedByAndCache(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values) throws GenericEntityException {
-        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAndCache", module);
+        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAndCache(String, Map, List)", module);
         return getRelated(relationName, fields, values, true);
     }
 

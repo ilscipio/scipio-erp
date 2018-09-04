@@ -64,7 +64,7 @@ under the License.
                     <#list exportList as record>
                         <@tr>
                             <@td width="100">
-                                <#assign exportUrl=makeOfbizWebappUrl("/export?exportId=" + record.exportId!"") />
+                                <#assign exportUrl=makeOfbizWebappUrl("/export?exportId=" + rawString(record.exportId!)) />
                                 <a href="${exportUrl!""}" target="_blank">${uiLabelMap.FormFieldTitle_downloadAction}</a>
                             </@td>
                             
@@ -79,7 +79,10 @@ under the License.
                                 ${record.description!""}
                             </@td>
                             <@td>
-                               <#-- <a href="">${uiLabelMap.CommonDelete}</a>-->
+                                <form method="post" action="<@ofbizUrl uri="deleteEntityExport"/>" id="EntityExport_remove_${record?index}">
+                                  <input type="hidden" name="exportId" value="${record.exportId!}"/>
+                                  <a href="javascript:jQuery('#EntityExport_remove_${record?index}').submit();void(0);">${uiLabelMap.CommonDelete}</a>
+                                </form>
                             </@td>
                         </@tr>
                     </#list>

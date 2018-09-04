@@ -442,6 +442,12 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="xmldsrawdump"/>
     </request-map>
+    <request-map uri="deleteEntityExport"><!-- SCIPIO -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteEntityExport"/>
+        <response name="success" type="view" value="xmldsdump"/>
+        <response name="error" type="view" value="xmldsdump"/>
+    </request-map>
 
     <!-- EntitySync requests -->
     <request-map uri="EntitySyncStatus"><security https="true" auth="true"/><response name="success" type="view" value="EntitySyncStatus"/></request-map>

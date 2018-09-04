@@ -687,9 +687,7 @@
     <!--  Media entities -->
     <!-- ========================================================= -->
 
-    <!-- NOTE: DataResourceFileView currently relies on the datastructure outlined by the content component. As the rest of the content component
-        is rather superfluous by now, it is possible that the datamodel may be migrated to this component in future releases. -->
-    <view-entity entity-name="DataResourceMediaFileView" title="DataResource View"
+    <view-entity entity-name="DataResourceMediaFileView" title="DataResource Media File View"
         package-name="com.ilscipio.scipio.cms.media">
       <member-entity entity-alias="DR" entity-name="DataResource"/>
       <member-entity entity-alias="CNT" entity-name="Content"/>
@@ -738,8 +736,7 @@
       </view-link>
 
       <relation type="one-nofk" rel-entity-name="Content">
-        <!--<key-map field-name="contentId"/>-->
-        <key-map field-name="dataResourceId"/>
+        <key-map field-name="contentId"/>
       </relation>
 
       <relation type="many" rel-entity-name="DataResourceAttribute">

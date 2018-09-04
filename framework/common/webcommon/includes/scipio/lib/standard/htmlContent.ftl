@@ -278,6 +278,7 @@ Creates a responsive tables script (script only - no markup).
       
       <@script htmlwrap=htmlwrap>
         $(document).ready(function() {
+            $.fn.dataTable.ext.errMode = 'none';
             $('#${escapeVal(tableId, 'js')}').DataTable(<@objectAsScript lang="js" object=respOpts />);
         } );
       </@script>

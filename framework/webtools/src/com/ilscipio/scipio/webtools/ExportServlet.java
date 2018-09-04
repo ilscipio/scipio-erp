@@ -56,7 +56,7 @@ public class ExportServlet extends HttpServlet {
                 // see org.ofbiz.content.data.DataEvents#serveImage for reference code
                 //ServletContext application = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 
-                byte[] mediaData = (byte[]) dataResource.get("file");
+                byte[] mediaData = (byte[]) dataResource.get("fileData");
                 ByteArrayInputStream mediaStream = new ByteArrayInputStream(mediaData);
 
                 long mediaLength = (long) dataResource.get("fileSize");

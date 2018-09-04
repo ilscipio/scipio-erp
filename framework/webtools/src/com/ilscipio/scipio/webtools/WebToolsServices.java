@@ -179,7 +179,7 @@ public class WebToolsServices {
 
              FileInputStream fileInputStream = new FileInputStream(outZipFile);
              byte[] zipFile = IOUtils.toByteArray(fileInputStream);
-             dataResource.put("file", zipFile);
+             dataResource.put("fileData", zipFile);
              dataResource.put("fileSize", new Long(zipFile.length));
              delegator.createOrStore(dataResource);
              

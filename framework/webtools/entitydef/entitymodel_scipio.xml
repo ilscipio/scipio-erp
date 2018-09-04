@@ -30,7 +30,7 @@ under the License.
     <entity entity-name="EntityExport" package-name="com.ilscipio.scipio.webtools.entity"
         title="Entity Export" author="Ilscipio GmbH" version="1.0">
       <field name="exportId" type="id-ne"></field>
-      <field name="file" type="byte-array"></field>
+      <field name="fileData" type="byte-array"></field>
       <field name="fileSize" type="numeric"></field>
       <field name="description" type="very-long"></field>
       <field name="createdBy" type="id"></field>

@@ -78,8 +78,8 @@ under the License.
                 <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: border="0" -->
                 
               <#list OISGAssContents as OISGAssContent>
-                <#assign OISG = OISGAssContent.getRelatedOne("OrderItemShipGroup")>
-                <#assign orderShipments = OISGAssContent.getRelated("OrderShipment")>
+                <#assign OISG = OISGAssContent.getRelatedOne("OrderItemShipGroup", false)>
+                <#assign orderShipments = OISGAssContent.getRelated("OrderShipment", null, null, false)>
                       
                 <@tr>
                   <@td width="40%">&nbsp;</@td>
@@ -352,7 +352,7 @@ under the License.
 
 
         <#if shipGroup.supplierPartyId?has_content>
-           <#assign OISGAContent = shipGroup.getRelated("OrderItemShipGroupAssoc")>
+           <#assign OISGAContent = shipGroup.getRelated("OrderItemShipGroupAssoc", null, null, false)>
            <#-- New in Ofbiz 14.12 -->
            <#if OISGAContent.size() == 0>
            <@tr>

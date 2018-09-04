@@ -678,7 +678,7 @@ public class InvoiceWorker {
                 }
             }
         }
-        // Add Vat included
+        // SCIPIO: Add Vat included
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
             List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
@@ -723,7 +723,7 @@ public class InvoiceWorker {
             Debug.logError(e, "Trouble getting InvoiceItem list", module);
             return null;
         }
-        // Vat Included
+        // SCIPIO: Vat Included
         BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
@@ -785,7 +785,7 @@ public class InvoiceWorker {
     }
     
     /**
-     * Get the order id for a specific invoice
+     * SCIPIO: Get the order id for a specific invoice
      *
      * @param delegator
      * @param invoiceId
@@ -807,8 +807,9 @@ public class InvoiceWorker {
 
         return orderItemBilling.getString("orderId");
     }
+
     /**
-     * Gets included tax amount out of Order Adjustments (either from TaxAuthority Services or OrderAdjustment)
+     * SCIPIO: Gets included tax amount out of Order Adjustments (either from TaxAuthority Services or OrderAdjustment)
      *
      * @param adjustments
      * @return Tax Amount, Zero if there are no adjustments
@@ -826,8 +827,9 @@ public class InvoiceWorker {
         }
         return taxAmountIncluded.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
+
     /**
-     * Returns a List of the TaxAuthority RateProducts for the given Invoice.
+     * SCIPIO: Returns a List of the TaxAuthority RateProducts for the given Invoice.
      * @param invoice GenericValue object representing the Invoice
      * @return A Map containing the each taxAuthRateProduct as a key and a Set of ... (was: taxAuthGeoIds for that taxAuthPartyId as the values.  Note this method
      *         will not account for tax lines that do not contain a taxAuthPartyId)
@@ -857,8 +859,8 @@ public class InvoiceWorker {
                     if (UtilValidate.isNotEmpty(taxAuthorityRateSeqId)) {
                         if (!result.containsKey(taxAuthorityRateSeqId)) {
                             String taxGlAccountId = null;
-                            GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOne("TaxAuthorityRateProduct", true); // SCIPIO: fixed deprecated method
-                            if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                            GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOne("TaxAuthorityRateProduct", true);
+                            if (taxAuthorityRateProduct != null && taxAuthorityRateProduct.getModelEntity().isField("taxGlAccountId")) { // taxGlAccountId may only be present in addon...
                                 taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                             }
                             if (taxGlAccountId == null) {
@@ -898,7 +900,7 @@ public class InvoiceWorker {
                     if (!result.containsKey(taxAuthorityRateSeqId)) {
                         String taxGlAccountId = null;
                         GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOne("TaxAuthorityRateProduct", true);
-                        if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                        if (taxAuthorityRateProduct != null && taxAuthorityRateProduct.getModelEntity().isField("taxGlAccountId")) { // taxGlAccountId may only be present in addon...
                             taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                         }
                         if (taxGlAccountId == null) {
@@ -925,6 +927,7 @@ public class InvoiceWorker {
     }
 
     /**
+     * SCIPIO: getInvoiceTaxTotalForTaxGlAccount.
      * @param invoice GenericValue object representing the invoice
      * @param taxAuthPartyId
      * @param taxAuthGeoId
@@ -944,7 +947,7 @@ public class InvoiceWorker {
                 String taxGlAccountId = null;
                 // TODO: getTaxGlAccountForInvoiceItem(invoiceTaxItem);
                 GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOne("TaxAuthorityRateProduct", true);
-                if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                if (taxAuthorityRateProduct != null && taxAuthorityRateProduct.getModelEntity().isField("taxGlAccountId")) { // taxGlAccountId may only be present in addon...
                     taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                 }
                 if (taxGlAccountId == null) {
@@ -979,8 +982,8 @@ public class InvoiceWorker {
             for (GenericValue orderAdjustment : orderAdjustmentsTaxItems) {
                 String taxGlAccountId = null;
                 // TODO: getTaxGlAccountForInvoiceItem(orderAdjustment);
-                GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOne("TaxAuthorityRateProduct", true); // SCIPIO: fixed deprecated method
-                if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOne("TaxAuthorityRateProduct", true);
+                if (taxAuthorityRateProduct != null && taxAuthorityRateProduct.getModelEntity().isField("taxGlAccountId")) { // taxGlAccountId may only be present in addon...
                     taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                 }
                 if (taxGlAccountId == null) {
@@ -1008,7 +1011,7 @@ public class InvoiceWorker {
     }
 
     /**
-     * Method to return the amount of tax included of an invoiceItem
+     * SCIPIO: Method to return the amount of tax included of an invoiceItem
      *
      * @param invoiceItem GenericValue object of the invoice item
      * @return tax amount included as BigDecimal
@@ -1028,7 +1031,7 @@ public class InvoiceWorker {
     }
 
     /**
-     * Method to return the amount of tax included of an orderItem
+     * SCIPIO: Method to return the amount of tax included of an orderItem
      * 
      * @param orderItem
      *            GenericValue object of the order item

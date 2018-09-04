@@ -238,7 +238,7 @@ public class TaxAuthorityServices {
         }
         if (orderShippingAmount != null && orderShippingAmount.compareTo(BigDecimal.ZERO) > 0) {
             List<GenericValue> taxList = getTaxAdjustments(delegator, null, productStore, payToPartyId, billToPartyId, taxAuthoritySet, ZERO_BASE, ZERO_BASE, ZERO_BASE, orderShippingAmount, ZERO_BASE, useCache);
-            // if there is no rate for shipping use "majority" rule, i.e. most used rate for order
+            // SCIPIO: if there is no rate for shipping use "majority" rule, i.e. most used rate for order
             if (UtilValidate.isEmpty(taxList)) {
                 //taxList = getShippingTaxAdjustment(itemAdjustments);
                 taxList = getShippingTaxAdjustment(delegator, itemAdjustments, orderShippingAmount, productStore, billToPartyId, useCache);
@@ -669,12 +669,17 @@ public class TaxAuthorityServices {
         }
     }
 
+    /**
+     * SCIPIO: getShippingTaxAdjustment.
+     */
     private static List<GenericValue> getShippingTaxAdjustment(Delegator delegator, List<List<GenericValue>> itemsAdjustments,
             BigDecimal orderShippingAmount, GenericValue productStore, String billToPartyId) {
         return getShippingTaxAdjustment(delegator, itemsAdjustments, orderShippingAmount, productStore, billToPartyId, true);
     }
-    
-    // SCIPIO: 2017-12-19: added useCache flag
+
+    /**
+     * SCIPIO: getShippingTaxAdjustment.
+     */
     private static List<GenericValue> getShippingTaxAdjustment(Delegator delegator, List<List<GenericValue>> itemsAdjustments,
             BigDecimal orderShippingAmount, GenericValue productStore, String billToPartyId, boolean useCache) {
         List<GenericValue> adjustments = new ArrayList<GenericValue>();

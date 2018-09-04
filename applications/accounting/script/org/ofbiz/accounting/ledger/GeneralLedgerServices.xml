@@ -2232,7 +2232,7 @@ under the License.
             </entity-condition>
             <iterate list="invoiceItems" entry="invoiceItem">
                 <!-- TODO: handle serialized inventory -->
-                <if-empty field="invoiceItem.quantity">
+                <if-empty field="invoiceItem.quantity"><!-- SCIPIO: modified -->
                     <set field="invoiceItem.quantity" type="BigDecimal" value="1"/>
                 </if-empty>
                 <calculate field="origAmount" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
@@ -2242,6 +2242,7 @@ under the License.
                     </calcop>
                 </calculate>
                 <log level="info" message="** origAmount ${origAmount}"/>
+                <!-- SCIPIO: new section -->
                 <!-- subtract taxAlreadyIncluded -->
                 <call-class-method method-name="getInvoiceItemTaxIncluded" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"
                         ret-field="InvoiceItemTaxAlreadyIncluded">
@@ -2260,18 +2261,18 @@ under the License.
                         <calcop operator="get" field="origAmount"/>
                     </calcop>
                 </calculate>
-                <log level="info" message="** totalOrigAmount ${totalOrigAmount}"/>
+                <log level="info" message="** totalOrigAmount ${totalOrigAmount}"/><!-- SCIPIO -->
                 <!-- Credit -->
                 <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
                 <set field="creditEntry.debitCreditFlag" value="C"/>
-                <!-- Bug??<set field="creditEntry.glAccountTypeId" from-field="invoiceItem.invoiceItemTypeId"/>-->
+                <!-- SCIPIO: Bug??<set field="creditEntry.glAccountTypeId" from-field="invoiceItem.invoiceItemTypeId"/>-->
                 <set field="creditEntry.glAccountTypeId" value="SALES_ACCOUNT"/>
                 <set field="creditEntry.organizationPartyId" from-field="invoice.partyIdFrom"/>
                 <set field="creditEntry.productId" from-field="invoiceItem.productId"/>
-                <set field="creditEntry.origAmount" from-field="origAmountWithoutTax"/>
+                <set field="creditEntry.origAmount" from-field="origAmountWithoutTax"/><!-- SCIPIO -->
                 <set field="creditEntry.origCurrencyUomId" from-field="invoice.currencyUomId"/>
                 <set field="creditEntry.glAccountId" from-field="invoiceItem.overrideGlAccountId"/>
-                <!-- Get Gl Account from TaxAuthorityRateProduct ... -->
+                <!-- SCIPIO: Get Gl Account from TaxAuthorityRateProduct ... -->
                 <log level="info" message="*** creditEntry.glAccountId: ${creditEntry.glAccountId}"/>
                 <if-empty field="creditEntry.glAccountId">
                     <!-- Look for ITM_SALES_TAX  invoice item-->
@@ -2284,7 +2285,15 @@ under the License.
                     <if-not-empty field="taxInvoiceItems">
                         <first-from-list list="taxInvoiceItems" entry="taxInvoiceItem"/>
                         <get-related-one relation-name="TaxAuthorityRateProduct" value-field="taxInvoiceItem" to-value-field="taxRateProduct"/>
-                        <set field="creditEntry.glAccountId" from-field="taxRateProduct.revenueGlAccountId"/>
+                        <!-- SCIPIO: 2018-09-04: revenueGlAccountId may only be defined in addon; must check if field defined before using
+                        <set field="creditEntry.glAccountId" from-field="taxRateProduct.revenueGlAccountId"/>-->
+                        <script><![CDATA[groovy:
+                            if (taxRateProduct != null && taxRateProduct.getModelEntity().isField("revenueGlAccountId")) {
+                                creditEntry.glAccountId = taxRateProduct.revenueGlAccountId;
+                            } else {
+                                creditEntry.glAccountId = null;
+                            }
+                        ]]></script>
                     </if-not-empty>
                 </if-empty>
                 <if-not-empty field="invoiceItem.taxAuthPartyId">
@@ -2294,6 +2303,7 @@ under the License.
                 <set field="acctgTransEntries[]" from-field="creditEntry" type="Object"/>
             </iterate>
 
+            <!-- SCIPIO: many code in this section modified - TODO: comment this properly -->
             <!-- credit entry for SALES_TAX-->
             <!-- <call-class-method method-name="getInvoiceTaxAuthPartyAndGeos" class-name="org.ofbiz.accounting.invoice.InvoiceWorker" -->
             <call-class-method method-name="getInvoiceTaxRateProducts" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"

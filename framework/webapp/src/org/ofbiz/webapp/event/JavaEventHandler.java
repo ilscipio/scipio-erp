@@ -19,8 +19,7 @@
 package org.ofbiz.webapp.event;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +39,20 @@ public class JavaEventHandler implements EventHandler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private Map<String, Class<?>> eventClassMap = new HashMap<String, Class<?>>();
+    /* Cache for event handler classes. */
+    private ConcurrentHashMap<String, Class<?>> classes = new ConcurrentHashMap<>();
+
+    /* Return class corresponding to path or null. */
+    private static Class<?> loadClass(String path) {
+        try {
+            ClassLoader l = Thread.currentThread().getContextClassLoader();
+            return l.loadClass(path);
+        } catch (ClassNotFoundException e) {
+            Debug.logError(e, "Error loading class with name: "+ path
+                    + ", will not be able to run event...", module);
+            return null;
+        }
+    }
 
     /**
      * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)
@@ -51,75 +63,48 @@ public class JavaEventHandler implements EventHandler {
     /**
      * @see org.ofbiz.webapp.event.EventHandler#invoke(ConfigXMLReader.Event, ConfigXMLReader.RequestMap, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
-    public String invoke(Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
-        Class<?> eventClass = this.eventClassMap.get(event.path);
-
-        if (eventClass == null) {
-            synchronized (this) {
-                eventClass = this.eventClassMap.get(event.path);
-                if (eventClass == null) {
-                    try {
-                        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                        eventClass = loader.loadClass(event.path);
-                    } catch (ClassNotFoundException e) {
-                        Debug.logError(e, "Error loading class with name: " + event.path + ", will not be able to run event...", module);
-                    }
-                    if (eventClass != null) {
-                        eventClassMap.put(event.path, eventClass);
-                    }
-                }
-            }
-        }
-        if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + event.path + " / " + event.invoke, module);
-
-        Class<?>[] paramTypes = new Class<?>[] {HttpServletRequest.class, HttpServletResponse.class};
-
+    public String invoke(Event event, RequestMap requestMap,
+            HttpServletRequest request, HttpServletResponse response)
+                    throws EventHandlerException {
+        Class<?> k = classes.computeIfAbsent(event.path, JavaEventHandler::loadClass);
         if (Debug.verboseOn()) Debug.logVerbose("*[[Event invocation]]*", module);
-        Object[] params = new Object[] {request, response};
-
-        return invoke(event.path, event.invoke, eventClass, paramTypes, params, event, event.transactionTimeout); // SCIPIO: pass the event
-    }
-
-    private String invoke(String eventPath, String eventMethod, Class<?> eventClass, Class<?>[] paramTypes, Object[] params, Event event, int transactionTimeout) throws EventHandlerException {
-        boolean beganTransaction = false;
-        boolean rollback = false;
-        if (eventClass == null) {
-            throw new EventHandlerException("Error invoking event, the class " + eventPath + " was not found");
+        if (k == null) {
+            throw new EventHandlerException("Error invoking event, the class "
+                                            + event.path + " was not found");
         }
-        if (eventPath == null || eventMethod == null) {
+        if (event.path == null || event.invoke == null) {
             throw new EventHandlerException("Invalid event method or path; call initialize()");
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[Processing]: JAVA Event", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Processing]: Java Event", module);
+        boolean began = false;
+        boolean rollback = false; // SCIPIO
         try {
-            if (transactionTimeout > 0) {
-                beganTransaction = TransactionUtil.begin(transactionTimeout);
-            } else {
-                beganTransaction = TransactionUtil.begin();
-            }
-            Method m = eventClass.getMethod(eventMethod, paramTypes);
-            String eventReturn = (String) m.invoke(null, params);
+            int timeout = Integer.max(event.transactionTimeout, 0);
+            began = TransactionUtil.begin(timeout);
+            Method m = k.getMethod(event.invoke, HttpServletRequest.class,
+                                   HttpServletResponse.class);
+            String ret = (String) m.invoke(null, request, response);
+            if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + ret, module);
 
-            if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
-            
             // SCIPIO: Trigger transaction abort if configured
-            if ("error".equals(eventReturn) && ("on-any-error".equals(event.abortTransaction) || "on-error-result".equals(event.abortTransaction))) {
+            if ("error".equals(ret) && ("on-any-error".equals(event.abortTransaction) || "on-error-result".equals(event.abortTransaction))) {
                 try {
-                    TransactionUtil.rollback(beganTransaction, "Event returned an error", null);
+                    TransactionUtil.rollback(began, "Event returned an error", null);
                 } catch (GenericTransactionException e1) {
                     Debug.logError(e1, module);
                 }
                 rollback = true;
             }
-            
-            return eventReturn;
+
+            return ret;
         } catch (java.lang.reflect.InvocationTargetException e) {
             Throwable t = e.getTargetException();
 
             // SCIPIO: Trigger transaction abort if configured
             if ("on-any-error".equals(event.abortTransaction) || "on-exception".equals(event.abortTransaction)) {
                 try {
-                    TransactionUtil.rollback(beganTransaction, "Event exception", t);
+                    TransactionUtil.rollback(began, "Event exception", t);
                 } catch (GenericTransactionException e1) {
                     Debug.logError(e1, module);
                 }
@@ -138,7 +123,7 @@ public class JavaEventHandler implements EventHandler {
             // SCIPIO: Trigger transaction abort if configured
             if ("on-any-error".equals(event.abortTransaction) || "on-exception".equals(event.abortTransaction)) {
                 try {
-                    TransactionUtil.rollback(beganTransaction, "Event exception", e);
+                    TransactionUtil.rollback(began, "Event exception", e);
                 } catch (GenericTransactionException e1) {
                     Debug.logError(e1, module);
                 }
@@ -150,7 +135,7 @@ public class JavaEventHandler implements EventHandler {
         } finally {
             if (!rollback) {
                 try {
-                    TransactionUtil.commit(beganTransaction);
+                    TransactionUtil.commit(began);
                 } catch (GenericTransactionException e) {
                     Debug.logError(e, module);
                 }

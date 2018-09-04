@@ -4397,9 +4397,10 @@ under the License.
         <field name="dataCategoryClass" type="long-varchar"></field>
         <field name="description" type="long-varchar"></field>
         <prim-key field="dataCategoryId"/>
+        <!-- Not necessary, auto-created by entity engine, only cause extra logging
         <relation rel-entity-name="DatevFieldDefinition" type="many">
             <key-map field-name="dataCategoryId"/>
-        </relation>
+        </relation>-->
     </entity>
     
     <!-- TODO: Not used yet -->

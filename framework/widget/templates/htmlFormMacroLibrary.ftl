@@ -68,6 +68,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false requiredField="" conditionGroup="" tabindex="" extraArgs...>
+  <#if conditionGroup?has_content><#-- SCIPIO: Merged 2018-09-04 -->
+    <input type="hidden" name="${escapeVal(name, 'html')}_grp" value="${escapeVal(conditionGroup, 'html')}"/>
+  </#if>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
@@ -79,6 +82,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 
 <#-- SCIPIO: NOTE: here noCurrentSelectedKey, key, and altKey may be omitted by caller (java) when null, so that way we decide the defaults ourselves -->
 <#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" noCurrentSelectedKey="" key="" altKey=false useHidden="" conditionGroup="" tabindex="" disabled=false extraArgs...>
+  <#if conditionGroup?has_content><#-- SCIPIO: Merged 2018-09-04 -->
+    <input type="hidden" name="${escapeVal(name, 'html')}_grp" value="${escapeVal(conditionGroup, 'html')}"/>
+  </#if>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
@@ -89,6 +95,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" conditionGroup="" tabindex="" extraArgs...>
+  <#if conditionGroup?has_content><#-- SCIPIO: Merged 2018-09-04 -->
+    <input type="hidden" name="${escapeVal(name, 'html')}_grp" value="${escapeVal(conditionGroup, 'html')}"/>
+  </#if>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
@@ -151,6 +160,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#macro renderHiddenField name value id event action conditionGroup="" extraArgs...>
+  <#if conditionGroup?has_content><#-- SCIPIO: Merged 2018-09-04 -->
+    <input type="hidden" name="${escapeVal(name, 'html')}_grp" value="${escapeVal(conditionGroup, 'html')}"/>
+  </#if>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
@@ -591,16 +603,25 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase title="" fieldType="" fieldTitleBlank=false hideOptions=false requiredField="" tooltip="" conditionGroup="" tabindex="" extraArgs...>
+  <#if conditionGroup?has_content><#-- SCIPIO: Merged 2018-09-04 -->
+    <input type="hidden" name="${escapeVal(name, 'html')}_grp" value="${escapeVal(conditionGroup, 'html')}"/>
+  </#if>
   <#-- delegate to scipio libs -->
   <@field_textfind_widget name=name value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains opIsEmpty=opIsEmpty opNotEqual=opNotEqual class=className alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleStyle hideIgnoreCase=hideIgnoreCase ignoreCase=ignCase ignoreCaseMsg=ignoreCase title=title fieldTitleBlank=fieldTitleBlank hideOptions=hideOptions required=renderFieldIsRequired(requiredField) tooltip=tooltip/>
 </#macro>
 
 <#macro renderDateFindField className alert name localizedInputTitle value value2 size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty requiredField="" tooltip="" conditionGroup="" tabindex="" extraArgs...>
+  <#if conditionGroup?has_content><#-- SCIPIO: Merged 2018-09-04 -->
+    <input type="hidden" name="${escapeVal(name, 'html')}_grp" value="${escapeVal(conditionGroup, 'html')}"/>
+  </#if>
   <#-- delegate to scipio libs -->
   <@field_datefind_widget class=className alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleClass=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty required=renderFieldIsRequired(requiredField) tooltip=tooltip/>
 </#macro>
 
 <#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru requiredField="" tooltip="" conditionGroup="" tabindex="" extraArgs...>
+  <#if conditionGroup?has_content><#-- SCIPIO: Merged 2018-09-04 -->
+    <input type="hidden" name="${escapeVal(name, 'html')}_grp" value="${escapeVal(conditionGroup, 'html')}"/>
+  </#if>
   <#-- delegate to scipio libs -->
   <@field_rangefind_widget class=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals value2=value2 defaultOptionThru=defaultOptionThru required=renderFieldIsRequired(requiredField) tooltip=tooltip/>
 </#macro>
@@ -639,6 +660,9 @@ Parameter: initiallyCollapsed, Not used.
 Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true, the contents of lastViewName will be appended to the Ajax URL.
 -->
 <#macro renderLookupField name formName fieldFormName className="" alert="false" value="" size="" maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" lastViewName="main" title="" fieldType="" fieldTitleBlank=false tooltip="" requiredField="" conditionGroup="" tabindex="" extraArgs...>
+  <#if conditionGroup?has_content><#-- SCIPIO: Merged 2018-09-04 -->
+    <input type="hidden" name="${escapeVal(name, 'html')}_grp" value="${escapeVal(conditionGroup, 'html')}"/>
+  </#if>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>

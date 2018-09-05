@@ -1196,7 +1196,6 @@ under the License.
                         Each group member will be gathered with AND operator
                         Every defined groups will be joined each other with OR operator
                         Any ungrouped condition will be added with AND operator
-                        SCIPIO: NOTE: 2018-09-04: This may not be supported (by themes, yet). Merged 2018-09-04.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>

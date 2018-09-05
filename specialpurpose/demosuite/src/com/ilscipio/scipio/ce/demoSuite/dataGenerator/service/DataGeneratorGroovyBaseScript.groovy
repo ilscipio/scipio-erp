@@ -4,9 +4,18 @@ import java.sql.Timestamp
 import java.util.List
 import java.util.Map
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime
+import org.ofbiz.base.util.UtilMisc
+
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate
+
 import org.ofbiz.entity.GenericValue
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.engine.GroovyBaseScript
+import org.ofbiz.service.ServiceUtil
+
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper
@@ -51,8 +60,9 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                     boolean beginTransaction = TransactionUtil.begin();                    
                     GenericValue createdValue = delegator.create(value);
                     TransactionUtil.commit(beginTransaction)
-                    if (UtilValidate.isEmpty(createdValue))
+                    if (UtilValidate.isEmpty(createdValue)) {
                         throw new Exception("createdValue is null");
+                    }
                     int stored = stat.getStored();                   
                     stat.setStored(stored + 1);
                     totalStored++;

@@ -23,10 +23,7 @@ import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +34,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
@@ -342,147 +338,6 @@ public final class WidgetWorker {
         }
 
         writer.append("</form>");
-    }
-    
-    
-    /**
-     * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
-     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
-     */
-    @Deprecated
-    private static void makeJSForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {    
-        List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
-        if (rowSubmitFields != null) {
-            writer.append("<script type=\"text/javascript\">\r\n");
-            writer.append("jQuery(document).ready(function() {\r\n");
-            writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
-            writer.append("\tif (submitForm) {\r\n");
-            for (ModelFormField rowSubmitField : rowSubmitFields) {
-                String submitFieldName = rowSubmitField.getName();
-                String submitFieldId = rowSubmitField.getCurrentContainerId(context);
-                if (UtilValidate.isEmpty(submitFieldId)) {
-                    Debug.logWarning("makeJSForRowSubmit: submit field '" + submitFieldName +
-                            "' of form '" + rowSubmitField.getModelForm().getName() + 
-                            "' was not assigned a unique element ID; unable to build javascript", module);
-                    continue;
-                }
-                writer.append("\t\tvar submitField = $(\"#" + submitFieldId + "\");\r\n");
-                writer.append("\t\t$(submitField).click(function(e) {\r\n");
-                writer.append("\t\te.preventDefault();\r\n");
-                writer.append("\t\tvar checked = false;\r\n");
-                
-                // FIXME: flawed lookup required to get around datatables parents lookup broken for datatables
-                writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction], input[type=checkbox][name^=selectAction]\").each( function (j, r) {\r\n");
-                //writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction], input[type=checkbox][name^=selectAction]\").each( function (j, r) {\r\n");
-
-                writer.append("\t\t\tif ($(r).is(\":checked\")) {\r\n");
-
-                writer.append("\t\t\t\tchecked = true;\r\n");
-                makeHiddenFieldsForHiddenForm(writer);
-                writer.append("\t\t\t}\r\n");
-                writer.append("\t\t});\r\n");
-                writer.append("\t\tif (checked) {\r\n");
-                writer.append("\t\t\tsubmitForm.submit();\r\n");
-                writer.append("\t\t} else {\r\n");
-                String noRowMsg = UtilProperties.getMessage("CommonUiLabels", "CommonNoRowSelected", (Locale) context.get("locale"));
-                writer.append("\t\t\talert(\"" + getEncoder(context).encode(noRowMsg) + "\");\r\n");
-                writer.append("\t\t}\r\n");
-                writer.append("\t\t});\r\n");
-            }
-            writer.append("\t} else {\r\n");
-            writer.append("\t\treturn false;\r\n");
-            writer.append("\t}\r\n");
-            writer.append("});\r\n");
-            writer.append("</script>\r\n");
-        }
-    }
-    
-   
-    /**
-     * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
-     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
-     */
-    @Deprecated
-    private static void makeJSForInlineSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {        
-        List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
-        if (rowSubmitFields != null) {
-            writer.append("<script type=\"text/javascript\">\r\n");
-            writer.append("jQuery(document).ready(function() {\r\n");
-            writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
-            writer.append("\tif (submitForm) {\r\n");
-            for (ModelFormField rowSubmitField : rowSubmitFields) {
-                writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getCurrentContainerId(context) + "]\");\r\n");
-                writer.append("\t\t$(id).click(function(e) {\r\n");
-                writer.append("\t\te.preventDefault();\r\n");
-                makeHiddenFieldsForHiddenForm(writer);
-                writer.append("\t\t\tsubmitForm.submit();\r\n");
-                writer.append("\t\t});\r\n");
-            }
-            writer.append("\t} else {\r\n");
-            writer.append("\t\treturn false;\r\n");
-            writer.append("\t}\r\n");
-            writer.append("});\r\n");
-            writer.append("</script>\r\n");
-        }
-    }
-    
-    /**
-     * SCIPIO: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
-     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
-     */
-    @Deprecated
-    public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
-            HttpServletRequest request, HttpServletResponse response, ModelForm modelForm, Map<String, Object> context) throws IOException {
-        String hiddenFormName = makeLinkHiddenFormName(context, modelForm,
-                "submitForm" + modelForm.getItemIndexSeparator() + new Random().nextInt(Integer.MAX_VALUE));        
-        if (modelForm.getUseRowSubmit())
-            makeJSForRowSubmit(writer, context, modelForm, hiddenFormName);
-        else
-            makeJSForInlineSubmit(writer, context, modelForm, hiddenFormName);
-        writer.append("<form method=\"post\"");
-        writer.append(" action=\"");
-        // note that this passes null for the parameterList on purpose so they won't be put into the URL
-        // SCIPIO: don't call if target is empty (probably shouldn't happen, but does)
-        if (UtilValidate.isNotEmpty(target)) {
-            WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context);   
-        }
-        writer.append("\"");
-
-        if (UtilValidate.isNotEmpty(targetWindow)) {
-            writer.append(" target=\"");
-            writer.append(targetWindow);
-            writer.append("\"");
-        }
-
-        writer.append(" onsubmit=\"javascript:submitFormDisableSubmits(this);\"");
-
-        writer.append(" name=\"");
-        writer.append(hiddenFormName);
-        writer.append("\">");
-
-        for (Map.Entry<String, String> parameter: parameterMap.entrySet()) {
-            if (parameter.getValue() != null) {
-                writer.append("<input name=\"");
-                writer.append(parameter.getKey());
-                writer.append("\" value=\"");
-                writer.append(getEncoder(context).encode((parameter.getValue())));
-                writer.append("\" type=\"hidden\"/>");
-            }
-        }
-        writer.append("</form>");
-    }
-    
-    @Deprecated
-    private static void makeHiddenFieldsForHiddenForm(Appendable writer) throws IOException {
-        writer.append("\t\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
-        writer.append("\t\t\t\tif ($(submitForm).find(\"input[name=\" + $(e).attr(\"name\") + \"]\").length <= 0) {\r\n");
-        writer.append("\t\t\t\t\tvar hiddenField = $(\"<input></input>\")\r\n");
-        writer.append("\t\t\t\t\t$(hiddenField).attr(\"type\", \"hidden\");\r\n");
-        writer.append("\t\t\t\t\t$(hiddenField).attr(\"name\", $(e).attr(\"name\"));\r\n");
-        writer.append("\t\t\t\t\t$(hiddenField).attr(\"value\", $(e).val());\r\n");
-        writer.append("\t\t\t\t\t$(submitForm).append($(hiddenField));\r\n");
-        writer.append("\t\t\t\t}\r\n");
-        writer.append("\t\t\t});\r\n");        
     }
 
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelForm modelForm, String prefix) {

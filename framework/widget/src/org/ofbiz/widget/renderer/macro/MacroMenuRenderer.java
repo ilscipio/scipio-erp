@@ -332,8 +332,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("width", link.getWidth());
         parameters.put("targetWindow", link.getTargetWindow(context));
         String uniqueItemName = menuItem.getTopMenu().getName() + "_" + menuItem.getName() + "_LF_" + UtilMisc.<String> addToBigDecimalInMap(context, "menuUniqueItemIndex", BigDecimal.ONE);
-        if(menuItem.getModelMenu().getExtraIndex(context) != null){
-            uniqueItemName += "_" + menuItem.getTopMenu().getExtraIndex(context);
+        String extraIndex = menuItem.getTopMenu().getExtraIndex(context);
+        if (UtilValidate.isNotEmpty(extraIndex)) {
+            uniqueItemName += "_" + extraIndex;
         }
         // SCIPIO: make uniqueItemName actually globally unique; is NOT unique in stock ofbiz!
         uniqueItemName += "_" + MacroScreenRenderer.getNextUniqueItemNameIdNum(context);

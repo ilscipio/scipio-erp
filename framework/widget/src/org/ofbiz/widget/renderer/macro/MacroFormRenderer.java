@@ -224,6 +224,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     /**
      * @deprecated SCIPIO: use ftlFmt instead of this.
      */
+    @SuppressWarnings("unused")
     @Deprecated
     private static String encodeDoubleQuotes(String htmlString) {
         return htmlString.replaceAll("\"", "\\\\\"");

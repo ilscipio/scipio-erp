@@ -527,14 +527,17 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         
         // SCIPIO: sub menu style
         // NOTE: there is another "getSubMenu" (for "sub-menu" attribute), but I don't know what it was intended for.
+        @SuppressWarnings("deprecation")
         String subMenuStyle = menuItem.getSubMenuStyle(context);
         parameters.put("subMenuStyle", subMenuStyle); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
         
         // SCIPIO: sub menu id
+        @SuppressWarnings("deprecation")
         String subMenuId = menuItem.getSubMenuId(context);
         parameters.put("subMenuId", subMenuId); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
         
         // SCIPIO: sub menu title
+        @SuppressWarnings("deprecation")
         String subMenuTitle = menuItem.getSubMenuTitle(context);
         parameters.put("subMenuTitle", subMenuTitle); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
         

@@ -109,6 +109,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             request.setAttribute("formStringRenderer", formStringRenderer);
         }
         if (UtilValidate.isNotEmpty(treeMacroLibraryPath)) {
+            @SuppressWarnings("deprecation")
             TreeStringRenderer treeStringRenderer = new MacroTreeRenderer(screenRendererName, treeMacroLibraryPath, writer);
             context.put("treeStringRenderer", treeStringRenderer);
             request.setAttribute("treeStringRenderer", treeStringRenderer);

@@ -756,7 +756,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     public void renderScreenletBegin(Appendable writer, Map<String, Object> context, boolean collapsed, ModelScreenWidget.Screenlet screenlet) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded NOTE: we're ok even though .renderWidgetString here because it's a menu (I think)
         HttpServletRequest request = (HttpServletRequest) context.get("request");
-        HttpServletResponse response = (HttpServletResponse) context.get("response");
+        //HttpServletResponse response = (HttpServletResponse) context.get("response");
         boolean javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
         ModelScreenWidget.Menu tabMenu = screenlet.getTabMenu();
         if (tabMenu != null) {

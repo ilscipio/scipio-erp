@@ -81,6 +81,7 @@ public class HtmlFormWrapper {
         // SCIPIO: 2016-09-15: use macro renderer, now available in request
         this.renderer = (FormStringRenderer) request.getAttribute("formStringRenderer");
         if (this.renderer == null || !"html".equals(this.renderer.getRendererName())) { // fallback (shouldn't happen)
+            Debug.logError("No FormStringRenderer (MacroFormRenderer) available in request - falling back on HtmlFormRenderer - please report this issue!", module);
             this.renderer = new HtmlFormRenderer(request, response);
         }
 
@@ -121,7 +122,7 @@ public class HtmlFormWrapper {
     @SuppressWarnings("unchecked")
     public StringWriter renderFormString(Object contextStack) throws Exception {
         if (contextStack instanceof MapStack) {
-            return renderFormString((MapStack) contextStack);
+            return renderFormString((MapStack<String>) contextStack);
         } else {
             Debug.logWarning("Call renderFormString with a non-MapStack: " + (contextStack == null ? "null" : contextStack.getClass().getName()), module);
             return renderFormString();

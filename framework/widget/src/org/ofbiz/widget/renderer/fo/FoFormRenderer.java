@@ -61,8 +61,9 @@ import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 
 /**
  * Widget Library - FO Form Renderer implementation
- *
+ * @deprecated SCIPIO: 2018-09: use {@link org.ofbiz.widget.renderer.macro.MacroFormRenderer} instead.
  */
+@Deprecated
 public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRenderer {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

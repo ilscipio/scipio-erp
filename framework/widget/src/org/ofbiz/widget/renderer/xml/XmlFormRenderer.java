@@ -56,8 +56,9 @@ import org.ofbiz.widget.renderer.FormStringRenderer;
 
 /**
  * Widget Library - Xml Form Renderer implementation
- *
+ * @deprecated SCIPIO: 2018-09: use {@link org.ofbiz.widget.renderer.macro.MacroFormRenderer} instead.
  */
+@Deprecated
 public class XmlFormRenderer implements FormStringRenderer {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

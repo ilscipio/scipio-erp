@@ -4348,7 +4348,7 @@ under the License.
         <field name="headerRow" type="indicator"></field>
         <field name="textDelimiter" type="short-varchar"></field>
         <prim-key field="dataCategoryId"/>
-        <relation rel-entity-name="DatevDataCategory" fk-name="DATEVDATACATEGORYSETTINGS" type="one">
+        <relation rel-entity-name="DatevDataCategory" fk-name="DATEV_GSTGS_CAT" type="one">
             <key-map field-name="dataCategoryId" />
         </relation>
     </entity>
@@ -4414,7 +4414,7 @@ under the License.
         <prim-key field="fieldId"/>
         <prim-key field="dataCategoryId"/>
         <prim-key field="version"/>
-        <relation rel-entity-name="DatevFieldDefinition" type="one" fk-name="DATEV_FIELD_DEF_VER">
+        <relation rel-entity-name="DatevFieldDefinition" type="one" fk-name="DATEV_FLDDV_DEF">
             <key-map field-name="fieldId"/>
             <key-map field-name="dataCategoryId"/>
         </relation>

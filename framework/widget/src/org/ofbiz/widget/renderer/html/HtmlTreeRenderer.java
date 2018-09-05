@@ -339,7 +339,7 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
             screenStringRenderer = screenRenderer.getScreenStringRenderer();
         } else {
             if (screenStringRenderer == null) {
-                // SCIPIO: 2018-09-04: FIXME: should be along lines of the following...
+                // SCIPIO: 2018-09-04: WONTFIX: this came from upstream, but this class is deprecated and should no longer be used.
                 /*
                 try {
                     screenStringRenderer = new MacroScreenRenderer(modelTheme.getType("screen"), modelTheme.getScreenRendererLocation("screen"));

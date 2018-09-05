@@ -49,9 +49,8 @@ public class ScreenFactory extends WidgetFactory {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    // SCIPIO: NOTE: 2016-10-30: instead of Map<String, ModelScreen>, we now have a dedicated ModelScreens model.
+    // SCIPIO: 2016-10-30: Instead of Map<String, ModelScreen>, we now have a dedicated ModelScreens model.
     // it maintains backward-compat by implementing Map, so all old code should still work.
-    
     public static final UtilCache<String, ModelScreens> screenLocationCache = UtilCache.createUtilCache("widget.screen.locationResource", 0, 0, false);
     public static final UtilCache<String, ModelScreens> screenWebappCache = UtilCache.createUtilCache("widget.screen.webappResource", 0, 0, false);
     
@@ -116,7 +115,7 @@ public class ScreenFactory extends WidgetFactory {
     /**
      * SCIPIO: Returns the specified screen, or null if the name does not exist in the given location.
      * <p>
-     * NOTE: the resource must exist, however.
+     * NOTE: The resource must exist, however, otherwise IllegalArgumentException is thrown (TODO: REVIEW: is this really desirable?).
      */
     public static ModelScreen getScreenFromLocationOrNull(String combinedName)
             throws IOException, SAXException, ParserConfigurationException {
@@ -128,7 +127,7 @@ public class ScreenFactory extends WidgetFactory {
     /**
      * SCIPIO: Returns the specified screen, or null if the name does not exist in the given location.
      * <p>
-     * NOTE: the resource must exist, however.
+     * NOTE: The resource must exist, however, otherwise IllegalArgumentException is thrown (TODO: REVIEW: is this really desirable?).
      */
     public static ModelScreen getScreenFromLocationOrNull(String resourceName, String screenName)
             throws IOException, SAXException, ParserConfigurationException {
@@ -136,7 +135,7 @@ public class ScreenFactory extends WidgetFactory {
         return modelScreenMap.get(screenName);
     }
 
-    // SCIPIO: new: ModelScreens
+    // SCIPIO: new: ModelScreens return value
     public static ModelScreens getScreensFromLocation(String resourceName)
             throws IOException, SAXException, ParserConfigurationException {
         ModelScreens modelScreenMap = screenLocationCache.get(resourceName);
@@ -206,9 +205,8 @@ public class ScreenFactory extends WidgetFactory {
         if (screenFileDoc != null) {
             // SCIPIO: all the old code here delegated to ModelScreens
             return new ModelScreens(screenFileDoc.getDocumentElement(), sourceLocation);
-        } else {
-            return new ModelScreens();
         }
+        return new ModelScreens();
     }
 
     /**
@@ -256,15 +254,7 @@ public class ScreenFactory extends WidgetFactory {
                         if (UtilValidate.isNotEmpty(fallbackLocation)) {
                             try {
                                 modelScreen = ScreenFactory.getScreenFromLocation(fallbackLocation, fallbackName);
-                            } catch (IOException e) {
-                                String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
-                                Debug.logError(e, errMsg, module);
-                                throw new RuntimeException(errMsg);
-                            } catch (SAXException e) {
-                                String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
-                                Debug.logError(e, errMsg, module);
-                                throw new RuntimeException(errMsg);
-                            } catch (ParserConfigurationException e) {
+                            } catch (IOException | SAXException | ParserConfigurationException e) {
                                 String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
                                 Debug.logError(e, errMsg, module);
                                 throw new RuntimeException(errMsg);
@@ -279,15 +269,7 @@ public class ScreenFactory extends WidgetFactory {
                         throw new IllegalArgumentException("Could not find screen with name [" + name + "] in class resource [" + location + "]");
                     }
                 }
-            } catch (IOException e) {
-                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
-            } catch (SAXException e) {
-                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
-            } catch (ParserConfigurationException e) {
+            } catch (IOException | SAXException | ParserConfigurationException e) {
                 String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new RuntimeException(errMsg);
@@ -313,15 +295,7 @@ public class ScreenFactory extends WidgetFactory {
                 if (UtilValidate.isNotEmpty(fallbackLocation)) {
                     try {
                         modelScreen = ScreenFactory.getScreenFromLocation(fallbackLocation, fallbackName);
-                    } catch (IOException e) {
-                        String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
-                        Debug.logError(e, errMsg, module);
-                        throw new RuntimeException(errMsg);
-                    } catch (SAXException e) {
-                        String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
-                        Debug.logError(e, errMsg, module);
-                        throw new RuntimeException(errMsg);
-                    } catch (ParserConfigurationException e) {
+                    } catch (IOException | SAXException | ParserConfigurationException e) {
                         String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
                         Debug.logError(e, errMsg, module);
                         throw new RuntimeException(errMsg);
@@ -339,7 +313,6 @@ public class ScreenFactory extends WidgetFactory {
                 }
             }
         }
-        //Debug.logInfo("parent(" + parentWidget + ") rendering(" + modelScreen + ")", module);
         modelScreen.renderScreenString(writer, context, screenStringRenderer);
     }
     
@@ -353,7 +326,7 @@ public class ScreenFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelScreen getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+    public ModelScreen getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException { // SCIPIO
         try {
             return getScreenFromLocation(modelLoc.getResource(), modelLoc.getName());
         } catch (SAXException e) {
@@ -364,7 +337,7 @@ public class ScreenFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelScreen getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+    public ModelScreen getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException { // SCIPIO
         try {
             return getScreenFromLocationOrNull(modelLoc.getResource(), modelLoc.getName());
         } catch (SAXException e) {

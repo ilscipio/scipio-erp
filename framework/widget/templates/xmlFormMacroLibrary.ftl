@@ -59,12 +59,15 @@ under the License.
 <#macro renderIgnoredField extraArgs...></#macro>
 
 <#macro renderFieldTitle style title id fieldHelpText="" for="" extraArgs...></#macro>
+<#macro renderEmptyFormDataMessage message extraArgs...></#macro>
 <#macro renderSingleFormFieldTitle title extraArgs...></#macro>
     
 <#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" extraArgs...></#macro>
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField extraArgs...></#macro>
 <#macro renderMultiFormClose extraArgs...></#macro>
 
+<#macro renderFormatHeaderOpen extraArgs...></#macro>
+<#macro renderFormatHeaderClose extraArgs...></#macro>
 <#macro renderFormatHeaderRowOpen style extraArgs...></#macro>
 <#macro renderFormatHeaderRowClose extraArgs...>
 </#macro>
@@ -104,13 +107,15 @@ under the License.
 <#macro renderPasswordField className alert name value size maxlength id autocomplete extraArgs...></#macro>
 <#macro renderImageField value description alternate border width height event action extraArgs...></#macro>
 <#macro renderBanner style leftStyle rightStyle leftText text rightText extraArgs...></#macro>
+<#macro renderContainerField id className extraArgs...></#macro>
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId collapsible expandToolTip collapseToolTip extraArgs...></#macro>
 <#macro renderFieldGroupClose style id title extraArgs...></#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N" extraArgs...></#macro>
 <#macro renderSortField style title linkUrl ajaxEnabled tooltip="" extraArgs...></#macro>
-<#macro formatBoundaryComment boundaryType widgetType widgetName></#macro>
-<#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description confirmation><@renderField description /></#macro>
+<#macro formatBoundaryComment boundaryType widgetType widgetName extraArgs...></#macro>
+<#macro makeHiddenFormLinkForm actionUrl name parameters targetWindow extraArgs...></#macro>
+<#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description confirmation extraArgs...><@renderField description /></#macro>
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation><@renderField description /></#macro>
 <#macro renderTooltip tooltip tooltipStyle extraArgs...></#macro>
 <#macro renderAsterisks requiredField requiredStyle extraArgs...></#macro>

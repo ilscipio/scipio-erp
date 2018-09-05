@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.apache.ofbiz.widget.renderer;
+package org.ofbiz.widget.renderer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,9 +24,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ofbiz.base.util.UtilXml;
-import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
-import org.apache.ofbiz.widget.model.ModelTheme;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.widget.model.ModelTheme;
 import org.w3c.dom.Element;
 
 /**

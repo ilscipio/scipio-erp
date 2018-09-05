@@ -30,7 +30,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.regex.PatternSyntaxException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -98,29 +97,30 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * @return A new <code>ModelAction</code> instance
      */
     public static ModelAction newInstance(ModelWidget modelWidget, Element actionElement) {
-        if ("set".equals(actionElement.getNodeName())) {
+        String nodeName = UtilXml.getNodeNameIgnorePrefix(actionElement);
+        if ("set".equals(nodeName)) {
             return new SetField(modelWidget, actionElement);
-        } else if ("property-map".equals(actionElement.getNodeName())) {
+        } else if ("property-map".equals(nodeName)) {
             return new PropertyMap(modelWidget, actionElement);
-        } else if ("property-to-field".equals(actionElement.getNodeName())) {
+        } else if ("property-to-field".equals(nodeName)) {
             return new PropertyToField(modelWidget, actionElement);
-        } else if ("script".equals(actionElement.getNodeName())) {
+        } else if ("script".equals(nodeName)) {
             return new Script(modelWidget, actionElement);
-        } else if ("service".equals(actionElement.getNodeName())) {
+        } else if ("service".equals(nodeName)) {
             return new Service(modelWidget, actionElement);
-        } else if ("entity-one".equals(actionElement.getNodeName())) {
+        } else if ("entity-one".equals(nodeName)) {
             return new EntityOne(modelWidget, actionElement);
-        } else if ("entity-and".equals(actionElement.getNodeName())) {
+        } else if ("entity-and".equals(nodeName)) {
             return new EntityAnd(modelWidget, actionElement);
-        } else if ("entity-condition".equals(actionElement.getNodeName())) {
+        } else if ("entity-condition".equals(nodeName)) {
             return new EntityCondition(modelWidget, actionElement);
-        } else if ("get-related-one".equals(actionElement.getNodeName())) {
+        } else if ("get-related-one".equals(nodeName)) {
             return new GetRelatedOne(modelWidget, actionElement);
-        } else if ("get-related".equals(actionElement.getNodeName())) {
+        } else if ("get-related".equals(nodeName)) {
             return new GetRelated(modelWidget, actionElement);
-        } else if ("condition-to-field".equals(actionElement.getNodeName())) { // SCIPIO: new
+        } else if ("condition-to-field".equals(nodeName)) { // SCIPIO: new
             return new ConditionToField(modelWidget, actionElement);
-        } else if ("if".equals(actionElement.getNodeName())) { // SCIPIO: new
+        } else if ("if".equals(nodeName)) { // SCIPIO: new
             return new MasterIf(modelWidget, actionElement);
         } else if (IncludeActions.isIncludeActions(actionElement)) { // SCIPIO: new
             return IncludeActions.newInstance(modelWidget, actionElement);
@@ -131,7 +131,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     public static List<ModelAction> readSubActions(ModelWidget modelWidget, Element parentElement) {
         List<? extends Element> actionElementList = UtilXml.childElementList(parentElement);
-        List<ModelAction> actions = new ArrayList<ModelAction>(actionElementList.size());
+        List<ModelAction> actions = new ArrayList<>(actionElementList.size());
         for (Element actionElement : actionElementList) {
             actions.add(newInstance(modelWidget, actionElement));
         }
@@ -145,8 +145,9 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * @param context
      */
     public static void runSubActions(List<ModelAction> actions, Map<String, Object> context) {
-        if (actions == null)
+        if (actions == null) {
             return;
+        }
         for (ModelAction action : actions) {
             if (Debug.verboseOn()) {
                  Debug.logVerbose("Running action " + action.getClass().getName(), module);
@@ -168,11 +169,13 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * @throws GeneralException 
      */
     public static void runSubActionsEx(List<ModelAction> actions, Map<String, Object> context) throws GeneralException {
-        if (actions == null)
+        if (actions == null) {
             return;
+        }
         for (ModelAction action : actions) {
-            if (Debug.verboseOn())
+            if (Debug.verboseOn()) {
                 Debug.logVerbose("Running action " + action.getClass().getName(), module);
+            }
             action.runAction(context);
         }
     }
@@ -577,7 +580,6 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         @Override
         public void runAction(Map<String, Object> context) {
-            //String globalStr = this.globalExdr.expandString(context);
             // default to false
             //boolean global = "true".equals(globalStr);
             Locale locale = (Locale) context.get("locale");
@@ -764,7 +766,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 String method = WidgetWorker.getScriptMethodName(scriptLocation);
                 
                 if (location.endsWith(".xml")) {
-                    Map<String, Object> localContext = new HashMap<String, Object>();
+                    Map<String, Object> localContext = new HashMap<>();
                     localContext.putAll(context);
                     DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
                     MethodContext methodContext = new MethodContext(ctx, localContext, null);
@@ -839,7 +841,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 if ("true".equals(autoFieldMapString)) {
                     DispatchContext dc = WidgetWorker.getDispatcher(context).getDispatchContext();
                     // try a map called "parameters", try it first so values from here are overriden by values in the main context
-                    Map<String, Object> combinedMap = new HashMap<String, Object>();
+                    Map<String, Object> combinedMap = new HashMap<>();
                     Map<String, Object> parametersObj = UtilGenerics.toMap(context.get("parameters"));
                     if (parametersObj != null) {
                         combinedMap.putAll(parametersObj);
@@ -855,28 +857,13 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                     }
                 }
                 if (serviceContext == null) {
-                    serviceContext = new HashMap<String, Object>();
+                    serviceContext = new HashMap<>();
                 }
                 if (this.fieldMap != null) {
                     EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, serviceContext);
                 }
                 Map<String, Object> result = WidgetWorker.getDispatcher(context).runSync(serviceNameExpanded, serviceContext);
-                if (!this.resultMapNameAcsr.isEmpty()) {
-                    this.resultMapNameAcsr.put(context, result);
-                    String queryString = (String) result.get("queryString");
-                    context.put("queryString", queryString);
-                    context.put("queryStringMap", result.get("queryStringMap"));
-                    if (UtilValidate.isNotEmpty(queryString)) {
-                        try {
-                            String queryStringEncoded = queryString.replaceAll("&", "%26");
-                            context.put("queryStringEncoded", queryStringEncoded);
-                        } catch (PatternSyntaxException e) {
-
-                        }
-                    }
-                } else {
-                    context.putAll(result);
-                }
+                ModelActionUtil.contextPutQueryStringOrAllResult(context, result, this.resultMapNameAcsr);
             } catch (GenericServiceException e) {
                 String errMsg = "Error calling service with name " + serviceNameExpanded + ": " + e.toString();
                 Debug.logError(e, errMsg, module);
@@ -911,6 +898,8 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         private final String toScope;
         private final String type;
         private final FlexibleStringExpander valueExdr;
+        private final boolean setIfNull;
+        private final boolean setIfEmpty;
 
         public SetField(ModelWidget modelWidget, Element setElement) {
             super(modelWidget, setElement);
@@ -922,6 +911,8 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             this.type = setElement.getAttribute("type");
             this.toScope = setElement.getAttribute("to-scope");
             this.fromScope = setElement.getAttribute("from-scope");
+            this.setIfNull = !"false".equals(setElement.getAttribute("set-if-null")); //default to true
+            this.setIfEmpty = !"false".equals(setElement.getAttribute("set-if-empty")); //default to true
             if (!this.fromField.isEmpty() && !this.valueExdr.isEmpty()) {
                 throw new IllegalArgumentException("Cannot specify a from-field [" + setElement.getAttribute("from-field")
                         + "] and a value [" + setElement.getAttribute("value") + "] on the set action in a widget");
@@ -937,17 +928,18 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             Object newValue = null;
             String originalName = this.fromField.getOriginalName();
             List<String> currentWidgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
-            List<String> trailList = new ArrayList<String>();
+            List<String> trailList = new ArrayList<>();
             if (currentWidgetTrail != null) {
                 trailList.addAll(currentWidgetTrail);
             }
             for (int i = trailList.size(); i >= 0; i--) {
                 List<String> subTrail = trailList.subList(0, i);
                 String newKey = null;
-                if (subTrail.size() > 0)
+                if (subTrail.size() > 0) {
                     newKey = StringUtil.join(subTrail, "|") + "|" + originalName;
-                else
+                } else {
                     newKey = originalName;
+                }
                 if (storeAgent instanceof ServletContext) {
                     newValue = ((ServletContext) storeAgent).getAttribute(newKey);
                 } else if (storeAgent instanceof HttpSession) {
@@ -967,7 +959,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             // default to false
             boolean global = "true".equals(globalStr);
             Object newValue = null;
-            if (this.fromScope != null && this.fromScope.equals("user")) {
+            if (this.fromScope != null && "user".equals(this.fromScope)) {
                 if (!this.fromField.isEmpty()) {
                     HttpSession session = (HttpSession) context.get("session");
                     newValue = getInMemoryPersistedFromField(session, context);
@@ -977,7 +969,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 } else if (!this.valueExdr.isEmpty()) {
                     newValue = this.valueExdr.expand(context);
                 }
-            } else if (this.fromScope != null && this.fromScope.equals("application")) {
+            } else if (this.fromScope != null && "application".equals(this.fromScope)) {
                 if (!this.fromField.isEmpty()) {
                     ServletContext servletContext = (ServletContext) context.get("application");
                     newValue = getInMemoryPersistedFromField(servletContext, context);
@@ -1018,7 +1010,19 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                     }
                 }
             }
-            if (this.toScope != null && this.toScope.equals("user")) {
+            if (!setIfNull && newValue == null){
+                if (Debug.verboseOn()) { // SCIPIO: 2018-09-04: Changed this from warning (??) to verbose 
+                    Debug.logVerbose("Field value not found (null) for the field: [" + this.field.getOriginalName() + " and there was no default value, so field was not set", module);
+                }
+                return;
+            }
+            if (!setIfEmpty && ObjectType.isEmpty(newValue)){
+                if (Debug.verboseOn()) { // SCIPIO: 2018-09-04: Changed this from warning (??) to verbose 
+                    Debug.logVerbose("Field value not found (empty) for the field: [" + this.field.getOriginalName() + " and there was no default value, so field was not set", module);
+                }
+                return;
+            }
+            if (this.toScope != null && "user".equals(this.toScope)) {
                 String originalName = this.field.getOriginalName();
                 List<String> currentWidgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
                 String newKey = "";
@@ -1034,7 +1038,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 if (Debug.verboseOn()) {
                      Debug.logVerbose("In user setting value for field from [" + this.field.getOriginalName() + "]: " + newValue, module);
                 }
-            } else if (this.toScope != null && this.toScope.equals("application")) {
+            } else if (this.toScope != null && "application".equals(this.toScope)) {
                 String originalName = this.field.getOriginalName();
                 List<String> currentWidgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
                 String newKey = "";
@@ -1727,7 +1731,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             if (elseIfElements.isEmpty()) {
                 this.elseIfs = Collections.emptyList();
             } else {
-                List<ElseIf> elseIfs = new ArrayList<ElseIf>(elseIfElements.size());
+                List<ElseIf> elseIfs = new ArrayList<>(elseIfElements.size());
                 for (Element elseIfElement : elseIfElements) {
                     elseIfs.add(new ElseIf(modelWidget, elseIfElement));
                 }

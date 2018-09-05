@@ -42,6 +42,7 @@ import org.ofbiz.widget.model.ModelFormField.HyperlinkField;
 import org.ofbiz.widget.model.ModelFormField.IgnoredField;
 import org.ofbiz.widget.model.ModelFormField.ImageField;
 import org.ofbiz.widget.model.ModelFormField.LookupField;
+import org.ofbiz.widget.model.ModelFormField.MenuField;
 import org.ofbiz.widget.model.ModelFormField.PasswordField;
 import org.ofbiz.widget.model.ModelFormField.RadioField;
 import org.ofbiz.widget.model.ModelFormField.RangeFindField;
@@ -372,5 +373,25 @@ public class XmlFormRenderer implements FormStringRenderer {
     public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm)
             throws IOException {
         // SCIPIO: new
+    }
+
+    @Override
+    public void renderMenuField(Appendable writer, Map<String, Object> context, MenuField menuField)
+            throws IOException {
+    }
+
+    @Override
+    public void renderFormatHeaderOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm)
+            throws IOException {
+    }
+
+    @Override
+    public void renderFormatHeaderClose(Appendable writer, Map<String, Object> context, ModelForm modelForm)
+            throws IOException {
+    }
+
+    @Override
+    public void renderEmptyFormDataMessage(Appendable writer, Map<String, Object> context, ModelForm modelForm)
+            throws IOException {
     }
 }

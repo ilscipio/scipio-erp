@@ -41,9 +41,12 @@ public interface MenuStringRenderer {
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) throws IOException ;
     
     /**
-     * SCIPIO: New, render sub menu more officially.
+     * SCIPIO: Render sub menu open.
      */
     public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
+    /**
+     * SCIPIO: Render sub menu close.
+     */
     public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
 
     /**

@@ -53,7 +53,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </span>    
 </#macro>
 
-<#macro formatBoundaryComment boundaryType widgetType widgetName>
+<#macro formatBoundaryComment boundaryType widgetType widgetName extraArgs...>
 <!-- ${escapeVal(boundaryType, 'html')}  ${escapeVal(widgetType, 'html')}  ${escapeVal(widgetName, 'html')} -->
 </#macro>
 

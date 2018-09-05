@@ -78,7 +78,7 @@ public class HtmlMenuWrapper {
 
         this.renderer = getMenuRenderer();
 
-        this.context = new HashMap<String, Object>();
+        this.context = new HashMap<>();
         Map<String, Object> parameterMap = UtilHttp.getParameterMap(request);
         context.put("parameters", parameterMap);
 
@@ -118,7 +118,9 @@ public class HtmlMenuWrapper {
         HttpServletRequest req = ((HtmlMenuRenderer)renderer).request;
         ServletContext ctx = (ServletContext) req.getAttribute("servletContext");
         if (ctx == null) {
-            if (Debug.infoOn()) Debug.logInfo("in renderMenuString, ctx is null(0)" , "");
+            if (Debug.infoOn()) {
+                Debug.logInfo("in renderMenuString, ctx is null(0)" , "");
+            }
         }
 
         Writer writer = new StringWriter();
@@ -127,7 +129,9 @@ public class HtmlMenuWrapper {
         HttpServletRequest req2 = ((HtmlMenuRenderer)renderer).request;
         ServletContext ctx2 = (ServletContext) req2.getAttribute("servletContext");
         if (ctx2 == null) {
-            if (Debug.infoOn()) Debug.logInfo("in renderMenuString, ctx is null(2)" , "");
+            if (Debug.infoOn()) {
+                Debug.logInfo("in renderMenuString, ctx is null(2)" , "");
+            }
         }
 
         return writer.toString();
@@ -141,7 +145,7 @@ public class HtmlMenuWrapper {
      * parameters Map instead of the value Map.
      */
     public void setIsError(boolean isError) {
-        this.context.put("isError", Boolean.valueOf(isError));
+        this.context.put("isError", isError);
     }
 
     public boolean getIsError() {
@@ -149,7 +153,7 @@ public class HtmlMenuWrapper {
         if (isErrorBoolean == null) {
             return false;
         } else {
-            return isErrorBoolean.booleanValue();
+            return isErrorBoolean;
         }
     }
 
@@ -164,7 +168,7 @@ public class HtmlMenuWrapper {
     public void putInContext(String menuItemName, String valueName,  Object value) {
         Map<String, Object> valueMap = UtilGenerics.toMap(context.get(menuItemName));
         if (valueMap == null) {
-            valueMap = new HashMap<String, Object>();
+            valueMap = new HashMap<>();
             context.put(menuItemName, valueMap);
         }
         valueMap.put(valueName, value);
@@ -177,7 +181,7 @@ public class HtmlMenuWrapper {
     public Object getFromContext(String menuItemName, String valueName) {
         Map<String, Object> valueMap = UtilGenerics.toMap(context.get(menuItemName));
         if (valueMap == null) {
-            valueMap = new HashMap<String, Object>();
+            valueMap = new HashMap<>();
             context.put(menuItemName, valueMap);
         }
         return valueMap.get(valueName);
@@ -227,18 +231,10 @@ public class HtmlMenuWrapper {
                 Class<?> cls = Class.forName("org.ofbiz.widget.html." + menuWrapperClassName);
                 menuWrapper = (HtmlMenuWrapper)cls.newInstance();
                 menuWrapper.init(menuDefFile, menuName, request, response);
-            } catch (InstantiationException e) {
+            } catch (InstantiationException | IllegalAccessException | IOException | SAXException | ParserConfigurationException e) {
                 throw new RuntimeException(e.getMessage());
-            } catch (IllegalAccessException e2) {
-                throw new RuntimeException(e2.getMessage());
-            } catch (ClassNotFoundException e3) {
-                throw new RuntimeException("Class not found:" + e3.getMessage());
-            } catch (IOException e4) {
-                throw new RuntimeException(e4.getMessage());
-            } catch (SAXException e5) {
-                throw new RuntimeException(e5.getMessage());
-            } catch (ParserConfigurationException e6) {
-                throw new RuntimeException(e6.getMessage());
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException("Class not found:" + e.getMessage());
             }
         } else {
             menuWrapper.setRequest(request);

@@ -583,6 +583,14 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="type">
+                <xs:annotation>
+                    <xs:documentation>With the type it is possible to render different containers
+                        than div like section.
+                        SCIPIO: Merged 2018-09-04.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="auto-update-interval">
                 <xs:annotation>
                     <xs:documentation>The auto-update interval, in seconds.</xs:documentation>
@@ -905,7 +913,6 @@ under the License.
             <xs:attribute type="xs:string" name="name" use="required" />
         </xs:complexType>
     </xs:element>
-
     <xs:element name="include-form" substitutionGroup="AllWidgets">
         <xs:complexType>
             <xs:sequence>
@@ -1114,6 +1121,9 @@ under the License.
                 <xs:element minOccurs="0" ref="swing" />
                 <xs:element minOccurs="0" ref="xsl-fo" />
                 <xs:element minOccurs="0" ref="xml" />
+                <xs:element minOccurs="0" ref="text" />
+                <xs:element minOccurs="0" ref="csv" />
+                <xs:element minOccurs="0" ref="xls" />
                 <xs:element minOccurs="0" ref="email" />
             </xs:sequence>
         </xs:complexType>
@@ -1121,14 +1131,6 @@ under the License.
     <!-- ============== HTML Specific Elements =============== -->
     <xs:element name="HtmlWidgets" abstract="true" />
     <xs:element name="html">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <!-- Scipio: Email Widget support -->
-    <xs:element name="email">
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
@@ -1143,6 +1145,35 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="xml">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="xls">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="text">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="csv">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- Scipio: Email Widget support -->
+    <xs:element name="email">
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />

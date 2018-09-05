@@ -89,7 +89,6 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
                 // Not on the trail
                 if (node.showPeers(depth, context)) {
                     context.put("processChildren", Boolean.FALSE);
-                    //expandCollapseLink.setText("&nbsp;+&nbsp;");
                     currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
                     StringBuilder target = new StringBuilder(node.getModelTree().getExpandCollapseRequest(context));
                     String trailName = node.getModelTree().getTrailName(context);
@@ -103,7 +102,6 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
                 }
             } else {
                 context.put("processChildren", Boolean.TRUE);
-                //expandCollapseLink.setText("&nbsp;-&nbsp;");
                 String lastContentId = currentNodeTrail.remove(currentNodeTrail.size() - 1);
                 currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
                 if (currentNodeTrailPiped == null) {
@@ -133,7 +131,7 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
 
     public void renderNodeEnd(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node) throws IOException {
         Boolean processChildren = (Boolean) context.get("processChildren");
-        if (processChildren.booleanValue()) {
+        if (processChildren) {
             appendWhitespace(writer);
             writer.append("</ul>");
         }
@@ -149,7 +147,7 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
 
     public void renderLastElement(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node) throws IOException {
         Boolean processChildren = (Boolean) context.get("processChildren");
-        if (processChildren.booleanValue()) {
+        if (processChildren) {
             appendWhitespace(writer);
             writer.append("<ul class=\"basic-tree\">");
         }
@@ -222,7 +220,7 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
             String prefix = link.getPrefix(context);
             HttpServletResponse res = (HttpServletResponse) context.get("response");
             HttpServletRequest req = (HttpServletRequest) context.get("request");
-            if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {
+            if (urlMode != null && "intra-app".equalsIgnoreCase(urlMode)) {
                 if (req != null && res != null) {
                     WidgetWorker.buildHyperlinkUrl(writer, target, link.getUrlMode(), link.getParameterMap(context), link.getPrefix(context),
                         link.getFullPath(), link.getSecure(), link.getEncode(), req, res, context);
@@ -231,25 +229,23 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
                 } else {
                     writer.append(target);
                 }
-            } else if (urlMode != null && urlMode.equalsIgnoreCase("content")) {
+            } else if (urlMode != null && "content".equalsIgnoreCase(urlMode)) {
                 StringBuilder newURL = new StringBuilder();
                 ContentUrlTag.appendContentPrefix(req, newURL);
                 newURL.append(target);
                 writer.append(newURL.toString());
             } else if ("inter-app".equalsIgnoreCase(urlMode) && req != null) {
-                // SCIPIO: why is this manual? delegate to buildHyperlinkUrl
-                /*
-                String externalLoginKey = (String) req.getAttribute("externalLoginKey");
-                if (UtilValidate.isNotEmpty(externalLoginKey)) {
-                    writer.append(target);
-                    if (target.contains("?")) {
-                        writer.append("&externalLoginKey=");
-                    } else {
-                        writer.append("?externalLoginKey=");
-                    }
-                    writer.append(externalLoginKey);
-                }
-                */
+                // SCIPIO: delegate to buildHyperlinkUrl
+                //String externalLoginKey = (String) req.getAttribute("externalLoginKey");
+                //if (UtilValidate.isNotEmpty(externalLoginKey)) {
+                //    writer.append(target);
+                //    if (target.contains("?")) {
+                //        writer.append("&externalLoginKey=");
+                //    } else {
+                //        writer.append("?externalLoginKey=");
+                //    }
+                //    writer.append(externalLoginKey);
+                //}
                 WidgetWorker.buildHyperlinkUrl(writer, target, "inter-app", link.getParameterMap(context), link.getPrefix(context),
                         link.getFullPath(), link.getSecure(), link.getEncode(), req, res, context);
             } else {
@@ -312,7 +308,7 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
             Boolean encode = false; // SCIPIO: changed from boolean to Boolean
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
-            if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {
+            if (urlMode != null && "intra-app".equalsIgnoreCase(urlMode)) {
                 if (request != null && response != null) {
                     ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                     RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
@@ -321,7 +317,7 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
                 } else {
                     writer.append(src);
                 }
-            } else  if (urlMode != null && urlMode.equalsIgnoreCase("content")) {
+            } else  if (urlMode != null && "content".equalsIgnoreCase(urlMode)) {
                 if (request != null && response != null) {
                     StringBuilder newURL = new StringBuilder();
                     ContentUrlTag.appendContentPrefix(request, newURL);
@@ -343,6 +339,14 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
             screenStringRenderer = screenRenderer.getScreenStringRenderer();
         } else {
             if (screenStringRenderer == null) {
+                // SCIPIO: 2018-09-04: FIXME: should be along lines of the following...
+                /*
+                try {
+                    screenStringRenderer = new MacroScreenRenderer(modelTheme.getType("screen"), modelTheme.getScreenRendererLocation("screen"));
+                } catch (TemplateException | IOException e) {
+                    Debug.logError(e, module);
+                }
+                */
                 screenStringRenderer = new HtmlScreenRenderer();
             }
         }

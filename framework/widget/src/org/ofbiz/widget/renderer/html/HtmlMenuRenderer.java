@@ -32,7 +32,6 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
@@ -72,50 +71,31 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
     public void appendOfbizUrl(Appendable writer, String location) throws IOException {
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         if (ctx == null) {
-            //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, ctx is null(0): buffer=" + buffer.toString() + " location:" + location, "");
             HttpSession session = request.getSession();
             if (session != null) {
                 ctx = session.getServletContext();
-            } else {
-                //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, session is null(1)", "");
             }
             if (ctx == null) {
                 throw new RuntimeException("ctx is null. location:" + location);
             }
-                //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, ctx is NOT null(2)", "");
-        }
-        Delegator delegator = (Delegator)request.getAttribute("delegator");
-        if (delegator == null) {
-                //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, delegator is null(5)", "");
         }
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         // make and append the link
         String s = rh.makeLink(this.request, this.response, location);
-        if (s.indexOf("null") >= 0) {
-            //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl(3), url: " + s, "");
-        }
         writer.append(s);
     }
 
     public void appendContentUrl(Appendable writer, String location) throws IOException {
         ServletContext ctx = (ServletContext) this.request.getAttribute("servletContext");
         if (ctx == null) {
-            //if (Debug.infoOn()) Debug.logInfo("in appendContentUrl, ctx is null(0): buffer=" + buffer.toString() + " location:" + location, "");
             HttpSession session = request.getSession();
             if (session != null) {
                 ctx = session.getServletContext();
-            } else {
-                //if (Debug.infoOn()) Debug.logInfo("in appendContentUrl, session is null(1)", "");
             }
             if (ctx == null) {
                 throw new RuntimeException("ctx is null. location:" + location);
             }
-            //if (Debug.infoOn()) Debug.logInfo("in appendContentUrl, ctx is NOT null(2)", "");
             this.request.setAttribute("servletContext", ctx);
-        }
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        if (delegator == null) {
-                //if (Debug.infoOn()) Debug.logInfo("in appendContentUrl, delegator is null(6)", "");
         }
         StringBuilder buffer = new StringBuilder();
         ContentUrlTag.appendContentPrefix(this.request, buffer);
@@ -141,19 +121,18 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
     }
 
     public void renderFormatSimpleWrapperRows(Appendable writer, Map<String, Object> context, Object menuObj) throws IOException {
-        List<ModelMenuItem> menuItemList = ((ModelMenu) menuObj).getOrderedMenuItemList(context);
+        List<ModelMenuItem> menuItemList = ((ModelMenu) menuObj).getOrderedMenuItemList(context); // SCIPIO: getMenuItemList->getOrderedMenuItemList
         for (ModelMenuItem currentMenuItem: menuItemList) {
             renderMenuItem(writer, context, currentMenuItem);
         }
     }
 
     public void renderMenuItem(Appendable writer, Map<String, Object> context, ModelMenuItem menuItem) throws IOException {
-
-        //Debug.logInfo("in renderMenuItem, menuItem:" + menuItem.getName() + " context:" + context ,"");
         boolean hideThisItem = isHideIfSelected(menuItem, context);
-        //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
-        if (hideThisItem)
+
+        if (hideThisItem) {
             return;
+        }
 
         String style = menuItem.getWidgetStyle();
 
@@ -186,12 +165,13 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         }
         writer.append(">");
 
+        // SCIPIO: 2018-09-04: FIXME?: this is dumping "style" into the main context! may destroy context variables!
+        // maybe it should be handled in renderLink...
         Map<String, Object> linkContext = context;
         String linkStyle = menuItem.getLinkStyle();
         linkContext.put("style", linkStyle);
         
         MenuLink link = menuItem.getLink();
-        //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, link(0):" + link,"");
         if (link != null) {
             renderLink(writer, linkContext, link);
         } else {
@@ -235,16 +215,8 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         return disabled;
     }
 
-/*
-    public String buildDivStr(ModelMenuItem menuItem, Map<String, Object> context) {
-        String divStr = "";
-        divStr =  menuItem.getTitle(context);
-        return divStr;
-    }
-*/
     public void renderMenuOpen(Appendable writer, Map<String, Object> context, ModelMenu modelMenu) throws IOException {
 
-            //Debug.logInfo("in HtmlMenuRenderer, userLoginIdHasChanged:" + userLoginIdHasChanged,"");
         this.widgetCommentsEnabled = ModelWidget.widgetBoundaryCommentsEnabled(context);
         renderBeginningBoundaryComment(writer, "Menu Widget", modelMenu);
         writer.append("<div");
@@ -289,7 +261,6 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         if (UtilValidate.isNotEmpty(fillStyle)) {
             writer.append("<div class=\"").append(fillStyle).append("\">&nbsp;</div>");
         }
-        //String menuContainerStyle = modelMenu.getMenuContainerStyle(context);
         if (modelMenu.renderedMenuItemCount(context) > 0) {      
             writer.append(" </ul>");
             appendWhitespace(writer);
@@ -307,20 +278,16 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute("userLogin");
         if (userLogin != null) {
             String userLoginId = userLogin.getString("userLoginId");
-            //request.getSession().setAttribute("userLoginIdAtPermGrant", userLoginId);
             setUserLoginIdAtPermGrant(userLoginId);
-            //Debug.logInfo("in HtmlMenuRenderer, userLoginId(Close):" + userLoginId + " userLoginIdAtPermGrant:" + request.getSession().getAttribute("userLoginIdAtPermGrant"),"");
         } else {
             request.getSession().setAttribute("userLoginIdAtPermGrant", null);
         }
     }
 
     public void renderFormatSimpleWrapperOpen(Appendable writer, Map<String, Object> context, ModelMenu modelMenu) throws IOException {
-        //appendWhitespace(writer);
     }
 
     public void renderFormatSimpleWrapperClose(Appendable writer, Map<String, Object> context, ModelMenu modelMenu) throws IOException {
-        //appendWhitespace(writer);
     }
 
     public void setRequest(HttpServletRequest request) {
@@ -336,7 +303,6 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
      * @param string
      */
     public void setUserLoginIdAtPermGrant(String string) {
-            //Debug.logInfo("in HtmlMenuRenderer,  userLoginIdAtPermGrant(setUserLoginIdAtPermGrant):" + string,"");
         this.userLoginIdAtPermGrant = string;
     }
 
@@ -362,21 +328,21 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         boolean hasChanged = false;
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute("userLogin");
         userLoginIdAtPermGrant = getUserLoginIdAtPermGrant();
-        //userLoginIdAtPermGrant = (String)request.getSession().getAttribute("userLoginIdAtPermGrant");
         String userLoginId = null;
-        if (userLogin != null)
+        if (userLogin != null) {
             userLoginId = userLogin.getString("userLoginId");
-            //Debug.logInfo("in HtmlMenuRenderer, userLoginId:" + userLoginId + " userLoginIdAtPermGrant:" + userLoginIdAtPermGrant ,"");
+        }
         if ((userLoginId == null && userLoginIdAtPermGrant != null)
            || (userLoginId != null && userLoginIdAtPermGrant == null)
            || ((userLoginId != null && userLoginIdAtPermGrant != null)
               && !userLoginId.equals(userLoginIdAtPermGrant))) {
             hasChanged = true;
         } else {
-            if (userLoginIdAtPermGrant != null)
-               hasChanged = true;
-            else
-               hasChanged = false;
+            if (userLoginIdAtPermGrant != null) {
+                hasChanged = true;
+            } else {
+                hasChanged = false;
+            }
 
             userLoginIdAtPermGrant = null;
         }
@@ -401,7 +367,7 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
             HttpServletRequest request = (HttpServletRequest) context.get("request");
 
             String targetWindow = link.getTargetWindow(context);
-            String uniqueItemName = menuItem.getTopMenu().getName() + "_" + menuItem.getName() + "_LF_" + UtilMisc.<String>addToBigDecimalInMap(context, "menuUniqueItemIndex", BigDecimal.ONE);
+            String uniqueItemName = menuItem.getTopMenu().getName() + "_" + menuItem.getName() + "_LF_" + UtilMisc.<String>addToBigDecimalInMap(context, "menuUniqueItemIndex", BigDecimal.ONE); // SCIPIO: getTopMenu
 
             String linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
             if ("hidden-form".equals(linkType)) {
@@ -467,6 +433,8 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
             }
 
             writer.append(" href=\"");
+            // SCIPIO: 2018-09-04: TODO: REVIEW: this whole part was dramatically trimmed upstream...
+            // FIXME: this code uses very poor javascript syntax (document.xxx.submit())...
             String confirmationMsg = null;
             if ("hidden-form".equals(linkType)) {
                 if (UtilValidate.isNotEmpty(confirmationMsg)) {
@@ -510,31 +478,6 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
             writer.append("</a>");
         }
 
-        /* NOTE DEJ20090316: This was here as a comment and not sure what it is for or if it is useful... can probably be safely removed in the future if still not used/needed
-        boolean isSelected = menuItem.isSelected(context);
-
-        String style = null;
-
-        if (isSelected) {
-        style = menuItem.getSelectedStyle();
-        } else {
-        style = link.getStyle(context);
-        if (UtilValidate.isEmpty(style))
-        style = menuItem.getTitleStyle();
-        if (UtilValidate.isEmpty(style))
-        style = menuItem.getWidgetStyle();
-        }
-
-        if (menuItem.getDisabled()) {
-        style = menuItem.getDisabledTitleStyle();
-        }
-
-        if (UtilValidate.isNotEmpty(style)) {
-        writer.append(" class=\"");
-        writer.append(style);
-        writer.append("\"");
-        }
-        */
     }
 
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) throws IOException {
@@ -579,7 +522,7 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
             Boolean encode = false; // SCIPIO: changed from boolean to Boolean
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
-            if (urlMode != null && urlMode.equalsIgnoreCase("ofbiz")) {
+            if (urlMode != null && "ofbiz".equalsIgnoreCase(urlMode)) {
                 if (request != null && response != null) {
                     ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                     RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
@@ -588,7 +531,7 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
                 } else {
                     writer.append(src);
                 }
-            } else  if (urlMode != null && urlMode.equalsIgnoreCase("content")) {
+            } else  if (urlMode != null && "content".equalsIgnoreCase(urlMode)) {
                 if (request != null && response != null) {
                     StringBuilder newURL = new StringBuilder();
                     ContentUrlTag.appendContentPrefix(request, newURL);
@@ -605,15 +548,13 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
     }
 
     @Override
-    public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem)
-            throws IOException {
+    public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem) throws IOException { // SCIPIO
         // SCIPIO: will not implement this.
         throw new UnsupportedOperationException("Scipio: HtmlMenuRenderer is deprecated");
     }
     
     @Override
-    public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem)
-            throws IOException {
+    public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem) throws IOException { // SCIPIO
         // SCIPIO: will not implement this.
         throw new UnsupportedOperationException("Scipio: HtmlMenuRenderer is deprecated");
     }

@@ -165,7 +165,7 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
     @Override
     public void visit(HtmlTemplate htmlTemplate) throws Exception {
         writer.append("<html-template");
-        // SCIPIO: new. TODO: better polymorph
+        // SCIPIO: new. TODO: better polymorphism
         if (htmlTemplate instanceof FileHtmlTemplate) {
             visitModelWidget(htmlTemplate);
             visitAttribute("location", ((FileHtmlTemplate) htmlTemplate).getLocationExdr());
@@ -290,7 +290,7 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         visitAttribute("default-cell-width", modelMenu.getDefaultCellWidth());
         visitAttribute("default-hide-if-selected", modelMenu.getDefaultHideIfSelected());
         visitAttribute("default-disabled-title-style", modelMenu.getDefaultDisabledTitleStyle());
-        visitAttribute("selected-menuitem-context-field-name", modelMenu.getSelectedMenuItemContextFieldNameExprStr());
+        visitAttribute("selected-menuitem-context-field-name", modelMenu.getSelectedMenuItemContextFieldNameExprStr()); // SCIPIO: modified to retain original expression
         visitAttribute("menu-container-style", modelMenu.getMenuContainerStyleExdr());
         visitAttribute("default-align", modelMenu.getDefaultAlign());
         visitAttribute("default-align-style", modelMenu.getDefaultAlignStyle());
@@ -328,7 +328,7 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         visitAttribute("position", modelMenuItem.getPosition());
         visitAttribute("associated-content-id", modelMenuItem.getAssociatedContentId());
         visitAttribute("cell-width", modelMenuItem.getCellWidth());
-        //visitAttribute("sub-menu", modelMenuItem.getSubMenu()); // SCIPIO: has no meaning in Scipio
+        //visitAttribute("sub-menu", modelMenuItem.getSubMenu()); // SCIPIO: has no meaning in Scipio, can only confuse
         writer.append(">");
         if (modelMenuItem.getCondition() != null) {
             modelMenuItem.getCondition().getCondition().accept(conditionVisitor);
@@ -344,7 +344,7 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         
         // SCIPIO: TODO: print sub-menu elements
         
-        for (ModelMenuItem menuItem : modelMenuItem.getDirectInlineMenuItemList()) {
+        for (ModelMenuItem menuItem : modelMenuItem.getDirectInlineMenuItemList()) { // SCIPIO: getMenuItemList->getDirectInlineMenuItemList 
             menuItem.accept(this);
             ;
         }
@@ -672,7 +672,7 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
     }
 
     @Override
-    public void visit(ModelSubMenu subMenu) throws Exception {
+    public void visit(ModelSubMenu subMenu) throws Exception { // SCIPIO
         // SCIPIO: new method
         // TODO: incomplete
         writer.append("<sub-menu/>");

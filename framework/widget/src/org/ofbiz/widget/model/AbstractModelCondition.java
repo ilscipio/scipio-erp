@@ -89,7 +89,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
     public static List<ModelCondition> readSubConditions(ModelConditionFactory factory, ModelWidget modelWidget,
             Element conditionElement) {
         List<? extends Element> subElementList = UtilXml.childElementList(conditionElement);
-        List<ModelCondition> condList = new ArrayList<ModelCondition>(subElementList.size());
+        List<ModelCondition> condList = new ArrayList<>(subElementList.size());
         for (Element subElement : subElementList) {
             condList.add(factory.newInstance(modelWidget, subElement));
         }
@@ -234,12 +234,12 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 return new IfRegexp(factory, modelWidget, conditionElement);
             } else if ("if-empty".equals(nodeName)) {
                 return new IfEmpty(factory, modelWidget, conditionElement);
+            } else if ("if-entity-permission".equals(nodeName)) {
+                return new IfEntityPermission(factory, modelWidget, conditionElement);
             } else if ("if-true".equals(nodeName)) { // SCIPIO: new
                 return new IfTrue(factory, modelWidget, conditionElement);
             } else if ("if-false".equals(nodeName)) { // SCIPIO: new
                 return new IfFalse(factory, modelWidget, conditionElement);
-            } else if ("if-entity-permission".equals(nodeName)) {
-                return new IfEntityPermission(factory, modelWidget, conditionElement);
             } else if ("if-widget".equals(nodeName)) { // SCIPIO: new
                 return new IfWidget(factory, modelWidget, conditionElement);
             } else {
@@ -263,8 +263,9 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         private IfCompare(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
             String fieldAcsr = condElement.getAttribute("field");
-            if (fieldAcsr.isEmpty())
+            if (fieldAcsr.isEmpty()) {
                 fieldAcsr = condElement.getAttribute("field-name");
+            }
             this.fieldAcsr = FlexibleMapAccessor.getInstance(fieldAcsr);
             this.valueExdr = FlexibleStringExpander.getInstance(condElement.getAttribute("value"));
             this.operator = condElement.getAttribute("operator");
@@ -286,7 +287,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             if (fieldVal == null) {
                 fieldVal = "";
             }
-            List<Object> messages = new LinkedList<Object>();
+            List<Object> messages = new LinkedList<>();
             Boolean resultBool = BaseCompare.doRealCompare(fieldVal, value, operator, type, format, messages, null, null, true);
             if (messages.size() > 0) {
                 messages.add(0, "Error with comparison in if-compare between field [" + fieldAcsr.toString() + "] with value ["
@@ -300,7 +301,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 Debug.logWarning(fullString.toString(), module);
                 throw new IllegalArgumentException(fullString.toString());
             }
-            return resultBool.booleanValue();
+            return resultBool;
         }
 
         public FlexibleMapAccessor<Object> getFieldAcsr() {
@@ -339,12 +340,14 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         private IfCompareField(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
             String fieldAcsr = condElement.getAttribute("field");
-            if (fieldAcsr.isEmpty())
+            if (fieldAcsr.isEmpty()) {
                 fieldAcsr = condElement.getAttribute("field-name");
+            }
             this.fieldAcsr = FlexibleMapAccessor.getInstance(fieldAcsr);
             String toFieldAcsr = condElement.getAttribute("to-field");
-            if (toFieldAcsr.isEmpty())
+            if (toFieldAcsr.isEmpty()) {
                 toFieldAcsr = condElement.getAttribute("to-field-name");
+            }
             this.toFieldAcsr = FlexibleMapAccessor.getInstance(toFieldAcsr);
             this.operator = condElement.getAttribute("operator");
             this.type = condElement.getAttribute("type");
@@ -365,7 +368,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             if (fieldVal == null) {
                 fieldVal = "";
             }
-            List<Object> messages = new LinkedList<Object>();
+            List<Object> messages = new LinkedList<>();
             Boolean resultBool = BaseCompare.doRealCompare(fieldVal, toFieldVal, operator, type, format, messages, null, null,
                     false);
             if (messages.size() > 0) {
@@ -381,7 +384,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 Debug.logWarning(fullString.toString(), module);
                 throw new IllegalArgumentException(fullString.toString());
             }
-            return resultBool.booleanValue();
+            return resultBool;
         }
 
         public FlexibleMapAccessor<Object> getFieldAcsr() {
@@ -416,8 +419,9 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         private IfEmpty(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
             String fieldAcsr = condElement.getAttribute("field");
-            if (fieldAcsr.isEmpty())
+            if (fieldAcsr.isEmpty()) {
                 fieldAcsr = condElement.getAttribute("field-name");
+            }
             this.fieldAcsr = FlexibleMapAccessor.getInstance(fieldAcsr);
         }
 
@@ -668,8 +672,9 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         private IfRegexp(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
             String fieldAcsr = condElement.getAttribute("field");
-            if (fieldAcsr.isEmpty())
+            if (fieldAcsr.isEmpty()) {
                 fieldAcsr = condElement.getAttribute("field-name");
+            }
             this.fieldAcsr = FlexibleMapAccessor.getInstance(fieldAcsr);
             this.exprExdr = FlexibleStringExpander.getInstance(condElement.getAttribute("expr"));
         }
@@ -687,7 +692,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             try {
                 pattern = PatternFactory.createOrGetPerl5CompiledPattern(expr, true);
             } catch (MalformedPatternException e) {
-                String errMsg = "Error in evaluation in if-regexp in screen: " + e.toString() + getLogDirectiveLocationString();
+                String errMsg = "Error in evaluation in if-regexp in screen: " + e.toString() + getLogDirectiveLocationString(); // SCIPIO: getLogDirectiveLocationString
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
@@ -696,11 +701,12 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null, (TimeZone) context.get("timeZone"),
                         (Locale) context.get("locale"), true);
             } catch (GeneralException e) {
-                Debug.logError(e, "Could not convert object to String, using empty String" + getLogDirectiveLocationString(), module);
+                Debug.logError(e, "Could not convert object to String, using empty String" + getLogDirectiveLocationString(), module); // SCIPIO: getLogDirectiveLocationString
             }
             // always use an empty string by default
-            if (fieldString == null)
+            if (fieldString == null) {
                 fieldString = "";
+            }
             PatternMatcher matcher = new Perl5Matcher();
             return matcher.matches(fieldString, pattern);
         }
@@ -751,7 +757,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                     resource = serviceName;
                 }
                 if (UtilValidate.isEmpty(serviceName)) {
-                    Debug.logWarning("No permission service-name specified!" + getLogDirectiveLocationString(), module);
+                    Debug.logWarning("No permission service-name specified!" + getLogDirectiveLocationString(), module); // SCIPIO: getLogDirectiveLocationString
                     return false;
                 }
                 // SCIPIO: refactored the main code
@@ -759,22 +765,6 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 return checkServicePermission(context, serviceName, mainAction, serviceContext, resource, userLogin);
             }
             return false;
-        }
-
-        public FlexibleStringExpander getActionExdr() {
-            return actionExdr;
-        }
-
-        public FlexibleStringExpander getCtxMapExdr() {
-            return ctxMapExdr;
-        }
-
-        public FlexibleStringExpander getResExdr() {
-            return resExdr;
-        }
-
-        public FlexibleStringExpander getServiceExdr() {
-            return serviceExdr;
         }
         
         /**
@@ -805,31 +795,45 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 Debug.logError(e, module);
                 return false;
             }
-            if (permService != null) {
-                // build the context
-                Map<String, Object> svcCtx = permService.makeValid(serviceContext, ModelService.IN_PARAM);
-                svcCtx.put("resourceDescription", resource);
-                if (UtilValidate.isNotEmpty(mainAction)) {
-                    svcCtx.put("mainAction", mainAction);
-                }
-                // invoke the service
-                Map<String, Object> resp;
-                try {
-                    resp = dispatcher.runSync(permService.name, svcCtx, 300, true);
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
-                    return false;
-                }
-                if (ServiceUtil.isError(resp) || ServiceUtil.isFailure(resp)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(resp), module);
-                    return false;
-                }
-                Boolean hasPermission = (Boolean) resp.get("hasPermission");
-                if (hasPermission != null) {
-                    return hasPermission.booleanValue();
-                }
+            // build the context
+            Map<String, Object> svcCtx = permService.makeValid(serviceContext, ModelService.IN_PARAM);
+            svcCtx.put("resourceDescription", resource);
+            if (UtilValidate.isNotEmpty(mainAction)) {
+                svcCtx.put("mainAction", mainAction);
+            }
+            // invoke the service
+            Map<String, Object> resp;
+            try {
+                resp = dispatcher.runSync(permService.name, svcCtx, 300, true);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return false;
+            }
+            if (ServiceUtil.isError(resp) || ServiceUtil.isFailure(resp)) {
+                Debug.logError(ServiceUtil.getErrorMessage(resp), module);
+                return false;
+            }
+            Boolean hasPermission = (Boolean) resp.get("hasPermission");
+            if (hasPermission != null) {
+                return hasPermission;
             }
             return false;
+        }
+
+        public FlexibleStringExpander getActionExdr() {
+            return actionExdr;
+        }
+
+        public FlexibleStringExpander getCtxMapExdr() {
+            return ctxMapExdr;
+        }
+
+        public FlexibleStringExpander getResExdr() {
+            return resExdr;
+        }
+
+        public FlexibleStringExpander getServiceExdr() {
+            return serviceExdr;
         }
     }
 
@@ -846,8 +850,9 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         private IfValidateMethod(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
             String fieldAcsr = condElement.getAttribute("field");
-            if (fieldAcsr.isEmpty())
+            if (fieldAcsr.isEmpty()) {
                 fieldAcsr = condElement.getAttribute("field-name");
+            }
             this.fieldAcsr = FlexibleMapAccessor.getInstance(fieldAcsr);
             this.methodExdr = FlexibleStringExpander.getInstance(condElement.getAttribute("method"));
             this.classExdr = FlexibleStringExpander.getInstance(condElement.getAttribute("class"));
@@ -869,26 +874,27 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                     fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null,
                             (TimeZone) context.get("timeZone"), (Locale) context.get("locale"), true);
                 } catch (GeneralException e) {
-                    Debug.logError(e, "Could not convert object to String, using empty String" + getLogDirectiveLocationString(), module);
+                    Debug.logError(e, "Could not convert object to String, using empty String" + getLogDirectiveLocationString(), module); // SCIPIO: getLogDirectiveLocationString
                 }
             }
             // always use an empty string by default
-            if (fieldString == null)
+            if (fieldString == null) {
                 fieldString = "";
+            }
             Class<?>[] paramTypes = new Class[] { String.class };
             Object[] params = new Object[] { fieldString };
             Class<?> valClass;
             try {
                 valClass = ObjectType.loadClass(className);
             } catch (ClassNotFoundException cnfe) {
-                Debug.logError("Could not find validation class: " + className + getLogDirectiveLocationString(), module);
+                Debug.logError("Could not find validation class: " + className + getLogDirectiveLocationString(), module); // SCIPIO: getLogDirectiveLocationString
                 return false;
             }
             Method valMethod;
             try {
                 valMethod = valClass.getMethod(methodName, paramTypes);
             } catch (NoSuchMethodException cnfe) {
-                Debug.logError("Could not find validation method: " + methodName + " of class " + className + getLogDirectiveLocationString(), module);
+                Debug.logError("Could not find validation method: " + methodName + " of class " + className + getLogDirectiveLocationString(), module); // SCIPIO: getLogDirectiveLocationString
                 return false;
             }
             Boolean resultBool = Boolean.FALSE;
@@ -896,9 +902,9 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 resultBool = (Boolean) valMethod.invoke(null, params);
             } catch (Exception e) {
                 Debug.logError(e, "Error in IfValidationMethod " + methodName + " of class " + className
-                        + ", defaulting to false " + getLogDirectiveLocationString(), module);
+                        + ", defaulting to false " + getLogDirectiveLocationString(), module); // SCIPIO: getLogDirectiveLocationString
             }
-            return resultBool.booleanValue();
+            return resultBool;
         }
 
         public FlexibleStringExpander getClassExdr() {
@@ -1005,9 +1011,8 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                     if (foundOneTrue) {
                         // now found two true, so return false
                         return false;
-                    } else {
-                        foundOneTrue = true;
                     }
+                    foundOneTrue = true;
                 }
             }
             return foundOneTrue;

@@ -103,17 +103,17 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
         // SCIPIO: 2016-09-15: in addition, dump the renderers into the request attributes,
         // for some cases where only request is available
         ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(screenRendererName, screenMacroLibraryPath);
-        if (!formMacroLibraryPath.isEmpty()) {
+        if (UtilValidate.isNotEmpty(formMacroLibraryPath)) {
             FormStringRenderer formStringRenderer = new MacroFormRenderer(screenRendererName, formMacroLibraryPath, request, response);
             context.put("formStringRenderer", formStringRenderer);
             request.setAttribute("formStringRenderer", formStringRenderer);
         }
-        if (!treeMacroLibraryPath.isEmpty()) {
+        if (UtilValidate.isNotEmpty(treeMacroLibraryPath)) {
             TreeStringRenderer treeStringRenderer = new MacroTreeRenderer(screenRendererName, treeMacroLibraryPath, writer);
             context.put("treeStringRenderer", treeStringRenderer);
             request.setAttribute("treeStringRenderer", treeStringRenderer);
         }
-        if (!menuMacroLibraryPath.isEmpty()) {
+        if (UtilValidate.isNotEmpty(menuMacroLibraryPath)) {
             MenuStringRenderer menuStringRenderer = new MacroMenuRenderer(screenRendererName, menuMacroLibraryPath, request, response);
             context.put("menuStringRenderer", menuStringRenderer);
             request.setAttribute("menuStringRenderer", menuStringRenderer);
@@ -146,7 +146,6 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
                 // to speed up output.
                 writer = new StandardCompress().getWriter(writer, null);
             }
-            
             MapStack<String> context = MapStack.create();
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
             
@@ -173,9 +172,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             throw new ViewHandlerException(e.getMessage());
         } catch (IOException e) {
             throw new ViewHandlerException("Error in the response writer/output stream: " + e.toString(), e);
-        } catch (SAXException e) {
-            throw new ViewHandlerException("XML Error rendering page: " + e.toString(), e);
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | ParserConfigurationException e) {
             throw new ViewHandlerException("XML Error rendering page: " + e.toString(), e);
         } catch (GeneralException e) {
             throw new ViewHandlerException("Lower level error rendering page: " + e.toString(), e);

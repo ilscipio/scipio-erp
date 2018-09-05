@@ -17,19 +17,19 @@
  under the License.
  */
 
-package org.apache.ofbiz.widget.test;
+package org.ofbiz.widget.test;
 
 import java.io.InputStream;
 
-import org.apache.ofbiz.base.start.Start;
-import org.apache.ofbiz.base.util.HttpClient;
-import org.apache.ofbiz.base.util.HttpClientException;
-import org.apache.ofbiz.base.util.SSLUtil;
-import org.apache.ofbiz.service.testtools.OFBizTestCase;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.ofbiz.base.start.Start;
+import org.ofbiz.base.util.HttpClient;
+import org.ofbiz.base.util.HttpClientException;
+import org.ofbiz.base.util.SSLUtil;
+import org.ofbiz.service.testtools.OFBizTestCase;
 
 
 public class WidgetMacroLibraryTests extends OFBizTestCase {

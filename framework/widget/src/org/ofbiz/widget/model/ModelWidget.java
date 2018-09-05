@@ -82,8 +82,7 @@ public abstract class ModelWidget implements Serializable {
      * @param widgetElement The XML Element for the widget
      */
     protected ModelWidget(Element widgetElement) {
-        // SCIPIO: delegating:
-        this(widgetElement, widgetElement.getAttribute("name"));
+        this(widgetElement, widgetElement.getAttribute("name")); // SCIPIO: now delegating
     }
 
     public abstract void accept(ModelWidgetVisitor visitor) throws Exception;
@@ -158,7 +157,7 @@ public abstract class ModelWidget implements Serializable {
             String str = (String) context.get(enableBoundaryCommentsParam);
             if (str != null) {
                 result = "true".equals(str);
-            } else{
+            } else {
                 Map<String, ? extends Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
                 if (parameters != null) {
                     str = (String) parameters.get(enableBoundaryCommentsParam);

@@ -44,6 +44,7 @@ import org.ofbiz.widget.model.ModelFormField.HyperlinkField;
 import org.ofbiz.widget.model.ModelFormField.IgnoredField;
 import org.ofbiz.widget.model.ModelFormField.ImageField;
 import org.ofbiz.widget.model.ModelFormField.LookupField;
+import org.ofbiz.widget.model.ModelFormField.MenuField;
 import org.ofbiz.widget.model.ModelFormField.PasswordField;
 import org.ofbiz.widget.model.ModelFormField.RadioField;
 import org.ofbiz.widget.model.ModelFormField.RangeFindField;
@@ -55,6 +56,7 @@ import org.ofbiz.widget.model.ModelFormField.TextareaField;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
+import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 
 
 /**
@@ -79,7 +81,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
         writer.append("<fo:block");
         if (UtilValidate.isNotEmpty(widgetStyle)) {
             writer.append(" ");
-            writer.append(FoScreenRenderer.getFoStyle(widgetStyle));
+            writer.append(MacroScreenRenderer.getFoStyle(widgetStyle));
         }
         writer.append(">");
         writer.append(UtilFormatOut.encodeXmlValue(text));
@@ -88,31 +90,35 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
 
     public void renderDisplayField(Appendable writer, Map<String, Object> context, DisplayField displayField) throws IOException {
         ModelFormField modelFormField = displayField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), displayField.getDescription(context));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), displayField.getDescription(context)); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
     }
 
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, HyperlinkField hyperlinkField) throws IOException {
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), hyperlinkField.getDescription(context));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), hyperlinkField.getDescription(context)); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
+    }
+
+    public void renderMenuField(Appendable writer, Map<String, Object> context, MenuField menuField) throws IOException {
+        menuField.renderFieldString(writer, context, null);
     }
 
     public void renderTextField(Appendable writer, Map<String, Object> context, TextField textField) throws IOException {
         ModelFormField modelFormField = textField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textField.getDefaultValue(context))); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
     }
 
     public void renderTextareaField(Appendable writer, Map<String, Object> context, TextareaField textareaField) throws IOException {
         ModelFormField modelFormField = textareaField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textareaField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textareaField.getDefaultValue(context))); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
     }
 
     public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) throws IOException {
         ModelFormField modelFormField = dateTimeField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, dateTimeField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, dateTimeField.getDefaultValue(context))); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
     }
 
@@ -124,9 +130,9 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
         if (UtilValidate.isNotEmpty(currentValue) && "first-in-list".equals(dropDownField.getCurrent())) {
             String explicitDescription = dropDownField.getCurrentDescription(context);
             if (UtilValidate.isNotEmpty(explicitDescription)) {
-                this.makeBlockString(writer, modelFormField.getWidgetStyle(context), explicitDescription);
+                this.makeBlockString(writer, modelFormField.getWidgetStyle(context), explicitDescription); // SCIPIO: pass context to getWidgetStyle
             } else {
-                this.makeBlockString(writer, modelFormField.getWidgetStyle(context), FieldInfoWithOptions.getDescriptionForOptionKey(currentValue, allOptionValues));
+                this.makeBlockString(writer, modelFormField.getWidgetStyle(context), FieldInfoWithOptions.getDescriptionForOptionKey(currentValue, allOptionValues)); // SCIPIO: pass context to getWidgetStyle
             }
         } else {
             boolean optionSelected = false;
@@ -134,7 +140,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
                 String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
                 if ((UtilValidate.isNotEmpty(currentValue) && currentValue.equals(optionValue.getKey()) && "selected".equals(dropDownField.getCurrent())) ||
                         (UtilValidate.isEmpty(currentValue) && noCurrentSelectedKey != null && noCurrentSelectedKey.equals(optionValue.getKey()))) {
-                    this.makeBlockString(writer, modelFormField.getWidgetStyle(context), optionValue.getDescription());
+                    this.makeBlockString(writer, modelFormField.getWidgetStyle(context), optionValue.getDescription()); // SCIPIO: pass context to getWidgetStyle
                     optionSelected = true;
                     break;
                 }
@@ -205,7 +211,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
             String areaStyle = childField.getTitleAreaStyle();
             if (UtilValidate.isNotEmpty(areaStyle)) {
                 writer.append(" ");
-                writer.append(FoScreenRenderer.getFoStyle(areaStyle));
+                writer.append(MacroScreenRenderer.getFoStyle(areaStyle));
             }
             writer.append("/>");
             appendWhitespace(writer);
@@ -217,6 +223,25 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
         writer.append("</fo:table-body>");
         writer.append("</fo:table>");
         appendWhitespace(writer);
+    }
+
+    // SCIPIO: 2018-09-04: TODO: REVIEW: this method new from upstream, currently unused (included in renderFormatHeaderRowOpen), doesn't hurt to leave it here for now...
+    public void renderFormatHeaderOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        /* REVIEW
+        writer.append("<fo:table-header>");
+        appendWhitespace(writer);
+        */
+    }
+
+    // SCIPIO: 2018-09-04: TODO: REVIEW: this method new from upstream, currently unused (included in renderFormatHeaderRowClose), doesn't hurt to leave it here for now...
+    public void renderFormatHeaderClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        /* REVIEW
+        writer.append("  </fo:table-header>");
+        writer.append("  <fo:table-body>");
+        // FIXME: this is an hack to avoid FOP rendering errors for empty lists (fo:table-body cannot be null)
+        writer.append("<fo:table-row><fo:table-cell><fo:block/></fo:table-cell></fo:table-row>");
+        appendWhitespace(writer);
+        */
     }
 
     public void renderFormatHeaderRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
@@ -287,7 +312,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
         if (UtilValidate.isEmpty(areaStyle)) {
             areaStyle = "tabletext";
         }
-        writer.append(FoScreenRenderer.getFoStyle(areaStyle));
+        writer.append(MacroScreenRenderer.getFoStyle(areaStyle));
         writer.append(">");
         appendWhitespace(writer);
     }
@@ -366,25 +391,25 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
 
     public void renderTextFindField(Appendable writer, Map<String, Object> context, TextFindField textFindField) throws IOException {
         ModelFormField modelFormField = textFindField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textFindField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textFindField.getDefaultValue(context))); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
     }
 
     public void renderRangeFindField(Appendable writer, Map<String, Object> context, RangeFindField rangeFindField) throws IOException {
         ModelFormField modelFormField = rangeFindField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, rangeFindField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, rangeFindField.getDefaultValue(context))); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
     }
 
     public void renderDateFindField(Appendable writer, Map<String, Object> context, DateFindField dateFindField) throws IOException {
         ModelFormField modelFormField = dateFindField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, dateFindField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, dateFindField.getDefaultValue(context))); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
     }
 
     public void renderLookupField(Appendable writer, Map<String, Object> context, LookupField lookupField) throws IOException {
         ModelFormField modelFormField = lookupField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, lookupField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, lookupField.getDefaultValue(context))); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
     }
 
@@ -393,7 +418,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
 
     public void renderFileField(Appendable writer, Map<String, Object> context, FileField textField) throws IOException {
         ModelFormField modelFormField = textField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textField.getDefaultValue(context))); // SCIPIO: pass context to getWidgetStyle
         appendWhitespace(writer);
     }
 
@@ -424,7 +449,13 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
 
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ContainerField containerField) throws IOException {
     }
+    public void renderEmptyFormDataMessage(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // TODO
+    }
 
+    /**
+     * SCIPIO: renders alternate text.
+     */
     public void renderAlternateText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException {
         if (wrapperOpened) {
             writer.append("<fo:table-row>");
@@ -446,21 +477,18 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
     }
 
     @Override
-    public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+    public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException { // SCIPIO
         // TODO Auto-generated method stub
-        
     }
 
     @Override
-    public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+    public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException { // SCIPIO
         // TODO Auto-generated method stub
-        
     }
 
     @Override
-    public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+    public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException { // SCIPIO
         // TODO Auto-generated method stub
-        
     }
 
     @Override

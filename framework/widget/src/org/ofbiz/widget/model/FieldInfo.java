@@ -20,11 +20,14 @@ package org.ofbiz.widget.model;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.w3c.dom.Element;
 
@@ -56,6 +59,11 @@ public abstract class FieldInfo implements Serializable  {
     public static final int PASSWORD = 18;
     public static final int IMAGE = 19;
     public static final int DISPLAY_ENTITY = 20;
+    public static final int CONTAINER = 21;
+    public static final int MENU = 22;
+    public static final int FORM = 23;
+    public static final int GRID = 24;
+    public static final int SCREEN = 25;
     // the numbering here represents the priority of the source;
     //when setting a new fieldInfo on a modelFormField it will only set
     //the new one if the fieldSource is less than or equal to the existing
@@ -64,49 +72,71 @@ public abstract class FieldInfo implements Serializable  {
     public static final int SOURCE_AUTO_ENTITY = 2;
     public static final int SOURCE_AUTO_SERVICE = 3;
     private static Map<String, Integer> fieldTypeByName = createFieldTypeMap();
-    private static Map<Integer, String> fieldTypeByNumber = createFieldTypeNumberMap(fieldTypeByName);
-    
+    private static Map<Integer, String> fieldTypeByNumber = createFieldTypeNumberMap(fieldTypeByName); // SCIPIO
+    private static List<Integer> nonInputFieldTypeList = createNonInputFieldTypeList();
+
     private static Map<String, Integer> createFieldTypeMap() {
-        Map<String, Integer> fieldTypeByName = new HashMap<String, Integer>();
-        fieldTypeByName.put("display", Integer.valueOf(1));
-        fieldTypeByName.put("hyperlink", Integer.valueOf(2));
-        fieldTypeByName.put("text", Integer.valueOf(3));
-        fieldTypeByName.put("textarea", Integer.valueOf(4));
-        fieldTypeByName.put("date-time", Integer.valueOf(5));
-        fieldTypeByName.put("drop-down", Integer.valueOf(6));
-        fieldTypeByName.put("check", Integer.valueOf(7));
-        fieldTypeByName.put("radio", Integer.valueOf(8));
-        fieldTypeByName.put("submit", Integer.valueOf(9));
-        fieldTypeByName.put("reset", Integer.valueOf(10));
-        fieldTypeByName.put("hidden", Integer.valueOf(11));
-        fieldTypeByName.put("ignored", Integer.valueOf(12));
-        fieldTypeByName.put("text-find", Integer.valueOf(13));
-        fieldTypeByName.put("date-find", Integer.valueOf(14));
-        fieldTypeByName.put("range-find", Integer.valueOf(15));
-        fieldTypeByName.put("lookup", Integer.valueOf(16));
-        fieldTypeByName.put("file", Integer.valueOf(17));
-        fieldTypeByName.put("password", Integer.valueOf(18));
-        fieldTypeByName.put("image", Integer.valueOf(19));
-        fieldTypeByName.put("display-entity", Integer.valueOf(20));
-        fieldTypeByName.put("container", Integer.valueOf(21));
+        Map<String, Integer> fieldTypeByName = new HashMap<>();
+        fieldTypeByName.put("display", 1);
+        fieldTypeByName.put("hyperlink", 2);
+        fieldTypeByName.put("text", 3);
+        fieldTypeByName.put("textarea", 4);
+        fieldTypeByName.put("date-time", 5);
+        fieldTypeByName.put("drop-down", 6);
+        fieldTypeByName.put("check", 7);
+        fieldTypeByName.put("radio", 8);
+        fieldTypeByName.put("submit", 9);
+        fieldTypeByName.put("reset", 10);
+        fieldTypeByName.put("hidden", 11);
+        fieldTypeByName.put("ignored", 12);
+        fieldTypeByName.put("text-find", 13);
+        fieldTypeByName.put("date-find", 14);
+        fieldTypeByName.put("range-find", 15);
+        fieldTypeByName.put("lookup", 16);
+        fieldTypeByName.put("file", 17);
+        fieldTypeByName.put("password", 18);
+        fieldTypeByName.put("image", 19);
+        fieldTypeByName.put("display-entity", 20);
+        fieldTypeByName.put("container", 21);
+        fieldTypeByName.put("include-menu", 22);
+        fieldTypeByName.put("include-form", 23);
+        fieldTypeByName.put("include-grid", 24);
+        fieldTypeByName.put("include-screen", 25);
         return Collections.unmodifiableMap(fieldTypeByName);
     }
-    
-    private static Map<Integer, String> createFieldTypeNumberMap(Map<String, Integer> fieldTypeByName) {
-        Map<Integer, String> fieldTypeByNumber = new HashMap<Integer, String>();
+
+    private static Map<Integer, String> createFieldTypeNumberMap(Map<String, Integer> fieldTypeByName) { // SCIPIO
+        Map<Integer, String> fieldTypeByNumber = new HashMap<>();
         for(Map.Entry<String, Integer> entry : fieldTypeByName.entrySet()) {
             fieldTypeByNumber.put(entry.getValue(), entry.getKey());
         }
         return Collections.unmodifiableMap(fieldTypeByNumber);
     }
 
+    private static List<Integer> createNonInputFieldTypeList() {
+        List<Integer> nonInputFieldTypeList = new ArrayList<>();
+        nonInputFieldTypeList.add(FieldInfo.IGNORED);
+        nonInputFieldTypeList.add(FieldInfo.HIDDEN);
+        nonInputFieldTypeList.add(FieldInfo.DISPLAY);
+        nonInputFieldTypeList.add(FieldInfo.DISPLAY_ENTITY);
+        nonInputFieldTypeList.add(FieldInfo.HYPERLINK);
+        nonInputFieldTypeList.add(FieldInfo.MENU);
+        nonInputFieldTypeList.add(FieldInfo.FORM);
+        nonInputFieldTypeList.add(FieldInfo.GRID);
+        nonInputFieldTypeList.add(FieldInfo.SCREEN);
+        return Collections.unmodifiableList(nonInputFieldTypeList);
+    }
+
     public static int findFieldTypeFromName(String name) {
         Integer fieldTypeInt = FieldInfo.fieldTypeByName.get(name);
         if (fieldTypeInt != null) {
             return fieldTypeInt;
-        } else {
-            throw new IllegalArgumentException("Could not get fieldType for field type name " + name);
         }
+        throw new IllegalArgumentException("Could not get fieldType for field type name " + name);
+    }
+
+    public static boolean isInputFieldType(Integer fieldType) {
+        return ! nonInputFieldTypeList.contains(fieldType);
     }
 
     private final int fieldType;
@@ -116,7 +146,7 @@ public abstract class FieldInfo implements Serializable  {
     /** XML Constructor */
     protected FieldInfo(Element element, ModelFormField modelFormField) {
         this.fieldSource = FieldInfo.SOURCE_EXPLICIT;
-        this.fieldType = findFieldTypeFromName(element.getTagName());
+        this.fieldType = findFieldTypeFromName(UtilXml.getTagNameIgnorePrefix(element));
         this.modelFormField = modelFormField;
     }
 
@@ -144,7 +174,7 @@ public abstract class FieldInfo implements Serializable  {
         return fieldType;
     }
     
-    public String getFieldTypeName() {
+    public String getFieldTypeName() { // SCIPIO
         return fieldTypeByNumber.get(getFieldType());
     }
 

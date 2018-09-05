@@ -25,9 +25,11 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +45,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
@@ -70,7 +73,10 @@ import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.CommonWidgetModels.Link;
 import org.ofbiz.widget.model.CommonWidgetModels.Parameter;
 import org.ofbiz.widget.model.ModelForm.UpdateArea;
+import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
+import org.ofbiz.widget.renderer.MenuStringRenderer;
+import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.w3c.dom.Element;
 
 import bsh.EvalError;
@@ -111,19 +117,19 @@ public class ModelFormField implements Serializable {
     private final FlexibleMapAccessor<Object> entryAcsr;
     private final String event;
     private final FieldInfo fieldInfo;
-    private final String fieldName;
+    protected final String fieldName;
     private final String headerLink;
     private final String headerLinkStyle;
     private final String idName;
     private final FlexibleMapAccessor<Map<String, ? extends Object>> mapAcsr;
-    private final ModelForm modelForm;
-    private final String name;
+    protected final ModelForm modelForm;
+    protected final String name;
     private final List<UpdateArea> onChangeUpdateAreas;
     private final List<UpdateArea> onClickUpdateAreas;
-    private final String parameterName;
+    protected final String parameterName;
     private final Integer position;
-    private final Integer positionSpan;
-    private final Boolean combinePrevious;
+    private final Integer positionSpan; // SCIPIO
+    private final Boolean combinePrevious; // SCIPIO
     private final String redWhen;
     private final Boolean requiredField;
     private final String requiredFieldStyle;
@@ -136,15 +142,17 @@ public class ModelFormField implements Serializable {
     private final String sortFieldStyle;
     private final FlexibleStringExpander title;
     private final String titleAreaStyle;
-    private final String titleAreaInlineStyle;
+    private final String titleAreaInlineStyle; // SCIPIO
     private final String titleStyle;
     private final FlexibleStringExpander tooltip;
     private final String tooltipStyle;
     private final FlexibleStringExpander useWhen;
+    private final FlexibleStringExpander ignoreWhen;
     private final String widgetAreaStyle;
-    private final FlexibleStringExpander widgetStyle;
+    private final FlexibleStringExpander widgetStyle; // SCIPIO: now flexible
     private final String parentFormName;
-
+    private final String tabindex;
+    private final String conditionGroup;
     /**
      * SCIPIO: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
@@ -173,17 +181,17 @@ public class ModelFormField implements Serializable {
         if (builder.getOnChangeUpdateAreas().isEmpty()) {
             this.onChangeUpdateAreas = Collections.emptyList();
         } else {
-            this.onChangeUpdateAreas = Collections.unmodifiableList(new ArrayList<UpdateArea>(builder.getOnChangeUpdateAreas()));
+            this.onChangeUpdateAreas = Collections.unmodifiableList(new ArrayList<>(builder.getOnChangeUpdateAreas()));
         }
         if (builder.getOnClickUpdateAreas().isEmpty()) {
             this.onClickUpdateAreas = Collections.emptyList();
         } else {
-            this.onClickUpdateAreas = Collections.unmodifiableList(new ArrayList<UpdateArea>(builder.getOnClickUpdateAreas()));
+            this.onClickUpdateAreas = Collections.unmodifiableList(new ArrayList<>(builder.getOnClickUpdateAreas()));
         }
         this.parameterName = builder.getParameterName();
         this.position = builder.getPosition();
-        this.positionSpan = builder.getPositionSpan();
-        this.combinePrevious = builder.getCombinePrevious();
+        this.positionSpan = builder.getPositionSpan(); // SCIPIO
+        this.combinePrevious = builder.getCombinePrevious(); // SCIPIO
         this.redWhen = builder.getRedWhen();
         this.requiredField = builder.getRequiredField();
         this.requiredFieldStyle = builder.getRequiredFieldStyle();
@@ -196,15 +204,18 @@ public class ModelFormField implements Serializable {
         this.sortFieldStyle = builder.getSortFieldStyle();
         this.title = builder.getTitle();
         this.titleAreaStyle = builder.getTitleAreaStyle();
-        this.titleAreaInlineStyle = builder.getTitleAreaInlineStyle();
+        this.titleAreaInlineStyle = builder.getTitleAreaInlineStyle(); // SCIPIO
         this.titleStyle = builder.getTitleStyle();
         this.tooltip = builder.getTooltip();
         this.tooltipStyle = builder.getTooltipStyle();
         this.useWhen = builder.getUseWhen();
+        this.ignoreWhen = builder.getIgnoreWhen();
         this.widgetAreaStyle = builder.getWidgetAreaStyle();
         this.widgetStyle = builder.getWidgetStyle();
         this.parentFormName = builder.getParentFormName();
-        this.attribsExpr = builder.getAttribsExpr();
+        this.tabindex = builder.getTabindex();
+        this.conditionGroup = builder.getConditionGroup();
+        this.attribsExpr = builder.getAttribsExpr(); // SCIPIO
     }
 
     public FlexibleStringExpander getAction() {
@@ -212,8 +223,9 @@ public class ModelFormField implements Serializable {
     }
 
     public String getAction(Map<String, ? extends Object> context) {
-        if (UtilValidate.isNotEmpty(this.action))
+        if (UtilValidate.isNotEmpty(this.action)) {
             return action.expandString(context);
+        }
         return null;
     }
 
@@ -225,8 +237,9 @@ public class ModelFormField implements Serializable {
      * @return returns the name of the Service Attribute 
      */
     public String getAttributeName() {
-        if (UtilValidate.isNotEmpty(this.attributeName))
+        if (UtilValidate.isNotEmpty(this.attributeName)) {
             return this.attributeName;
+        }
         return this.name;
     }
 
@@ -238,7 +251,7 @@ public class ModelFormField implements Serializable {
             Integer itemIndex = (Integer) context.get("itemIndex");
             if ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType())) {
                 if (itemIndex != null) {
-                    return idName + modelForm.getItemIndexSeparator() + itemIndex.intValue();
+                    return idName + modelForm.getItemIndexSeparator() + itemIndex;
                 }
             }
         }
@@ -250,8 +263,9 @@ public class ModelFormField implements Serializable {
     }
 
     public String getEntityName() {
-        if (UtilValidate.isNotEmpty(this.entityName))
+        if (UtilValidate.isNotEmpty(this.entityName)) {
             return this.entityName;
+        }
         return this.modelForm.getDefaultEntityName();
     }
 
@@ -268,16 +282,20 @@ public class ModelFormField implements Serializable {
         return this.getEntry(context, "");
     }
 
-    public String getEntry(Map<String, ? extends Object> context, String defaultValue, boolean allowEncode) {
+    public String getEntry(Map<String, ? extends Object> context, String defaultValue, boolean allowEncode) { // SCIPIO: added allowEncode
         Boolean isError = (Boolean) context.get("isError");
         Boolean useRequestParameters = (Boolean) context.get("useRequestParameters");
 
         Locale locale = (Locale) context.get("locale");
-        if (locale == null)
+        if (locale == null) {
             locale = Locale.getDefault();
+        }
         TimeZone timeZone = (TimeZone) context.get("timeZone");
-        if (timeZone == null)
+        if (timeZone == null) {
             timeZone = TimeZone.getDefault();
+        }
+
+        //UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder"); // SCIPIO: not here, below...
 
         String returnValue;
 
@@ -285,7 +303,6 @@ public class ModelFormField implements Serializable {
         // if isError is TRUE and useRequestParameters is not FALSE (ie is null or TRUE) then parameters will be used
         if ((Boolean.TRUE.equals(isError) && !Boolean.FALSE.equals(useRequestParameters))
                 || (Boolean.TRUE.equals(useRequestParameters))) {
-            //Debug.logInfo("Getting entry, isError true so getting from parameters for field " + this.getName() + " of form " + this.modelForm.getName(), module);
             Map<String, Object> parameters = UtilGenerics.checkMap(context.get("parameters"), String.class, Object.class);
             String parameterName = this.getParameterName(context);
             if (parameters != null && parameters.get(parameterName) != null) {
@@ -302,11 +319,9 @@ public class ModelFormField implements Serializable {
                 returnValue = defaultValue;
             }
         } else {
-            //Debug.logInfo("Getting entry, isError false so getting from Map in context for field " + this.getName() + " of form " + this.modelForm.getName(), module);
             Map<String, ? extends Object> dataMap = this.getMap(context);
             boolean dataMapIsContext = false;
             if (dataMap == null) {
-                //Debug.logInfo("Getting entry, no Map found with name " + this.getMapName() + ", using context for field " + this.getName() + " of form " + this.modelForm.getName(), module);
                 dataMap = context;
                 dataMapIsContext = true;
             }
@@ -333,10 +348,11 @@ public class ModelFormField implements Serializable {
             if (dataMapIsContext && retVal == null && !Boolean.FALSE.equals(useRequestParameters)) {
                 Map<String, ? extends Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
                 if (parameters != null) {
-                    if (UtilValidate.isNotEmpty(this.entryAcsr))
+                    if (UtilValidate.isNotEmpty(this.entryAcsr)) {
                         retVal = this.entryAcsr.get(parameters);
-                    else
+                    } else {
                         retVal = parameters.get(this.name);
+                    }
                 }
             }
 
@@ -347,17 +363,35 @@ public class ModelFormField implements Serializable {
                     nf.setMaximumFractionDigits(10);
                     return nf.format(retVal);
                 } else if (retVal instanceof java.sql.Date) {
-                    DateFormat df = UtilDateTime.toDateFormat(UtilDateTime.DATE_FORMAT, timeZone, null);
+                    DateFormat df = UtilDateTime.toDateFormat(UtilDateTime.getDateFormat(), timeZone, null);
                     return df.format((java.util.Date) retVal);
                 } else if (retVal instanceof java.sql.Time) {
-                    DateFormat df = UtilDateTime.toTimeFormat(UtilDateTime.TIME_FORMAT, timeZone, null);
+                    DateFormat df = UtilDateTime.toTimeFormat(UtilDateTime.getTimeFormat(), timeZone, null);
                     return df.format((java.util.Date) retVal);
                 } else if (retVal instanceof java.sql.Timestamp) {
-                    DateFormat df = UtilDateTime.toDateTimeFormat(UtilDateTime.DATE_TIME_FORMAT, timeZone, null);
+                    DateFormat df = UtilDateTime.toDateTimeFormat(UtilDateTime.getDateTimeFormat(), timeZone, null);
                     return df.format((java.util.Date) retVal);
                 } else if (retVal instanceof java.util.Date) {
                     DateFormat df = UtilDateTime.toDateTimeFormat("EEE MMM dd hh:mm:ss z yyyy", timeZone, null);
                     return df.format((java.util.Date) retVal);
+                } else if (retVal instanceof Collection) {
+                    Collection<Object> col = UtilGenerics.checkCollection(retVal);
+                    Iterator<Object> iter = col.iterator();
+                    List<Object> newCol = new ArrayList<>(col.size());
+                    UtilCodec.SimpleEncoder simpleEncoder = (allowEncode && this.getEncodeOutput()) ? WidgetWorker.getEarlyEncoder(context) : null; // SCIPIO: use our own encoder logic                  
+                    while (iter.hasNext()) {
+                        Object item = iter.next();
+                        if (item == null) {
+                            continue;
+                        }
+                        if (simpleEncoder != null) {
+                            newCol.add(simpleEncoder.encode(item.toString()));
+                        }
+                        else {
+                            newCol.add(item.toString());
+                        }
+                    }
+                    return newCol.toString();
                 } else {
                     returnValue = retVal.toString();
                 }
@@ -369,6 +403,11 @@ public class ModelFormField implements Serializable {
         if (allowEncode && this.getEncodeOutput() && returnValue != null) {
             returnValue = WidgetWorker.getEarlyEncoder(context).encode(returnValue); // SCIPIO: simplified
         }
+
+        // SCIPIO: TODO: REVIEW: from upstream, not always desirable (this does not exclusively deal with user input or config)...
+        //if (returnValue != null) {
+        //    returnValue = returnValue.trim();
+        //}
         return returnValue;
     }
 
@@ -460,8 +499,9 @@ public class ModelFormField implements Serializable {
     }
 
     public String getEntryName() {
-        if (UtilValidate.isNotEmpty(this.entryAcsr))
+        if (UtilValidate.isNotEmpty(this.entryAcsr)) {
             return this.entryAcsr.getOriginalName();
+        }
         return this.name;
     }
 
@@ -481,8 +521,9 @@ public class ModelFormField implements Serializable {
      * @return return the name of the Entity Field that corresponds with this field
      */
     public String getFieldName() {
-        if (UtilValidate.isNotEmpty(this.fieldName))
+        if (UtilValidate.isNotEmpty(this.fieldName)) {
             return this.fieldName;
+        }
         return this.name;
     }
 
@@ -495,25 +536,33 @@ public class ModelFormField implements Serializable {
     }
 
     public String getIdName() {
-        if (UtilValidate.isNotEmpty(idName))
+        if (UtilValidate.isNotEmpty(idName)) {
             return idName;
+        }
         String parentFormName = this.getParentFormName();
         if (UtilValidate.isNotEmpty(parentFormName)) {
             return parentFormName + "_" + this.getFieldName();
-        } else {
-           return this.modelForm.getName() + "_" + this.getFieldName();
         }
-     }
+        return this.modelForm.getName() + "_" + this.getFieldName();
+    }
+
+    public String getTabindex() {
+        return tabindex;
+    }
+
+    public String getConditionGroup() {
+        return conditionGroup;
+    }
 
     public Map<String, ? extends Object> getMap(Map<String, ? extends Object> context) {
-        if (UtilValidate.isEmpty(this.mapAcsr))
-            return this.modelForm.getDefaultMap(context); //Debug.logInfo("Getting Map from default of the form because of no mapAcsr for field " + this.getName(), module);
+        if (UtilValidate.isEmpty(this.mapAcsr)) {
+            return this.modelForm.getDefaultMap(context);
+        }
 
-        // Debug.logInfo("Getting Map from mapAcsr for field " + this.getName() + ", map-name=" + mapAcsr.getOriginalName() + ", context type=" + context.getClass().toString(), module);
         Map<String, ? extends Object> result = null;
         try {
             result = mapAcsr.get(context);
-        } catch (java.lang.ClassCastException e) {
+        } catch (ClassCastException e) {
             String errMsg = "Got an unexpected object type (not a Map) for map-name [" + mapAcsr.getOriginalName()
                     + "] in field with name [" + this.getName() + "]: " + e.getMessage();
             Debug.logError(errMsg, module);
@@ -535,8 +584,9 @@ public class ModelFormField implements Serializable {
      * @return returns the name of the Map in the form context that contains the entry
      */
     public String getMapName() {
-        if (UtilValidate.isNotEmpty(this.mapAcsr))
+        if (UtilValidate.isNotEmpty(this.mapAcsr)) {
             return this.mapAcsr.getOriginalName();
+        }
         return this.modelForm.getDefaultMapName();
     }
 
@@ -568,36 +618,38 @@ public class ModelFormField implements Serializable {
      */
     public String getParameterName(Map<String, ? extends Object> context) {
         String baseName;
-        if (UtilValidate.isNotEmpty(this.parameterName))
+        if (UtilValidate.isNotEmpty(this.parameterName)) {
             baseName = this.parameterName;
-        else
+        } else {
             baseName = this.name;
+        }
 
         Integer itemIndex = (Integer) context.get("itemIndex");
         if (itemIndex != null && "multi".equals(this.modelForm.getType())) {
-            if (baseName.equals(UtilHttp.ROW_SUBMIT_PREFIX))
-                return baseName + itemIndex.intValue();
-            return baseName + this.modelForm.getItemIndexSeparator() + itemIndex.intValue();
-        } else {
-            return baseName;
+            if (baseName.equals(UtilHttp.ROW_SUBMIT_PREFIX)) { // SCIPIO
+                return baseName + itemIndex;
+            }
+            return baseName + this.modelForm.getItemIndexSeparator() + itemIndex;
         }
+        return baseName;
     }
 
     public int getPosition() {
-        if (this.position == null)
+        if (this.position == null) {
             return 1;
-        return position.intValue();
+        }
+        return position;
     }
     
-    public Integer getPositionSpan() {
+    public Integer getPositionSpan() { // SCIPIO
         return positionSpan;
     }
     
-    public Boolean getCombinePrevious() {
+    public Boolean getCombinePrevious() { // SCIPIO
         return combinePrevious;
     }
     
-    public boolean isCombinePrevious(Map<String, Object> context, ModelFormField prevField) {
+    public boolean isCombinePrevious(Map<String, Object> context, ModelFormField prevField) { // SCIPIO
         if (combinePrevious != null) {
             return combinePrevious;
         }
@@ -624,8 +676,9 @@ public class ModelFormField implements Serializable {
     }
 
     public String getRequiredFieldStyle() {
-        if (UtilValidate.isNotEmpty(this.requiredFieldStyle))
+        if (UtilValidate.isNotEmpty(this.requiredFieldStyle)) {
             return this.requiredFieldStyle;
+        }
         return this.modelForm.getDefaultRequiredFieldStyle();
     }
 
@@ -634,8 +687,9 @@ public class ModelFormField implements Serializable {
     }
 
     public String getServiceName() {
-        if (UtilValidate.isNotEmpty(this.serviceName))
+        if (UtilValidate.isNotEmpty(this.serviceName)) {
             return this.serviceName;
+        }
         return this.modelForm.getDefaultServiceName();
     }
 
@@ -660,20 +714,23 @@ public class ModelFormField implements Serializable {
     }
 
     public String getSortFieldStyle() {
-        if (UtilValidate.isNotEmpty(this.sortFieldStyle))
+        if (UtilValidate.isNotEmpty(this.sortFieldStyle)) {
             return this.sortFieldStyle;
+        }
         return this.modelForm.getDefaultSortFieldStyle();
     }
 
     public String getSortFieldStyleAsc() {
-        if (UtilValidate.isNotEmpty(this.sortFieldAscStyle))
+        if (UtilValidate.isNotEmpty(this.sortFieldAscStyle)) {
             return this.sortFieldAscStyle;
+        }
         return this.modelForm.getDefaultSortFieldAscStyle();
     }
 
     public String getSortFieldStyleDesc() {
-        if (UtilValidate.isNotEmpty(this.sortFieldDescStyle))
+        if (UtilValidate.isNotEmpty(this.sortFieldDescStyle)) {
             return this.sortFieldDescStyle;
+        }
         return this.modelForm.getDefaultSortFieldDescStyle();
     }
 
@@ -682,12 +739,14 @@ public class ModelFormField implements Serializable {
     }
 
     public String getTitle(Map<String, Object> context) {
-        if (UtilValidate.isNotEmpty(this.title))
+        if (UtilValidate.isNotEmpty(this.title)) {
             return title.expandString(context);
+        }
 
         // create a title from the name of this field; expecting a Java method/field style name, ie productName or productCategoryId
-        if (UtilValidate.isEmpty(this.name))
+        if (UtilValidate.isEmpty(this.name)) {
             return ""; // this should never happen, ie name is required
+        }
 
         // search for a localized label for the field's name
         Map<String, String> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
@@ -716,10 +775,19 @@ public class ModelFormField implements Serializable {
             autoTitlewriter.append(curChar);
         }
 
-        return autoTitlewriter.toString();
+        String autoTitlewriterString = autoTitlewriter.toString();
+
+        // For English, ID is correct abbreviation for identity.
+        // So if a label ends with " Id", replace with " ID".
+        // If there is another locale that doesn't follow this rule, we can add condition for this locale to exempt from the change.
+        if (autoTitlewriterString.endsWith(" Id")){
+                autoTitlewriterString = autoTitlewriterString.subSequence(0, autoTitlewriterString.length() - 3) + " ID";
+        }
+
+        return autoTitlewriterString;
     }
     
-    public boolean isBlankTitle(Map<String, Object> context) {
+    public boolean isBlankTitle(Map<String, Object> context) { // SCIPIO
         String title = getTitle(context);
         if (title == null || title.trim().length() == 0) {
             return true;
@@ -728,20 +796,23 @@ public class ModelFormField implements Serializable {
     }
 
     public String getTitleAreaStyle() {
-        if (UtilValidate.isNotEmpty(this.titleAreaStyle))
+        if (UtilValidate.isNotEmpty(this.titleAreaStyle)) {
             return this.titleAreaStyle;
+        }
         return this.modelForm.getDefaultTitleAreaStyle();
     }
 
-    public String getTitleAreaInlineStyle() {
-        if (UtilValidate.isNotEmpty(this.titleAreaInlineStyle))
+    public String getTitleAreaInlineStyle() { // SCIPIO
+        if (UtilValidate.isNotEmpty(this.titleAreaInlineStyle)) {
             return this.titleAreaInlineStyle;
+        }
         return "";
     }
     
     public String getTitleStyle() {
-        if (UtilValidate.isNotEmpty(this.titleStyle))
+        if (UtilValidate.isNotEmpty(this.titleStyle)) {
             return this.titleStyle;
+        }
         return this.modelForm.getDefaultTitleStyle();
     }
 
@@ -751,8 +822,9 @@ public class ModelFormField implements Serializable {
 
     public String getTooltip(Map<String, Object> context) {
         String tooltipString = "";
-        if (UtilValidate.isNotEmpty(tooltip))
+        if (UtilValidate.isNotEmpty(tooltip)) {
             tooltipString = tooltip.expandString(context);
+        }
         if (this.getEncodeOutput()) {
             tooltipString = WidgetWorker.getEarlyEncoder(context).encode(tooltipString); // SCIPIO: simplified
         }
@@ -760,8 +832,9 @@ public class ModelFormField implements Serializable {
     }
 
     public String getTooltipStyle() {
-        if (UtilValidate.isNotEmpty(this.tooltipStyle))
+        if (UtilValidate.isNotEmpty(this.tooltipStyle)) {
             return this.tooltipStyle;
+        }
         return this.modelForm.getDefaultTooltipStyle();
     }
 
@@ -770,34 +843,45 @@ public class ModelFormField implements Serializable {
     }
 
     public String getUseWhen(Map<String, Object> context) {
-        if (UtilValidate.isNotEmpty(this.useWhen))
+        if (UtilValidate.isNotEmpty(this.useWhen)) {
             return this.useWhen.expandString(context);
+        }
+        return "";
+    }
+
+    public String getIgnoreWhen(Map<String, Object> context) {
+        if (UtilValidate.isNotEmpty(this.ignoreWhen)) {
+            return this.ignoreWhen.expandString(context);
+        }
         return "";
     }
 
     public String getWidgetAreaStyle() {
-        if (UtilValidate.isNotEmpty(this.widgetAreaStyle))
+        if (UtilValidate.isNotEmpty(this.widgetAreaStyle)) {
             return this.widgetAreaStyle;
+        }
         return this.modelForm.getDefaultWidgetAreaStyle();
     }
 
-    public FlexibleStringExpander getWidgetStyle() {
+    public FlexibleStringExpander getWidgetStyle() { // SCIPIO: modified to return FlexibleStringExpander instead of String
         return widgetStyle;
     }
     
-    public String getWidgetStyle(Map<String, Object> context) {
-        if (UtilValidate.isNotEmpty(this.widgetStyle))
+    public String getWidgetStyle(Map<String, Object> context) { // SCIPIO: new overload
+        if (UtilValidate.isNotEmpty(this.widgetStyle)) {
             return this.widgetStyle.expandString(context);
+        }
         return this.modelForm.getDefaultWidgetStyle();
     }
 
     public String getParentFormName() {
-        if (UtilValidate.isNotEmpty(this.parentFormName)) 
+        if (UtilValidate.isNotEmpty(this.parentFormName)) {
             return this.parentFormName;
+        }
         return "";
     }
     
-    public AttribsExpression getAttribsExpr() {
+    public AttribsExpression getAttribsExpr() { // SCIPIO
         return attribsExpr;
     }
 
@@ -805,17 +889,20 @@ public class ModelFormField implements Serializable {
      * Checks if field is a row submit field.
      */
     public boolean isRowSubmit() {
-        if (!"multi".equals(getModelForm().getType()))
+        if (!"multi".equals(getModelForm().getType())) {
             return false;
-        if (getFieldInfo().getFieldType() != FieldInfo.CHECK)
+        }
+        if (getFieldInfo().getFieldType() != FieldInfo.CHECK) {
             return false;
-        if (!CheckField.ROW_SUBMIT_FIELD_NAME.equals(getName()))
+        }
+        if (!CheckField.ROW_SUBMIT_FIELD_NAME.equals(getName())) {
             return false;
+        }
         return true;
     }
 
     public boolean isSortField() {
-        return this.sortField != null && this.sortField.booleanValue();
+        return this.sortField != null && this.sortField;
     }
 
     public boolean isUseWhenEmpty() {
@@ -845,8 +932,9 @@ public class ModelFormField implements Serializable {
 
         String redCondition = this.redWhen;
 
-        if ("never".equals(redCondition))
+        if ("never".equals(redCondition)) {
             return false;
+        }
 
         // for performance resaons we check this first, most fields will be eliminated here and the valueOfs will not be necessary
         if (UtilValidate.isEmpty(redCondition) || "by-name".equals(redCondition)) {
@@ -877,14 +965,14 @@ public class ModelFormField implements Serializable {
         String value = this.getEntry(context, null);
         try {
             timestampVal = java.sql.Timestamp.valueOf(value);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             // okay, not a timestamp...
         }
 
         if (timestampVal == null) {
             try {
                 dateVal = java.sql.Date.valueOf(value);
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 // okay, not a date...
             }
         }
@@ -892,7 +980,7 @@ public class ModelFormField implements Serializable {
         if (timestampVal == null && dateVal == null) {
             try {
                 timeVal = java.sql.Time.valueOf(value);
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 // okay, not a time...
             }
         }
@@ -946,13 +1034,14 @@ public class ModelFormField implements Serializable {
         return false;
     }
 
-    static String getWidgetDefDefault(Map<String, Object> context, String propName, boolean expand) {
+    static String getWidgetDefDefault(Map<String, Object> context, String propName, boolean expand) { // SCIPIO
         return ModelForm.getWidgetDefDefault(context, propName, expand);
     }
     
     public boolean shouldUse(Map<String, Object> context) {
         String useWhenStr = this.getUseWhen(context);
         if (UtilValidate.isEmpty(useWhenStr)) {
+            // SCIPIO: lookup default useWhen behaviors 
             String fieldType = getFieldInfo().getFieldTypeName();
             if (UtilValidate.isNotEmpty(fieldType)) {
                 String formType = modelForm.getType();
@@ -975,7 +1064,7 @@ public class ModelFormField implements Serializable {
             // retVal should be a Boolean, if not something weird is up...
             if (retVal instanceof Boolean) {
                 Boolean boolVal = (Boolean) retVal;
-                condTrue = boolVal.booleanValue();
+                condTrue = boolVal;
             } else {
                 throw new IllegalArgumentException("Return value from use-when condition eval was not a Boolean: "
                         + (retVal != null ? retVal.getClass().getName() : "null") + " [" + retVal + "] on the field " + this.name
@@ -987,7 +1076,6 @@ public class ModelFormField implements Serializable {
             String errMsg = "Error evaluating BeanShell use-when condition [" + useWhenStr + "] on the field " + this.name
                     + " of form " + this.modelForm.getName() + ": " + e.toString();
             Debug.logError(e, errMsg, module);
-            //Debug.logError("For use-when eval error context is: " + context, module);
             throw new IllegalArgumentException(errMsg);
         }
     }
@@ -1072,6 +1160,7 @@ public class ModelFormField implements Serializable {
     public static class CheckField extends FieldInfoWithOptions implements Serializable {
         public final static String ROW_SUBMIT_FIELD_NAME = "_rowSubmit";
         private final FlexibleStringExpander allChecked;
+        private final boolean disabled;
         private final FlexibleStringExpander key; // SCIPIO: 2017-04-20: new, for single check fields
         private final FlexibleStringExpander altKey; // SCIPIO: 2017-04-20: new, for single check fields
         private final Boolean useHidden; // SCIPIO: 2017-04-20: new, for single check fields
@@ -1079,6 +1168,8 @@ public class ModelFormField implements Serializable {
         private CheckField(CheckField original, ModelFormField modelFormField) {
             super(original, modelFormField);
             this.allChecked = original.allChecked;
+            this.disabled = original.disabled;
+            // SCIPIO
             this.key = original.key;
             this.altKey = original.altKey;
             this.useHidden = original.useHidden;
@@ -1087,7 +1178,8 @@ public class ModelFormField implements Serializable {
         public CheckField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField, makeDefaultOptions(element, modelFormField));
             allChecked = FlexibleStringExpander.getInstance(element.getAttribute("all-checked"));
-            
+            this.disabled = "true".equals(element.getAttribute("disabled"));
+
             // SCIPIO: FIXME: duplication with KeyFields calls due to construction issues
             KeyFields fields = new KeyFields(element, modelFormField);
             useHidden = fields.useHidden;
@@ -1118,6 +1210,8 @@ public class ModelFormField implements Serializable {
         public CheckField(int fieldSource, ModelFormField modelFormField) {
             super(fieldSource, FieldInfo.CHECK, modelFormField);
             this.allChecked = FlexibleStringExpander.getInstance("");
+            this.disabled = false;
+             // SCIPIO
             this.key = null;
             this.altKey = null;
             this.useHidden = null;
@@ -1127,6 +1221,7 @@ public class ModelFormField implements Serializable {
         public CheckField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
             super(fieldSource, FieldInfo.CHECK, optionSourceList);
             this.allChecked = FlexibleStringExpander.getInstance("");
+            this.disabled = false;
             this.key = null;
             this.altKey = null;
             this.useHidden = null;
@@ -1135,6 +1230,7 @@ public class ModelFormField implements Serializable {
         public CheckField(ModelFormField modelFormField) {
             super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.CHECK, modelFormField);
             this.allChecked = FlexibleStringExpander.getInstance("");
+            this.disabled = false;
             this.key = null;
             this.altKey = null;
             this.useHidden = null;
@@ -1156,28 +1252,32 @@ public class ModelFormField implements Serializable {
 
         public Boolean isAllChecked(Map<String, Object> context) {
             String allCheckedStr = this.allChecked.expandString(context);
-            if (!allCheckedStr.isEmpty())
-                return Boolean.valueOf("true".equals(allCheckedStr));
-            else
-                return null;
+            if (!allCheckedStr.isEmpty()) {
+                return "true".equals(allCheckedStr);
+            }
+            return null;
+        }
+
+        public boolean getDisabled() {
+            return this.disabled;
+        }
+
+        public String getKey(Map<String, Object> context) { // SCIPIO
+            return key != null ? this.key.expandString(context) : null;
+        }
+        
+        public String getAltKey(Map<String, Object> context) { // SCIPIO
+            return altKey != null ? this.altKey.expandString(context) : null;
+        }
+        
+        public Boolean getUseHidden(Map<String, Object> context) { // SCIPIO
+            return useHidden;
         }
 
         @Override
         public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
                 throws IOException {
             formStringRenderer.renderCheckField(writer, context, this);
-        }
-        
-        public String getKey(Map<String, Object> context) {
-            return key != null ? this.key.expandString(context) : null;
-        }
-        
-        public String getAltKey(Map<String, Object> context) {
-            return altKey != null ? this.altKey.expandString(context) : null;
-        }
-        
-        public Boolean getUseHidden(Map<String, Object> context) {
-            return useHidden;
         }
     }
 
@@ -1389,15 +1489,17 @@ public class ModelFormField implements Serializable {
          * @return Default value string for date-time
          */
         public String getDefaultDateTimeString(Map<String, Object> context) {
-            if (UtilValidate.isNotEmpty(this.defaultValue))
+            if (UtilValidate.isNotEmpty(this.defaultValue)) {
                 return this.getDefaultValue(context);
+            }
 
-            if ("date".equals(this.type))
+            if ("date".equals(this.type)) {
                 return (new java.sql.Date(System.currentTimeMillis())).toString();
-            else if ("time".equals(this.type))
+            } else if ("time".equals(this.type)) {
                 return (new java.sql.Time(System.currentTimeMillis())).toString();
-            else
+            } else {
                 return UtilDateTime.nowTimestamp().toString();
+            }
         }
 
         public FlexibleStringExpander getDefaultValue() {
@@ -1407,9 +1509,8 @@ public class ModelFormField implements Serializable {
         public String getDefaultValue(Map<String, Object> context) {
             if (this.defaultValue != null) {
                 return this.defaultValue.expandString(context);
-            } else {
-                return "";
             }
+            return "";
         }
 
         public String getInputMethod() {
@@ -1508,8 +1609,9 @@ public class ModelFormField implements Serializable {
             // rather than using the context to expand the string, lookup the given entity and use it to expand the string
             GenericValue value = null;
             String fieldKey = this.keyFieldName;
-            if (UtilValidate.isEmpty(fieldKey))
+            if (UtilValidate.isEmpty(fieldKey)) {
                 fieldKey = getModelFormField().fieldName;
+            }
 
             Delegator delegator = WidgetWorker.getDelegator(context);
             // SCIPIO: only encode after the lookup
@@ -1676,9 +1778,8 @@ public class ModelFormField implements Serializable {
         public String getDefaultValue(Map<String, Object> context) {
             if (this.defaultValue != null) {
                 return this.defaultValue.expandString(context);
-            } else {
-                return "";
             }
+            return "";
         }
 
         public FlexibleStringExpander getDescription() {
@@ -1687,21 +1788,24 @@ public class ModelFormField implements Serializable {
 
         public String getDescription(Map<String, Object> context) {
             String retVal = null;
-            if (UtilValidate.isNotEmpty(this.description))
+            if (UtilValidate.isNotEmpty(this.description)) {
                 retVal = this.description.expandString(context);
-            else
+            } else {
                 retVal = getModelFormField().getEntry(context);
+            }
 
             if (UtilValidate.isEmpty(retVal)) {
                 retVal = this.getDefaultValue(context);
             } else if ("currency".equals(type)) {
                 retVal = retVal.replaceAll("&nbsp;", " "); // FIXME : encoding currency is a problem for some locale, we should not have any &nbsp; in retVal other case may arise in future...
                 Locale locale = (Locale) context.get("locale");
-                if (locale == null)
+                if (locale == null) {
                     locale = Locale.getDefault();
+                }
                 String isoCode = null;
-                if (UtilValidate.isNotEmpty(this.currency))
+                if (UtilValidate.isNotEmpty(this.currency)) {
                     isoCode = this.currency.expandString(context);
+                }
 
                 try {
                     BigDecimal parsedRetVal = (BigDecimal) ObjectType.simpleTypeConvert(retVal, "BigDecimal", null, null, locale,
@@ -1766,7 +1870,7 @@ public class ModelFormField implements Serializable {
                     Double parsedRetVal = (Double) ObjectType.simpleTypeConvert(retVal, "Double", null, locale, false);
                     String template = UtilProperties.getPropertyValue("arithmetic", "accounting-number.format",
                             "#,##0.00;(#,##0.00)");
-                    retVal = UtilFormatOut.formatDecimalNumber(parsedRetVal.doubleValue(), template, locale);
+                    retVal = UtilFormatOut.formatDecimalNumber(parsedRetVal, template, locale);
                 } catch (GeneralException e) {
                     String errMsg = "Error formatting number [" + retVal + "]: " + e.toString();
                     Debug.logError(e, errMsg, module);
@@ -1784,8 +1888,9 @@ public class ModelFormField implements Serializable {
         }
 
         public String getImageLocation(Map<String, Object> context) {
-            if (this.imageLocation != null)
+            if (this.imageLocation != null) {
                 return this.imageLocation.expandString(context);
+            }
             return "";
         }
 
@@ -1858,7 +1963,7 @@ public class ModelFormField implements Serializable {
             if (!sizeStr.isEmpty()) {
                 try {
                     otherFieldSize = Integer.parseInt(sizeStr);
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     Debug.logError("Could not parse the size value of the text element: [" + sizeStr
                             + "], setting to the default of 0", module);
                 }
@@ -1940,8 +2045,9 @@ public class ModelFormField implements Serializable {
         }
 
         public String getCurrent() {
-            if (UtilValidate.isEmpty(this.current))
+            if (UtilValidate.isEmpty(this.current)) {
                 return "first-in-list";
+            }
             return this.current;
         }
 
@@ -1950,8 +2056,9 @@ public class ModelFormField implements Serializable {
         }
 
         public String getCurrentDescription(Map<String, Object> context) {
-            if (this.currentDescription == null)
+            if (this.currentDescription == null) {
                 return null;
+            }
             return this.currentDescription.expandString(context);
         }
 
@@ -1967,18 +2074,18 @@ public class ModelFormField implements Serializable {
          */
         public String getParameterNameOther(Map<String, Object> context) {
             String baseName;
-            if (UtilValidate.isNotEmpty(getModelFormField().parameterName))
+            if (UtilValidate.isNotEmpty(getModelFormField().parameterName)) {
                 baseName = getModelFormField().parameterName;
-            else
+            } else {
                 baseName = getModelFormField().name;
+            }
 
             baseName += "_OTHER";
             Integer itemIndex = (Integer) context.get("itemIndex");
             if (itemIndex != null && "multi".equals(getModelFormField().modelForm.getType())) {
-                return baseName + getModelFormField().modelForm.getItemIndexSeparator() + itemIndex.intValue();
-            } else {
-                return baseName;
+                return baseName + getModelFormField().modelForm.getItemIndexSeparator() + itemIndex;
             }
+            return baseName;
         }
 
         public String getSize() {
@@ -2027,7 +2134,7 @@ public class ModelFormField implements Serializable {
             this.cache = !"false".equals(entityOptionsElement.getAttribute("cache"));
             List<? extends Element> constraintElements = UtilXml.childElementList(entityOptionsElement, "entity-constraint");
             if (!constraintElements.isEmpty()) {
-                List<EntityFinderUtil.ConditionExpr> constraintList = new ArrayList<EntityFinderUtil.ConditionExpr>(
+                List<EntityFinderUtil.ConditionExpr> constraintList = new ArrayList<>(
                         constraintElements.size());
                 for (Element constraintElement : constraintElements) {
                     constraintList.add(new EntityFinderUtil.ConditionExpr(constraintElement));
@@ -2042,7 +2149,7 @@ public class ModelFormField implements Serializable {
             this.keyFieldName = entityOptionsElement.getAttribute("key-field-name");
             List<? extends Element> orderByElements = UtilXml.childElementList(entityOptionsElement, "entity-order-by");
             if (!orderByElements.isEmpty()) {
-                List<String> orderByList = new ArrayList<String>(orderByElements.size());
+                List<String> orderByList = new ArrayList<>(orderByElements.size());
                 for (Element orderByElement : orderByElements) {
                     orderByList.add(orderByElement.getAttribute("field-name"));
                 }
@@ -2079,7 +2186,7 @@ public class ModelFormField implements Serializable {
             // first expand any conditions that need expanding based on the current context
             EntityCondition findCondition = null;
             if (UtilValidate.isNotEmpty(this.constraintList)) {
-                List<EntityCondition> expandedConditionList = new LinkedList<EntityCondition>();
+                List<EntityCondition> expandedConditionList = new LinkedList<>();
                 for (EntityFinderUtil.Condition condition : constraintList) {
                     ModelEntity modelEntity = delegator.getModelEntity(this.entityName);
                     if (modelEntity == null) {
@@ -2103,7 +2210,7 @@ public class ModelFormField implements Serializable {
 
                 List<GenericValue> values = null;
                 if (!localizedOrderBy) {
-                values = delegator.findList(this.entityName, findCondition, null, this.orderByList, null, this.cache);
+                    values = delegator.findList(this.entityName, findCondition, null, this.orderByList, null, this.cache);
                 } else {
                     //if entity has localized label 
                     values = delegator.findList(this.entityName, findCondition, null, null, null, this.cache);
@@ -2172,8 +2279,9 @@ public class ModelFormField implements Serializable {
         }
 
         public String getKeyFieldName() {
-            if (UtilValidate.isNotEmpty(this.keyFieldName))
+            if (UtilValidate.isNotEmpty(this.keyFieldName)) {
                 return this.keyFieldName;
+            }
             return getModelFormField().getFieldName(); // get the modelFormField fieldName
         }
 
@@ -2185,11 +2293,13 @@ public class ModelFormField implements Serializable {
     public static abstract class FieldInfoWithOptions extends FieldInfo implements Serializable {
 
         public static String getDescriptionForOptionKey(String key, List<OptionValue> allOptionValues) {
-            if (UtilValidate.isEmpty(key))
+            if (UtilValidate.isEmpty(key)) {
                 return "";
+            }
 
-            if (UtilValidate.isEmpty(allOptionValues))
+            if (UtilValidate.isEmpty(allOptionValues)) {
                 return key;
+            }
 
             for (OptionValue optionValue : allOptionValues) {
                 if (key.equals(optionValue.getKey())) {
@@ -2209,7 +2319,7 @@ public class ModelFormField implements Serializable {
             super(element, modelFormField);
             this.noCurrentSelectedKey = FlexibleStringExpander.getInstance(element.getAttribute("no-current-selected-key"));
             // read all option and entity-options sub-elements, maintaining order
-            ArrayList<OptionSource> optionSources = new ArrayList<OptionSource>();
+            ArrayList<OptionSource> optionSources = new ArrayList<>();
             List<? extends Element> childElements = UtilXml.childElementList(element);
             if (childElements.size() > 0) {
                 for (Element childElement : childElements) {
@@ -2234,7 +2344,7 @@ public class ModelFormField implements Serializable {
         }
         
         public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
-            this(element, modelFormField, null);
+            this(element, modelFormField, null); // SCIPIO: now delegating
         }
 
         // Copy constructor.
@@ -2244,7 +2354,7 @@ public class ModelFormField implements Serializable {
             if (original.optionSources.isEmpty()) {
                 this.optionSources = original.optionSources;
             } else {
-                List<OptionSource> optionSources = new ArrayList<OptionSource>(original.optionSources.size());
+                List<OptionSource> optionSources = new ArrayList<>(original.optionSources.size());
                 for (OptionSource source : original.optionSources) {
                     optionSources.add(source.copy(modelFormField));
                 }
@@ -2255,7 +2365,7 @@ public class ModelFormField implements Serializable {
         protected FieldInfoWithOptions(int fieldSource, int fieldType, List<OptionSource> optionSources) {
             super(fieldSource, fieldType, null);
             this.noCurrentSelectedKey = FlexibleStringExpander.getInstance("");
-            this.optionSources = Collections.unmodifiableList(new ArrayList<OptionSource>(optionSources));
+            this.optionSources = Collections.unmodifiableList(new ArrayList<>(optionSources));
         }
 
         public FieldInfoWithOptions(int fieldSource, int fieldType, ModelFormField modelFormField) {
@@ -2265,7 +2375,7 @@ public class ModelFormField implements Serializable {
         }
 
         public List<OptionValue> getAllOptionValues(Map<String, Object> context, Delegator delegator) {
-            List<OptionValue> optionValues = new LinkedList<OptionValue>();
+            List<OptionValue> optionValues = new LinkedList<>();
             for (OptionSource optionSource : this.optionSources) {
                 optionSource.addOptionValues(optionValues, context, delegator);
             }
@@ -2301,7 +2411,7 @@ public class ModelFormField implements Serializable {
         }
 
         public FileField(int fieldSource, ModelFormField modelFormField) {
-            super(fieldSource, modelFormField);
+            super(fieldSource, FieldInfo.FILE, modelFormField);
         }
 
         @Override
@@ -2318,6 +2428,168 @@ public class ModelFormField implements Serializable {
         public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
                 throws IOException {
             formStringRenderer.renderFileField(writer, context, this);
+        }
+    }
+
+    /**
+     * Models the &lt;include-form&gt; element.
+     *
+     * @see <code>widget-form.xsd</code>
+     */
+    public static class FormField extends FieldInfo {
+        private final FlexibleStringExpander formName;
+        private final FlexibleStringExpander formLocation;
+
+        public FormField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            this.formName = FlexibleStringExpander.getInstance(element.getAttribute("name"));
+            this.formLocation = FlexibleStringExpander.getInstance(element.getAttribute("location"));
+        }
+
+        private FormField(FormField original, ModelFormField modelFormField) {
+            super(original.getFieldSource(), original.getFieldType(), modelFormField);
+            this.formName = original.formName;
+            this.formLocation = original.formLocation;
+        }
+
+        @Override
+        public void accept(ModelFieldVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        @Override
+        public FieldInfo copy(ModelFormField modelFormField) {
+            return new FormField(this, modelFormField);
+        }
+
+        public String getFormName(Map<String, Object> context) {
+            return this.formName.expandString(context);
+        }
+
+        public FlexibleStringExpander getFormName() {
+            return formName;
+        }
+
+        public String getFormLocation(Map<String, Object> context) {
+            return this.formLocation.expandString(context);
+        }
+
+        public FlexibleStringExpander getFormLocation() {
+            return formLocation;
+        }
+
+        @Override
+        public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
+                throws IOException {
+            // Output format might not support menus, so make menu rendering optional.
+            ModelForm modelForm = getModelForm(context);
+            try {
+                FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
+                renderer.render(writer, context);
+            } catch (Exception e) {
+                String errMsg = "Error rendering included form named [" + modelForm.getName() + "] at location [" + modelForm.getFormLocation() + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg + e);
+            }
+        }
+
+        public ModelForm getModelForm(Map<String, Object> context) {
+            String name = this.getFormName(context);
+            String location = this.getFormLocation(context);
+            ModelForm modelForm = null;
+            try {
+                org.ofbiz.entity.model.ModelReader entityModelReader = ((org.ofbiz.entity.Delegator)context.get("delegator")).getModelReader();
+                org.ofbiz.service.DispatchContext dispatchContext = ((org.ofbiz.service.LocalDispatcher)context.get("dispatcher")).getDispatchContext();
+                modelForm = FormFactory.getFormFromLocation(location, name, entityModelReader, dispatchContext);
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                String errMsg = "Error rendering form named [" + name + "] at location [" + location + "]: ";
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg + e);
+            }
+            return modelForm;
+        }
+    }
+
+    /**
+     * Models the &lt;include-grid&gt; element.
+     *
+     * @see <code>widget-form.xsd</code>
+     */
+    public static class GridField extends FieldInfo {
+        private final FlexibleStringExpander gridName;
+        private final FlexibleStringExpander gridLocation;
+
+        public GridField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            this.gridName = FlexibleStringExpander.getInstance(element.getAttribute("name"));
+            this.gridLocation = FlexibleStringExpander.getInstance(element.getAttribute("location"));
+        }
+
+        private GridField(GridField original, ModelFormField modelFormField) {
+            super(original.getFieldSource(), original.getFieldType(), modelFormField);
+            this.gridName = original.gridName;
+            this.gridLocation = original.gridLocation;
+        }
+
+        @Override
+        public void accept(ModelFieldVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        @Override
+        public FieldInfo copy(ModelFormField modelFormField) {
+            return new GridField(this, modelFormField);
+        }
+
+        public String getGridName(Map<String, Object> context) {
+            return this.gridName.expandString(context);
+        }
+
+        public FlexibleStringExpander getGridName() {
+            return gridName;
+        }
+
+        public String getGridLocation(Map<String, Object> context) {
+            return this.gridLocation.expandString(context);
+        }
+
+        public FlexibleStringExpander getGridLocation() {
+            return gridLocation;
+        }
+
+        @Override
+        public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
+                throws IOException {
+            // Output format might not support menus, so make menu rendering optional.
+            ModelForm modelGrid = getModelGrid(context);
+            try {
+                FormRenderer renderer = new FormRenderer(modelGrid, formStringRenderer);
+                renderer.render(writer, context);
+            } catch (Exception e) {
+                String errMsg = "Error rendering included grid named [" + modelGrid.getName() + "] at location [" + modelGrid.getFormLocation() + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg + e);
+            }
+        }
+
+        public ModelForm getModelGrid(Map<String, Object> context) {
+            String name = this.getGridName(context);
+            String location = this.getGridLocation(context);
+            ModelForm modelForm = null;
+            try {
+                org.ofbiz.entity.model.ModelReader entityModelReader = ((org.ofbiz.entity.Delegator)context.get("delegator")).getModelReader();
+                org.ofbiz.service.DispatchContext dispatchContext = ((org.ofbiz.service.LocalDispatcher)context.get("dispatcher")).getDispatchContext();
+                modelForm = GridFactory.getGridFromLocation(location, name, entityModelReader, dispatchContext);
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                String errMsg = "Error rendering grid named [" + name + "] at location [" + location + "]: ";
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg + e);
+            }
+            return modelForm;
         }
     }
 
@@ -2368,9 +2640,8 @@ public class ModelFormField implements Serializable {
                 String valueEnc = this.value.expandString(context);
                 valueEnc = WidgetWorker.getEarlyEncoder(context).encode(valueEnc); // SCIPIO: simplified
                 return valueEnc;
-            } else {
-                return getModelFormField().getEntry(context);
             }
+            return getModelFormField().getEntry(context);
         }
 
         @Override
@@ -2388,17 +2659,13 @@ public class ModelFormField implements Serializable {
     public static class HyperlinkField extends FieldInfo implements Serializable {
 
         private final boolean alsoHidden;
-        private final FlexibleStringExpander confirmationMsgExdr;
         private final FlexibleStringExpander description;
-        private final boolean requestConfirmation;
         private final Link link;
 
         public HyperlinkField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
             this.alsoHidden = !"false".equals(element.getAttribute("also-hidden"));
-            this.confirmationMsgExdr = FlexibleStringExpander.getInstance(element.getAttribute("confirmation-message"));
             this.description = FlexibleStringExpander.getInstance(element.getAttribute("description"));
-            this.requestConfirmation = "true".equals(element.getAttribute("request-confirmation"));
             // Backwards-compatible fix
             element.setAttribute("url-mode", element.getAttribute("target-type"));
             this.link = new Link(element);
@@ -2407,9 +2674,7 @@ public class ModelFormField implements Serializable {
         private HyperlinkField(HyperlinkField original, ModelFormField modelFormField) {
             super(original.getFieldSource(), original.getFieldType(), modelFormField);
             this.alsoHidden = original.alsoHidden;
-            this.confirmationMsgExdr = original.confirmationMsgExdr;
             this.description = original.description;
-            this.requestConfirmation = original.requestConfirmation;
             this.link = original.link;
         }
 
@@ -2429,8 +2694,9 @@ public class ModelFormField implements Serializable {
 
         public String getConfirmation(Map<String, Object> context) {
             String message = getConfirmationMsg(context);
-            if (UtilValidate.isNotEmpty(message))
+            if (UtilValidate.isNotEmpty(message)) {
                 return message;
+            }
             if (getRequestConfirmation()) {
                 String defaultMessage = UtilProperties.getPropertyValue("general", "default.confirmation.message",
                         "${uiLabelMap.CommonConfirm}");
@@ -2461,11 +2727,11 @@ public class ModelFormField implements Serializable {
         }
 
         public String getConfirmationMsg(Map<String, Object> context) {
-            return this.confirmationMsgExdr.expandString(context);
+            return link.getConfirmationMsg(context);
         }
 
         public FlexibleStringExpander getConfirmationMsgExdr() {
-            return confirmationMsgExdr;
+            return link.getConfirmationMsgExdr();
         }
 
         public FlexibleStringExpander getDescription() {
@@ -2477,7 +2743,7 @@ public class ModelFormField implements Serializable {
         }
 
         public boolean getRequestConfirmation() {
-            return this.requestConfirmation;
+            return link.getRequestConfirmation();
         }
 
         public Link getLink() {
@@ -2536,12 +2802,12 @@ public class ModelFormField implements Serializable {
             return link.getParameterList();
         }
 
-        public Map<String, String> getParameterMap(Map<String, Object> context) {
-            return link.getParameterMap(context);
-        }
-
         public Map<String, String> getParameterMap(Map<String, Object> context, String defaultEntityName, String defaultServiceName) {
             return link.getParameterMap(context, defaultEntityName, defaultServiceName);
+        }
+
+        public Map<String, String> getParameterMap(Map<String, Object> context) {
+            return link.getParameterMap(context);
         }
 
         public String getPrefix(Map<String, Object> context) {
@@ -2718,8 +2984,9 @@ public class ModelFormField implements Serializable {
         }
 
         public String getAlternate(Map<String, Object> context) {
-            if (UtilValidate.isNotEmpty(this.alternate))
+            if (UtilValidate.isNotEmpty(this.alternate)) {
                 return this.alternate.expandString(context);
+            }
             return "";
         }
 
@@ -2730,9 +2997,8 @@ public class ModelFormField implements Serializable {
         public String getDefaultValue(Map<String, Object> context) {
             if (this.defaultValue != null) {
                 return this.defaultValue.expandString(context);
-            } else {
-                return "";
             }
+            return "";
         }
 
         public FlexibleStringExpander getDescription() {
@@ -2740,8 +3006,9 @@ public class ModelFormField implements Serializable {
         }
 
         public String getDescription(Map<String, Object> context) {
-            if (UtilValidate.isNotEmpty(this.description))
+            if (UtilValidate.isNotEmpty(this.description)) {
                 return this.description.expandString(context);
+            }
             return "";
         }
 
@@ -2750,8 +3017,9 @@ public class ModelFormField implements Serializable {
         }
 
         public String getStyle(Map<String, Object> context) {
-            if (UtilValidate.isNotEmpty(this.style))
+            if (UtilValidate.isNotEmpty(this.style)) {
                 return this.style.expandString(context);
+            }
             return "";
         }
 
@@ -2764,8 +3032,9 @@ public class ModelFormField implements Serializable {
         }
 
         public String getValue(Map<String, Object> context) {
-            if (UtilValidate.isNotEmpty(this.value))
+            if (UtilValidate.isNotEmpty(this.value)) {
                 return this.value.expandString(context);
+            }
             return getModelFormField().getEntry(context);
         }
 
@@ -2863,7 +3132,7 @@ public class ModelFormField implements Serializable {
         }
 
         public Map<String, Object> getFieldMap(Map<String, Object> context) {
-            Map<String, Object> inPlaceEditorContext = new HashMap<String, Object>();
+            Map<String, Object> inPlaceEditorContext = new HashMap<>();
             EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, inPlaceEditorContext);
             return inPlaceEditorContext;
         }
@@ -2951,9 +3220,8 @@ public class ModelFormField implements Serializable {
         public String getUrl(Map<String, Object> context) {
             if (this.url != null) {
                 return this.url.expandString(context);
-            } else {
-                return "";
             }
+            return "";
         }
     }
 
@@ -2973,7 +3241,7 @@ public class ModelFormField implements Serializable {
             super(modelFormField);
             this.listEntryName = optionElement.getAttribute("list-entry-name");
             this.keyAcsr = FlexibleMapAccessor.getInstance(optionElement.getAttribute("key-name"));
-            this.altKeyAcsr = FlexibleMapAccessor.getInstance(optionElement.getAttribute("alt-key-name"));
+            this.altKeyAcsr = FlexibleMapAccessor.getInstance(optionElement.getAttribute("alt-key-name")); // SCIPIO
             this.listAcsr = FlexibleMapAccessor.getInstance(optionElement.getAttribute("list-name"));
             this.description = FlexibleStringExpander.getInstance(optionElement.getAttribute("description"));
         }
@@ -2983,7 +3251,7 @@ public class ModelFormField implements Serializable {
             this.listAcsr = original.listAcsr;
             this.listEntryName = original.listEntryName;
             this.keyAcsr = original.keyAcsr;
-            this.altKeyAcsr = original.altKeyAcsr;
+            this.altKeyAcsr = original.altKeyAcsr; // SCIPIO
             this.description = original.description;
         }
 
@@ -2993,13 +3261,13 @@ public class ModelFormField implements Serializable {
             this.listAcsr = FlexibleMapAccessor.getInstance(listName);
             this.listEntryName = listEntryName;
             this.keyAcsr = FlexibleMapAccessor.getInstance(keyName);
-            this.altKeyAcsr = FlexibleMapAccessor.getInstance(altKeyName);
+            this.altKeyAcsr = FlexibleMapAccessor.getInstance(altKeyName); // SCIPIO
             this.description = FlexibleStringExpander.getInstance(description);
         }
         
         public ListOptions(String listName, String listEntryName, String keyName, String description,
                 ModelFormField modelFormField) {
-            this(listName, listEntryName, keyName, null, description, modelFormField);
+            this(listName, listEntryName, keyName, null, description, modelFormField); // SCIPIO: now delegating
         }
 
         @Override
@@ -3007,7 +3275,7 @@ public class ModelFormField implements Serializable {
             List<? extends Object> dataList = UtilGenerics.checkList(this.listAcsr.get(context));
             if (dataList != null && dataList.size() != 0) {
                 for (Object data : dataList) {
-                    Map<String, Object> localContext = new HashMap<String, Object>();
+                    Map<String, Object> localContext = new HashMap<>();
                     localContext.putAll(context);
                     if (UtilValidate.isNotEmpty(this.listEntryName)) {
                         localContext.put(this.listEntryName, data);
@@ -3015,6 +3283,7 @@ public class ModelFormField implements Serializable {
                         Map<String, Object> dataMap = UtilGenerics.checkMap(data);
                         localContext.putAll(dataMap);
                     }
+                    // SCIPIO: refactored for altKey support
                     String key = getKeyValue(keyAcsr, localContext);
                     String altKey = getKeyValue(altKeyAcsr, localContext);
                     optionValues.add(new OptionValue(key, altKey, description.expandString(localContext)));
@@ -3022,7 +3291,7 @@ public class ModelFormField implements Serializable {
             }
         }
         
-        private String getKeyValue(FlexibleMapAccessor<Object> keyAscr, Map<String, Object> localContext) {
+        private String getKeyValue(FlexibleMapAccessor<Object> keyAscr, Map<String, Object> localContext) { // SCIPIO: refactored from above
             // SCIPIO: 2017-04-20: factored out from main method
             if (keyAcsr == null) return null;
             Object keyObj = keyAcsr.get(localContext);
@@ -3054,7 +3323,7 @@ public class ModelFormField implements Serializable {
             return keyAcsr;
         }
         
-        public FlexibleMapAccessor<Object> getAltKeyAcsr() {
+        public FlexibleMapAccessor<Object> getAltKeyAcsr() { // SCIPIO
             return altKeyAcsr;
         }
 
@@ -3099,7 +3368,7 @@ public class ModelFormField implements Serializable {
         }
 
         public LookupField(int fieldSource, ModelFormField modelFormField) {
-            super(fieldSource, modelFormField);
+            super(fieldSource, FieldInfo.LOOKUP, modelFormField);
             this.descriptionFieldName = "";
             this.fadeBackground = "";
             this.formName = FlexibleStringExpander.getInstance("");
@@ -3182,7 +3451,7 @@ public class ModelFormField implements Serializable {
         }
 
         public List<String> getTargetParameterList() {
-            List<String> paramList = new LinkedList<String>();
+            List<String> paramList = new LinkedList<>();
             if (UtilValidate.isNotEmpty(this.targetParameter)) {
                 StringTokenizer stk = new StringTokenizer(this.targetParameter, ", ");
                 while (stk.hasMoreTokens()) {
@@ -3196,6 +3465,81 @@ public class ModelFormField implements Serializable {
         public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
                 throws IOException {
             formStringRenderer.renderLookupField(writer, context, this);
+        }
+    }
+
+    /**
+     * Models the &lt;include-menu&gt; element.
+     *
+     * @see <code>widget-form.xsd</code>
+     */
+    public static class MenuField extends FieldInfo {
+        private final FlexibleStringExpander menuName;
+        private final FlexibleStringExpander menuLocation;
+
+        public MenuField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            this.menuName = FlexibleStringExpander.getInstance(element.getAttribute("name"));
+            this.menuLocation = FlexibleStringExpander.getInstance(element.getAttribute("location"));
+        }
+
+        private MenuField(MenuField original, ModelFormField modelFormField) {
+            super(original.getFieldSource(), original.getFieldType(), modelFormField);
+            this.menuName = original.menuName;
+            this.menuLocation = original.menuLocation;
+        }
+
+        @Override
+        public void accept(ModelFieldVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        @Override
+        public FieldInfo copy(ModelFormField modelFormField) {
+            return new MenuField(this, modelFormField);
+        }
+
+        public String getMenuName(Map<String, Object> context) {
+            return this.menuName.expandString(context);
+        }
+
+        public FlexibleStringExpander getMenuName() {
+            return menuName;
+        }
+
+        public String getMenuLocation(Map<String, Object> context) {
+            return this.menuLocation.expandString(context);
+        }
+
+        public FlexibleStringExpander getMenuLocation() {
+            return menuLocation;
+        }
+
+        @Override
+        public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
+                throws IOException {
+            // Output format might not support menus, so make menu rendering optional.
+            MenuStringRenderer menuStringRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
+            if (menuStringRenderer == null) {
+                if (Debug.verboseOn()) Debug.logVerbose("MenuStringRenderer instance not found in rendering context, menu not rendered.", module);
+                return;
+            }
+            ModelMenu modelMenu = getModelMenu(context);
+            modelMenu.renderMenuString(writer, context, menuStringRenderer);
+        }
+
+        public ModelMenu getModelMenu(Map<String, Object> context) {
+            String name = this.getMenuName(context);
+            String location = this.getMenuLocation(context);
+            ModelMenu modelMenu = null;
+            try {
+                modelMenu = MenuFactory.getMenuFromLocation(location, name);
+            } catch (Exception e) {
+                String errMsg = "Error rendering menu named [" + name + "] at location [" + location + "]: ";
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg + e);
+            }
+            return modelMenu;
         }
     }
 
@@ -3221,14 +3565,14 @@ public class ModelFormField implements Serializable {
         private final String key;
         private final String altKey; // SCIPIO: 2017-04-20: new, for check fields only
 
-        public OptionValue(String key, String altKey, String description) {
+        public OptionValue(String key, String altKey, String description) { // SCIPIO: now with altKey
             this.key = key;
-            this.altKey = altKey;
+            this.altKey = altKey; // SCIPIO
             this.description = description;
         }
         
         public OptionValue(String key, String description) {
-            this(key, null, description);
+            this(key, null, description); // SCIPIO: now delegating
         }
 
         public String getDescription() {
@@ -3260,7 +3604,7 @@ public class ModelFormField implements Serializable {
         }
 
         public PasswordField(int fieldSource, ModelFormField modelFormField) {
-            super(fieldSource, modelFormField);
+            super(fieldSource, FieldInfo.PASSWORD, modelFormField);
         }
 
         private PasswordField(PasswordField original, ModelFormField modelFormField) {
@@ -3307,9 +3651,9 @@ public class ModelFormField implements Serializable {
             super(original, modelFormField);
         }
         
-        // SCIPIO: Allow adding options to radio fields
+        // SCIPIO: new: Allow adding options to radio fields
         public RadioField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
-            super(fieldSource, FieldInfo.CHECK, optionSourceList);            
+            super(fieldSource, FieldInfo.RADIO, optionSourceList);            
         }
 
         @Override
@@ -3345,7 +3689,7 @@ public class ModelFormField implements Serializable {
         }
 
         public RangeFindField(int fieldSource, int size, ModelFormField modelFormField) {
-            super(fieldSource, size, null, modelFormField);
+            super(fieldSource, size, null, modelFormField, FieldInfo.RANGEQBE);
             this.defaultOptionFrom = "greaterThanEqualTo";
             this.defaultOptionThru = "lessThanEqualTo";
         }
@@ -3422,6 +3766,75 @@ public class ModelFormField implements Serializable {
     }
 
     /**
+     * Models the &lt;include-screen&gt; element.
+     *
+     * @see <code>widget-form.xsd</code>
+     */
+    public static class ScreenField extends FieldInfo {
+        private final FlexibleStringExpander screenName;
+        private final FlexibleStringExpander screenLocation;
+
+        public ScreenField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            this.screenName = FlexibleStringExpander.getInstance(element.getAttribute("name"));
+            this.screenLocation = FlexibleStringExpander.getInstance(element.getAttribute("location"));
+        }
+
+        private ScreenField(ScreenField original, ModelFormField modelFormField) {
+            super(original.getFieldSource(), original.getFieldType(), modelFormField);
+            this.screenName = original.screenName;
+            this.screenLocation = original.screenLocation;
+        }
+
+        @Override
+        public void accept(ModelFieldVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        @Override
+        public FieldInfo copy(ModelFormField modelFormField) {
+            return new ScreenField(this, modelFormField);
+        }
+
+        public String getScreenName(Map<String, Object> context) {
+            return this.screenName.expandString(context);
+        }
+
+        public FlexibleStringExpander getScreenName() {
+            return screenName;
+        }
+
+        public String getScreenLocation(Map<String, Object> context) {
+            return this.screenLocation.expandString(context);
+        }
+
+        public FlexibleStringExpander getScreenLocation() {
+            return screenLocation;
+        }
+
+        @Override
+        public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
+                throws IOException {
+            String name = this.getScreenName(context);
+            String location = this.getScreenLocation(context);
+            try {
+                ScreenRenderer renderer = (ScreenRenderer)context.get("screens");
+                if (renderer != null) {
+                    MapStack<String> mapStack = UtilGenerics.cast(context);
+                    ScreenRenderer subRenderer = new ScreenRenderer(writer, mapStack, renderer.getScreenStringRenderer());
+                    writer.append(subRenderer.render(location, name));
+                }
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg + e);
+            }
+        }
+    }
+
+    /**
      * Models the &lt;option&gt; element.
      * 
      * @see <code>widget-form.xsd</code>
@@ -3434,7 +3847,7 @@ public class ModelFormField implements Serializable {
         public SingleOption(Element optionElement, ModelFormField modelFormField) {
             super(modelFormField);
             this.key = FlexibleStringExpander.getInstance(optionElement.getAttribute("key"));
-            String altKeyStr = optionElement.hasAttribute("alt-key") ? optionElement.getAttribute("alt-key") : null;
+            String altKeyStr = optionElement.hasAttribute("alt-key") ? optionElement.getAttribute("alt-key") : null; // SCIPIO
             this.altKey = altKeyStr != null ? FlexibleStringExpander.getInstance(altKeyStr) : null;
             this.description = FlexibleStringExpander.getInstance(UtilXml.checkEmpty(optionElement.getAttribute("description"),
                     optionElement.getAttribute("key")));
@@ -3443,25 +3856,25 @@ public class ModelFormField implements Serializable {
         private SingleOption(SingleOption original, ModelFormField modelFormField) {
             super(modelFormField);
             this.key = original.key;
-            this.altKey = original.altKey;
+            this.altKey = original.altKey; // SCIPIO
             this.description = original.description;
         }
 
         public SingleOption(String key, String description, ModelFormField modelFormField) {
-            this(key, null, description, modelFormField);
+            this(key, null, description, modelFormField); // SCIPIO: now delegating
         }
         
         public SingleOption(String key, String altKey, String description, ModelFormField modelFormField) {
             super(modelFormField);
             this.key = FlexibleStringExpander.getInstance(key);
-            this.altKey = altKey != null ? FlexibleStringExpander.getInstance(altKey) : null;
+            this.altKey = altKey != null ? FlexibleStringExpander.getInstance(altKey) : null; // SCIPIO
             this.description = FlexibleStringExpander.getInstance(UtilXml.checkEmpty(description, key));
         }
 
         @Override
         public void addOptionValues(List<OptionValue> optionValues, Map<String, Object> context, Delegator delegator) {
             optionValues.add(new OptionValue(key.expandString(context), 
-                    altKey != null ? altKey.expandString(context) : null,
+                    altKey != null ? altKey.expandString(context) : null, // SCIPIO: altKey
                     description.expandString(context)));
         }
 
@@ -3482,7 +3895,7 @@ public class ModelFormField implements Serializable {
          * SCIPIO: Off state key, for check fields only (new 2017-04-20).
          * May be null.
          */
-        public FlexibleStringExpander getAltKey() { // 
+        public FlexibleStringExpander getAltKey() {
             return altKey;
         }
     }
@@ -3567,12 +3980,12 @@ public class ModelFormField implements Serializable {
             return link.getParameterList();
         }
 
-        public Map<String, String> getParameterMap(Map<String, Object> context) {
-            return link.getParameterMap(context);
-        }
-
         public Map<String, String> getParameterMap(Map<String, Object> context, String defaultEntityName, String defaultServiceName) {
             return link.getParameterMap(context, defaultEntityName, defaultServiceName);
+        }
+
+        public Map<String, String> getParameterMap(Map<String, Object> context) {
+            return link.getParameterMap(context);
         }
 
         public String getPrefix(Map<String, Object> context) {
@@ -3677,7 +4090,7 @@ public class ModelFormField implements Serializable {
                     // retVal should be a Boolean, if not something weird is up...
                     if (retVal instanceof Boolean) {
                         Boolean boolVal = (Boolean) retVal;
-                        shouldUse = boolVal.booleanValue();
+                        shouldUse = boolVal;
                     } else {
                         throw new IllegalArgumentException("Return value from target condition eval was not a Boolean: "
                                 + retVal.getClass().getName() + " [" + retVal + "]");
@@ -3690,6 +4103,46 @@ public class ModelFormField implements Serializable {
             }
             return shouldUse;
         }
+    }
+
+    public boolean shouldIgnore(Map<String, Object> context) {
+        boolean shouldIgnore = true;
+        String ignoreWhen = this.getIgnoreWhen(context);
+        if (UtilValidate.isEmpty(ignoreWhen)) {
+            return false;
+        }
+
+        // SCIPIO: optimization/shortcut: check for pre-evaluated true and false values
+        if ("true".equals(ignoreWhen)) {
+            return true;
+        } else if ("false".equals(ignoreWhen)) {
+            return false;
+        }
+
+        try {
+            // SCIPIO: 2018-09-04: reinstated Beanshell here for time being...
+            Interpreter bsh = (Interpreter) context.get("bshInterpreter");
+            if (bsh == null) {
+                bsh = BshUtil.makeInterpreter(context);
+                context.put("bshInterpreter", bsh);
+            }
+
+            Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(ignoreWhen));
+
+            if (retVal instanceof Boolean) {
+                shouldIgnore =(Boolean) retVal;
+            } else {
+                throw new IllegalArgumentException("Return value from ignore-when condition eval was not a Boolean: "  + (retVal != null ? retVal.getClass().getName() : "null") + " [" + retVal + "] on the field " + this.name + " of form " + this.modelForm.getName());
+            }
+
+        } catch (EvalError e) {
+            String errMsg = "Error evaluating BeanShell ignore-when condition [" + ignoreWhen + "] on the field " + this.name + " of form " + this.modelForm.getName() + ": " + e.toString();
+            Debug.logError(e, errMsg, module);
+            throw new IllegalArgumentException(errMsg);
+        }
+
+        return shouldIgnore;
+
     }
 
     /**
@@ -3760,9 +4213,9 @@ public class ModelFormField implements Serializable {
 
         public String getConfirmation(Map<String, Object> context) {
             String message = getConfirmationMsg(context);
-            if (UtilValidate.isNotEmpty(message))
+            if (UtilValidate.isNotEmpty(message)) {
                 return message;
-            else if (getRequestConfirmation()) {
+            } else if (getRequestConfirmation()) {
                 String defaultMessage = UtilProperties.getPropertyValue("general", "default.confirmation.message",
                         "${uiLabelMap.CommonConfirm}");
                 return FlexibleStringExpander.expandString(defaultMessage, context);
@@ -3809,7 +4262,7 @@ public class ModelFormField implements Serializable {
         private final int rows;
         private final FlexibleStringExpander visualEditorButtons;
         private final boolean visualEditorEnable;
-        private final Integer maxlength; // SCIPIO: new 
+        private final Integer maxlength;
 
         public TextareaField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
@@ -3818,11 +4271,9 @@ public class ModelFormField implements Serializable {
             if (!colsStr.isEmpty()) {
                 try {
                     cols = Integer.parseInt(colsStr);
-                } catch (Exception e) {
-                    if (UtilValidate.isNotEmpty(colsStr)) {
-                        Debug.logError("Could not parse the size value of the text element: [" + colsStr
-                                + "], setting to default of " + cols, module);
-                    }
+                } catch (NumberFormatException e) {
+                    Debug.logError("Could not parse the size value of the text element: [" + colsStr
+                            + "], setting to default of " + cols, module);
                 }
             }
             this.cols = cols;
@@ -3833,28 +4284,25 @@ public class ModelFormField implements Serializable {
             if (!rowsStr.isEmpty()) {
                 try {
                     rows = Integer.parseInt(rowsStr);
-                } catch (Exception e) {
-                    if (UtilValidate.isNotEmpty(rowsStr)) {
-                        Debug.logError("Could not parse the size value of the text element: [" + rowsStr
-                                + "], setting to default of " + rows, module);
-                    }
+                } catch (NumberFormatException e) {
+                    Debug.logError("Could not parse the size value of the text element: [" + rowsStr
+                            + "], setting to default of " + rows, module);
                 }
             }
             this.rows = rows;
-            this.visualEditorButtons = FlexibleStringExpander.getInstance(element.getAttribute("visual-editor-buttons"));
-            this.visualEditorEnable = "true".equals(element.getAttribute("visual-editor-enable"));
-            // SCIPIO: new
             Integer maxlength = null;
             String maxlengthStr = element.getAttribute("maxlength");
             if (!maxlengthStr.isEmpty()) {
                 try {
                     maxlength = Integer.valueOf(maxlengthStr);
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     Debug.logError("Could not parse the max-length value of the text element: [" + maxlengthStr
                             + "], setting to null; default of no maxlength will be used", module);
                 }
             }
             this.maxlength = maxlength;
+            this.visualEditorButtons = FlexibleStringExpander.getInstance(element.getAttribute("visual-editor-buttons"));
+            this.visualEditorEnable = "true".equals(element.getAttribute("visual-editor-enable"));
         }
 
         public TextareaField(int fieldSource, ModelFormField modelFormField) {
@@ -3863,9 +4311,9 @@ public class ModelFormField implements Serializable {
             this.defaultValue = FlexibleStringExpander.getInstance("");
             this.readOnly = false;
             this.rows = 2;
+            this.maxlength = null;
             this.visualEditorButtons = FlexibleStringExpander.getInstance("");
             this.visualEditorEnable = false;
-            this.maxlength = null;
         }
 
         public TextareaField(ModelFormField modelFormField) {
@@ -3904,13 +4352,16 @@ public class ModelFormField implements Serializable {
         public String getDefaultValue(Map<String, Object> context) {
             if (this.defaultValue != null) {
                 return this.defaultValue.expandString(context);
-            } else {
-                return "";
             }
+            return "";
         }
 
         public int getRows() {
             return rows;
+        }
+
+        public Integer getMaxlength() {
+            return maxlength;
         }
 
         public FlexibleStringExpander getVisualEditorButtons() {
@@ -3927,10 +4378,6 @@ public class ModelFormField implements Serializable {
 
         public boolean isReadOnly() {
             return readOnly;
-        }
-
-        public Integer getMaxlength() { // SCIPIO: new
-            return maxlength;
         }
         
         @Override
@@ -3967,8 +4414,8 @@ public class ModelFormField implements Serializable {
             if (!maxlengthStr.isEmpty()) {
                 try {
                     maxlength = Integer.valueOf(maxlengthStr);
-                } catch (Exception e) {
-                    Debug.logError("Could not parse the max-length value of the text element: [" + maxlengthStr
+                } catch (NumberFormatException e) {
+                    Debug.logError("Could not parse the maxlength value of the text element: [" + maxlengthStr
                             + "], setting to null; default of no maxlength will be used", module);
                 }
             }
@@ -3980,7 +4427,7 @@ public class ModelFormField implements Serializable {
             if (!sizeStr.isEmpty()) {
                 try {
                     size = Integer.parseInt(sizeStr);
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     Debug.logError("Could not parse the size value of the text element: [" + sizeStr
                             + "], setting to the default of " + size, module);
                 }
@@ -3992,6 +4439,19 @@ public class ModelFormField implements Serializable {
             } else {
                 this.subHyperlink = null;
             }
+        }
+
+        protected TextField(int fieldSource, int size, Integer maxlength, ModelFormField modelFormField, int fieldType) {
+            super(fieldSource, fieldType == -1 ? FieldInfo.TEXT : fieldType, modelFormField);
+            this.clientAutocompleteField = true;
+            this.defaultValue = FlexibleStringExpander.getInstance("");
+            this.disabled = false;
+            this.mask = "";
+            this.maxlength = maxlength;
+            this.placeholder = FlexibleStringExpander.getInstance("");
+            this.readonly = false;
+            this.size = size;
+            this.subHyperlink = null;
         }
 
         protected TextField(int fieldSource, int size, Integer maxlength, ModelFormField modelFormField) {
@@ -4066,9 +4526,8 @@ public class ModelFormField implements Serializable {
         public String getDefaultValue(Map<String, Object> context) {
             if (this.defaultValue != null) {
                 return this.defaultValue.expandString(context);
-            } else {
-                return "";
             }
+            return "";
         }
 
         public boolean getDisabled() {
@@ -4205,7 +4664,7 @@ public class ModelFormField implements Serializable {
             if (UtilValidate.isNotEmpty(parameters)) {
                 String fieldName = this.getModelFormField().getName();
                 if (parameters.containsKey(fieldName)) {
-                    ignoreCase = "Y".equals((String) parameters.get(fieldName.concat("_ic")));
+                    ignoreCase = "Y".equals(parameters.get(fieldName.concat("_ic")));
                 }
             }
             return ignoreCase;

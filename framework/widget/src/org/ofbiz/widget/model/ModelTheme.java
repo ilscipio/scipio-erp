@@ -16,7 +16,7 @@
  * dedicate language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.apache.ofbiz.widget.model;
+package org.ofbiz.widget.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,14 +26,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.GeneralException;
-import org.apache.ofbiz.base.util.ObjectType;
-import org.apache.ofbiz.base.util.UtilMisc;
-import org.apache.ofbiz.base.util.UtilValidate;
-import org.apache.ofbiz.base.util.UtilXml;
-import org.apache.ofbiz.base.util.collections.FlexibleMapAccessor;
-import org.apache.ofbiz.widget.renderer.VisualTheme;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.widget.renderer.VisualTheme;
 import org.w3c.dom.Element;
 
 /**

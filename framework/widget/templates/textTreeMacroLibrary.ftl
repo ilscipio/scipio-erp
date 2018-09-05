@@ -25,7 +25,7 @@ under the License.
  
 <#macro renderLabel id style labelText extraArgs...></#macro>
 
-<#macro formatBoundaryComment boundaryType widgetType widgetName></#macro>
+<#macro formatBoundaryComment boundaryType widgetType widgetName extraArgs...></#macro>
 
 <#macro renderLink id style name title targetWindow linkUrl linkText imgStr extraArgs...></#macro>
 

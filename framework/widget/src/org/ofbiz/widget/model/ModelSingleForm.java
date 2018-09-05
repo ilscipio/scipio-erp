@@ -98,7 +98,7 @@ public class ModelSingleForm extends ModelForm {
     }
 
     @Override
-    public String getWidgetType() {
+    public String getWidgetType() { // SCIPIO
         return "form";
     }
 }

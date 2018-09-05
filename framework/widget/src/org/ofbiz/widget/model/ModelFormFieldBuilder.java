@@ -44,16 +44,20 @@ import org.ofbiz.widget.model.ModelFormField.DisplayEntityField;
 import org.ofbiz.widget.model.ModelFormField.DisplayField;
 import org.ofbiz.widget.model.ModelFormField.DropDownField;
 import org.ofbiz.widget.model.ModelFormField.FileField;
+import org.ofbiz.widget.model.ModelFormField.FormField;
+import org.ofbiz.widget.model.ModelFormField.GridField;
 import org.ofbiz.widget.model.ModelFormField.HiddenField;
 import org.ofbiz.widget.model.ModelFormField.HyperlinkField;
 import org.ofbiz.widget.model.ModelFormField.IgnoredField;
 import org.ofbiz.widget.model.ModelFormField.ImageField;
 import org.ofbiz.widget.model.ModelFormField.LookupField;
+import org.ofbiz.widget.model.ModelFormField.MenuField;
 import org.ofbiz.widget.model.ModelFormField.OptionSource;
 import org.ofbiz.widget.model.ModelFormField.PasswordField;
 import org.ofbiz.widget.model.ModelFormField.RadioField;
 import org.ofbiz.widget.model.ModelFormField.RangeFindField;
 import org.ofbiz.widget.model.ModelFormField.ResetField;
+import org.ofbiz.widget.model.ModelFormField.ScreenField;
 import org.ofbiz.widget.model.ModelFormField.SubmitField;
 import org.ofbiz.widget.model.ModelFormField.TextField;
 import org.ofbiz.widget.model.ModelFormField.TextFindField;
@@ -82,12 +86,12 @@ public class ModelFormFieldBuilder {
     private FlexibleMapAccessor<Map<String, ? extends Object>> mapAcsr = null;
     private ModelForm modelForm = null;
     private String name = "";
-    private List<UpdateArea> onChangeUpdateAreas = new ArrayList<UpdateArea>();
-    private List<UpdateArea> onClickUpdateAreas = new ArrayList<UpdateArea>();
+    private List<UpdateArea> onChangeUpdateAreas = new ArrayList<>();
+    private List<UpdateArea> onClickUpdateAreas = new ArrayList<>();
     private String parameterName = "";
     private Integer position = null;
-    private Integer positionSpan = null;
-    private Boolean combinePrevious = null;
+    private Integer positionSpan = null; // SCIPIO
+    private Boolean combinePrevious = null; // SCIPIO
     private String redWhen = "";
     private Boolean requiredField = null;
     private String requiredFieldStyle = "";
@@ -100,15 +104,17 @@ public class ModelFormFieldBuilder {
     private String sortFieldStyle = "";
     private FlexibleStringExpander title = FlexibleStringExpander.getInstance("");
     private String titleAreaStyle = "";
-    private String titleAreaInlineStyle = "";
+    private String titleAreaInlineStyle = ""; // SCIPIO
     private String titleStyle = "";
     private FlexibleStringExpander tooltip = FlexibleStringExpander.getInstance("");
     private String tooltipStyle = "";
     private FlexibleStringExpander useWhen = FlexibleStringExpander.getInstance("");
+    private FlexibleStringExpander ignoreWhen = FlexibleStringExpander.getInstance("");
     private String widgetAreaStyle = "";
-    private FlexibleStringExpander widgetStyle = FlexibleStringExpander.getInstance("");
+    private FlexibleStringExpander widgetStyle = FlexibleStringExpander.getInstance(""); // SCIPIO: modified to use FlexibleStringExpander
     private String parentFormName = "";
-    
+    private String tabindex = "";
+    private String conditionGroup = "";
     /**
      * SCIPIO: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
@@ -142,13 +148,13 @@ public class ModelFormFieldBuilder {
             position = Integer.parseInt(positionAtttr);
         }
         this.position = position;
-        String positionSpanAttr = fieldElement.getAttribute("position-span");
+        String positionSpanAttr = fieldElement.getAttribute("position-span"); // SCIPIO
         Integer positionSpan = null;
         if (!positionSpanAttr.isEmpty()) {
             positionSpan = Integer.parseInt(positionSpanAttr);
         }
         this.positionSpan = positionSpan;
-        if ("true".equals(fieldElement.getAttribute("combine-previous"))) {
+        if ("true".equals(fieldElement.getAttribute("combine-previous"))) { // SCIPIO
             this.combinePrevious = true;
         }
         else if ("false".equals(fieldElement.getAttribute("combine-previous"))) {
@@ -171,26 +177,30 @@ public class ModelFormFieldBuilder {
         this.sortFieldStyle = fieldElement.getAttribute("sort-field-style");
         this.title = FlexibleStringExpander.getInstance(fieldElement.getAttribute("title"));
         this.titleAreaStyle = fieldElement.getAttribute("title-area-style");
-        this.titleAreaInlineStyle = fieldElement.getAttribute("title-area-inline-style");
+        this.titleAreaInlineStyle = fieldElement.getAttribute("title-area-inline-style"); // SCIPIO
         this.titleStyle = fieldElement.getAttribute("title-style");
         this.tooltip = FlexibleStringExpander.getInstance(fieldElement.getAttribute("tooltip"));
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
         this.useWhen = FlexibleStringExpander.getInstance(fieldElement.getAttribute("use-when"));
+        this.ignoreWhen = FlexibleStringExpander.getInstance(fieldElement.getAttribute("ignore-when"));
         this.widgetAreaStyle = fieldElement.getAttribute("widget-area-style");
-        this.widgetStyle = FlexibleStringExpander.getInstance(fieldElement.getAttribute("widget-style"));
+        this.widgetStyle = FlexibleStringExpander.getInstance(fieldElement.getAttribute("widget-style")); // SCIPIO: modified for flexible
         this.parentFormName = fieldElement.getAttribute("form-name");
-        this.attribsExpr = AttribsExpression.makeAttribsExpr(fieldElement.getAttribute("attribs"));
+        this.tabindex = fieldElement.getAttribute("tabindex");
+        this.conditionGroup = fieldElement.getAttribute("condition-group");
+        this.attribsExpr = AttribsExpression.makeAttribsExpr(fieldElement.getAttribute("attribs")); // SCIPIO
         
         Element childElement = null;
         List<? extends Element> subElements = UtilXml.childElementList(fieldElement);
         for (Element subElement : subElements) {
-            String subElementName = subElement.getTagName();
+            String subElementName = UtilXml.getTagNameIgnorePrefix(subElement);
             if ("on-field-event-update-area".equals(subElementName)) {
                 UpdateArea updateArea = new UpdateArea(subElement);
-                if ("change".equals(updateArea.getEventType()))
+                if ("change".equals(updateArea.getEventType())) {
                     onChangeUpdateAreas.add(updateArea);
-                else if ("click".equals(updateArea.getEventType()))
+                } else if ("click".equals(updateArea.getEventType())) {
                     onClickUpdateAreas.add(updateArea);
+                }
             } else {
                 if (this.fieldType != null) {
                     throw new IllegalArgumentException("Multiple field types found: " + this.fieldType + ", " + subElementName);
@@ -201,50 +211,59 @@ public class ModelFormFieldBuilder {
         }
         if (UtilValidate.isEmpty(this.fieldType)) {
             this.induceFieldInfo(modelForm, null, entityModelReader, dispatchContext);
-        } else if ("display".equals(this.fieldType))
+        } else if ("display".equals(this.fieldType)) {
             this.fieldInfo = new DisplayField(childElement, null);
-        else if ("display-entity".equals(this.fieldType))
+        } else if ("display-entity".equals(this.fieldType)) {
             this.fieldInfo = new DisplayEntityField(childElement, null);
-        else if ("hyperlink".equals(this.fieldType))
+        } else if ("hyperlink".equals(this.fieldType)) {
             this.fieldInfo = new HyperlinkField(childElement, null);
-        else if ("text".equals(this.fieldType))
+        } else if ("text".equals(this.fieldType)) {
             this.fieldInfo = new TextField(childElement, null);
-        else if ("textarea".equals(this.fieldType))
+        } else if ("textarea".equals(this.fieldType)) {
             this.fieldInfo = new TextareaField(childElement, null);
-        else if ("date-time".equals(this.fieldType))
+        } else if ("date-time".equals(this.fieldType)) {
             this.fieldInfo = new DateTimeField(childElement, null);
-        else if ("drop-down".equals(this.fieldType))
+        } else if ("drop-down".equals(this.fieldType)) {
             this.fieldInfo = new DropDownField(childElement, null);
-        else if ("check".equals(this.fieldType))
+        } else if ("check".equals(this.fieldType)) {
             this.fieldInfo = new CheckField(childElement, null);
-        else if ("radio".equals(this.fieldType))
+        } else if ("radio".equals(this.fieldType)) {
             this.fieldInfo = new RadioField(childElement, null);
-        else if ("submit".equals(this.fieldType))
+        } else if ("submit".equals(this.fieldType)) {
             this.fieldInfo = new SubmitField(childElement, null);
-        else if ("reset".equals(this.fieldType))
+        } else if ("reset".equals(this.fieldType)) {
             this.fieldInfo = new ResetField(childElement, null);
-        else if ("hidden".equals(this.fieldType))
+        } else if ("hidden".equals(this.fieldType)) {
             this.fieldInfo = new HiddenField(childElement, null);
-        else if ("ignored".equals(this.fieldType))
+        } else if ("ignored".equals(this.fieldType)) {
             this.fieldInfo = new IgnoredField(childElement, null);
-        else if ("text-find".equals(this.fieldType))
+        } else if ("text-find".equals(this.fieldType)) {
             this.fieldInfo = new TextFindField(childElement, null);
-        else if ("date-find".equals(this.fieldType))
+        } else if ("date-find".equals(this.fieldType)) {
             this.fieldInfo = new DateFindField(childElement, null);
-        else if ("range-find".equals(this.fieldType))
+        } else if ("range-find".equals(this.fieldType)) {
             this.fieldInfo = new RangeFindField(childElement, null);
-        else if ("lookup".equals(this.fieldType))
+        } else if ("lookup".equals(this.fieldType)) {
             this.fieldInfo = new LookupField(childElement, null);
-        else if ("file".equals(this.fieldType))
+        } else if ("include-menu".equals(this.fieldType)) {
+            this.fieldInfo = new MenuField(childElement, null);
+        } else if ("include-form".equals(this.fieldType)) {
+            this.fieldInfo = new FormField(childElement, null);
+        } else if ("include-grid".equals(this.fieldType)) {
+            this.fieldInfo = new GridField(childElement, null);
+        } else if ("include-screen".equals(this.fieldType)) {
+            this.fieldInfo = new ScreenField(childElement, null);
+        } else if ("file".equals(this.fieldType)) {
             this.fieldInfo = new FileField(childElement, null);
-        else if ("password".equals(this.fieldType))
+        } else if ("password".equals(this.fieldType)) {
             this.fieldInfo = new PasswordField(childElement, null);
-        else if ("image".equals(this.fieldType))
+        } else if ("image".equals(this.fieldType)) {
             this.fieldInfo = new ImageField(childElement, null);
-        else if ("container".equals(this.fieldType))
+        } else if ("container".equals(this.fieldType)) {
             this.fieldInfo = new ContainerField(childElement, null);
-        else
+        } else {
             throw new IllegalArgumentException("The field sub-element with name " + this.fieldType + " is not supported");
+        }
     }
 
     public ModelFormFieldBuilder(ModelFormField modelFormField) {
@@ -266,8 +285,8 @@ public class ModelFormFieldBuilder {
         this.onClickUpdateAreas.addAll(modelFormField.getOnClickUpdateAreas());
         this.parameterName = modelFormField.getParameterName();
         this.position = modelFormField.getPosition();
-        this.positionSpan = modelFormField.getPositionSpan();
-        this.combinePrevious = modelFormField.getCombinePrevious();
+        this.positionSpan = modelFormField.getPositionSpan(); // SCIPIO
+        this.combinePrevious = modelFormField.getCombinePrevious(); // SCIPIO
         this.redWhen = modelFormField.getRedWhen();
         this.requiredField = modelFormField.getRequiredField();
         this.requiredFieldStyle = modelFormField.getRequiredFieldStyle();
@@ -280,7 +299,7 @@ public class ModelFormFieldBuilder {
         this.sortFieldStyle = modelFormField.getSortFieldStyle();
         this.title = modelFormField.getTitle();
         this.titleAreaStyle = modelFormField.getTitleAreaStyle();
-        this.titleAreaInlineStyle = modelFormField.getTitleAreaInlineStyle();
+        this.titleAreaInlineStyle = modelFormField.getTitleAreaInlineStyle(); // SCIPIO
         this.titleStyle = modelFormField.getTitleStyle();
         this.tooltip = modelFormField.getTooltip();
         this.tooltipStyle = modelFormField.getTooltipStyle();
@@ -288,7 +307,9 @@ public class ModelFormFieldBuilder {
         this.widgetAreaStyle = modelFormField.getWidgetAreaStyle();
         this.widgetStyle = modelFormField.getWidgetStyle();
         this.parentFormName = modelFormField.getParentFormName();
-        this.attribsExpr = modelFormField.getAttribsExpr();
+        this.tabindex = modelFormField.getTabindex();
+        this.conditionGroup = modelFormField.getConditionGroup();
+        this.attribsExpr = modelFormField.getAttribsExpr(); // SCIPIO
     }
 
     public ModelFormFieldBuilder(ModelFormFieldBuilder builder) {
@@ -310,8 +331,8 @@ public class ModelFormFieldBuilder {
         this.onClickUpdateAreas.addAll(builder.getOnClickUpdateAreas());
         this.parameterName = builder.getParameterName();
         this.position = builder.getPosition();
-        this.positionSpan = builder.getPositionSpan();
-        this.combinePrevious = builder.getCombinePrevious();
+        this.positionSpan = builder.getPositionSpan(); // SCIPIO
+        this.combinePrevious = builder.getCombinePrevious(); // SCIPIO
         this.redWhen = builder.getRedWhen();
         this.requiredField = builder.getRequiredField();
         this.requiredFieldStyle = builder.getRequiredFieldStyle();
@@ -324,7 +345,7 @@ public class ModelFormFieldBuilder {
         this.sortFieldStyle = builder.getSortFieldStyle();
         this.title = builder.getTitle();
         this.titleAreaStyle = builder.getTitleAreaStyle();
-        this.titleAreaInlineStyle = builder.getTitleAreaInlineStyle();
+        this.titleAreaInlineStyle = builder.getTitleAreaInlineStyle(); // SCIPIO
         this.titleStyle = builder.getTitleStyle();
         this.tooltip = builder.getTooltip();
         this.tooltipStyle = builder.getTooltipStyle();
@@ -332,7 +353,9 @@ public class ModelFormFieldBuilder {
         this.widgetAreaStyle = builder.getWidgetAreaStyle();
         this.widgetStyle = builder.getWidgetStyle();
         this.parentFormName = builder.getParentFormName();
-        this.attribsExpr = builder.getAttribsExpr();
+        this.tabindex = builder.getTabindex();
+        this.conditionGroup = builder.getConditionGroup();
+        this.attribsExpr = builder.getAttribsExpr(); // SCIPIO
     }
 
     public ModelFormFieldBuilder addOnChangeUpdateArea(UpdateArea onChangeUpdateArea) {
@@ -425,11 +448,11 @@ public class ModelFormFieldBuilder {
         return position;
     }
     
-    public Integer getPositionSpan() {
+    public Integer getPositionSpan() { // SCIPIO
         return positionSpan;
     }
     
-    public Boolean getCombinePrevious() {
+    public Boolean getCombinePrevious() { // SCIPIO
         return combinePrevious;
     }
 
@@ -481,7 +504,7 @@ public class ModelFormFieldBuilder {
         return titleAreaStyle;
     }
 
-    public String getTitleAreaInlineStyle() {
+    public String getTitleAreaInlineStyle() { // SCIPIO
         return titleAreaInlineStyle;
     }
     
@@ -501,64 +524,79 @@ public class ModelFormFieldBuilder {
         return useWhen;
     }
 
+    public FlexibleStringExpander getIgnoreWhen() {
+        return ignoreWhen;
+    }
+
     public String getWidgetAreaStyle() {
         return widgetAreaStyle;
     }
 
-    public FlexibleStringExpander getWidgetStyle() {
+    public FlexibleStringExpander getWidgetStyle() { // SCIPIO: modified to return FlexibleStringExpander instead of String
         return widgetStyle;
     }
 
     public String getParentFormName() {
-        return this.parentFormName;
+        return parentFormName;
     }
-    
-    public AttribsExpression getAttribsExpr() {
+
+    public String getTabindex() {
+        return tabindex;
+    }
+
+    public String getConditionGroup() {
+        return conditionGroup;
+    }
+
+    public AttribsExpression getAttribsExpr() { // SCIPIO
         return attribsExpr;
     }
 
     private boolean induceFieldInfo(ModelForm modelForm, String defaultFieldType, ModelReader entityModelReader, DispatchContext dispatchContext) {
-        if (induceFieldInfoFromEntityField(defaultFieldType, entityModelReader))
+        if (induceFieldInfoFromEntityField(defaultFieldType, entityModelReader)) {
             return true;
-        if (induceFieldInfoFromServiceParam(defaultFieldType, entityModelReader, dispatchContext))
+        }
+        if (induceFieldInfoFromServiceParam(defaultFieldType, entityModelReader, dispatchContext)) {
             return true;
+        }
         return false;
     }
 
     public boolean induceFieldInfoFromEntityField(ModelEntity modelEntity, ModelField modelField, String defaultFieldType) {
-        if (modelEntity == null || modelField == null)
+        if (modelEntity == null || modelField == null) {
             return false;
+        }
         this.entityName = modelEntity.getEntityName();
         this.fieldName = modelField.getName();
         if ("find".equals(defaultFieldType)) {
             if ("id".equals(modelField.getType()) || "id-ne".equals(modelField.getType())) {
                 ModelFormField.TextFindField textField = new ModelFormField.TextFindField(FieldInfo.SOURCE_AUTO_ENTITY, 20,
-                        Integer.valueOf(20), null);
+                        20, null);
                 this.setFieldInfo(textField);
             } else if ("id-long".equals(modelField.getType()) || "id-long-ne".equals(modelField.getType())) {
                 ModelFormField.TextFindField textField = new ModelFormField.TextFindField(FieldInfo.SOURCE_AUTO_ENTITY, 40,
-                        Integer.valueOf(60), null);
+                        60, null);
                 this.setFieldInfo(textField);
             } else if ("id-vlong".equals(modelField.getType()) || "id-vlong-ne".equals(modelField.getType())) {
                 ModelFormField.TextFindField textField = new ModelFormField.TextFindField(FieldInfo.SOURCE_AUTO_ENTITY, 60,
-                        Integer.valueOf(250), null);
+                        250, null);
                 this.setFieldInfo(textField);
             } else if ("very-short".equals(modelField.getType())) {
                 ModelFormField.TextField textField = new ModelFormField.TextField(FieldInfo.SOURCE_AUTO_ENTITY, 6,
-                        Integer.valueOf(10), null);
+                        10, null);
                 this.setFieldInfo(textField);
             } else if ("name".equals(modelField.getType()) || "short-varchar".equals(modelField.getType())) {
                 ModelFormField.TextFindField textField = new ModelFormField.TextFindField(FieldInfo.SOURCE_AUTO_ENTITY, 40,
-                        Integer.valueOf(60), null);
+                        60, null);
                 this.setFieldInfo(textField);
             } else if ("value".equals(modelField.getType()) || "comment".equals(modelField.getType())
                     || "description".equals(modelField.getType()) || "long-varchar".equals(modelField.getType())
                     || "url".equals(modelField.getType()) || "email".equals(modelField.getType())) {
                 ModelFormField.TextFindField textField = new ModelFormField.TextFindField(FieldInfo.SOURCE_AUTO_ENTITY, 60,
-                        Integer.valueOf(250), null);
+                        250, null);
                 this.setFieldInfo(textField);
             } else if ("floating-point".equals(modelField.getType()) || "currency-amount".equals(modelField.getType())
-                    || "numeric".equals(modelField.getType())) {
+                    || "numeric".equals(modelField.getType()) || "fixed-point".equals(modelField.getType()) || "currency-precise".equals(modelField.getType())) {
                 ModelFormField.RangeFindField textField = new ModelFormField.RangeFindField(FieldInfo.SOURCE_AUTO_ENTITY, 6, null);
                 this.setFieldInfo(textField);
             } else if ("date-time".equals(modelField.getType()) || "date".equals(modelField.getType())
@@ -582,18 +620,18 @@ public class ModelFormFieldBuilder {
         } else {
             if ("id".equals(modelField.getType()) || "id-ne".equals(modelField.getType())) {
                 ModelFormField.TextField textField = new ModelFormField.TextField(FieldInfo.SOURCE_AUTO_ENTITY, 20,
-                        Integer.valueOf(20), null);
+                        20, null);
                 this.setFieldInfo(textField);
             } else if ("id-long".equals(modelField.getType()) || "id-long-ne".equals(modelField.getType())) {
                 ModelFormField.TextField textField = new ModelFormField.TextField(FieldInfo.SOURCE_AUTO_ENTITY, 40,
-                        Integer.valueOf(60), null);
+                        60, null);
                 this.setFieldInfo(textField);
             } else if ("id-vlong".equals(modelField.getType()) || "id-vlong-ne".equals(modelField.getType())) {
                 ModelFormField.TextField textField = new ModelFormField.TextField(FieldInfo.SOURCE_AUTO_ENTITY, 60,
-                        Integer.valueOf(250), null);
+                        250, null);
                 this.setFieldInfo(textField);
             } else if ("indicator".equals(modelField.getType())) {
-                List<OptionSource> optionSources = new ArrayList<OptionSource>();
+                List<OptionSource> optionSources = new ArrayList<>();
                 optionSources.add(new ModelFormField.SingleOption("Y", null, null));
                 optionSources.add(new ModelFormField.SingleOption("N", null, null));
                 ModelFormField.DropDownField dropDownField = new ModelFormField.DropDownField(FieldInfo.SOURCE_AUTO_ENTITY,
@@ -601,20 +639,20 @@ public class ModelFormFieldBuilder {
                 this.setFieldInfo(dropDownField);
             } else if ("very-short".equals(modelField.getType())) {
                 ModelFormField.TextField textField = new ModelFormField.TextField(FieldInfo.SOURCE_AUTO_ENTITY, 6,
-                        Integer.valueOf(10), null);
+                        10, null);
                 this.setFieldInfo(textField);
             } else if ("very-long".equals(modelField.getType())) {
                 ModelFormField.TextareaField textareaField = new ModelFormField.TextareaField(FieldInfo.SOURCE_AUTO_ENTITY, null);
                 this.setFieldInfo(textareaField);
             } else if ("name".equals(modelField.getType()) || "short-varchar".equals(modelField.getType())) {
                 ModelFormField.TextField textField = new ModelFormField.TextField(FieldInfo.SOURCE_AUTO_ENTITY, 40,
-                        Integer.valueOf(60), null);
+                        60, null);
                 this.setFieldInfo(textField);
             } else if ("value".equals(modelField.getType()) || "comment".equals(modelField.getType())
                     || "description".equals(modelField.getType()) || "long-varchar".equals(modelField.getType())
                     || "url".equals(modelField.getType()) || "email".equals(modelField.getType())) {
                 ModelFormField.TextField textField = new ModelFormField.TextField(FieldInfo.SOURCE_AUTO_ENTITY, 60,
-                        Integer.valueOf(250), null);
+                        250, null);
                 this.setFieldInfo(textField);
             } else if ("floating-point".equals(modelField.getType()) || "currency-amount".equals(modelField.getType())
                     || "numeric".equals(modelField.getType())) {
@@ -637,17 +675,16 @@ public class ModelFormFieldBuilder {
     }
 
     private boolean induceFieldInfoFromEntityField(String defaultFieldType, ModelReader entityModelReader) {
-        if (UtilValidate.isEmpty(this.getEntityName()) || UtilValidate.isEmpty(this.getFieldName()))
+        if (UtilValidate.isEmpty(this.getEntityName()) || UtilValidate.isEmpty(this.getFieldName())) {
             return false;
+        }
         try {
             ModelEntity modelEntity = entityModelReader.getModelEntity(this.getEntityName());
-            if (modelEntity != null) {
-                ModelField modelField = modelEntity.getField(this.getFieldName());
-                if (modelField != null) {
-                    // okay, populate using the entity field info...
-                    this.induceFieldInfoFromEntityField(modelEntity, modelField, defaultFieldType);
-                    return true;
-                }
+            ModelField modelField = modelEntity.getField(this.getFieldName());
+            if (modelField != null) {
+                // okay, populate using the entity field info...
+                this.induceFieldInfoFromEntityField(modelEntity, modelField, defaultFieldType);
+                return true;
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
@@ -656,8 +693,9 @@ public class ModelFormFieldBuilder {
     }
 
     public boolean induceFieldInfoFromServiceParam(ModelService modelService, ModelParam modelParam, String defaultFieldType) {
-        if (modelService == null || modelParam == null)
+        if (modelService == null || modelParam == null) {
             return false;
+        }
         this.serviceName = modelService.name;
         this.attributeName = modelParam.name;
         if ("find".equals(defaultFieldType)) {
@@ -713,24 +751,23 @@ public class ModelFormFieldBuilder {
 
     private boolean induceFieldInfoFromServiceParam(String defaultFieldType, ModelReader entityModelReader,
             DispatchContext dispatchContext) {
-        if (UtilValidate.isEmpty(this.getServiceName()) || UtilValidate.isEmpty(this.getAttributeName()))
+        if (UtilValidate.isEmpty(this.getServiceName()) || UtilValidate.isEmpty(this.getAttributeName())) {
             return false;
+        }
         try {
             ModelService modelService = dispatchContext.getModelService(this.getServiceName());
-            if (modelService != null) {
-                ModelParam modelParam = modelService.getParam(this.getAttributeName());
-                if (modelParam != null) {
-                    if (UtilValidate.isNotEmpty(modelParam.entityName) && UtilValidate.isNotEmpty(modelParam.fieldName)) {
-                        this.entityName = modelParam.entityName;
-                        this.fieldName = modelParam.fieldName;
-                        if (this.induceFieldInfoFromEntityField(defaultFieldType, entityModelReader)) {
-                            return true;
-                        }
+            ModelParam modelParam = modelService.getParam(this.getAttributeName());
+            if (modelParam != null) {
+                if (UtilValidate.isNotEmpty(modelParam.entityName) && UtilValidate.isNotEmpty(modelParam.fieldName)) {
+                    this.entityName = modelParam.entityName;
+                    this.fieldName = modelParam.fieldName;
+                    if (this.induceFieldInfoFromEntityField(defaultFieldType, entityModelReader)) {
+                        return true;
                     }
-
-                    this.induceFieldInfoFromServiceParam(modelService, modelParam, defaultFieldType);
-                    return true;
                 }
+
+                this.induceFieldInfoFromServiceParam(modelService, modelParam, defaultFieldType);
+                return true;
             }
         } catch (GenericServiceException e) {
             Debug.logError(e,
@@ -741,69 +778,107 @@ public class ModelFormFieldBuilder {
     }
 
     public void mergeOverrideModelFormField(ModelFormFieldBuilder builder) {
-        if (builder == null)
+        if (builder == null) {
             return;
-        if (UtilValidate.isNotEmpty(builder.getName()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getName())) {
             this.name = builder.getName();
-        if (UtilValidate.isNotEmpty(builder.getMapAcsr()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getMapAcsr())) {
             this.mapAcsr = builder.getMapAcsr();
-        if (UtilValidate.isNotEmpty(builder.getEntityName()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getEntityName())) {
             this.entityName = builder.getEntityName();
-        if (UtilValidate.isNotEmpty(builder.getServiceName()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getServiceName())) {
             this.serviceName = builder.getServiceName();
-        if (UtilValidate.isNotEmpty(builder.getEntryAcsr()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getEntryAcsr())) {
             this.entryAcsr = builder.getEntryAcsr();
-        if (UtilValidate.isNotEmpty(builder.getParameterName()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getParameterName())) {
             this.parameterName = builder.getParameterName();
-        if (UtilValidate.isNotEmpty(builder.getFieldName()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getFieldName())) {
             this.fieldName = builder.getFieldName();
-        if (!builder.getAttributeName().isEmpty())
+        }
+        if (!builder.getAttributeName().isEmpty()) {
             this.attributeName = builder.getAttributeName();
-        if (UtilValidate.isNotEmpty(builder.getTitle()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getTitle())) {
             this.title = builder.getTitle();
-        if (UtilValidate.isNotEmpty(builder.getTooltip()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getTooltip())) {
             this.tooltip = builder.getTooltip();
-        if (builder.getSortField() != null)
+        }
+        if (builder.getSortField() != null) {
             this.sortField = builder.getSortField();
-        if (UtilValidate.isNotEmpty(builder.getSortFieldHelpText()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getSortFieldHelpText())) {
             this.sortFieldHelpText = builder.getSortFieldHelpText();
-        if (UtilValidate.isNotEmpty(builder.getTitleAreaStyle()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getTitleAreaStyle())) {
             this.titleAreaStyle = builder.getTitleAreaStyle();
-        if (UtilValidate.isNotEmpty(builder.getWidgetAreaStyle()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getWidgetAreaStyle())) {
             this.widgetAreaStyle = builder.getWidgetAreaStyle();
-        if (UtilValidate.isNotEmpty(builder.getTitleStyle()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getTitleStyle())) {
             this.titleStyle = builder.getTitleStyle();
-        if (UtilValidate.isNotEmpty(builder.getWidgetStyle()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getWidgetStyle())) {
             this.widgetStyle = builder.getWidgetStyle();
-        if (UtilValidate.isNotEmpty(builder.getParentFormName()))
-            this.parentFormName = builder.getParentFormName();
-        if (UtilValidate.isNotEmpty(builder.getRedWhen()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getRedWhen())) {
             this.redWhen = builder.getRedWhen();
-        if (UtilValidate.isNotEmpty(builder.getEvent()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getEvent())) {
             this.event = builder.getEvent();
-        if (!builder.getAction().isEmpty())
+        }
+        if (!builder.getAction().isEmpty()) {
             this.action = builder.getAction();
-        if (UtilValidate.isNotEmpty(builder.getUseWhen()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getUseWhen())) {
             this.useWhen = builder.getUseWhen();
-        if (builder.getFieldInfo() != null)
+        }
+        if (UtilValidate.isNotEmpty(builder.getIgnoreWhen())) {
+            this.ignoreWhen = builder.getIgnoreWhen();
+        }
+        if (builder.getFieldInfo() != null) {
             this.setFieldInfo(builder.getFieldInfo());
-        if (UtilValidate.isNotEmpty(builder.getHeaderLink()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getHeaderLink())) {
             this.headerLink = builder.getHeaderLink();
-        if (UtilValidate.isNotEmpty(builder.getHeaderLinkStyle()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getHeaderLinkStyle())) {
             this.headerLinkStyle = builder.getHeaderLinkStyle();
-        if (UtilValidate.isNotEmpty(builder.getIdName()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getIdName())) {
             this.idName = builder.getIdName();
-        if (UtilValidate.isNotEmpty(builder.getOnChangeUpdateAreas()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getOnChangeUpdateAreas())) {
             this.onChangeUpdateAreas.addAll(builder.getOnChangeUpdateAreas());
-        if (UtilValidate.isNotEmpty(builder.getOnClickUpdateAreas()))
+        }
+        if (UtilValidate.isNotEmpty(builder.getOnClickUpdateAreas())) {
             this.onClickUpdateAreas.addAll(builder.getOnClickUpdateAreas());
+        }
+        if (UtilValidate.isNotEmpty(builder.getParentFormName())) {
+            this.parentFormName = builder.getParentFormName();
+        }
+        if (UtilValidate.isNotEmpty(builder.getTabindex())) {
+            this.tabindex = builder.getTabindex();
+        }
+        if (UtilValidate.isNotEmpty(builder.getConditionGroup())) {
+            this.conditionGroup = builder.getConditionGroup();
+        }
         // SCIPIO: don't forget to merge attribsExpr
-        if (UtilValidate.isNotEmpty(builder.getAttribsExpr()))
+        if (UtilValidate.isNotEmpty(builder.getAttribsExpr())) {
             this.attribsExpr = this.attribsExpr.putAll(builder.getAttribsExpr());
+        }
         this.encodeOutput = builder.getEncodeOutput();
         this.position = builder.getPosition();
-        this.positionSpan = builder.getPositionSpan();
-        this.combinePrevious = builder.getCombinePrevious();
+        this.positionSpan = builder.getPositionSpan(); // SCIPIO
+        this.combinePrevious = builder.getCombinePrevious(); // SCIPIO
         this.requiredField = builder.getRequiredField();
         this.separateColumn = builder.getSeparateColumn();
     }
@@ -895,12 +970,12 @@ public class ModelFormFieldBuilder {
         return this;
     }
     
-    public ModelFormFieldBuilder setPositionSpan(Integer positionSpan) {
+    public ModelFormFieldBuilder setPositionSpan(Integer positionSpan) { // SCIPIO
         this.positionSpan = positionSpan;
         return this;
     }
     
-    public ModelFormFieldBuilder setCombinePrevious(Boolean combinePrevious) {
+    public ModelFormFieldBuilder setCombinePrevious(Boolean combinePrevious) { // SCIPIO
         this.combinePrevious = combinePrevious;
         return this;
     }
@@ -991,17 +1066,23 @@ public class ModelFormFieldBuilder {
     }
 
     public ModelFormFieldBuilder setWidgetStyle(String widgetStyle) {
-        this.widgetStyle = FlexibleStringExpander.getInstance(widgetStyle);
+        this.widgetStyle = FlexibleStringExpander.getInstance(widgetStyle); // SCIPIO: FlexibleStringExpander
         return this;
     }
     public ModelFormFieldBuilder setParentFormName(String parentFormName) {
         this.parentFormName = parentFormName;
         return this;
     }
-    
-    public ModelFormFieldBuilder setAttribsExpr(AttribsExpression attribsExpr) {
+    public ModelFormFieldBuilder setTabindex(String tabindex) {
+        this.tabindex = tabindex;
+        return this;
+    }
+    public ModelFormFieldBuilder setConditionGroup(String conditionGroup) {
+        this.conditionGroup = conditionGroup;
+        return this;
+    }
+    public ModelFormFieldBuilder setAttribsExpr(AttribsExpression attribsExpr) { // SCIPIO
         this.attribsExpr = attribsExpr;
         return this;
     }
-    
 }

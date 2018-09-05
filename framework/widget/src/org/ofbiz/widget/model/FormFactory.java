@@ -103,6 +103,10 @@ public class FormFactory extends WidgetFactory {
             modelForm = createModelForm(formFileDoc, entityModelReader, dispatchContext, resourceName, formName);
             modelForm = formLocationCache.putIfAbsentAndGet(cacheKey, modelForm);
         }
+        // SCIPIO: done by non-*OrNull method
+        //if (modelForm == null) {
+        //    throw new IllegalArgumentException("Could not find form with name [" + formName + "] in class resource [" + resourceName + "]");
+        //}
         return modelForm;
     }
 
@@ -132,10 +136,13 @@ public class FormFactory extends WidgetFactory {
     }
 
     public static Map<String, ModelForm> readFormDocument(Document formFileDoc, ModelReader entityModelReader, DispatchContext dispatchContext, String formLocation) {
-        Map<String, ModelForm> modelFormMap = new HashMap<String, ModelForm>();
+        Map<String, ModelForm> modelFormMap = new HashMap<>();
         if (formFileDoc != null) {
             // read document and construct ModelForm for each form element
             Element rootElement = formFileDoc.getDocumentElement();
+            if (!"forms".equalsIgnoreCase(rootElement.getTagName())) {
+                rootElement = UtilXml.firstChildElement(rootElement, "forms");
+            }
             List<? extends Element> formElements = UtilXml.childElementList(rootElement, "form");
             for (Element formElement : formElements) {
                 String formName = formElement.getAttribute("name");
@@ -152,7 +159,11 @@ public class FormFactory extends WidgetFactory {
     }
 
     public static ModelForm createModelForm(Document formFileDoc, ModelReader entityModelReader, DispatchContext dispatchContext, String formLocation, String formName) {
-        Element formElement = UtilXml.firstChildElement(formFileDoc.getDocumentElement(), "form", "name", formName);
+        Element rootElement = formFileDoc.getDocumentElement();
+        if (!"forms".equalsIgnoreCase(rootElement.getTagName())) {
+            rootElement = UtilXml.firstChildElement(rootElement, "forms");
+        }
+        Element formElement = UtilXml.firstChildElement(rootElement, "form", "name", formName);
         return createModelForm(formElement, entityModelReader, dispatchContext, formLocation, formName);
     }
 
@@ -160,13 +171,12 @@ public class FormFactory extends WidgetFactory {
         String formType = formElement.getAttribute("type");
         if (formType.isEmpty() || "single".equals(formType) || "upload".equals(formType)) {
             return new ModelSingleForm(formElement, formLocation, entityModelReader, dispatchContext);
-        } else {
-            return new ModelGrid(formElement, formLocation, entityModelReader, dispatchContext);
         }
+        return new ModelGrid(formElement, formLocation, entityModelReader, dispatchContext);
     }
 
     @Override
-    public ModelForm getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+    public ModelForm getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
             return getFormFromLocation(modelLoc.getResource(), modelLoc.getName(), 
@@ -179,7 +189,7 @@ public class FormFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelForm getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+    public ModelForm getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
             return getFormFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(), 

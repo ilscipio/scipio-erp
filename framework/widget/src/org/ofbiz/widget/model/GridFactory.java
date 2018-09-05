@@ -104,6 +104,10 @@ public class GridFactory extends WidgetFactory {
             modelGrid = createModelGrid(gridFileDoc, entityModelReader, dispatchContext, resourceName, gridName);
             modelGrid = gridLocationCache.putIfAbsentAndGet(cacheKey, modelGrid);
         }
+        // SCIPIO: done by non-*OrNull method
+        //if (modelGrid == null) {
+        //    throw new IllegalArgumentException("Could not find grid with name [" + gridName + "] in class resource [" + resourceName + "]");
+        //}
         return modelGrid;
     }
 
@@ -133,7 +137,7 @@ public class GridFactory extends WidgetFactory {
     }
 
     public static Map<String, ModelGrid> readGridDocument(Document gridFileDoc, ModelReader entityModelReader, DispatchContext dispatchContext, String gridLocation) {
-        Map<String, ModelGrid> modelGridMap = new HashMap<String, ModelGrid>();
+        Map<String, ModelGrid> modelGridMap = new HashMap<>();
         if (gridFileDoc != null) {
             // read document and construct ModelGrid for each grid element
             Element rootElement = gridFileDoc.getDocumentElement();
@@ -166,7 +170,7 @@ public class GridFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelGrid getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+    public ModelGrid getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
             return getGridFromLocation(modelLoc.getResource(), modelLoc.getName(), 
@@ -179,7 +183,7 @@ public class GridFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelGrid getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+    public ModelGrid getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
             return getGridFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(), 

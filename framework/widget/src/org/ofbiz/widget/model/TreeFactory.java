@@ -73,33 +73,26 @@ public class TreeFactory extends WidgetFactory {
             throws IOException, SAXException, ParserConfigurationException {
         Map<String, ModelTree> modelTreeMap = treeLocationCache.get(resourceName);
         if (modelTreeMap == null) {
-            synchronized (TreeFactory.class) {
-                modelTreeMap = treeLocationCache.get(resourceName);
-                if (modelTreeMap == null) {
-                    ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                    if (loader == null) {
-                        loader = TreeFactory.class.getClassLoader();
-                    }
-
-                    URL treeFileUrl = null;
-                    treeFileUrl = FlexibleLocation.resolveLocation(resourceName); //, loader);
-                    Document treeFileDoc = UtilXml.readXmlDocument(treeFileUrl, true, true);
-                    // SCIPIO: New: Save original location as user data in Document
-                    if (treeFileDoc != null) {
-                        WidgetDocumentInfo.retrieveAlways(treeFileDoc).setResourceLocation(resourceName); 
-                    }
-                    modelTreeMap = readTreeDocument(treeFileDoc, delegator, dispatcher, resourceName);
-                    treeLocationCache.put(resourceName, modelTreeMap);
-                }
+            URL treeFileUrl = FlexibleLocation.resolveLocation(resourceName);
+            Document treeFileDoc = UtilXml.readXmlDocument(treeFileUrl, true, true);
+            // SCIPIO: New: Save original location as user data in Document
+            if (treeFileDoc != null) {
+                WidgetDocumentInfo.retrieveAlways(treeFileDoc).setResourceLocation(resourceName); 
             }
+            modelTreeMap = readTreeDocument(treeFileDoc, delegator, dispatcher, resourceName);
+            modelTreeMap = treeLocationCache.putIfAbsentAndGet(resourceName, modelTreeMap);
         }
-
         ModelTree modelTree = modelTreeMap.get(treeName);
+        // SCIPIO: now done in non-*OrNull method
+        //if (modelTree == null) {
+        //    throw new IllegalArgumentException("Could not find tree with name [" + treeName + "] in class resource ["
+        //            + resourceName + "]");
+        //}
         return modelTree;
     }
 
     public static Map<String, ModelTree> readTreeDocument(Document treeFileDoc, Delegator delegator, LocalDispatcher dispatcher, String treeLocation) {
-        Map<String, ModelTree> modelTreeMap = new HashMap<String, ModelTree>();
+        Map<String, ModelTree> modelTreeMap = new HashMap<>();
         if (treeFileDoc != null) {
             // read document and construct ModelTree for each tree element
             Element rootElement = treeFileDoc.getDocumentElement();
@@ -112,7 +105,7 @@ public class TreeFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelTree getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+    public ModelTree getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
             return getTreeFromLocation(modelLoc.getResource(), modelLoc.getName(), 
@@ -125,7 +118,7 @@ public class TreeFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelTree getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+    public ModelTree getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
             return getTreeFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(), 

@@ -31,16 +31,20 @@ import org.ofbiz.widget.model.ModelFormField.DisplayField;
 import org.ofbiz.widget.model.ModelFormField.DropDownField;
 import org.ofbiz.widget.model.ModelFormField.FieldInfoWithOptions;
 import org.ofbiz.widget.model.ModelFormField.FileField;
+import org.ofbiz.widget.model.ModelFormField.FormField;
+import org.ofbiz.widget.model.ModelFormField.GridField;
 import org.ofbiz.widget.model.ModelFormField.HiddenField;
 import org.ofbiz.widget.model.ModelFormField.HyperlinkField;
 import org.ofbiz.widget.model.ModelFormField.IgnoredField;
 import org.ofbiz.widget.model.ModelFormField.ImageField;
 import org.ofbiz.widget.model.ModelFormField.InPlaceEditor;
 import org.ofbiz.widget.model.ModelFormField.LookupField;
+import org.ofbiz.widget.model.ModelFormField.MenuField;
 import org.ofbiz.widget.model.ModelFormField.PasswordField;
 import org.ofbiz.widget.model.ModelFormField.RadioField;
 import org.ofbiz.widget.model.ModelFormField.RangeFindField;
 import org.ofbiz.widget.model.ModelFormField.ResetField;
+import org.ofbiz.widget.model.ModelFormField.ScreenField;
 import org.ofbiz.widget.model.ModelFormField.SubHyperlink;
 import org.ofbiz.widget.model.ModelFormField.SubmitField;
 import org.ofbiz.widget.model.ModelFormField.TextField;
@@ -58,22 +62,13 @@ public class XmlWidgetFieldVisitor extends XmlAbstractWidgetVisitor implements M
     public XmlWidgetFieldVisitor(Appendable writer) {
         super(writer);
     }
-
-    @Override
-    public void visit(ModelFormField field) throws Exception { // SCIPIO: added 2018-03-02
-        if (field.getFieldInfo() != null) {
-            field.getFieldInfo().accept(this);
-        } else {
-            visitModelField(field);
-            writer.append("</field>");
-        }
-    }
     
     @Override
     public void visit(CheckField checkField) throws Exception {
         visitModelField(checkField.getModelFormField());
         writer.append("<check");
         visitAttribute("all-checked", checkField.getAllChecked());
+        visitAttribute("disabled", checkField.getDisabled());
         visitFieldInfoWithOptions(checkField);
         writer.append("</check></field>");
     }
@@ -181,6 +176,42 @@ public class XmlWidgetFieldVisitor extends XmlAbstractWidgetVisitor implements M
             writer.append("/>");
         }
         writer.append("</field>");
+    }
+
+    @Override
+    public void visit(FormField formField) throws Exception {
+        visitModelField(formField.getModelFormField());
+        writer.append("<include-form");
+        visitAttribute("name", formField.getFormName());
+        visitAttribute("location", formField.getFormLocation());
+        writer.append("/>");
+    }
+
+    @Override
+    public void visit(GridField gridField) throws Exception {
+        visitModelField(gridField.getModelFormField());
+        writer.append("<include-grid");
+        visitAttribute("name", gridField.getGridName());
+        visitAttribute("location", gridField.getGridLocation());
+        writer.append("/>");
+    }
+
+    @Override
+    public void visit(MenuField menuField) throws Exception {
+        visitModelField(menuField.getModelFormField());
+        writer.append("<include-menu");
+        visitAttribute("name", menuField.getMenuName());
+        visitAttribute("location", menuField.getMenuLocation());
+        writer.append("/>");
+    }
+
+    @Override
+    public void visit(ScreenField screenField) throws Exception {
+        visitModelField(screenField.getModelFormField());
+        writer.append("<include-screen");
+        visitAttribute("name", screenField.getScreenName());
+        visitAttribute("location", screenField.getScreenLocation());
+        writer.append("/>");
     }
 
     @Override
@@ -305,6 +336,16 @@ public class XmlWidgetFieldVisitor extends XmlAbstractWidgetVisitor implements M
         writer.append(">");
         visitSubHyperlink(textField.getSubHyperlink());
         writer.append("</text-find></field>");
+    }
+
+    @Override
+    public void visit(ModelFormField field) throws Exception { // SCIPIO: added 2018-03-02
+        if (field.getFieldInfo() != null) {
+            field.getFieldInfo().accept(this);
+        } else {
+            visitModelField(field);
+            writer.append("</field>");
+        }
     }
 
     private void visitTextFieldAttrs(TextField field) throws Exception {

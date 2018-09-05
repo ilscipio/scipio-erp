@@ -32,6 +32,7 @@ under the License.
         <!-- <fileset dir="${lib.dir}" includes="*.jar"/> -->
         <fileset dir="../base/lib" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
+        <fileset dir="../start/build/lib" includes="*.jar"/><!-- SCIPIO: 2018-09-04: added for WidgetMacroLibraryTests.java -->
         <fileset dir="../entity/build/lib" includes="*.jar"/>
         <fileset dir="../security/build/lib" includes="*.jar"/>
         <fileset dir="../service/lib" includes="*.jar"/>

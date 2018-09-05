@@ -49,7 +49,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final Set<String> validScreenElementTagNames = Collections.unmodifiableSet(
+    static final Set<String> validScreenElementTagNames = Collections.unmodifiableSet(
             UtilMisc.toSet("screen")); // SCIPIO: new, for future use
     
     private final String sourceLocation;
@@ -128,7 +128,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     }
     
     /**
-     * SCIPIO: new
+     * SCIPIO: getModelScreenGroup (new).
      */
     public ModelScreenGroup getModelScreenGroup() {
         return modelScreenGroup;
@@ -153,7 +153,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     /**
      * Renders this screen to a String, i.e. in a text format, as defined with the
      * ScreenStringRenderer implementation.
-     * SCIPIO: RENAMED to renderScreenStringCore 2017-05-09.
+     * SCIPIO: 2017-05-09: RENAMED to renderScreenStringCore.
      *
      * @param writer The Writer that the screen text will be written to
      * @param context Map containing the screen context; the following are
@@ -219,6 +219,10 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             // render the screen, starting with the top-level section
             this.section.renderWidgetString(writer, context, screenStringRenderer);
             TransactionUtil.commit(beganTransaction);
+        // SCIPIO: 2018-09-04: TODO: REVIEW: this is from upstream, but I believe it's at least
+        // half an error because it bypasses the rollback...
+        //} catch (RuntimeException e) {
+        //    throw e;
         } catch (Exception e) {
             String errMsg = "Error rendering screen [" + this.sourceLocation + "#" + getName() + "]: " + e.toString();
             Debug.logError(errMsg + ". Rolling back transaction.", module);
@@ -292,7 +296,6 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     public String getWidgetType() { // SCIPIO: new
         return "screen";
     }
-
 }
 
 

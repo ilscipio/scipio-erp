@@ -462,7 +462,6 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         populateContextForRequest(getContext(), this, request, response, servletContext);
     }
 
-    @SuppressWarnings("rawtypes")
     public static void populateContextForRequest(MapStack<String> context, ScreenRenderer screens, HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         HttpSession session = request.getSession();
 
@@ -493,9 +492,8 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         context.put("response", response);
         context.put("session", session);
         context.put("application", servletContext);
-        if (session != null) {
-            context.put("webappName", session.getAttribute("_WEBAPP_NAME_"));
-        }
+        context.put("webappName", session.getAttribute("_WEBAPP_NAME_"));
+
         if (servletContext != null) {
             String rootDir = (String) context.get("rootDir");
             String webSiteId = (String) context.get("webSiteId");
@@ -513,7 +511,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
                 context.put("https", https);
             }
         }
-        context.put("javaScriptEnabled", Boolean.valueOf(UtilHttp.isJavaScriptEnabled(request)));
+        context.put("javaScriptEnabled", UtilHttp.isJavaScriptEnabled(request));
 
         // these ones are FreeMarker specific and will only work in FTL templates, mainly here for backward compatibility
         context.put("sessionAttributes", new HttpSessionHashModel(session, FreeMarkerWorker.getDefaultOfbizWrapper()));
@@ -527,7 +525,8 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         context.put("Request", context.get("requestAttributes"));
  
         // this is a dummy object to stand-in for the JPublish page object for backward compatibility
-        context.put("page", new HashMap());
+        // SCIPIO: DEPRECATED - TODO: REMOVE: this is long deprecated (NOTE: if remove here, should remove all other references throughout renderer)
+        context.put("page", new HashMap<String, Object>());
 
         // some information from/about the ControlServlet environment
         context.put("controlPath", request.getAttribute("_CONTROL_PATH_"));
@@ -541,9 +540,13 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
 
         // setup message lists
         List<String> eventMessageList = UtilGenerics.toList(request.getAttribute("eventMessageList"));
-        if (eventMessageList == null) eventMessageList = new LinkedList<String>();
+        if (eventMessageList == null) {
+            eventMessageList = new LinkedList<>();
+        }
         List<String> errorMessageList = UtilGenerics.toList(request.getAttribute("errorMessageList"));
-        if (errorMessageList == null) errorMessageList = new LinkedList<String>();
+        if (errorMessageList == null) {
+            errorMessageList = new LinkedList<>();
+        }
 
         if (request.getAttribute("_EVENT_MESSAGE_") != null) {
             // SCIPIO: 2018-02-27: will now be handled using correct point-of-use escaping (ftl)
@@ -638,7 +641,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         MapStack<String> context = getContext();
         
         this.populateBasicContext(context, serviceContext, dctx.getDelegator(), dctx.getDispatcher(),
-                dctx.getSecurity(), (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin"));
+                dctx.getSecurity(), (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin")); // SCIPIO: pass main context
         
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);

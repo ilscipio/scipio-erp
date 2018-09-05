@@ -47,7 +47,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#if>
 </#macro>
 
-<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval extraArgs...>
+<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval type="" extraArgs...>
   <#if autoUpdateLink?has_content>
     <@script>ajaxUpdateAreaPeriodic('${escapeVal(id, 'js')}', '${escapeFullUrl(autoUpdateLink, 'js')}', '', '${autoUpdateInterval}');</@script>
   </#if>
@@ -60,6 +60,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     <#local parts = style?split(":")>
     <#local elem = parts[0]>
     <#local style = parts[1]>
+  </#if>
+  <#if !elem?has_content>
+    <#local elem = type><#-- 2018-09-04 -->
   </#if>
   <#-- SCIPIO: delegate to scipio libs -->
   <@container open=true close=false class=style id=id elem=elem />
@@ -99,7 +102,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name height width linkUrl text imgStr extraArgs...>
-    <#if "ajax-window" != linkType>
+    <#if "layered-modal" != linkType>
         <#if "hidden-form" == linkType>
             <form method="post" action="${escapeFullUrl(actionUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${escapeVal(uniqueItemName, 'html')}"><#rt/>
                 <#list parameterList as parameter>

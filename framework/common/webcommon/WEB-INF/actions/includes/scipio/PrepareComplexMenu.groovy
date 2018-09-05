@@ -129,11 +129,14 @@ if (!smplForce) {
     
     if (useCplxMenu) {
         if (cplxMenuModel != null) {
+            // SCIPIO: NOTE: 2018-09-04: The return values for the getSelectedMenu* methods without context
+            // methods have been changed and they now return FlexibleMapAccessor (so .toString() has been added here).
+            // TODO: REVIEW: Why did I not pass the context here again? Was it a bad context to use? Either way could cause issues...
             if (!cplxSelSubField) {
-                cplxSelSubField = cplxMenuModel.getSelectedMenuContextFieldName();
+                cplxSelSubField = cplxMenuModel.getSelectedMenuContextFieldName().toString();
             }
             if (!cplxSelItemField) {
-                cplxSelItemField = cplxMenuModel.getSelectedMenuItemContextFieldNameFirst();
+                cplxSelItemField = cplxMenuModel.getSelectedMenuItemContextFieldNameFirst().toString();
             }
         }
     }

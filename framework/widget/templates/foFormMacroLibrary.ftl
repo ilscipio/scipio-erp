@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#macro getFoStyle style>
-    <#assign foStyles = {
+    <#local foStyles = {
         "listtitlestyle":"font-weight=\"bold\" text-align=\"center\" border=\"solid black\" padding=\"2pt\"",
         "tabletext":"border-left=\"solid black\" border-right=\"solid black\" padding-left=\"2pt\" padding-top=\"2pt\"",
         "tabletextright":"border-left=\"solid black\" border-right=\"solid black\" padding-left=\"2pt\" padding-top=\"2pt\" text-align=\"right\"",
@@ -32,16 +32,17 @@ under the License.
         "h1":"font-size=\"12\" font-weight=\"bold\"",
         "h2":"font-weight=\"bold\"",
         "h3":"font-weight=\"bold\" font-style=\"italic\"",
+        "alternate-row" : "background-color=\"lightgray\"",
         "error":"color=\"red\""}/>
     <#list style?split(' ') as styleItem>
-        <#assign foStyle = foStyles[styleItem]!""/>
+        <#local foStyle = foStyles[styleItem]!""/>
         ${foStyle!""}
     </#list>
 </#macro>
 
 <#escape x as x?xml>
 
-<#macro makeBlock style text><fo:block<#if style?has_content> <@getFoStyle style/></#if>><#if text??>${text}</#if></fo:block></#macro>
+<#macro makeBlock style="" text="" extraArgs...><fo:block<#if style?has_content> <@getFoStyle style/></#if>><#if text??>${text}</#if></fo:block></#macro>
 
 <#macro renderField text extraArgs...><#if text??>${text}</#if></#macro>
 
@@ -76,6 +77,7 @@ under the License.
 <#macro renderIgnoredField extraArgs...></#macro>
 
 <#macro renderFieldTitle style title id fieldHelpText="" for="" extraArgs...>${(title!"")?replace("&nbsp;", " ")}</#macro>
+<#macro renderEmptyFormDataMessage message extraArgs...></#macro>
 <#macro renderSingleFormFieldTitle title extraArgs...>${title!""}</#macro>
     
 <#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" extraArgs...></#macro>
@@ -85,12 +87,15 @@ under the License.
 <#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={} extraArgs...><fo:table border="solid black"><#list columnStyles as columnStyle><fo:table-column<#if columnStyle?has_content> <@getFoStyle columnStyle/></#if>/></#list></#macro>
 <#macro renderFormatListWrapperClose formName extraArgs...><fo:table-row><fo:table-cell><fo:block/></fo:table-cell></fo:table-row></fo:table-body></fo:table></#macro>
 
+<#macro renderFormatHeaderOpen extraArgs...><#-- SCIPIO: 2018-09-04: currently covered by other macro: <fo:table-header>--></#macro>
+<#macro renderFormatHeaderClose extraArgs...><#-- SCIPIO: 2018-09-04: currently covered by other macro: </fo:table-header><fo:table-body>--></#macro>
+
 <#macro renderFormatHeaderRowOpen style extraArgs...><fo:table-header><fo:table-row></#macro>
 <#macro renderFormatHeaderRowClose extraArgs...></fo:table-row></fo:table-header><fo:table-body>
 <#-- FIXME: this is an hack to avoid FOP rendering errors for empty lists (fo:table-body cannot be null) -->
 <fo:table-row><fo:table-cell><fo:block/></fo:table-cell></fo:table-row>
 </#macro>
-<#macro renderFormatHeaderRowCellOpen style positionSpan extraArgs...><fo:table-cell <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if><@getFoStyle "listtitlestyle"/>><fo:block></#macro>
+<#macro renderFormatHeaderRowCellOpen style positionSpan extraArgs...><fo:table-cell<#if positionSpan?has_content && (positionSpan > 1)> number-columns-spanned="${positionSpan}"</#if><@getFoStyle "listtitlestyle"/>><fo:block></#macro>
 <#macro renderFormatHeaderRowCellClose extraArgs...></fo:block></fo:table-cell></#macro>
 
 <#macro renderFormatHeaderRowFormCellOpen style extraArgs...></#macro>
@@ -134,14 +139,16 @@ under the License.
 <#macro renderPasswordField className alert name value size maxlength id autocomplete extraArgs...><@makeBlock className "" /></#macro>
 <#macro renderImageField value description alternate border width height event action extraArgs...><@makeBlock "" "" /></#macro>
 <#macro renderBanner style leftStyle rightStyle leftText text rightText extraArgs...><@makeBlock "" "" /></#macro>
+<#macro renderContainerField id className extraArgs...><@makeBlock className "" /></#macro>
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId collapsible expandToolTip collapseToolTip extraArgs...></#macro>
 <#macro renderFieldGroupClose style id title extraArgs...></#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N" extraArgs...></#macro>
 <#macro renderSortField style title linkUrl ajaxEnabled tooltip="" extraArgs...><@renderFieldTitle style title /></#macro>
-<#macro formatBoundaryComment boundaryType widgetType widgetName></#macro>
-<#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description><@renderField description /></#macro>
-<#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation><@makeBlock linkStyle description /></#macro>
+<#macro formatBoundaryComment boundaryType widgetType widgetName extraArgs...></#macro>
+<#macro makeHiddenFormLinkForm actionUrl name parameters targetWindow extraArgs...></#macro>
+<#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description extraArgs...><@renderField description /></#macro>
+<#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation uniqueItemName="" height="" width="" id="" extraArgs...><@makeBlock linkStyle description /></#macro>
 <#macro renderTooltip tooltip tooltipStyle extraArgs...></#macro>
 <#macro renderAsterisks requiredField requiredStyle extraArgs...></#macro>
 
@@ -156,10 +163,11 @@ under the License.
       </fo:table-row>
     </#if>
 </#macro>
-</#escape>
 
 <#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
 <#macro renderSubmitForm extraArgs...></#macro>
 
 <#-- SCIPIO: 2017-04-24: new -->
 <#macro renderFormPageScripts pageScripts=[] extraArgs...></#macro>
+
+</#escape>

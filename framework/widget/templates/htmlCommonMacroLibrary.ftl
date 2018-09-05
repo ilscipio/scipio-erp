@@ -24,7 +24,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 <#assign dummy = importScipioUtilities()>
 -->
 
-<#macro renderLabelCommon text id style extraArgs...>
+<#macro renderLabelCommon text="" id="" style="" extraArgs...>
   <#if text?has_content>
     <#-- If a label widget has one of the h1-h6 styles, then it is considered block level element.
          Otherwise it is considered an inline element. -->
@@ -72,4 +72,3 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     </#if>
   </#if>
 </#macro>
-

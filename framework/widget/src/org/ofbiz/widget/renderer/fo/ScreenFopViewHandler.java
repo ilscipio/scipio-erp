@@ -99,6 +99,8 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             UtilCodec.SimpleEncoder simpleEarlyEncoder = UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".earlyEncoder", delegator));
             screens.getContext().put("simpleEarlyEncoder", (simpleEarlyEncoder != null) ? simpleEarlyEncoder : simpleEncoder);
             screens.render(page);
+        // SCIPIO: 2018-09-04: TODO: REVIEW: from upstream: this may not be desirable for us right now...
+        //} catch (IOException | GeneralException | SAXException | ParserConfigurationException | TemplateException e) {
         } catch (Exception e) {
             renderError("Problems with the response writer/output stream", e, "[Not Yet Rendered]", request, response);
             return;
@@ -198,6 +200,8 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             response.setContentType("text/html");
             response.getWriter().write(writer.toString());
             writer.close();
+        // SCIPIO: 2018-09-04: TODO: REVIEW: from upstream: this may not be desirable for us right now...
+        //} catch (IOException | GeneralException | SAXException | ParserConfigurationException | TemplateException x) {
         } catch (Exception x) {
             Debug.logError("Multiple errors rendering FOP", module);
             throw new ViewHandlerException("Multiple errors rendering FOP", x);

@@ -119,6 +119,14 @@ under the License.
             <xs:attribute name="style" type="xs:string" />
             <xs:attribute name="focus-field-name" type="xs:string" />
             <xs:attribute name="title" type="xs:string" />
+            <xs:attribute name="empty-form-data-message" type="xs:string" default="${uiLabelMap.CommonNoRecordFound}">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: NOTE: 2018-09-04: Not currently supported in Scipio and may not work properly;
+                        please use the "use-alternate-text-when" attribute and/or the "useAlternateTextWhen"
+                        expressions in widget.properties instead, which are more versatile. 
+                        This attribute is present for forward-compatibility only. Merged 2018-09-04.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="tooltip" type="xs:string" />
             <xs:attribute name="list-name" type="xs:string">
                 <xs:annotation>
@@ -200,7 +208,10 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="override-list-size">
                 <xs:annotation>
-                    <xs:documentation>The total number of rows in the original list (used for pagination). If not specified, the size of the list will be used. Accepts ${} notation.</xs:documentation>
+                    <xs:documentation>The total number of rows in the original list (used for pagination). 
+                                      If not specified, the size of the list will be used. Accepts ${} notation.
+                                      You may use any value, true makes sense, when using performFindList, but one value must be passed. 
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="paginate-first-label">
@@ -428,6 +439,11 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="grid">
+        <xs:annotation>
+            <xs:documentation>
+                a list of individual forms in a table (could be called a tabular form), it has a list of sets of values and creates one form for each list element
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="actions" />
@@ -484,6 +500,14 @@ under the License.
             <xs:attribute name="style" type="xs:string" />
             <xs:attribute name="focus-field-name" type="xs:string" />
             <xs:attribute name="title" type="xs:string" />
+            <xs:attribute name="empty-form-data-message" type="xs:string" default="${uiLabelMap.CommonNoRecordFound}">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: NOTE: 2018-09-04: Not currently supported in Scipio and may not work properly;
+                        please use the "use-alternate-text-when" attribute and/or the "useAlternateTextWhen"
+                        expressions in widget.properties instead, which are more versatile. 
+                        This attribute is present for forward-compatibility only. Merged 2018-09-04.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="tooltip" type="xs:string" />
             <xs:attribute name="list-name" type="xs:string">
                 <xs:annotation>
@@ -954,7 +978,12 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="title">
                 <xs:annotation>
-                    <xs:documentation>The name of this field that will be shown to the user; can use the ${} and foo.bar (dot) syntax to insert values from the context for parameterization or internationalization.</xs:documentation>
+                    <xs:documentation>
+                        The name of this field that will be shown to the user. 
+                        It can use the ${} and foo.bar (dot) syntax to insert values from the context for parameterization or internationalization.
+                        
+                        Be sure a "FormFieldTitle_" labels does not already exist, else it will be overriden.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="header-link">
@@ -1044,6 +1073,17 @@ under the License.
                         Java syntax and can operate on values in the form context; conditional fields are evaluated in reverse
                         order so the last field defined that evaluates to true is the one that is rendered.
             </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="ignore-when" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        This attribute is defined to enable ignoring a field on a form of type list or multi,
+                        which is not possible using use-when attribute. Like use-when it should be written using java syntax.
+                        The condition should be evaluated in the form context without looking for data coming from list that feeds the form.
+                        SCIPIO: WARNING: 2018-09-04: This feature is currently not guaranteed to work in all cases due
+                        to form widget renderer complexity (TODO: REVIEW).
+                        </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="encode-output" default="true">
@@ -1139,6 +1179,27 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="tabindex">
+                <xs:annotation>
+                    <xs:documentation>
+                        The HTML tabindex specifies the tab order of an element (when the "tab" button is used for navigating).
+                        To exclude an element from the tab order, set the value of tabindex to 0
+                        In that case the element is skipped when the user tabs around the form.
+                        SCIPIO: NOTE: 2018-09-04: This may not be supported (by themes, yet). Merged 2018-09-04.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="condition-group">
+                <xs:annotation>
+                    <xs:documentation>
+                        The condition-group regroup search criterias together.
+                        Each group member will be gathered with AND operator
+                        Every defined groups will be joined each other with OR operator
+                        Any ungrouped condition will be added with AND operator
+                        SCIPIO: NOTE: 2018-09-04: This may not be supported (by themes, yet). Merged 2018-09-04.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros).</xs:documentation>
@@ -1156,6 +1217,14 @@ under the License.
                 <xs:element ref="option" />
             </xs:choice>
             <xs:attribute name="all-checked">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="disabled" default="false">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />
@@ -1382,7 +1451,10 @@ under the License.
     </xs:element>
     <xs:element name="display-entity" substitutionGroup="AllFields">
         <xs:annotation>
-            <xs:documentation>This is just like display but looks up a description using the Entity Engine; note that if also-hidden is true then it uses the key as the value, not the shown description.</xs:documentation>
+            <xs:documentation>
+                This is just like display but looks up a description using the Entity Engine; 
+                note that if also-hidden is true then it uses the key as the value, not the shown description.
+            </xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
@@ -1393,7 +1465,10 @@ under the License.
             <xs:attribute type="xs:string" name="description" default="${description}" />
             <xs:attribute type="xs:integer" name="size">
                 <xs:annotation>
-                    <xs:documentation>Specifies the size of the field (as a number of characters), when the text to display exceed the given size it is truncated and add the complete text as a hint</xs:documentation>
+                    <xs:documentation>
+                        Specifies the size of the field (as a number of characters), 
+                        when the text to display exceed the given size it is truncated and add the complete text as a hint
+                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="cache" default="true">
@@ -1639,6 +1714,9 @@ under the License.
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="read-only" default="false">
+                <xs:annotation>
+                    <xs:documentation>Makes the input field related to this lookup read-only (no edits allowed)</xs:documentation>
+                </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />
@@ -1650,6 +1728,7 @@ under the License.
                 <xs:annotation>
                     <xs:documentation>
                         Shows the lookup as moveable and resizable layer or popup window. 
+                        if set to none only autocompletion is active (no lookup form would be call)
                         Default to layer.
                     </xs:documentation>
                 </xs:annotation>
@@ -1657,6 +1736,7 @@ under the License.
                     <xs:restriction base="xs:string">
                         <xs:enumeration value="layer" />
                         <xs:enumeration value="window" />
+                        <xs:enumeration value="none" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
@@ -1715,6 +1795,30 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-menu" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-form" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-grid" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-screen" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
         </xs:complexType>
     </xs:element>
     <xs:element name="password" substitutionGroup="AllFields">
@@ -1870,6 +1974,17 @@ under the License.
                 <xs:annotation>
                     <xs:documentation>Defines a customized input mask. Use 9 for numeric, a for alpha and * for alphanumeric character.</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="read-only" default="false">
+                <xs:annotation>
+                    <xs:documentation>Makes this text field read-only (no edits allowed)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="placeholder" type="xs:string">
                 <xs:annotation>
@@ -2087,9 +2202,10 @@ under the License.
                     <xs:documentation>The name of the field in the looked up entity that will be used for the key value; if empty defaults to the entry-name of the field this is in.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="xs:string" name="description" use="required">
+            <xs:attribute type="xs:string" name="description" default="${description}">
                 <xs:annotation>
-                    <xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.</xs:documentation>
+                    <xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.
+                        SCIPIO: NOTE: 2018-09-04: The default was changed to "${description}" (instead of required). Merged 2018-09-04.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="cache" default="true">
@@ -2234,9 +2350,10 @@ under the License.
                         NOTE: If this resolves to a non-empty value, then special input hidden logic to submit the alt value is automatically employed.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="xs:string" name="description">
+            <xs:attribute type="xs:string" name="description" default="${description}">
                 <xs:annotation>
-                    <xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.</xs:documentation>
+                    <xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.
+                        SCIPIO: NOTE: 2018-09-04: The default was changed to "${description}". Merged 2018-09-04.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>

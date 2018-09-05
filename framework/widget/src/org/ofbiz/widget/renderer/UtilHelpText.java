@@ -31,9 +31,11 @@ import org.ofbiz.entity.model.ModelReader;
 /**
  * Util for working with Help Text
  */
-public class UtilHelpText {
+public final class UtilHelpText {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private UtilHelpText () {}
 
     /**
      * Find the help text associated with an entity field.

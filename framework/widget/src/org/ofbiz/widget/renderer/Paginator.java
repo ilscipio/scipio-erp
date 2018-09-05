@@ -44,14 +44,15 @@ public final class Paginator {
 
     public static int getActualPageSize(Map<String, Object> context) {
         Integer value = (Integer) context.get("actualPageSize");
-        return value != null ? value.intValue() : (getHighIndex(context) - getLowIndex(context));
+        return value != null ? value : (getHighIndex(context) - getLowIndex(context));
     }
 
     public static int getHighIndex(Map<String, Object> context) {
         Integer value = (Integer) context.get("highIndex");
-        return value != null ? value.intValue() : 0;
+        return value != null ? value : 0;
     }
 
+    // entryList might be an  EntityListIterator. It will then be closed at the end of FormRenderer.renderItemRows()
     public static void getListLimits(ModelForm modelForm, Map<String, Object> context, Object entryList) {
         int viewIndex = 0;
         int viewSize = 0;
@@ -59,7 +60,6 @@ public final class Paginator {
         int highIndex = 0;
         int listSize = modelForm.getOverrideListSize(context);
         if (listSize > 0) {
-            //setOverridenListSize(true);
         } else if (entryList instanceof EntityListIterator) {
             EntityListIterator iter = (EntityListIterator) entryList;
             try {
@@ -71,6 +71,14 @@ public final class Paginator {
         } else if (entryList instanceof List<?>) {
             List<?> items = (List<?>) entryList;
             listSize = items.size();
+            /* SCIPIO: 2018-09-04: TODO: REVIEW: from upstream, unclear if good for us...
+            if(context.containsKey("result")){
+                Map<String, Object> resultMap = UtilGenerics.checkMap(context.get("result"));
+                if(resultMap.containsKey("listSize")){
+                    listSize = (int)resultMap.get("listSize");
+                }
+            }
+            */
         } else if (entryList instanceof PagedList) {
             PagedList<?> pagedList = (PagedList<?>) entryList;
             listSize = pagedList.getSize();
@@ -86,21 +94,21 @@ public final class Paginator {
             lowIndex = 0;
             highIndex = ModelForm.MAX_PAGE_SIZE;
         }
-        context.put("listSize", Integer.valueOf(listSize));
-        context.put("viewIndex", Integer.valueOf(viewIndex));
-        context.put("viewSize", Integer.valueOf(viewSize));
-        context.put("lowIndex", Integer.valueOf(lowIndex));
-        context.put("highIndex", Integer.valueOf(highIndex));
+        context.put("listSize", listSize);
+        context.put("viewIndex", viewIndex);
+        context.put("viewSize", viewSize);
+        context.put("lowIndex", lowIndex);
+        context.put("highIndex", highIndex);
     }
 
     public static int getListSize(Map<String, Object> context) {
         Integer value = (Integer) context.get("listSize");
-        return value != null ? value.intValue() : 0;
+        return value != null ? value : 0;
     }
 
     public static int getLowIndex(Map<String, Object> context) {
         Integer value = (Integer) context.get("lowIndex");
-        return value != null ? value.intValue() : 0;
+        return value != null ? value : 0;
     }
 
     public static int getViewIndex(ModelForm modelForm, Map<String, Object> context) {
@@ -125,7 +133,7 @@ public final class Paginator {
                 value = context.get(field);
             }
             if (value instanceof Integer) {
-                viewIndex = ((Integer) value).intValue();
+                viewIndex = (Integer) value;
             } else if (value instanceof String) {
                 viewIndex = Integer.parseInt((String) value);
             }
@@ -157,7 +165,7 @@ public final class Paginator {
                 value = context.get(field);
             }
             if (value instanceof Integer) {
-                viewSize = ((Integer) value).intValue();
+                viewSize = (Integer) value;
             } else if (value instanceof String && UtilValidate.isNotEmpty(value)) {
                 viewSize = Integer.parseInt((String) value);
             }
@@ -194,19 +202,19 @@ public final class Paginator {
         // set low and high index
         getListLimits(modelForm, context, obj);
 
-        int listSize = ((Integer) context.get("listSize")).intValue();
-        int lowIndex = ((Integer) context.get("lowIndex")).intValue();
-        int highIndex = ((Integer) context.get("highIndex")).intValue();
-        // Debug.logInfo("preparePager: low - high = " + lowIndex + " - " + highIndex, module);
+        int listSize = (Integer) context.get("listSize");
+        int lowIndex = (Integer) context.get("lowIndex");
+        int highIndex = (Integer) context.get("highIndex");
 
         // we're passed a subset of the list, so use (0, viewSize) range
         if (modelForm.isOverridenListSize()) {
             lowIndex = 0;
-            highIndex = ((Integer) context.get("viewSize")).intValue();
+            highIndex = (Integer) context.get("viewSize");
         }
 
-        if (iter == null)
+        if (iter == null) {
             return;
+        }
 
         // count item rows
         int itemIndex = -1;
@@ -216,17 +224,17 @@ public final class Paginator {
             item = safeNext(iter);
         }
 
-        // Debug.logInfo("preparePager: Found rows = " + itemIndex, module);
-
         // reduce the highIndex if number of items falls short
         if ((itemIndex + 1) < highIndex) {
             highIndex = itemIndex + 1;
             // if list size is overridden, use full listSize
-            context.put("highIndex", Integer.valueOf(modelForm.isOverridenListSize() ? listSize : highIndex));
+            context.put("highIndex", modelForm.isOverridenListSize() ? listSize : highIndex);
         }
-        context.put("actualPageSize", Integer.valueOf(highIndex - lowIndex));
+        context.put("actualPageSize", highIndex - lowIndex);
 
         if (iter instanceof EntityListIterator) {
+            // The EntityListIterator will be closed at the end of FormRenderer.renderItemRows()
+            // Note: it's also used in MacroScreenRenderer.renderScreenletPaginateMenu() but I could not find where it's then closed, nor issues...
             try {
                 ((EntityListIterator) iter).beforeFirst();
             } catch (GenericEntityException e) {

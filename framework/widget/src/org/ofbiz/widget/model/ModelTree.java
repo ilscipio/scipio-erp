@@ -84,9 +84,9 @@ public class ModelTree extends ModelWidget {
     private final String defaultRenderStyle;
     private final FlexibleStringExpander defaultWrapStyleExdr;
     private final FlexibleStringExpander expandCollapseRequestExdr;
-    private final boolean forceChildCheck;
+    protected final boolean forceChildCheck;
     private final String location;
-    private final Map<String, ModelNode> nodeMap;
+    protected final Map<String, ModelNode> nodeMap;
     private final int openDepth;
     private final int postTrailOpenDepth;
     private final String rootNodeName;
@@ -98,10 +98,11 @@ public class ModelTree extends ModelWidget {
         this.rootNodeName = treeElement.getAttribute("root-node-name");
         String defaultRenderStyle = UtilXml.checkEmpty(treeElement.getAttribute("default-render-style"), "simple");
         // A temporary hack to accommodate those who might still be using "render-style" instead of "default-render-style"
-        if (defaultRenderStyle.isEmpty() || defaultRenderStyle.equals("simple")) {
+        if (defaultRenderStyle.isEmpty() || "simple".equals(defaultRenderStyle)) {
             String rStyle = treeElement.getAttribute("render-style");
-            if (!rStyle.isEmpty())
+            if (!rStyle.isEmpty()) {
                 defaultRenderStyle = rStyle;
+            }
         }
         this.defaultRenderStyle = defaultRenderStyle;
         this.defaultWrapStyleExdr = FlexibleStringExpander.getInstance(treeElement.getAttribute("default-wrap-style"));
@@ -134,7 +135,7 @@ public class ModelTree extends ModelWidget {
         if (nodeElements.size() == 0) {
             throw new IllegalArgumentException("No node elements found for the tree definition with name: " + getName());
         }
-        Map<String, ModelNode> nodeMap = new HashMap<String, ModelNode>();
+        Map<String, ModelNode> nodeMap = new HashMap<>();
         for (Element nodeElementEntry : UtilXml.childElementList(treeElement, "node")) {
             ModelNode node = new ModelNode(nodeElementEntry, this);
             String nodeName = node.getName();
@@ -171,20 +172,21 @@ public class ModelTree extends ModelWidget {
         if (UtilValidate.isEmpty(expColReq)) {
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             String s1 = request.getRequestURI();
-            int pos = s1.lastIndexOf("/");
-            if (pos >= 0)
+            int pos = s1.lastIndexOf('/');
+            if (pos >= 0) {
                 expColReq = s1.substring(pos + 1);
-            else
+            } else {
                 expColReq = s1;
+            }
         }
         //append also the request parameters
         Map<String, Object> paramMap = UtilGenerics.checkMap(context.get("requestParameters"));
         if (UtilValidate.isNotEmpty(paramMap)) {
-            Map<String, Object> requestParameters = new HashMap<String, Object>(paramMap);
+            Map<String, Object> requestParameters = new HashMap<>(paramMap);
             requestParameters.remove(this.getTrailName(context));
             if (UtilValidate.isNotEmpty(requestParameters)) {
                 String queryString = UtilHttp.urlEncodeArgs(requestParameters, false);
-                if (expColReq.indexOf("?") < 0) {
+                if (expColReq.indexOf('?') < 0) {
                     expColReq += "?";
                 } else {
                     expColReq += "&amp;";
@@ -239,12 +241,13 @@ public class ModelTree extends ModelWidget {
         List<String> trail = null;
         if (UtilValidate.isNotEmpty(treeString)) {
             trail = StringUtil.split(treeString, "|");
-            if (UtilValidate.isEmpty(trail))
+            if (UtilValidate.isEmpty(trail)) {
                 throw new RuntimeException("Tree 'trail' value is empty.");
+            }
             context.put("rootEntityId", trail.get(0));
             context.put(getDefaultPkName(context), trail.get(0));
         } else {
-            trail = new LinkedList<String>();
+            trail = new LinkedList<>();
         }
         context.put("targetNodeTrail", trail);
         context.put("currentNodeTrail", new LinkedList());
@@ -326,7 +329,7 @@ public class ModelTree extends ModelWidget {
             this.entryName = nodeElement.getAttribute("entry-name");
             this.entityName = nodeElement.getAttribute("entity-name");
             this.pkName = nodeElement.getAttribute("join-field-name");
-            ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
+            ArrayList<ModelAction> actions = new ArrayList<>();
             // FIXME: Validate child elements, should be only one of actions, entity-one, service, script.
             Element actionsElement = UtilXml.firstChildElement(nodeElement, "actions");
             if (actionsElement != null) {
@@ -376,7 +379,7 @@ public class ModelTree extends ModelWidget {
             }
             List<? extends Element> nodeElements = UtilXml.childElementList(nodeElement, "sub-node");
             if (!nodeElements.isEmpty()) {
-                List<ModelSubNode> subNodeList = new ArrayList<ModelSubNode>();
+                List<ModelSubNode> subNodeList = new ArrayList<>();
                 for (Element subNodeElementEntry : nodeElements) {
                     ModelSubNode subNode = new ModelSubNode(subNodeElementEntry, this);
                     subNodeList.add(subNode);
@@ -393,24 +396,20 @@ public class ModelTree extends ModelWidget {
         }
 
         private List<Object[]> getChildren(Map<String, Object> context) {
-            List<Object[]> subNodeValues = new ArrayList<Object[]>();
+            List<Object[]> subNodeValues = new ArrayList<>();
             for (ModelSubNode subNode : subNodeList) {
                 String nodeName = subNode.getNodeName(context);
                 ModelNode node = modelTree.nodeMap.get(nodeName);
                 List<ModelAction> subNodeActions = subNode.getActions();
-                //if (Debug.infoOn()) Debug.logInfo(" context.currentValue:" + context.get("currentValue"), module);
                 AbstractModelAction.runSubActions(subNodeActions, context);
-                // List dataFound = (List)context.get("dataFound");
                 Iterator<? extends Map<String, ? extends Object>> dataIter = subNode.getListIterator(context);
                 if (dataIter instanceof EntityListIterator) {
-                    EntityListIterator eli = (EntityListIterator) dataIter;
-                    Map<String, Object> val = null;
-                    while ((val = eli.next()) != null) {
-                        Object[] arr = { node, val };
-                        subNodeValues.add(arr);
-                    }
-                    try {
-                        eli.close();
+                    try (EntityListIterator eli = (EntityListIterator) dataIter) {
+                        Map<String, Object> val = null;
+                        while ((val = eli.next()) != null) {
+                            Object[] arr = { node, val };
+                            subNodeValues.add(arr);
+                        }
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
                         throw new RuntimeException(e.getMessage());
@@ -429,9 +428,8 @@ public class ModelTree extends ModelWidget {
         public String getEntityName() {
             if (!this.entityName.isEmpty()) {
                 return this.entityName;
-            } else {
-                return this.modelTree.getDefaultEntityName();
             }
+            return this.modelTree.getDefaultEntityName();
         }
 
         public String getEntryName() {
@@ -449,14 +447,14 @@ public class ModelTree extends ModelWidget {
         public String getPkName(Map<String, Object> context) {
             if (UtilValidate.isNotEmpty(this.pkName)) {
                 return this.pkName;
-            } else {
-                return this.modelTree.getDefaultPkName(context);
             }
+            return this.modelTree.getDefaultPkName(context);
         }
 
         public String getRenderStyle() {
-            if (this.renderStyle.isEmpty())
+            if (this.renderStyle.isEmpty()) {
                 return modelTree.getRenderStyle();
+            }
             return this.renderStyle;
         }
 
@@ -497,22 +495,7 @@ public class ModelTree extends ModelWidget {
             }
             if (nodeCount == null && modelField != null || this.modelTree.forceChildCheck) {
                 getChildren(context);
-                /*
-                String id = (String)context.get(modelTree.getPkName());
-                if (UtilValidate.isNotEmpty(id)) {
-                    try {
-                        int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, id, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"));
-                        GenericValue entity = delegator.findOne(entName, UtilMisc.toMap(modelTree.getPkName(), id), true);
-                        obj = entity.get("childBranchCount");
-                       if (obj != null)
-                           nodeCount = (Long)obj;
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, module);
-                       throw new RuntimeException(e.getMessage());
-                    }
-                }
-                */
-                nodeCount = Long.valueOf(subNodeValues.size());
+                nodeCount = (long) subNodeValues.size();
                 String pkName = this.getPkName(context);
                 String id = null;
                 if (!this.entryName.isEmpty()) {
@@ -534,9 +517,7 @@ public class ModelTree extends ModelWidget {
                 }
             } else if (nodeCount == null) {
                 getChildren(context);
-                if (subNodeValues != null) {
-                    nodeCount = Long.valueOf(subNodeValues.size());
-                }
+                nodeCount = (long) subNodeValues.size();
             }
             if (nodeCount != null && nodeCount.intValue() > 0) {
                 hasChildren = true;
@@ -547,15 +528,16 @@ public class ModelTree extends ModelWidget {
         public boolean isExpandCollapse() {
             boolean isExpCollapse = false;
             String rStyle = getRenderStyle();
-            if (rStyle != null && rStyle.equals("expand-collapse"))
+            if (rStyle != null && "expand-collapse".equals(rStyle)) {
                 isExpCollapse = true;
+            }
             return isExpCollapse;
         }
 
         public boolean isFollowTrail() {
             boolean isFollowTrail = false;
             String rStyle = getRenderStyle();
-            if (rStyle != null && (rStyle.equals("follow-trail") || rStyle.equals("show-peers") || rStyle.equals("follow-trail"))) {
+            if (rStyle != null && ("follow-trail".equals(rStyle) || "show-peers".equals(rStyle) || "follow-trail".equals(rStyle))) {
                 isFollowTrail = true;
             }
             return isFollowTrail;
@@ -573,7 +555,6 @@ public class ModelTree extends ModelWidget {
                     passed = false;
                 }
             }
-            //Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
             if (passed) {
                 List<String> currentNodeTrail = UtilGenerics.toList(context.get("currentNodeTrail"));
                 context.put("processChildren", Boolean.TRUE);
@@ -588,15 +569,15 @@ public class ModelTree extends ModelWidget {
                 }
                 currentNodeTrail.add(id);
                 treeStringRenderer.renderNodeBegin(writer, context, this, depth);
-                //if (Debug.infoOn()) Debug.logInfo(" context:" +
-                // context.entrySet(), module);
                 try {
                     String screenName = null;
-                    if (!screenNameExdr.isEmpty())
+                    if (!screenNameExdr.isEmpty()) {
                         screenName = screenNameExdr.expandString(context);
+                    }
                     String screenLocation = null;
-                    if (!screenLocationExdr.isEmpty())
+                    if (!screenLocationExdr.isEmpty()) {
                         screenLocation = screenLocationExdr.expandString(context);
+                    }
                     if (screenName != null && screenLocation != null) {
                         ScreenStringRenderer screenStringRenderer = treeStringRenderer.getScreenStringRenderer(context);
                         ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(screenLocation, screenName);
@@ -610,16 +591,12 @@ public class ModelTree extends ModelWidget {
                     }
                     treeStringRenderer.renderLastElement(writer, context, this);
                     Boolean processChildren = (Boolean) context.get("processChildren");
-                    //if (Debug.infoOn()) Debug.logInfo(" processChildren:" + processChildren, module);
-                    if (processChildren.booleanValue()) {
+                    if (processChildren) {
                         List<Object[]> subNodeValues = getChildren(context);
                         int newDepth = depth + 1;
                         for (Object[] arr : subNodeValues) {
                             ModelNode node = (ModelNode) arr[0];
                             Map<String, Object> val = UtilGenerics.checkMap(arr[1]);
-                            //GenericPK pk = val.getPrimaryKey();
-                            //if (Debug.infoOn()) Debug.logInfo(" pk:" + pk,
-                            // module);
                             String thisPkName = node.getPkName(context);
                             String thisEntityId = (String) val.get(thisPkName);
                             MapStack<String> newContext = MapStack.create(context);
@@ -641,27 +618,16 @@ public class ModelTree extends ModelWidget {
                             }
                         }
                     }
-                } catch (ScreenRenderException e) {
+                } catch (ScreenRenderException | SAXException | ParserConfigurationException | IOException e) {
                     String errMsg = "Error rendering included label with name [" + getName() + "] : " + e.toString();
                     Debug.logError(e, errMsg, module);
-                    throw new RuntimeException(errMsg);
-                } catch (SAXException e) {
-                    String errMsg = "Error rendering included label with name [" + getName() + "] : " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    throw new RuntimeException(errMsg);
-                } catch (ParserConfigurationException e3) {
-                    String errMsg = "Error rendering included label with name [" + getName() + "] : " + e3.toString();
-                    Debug.logError(e3, errMsg, module);
-                    throw new RuntimeException(errMsg);
-                } catch (IOException e2) {
-                    String errMsg = "Error rendering included label with name [" + getName() + "] : " + e2.toString();
-                    Debug.logError(e2, errMsg, module);
                     throw new RuntimeException(errMsg);
                 }
                 treeStringRenderer.renderNodeEnd(writer, context, this);
                 int removeIdx = currentNodeTrail.size() - 1;
-                if (removeIdx >= 0)
+                if (removeIdx >= 0) {
                     currentNodeTrail.remove(removeIdx);
+                }
             }
         }
 
@@ -670,8 +636,9 @@ public class ModelTree extends ModelWidget {
             List<?> trail = UtilGenerics.checkList(context.get("targetNodeTrail"));
             int openDepth = modelTree.getOpenDepth();
             int postTrailOpenDepth = modelTree.getPostTrailOpenDepth();
-            if (trail != null)
+            if (trail != null) {
                 trailSize = trail.size();
+            }
 
             boolean showPeers = false;
             String rStyle = getRenderStyle();
@@ -680,14 +647,15 @@ public class ModelTree extends ModelWidget {
             } else if (!isFollowTrail()) {
                 showPeers = true;
             } else if ((currentDepth < trailSize) && (rStyle != null)
-                    && (rStyle.equals("show-peers") || rStyle.equals("expand-collapse"))) {
+                    && ("show-peers".equals(rStyle) || "expand-collapse".equals(rStyle))) {
                 showPeers = true;
             } else if (openDepth >= currentDepth) {
                 showPeers = true;
             } else {
                 int depthAfterTrail = currentDepth - trailSize;
-                if (depthAfterTrail >= 0 && depthAfterTrail <= postTrailOpenDepth)
+                if (depthAfterTrail >= 0 && depthAfterTrail <= postTrailOpenDepth) {
                     showPeers = true;
+                }
             }
             return showPeers;
         }
@@ -889,7 +857,7 @@ public class ModelTree extends ModelWidget {
                 this.nameExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("name"));
                 List<? extends Element> parameterElementList = UtilXml.childElementList(linkElement, "parameter");
                 if (!parameterElementList.isEmpty()) {
-                    List<Parameter> parameterList = new ArrayList<Parameter>(parameterElementList.size());
+                    List<Parameter> parameterList = new ArrayList<>(parameterElementList.size());
                     for (Element parameterElement : parameterElementList) {
                         parameterList.add(new Parameter(parameterElement));
                     }
@@ -951,7 +919,7 @@ public class ModelTree extends ModelWidget {
             }
 
             public Map<String, String> getParameterMap(Map<String, Object> context) {
-                Map<String, String> fullParameterMap = new HashMap<String, String>();
+                Map<String, String> fullParameterMap = new HashMap<>();
                 /* leaving this here... may want to add it at some point like the hyperlink element:
                 Map<String, String> addlParamMap = this.parametersMapAcsr.get(context);
                 if (addlParamMap != null) {
@@ -1066,7 +1034,7 @@ public class ModelTree extends ModelWidget {
                 super(subNodeElement);
                 this.rootNode = modelNode;
                 this.nodeNameExdr = FlexibleStringExpander.getInstance(subNodeElement.getAttribute("node-name"));
-                ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
+                ArrayList<ModelAction> actions = new ArrayList<>();
                 // FIXME: Validate child elements, should be only one of actions, entity-and, entity-condition, service, script.
                 Element actionsElement = UtilXml.firstChildElement(subNodeElement, "actions");
                 if (actionsElement != null) {

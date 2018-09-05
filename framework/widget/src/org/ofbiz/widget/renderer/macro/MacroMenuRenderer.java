@@ -84,7 +84,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
     
     private int macroCount = 999;
-    private final Map<Appendable, Environment> environments = new HashMap<Appendable, Environment>();
+    private final Map<Appendable, Environment> environments = new HashMap<>();
     private final Template macroLibrary;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
@@ -135,7 +135,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     
     // Made this a separate method so it can be externalized and reused.
     private Map<String, Object> createImageParameters(Map<String, Object> context, Image image) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", image.getId(context));
         parameters.put("style", image.getStyle(context));
         parameters.put("width", image.getWidth(context));
@@ -169,7 +169,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         String templateName = toString().concat("_") + macroCount;
         Template template = new Template(templateName, templateReader, FreeMarkerWorker.getDefaultOfbizConfig());
         templateReader.close();
-        FreeMarkerWorker.includeTemplate(template, environment);
+        FreeMarkerWorker.includeTemplate(template, environment); // SCIPIO: use FreeMarkerWorker instead of Environment
     }
 
     /**
@@ -254,10 +254,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         //String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
         //String currentItemName = menuItem.getName();
         //Boolean hideIfSelected = menuItem.getHideIfSelected();
-        //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
+        //return (hideIfSelected != null && hideIfSelected && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
         MenuItemState itemState = MenuRenderState.retrieve(context).getItemState();
-        return (hideIfSelected != null && hideIfSelected.booleanValue() && itemState.isSelected());
+        return (hideIfSelected != null && hideIfSelected && itemState.isSelected());
     }
     
     /**
@@ -296,9 +296,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     @Override
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) throws IOException {
         Map<String, Object> parameters = createImageParameters(context, image);
-        
-        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
-        
+
+        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty()); // SCIPIO
+
         try {
             executeMacro(writer, "renderImage", parameters);
         } catch (TemplateException e) {
@@ -308,7 +308,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
     @Override
     public void renderLink(Appendable writer, Map<String, Object> context, MenuLink link) throws IOException {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         String target = link.getTarget(context);
         ModelMenuItem menuItem = link.getLinkMenuItem();
         // SCIPIO: Let macro decide what to do when disabled.
@@ -322,12 +322,14 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
         
-        boolean selected = menuItem.isSame(selectedMenuItem);
-        boolean selectedAncestor = !selected && menuItem.isAncestorOf(selectedMenuAndItem.getSubMenu());
+        boolean selected = menuItem.isSame(selectedMenuItem); // SCIPIO
+        boolean selectedAncestor = !selected && menuItem.isAncestorOf(selectedMenuAndItem.getSubMenu()); // SCIPIO
         parameters.put("id", link.getId(context));
         parameters.put("style", link.getStyle(context));
         parameters.put("name", link.getName(context));
         parameters.put("text", link.getText(context));
+        parameters.put("height", link.getHeight());
+        parameters.put("width", link.getWidth());
         parameters.put("targetWindow", link.getTargetWindow(context));
         String uniqueItemName = menuItem.getTopMenu().getName() + "_" + menuItem.getName() + "_LF_" + UtilMisc.<String> addToBigDecimalInMap(context, "menuUniqueItemIndex", BigDecimal.ONE);
         if(menuItem.getModelMenu().getExtraIndex(context) != null){
@@ -344,7 +346,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         String linkUrl = "";
         String actionUrl = "";
         StringBuilder targetParameters = new StringBuilder();
-        if ("hidden-form".equals(linkType) || "ajax-window".equals(linkType)) {
+        if ("hidden-form".equals(linkType) || "layered-modal".equals(linkType)) {
             StringBuilder sb = new StringBuilder();
             WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), null, link.getPrefix(context), link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
             actionUrl = sb.toString();
@@ -368,7 +370,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         if (UtilValidate.isNotEmpty(target)) {
             if (!"hidden-form".equals(linkType)) {
                 StringBuilder sb = new StringBuilder();
-                WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), link.getParameterMap(context), link.getPrefix(context), link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
+                WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), "layered-modal".equals(linkType)?null:link.getParameterMap(context), link.getPrefix(context), link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
                 linkUrl = sb.toString();
             }
         }
@@ -384,7 +386,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         parameters.put("imgStr", imgStr);
         
-        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
+        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty()); // SCIPIO
         
         // SCIPIO: add disabled and selected
         parameters.put("disabled", disabled);
@@ -400,7 +402,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
     @Override
     public void renderMenuClose(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
 
         // SCIPIO: new entries
         parameters.put("style", menu.getMenuContainerStyle(context));
@@ -427,9 +429,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     @Override
     public void renderMenuItem(Appendable writer, Map<String, Object> context, ModelMenuItem menuItem) throws IOException {
         contextHandler.registerContext(writer, context);
-        if (isHideIfSelected(menuItem, context))
+        if (isHideIfSelected(menuItem, context)) {
             return;
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        }
+        Map<String, Object> parameters = new HashMap<>();
         String style = menuItem.getWidgetStyle();
         
         // SCIPIO: tell macro which selected and disabled
@@ -548,7 +551,6 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         } catch (TemplateException e) {
             throw new IOException(e);
         }
-
         if (containsNestedMenus) {
             // SCIPIO: 2016-08-26: This is now obsoleted in favor of explicit sub-menus.
             // We could have provided compatibility for macros, but all it will do is
@@ -610,7 +612,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.clear();
         parameters.put("containsNestedMenus", containsNestedMenus);
         
-        parameters.put("menuCtxRole", menuCtxRole);
+        parameters.put("menuCtxRole", menuCtxRole); // SCIPIO
         
         try {
             executeMacro(writer, "renderMenuItemEnd", parameters);
@@ -622,17 +624,18 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     @Override
     public void renderMenuOpen(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException {
         contextHandler.registerContext(writer, context);
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         if (ModelWidget.widgetBoundaryCommentsEnabled(context)) {
             StringBuilder sb = new StringBuilder("Begin Menu Widget ");
             sb.append(menu.getBoundaryCommentName());
             parameters.put("boundaryComment", sb.toString());
         }
-        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        MenuRenderState renderState = MenuRenderState.retrieve(context); // SCIPIO
         parameters.put("id", menu.getId());
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("title", menu.getTitle(context));
-        parameters.put("titleStyle", menu.getTitleStyle(context)); // SCIPIO: new
+        // SCIPIO: new attribs
+        parameters.put("titleStyle", menu.getTitleStyle(context));
         parameters.put("inlineEntries", renderState.isInlineEntries());
         parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
         
@@ -659,6 +662,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
     }
 
+    // SCIPIO: new
     @Override
     public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu)
             throws IOException {
@@ -666,7 +670,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         
         contextHandler.registerContext(writer, context);
         
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         
         parameters.put("id", subMenu.getId(context));
         parameters.put("style", subMenu.getStyle(context));
@@ -695,12 +699,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
     }
     
+    // SCIPIO: new
     @Override
     public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu)
             throws IOException {
         // SCIPIO: new method
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         
         // SCIPIO: menu context role
         parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
@@ -711,5 +716,4 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             throw new IOException(e);
         }
     }
-    
 }

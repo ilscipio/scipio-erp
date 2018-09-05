@@ -18,6 +18,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns="http://ofbiz.apache.org/Widget-Theme" targetNamespace="http://ofbiz.apache.org/Widget-Theme">
+    <xs:annotation>
+        <xs:documentation><![CDATA[
+            SCIPIO: NOTE: 2018-09-04: 
+            This filetype/DTD is not (yet) supported and is here
+            for testing and future purposes only. XML files of this type
+            may not be recognized by the system at all at this time.
+            Note that Scipio already supported an extensive visual theme system,
+            so parts of this may be redundant.
+        ]]></xs:documentation>
+    </xs:annotation>
     <xs:element name="theme">
         <xs:complexType>
             <xs:sequence>

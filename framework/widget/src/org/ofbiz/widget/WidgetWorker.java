@@ -60,6 +60,7 @@ public final class WidgetWorker {
         // We may get an encoded request like: &#47;projectmgr&#47;control&#47;EditTaskContents&#63;workEffortId&#61;10003
         // Try to reducing a possibly encoded string down to its simplest form: /projectmgr/control/EditTaskContents?workEffortId=10003
         // This step make sure the following appending externalLoginKey operation to work correctly
+        // SCIPIO: NOTE: we are less likely to have this escaping issue, because we turn off the HTML early escaping in Scipio and leave it to Freemarker.
         String localRequestName = StringEscapeUtils.unescapeHtml(target);
         localRequestName = UtilHttp.encodeAmpersands(localRequestName);
 
@@ -125,7 +126,7 @@ public final class WidgetWorker {
             }
         } else if ("content".equals(targetType)) {
             appendContentUrl(localWriter, localRequestName, request);
-        } else if ("plain".equals(targetType)) {
+        } else if ("plain".equals(targetType)) { // SCIPIO: NOTE: 2018-09-04: this was removed by upstream, I am leaving in, this was not bad...
             localWriter.append(localRequestName);
         } else {
             localWriter.append(localRequestName);
@@ -194,6 +195,11 @@ public final class WidgetWorker {
     public static void makeHyperlinkByType(Appendable writer, String linkType, String linkStyle, String targetType, String target,
             Map<String, String> parameterMap, String description, String targetWindow, String confirmation, ModelFormField modelFormField,
             HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+        /* SCIPIO: 2018-09-04: TODO: REVIEW: from upstream...
+        if (modelFormField == null) {
+            throw new IllegalArgumentException("modelFormField in WidgetWorker.makeHyperlinkByType has turned out to be null");
+        }
+        */
         String realLinkType = WidgetWorker.determineAutoLinkType(linkType, target, targetType, request);
         if ("hidden-form".equals(realLinkType)) {
             if (modelFormField != null && "multi".equals(modelFormField.getModelForm().getType())) {
@@ -310,7 +316,7 @@ public final class WidgetWorker {
         writer.append("<form method=\"post\"");
         writer.append(" action=\"");
         // note that this passes null for the parameterList on purpose so they won't be put into the URL
-        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context);
+        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context); // SCIPIO: pass null for fullPath/secure/encode
         writer.append("\"");
 
         if (UtilValidate.isNotEmpty(targetWindow)) {
@@ -490,14 +496,14 @@ public final class WidgetWorker {
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
         ModelForm modelForm = null;
         // SCIPIO: make sure model form field not empty
-        if (UtilValidate.isNotEmpty(modelFormField)) {
+        if (modelFormField != null) {
             modelForm = modelFormField.getModelForm();
         }
         Integer itemIndex = (Integer) context.get("itemIndex");
         String iterateId = "";
         String formUniqueId = "";
         String formName = (String) context.get("formName");
-        if (UtilValidate.isNotEmpty(modelForm) && UtilValidate.isEmpty(formName)) { // SCIPIO: make sure modelForm not empty
+        if (modelForm != null && UtilValidate.isEmpty(formName)) { // SCIPIO: make sure modelForm not empty
             formName = modelForm.getName();
         }
         if (UtilValidate.isNotEmpty(context.get("iterateId"))) {
@@ -507,12 +513,10 @@ public final class WidgetWorker {
             formUniqueId = (String) context.get("formUniqueId");
         }
         if (itemIndex != null) {
-            return formName + modelForm.getItemIndexSeparator() + itemIndex.intValue() + iterateId + formUniqueId + modelForm.getItemIndexSeparator() + modelFormField.getName();
-        } else {
-            return formName + modelForm.getItemIndexSeparator() + modelFormField.getName();
+            return formName + modelForm.getItemIndexSeparator() + itemIndex + iterateId + formUniqueId + modelForm.getItemIndexSeparator() + modelFormField.getName();
         }
+        return formName + modelForm.getItemIndexSeparator() + modelFormField.getName();
     }
-    
     public static String determineAutoLinkType(String linkType, String target, String targetType, HttpServletRequest request) {
         if ("auto".equals(linkType)) {
             if ("intra-app".equals(targetType)) {
@@ -527,15 +531,11 @@ public final class WidgetWorker {
                 }
                 if (requestMap != null && requestMap.event != null) {
                     return "hidden-form";
-                } else {
-                    return "anchor";
                 }
-            } else {
-                return "anchor";
             }
-        } else {
-            return linkType;
+            return "anchor";
         }
+        return linkType;
     }
 
     /** Returns the script location based on a script combined name:
@@ -545,7 +545,7 @@ public final class WidgetWorker {
      * @return The script location
      */
     public static String getScriptLocation(String combinedName) {
-        int pos = combinedName.lastIndexOf("#");
+        int pos = combinedName.lastIndexOf('#');
         if (pos == -1) {
             return combinedName;
         }
@@ -560,7 +560,7 @@ public final class WidgetWorker {
      * @return The method name or <code>null</code>
      */
     public static String getScriptMethodName(String combinedName) {
-        int pos = combinedName.lastIndexOf("#");
+        int pos = combinedName.lastIndexOf('#');
         if (pos == -1) {
             return null;
         }
@@ -569,14 +569,28 @@ public final class WidgetWorker {
 
     public static int getPaginatorNumber(Map<String, Object> context) {
         int paginator_number = 0;
-        Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
-        if (globalCtx != null) {
-            Integer paginateNumberInt= (Integer)globalCtx.get("PAGINATOR_NUMBER");
+        if (context != null) {
+            /* SCIPIO: 2018-09-04: TODO: REVIEW: new code form upstream...
+            Integer paginateNumberInt= (Integer)context.get("PAGINATOR_NUMBER");
             if (paginateNumberInt == null) {
-                paginateNumberInt = Integer.valueOf(0);
-                globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
+                paginateNumberInt = 0;
+                context.put("PAGINATOR_NUMBER", paginateNumberInt);
+                Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
+                if (globalCtx != null) {
+                    globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
+                }
             }
-            paginator_number = paginateNumberInt.intValue();
+            paginator_number = paginateNumberInt;
+            */
+            Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
+            if (globalCtx != null) {
+                Integer paginateNumberInt= (Integer)globalCtx.get("PAGINATOR_NUMBER");
+                if (paginateNumberInt == null) {
+                    paginateNumberInt = Integer.valueOf(0);
+                    globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
+                }
+                paginator_number = paginateNumberInt;
+            }
         }
         return paginator_number;
     }
@@ -588,7 +602,16 @@ public final class WidgetWorker {
             if (UtilValidate.isNotEmpty(NO_PAGINATOR)) {
                 globalCtx.remove("NO_PAGINATOR");
             } else {
-                Integer paginateNumberInt = Integer.valueOf(getPaginatorNumber(context) + 1);
+                /* SCIPIO: 2018-09-04: TODO: REVIEW: new code from upstream
+                Integer paginateNumberInt= (Integer)globalCtx.get("PAGINATOR_NUMBER");
+                if (paginateNumberInt == null) {
+                    paginateNumberInt = 0;
+                }
+                paginateNumberInt = paginateNumberInt + 1;
+                globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
+                context.put("PAGINATOR_NUMBER", paginateNumberInt);
+                */
+                Integer paginateNumberInt = getPaginatorNumber(context) + 1;
                 globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
             }
         }
@@ -639,10 +662,10 @@ public final class WidgetWorker {
     }
 
     private static final int minWidgetFolderPathLength = 
-            ("component://".length() + 1 + "/widget/".length());
+            ("component://".length() + 1 + "/widget/".length()); // SCIPIO
     
     /**
-     * Returns base widget folder from component:// path, including terminating slash.
+     * SCIPIO: Returns base widget folder from component:// path, including terminating slash.
      */
     public static String getBaseWidgetFolderFromComponentPath(String path) throws IllegalArgumentException {
         if (!path.startsWith("component://")) {

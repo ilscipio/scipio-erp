@@ -433,6 +433,24 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="set-if-empty" type="xs:boolean" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        Controls if the target field can be set to an empty value. The meaning of "empty" depends on the Java data type.
+                        Defaults to "true".
+                        Optional.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="set-if-null" type="xs:boolean" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        Controls if the target field can be set to null when the from attribute evaluates to null.
+                        Defaults to "true".
+                        Optional.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="property-map" substitutionGroup="AllActions">
@@ -901,7 +919,13 @@ under the License.
             <xs:element minOccurs="0" name="image" type="image" />
         </xs:sequence>
         <xs:attribute type="xs:string" name="text" />
-        <xs:attribute type="xs:string" name="id" />
+        <xs:attribute type="xs:string" name="id">
+            <xs:annotation>
+                <xs:documentation>
+                    If you use id for link present in list form or multi form, you can use ${itemIndex} to generate an unique id by line.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="style" />
         <xs:attribute type="xs:string" name="name" />
         <xs:attribute type="xs:string" name="title" />
@@ -928,14 +952,22 @@ under the License.
                             <xs:documentation>
                                 If selected the hidden-form type will be used if the url-mode is intra-app
                                 and the request specified has an event, otherwise the anchor type will be used,
-                                except if the ajax-window mode is specified.
+                                except if the ajax-window or layered-modal mode is specified.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
                     <xs:enumeration value="anchor" />
                     <xs:enumeration value="hidden-form" />
-                        <!-- FIXME: This is not a link type. It indicates the target window should be a popup dialog. -->
+                    <!-- FIXME: This is not a link type. It indicates the target window should be a popup dialog. -->
                     <xs:enumeration value="ajax-window" />
+                    <xs:enumeration value="layered-modal">
+                        <xs:annotation>
+                            <xs:documentation>
+                                SCIPIO: WARN: 2018-09-04: This link type is
+                                not fully supported at this time. Merged 2018-09-04.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>

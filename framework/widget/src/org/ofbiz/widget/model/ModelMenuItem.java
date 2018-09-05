@@ -93,7 +93,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     private final String disableIfEmpty;
     private final String entityName;
     private final Boolean hideIfSelected;
-    private final MenuLink link;
+    protected final MenuLink link;
     //@Deprecated
     //private final List<ModelMenuItem> menuItemList; // SCIPIO: This is replaced by ModelSubMenu. This var doesn't contain the sub-menu menu-item elements.
     private final ModelMenu modelMenu;  
@@ -111,6 +111,8 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     private final FlexibleStringExpander tooltip;
     private final String tooltipStyle;
     private final String widgetStyle;
+
+    // SCIPIO: (other) new fields
     private final String linkStyle;
     
     private final String overrideMode; // SCIPIO: override mode
@@ -137,11 +139,11 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     
     // ===== CONSTRUCTORS =====
 
-    public ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, BuildArgs buildArgs) {
+    public ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, BuildArgs buildArgs) { // SCIPIO: modified for buildArgs
         this(menuItemElement, modelMenu, null, buildArgs);
     }
     
-    public ModelMenuItem(Element menuItemElement, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
+    public ModelMenuItem(Element menuItemElement, ModelSubMenu parentSubMenu, BuildArgs buildArgs) { // SCIPIO: modified for parentSubMenu, buildArgs
         this(menuItemElement, parentSubMenu.getTopMenu(), parentSubMenu, buildArgs);
     }
     
@@ -149,7 +151,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     // Presence of parentInfo.menuItem indicates this item is part of a sub-menu.
     private ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
         super(menuItemElement);
-        buildArgs.genBuildArgs.totalMenuItemCount++;
+        buildArgs.genBuildArgs.totalMenuItemCount++; // SCIPIO
         this.modelMenu = modelMenu;
         //this.parentMenuItem = parentMenuItem;
         this.parentSubMenu = parentSubMenu; // SCIPIO: new
@@ -160,22 +162,24 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         this.titleStyle = menuItemElement.getAttribute("title-style");
         this.disabledTitleStyle = menuItemElement.getAttribute("disabled-title-style");
         this.widgetStyle = menuItemElement.getAttribute("widget-style");
-        this.linkStyle = menuItemElement.getAttribute("link-style");
-        this.overrideMode = menuItemElement.getAttribute("override-mode");
-        this.sortMode = menuItemElement.getAttribute("sort-mode");
+        this.linkStyle = menuItemElement.getAttribute("link-style"); // SCIPIO
+        this.overrideMode = menuItemElement.getAttribute("override-mode"); // SCIPIO
+        this.sortMode = menuItemElement.getAttribute("sort-mode"); // SCIPIO
         this.tooltipStyle = menuItemElement.getAttribute("tooltip-style");
         this.selectedStyle = menuItemElement.getAttribute("selected-style");
-        this.selectedAncestorStyle = menuItemElement.getAttribute("selected-ancestor-style");
+        this.selectedAncestorStyle = menuItemElement.getAttribute("selected-ancestor-style"); // SCIPIO
         String hideIfSelected = menuItemElement.getAttribute("hide-if-selected");
-        if (!hideIfSelected.isEmpty())
-            if (hideIfSelected.equalsIgnoreCase("true"))
+        if (!hideIfSelected.isEmpty()) {
+            if ("true".equalsIgnoreCase(hideIfSelected)) {
                 this.hideIfSelected = Boolean.TRUE;
-            else
+            } else {
                 this.hideIfSelected = Boolean.FALSE;
-        else
+            }
+        } else {
             this.hideIfSelected = null;
+        }
         this.disableIfEmpty = menuItemElement.getAttribute("disable-if-empty");
-        this.disabled = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("disabled"));
+        this.disabled = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("disabled")); // SCIPIO
         this.align = menuItemElement.getAttribute("align");
         this.alignStyle = menuItemElement.getAttribute("align-style");
         Integer position = null;
@@ -200,11 +204,12 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
             this.link = null;
         }
         
-        if (!menuItemElement.getAttribute("always-expand-selected-or-ancestor").isEmpty()) 
+        if (!menuItemElement.getAttribute("always-expand-selected-or-ancestor").isEmpty()) { // SCIPIO
             alwaysExpandSelectedOrAncestor = "true".equals(menuItemElement.getAttribute("always-expand-selected-or-ancestor"));
-        else 
+        } else { 
             alwaysExpandSelectedOrAncestor = null;
-        this.selected = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("selected"));
+        }
+        this.selected = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("selected")); // SCIPIO
 
         // SCIPIO: legacy inlined menu-items
         if (buildArgs.omitSubMenus) {
@@ -298,7 +303,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         this.condition = null;
         this.disabledTitleStyle = "";
         this.disableIfEmpty = "";
-        this.disabled = FlexibleStringExpander.getInstance("");
+        this.disabled = FlexibleStringExpander.getInstance(""); // SCIPIO
         this.entityName = "";
         this.hideIfSelected = null;
         //this.menuItemList = Collections.emptyList(); // SCIPIO: moved to ModelSubMenu
@@ -308,28 +313,28 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         this.parentPortalPageId = FlexibleStringExpander.getInstance(portalPage.getString("parentPortalPageId"));
         this.position = null;
         this.selectedStyle = "";
-        this.selectedAncestorStyle = "";
+        this.selectedAncestorStyle = ""; // SCIPIO
         this.subMenu = "";
         this.title = FlexibleStringExpander.getInstance((String) portalPage.get("portalPageName", locale));
         this.titleStyle = "";
         this.tooltip = FlexibleStringExpander.getInstance("");
         this.tooltipStyle = "";
         this.widgetStyle = "";
-        this.linkStyle = "";
-        this.overrideMode = "";
-        this.sortMode = "";
-        this.alwaysExpandSelectedOrAncestor = null;
-        this.selected = FlexibleStringExpander.getInstance("");
+        this.linkStyle = ""; // SCIPIO
+        this.overrideMode = ""; // SCIPIO
+        this.sortMode = ""; // SCIPIO
+        this.alwaysExpandSelectedOrAncestor = null; // SCIPIO
+        this.selected = FlexibleStringExpander.getInstance(""); // SCIPIO
         this.link = new MenuLink(portalPage, parentMenuItem, locale);
         this.modelMenu = parentMenuItem.modelMenu;
-        this.subMenuList = Collections.emptyList();
-        this.subMenuMap = Collections.emptyMap();
-        this.subMenuModel = "";
-        this.subMenuStyle = "";
-        this.subMenuTitle = "";
+        this.subMenuList = Collections.emptyList(); // SCIPIO
+        this.subMenuMap = Collections.emptyMap(); // SCIPIO
+        this.subMenuModel = ""; // SCIPIO
+        this.subMenuStyle = ""; // SCIPIO
+        this.subMenuTitle = ""; // SCIPIO
     }
 
-    // SCIPIO: copy constructor
+    // SCIPIO: new copy constructor
     private ModelMenuItem(ModelMenuItem existingMenuItem, 
             ModelMenu modelMenu, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
         super(existingMenuItem.getName());
@@ -406,7 +411,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     private ModelMenuItem(ModelMenuItem existingMenuItem, ModelMenuItem overrideMenuItem, 
             BuildArgs buildArgs) {
         super(overrideMenuItem.getName());
-        buildArgs.genBuildArgs.totalMenuItemCount++;
+        buildArgs.genBuildArgs.totalMenuItemCount++; // SCIPIO
         // SCIPIO: this is an error; when we retried the modelMenu we want the effective one,
         // not the original one
         //this.modelMenu = existingMenuItem.modelMenu;
@@ -447,7 +452,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         } else {
             this.selectedStyle = existingMenuItem.selectedStyle;
         }
-        if (UtilValidate.isNotEmpty(overrideMenuItem.selectedAncestorStyle)) {
+        if (UtilValidate.isNotEmpty(overrideMenuItem.selectedAncestorStyle)) { // SCIPIO
             this.selectedAncestorStyle = overrideMenuItem.selectedAncestorStyle;
         } else {
             this.selectedAncestorStyle = existingMenuItem.selectedAncestorStyle;
@@ -457,7 +462,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         } else {
             this.widgetStyle = existingMenuItem.widgetStyle;
         }
-        if (UtilValidate.isNotEmpty(overrideMenuItem.linkStyle)) {
+        if (UtilValidate.isNotEmpty(overrideMenuItem.linkStyle)) { // SCIPIO
             this.linkStyle = overrideMenuItem.linkStyle;
         } else {
             this.linkStyle = existingMenuItem.linkStyle;
@@ -467,39 +472,39 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         } else {
             this.position = existingMenuItem.position;
         }
-        if (UtilValidate.isNotEmpty(overrideMenuItem.sortMode)) {
+        if (UtilValidate.isNotEmpty(overrideMenuItem.sortMode)) { // SCIPIO
             this.sortMode = overrideMenuItem.sortMode;
         } else {
             this.sortMode = existingMenuItem.sortMode;
         }
-        if (overrideMenuItem.alwaysExpandSelectedOrAncestor != null) {
+        if (overrideMenuItem.alwaysExpandSelectedOrAncestor != null) { // SCIPIO
             this.alwaysExpandSelectedOrAncestor = overrideMenuItem.alwaysExpandSelectedOrAncestor;
         } else {
             this.alwaysExpandSelectedOrAncestor = existingMenuItem.alwaysExpandSelectedOrAncestor;
         }
-        if (UtilValidate.isNotEmpty(overrideMenuItem.selected.getOriginal())) {
+        if (UtilValidate.isNotEmpty(overrideMenuItem.selected.getOriginal())) { // SCIPIO
             this.selected = overrideMenuItem.selected;
         } else {
             this.selected = existingMenuItem.selected;
         }
         
-        if (UtilValidate.isNotEmpty(overrideMenuItem.subMenuModel)) {
+        if (UtilValidate.isNotEmpty(overrideMenuItem.subMenuModel)) { // SCIPIO
             this.subMenuModel = overrideMenuItem.subMenuModel;
         } else {
             this.subMenuModel = existingMenuItem.subMenuModel;
         }
-        if (UtilValidate.isNotEmpty(overrideMenuItem.subMenuStyle)) {
+        if (UtilValidate.isNotEmpty(overrideMenuItem.subMenuStyle)) { // SCIPIO
             this.subMenuStyle = overrideMenuItem.subMenuStyle;
         } else {
             this.subMenuStyle = existingMenuItem.subMenuStyle;
         }
-        if (UtilValidate.isNotEmpty(overrideMenuItem.subMenuTitle)) {
+        if (UtilValidate.isNotEmpty(overrideMenuItem.subMenuTitle)) { // SCIPIO
             this.subMenuTitle = overrideMenuItem.subMenuTitle;
         } else {
             this.subMenuTitle = existingMenuItem.subMenuTitle;
         }
 
-        List<ModelSubMenu> srcSubMenuList;
+        List<ModelSubMenu> srcSubMenuList; // SCIPIO
         boolean subMenusFromOverriding = overrideMenuItem.hasSubMenu();
         if (subMenusFromOverriding) {
             // WARN: cloning the overriding is probably excessive and stupidly slow because overrideMenuItem was just created,
@@ -608,7 +613,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
 
     @SuppressWarnings("unused")
     private void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
-            Map<String, ModelMenuItem> menuItemMap, BuildArgs buildArgs) {
+            Map<String, ModelMenuItem> menuItemMap, BuildArgs buildArgs) { // SCIPIO: buildArgs
         // SCIPIO: this is a copy of the ModelMenu method, so delegate
         modelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap, buildArgs);
     }
@@ -620,7 +625,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public String getAlign() {
         if (!this.align.isEmpty()) {
             return this.align;
-        } else if (parentSubMenu != null) {
+        } else if (parentSubMenu != null) { // SCIPIO: switched reference
             return getParentMenuItem().getAlign();
         } else {
             return this.modelMenu.getDefaultAlign();
@@ -628,7 +633,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
 
     public String getAlignStyle() {
-        return getStyle("align", this.alignStyle, getStyleModelMenu().getDefaultAlignStyle());
+        return getStyle("align", this.alignStyle, getStyleModelMenu().getDefaultAlignStyle()); // SCIPIO: refactored
     }
 
     public FlexibleStringExpander getAssociatedContentId() {
@@ -640,7 +645,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         if (this.associatedContentId != null) {
             retStr = associatedContentId.expandString(context);
         }
-        if (retStr.isEmpty()) {
+        if (retStr == null || retStr.isEmpty()) {
             retStr = this.modelMenu.getDefaultAssociatedContentId(context);
         }
         return retStr;
@@ -649,9 +654,8 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public String getCellWidth() {
         if (!this.cellWidth.isEmpty()) {
             return this.cellWidth;
-        } else {
-            return this.modelMenu.getDefaultCellWidth();
         }
+        return this.modelMenu.getDefaultCellWidth();
     }
 
     public ModelMenuCondition getCondition() {
@@ -659,18 +663,18 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
 
     public String getDisabledTitleStyle() {
-        return getStyle("disabled", this.disabledTitleStyle, getStyleModelMenu().getDefaultDisabledTitleStyle());
+        return getStyle("disabled", this.disabledTitleStyle, getStyleModelMenu().getDefaultDisabledTitleStyle()); // SCIPIO: refactored
     }
 
     public String getDisableIfEmpty() {
         return this.disableIfEmpty;
     }
     
-    public FlexibleStringExpander getDisabled() {
+    public FlexibleStringExpander getDisabled() { // SCIPIO
         return this.disabled;
     }
     
-    public Boolean getDisabled(Map<String, Object> context) {
+    public Boolean getDisabled(Map<String, Object> context) { // SCIPIO
         return UtilMisc.booleanValue(this.disabled.expandString(context));
     }
     
@@ -691,7 +695,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public String getEntityName() {
         if (!this.entityName.isEmpty()) {
             return this.entityName;
-        } else if (parentSubMenu != null) {
+        } else if (parentSubMenu != null) { // SCIPIO: switch reference
             return getParentMenuItem().getEntityName();
         } else {
             return this.modelMenu.getDefaultEntityName();
@@ -701,9 +705,8 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public Boolean getHideIfSelected() {
         if (hideIfSelected != null) {
             return this.hideIfSelected;
-        } else {
-            return this.modelMenu.getDefaultHideIfSelected();
         }
+        return this.modelMenu.getDefaultHideIfSelected();
     }
 
     public MenuLink getLink() {
@@ -715,7 +718,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
      */
     @Deprecated
     public List<ModelMenuItem> getMenuItemList() {
-        ModelSubMenu subMenu = getDefaultSubMenu();
+        ModelSubMenu subMenu = getDefaultSubMenu(); // SCIPIO: go through subMenu
         if (subMenu != null) {
             return subMenu.getMenuItemList();
         } else {
@@ -748,7 +751,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
     
     /**
-     * Gets the top model menu associated with this item.
+     * SCIPIO: Gets the top model menu associated with this item.
      */
     public ModelMenu getTopMenu() {
         return modelMenu;
@@ -766,16 +769,15 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         return overrideName;
     }
 
-    public ModelMenu getParentMenu() {
+    public ModelMenu getParentMenu() { // SCIPIO
         return modelMenu;
     }
     
     public ModelMenuItem getParentMenuItem() {
-        if (parentSubMenu != null) {
+        if (parentSubMenu != null) { // SCIPIO: refactored
             return parentSubMenu.getParentMenuItem();
-        } else {
-            return null;
         }
+        return null;
     }
     
     public ModelMenuItem getTopAncestorMenuItem() { // SCIPIO: new
@@ -797,16 +799,15 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public int getPosition() {
         if (this.position == null) {
             return 1;
-        } else {
-            return position.intValue();
         }
+        return position;
     }
 
     public String getSelectedStyle() {
-        return getStyle("selected", this.selectedStyle, getStyleModelMenu().getDefaultSelectedStyle());
+        return getStyle("selected", this.selectedStyle, getStyleModelMenu().getDefaultSelectedStyle()); // SCIPIO: refactored
     }
     
-    public String getSelectedAncestorStyle() {
+    public String getSelectedAncestorStyle() { // SCIPIO: new
         return getStyle("selectedAncestor", this.selectedAncestorStyle, getStyleModelMenu().getDefaultSelectedAncestorStyle());
     }
 
@@ -829,7 +830,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
 
     public String getTitleStyle() {
-        return getStyle("title", this.titleStyle, getStyleModelMenu().getDefaultTitleStyle());
+        return getStyle("title", this.titleStyle, getStyleModelMenu().getDefaultTitleStyle()); // SCIPIO: refactored
     }
 
     public FlexibleStringExpander getTooltip() {
@@ -839,17 +840,16 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public String getTooltip(Map<String, Object> context) {
         if (UtilValidate.isNotEmpty(tooltip)) {
             return tooltip.expandString(context);
-        } else {
-            return "";
         }
+        return "";
     }
 
     public String getTooltipStyle() {
-        return getStyle("tooltip", this.tooltipStyle, getStyleModelMenu().getDefaultTooltipStyle());
+        return getStyle("tooltip", this.tooltipStyle, getStyleModelMenu().getDefaultTooltipStyle()); // SCIPIO: refactored
     }
 
     public String getWidgetStyle() {
-        return getStyle("widget", this.widgetStyle, getStyleModelMenu().getDefaultWidgetStyle());
+        return getStyle("widget", this.widgetStyle, getStyleModelMenu().getDefaultWidgetStyle()); // SCIPIO: refactored
     }
     
     /**
@@ -877,41 +877,40 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         return ModelMenu.buildStyle(style, null, defaultStyle);
     }
     
-    public String getOverrideMode() {
+    public String getOverrideMode() { // SCIPIO
         return this.overrideMode;
     }
     
-    public String getSortMode() {
+    public String getSortMode() { // SCIPIO
         return this.sortMode;
     }
     
-    public List<ModelSubMenu> getSubMenuList() {
+    public List<ModelSubMenu> getSubMenuList() { // SCIPIO
         return subMenuList;
     }
     
-    public Map<String, ModelSubMenu> getSubMenuMap() {
+    public Map<String, ModelSubMenu> getSubMenuMap() { // SCIPIO
         return subMenuMap;
     }
     
-    public boolean hasSubMenu() {
+    public boolean hasSubMenu() { // SCIPIO
         return !subMenuList.isEmpty();
     }
     
-    public ModelSubMenu getDefaultSubMenu() {
+    public ModelSubMenu getDefaultSubMenu() { // SCIPIO
         if (subMenuList.size() > 0) {
             return subMenuList.get(0);
-        } else {
-            return null;
         }
+        return null;
     }
     
     @Deprecated
-    public MenuAndItemLookup resolveMenuAndItemByTrail(String[] nameList) {
+    public MenuAndItemLookup resolveMenuAndItemByTrail(String[] nameList) { // SCIPIO
         return resolveMenuAndItemByTrail(nameList[0], nameList, 1);
     }
     
     @Deprecated
-    public MenuAndItemLookup resolveMenuAndItemByTrail(String name, String[] nameList, int nextNameIndex) {
+    public MenuAndItemLookup resolveMenuAndItemByTrail(String name, String[] nameList, int nextNameIndex) { // SCIPIO
         String[] currLevelRef = name.split(":", 2);
         String nextItemName;
         ModelSubMenu subMenu;
@@ -929,10 +928,9 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
             return null;
         }
     }
-    
-    
+
     @Deprecated
-    public String getSubMenuId(Map<String, Object> context) {
+    public String getSubMenuId(Map<String, Object> context) { // SCIPIO
         ModelSubMenu subMenu = getDefaultSubMenu();
         if (subMenu != null) {
             return subMenu.getId(context);
@@ -942,7 +940,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
     
     @Deprecated
-    public String getSubMenuStyle(Map<String, Object> context) {
+    public String getSubMenuStyle(Map<String, Object> context) { // SCIPIO
         ModelSubMenu subMenu = getDefaultSubMenu();
         if (subMenu != null) {
             return subMenu.getStyle(context);
@@ -952,7 +950,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
     
     @Deprecated
-    public String getSubMenuStyle() {
+    public String getSubMenuStyle() { // SCIPIO
         ModelSubMenu subMenu = getDefaultSubMenu();
         if (subMenu != null) {
             return subMenu.getStyle();
@@ -962,7 +960,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
     
     @Deprecated
-    public String getSubMenuTitle(Map<String, Object> context) {
+    public String getSubMenuTitle(Map<String, Object> context) { // SCIPIO
         ModelSubMenu subMenu = getDefaultSubMenu();
         if (subMenu != null) {
             return subMenu.getTitle(context);
@@ -970,8 +968,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
             return "";
         }
     }
-    
-    
+
     /**
      * SCIPIO: Returns THIS item's alt model menu for style fields.
      */
@@ -1019,7 +1016,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         return this == menuItem; // SCIPIO: NOTE: this works because we know how the ModelMenu was built
     }
     
-    public boolean isSameOrAncestorOf(ModelMenuItem menuItem) {
+    public boolean isSameOrAncestorOf(ModelMenuItem menuItem) { // SCIPIO
         if (menuItem == null) {
             return false;
         }
@@ -1030,7 +1027,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         }
     }
     
-    public boolean isAncestorOf(ModelSubMenu subMenu) {
+    public boolean isAncestorOf(ModelSubMenu subMenu) { // SCIPIO
         if (subMenu == null) {
             return false;
         }
@@ -1061,7 +1058,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     
     public static void cloneModelMenuItems(List<ModelMenuItem> menuItemList, 
             List<ModelMenuItem> targetList, Map<String, ModelMenuItem> targetMap, 
-            ModelMenu modelMenu, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
+            ModelMenu modelMenu, ModelSubMenu parentSubMenu, BuildArgs buildArgs) { // SCIPIO
         for(ModelMenuItem menuItem : menuItemList) {
             ModelMenuItem clonedItem = menuItem.cloneModelMenuItem(modelMenu, parentSubMenu, buildArgs);
             targetList.add(clonedItem);
@@ -1069,19 +1066,19 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         }
     }
     
-    public boolean isTopMenuItem() {
+    public boolean isTopMenuItem() { // SCIPIO
         return parentSubMenu == null;
     }
     
-    public ModelSubMenu getParentSubMenu() {
+    public ModelSubMenu getParentSubMenu() { // SCIPIO
         return parentSubMenu;
     }
     
-    public static boolean isNoneMenuItemName(String menuItemName) {
+    public static boolean isNoneMenuItemName(String menuItemName) { // SCIPIO
         return (menuItemName == null || menuItemName.isEmpty() || NONE_MENU_ITEM_NAME.equals(menuItemName));
     }
     
-    public static String getNoneMenuItemNameAsNull(String menuItemName) {
+    public static String getNoneMenuItemNameAsNull(String menuItemName) { // SCIPIO
         if (menuItemName == null || menuItemName.isEmpty() || NONE_MENU_ITEM_NAME.equals(menuItemName)) {
             return null;
         } else {
@@ -1089,7 +1086,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         }
     }
     
-    public static String getNoneMenuItemNameAsConstant(String menuItemName) {
+    public static String getNoneMenuItemNameAsConstant(String menuItemName) { // SCIPIO
         if (menuItemName == null || menuItemName.isEmpty()) { // || NONE_MENU_ITEM_NAME.equals(menuItemName)
             return NONE_MENU_ITEM_NAME;
         } else {
@@ -1097,7 +1094,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         }
     }
     
-    public String getDisplayText(Map<String, Object> context) {
+    public String getDisplayText(Map<String, Object> context) { // SCIPIO
         String res;
         MenuLink link = getLink();
         if (link != null) {
@@ -1113,7 +1110,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         return getName();
     }
 
-    void addAllSubMenus(Map<String, ModelSubMenu> subMenuMap) {
+    void addAllSubMenus(Map<String, ModelSubMenu> subMenuMap) { // SCIPIO
         for(ModelSubMenu subMenu : getSubMenuList()) {
             String name = subMenu.getEffectiveName();
             if (subMenuMap.containsKey(name)) {
@@ -1135,7 +1132,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         MenuRenderState renderState = MenuRenderState.retrieve(context);
         Object prevItemContext = prepareItemContext(context, renderState);
 
-        if (shouldBeRendered(context, renderState)) {
+        if (shouldBeRendered(context, renderState)) { // SCIPIO: renderState
             AbstractModelAction.runSubActions(actions, context);
             String parentPortalPageId = getParentPortalPageId(context);
             if (UtilValidate.isNotEmpty(parentPortalPageId)) {
@@ -1165,7 +1162,11 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public Object prepareItemContext(Map<String, Object> context) {
         return prepareItemContext(context, MenuRenderState.retrieve(context));
     }
-    
+
+    /**
+     * SCIPIO: prepares context for an item render and returns the previous
+     * item's state (if any).
+     */
     public Object prepareItemContext(Map<String, Object> context, MenuRenderState renderState) {
         MenuItemState prevItemState = renderState.getItemState();
         renderState.setItemState(MenuItemState.fromCurrent(this, context, renderState));
@@ -1178,14 +1179,17 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public void restoreItemContext(Map<String, Object> context, Object prevItemContext) {
         restoreItemContext(context, prevItemContext, MenuRenderState.retrieve(context));
     }
-    
+
+    /**
+     * SCIPIO: restores item context, after a call to prepareItemContext.
+     */
     public void restoreItemContext(Map<String, Object> context, Object prevItemContext, MenuRenderState renderState) {
         renderState.setItemState((MenuItemState) prevItemContext);
     }
     
     
     /**
-     * Determines if item should be rendered, basic on condition and context.
+     * Determines if item should be rendered, based on condition and context.
      * <p>
      * SCIPIO: NOTE: This is ONLY valid if the context was prepared for the item
      * using {@link #prepareItemContext(Map)}!
@@ -1194,7 +1198,13 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         // SCIPIO: now delegated
         return shouldBeRendered(context, MenuRenderState.retrieve(context));
     }
-    
+
+    /**
+     * SCIPIO: Determines if item should be rendered, based on condition, context and render state.
+     * <p>
+     * SCIPIO: NOTE: This is ONLY valid if the context was prepared for the item
+     * using {@link #prepareItemContext(Map)}!
+     */
     public boolean shouldBeRendered(Map<String, Object> context, MenuRenderState renderState) {
         // SCIPIO: first check if must always render selected or ancestor
         Boolean result = null;
@@ -1214,9 +1224,8 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         }
         if (result != null) {
             return result;
-        } else {
-            return true;
         }
+        return true;
     }
 
     public static class MenuLink implements Serializable {
@@ -1228,21 +1237,12 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
             if (linkElement.getAttribute("text").isEmpty()) {
                 linkElement.setAttribute("text", parentMenuItem.getTitle().getOriginal());
             }
-            // SCIPIO: This whole block was removed in ofbiz branch 14.12 r1720933, AFTER we already removed the code inside the block
-            //if (linkElement.getAttribute("style").isEmpty()) {
-                // SCIPIO: this was changed by us...
-                // WARN: removing this effectively changed the behavior of menu-item's widget-style for all widgets!
-                //linkElement.setAttribute("style", parentMenuItem.getWidgetStyle());
-                // The following was added by us instead of previous line, but we don't need to do this here anymore.
-                // we modify the getter below instead.
-                //linkElement.setAttribute("style", parentMenuItem.getLinkStyle());
-            //}
             this.link = new Link(linkElement);
         }
 
         public MenuLink(GenericValue portalPage, ModelMenuItem parentMenuItem, Locale locale) {
             this.linkMenuItem = parentMenuItem;
-            ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+            List<Parameter> parameterList = new ArrayList<>();
             if (parentMenuItem.link != null) {
                 parameterList.addAll(parentMenuItem.link.getParameterList());
             }
@@ -1427,22 +1427,22 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     // SCIPIO: ModelMenuNode methods
     
     @Override
-    public ModelMenuItemGroupNode getParentNode() {
+    public ModelMenuItemGroupNode getParentNode() { // SCIPIO
         return getParentSubMenu();
     }
 
     @Override
-    public List<ModelSubMenu> getChildrenNodes() {
+    public List<ModelSubMenu> getChildrenNodes() { // SCIPIO
         return subMenuList;
     }
 
     @Override
-    public FlexibleStringExpander getExpanded() {
+    public FlexibleStringExpander getExpanded() { // SCIPIO
         return null;
     }
 
     /**
-     * SCIPIO: new
+     * SCIPIO: ModelMenuItemAlias (new).
      */
     public static class ModelMenuItemAlias implements Serializable {
         private final String name;
@@ -1495,5 +1495,4 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public String getWidgetType() { // SCIPIO: new
         return "menu-item";
     }
-
 }

@@ -19,7 +19,6 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -82,7 +81,7 @@ public class HtmlWidget extends ModelScreenWidget {
         if (childElementList.isEmpty()) {
             this.subWidgets = Collections.emptyList();
         } else {
-            List<ModelScreenWidget> subWidgets = new ArrayList<ModelScreenWidget>(childElementList.size());
+            List<ModelScreenWidget> subWidgets = new ArrayList<>(childElementList.size());
             for (Element childElement : childElementList) {
                 if ("html-template".equals(childElement.getNodeName())) {
                     subWidgets.add(HtmlTemplate.getInstance(modelScreen, childElement)); // SCIPIO: now uses factory
@@ -119,10 +118,9 @@ public class HtmlWidget extends ModelScreenWidget {
 
     public static void renderHtmlTemplate(Appendable writer, FlexibleStringExpander locationExdr, Map<String, Object> context) {
         String location = locationExdr.expandString(context);
-        //Debug.logInfo("Rendering template at location [" + location + "] with context: \n" + context, module);
 
         if (UtilValidate.isEmpty(location)) {
-            throw new IllegalArgumentException("Template location is empty");
+            throw new IllegalArgumentException("Template location is empty with search string location " + locationExdr.getOriginal());
         }
 
         if (location.endsWith(".ftl")) {
@@ -133,7 +131,6 @@ public class HtmlWidget extends ModelScreenWidget {
                     writer.append(HtmlWidgetRenderer.formatBoundaryComment("Begin", "Template", location));
                 }
 
-                //FreeMarkerWorker.renderTemplateAtLocation(location, context, writer);
                 Template template = null;
                 if (location.endsWith(".fo.ftl")) { // FOP can't render correctly escaped characters
                     template = FreeMarkerWorker.getTemplate(location);
@@ -145,19 +142,7 @@ public class HtmlWidget extends ModelScreenWidget {
                 if (insertWidgetBoundaryComments) {
                     writer.append(HtmlWidgetRenderer.formatBoundaryComment("End", "Template", location));
                 }
-            } catch (IllegalArgumentException e) {
-                String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg, e, context);
-            } catch (MalformedURLException e) {
-                String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg, e, context);
-            } catch (TemplateException e) {
-                String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg, e, context);
-            } catch (IOException e) {
+            } catch (IllegalArgumentException | TemplateException | IOException e) {
                 String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 writeError(writer, errMsg, e, context);
@@ -191,19 +176,7 @@ public class HtmlWidget extends ModelScreenWidget {
             if (insertWidgetBoundaryComments) {
                 writer.append(HtmlWidgetRenderer.formatBoundaryComment("End", "Inline Template", templateId));
             }
-        } catch (IllegalArgumentException e) {
-            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg, e, context);
-        } catch (MalformedURLException e) {
-            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg, e, context);
-        } catch (TemplateException e) {
-            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg, e, context);
-        } catch (IOException e) {
+        } catch (IllegalArgumentException | TemplateException | IOException e) {
             String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
             Debug.logError(e, errMsg, module);
             writeError(writer, errMsg, e, context);
@@ -348,14 +321,14 @@ public class HtmlWidget extends ModelScreenWidget {
     }
 
     public static class HtmlTemplateDecorator extends ModelScreenWidget {
-        protected final FlexibleStringExpander locationExdr; // SCIPIO: final added
+        protected final FlexibleStringExpander locationExdr; // SCIPIO: final added for thread-safety
         protected final Map<String, ModelScreenWidget> sectionMap;
 
         public HtmlTemplateDecorator(ModelScreen modelScreen, Element htmlTemplateDecoratorElement) {
             super(modelScreen, htmlTemplateDecoratorElement);
             this.locationExdr = FlexibleStringExpander.getInstance(htmlTemplateDecoratorElement.getAttribute("location"));
 
-            Map<String, ModelScreenWidget> sectionMap = new HashMap<String, ModelScreenWidget>();
+            Map<String, ModelScreenWidget> sectionMap = new HashMap<>();
             List<? extends Element> htmlTemplateDecoratorSectionElementList = UtilXml.childElementList(htmlTemplateDecoratorElement, "html-template-decorator-section");
             for (Element htmlTemplateDecoratorSectionElement: htmlTemplateDecoratorSectionElementList) {
                 String name = htmlTemplateDecoratorSectionElement.getAttribute("name");

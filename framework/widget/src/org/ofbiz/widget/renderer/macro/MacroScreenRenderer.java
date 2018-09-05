@@ -158,11 +158,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             // FIXME: I am using a Date as an hack to provide a unique name for the template...
             Template template = new Template((new java.util.Date()).toString(), templateReader, FreeMarkerWorker.getDefaultOfbizConfig());
             templateReader.close();
-            FreeMarkerWorker.includeTemplate(template, environment);
-        } catch (TemplateException e) {
-            Debug.logError(e, "Error rendering screen macro [" + macro + "] thru ftl", module);
-            handleError(writer, e); // SCIPIO
-        } catch (IOException e) {
+            FreeMarkerWorker.includeTemplate(template, environment); // SCIPIO: use FreeMarkerWorker instead of Environment
+        } catch (TemplateException | IOException e) {
             Debug.logError(e, "Error rendering screen macro [" + macro + "] thru ftl", module);
             handleError(writer, e); // SCIPIO
         }
@@ -286,7 +283,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             this.widgetCommentsEnabled = ModelWidget.widgetBoundaryCommentsEnabled(context);
         }
         if (this.widgetCommentsEnabled) {
-            Map<String, Object> parameters = new HashMap<String, Object>();
+            Map<String, Object> parameters = new HashMap<>();
             StringBuilder sb = new StringBuilder("Begin ");
             sb.append(section.isMainSection() ? "Screen " : "Section Widget ");
             sb.append(section.getBoundaryCommentName());
@@ -297,7 +294,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     public void renderSectionEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         if (this.widgetCommentsEnabled) {
-            Map<String, Object> parameters = new HashMap<String, Object>();
+            Map<String, Object> parameters = new HashMap<>();
             StringBuilder sb = new StringBuilder();
             sb.append("End ");
             sb.append(section.isMainSection() ? "Screen " : "Section Widget ");
@@ -310,6 +307,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     public void renderContainerBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         String containerId = container.getId(context);
+        String containerType = container.getType(context);
         String autoUpdateTarget = container.getAutoUpdateTargetExdr(context);
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         String autoUpdateLink = "";
@@ -322,8 +320,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
             autoUpdateLink = rh.makeLink(request, response, autoUpdateTarget);
         }
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", containerId);
+        parameters.put("type", containerType);
         parameters.put("style", container.getStyle(context));
         parameters.put("autoUpdateLink", autoUpdateLink);
         parameters.put("autoUpdateInterval", container.getAutoUpdateInterval(context));
@@ -332,12 +331,13 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
     public void renderContainerEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
-        executeMacro(writer, "renderContainerEnd", null);
+        String containerType = container.getType(context); 
+        executeMacro(writer, "renderContainerEnd", UtilMisc.toMap("type", containerType));
     }
 
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("text", label.getText(context));
         parameters.put("id", label.getId(context));
         parameters.put("style", label.getStyle(context));
@@ -346,7 +346,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", separator.getId(context));
         parameters.put("style", separator.getStyle(context));
         executeMacro(writer, "renderHorizontalSeparator", parameters);
@@ -389,16 +389,16 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
         String linkUrl = "";
         String actionUrl = "";
-        StringBuilder parameters=new StringBuilder();
+        StringBuilder parameters = new StringBuilder();
         String width = link.getWidth();
         if (UtilValidate.isEmpty(width)) {
-            width = "300";
+            width = "300"; // SCIPIO: 2018-09-04: FIXME: was unhardcoded upstream...
         }
         String height = link.getHeight();
         if (UtilValidate.isEmpty(height)) {
-            height = "200";
+            height = "200"; // SCIPIO: 2018-09-04: FIXME: was unhardcoded upstream...
         }
-        if ("hidden-form".equals(linkType) || "ajax-window".equals(linkType)) {
+        if ("hidden-form".equals(linkType) || "layered-modal".equals(linkType)) {
             StringBuilder sb = new StringBuilder();
             WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), null, link.getPrefix(context),
                     link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
@@ -415,7 +415,6 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 parameters.append("}");
             }
             parameters.append("]");
-
         }
         String id = link.getId(context);
         String style = link.getStyle(context);
@@ -456,10 +455,14 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(style));
         sr.append(" name=");
         sr.append(ftlFmt.makeStringLiteral(name));
-        sr.append(" width=");
-        sr.append(ftlFmt.makeStringLiteral(width));
-        sr.append(" height=");
-        sr.append(ftlFmt.makeStringLiteral(height));
+        if (UtilValidate.isNotEmpty(width)) {
+            sr.append(" width=");
+            sr.append(ftlFmt.makeStringLiteral(width));
+        }
+        if (UtilValidate.isNotEmpty(height)) {
+            sr.append(" height=");
+            sr.append(ftlFmt.makeStringLiteral(height));
+        }
         sr.append(" linkUrl=");
         sr.append(ftlFmt.makeStringLiteral(linkUrl));
         sr.append(" text=");
@@ -472,8 +475,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
     public void renderImage(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenImage image) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
-        if (image == null)
+        if (image == null) {
             return ;
+        }
         String src = image.getSrc(context);
 
         String urlMode = image.getUrlMode();
@@ -483,7 +487,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         String urlString = "";
-        if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {
+        if (urlMode != null && "intra-app".equalsIgnoreCase(urlMode)) {
             if (request != null && response != null) {
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
@@ -491,7 +495,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             } else {
                 urlString = src;
             }
-        } else  if (urlMode != null && urlMode.equalsIgnoreCase("content")) {
+        } else  if (urlMode != null && "content".equalsIgnoreCase(urlMode)) {
             if (request != null && response != null) {
                 StringBuilder newURL = new StringBuilder();
                 ContentUrlTag.appendContentPrefix(request, newURL);
@@ -501,7 +505,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         } else {
             urlString = src;
         }
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("id", image.getId(context));
         parameters.put("style", image.getStyle(context));
@@ -519,9 +523,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
          String enableEditName = content.getEnableEditName(context);
          String enableEditValue = (String)context.get(enableEditName);
 
-         if (Debug.verboseOn()) Debug.logVerbose("directEditRequest:" + editRequest, module);
+         if (Debug.verboseOn()) {
+             Debug.logVerbose("directEditRequest:" + editRequest, module);
+         }
 
-         Map<String, Object> parameters = new HashMap<String, Object>();
+         Map<String, Object> parameters = new HashMap<>();
          parameters.put("editRequest", editRequest);
          parameters.put("enableEditValue", enableEditValue == null ? "" : enableEditValue);
          parameters.put("editContainerStyle", content.getEditContainerStyle(context));
@@ -531,7 +537,6 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     public void renderContentBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         Locale locale = UtilMisc.ensureLocale(context.get("locale"));
-        //Boolean nullThruDatesOnly = Boolean.valueOf(false);
         String mimeTypeId = "text/html";
         String expandedContentId = content.getContentId(context);
         String expandedDataResourceId = content.getDataResourceId(context);
@@ -540,27 +545,29 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         Delegator delegator = (Delegator) context.get("delegator");
 
         // make a new map for content rendering; so our current map does not get clobbered
-        Map<String, Object> contentContext = new HashMap<String, Object>();
+        Map<String, Object> contentContext = new HashMap<>();
         contentContext.putAll(context);
         String dataResourceId = (String)contentContext.get("dataResourceId");
-        if (Debug.verboseOn()) Debug.logVerbose("expandedContentId:" + expandedContentId, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("expandedContentId:" + expandedContentId, module);
+        }
 
         try {
             if (UtilValidate.isNotEmpty(dataResourceId)) {
-                if (WidgetDataResourceWorker.dataresourceWorker != null) {
-                    renderedContent = WidgetDataResourceWorker.dataresourceWorker.renderDataResourceAsTextExt(delegator, dataResourceId, contentContext, locale, mimeTypeId, false);
+                if (WidgetDataResourceWorker.getDataresourceWorker() != null) {
+                    renderedContent = WidgetDataResourceWorker.getDataresourceWorker().renderDataResourceAsTextExt(delegator, dataResourceId, contentContext, locale, mimeTypeId, false);
                 } else {
                     Debug.logError("Not rendering content, WidgetDataResourceWorker.dataresourceWorker not found.", module);
                 }
             } else if (UtilValidate.isNotEmpty(expandedContentId)) {
-                if (WidgetContentWorker.contentWorker != null) {
-                    renderedContent = WidgetContentWorker.contentWorker.renderContentAsTextExt(dispatcher, delegator, expandedContentId, contentContext, locale, mimeTypeId, true);
+                if (WidgetContentWorker.getContentWorker() != null) {
+                    renderedContent = WidgetContentWorker.getContentWorker().renderContentAsTextExt(dispatcher, delegator, expandedContentId, contentContext, locale, mimeTypeId, true);
                 } else {
                     Debug.logError("Not rendering content, WidgetContentWorker.contentWorker not found.", module);
                 }
             } else if (UtilValidate.isNotEmpty(expandedDataResourceId)) {
-                if (WidgetDataResourceWorker.dataresourceWorker != null) {
-                    renderedContent = WidgetDataResourceWorker.dataresourceWorker.renderDataResourceAsTextExt(delegator, expandedDataResourceId, contentContext, locale, mimeTypeId, false);
+                if (WidgetDataResourceWorker.getDataresourceWorker() != null) {
+                    renderedContent = WidgetDataResourceWorker.getDataresourceWorker().renderDataResourceAsTextExt(delegator, expandedDataResourceId, contentContext, locale, mimeTypeId, false);
                 } else {
                     Debug.logError("Not rendering content, WidgetDataResourceWorker.dataresourceWorker not found.", module);
                 }
@@ -568,8 +575,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             if (UtilValidate.isEmpty(renderedContent)) {
                 String editRequest = content.getEditRequest(context);
                 if (UtilValidate.isNotEmpty(editRequest)) {
-                    if (WidgetContentWorker.contentWorker != null) {
-                        WidgetContentWorker.contentWorker.renderContentAsTextExt(dispatcher, delegator, "NOCONTENTFOUND", writer, contentContext, locale, mimeTypeId, true);
+                    if (WidgetContentWorker.getContentWorker() != null) {
+                        WidgetContentWorker.getContentWorker().renderContentAsTextExt(dispatcher, delegator, "NOCONTENTFOUND", writer, contentContext, locale, mimeTypeId, true);
                     } else {
                         Debug.logError("Not rendering content, WidgetContentWorker.contentWorker not found.", module);
                     }
@@ -582,16 +589,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 writer.append(renderedContent);
             }
 
-        } catch (GeneralException e) {
+        } catch (GeneralException |IOException e) {
             String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
             Debug.logError(e, errMsg, module);
             //throw new RuntimeException(errMsg);
             handleError(writer, e); // SCIPIO
-        } catch (IOException e2) {
-            String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e2.toString();
-            Debug.logError(e2, errMsg, module);
-            //throw new RuntimeException(errMsg);
-            handleError(writer, e2); // SCIPIO
         }
     }
 
@@ -603,7 +605,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String enableEditName = content.getEnableEditName(context);
         String enableEditValue = (String)context.get(enableEditName);
         String urlString = "";
-        if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
+        if (editRequest != null && editRequest.toUpperCase(Locale.getDefault()).indexOf("IMAGE") > 0) {
             editMode += " Image";
         }
 
@@ -611,15 +613,18 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             if (request != null && response != null) {
-                if (editRequest.indexOf("?") < 0)  editRequest += "?";
-                else editRequest += "&amp;";
+                if (editRequest.indexOf('?') < 0) {
+                    editRequest += "?";
+                } else {
+                    editRequest += "&amp;";
+                }
                 editRequest += "contentId=" + expandedContentId;
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 urlString = rh.makeLink(request, response, editRequest, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
             }
 
-            Map<String, Object> parameters = new HashMap<String, Object>();
+            Map<String, Object> parameters = new HashMap<>();
             parameters.put("urlString", urlString);
             parameters.put("editMode", editMode);
             parameters.put("editContainerStyle", content.getEditContainerStyle(context));
@@ -642,7 +647,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             fullUrlString = rh.makeLink(request, response, urlString, true, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
         }
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("fullUrl", fullUrlString);
         parameters.put("width", content.getWidth());
         parameters.put("height", content.getHeight());
@@ -655,7 +660,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
          String enableEditName = content.getEnableEditName(context);
          String enableEditValue = (String)context.get(enableEditName);
     
-         Map<String, Object> parameters = new HashMap<String, Object>();
+         Map<String, Object> parameters = new HashMap<>();
          parameters.put("editContainerStyle", content.getEditContainerStyle(context));
          parameters.put("editRequest", content.getEditRequest(context));
          parameters.put("enableEditValue", enableEditValue == null ? "" : enableEditValue);
@@ -673,21 +678,20 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
          Delegator delegator = (Delegator) context.get("delegator");
 
          // create a new map for the content rendering; so our current context does not get overwritten!
-         Map<String, Object> contentContext = new HashMap<String, Object>();
+         Map<String, Object> contentContext = new HashMap<>();
          contentContext.putAll(context);
 
          try {
-             if (WidgetContentWorker.contentWorker != null) {
-                 renderedContent = WidgetContentWorker.contentWorker.renderSubContentAsTextExt(dispatcher, delegator, expandedContentId, expandedMapKey, contentContext, locale, mimeTypeId, true);
-                 //Debug.logInfo("renderedContent=" + renderedContent, module);
+             if (WidgetContentWorker.getContentWorker() != null) {
+                 renderedContent = WidgetContentWorker.getContentWorker().renderSubContentAsTextExt(dispatcher, delegator, expandedContentId, expandedMapKey, contentContext, locale, mimeTypeId, true);
              } else {
                  Debug.logError("Not rendering content, WidgetContentWorker.contentWorker not found.", module);
              }
              if (UtilValidate.isEmpty(renderedContent)) {
                  String editRequest = content.getEditRequest(context);
                  if (UtilValidate.isNotEmpty(editRequest)) {
-                     if (WidgetContentWorker.contentWorker != null) {
-                         WidgetContentWorker.contentWorker.renderContentAsTextExt(dispatcher, delegator, "NOCONTENTFOUND", writer, contentContext, locale, mimeTypeId, true);
+                     if (WidgetContentWorker.getContentWorker() != null) {
+                         WidgetContentWorker.getContentWorker().renderContentAsTextExt(dispatcher, delegator, "NOCONTENTFOUND", writer, contentContext, locale, mimeTypeId, true);
                      } else {
                          Debug.logError("Not rendering content, WidgetContentWorker.contentWorker not found.", module);
                      }
@@ -700,16 +704,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                  writer.append(renderedContent);
              }
 
-         } catch (GeneralException e) {
+         } catch (GeneralException | IOException e) {
              String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
              Debug.logError(e, errMsg, module);
              //throw new RuntimeException(errMsg);
              handleError(writer, e); // SCIPIO
-         } catch (IOException e2) {
-             String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e2.toString();
-             Debug.logError(e2, errMsg, module);
-             //throw new RuntimeException(errMsg);
-             handleError(writer, e2); // SCIPIO
          }
     }
 
@@ -722,15 +721,18 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
          String expandedContentId = content.getContentId(context);
          String expandedMapKey = content.getMapKey(context);
          String urlString = "";
-         if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
+         if (editRequest != null && editRequest.toUpperCase(Locale.getDefault()).indexOf("IMAGE") > 0) {
              editMode += " Image";
          }
          if (UtilValidate.isNotEmpty(editRequest) && "true".equals(enableEditValue)) {
              HttpServletResponse response = (HttpServletResponse) context.get("response");
              HttpServletRequest request = (HttpServletRequest) context.get("request");
              if (request != null && response != null) {
-                 if (editRequest.indexOf("?") < 0)  editRequest += "?";
-                 else editRequest += "&amp;";
+                 if (editRequest.indexOf('?') < 0) {
+                     editRequest += "?";
+                 } else {
+                     editRequest += "&amp;";
+                 }
                  editRequest += "contentId=" + expandedContentId;
                  if (UtilValidate.isNotEmpty(expandedMapKey)) {
                      editRequest += "&amp;mapKey=" + expandedMapKey;
@@ -741,7 +743,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
              }
          }
 
-         Map<String, Object> parameters = new HashMap<String, Object>();
+         Map<String, Object> parameters = new HashMap<>();
          parameters.put("urlString", urlString);
          parameters.put("editMode", editMode);
          parameters.put("editContainerStyle", content.getEditContainerStyle(context));
@@ -766,7 +768,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
 
         String title = screenlet.getTitle(context);
-        String titleStyle = screenlet.getTitleStyle(context);
+        String titleStyle = screenlet.getTitleStyle(context); // SCIPIO
         boolean collapsible = screenlet.collapsible();
         ModelScreenWidget.Menu navMenu = screenlet.getNavigationMenu();
         ModelScreenWidget.Form navForm = screenlet.getNavigationForm();
@@ -775,14 +777,14 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String fullUrlString = "";
         String menuString = "";
         boolean showMore = false;
-        String menuRole = "";
+        String menuRole = ""; // SCIPIO
         if (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible) {
             showMore = true;
             if (collapsible) {
                 this.getNextElementId();
                 Map<String, Object> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
                 Map<String, Object> paramMap = UtilGenerics.checkMap(context.get("requestParameters"));
-                Map<String, Object> requestParameters = new HashMap<String, Object>(paramMap);
+                Map<String, Object> requestParameters = new HashMap<>(paramMap);
                 if (uiLabelMap != null) {
                     expandToolTip = (String) uiLabelMap.get("CommonExpand");
                     collapseToolTip = (String) uiLabelMap.get("CommonCollapse");
@@ -808,17 +810,17 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                     throw new IOException(e);
                 }
                 //context.put("menuStringRenderer", savedRenderer);
-                menuRole = "nav-menu";
+                menuRole = "nav-menu"; // SCIPIO
             } else if (navForm != null) {
                 renderScreenletPaginateMenu(sb, context, navForm);
-                menuRole = "paginate-menu";
+                menuRole = "paginate-menu"; // SCIPIO
             }
             menuString = sb.toString();
         }
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("title", title);
-        parameters.put("titleStyle", titleStyle);
+        parameters.put("titleStyle", titleStyle); // SCIPIO
         parameters.put("collapsible", collapsible);
         parameters.put("saveCollapsed", screenlet.saveCollapsed());
         if (UtilValidate.isNotEmpty (screenlet.getId(context))) {
@@ -837,7 +839,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         parameters.put("showMore", showMore);
         parameters.put("collapsed", collapsed);
         parameters.put("javaScriptEnabled", javaScriptEnabled);
-        parameters.put("menuRole", menuRole);
+        parameters.put("menuRole", menuRole); // SCIPIO
         executeMacro(writer, "renderScreenletBegin", parameters);
     }
 
@@ -903,7 +905,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         int actualPageSize = Paginator.getActualPageSize(context);
 
         // if this is all there seems to be (if listSize < 0, then size is unknown)
-        if (actualPageSize >= listSize && listSize >= 0) return;
+        if (actualPageSize >= listSize && listSize >= 0) {
+            return;
+        }
 
         // needed for the "Page" and "rows" labels
         Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
@@ -912,43 +916,49 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             Debug.logWarning("Could not find uiLabelMap in context", module);
         } else {
             ofLabel = uiLabelMap.get("CommonOf");
-            ofLabel = ofLabel.toLowerCase();
+            ofLabel = ofLabel.toLowerCase(Locale.getDefault());
         }
 
         // for legacy support, the viewSizeParam is VIEW_SIZE and viewIndexParam is VIEW_INDEX when the fields are "viewSize" and "viewIndex"
-        if (viewIndexParam.equals("viewIndex" + "_" + paginatorNumber)) viewIndexParam = "VIEW_INDEX" + "_" + paginatorNumber;
-        if (viewSizeParam.equals("viewSize" + "_" + paginatorNumber)) viewSizeParam = "VIEW_SIZE" + "_" + paginatorNumber;
+        if (("viewIndex" + "_" + paginatorNumber).equals(viewIndexParam)) {
+            viewIndexParam = "VIEW_INDEX" + "_" + paginatorNumber;
+        }
+        if (("viewSize" + "_" + paginatorNumber).equals(viewSizeParam)) {
+            viewSizeParam = "VIEW_SIZE" + "_" + paginatorNumber;
+        }
 
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
 
         Map<String, Object> inputFields = UtilGenerics.toMap(context.get("requestParameters"));
         // strip out any multi form fields if the form is of type multi
-        if (modelForm.getType().equals("multi")) {
+        if ("multi".equals(modelForm.getType())) {
             inputFields = UtilHttp.removeMultiFormParameters(inputFields);
         }
         String queryString = UtilHttp.urlEncodeArgs(inputFields);
         // strip legacy viewIndex/viewSize params from the query string
         queryString = UtilHttp.stripViewParamsFromQueryString(queryString, "" + paginatorNumber);
         // strip parametrized index/size params from the query string
-        HashSet<String> paramNames = new HashSet<String>();
+        HashSet<String> paramNames = new HashSet<>();
         paramNames.add(viewIndexParam);
         paramNames.add(viewSizeParam);
         queryString = UtilHttp.stripNamedParamsFromQueryString(queryString, paramNames);
 
         String anchor = "";
         String paginateAnchor = modelForm.getPaginateTargetAnchor();
-        if (paginateAnchor != null) anchor = "#" + paginateAnchor;
+        if (paginateAnchor != null) {
+            anchor = "#" + paginateAnchor;
+        }
 
         // preparing the link text, so that later in the code we can reuse this and just add the viewIndex
         String prepLinkText = "";
         prepLinkText = targetService;
-        if (prepLinkText.indexOf("?") < 0) {
+        if (prepLinkText.indexOf('?') < 0) {
             prepLinkText += "?";
         } else if (!prepLinkText.endsWith("?")) {
             prepLinkText += "&amp;";
         }
-        if (UtilValidate.isNotEmpty(queryString) && !queryString.equals("null")) {
+        if (UtilValidate.isNotEmpty(queryString) && !"null".equals(queryString)) {
             prepLinkText += queryString + "&amp;";
         }
         prepLinkText += viewSizeParam + "=" + viewSize + "&amp;" + viewIndexParam + "=";
@@ -982,7 +992,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             firstLinkUrl = rh.makeLink(request, response, linkText);
         }
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("lowIndex", Paginator.getLowIndex(context));
         parameters.put("actualPageSize", actualPageSize);
         parameters.put("ofLabel", ofLabel);
@@ -1018,6 +1028,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             addColumnHint = uiLabelMap.get("CommonAddAColumnToThisPortalPage");
         }
 
+        // SCIPIO: columnCount
         Integer columnCount = (Integer) context.get("portletColumnCount");
         if (columnCount == null) {
             columnCount = 1;
@@ -1077,12 +1088,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             setColumnSizeHint = uiLabelMap.get("CommonSetColumnWidth");
         }
 
-        Integer columnCount = (Integer) context.get("portletColumnCount");
+        Integer columnCount = (Integer) context.get("portletColumnCount"); // SCIPIO
         if (columnCount == null) {
             columnCount = 1;
         }
-        
-        Integer columnIndex = (Integer) context.get("portletColumnIndex");
+        Integer columnIndex = (Integer) context.get("portletColumnIndex"); // SCIPIO
         if (columnIndex == null) {
             columnIndex = 0;
         }
@@ -1150,8 +1160,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String prevColumnSeqId = (String) context.get("prevColumnSeqId");
         String nextColumnSeqId = (String) context.get("nextColumnSeqId");
 
-        String columnWidthPercentage = (String) context.get("columnWidthPercentage");
-        String columnWidthPixels = (String) context.get("columnWidthPixels");
+        String columnWidthPercentage = (String) context.get("columnWidthPercentage"); // SCIPIO
+        String columnWidthPixels = (String) context.get("columnWidthPixels"); // SCIPIO
         
         Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         String delPortletHint = "";
@@ -1163,12 +1173,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             editAttributeHint = uiLabelMap.get("CommonEditPortletAttributes");
         }
 
-        Integer columnCount = (Integer) context.get("portletColumnCount");
+        Integer columnCount = (Integer) context.get("portletColumnCount"); // SCIPIO
         if (columnCount == null) {
             columnCount = 1;
         }
-        
-        Integer columnIndex = (Integer) context.get("portletColumnIndex");
+        Integer columnIndex = (Integer) context.get("portletColumnIndex"); // SCIPIO
         if (columnIndex == null) {
             columnIndex = 0;
         }
@@ -1208,7 +1217,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(" columnIndex=");
         sr.append(columnIndex.toString());
         sr.append("");
-        if (UtilValidate.isNotEmpty(columnWidthPixels)) {
+        if (UtilValidate.isNotEmpty(columnWidthPixels)) { // SCIPIO: new width attribute + logic
             sr.append(" width=");
             sr.append(ftlFmt.makeStringLiteral(columnWidthPixels + "px"));
         } else if (UtilValidate.isNotEmpty(columnWidthPercentage)) {
@@ -1244,24 +1253,18 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         if (UtilValidate.isNotEmpty(screenName) && UtilValidate.isNotEmpty(screenLocation)) {
             try {
                 modelScreen = ScreenFactory.getScreenFromLocation(screenLocation, screenName);
-            } catch (IOException e) {
-                String errMsg = "Error rendering portlet ID [" + portalPortletId + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                //throw new RuntimeException(errMsg);
-                handleError(writer, e); // SCIPIO
-            } catch (SAXException e) {
-                String errMsg = "Error rendering portlet ID [" + portalPortletId + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                //throw new RuntimeException(errMsg);
-                handleError(writer, e); // SCIPIO
-            } catch (ParserConfigurationException e) {
+            } catch (IOException | SAXException | ParserConfigurationException e) {
                 String errMsg = "Error rendering portlet ID [" + portalPortletId + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 //throw new RuntimeException(errMsg);
                 handleError(writer, e); // SCIPIO
             }
         }
-        modelScreen.renderScreenString(writer, context, this);
+        if (writer != null && context != null) {
+            modelScreen.renderScreenString(writer, context, this);
+        } else {
+            Debug.logError("Null on some Path: writer" + writer + ", context: " + context, module);
+        }
     }
 
     @Override
@@ -1298,4 +1301,12 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         executeMacro(writer, "<@renderColumnContainerEnd />");
     }
     
+    // This is a util method to get the style from a property file
+    public static String getFoStyle(String styleName) {
+        String value = UtilProperties.getPropertyValue("fo-styles", styleName);
+        if (value.equals(styleName)) {
+            return "";
+        }
+        return value;
+    }
 }

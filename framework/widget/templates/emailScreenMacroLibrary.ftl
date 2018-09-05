@@ -38,7 +38,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 <#macro renderSectionEnd boundaryComment extraArgs...></#macro>
 
 <#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name height width linkUrl text imgStr extraArgs...>
-        <a href="javascript:void(0);" id="${escapeVal(uniqueItemName, 'html')}_link" 
-        <#if style?has_content>class="${escapeVal(style, 'html')}"</#if>>
-        <#if text?has_content>${escapeVal(text, 'htmlmarkup')}</#if></a>
+    <a href="javascript:void(0);" id="${escapeVal(uniqueItemName, 'html')}_link" 
+    <#if style?has_content>class="${escapeVal(style, 'html')}"</#if>>
+    <#if text?has_content>${escapeVal(text, 'htmlmarkup')}</#if></a>
 </#macro>

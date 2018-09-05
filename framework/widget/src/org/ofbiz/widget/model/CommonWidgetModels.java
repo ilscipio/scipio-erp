@@ -63,7 +63,7 @@ public final class CommonWidgetModels {
     @SuppressWarnings("serial")
     public static class AutoEntityParameters implements Serializable {
         private String entityName;
-        List<String> excludeList = new ArrayList<String>();
+        List<String> excludeList = new ArrayList<>(); // SCIPIO: FIXME: non-thread-safe
         boolean includeNonPk;
         boolean includePk;
         private String includeType;
@@ -87,7 +87,7 @@ public final class CommonWidgetModels {
 
         @SuppressWarnings("unchecked")
         public Map<String, String> getParametersMap(Map<String, Object> context, String defaultEntityName) {
-            Map<String, String> autEntityParams = new HashMap<String, String>();
+            Map<String, String> autEntityParams = new HashMap<>();
             Delegator delegator = (Delegator) context.get("delegator");
             if (delegator == null) {
                 Debug.logError(
@@ -95,8 +95,9 @@ public final class CommonWidgetModels {
                         module);
                 return autEntityParams;
             }
-            if (UtilValidate.isEmpty(entityName))
+            if (UtilValidate.isEmpty(entityName)) {
                 entityName = defaultEntityName;
+            }
             FlexibleStringExpander toExpand = FlexibleStringExpander.getInstance(entityName);
             ModelEntity entity = delegator.getModelEntity(toExpand.expandString(context));
             if (entity == null) {
@@ -106,21 +107,19 @@ public final class CommonWidgetModels {
             }
 
             Iterator<ModelField> fieldsIter = entity.getFieldsIterator();
-            if (fieldsIter != null) {
-                while (fieldsIter.hasNext()) {
-                    ModelField field = fieldsIter.next();
-                    String fieldName = field.getName();
-                    FlexibleMapAccessor<Object> fma = FlexibleMapAccessor.getInstance(fieldName);
-                    boolean shouldExclude = excludeList.contains(fieldName);
-                    if ((!shouldExclude) && (!field.getIsAutoCreatedInternal())
-                            && ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk))) {
-                        Object flexibleValue = fma.get(context);
-                        if (UtilValidate.isEmpty(flexibleValue) && context.containsKey("parameters")) {
-                            flexibleValue = fma.get((Map<String, Object>) context.get("parameters"));
-                        }
-                        if (UtilValidate.isNotEmpty(flexibleValue) || sendIfEmpty) {
-                            autEntityParams.put(fieldName, String.valueOf(flexibleValue));
-                        }
+            while (fieldsIter.hasNext()) {
+                ModelField field = fieldsIter.next();
+                String fieldName = field.getName();
+                FlexibleMapAccessor<Object> fma = FlexibleMapAccessor.getInstance(fieldName);
+                boolean shouldExclude = excludeList.contains(fieldName);
+                if ((!shouldExclude) && (!field.getIsAutoCreatedInternal())
+                    && ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk))) {
+                    Object flexibleValue = fma.get(context);
+                    if (UtilValidate.isEmpty(flexibleValue) && context.containsKey("parameters")) {
+                        flexibleValue = fma.get((Map<String, Object>) context.get("parameters"));
+                    }
+                    if (UtilValidate.isNotEmpty(flexibleValue) || sendIfEmpty) {
+                        autEntityParams.put(fieldName, String.valueOf(flexibleValue));
                     }
                 }
             }
@@ -130,7 +129,7 @@ public final class CommonWidgetModels {
 
     @SuppressWarnings("serial")
     public static class AutoServiceParameters implements Serializable {
-        List<String> excludeList = new ArrayList<String>();
+        List<String> excludeList = new ArrayList<>(); // SCIPIO: FIXME: non-thread-safe
         boolean includeNonPk;
         boolean includePk;
         boolean sendIfEmpty;
@@ -151,7 +150,7 @@ public final class CommonWidgetModels {
 
         @SuppressWarnings("unchecked")
         public Map<String, String> getParametersMap(Map<String, Object> context, String defaultServiceName) {
-            Map<String, String> autServiceParams = new HashMap<String, String>();
+            Map<String, String> autServiceParams = new HashMap<>();
             LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
             if (dispatcher == null) {
                 Debug.logError(
@@ -159,8 +158,9 @@ public final class CommonWidgetModels {
                         module);
                 return autServiceParams;
             }
-            if (UtilValidate.isEmpty(serviceName))
+            if (UtilValidate.isEmpty(serviceName)) {
                 serviceName = defaultServiceName;
+            }
             FlexibleStringExpander toExpand = FlexibleStringExpander.getInstance(serviceName);
             ModelService service = null;
             try {
@@ -177,8 +177,9 @@ public final class CommonWidgetModels {
             if (paramsIter != null) {
                 while (paramsIter.hasNext()) {
                     ModelParam param = paramsIter.next();
-                    if (param.getInternal())
+                    if (param.getInternal()) {
                         continue;
+                    }
                     String paramName = param.getName();
                     FlexibleMapAccessor<Object> fma = FlexibleMapAccessor.getInstance(paramName);
                     if (!excludeList.contains(paramName)) {
@@ -332,6 +333,8 @@ public final class CommonWidgetModels {
         private final FlexibleStringExpander targetWindowExdr;
         private final FlexibleStringExpander textExdr;
         private final String urlMode;
+        private final boolean requestConfirmation;
+        private final FlexibleStringExpander confirmationMsgExdr;
         // FIXME: These don't belong in this class (might have been used for image)
         private final String height;
         private final String width;
@@ -362,12 +365,17 @@ public final class CommonWidgetModels {
                     this.image = null;
                 }
             }
-            this.linkType = linkElement.getAttribute("link-type");
+            //Backwards compatibility
+            if ("ajax-window".equals(linkElement.getAttribute("link-type"))) {
+                this.linkType = "layered-modal";
+            } else {
+                this.linkType = linkElement.getAttribute("link-type");
+            }
             List<? extends Element> parameterElementList = UtilXml.childElementList(linkElement, "parameter");
             if (parameterElementList.isEmpty()) {
                 this.parameterList = Collections.emptyList();
             } else {
-                List<Parameter> parameterList = new ArrayList<Parameter>(
+                List<Parameter> parameterList = new ArrayList<>(
                         parameterElementList.size());
                 for (Element parameterElement : parameterElementList) {
                     parameterList.add(new Parameter(parameterElement));
@@ -399,6 +407,8 @@ public final class CommonWidgetModels {
                 size = Integer.valueOf(sizeAttr);
             }
             this.size = size;
+            this.requestConfirmation = "true".equals(linkElement.getAttribute("request-confirmation"));
+            this.confirmationMsgExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("confirmation-message"));
             this.width = linkElement.getAttribute("width");
             this.height = linkElement.getAttribute("height");
             this.useWhenExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("use-when"));
@@ -423,6 +433,8 @@ public final class CommonWidgetModels {
             this.textExdr = FlexibleStringExpander.getInstance((String) portalPage.get("portalPageName", locale));
             this.urlMode = "intra-app";
             this.size = null;
+            this.requestConfirmation = false;
+            this.confirmationMsgExdr = FlexibleStringExpander.getInstance("");
             this.width = "";
             this.height = "";
             this.useWhenExdr = FlexibleStringExpander.getInstance("");
@@ -435,6 +447,14 @@ public final class CommonWidgetModels {
 
         public AutoServiceParameters getAutoServiceParameters() {
             return autoServiceParameters;
+        }
+
+        public String getConfirmationMsg(Map<String, Object> context) {
+            return this.confirmationMsgExdr.expandString(context);
+        }
+
+        public FlexibleStringExpander getConfirmationMsgExdr() {
+            return confirmationMsgExdr;
         }
 
         public Boolean getEncode() { // SCIPIO: changed from boolean to Boolean
@@ -481,25 +501,8 @@ public final class CommonWidgetModels {
             return parameterList;
         }
 
-        public Map<String, String> getParameterMap(Map<String, Object> context) {
-            Map<String, String> fullParameterMap = new HashMap<String, String>();
-            if (autoParameterMap != null) { // SCIPIO: new parameter-map
-                autoParameterMap.putAllParametersMap(fullParameterMap, context);
-            }
-            for (Parameter parameter : this.parameterList) {
-                fullParameterMap.put(parameter.getName(), parameter.getValue(context));
-            }
-            if (autoServiceParameters != null) {
-                fullParameterMap.putAll(autoServiceParameters.getParametersMap(context, null));
-            }
-            if (autoEntityParameters != null) {
-                fullParameterMap.putAll(autoEntityParameters.getParametersMap(context, null));
-            }
-            return fullParameterMap;
-        }
-
         public Map<String, String> getParameterMap(Map<String, Object> context, String defaultEntityName, String defaultServiceName) {
-            Map<String, String> fullParameterMap = new HashMap<String, String>();
+            Map<String, String> fullParameterMap = new HashMap<>();
             if (autoParameterMap != null) { // SCIPIO: new parameter-map
                 autoParameterMap.putAllParametersMap(fullParameterMap, context);
             }
@@ -515,12 +518,33 @@ public final class CommonWidgetModels {
             return fullParameterMap;
         }
 
+        public Map<String, String> getParameterMap(Map<String, Object> context) {
+            Map<String, String> fullParameterMap = new HashMap<>();
+            if (autoParameterMap != null) { // SCIPIO: new parameter-map
+                autoParameterMap.putAllParametersMap(fullParameterMap, context);
+            }
+            for (Parameter parameter : this.parameterList) {
+                fullParameterMap.put(parameter.getName(), parameter.getValue(context));
+            }
+            if (autoServiceParameters != null) {
+                fullParameterMap.putAll(autoServiceParameters.getParametersMap(context, null));
+            }
+            if (autoEntityParameters != null) {
+                fullParameterMap.putAll(autoEntityParameters.getParametersMap(context, null));
+            }
+            return fullParameterMap;
+        }
+
         public String getPrefix(Map<String, Object> context) {
             return this.prefixExdr.expandString(context);
         }
 
         public FlexibleStringExpander getPrefixExdr() {
             return prefixExdr;
+        }
+
+        public boolean getRequestConfirmation() {
+            return this.requestConfirmation;
         }
 
         public Boolean getSecure() { // SCIPIO: changed from boolean to Boolean
@@ -641,20 +665,21 @@ public final class CommonWidgetModels {
             }
             if (retVal != null) {
                 TimeZone timeZone = (TimeZone) context.get("timeZone");
-                if (timeZone == null)
+                if (timeZone == null) {
                     timeZone = TimeZone.getDefault();
+                }
                 String returnValue = null;
                 // format string based on the user's time zone (not locale because these are parameters)
                 if (retVal instanceof Double || retVal instanceof Float || retVal instanceof BigDecimal) {
                     returnValue = retVal.toString();
                 } else if (retVal instanceof java.sql.Date) {
-                    DateFormat df = UtilDateTime.toDateFormat(UtilDateTime.DATE_FORMAT, timeZone, null);
+                    DateFormat df = UtilDateTime.toDateFormat(UtilDateTime.getDateFormat(), timeZone, null);
                     returnValue = df.format((java.util.Date) retVal);
                 } else if (retVal instanceof java.sql.Time) {
-                    DateFormat df = UtilDateTime.toTimeFormat(UtilDateTime.TIME_FORMAT, timeZone, null);
+                    DateFormat df = UtilDateTime.toTimeFormat(UtilDateTime.getTimeFormat(), timeZone, null);
                     returnValue = df.format((java.util.Date) retVal);
                 } else if (retVal instanceof java.sql.Timestamp) {
-                    DateFormat df = UtilDateTime.toDateTimeFormat(UtilDateTime.DATE_TIME_FORMAT, timeZone, null);
+                    DateFormat df = UtilDateTime.toDateTimeFormat(UtilDateTime.getDateTimeFormat(), timeZone, null);
                     returnValue = df.format((java.util.Date) retVal);
                 } else if (retVal instanceof java.util.Date) {
                     DateFormat df = UtilDateTime.toDateTimeFormat("EEE MMM dd hh:mm:ss z yyyy", timeZone, null);
@@ -663,9 +688,8 @@ public final class CommonWidgetModels {
                     returnValue = retVal.toString();
                 }
                 return returnValue;
-            } else {
-                return null;
             }
+            return null;
         }
     }
     
@@ -675,7 +699,7 @@ public final class CommonWidgetModels {
      */
     @SuppressWarnings("serial")
     public static class AutoParameterMap implements Serializable  {
-        protected FlexibleMapAccessor<Object> fromField;
+        protected final FlexibleMapAccessor<Object> fromField;
         
         public AutoParameterMap(Element element) {
             this.fromField = UtilValidate.isNotEmpty(element.getAttribute("from-field")) ? FlexibleMapAccessor

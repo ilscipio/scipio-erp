@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.apache.ofbiz.widget.model;
+package org.ofbiz.widget.model;
 
 import java.util.Map;
 
-import org.apache.ofbiz.base.util.UtilValidate;
-import org.apache.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 
 public class ModelActionUtil {
 

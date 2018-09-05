@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.regex.PatternSyntaxException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -73,7 +72,7 @@ public abstract class ModelTreeAction extends AbstractModelAction {
 
     public static List<ModelAction> readNodeActions(ModelNode modelNode, Element actionsElement) {
         List<? extends Element> actionElementList = UtilXml.childElementList(actionsElement);
-        List<ModelAction> actions = new ArrayList<ModelAction>(actionElementList.size());
+        List<ModelAction> actions = new ArrayList<>(actionElementList.size());
         for (Element actionElement : actionElementList) {
             if ("service".equals(actionElement.getNodeName())) {
                 actions.add(new Service(modelNode, actionElement));
@@ -88,7 +87,7 @@ public abstract class ModelTreeAction extends AbstractModelAction {
 
     public static List<ModelAction> readSubNodeActions(ModelNode.ModelSubNode modelSubNode, Element actionsElement) {
         List<? extends Element> actionElementList = UtilXml.childElementList(actionsElement);
-        List<ModelAction> actions = new ArrayList<ModelAction>(actionElementList.size());
+        List<ModelAction> actions = new ArrayList<>(actionElementList.size());
         for (Element actionElement : actionElementList) {
             if ("service".equals(actionElement.getNodeName())) {
                 actions.add(new Service(modelSubNode, actionElement));
@@ -145,12 +144,14 @@ public abstract class ModelTreeAction extends AbstractModelAction {
             super(modelSubNode, entityAndElement);
             boolean useCache = "true".equalsIgnoreCase(entityAndElement.getAttribute("use-cache"));
             Document ownerDoc = entityAndElement.getOwnerDocument();
-            if (!useCache)
+            if (!useCache) {
                 UtilXml.addChildElement(entityAndElement, "use-iterator", ownerDoc);
+            }
             String listName = UtilFormatOut.checkEmpty(entityAndElement.getAttribute("list"),
                     entityAndElement.getAttribute("list-name"));
-            if (UtilValidate.isEmpty(listName))
+            if (UtilValidate.isEmpty(listName)) {
                 listName = "_LIST_ITERATOR_";
+            }
             this.listName = listName;
             entityAndElement.setAttribute("list-name", this.listName);
             finder = new ByAndFinder(entityAndElement);
@@ -205,12 +206,14 @@ public abstract class ModelTreeAction extends AbstractModelAction {
             super(modelSubNode, entityConditionElement);
             Document ownerDoc = entityConditionElement.getOwnerDocument();
             boolean useCache = "true".equalsIgnoreCase(entityConditionElement.getAttribute("use-cache"));
-            if (!useCache)
+            if (!useCache) {
                 UtilXml.addChildElement(entityConditionElement, "use-iterator", ownerDoc);
+            }
             String listName = UtilFormatOut.checkEmpty(entityConditionElement.getAttribute("list"),
                     entityConditionElement.getAttribute("list-name"));
-            if (UtilValidate.isEmpty(listName))
+            if (UtilValidate.isEmpty(listName)) {
                 listName = "_LIST_ITERATOR_";
+            }
             this.listName = listName;
             entityConditionElement.setAttribute("list-name", this.listName);
             finder = new ByConditionFinder(entityConditionElement);
@@ -292,7 +295,7 @@ public abstract class ModelTreeAction extends AbstractModelAction {
         public void runAction(Map<String, Object> context) {
             context.put("_LIST_ITERATOR_", null);
             if (location.endsWith(".xml")) {
-                Map<String, Object> localContext = new HashMap<String, Object>();
+                Map<String, Object> localContext = new HashMap<>();
                 localContext.putAll(context);
                 DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
                 MethodContext methodContext = new MethodContext(ctx, localContext, null);
@@ -403,34 +406,17 @@ public abstract class ModelTreeAction extends AbstractModelAction {
                     serviceContext = WidgetWorker.getDispatcher(context).getDispatchContext()
                             .makeValidContext(serviceNameExpanded, ModelService.IN_PARAM, context);
                 } else {
-                    serviceContext = new HashMap<String, Object>();
+                    serviceContext = new HashMap<>();
                 }
                 if (this.fieldMap != null) {
                     EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, serviceContext);
                 }
                 Map<String, Object> result = WidgetWorker.getDispatcher(context).runSync(serviceNameExpanded, serviceContext);
-                if (!this.resultMapNameAcsr.isEmpty()) {
-                    this.resultMapNameAcsr.put(context, result);
-                    String queryString = (String) result.get("queryString");
-                    context.put("queryString", queryString);
-                    context.put("queryStringMap", result.get("queryStringMap"));
-                    if (UtilValidate.isNotEmpty(queryString)) {
-                        try {
-                            String queryStringEncoded = queryString.replaceAll("&", "%26");
-                            context.put("queryStringEncoded", queryStringEncoded);
-                        } catch (PatternSyntaxException e) {
-
-                        }
-                    }
-                } else {
-                    context.putAll(result);
-                }
+                ModelActionUtil.contextPutQueryStringOrAllResult(context, result, this.resultMapNameAcsr);
                 String resultMapListName = resultMapListNameExdr.expandString(context);
-                //String resultMapListIteratorName = resultMapListIteratorNameExdr.expandString(context);
                 String resultMapValueName = resultMapValueNameExdr.expandString(context);
                 String valueName = valueNameExdr.expandString(context);
                 if (this.getModelSubNode() != null) {
-                    //ListIterator iter = null;
                     if (UtilValidate.isNotEmpty(resultMapListName)) {
                         List<? extends Map<String, ? extends Object>> lst = UtilGenerics.checkList(result.get(resultMapListName));
                         if (lst != null) {

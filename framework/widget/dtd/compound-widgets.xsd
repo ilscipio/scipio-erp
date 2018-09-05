@@ -18,21 +18,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 <xs:schema
-    xmlns:sc="http://ofbiz.apache.org/Site-Conf"
-    xmlns:sm="http://ofbiz.apache.org/Simple-Method"
-    xmlns:wf="http://ofbiz.apache.org/Widget-Form"
-    xmlns:wt="http://ofbiz.apache.org/Widget-Tree"
-    xmlns:wm="http://ofbiz.apache.org/Widget-Menu"
-    xmlns:ws="http://ofbiz.apache.org/Widget-Screen"
+    xmlns:sc="http://ofbiz.apache.org/dtds/site-conf.xsd"
+    xmlns:sm="http://ofbiz.apache.org/dtds/simple-methods.xsd"
+    xmlns:wf="http://ofbiz.apache.org/dtds/widget-form.xsd"
+    xmlns:wt="http://ofbiz.apache.org/dtds/widget-tree.xsd"
+    xmlns:wm="http://ofbiz.apache.org/dtds/widget-menu.xsd"
+    xmlns:ws="http://ofbiz.apache.org/dtds/widget-screen.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified">
     
-    <xs:import schemaLocation="../../webapp/dtd/site-conf.xsd" namespace="http://ofbiz.apache.org/Site-Conf"/>
-    <xs:import schemaLocation="widget-menu.xsd" namespace="http://ofbiz.apache.org/Widget-Menu"/>
-    <xs:import schemaLocation="widget-screen.xsd" namespace="http://ofbiz.apache.org/Widget-Screen"/>
-    <xs:import schemaLocation="widget-form.xsd" namespace="http://ofbiz.apache.org/Widget-Form"/>
-    <xs:import schemaLocation="widget-tree.xsd" namespace="http://ofbiz.apache.org/Widget-Tree"/>
-    <xs:import schemaLocation="../../minilang/dtd/simple-methods.xsd" namespace="http://ofbiz.apache.org/Simple-Method"/>
+    <xs:import schemaLocation="../../webapp/dtd/site-conf.xsd" namespace="http://ofbiz.apache.org/dtds/site-conf.xsd"/>
+    <xs:import schemaLocation="widget-menu.xsd" namespace="http://ofbiz.apache.org/dtds/widget-menu.xsd"/>
+    <xs:import schemaLocation="widget-screen.xsd" namespace="http://ofbiz.apache.org/dtds/widget-screen.xsd"/>
+    <xs:import schemaLocation="widget-form.xsd" namespace="http://ofbiz.apache.org/dtds/widget-form.xsd"/>
+    <xs:import schemaLocation="widget-tree.xsd" namespace="http://ofbiz.apache.org/dtds/widget-tree.xsd"/>
+    <xs:import schemaLocation="../../minilang/dtd/simple-methods-v2.xsd" namespace="http://ofbiz.apache.org/dtds/simple-methods.xsd"/>
     
     <xs:element name="compound-widgets">
         <xs:complexType>

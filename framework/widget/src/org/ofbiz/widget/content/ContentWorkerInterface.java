@@ -40,6 +40,7 @@ public interface ContentWorkerInterface {
     public String getMimeTypeIdExt(Delegator delegator, GenericValue view, Map<String, Object> ctx);
 
     // new rendering methods
+    // SCIPIO: NOTE: 2018-09-04: upstream code removed Delegator from these methods; we will keep it for backward compat for now (trivial detail, why bother?)
     public void renderContentAsTextExt(LocalDispatcher dispatcher, Delegator delegator, String contentId, Appendable out, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException;
     public String renderContentAsTextExt(LocalDispatcher dispatcher, Delegator delegator, String contentId, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException;
 

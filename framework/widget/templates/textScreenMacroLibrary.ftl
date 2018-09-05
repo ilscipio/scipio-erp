@@ -39,7 +39,7 @@ under the License.
 <#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...></#macro>
 
 <#macro renderHorizontalSeparator id style extraArgs...></#macro>
-<#macro renderLabel text id style extraArgs...>
+<#macro renderLabel text="" id="" style="" extraArgs...>
     <#if text??>
         ${text}<#lt/>
     </#if>

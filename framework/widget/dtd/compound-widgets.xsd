@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<xs:schema
+    xmlns:sc="http://ofbiz.apache.org/Site-Conf"
+    xmlns:sm="http://ofbiz.apache.org/Simple-Method"
+    xmlns:wf="http://ofbiz.apache.org/Widget-Form"
+    xmlns:wt="http://ofbiz.apache.org/Widget-Tree"
+    xmlns:wm="http://ofbiz.apache.org/Widget-Menu"
+    xmlns:ws="http://ofbiz.apache.org/Widget-Screen"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
+    
+    <xs:import schemaLocation="../../webapp/dtd/site-conf.xsd" namespace="http://ofbiz.apache.org/Site-Conf"/>
+    <xs:import schemaLocation="widget-menu.xsd" namespace="http://ofbiz.apache.org/Widget-Menu"/>
+    <xs:import schemaLocation="widget-screen.xsd" namespace="http://ofbiz.apache.org/Widget-Screen"/>
+    <xs:import schemaLocation="widget-form.xsd" namespace="http://ofbiz.apache.org/Widget-Form"/>
+    <xs:import schemaLocation="widget-tree.xsd" namespace="http://ofbiz.apache.org/Widget-Tree"/>
+    <xs:import schemaLocation="../../minilang/dtd/simple-methods.xsd" namespace="http://ofbiz.apache.org/Simple-Method"/>
+    
+    <xs:element name="compound-widgets">
+        <xs:complexType>
+            <xs:all minOccurs="0" maxOccurs="1">
+                <xs:element ref="sc:site-conf"/>
+                <xs:element ref="wm:menus" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="ws:screens"/>
+                <xs:element ref="wt:trees" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="wf:forms"/>
+                <xs:element ref="sm:simple-methods"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

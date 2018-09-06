@@ -1694,6 +1694,10 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
             </fileset>
             <report format="frames" todir="runtime/logs/test-results/html"/>
         </junitreport>
+        <echo></echo>
+        <echo>Test results can be viewed using:</echo>
+        <echo>    runtime/logs/test-results/html/all-tests.html</echo>
+        <echo></echo>
         <fail message="Test run was unsuccessful">
             <condition>
                 <not>

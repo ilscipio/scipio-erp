@@ -58,8 +58,10 @@ public final class InstrumenterWorker {
             for (File file: srcPaths) {
                 tmpUrls.add(file.toURI().toURL());
             }
-            ClassLoader tmpLoader = new URLClassLoader(tmpUrls.toArray(new URL[tmpUrls.size()]), InstrumenterWorker.class.getClassLoader());
-            instrumenter = (Instrumenter) tmpLoader.loadClass(instrumenterClassName).newInstance();
+            // SCIPIO: 2018-09-06: Added try-with-resources to ensure the URLClassLoader get closed
+            try (URLClassLoader tmpLoader = new URLClassLoader(tmpUrls.toArray(new URL[tmpUrls.size()]), InstrumenterWorker.class.getClassLoader())) {
+                instrumenter = (Instrumenter) tmpLoader.loadClass(instrumenterClassName).newInstance();
+            }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return srcPaths;

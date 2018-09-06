@@ -26,7 +26,9 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     private transient boolean noSubMenus;
     private transient boolean currentSubMenusOnly;
     private transient MenuAndItem selectedMenuAndItem;
-    private transient ModelMenu.FlaggedMenuNodes flaggedMenuNodes; // TODO? not being used
+    // TODO: REVIEW: this cache for flagged nodes ended up unused, but unclear
+    // if this was by design or omission...
+    private transient ModelMenu.FlaggedMenuNodes flaggedMenuNodes;
     
     private transient MenuItemState itemState;
     

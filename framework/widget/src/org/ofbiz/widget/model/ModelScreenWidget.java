@@ -1248,7 +1248,6 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException { // SCIPIO: renamed to *Core
 
             // SCIPIO: everything here heavily refactored
@@ -1305,10 +1304,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 context = MapStack.create(context);
             }
 
-            MapStack contextMs = (MapStack) context;
+            MapStack<String> contextMs = (MapStack<String>) context;
 
             // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
-            MapStack standAloneStack = contextMs.standAloneChildStack();
+            MapStack<String> standAloneStack = contextMs.standAloneChildStack();
             // SCIPIO: 2017-03-09: workaround for context fetching problems
             RenderContextFetcher contextFetcher = ScreenRenderer.makeEnvAwareContextFetcher(writer, standAloneStack);
             standAloneStack.put("screens", new ScreenRenderer(contextFetcher, screenStringRenderer));

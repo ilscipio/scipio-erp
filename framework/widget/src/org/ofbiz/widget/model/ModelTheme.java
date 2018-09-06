@@ -442,6 +442,7 @@ public class ModelTheme implements Serializable {
             this.treeRendererLocation = exist && currentModelTemplate.treeRendererLocation != null ? currentModelTemplate.treeRendererLocation : originModelTemplate.treeRendererLocation;
             this.menuRendererLocation = exist && currentModelTemplate.menuRendererLocation != null ? currentModelTemplate.menuRendererLocation : originModelTemplate.menuRendererLocation;
         }
+        @SuppressWarnings("unused")
         public String getName() {
             return name;
         }

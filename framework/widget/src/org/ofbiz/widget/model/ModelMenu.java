@@ -499,13 +499,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
             return FlexibleStringExpander.getInstance(element.getAttribute(name));
         return existing;
     }
-    
-    private static String getString(Element element, String name, String existing) { // SCIPIO: helper
-        if (!element.getAttribute(name).isEmpty())
-            return element.getAttribute(name);
-        return existing;
-    }
-    
+
     /**
      * SCIPIO: Menu loading factored out of main constructor and modified for reuse.
      * <p>

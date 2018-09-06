@@ -67,7 +67,6 @@ public abstract class ModelMenuAction implements Serializable {
      * 
      * @see <code>widget-common.xsd</code>
      */
-    @SuppressWarnings("serial")
     public static class SetField extends AbstractModelAction {
         private final FlexibleMapAccessor<Object> field;
         private final FlexibleMapAccessor<Object> fromField;

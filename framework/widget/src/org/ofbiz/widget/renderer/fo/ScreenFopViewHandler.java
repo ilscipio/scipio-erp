@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -151,7 +152,11 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             pdfEncryptionParams.setAllowAssembleDocument(allowAssembleDocument);
             pdfEncryptionParams.setAllowPrintHq(allowPrintHq);
             pdfEncryptionParams.setEncryptionLengthInBits(encryptionLength);
-            foUserAgent.getRendererOptions().put(PDFEncryptionOption.ENCRYPTION_PARAMS, pdfEncryptionParams);
+            // SCIPIO: needless warning
+            //foUserAgent.getRendererOptions().put(PDFEncryptionOption.ENCRYPTION_PARAMS, pdfEncryptionParams);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> rendererOptions = foUserAgent.getRendererOptions();
+            rendererOptions.put(PDFEncryptionOption.ENCRYPTION_PARAMS, pdfEncryptionParams);
         }
         
         Reader reader = new StringReader(screenOutString);

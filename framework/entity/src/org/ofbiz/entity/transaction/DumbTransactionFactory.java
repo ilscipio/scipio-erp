@@ -114,9 +114,9 @@ public class DumbTransactionFactory implements TransactionFactory {
             Connection otherCon = ConnectionFactoryLoader.getInstance().getConnection(helperInfo, datasourceInfo.getInlineJdbc());
             return TransactionUtil.getCursorConnection(helperInfo, otherCon);
         }
-            Debug.logError("Dumb/Empty is the configured transaction manager but no inline-jdbc element was specified in the " + helperInfo.getHelperBaseName() + " datasource. Please check your configuration", module);
-            return null;
-        }
+        Debug.logError("Dumb/Empty is the configured transaction manager but no inline-jdbc element was specified in the " + helperInfo.getHelperBaseName() + " datasource. Please check your configuration", module);
+        return null;
+    }
 
     public void shutdown() {}
 }

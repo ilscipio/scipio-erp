@@ -751,17 +751,17 @@ public class DatabaseUtil {
     }
 
     private boolean getIsCaseSensitive(Collection<String> messages) {
-            boolean isCaseSensitive = false;
+        boolean isCaseSensitive = false;
         try (Connection connection = getConnectionLogged(messages)) {
             DatabaseMetaData dbData = this.getDatabaseMetaData(connection, messages);
             if (dbData != null) {
-                    isCaseSensitive = dbData.supportsMixedCaseIdentifiers();
+                isCaseSensitive = dbData.supportsMixedCaseIdentifiers();
             }
-                } catch (SQLException e) {
-                    Debug.logError(e, "Error getting db meta data about case sensitive", module);
-                }
-            return isCaseSensitive;
+        } catch (SQLException e) {
+            Debug.logError(e, "Error getting db meta data about case sensitive", module);
         }
+        return isCaseSensitive;
+    }
 
     public DatabaseMetaData getDatabaseMetaData(Connection connection, Collection<String> messages) {
         DatabaseMetaData dbData = null;
@@ -2760,10 +2760,10 @@ public class DatabaseUtil {
                     Debug.logError(errMsg, module);
                 }
             }
-            } catch (SQLException e) {
-                Debug.logError(e, module);
-            }
+        } catch (SQLException e) {
+            Debug.logError(e, module);
         }
+    }
 
     /* ====================================================================== */
     /* ====================================================================== */

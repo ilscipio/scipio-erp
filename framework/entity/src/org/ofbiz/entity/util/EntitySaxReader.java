@@ -246,11 +246,11 @@ public class EntitySaxReader extends DefaultHandler {
             try {
                 parser.parse(is, this);
                 // make sure all of the values to write got written...
-                if (! valuesToWrite.isEmpty()) {
+                if (!valuesToWrite.isEmpty()) {
                     writeValues(valuesToWrite);
                     valuesToWrite.clear();
                 }
-                if (! valuesToDelete.isEmpty()) {
+                if (!valuesToDelete.isEmpty()) {
                     delegator.removeAll(valuesToDelete);
                     valuesToDelete.clear();
                 }
@@ -284,7 +284,7 @@ public class EntitySaxReader extends DefaultHandler {
     private void countValue(boolean skip, boolean exist) {
         if (skip) numberSkipped++;
         else if (Action.DELETE == currentAction) numberDeleted++;
-        else if (Action.CREATE == currentAction || ! exist) numberCreated++;
+        else if (Action.CREATE == currentAction || !exist) numberCreated++;
         else if (Action.CREATE_REPLACE == currentAction) numberReplaced++;
         else numberUpdated++;
     }
@@ -436,9 +436,9 @@ public class EntitySaxReader extends DefaultHandler {
                             } catch (GenericEntityNotFoundException e) {exist = false;}
                         }
                         if (Action.CREATE == currentAction && exist) { skip = true; }
-                        else if (Action.DELETE == currentAction && ! exist) { skip = true; }
+                        else if (Action.DELETE == currentAction && !exist) { skip = true; }
                     }
-                    if (! skip) {
+                    if (!skip) {
                         if (this.useTryInsertMethod && !this.checkDataOnly) {
                             if (Action.CREATE == currentAction) { currentValue.create(); }
                             else if (Action.DELETE == currentAction) {
@@ -577,9 +577,6 @@ public class EntitySaxReader extends DefaultHandler {
             
             try {
                 currentValue = delegator.makeValue(entityName);
-                // TODO: do we really want this? it makes it so none of the values imported have create/update timestamps set
-                // DEJ 10/16/04 I think they should all be stamped, so commenting this out
-                // JAZ 12/10/04 I think it should be specified when creating the reader
                 if (this.maintainTxStamps) {
                     currentValue.setIsFromEntitySync(true);
                 }

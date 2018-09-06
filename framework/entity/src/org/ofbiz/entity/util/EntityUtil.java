@@ -318,8 +318,7 @@ public final class EntityUtil {
      *@return List of GenericValue's that match the values in fields
      */
     public static <T extends GenericEntity> List<T> filterByOr(List<T> values, List<? extends EntityCondition> exprs) {
-        if (values == null) return null;
-        if (UtilValidate.isEmpty(exprs)) {
+        if (values == null || UtilValidate.isEmpty(exprs)) {
             return values;
         }
 
@@ -611,11 +610,9 @@ public final class EntityUtil {
     public static Boolean toBoolean(String value) {
         if ("Y".equalsIgnoreCase(value)) {
             return true;
-        }
-        else if ("N".equalsIgnoreCase(value)) {
+        } else if ("N".equalsIgnoreCase(value)) {
             return false;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -662,5 +659,4 @@ public final class EntityUtil {
         Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAndCache(String, Map, List)", module);
         return getRelated(relationName, fields, values, true);
     }
-
 }

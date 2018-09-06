@@ -242,14 +242,14 @@ public final class EntityFinderUtil {
                             EntityOperator.OR,
                             EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, null));
                 }
-                    return EntityCondition.makeCondition(
-                            EntityCondition.makeCondition(fieldName, UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), value),
-                            EntityOperator.OR,
-                            EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, null));
-                }
-                if (ignoreCase) {
-                    // use the stuff to upper case both sides
-                    return EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(fieldName), UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), EntityFunction.UPPER(value));
+                return EntityCondition.makeCondition(
+                        EntityCondition.makeCondition(fieldName, UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), value),
+                        EntityOperator.OR,
+                        EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, null));
+            }
+            if (ignoreCase) {
+                // use the stuff to upper case both sides
+                return EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(fieldName), UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), EntityFunction.UPPER(value));
             }
             return EntityCondition.makeCondition(fieldName, UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), value);
         }

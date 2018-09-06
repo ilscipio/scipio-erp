@@ -101,9 +101,9 @@ public class XmlSerializer {
             }
             return deserialize(document, delegator);
         }
-            Debug.logWarning("Serialized document came back null", module);
-            return null;
-        }
+        Debug.logWarning("Serialized document came back null", module);
+        return null;
+    }
 
     /** Deserialize a Java object from a DOM <code>Document</code>.
      * <p>This method should be used with caution. If the DOM <code>Document</code>
@@ -264,14 +264,14 @@ public class XmlSerializer {
             if (objBytes == null) {
                 throw new SerializeException("Unable to serialize object; null byte array returned");
             }
-                String byteHex = StringUtil.toHexString(objBytes);
-                Element element = document.createElement("cus-obj");
-                // this is hex encoded so does not need to be in a CDATA block
-                element.appendChild(document.createTextNode(byteHex));
-                return element;
-            }
-            throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
+            String byteHex = StringUtil.toHexString(objBytes);
+            Element element = document.createElement("cus-obj");
+            // this is hex encoded so does not need to be in a CDATA block
+            element.appendChild(document.createTextNode(byteHex));
+            return element;
         }
+        throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
+    }
 
     public static Element makeElement(String elementName, Object value, Document document) {
         if (value == null) {
@@ -382,15 +382,15 @@ public class XmlSerializer {
             if (value == null) {
                 return deserializeCustom(element);
             }
-                Node curChild = element.getFirstChild();
+            Node curChild = element.getFirstChild();
 
-                while (curChild != null) {
-                    if (curChild.getNodeType() == Node.ELEMENT_NODE) {
-                        value.add(deserializeSingle((Element) curChild, delegator));
-                    }
-                    curChild = curChild.getNextSibling();
+            while (curChild != null) {
+                if (curChild.getNodeType() == Node.ELEMENT_NODE) {
+                    value.add(deserializeSingle((Element) curChild, delegator));
                 }
-                return value;
+                curChild = curChild.getNextSibling();
+            }
+            return value;
         } else if (tagName.startsWith("map-")) {
             // - Maps -
             Map<Object, Object> value = null;
@@ -412,50 +412,50 @@ public class XmlSerializer {
             if (value == null) {
                 return deserializeCustom(element);
             }
-                Node curChild = element.getFirstChild();
+            Node curChild = element.getFirstChild();
 
-                while (curChild != null) {
-                    if (curChild.getNodeType() == Node.ELEMENT_NODE) {
-                        Element curElement = (Element) curChild;
+            while (curChild != null) {
+                if (curChild.getNodeType() == Node.ELEMENT_NODE) {
+                    Element curElement = (Element) curChild;
 
-                        if ("map-Entry".equals(curElement.getLocalName())) {
+                    if ("map-Entry".equals(curElement.getLocalName())) {
 
-                            Element mapKeyElement = UtilXml.firstChildElement(curElement, "map-Key");
-                            Element keyElement = null;
-                            Node tempNode = mapKeyElement.getFirstChild();
+                        Element mapKeyElement = UtilXml.firstChildElement(curElement, "map-Key");
+                        Element keyElement = null;
+                        Node tempNode = mapKeyElement.getFirstChild();
 
-                            while (tempNode != null) {
-                                if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
-                                    keyElement = (Element) tempNode;
-                                    break;
-                                }
-                                tempNode = tempNode.getNextSibling();
+                        while (tempNode != null) {
+                            if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
+                                keyElement = (Element) tempNode;
+                                break;
                             }
+                            tempNode = tempNode.getNextSibling();
+                        }
                         if (keyElement == null) {
                             throw new SerializeException("Could not find an element under the map-Key");
                         }
 
-                            Element mapValueElement = UtilXml.firstChildElement(curElement, "map-Value");
-                            Element valueElement = null;
+                        Element mapValueElement = UtilXml.firstChildElement(curElement, "map-Value");
+                        Element valueElement = null;
 
-                            tempNode = mapValueElement.getFirstChild();
-                            while (tempNode != null) {
-                                if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
-                                    valueElement = (Element) tempNode;
-                                    break;
-                                }
-                                tempNode = tempNode.getNextSibling();
+                        tempNode = mapValueElement.getFirstChild();
+                        while (tempNode != null) {
+                            if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
+                                valueElement = (Element) tempNode;
+                                break;
                             }
+                            tempNode = tempNode.getNextSibling();
+                        }
                         if (valueElement == null) {
                             throw new SerializeException("Could not find an element under the map-Value");
                         }
 
-                            value.put(deserializeSingle(keyElement, delegator), deserializeSingle(valueElement, delegator));
-                        }
+                        value.put(deserializeSingle(keyElement, delegator), deserializeSingle(valueElement, delegator));
                     }
-                    curChild = curChild.getNextSibling();
                 }
-                return value;
+                curChild = curChild.getNextSibling();
+            }
+            return value;
         } else if (tagName.startsWith("eepk-")) {
             return delegator.makePK(element);
         } else if (tagName.startsWith("eeval-")) {

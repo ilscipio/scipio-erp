@@ -275,11 +275,11 @@ public class GenericDAO {
     public int updateByCondition(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fieldsToSet, EntityCondition condition) throws GenericEntityException {
 
         try (SQLProcessor sqlP = new SQLProcessor(delegator, helperInfo)) {
-        try {
-            return updateByCondition(modelEntity, fieldsToSet, condition, sqlP);
-        } catch (GenericDataSourceException e) {
-            sqlP.rollback();
-            throw new GenericDataSourceException("Generic Entity Exception occurred in updateByCondition", e);
+            try {
+                return updateByCondition(modelEntity, fieldsToSet, condition, sqlP);
+            } catch (GenericDataSourceException e) {
+                sqlP.rollback();
+                throw new GenericDataSourceException("Generic Entity Exception occurred in updateByCondition", e);
             }
         }
     }
@@ -307,12 +307,12 @@ public class GenericDAO {
         }
         sql.append(" WHERE ").append(condition.makeWhereString(modelEntity, params, this.datasource));
 
-            sqlP.prepareStatement(sql.toString());
-            for (EntityConditionParam param: params) {
-                SqlJdbcUtil.setValue(sqlP, param.getModelField(), modelEntity.getEntityName(), param.getFieldValue(), modelFieldTypeReader);
-            }
+        sqlP.prepareStatement(sql.toString());
+        for (EntityConditionParam param: params) {
+            SqlJdbcUtil.setValue(sqlP, param.getModelField(), modelEntity.getEntityName(), param.getFieldValue(), modelFieldTypeReader);
+        }
 
-            return sqlP.executeUpdate();
+        return sqlP.executeUpdate();
     }
 
     /* ====================================================================== */
@@ -485,24 +485,24 @@ public class GenericDAO {
         sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, modelFieldTypeReader, datasource));
         sqlBuffer.append(SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPkFieldsUnmodifiable(), entity, "AND", datasource.getJoinStyle()));
 
-            sqlP.prepareStatement(sqlBuffer.toString(), true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
-            sqlP.executeQuery();
+        sqlP.prepareStatement(sqlBuffer.toString(), true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
+        sqlP.executeQuery();
 
-            if (sqlP.next()) {
-                int idx = 1;
-                Iterator<ModelField> nopkIter = modelEntity.getNopksIterator();
-                while (nopkIter.hasNext()) {
-                    ModelField curField = nopkIter.next();
-                    SqlJdbcUtil.getValue(sqlP.getResultSet(), idx, curField, entity, modelFieldTypeReader);
-                    idx++;
-                }
-
-                entity.synchronizedWithDatasource();
-            } else {
-                // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString(), module);
-                throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
+        if (sqlP.next()) {
+            int idx = 1;
+            Iterator<ModelField> nopkIter = modelEntity.getNopksIterator();
+            while (nopkIter.hasNext()) {
+                ModelField curField = nopkIter.next();
+                SqlJdbcUtil.getValue(sqlP.getResultSet(), idx, curField, entity, modelFieldTypeReader);
+                idx++;
             }
+
+            entity.synchronizedWithDatasource();
+        } else {
+            // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString(), module);
+            throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
+        }
     }
 
     public void partialSelect(GenericEntity entity, Set<String> keys) throws GenericEntityException {

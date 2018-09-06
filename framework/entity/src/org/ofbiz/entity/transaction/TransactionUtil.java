@@ -350,9 +350,9 @@ public final class TransactionUtil implements Status {
             }
         } else {
             if (Debug.infoOn()) {
-            Debug.logInfo("No UserTransaction, transaction not rolled back", module);
+                Debug.logInfo("No UserTransaction, transaction not rolled back", module);
+            }
         }
-    }
     }
 
     /** Makes a rollback the only possible outcome of the transaction in the current thread IF transactions are available */
@@ -407,8 +407,8 @@ public final class TransactionUtil implements Status {
                     pushSuspendedTransaction(trans);
                     return trans;
                 }
-                    return null;
-                }
+                return null;
+            }
             if (Debug.warningOn()) {
                 Debug.logWarning("No transaction in place, so not suspending.", module);
             }
@@ -757,9 +757,9 @@ public final class TransactionUtil implements Status {
             Debug.logWarning(e2, "In clearTransactionBeginStack no stack placeholder was in place, here is the current location: ", module);
             return null;
         }
-            transactionBeginStack.set(null);
-            return e;
-        }
+        transactionBeginStack.set(null);
+        return e;
+    }
 
     public static Exception getTransactionBeginStack() {
         Exception e = transactionBeginStack.get();
@@ -836,9 +836,9 @@ public final class TransactionUtil implements Status {
         if (roc == null) {
             return null;
         }
-            setRollbackOnlyCause.set(null);
-            return roc;
-        }
+        setRollbackOnlyCause.set(null);
+        return roc;
+    }
     public static RollbackOnlyCause getSetRollbackOnlyCause() {
         if (setRollbackOnlyCause.get() == null) {
             Exception e = new Exception("Current Stack Trace");

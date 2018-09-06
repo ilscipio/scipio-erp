@@ -68,12 +68,12 @@ public abstract class AbstractEntityConditionCache<K, V> extends AbstractCache<E
     public void remove(GenericEntity entity) {
         UtilCache.clearCache(getCacheName(entity.getEntityName()));
         ModelEntity model = entity.getModelEntity();
-            Iterator<String> it = model.getViewConvertorsIterator();
-            while (it.hasNext()) {
-                String targetEntityName = it.next();
-                UtilCache.clearCache(getCacheName(targetEntityName));
-            }
+        Iterator<String> it = model.getViewConvertorsIterator();
+        while (it.hasNext()) {
+            String targetEntityName = it.next();
+            UtilCache.clearCache(getCacheName(targetEntityName));
         }
+    }
 
     public void remove(String entityName, EntityCondition condition) {
         UtilCache<EntityCondition, ConcurrentMap<K, V>> cache = getCache(entityName);
@@ -161,7 +161,7 @@ public abstract class AbstractEntityConditionCache<K, V> extends AbstractCache<E
         if (isNull(entity)) {
             return null;
         }
-            return entity.getModelEntity().convertToViewValues(targetEntityName, entity);
+        return entity.getModelEntity().convertToViewValues(targetEntityName, entity);
     }
 
     public void storeHook(boolean isPK, GenericEntity oldEntity, GenericEntity newEntity) {

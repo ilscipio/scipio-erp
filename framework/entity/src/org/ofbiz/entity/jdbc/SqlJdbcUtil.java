@@ -225,9 +225,9 @@ public final class SqlJdbcUtil {
                     ModelViewEntity.ViewEntityCondition viewEntityCondition = viewLink.getViewEntityCondition();
                     if (viewEntityCondition != null) {
                         EntityCondition whereCondition = viewEntityCondition.getWhereCondition(modelFieldTypeReader, null);
-                            condBuffer.append(" AND ");
-                            condBuffer.append(whereCondition.makeWhereString(modelEntity, null, datasourceInfo));
-                        }
+                        condBuffer.append(" AND ");
+                        condBuffer.append(whereCondition.makeWhereString(modelEntity, null, datasourceInfo));
+                    }
 
                     restOfStatement.append(condBuffer.toString());
 

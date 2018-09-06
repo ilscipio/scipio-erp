@@ -163,21 +163,21 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
             Debug.logWarning("This EntityListIterator for Entity [" + modelEntityName + "] has already been closed, not closing again.", module);
             return;
         }
-            if (sqlp != null) {
-                sqlp.close();
-                closed = true;
+        if (sqlp != null) {
+            sqlp.close();
+            closed = true;
             return;
         }
         if (resultSet == null) {
             throw new GenericEntityException(
                     "Cannot close an EntityListIterator without a SQLProcessor or a ResultSet");
         }
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    throw new GenericEntityException("Cannot close EntityListIterator with ResultSet", e);
-                }
-                closed = true;
+        try {
+            resultSet.close();
+        } catch (SQLException e) {
+            throw new GenericEntityException("Cannot close EntityListIterator with ResultSet", e);
+        }
+        closed = true;
     }
 
     /**
@@ -275,7 +275,7 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
      * It is much better to just use next() until it returns null 
      * For example, you could use the following to iterate through the results in an EntityListIterator:
      *
-     *      GenericValue nextValue = null;
+     * GenericValue nextValue = null;
      * while ((nextValue = (GenericValue)
      * this.next()) != null) { ... }
      *
@@ -295,8 +295,8 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
             if (resultSet.isLast() || resultSet.isAfterLast()) {
                 return false;
             }
-                // do a quick game to see if the resultSet is empty:
-                // if we are not in the first or beforeFirst positions and we haven't made any values yet, the result set is empty so return false
+            // do a quick game to see if the resultSet is empty:
+            // if we are not in the first or beforeFirst positions and we haven't made any values yet, the result set is empty so return false
             return haveMadeValue || resultSet.isBeforeFirst() || resultSet.isFirst();
         } catch (SQLException e) {
             tryCloseWithWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString());

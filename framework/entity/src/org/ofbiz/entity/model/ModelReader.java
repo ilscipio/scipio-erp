@@ -157,7 +157,7 @@ public class ModelReader implements Serializable {
         // add entityName, entityFileName pair to entityResourceHandlerMap map
         entityResourceHandlerMap.put(entityName, entityResourceHandler);
 
-        // utilTimer.timerString("  After entityEntityName -- " + i + " --");
+        // utilTimer.timerString(" After entityEntityName -- " + i + " --");
         // ModelEntity entity = createModelEntity(curEntity, utilTimer);
 
         ModelEntity modelEntity = null;
@@ -174,10 +174,10 @@ public class ModelReader implements Serializable {
             Debug.logError(e, "Could not get resource URL", module);
         }
 
-        // utilTimer.timerString("  After createModelEntity -- " + i + " --");
+        // utilTimer.timerString(" After createModelEntity -- " + i + " --");
         if (modelEntity != null) {
             modelEntity.setLocation(resourceLocation);
-            // utilTimer.timerString("  After entityCache.put -- " + i + " --");
+            // utilTimer.timerString(" After entityCache.put -- " + i + " --");
             if (isEntity) {
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("-- [Entity]: #" + i + ": " + entityName, module);
@@ -189,7 +189,7 @@ public class ModelReader implements Serializable {
             }
         } else {
             Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create " +
-                "entity for entityName: " + entityName, module);
+                    "entity for entityName: " + entityName, module);
         }
         return modelEntity;
     }
@@ -384,7 +384,7 @@ public class ModelReader implements Serializable {
                                         List<String> curPkFieldNames = curModelEntity.getPkFieldNames();
                                         Iterator<ModelKeyMap> nrkmIter = keyMaps.iterator();
                                         while (nrkmIter.hasNext()) {
-                                        ModelKeyMap nrkm = nrkmIter.next();
+                                            ModelKeyMap nrkm = nrkmIter.next();
                                             String checkField = nrkm.getRelFieldName();
                                             if (!curPkFieldNames.contains(checkField)) {
                                                 nrkmIter.remove();
@@ -406,19 +406,19 @@ public class ModelReader implements Serializable {
                                     } else {
                                         if (newRel.equals(existingRelation)) {
                                             // don't warn if the target title+entity = current title+entity
-                                        if (Debug.infoOn() 
-                                                && !(title + curModelEntity.getEntityName()).equals(modelRelation.getTitle() + modelRelation.getRelEntityName())) {
-                                            // String errorMsg = "Relation already exists to entity [] with title ["
-                                            // + targetTitle + "],from entity []";
-                                            String message = "Entity [" + relatedEnt.getPackageName() + ":" + relatedEnt.getEntityName()
-                                                    + "] already has identical relationship to entity [" + curModelEntity.getEntityName() + "] title [" + title
-                                                    + "]; would auto-create: type [" + newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
+                                            if (Debug.infoOn() 
+                                                    && !(title + curModelEntity.getEntityName()).equals(modelRelation.getTitle() + modelRelation.getRelEntityName())) {
+                                                // String errorMsg = "Relation already exists to entity [] with title ["
+                                                // + targetTitle + "],from entity []";
+                                                String message = "Entity [" + relatedEnt.getPackageName() + ":" + relatedEnt.getEntityName()
+                                                        + "] already has identical relationship to entity [" + curModelEntity.getEntityName() + "] title [" + title
+                                                        + "]; would auto-create: type [" + newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
                                                 orderedMessages.add(message);
                                             }
                                         } else {
                                             String message = "Existing relationship with the same name, but different specs found from what would be auto-created for Entity ["
-                                                + relatedEnt.getEntityName() + "] and relationship to entity [" + curModelEntity.getEntityName() + "] title [" + title
-                                                + "]; would auto-create: type [" + newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
+                                                    + relatedEnt.getEntityName() + "] and relationship to entity [" + curModelEntity.getEntityName() + "] title [" + title
+                                                    + "]; would auto-create: type [" + newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
                                             if (Debug.verboseOn()) Debug.logVerbose(message, module);
                                         }
                                     }

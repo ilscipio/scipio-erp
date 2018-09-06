@@ -808,23 +808,23 @@ public class GenericDelegator implements Delegator {
                 if (existingValue == null) {
                     throw e;
                 }
-                    if (Debug.infoOn()) {
-                        Debug.logInfo("Error creating entity record with a sequenced value [" + value.getPrimaryKey() + "], trying again about to refresh bank for entity [" + value.getEntityName() + "]", module);
-                    }
-
-                    // found an existing value... was probably a duplicate key, so clean things up and try again
-                    this.AtomicRefSequencer.get().forceBankRefresh(value.getEntityName(), 1);
-
-                    value.setNextSeqId();
-                    value = helper.create(value);
-                    if (Debug.infoOn()) {
-                        Debug.logInfo("Successfully created new entity record on retry with a sequenced value [" + value.getPrimaryKey() + "], after getting refreshed bank for entity [" + value.getEntityName() + "]", module);
-                    }
-
-                    if (testMode) {
-                        storeForTestRollback(new TestOperation(OperationType.INSERT, value));
-                    }
+                if (Debug.infoOn()) {
+                    Debug.logInfo("Error creating entity record with a sequenced value [" + value.getPrimaryKey() + "], trying again about to refresh bank for entity [" + value.getEntityName() + "]", module);
                 }
+
+                // found an existing value... was probably a duplicate key, so clean things up and try again
+                this.AtomicRefSequencer.get().forceBankRefresh(value.getEntityName(), 1);
+
+                value.setNextSeqId();
+                value = helper.create(value);
+                if (Debug.infoOn()) {
+                    Debug.logInfo("Successfully created new entity record on retry with a sequenced value [" + value.getPrimaryKey() + "], after getting refreshed bank for entity [" + value.getEntityName() + "]", module);
+                }
+
+                if (testMode) {
+                    storeForTestRollback(new TestOperation(OperationType.INSERT, value));
+                }
+            }
 
             if (value != null) {
                 value.setDelegator(this);
@@ -1057,7 +1057,7 @@ public class GenericDelegator implements Delegator {
             }
 
             if (saveEntitySyncRemoveInfo) {
-            this.saveEntitySyncRemoveInfo(value.getPrimaryKey());
+                this.saveEntitySyncRemoveInfo(value.getPrimaryKey());
             }
 
             ecaRunner.evalRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, value, false);

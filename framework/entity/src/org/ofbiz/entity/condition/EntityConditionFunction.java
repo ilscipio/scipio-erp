@@ -72,7 +72,7 @@ public abstract class EntityConditionFunction extends EntityCondition {
         if (codeString == null) {
             return "null";
         }
-            return codeString;
+        return codeString;
     }
 
     public int getId() {

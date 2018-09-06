@@ -147,9 +147,9 @@ public class JNDITransactionFactory implements TransactionFactory {
             Connection otherCon = ConnectionFactoryLoader.getInstance().getConnection(helperInfo, datasourceInfo.getInlineJdbc());
             return TransactionUtil.getCursorConnection(helperInfo, otherCon);
         }
-            //no real need to print an error here
-            return null;
-        }
+        //no real need to print an error here
+        return null;
+    }
 
     public static Connection getJndiConnection(String jndiName, String jndiServerName) throws SQLException, GenericEntityException {
         DataSource ds = dsCache.get(jndiName);

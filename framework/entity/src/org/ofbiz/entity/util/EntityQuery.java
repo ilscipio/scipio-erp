@@ -526,7 +526,7 @@ public class EntityQuery {
             result = delegator.findList(entityName, makeWhereCondition(useCache), fieldsToSelect, orderBy, findOptions, useCache);
         } else {
             try (EntityListIterator it = queryIterator()) { 
-            result = it.getCompleteList();
+                result = it.getCompleteList();
             }
         }
         if (filterByDate && useCache) {

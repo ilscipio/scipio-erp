@@ -358,7 +358,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             if (delegatorName == null) {
                 delegatorName = "default";
             }
-                internalDelegator = DelegatorFactory.getDelegator(delegatorName);
+            internalDelegator = DelegatorFactory.getDelegator(delegatorName);
             if (internalDelegator == null) {
                 throw new IllegalStateException("[GenericEntity.getDelegator] could not find delegator with name " + delegatorName);
             }
@@ -555,7 +555,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         ModelFieldType type = null;
         try {
             if (field != null) {
-            type = getDelegator().getEntityFieldType(getModelEntity(), field.getType());
+                type = getDelegator().getEntityFieldType(getModelEntity(), field.getType());
             }
         } catch (IllegalStateException | GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -835,12 +835,12 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
               if (resourceValue == null) {
                   return fieldValue;
               }
-                  return resourceValue;
-              }
-              return fieldValue;
-          }
             return resourceValue;
+          }
+        return fieldValue;
         }
+        return resourceValue;
+    }
 
     /**
      * call by the previous method to be able to read with View entityName and entity Field and after for real entity
@@ -1300,7 +1300,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
                                     // Replace each char which is out of the ASCII range with a XML entity
                                     String replacement = "&#" + (int) curChar + ";";
                                     if (Debug.verboseOn()) {
-                                    Debug.logVerbose("Entity: " + this.getEntityName() + ", PK: " + this.getPrimaryKey().toString() + " -> char [" + curChar + "] replaced with [" + replacement + "]", module);
+                                        Debug.logVerbose("Entity: " + this.getEntityName() + ", PK: " + this.getPrimaryKey().toString() + " -> char [" + curChar + "] replaced with [" + replacement + "]", module);
                                     }
                                     value.replace(i, i+1, replacement);
                                 }
@@ -1452,11 +1452,11 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
                 return 0;
             // if thisVal is null, but thatVal is not, return 1 to put this earlier in the list
             }
-                return 1;
+            return 1;
         }
-            // if thatVal is null, put the other earlier in the list
+        // if thatVal is null, put the other earlier in the list
         if (thatVal == null) {
-                return  -1;
+            return  -1;
         }
         return thisVal.compareTo(thatVal);
     }

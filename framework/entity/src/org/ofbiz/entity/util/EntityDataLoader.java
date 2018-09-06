@@ -170,9 +170,9 @@ public class EntityDataLoader {
                     if (files != null) {
                         for (File file : files) {
                             if (file.getName().toLowerCase(Locale.getDefault()).endsWith(".xml")) {
-                            tempFileList.add(file);
+                                tempFileList.add(file);
+                            }
                         }
-                    }
                     }
                     Collections.sort(tempFileList);
                     for (File dataFile: tempFileList) {

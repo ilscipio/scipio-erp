@@ -44,9 +44,8 @@ public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() != 2)
             throw new TemplateModelException("Invalid number of arguments");
         if (!(args.get(0) instanceof TemplateScalarModel))
@@ -57,6 +56,7 @@ public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
 
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         BeanModel globalContextModel = (BeanModel) env.getVariable("globalContext");
+        @SuppressWarnings("unchecked")
         Map<String, Object> globalContext = (Map<String, Object>) globalContextModel.getWrappedObject();
 
         String name = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));

@@ -39,8 +39,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    @SuppressWarnings("unchecked")
-    protected Object execPush(List args, boolean setLast) throws TemplateModelException {
+    protected Object execPush(@SuppressWarnings("rawtypes") List args, boolean setLast) throws TemplateModelException {
         if (args == null || args.size() != 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 2)");
         }
@@ -56,8 +55,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         return new SimpleScalar("");
     }
 
-    @SuppressWarnings("unchecked")
-    protected Object execRead(List args, boolean pop) throws TemplateModelException {
+    protected Object execRead(@SuppressWarnings("rawtypes") List args, boolean pop) throws TemplateModelException {
         if (args == null || args.size() != 1) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }
@@ -73,8 +71,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         return LangFtlUtil.wrap(res, objectWrapper);
     }
     
-    @SuppressWarnings("unchecked")
-    protected Object execGetAsList(List args) throws TemplateModelException {
+    protected Object execGetAsList(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() < 1 || args.size() > 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
@@ -101,8 +98,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         return LangFtlUtil.wrap(res, objectWrapper);
     }    
     
-    @SuppressWarnings("unchecked")
-    protected Object execGetSize(List args) throws TemplateModelException {
+    protected Object execGetSize(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() != 1) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }

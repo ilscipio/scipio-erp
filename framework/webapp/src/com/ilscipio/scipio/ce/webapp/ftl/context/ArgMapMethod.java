@@ -38,13 +38,11 @@ public abstract class ArgMapMethod implements TemplateMethodModelEx {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
-    @SuppressWarnings("unchecked")
-    protected Object execMergeArgMaps(List methodArgs, boolean recordArgNames) throws TemplateModelException {
+    protected Object execMergeArgMaps(@SuppressWarnings("rawtypes") List methodArgs, boolean recordArgNames) throws TemplateModelException {
         return execMergeArgMaps(methodArgs, recordArgNames, CommonFtlUtil.getCurrentEnvironment());
     }    
     
-    @SuppressWarnings("unchecked")
-    protected Object execMergeArgMaps(List methodArgs, boolean recordArgNames, Environment env) throws TemplateModelException {
+    protected Object execMergeArgMaps(@SuppressWarnings("rawtypes") List methodArgs, boolean recordArgNames, Environment env) throws TemplateModelException {
         TemplateHashModelEx args = null;
         if (methodArgs.size() >= 1) {
             args = (TemplateHashModelEx) methodArgs.get(0);
@@ -67,8 +65,7 @@ public abstract class ArgMapMethod implements TemplateMethodModelEx {
         return ContextFtlUtil.mergeArgMaps(args, inlineArgs, defaultArgs, overrideArgs, recordArgNames, env, objectWrapper);
     }    
     
-    @SuppressWarnings("unchecked")
-    protected Object execMergeArgMapsToLocals(List methodArgs, boolean recordArgNames) throws TemplateModelException {
+    protected Object execMergeArgMapsToLocals(@SuppressWarnings("rawtypes") List methodArgs, boolean recordArgNames) throws TemplateModelException {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         
         SimpleHash resArgs = (SimpleHash) execMergeArgMaps(methodArgs, recordArgNames, env);

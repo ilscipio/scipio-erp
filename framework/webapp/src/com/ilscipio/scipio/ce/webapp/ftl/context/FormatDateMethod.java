@@ -47,9 +47,8 @@ public class FormatDateMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() < 1 || args.size() > 5)
             throw new TemplateModelException("Invalid number of arguments");
         if (!(args.get(0) instanceof TemplateDateModel))

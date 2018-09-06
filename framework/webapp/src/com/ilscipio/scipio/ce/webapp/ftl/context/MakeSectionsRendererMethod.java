@@ -42,7 +42,7 @@ public class MakeSectionsRendererMethod implements TemplateMethodModelEx {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         return execTyped(args);
     }
     

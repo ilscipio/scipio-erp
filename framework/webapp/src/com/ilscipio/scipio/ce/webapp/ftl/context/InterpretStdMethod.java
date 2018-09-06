@@ -56,8 +56,8 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
-        return execTyped(args, false);
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
+        return execTyped((List<TemplateModel>) args, false);
     }
     
     public Object execTyped(List<TemplateModel> args, boolean singleStrAsLoc) throws TemplateModelException {

@@ -38,9 +38,8 @@ public class ToRawStringMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         List<TemplateModel> values = UtilGenerics.cast(args);
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         if (args.size() == 1) {

@@ -40,9 +40,8 @@ public class CopyMapMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() < 1 || args.size() > 3) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-3)");
         }

@@ -447,33 +447,40 @@ under the License.
                                         <container style="${styles.grid_row}">
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                
+                                                <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Subscriptions" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                
                                                 <!-- SCIPIO: moved this to left, used to be in right, out of place -->
                                                 <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 
                                                 <!-- SCIPIO: moved these to left, used to be in "profile-bottom" -->
-                                                <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             </container>
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <!-- SCIPIO: NOTE: these are very long when they show, so they pretty much have to stay on the right - see viewprofile?roleTypeId=ACCOUNT&partyId=Company -->
                                                 <include-screen name="FinAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 <include-screen name="LeadPartyDataSource" location="component://marketing/widget/sfa/LeadScreens.xml"/>
+                                                <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                         
                                             </container>
                                         </container>
-                                    </widgets>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                                        <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+                                        </container>
+                                    </widgets> 
                                 </section>
+                                <!-- 
                                 <section>
                                     <condition>
                                         <and>
                                             <or>
-                                                <!-- 
                                                 <not><if-empty field="leadDescription"/></not>
-                                                <not><if-empty field="accountLeadDescription"/></not>-->
+                                                <not><if-empty field="accountLeadDescription"/></not>
                                             </or>
                                         </and>
                                     </condition>
@@ -517,7 +524,6 @@ under the License.
                                                     </actions>
                                                     <widgets>
                                                         <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                        <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                         <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                     </widgets>
                                                 </section>
@@ -527,7 +533,7 @@ under the License.
                                 </section>
                                 <section>
                                     <condition>
-                                        <!-- <not><if-empty field="contactDescription"/></not>-->
+                                        <not><if-empty field="contactDescription"/></not>
                                     </condition>
                                     <widgets>
                                         <container style="${styles.grid_row}">
@@ -546,7 +552,7 @@ under the License.
                                             </container>
                                         </container>
                                     </widgets>
-                                </section>
+                                </section>-->
                             </widgets>
                             <fail-widgets>
                                 <container>

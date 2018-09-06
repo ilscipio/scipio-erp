@@ -1851,13 +1851,13 @@ public class ConfigXMLReader {
                 }
             }
             if (element.getAttribute("prefix").length() > 0) {
-                return new PrefixNameFilter(element.getAttribute("prefix"), useValue);
+                return new PrefixNameFilter<V>(element.getAttribute("prefix"), useValue);
             } else if (element.getAttribute("suffix").length() > 0) {
-                return new SuffixNameFilter(element.getAttribute("suffix"), useValue);
+                return new SuffixNameFilter<V>(element.getAttribute("suffix"), useValue);
             } else if (element.getAttribute("regexp").length() > 0) {
-                return new RegexNameFilter(element.getAttribute("regexp"), useValue);
+                return new RegexNameFilter<V>(element.getAttribute("regexp"), useValue);
             } else {
-                return new FalseNameFilter(useValue);
+                return new FalseNameFilter<V>(useValue);
             }
         }
 

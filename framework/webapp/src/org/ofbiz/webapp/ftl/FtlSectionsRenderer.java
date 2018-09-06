@@ -86,6 +86,7 @@ public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, O
         return asString ? effWriter.toString() : "";
     }
     
+    @SuppressWarnings("deprecation")
     protected static void render(Appendable writer, Object section) throws TemplateException, IOException {
         if (section instanceof TemplateInvoker) {
             TemplateInvoker invoker = (TemplateInvoker) section;

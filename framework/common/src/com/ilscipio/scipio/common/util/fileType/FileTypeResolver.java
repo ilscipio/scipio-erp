@@ -174,6 +174,7 @@ public abstract class FileTypeResolver {
         for(AbstractFileType fileType : fileTypes) {
             for(MagicNumber magicNumber : fileType.getMagicNumbers()) {
                 for(String extension : magicNumber.getExtensions()) {
+                    @SuppressWarnings("deprecation")
                     String mediaType = magicNumber.getMediaType(delegator, extension);
                     if (mediaType != null) {
                         mediaType = adjustMediaTypeManual(mediaType);
@@ -208,7 +209,8 @@ public abstract class FileTypeResolver {
         } 
         return null;
     }
-    
+
+    @SuppressWarnings("deprecation")
     protected String findMediaTypeManual(ByteBuffer byteBuffer, String fileName) {
         MagicNumber magicNumber = findMagicNumberManual(byteBuffer, fileName);
         if (magicNumber != null) { // redundant: && isAllowedMediaType(magicNumber.getMediaType())

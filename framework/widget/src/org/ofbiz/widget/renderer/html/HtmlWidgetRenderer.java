@@ -27,10 +27,9 @@ import org.ofbiz.widget.model.ModelWidget;
  * Widget Library - HTML Widget Renderer implementation. HtmlWidgetRenderer
  * is a base class that is extended by other widget HTML rendering classes.
  * <p>
- * @deprecated SCIPIO: 2016-08-30: Considered deprecated and
- * will not be maintained. Use macro renderer instead.
+ * SCIPIO: NOTE: 2016-08-30: This class when used as a renderer base class is deprecated.
+ * Some static utilities are preserved, for backward-compatibility, but use is discouraged.
  */
-@Deprecated
 public class HtmlWidgetRenderer {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -44,18 +43,22 @@ public class HtmlWidgetRenderer {
 
     /**
      * Helper method used to append whitespace characters to the end of each rendered element.
+     * @deprecated SCIPIO: This class is no longer intended for use as a renderer superclass.
      * @param writer The writer to write to
      */
+    @Deprecated
     public void appendWhitespace(Appendable writer) throws IOException {
         writer.append(whiteSpace);
     }
 
     /**
      * Helper method used to build the boundary comment string.
+     * @deprecated SCIPIO: This class is no longer intended for use as a renderer base class.
      * @param boundaryType The boundary type: "Begin" or "End"
      * @param widgetType The widget type: "Screen Widget", "Form Widget", etc.
      * @param widgetName The widget name
      */
+    @Deprecated
     public String buildBoundaryComment(String boundaryType, String widgetType, String widgetName) {
         return formatBoundaryComment(boundaryType, widgetType, widgetName);
     }
@@ -66,10 +69,12 @@ public class HtmlWidgetRenderer {
 
     /**
      * Renders the beginning boundary comment string.
+     * @deprecated SCIPIO: This class is no longer intended for use as a renderer base class.
      * @param writer The writer to write to
      * @param widgetType The widget type: "Screen Widget", "Form Widget", etc.
      * @param modelWidget The widget
      */
+    @Deprecated
     public void renderBeginningBoundaryComment(Appendable writer, String widgetType, ModelWidget modelWidget) throws IOException {
         if (this.widgetCommentsEnabled) {
             writer.append(this.buildBoundaryComment("Begin", widgetType, modelWidget.getBoundaryCommentName()));
@@ -78,10 +83,12 @@ public class HtmlWidgetRenderer {
 
     /**
      * Renders the ending boundary comment string.
+     * @deprecated SCIPIO: This class is no longer intended for use as a renderer base class.
      * @param writer The writer to write to
      * @param widgetType The widget type: "Screen Widget", "Form Widget", etc.
      * @param modelWidget The widget
      */
+    @Deprecated
     public void renderEndingBoundaryComment(Appendable writer, String widgetType, ModelWidget modelWidget) throws IOException {
         if (this.widgetCommentsEnabled) {
             writer.append(this.buildBoundaryComment("End", widgetType, modelWidget.getBoundaryCommentName()));

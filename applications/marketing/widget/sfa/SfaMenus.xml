@@ -309,9 +309,9 @@ under the License.
             <link target="NewLead"/>
         </menu-item>
         <!-- SCIPIO: Commneted out for now -->
-       <!--  <menu-item name="NewLeadFromVCard" title="${uiLabelMap.PageTitleCreateLeadFromVCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
+       <menu-item name="NewLeadFromVCard" title="${uiLabelMap.PageTitleCreateLeadFromVCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewLeadFromVCard"/>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="ViewSfaCommEvent" title="${uiLabelMap.PartyCommunications}">
             <condition>
                 <not><if-empty field="partyId"/></not>

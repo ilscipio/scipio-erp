@@ -40,7 +40,6 @@ public class HumanResEvents {
     public static final String resourceError = "ProductErrorUiLabels";
     
     // Please note : the structure of map in this function is according to the JSON data map of the jsTree
-    @SuppressWarnings("unchecked")
     public static String getChildHRCategoryTree(HttpServletRequest request, HttpServletResponse response){
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String partyId = request.getParameter("partyId");
@@ -49,7 +48,7 @@ public class HumanResEvents {
         String hrefString = request.getParameter("hrefString");
         String hrefString2 = request.getParameter("hrefString2");
         
-        List categoryList = new ArrayList();
+        List<Map<String,Object>> categoryList = new ArrayList<Map<String,Object>>();
         List<GenericValue> childOfComs;
         //check employee position
         try {
@@ -81,10 +80,10 @@ public class HumanResEvents {
                             title = memGroupCtx.getString("groupName");
                         }
                         
-                        Map josonMap = new HashMap<String, Object>();
-                        Map dataMap = new HashMap<String, Object>();
-                        Map dataAttrMap = new HashMap<String, Object>();
-                        Map attrMap = new HashMap<String, Object>();
+                        Map<String, Object> josonMap = new HashMap<String, Object>();
+                        Map<String, Object> dataMap = new HashMap<String, Object>();
+                        Map<String, Object> dataAttrMap = new HashMap<String, Object>();
+                        Map<String, Object> attrMap = new HashMap<String, Object>();
                         
                         dataAttrMap.put("onClick", onclickFunction + "('" + memberId + additionParam + "')");
                         
@@ -123,10 +122,10 @@ public class HumanResEvents {
                         String catNameField = null;
                         String title = null;
                         
-                        Map josonMap = new HashMap<String, Object>();
-                        Map dataMap = new HashMap<String, Object>();
-                        Map dataAttrMap = new HashMap<String, Object>();
-                        Map attrMap = new HashMap<String, Object>();
+                        Map<String, Object> josonMap = new HashMap<String, Object>();
+                        Map<String, Object> dataMap = new HashMap<String, Object>();
+                        Map<String, Object> dataAttrMap = new HashMap<String, Object>();
+                        Map<String, Object> attrMap = new HashMap<String, Object>();
                         
                         catId = childOfCom.get("partyIdTo");
                         
@@ -197,10 +196,10 @@ public class HumanResEvents {
 
                 if (UtilValidate.isNotEmpty(isEmpls)) {
                     for (GenericValue childOfEmpl : isEmpls ) {
-                        Map emplMap = new HashMap<String, Object>();
-                        Map emplAttrMap = new HashMap<String, Object>();
-                        Map empldataMap = new HashMap<String, Object>();
-                        Map emplDataAttrMap = new HashMap<String, Object>();
+                        Map<String, Object> emplMap = new HashMap<String, Object>();
+                        Map<String, Object> emplAttrMap = new HashMap<String, Object>();
+                        Map<String, Object> empldataMap = new HashMap<String, Object>();
+                        Map<String, Object> emplDataAttrMap = new HashMap<String, Object>();
                         
                         String emplId = (String) childOfEmpl.get("emplPositionId");
                         String typeId = (String) childOfEmpl.get("emplPositionTypeId");
@@ -232,7 +231,7 @@ public class HumanResEvents {
                 }
             }
         } catch (Exception e) {
-            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
+            Debug.logError(e, module);
             return "error";
         }
         request.setAttribute("hrTree", categoryList);

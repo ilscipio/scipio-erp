@@ -157,8 +157,13 @@ public final class ServiceEcaUtil {
             if (ruleIndex >= 0) {
                 ServiceEcaRule prevRule = rules.get(ruleIndex);
                 rules.remove(prevRule);
-                Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName 
-                        + "] from definition [" + prevRule.getDefinitionLocation() + "] and overriding definition [" + rule.getDefinitionLocation() + "]", module);
+                if (prevRule.getDefinitionLocation() != null && prevRule.getDefinitionLocation().equals(rule.getDefinitionLocation())) {
+                    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName 
+                            + "] both from definition [" + prevRule.getDefinitionLocation() + "]", module);
+                } else {
+                    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName 
+                            + "] from definition [" + prevRule.getDefinitionLocation() + "] and overriding definition [" + rule.getDefinitionLocation() + "]", module);
+                }
             }
             rules.add(rule);
         }

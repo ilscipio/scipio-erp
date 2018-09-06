@@ -31,6 +31,15 @@ import javax.servlet.http.Part;
 
 import org.ofbiz.base.util.Debug;
 
+/**
+ * LocalHttpServletRequest.
+ * <p>
+ * DEV NOTE: DO NOT REMOVE THE <code>@SuppressWarnings("deprecation")</code>
+ * - due to special library setup with ivy, the IDE does not see the exact same
+ * interfaces that are loaded at runtime for Tomcat; the suppress
+ * is needed for javac.
+ */
+@SuppressWarnings("deprecation")
 public class LocalHttpServletRequest implements HttpServletRequest {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

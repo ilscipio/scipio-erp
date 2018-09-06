@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 
+@SuppressWarnings("deprecation")
 public class LocalHttpServletResponse implements HttpServletResponse {
     
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

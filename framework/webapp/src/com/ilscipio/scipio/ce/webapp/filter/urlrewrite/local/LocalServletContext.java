@@ -28,6 +28,7 @@ import javax.servlet.descriptor.JspConfigDescriptor;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 
+@SuppressWarnings("deprecation")
 public class LocalServletContext implements ServletContext {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

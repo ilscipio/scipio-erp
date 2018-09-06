@@ -35,6 +35,7 @@ import com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper;
 /**
  * Local implementation of the Servlet API.
  */
+@SuppressWarnings("deprecation")
 public class LocalServletContainer {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

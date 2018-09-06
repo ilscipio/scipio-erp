@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 
+@SuppressWarnings("deprecation")
 public class LocalHttpSession implements HttpSession {
     
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -63,7 +64,6 @@ public class LocalHttpSession implements HttpSession {
         return 0;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public javax.servlet.http.HttpSessionContext getSessionContext() {
         Debug.logWarning("getSessionContext called - deprecated", module);

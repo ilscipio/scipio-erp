@@ -43,14 +43,16 @@ import org.xml.sax.SAXException;
 
 /**
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
+ * @deprecated SCIPIO: 2018: This class may not populate the context for the menu renderer
+ * correctly; use other menu rendering facilities instead, such as 
+ * the freemarker Scipio templating API <code>@render</code> macro (utilities.ftl).
  * <p>
- * SCIPIO: NOTE: 2016-09-15: This now renders using the Macro Freemarker renderer.
- * Use is still discouraged; the context populated by this wrapper
- * may be incomplete. Other means are available to invoke menu renders from templates.
+ * SCIPIO: NOTE: 2016-09-15: This now renders using the Macro Freemarker renderer (from request).
  */
+@Deprecated
 public class HtmlMenuWrapper {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String resourceName;
     protected String menuName;
@@ -108,14 +110,14 @@ public class HtmlMenuWrapper {
     public MenuStringRenderer getMenuRenderer() {
         // SCIPIO: 2016-09-15: use macro renderer, now available in request
         MenuStringRenderer renderer = (MenuStringRenderer) request.getAttribute("menuStringRenderer");
-        if (renderer == null || !"html".equals(renderer.getRendererName())) { // fallback (shouldn't happen)
-            renderer = new HtmlMenuRenderer(request, response);
+        if (renderer == null) { // fallback (shouldn't happen for correct Scipio webapp requests)
+            Debug.logError("No MenuStringRenderer available in request - menu wrapper will fail", module);
         }
         return renderer;
     }
 
     public String renderMenuString() throws IOException {
-        HttpServletRequest req = ((HtmlMenuRenderer)renderer).request;
+        HttpServletRequest req = request; // SCIPIO: fixed reference
         ServletContext ctx = (ServletContext) req.getAttribute("servletContext");
         if (ctx == null) {
             if (Debug.infoOn()) {
@@ -126,7 +128,7 @@ public class HtmlMenuWrapper {
         Writer writer = new StringWriter();
         modelMenu.renderMenuString(writer, context, renderer);
 
-        HttpServletRequest req2 = ((HtmlMenuRenderer)renderer).request;
+        HttpServletRequest req2 = request; // SCIPIO: fixed reference
         ServletContext ctx2 = (ServletContext) req2.getAttribute("servletContext");
         if (ctx2 == null) {
             if (Debug.infoOn()) {
@@ -201,20 +203,20 @@ public class HtmlMenuWrapper {
 
     public void setRequest(HttpServletRequest request) {
         this.request = request;
-        ((HtmlMenuRenderer)renderer).setRequest(request);
+        //((HtmlMenuRenderer)renderer).setRequest(request); // SCIPIO: shouldn't be necessary
     }
 
     public void setResponse(HttpServletResponse response) {
         this.response = response;
-        ((HtmlMenuRenderer)renderer).setResponse(response);
+        //((HtmlMenuRenderer)renderer).setResponse(response); // SCIPIO: shouldn't be necessary
     }
 
     public HttpServletRequest getRequest() {
-        return ((HtmlMenuRenderer)renderer).request;
+        return request; // SCIPIO: fixed reference
     }
 
     public HttpServletResponse getResponse() {
-        return ((HtmlMenuRenderer)renderer).response;
+        return response; // SCIPIO: fixed reference
     }
 
     public static HtmlMenuWrapper getMenuWrapper(HttpServletRequest request, HttpServletResponse response, HttpSession session, String menuDefFile, String menuName, String menuWrapperClassName) {

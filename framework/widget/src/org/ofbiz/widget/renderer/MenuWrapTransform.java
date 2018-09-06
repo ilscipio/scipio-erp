@@ -49,6 +49,9 @@ import freemarker.template.TransformControl;
  * MenuWrapTransform -  a FreeMarker transform that allow the ModelMenu
  * stuff to be used at the FM level. It can be used to add "function bars"
  * to pages.
+ * @deprecated SCIPIO: 2018: This class may not populate the context for the menu renderer
+ * correctly; use other menu rendering facilities instead, such as 
+ * the freemarker Scipio templating API <code>@render</code> macro (utilities.ftl).
  *
  * Accepts the following arguments (all of which can alternatively be present in the template context):
  * <ul>
@@ -66,6 +69,7 @@ import freemarker.template.TransformControl;
  *
  * This is an interactive FreeMarker transform that allows the user to modify the contents that are placed within it.
  */
+@Deprecated
 public class MenuWrapTransform implements TemplateTransformModel {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -181,18 +185,22 @@ public class MenuWrapTransform implements TemplateTransformModel {
                 String menuDefFile = (String)templateCtx.get("menuDefFile");
                 String menuName = (String)templateCtx.get("menuName");
                 String menuWrapperClassName = (String)templateCtx.get("menuWrapperClassName");
-                HtmlMenuWrapper menuWrapper = HtmlMenuWrapper.getMenuWrapper(request, response, session, menuDefFile, menuName, menuWrapperClassName);
-
-                if (menuWrapper == null) {
-                    throw new IOException("HtmlMenuWrapper with def file:" + menuDefFile + " menuName:" + menuName + " and HtmlMenuWrapper class:" + menuWrapperClassName + " could not be instantiated.");
+                if (request != null) { // SCIPIO: 2018-09-06: This is guaranteed to explode if no request present
+                    HtmlMenuWrapper menuWrapper = HtmlMenuWrapper.getMenuWrapper(request, response, session, menuDefFile, menuName, menuWrapperClassName);
+    
+                    if (menuWrapper == null) {
+                        throw new IOException("HtmlMenuWrapper with def file:" + menuDefFile + " menuName:" + menuName + " and HtmlMenuWrapper class:" + menuWrapperClassName + " could not be instantiated.");
+                    }
+    
+                    String associatedContentId = (String)templateCtx.get("associatedContentId");
+                    menuWrapper.putInContext("defaultAssociatedContentId", associatedContentId);
+                    menuWrapper.putInContext("currentValue", view);
+    
+                    String menuStr = menuWrapper.renderMenuString();
+                    out.write(menuStr);
+                } else {
+                    Debug.logWarning("No HttpServletRequest available for @menuWrap; skipping render", module);
                 }
-
-                String associatedContentId = (String)templateCtx.get("associatedContentId");
-                menuWrapper.putInContext("defaultAssociatedContentId", associatedContentId);
-                menuWrapper.putInContext("currentValue", view);
-
-                String menuStr = menuWrapper.renderMenuString();
-                out.write(menuStr);
             }
 
         };

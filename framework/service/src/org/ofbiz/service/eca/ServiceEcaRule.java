@@ -45,7 +45,7 @@ public final class ServiceEcaRule implements java.io.Serializable {
     public final boolean runOnError;
     public final List<ServiceEcaCondition> conditions = new ArrayList<ServiceEcaCondition>();
     public final List<Object> actionsAndSets = new ArrayList<Object>();
-    public boolean enabled = true;
+    public final boolean enabled; // SCIPIO: 2018-09-06: made final for thread-safety
     public final String definitionLocation;
 
     public ServiceEcaRule(Element eca, String definitionLocation) {
@@ -172,9 +172,11 @@ public final class ServiceEcaRule implements java.io.Serializable {
         }
     }
 
+    /* SCIPIO: 2018-09-06: REMOVED for thread safety (NOTE: this was only lately merged from upstream, so no harm done)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+    */
 
     public boolean isEnabled() {
         return this.enabled;

@@ -244,6 +244,11 @@ public final class UtilValidate {
         return ((c != null) && (c.length() > 0));
     }
 
+    /** SCIPIO: Check whether map is NOT empty. <p> Added 2018-09-06. */
+    public static <K,E> boolean isNotEmpty(Map<K,E> m) {
+        return (m != null) && !m.isEmpty();
+    }
+
     public static boolean isString(Object obj) {
         return ((obj != null) && (obj instanceof java.lang.String));
     }

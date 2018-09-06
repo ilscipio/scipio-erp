@@ -418,6 +418,7 @@ under the License.
                                 <not><if-empty field="party"/></not>
                             </condition>
                             <widgets>
+                                <!-- 
                                 <section>
                                     <condition>
                                         <if-true field="showOld" />
@@ -437,10 +438,10 @@ under the License.
                                             </link>
                                         </container>
                                     </fail-widgets>
-                                </section>
+                                </section>-->
                                 <section>
                                     <condition>
-                                        <not><if-empty field="accountDescription"/></not>
+                                        <!-- <not><if-empty field="accountDescription"/></not> -->
                                     </condition>
                                     <widgets>
                                         <container style="${styles.grid_row}">
@@ -470,8 +471,9 @@ under the License.
                                     <condition>
                                         <and>
                                             <or>
+                                                <!-- 
                                                 <not><if-empty field="leadDescription"/></not>
-                                                <not><if-empty field="accountLeadDescription"/></not>
+                                                <not><if-empty field="accountLeadDescription"/></not>-->
                                             </or>
                                         </and>
                                     </condition>
@@ -525,7 +527,7 @@ under the License.
                                 </section>
                                 <section>
                                     <condition>
-                                        <not><if-empty field="contactDescription"/></not>
+                                        <!-- <not><if-empty field="contactDescription"/></not>-->
                                     </condition>
                                     <widgets>
                                         <container style="${styles.grid_row}">

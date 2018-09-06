@@ -30,19 +30,20 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.ofbiz.base.util.Debug;
 
-public class DebugManagedDataSource extends ManagedDataSource {
+public class DebugManagedDataSource extends ManagedDataSource<Connection> {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public DebugManagedDataSource(ObjectPool pool, TransactionRegistry transactionRegistry) {
-        super(pool, transactionRegistry);
+    @SuppressWarnings("unchecked")
+    public DebugManagedDataSource(ObjectPool<? extends Connection> pool, TransactionRegistry transactionRegistry) {
+        super((ObjectPool<Connection>) pool, transactionRegistry);
     }
 
     @Override
     public Connection getConnection() throws SQLException {
         if (Debug.verboseOn()) {
             if (super.getPool() instanceof GenericObjectPool) {
-                GenericObjectPool objectPool = (GenericObjectPool)super.getPool();
+                GenericObjectPool<?> objectPool = (GenericObjectPool<?>)super.getPool();
                 Debug.logVerbose("Borrowing a connection from the pool; used/idle/total: " + objectPool.getNumActive() + "/" + objectPool.getNumIdle() + "/" + (objectPool.getNumActive() + objectPool.getNumIdle()) + "; min idle/max idle/max total: " + objectPool.getMinIdle() + "/" + objectPool.getMaxIdle() + "/" + objectPool.getMaxTotal(), module);
             } else {
                 if (Debug.verboseOn()) Debug.logVerbose("Borrowing a connection from the pool; used/idle/total: " + super.getPool().getNumActive() + "/" + super.getPool().getNumIdle() + "/" + (super.getPool().getNumActive() + super.getPool().getNumIdle()), module);
@@ -57,7 +58,7 @@ public class DebugManagedDataSource extends ManagedDataSource {
         dataSourceInfo.put("poolNumIdle", super.getPool().getNumIdle());
         dataSourceInfo.put("poolNumTotal", (super.getPool().getNumIdle() + super.getPool().getNumActive()));
         if (super.getPool() instanceof GenericObjectPool) {
-            GenericObjectPool objectPool = (GenericObjectPool)super.getPool();
+            GenericObjectPool<?> objectPool = (GenericObjectPool<?>)super.getPool();
             dataSourceInfo.put("poolMaxActive", objectPool.getMaxTotal());
             dataSourceInfo.put("poolMaxIdle", objectPool.getMaxIdle());
             dataSourceInfo.put("poolMaxWait", objectPool.getMaxWaitMillis());

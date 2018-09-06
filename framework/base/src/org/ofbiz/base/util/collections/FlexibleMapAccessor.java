@@ -89,12 +89,12 @@ public final class FlexibleMapAccessor<T> implements Serializable, IsEmpty {
         if (UtilValidate.isEmpty(original) || "null".equals(original)) {
             return (FlexibleMapAccessor<T>) nullFma;
         }
-        FlexibleMapAccessor fma = fmaCache.get(original);
+        FlexibleMapAccessor<?> fma = fmaCache.get(original);
         if (fma == null) {
-            fmaCache.putIfAbsent(original, new FlexibleMapAccessor(original));
+            fmaCache.putIfAbsent(original, new FlexibleMapAccessor<T>(original));
             fma = fmaCache.get(original);
         }
-        return fma;
+        return (FlexibleMapAccessor<T>) fma;
     }
 
     /**

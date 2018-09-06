@@ -49,7 +49,7 @@ public class TestBooleanConverters extends TestCase {
         assertEquals(label + " converted", Boolean.FALSE, converter.convert(falseSource));
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static <S> void assertToCollection(String label, S source) throws Exception {
         Converter<S, ? extends Collection> toList = (Converter<S, ? extends Collection>) Converters.getConverter(source.getClass(), List.class);
         Collection<S> listResult = toList.convert(source);

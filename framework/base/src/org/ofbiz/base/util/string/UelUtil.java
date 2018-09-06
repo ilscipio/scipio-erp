@@ -374,7 +374,7 @@ public class UelUtil {
                         Debug.logVerbose("ExtendedListResolver.setValue adding List element: base = " + base + ", property = " + property + ", value = " + val, module);
                     }
                     context.setPropertyResolved(true);
-                    List list = (List) base;
+                    List<Object> list = (List<Object>) base;
                     list.add(val);
                 } else if (str.startsWith("insert@")) {
                     if (Debug.verboseOn()) {
@@ -383,7 +383,7 @@ public class UelUtil {
                     context.setPropertyResolved(true);
                     String indexStr = str.replace("insert@", "");
                     int index = Integer.parseInt(indexStr);
-                    List list = (List) base;
+                    List<Object> list = (List<Object>) base;
                     try {
                         list.add(index, val);
                     } catch (UnsupportedOperationException ex) {
@@ -413,7 +413,7 @@ public class UelUtil {
             }
             if (base != null && base instanceof LocalizedMap) {
                 context.setPropertyResolved(true);
-                LocalizedMap map = (LocalizedMap) base;
+                LocalizedMap<?> map = (LocalizedMap<?>) base;
                 Locale locale = null;
                 try {
                     VariableMapper vm = context.getVariableMapper();
@@ -436,11 +436,11 @@ public class UelUtil {
                     }
                     locale = Locale.getDefault();
                 }
-                return resolveVariable(property.toString(), (Map) map, locale);
+                return resolveVariable(property.toString(), (Map<String, ?>) map, locale);
             }
             if (base != null && base instanceof Map && property instanceof String) {
                 context.setPropertyResolved(true);
-                return resolveVariable(property.toString(), (Map) base, null);
+                return resolveVariable(property.toString(), (Map<String, ?>) base, null);
             }
             return super.getValue(context, base, property);
         }

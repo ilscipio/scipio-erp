@@ -34,7 +34,7 @@ public class ComparableRangeTests extends GenericTestCaseBase {
         super(name);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private static <L extends Comparable<L>, R extends Comparable<R>> void comparableRangeConstructorTest(L left, R right) {
         new ComparableRange<>(left, left);
         new ComparableRange<>(right, right);

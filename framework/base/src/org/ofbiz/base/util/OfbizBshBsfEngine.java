@@ -62,9 +62,8 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
 
     private static final UtilCache<String, Interpreter.ParsedScript> parsedScripts = UtilCache.createUtilCache("script.BshBsfParsedCache", 0, 0, false);
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void initialize(BSFManager mgr, String lang, Vector declaredBeans) throws BSFException {
+    public void initialize(BSFManager mgr, String lang, @SuppressWarnings("rawtypes") Vector declaredBeans) throws BSFException {
         super.initialize(mgr, lang, declaredBeans);
 
         interpreter = BshUtil.getMasterInterpreter(null);
@@ -136,9 +135,8 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
      * It executes the funcBody text in an "anonymous" method call with
      * arguments.
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object apply(String source, int lineNo, int columnNo, Object funcBody, Vector namesVec, Vector argsVec) throws BSFException {
+    public Object apply(String source, int lineNo, int columnNo, Object funcBody, @SuppressWarnings("rawtypes") Vector namesVec, @SuppressWarnings("rawtypes") Vector argsVec) throws BSFException {
         if (namesVec.size() != argsVec.size()) throw new BSFException("number of params/names mismatch");
         if (!(funcBody instanceof String)) throw new BSFException("apply: function body must be a string");
 

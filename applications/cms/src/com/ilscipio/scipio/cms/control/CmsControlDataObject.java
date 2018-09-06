@@ -78,6 +78,7 @@ public abstract class CmsControlDataObject extends CmsDataObject {
          * <p>
          * 2016: moved this here from DataObjectWorker
          */
+        @SuppressWarnings("deprecation")
         public T createOrUpdateControlDataObject(Delegator delegator, String webSiteId, String pkValue, 
                 Map<String, ?> inFields) throws CmsException {
             

@@ -59,7 +59,7 @@ public abstract class CategoryEvents {
             primaryKeyName = "productCategoryId";
         }
     
-        List categoryList = new ArrayList<>();
+        List<Map<Object, Object>> categoryList = new ArrayList<>();
         List<GenericValue> childOfCats;
         List<String> sortList = UtilMisc.toList("sequenceNum", "title");
     
@@ -86,7 +86,7 @@ public abstract class CategoryEvents {
                         catId = childOfCat.get("productCategoryId");
                         catNameField = "CATEGORY_NAME";
     
-                        Map josonMap = new HashMap<>();
+                        Map<Object, Object> josonMap = new HashMap<>();
                         List<GenericValue> childList = null;
     
                         // Get the child list of chosen category
@@ -101,8 +101,8 @@ public abstract class CategoryEvents {
                         if (UtilValidate.isNotEmpty(childList)) {
                             josonMap.put("state", "closed");
                         }
-                        Map dataMap = new HashMap<>();
-                        Map dataAttrMap = new HashMap<>();
+                        Map<String, Object> dataMap = new HashMap<>();
+                        Map<String, Object> dataAttrMap = new HashMap<>();
                         CategoryContentWrapper categoryContentWrapper = new CategoryContentWrapper(cate, request);
     
                         String title = null;
@@ -125,7 +125,7 @@ public abstract class CategoryEvents {
     
                         dataMap.put("attr", dataAttrMap);
                         josonMap.put("data", dataMap);
-                        Map attrMap = new HashMap<>();
+                        Map<String, Object> attrMap = new HashMap<>();
                         attrMap.put("id", catId);
                         attrMap.put("isCatalog", false);
                         attrMap.put("rel", "CATEGORY");

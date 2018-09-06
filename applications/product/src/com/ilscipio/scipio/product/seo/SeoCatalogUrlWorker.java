@@ -152,6 +152,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     /**
      * TODO: to be removed later.
      */
+    @SuppressWarnings("deprecation")
     static void registerUrlBuilder() {
         // TODO?: unhardcode via properties?
         CatalogUrlBuilder.registerUrlBuilder("seo", BuilderFactory.getInstance());

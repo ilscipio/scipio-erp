@@ -43,7 +43,7 @@ public class SetContextFieldTransform implements TemplateMethodModelEx {
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
     @SuppressWarnings("unchecked")
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() != 2)
             throw new TemplateModelException("Invalid number of arguements");
         if (!(args.get(0) instanceof TemplateScalarModel))
@@ -54,7 +54,7 @@ public class SetContextFieldTransform implements TemplateMethodModelEx {
 
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         BeanModel req = (BeanModel)env.getVariable("context");
-        Map context = (Map) req.getWrappedObject();
+        Map<String, Object> context = (Map<String, Object>) req.getWrappedObject();
 
         // SCIPIO: name should not be escaped
         //String name = ((TemplateScalarModel) args.get(0)).getAsString();

@@ -56,8 +56,7 @@ public class OfbizContentTransform implements TemplateTransformModel {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) throws TemplateModelException {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) throws TemplateModelException {
         final StringBuilder buf = new StringBuilder();
         final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
         boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams

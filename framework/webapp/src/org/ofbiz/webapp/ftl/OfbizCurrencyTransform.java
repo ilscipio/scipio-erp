@@ -52,8 +52,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    @SuppressWarnings("unchecked")
-    private static String getArg(Map args, String key) {
+    private static String getArg(@SuppressWarnings("rawtypes") Map args, String key) {
         String  result = "";
         Object o = args.get(key);
         if (o != null) {
@@ -73,8 +72,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
-    private static BigDecimal getAmount(Map args, String key) {
+    private static BigDecimal getAmount(@SuppressWarnings("rawtypes") Map args, String key) {
         if (args.containsKey(key)) {
             Object o = args.get(key);
 
@@ -99,8 +97,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
         return BigDecimal.ZERO;
     }
 
-    @SuppressWarnings("unchecked")
-    private static Integer getInteger(Map args, String key) {
+    private static Integer getInteger(@SuppressWarnings("rawtypes") Map args, String key) {
         if (args.containsKey(key)) {
             Object o = args.get(key);
             if (Debug.verboseOn()) Debug.logVerbose("Amount Object : " + o.getClass().getName(), module);
@@ -133,8 +130,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final StringBuilder buf = new StringBuilder();
 
         final BigDecimal amount = OfbizCurrencyTransform.getAmount(args, "amount");

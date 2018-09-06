@@ -149,8 +149,16 @@ public final class ServiceEcaUtil {
             }
             //remove the old rule if found and keep the recent one
             //This will prevent duplicate rule execution along with enabled/disabled seca workflow
-            if (rules.remove(rule)) {
-                Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName + "] ", module);
+            // SCIPIO: 2018-09-04: Reworked to give better log information
+            //if (rules.remove(rule)) {
+            //    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName + "] ", module);
+            //}
+            int ruleIndex = rules.indexOf(rule);
+            if (ruleIndex >= 0) {
+                ServiceEcaRule prevRule = rules.get(ruleIndex);
+                rules.remove(prevRule);
+                Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName 
+                        + "] from definition [" + prevRule.getDefinitionLocation() + "] and overriding definition [" + rule.getDefinitionLocation() + "]", module);
             }
             rules.add(rule);
         }

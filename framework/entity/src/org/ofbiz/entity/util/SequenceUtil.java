@@ -181,7 +181,9 @@ public class SequenceUtil {
 
             Transaction suspendedTransaction = null;
             try {
-                suspendedTransaction = TransactionUtil.suspend();
+                if (TransactionUtil.isTransactionInPlace()) { // SCIPIO: 2018-09-04: added check to eliminate useless warnings
+                    suspendedTransaction = TransactionUtil.suspend();
+                }
 
                 boolean beganTransaction = false;
                 try {

@@ -21,6 +21,7 @@ package org.ofbiz.accounting.thirdparty.clearcommerce;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -56,7 +57,7 @@ public class CCPaymentServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    private static RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
     public final static String resource = "AccountingUiLabels";
 
     public static Map<String, Object> ccAuth(DispatchContext dctx, Map<String, Object> context) {

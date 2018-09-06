@@ -19,6 +19,7 @@
 package org.ofbiz.accounting.payment;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -55,10 +56,10 @@ public class BillingAccountWorker {
     public static final String resourceError = "AccountingUiLabels";
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals = -1;
-    private static int rounding = -1;
+    private static RoundingMode rounding;
     static {
         decimals = UtilNumber.getBigDecimalScale("order.decimals");
-        rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+        rounding = UtilNumber.getRoundingMode("order.rounding");
 
         // set zero to the proper scale
         if (decimals != -1) ZERO = ZERO.setScale(decimals);

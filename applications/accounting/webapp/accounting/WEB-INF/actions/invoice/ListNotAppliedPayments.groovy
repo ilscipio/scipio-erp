@@ -35,7 +35,7 @@ invoiceId = parameters.invoiceId;
 invoice = from("Invoice").where(invoiceId : invoiceId).queryOne();
 
 decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+rounding = UtilNumber.getRoundingMode("invoice.rounding");
 
 exprBldr = new EntityConditionBuilder();
 preCurrencyCond = exprBldr.AND() {

@@ -20,6 +20,7 @@ package org.ofbiz.accounting.thirdparty.gosoftware;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +50,7 @@ public class RitaServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    private static RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
     public final static String resource = "AccountingUiLabels";
     public static final String resourceOrder = "OrderUiLabels";
 

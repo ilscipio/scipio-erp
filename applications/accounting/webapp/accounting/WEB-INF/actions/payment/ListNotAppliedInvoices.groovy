@@ -34,7 +34,7 @@ paymentId = parameters.paymentId;
 payment = from("Payment").where("paymentId", paymentId).queryOne();
 
 decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+rounding = UtilNumber.getRoundingMode("invoice.rounding");
 
 exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, payment.partyIdFrom),
             EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, payment.partyIdTo)];

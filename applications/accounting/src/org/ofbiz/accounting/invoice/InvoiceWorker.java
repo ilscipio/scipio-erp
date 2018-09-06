@@ -20,6 +20,7 @@ package org.ofbiz.accounting.invoice;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,9 +54,9 @@ public class InvoiceWorker {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    private static RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
     private static int taxDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
-    private static int taxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+    private static RoundingMode taxRounding = UtilNumber.getRoundingMode("salestax.rounding");
 
     /**
      * Return the total amount of the invoice (including tax) using the the invoiceId as input.
@@ -626,7 +627,7 @@ public class InvoiceWorker {
                                 }
                                 totalAmount = totalAmount.add(amount).setScale(taxDecimals, taxRounding);
                             }
-                            totalAmount = totalAmount.setScale(UtilNumber.getBigDecimalScale("salestax.calc.decimals"), UtilNumber.getBigDecimalRoundingMode("salestax.rounding"));
+                            totalAmount = totalAmount.setScale(UtilNumber.getBigDecimalScale("salestax.calc.decimals"), UtilNumber.getRoundingMode("salestax.rounding"));
                             taxByTaxAuthGeoAndPartyList.add(UtilMisc.<String, Object>toMap("taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId, "totalAmount", totalAmount));
                             taxGrandTotal = taxGrandTotal.add(totalAmount);
                         }
@@ -825,7 +826,7 @@ public class InvoiceWorker {
                 taxAmountIncluded = taxAmountIncluded.subtract(exemptAmount);
             }
         }
-        return taxAmountIncluded.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return taxAmountIncluded.setScale(2, RoundingMode.HALF_UP);
     }
 
     /**

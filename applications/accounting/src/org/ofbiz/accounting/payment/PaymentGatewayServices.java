@@ -19,6 +19,7 @@
 package org.ofbiz.accounting.payment;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
@@ -83,14 +84,14 @@ public class PaymentGatewayServices {
     private static final int TX_TIME = 300;
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals;
-    private static int rounding;
+    private static RoundingMode rounding;
     public final static String resource = "AccountingUiLabels";
     public static final String resourceError = "AccountingErrorUiLabels";
     public static final String resourceOrder = "OrderUiLabels";
     
     static {
         decimals = UtilNumber.getBigDecimalScale("order.decimals");
-        rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+        rounding = UtilNumber.getRoundingMode("order.rounding");
 
         // set zero to the proper scale
         if (decimals != -1) ZERO = ZERO.setScale(decimals);

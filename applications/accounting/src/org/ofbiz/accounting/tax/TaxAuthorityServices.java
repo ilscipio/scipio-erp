@@ -19,6 +19,7 @@
 package org.ofbiz.accounting.tax;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,7 +66,7 @@ public class TaxAuthorityServices {
     public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
     public static int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
     public static int salestaxCalcDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
-    public static int salestaxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+    public static RoundingMode salestaxRounding = UtilNumber.getRoundingMode("salestax.rounding");
     public static final String resource = "AccountingUiLabels";
 
     public static Map<String, Object> rateProductTaxCalcForDisplay(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -536,8 +537,8 @@ public class TaxAuthorityServices {
                     // the formula is: taxAmount = priceWithTax - (priceWithTax/(1+taxPercentage/100))
                     BigDecimal taxAmountIncluded = itemAmount.subtract(itemAmount.divide(
                             BigDecimal.ONE.add(
-                                    taxRate.divide(PERCENT_SCALE, salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP)),
-                            salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP));
+                                    taxRate.divide(PERCENT_SCALE, salestaxFinalDecimals, RoundingMode.HALF_UP)),
+                            salestaxFinalDecimals, RoundingMode.HALF_UP));
                     taxAdjValue.set("amountAlreadyIncluded", taxAmountIncluded);
                     taxAdjValue.set("amount", BigDecimal.ZERO);
                 } else {
@@ -745,7 +746,7 @@ public class TaxAuthorityServices {
     
                     // the amount will be different because we want to figure out how much of the price was tax, and not how much tax needs to be added
                     // the formula is: taxAmount = priceWithTax - (priceWithTax/(1+taxPercentage/100))
-                    BigDecimal taxAmountIncluded = orderShippingAmount.subtract(orderShippingAmount.divide(BigDecimal.ONE.add(taxRate.divide(PERCENT_SCALE, 4, BigDecimal.ROUND_HALF_UP)), 3, BigDecimal.ROUND_HALF_UP));
+                    BigDecimal taxAmountIncluded = orderShippingAmount.subtract(orderShippingAmount.divide(BigDecimal.ONE.add(taxRate.divide(PERCENT_SCALE, 4, RoundingMode.HALF_UP)), 3, RoundingMode.HALF_UP));
                     taxAdjValue.set("amountAlreadyIncluded", taxAmountIncluded);
                     taxAdjValue.set("amount", BigDecimal.ZERO);
                 } else {

@@ -21,6 +21,7 @@ package org.ofbiz.order.shoppingcart;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,10 +89,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     // scales and rounding modes for BigDecimal math
     public static final int scale = UtilNumber.getBigDecimalScale("order.decimals");
-    public static final int rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+    public static final RoundingMode rounding = UtilNumber.getRoundingMode("order.rounding");
     public static final int taxCalcScale = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
     public static final int taxFinalScale = UtilNumber.getBigDecimalScale("salestax.final.decimals");
-    public static final int taxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+    public static final RoundingMode taxRounding = UtilNumber.getRoundingMode("salestax.rounding");
     public static final BigDecimal ZERO = BigDecimal.ZERO;
     public static final BigDecimal percentage = new BigDecimal("0.01");
     public static final MathContext generalRounding = new MathContext(10);
@@ -3934,7 +3935,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         Delegator delegator = this.getDelegator();
         List<GenericValue> allOpPrefs = new LinkedList<GenericValue>();
         BigDecimal remainingAmount = this.getGrandTotal().subtract(this.getPaymentTotal());
-        remainingAmount = remainingAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+        remainingAmount = remainingAmount.setScale(2, RoundingMode.HALF_UP);
         if (getBillingAccountId() != null && this.billingAccountAmt.compareTo(BigDecimal.ZERO) <= 0) {
             BigDecimal billingAccountAvailableAmount = CheckOutHelper.availableAccountBalance(getBillingAccountId(), dispatcher);
             if (this.billingAccountAmt.compareTo(BigDecimal.ZERO) == 0 && billingAccountAvailableAmount.compareTo(BigDecimal.ZERO) > 0) {
@@ -5260,7 +5261,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             minimumOrderPrice = EntityUtil.getFirst(minimumOrderPriceList).getBigDecimal("price");
         }
         if (itemBasePrice != null && minimumOrderPrice.compareTo(itemBasePrice) > 0) {
-            minQuantity = minimumOrderPrice.divide(itemBasePrice, 0, BigDecimal.ROUND_UP);
+            minQuantity = minimumOrderPrice.divide(itemBasePrice, 0, RoundingMode.UP);
         }
         return minQuantity;
     }

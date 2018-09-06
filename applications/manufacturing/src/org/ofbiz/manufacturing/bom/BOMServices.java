@@ -20,6 +20,7 @@
 package org.ofbiz.manufacturing.bom;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -674,10 +675,10 @@ public class BOMServices {
                         productDepth = BigDecimal.ONE;
                     }
 
-                    BigDecimal firstMaxNumOfProducts = boxWidth.subtract(totalWidth).divide(productDepth, 0, BigDecimal.ROUND_FLOOR);
+                    BigDecimal firstMaxNumOfProducts = boxWidth.subtract(totalWidth).divide(productDepth, 0, RoundingMode.FLOOR);
                     if (firstMaxNumOfProducts.compareTo(BigDecimal.ZERO) == 0) firstMaxNumOfProducts = BigDecimal.ONE;
                     //
-                    BigDecimal maxNumOfProducts = boxWidth.divide(productDepth, 0, BigDecimal.ROUND_FLOOR);
+                    BigDecimal maxNumOfProducts = boxWidth.divide(productDepth, 0, RoundingMode.FLOOR);
                     if (maxNumOfProducts.compareTo(BigDecimal.ZERO) == 0) maxNumOfProducts = BigDecimal.ONE;
 
                     BigDecimal remQuantity = quantity;

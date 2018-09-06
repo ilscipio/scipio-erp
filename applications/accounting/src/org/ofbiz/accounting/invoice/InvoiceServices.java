@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
@@ -110,9 +111,9 @@ public class InvoiceServices {
     // set some BigDecimal properties
     private static final BigDecimal ZERO = BigDecimal.ZERO;
     private static final int DECIMALS = UtilNumber.getBigDecimalScale("invoice.decimals");
-    private static final int ROUNDING = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    private static final RoundingMode ROUNDING = UtilNumber.getRoundingMode("invoice.rounding");
     private static final int TAX_DECIMALS = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
-    private static final int TAX_ROUNDING = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+    private static final RoundingMode TAX_ROUNDING = UtilNumber.getRoundingMode("salestax.rounding");
     public static final int TAX_CALC_SCALE = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
     private static final int INVOICE_ITEM_SEQUENCE_ID_DIGITS = 5; // this is the number of digits used for invoiceItemSeqId: 00001, 00002...
 
@@ -162,7 +163,7 @@ public class InvoiceServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
 
-        if (DECIMALS == -1 || ROUNDING == -1) {
+        if (DECIMALS == -1 || ROUNDING == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingAritmeticPropertiesNotConfigured", locale));
         }
@@ -2254,7 +2255,7 @@ public class InvoiceServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
 
-        if (DECIMALS == -1 || ROUNDING == -1) {
+        if (DECIMALS == -1 || ROUNDING == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingAritmeticPropertiesNotConfigured", locale));
         }
@@ -2349,7 +2350,7 @@ public class InvoiceServices {
     }
 
     private static BigDecimal calcHeaderAdj(Delegator delegator, GenericValue adj, String invoiceTypeId, String invoiceId, String invoiceItemSeqId,
-            BigDecimal divisor, BigDecimal multiplier, BigDecimal baseAmount, int decimals, int rounding, GenericValue userLogin, LocalDispatcher dispatcher, Locale locale) {
+            BigDecimal divisor, BigDecimal multiplier, BigDecimal baseAmount, int decimals, RoundingMode rounding, GenericValue userLogin, LocalDispatcher dispatcher, Locale locale) {
         BigDecimal adjAmount = ZERO;
         if (adj.get("amount") != null) {
 
@@ -2546,7 +2547,7 @@ public class InvoiceServices {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
 
-        if (DECIMALS == -1 || ROUNDING == -1) {
+        if (DECIMALS == -1 || ROUNDING == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingAritmeticPropertiesNotConfigured", locale));
         }
@@ -3358,7 +3359,7 @@ public class InvoiceServices {
         boolean debug = true;
         if (debug) Debug.logInfo("Start updating the paymentApplication table ", module);
 
-        if (DECIMALS == -1 || ROUNDING == -1) {
+        if (DECIMALS == -1 || ROUNDING == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
                     "AccountingAritmeticPropertiesNotConfigured", locale));
         }

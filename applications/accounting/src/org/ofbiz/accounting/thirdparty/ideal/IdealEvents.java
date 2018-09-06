@@ -20,6 +20,7 @@ package org.ofbiz.accounting.thirdparty.ideal;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -67,7 +68,7 @@ public class IdealEvents {
     public static final String commonResource = "CommonUiLabels";
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    private static RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
 
     /** Initiate iDEAL Request */
     public static String callIdeal(HttpServletRequest request, HttpServletResponse response) {

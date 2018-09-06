@@ -19,6 +19,7 @@
 package org.ofbiz.order.order;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -111,9 +112,9 @@ public class OrderServices {
         purchaseAttributeRoleMap.put("supplierAgentPartyId", "SUPPLIER_AGENT");
     }
     public static final int taxDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
-    public static final int taxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+    public static final RoundingMode taxRounding = UtilNumber.getRoundingMode("salestax.rounding");
     public static final int orderDecimals = UtilNumber.getBigDecimalScale("order.decimals");
-    public static final int orderRounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+    public static final RoundingMode orderRounding = UtilNumber.getRoundingMode("order.rounding");
     public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(taxDecimals, taxRounding);
 
     private static boolean hasPermission(String orderId, GenericValue userLogin, String action, Security security, Delegator delegator) {
@@ -3795,9 +3796,9 @@ public class OrderServices {
                 if (remainder.compareTo(BigDecimal.ZERO) != 0) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "cart.addToCart.quantityInDecimalNotAllowed", locale));
                 }
-                quantity = quantity.setScale(0, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
+                quantity = quantity.setScale(0, UtilNumber.getRoundingMode("order.rounding"));
             } else {
-                quantity = quantity.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getBigDecimalRoundingMode("order.rounding"));
+                quantity = quantity.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getRoundingMode("order.rounding"));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
@@ -3975,9 +3976,9 @@ public class OrderServices {
                         if (remainder.compareTo(BigDecimal.ZERO) != 0) {
                             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "cart.addToCart.quantityInDecimalNotAllowed", locale));
                         }
-                        qty = qty.setScale(0, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
+                        qty = qty.setScale(0, UtilNumber.getRoundingMode("order.rounding"));
                     } else {
-                        qty = qty.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getBigDecimalRoundingMode("order.rounding"));
+                        qty = qty.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getRoundingMode("order.rounding"));
                     }
                 } catch (GenericEntityException e) {
                     Debug.logError(e.getMessage(), module);
@@ -4141,9 +4142,9 @@ public class OrderServices {
                         if (remainder.compareTo(BigDecimal.ZERO) != 0) {
                             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "cart.addToCart.quantityInDecimalNotAllowed", locale));
                         }
-                        groupQty = groupQty.setScale(0, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
+                        groupQty = groupQty.setScale(0, UtilNumber.getRoundingMode("order.rounding"));
                     } else {
-                        groupQty = groupQty.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getBigDecimalRoundingMode("order.rounding"));
+                        groupQty = groupQty.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getRoundingMode("order.rounding"));
                     }
                 } catch (GenericEntityException e) {
                     Debug.logError(e.getMessage(), module);

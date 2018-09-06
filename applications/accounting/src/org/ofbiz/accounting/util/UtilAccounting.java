@@ -308,7 +308,7 @@ public class UtilAccounting {
         BigDecimal origAmount = amounts.getBigDecimal("origAmount");
         BigDecimal amount = amounts.getBigDecimal("amount");
         if (origAmount != null && amount != null && BigDecimal.ZERO.compareTo(origAmount) != 0 && BigDecimal.ZERO.compareTo(amount) != 0 && amount.compareTo(origAmount) != 0) {
-            exchangeRate = amount.divide(origAmount, UtilNumber.getBigDecimalScale("ledger.decimals"), UtilNumber.getBigDecimalRoundingMode("invoice.rounding"));
+            exchangeRate = amount.divide(origAmount, UtilNumber.getBigDecimalScale("ledger.decimals"), UtilNumber.getRoundingMode("invoice.rounding"));
         }
         return exchangeRate;
     }
@@ -329,7 +329,7 @@ public class UtilAccounting {
         BigDecimal origAmount = amounts.getBigDecimal("origAmount");
         BigDecimal amount = amounts.getBigDecimal("amount");
         if (origAmount != null && amount != null && BigDecimal.ZERO.compareTo(origAmount) != 0 && BigDecimal.ZERO.compareTo(amount) != 0 && amount.compareTo(origAmount) != 0) {
-            exchangeRate = amount.divide(origAmount, UtilNumber.getBigDecimalScale("ledger.decimals"), UtilNumber.getBigDecimalRoundingMode("invoice.rounding"));
+            exchangeRate = amount.divide(origAmount, UtilNumber.getBigDecimalScale("ledger.decimals"), UtilNumber.getRoundingMode("invoice.rounding"));
         }
         return exchangeRate;
     }

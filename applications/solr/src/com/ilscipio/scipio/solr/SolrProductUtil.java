@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -848,7 +849,7 @@ public abstract class SolrProductUtil {
     }
     
     protected static BigDecimal scaleCurrency(BigDecimal amount) {
-        return amount.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return amount.setScale(2, RoundingMode.HALF_UP);
     }
     
     protected static List<String> getSolrProdAttrSimple() {

@@ -10,6 +10,7 @@
  * Its methods may populate the caller's binding.
  */
 
+import java.math.RoundingMode;
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
@@ -27,7 +28,7 @@ import groovy.transform.Field;
 
 @Field BigDecimal ZERO = BigDecimal.ZERO;
 @Field int scale = OrderReadHelper.scale;
-@Field int rounding = OrderReadHelper.rounding;
+@Field RoundingMode rounding = OrderReadHelper.rounding;
 
 //public AnalyticsScriptUtil(Binding binding) {
 //    this.setBinding(binding);

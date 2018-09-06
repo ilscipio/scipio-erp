@@ -19,6 +19,7 @@
 package org.ofbiz.order.shoppingcart;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class CheckOutHelper {
     public static final String resource_error = "OrderErrorUiLabels";
 
     public static final int scale = UtilNumber.getBigDecimalScale("order.decimals");
-    public static final int rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+    public static final RoundingMode rounding = UtilNumber.getRoundingMode("order.rounding");
 
     protected LocalDispatcher dispatcher = null;
     protected Delegator delegator = null;

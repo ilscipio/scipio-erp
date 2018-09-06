@@ -19,6 +19,7 @@
 package org.ofbiz.manufacturing.jobshopmgt;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,10 +74,10 @@ public class ProductionRunServices {
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static BigDecimal ONE = BigDecimal.ONE;
     private static int decimals = -1;
-    private static int rounding = -1;
+    private static RoundingMode rounding;
     static {
         decimals = UtilNumber.getBigDecimalScale("order.decimals");
-        rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+        rounding = UtilNumber.getRoundingMode("order.rounding");
         // set zero to the proper scale
         ZERO = ZERO.setScale(decimals);
         ONE = ONE.setScale(decimals);

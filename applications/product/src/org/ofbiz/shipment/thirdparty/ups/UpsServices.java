@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -88,7 +89,7 @@ public class UpsServices {
         }
     }
     public static final int decimals = UtilNumber.getBigDecimalScale("order.decimals");
-    public static final int rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+    public static final RoundingMode rounding = UtilNumber.getRoundingMode("order.rounding");
     public static final MathContext generalRounding = new MathContext(10);
     public static final int returnServiceCode = 8;
     public static final String dateFormatString = "yyyyMMdd";
@@ -553,7 +554,7 @@ public class UpsServices {
                             UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId, "shipmentPackageSeqId", shipmentPackage.getString("shipmentPackageSeqId")), locale));
                 }
                 BigDecimal boxWeight = shipmentPackage.getBigDecimal("weight");
-                UtilXml.addChildElementValue(packageWeightElement, "Weight", UtilValidate.isNotEmpty(boxWeight) ? ""+ boxWeight.setScale(0, BigDecimal.ROUND_CEILING) : "", shipmentConfirmRequestDoc);
+                UtilXml.addChildElementValue(packageWeightElement, "Weight", UtilValidate.isNotEmpty(boxWeight) ? ""+ boxWeight.setScale(0, RoundingMode.CEILING) : "", shipmentConfirmRequestDoc);
                 // Adding only when order is not an international order
                 if (!internationalServiceCodes.contains(carrierServiceCode)) {
                     Element referenceNumberElement = UtilXml.addChildElement(packageElement, "ReferenceNumber", shipmentConfirmRequestDoc);
@@ -571,7 +572,7 @@ public class UpsServices {
                 if (! UtilValidate.isEmpty(insuredValue)) {
 
                     Element insuredValueElement = UtilXml.addChildElement(packageServiceOptionsElement, "InsuredValue", shipmentConfirmRequestDoc);
-                    UtilXml.addChildElementValue(insuredValueElement, "MonetaryValue", insuredValue.setScale(2, BigDecimal.ROUND_HALF_UP).toString(), shipmentConfirmRequestDoc);
+                    UtilXml.addChildElementValue(insuredValueElement, "MonetaryValue", insuredValue.setScale(2, RoundingMode.HALF_UP).toString(), shipmentConfirmRequestDoc);
                     UtilXml.addChildElementValue(insuredValueElement, "CurrencyCode", currencyCode, shipmentConfirmRequestDoc);
                 }
 

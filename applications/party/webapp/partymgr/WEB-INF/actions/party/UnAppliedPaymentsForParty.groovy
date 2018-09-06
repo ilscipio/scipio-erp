@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import java.math.RoundingMode;
+
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.common.*;
@@ -52,7 +54,7 @@ paymentList = [];
 payIterator = from("PaymentAndType").where(payExprs).cursorScrollInsensitive().distinct().queryIterator();
 
 while (payment = payIterator.next()) {
-    unAppliedAmount = PaymentWorker.getPaymentNotApplied(payment, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
+    unAppliedAmount = PaymentWorker.getPaymentNotApplied(payment, actualCurrency).setScale(2,RoundingMode.HALF_UP);
     if (unAppliedAmount.signum() == 1) {
         if (actualCurrency.equals(true) && payment.actualCurrencyAmount && payment.actualCurrencyUomId) {
             amount = payment.actualCurrencyAmount;

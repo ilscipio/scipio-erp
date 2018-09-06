@@ -20,6 +20,7 @@
 package org.ofbiz.order.order;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -75,10 +76,10 @@ public class OrderReturnServices {
     //  set some BigDecimal properties
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals = -1;
-    private static int rounding = -1;
+    private static RoundingMode rounding;
     static {
         decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-        rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+        rounding = UtilNumber.getRoundingMode("invoice.rounding");
 
         // set zero to the proper scale
         if (decimals != -1) ZERO = ZERO.setScale(decimals);
@@ -2600,7 +2601,7 @@ public class OrderReturnServices {
         String settingPrefix = isSalesTax ? "salestax" : "order";
         String decimalsPrefix = isSalesTax ? ".calc" : "";
         int decimals = UtilNumber.getBigDecimalScale(settingPrefix + decimalsPrefix + ".decimals");
-        int rounding = UtilNumber.getBigDecimalRoundingMode(settingPrefix + ".rounding");
+        RoundingMode rounding = UtilNumber.getRoundingMode(settingPrefix + ".rounding");
         returnTotal = returnTotal.setScale(decimals, rounding);
         originalTotal = originalTotal.setScale(decimals, rounding);
         BigDecimal newAmount = null;

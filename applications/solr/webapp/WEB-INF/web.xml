@@ -15,14 +15,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
+<!-- SCIPIO: DEV NOTE: THIS FILE CONTAINS CUSTOMIZATIONS; 
+    MUST BE REVIEWED AND CHANGES REAPPLIED AFTER VERSION UPDATES. -->
+<!-- SCIPIO: Platform currently cannot read the DTD properly (FIXME)
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0"
          metadata-complete="true"
->
-  <!-- SCIPIO: DEV NOTE: THIS FILE CONTAINS CUSTOMIZATIONS; 
-    MUST BE REVIEWED AND CHANGES REAPPLIED AFTER VERSION UPDATES. -->
+>-->
+<web-app version="3.0">
 
   <!-- Uncomment if you are trying to use a Resin version before 3.0.19.
     Their XML implementation isn't entirely compatible with Xerces.

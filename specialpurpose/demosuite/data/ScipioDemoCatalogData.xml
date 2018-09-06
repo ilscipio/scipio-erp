@@ -1,5 +1,5 @@
 <!-- Demo data for SCIPIO_FOUNDATION_1 ProductStore -->
-<ProductStore productStoreId="SCIPIO_FOUNDATION_1" storeName="Scipio Foundation - OFBiz E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
+<ProductStore productStoreId="SCIPIO_FOUNDATION_1" storeName="Scipio Foundation - E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
         subtitle="Our Passion" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
         inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
         defaultLocaleString="en_US" defaultCurrencyUomId="USD" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
@@ -97,7 +97,7 @@
 <ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_70000" productCategoryId="SCIPIO_90000"/>
 
 <!-- Demo data for SCIPIO_FOUNDATION_2 ProductStore -->
-<ProductStore productStoreId="SCIPIO_FOUNDATION_2" storeName="Scipio Foundation - OFBiz Alternative E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
+<ProductStore productStoreId="SCIPIO_FOUNDATION_2" storeName="Scipio Foundation - Alternative E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
         subtitle="Our Passion" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
         inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
         defaultLocaleString="en_US" defaultCurrencyUomId="USD" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"

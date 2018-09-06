@@ -23,11 +23,11 @@ under the License.
     <Facility facilityId="ScipioShopWarehouse"/>
     
     <!-- PRODUCT STORE -->
-    <ProductStore productStoreId="B2CStore" storeName="OFBiz the B2C Store" companyName="Apache OFBiz" autoApproveReviews="Y" title="Apache OFBiz to Customer"
+    <ProductStore productStoreId="B2CStore" storeName="Scipio B2C Store" companyName="Ilscipio" autoApproveReviews="Y" title="Scipio to Customer"
         subtitle="" prorateShipping="Y" prorateTaxes="Y" defaultLocaleString="en_US" defaultCurrencyUomId="USD"
         autoApproveInvoice="Y" autoApproveOrder="Y" shipIfCaptureFails="Y" requireInventory="N" reserveInventory="Y" inventoryFacilityId="ScipioShopWarehouse"
         orderNumberPrefix="B2CS" visualThemeId="EC_DEFAULT" payToPartyId="Company" defaultSalesChannelEnumId="WEB_SALES_CHANNEL"/>
-    <ProductStore productStoreId="B2BStore" storeName="OFBiz the B2B Store" companyName="Apache OFBiz" autoApproveReviews="Y" title="Apache OFBiz to Business"
+    <ProductStore productStoreId="B2BStore" storeName="Scipio B2B Store" companyName="Ilscipio" autoApproveReviews="Y" title="Scipio to Business"
         subtitle="" prorateShipping="Y" prorateTaxes="Y" defaultLocaleString="en_US" defaultCurrencyUomId="USD"
         autoApproveInvoice="Y" autoApproveOrder="Y" shipIfCaptureFails="Y" requireInventory="N" reserveInventory="Y" inventoryFacilityId="ScipioShopWarehouse"
         orderNumberPrefix="B2BS" visualThemeId="EC_DEFAULT" payToPartyId="Company" defaultSalesChannelEnumId="WEB_SALES_CHANNEL"/>

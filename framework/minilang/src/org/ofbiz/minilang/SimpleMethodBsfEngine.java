@@ -47,9 +47,8 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
     /**
      * This is an implementation of the apply() method. It executes the funcBody text in an "anonymous" method call with arguments.
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object apply(String source, int lineNo, int columnNo, Object funcBody, Vector namesVec, Vector argsVec) throws BSFException {
+    public Object apply(String source, int lineNo, int columnNo, Object funcBody, @SuppressWarnings("rawtypes") Vector namesVec, @SuppressWarnings("rawtypes") Vector argsVec) throws BSFException {
         // if (namesVec.size() != argsVec.size()) throw new BSFException("number of params/names mismatch");
         // if (!(funcBody instanceof String)) throw new BSFException("apply: function body must be a string");
         throw new BSFException("The apply method is not yet supported for simple-methods");
@@ -100,9 +99,8 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
         eval(source, lineNo, columnNo, script);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void initialize(BSFManager mgr, String lang, Vector declaredBeans) throws BSFException {
+    public void initialize(BSFManager mgr, String lang, @SuppressWarnings("rawtypes") Vector declaredBeans) throws BSFException {
         super.initialize(mgr, lang, declaredBeans);
         // declare the bsf manager for callbacks, etc.
         context.put("bsf", mgr);

@@ -24,7 +24,9 @@
          version="3.0"
          metadata-complete="true"
 >-->
-<web-app version="3.0">
+<web-app version="3.0"
+         metadata-complete="true"
+>
 
   <!-- Uncomment if you are trying to use a Resin version before 3.0.19.
     Their XML implementation isn't entirely compatible with Xerces.

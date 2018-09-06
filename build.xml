@@ -1672,10 +1672,15 @@ under the License.
         <antcall target="load-admin-user-login"/>
     </target>
 
-    <target name="run-tests" description="(Unreliable) Run automated integration tests; you have to manually execute 'ant load-demo' before (and if needed even clear your data before) and see results in runtime/logs/test-results/html/all-tests.html. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+    <target name="run-tests" description="(Unreliable) Run automated integration tests [SCIPIO: run 'clean-logs' first]; you have to manually execute 'ant load-demo' before (and if needed even clear your data before) and see results in runtime/logs/test-results/html/all-tests.html.
+Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <echo>===========================================================</echo>
         <echo>= OFBiz / Scipio integration tests. Please be aware, that =</echo>
-        <echo>= the tests are based on OFBiz_14 and not always reliable.=</echo>
+        <echo>= the tests are based on OFBiz 14 and not always reliable.=</echo>
+        <echo>=                                                         =</echo>
+        <echo>= NOTE: To avoid dirty results, run 'clean-logs' before   =</echo>
+        <echo>= every invocation, e.g.:                                 =</echo>
+        <echo>=     ./ant clean-logs run-tests                          =</echo>
         <echo>===========================================================</echo>
         <exec-scipio-jar resultproperty="test.result">
             <arg value="test"/>

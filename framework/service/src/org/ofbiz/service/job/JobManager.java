@@ -449,7 +449,7 @@ public final class JobManager {
         } else {
             if (Debug.infoOn()) {
                 Debug.logInfo("No crashed jobs to re-schedule", module);
-        }
+            }
         }
         crashedJobsReloaded = true;
     }

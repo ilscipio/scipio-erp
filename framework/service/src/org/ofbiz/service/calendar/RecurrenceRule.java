@@ -448,7 +448,7 @@ public class RecurrenceRule {
             testTime = next(startTime, testTime, 1);
             if (testTime == dateTime) {
                 return true;
-        }
+            }
         }
         return false;
     }
@@ -523,17 +523,17 @@ public class RecurrenceRule {
         if (UtilValidate.isNotEmpty(bySecondList)) {
             if (!bySecondList.contains(String.valueOf(cal.get(Calendar.SECOND)))) {
                 return false;
-        }
+            }
         }
         if (UtilValidate.isNotEmpty(byMinuteList)) {
             if (!byMinuteList.contains(String.valueOf(cal.get(Calendar.MINUTE)))) {
                 return false;
-        }
+            }
         }
         if (UtilValidate.isNotEmpty(byHourList)) {
             if (!byHourList.contains(String.valueOf(cal.get(Calendar.HOUR_OF_DAY)))) {
                 return false;
-        }
+            }
         }
         if (UtilValidate.isNotEmpty(byDayList)) {
             Iterator<String> iter = byDayList.iterator();
@@ -654,11 +654,11 @@ public class RecurrenceRule {
                 }
                 if (day < 0 && day == ((currentDay - maxDay) - 1)) {
                     foundDay = true;
-            }
+                }
             }
             if (!foundDay) {
                 return false;
-        }
+            }
         }
         if (UtilValidate.isNotEmpty(byWeekNoList)) {
             Iterator<String> iter = byWeekNoList.iterator();
@@ -681,11 +681,11 @@ public class RecurrenceRule {
                 }
                 if (week < 0 && week == ((currentWeek - maxWeek) - 1)) {
                     foundWeek = true;
-            }
+                }
             }
             if (!foundWeek) {
                 return false;
-        }
+            }
         }
         if (UtilValidate.isNotEmpty(byMonthList)) {
             Iterator<String> iter = byMonthList.iterator();
@@ -706,7 +706,7 @@ public class RecurrenceRule {
             }
             if (!foundMonth) {
                 return false;
-        }
+            }
         }
 
         return true;
@@ -734,7 +734,7 @@ public class RecurrenceRule {
 
             if (hasNumber(thisChar)) {
                 numberBuf.append(thisChar);
-        }
+            }
         }
         String numberStr = numberBuf.toString();
 
@@ -768,26 +768,26 @@ public class RecurrenceRule {
         if (day != null) {
             day = day.trim();
             if ("MO".equalsIgnoreCase(day)) {
-            return Calendar.MONDAY;
+                return Calendar.MONDAY;
             }
             if ("TU".equalsIgnoreCase(day)) {
-            return Calendar.TUESDAY;
+                return Calendar.TUESDAY;
             }
             if ("WE".equalsIgnoreCase(day)) {
-            return Calendar.WEDNESDAY;
+                return Calendar.WEDNESDAY;
             }
             if ("TH".equalsIgnoreCase(day)) {
-            return Calendar.THURSDAY;
+                return Calendar.THURSDAY;
             }
             if ("FR".equalsIgnoreCase(day)) {
-            return Calendar.FRIDAY;
+                return Calendar.FRIDAY;
             }
             if ("SA".equalsIgnoreCase(day)) {
-            return Calendar.SATURDAY;
+                return Calendar.SATURDAY;
             }
             if ("SU".equalsIgnoreCase(day)) {
-            return Calendar.SUNDAY;
-        }
+                return Calendar.SUNDAY;
+            }
         }
         return 0;
     }

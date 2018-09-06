@@ -44,9 +44,9 @@ public class SoapSerializer {
         if (document != null) {
             return XmlSerializer.deserialize(document, delegator);
         }
-            Debug.logWarning("Serialized document came back null", module);
-            return null;
-        }
+        Debug.logWarning("Serialized document came back null", module);
+        return null;
+    }
 
     public static String serialize(Object object) throws SerializeException, FileNotFoundException, IOException {
         Document document = UtilXml.makeEmptyXmlDocument("ofbiz-ser");

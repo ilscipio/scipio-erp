@@ -107,16 +107,16 @@ public class PersistedServiceJob extends GenericServiceJob {
             // job not available
             throw new InvalidJobException("Job [" + getJobId() + "] is not available");
         }
-            jobValue.set("statusId", "SERVICE_QUEUED");
-            try {
-                jobValue.store();
-            } catch (GenericEntityException e) {
-                throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + getJobId() + "]; not running!", e);
-            }
-            if (Debug.verboseOn()) {
-            Debug.logVerbose("Placing job [" + getJobId() + "] in queue", module);
-            }
+        jobValue.set("statusId", "SERVICE_QUEUED");
+        try {
+            jobValue.store();
+        } catch (GenericEntityException e) {
+            throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + getJobId() + "]; not running!", e);
         }
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Placing job [" + getJobId() + "] in queue", module);
+        }
+    }
 
     @Override
     protected void init() throws InvalidJobException {

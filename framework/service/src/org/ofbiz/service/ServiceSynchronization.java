@@ -57,13 +57,13 @@ public class ServiceSynchronization implements Synchronization, ServiceSyncRegis
 
     public static void registerCommitService(DispatchContext dctx, String serviceName, String runAsUser, Map<String, ? extends Object> context, boolean async, boolean persist) throws GenericServiceException {
         ServiceSynchronization sync = ServiceSynchronization.getInstance();
-            sync.services.add(new ServiceExecution(dctx, serviceName, runAsUser, context, async, persist, false));
-        }
+        sync.services.add(new ServiceExecution(dctx, serviceName, runAsUser, context, async, persist, false));
+    }
 
     public static void registerRollbackService(DispatchContext dctx, String serviceName, String runAsUser, Map<String, ? extends Object> context, boolean async, boolean persist) throws GenericServiceException {
         ServiceSynchronization sync = ServiceSynchronization.getInstance();
-            sync.services.add(new ServiceExecution(dctx, serviceName, runAsUser, context, async, persist, true));
-        }
+        sync.services.add(new ServiceExecution(dctx, serviceName, runAsUser, context, async, persist, true));
+    }
 
     protected static ServiceSynchronization getInstance() throws GenericServiceException {
         ServiceSynchronization sync = null;

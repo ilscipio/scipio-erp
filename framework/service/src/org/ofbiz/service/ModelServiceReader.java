@@ -433,42 +433,42 @@ public class ModelServiceReader implements Serializable {
                     throw new GeneralException("Could not find entity with name [" + entityName + "]");
                 }
                 Iterator<ModelField> fieldsIter = entity.getFieldsIterator();
-                    while (fieldsIter.hasNext()) {
-                        ModelField field = fieldsIter.next();
-                        if ((!field.getIsAutoCreatedInternal()) && ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk))) {
-                            ModelFieldType fieldType = delegator.getEntityFieldType(entity, field.getType());
-                            if (fieldType == null) {
-                                throw new GeneralException("Null field type from delegator for entity [" + entityName + "]");
-                            }
-                            ModelParam param = new ModelParam();
-                            param.entityName = entityName;
-                            param.fieldName = field.getName();
-                            param.name = field.getName();
-                            param.type = fieldType.getJavaType();
-                            // this is a special case where we use something different in the service layer than we do in the entity/data layer
-                            if ("java.sql.Blob".equals(param.type)) {
-                                param.type = "java.nio.ByteBuffer";
-                            }
-                            param.mode = UtilXml.checkEmpty(autoElement.getAttribute("mode")).intern();
-                            param.optional = "true".equalsIgnoreCase(autoElement.getAttribute("optional")); // default to true
-                            param.formDisplay = !"false".equalsIgnoreCase(autoElement.getAttribute("form-display")); // default to false
-                            param.allowHtml = UtilXml.checkEmpty(autoElement.getAttribute("allow-html"), "none").intern(); // default to none
-                            modelParamMap.put(field.getName(), param);
+                while (fieldsIter.hasNext()) {
+                    ModelField field = fieldsIter.next();
+                    if ((!field.getIsAutoCreatedInternal()) && ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk))) {
+                        ModelFieldType fieldType = delegator.getEntityFieldType(entity, field.getType());
+                        if (fieldType == null) {
+                            throw new GeneralException("Null field type from delegator for entity [" + entityName + "]");
                         }
+                        ModelParam param = new ModelParam();
+                        param.entityName = entityName;
+                        param.fieldName = field.getName();
+                        param.name = field.getName();
+                        param.type = fieldType.getJavaType();
+                        // this is a special case where we use something different in the service layer than we do in the entity/data layer
+                        if ("java.sql.Blob".equals(param.type)) {
+                            param.type = "java.nio.ByteBuffer";
+                        }
+                        param.mode = UtilXml.checkEmpty(autoElement.getAttribute("mode")).intern();
+                        param.optional = "true".equalsIgnoreCase(autoElement.getAttribute("optional")); // default to true
+                        param.formDisplay = !"false".equalsIgnoreCase(autoElement.getAttribute("form-display")); // default to false
+                        param.allowHtml = UtilXml.checkEmpty(autoElement.getAttribute("allow-html"), "none").intern(); // default to none
+                        modelParamMap.put(field.getName(), param);
                     }
+                }
 
-                    // get the excludes list; and remove those from the map
-                    List<? extends Element> excludes = UtilXml.childElementList(autoElement, "exclude");
-                    if (excludes != null) {
+                // get the excludes list; and remove those from the map
+                List<? extends Element> excludes = UtilXml.childElementList(autoElement, "exclude");
+                if (excludes != null) {
                     for (Element exclude : excludes) {
-                            modelParamMap.remove(UtilXml.checkEmpty(exclude.getAttribute("field-name")));
-                        }
+                        modelParamMap.remove(UtilXml.checkEmpty(exclude.getAttribute("field-name")));
                     }
+                }
 
-                    // now add in all the remaining params
+                // now add in all the remaining params
                 for (ModelParam thisParam : modelParamMap.values()) {
-                        service.addParam(thisParam);
-                    }
+                    service.addParam(thisParam);
+                }
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problem loading auto-attributes [" + entityName + "] for " + service.name, module);
             } catch (GeneralException e) {

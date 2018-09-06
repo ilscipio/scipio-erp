@@ -112,16 +112,16 @@ public class ServiceDispatcher {
         
         // job manager needs to always be running, but the poller thread does not
         if (this.delegator != null) {
-        try {
-            Delegator origDelegator = this.delegator;
-            if (!this.delegator.getOriginalDelegatorName().equals(this.delegator.getDelegatorName())) {
-                origDelegator = DelegatorFactory.getDelegator(this.delegator.getOriginalDelegatorName());
-            }
-            this.jm = JobManager.getInstance(origDelegator, enableJM);
+            try {
+                Delegator origDelegator = this.delegator;
+                if (!this.delegator.getOriginalDelegatorName().equals(this.delegator.getDelegatorName())) {
+                    origDelegator = DelegatorFactory.getDelegator(this.delegator.getOriginalDelegatorName());
+                }
+                this.jm = JobManager.getInstance(origDelegator, enableJM);
             }
             catch (GeneralRuntimeException e) {
-            Debug.logWarning(e.getMessage(), module);
-        }
+                Debug.logWarning(e.getMessage(), module);
+            }
         } else {
             Debug.logError("[ServiceDispatcher.init] : Delegator parameter was null and caused an exception.", module);
         }

@@ -134,7 +134,7 @@ public class ServiceSemaphore {
 
             // use the special method below so we can reuse the unqiue tx functions
             try {
-            dbWrite(semaphore, false);
+                dbWrite(semaphore, false);
             } catch (SemaphoreFailException e) {
                 // can't write a new semaphore, need to wait
                 return true;
@@ -143,9 +143,9 @@ public class ServiceSemaphore {
             // we own the lock, no waiting
             return false;
         }
-            // found a semaphore, need to wait
-            return true;
-        }
+        // found a semaphore, need to wait
+        return true;
+    }
 
     private synchronized void dbWrite(GenericValue value, boolean delete) throws SemaphoreFailException {
         Transaction parent = null;
@@ -155,7 +155,7 @@ public class ServiceSemaphore {
         try {
             // prepare the suspended transaction
             if (TransactionUtil.isTransactionInPlace()) {
-            parent = TransactionUtil.suspend();
+                parent = TransactionUtil.suspend();
             }
             beganTx = TransactionUtil.begin();
             if (!beganTx) {

@@ -89,11 +89,11 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                return this.range.equals(((DateRange) obj).range);
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    return this.range.equals(((DateRange) obj).range);
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -202,12 +202,12 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                DayInMonth that = (DayInMonth) obj;
-                return this.dayOfWeek == that.dayOfWeek && this.occurrence == that.occurrence;
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    DayInMonth that = (DayInMonth) obj;
+                    return this.dayOfWeek == that.dayOfWeek && this.occurrence == that.occurrence;
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -335,12 +335,12 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                DayOfMonthRange that = (DayOfMonthRange) obj;
-                return this.start == that.start && this.end == that.end;
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    DayOfMonthRange that = (DayOfMonthRange) obj;
+                    return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -455,12 +455,12 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                DayOfWeekRange that = (DayOfWeekRange) obj;
-                return this.start == that.start && this.end == that.end;
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    DayOfWeekRange that = (DayOfWeekRange) obj;
+                    return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -592,12 +592,12 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                Difference that = (Difference) obj;
-                return this.included.equals(that.included) && this.excluded.equals(that.excluded);
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    Difference that = (Difference) obj;
+                    return this.included.equals(that.included) && this.excluded.equals(that.excluded);
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -708,12 +708,12 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                Frequency that = (Frequency) obj;
-                return this.start.equals(that.start) && this.freqType == that.freqType && this.freqCount == that.freqCount;
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    Frequency that = (Frequency) obj;
+                    return this.start.equals(that.start) && this.freqType == that.freqType && this.freqCount == that.freqCount;
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -866,12 +866,12 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                HourRange that = (HourRange) obj;
-                return this.start == that.start && this.end == that.end;
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    HourRange that = (HourRange) obj;
+                    return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -1028,11 +1028,11 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                return this.expressionSet.equals(((Intersection) obj).expressionSet);
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    return this.expressionSet.equals(((Intersection) obj).expressionSet);
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -1151,12 +1151,12 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                MinuteRange that = (MinuteRange) obj;
-                return this.start == that.start && this.end == that.end;
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    MinuteRange that = (MinuteRange) obj;
+                    return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -1302,12 +1302,12 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                MonthRange that = (MonthRange) obj;
-                return this.start == that.start && this.end == that.end;
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    MonthRange that = (MonthRange) obj;
+                    return this.start == that.start && this.end == that.end;
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -1465,12 +1465,12 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                Substitution that = (Substitution) obj;
-                return this.included.equals(that.included) && this.excluded.equals(that.excluded) && this.substitute.equals(that.substitute);
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    Substitution that = (Substitution) obj;
+                    return this.included.equals(that.included) && this.excluded.equals(that.excluded) && this.substitute.equals(that.substitute);
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);
@@ -1586,11 +1586,11 @@ public class TemporalExpressions implements Serializable {
         @Override
         public boolean equals(Object obj) {
             if (obj != null) {
-            if (obj == this) {
-                return true;
-            }
-            try {
-                return this.expressionSet.equals(((Union) obj).expressionSet);
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    return this.expressionSet.equals(((Union) obj).expressionSet);
                 }
                 catch (ClassCastException e) {
                     Debug.logInfo(e.getMessage(), module);

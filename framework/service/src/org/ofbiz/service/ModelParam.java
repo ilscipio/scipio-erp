@@ -320,9 +320,9 @@ public class ModelParam implements Serializable {
             if (failMessage != null) {
                 return this.failMessage;
             }
-                if (failResource != null && failProperty != null) {
-                    return UtilProperties.getMessage(failResource, failProperty, locale);
-                }
+            if (failResource != null && failProperty != null) {
+                return UtilProperties.getMessage(failResource, failProperty, locale);
+            }
             return null;
         }
 

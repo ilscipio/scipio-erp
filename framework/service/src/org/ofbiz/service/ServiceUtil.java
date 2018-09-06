@@ -564,7 +564,7 @@ public final class ServiceUtil {
     }
 
     public static Map<String, Object> purgeOldJobs(DispatchContext dctx, Map<String, ? extends Object> context) {
-    	 Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale)context.get("locale");
         Debug.logWarning("purgeOldJobs service invoked. This service is obsolete - the Job Scheduler will purge old jobs automatically.", module);
         String sendPool = null;
         Calendar cal = Calendar.getInstance();
@@ -612,10 +612,10 @@ public final class ServiceUtil {
                     // begin this transaction
                     beganTx1 = TransactionUtil.begin();
                     EntityQuery eq = EntityQuery.use(delegator)
-                                               .select("jobId")
-                                               .from("JobSandbox")
-                                               .where(EntityCondition.makeCondition(UtilMisc.toList(doneCond, pool)))
-                                               .cursorScrollInsensitive()
+                            .select("jobId")
+                            .from("JobSandbox")
+                            .where(EntityCondition.makeCondition(UtilMisc.toList(doneCond, pool)))
+                            .cursorScrollInsensitive()
                             .maxRows(1000); 
 
                     try (EntityListIterator foundJobs = eq.queryIterator()) {
@@ -747,7 +747,7 @@ public final class ServiceUtil {
         }
 
         if (job != null) {
-        Timestamp cancelDate = job.getTimestamp("cancelDateTime");
+            Timestamp cancelDate = job.getTimestamp("cancelDateTime");
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("cancelDateTime", cancelDate);
             result.put("statusId", "SERVICE_PENDING"); // To more easily see current pending jobs and possibly cancel some others
@@ -837,11 +837,11 @@ public final class ServiceUtil {
         if (args == null) {
             throw new IllegalArgumentException("args is null in makeContext, this would throw a NullPointerExcption.");
         }
-            for (int i = 0; i < args.length; i += 2) {
+        for (int i = 0; i < args.length; i += 2) {
             if (!(args[i] instanceof String)) {
                 throw new IllegalArgumentException("Arg(" + i + "), value(" + args[i] + ") is not a string.");
             }
-            }
+        }
         return UtilGenerics.checkMap(UtilMisc.toMap(args));
     }
 

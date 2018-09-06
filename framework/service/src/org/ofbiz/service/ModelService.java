@@ -1076,7 +1076,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             LocalDispatcher dispatcher = dctx.getDispatcher();
             Map<String, Object> resp;
             try {
-                resp = dispatcher.runSync(permission.name,  ctx, 300, true);
+                resp = dispatcher.runSync(permission.name, ctx, 300, true);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
                 Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -1330,74 +1330,74 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         // set the IN parameters
         Input input = def.createInput();
         Set<String> inParam = this.getInParamNames();
-            Message inMessage = def.createMessage();
-            inMessage.setQName(new QName(TNS, this.name + "Request"));
-            inMessage.setUndefined(false);
-            Part parametersPart = def.createPart();
-            parametersPart.setName("map-Map");
-            parametersPart.setTypeName(new QName(TNS, "map-Map"));
-            inMessage.addPart(parametersPart);
-            Element documentation = document.createElement("wsdl:documentation");
+        Message inMessage = def.createMessage();
+        inMessage.setQName(new QName(TNS, this.name + "Request"));
+        inMessage.setUndefined(false);
+        Part parametersPart = def.createPart();
+        parametersPart.setName("map-Map");
+        parametersPart.setTypeName(new QName(TNS, "map-Map"));
+        inMessage.addPart(parametersPart);
+        Element documentation = document.createElement("wsdl:documentation");
         for (String paramName : inParam) {
-                ModelParam param = this.getParam(paramName);
-                if (!param.internal) {
-                    Part part = param.getWSDLPart(def);
-                    Element attribute = document.createElement("attribute");
-                    attribute.setAttribute("name", paramName);
-                    attribute.setAttribute("type", part.getTypeName().getLocalPart());
-                    attribute.setAttribute("namespace", part.getTypeName().getNamespaceURI());
-                    attribute.setAttribute("java-class", param.type);
-                    attribute.setAttribute("optional", Boolean.toString(param.optional));
-                    documentation.appendChild(attribute);
-                }
+            ModelParam param = this.getParam(paramName);
+            if (!param.internal) {
+                Part part = param.getWSDLPart(def);
+                Element attribute = document.createElement("attribute");
+                attribute.setAttribute("name", paramName);
+                attribute.setAttribute("type", part.getTypeName().getLocalPart());
+                attribute.setAttribute("namespace", part.getTypeName().getNamespaceURI());
+                attribute.setAttribute("java-class", param.type);
+                attribute.setAttribute("optional", Boolean.toString(param.optional));
+                documentation.appendChild(attribute);
             }
-            Element usernameAttr = document.createElement("attribute");
-            usernameAttr.setAttribute("name", "login.username");
-            usernameAttr.setAttribute("type", "std-String");
-            usernameAttr.setAttribute("namespace", TNS);
-            usernameAttr.setAttribute("java-class", String.class.getName());
-            usernameAttr.setAttribute("optional", Boolean.toString(!this.auth));
-            documentation.appendChild(usernameAttr);
+        }
+        Element usernameAttr = document.createElement("attribute");
+        usernameAttr.setAttribute("name", "login.username");
+        usernameAttr.setAttribute("type", "std-String");
+        usernameAttr.setAttribute("namespace", TNS);
+        usernameAttr.setAttribute("java-class", String.class.getName());
+        usernameAttr.setAttribute("optional", Boolean.toString(!this.auth));
+        documentation.appendChild(usernameAttr);
 
-            Element passwordAttr = document.createElement("attribute");
-            passwordAttr.setAttribute("name", "login.password");
-            passwordAttr.setAttribute("type", "std-String");
-            passwordAttr.setAttribute("namespace", TNS);
-            passwordAttr.setAttribute("java-class", String.class.getName());
-            passwordAttr.setAttribute("optional", Boolean.toString(!this.auth));
-            documentation.appendChild(passwordAttr);
+        Element passwordAttr = document.createElement("attribute");
+        passwordAttr.setAttribute("name", "login.password");
+        passwordAttr.setAttribute("type", "std-String");
+        passwordAttr.setAttribute("namespace", TNS);
+        passwordAttr.setAttribute("java-class", String.class.getName());
+        passwordAttr.setAttribute("optional", Boolean.toString(!this.auth));
+        documentation.appendChild(passwordAttr);
 
-            parametersPart.setDocumentationElement(documentation);
-            def.addMessage(inMessage);
-            input.setMessage(inMessage);
+        parametersPart.setDocumentationElement(documentation);
+        def.addMessage(inMessage);
+        input.setMessage(inMessage);
 
         // set the OUT parameters
         Output output = def.createOutput();
         Set<String> outParam = this.getOutParamNames();
-            Message outMessage = def.createMessage();
-            outMessage.setQName(new QName(TNS, this.name + "Response"));
-            outMessage.setUndefined(false);
-            Part resultsPart = def.createPart();
-            resultsPart.setName("map-Map");
-            resultsPart.setTypeName(new QName(TNS, "map-Map"));
-            outMessage.addPart(resultsPart);
+        Message outMessage = def.createMessage();
+        outMessage.setQName(new QName(TNS, this.name + "Response"));
+        outMessage.setUndefined(false);
+        Part resultsPart = def.createPart();
+        resultsPart.setName("map-Map");
+        resultsPart.setTypeName(new QName(TNS, "map-Map"));
+        outMessage.addPart(resultsPart);
         documentation = document.createElement("wsdl:documentation");
         for (String paramName : outParam) {
-                ModelParam param = this.getParam(paramName);
-                if (!param.internal) {
-                    Part part = param.getWSDLPart(def);
-                    Element attribute = document.createElement("attribute");
-                    attribute.setAttribute("name", paramName);
-                    attribute.setAttribute("type", part.getTypeName().getLocalPart());
-                    attribute.setAttribute("namespace", part.getTypeName().getNamespaceURI());
-                    attribute.setAttribute("java-class", param.type);
-                    attribute.setAttribute("optional", Boolean.toString(param.optional));
-                    documentation.appendChild(attribute);
-                }
+            ModelParam param = this.getParam(paramName);
+            if (!param.internal) {
+                Part part = param.getWSDLPart(def);
+                Element attribute = document.createElement("attribute");
+                attribute.setAttribute("name", paramName);
+                attribute.setAttribute("type", part.getTypeName().getLocalPart());
+                attribute.setAttribute("namespace", part.getTypeName().getNamespaceURI());
+                attribute.setAttribute("java-class", param.type);
+                attribute.setAttribute("optional", Boolean.toString(param.optional));
+                documentation.appendChild(attribute);
             }
-            resultsPart.setDocumentationElement(documentation);
-            def.addMessage(outMessage);
-            output.setMessage(outMessage);
+        }
+        resultsPart.setDocumentationElement(documentation);
+        def.addMessage(outMessage);
+        output.setMessage(outMessage);
 
         // set port type
         Operation operation = def.createOperation();

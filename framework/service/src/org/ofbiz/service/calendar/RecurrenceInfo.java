@@ -279,8 +279,8 @@ public class RecurrenceInfo {
                     nextTime = thisDate.getTime();
                 } else if (nextTime == 0 && thisDate.getTime() > fromTime) {
                     nextTime = thisDate.getTime();
+                }
             }
-        }
         }
         return nextTime;
     }
@@ -293,7 +293,7 @@ public class RecurrenceInfo {
 
             if (except.isValid(getStartTime(), time) || eDateList.contains(new Date(time))) {
                 return false;
-        }
+            }
         }
         return true;
     }

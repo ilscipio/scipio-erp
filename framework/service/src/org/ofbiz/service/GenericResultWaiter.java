@@ -84,8 +84,9 @@ public class GenericResultWaiter implements GenericRequester {
      * @return Exception
      */
     public synchronized Throwable getThrowable() {
-        if (!isCompleted())
+        if (!isCompleted()) {
             throw new java.lang.IllegalStateException("Cannot return exception, synchronous call has not completed.");
+        }
         return this.t;
     }
 
@@ -94,8 +95,9 @@ public class GenericResultWaiter implements GenericRequester {
      * @return Map
      */
     public synchronized Map<String, Object> getResult() {
-        if (!isCompleted())
+        if (!isCompleted()) {
             throw new java.lang.IllegalStateException("Cannot return result, asynchronous call has not completed.");
+        }
         return result;
     }
 

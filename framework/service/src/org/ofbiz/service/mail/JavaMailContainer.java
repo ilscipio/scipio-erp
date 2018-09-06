@@ -124,9 +124,9 @@ public class JavaMailContainer implements Container {
         for (ContainerConfig.Container.Property prop: configs) {
             Session session = this.makeSession(prop);
             Store store = this.getStore(session);
-                stores.put(store, session);
-                store.addStoreListener(new LoggingStoreListener());
-            }
+            stores.put(store, session);
+            store.addStoreListener(new LoggingStoreListener());
+        }
 
         // start the polling timer
         if (stores != null) {

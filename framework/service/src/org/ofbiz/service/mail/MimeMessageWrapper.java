@@ -96,10 +96,10 @@ public class MimeMessageWrapper implements java.io.Serializable {
                     this.parts = 0;
                 }
             } catch (IOException | MessagingException e) {
-                    Debug.logError(e, module);
-                }
+                Debug.logError(e, module);
             }
         }
+    }
 
     public synchronized MimeMessage getMessage() {
         if (message == null) {
@@ -242,26 +242,26 @@ public class MimeMessageWrapper implements java.io.Serializable {
         if (getMainPartCount() == 0) { // single part message (no attachments)
             return attachments;
         }
-            for (int i = 0; i < getMainPartCount(); i++) {
-                int subPartCount = getSubPartCount(i);
-                String idx = Integer.toString(i);
-                if (subPartCount > 0) {
-                    for (int si = 0; si < subPartCount; si++) {
-                        String sidx = idx + "." + Integer.toString(si);
-                        if (getPartDisposition(sidx) != null && (getPartDisposition(sidx).equalsIgnoreCase(Part.ATTACHMENT) ||
-                                getPartDisposition(sidx).equalsIgnoreCase(Part.INLINE))) {
-                            attachments.add(sidx);
-                        }
-                    }
-                } else {
-                    if (getPartDisposition(idx) != null && (getPartDisposition(idx).equalsIgnoreCase(Part.ATTACHMENT) ||
-                            getPartDisposition(idx).equalsIgnoreCase(Part.INLINE))) {
-                        attachments.add(idx);
+        for (int i = 0; i < getMainPartCount(); i++) {
+            int subPartCount = getSubPartCount(i);
+            String idx = Integer.toString(i);
+            if (subPartCount > 0) {
+                for (int si = 0; si < subPartCount; si++) {
+                    String sidx = idx + "." + Integer.toString(si);
+                    if (getPartDisposition(sidx) != null && (getPartDisposition(sidx).equalsIgnoreCase(Part.ATTACHMENT) ||
+                            getPartDisposition(sidx).equalsIgnoreCase(Part.INLINE))) {
+                        attachments.add(sidx);
                     }
                 }
+            } else {
+                if (getPartDisposition(idx) != null && (getPartDisposition(idx).equalsIgnoreCase(Part.ATTACHMENT) ||
+                        getPartDisposition(idx).equalsIgnoreCase(Part.INLINE))) {
+                    attachments.add(idx);
+                }
             }
-            return attachments;
         }
+        return attachments;
+    }
 
     public String getMessageBody() {
         MimeMessage message = getMessage();
@@ -274,57 +274,57 @@ public class MimeMessageWrapper implements java.io.Serializable {
                 return null;
             }
         }
-            StringBuffer body = new StringBuffer();
-            for (int i = 0; i < getMainPartCount(); i++) {
-                int subPartCount = getSubPartCount(i);
-                String idx = Integer.toString(i);
-                if (subPartCount > 0) {
-                    for (int si = 0; si < subPartCount; si++) {
-                        String sidx = idx + "." + Integer.toString(si);
+        StringBuffer body = new StringBuffer();
+        for (int i = 0; i < getMainPartCount(); i++) {
+            int subPartCount = getSubPartCount(i);
+            String idx = Integer.toString(i);
+            if (subPartCount > 0) {
+                for (int si = 0; si < subPartCount; si++) {
+                    String sidx = idx + "." + Integer.toString(si);
                     if (getPartContentType(sidx) != null && getPartContentType(sidx).toLowerCase(Locale.getDefault()).startsWith("text")) {
-                            if (getPartDisposition(sidx) == null || getPartDisposition(sidx).equals(Part.INLINE)) {
-                                body.append(getPartText(sidx)).append("\n");
-                            }
-                        }
-                    }
-                } else {
-                if (getPartContentType(idx) != null && getPartContentType(idx).toLowerCase(Locale.getDefault()).startsWith("text")) {
-                        // make sure the part isn't an attachment
-                        if (getPartDisposition(idx) == null || getPartDisposition(idx).equals(Part.INLINE)) {
-                            body.append(getPartText(idx)).append("\n");
+                        if (getPartDisposition(sidx) == null || getPartDisposition(sidx).equals(Part.INLINE)) {
+                            body.append(getPartText(sidx)).append("\n");
                         }
                     }
                 }
+            } else {
+                if (getPartContentType(idx) != null && getPartContentType(idx).toLowerCase(Locale.getDefault()).startsWith("text")) {
+                    // make sure the part isn't an attachment
+                    if (getPartDisposition(idx) == null || getPartDisposition(idx).equals(Part.INLINE)) {
+                        body.append(getPartText(idx)).append("\n");
+                    }
+                }
             }
-            return body.toString();
         }
+        return body.toString();
+    }
 
     public String getMessageBodyContentType() {
         String contentType = getContentType();
         if (contentType != null && contentType.toLowerCase(Locale.getDefault()).startsWith("text")) {
             return contentType;
         }
-            for (int i = 0; i < getMainPartCount(); i++) {
-                int subPartCount = getSubPartCount(i);
-                String idx = Integer.toString(i);
-                if (subPartCount > 0) {
-                    for (int si = 0; si < subPartCount; si++) {
-                        String sidx = idx + "." + Integer.toString(si);
+        for (int i = 0; i < getMainPartCount(); i++) {
+            int subPartCount = getSubPartCount(i);
+            String idx = Integer.toString(i);
+            if (subPartCount > 0) {
+                for (int si = 0; si < subPartCount; si++) {
+                    String sidx = idx + "." + Integer.toString(si);
                     if (getPartContentType(sidx) != null && getPartContentType(sidx).toLowerCase(Locale.getDefault()).startsWith("text")) {
-                            if (getPartDisposition(sidx) == null || getPartDisposition(sidx).equals(Part.INLINE)) {
-                                return getPartContentType(sidx);
-                            }
-                        }
-                    }
-                } else {
-                if (getPartContentType(idx) != null && getPartContentType(idx).toLowerCase(Locale.getDefault()).startsWith("text")) {
-                        // make sure the part isn't an attachment
-                        if (getPartDisposition(idx) == null || getPartDisposition(idx).equals(Part.INLINE)) {
-                            return getPartContentType(idx);
+                        if (getPartDisposition(sidx) == null || getPartDisposition(sidx).equals(Part.INLINE)) {
+                            return getPartContentType(sidx);
                         }
                     }
                 }
+            } else {
+                if (getPartContentType(idx) != null && getPartContentType(idx).toLowerCase(Locale.getDefault()).startsWith("text")) {
+                    // make sure the part isn't an attachment
+                    if (getPartDisposition(idx) == null || getPartDisposition(idx).equals(Part.INLINE)) {
+                        return getPartContentType(idx);
+                    }
+                }
             }
+        }
         return "text/html";
     }
 
@@ -456,23 +456,23 @@ public class MimeMessageWrapper implements java.io.Serializable {
                 if (subIndex == -1) {
                     return mp.getBodyPart(mainIndex);
                 }
-                    BodyPart part = mp.getBodyPart(mainIndex);
-                    int subPartCount = getSubPartCount(mainIndex);
-                    if (subPartCount > subIndex) {
-                        Multipart sp = (Multipart) part.getContent();
-                        return sp.getBodyPart(subIndex);
+                BodyPart part = mp.getBodyPart(mainIndex);
+                int subPartCount = getSubPartCount(mainIndex);
+                if (subPartCount > subIndex) {
+                    Multipart sp = (Multipart) part.getContent();
+                    return sp.getBodyPart(subIndex);
                 }
-                        Debug.logWarning("Requested a subpart [" + subIndex + "] which deos not exist; only [" + getSubPartCount(mainIndex) + "] parts", module);
-                        // there is no sub part to find
-                        return part;
+                Debug.logWarning("Requested a subpart [" + subIndex + "] which deos not exist; only [" + getSubPartCount(mainIndex) + "] parts", module);
+                // there is no sub part to find
+                return part;
             } catch (MessagingException | IOException e) {
                 Debug.logError(e, module);
                 return null;
             }
         }
-            Debug.logWarning("Requested a part [" + mainIndex + "] which deos not exist; only [" + getMainPartCount() + "] parts", module);
-            return null;
-        }
+        Debug.logWarning("Requested a part [" + mainIndex + "] which deos not exist; only [" + getMainPartCount() + "] parts", module);
+        return null;
+    }
 
     protected String getContentText(Object content) {
         if (content == null) {

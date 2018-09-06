@@ -33,21 +33,25 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.widget.model.FormFactory;
 import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
+import org.ofbiz.widget.renderer.macro.MacroFormRenderer;
 import org.xml.sax.SAXException;
 
 
 /**
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
+ * @deprecated SCIPIO: 2018: This class may not populate the context for the form renderer
+ * correctly; use other form rendering facilities instead, such as 
+ * the freemarker Scipio templating API <code>@render</code> macro (utilities.ftl).
  * <p>
  * SCIPIO: NOTE: 2016-09-15: This now renders using the Macro Freemarker renderer.
- * Use is still discouraged; the context populated by this wrapper
- * may be incomplete. Other means are available to invoke menu renders from templates.
  */
+@Deprecated
 public class HtmlFormWrapper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -80,9 +84,15 @@ public class HtmlFormWrapper {
 
         // SCIPIO: 2016-09-15: use macro renderer, now available in request
         this.renderer = (FormStringRenderer) request.getAttribute("formStringRenderer");
-        if (this.renderer == null || !"html".equals(this.renderer.getRendererName())) { // fallback (shouldn't happen)
-            Debug.logError("No FormStringRenderer (MacroFormRenderer) available in request - falling back on HtmlFormRenderer - please report this issue!", module);
-            this.renderer = new HtmlFormRenderer(request, response);
+        if (this.renderer == null) { // fallback (shouldn't happen)
+            Debug.logWarning("No FormStringRenderer available in request - creating temporary html form renderer, but this may not work properly"
+                    + " - please report this issue", module);
+            try {
+                this.renderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator), 
+                        EntityUtilProperties.getPropertyValue("widget", "screen.formrenderer", delegator), request, response);
+            } catch (Exception e) {
+                throw new IOException("Could not create temporary MacroFormRenderer for HtmlFormWrapper", e);
+            }
         }
 
         this.context = new HashMap<String, Object>();

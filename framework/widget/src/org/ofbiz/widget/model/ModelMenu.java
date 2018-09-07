@@ -1841,7 +1841,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         menuItemName = ModelMenuItem.getNoneMenuItemNameAsConstant(menuItemName);
         String res = this.menuItemNameAliasMap.get(menuItemName);
         if (UtilValidate.isNotEmpty(res)) {
-            if (ModelMenuItem.parentMenuItemNames.contains(res)) { // don't support PARENT-XXX in top menu
+            if (ModelMenuItem.parentMenuItemNames.contains(res)) { // don't support PARENT-XX in top menu
                 return menuItemName;
             } else {
                 return res;

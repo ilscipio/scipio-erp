@@ -2216,7 +2216,7 @@ public class InvoiceServices {
                 input.put("taxAuthGeoId", adjustment.get("taxAuthGeoId"));
                 input.put("userLogin", userLogin);
 
-                // XXX TODO Note: we need to implement ReturnAdjustment.includeInTax for this to work properly
+                // XX TODO Note: we need to implement ReturnAdjustment.includeInTax for this to work properly
                 input.put("taxableFlag", adjustment.get("includeInTax"));
 
                 // create the invoice item

@@ -45,8 +45,8 @@ import org.ofbiz.base.util.cache.UtilCache;
  * syntax. This class also supports the execution of Groovy scripts
  * by using the 'groovy:' prefix.
  * Further it is possible to control the output by specifying the suffix
- * '?currency(XXX)' to format the output according to the supplied locale
- * and specified (XXX) currency.<p>This class extends the UEL by allowing
+ * '?currency(XX)' to format the output according to the supplied locale
+ * and specified (XX) currency.<p>This class extends the UEL by allowing
  * nested expressions.</p>
  */
 @SourceMonitored

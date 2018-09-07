@@ -324,7 +324,7 @@ public class CheckOutHelper {
                 }
 
                 // associate the cart billing account amount and EXT_BILLACT selected payment method with whatever amount we have now
-                // XXX: Note that this step is critical for the billing account to be charged correctly
+                // XX: Note that this step is critical for the billing account to be charged correctly
                 if (amountToUse.compareTo(BigDecimal.ZERO) > 0) {
                     cart.setBillingAccount(billingAccountId, amountToUse);
                     selectedPaymentMethods.put("EXT_BILLACT", UtilMisc.<String, Object>toMap("amount", amountToUse, "securityCode", null));

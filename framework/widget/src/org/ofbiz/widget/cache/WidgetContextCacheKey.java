@@ -28,6 +28,7 @@ import java.util.Set;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.webapp.renderer.RenderOptions;
 
 public final class WidgetContextCacheKey {
 
@@ -87,6 +88,7 @@ public final class WidgetContextCacheKey {
         fieldNamesToSkip.add("screenStringRenderer"); 
         
         fieldNamesToSkip.add("requestMethod"); 
+        fieldNamesToSkip.add(RenderOptions.FIELD_NAME);
         
         return Collections.unmodifiableSet(fieldNamesToSkip);
     }

@@ -20,7 +20,7 @@ package org.ofbiz.widget.renderer.html;
 
 import java.io.IOException;
 
-import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.ModelWidget;
 
 /**
@@ -36,9 +36,12 @@ public class HtmlWidgetRenderer {
     /**
      * Characters that are appended to the end of each rendered element. Currently set to
      * CR/LF.
+     * @deprecated SCIPIO: whitespace should be left to Freemarker macro template files.
      */
+    @Deprecated
     public static final String whiteSpace = "\r\n";
 
+    @Deprecated
     protected boolean widgetCommentsEnabled = false;
 
     /**
@@ -63,6 +66,12 @@ public class HtmlWidgetRenderer {
         return formatBoundaryComment(boundaryType, widgetType, widgetName);
     }
 
+    /**
+     * Helper method used to build the boundary comment string.
+     * <p>
+     * SCIPIO: NOTE: Use discouraged, it is better to leave this to the Freemarker
+     * macro templates through Macro*Renderer.
+     */
     public static String formatBoundaryComment(String boundaryType, String widgetType, String widgetName) {
         return "<!-- " + boundaryType + " " + widgetType + " " + widgetName + " -->" + whiteSpace;
     }
@@ -98,13 +107,12 @@ public class HtmlWidgetRenderer {
     /** Extracts parameters from a target URL string, prepares them for an Ajax
      * JavaScript call. This method is currently set to return a parameter string
      * suitable for the Prototype.js library.
+     * @deprecated SCIPIO: 2018-09-07: use {@link org.ofbiz.widget.WidgetWorker#getAjaxParamsFromTarget(String)}.
      * @param target Target URL string
      * @return Parameter string
      */
+    @Deprecated
     public static String getAjaxParamsFromTarget(String target) {
-        String targetParams = UtilHttp.getQueryStringFromTarget(target);
-        targetParams = targetParams.replace("?", "");
-        targetParams = targetParams.replace("&amp;", "&");
-        return targetParams;
+        return WidgetWorker.getAjaxParamsFromTarget(target);
     }
 }

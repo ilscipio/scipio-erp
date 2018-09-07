@@ -3318,14 +3318,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
     /** Extracts parameters from a target URL string, prepares them for an Ajax
      * JavaScript call. This method is currently set to return a parameter string
      * suitable for the Prototype.js library.
+     * @deprecated SCIPIO: 2018-09-07: use {@link org.ofbiz.widget.WidgetWorker#getAjaxParamsFromTarget(String)}.
      * @param target Target URL string
      * @return Parameter string
      */
+    @Deprecated
     public static String getAjaxParamsFromTarget(String target) {
-        String targetParams = UtilHttp.getQueryStringFromTarget(target);
-        targetParams = targetParams.replace("?", "");
-        targetParams = targetParams.replace("&amp;", "&");
-        return targetParams;
+        return WidgetWorker.getAjaxParamsFromTarget(target);
     }
 
     /**

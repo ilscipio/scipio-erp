@@ -482,6 +482,22 @@ public final class WidgetWorker {
         return delegator;
     }
 
+    /** Extracts parameters from a target URL string, prepares them for an Ajax
+     * JavaScript call. This method is currently set to return a parameter string
+     * suitable for the Prototype.js library.
+     * <p>
+     * SCIPIO: 2018-09-07: Method was moved here from {@link org.ofbiz.widget.renderer.html.HtmlWidgetRenderer}.
+     * NOTE: The previous Prototype.js comment is probably irrelevant.
+     * @param target Target URL string
+     * @return Parameter string
+     */
+    public static String getAjaxParamsFromTarget(String target) {
+        String targetParams = UtilHttp.getQueryStringFromTarget(target);
+        targetParams = targetParams.replace("?", "");
+        targetParams = targetParams.replace("&amp;", "&");
+        return targetParams;
+    }
+
     /**
      * SCIPIO: Returns the generic platform simpleEncoder from context, appropriate for point-of-use encoding and other purposes.
      * If none, returns a dummy raw encoder so null tests never needed.

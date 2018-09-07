@@ -388,13 +388,13 @@ under the License.
                <parameter param-name="clear" value="true"/>
             </link>
         </menu-item>
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh ${styles.action_reload}">
             <link target="StatsSinceStart"/>
         </menu-item>
     </menu>
 
     <menu name="StatsBinHistory" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh ${styles.action_reload}">
             <link target="StatBinsHistory">
                <parameter param-name="statsId" from-field="parameters.statsId"/>
                <parameter param-name="type" from-field="parameters.type"/>
@@ -403,7 +403,7 @@ under the License.
     </menu>
 
     <menu name="FindCacheTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh ${styles.action_reload}">
             <link target="FindUtilCache"/>
         </menu-item>
         <menu-item name="clearAll" title="${uiLabelMap.WebtoolsClearAllCaches}">

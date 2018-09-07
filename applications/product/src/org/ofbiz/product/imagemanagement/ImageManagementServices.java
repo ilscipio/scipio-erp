@@ -86,7 +86,6 @@ public class ImageManagementServices {
         Locale locale = (Locale) context.get("locale");
         
         if (UtilValidate.isNotEmpty(uploadFileName)) {
-            String imageFilenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", delegator);
             String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
             String imageServerUrl = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.url", delegator), context);
             String rootTargetDirectory = imageServerPath;
@@ -119,35 +118,14 @@ public class ImageManagementServices {
             String contentId = (String) contentResult.get("contentId");
             result.put("contentFrameId", contentId);
             result.put("contentId", contentId);
-            
-            // File to use for original image
-            FlexibleStringExpander filenameExpander = FlexibleStringExpander.getInstance(imageFilenameFormat);
-            String fileLocation = filenameExpander.expandString(UtilMisc.toMap("location", "products", "type", sizeType, "id", contentId));
-            String filenameToUse = fileLocation;
-            if (fileLocation.lastIndexOf("/") != -1) {
-                filenameToUse = fileLocation.substring(fileLocation.lastIndexOf("/") + 1);
-            }
-            
+
             String fileContentType = (String) context.get("_uploadedFile_contentType");
             if (fileContentType.equals("image/pjpeg")) {
                 fileContentType = "image/jpeg";
             } else if (fileContentType.equals("image/x-png")) {
                 fileContentType = "image/png";
             }
-            
-            List<GenericValue> fileExtension = new LinkedList<GenericValue>();
-            try {
-                fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", fileContentType).queryList();
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError(e.getMessage());
-            }
-            
-            GenericValue extension = EntityUtil.getFirst(fileExtension);
-            if (extension != null) {
-                filenameToUse += "." + extension.getString("fileExtensionId");
-            }
-            
+
             // Create folder product id.
             String targetDirectory = imageServerPath + "/" + productId;
             File targetDir = new File(targetDirectory);

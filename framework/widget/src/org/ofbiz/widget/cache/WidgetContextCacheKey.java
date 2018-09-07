@@ -202,4 +202,16 @@ public final class WidgetContextCacheKey {
         }
         return true;
     }
+
+    /**
+     * SCIPIO: Returns the fields names skipped by WidgetContextCacheKey.
+     * <p>
+     * This may be useful for other implementations that use the same
+     * logic to reuse.
+     * <p>
+     * Added 2018-09-07.
+     */
+    public static Set<String> getFieldNamesToSkip() {
+        return fieldNamesToSkip;
+    }
 }

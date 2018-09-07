@@ -179,7 +179,7 @@ public class ScreenFactory extends WidgetFactory {
             synchronized (ScreenFactory.class) {
                 modelScreenMap = screenWebappCache.get(cacheKey);
                 if (modelScreenMap == null) {
-                    ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
+                    ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
 
                     URL screenFileUrl = servletContext.getResource(resourceName);
                     Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true, true);

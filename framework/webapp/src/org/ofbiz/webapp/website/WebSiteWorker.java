@@ -44,11 +44,7 @@ public class WebSiteWorker {
      * SCIPIO: 2018-07-31: This is now safe to use from early filters.
      */
     public static String getWebSiteId(ServletRequest request) {
-        // SCIPIO: 2018-07-31: Since servlet API 3.0 we have better way that works even for early filters...
-        //ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        //
-        //if (application == null) return null;
-        ServletContext application = request.getServletContext();
+        ServletContext application = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         return application.getInitParameter("webSiteId");
     }
 

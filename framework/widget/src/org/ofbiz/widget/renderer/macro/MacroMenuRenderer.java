@@ -148,7 +148,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                 Boolean fullPath = null; // SCIPIO: changed from boolean to Boolean
                 Boolean secure = null; // SCIPIO: changed from boolean to Boolean
                 Boolean encode = false; // SCIPIO: changed from boolean to Boolean
-                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 src = rh.makeLink(request, response, src, fullPath, secure, encode);
             } else if ("content".equalsIgnoreCase(urlMode)) {

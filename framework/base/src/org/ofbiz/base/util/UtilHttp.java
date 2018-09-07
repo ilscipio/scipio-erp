@@ -391,7 +391,7 @@ public final class UtilHttp {
         Map<String, Object> servletCtxMap = new HashMap<>();
 
         // look at all servlet context attributes
-        ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
+        ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         Enumeration<String> applicationAttrNames = UtilGenerics.cast(servletContext.getAttributeNames());
         while (applicationAttrNames.hasMoreElements()) {
             String attrName = applicationAttrNames.nextElement();

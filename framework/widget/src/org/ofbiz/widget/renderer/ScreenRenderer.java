@@ -720,14 +720,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
      */
     public static void runWebappRenderInitActions(Map<String, Object> context, String resource) {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
-        ServletContext servletContext = (ServletContext) context.get("servletContext");
         if (request == null) {
             return;
         }
-        if (servletContext == null) {
-            servletContext = request.getServletContext(); // NOTE: new in Servlet API 3.0
-        }
-        
+        ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
+
         // next run screen-based one
         ModelLocation modelLoc = getRenderInitScriptScreenLocation(request, servletContext);        
         if (modelLoc.hasResource()) {

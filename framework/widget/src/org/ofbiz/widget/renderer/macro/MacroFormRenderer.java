@@ -135,7 +135,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         this.macroLibrary = MacroScreenRenderer.getTemplate(name, macroLibraryPath);
         this.request = request;
         this.response = response;
-        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         this.rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         this.javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
         // SCIPIO: better off without this

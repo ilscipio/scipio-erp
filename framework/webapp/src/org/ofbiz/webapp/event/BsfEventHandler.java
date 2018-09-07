@@ -54,7 +54,7 @@ public class BsfEventHandler implements EventHandler {
      * @see org.ofbiz.webapp.event.EventHandler#invoke(ConfigXMLReader.Event, ConfigXMLReader.RequestMap, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
-        ServletContext context = (ServletContext) request.getAttribute("servletContext");
+        ServletContext context = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         if (cl == null)
             cl = this.getClass().getClassLoader();

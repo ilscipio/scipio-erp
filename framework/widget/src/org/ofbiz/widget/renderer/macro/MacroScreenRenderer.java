@@ -316,7 +316,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 containerId = getNextElementId();
             }
             HttpServletResponse response = (HttpServletResponse) context.get("response");
-            ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+            ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
             RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
             autoUpdateLink = rh.makeLink(request, response, autoUpdateTarget);
         }
@@ -489,7 +489,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String urlString = "";
         if (urlMode != null && "intra-app".equalsIgnoreCase(urlMode)) {
             if (request != null && response != null) {
-                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 urlString = rh.makeLink(request, response, src, fullPath, secure, encode);
             } else {
@@ -619,7 +619,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                     editRequest += "&amp;";
                 }
                 editRequest += "contentId=" + expandedContentId;
-                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 urlString = rh.makeLink(request, response, editRequest, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
             }
@@ -642,7 +642,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         if (request != null && response != null) {
-            ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+            ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
             RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
             fullUrlString = rh.makeLink(request, response, urlString, true, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
         }
@@ -737,7 +737,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                  if (UtilValidate.isNotEmpty(expandedMapKey)) {
                      editRequest += "&amp;mapKey=" + expandedMapKey;
                  }
-                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                 ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
                  RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                  urlString = rh.makeLink(request, response, editRequest, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
              }
@@ -927,7 +927,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             viewSizeParam = "VIEW_SIZE" + "_" + paginatorNumber;
         }
 
-        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
 
         Map<String, Object> inputFields = UtilGenerics.toMap(context.get("requestParameters"));

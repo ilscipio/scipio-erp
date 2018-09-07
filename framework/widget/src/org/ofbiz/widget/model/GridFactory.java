@@ -117,7 +117,7 @@ public class GridFactory extends WidgetFactory {
         String cacheKey = webappName + "::" + resourceName + "::" + gridName;
         ModelGrid modelGrid = gridWebappCache.get(cacheKey);
         if (modelGrid == null) {
-            ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
+            ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
             Delegator delegator = (Delegator) request.getAttribute("delegator");
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
             URL gridFileUrl = servletContext.getResource(resourceName);

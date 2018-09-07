@@ -287,7 +287,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         HttpServletResponse response = (HttpServletResponse) context.get("response");
 
-        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
 
         writer.append("<table border=\"0\" width=\"100%\" cellpadding=\"2\">\n");

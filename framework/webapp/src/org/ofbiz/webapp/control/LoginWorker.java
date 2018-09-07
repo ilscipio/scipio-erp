@@ -1201,7 +1201,7 @@ public class LoginWorker {
     public static boolean hasBasePermission(GenericValue userLogin, HttpServletRequest request) {
         Security security = (Security) request.getAttribute("security");
         if (security != null) {
-            ServletContext context = (ServletContext) request.getAttribute("servletContext");
+            ServletContext context = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
             String serverId = (String) context.getAttribute("_serverId");
             // SCIPIO: delegated to new overload
             return hasBasePermission(userLogin, request, security, serverId);

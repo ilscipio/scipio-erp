@@ -61,7 +61,7 @@ public class MenuFactory extends WidgetFactory {
 
         Map<String, ModelMenu> modelMenuMap = menuWebappCache.get(cacheKey);
         if (modelMenuMap == null) {
-            ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
+            ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
 
             URL menuFileUrl = servletContext.getResource(resourceName);
             Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);

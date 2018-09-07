@@ -257,7 +257,7 @@ public class CmsEvents {
                 templateMap.put("statusCode", statusCode);
 
                 // make the link prefix
-                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 templateMap.put("_REQUEST_HANDLER_", rh);
 

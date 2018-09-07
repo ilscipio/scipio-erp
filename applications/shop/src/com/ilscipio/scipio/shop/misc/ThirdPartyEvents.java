@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -112,7 +111,8 @@ public class ThirdPartyEvents {
 
         try {
             // SCIPIO: now points to shop
-            shopPropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
+            // SCIPIO: get context using servlet API 3.0
+            shopPropertiesUrl = request.getServletContext().getResource("/WEB-INF/shop.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);
         }
@@ -194,7 +194,8 @@ public class ThirdPartyEvents {
 
         try {
             // SCIPIO: now points to shop
-            shopPropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
+            // SCIPIO: get context using servlet API 3.0
+            shopPropertiesUrl = request.getServletContext().getResource("/WEB-INF/shop.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);
         }

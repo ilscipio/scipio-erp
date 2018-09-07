@@ -2378,7 +2378,7 @@ public class RequestHandler {
     }
 
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode) {
-        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         return rh.makeLink(request, response, url, fullPath, secure, encode);
     }

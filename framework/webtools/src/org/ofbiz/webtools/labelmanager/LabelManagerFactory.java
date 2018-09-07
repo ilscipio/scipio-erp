@@ -101,7 +101,8 @@ public class LabelManagerFactory {
         }
     }
 
-    public void findMatchingLabels(String component, String fileName, String key, String locale) throws MalformedURLException, SAXException, ParserConfigurationException, IOException, GeneralException {
+    public void findMatchingLabels(String component, String fileName, String key, String locale) 
+            throws MalformedURLException, SAXException, ParserConfigurationException, IOException, GeneralException {
         if (UtilValidate.isEmpty(component) && UtilValidate.isEmpty(fileName) && UtilValidate.isEmpty(key) && UtilValidate.isEmpty(locale)) {
             // Important! Don't allow unparameterized queries - doing so will result in loading the entire project into memory
             return;
@@ -203,7 +204,7 @@ public class LabelManagerFactory {
                         label = new LabelInfo(key, keyComment, fileName, localeName, localeValue, localeComment);
                         labels.put(key + keySeparator + fileName, label);
                     } catch (Exception e) {
-                        Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
+                        Debug.logError(e, module);
                     }
                 } else {
                     label.setLabelKeyComment(keyComment);

@@ -151,7 +151,7 @@ public class GenericWebEvent {
         }
 
         // if this is a delete, do that before getting all of the non-pk parameters and validating them
-        if (updateMode.equals("DELETE")) {
+        if ("DELETE".equals(updateMode)) {
             
             // SCIPIO: 2017-04-13: NOTE whether a delete attempt was made, and save the previous value
             request.setAttribute("updateGenericDeleteAttempt", Boolean.TRUE);
@@ -221,7 +221,7 @@ public class GenericWebEvent {
 
 
         // if the updateMode is CREATE, check to see if an entity with the specified primary key already exists
-        if (updateMode.equals("CREATE")) {
+        if ("CREATE".equals(updateMode)) {
             GenericValue tempEntity = null;
 
             try {
@@ -284,7 +284,7 @@ public class GenericWebEvent {
                     resultBool = Boolean.TRUE;
                 }
 
-                if (!resultBool.booleanValue()) {
+                if (!resultBool) {
                     Field msgField;
                     String message;
 
@@ -309,7 +309,7 @@ public class GenericWebEvent {
             return "error";
         }
 
-        if (updateMode.equals("CREATE")) {
+        if ("CREATE".equals(updateMode)) {
             try {
                 delegator.create(findByEntity.getEntityName(), findByEntity.getAllFields());
             } catch (GenericEntityException e) {
@@ -319,7 +319,7 @@ public class GenericWebEvent {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-        } else if (updateMode.equals("UPDATE")) {
+        } else if ("UPDATE".equals(updateMode)) {
             GenericValue value = delegator.makeValue(findByEntity.getEntityName(), findByEntity.getAllFields());
 
             try {

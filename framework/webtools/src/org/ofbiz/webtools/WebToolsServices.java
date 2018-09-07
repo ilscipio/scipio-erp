@@ -131,7 +131,7 @@ public class WebToolsServices {
 
         Integer txTimeout = (Integer)context.get("txTimeout");
         if (txTimeout == null) {
-            txTimeout = Integer.valueOf(7200);
+            txTimeout = 7200;
         }
         URL url = null;
 
@@ -161,7 +161,7 @@ public class WebToolsServices {
             } catch (MalformedURLException mue) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsInvalidFileName", UtilMisc.toMap("filename", filename, "errorString", mue.getMessage()), locale));
             } catch (Exception exc) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrrorReadingFileName", UtilMisc.toMap("filename", filename, "errorString", exc.getMessage()), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrorReadingFileName", UtilMisc.toMap("filename", filename, "errorString", exc.getMessage()), locale));
             }
         }
 
@@ -173,7 +173,7 @@ public class WebToolsServices {
             try {
                 templateReader = new FileReader(fmfilename);
             } catch (FileNotFoundException e) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrrorReadingTemplateFile", UtilMisc.toMap("filename", fmfilename, "errorString", e.getMessage()), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrorReadingTemplateFile", UtilMisc.toMap("filename", fmfilename, "errorString", e.getMessage()), locale));
             }
 
             StringWriter outWriter = new StringWriter();
@@ -182,7 +182,7 @@ public class WebToolsServices {
             try {
                 Configuration conf = org.ofbiz.base.util.template.FreeMarkerWorker.getDefaultOfbizConfig();
                 template = new Template("FMImportFilter", templateReader, conf);
-                Map<String, Object> fmcontext = new HashMap<String, Object>();
+                Map<String, Object> fmcontext = new HashMap<>();
 
                 InputSource ins = url != null ? new InputSource(url.openStream()) : new InputSource(new StringReader(fulltext));
                 NodeModel nodeModel;
@@ -203,7 +203,7 @@ public class WebToolsServices {
                 template.process(fmcontext, outWriter);
                 fulltext = outWriter.toString();
             } catch (Exception ex) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrrorProcessingTemplateFile", UtilMisc.toMap("filename", fmfilename, "errorString", ex.getMessage()), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrorProcessingTemplateFile", UtilMisc.toMap("filename", fmfilename, "errorString", ex.getMessage()), locale));
             }
         }
 
@@ -227,7 +227,7 @@ public class WebToolsServices {
                 }
                 Map<String, Object> outputMap = dispatcher.runSync("parseEntityXmlFile", inputMap);
                 if (ServiceUtil.isError(outputMap)) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrrorParsingFile", UtilMisc.toMap("errorString", ServiceUtil.getErrorMessage(outputMap)), locale));
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrorParsingFile", UtilMisc.toMap("errorString", ServiceUtil.getErrorMessage(outputMap)), locale));
                 } else {
                     Long numberRead = (Long)outputMap.get("rowProcessed");
                     messages.add(UtilProperties.getMessage(resource, "EntityImportRowProcessed", UtilMisc.toMap("numberRead", numberRead.toString()), locale));
@@ -264,14 +264,14 @@ public class WebToolsServices {
         Long filePause = (Long)context.get("filePause");
 
         if (txTimeout == null) {
-            txTimeout = Integer.valueOf(7200);
+            txTimeout = 7200;
         }
         if (filePause == null) {
-            filePause = Long.valueOf(0);
+            filePause = 0L;
         }
 
         if (UtilValidate.isNotEmpty(path)) {
-            long pauseLong = filePause != null ? filePause.longValue() : 0;
+            long pauseLong = filePause != null ? filePause : 0;
             File baseDir = new File(path);
 
             if (baseDir.isDirectory() && baseDir.canRead()) {
@@ -359,7 +359,7 @@ public class WebToolsServices {
         boolean checkDataOnly = "true".equals(context.get("checkDataOnly"));
         Locale locale = (Locale) context.get("locale");
         Integer txTimeoutInt = (Integer) context.get("txTimeout");
-        int txTimeout = txTimeoutInt != null ? txTimeoutInt.intValue() : -1;
+        int txTimeout = txTimeoutInt != null ? txTimeoutInt : -1;
 
         List<Object> messages = new LinkedList<Object>();
 
@@ -478,7 +478,7 @@ public class WebToolsServices {
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
 
         if (txTimeout == null) {
-            txTimeout = Integer.valueOf(7200);
+            txTimeout = 7200;
         }
 
         long rowProcessed = 0;
@@ -486,7 +486,7 @@ public class WebToolsServices {
             EntitySaxReader reader = new EntitySaxReader(delegator);
             reader.setUseTryInsertMethod(mostlyInserts);
             reader.setMaintainTxStamps(maintainTimeStamps);
-            reader.setTransactionTimeout(txTimeout.intValue());
+            reader.setTransactionTimeout(txTimeout);
             reader.setCreateDummyFks(createDummyFks);
             reader.setCheckDataOnly(checkDataOnly);
             reader.setPlaceholderValues(placeholderValues);
@@ -509,7 +509,7 @@ public class WebToolsServices {
         Timestamp fromDate = (Timestamp)context.get("fromDate");
         Integer txTimeout = (Integer)context.get("txTimeout");
         if (txTimeout == null) {
-            txTimeout = Integer.valueOf(7200);
+            txTimeout = 7200;
         }
 
         List<String> results = new LinkedList<String>();
@@ -904,7 +904,7 @@ public class WebToolsServices {
                 ModelEntity modelEntity = reader.getModelEntity(curEntityName);
                 UtilPlist.writePlistFile(modelEntity.createEoModelMap(entityNamePrefix, datasourceName, entityNames, reader), eomodeldFullPath, curEntityName +".plist", true);
             }
-            Integer entityNamesSize = new Integer(entityNames.size());
+            Integer entityNamesSize = entityNames.size();
             return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "WebtoolsEomodelExported", UtilMisc.toMap("entityNamesSize", entityNamesSize.toString(), "eomodeldFullPath", eomodeldFullPath), locale));
         } catch (UnsupportedEncodingException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsEomodelSavingFileError", UtilMisc.toMap("errorString", e.toString()), locale));

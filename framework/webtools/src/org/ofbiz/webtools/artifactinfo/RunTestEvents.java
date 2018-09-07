@@ -56,4 +56,3 @@ public class RunTestEvents {
         return result;
     }
 }
-

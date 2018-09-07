@@ -141,10 +141,10 @@ public class ServiceEcaArtifactInfo extends ArtifactInfoBase {
 
         /* going to try this without any attributes...
         // attributes
-        List<Map<String, Object>> attributesList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> attributesList = new ArrayList<>();
         topLevelMap.put("attributes", attributesList);
         for (ModelParam param: this.modelService.getModelParamList()) {
-            Map<String, Object> attributeMap = new HashMap<String, Object>();
+            Map<String, Object> attributeMap = new HashMap<>();
             attributesList.add(attributeMap);
 
             if (useMoreDetailedNames) {

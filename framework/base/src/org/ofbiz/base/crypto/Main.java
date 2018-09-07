@@ -31,8 +31,10 @@ public class Main {
         } else if ("-kek".equals(args[0])) {
             AesCipherService cs = new AesCipherService();
             System.out.println(Base64.encodeBase64String(cs.generateNewKey().getEncoded()));
-        } else if ("-kek-old".equals(args[0])) {
-            System.out.println(Base64.encodeBase64String(DesCrypt.generateKey().getEncoded()));
+        // SCIPIO: 2018-09-07: DISABLED generating new DES keys - DES is insecure
+        // and the DES code in Scipio should only be used to decrypt existing records.
+        //} else if ("-kek-old".equals(args[0])) {
+        //    System.out.println(Base64.encodeBase64String(DesCrypt.generateKey().getEncoded()));
         }
     }
 }

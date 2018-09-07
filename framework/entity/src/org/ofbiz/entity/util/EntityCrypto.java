@@ -299,6 +299,12 @@ public final class EntityCrypto {
         }
     }
 
+    /**
+     * LegacyStorageHandler, uses DES encryption.
+     * @deprecated SCIPIO: 2018-09-07: DES algorithm is insecure 
+     * and should not be used anymore, except to decrypt existing records.
+     */
+    @Deprecated
     protected static abstract class LegacyStorageHandler extends StorageHandler {
         @Override
         protected Key generateNewKey() throws EntityCryptoException {

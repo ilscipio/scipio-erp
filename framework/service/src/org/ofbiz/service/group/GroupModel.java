@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.service.group;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,8 @@ import org.w3c.dom.Element;
 /**
  * GroupModel.java
  */
-public class GroupModel {
+@SuppressWarnings("serial")
+public class GroupModel implements Serializable { // SCIPIO: added Serializable
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 

@@ -90,7 +90,9 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     /** Synchronization object used to control access to the ModelField collection objects.
      * A single lock is used for all ModelField collections so collection updates are atomic. */
-    private final Object fieldsLock = new Object();
+    // SCIPIO: 2018-09-07: fixed: using new Object() is invalid because Object is not Serializable
+    //private final Object fieldsLock = new Object();
+    private final Object fieldsLock = new Serializable() {};
 
     /** Model fields in the order they were defined. This list duplicates the values in fieldsMap, but
      *  we must keep the list in its original sequence for SQL DISTINCT operations to work properly. */

@@ -33,7 +33,8 @@ import org.w3c.dom.Element;
 /**
  * ServiceEcaSetField
  */
-public class ServiceEcaSetField {
+@SuppressWarnings("serial")
+public class ServiceEcaSetField implements java.io.Serializable { // SCIPIO: added Serializable
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 

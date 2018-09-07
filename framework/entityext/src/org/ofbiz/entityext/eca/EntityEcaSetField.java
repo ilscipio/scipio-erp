@@ -28,9 +28,10 @@ import org.ofbiz.entity.model.ModelUtil;
 import org.w3c.dom.Element;
 
 /**
- * ServiceEcaSetField
+ * EntityEcaSetField
  */
-public final class EntityEcaSetField {
+@SuppressWarnings("serial")
+public final class EntityEcaSetField implements java.io.Serializable { // SCIPIO: added Serializable
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -143,7 +144,7 @@ public final class ModelIndex extends ModelChild {
         return root;
     }
 
-    public static final class Field {
+    public static final class Field implements Serializable { // SCIPIO: added Serializable
         private final String fieldName;
         private final Function function;
 

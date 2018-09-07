@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
+import java.io.Serializable;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,7 +44,8 @@ import org.ofbiz.base.util.Debug;
  * <code>PreparedStatement</code> and <code>ResultSet</code> objects.
  *
  */
-public abstract class JdbcValueHandler<T> {
+@SuppressWarnings("serial")
+public abstract class JdbcValueHandler<T> implements Serializable { // SCIPIO: added Serializable
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Map<String, JdbcValueHandler<?>> JdbcValueHandlerMap = createJdbcValueHandlerMap();
     private static final Map<String, Integer> SqlTypeMap = createSqlTypeMap();

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -31,8 +32,9 @@ import org.w3c.dom.Element;
  * An object that models the <code>&lt;entitymodel&gt;</code> child elements that provide default values.
  *
  */
+@SuppressWarnings("serial")
 @ThreadSafe
-public final class ModelInfo {
+public final class ModelInfo implements Serializable { // SCIPIO: added Serializable
 
     public static final ModelInfo DEFAULT = new ModelInfo("None", "None", getCopyrightString(), "None", "1.0", "");
 

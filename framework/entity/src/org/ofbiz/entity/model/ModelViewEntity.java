@@ -1272,7 +1272,7 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
-    public static final class ViewEntityCondition {
+    public static final class ViewEntityCondition implements Serializable { // SCIPIO: added Serializable
         public final ModelViewEntity modelViewEntity;
         public final ModelViewLink modelViewLink;
         public final boolean filterByDate;

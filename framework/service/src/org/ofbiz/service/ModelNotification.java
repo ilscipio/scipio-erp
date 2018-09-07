@@ -19,6 +19,7 @@
 
 package org.ofbiz.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,8 @@ import org.ofbiz.service.config.model.Notify;
 /**
  * ModelNotification
  */
-public class ModelNotification {
+@SuppressWarnings("serial")
+public class ModelNotification implements Serializable { // SCIPIO: added Serializable
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 

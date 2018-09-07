@@ -28,8 +28,7 @@ import org.ofbiz.widget.model.ModelScreenWidget;
 /**
  * Widget Library - Screen String Renderer interface.
  */
-public interface ScreenStringRenderer {
-    public String getRendererName();
+public interface ScreenStringRenderer extends StringRenderer { // SCIPIO: StringRenderer
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException;
     public void renderScreenEnd(Appendable writer, Map<String, Object> context) throws IOException;
     public void renderSectionBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException;

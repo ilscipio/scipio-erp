@@ -26,7 +26,7 @@ import org.ofbiz.widget.model.ModelTree;
 /**
  * Widget Library - Tree String Renderer interface
  */
-public interface TreeStringRenderer {
+public interface TreeStringRenderer extends StringRenderer { // SCIPIO: StringRenderer
 
     public void renderNodeBegin(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node, int depth) throws IOException;
     public void renderNodeEnd(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node) throws IOException;
@@ -35,9 +35,5 @@ public interface TreeStringRenderer {
     public void renderImage(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Image image) throws IOException;
     public void renderLastElement(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node) throws IOException;
     public ScreenStringRenderer getScreenStringRenderer(Map<String, Object> context);
-    
-    /**
-     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
-     */
-    public String getRendererName();
+
 }

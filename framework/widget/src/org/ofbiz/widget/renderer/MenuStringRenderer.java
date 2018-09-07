@@ -30,7 +30,7 @@ import org.ofbiz.widget.model.ModelSubMenu;
 /**
  * Widget Library - Form String Renderer interface
  */
-public interface MenuStringRenderer {
+public interface MenuStringRenderer extends StringRenderer { // SCIPIO: StringRenderer
     public void renderMenuItem(Appendable writer, Map<String, Object> context, ModelMenuItem menuItem) throws IOException ;
     public void renderMenuOpen(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException ;
     public void renderMenuClose(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException ;
@@ -49,8 +49,4 @@ public interface MenuStringRenderer {
      */
     public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
 
-    /**
-     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
-     */
-    public String getRendererName();
 }

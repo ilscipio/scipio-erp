@@ -27,7 +27,7 @@ import org.ofbiz.widget.model.ModelFormField;
 /**
  * Widget Library - Form/Grid renderer.
  */
-public interface FormStringRenderer {
+public interface FormStringRenderer extends StringRenderer { // SCIPIO: StringRenderer
     public void renderDisplayField(Appendable writer, Map<String, Object> context, ModelFormField.DisplayField displayField) throws IOException;
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, ModelFormField.HyperlinkField hyperlinkField) throws IOException;
     public void renderMenuField(Appendable writer, Map<String, Object> context, ModelFormField.MenuField menuField) throws IOException;
@@ -128,9 +128,4 @@ public interface FormStringRenderer {
      * SCIPIO: handles no-result case for list forms, so a text or other may be displayed instead of empty table.
      */
     public void renderAlternateText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException;
-    
-    /**
-     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
-     */
-    public String getRendererName();
 }

@@ -569,7 +569,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                 for(ModelSubMenu childSubMenu : menuItem.getSubMenuList()) {
                     Boolean expandOvrd = childSubMenu.getExpand(context);
                     // TODO: expand flag functionality is incomplete - this does not expand parents -
-                    // need functionality from org.ofbiz.widget.model.ModelMenu.FlaggedMenuNodes
+                    // need functionality from org.ofbiz.widget.model.ModelMenu.FlaggedMenuNodes (see MenuRenderState.flaggedMenuNodes)
                     if (!Boolean.FALSE.equals(expandOvrd)) { // false expandOvrd prevents expand, true guarantees expand
                         if (!(renderState != null && renderState.isCurrentSubMenusOnly()) || childSubMenu.isSameOrAncestorOf(selectedSubMenu) || Boolean.TRUE.equals(expandOvrd)) {
                             // 2017-04-25: if this is the separate sub-menu match, we have to render it to a different output

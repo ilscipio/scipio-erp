@@ -28,7 +28,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     private transient MenuAndItem selectedMenuAndItem;
     // TODO: REVIEW: this cache for flagged nodes ended up unused, but unclear
     // if this was by design or omission...
-    private transient ModelMenu.FlaggedMenuNodes flaggedMenuNodes;
+    //private transient ModelMenu.FlaggedMenuNodes flaggedMenuNodes;
     
     private transient MenuItemState itemState;
     
@@ -41,7 +41,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         setMaxDepth(1);
         setSubMenuFilter(null);
         this.selectedMenuAndItem = null;
-        this.flaggedMenuNodes = null;
+        //this.flaggedMenuNodes = null;
         this.itemState = null;
         this.separateMenu = null;
         this.separateMenuConfig = modelMenu.getSeparateMenuConfig(context);
@@ -171,8 +171,9 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         this.selectedMenuAndItem = modelMenu.getSelectedMenuAndItem(context);
         
         // 2016-11-11: also determine all the possible manually-selected items, which might get crazy...
-        this.flaggedMenuNodes = ModelMenu.FlaggedMenuNodes.resolve(context, modelMenu.getManualSelectedNodes(), 
-                modelMenu.getManualExpandedNodes(), this.selectedMenuAndItem);
+        // TODO: REVIEW
+        //this.flaggedMenuNodes = ModelMenu.FlaggedMenuNodes.resolve(context, modelMenu.getManualSelectedNodes(), 
+        //        modelMenu.getManualExpandedNodes(), this.selectedMenuAndItem);
     }
     
     public ModelSubMenu getSeparateMenu() {

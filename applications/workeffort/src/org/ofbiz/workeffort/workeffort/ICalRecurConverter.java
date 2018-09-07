@@ -63,8 +63,7 @@ import net.fortuna.ical4j.model.property.RRule;
 public class ICalRecurConverter implements TemporalExpressionVisitor {
     protected static final WeekDay dayOfWeekArray[] = {WeekDay.SU, WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA};
 
-    @SuppressWarnings("unchecked")
-    public static void convert(TemporalExpression expr, PropertyList eventProps) {
+    public static void convert(TemporalExpression expr, PropertyList<Property> eventProps) {
         ICalRecurConverter converter = new ICalRecurConverter();
         expr.accept(converter);
         DtStart dateStart = (DtStart) eventProps.getProperty(Property.DTSTART);

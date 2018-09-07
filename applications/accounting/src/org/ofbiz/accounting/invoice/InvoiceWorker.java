@@ -725,6 +725,7 @@ public class InvoiceWorker {
             return null;
         }
         // SCIPIO: Vat Included
+        // TODO: REVIEW: unused taxAlreadyIncluded
         BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
@@ -888,7 +889,8 @@ public class InvoiceWorker {
             Debug.logError(e, "Trouble getting TaxAuthorityRateProduct/TaxAuthorityGlAccount for InvoiceItem: " + e, module);
             return null;
         }
-        // Vat Included
+        // SCIPIO: Vat Included
+        // TODO: REVIEW: unused taxAlreadyIncluded
         BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));

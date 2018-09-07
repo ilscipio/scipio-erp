@@ -725,7 +725,7 @@ public class InvoiceWorker {
             return null;
         }
         // SCIPIO: Vat Included
-        // TODO: REVIEW: unused taxAlreadyIncluded
+        /* TODO?: REVIEW: is taxAlreadyIncluded still needed later, or can be removed?
         BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
@@ -736,9 +736,9 @@ public class InvoiceWorker {
         } catch (GenericEntityException e) {
             Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
-
-       //return getTaxTotalForInvoiceItems(invoiceTaxItems).add(taxAlreadyIncluded);
-       return getTaxTotalForInvoiceItems(invoiceTaxItems);
+        return getTaxTotalForInvoiceItems(invoiceTaxItems).add(taxAlreadyIncluded);
+        */
+        return getTaxTotalForInvoiceItems(invoiceTaxItems);
     }
 
     /** Returns the invoice tax total for unattributed tax items, that is items which have no taxAuthPartyId value
@@ -890,13 +890,13 @@ public class InvoiceWorker {
             return null;
         }
         // SCIPIO: Vat Included
-        // TODO: REVIEW: unused taxAlreadyIncluded
-        BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
+        // TODO: REVIEW: is taxAlreadyIncluded still needed later, or can be removed?
+        //BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
             List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
                     .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX")).queryList();
-            taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
+            //taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
             for (GenericValue orderAdjustment : orderAdjustments) {
                 String taxAuthorityRateSeqId = orderAdjustment.getString("taxAuthorityRateSeqId");
                 if (UtilValidate.isNotEmpty(taxAuthorityRateSeqId)) {

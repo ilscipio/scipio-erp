@@ -47,8 +47,8 @@ public class SimpleMethodTest extends OFBizTestCase {
     protected String methodLocation;
     protected String methodName;
     
-    public static MockHttpServletRequest request = new MockHttpServletRequest();
-    public static MockHttpServletResponse response = new MockHttpServletResponse();
+    public static final MockHttpServletRequest request = new MockHttpServletRequest();
+    public static final MockHttpServletResponse response = new MockHttpServletResponse();
 
     /**
      * Tests of Simple Method

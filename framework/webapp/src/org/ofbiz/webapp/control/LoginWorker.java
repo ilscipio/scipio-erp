@@ -93,7 +93,7 @@ public class LoginWorker {
     public static final String X509_CERT_ATTR = "SSLx509Cert";
 
     /** This Map is keyed by the randomly generated externalLoginKey and the value is a UserLogin GenericValue object */
-    public static Map<String, GenericValue> externalLoginKeys = new ConcurrentHashMap<String, GenericValue>();
+    public static final Map<String, GenericValue> externalLoginKeys = new ConcurrentHashMap<String, GenericValue>();
 
     public static StringWrapper makeLoginUrl(PageContext pageContext) {
         return makeLoginUrl(pageContext, "checkLogin");

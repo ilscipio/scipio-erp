@@ -47,8 +47,8 @@ public class FinAccountHelper {
      /**
       * A word on precision: since we're just adding and subtracting, the interim figures should have one more decimal place of precision than the final numbers.
       */
-     public static int decimals = UtilNumber.getBigDecimalScale("finaccount.decimals");
-     public static RoundingMode rounding = UtilNumber.getRoundingMode("finaccount.rounding");
+     public static final int decimals = UtilNumber.getBigDecimalScale("finaccount.decimals");
+     public static final RoundingMode rounding = UtilNumber.getRoundingMode("finaccount.rounding");
      public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(decimals, rounding);
 
      public static final String giftCertFinAccountTypeId = "GIFTCERT_ACCOUNT";

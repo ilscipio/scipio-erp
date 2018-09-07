@@ -61,8 +61,8 @@ import org.ofbiz.security.Security;
 public class ContentManagementWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static Map<String, GenericValue> cachedWebSitePublishPoints = new ConcurrentHashMap<>(); // SCIPIO: 2018-03-28: concurrency fix
-    public static Map<String, Map<String, Object>> cachedStaticValues = new ConcurrentHashMap<>(); // SCIPIO: 2018-03-28: concurrency fix
+    public static final Map<String, GenericValue> cachedWebSitePublishPoints = new ConcurrentHashMap<>(); // SCIPIO: 2018-03-28: concurrency fix
+    public static final Map<String, Map<String, Object>> cachedStaticValues = new ConcurrentHashMap<>(); // SCIPIO: 2018-03-28: concurrency fix
 
     public static void mruAdd(HttpServletRequest request, GenericEntity pk, String suffix) {
         HttpSession session = request.getSession();

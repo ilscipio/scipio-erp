@@ -57,7 +57,7 @@ public class GiftCertificateServices {
     public static final int CARD_NUMBER_LENGTH = 14;
     public static final int PIN_NUMBER_LENGTH = 6;
 
-    public static BigDecimal ZERO = BigDecimal.ZERO;
+    public static final BigDecimal ZERO = BigDecimal.ZERO;
 
     // Base Gift Certificate Services
     public static Map<String, Object> createGiftCertificate(DispatchContext dctx, Map<String, ? extends Object> context) {

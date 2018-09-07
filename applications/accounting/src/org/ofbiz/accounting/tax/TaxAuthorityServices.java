@@ -64,9 +64,9 @@ public class TaxAuthorityServices {
     public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
     public static final BigDecimal ONE_BASE = BigDecimal.ONE;
     public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
-    public static int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
-    public static int salestaxCalcDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
-    public static RoundingMode salestaxRounding = UtilNumber.getRoundingMode("salestax.rounding");
+    public static final int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
+    public static final int salestaxCalcDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+    public static final RoundingMode salestaxRounding = UtilNumber.getRoundingMode("salestax.rounding");
     public static final String resource = "AccountingUiLabels";
 
     public static Map<String, Object> rateProductTaxCalcForDisplay(DispatchContext dctx, Map<String, ? extends Object> context) {

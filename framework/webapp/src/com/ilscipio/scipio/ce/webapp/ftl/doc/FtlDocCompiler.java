@@ -51,7 +51,7 @@ import freemarker.template.TemplateExceptionHandler;
  */
 public class FtlDocCompiler {
 
-    public static boolean DEBUG = false;
+    public static final boolean DEBUG = false;
     
     public static final String EXTENSION_NONE = "_NONE_";
     

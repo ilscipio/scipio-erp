@@ -56,9 +56,9 @@ public class OrbitalPaymentServices {
     private static RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
     public final static String resource = "AccountingUiLabels";
 
-    public static String APPROVED = "Approved";
-    public static String DECLINED = "Declined";
-    public static String ERROR    = "Error";
+    public static final String APPROVED = "Approved";
+    public static final String DECLINED = "Declined";
+    public static final String ERROR    = "Error";
 
     public static final String BIN_VALUE = "000002";
     public static TransactionProcessorIF tp = null;

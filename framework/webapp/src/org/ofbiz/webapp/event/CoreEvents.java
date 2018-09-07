@@ -424,7 +424,7 @@ public class CoreEvents {
         }
     }
 
-    public static ServiceEventHandler seh = new ServiceEventHandler();
+    public static final ServiceEventHandler seh = new ServiceEventHandler();
 
     /**
      * Run a service.

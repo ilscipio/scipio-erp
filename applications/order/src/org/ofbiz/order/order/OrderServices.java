@@ -97,19 +97,24 @@ public class OrderServices {
     public static final String resourceProduct = "ProductUiLabels";
     public static final String resourceCommon = "CommonUiLabels";
 
-    public static Map<String, String> salesAttributeRoleMap = new HashMap<String, String>();
-    public static Map<String, String> purchaseAttributeRoleMap = new HashMap<String, String>();
+    public static final Map<String, String> salesAttributeRoleMap;
+    public static final Map<String, String> purchaseAttributeRoleMap;
     static {
-        salesAttributeRoleMap.put("placingCustomerPartyId", "PLACING_CUSTOMER");
-        salesAttributeRoleMap.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
-        salesAttributeRoleMap.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
-        salesAttributeRoleMap.put("shipToCustomerPartyId", "SHIP_TO_CUSTOMER");
-        salesAttributeRoleMap.put("endUserCustomerPartyId", "END_USER_CUSTOMER");
-
-        purchaseAttributeRoleMap.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
-        purchaseAttributeRoleMap.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
-        purchaseAttributeRoleMap.put("shipFromVendorPartyId", "SHIP_FROM_VENDOR");
-        purchaseAttributeRoleMap.put("supplierAgentPartyId", "SUPPLIER_AGENT");
+        // SCIPIO: fixed map populate for final field
+        Map<String, String> m = new HashMap<>();
+        m.put("placingCustomerPartyId", "PLACING_CUSTOMER");
+        m.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
+        m.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
+        m.put("shipToCustomerPartyId", "SHIP_TO_CUSTOMER");
+        m.put("endUserCustomerPartyId", "END_USER_CUSTOMER");
+        salesAttributeRoleMap = m;
+        
+        m = new HashMap<>();
+        m.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
+        m.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
+        m.put("shipFromVendorPartyId", "SHIP_FROM_VENDOR");
+        m.put("supplierAgentPartyId", "SUPPLIER_AGENT");
+        purchaseAttributeRoleMap = m;
     }
     public static final int taxDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
     public static final RoundingMode taxRounding = UtilNumber.getRoundingMode("salestax.rounding");

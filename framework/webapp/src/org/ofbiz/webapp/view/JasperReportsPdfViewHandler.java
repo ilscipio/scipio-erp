@@ -50,7 +50,7 @@ public class JasperReportsPdfViewHandler extends AbstractViewHandler {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ServletContext context;
-    public static UtilCache jasperReportsCompiledCache = UtilCache.createUtilCache("webapp.JasperReportsCompiled");
+    public static final UtilCache jasperReportsCompiledCache = UtilCache.createUtilCache("webapp.JasperReportsCompiled");
 
     public void init(ServletContext context) throws ViewHandlerException {
         this.context = context;

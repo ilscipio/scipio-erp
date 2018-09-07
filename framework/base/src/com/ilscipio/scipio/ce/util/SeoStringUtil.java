@@ -15,8 +15,8 @@ public class SeoStringUtil {
 
     public static final String URL_HYPHEN = "-";
     public static final String ASCII_REGEX = "^[0-9-_a-zA-Z]*$";
-    public static Pattern ASCII_PATTERN = Pattern.compile(ASCII_REGEX);
-    public static char[] dashedArray = new char[] {' ',',','.','/','\\','-','_','=','?',';'};
+    public static final Pattern ASCII_PATTERN = Pattern.compile(ASCII_REGEX);
+    public static final char[] dashedArray = new char[] {' ',',','.','/','\\','-','_','=','?',';'};
     
     /**
      * Generates a hash of a given plainText

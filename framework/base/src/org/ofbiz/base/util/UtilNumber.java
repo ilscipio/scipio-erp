@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import com.ibm.icu.text.RuleBasedNumberFormat;
 
@@ -260,6 +261,33 @@ public final class UtilNumber {
         return getRoundingMode(arithmeticPropertiesFile, property);
     }
 
+    private static final Map<String, RoundingMode> roundingModeStrMap; // SCIPIO: 2018-09-06: better string to RoundingMode conversion
+    static {
+        Map<String, RoundingMode> m = new HashMap<>();
+        
+        // values supported by stock
+        m.put("ROUND_HALF_UP", RoundingMode.HALF_UP);
+        m.put("ROUND_HALF_DOWN", RoundingMode.HALF_DOWN);
+        m.put("ROUND_HALF_EVEN", RoundingMode.HALF_EVEN);
+        m.put("ROUND_UP", RoundingMode.UP);
+        m.put("ROUND_DOWN", RoundingMode.DOWN);
+        m.put("ROUND_CEILING", RoundingMode.CEILING);
+        m.put("ROUND_FLOOR", RoundingMode.FLOOR);
+        m.put("ROUND_UNNECCESSARY", RoundingMode.UNNECESSARY);
+        
+        // also support abbreviated names (SCIPIO)
+        m.put("HALF_UP", RoundingMode.HALF_UP);
+        m.put("HALF_DOWN", RoundingMode.HALF_DOWN);
+        m.put("HALF_EVEN", RoundingMode.HALF_EVEN);
+        m.put("UP", RoundingMode.UP);
+        m.put("DOWN", RoundingMode.DOWN);
+        m.put("CEILING", RoundingMode.CEILING);
+        m.put("FLOOR", RoundingMode.FLOOR);
+        m.put("UNNECCESSARY", RoundingMode.UNNECESSARY);
+        
+        roundingModeStrMap = m;
+    }
+    
     /**
      * Method to get the RoundingMode rounding mode int value from a string name.
      * @param   value - The name of the mode (e.g., "ROUND_HALF_UP")
@@ -270,24 +298,26 @@ public final class UtilNumber {
             return null;
         }
         value = value.trim();
-        if ("ROUND_HALF_UP".equals(value)) {
-            return RoundingMode.HALF_UP;
-        } else if ("ROUND_HALF_DOWN".equals(value)) {
-            return RoundingMode.HALF_DOWN;
-        } else if ("ROUND_HALF_EVEN".equals(value)) {
-            return RoundingMode.HALF_EVEN;
-        } else if ("ROUND_UP".equals(value)) {
-            return RoundingMode.UP;
-        } else if ("ROUND_DOWN".equals(value)) {
-            return RoundingMode.DOWN;
-        } else if ("ROUND_CEILING".equals(value)) {
-            return RoundingMode.CEILING;
-        } else if ("ROUND_FLOOR".equals(value)) {
-            return RoundingMode.FLOOR;
-        } else if ("ROUND_UNNECCESSARY".equals(value)) {
-            return RoundingMode.UNNECESSARY;
-        }
-        return null;
+        // SCIPIO: 2018-09-06: better string to RoundingMode conversion
+//        if ("ROUND_HALF_UP".equals(value)) {
+//            return RoundingMode.HALF_UP;
+//        } else if ("ROUND_HALF_DOWN".equals(value)) {
+//            return RoundingMode.HALF_DOWN;
+//        } else if ("ROUND_HALF_EVEN".equals(value)) {
+//            return RoundingMode.HALF_EVEN;
+//        } else if ("ROUND_UP".equals(value)) {
+//            return RoundingMode.UP;
+//        } else if ("ROUND_DOWN".equals(value)) {
+//            return RoundingMode.DOWN;
+//        } else if ("ROUND_CEILING".equals(value)) {
+//            return RoundingMode.CEILING;
+//        } else if ("ROUND_FLOOR".equals(value)) {
+//            return RoundingMode.FLOOR;
+//        } else if ("ROUND_UNNECCESSARY".equals(value)) {
+//            return RoundingMode.UNNECESSARY;
+//        }
+//        return null;
+        return roundingModeStrMap.get(value);
     }
 
     /**

@@ -33,6 +33,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.CellType;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -119,12 +120,12 @@ public class ImportProductServices {
                     // read productId from first column "sheet column index
                     // starts from 0"
                     HSSFCell cell2 = row.getCell(2);
-                    cell2.setCellType(HSSFCell.CELL_TYPE_STRING);
+                    cell2.setCellType(CellType.STRING); // SCIPIO: switched to CellType enum
                     String productId = cell2.getRichStringCellValue().toString();
                     // read QOH from ninth column
                     HSSFCell cell5 = row.getCell(5);
                     BigDecimal quantityOnHand = BigDecimal.ZERO;
-                    if (cell5 != null && cell5.getCellType() == HSSFCell.CELL_TYPE_NUMERIC)
+                    if (cell5 != null && cell5.getCellTypeEnum() == CellType.NUMERIC) // SCIPIO: switched to CellType enum
                         quantityOnHand = new BigDecimal(cell5.getNumericCellValue());
 
                     // check productId if null then skip creating inventory item

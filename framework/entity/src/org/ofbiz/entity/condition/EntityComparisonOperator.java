@@ -248,6 +248,7 @@ public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R
         return true;
     }
 
+    @SuppressWarnings("unlikely-arg-type") // SCIPIO: suppress, we know that somewhat related types are chosen for L and R
     public static final <L,R> boolean compareIn(L lhs, R rhs) {
         if (lhs == null) {
             if (rhs != null) {

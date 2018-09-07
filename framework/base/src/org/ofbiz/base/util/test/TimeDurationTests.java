@@ -76,6 +76,7 @@ public class TimeDurationTests extends GenericTestCaseBase {
         }
     }
 
+    @SuppressWarnings("unlikely-arg-type") // SCIPIO: This is for "stringDuration.equals(TimeDurationTests.class)", assuming intentional unless upstream decides otherwise
     private static TimeDuration assertDurationLoop(String label, Calendar right, int years, int months, int days, int hours, int minutes, int seconds, int milliseconds, TimeDuration lastString, boolean isNegative) {
         StringBuilder sb = new StringBuilder();
         sb.append(years != 0 ? years : "");

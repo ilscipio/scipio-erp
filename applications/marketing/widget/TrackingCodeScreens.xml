@@ -79,7 +79,14 @@ under the License.
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                 </link>
                             </container>
-                            <include-form name="ListTrackingCode" location="component://marketing/widget/TrackingCodeForms.xml"/>
+                            <container style="${styles.grid_row}">
+                                <container style="${styles.grid_large}9 ${styles.grid_cell}">
+                                    <include-form name="ListTrackingCode" location="component://marketing/widget/TrackingCodeForms.xml"/>
+                                </container>
+                                <container style="${styles.grid_large}3 ${styles.grid_cell}">
+                                    <platform-specific><html><html-template location="component://marketing/webapp/marketing/tracking/listTrackingCode.ftl"/></html></platform-specific>
+                                </container>
+                            </container>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

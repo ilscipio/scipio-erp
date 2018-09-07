@@ -3697,4 +3697,22 @@
     <property key="SfaSettings">
         <value xml:lang="en">Settings</value>
     </property>
+    
+    
+    <!-- SCIPIO -->
+    <property key="MarketingTrackingCodeDesc">
+        <value xml:lang="de">Tracking Codes werden als URL parameter in den Shop übergeben. Die nachfolgenden sind verfügbar: &lt;br/&gt;
+        &lt;ul&gt;
+        &lt;li&gt;Partner Tracking Code = ptc (Beispiel: ?ptc=9000) &lt;/li&gt;
+        &lt;li&gt;Auto Tracking Code = atc (Beispiel: ?atc=9000) &lt;/li&gt;
+        &lt;li&gt;Default Tracking Code = dtc (Beispiel: ?dtc=9000) &lt;/li&gt;
+        &lt;/ul&gt;</value>
+        <value xml:lang="en">Tracking Codes are added as URL parameters. The following are available: &lt;br/&gt;
+        &lt;ul&gt;
+        &lt;li&gt;Partner Tracking Code = ptc (Example: ?ptc=9000) &lt;/li&gt;
+        &lt;li&gt;Auto Tracking Code = atc (Example: ?atc=9000) &lt;/li&gt;
+        &lt;li&gt;Default Tracking Code = dtc (Example: ?dtc=9000) &lt;/li&gt;
+        &lt;/ul&gt;
+        </value>
+    </property>
 </resource>

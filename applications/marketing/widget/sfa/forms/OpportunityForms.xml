@@ -172,7 +172,7 @@ under the License.
         <field name="opportunityStageId" position="1" title="${uiLabelMap.SfaInitialStage}">
             <display-entity entity-name="SalesOpportunityStage" description="${description}"/>
         </field>
-        <field name="typeEnumId" position="2" title="${uiLabelMap.SfaType}"><display/></field>
+        <field name="typeEnumId" position="2" title="${uiLabelMap.SfaType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/></field>
         <field name="marketingCampaignId" position="1" title="${uiLabelMap.MarketingCampaign}"><display/></field>
         <field name="currencyUomId" position="2" title="${uiLabelMap.CommonCurrency}"><display/></field>
         <field name="dataSourceId" position="1" title="${uiLabelMap.SfaDataSourceLabel}"><display/></field>

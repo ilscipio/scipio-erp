@@ -32,7 +32,7 @@ import javax.servlet.http.Part;
 import org.ofbiz.base.util.Debug;
 
 /**
- * LocalHttpServletRequest.
+ * LocalHttpServletRequest - Local servlet API implementation for urlrewrite emulation.
  * <p>
  * DEV NOTE: DO NOT REMOVE THE <code>@SuppressWarnings("deprecation")</code>
  * - due to special library setup with ivy, the IDE does not see the exact same

@@ -295,7 +295,7 @@ public class UtilAccounting {
     public static BigDecimal getGlExchangeRateOfPurchaseInvoice(GenericValue paymentApplication) throws GenericEntityException {
         BigDecimal exchangeRate = BigDecimal.ONE;
         Delegator delegator = paymentApplication.getDelegator();
-        List andConditions = UtilMisc.toList(
+        List<EntityCondition> andConditions = UtilMisc.toList(
                 EntityCondition.makeCondition("glAccountTypeId", "ACCOUNTS_PAYABLE"),
                 EntityCondition.makeCondition("debitCreditFlag", "C"),
                 EntityCondition.makeCondition("acctgTransTypeId", "PURCHASE_INVOICE"),
@@ -316,7 +316,7 @@ public class UtilAccounting {
     public static BigDecimal getGlExchangeRateOfOutgoingPayment(GenericValue paymentApplication) throws GenericEntityException {
         BigDecimal exchangeRate = BigDecimal.ONE;
         Delegator delegator = paymentApplication.getDelegator();
-        List andConditions = UtilMisc.toList(
+        List<EntityCondition> andConditions = UtilMisc.toList(
                 EntityCondition.makeCondition("glAccountTypeId", "CURRENT_ASSET"),
                 EntityCondition.makeCondition("debitCreditFlag", "C"),
                 EntityCondition.makeCondition("acctgTransTypeId", "OUTGOING_PAYMENT"),

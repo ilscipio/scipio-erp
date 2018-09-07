@@ -279,7 +279,7 @@ public class SagePayServices
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
         } finally {
-            httpClient.getConnectionManager().shutdown();
+            close(httpClient);
         }
         return resultMap;
     }
@@ -375,7 +375,7 @@ public class SagePayServices
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
         } finally {
-            httpClient.getConnectionManager().shutdown();
+            close(httpClient);
         }
         return resultMap;
     }
@@ -469,7 +469,7 @@ public class SagePayServices
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
         } finally {
-            httpClient.getConnectionManager().shutdown();
+            close(httpClient);
         }
         return resultMap;
     }
@@ -561,7 +561,7 @@ public class SagePayServices
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
         } finally {
-            httpClient.getConnectionManager().shutdown();
+            close(httpClient);
         }
         return resultMap;
     }
@@ -672,9 +672,13 @@ public class SagePayServices
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
         } finally {
-            httpClient.getConnectionManager().shutdown();
+            close(httpClient);
         }
 
         return resultMap;
+    }
+    
+    private static void close(HttpClient httpClient) { // SCIPIO: new helper method
+        httpClient.getConnectionManager().shutdown();
     }
 }

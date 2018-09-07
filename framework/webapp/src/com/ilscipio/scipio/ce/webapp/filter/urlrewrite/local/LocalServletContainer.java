@@ -33,7 +33,12 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 import com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper;
 
 /**
- * Local implementation of the Servlet API.
+ * LocalServletContainer - Local servlet API implementation for urlrewrite emulation.
+ * <p>
+ * DEV NOTE: DO NOT REMOVE THE <code>@SuppressWarnings("deprecation")</code>
+ * - due to special library setup with ivy, the IDE does not see the exact same
+ * interfaces that are loaded at runtime for Tomcat; the suppress
+ * is needed for javac.
  */
 @SuppressWarnings("deprecation")
 public class LocalServletContainer {

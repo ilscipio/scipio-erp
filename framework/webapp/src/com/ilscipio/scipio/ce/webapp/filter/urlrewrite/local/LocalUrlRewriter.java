@@ -19,7 +19,7 @@ import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.UrlConfUtil;
 
 /**
  * SCIPIO: URL rewriter that invokes Tuckey using an emulated
- * servlet.
+ * local servlet API implementation.
  * <p>
  * Added 2018-08.
  */

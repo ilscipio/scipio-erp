@@ -4125,9 +4125,11 @@ public class OrderServices {
             }
 
             String[] itemInfo = key.split(":");
-            int groupIdx = -1;
+            // SCIPIO: groupIdx is unused, so presumably it only needs to check that itemInfo[1] is a valid number
+            //int groupIdx = -1;
             try {
-                groupIdx = Integer.parseInt(itemInfo[1]);
+                //groupIdx = Integer.parseInt(itemInfo[1]);
+                Integer.parseInt(itemInfo[1]);
             } catch (NumberFormatException e) {
                 Debug.logError(e, module);
                 return ServiceUtil.returnError(e.getMessage());

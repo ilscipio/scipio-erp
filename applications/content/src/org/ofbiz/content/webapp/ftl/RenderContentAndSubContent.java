@@ -50,7 +50,7 @@ public class RenderContentAndSubContent implements TemplateTransformModel {
 //    public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
 
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
@@ -58,7 +58,7 @@ public class RenderContentAndSubContent implements TemplateTransformModel {
         // final HttpServletResponse response = FreeMarkerWorker.getWrappedObject("response", env);
         final Map<String, Object> envMap = FreeMarkerWorker.createEnvironmentMap(env);
         final MapStack<String> templateRoot = MapStack.create();
-        ((MapStack)templateRoot).push(envMap);
+        ((MapStack<String>)templateRoot).push(envMap);
         if (Debug.verboseOn()) Debug.logVerbose("in RenderContentAndSubContent, contentId(0):" + templateRoot.get("contentId"), module);
         FreeMarkerWorker.getSiteParameters(request, templateRoot);
         // final Map savedValuesUp = new HashMap<String, Object>();

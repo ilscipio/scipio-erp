@@ -79,7 +79,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
     }
 
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final StringBuilder buf = new StringBuilder();
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         //final Map templateRoot = FreeMarkerWorker.getWrappedObject("context", env);

@@ -53,7 +53,7 @@ public class RenderContentTransform implements TemplateTransformModel {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
@@ -61,7 +61,7 @@ public class RenderContentTransform implements TemplateTransformModel {
         final HttpServletResponse response = FreeMarkerWorker.getWrappedObject("response", env);
 
         final Map<String, Object> templateRoot = MapStack.create(FreeMarkerWorker.createEnvironmentMap(env));
-        ((MapStack)templateRoot).push(args);
+        ((MapStack<String>)templateRoot).push(args);
         final String xmlEscape =  (String)templateRoot.get("xmlEscape");
         final String thisContentId = (String)templateRoot.get("contentId");
 

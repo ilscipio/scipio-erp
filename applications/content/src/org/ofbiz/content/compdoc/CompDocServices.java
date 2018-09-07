@@ -164,7 +164,6 @@ public class CompDocServices {
             //PdfWriter writer = PdfWriter.getInstance(document, baos);
             PdfCopy writer = new PdfCopy(document, baos);
             document.open();
-            int pgCnt = 0;
             for (GenericValue contentAssocRevisionItemView : compDocParts) {
                 //String thisContentId = contentAssocRevisionItemView.getString("contentId");
                 //String thisContentRevisionSeqId = contentAssocRevisionItemView.getString("maxRevisionSeqId");
@@ -252,7 +251,6 @@ public class CompDocServices {
                         PdfImportedPage pg = writer.getImportedPage(reader, i + 1);
                         //cb.addTemplate(pg, left, height * pgCnt);
                         writer.addPage(pg);
-                        pgCnt++;
                     }
                 }
             }

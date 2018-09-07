@@ -56,7 +56,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
     public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
 
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         // final StringBuilder buf = new StringBuilder();
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         //final Map templateCtx = FreeMarkerWorker.getWrappedObject("context", env);

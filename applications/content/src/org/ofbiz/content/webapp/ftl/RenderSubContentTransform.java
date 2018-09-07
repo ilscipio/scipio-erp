@@ -72,7 +72,7 @@ public class RenderSubContentTransform implements TemplateTransformModel {
     }
 
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         // final StringBuilder buf = new StringBuilder();
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         Map<String, Object> ctx = FreeMarkerWorker.getWrappedObject("context", env);

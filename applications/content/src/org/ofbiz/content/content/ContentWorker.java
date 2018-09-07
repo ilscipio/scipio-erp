@@ -905,7 +905,6 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static List<GenericValue> getAssociatedContentView(GenericValue currentContent, String linkDir, List<String> assocTypes, List<String> contentTypes, String fromDate, String thruDate) throws GenericEntityException {
-        List<GenericValue> contentList = new LinkedList<GenericValue>();
         List<EntityExpr> exprListAnd = new LinkedList<EntityExpr>();
 
         String origContentId = (String) currentContent.get("contentId");
@@ -956,11 +955,9 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         return assocs;
     }
 
-    @SuppressWarnings("unchecked")
     public static List<GenericValue> getContentAssocsWithId(Delegator delegator, String contentId, Timestamp fromDate, Timestamp thruDate, String direction, List<String> assocTypes) throws GenericEntityException {
-        List exprList = new LinkedList();
+        List<EntityCondition> exprList = new LinkedList<>();
         EntityExpr joinExpr = null;
-        EntityExpr expr = null;
         if (direction != null && direction.equalsIgnoreCase("From")) {
             joinExpr = EntityCondition.makeCondition("contentIdTo", EntityOperator.EQUALS, contentId);
         } else {

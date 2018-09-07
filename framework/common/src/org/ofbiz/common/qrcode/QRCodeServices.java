@@ -79,7 +79,7 @@ public class QRCodeServices {
 
     public static final String QRCODE_DEFAULT_LOGOIMAGE = UtilProperties.getPropertyValue("qrcode", "qrcode.default.logoimage");
 
-    public static BufferedImage defaultLogoImage;
+    public static final BufferedImage defaultLogoImage;
 
     private static final String[] FORMAT_NAMES = StringUtil.split(QRCODE_FORMAT_SUPPORTED, '|');
 
@@ -94,19 +94,20 @@ public class QRCodeServices {
     private static final int WHITE = 0xFFFFFFFF;
 
     static {
+        // SCIPIO: this block rearranged for final field and not swallowing exceptions
+        BufferedImage img = null; 
         if (UtilValidate.isNotEmpty(QRCODE_DEFAULT_LOGOIMAGE)) {
             try {
                 Map<String, Object> logoImageResult = ImageTransform.getBufferedImage(FileUtil.getFile(QRCODE_DEFAULT_LOGOIMAGE).getAbsolutePath(), Locale.getDefault());
-                defaultLogoImage = (BufferedImage) logoImageResult.get("bufferedImage");
-                if (UtilValidate.isEmpty(defaultLogoImage)) {
-                    Debug.logError("Your logo image file(" + QRCODE_DEFAULT_LOGOIMAGE + ") cannot be read by javax.imageio.ImageIO. Please use png, jpeg formats instead of ico and etc.", module);
+                img = (BufferedImage) logoImageResult.get("bufferedImage");
+                if (UtilValidate.isEmpty(img)) {
+                    Debug.logError("Your logo image file (" + QRCODE_DEFAULT_LOGOIMAGE + ") cannot be read by javax.imageio.ImageIO. Please use png, jpeg formats instead of ico and etc.", module);
                 }
-            } catch (IllegalArgumentException e) {
-                defaultLogoImage = null;
-            } catch (IOException e) {
-                defaultLogoImage = null;
+            } catch (Exception e) {
+                Debug.logError(e, "Could not load logo image file: " + QRCODE_DEFAULT_LOGOIMAGE, module);
             }
         }
+        defaultLogoImage = img;
     }
 
     // SCIPIO: 2018-08-22: new fields

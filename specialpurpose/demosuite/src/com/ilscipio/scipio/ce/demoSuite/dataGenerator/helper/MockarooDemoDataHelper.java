@@ -39,7 +39,7 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 	}
 
 	public static class MockarooSettings extends DataGeneratorSettings {
-		private final Map<String, Object> queryParameters;
+		//private final Map<String, Object> queryParameters;
 		private final String api;
 		private final String url;
 		private final String method;
@@ -51,7 +51,7 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 			try {
 				GenericValue mockarooSettings = delegator.findOne("MockarooDataGeneratorProvider",
 						UtilMisc.toMap("", ""), true);
-				this.queryParameters = UtilMisc.toMap("");
+				//this.queryParameters = UtilMisc.toMap("");
 				this.url = mockarooSettings.getString("url");
 				this.method = mockarooSettings.getString("method");
 				this.key = mockarooSettings.getString("mockarooKey");

@@ -350,7 +350,7 @@ public abstract class CmsAssetTemplateServices {
         Delegator delegator = dctx.getDelegator();
         try {
             String webSiteId = (String) context.get("webSiteId");
-            Boolean webSiteOptional = !Boolean.FALSE.equals("webSiteOptional");
+            Boolean webSiteOptional = !Boolean.FALSE.equals(context.get("webSiteOptional"));
             String contentTypeId = (String) context.get("contentTypeId");
             
             List<EntityCondition> condList = new ArrayList<>();

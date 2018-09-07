@@ -3519,9 +3519,8 @@ public class ModelFormField implements Serializable {
         public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
                 throws IOException {
             // Output format might not support menus, so make menu rendering optional.
-            MenuStringRenderer menuStringRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
+            MenuStringRenderer menuStringRenderer = ModelScreenWidget.getMenuStringRendererForWidgetRender(context, "menu"); // SCIPIO: refactored
             if (menuStringRenderer == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("MenuStringRenderer instance not found in rendering context, menu not rendered.", module);
                 return;
             }
             ModelMenu modelMenu = getModelMenu(context);

@@ -57,6 +57,7 @@ import org.ofbiz.widget.portal.PortalPageWorker;
 import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
+import org.ofbiz.widget.renderer.WidgetRenderOptions;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
@@ -1619,9 +1620,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         @Override
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) { // SCIPIO: renamed to *Core
             // Output format might not support forms, so make form rendering optional.
-            FormStringRenderer formStringRenderer = (FormStringRenderer) context.get("formStringRenderer");
+            FormStringRenderer formStringRenderer = getFormStringRendererForWidgetRender(context, "form"); // SCIPIO: refactored
             if (formStringRenderer == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("FormStringRenderer instance not found in rendering context, form not rendered.", module);
                 return;
             }
             boolean protectScope = !shareScope(context);
@@ -1725,9 +1725,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         @Override
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) { // SCIPIO: renamed to *Core
             // Output format might not support forms, so make form rendering optional.
-            FormStringRenderer formStringRenderer = (FormStringRenderer) context.get("formStringRenderer");
+            FormStringRenderer formStringRenderer = getFormStringRendererForWidgetRender(context, "grid"); // SCIPIO: refactored
             if (formStringRenderer == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("FormStringRenderer instance not found in rendering context, form not rendered.", module);
                 return;
             }
             boolean protectScope = !shareScope(context);
@@ -1840,9 +1839,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         @Override
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException { // SCIPIO: renamed to *Core
             // Output format might not support trees, so make tree rendering optional.
-            TreeStringRenderer treeStringRenderer = (TreeStringRenderer) context.get("treeStringRenderer");
+            TreeStringRenderer treeStringRenderer = getTreeStringRendererForWidgetRender(context, "tree"); // SCIPIO: refactored
             if (treeStringRenderer == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("TreeStringRenderer instance not found in rendering context, tree not rendered.", module);
                 return;
             }
             boolean protectScope = !shareScope(context);
@@ -2226,9 +2224,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         @Override
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws IOException { // SCIPIO: renamed to *Core
             // Output format might not support menus, so make menu rendering optional.
-            MenuStringRenderer menuStringRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
+            MenuStringRenderer menuStringRenderer = getMenuStringRendererForWidgetRender(context, "menu"); // SCIPIO: refactored
             if (menuStringRenderer == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("MenuStringRenderer instance not found in rendering context, menu not rendered.", module);
                 return;
             }
             ModelMenu modelMenu = getModelMenu(context);
@@ -2812,5 +2809,50 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
     @Override
     public String getContainerLocation() { // SCIPIO
         return getModelScreen() != null ? getModelScreen().getFullLocationAndName() : null;
+    }
+
+    protected static FormStringRenderer getFormStringRendererForWidgetRender(Map<String, Object> context, String widgetName) { // SCIPIO: refactored from renderWidgetStringCore
+        FormStringRenderer formStringRenderer = (FormStringRenderer) context.get("formStringRenderer");
+        if (formStringRenderer == null) {
+            // SCIPIO: log warning for missing renderers if requested
+            if (WidgetRenderOptions.fromContextOrDefaultsReadOnly(context).isWarnMissingFormRendererEffective()) {
+                Debug.logWarning("FormStringRenderer instance not found in rendering context, " + widgetName + " not rendered.", module);
+            } else {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("FormStringRenderer instance not found in rendering context, " + widgetName + " not rendered.", module);
+                }
+            }
+        }
+        return formStringRenderer;
+    }
+
+    protected static MenuStringRenderer getMenuStringRendererForWidgetRender(Map<String, Object> context, String widgetName) { // SCIPIO: refactored from renderWidgetStringCore
+        MenuStringRenderer menuStringRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
+        if (menuStringRenderer == null) {
+            // SCIPIO: log warning for missing renderers if requested
+            if (WidgetRenderOptions.fromContextOrDefaultsReadOnly(context).isWarnMissingMenuRendererEffective()) {
+                Debug.logWarning("MenuStringRenderer instance not found in rendering context, " + widgetName + " not rendered.", module);
+            } else {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("MenuStringRenderer instance not found in rendering context, " + widgetName + " not rendered.", module);
+                }
+            }
+        }
+        return menuStringRenderer;
+    }
+
+    protected static TreeStringRenderer getTreeStringRendererForWidgetRender(Map<String, Object> context, String widgetName) { // SCIPIO: refactored from renderWidgetStringCore
+        TreeStringRenderer treeStringRenderer = (TreeStringRenderer) context.get("treeStringRenderer");
+        if (treeStringRenderer == null) {
+            // SCIPIO: log warning for missing renderers if requested
+            if (WidgetRenderOptions.fromContextOrDefaultsReadOnly(context).isWarnMissingTreeRendererEffective()) {
+                Debug.logWarning("TreeStringRenderer instance not found in rendering context, " + widgetName + " not rendered.", module);
+            } else {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("TreeStringRenderer instance not found in rendering context, " + widgetName + " not rendered.", module);
+                }
+            }
+        }
+        return treeStringRenderer;
     }
 }

@@ -24,13 +24,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-
+import java.util.Map.Entry;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -58,11 +57,12 @@ public class SagePayServices
             try {
                 GenericValue sagePay = EntityQuery.use(delegator).from("PaymentGatewaySagePay").where("paymentGatewayConfigId", paymentGatewayConfigId).queryOne();
                 if (sagePay != null) {
-                    Map<String, Object> tmp = sagePay.getAllFields();
-                    Set<String> keys = tmp.keySet();
-                    for (String key : keys) {
-                        String value = tmp.get(key).toString();
-                        sagePayConfig.put(key, value);
+                    for (Entry<String, Object> set : sagePay.entrySet()) {
+                        if(set.getValue() == null){
+                            sagePayConfig.put(set.getKey(), null);
+                        } else {
+                            sagePayConfig.put(set.getKey(), set.getValue().toString());
+                        }
                     }
                 }
             } catch (GenericEntityException e) {
@@ -74,8 +74,7 @@ public class SagePayServices
         return sagePayConfig;
     }
 
-    public static Map<String, Object> paymentAuthentication(DispatchContext ctx, Map<String, Object> context)
-    {
+    public static Map<String, Object> paymentAuthentication(DispatchContext ctx, Map<String, Object> context) {
         Debug.logInfo("SagePay - Entered paymentAuthentication", module);
         Debug.logInfo("SagePay paymentAuthentication context : " + context, module);
 
@@ -122,7 +121,6 @@ public class SagePayServices
         String clientIPAddress = (String) context.get("clientIPAddress");
         Locale locale = (Locale) context.get("locale");
 
-        HttpClient httpClient = SagePayUtil.getHttpClient();
         HttpHost host = SagePayUtil.getHost(props);
 
         //start - authentication parameters
@@ -133,6 +131,20 @@ public class SagePayServices
         String txType = props.get("authenticationTransType");
 
         //start - required parameters
+        StringBuilder errorRequiredParameters = new StringBuilder();
+        if(vpsProtocol == null){
+            errorRequiredParameters.append("Required transaction parameter 'protocolVersion' is missing. ");
+        }
+        if(vendor == null){
+            errorRequiredParameters.append("Required transaction parameter 'vendor' is missing. ");
+        }
+        if(txType == null){
+            errorRequiredParameters.append("Required transaction parameter 'authenticationsTransType' is missing. ");
+        }
+        if(errorRequiredParameters.length() > 0){
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayPaymentAuthorisationException", UtilMisc.toMap("errorString", errorRequiredParameters), locale));
+        }
+        
         parameters.put("VPSProtocol", vpsProtocol);
         parameters.put("TxType", txType);
         parameters.put("Vendor", vendor);
@@ -192,7 +204,7 @@ public class SagePayServices
         //end - optional parameters
         //end - authentication parameters
 
-        try {
+        try (CloseableHttpClient httpClient = SagePayUtil.getHttpClient()) {
 
             String successMessage = null;
             HttpPost httpPost = SagePayUtil.getHttpPost(props.get("authenticationUrl"), parameters);
@@ -278,14 +290,11 @@ public class SagePayServices
             //from httpClient execute or getResponsedata
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
-        } finally {
-            close(httpClient);
         }
         return resultMap;
     }
 
-    public static Map<String, Object> paymentAuthorisation(DispatchContext ctx, Map<String, Object> context)
-    {
+    public static Map<String, Object> paymentAuthorisation(DispatchContext ctx, Map<String, Object> context) {
         Debug.logInfo("SagePay - Entered paymentAuthorisation", module);
         Debug.logInfo("SagePay paymentAuthorisation context : " + context, module);
 
@@ -301,7 +310,6 @@ public class SagePayServices
         String amount = (String) context.get("amount");
         Locale locale = (Locale) context.get("locale");
 
-        HttpClient httpClient = SagePayUtil.getHttpClient();
         HttpHost host = SagePayUtil.getHost(props);
 
         //start - authorization parameters
@@ -323,7 +331,7 @@ public class SagePayServices
         Debug.logInfo("authorization parameters -> " + parameters, module);
         //end - authorization parameters
 
-        try {
+        try (CloseableHttpClient httpClient = SagePayUtil.getHttpClient()) {
             String successMessage = null;
             HttpPost httpPost = SagePayUtil.getHttpPost(props.get("authoriseUrl"), parameters);
             HttpResponse response = httpClient.execute(host, httpPost);
@@ -374,14 +382,11 @@ public class SagePayServices
             //from httpClient execute or getResponsedata
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
-        } finally {
-            close(httpClient);
         }
         return resultMap;
     }
 
-    public static Map<String, Object> paymentRelease(DispatchContext ctx, Map<String, Object> context)
-    {
+    public static Map<String, Object> paymentRelease(DispatchContext ctx, Map<String, Object> context) {
         Debug.logInfo("SagePay - Entered paymentRelease", module);
         Debug.logInfo("SagePay paymentRelease context : " + context, module);
 
@@ -396,7 +401,6 @@ public class SagePayServices
         String txAuthNo = (String) context.get("txAuthNo");
         Locale locale = (Locale) context.get("locale");
 
-        HttpClient httpClient = SagePayUtil.getHttpClient();
         HttpHost host = SagePayUtil.getHost(props);
 
         //start - release parameters
@@ -415,8 +419,7 @@ public class SagePayServices
         parameters.put("TxAuthNo", txAuthNo);
         //end - release parameters
 
-        try {
-
+        try (CloseableHttpClient httpClient = SagePayUtil.getHttpClient()) {
             String successMessage = null;
             HttpPost httpPost = SagePayUtil.getHttpPost(props.get("releaseUrl"), parameters);
             HttpResponse response = httpClient.execute(host, httpPost);
@@ -468,14 +471,11 @@ public class SagePayServices
             //from httpClient execute or getResponsedata
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
-        } finally {
-            close(httpClient);
         }
         return resultMap;
     }
 
-    public static Map<String, Object> paymentVoid(DispatchContext ctx, Map<String, Object> context)
-    {
+    public static Map<String, Object> paymentVoid(DispatchContext ctx, Map<String, Object> context) {
         Debug.logInfo("SagePay - Entered paymentVoid", module);
         Debug.logInfo("SagePay paymentVoid context : " + context, module);
 
@@ -490,7 +490,6 @@ public class SagePayServices
         String txAuthNo = (String) context.get("txAuthNo");
         Locale locale = (Locale) context.get("locale");
 
-        HttpClient httpClient = SagePayUtil.getHttpClient();
         HttpHost host = SagePayUtil.getHost(props);
 
         //start - void parameters
@@ -508,9 +507,8 @@ public class SagePayServices
         parameters.put("TxAuthNo", txAuthNo);
         //end - void parameters
 
-        try {
+        try (CloseableHttpClient httpClient = SagePayUtil.getHttpClient()) {
             String successMessage = null;
-
             HttpPost httpPost = SagePayUtil.getHttpPost(props.get("voidUrl"), parameters);
             HttpResponse response = httpClient.execute(host, httpPost);
             Map<String, String> responseData = SagePayUtil.getResponseData(response);
@@ -560,14 +558,11 @@ public class SagePayServices
             //from httpClient execute or getResponsedata
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
-        } finally {
-            close(httpClient);
         }
         return resultMap;
     }
 
-    public static Map<String, Object> paymentRefund(DispatchContext ctx, Map<String, Object> context)
-    {
+    public static Map<String, Object> paymentRefund(DispatchContext ctx, Map<String, Object> context) {
         Debug.logInfo("SagePay - Entered paymentRefund", module);
         Debug.logInfo("SagePay paymentRefund context : " + context, module);
 
@@ -587,7 +582,6 @@ public class SagePayServices
         String relatedTxAuthNo = (String) context.get("relatedTxAuthNo");
         Locale locale = (Locale) context.get("locale");
 
-        HttpClient httpClient = SagePayUtil.getHttpClient();
         HttpHost host = SagePayUtil.getHost(props);
 
         //start - refund parameters
@@ -609,7 +603,7 @@ public class SagePayServices
         parameters.put("RelatedTxAuthNo", relatedTxAuthNo);
         //end - refund parameters
 
-        try {
+        try (CloseableHttpClient httpClient = SagePayUtil.getHttpClient()) {
             String successMessage = null;
 
             HttpPost httpPost = SagePayUtil.getHttpPost(props.get("refundUrl"), parameters);
@@ -671,14 +665,8 @@ public class SagePayServices
             //from httpClient execute or getResponsedata
             Debug.logError(ioe, "Error occurred in HttpClient execute or getting response (" + ioe.getMessage() + ")", module);
             resultMap = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayErrorHttpClientExecuteOrGettingResponse", UtilMisc.toMap("errorString", ioe.getMessage()), locale));
-        } finally {
-            close(httpClient);
         }
 
         return resultMap;
-    }
-    
-    private static void close(HttpClient httpClient) { // SCIPIO: new helper method
-        httpClient.getConnectionManager().shutdown();
     }
 }

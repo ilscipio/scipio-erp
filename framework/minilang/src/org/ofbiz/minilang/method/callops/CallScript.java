@@ -89,7 +89,9 @@ public final class CallScript extends MethodOperation {
         if (inlineScript.isEmpty()) {
             inlineScript = UtilXml.elementValue(element);
         }
-        if (inlineScript != null && MiniLangUtil.containsScript(inlineScript)) {
+        // SCIPIO
+        //if (inlineScript != null && MiniLangUtil.containsScript(inlineScript)) {
+        if (inlineScript != null && MiniLangUtil.startsWithScriptPrefixIgnoreLeadingSpace(inlineScript)) {
             this.scriptlet = new Scriptlet(StringUtil.convertOperatorSubstitutions(inlineScript));
         } else {
             this.scriptlet = null;

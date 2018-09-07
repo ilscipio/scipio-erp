@@ -3262,7 +3262,7 @@ public class ProductionRunServices {
                 }
                 TreeMap<Timestamp, Object> productMap = products.get(productId);
                 if (!productMap.containsKey(estimatedShipDate)) {
-                    productMap.put(estimatedShipDate, UtilMisc.toMap("remainingQty", BigDecimal.ZERO, "reservations", new LinkedList()));
+                    productMap.put(estimatedShipDate, UtilMisc.toMap("remainingQty", BigDecimal.ZERO, "reservations", new LinkedList<>()));
                 }
                 Map<String, Object> dateMap = UtilGenerics.checkMap(productMap.get(estimatedShipDate));
                 BigDecimal remainingQty = (BigDecimal)dateMap.get("remainingQty");

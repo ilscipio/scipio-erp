@@ -1707,7 +1707,6 @@ public class OrderServices {
         // Accumulate the total manually added tax adjustment
         BigDecimal totalManuallyAddedOrderTax = ZERO;
         for (GenericValue orderTaxAdjustment : orderTaxAdjustments) {
-            String comment = orderTaxAdjustment.getString("comments");
             if (orderTaxAdjustment.get("amount") != null && "Y".equals(orderTaxAdjustment.getString("isManual"))) {
                 totalManuallyAddedOrderTax = totalManuallyAddedOrderTax.add(orderTaxAdjustment.getBigDecimal("amount").setScale(taxDecimals, taxRounding));
             }

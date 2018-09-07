@@ -315,6 +315,7 @@ public class TaxAuthorityServices {
     /**
      * SCIPIO: 2018-07-18
      */
+    @SuppressWarnings("unused")
     private static class TaxAdjustmentsResult {
         List<GenericValue> adjustments = new ArrayList<>();
         int origTotalRateProducts = 0;
@@ -673,6 +674,7 @@ public class TaxAuthorityServices {
     /**
      * SCIPIO: getShippingTaxAdjustment.
      */
+    @SuppressWarnings("unused")
     private static List<GenericValue> getShippingTaxAdjustment(Delegator delegator, List<List<GenericValue>> itemsAdjustments,
             BigDecimal orderShippingAmount, GenericValue productStore, String billToPartyId) {
         return getShippingTaxAdjustment(delegator, itemsAdjustments, orderShippingAmount, productStore, billToPartyId, true);

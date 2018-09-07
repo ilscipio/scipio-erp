@@ -79,8 +79,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, final Map args)
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") final Map args)
             throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
         // SCIPIO: various changes here

@@ -17,9 +17,9 @@ import org.ofbiz.base.util.Debug;
  * DEV NOTE: DO NOT REMOVE THE <code>@SuppressWarnings("deprecation")</code>
  * - due to special library setup with ivy, the IDE does not see the exact same
  * interfaces that are loaded at runtime for Tomcat; the suppress
- * is needed for javac.
+ * is needed for javac. EDIT: Added "all", as a rare exception for this case.
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({ "all", "deprecation" })
 public class LocalHttpSession implements HttpSession {
     
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

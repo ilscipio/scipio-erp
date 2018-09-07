@@ -5358,7 +5358,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * @throws GenericEntityException
      */
     public boolean hasSubscriptions(GenericValue cartItem) {
-        return UtilValidate.isNotEmpty(this.cartSubscriptionItems) && this.cartSubscriptionItems.containsKey(cartItem);
+        return UtilValidate.isNotEmpty(this.cartSubscriptionItems) && this.cartSubscriptionItems.containsKey(cartItem.getString("productId"));
     }
 
     /**
@@ -5370,7 +5370,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         List<ShoppingCartItem> cartItems = items();
         if (cartItems != null && cartSubscriptionItems != null) {
             for (ShoppingCartItem orderItem : cartItems) {
-                if (!cartSubscriptionItems.containsKey(orderItem))
+                if (!cartSubscriptionItems.containsKey(orderItem.getProductId()))
                     return false;
             }
         } else {

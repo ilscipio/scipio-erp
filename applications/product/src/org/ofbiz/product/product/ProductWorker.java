@@ -36,7 +36,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.Delegator;
@@ -512,50 +511,51 @@ public class ProductWorker {
     }
     
     
-    public static List<Map<String,Map<String,Object>>> getProductFeatures(GenericValue product) {
-        Locale locale = new Locale(UtilProperties.getPropertyValue("start", "ofbiz.locale.default"));
-        return getProductFeatures(product, locale);
+    public static List<Map<String, Object>> getProductFeatures(GenericValue product) {
+        return getProductFeatures(product, Locale.getDefault());
     }
 
     /**
      * SCIPIO: Returns a list of Product features by Type and sequence Id. Replaces getSelectableProductFeaturesByTypesAndSeq
+     * NOTE: 2018-09-06: The return type has been corrected.
      * @param product
      * @return list featureType and related featuresIds, description and feature price for this product ordered by type and sequence
      * */
-    public static List<Map<String,Map<String,Object>>> getProductFeatures(GenericValue product, Locale locale) {
+    public static List<Map<String, Object>> getProductFeatures(GenericValue product, Locale locale) {
         if (product == null) {
             return null;
         }
-        List <Map<String,Map<String,Object>>> featureTypeFeatures = new LinkedList<Map<String,Map<String,Object>>>();
+        List<Map<String, Object>> featureTypeFeatures = new ArrayList<>();
         try {
             Delegator delegator = product.getDelegator();
             List<GenericValue> featuresSorted = EntityQuery.use(delegator)
-                                                    .from("ProductFeatureAndAppl")
-                                                    .where("productId", product.getString("productId"), "productFeatureApplTypeId", "SELECTABLE_FEATURE")
-                                                    .orderBy("productFeatureTypeId", "sequenceNum")
-                                                    .cache(true)
-                                                    .queryList();
-            for (GenericValue productFeatureAppl: featuresSorted) {
-                Map featureType = null;
+                    .from("ProductFeatureAndAppl")
+                    .where("productId", product.getString("productId"), "productFeatureApplTypeId", "SELECTABLE_FEATURE")
+                    .orderBy("productFeatureTypeId", "sequenceNum")
+                    .cache(true)
+                    .queryList();
+            for(GenericValue productFeatureAppl: featuresSorted) {
+                Map<String, Object> featureType = null;
                 // Map to previous featureType if exists
-                for(Map ftype : featureTypeFeatures){
+                for(Map<String, Object> ftype : featureTypeFeatures) {
                     String productFeatureTypeId = ftype.get("productFeatureTypeId") != null ? (String) ftype.get("productFeatureTypeId") :"";
                     if(productFeatureTypeId.equals(productFeatureAppl.getString("productFeatureTypeId")))
                     featureType = ftype;
                 }
                 // otherwise create a new featureType
-                if(featureType == null){
-                    featureType = new HashMap<String, Object>();
+                if (featureType == null) {
+                    featureType = new HashMap<>();
                     GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
                     featureType.put("description",productFeatureType.get("description", locale));
                     featureType.put("productFeatureTypeId", productFeatureAppl.get("productFeatureTypeId", locale));
-                    featureType.put("features", new LinkedList<Map>());
+                    featureType.put("features", new ArrayList<Map<String, String>>());
                     featureTypeFeatures.add(featureType);
                 }
-                List features = (List) featureType.get("features");
+                @SuppressWarnings("unchecked")
+                List<Map<String, String>> features = (List<Map<String, String>>) featureType.get("features");
                 
                 // Add Product features
-                Map<String,String> featureData = UtilMisc.toMap("productFeatureId", productFeatureAppl.getString("productFeatureId"));
+                Map<String, String> featureData = UtilMisc.toMap("productFeatureId", productFeatureAppl.getString("productFeatureId"));
                 if (UtilValidate.isNotEmpty(productFeatureAppl.get("description"))) {
                     featureData.put("description", productFeatureAppl.getString("description"));
                 } else {

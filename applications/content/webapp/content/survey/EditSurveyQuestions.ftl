@@ -288,6 +288,6 @@ under the License.
       </#macro>
     </#if>
   <@section title=sectionTitle menuContent=menuContent>
-    ${createSurveyOptionWrapper.renderFormString()}
+    ${createSurveyOptionWrapper.renderFormString(context)}<#-- SCIPIO: 2018-09-08: fixed missing (context) here (instead of ()) -->
   </@section>
 </#if>

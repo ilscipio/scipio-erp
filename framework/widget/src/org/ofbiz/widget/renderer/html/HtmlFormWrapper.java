@@ -47,7 +47,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  * @deprecated SCIPIO: 2018: This class may not populate the context for the form renderer
  * correctly; use other form rendering facilities instead, such as 
- * the freemarker Scipio templating API <code>@render</code> macro (utilities.ftl).
+ * the Scipio Freemarker templating API <code>@render</code> macro (utilities.ftl).
  * <p>
  * SCIPIO: NOTE: 2016-09-15: This now renders using the Macro Freemarker renderer.
  */
@@ -63,6 +63,10 @@ public class HtmlFormWrapper {
     protected ModelForm modelForm;
     protected FormStringRenderer renderer;
     protected Map<String, Object> context;
+    /**
+     * SCIPIO: For caller-specific context fields ({@link #putInContext(String, Object)}).
+     */
+    protected Map<String, Object> userContext = new HashMap<>();
 
     protected HtmlFormWrapper() {}
 
@@ -99,7 +103,7 @@ public class HtmlFormWrapper {
         Map<String, Object> parameterMap = UtilHttp.getParameterMap(request);
         context.put("parameters", parameterMap);
 
-        //make sure the locale is in the context
+        //make sure the locarenderFormStringle is in the context
         context.put("locale", UtilHttp.getLocale(request));
         //make sure the timeZone is in the context
         context.put("timeZone", UtilHttp.getTimeZone(request));
@@ -128,7 +132,13 @@ public class HtmlFormWrapper {
         // SCIPIO: transfer the screens renderer object (REQUIRED)
         context.put("screens", request.getAttribute("screens"));
     }
-
+    /**
+     * renderFormString with unknown context type.
+     * <p>
+     * SCIPIO: NOTE: 2018-09-10: This method should never be called with a non MapStack context anymore,
+     * and the context should always be the main render context. Any other context may suffer, such as the one
+     * in this class's construction, may suffer from population issues and not guaranteed to work.
+     */
     @SuppressWarnings("unchecked")
     public StringWriter renderFormString(Object contextStack) throws Exception {
         if (contextStack instanceof MapStack) {
@@ -138,16 +148,42 @@ public class HtmlFormWrapper {
             return renderFormString();
         }
     }
+    /**
+     * renderFormString with MapStack.
+     * <p>
+     * SCIPIO: NOTE: 2018-09-10: Although this whole class is deprecated by name, when this method is called with the
+     * main render context passed, there will likely be no functional issues compared to using the Scipio Freemarker
+     * templating API <code>@render</code> macro.
+     */
     public StringWriter renderFormString(MapStack<String> contextStack) throws Exception {
         // create a new context with the current context on the bottom
-        contextStack.push(this.context);
+        // SCIPIO: pushing this.context probably ruined the render context prior to this check
+        // with variables from the constructor (though pushed, so did not wreck other renders)...
+        if (contextStack.containsKey("delegator")) {
+            contextStack.push(this.userContext);
+        } else {
+            Debug.logWarning("Scipio: Passed MapStack to HtmlFormWrapper.renderFormString contains no delegator"
+                    + " - only the main render context (with delegator) should be passed to this method", module);
+            contextStack.push(this.context);
+        }
         StringWriter buffer = new StringWriter();
         FormRenderer formRenderer = new FormRenderer(modelForm, renderer);
         formRenderer.render(buffer, contextStack);
         contextStack.pop();
         return buffer;
     }
+    /**
+     * renderFormString using the context prepared and stored in this instance.
+     * @deprecated SCIPIO: NOTE: 2018-09-10: This method uses a locally-built context 
+     * (from {@link #HtmlFormWrapper(String, String, HttpServletRequest, HttpServletResponse)})
+     * which may contain insufficient data and the code for which may not be maintained.
+     * It is recommended to simply replace usage of this class with Scipio Freemarker template API
+     * utilities usage if possible; otherwise switch to {@link #renderFormString(MapStack)} 
+     * and push the context before adding your custom fields to it and pop it after the call.
+     */
+    @Deprecated
     public StringWriter renderFormString() throws Exception {
+        Debug.logWarning("Scipio: Deprecated HtmlFormWrapper.renderFormString() call invoked; render context could be incomplete", module); // SCIPIO
         StringWriter buffer = new StringWriter();
         FormRenderer formRenderer = new FormRenderer(modelForm, renderer);
         formRenderer.render(buffer, context);
@@ -160,13 +196,19 @@ public class HtmlFormWrapper {
      * in the request or if an isError parameter was passed to the page with
      * the value "true". If true then the prefilled values will come from the
      * parameters Map instead of the value Map.
+     * @deprecated SCIPIO: NOTE: 2018-09-10: This gets ignored by {@link #renderFormString(MapStack)}.
      */
+    @Deprecated
     public void setIsError(boolean isError) {
-        this.context.put("isError", Boolean.valueOf(isError));
+        this.userContext.put("isError", Boolean.valueOf(isError)); // SCIPIO: callContext
     }
 
+    /**
+     * @deprecated SCIPIO: NOTE: 2018-09-10: this only reads from the locally-stored context, which should not be used.
+     */
+    @Deprecated
     public boolean getIsError() {
-        Boolean isErrorBoolean = (Boolean) this.context.get("isError");
+        Boolean isErrorBoolean = (Boolean) (userContext.containsKey("isError") ? userContext: context).get("isError"); // SCIPIO: callContext
         if (isErrorBoolean == null) {
             return false;
         } else {
@@ -180,15 +222,21 @@ public class HtmlFormWrapper {
      * This is generally used when it is an empty form to pre-set inital values.
      * This is automatically set to false for list and multi forms. For related
      * functionality see the setIsError method.
+     * @deprecated SCIPIO: NOTE: 2018-09-10: This gets ignored by {@link #renderFormString(MapStack)}.
      *
      * @param useRequestParameters
      */
+    @Deprecated
     public void setUseRequestParameters(boolean useRequestParameters) {
-        this.context.put("useRequestParameters", Boolean.valueOf(useRequestParameters));
+        this.userContext.put("useRequestParameters", Boolean.valueOf(useRequestParameters)); // SCIPIO: callContext
     }
 
+    /**
+     * @deprecated SCIPIO: NOTE: 2018-09-10: this only reads from the locally-stored context, which should not be used.
+     */
+    @Deprecated
     public boolean getUseRequestParameters() {
-        Boolean useRequestParametersBoolean = (Boolean) this.context.get("useRequestParameters");
+        Boolean useRequestParametersBoolean = (Boolean) (userContext.containsKey("useRequestParameters") ? userContext: context).get("useRequestParameters"); // SCIPIO: callContext
         if (useRequestParametersBoolean == null) {
             return false;
         } else {
@@ -196,16 +244,21 @@ public class HtmlFormWrapper {
         }
     }
 
+    /**
+     * @deprecated SCIPIO: NOTE: 2018-09-10: This method has NEVER worked correctly! Do not use!
+     */
+    @Deprecated
     public void setFormOverrideName(String formName) {
-        this.context.put("formName", formName);
+        Debug.logError("Scipio: Known broken stock HtmlFormWrapper method called, setFormOverrideName(string) - please fix or remove this call", module); 
+        this.userContext.put("formName", formName); // SCIPIO: callContext
     }
 
     public void putInContext(String name, Object value) {
-        this.context.put(name, value);
+        this.userContext.put(name, value); // SCIPIO: callContext
     }
 
     public Object getFromContext(String name) {
-        return this.context.get(name);
+        return (userContext.containsKey(name) ? userContext: context).get(name); // SCIPIO: callContext
     }
 
     public ModelForm getModelForm() {
@@ -216,6 +269,10 @@ public class HtmlFormWrapper {
         return renderer;
     }
 
+    /**
+     * @deprecated SCIPIO: 2018-09-10: Will give unpredictable results.
+     */
+    @Deprecated
     public void setRenderer(FormStringRenderer renderer) {
         this.renderer = renderer;
     }

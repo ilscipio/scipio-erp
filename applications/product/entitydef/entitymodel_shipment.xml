@@ -1425,6 +1425,7 @@ under the License.
             title="Shipment Type Attribute">
       <field name="shipmentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="shipmentTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="SHPMNT_TYPATR" rel-entity-name="ShipmentType">

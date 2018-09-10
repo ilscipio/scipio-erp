@@ -614,6 +614,7 @@ under the License.
             title="Product Category Type Attribute">
       <field name="productCategoryTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="productCategoryTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="PROD_CTGRY_TATTR" rel-entity-name="ProductCategoryType">
@@ -928,6 +929,7 @@ under the License.
             title="Cost Component Type Attribute">
       <field name="costComponentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="costComponentTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="COST_COMP_TATTR" rel-entity-name="CostComponentType">
@@ -1453,6 +1455,7 @@ under the License.
     <entity entity-name="FacilityTypeAttr" package-name="org.ofbiz.product.facility" title="Facility Type Attribute">
         <field name="facilityTypeId" type="id-ne"></field>
         <field name="attrName" type="id-long-ne"></field>
+        <field name="description" type="description"></field>
         <prim-key field="facilityTypeId"/>
         <prim-key field="attrName"/>
         <relation type="one" fk-name="FACILITY_TPAT_FT" rel-entity-name="FacilityType">
@@ -2278,6 +2281,7 @@ under the License.
             title="Inventory Item Type Attribute">
       <field name="inventoryItemTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="inventoryItemTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="INV_ITEM_TYP_ATTR" rel-entity-name="InventoryItemType">
@@ -3426,6 +3430,7 @@ under the License.
             title="Product Type Attribute">
       <field name="productTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="productTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="PROD_TYPE_ATTR" rel-entity-name="ProductType">
@@ -4777,6 +4782,7 @@ under the License.
             title="Subscription Type Attribute">
         <field name="subscriptionTypeId" type="id-ne"></field>
         <field name="attrName" type="id-long-ne"></field>
+        <field name="description" type="description"></field>
         <prim-key field="subscriptionTypeId"/>
         <prim-key field="attrName"/>
         <relation type="one" fk-name="SUBSC_TYPE_ATTR" rel-entity-name="SubscriptionType">

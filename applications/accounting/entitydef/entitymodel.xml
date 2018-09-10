@@ -134,6 +134,7 @@ under the License.
             title="Budget Item Type Attribute">
       <field name="budgetItemTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="budgetItemTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="BUDGET_ITMTYPATTR" rel-entity-name="BudgetItemType">
@@ -310,6 +311,7 @@ under the License.
             title="Budget Type Attribute">
       <field name="budgetTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="budgetTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="BUDGET_TPATR_BT" rel-entity-name="BudgetType">
@@ -528,6 +530,7 @@ under the License.
     <entity entity-name="FinAccountTransTypeAttr" package-name="org.ofbiz.accounting.finaccount" title="Financial Account Transaction Type Attribute">
         <field name="finAccountTransTypeId" type="id-ne"></field>
         <field name="attrName" type="id-long-ne"></field>
+        <field name="description" type="description"></field>
         <prim-key field="finAccountTransTypeId"/>
         <prim-key field="attrName"/>
         <relation type="one" fk-name="FINACCT_TX_TYPATR" rel-entity-name="FinAccountTransType">
@@ -562,6 +565,7 @@ under the License.
         <field name="finAccountTypeId" type="id-ne"></field>
         <field name="attrName" type="id-long-ne"></field>
         <field name="attrValue" type="long-varchar"></field>
+        <field name="description" type="description"></field>
         <prim-key field="finAccountTypeId"/>
         <prim-key field="attrName"/>
         <relation type="one" fk-name="FINACCT_TYPE_ATTR" rel-entity-name="FinAccountType">
@@ -1006,6 +1010,7 @@ under the License.
             title="Fixed Asset Type Attribute">
       <field name="fixedAssetTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="fixedAssetTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="FIXEDAST_TYPATTR" rel-entity-name="FixedAssetType">
@@ -1448,6 +1453,7 @@ under the License.
             title="Invoice Item Type Attribute">
       <field name="invoiceItemTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="invoiceItemTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="INVOICE_ITEM_TATR" rel-entity-name="InvoiceItemType">
@@ -1593,6 +1599,7 @@ under the License.
             title="Invoice Type Attribute">
       <field name="invoiceTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="invoiceTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="INVOICE_TPAT_TYP" rel-entity-name="InvoiceType">
@@ -2060,6 +2067,7 @@ under the License.
             title="Accounting Transaction Type Attribute">
       <field name="acctgTransTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="acctgTransTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="ACCTTX_TYPE_ATTR" rel-entity-name="AcctgTransType">
@@ -3365,6 +3373,7 @@ under the License.
             title="Payment Type Attribute">
       <field name="paymentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="paymentTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="PAYMETH_TYPE_ATTR" rel-entity-name="PaymentType">

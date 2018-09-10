@@ -204,6 +204,7 @@ under the License.
             title="Agreement Item Type Attribute">
       <field name="agreementItemTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="agreementItemTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="AGRMNT_ITEM_TYPATR" rel-entity-name="AgreementItemType">
@@ -385,6 +386,7 @@ under the License.
             title="Agreement Type Attribute">
       <field name="agreementTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="agreementTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="AGRMNT_TYPE_ATTR" rel-entity-name="AgreementType">
@@ -434,6 +436,7 @@ under the License.
             title="Term Type Attribute">
       <field name="termTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="termTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="TERM_TYPATR_TTYP" rel-entity-name="TermType">
@@ -1009,6 +1012,7 @@ under the License.
             title="Contact Mechanism Type Attribute">
       <field name="contactMechTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="contactMechTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="CONT_MECH_TYP_ATR" rel-entity-name="ContactMechType">
@@ -2666,6 +2670,7 @@ under the License.
             title="Party Type Attribute">
       <field name="partyTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="partyTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="PARTY_TYP_ATTR" rel-entity-name="PartyType">
@@ -2789,6 +2794,7 @@ under the License.
             title="Role Type Attribute">
       <field name="roleTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
       <prim-key field="roleTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="ROLE_TYPATR_RTYP" rel-entity-name="RoleType">

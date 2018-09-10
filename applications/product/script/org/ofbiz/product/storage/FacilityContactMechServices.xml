@@ -21,10 +21,6 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <simple-method method-name="createFacilityContactMech" short-description="Create a FacilityContactMech">
-        <check-permission permission="FACILITY" action="_CREATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
         <make-value entity-name="FacilityContactMech" value-field="newValue"/>
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
         <log level="info" message="contactMechId is ${parameters.contactMechId}"/>
@@ -60,11 +56,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateFacilityContactMech" short-description="Update a FacilityContactMech">
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
 
         <!-- Find old value -->
@@ -144,10 +135,6 @@ under the License.
 
     <simple-method method-name="deleteFacilityContactMech" short-description="Delete a FacilityContactMech">
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
-        <check-permission permission="FACILITY" action="_DELETE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityDeletePermissionError"/>
-        </check-permission>
-        <check-errors/>
 
         <make-value entity-name="FacilityContactMech" value-field="facilityContactMechMap"/>
         <set-pk-fields value-field="facilityContactMechMap" map="parameters"/>
@@ -167,11 +154,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createFacilityPostalAddress" short-description="Create a PostalAddress for facility">
-        <check-permission permission="FACILITY" action="_CREATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <set-service-fields service-name="createPostalAddress" map="parameters" to-map="createPostalAddressMap"/>
         <call-service in-map-name="createPostalAddressMap" service-name="createPostalAddress">
             <default-message resource="PartyUiLabels" property="PartyPostalAddressSuccessfullyCreated"/>
@@ -192,11 +174,6 @@ under the License.
 
     <simple-method method-name="updateFacilityPostalAddress" short-description="Update a PostalAddress for facility">
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <set-service-fields service-name="updatePostalAddress" map="parameters" to-map="updatePostalAddressMap"/>
         <call-service in-map-name="updatePostalAddressMap" service-name="updatePostalAddress">
             <default-message resource="PartyUiLabels" property="PartyContactMechanismSuccessfullyUpdated"/>
@@ -216,11 +193,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createFacilityTelecomNumber" short-description="Create a TelecomNumber for facility">
-        <check-permission permission="FACILITY" action="_CREATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <log level="info" message="Creating telecom number"/>
         <set-service-fields service-name="createTelecomNumber" map="parameters" to-map="createTelecomNumberMap"/>
         <call-service in-map-name="createTelecomNumberMap" service-name="createTelecomNumber">
@@ -241,11 +213,6 @@ under the License.
 
     <simple-method method-name="updateFacilityTelecomNumber" short-description="Update a TelecomNumber for facility">
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <set-service-fields service-name="updateTelecomNumber" map="parameters" to-map="updateTelecomNumberMap"/>
         <call-service service-name="updateTelecomNumber" in-map-name="updateTelecomNumberMap">
             <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyUpdated"/>
@@ -268,11 +235,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createFacilityEmailAddress" short-description="Create an email address for facility">
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <if-validate-method field="parameters.emailAddress" method="isEmail">
         <else>
             <add-error>
@@ -293,11 +255,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateFacilityEmailAddress" short-description="Update an email address for facility">
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <if-validate-method field="parameters.emailAddress" method="isEmail">
         <else>
             <add-error>
@@ -318,11 +275,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createFacilityContactMechPurpose" short-description="Create a facility/contact mech purpose">
-        <check-permission permission="FACILITY" action="_CREATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <make-value value-field="lookUpMap" entity-name="FacilityContactMechPurpose"/>
         <set field="lookUpMap.facilityId" from-field="parameters.facilityId"/>
         <set field="lookUpMap.contactMechId" from-field="parameters.contactMechId"/>
@@ -350,11 +302,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="deleteFacilityContactMechPurpose" short-description="Delete a facility/contact mech purpose">
-        <check-permission permission="FACILITY" action="_DELETE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityDeletePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <make-value value-field="lookUpMap" entity-name="FacilityContactMechPurpose"/>
 
         <set-pk-fields map="parameters" value-field="lookUpMap"/>

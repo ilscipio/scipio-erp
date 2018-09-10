@@ -441,11 +441,13 @@ under the License.
     </service>
     <service name="updateCommunicationEventWorkEff" engine="simple" location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateCommunicationEventWorkEff" auth="true">
         <description>Updates CommunicationEventWorkEff</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CommunicationEventWorkEff"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEventWorkEff"/>
     </service>
     <service name="deleteCommunicationEventWorkEff" engine="simple" location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteCommunicationEventWorkEff" auth="true">
         <description>Deletes CommunicationEventWorkEff</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CommunicationEventWorkEff"/>
     </service>
     <service name="createWorkEffortRequest" engine="simple" location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortRequest" auth="true">
@@ -545,6 +547,7 @@ under the License.
             invoke="createWorkEffortFixedAssetStd">
         <description>Creates a WorkEffortFixedAssetStd entry to associate a routing task
             with a fixed asset (type)</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
@@ -553,6 +556,7 @@ under the License.
             location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml"
             invoke="updateWorkEffortFixedAssetStd">
         <description>Updates an existing WorkEffortFixedAssetStd entry</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
@@ -562,6 +566,7 @@ under the License.
             invoke="removeWorkEffortFixedAssetStd">
         <description>Removes a WorkEffortFixedAssetStd, thus removing the association between a routing task
             and a fixed asset (type)</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
     <service name="createWorkEffortFixedAssetAssign" engine="simple" auth="true"
@@ -570,6 +575,7 @@ under the License.
             invoke="createWorkEffortFixedAssetAssign">
         <description>Create a WorkEffortFixedAssetAssign entry to associate a fixed asset
             with a work effort (e.g. a production run task)</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true" mode="IN"/>
@@ -579,6 +585,7 @@ under the License.
             location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml"
             invoke="updateWorkEffortFixedAssetAssign">
         <description>Update an existing WorkEffortFixedAssetAssign entry</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
@@ -588,6 +595,7 @@ under the License.
             invoke="removeWorkEffortFixedAssetAssign">
         <description>Remove a WorkEffortFixedAssign entry, which removes the association between a fixed asset
             and a work effort (e.g. a production run task)</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
@@ -648,18 +656,21 @@ under the License.
     <service name="createWorkEffortReview" default-entity-name="WorkEffortReview" engine="simple"
                 location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortReview" auth="true">
         <description>Create a Work Effort Review</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateWorkEffortReview" default-entity-name="WorkEffortReview" engine="simple"
                 location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortReview" auth="true">
         <description>Update a Work Effort Review</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteWorkEffortReview" engine="simple"
                 location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortReview" auth="true">
         <description>Remove a Work Effort Review</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="DELETE"/>
         <auto-attributes entity-name="WorkEffortReview" include="pk" mode="IN" optional="false"/>
     </service>
 
@@ -672,23 +683,27 @@ under the License.
     <service name="createWorkEffortKeyword" default-entity-name="WorkEffortKeyword" engine="simple"
                 location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortKeyword" auth="true">
         <description>Create a Work Effort Keyword</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteWorkEffortKeyword" engine="simple"
                 location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortKeyword" auth="true">
         <description>Remove a Work Effort Keyword</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="DELETE"/>
         <auto-attributes entity-name="WorkEffortKeyword" include="pk" mode="IN" optional="false"/>
     </service>
     <service name="createWorkEffortKeywords" default-entity-name="WorkEffortKeyword" engine="simple"
                 location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortKeywords" auth="true">
         <description>Create a Work Effort Keyword</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteWorkEffortKeywords" engine="simple"
                 location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortKeywords" auth="true">
         <description>Remove all Work Effort Keyword</description>
+        <permission-service service-name="workEffortManagerPermission" main-action="DELETE"/>
         <auto-attributes entity-name="WorkEffort" include="pk" mode="IN" optional="false"/>
     </service>
 

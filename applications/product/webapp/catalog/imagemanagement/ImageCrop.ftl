@@ -86,7 +86,7 @@ function showPreview(coords){
 }
 </@script>
 
-<#-- SCIPIO: custom form based on component://applications/product/widget/catalog/ImageManagementForms.xml#ImageCropping
+<#-- SCIPIO: custom form based on component://product/widget/catalog/ImageManagementForms.xml#ImageCropping
      re-enabled the form widget temporarily instead
 <@form id="ImageCropping" name="ImageCropping" action=makeOfbizUrl("CropImage")
   method="post" onsubmit="javascript:submitFormDisableSubmits(this);"> 

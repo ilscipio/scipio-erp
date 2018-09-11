@@ -191,7 +191,6 @@ under the License.
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="exportId" type="String" mode="OUT" optional="false"/>
-        
     </service>
     
     <service name="deleteEntityExport" engine="entity-auto" default-entity-name="EntityExport" invoke="delete" auth="true">
@@ -199,4 +198,15 @@ under the License.
         <attribute name="exportId" mode="IN" type="String" optional="false"/>
     </service>
     
+    <service name="validateSystemLocations" engine="java" location="com.ilscipio.scipio.webtools.WebToolsServices" invoke="validateSystemLocations" 
+        auth="true" use-transaction="false">
+        <description>Tool to verify that a bunch of paths actually exist in the system, to detect problems (SCIPIO)</description>
+        <permission-service service-name="entityMaintPermCheck" main-action="VIEW"/>
+        <attribute name="pathList" mode="IN" type="List" optional="true"/>
+        <attribute name="paths" mode="IN" type="String" optional="true" allow-html="any"/>
+        <attribute name="classNameList" mode="IN" type="List" optional="true"/>
+        <attribute name="classNames" mode="IN" type="String" optional="true" allow-html="any"/>
+        <attribute name="pathResults" mode="OUT" type="List" optional="true"/>
+        <attribute name="classNameResults" mode="OUT" type="List" optional="true"/>
+    </service>
 </services>

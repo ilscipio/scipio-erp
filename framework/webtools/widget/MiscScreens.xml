@@ -961,4 +961,71 @@ under the License.
         </section>
     </screen>
 
+    <screen name="validateSystemLocations">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    vslResults = null;
+                    if (parameters.vslPaths || parameters.vslClassNames) {
+                        vslResults = dispatcher.runSync("validateSystemLocations", 
+                            [userLogin:context.userLogin, paths: parameters.vslPaths, classNames: parameters.vslClassNames]);
+                    }
+                    context.vslResults = vslResults;
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <form method="post" action="<@ofbizUrl uri=rawString(vslTargetUri)/>">
+                        <@field type="textarea" name="vslPaths" label="Paths" value=(parameters.vslPaths!)/>
+                        <@field type="textarea" name="vslClassNames" label="Class names" value=(parameters.vslClassNames!)/>
+                        <@field type="submit"/>
+                    </form>
+                    <#if vslResults??>
+                      <@section title="Results:">
+                      <#if vslResults.pathResults??>
+                        <@section title="Valid paths:">
+                          <ul>
+                            <#list vslResults.pathResults as vslResult>
+                              <#if vslResult.valid>
+                                <li>${vslResult.value}</li>
+                              </#if>
+                            </#list>
+                          </ul>
+                        </@section>
+                        <@section title="Invalid paths:">
+                          <ul>
+                            <#list vslResults.pathResults as vslResult>
+                              <#if !vslResult.valid>
+                                <li>${vslResult.value}: ${vslResult.errMsg!}</li>
+                              </#if>
+                            </#list>
+                          </ul>
+                        </@section>
+                      </#if>
+                      <#if vslResults.classNameResults??>
+                        <@section title="Valid class names:">
+                          <ul>
+                            <#list vslResults.classNameResults as vslResult>
+                              <#if vslResult.valid>
+                                <li>${vslResult.value}</li>
+                              </#if>
+                            </#list>
+                          </ul>
+                        </@section>
+                        <@section title="Invalid class names:">
+                          <ul>
+                            <#list vslResults.classNameResults as vslResult>
+                              <#if !vslResult.valid>
+                                <li>${vslResult.value}: ${vslResult.errMsg!}</li>
+                              </#if>
+                            </#list>
+                          </ul>
+                        </@section>
+                      </#if>
+                      </@section>
+                    </#if>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>

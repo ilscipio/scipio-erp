@@ -21,11 +21,15 @@ package com.ilscipio.scipio.webtools;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,9 +38,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -65,7 +71,7 @@ public class WebToolsServices {
      * entity. Afterwards returns the generated downloadLink
      * @return String of generated filedownloadlink
      * */
-    public static Map<String, Object> getEntityExport(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> getEntityExport(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         List<String> entityNames = UtilGenerics.checkList(context.get("entityList"));
         EntityCondition entityFromCond = null;
@@ -199,4 +205,73 @@ public class WebToolsServices {
         return result;
     }
     
+    public static Map<String, Object> validateSystemLocations(DispatchContext dctx, Map<String, ? extends Object> context) {
+        List<String> pathList = UtilGenerics.checkList(context.get("pathList"));
+        String paths = (String) context.get("paths");
+        if (UtilValidate.isNotEmpty(paths)) {
+            pathList = (pathList != null) ? new ArrayList<>(pathList) : new ArrayList<>();
+            pathList.addAll(Arrays.asList(paths.split("[\\s\\n,;]+")));
+        }
+        boolean success = true;
+        List<Map<String, Object>> pathResults = null;
+        if (pathList != null) {
+            pathResults = new ArrayList<>();
+            for(String path : pathList) {
+                path = path.trim();
+                int dollarSign = path.indexOf('#');
+                if (dollarSign >= 0) {
+                    path = path.substring(0, dollarSign);
+                }
+                if (path.length() == 0) {
+                    continue;
+                }
+                URL resolvedLocation = null;
+                try {
+                    resolvedLocation = FlexibleLocation.resolveLocation(path);
+                    if (resolvedLocation == null) {
+                        throw new NullPointerException();
+                    }
+                    if (!new java.io.File(resolvedLocation.toURI()).exists()) {
+                        throw new FileNotFoundException();
+                    }
+                    pathResults.add(UtilMisc.toMap("value", path, "valid", true));
+                } catch (Exception e) {
+                    pathResults.add(UtilMisc.toMap("value", path, "valid", false, 
+                            "errMsg", e.toString()));
+                    success = false;
+                }
+            }
+        }
+
+        List<String> classNameList = UtilGenerics.checkList(context.get("classNameList"));
+        String classNames = (String) context.get("classNames");
+        if (UtilValidate.isNotEmpty(classNames)) {
+            classNameList = (classNameList != null) ? new ArrayList<>(classNameList) : new ArrayList<>();
+            classNameList.addAll(Arrays.asList(classNames.split("[\\s\\n,;]+")));
+        }
+        List<Map<String, Object>> classNameResults = null;
+        if (classNameList != null) {
+            classNameResults = new ArrayList<>();
+            for(String className : classNameList) {
+                className = className.trim();
+                if (className.length() == 0) {
+                    continue;
+                }
+                try {
+                    ClassLoader cl = dctx.getClassLoader();
+                    cl.loadClass(className);
+                    classNameResults.add(UtilMisc.toMap("value", className, "valid", true));
+                } catch(Exception e) {
+                    classNameResults.add(UtilMisc.toMap("value", className, "valid", false, 
+                            "errMsg", e.toString()));
+                    success = false;
+                }
+            }
+        }
+
+        Map<String, Object> results = success ? ServiceUtil.returnSuccess() : ServiceUtil.returnFailure("Invalid locations found");
+        results.put("pathResults", pathResults);
+        results.put("classNameResults", classNameResults);
+        return results;
+    }
 }

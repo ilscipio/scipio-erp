@@ -2432,6 +2432,14 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     </@section>
 </@section>
 
+<hr />
+
+<a name="validateSystemTools"></a>
+<@section title="Validate System Locations tools">
+  <@render resource="component://webtools/widget/MiscScreens.xml#validateSystemLocations" 
+    ctxVars={"vslTargetUri":"LayoutDemo?debugMode=true#validateSystemTools"}/>
+</@section>
+
 <#-- NOTE: keep last -->
 <hr />
 <#-- put this in a @section; it provides extra test for the request-scope section/title levels -->

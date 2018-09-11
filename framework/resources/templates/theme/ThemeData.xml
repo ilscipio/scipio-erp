@@ -24,19 +24,19 @@ under the License.
     
     <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_NAME" resourceValue="@theme-id@" sequenceId="01"/>
     <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/@webapp-name@/screenshot.jpg" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://@component-name/includes/header.ftl" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://@component-name/includes/messages.ftl" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://@component-name/includes/footer.ftl" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://@component-name/includes/appbar.ftl" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://@component-name/includes/appbarOpen.ftl" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://@component-name/includes/appbarClose.ftl" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://@component-name/includes/themeStyles.groovy" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://@component-name/includes/themeTemplate.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://@component-name@/includes/header.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://@component-name@/includes/messages.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://@component-name@/includes/footer.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://@component-name@/includes/appbar.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://@component-name@/includes/appbarOpen.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://@component-name@/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://@component-name@/includes/themeStyles.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://@component-name@/includes/themeTemplate.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/@webapp-name@/images/favicon.ico" sequenceId="01"/>
 
     <!-- SCIPIO: The following includes can be used to override specific default pages
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://@component-name/includes/login.ftl" sequenceId="01"/> // Custom Login Page
-    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://@component-name/includes/error.ftl" sequenceId="01"/> // Custom Error Page
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://@component-name@/includes/login.ftl" sequenceId="01"/> // Custom Login Page
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://@component-name@/includes/error.ftl" sequenceId="01"/> // Custom Error Page
      -->
     
     <!-- GENERAL -->

@@ -1288,9 +1288,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     /**
      * if the service is declare as deprecated, create a log warning with the reason
+     * <p>
+     * SCIPIO: By default this now only logs if verbose on. This should not be a warning in every place,
+     * because having deprecated services is normal. During loading, we don't want to see these,
+     * only if they're invoked.
      */
-    public void informIfDeprecated() {
-        if (this.deprecatedUseInstead != null) {
+    public void informIfDeprecated(boolean warn) {
+        if (this.deprecatedUseInstead != null && (warn || Debug.verboseOn())) { // SCIPIO: warn or verbose
             StringBuilder informMsg = new StringBuilder("DEPRECATED: the service ")
                     .append(name).append( " has been deprecated and replaced by ").append(deprecatedUseInstead);
             if (this.deprecatedSince != null) {
@@ -1299,8 +1303,19 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             if (deprecatedReason != null) {
                 informMsg.append(" because '").append(deprecatedReason).append("'");
             }
-            Debug.logWarning(informMsg.toString(), module);
+            if (warn) { // SCIPIO
+                Debug.logWarning(informMsg.toString(), module);
+            } else {
+                Debug.logVerbose(informMsg.toString(), module);
+            }
         }
+    }
+
+    /**
+     * if the service is declare as deprecated, create a log warning with the reason
+     */
+    public void informIfDeprecated() {
+        informIfDeprecated(true); // SCIPIO: now delegating
     }
 
     public Document toWSDL(String locationURI) throws WSDLException {

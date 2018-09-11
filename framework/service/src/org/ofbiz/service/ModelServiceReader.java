@@ -680,7 +680,7 @@ public class ModelServiceReader implements Serializable {
             //service.deprecatedReason = UtilXml.elementValue(deprecated);
             String deprecatedReason = UtilXml.elementValue(deprecated);
             service.deprecatedReason = (deprecatedReason != null) ? deprecatedReason.trim() : null;
-            service.informIfDeprecated();
+            service.informIfDeprecated(false); // SCIPIO: do not log as warning during loading
         }
     }
 

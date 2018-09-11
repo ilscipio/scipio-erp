@@ -1525,7 +1525,7 @@ under the License.
           menu-item-alias definitions (added for 1.14.3) in menu definitions.
           For example if a new-record screen identifies itself with "NewRecord" set in activeSubMenuItem, the corresponding
           sub-menu's definition can be augmented with an alias to make it behave like PARENT(-NOSUB):
-            <menu name="RecordSideBar" extends="CommonSideBarMenu" location="component://common/widget/ContentMenus.xml">
+            <menu name="RecordSideBar" extends="CommonSideBarMenu" location="component://common/widget/CommonMenus.xml">
                 [...]
                 <menu-item-alias name="NewRecord" for="PARENT-NOSUB"/>
                 [...]

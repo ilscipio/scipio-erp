@@ -59,7 +59,7 @@ public class ModelServiceReader implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private static final boolean loadValidateHigh = "high".equals(UtilProperties.getPropertyValue("debug", "code.load.validate.level"));    // SCIPIO
+    private static final boolean loadValidateHigh = UtilProperties.getPropertyValue("debug", "code.load.validate.level").contains("high"); // SCIPIO
 
     /** is either from a URL or from a ResourceLoader (through the ResourceHandler) */
     protected boolean isFromURL;

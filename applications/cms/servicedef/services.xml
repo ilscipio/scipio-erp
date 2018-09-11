@@ -15,6 +15,7 @@
         <implements service="permissionInterface"/>
     </service>
 
+    <!-- TODO?: CmsServices.getAdminDescriptors does not exist
     <service name="cmsGetAdminDescriptors" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.CmsServices" invoke="getAdminDescriptors">
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
@@ -22,6 +23,7 @@
         <attribute name="assetTemplates" mode="OUT" type="Array" optional="false"/>
         <attribute name="pages" mode="OUT" type="Array" optional="false"/>
     </service>
+    -->
 
     <service name="cmsExportDataFormatInterface" engine="interface">
         <description>CMS data export functionality formatting options</description>

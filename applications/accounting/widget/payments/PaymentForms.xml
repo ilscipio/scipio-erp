@@ -59,7 +59,6 @@ under the License.
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-            <!-- <script location="component://accounting/webapp/accounting/WEB-INF/actions/dashboard/Test.groovy"/>          -->  
         </actions>
         <row-actions>
             <set field="amountToApply" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>
@@ -69,7 +68,6 @@ under the License.
             <entity-one value-field="partyTo" entity-name="PartyNameView">
                 <field-map field-name="partyId" value="${partyIdTo}" />
             </entity-one>
-            
         </row-actions>
         <field name="effectiveDate"><display type="date"/></field>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_info_id}">

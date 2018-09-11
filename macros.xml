@@ -614,7 +614,7 @@ Unexpectedly received empty list of builds to iterate."/>
             Currently (2017-01-18), Scipio supports this same directory-focused automatic
             dependency resolution for both build-time and load-time resolution; see the description
             for the "depends-on" xml element in the following file for the load-time mechanism:
-              component://framework/base/dtd/ofbiz-component.xsd
+              component://base/dtd/ofbiz-component.xsd
         FIXME?: get-component-build-deps must currently be defined in macros.xml due to theme patterns... -->
     <macrodef name="read-component-build-deps">
         <!--

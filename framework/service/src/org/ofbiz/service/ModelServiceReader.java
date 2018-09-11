@@ -676,7 +676,10 @@ public class ModelServiceReader implements Serializable {
         if (deprecated != null) {
             service.deprecatedUseInstead = deprecated.getAttribute("use-instead");
             service.deprecatedSince = deprecated.getAttribute("since");
-            service.deprecatedReason = UtilXml.elementValue(deprecated);
+            // SCIPIO: trim it
+            //service.deprecatedReason = UtilXml.elementValue(deprecated);
+            String deprecatedReason = UtilXml.elementValue(deprecated);
+            service.deprecatedReason = (deprecatedReason != null) ? deprecatedReason.trim() : null;
             service.informIfDeprecated();
         }
     }

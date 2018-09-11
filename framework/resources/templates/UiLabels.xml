@@ -28,7 +28,7 @@
     </property>
     <property key="@component-resource-name@ViewPermissionError">
         <value xml:lang="de">Sie haben nicht die Berechtigung, diese Seite anzusehen.</value>
-        <value xml:lang="en">You do not have permission to view this page.</value>
+        <value xml:lang="en">You are not allowed to view this page.</value>
         <value xml:lang="es">No tiene permiso para ver esta página.</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation de voir cette page.</value>
         <value xml:lang="it">Tu non sei autorizzato a vedere questa pagina.</value>

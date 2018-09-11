@@ -35,4 +35,7 @@
         <value xml:lang="de">Die Position auf dem Antrag ist die gleiche wie die Position auf dem Arbeitsanforderung sein</value>
         <value xml:lang="en">The position on the application must be the same as the position on the job requisition</value>
     </property>
+    <property key="HumanResRequiredFieldMissingTrainingClassTypeId">
+        <value xml:lang="en">Required Field Missing : Training Class Type Id.</value>
+    </property>
 </resource>

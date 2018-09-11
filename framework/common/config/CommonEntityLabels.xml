@@ -17355,6 +17355,22 @@
         <value xml:lang="zh">阿富汗尼</value>
         <value xml:lang="zh-TW">阿富汗尼</value>
     </property>
+    <property key="Uom.description.AFN">
+        <value xml:lang="ar">أفغاني</value>
+        <value xml:lang="cs">Afghánský afghání</value>
+        <value xml:lang="de">Afghani</value>
+        <value xml:lang="en">Afghani</value>
+        <value xml:lang="fr">Afghani</value>
+        <value xml:lang="it">Afghani</value>
+        <value xml:lang="ja">アフガニ</value>
+        <value xml:lang="pt">Afghani</value>
+        <value xml:lang="pt-BR">Afegão</value>
+        <value xml:lang="ro">Afghani</value>
+        <value xml:lang="ru">Афгани</value>
+        <value xml:lang="th">อัฟกานิ </value>
+        <value xml:lang="zh">阿富汗尼</value>
+        <value xml:lang="zh-TW">阿富汗尼</value>
+    </property>
     <property key="Uom.description.ALL">
         <value xml:lang="ar">ليك ألباني</value>
         <value xml:lang="cs">Albánský lek</value>
@@ -17402,6 +17418,22 @@
         <value xml:lang="th">กิลเดอร์ เนเธอร์แลนด์แอนทิลลิส</value>
         <value xml:lang="zh">安第列斯群岛盾</value>
         <value xml:lang="zh-TW">安第列斯群島盾</value>
+    </property>
+    <property key="Uom.description.AOA">
+        <value xml:lang="ar">كوانزا أنغولية</value>
+        <value xml:lang="cs">Angolská kwanza</value>
+        <value xml:lang="de">Kwanza Angola</value>
+        <value xml:lang="en">Angolan Kwanza</value>
+        <value xml:lang="fr">Kwanza d'Angola</value>
+        <value xml:lang="it">Kwanza Angola</value>
+        <value xml:lang="ja">アンゴラ・クワンザ</value>
+        <value xml:lang="pt">Angolan Kwanza</value>
+        <value xml:lang="pt-BR">Kwanza Angolano</value>
+        <value xml:lang="ro">Kwanza Angola</value>
+        <value xml:lang="ru">Ангольские кванза</value>
+        <value xml:lang="th">ควันซา อังโกลา</value>
+        <value xml:lang="zh">安哥拉宽扎</value>
+        <value xml:lang="zh-TW">安哥拉寬紮</value>
     </property>
     <property key="Uom.description.AOK">
         <value xml:lang="ar">كوانزا أنغولية</value>
@@ -17732,6 +17764,22 @@
         <value xml:lang="zh">阿塞拜疆曼纳特</value>
         <value xml:lang="zh-TW">亞塞拜然曼納特</value>
     </property>
+    <property key="Uom.description.AZN">
+        <value xml:lang="ar">أذربيجان مانات</value>
+        <value xml:lang="cs">Ázerbájdžánský manat</value>
+        <value xml:lang="de">Manat Aserbaidschan</value>
+        <value xml:lang="en">Azerbaijan Manat</value>
+        <value xml:lang="fr">Manat d'Azerbaïdjan</value>
+        <value xml:lang="it">Manat Azerbaijan</value>
+        <value xml:lang="ja">アゼルバイジャン・マナト</value>
+        <value xml:lang="pt">Azerbaijan Manat</value>
+        <value xml:lang="pt-BR">Manat azeri</value>
+        <value xml:lang="ro">Manat Azerbaijan</value>
+        <value xml:lang="ru">Азербайджанский манат</value>
+        <value xml:lang="th">มานาท อาเซอร์ไบจัน</value>
+        <value xml:lang="zh">阿塞拜疆曼纳特</value>
+        <value xml:lang="zh-TW">亞塞拜然曼納特</value>
+    </property>
     <property key="Uom.description.BAD">
         <value xml:lang="ar">دينار البوسنة والهرسك</value>
         <value xml:lang="cs">Dinár (Bosna a Herzegovina)</value>
@@ -17955,6 +18003,22 @@
         <value xml:lang="th">พูลา บอตสวานา</value>
         <value xml:lang="zh">博茨瓦纳普拉</value>
         <value xml:lang="zh-TW">博茨瓦納普拉</value>
+    </property>
+    <property key="Uom.description.BYN">
+        <value xml:lang="ar">روبل بيلاروسية</value>
+        <value xml:lang="cs">Běloruský rubl</value>
+        <value xml:lang="de">Rubel Weissrussland</value>
+        <value xml:lang="en">Belorussian Ruble</value>
+        <value xml:lang="fr">Rouble de Biélorussie</value>
+        <value xml:lang="it">Rublo Bielorussia</value>
+        <value xml:lang="ja">ベラルーシ・ルーブル</value>
+        <value xml:lang="pt">Belorussian Ruble</value>
+        <value xml:lang="pt-BR">Rublo bielorusso</value>
+        <value xml:lang="ro">Rublo Bielorussia</value>
+        <value xml:lang="ru">Белорусский рубль</value>
+        <value xml:lang="th">รูเบิล เบลารุส</value>
+        <value xml:lang="zh">白俄罗斯卢布</value>
+        <value xml:lang="zh-TW">白俄羅斯盧布</value>
     </property>
     <property key="Uom.description.BYR">
         <value xml:lang="ar">روبل بيلاروسية</value>
@@ -18837,6 +18901,21 @@
         <value xml:lang="zh">加纳塞第</value>
         <value xml:lang="zh-TW">加納塞第</value>
     </property>
+    <property key="Uom.description.GHS">
+        <value xml:lang="ar">سيدي غاني</value>
+        <value xml:lang="de">Ghana Cedi</value>
+        <value xml:lang="en">Ghanian Cedi</value>
+        <value xml:lang="fr">Cedi ghanéen</value>
+        <value xml:lang="it">Cedi Ghanian</value>
+        <value xml:lang="ja">ガーナ・セディ</value>
+        <value xml:lang="pt">Ghanian Cedi</value>
+        <value xml:lang="pt-BR">Cedi de Gana</value>
+        <value xml:lang="ro">Cedi Ghanian</value>
+        <value xml:lang="ru">Ганский седи</value>
+        <value xml:lang="th">เซดี กานา</value>
+        <value xml:lang="zh">加纳塞第</value>
+        <value xml:lang="zh-TW">加納塞第</value>
+    </property>
     <property key="Uom.description.GIP">
         <value xml:lang="ar">جنيه جبل طارق</value>
         <value xml:lang="de">Pfund Gibraltar</value>
@@ -19212,6 +19291,20 @@
         <value xml:lang="th">เรียล กัมพูชา</value>
         <value xml:lang="zh">柬埔寨里尔</value>
         <value xml:lang="zh-TW">柬埔寨裡爾</value>
+    </property>
+    <property key="Uom.description.KGS">
+        <value xml:lang="ar">قيرغيزستان سوم</value>
+        <value xml:lang="en">Kirghizstan Som</value>
+        <value xml:lang="fr">Som du Kirghizstan</value>
+        <value xml:lang="it">Som Kirghizstan</value>
+        <value xml:lang="ja">キルギス・ソム</value>
+        <value xml:lang="pt">Kirghizstan Som</value>
+        <value xml:lang="pt-BR">Som do Quirguistão</value>
+        <value xml:lang="ro">Som Kirghizstan</value>
+        <value xml:lang="ru">Киргизстанский сом</value>
+        <value xml:lang="th">Kirghizstan Som</value>
+        <value xml:lang="zh">吉尔吉斯斯坦索姆</value>
+        <value xml:lang="zh-TW">吉爾吉斯斯坦索姆</value>
     </property>
     <property key="Uom.description.KIS">
         <value xml:lang="ar">قيرغيزستان سوم</value>
@@ -20057,19 +20150,19 @@
         <value xml:lang="zh-TW">馬拉維克瓦查</value>
     </property>
     <property key="Uom.description.MXN">
-        <value xml:lang="ar">بيزو مكسيكي (جديد)</value>
-        <value xml:lang="de">Peso Mexiko (neuer)</value>
-        <value xml:lang="en">Mexican Peso (new)</value>
-        <value xml:lang="fr">Peso (nouveau) du Mexique</value>
-        <value xml:lang="it">Peso Messicano (nuovo)</value>
-        <value xml:lang="ja">メキシコ・ペソ(新)</value>
-        <value xml:lang="pt">Mexican Peso (new)</value>
-        <value xml:lang="pt-BR">Peso Mexicano (novo)</value>
-        <value xml:lang="ro">Peso Messicano (nou)</value>
-        <value xml:lang="ru">Мексиканский песо (новый)</value>
+        <value xml:lang="ar">بيزو مكسيكي</value>
+        <value xml:lang="de">Peso Mexiko</value>
+        <value xml:lang="en">Mexican Peso</value>
+        <value xml:lang="fr">Peso du Mexique</value>
+        <value xml:lang="it">Peso Messicano </value>
+        <value xml:lang="ja">メキシコ・ペソ</value>
+        <value xml:lang="pt">Mexican Peso</value>
+        <value xml:lang="pt-BR">Peso Mexicano</value>
+        <value xml:lang="ro">Peso Messicano</value>
+        <value xml:lang="ru">Мексиканский песо</value>
         <value xml:lang="th">เปโซ เม็กซิโก</value>
-        <value xml:lang="zh">墨西哥比索(新)</value>
-        <value xml:lang="zh-TW">墨西哥比索(新)</value>
+        <value xml:lang="zh">墨西哥比索</value>
+        <value xml:lang="zh-TW">墨西哥比索</value>
     </property>
     <property key="Uom.description.MXP">
         <value xml:lang="ar">بيزو مكسيكي (قديم)</value>
@@ -20102,6 +20195,21 @@
         <value xml:lang="zh-TW">馬來西亞林吉特</value>
     </property>
     <property key="Uom.description.MZM">
+        <value xml:lang="ar">متيكال موزمبيقي</value>
+        <value xml:lang="de">Metical Mosambik</value>
+        <value xml:lang="en">Mozambique Metical</value>
+        <value xml:lang="fr">Metical du Mozambique</value>
+        <value xml:lang="it">Metical Mozambico</value>
+        <value xml:lang="ja">モザンビーク・メディカル</value>
+        <value xml:lang="pt">Mozambique Metical</value>
+        <value xml:lang="pt-BR">Metical Moçambicano</value>
+        <value xml:lang="ro">Metical Mozambic</value>
+        <value xml:lang="ru">Мозамбикский метикал</value>
+        <value xml:lang="th">เมททิคัล โมซัทบิก</value>
+        <value xml:lang="zh">莫桑比克美提卡</value>
+        <value xml:lang="zh-TW">莫三比克美提卡</value>
+    </property>
+    <property key="Uom.description.MZN">
         <value xml:lang="ar">متيكال موزمبيقي</value>
         <value xml:lang="de">Metical Mosambik</value>
         <value xml:lang="en">Mozambique Metical</value>
@@ -20161,6 +20269,20 @@
         <value xml:lang="th">คอร์โดบา นิคารากัว</value>
         <value xml:lang="zh">尼加拉瓜科多巴</value>
         <value xml:lang="zh-TW">尼加拉瓜科多巴</value>
+    </property>
+    <property key="Uom.description.ILS">
+        <value xml:lang="ar">الشيكل الإسرائيلي الجديد</value>
+        <value xml:lang="en">New Israeli Shekel</value>
+        <value xml:lang="fr">Nouveau shekel</value>
+        <value xml:lang="it">Shekel Nuovo Israele</value>
+        <value xml:lang="ja">イスラエル・新シェケル</value>
+        <value xml:lang="pt">New Israeli Shekel</value>
+        <value xml:lang="pt-BR">Novo Shekel israelita</value>
+        <value xml:lang="ro">Shekel Nuovo Israel</value>
+        <value xml:lang="ru">Новый Израильский шекель</value>
+        <value xml:lang="th">เชคเกิล อิสราเอล</value>
+        <value xml:lang="zh">新以色列谢克尔</value>
+        <value xml:lang="zh-TW">新以色列謝克爾</value>
     </property>
     <property key="Uom.description.NIS">
         <value xml:lang="ar">الشيكل الإسرائيلي الجديد</value>
@@ -20516,6 +20638,36 @@
         <value xml:lang="zh">罗马尼亚列伊</value>
         <value xml:lang="zh-TW">羅馬尼亞列伊</value>
     </property>
+    <property key="Uom.description.RON">
+        <value xml:lang="ar">ليو روماني</value>
+        <value xml:lang="de">Leu Rumänien</value>
+        <value xml:lang="en">Romanian Leu</value>
+        <value xml:lang="fr">Leu roumain</value>
+        <value xml:lang="it">Leu Romania</value>
+        <value xml:lang="ja">ルーマニア・レウ</value>
+        <value xml:lang="pt">Romanian Leu</value>
+        <value xml:lang="pt-BR">Leu Romeno</value>
+        <value xml:lang="ro">Leu Romania</value>
+        <value xml:lang="ru">Румынский лей</value>
+        <value xml:lang="th">ลิว โรมาเนีย</value>
+        <value xml:lang="zh">罗马尼亚列伊</value>
+        <value xml:lang="zh-TW">羅馬尼亞列伊</value>
+    </property>
+    <property key="Uom.description.RUB">
+        <value xml:lang="ar">روبل روسي</value>
+        <value xml:lang="de">Rubel Russland</value>
+        <value xml:lang="en">Russian Rouble</value>
+        <value xml:lang="fr">Rouble russe</value>
+        <value xml:lang="it">Rublo Russo</value>
+        <value xml:lang="ja">ロシア・ルーブル</value>
+        <value xml:lang="pt">Russian Rouble</value>
+        <value xml:lang="pt-BR">Rublo Russo</value>
+        <value xml:lang="ro">Rubla Rusia</value>
+        <value xml:lang="ru">Российский рубль</value>
+        <value xml:lang="th">รูเบิล รัสเซีย</value>
+        <value xml:lang="zh">俄罗斯卢布</value>
+        <value xml:lang="zh-TW">俄羅斯盧布</value>
+    </property>
     <property key="Uom.description.RUR">
         <value xml:lang="ar">روبل روسي</value>
         <value xml:lang="de">Rubel Russland</value>
@@ -20590,6 +20742,21 @@
         <value xml:lang="th">รูปี เซเชลส์</value>
         <value xml:lang="zh">塞舌尔卢比</value>
         <value xml:lang="zh-TW">塞舌爾盧比</value>
+    </property>
+    <property key="Uom.description.SDG">
+        <value xml:lang="ar">جنيه سوداني</value>
+        <value xml:lang="de">Pfund Sudan</value>
+        <value xml:lang="en">Sudanese Pound</value>
+        <value xml:lang="fr">Pound soudanais</value>
+        <value xml:lang="it">Sterlina Sudanese</value>
+        <value xml:lang="ja">スーダン・ポンド</value>
+        <value xml:lang="pt">Sudanese Pound</value>
+        <value xml:lang="pt-BR">Libras Sudanesas</value>
+        <value xml:lang="ro">Sterlina Sudaneza</value>
+        <value xml:lang="ru">Суданский фунт</value>
+        <value xml:lang="th">ปอนด์ ซูดาน</value>
+        <value xml:lang="zh">苏丹镑</value>
+        <value xml:lang="zh-TW">蘇丹鎊</value>
     </property>
     <property key="Uom.description.SDP">
         <value xml:lang="ar">جنيه سوداني</value>
@@ -21112,6 +21279,22 @@
         <value xml:lang="zh">土库曼斯坦马纳特</value>
         <value xml:lang="zh-TW">土庫曼斯坦馬納特</value>
     </property>
+    <property key="Uom.description.TMT">
+        <value xml:lang="ar">مانات تركمنستاني</value>
+        <value xml:lang="cs">Turkmenský manat</value>
+        <value xml:lang="de">Manat Turkmenistan</value>
+        <value xml:lang="en">Turkmenistani Manat</value>
+        <value xml:lang="fr">Manat de Turkmenistan</value>
+        <value xml:lang="it">Manat Turkmenistani</value>
+        <value xml:lang="ja">トルクメニスタン・マナト</value>
+        <value xml:lang="pt">Turkmenistani Manat</value>
+        <value xml:lang="pt-BR">Manata Turquemeno</value>
+        <value xml:lang="ro">Manat Turkmenistani</value>
+        <value xml:lang="ru">Туркменистанский манат</value>
+        <value xml:lang="th">Turkmenistani Manat</value>
+        <value xml:lang="zh">土库曼斯坦马纳特</value>
+        <value xml:lang="zh-TW">土庫曼斯坦馬納特</value>
+    </property>
     <property key="Uom.description.TND">
         <value xml:lang="ar">دينار تونسي</value>
         <value xml:lang="cs">Tuniský dinár</value>
@@ -21250,6 +21433,22 @@
         <value xml:lang="zh-TW">烏克蘭格裡夫那</value>
     </property>
     <property key="Uom.description.UGS">
+        <value xml:lang="ar">شلن اوغندي</value>
+        <value xml:lang="cs">Ugandský šilink</value>
+        <value xml:lang="de">Schilling Uganda</value>
+        <value xml:lang="en">Ugandan Shilling</value>
+        <value xml:lang="fr">Shilling d'Uganda</value>
+        <value xml:lang="it">Scellino Uganda</value>
+        <value xml:lang="ja">ウガンダ・シリング</value>
+        <value xml:lang="pt">Ugandan Shilling</value>
+        <value xml:lang="pt-BR">Xelim de Uganda</value>
+        <value xml:lang="ro">Siling Uganda</value>
+        <value xml:lang="ru">Угандийский шиллинг</value>
+        <value xml:lang="th">ชิลลิง ยูกันดา</value>
+        <value xml:lang="zh">乌干达先令</value>
+        <value xml:lang="zh-TW">烏甘達先令</value>
+    </property>
+    <property key="Uom.description.UGX">
         <value xml:lang="ar">شلن اوغندي</value>
         <value xml:lang="cs">Ugandský šilink</value>
         <value xml:lang="de">Schilling Uganda</value>
@@ -21428,6 +21627,22 @@
         <value xml:lang="zh-TW">立方碼</value>
     </property>
     <property key="Uom.description.VEB">
+        <value xml:lang="ar">بوليفار بنزويلي</value>
+        <value xml:lang="cs">Venezuelský bolívar</value>
+        <value xml:lang="de">Bolivar Venezuela</value>
+        <value xml:lang="en">Venezuelan Bolivar</value>
+        <value xml:lang="fr">Bolivar du Vénézuela</value>
+        <value xml:lang="it">Bolivar Venezuelano</value>
+        <value xml:lang="ja">ベネズエラ・ボリバル</value>
+        <value xml:lang="pt">Venezuelan Bolivar</value>
+        <value xml:lang="pt-BR">Bolívar Venezuelano</value>
+        <value xml:lang="ro">Bolivar Venezuela</value>
+        <value xml:lang="ru">Венесуэльский боливар</value>
+        <value xml:lang="th">โบลิวาร์ เวเนซูเอลา</value>
+        <value xml:lang="zh">委内瑞拉博利瓦</value>
+        <value xml:lang="zh-TW">委內瑞拉博利瓦</value>
+    </property>
+    <property key="Uom.description.VEF">
         <value xml:lang="ar">بوليفار بنزويلي</value>
         <value xml:lang="cs">Venezuelský bolívar</value>
         <value xml:lang="de">Bolivar Venezuela</value>
@@ -22077,6 +22292,22 @@
         <value xml:lang="zh">赞比亚克瓦查</value>
         <value xml:lang="zh-TW">贊比亞克瓦查</value>
     </property>
+    <property key="Uom.description.ZMW">
+        <value xml:lang="ar">كواشا زامبية</value>
+        <value xml:lang="cs">Zambijská kwacha</value>
+        <value xml:lang="de">Kwacha Sambia</value>
+        <value xml:lang="en">Zambian Kwacha</value>
+        <value xml:lang="fr">Kwacha de Zambie</value>
+        <value xml:lang="it">Kwacha Zambia</value>
+        <value xml:lang="ja">ザンビア・クワチャ</value>
+        <value xml:lang="pt">Zambian Kwacha</value>
+        <value xml:lang="pt-BR">Kwacha Zambiano</value>
+        <value xml:lang="ro">Kwacha Zambia</value>
+        <value xml:lang="ru">Замбийский квача</value>
+        <value xml:lang="th">ควาซา แซมเบีย</value>
+        <value xml:lang="zh">赞比亚克瓦查</value>
+        <value xml:lang="zh-TW">贊比亞克瓦查</value>
+    </property>
     <property key="Uom.description.ZRZ">
         <value xml:lang="ar">زائير</value>
         <value xml:lang="cs">Zaire</value>
@@ -22093,6 +22324,22 @@
         <value xml:lang="zh-TW">紮伊爾</value>
     </property>
     <property key="Uom.description.ZWD">
+        <value xml:lang="ar">دولار زمبابوي</value>
+        <value xml:lang="cs">Zimbavský dolar</value>
+        <value xml:lang="de">Dollar Simbabwe</value>
+        <value xml:lang="en">Zimbabwean Dollar</value>
+        <value xml:lang="fr">Dollar de Zimbabwe</value>
+        <value xml:lang="it">Dollaro Zimbawe</value>
+        <value xml:lang="ja">ジンバブエ・ドル</value>
+        <value xml:lang="pt">Zimbabwean Dollar</value>
+        <value xml:lang="pt-BR">Dólar zimbabweano</value>
+        <value xml:lang="ro">Dollar Zimbague</value>
+        <value xml:lang="ru">Зимбабвийский доллар</value>
+        <value xml:lang="th">ดอลลาร์ ซิมบับเว</value>
+        <value xml:lang="zh">津巴布韦元</value>
+        <value xml:lang="zh-TW">津巴布韋元</value>
+    </property>
+    <property key="Uom.description.ZWL">
         <value xml:lang="ar">دولار زمبابوي</value>
         <value xml:lang="cs">Zimbavský dolar</value>
         <value xml:lang="de">Dollar Simbabwe</value>
@@ -22327,77 +22574,5 @@
         <value xml:lang="vi">Cân nặng</value>
         <value xml:lang="zh">重量</value>
         <value xml:lang="zh-TW">重量</value>
-    </property>
-    <property key="VisualTheme.description.BIZZNESS_TIME">
-        <value xml:lang="cs">Bizzness : vertikální menu</value>
-        <value xml:lang="en">It's bizzness, it's bizzness time.  I couldn't have said it better myself. This theme gets down</value>
-        <value xml:lang="es">Bizzness, es hora de bizzness.  No lo podría haber dicho mejor. Este tema lo consigue</value>
-        <value xml:lang="fr">Bizzness : menu principal vertical</value>
-        <value xml:lang="ja">さあ仕事をしよう。自分自身うまく言えない。このテーマはやめた</value>
-        <value xml:lang="pt-BR">É Bizzness, é hora Bizzness. Eu não poderia ter dito melhor sozinho. Este tema fica para baixo</value>
-        <value xml:lang="ru">Это бизнес, это бизнес время. Я не могу сказать что-то лучше о себе. Эта тема получена ниже</value>
-        <value xml:lang="vi">It's bizzness, it's bizzness time.  I couldn't have said it better myself. This theme gets down</value>
-        <value xml:lang="zh">商务时代。我不能自己说它是最好的。本风格搞定</value>
-        <value xml:lang="zh-TW">商務時代.我不能自己說它是最好的.本風格搞定</value>
-    </property>
-    <property key="VisualTheme.description.BLUELIGHT">
-        <value xml:lang="cs">BlueLight Theme: navigační řádek, menu a zakulacené rohy</value>
-        <value xml:lang="en">BlueLight Theme: Breadcrumbs, drop-down menus and rounded corners</value>
-        <value xml:lang="es">BlueLight: Migas de pan, menús desplegables y las esquinas redondeadas</value>
-        <value xml:lang="fr">BlueLight Theme: fil d'ariane, menus déroulants et coins arrondis</value>
-        <value xml:lang="ja">ブルーライト: パンくずリスト、ドロップダウンメニュー、そして丸いコーナー</value>
-        <value xml:lang="pt-BR">Bluelight Tema: Breadcrumbs, menus drop-down e cantos arredondados</value>
-        <value xml:lang="ru">Светло-голубая тема: Бреадкрамбсы, раскрывающиеся меню с закругленным углами</value>
-        <value xml:lang="vi">BlueLight Theme: Breadcrumbs, drop-down menus and rounded corners</value>
-        <value xml:lang="zh">浅蓝风格：自动的多级导航，下拉式菜单，以及圆角</value>
-        <value xml:lang="zh-TW">淺藍風格:自動的多級導航,下拉式選單,以及圓角</value>
-    </property>
-    <property key="VisualTheme.description.DROPPINGCRUMBS">
-        <value xml:lang="cs">Dropping Crumbs: Pokročilejší varianta Blue-Light, menu integrované s navigací</value>
-        <value xml:lang="en">Dropping Crumbs: Evolution of Blue-Light, includes a drop down menu embedded in the breadcrumbs bar</value>
-        <value xml:lang="es">Dropping Crumbs: Evolución de BlueLight, incluye un menú desplegable incrustado en la barra de migas de pan</value>
-        <value xml:lang="fr">Dropping Crumbs: déclinaison de Bluelight, plus sobre, menu déroulant intégré dans la barre du fil d'ariane</value>
-        <value xml:lang="ja">パンくず: ブルーライトの改良。パンくずリストバーに組み込まれたドロップダウンメニューを含む</value>
-        <value xml:lang="pt-BR">Descartando Migalhas: Evolução da azul-luz, inclui um menu drop-down incorporado na barra de farinha de rosca</value>
-        <value xml:lang="ru">Падающие крамбы: Эволюция светло-голубых, включает раскрывающиеся меню встроенных в полосу бреадкрамбов</value>
-        <value xml:lang="vi">Dropping Crumbs: Evolution of Blue-Light, includes a drop down menu embedded in the breadcrumbs bar</value>
-        <value xml:lang="zh">下拉多级：浅蓝风格的演化版，包括一个嵌入多级导航条的下拉式菜单</value>
-        <value xml:lang="zh-TW">下拉多級:淺藍風格的演化版,包括一個嵌入多級導航條的下拉式選單</value>
-    </property>
-    <property key="VisualTheme.description.FLAT_GREY">
-        <value xml:lang="cs">Flat Grey - Plovoucí rozložení, podpora obousměrného textu</value>
-        <value xml:lang="en">Flat Grey - Floating Layout, Sight-Impaired Accessible, Bidirectional</value>
-        <value xml:lang="es">Flat Grey - Diseño flotante, accesible para personas con discapacidad visual, bidireccional</value>
-        <value xml:lang="fr">Flat Grey : mise en page dynamique, accessibilité, support de texte bidirectionnel</value>
-        <value xml:lang="ja">フラットグレー: 以前のOFBiz標準フローティングレイアウト</value>
-        <value xml:lang="pt-BR">Apartamento Grey - Layout padrão antigo OFBiz flutuante</value>
-        <value xml:lang="ru">Плоские серые - Плавающие лейауты, Слабовидящий доступ, Двунаправленный</value>
-        <value xml:lang="vi">Flat Grey - Floating Layout, Sight-Impaired Accessible, Bidirectional</value>
-        <value xml:lang="zh">浅灰－浮动样式，视觉阻挡，双向</value>
-        <value xml:lang="zh-TW">淺灰－浮動式,視障殘疾人專用,雙向</value>
-    </property>
-    <property key="VisualTheme.description.MULTIFLEX">
-        <value xml:lang="cs">Alternativní téma pro eShop</value>
-        <value xml:lang="en">Alternative VisualTheme for Ecommerce</value>
-        <value xml:lang="es">Tema visual alternativo para comercio electrónico</value>
-        <value xml:lang="fr">Une alternative pour le theme de base du module de commerce électronique</value>
-        <value xml:lang="ja">マルチフレックス: 別のEコマース向けテーマ</value>
-        <value xml:lang="pt-BR">Alternativa para VisualTheme Ecommerce</value>
-        <value xml:lang="ru">Альтернативная Визуальная Тема для электронной коммерции</value>
-        <value xml:lang="vi">Giao diện trực quan thay thế khác cho trang thương mại điện tử</value>
-        <value xml:lang="zh">电子商务的替代视觉风格</value>
-        <value xml:lang="zh-TW">電子商務的替代視覺風格</value>
-    </property>
-    <property key="VisualTheme.description.TOMAHAWK">
-        <value xml:lang="cs">Tomahawk: evoluční verze Dropping Crumbs</value>
-        <value xml:lang="en">Tomahawk: the evolution of the Dropping Crumbs theme</value>
-        <value xml:lang="es">Tomahawk: la evolución del tema Dropping Crumbs</value>
-        <value xml:lang="fr">Tomahawk: évolution de Dropping Crumbs dans les tons noir et orange</value>
-        <value xml:lang="ja">トマホーク: パンくずの改良</value>
-        <value xml:lang="pt-BR">Tomahawk: a evolução do tema Migalhas Descartando</value>
-        <value xml:lang="ru">Томахавк: эволюция падающих крамбов темы</value>
-        <value xml:lang="vi">Tomahawk: Ôi võ đức trí djjava ơi. evolution of the Dropping Crumbs theme</value>
-        <value xml:lang="zh">印第安战斧：下拉多级风格的演化版</value>
-        <value xml:lang="zh-TW">印第安戰斧:下拉多級風格的演化版</value>
     </property>
 </resource>

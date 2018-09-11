@@ -96,8 +96,8 @@
         <value xml:lang="zh-TW">轉化了的線索</value>
     </property>
     <property key="FormFieldTitle_custRequestId">
-        <value xml:lang="de">Kundenanfrage Id</value>
-        <value xml:lang="en">Cust Request Id</value>
+        <value xml:lang="de">Kundenanfrage ID</value>
+        <value xml:lang="en">Cust Request ID</value>
         <value xml:lang="fr">Réf. de requête de client</value>
         <value xml:lang="it">Numero richiesta cliente</value>
         <value xml:lang="ja">顧客リクエストID</value>
@@ -147,7 +147,7 @@
     </property>
     <property key="FormFieldTitle_internalPartyId">
         <value xml:lang="de">Interne Nutzer-Nr.</value>
-        <value xml:lang="en">Internal Party Id</value>
+        <value xml:lang="en">Internal Party ID</value>
         <value xml:lang="fr">Réf. d'acteur interne</value>
         <value xml:lang="it">Soggetto interno</value>
         <value xml:lang="ja">内部取引先ID</value>
@@ -171,7 +171,7 @@
     </property>
     <property key="FormFieldTitle_parentSalesForecastId">
         <value xml:lang="de">Übergeordnete Verkaufsprognose</value>
-        <value xml:lang="en">Parent Sales Forecast Id</value>
+        <value xml:lang="en">Parent Sales Forecast ID</value>
         <value xml:lang="fr">Réf. de vente parente estimée</value>
         <value xml:lang="it">Previsione di vendita padre</value>
         <value xml:lang="ja">上位(親)の販売予測ID</value>
@@ -218,8 +218,8 @@
         <value xml:lang="zh-TW">管道金額</value>
     </property>
     <property key="FormFieldTitle_prodCatalogId">
-        <value xml:lang="de">Katalog Id</value>
-        <value xml:lang="en">Product Catalog Id</value>
+        <value xml:lang="de">Katalog ID</value>
+        <value xml:lang="en">Product Catalog ID</value>
         <value xml:lang="fr">Réf. de catalogue</value>
         <value xml:lang="it">Catalogo prodotti</value>
         <value xml:lang="ja">製品カタログID</value>
@@ -244,8 +244,8 @@
         <value xml:lang="zh-TW">指標金額</value>
     </property>
     <property key="FormFieldTitle_salesForecastDetailId">
-        <value xml:lang="de">Prognose Detail Id</value>
-        <value xml:lang="en">Sales Forecast Detail Id</value>
+        <value xml:lang="de">Prognose Detail ID</value>
+        <value xml:lang="en">Sales Forecast Detail ID</value>
         <value xml:lang="fr">Réf. de détail de vente estimée</value>
         <value xml:lang="it">Dettaglio previsione di vendita</value>
         <value xml:lang="ja">販売予測詳細ID</value>
@@ -256,8 +256,8 @@
         <value xml:lang="zh-TW">銷售預測明細識別</value>
     </property>
     <property key="FormFieldTitle_salesForecastId">
-        <value xml:lang="de">Prognose Id</value>
-        <value xml:lang="en">Sales Forecast Id</value>
+        <value xml:lang="de">Prognose ID</value>
+        <value xml:lang="en">Sales Forecast ID</value>
         <value xml:lang="fr">Réf. de vente estimée</value>
         <value xml:lang="it">Previsione di vendita</value>
         <value xml:lang="ja">販売予測ID</value>
@@ -266,6 +266,21 @@
         <value xml:lang="vi">Id Dự báo  bán hàng</value>
         <value xml:lang="zh">销售预测标识</value>
         <value xml:lang="zh-TW">銷售預測識別</value>
+    </property>
+    <property key="MarketingAnalytics">
+        <value xml:lang="en">Marketing Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsForecast">
+        <value xml:lang="en">Forecast Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsLeads">
+        <value xml:lang="en">Lead Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsSales">
+        <value xml:lang="en">Sales Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsSegments">
+        <value xml:lang="en">Segment Analytics</value>
     </property>
     <property key="MarketingCampaign">
         <value xml:lang="de">Marketing Kampagne</value>
@@ -299,7 +314,7 @@
     </property>
     <property key="MarketingCampaignId">
         <value xml:lang="de">Kampagne ID</value>
-        <value xml:lang="en">Campaign Id</value>
+        <value xml:lang="en">Campaign ID</value>
         <value xml:lang="es">Campaña</value>
         <value xml:lang="fr">Réf. de campagne marketing</value>
         <value xml:lang="it">Codice campagna di vendita</value>
@@ -370,6 +385,10 @@
         <value xml:lang="zh">新建市场攻势角色</value>
         <value xml:lang="zh-TW">新建行銷活動角色</value>
     </property>
+    <property key="MarketingCampaigns">
+        <value xml:lang="de">Kampagnen</value>
+        <value xml:lang="en">Campaigns</value>
+    </property>
     <property key="MarketingCampaignSummary">
         <value xml:lang="de">Kampagnenzusammenfassung</value>
         <value xml:lang="en">Campaign Summary</value>
@@ -384,6 +403,12 @@
         <value xml:lang="vi">Tóm tắt chiến dịch</value>
         <value xml:lang="zh">攻势摘要</value>
         <value xml:lang="zh-TW">活動摘要</value>
+    </property>
+    <property key="MarketingCommunicationRoleStatusId">
+        <value xml:lang="en">Communication Role Status ID</value>
+    </property>
+    <property key="MarketingCommunicationStatusId">
+        <value xml:lang="en">Communication Status ID</value>
     </property>
     <property key="MarketingCompanyName">
         <value xml:lang="de">SCIPIO - Vermarktungsmanager</value>
@@ -451,7 +476,7 @@
     </property>
     <property key="MarketingContactListCommEventId">
         <value xml:lang="de">Kommunikationsereignis</value>
-        <value xml:lang="en">Communication Event Id</value>
+        <value xml:lang="en">Communication Event ID</value>
         <value xml:lang="es">Código de evento</value>
         <value xml:lang="fr">Réf. d'évènement de communication</value>
         <value xml:lang="it">Codice evento comunicazione</value>
@@ -466,7 +491,7 @@
     </property>
     <property key="MarketingContactListCommEventTypeId">
         <value xml:lang="de">Kommunikationsereignis-Art</value>
-        <value xml:lang="en">Communication Event Type Id</value>
+        <value xml:lang="en">Communication Event Type ID</value>
         <value xml:lang="es">Tipo de evento</value>
         <value xml:lang="fr">Réf. du type d'événement de communication</value>
         <value xml:lang="it">Tipo evento comunicazione</value>
@@ -488,8 +513,8 @@
         <value xml:lang="zh-TW">聯絡清單通訊狀態</value>
     </property>
     <property key="MarketingContactListContactListId">
-        <value xml:lang="de">Kontaktliste Id</value>
-        <value xml:lang="en">Contact List Id</value>
+        <value xml:lang="de">Kontaktliste ID</value>
+        <value xml:lang="en">Contact List ID</value>
         <value xml:lang="es">Código de lista</value>
         <value xml:lang="fr">Réf. de la liste de contact</value>
         <value xml:lang="it">Codice lista contatti</value>
@@ -519,7 +544,7 @@
     </property>
     <property key="MarketingContactListContactListTypeId">
         <value xml:lang="de">Kontaktlistenart</value>
-        <value xml:lang="en">Contact List Type Id</value>
+        <value xml:lang="en">Contact List Type ID</value>
         <value xml:lang="es">Tipo de lista</value>
         <value xml:lang="fr">Réf. du type de liste de contact</value>
         <value xml:lang="it">Tipo lista contatti</value>
@@ -534,7 +559,7 @@
     </property>
     <property key="MarketingContactListContactMechTypeId">
         <value xml:lang="de">Kontaktmechanismus Typ ID</value>
-        <value xml:lang="en">Contact Mechanism Type Id</value>
+        <value xml:lang="en">Contact Mechanism Type ID</value>
         <value xml:lang="es">Mecanismo de contacto</value>
         <value xml:lang="fr">Type de mécanisme de contact </value>
         <value xml:lang="it">Tipo di contatti</value>
@@ -654,7 +679,7 @@
     </property>
     <property key="MarketingContactListOwnerPartyId">
         <value xml:lang="de">Ersteller ID</value>
-        <value xml:lang="en">Owner Party Id</value>
+        <value xml:lang="en">Owner Party ID</value>
         <value xml:lang="es">Propietario</value>
         <value xml:lang="fr">Réf. d'acteur propriétaire</value>
         <value xml:lang="it">Codice soggetto proprietario</value>
@@ -666,6 +691,16 @@
         <value xml:lang="vi">Mã Tác nhân sở hữu</value>
         <value xml:lang="zh">拥有人会员标识</value>
         <value xml:lang="zh-TW">擁有者團體識別</value>
+    </property>
+    <property key="MarketingContactListPartiesImport">
+        <value xml:lang="de">Akteure importieren</value>
+        <value xml:lang="en">Import Parties</value>
+        <value xml:lang="fr">Import d'acteurs</value>
+        <value xml:lang="ja">取引先をインポート</value>
+        <value xml:lang="th">นำเข้ากลุ่มผู้ใช้</value>
+        <value xml:lang="vi">Nhập vào các Tác nhân</value>
+        <value xml:lang="zh">导入会员</value>
+        <value xml:lang="zh-TW">匯入團體</value>
     </property>
     <property key="MarketingContactListParty">
         <value xml:lang="de">Kontaktliste Nutzer</value>
@@ -699,7 +734,7 @@
     </property>
     <property key="MarketingContactListPartyId">
         <value xml:lang="de">Teilnehmer ID</value>
-        <value xml:lang="en">Party Id</value>
+        <value xml:lang="en">Party ID</value>
         <value xml:lang="es">Código de participante</value>
         <value xml:lang="fr">Réf. d'abonné à la liste de contact</value>
         <value xml:lang="it">Codice membro lista contatti</value>
@@ -784,7 +819,7 @@
     </property>
     <property key="MarketingContactListVerifyEmailWebSiteId">
         <value xml:lang="de">Bestätigungsemail Webseiten ID</value>
-        <value xml:lang="en">Verify Email WebSite Id</value>
+        <value xml:lang="en">Verify Email WebSite ID</value>
         <value xml:lang="es">Sitio web de verificación</value>
         <value xml:lang="fr">Réf. du site Internet du courriel de vérification</value>
         <value xml:lang="it">Verifica Email Sito Web</value>
@@ -855,6 +890,9 @@
         <value xml:lang="vi">Lỗi phân quyền: để thực thi ${resourceDescription} bạn cần có quyền MARKETING_DELETE hoặc quyền MARKETING_ADMIN</value>
         <value xml:lang="zh">安全错误：要运行${resourceDescription}，你必须有 MARKETING_DELETE 或 MARKETING_ADMIN 权限</value>
         <value xml:lang="zh-TW">安全錯誤:要執行${resourceDescription},你必須有 MARKETING_DELETE 或 MARKETING_ADMIN 許可權</value>
+    </property>
+    <property key="MarketingEmailFormatError">
+        <value xml:lang="en">${firstName} ${lastName} has ${emailFormatErrMsg}</value>
     </property>
     <property key="MarketingEmailStatusReport">
         <value xml:lang="de">E-Mail Statusbericht</value>
@@ -962,6 +1000,9 @@
         <value xml:lang="zh">欢迎使用市场管理程序！</value>
         <value xml:lang="zh-TW">歡迎使用行銷管理程式！</value>
     </property>
+    <property key="MarketingMarketing">
+        <value xml:lang="en">Marketing</value>
+    </property>
     <property key="MarketingNoOfEmployees">
         <value xml:lang="de">Anzahl Angestellte</value>
         <value xml:lang="en">No of Employees</value>
@@ -973,6 +1014,10 @@
         <value xml:lang="vi">Số nhân viên</value>
         <value xml:lang="zh">雇员数量</value>
         <value xml:lang="zh-TW">員工數量</value>
+    </property>
+    <property key="MarketingNoPartyLoad">
+        <value xml:lang="en">No party load</value>
+        <value xml:lang="fr">Aucun acteur chargé</value>
     </property>
     <property key="MarketingOrderAmount">
         <value xml:lang="de">Auftragssumme</value>
@@ -1006,7 +1051,7 @@
     </property>
     <property key="MarketingParentCampaignId">
         <value xml:lang="de">Übergeordnete Kampagne</value>
-        <value xml:lang="en">Parent Campaign Id</value>
+        <value xml:lang="en">Parent Campaign ID</value>
         <value xml:lang="es">Campaña padre</value>
         <value xml:lang="fr">Réf. de campagne parent</value>
         <value xml:lang="it">Codice Campagna Padre</value>
@@ -1017,6 +1062,14 @@
         <value xml:lang="vi">Chiến dịch cấp quản lý trên</value>
         <value xml:lang="zh">上级攻势标识</value>
         <value xml:lang="zh-TW">上級活動識別</value>
+    </property>
+    <property key="MarketingPartiesLoaded">
+        <value xml:lang="en">Parties Loaded</value>
+        <value xml:lang="fr">Acteurs chargés</value>
+    </property>
+    <property key="MarketingPartiesNoLoadedAlreadyExist">
+        <value xml:lang="en">Parties no loaded because they already exist on the system</value>
+        <value xml:lang="fr">Acteurs non chargés car déjà présent dans le système</value>
     </property>
     <property key="MarketingPartyStatusReport">
         <value xml:lang="de">Statusbericht Nutzer</value>
@@ -1151,6 +1204,10 @@
         <value xml:lang="zh">分区组浏览权限出错</value>
         <value xml:lang="zh-TW">分區群組檢視權限出錯</value>
     </property>
+    <property key="MarketingSegmentGroupNoSegmentGroupFound">
+        <value xml:lang="de">Keine Segmente gefunden</value>
+        <value xml:lang="en">No Segments found </value>
+    </property>
     <property key="MarketingSegmentGroupNoSegmentGroupFoundWithId">
         <value xml:lang="de">Keine Segmentgruppe gefunden mit ID:</value>
         <value xml:lang="en">No SegmentGroup found with ID:</value>
@@ -1168,7 +1225,7 @@
     </property>
     <property key="MarketingSegmentGroupPartyClassificationGroupId">
         <value xml:lang="de">Segment Klassifizierungsgruppen-ID</value>
-        <value xml:lang="en">Segment GroupParty ClassificationGroup Id</value>
+        <value xml:lang="en">Segment GroupParty ClassificationGroup ID</value>
         <value xml:lang="fr">Réf du groupe de classification d'acteur</value>
         <value xml:lang="it">Soggetto gruppo segmento classificazione</value>
         <value xml:lang="ja">セグメントグループ取引先分類グループID</value>
@@ -1180,7 +1237,7 @@
     </property>
     <property key="MarketingSegmentGroupProductStoreId">
         <value xml:lang="de">Laden-ID</value>
-        <value xml:lang="en">Product Store Id</value>
+        <value xml:lang="en">Product Store ID</value>
         <value xml:lang="es">Tienda</value>
         <value xml:lang="fr">Réf. de centre de profit</value>
         <value xml:lang="it">Codice Negozio</value>
@@ -1253,7 +1310,7 @@
     </property>
     <property key="MarketingSegmentGroupSegmentGroupId">
         <value xml:lang="de">Segmentgruppe ID</value>
-        <value xml:lang="en">Segment Group Id</value>
+        <value xml:lang="en">Segment Group ID</value>
         <value xml:lang="es">Código de segmento</value>
         <value xml:lang="fr">Réf. du groupe de segment</value>
         <value xml:lang="it">Codice Gruppo Segmento</value>
@@ -1312,8 +1369,8 @@
         <value xml:lang="zh-TW">類型</value>
     </property>
     <property key="MarketingSegmentGroupSegmentGroupTypeId">
-        <value xml:lang="de">Segmentgruppe Typ Id</value>
-        <value xml:lang="en">Segment Group Type Id</value>
+        <value xml:lang="de">Segmentgruppe Typ ID</value>
+        <value xml:lang="en">Segment Group Type ID</value>
         <value xml:lang="es">Tipo de segmento</value>
         <value xml:lang="fr">Réf. du type de groupe de segment</value>
         <value xml:lang="it">Tipo Gruppo Segmento</value>
@@ -1325,6 +1382,13 @@
         <value xml:lang="vi">Loại nhóm</value>
         <value xml:lang="zh">分区组类型标识</value>
         <value xml:lang="zh-TW">分區群組類型識別</value>
+    </property>
+    <property key="MarketingSegments">
+        <value xml:lang="de">Segmente</value>
+        <value xml:lang="en">Segments</value>
+    </property>
+    <property key="MarketingServiceCommunicationNotFound">
+        <value xml:lang="en">Could not find communications.</value>
     </property>
     <property key="MarketingServiceError">
         <value xml:lang="de">Während der Anfrage ist ein Problem aufgetreten, bitte versuchen Sie es noch einmal oder, falls das Problem weiterhin besteht, kontaktieren Sie uns.</value>
@@ -1412,7 +1476,7 @@
     </property>
     <property key="MarketingTrackingCodeDefaultProdCatalogId">
         <value xml:lang="de">Standard-Produkkatalog</value>
-        <value xml:lang="en">Default Product Catalog Id</value>
+        <value xml:lang="en">Default Product Catalog ID</value>
         <value xml:lang="es">Catálogo</value>
         <value xml:lang="fr">Catalogue produit par défaut</value>
         <value xml:lang="it">Codice Catalogo Default</value>
@@ -1424,6 +1488,21 @@
         <value xml:lang="vi">Phân loại Quản lý mặc định</value>
         <value xml:lang="zh">缺省产品目录标识</value>
         <value xml:lang="zh-TW">預設產品型錄識別</value>
+    </property>
+    <property key="MarketingTrackingCodeDesc">
+        <value xml:lang="de">Tracking Codes werden als URL parameter in den Shop übergeben. Die nachfolgenden sind verfügbar: &lt;br/&gt;
+        &lt;ul&gt;
+        &lt;li&gt;Partner Tracking Code = ptc (Beispiel: ?ptc=9000) &lt;/li&gt;
+        &lt;li&gt;Auto Tracking Code = atc (Beispiel: ?atc=9000) &lt;/li&gt;
+        &lt;li&gt;Default Tracking Code = dtc (Beispiel: ?dtc=9000) &lt;/li&gt;
+        &lt;/ul&gt;</value>
+        <value xml:lang="en">Tracking Codes are added as URL parameters. The following are available: &lt;br/&gt;
+        &lt;ul&gt;
+        &lt;li&gt;Partner Tracking Code = ptc (Example: ?ptc=9000) &lt;/li&gt;
+        &lt;li&gt;Auto Tracking Code = atc (Example: ?atc=9000) &lt;/li&gt;
+        &lt;li&gt;Default Tracking Code = dtc (Example: ?dtc=9000) &lt;/li&gt;
+        &lt;/ul&gt;
+        </value>
     </property>
     <property key="MarketingTrackingCodeDescription">
         <value xml:lang="de">Beschreibung</value>
@@ -1442,7 +1521,7 @@
     </property>
     <property key="MarketingTrackingCodeGroupId">
         <value xml:lang="de">Grouppen-ID</value>
-        <value xml:lang="en">Group Id</value>
+        <value xml:lang="en">Group ID</value>
         <value xml:lang="es">Grupo</value>
         <value xml:lang="fr">Réf. du groupe</value>
         <value xml:lang="it">Codice Gruppo</value>
@@ -1528,7 +1607,7 @@
     </property>
     <property key="MarketingTrackingCodeOrderOrderId">
         <value xml:lang="de">Auftrags-Nr.</value>
-        <value xml:lang="en">Order Id</value>
+        <value xml:lang="en">Order ID</value>
         <value xml:lang="es">Código de orden</value>
         <value xml:lang="fr">Réf. de l'ordre</value>
         <value xml:lang="it">Numero Ordine</value>
@@ -1570,7 +1649,7 @@
     </property>
     <property key="MarketingTrackingCodeProdCatalogId">
         <value xml:lang="de">Tracking Code Produktkatalog</value>
-        <value xml:lang="en">Tracking Code Prod Catalog Id</value>
+        <value xml:lang="en">Tracking Code Prod Catalog ID</value>
         <value xml:lang="fr">Réf. de code de suivi de catalogue</value>
         <value xml:lang="it">Codice tracciatura catalogo</value>
         <value xml:lang="ja">追跡コード製品カタログID</value>
@@ -1609,7 +1688,7 @@
     </property>
     <property key="MarketingTrackingCodeSubgroupId">
         <value xml:lang="de">Untergruppen-ID</value>
-        <value xml:lang="en">Sub-Group Id</value>
+        <value xml:lang="en">Sub-Group ID</value>
         <value xml:lang="es">Sub-grupo</value>
         <value xml:lang="fr">Réf. du sous-groupe</value>
         <value xml:lang="it">Codice Sotto-Gruppo</value>
@@ -1636,7 +1715,7 @@
     </property>
     <property key="MarketingTrackingCodeTrackingCodeId">
         <value xml:lang="de">Tracking-Code ID</value>
-        <value xml:lang="en">Tracking Code Id</value>
+        <value xml:lang="en">Tracking Code ID</value>
         <value xml:lang="es">Código</value>
         <value xml:lang="fr">Réf. du code de suivi</value>
         <value xml:lang="it">Codice Tracciatura</value>
@@ -1650,7 +1729,7 @@
     </property>
     <property key="MarketingTrackingCodeTrackingCodeTypeId">
         <value xml:lang="de">Tracking-Code Art</value>
-        <value xml:lang="en">Tracking Code Type Id</value>
+        <value xml:lang="en">Tracking Code Type ID</value>
         <value xml:lang="es">Tipo de código</value>
         <value xml:lang="fr">Type de code de suivi</value>
         <value xml:lang="it">Tipo Tracciatura</value>
@@ -1762,7 +1841,7 @@
     </property>
     <property key="MarketingTrackingCodeVisitPartyId">
         <value xml:lang="de">Tracking-Code Nutzer</value>
-        <value xml:lang="en">Party Id</value>
+        <value xml:lang="en">Party ID</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Réf. de l'acteur</value>
         <value xml:lang="it">Codice Soggetto</value>
@@ -1776,7 +1855,7 @@
     </property>
     <property key="MarketingTrackingCodeVisitRoleTypeId">
         <value xml:lang="de">Funktionstyp ID</value>
-        <value xml:lang="en">Role Type Id</value>
+        <value xml:lang="en">Role Type ID</value>
         <value xml:lang="es">Tipo de rol</value>
         <value xml:lang="fr">Type de rôle</value>
         <value xml:lang="it">Tipo Ruolo</value>
@@ -1789,7 +1868,7 @@
         <value xml:lang="zh-TW">角色類型識別</value>
     </property>
     <property key="MarketingTrackingCodeVisitSessionId">
-        <value xml:lang="en">Session Id</value>
+        <value xml:lang="en">Session ID</value>
         <value xml:lang="es">Código de sesión</value>
         <value xml:lang="fr">Réf. de la session</value>
         <value xml:lang="it">Numero Sessione</value>
@@ -1802,7 +1881,7 @@
         <value xml:lang="zh-TW">活動識別</value>
     </property>
     <property key="MarketingTrackingCodeVisitSourceEnumId">
-        <value xml:lang="en">Source Id</value>
+        <value xml:lang="en">Source ID</value>
         <value xml:lang="es">Código de fuente de la visita</value>
         <value xml:lang="fr">Réf. de l'origine</value>
         <value xml:lang="it">Numero Origine</value>
@@ -1816,7 +1895,7 @@
     </property>
     <property key="MarketingTrackingCodeVisitUserLoginId">
         <value xml:lang="de">Tracking-Code User-Login</value>
-        <value xml:lang="en">Tracking Code Visit User Login Id</value>
+        <value xml:lang="en">Tracking Code Visit User Login ID</value>
         <value xml:lang="fr">Réf. de code de suivi de visite d'identifiant de connexion</value>
         <value xml:lang="it">Codice tracciatura utente visita</value>
         <value xml:lang="ja">追跡コード訪問ログインユーザID</value>
@@ -1826,8 +1905,8 @@
         <value xml:lang="zh-TW">追蹤碼拜訪的使用者登入識別</value>
     </property>
     <property key="MarketingTrackingCodeVisitVisitId">
-        <value xml:lang="de">Visit Id</value>
-        <value xml:lang="en">Visit Id</value>
+        <value xml:lang="de">Visit ID</value>
+        <value xml:lang="en">Visit ID</value>
         <value xml:lang="es">Código de visita</value>
         <value xml:lang="fr">Réf. de la visite</value>
         <value xml:lang="it">Numero Visita</value>
@@ -1840,7 +1919,7 @@
         <value xml:lang="zh-TW">拜訪識別</value>
     </property>
     <property key="MarketingTrackingCodeVisitVisitorId">
-        <value xml:lang="en">Visitor Id</value>
+        <value xml:lang="en">Visitor ID</value>
         <value xml:lang="es">Código de visitante</value>
         <value xml:lang="fr">Réf. du visiteur</value>
         <value xml:lang="it">Codice Visitatore</value>
@@ -2794,6 +2873,10 @@
         <value xml:lang="zh">全部线索</value>
         <value xml:lang="zh-TW">全部線索</value>
     </property>
+    <property key="SfaAnalytics">
+        <value xml:lang="de">Analyse</value>
+        <value xml:lang="en">Analytics</value>
+    </property>
     <property key="SfaAssignToMe">
         <value xml:lang="de">Zugewiesen an mich</value>
         <value xml:lang="en">Assign To Me</value>
@@ -2837,6 +2920,10 @@
         <value xml:lang="vi">Tự động tạo mới Đầu mối bởi nhập khẩu vCard</value>
         <value xml:lang="zh">通过导入vCard自动新建线索</value>
         <value xml:lang="zh-TW">通過匯入vCard自動新建線索</value>
+    </property>
+    <property key="SfaCalendar">
+        <value xml:lang="de">Kalender</value>
+        <value xml:lang="en">Calendar</value>
     </property>
     <property key="SfaCampaigns">
         <value xml:lang="de">Kampagnen</value>
@@ -2997,6 +3084,10 @@
         <value xml:lang="vi">Tạo từ vCard</value>
         <value xml:lang="zh">从vCard创建</value>
         <value xml:lang="zh-TW">從vCard新建</value>
+    </property>
+    <property key="SfaCurrencyConvertedUsingLastKnownRates">
+        <value xml:lang="de">Währungen werden unter Verwendung der zuletzt bekannten / aktualisierten Wechselkurse von der Datenbank konvertiert.</value>
+        <value xml:lang="en">Currencies are converted using the last known/updated exchange rates, from database.</value>
     </property>
     <property key="SfaDataSourceLabel">
         <value xml:lang="de">Quelle</value>
@@ -3231,6 +3322,10 @@
         <value xml:lang="zh">从VCard导入数据时出错：${errorString}</value>
         <value xml:lang="zh-TW">從VCard匯入資料時出錯:${errorString}</value>
     </property>
+    <property key="SfaImportVcardNameMissingError">
+        <value xml:lang="en">first name or last name missing.</value>
+        <value xml:lang="fr">Prénom ou nom manquant.</value>
+    </property>
     <property key="SfaInitialAccount">
         <value xml:lang="de">Initiales Account</value>
         <value xml:lang="en">Initial Account</value>
@@ -3263,6 +3358,9 @@
         <value xml:lang="vi">Đầu mối</value>
         <value xml:lang="zh">线索</value>
         <value xml:lang="zh-TW">線索</value>
+    </property>
+    <property key="SfaLeadCreatedSuccessfully">
+        <value xml:lang="en">Lead created successfully</value>
     </property>
     <property key="SfaLeadSource">
         <value xml:lang="de">Lead Quelle</value>
@@ -3437,6 +3535,10 @@
         <value xml:lang="zh">没有选择要合并的线索</value>
         <value xml:lang="zh-TW">沒有選擇要合併的線索</value>
     </property>
+    <property key="SfaOnlyConvertibleCurrenciesListed">
+        <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
+        <value xml:lang="en">Only convertible currencies are listed.</value>
+    </property>
     <property key="SfaOpportunities">
         <value xml:lang="de">Opportunities</value>
         <value xml:lang="en">Opportunities</value>
@@ -3501,6 +3603,14 @@
         <value xml:lang="zh">机会总览</value>
         <value xml:lang="zh-TW">機會總覽</value>
     </property>
+    <property key="SfaOrderTotalsConvertedExchangeNotice">
+        <value xml:lang="de">${currencyConvertCount} Die Auftragssummen wurden unter Verwendung der zuletzt bekannten Wechselkurse in eine Währung von ${currencyUomId} umgewandelt.</value>
+        <value xml:lang="en">${currencyConvertCount} order totals were converted to ${currencyUomId} currency, using last known exchange rates.</value>
+    </property>
+    <property key="SfaOrderTotalsConvertFail">
+        <value xml:lang="de">${CurrencyFailCount} Auftragssummen fehlgeschlagene Währungsumrechnung in ${currencyUomId}.</value>
+        <value xml:lang="en">${currencyFailCount} order totals failed currency conversion to ${currencyUomId}.</value>
+    </property>
     <property key="SfaProbability">
         <value xml:lang="de">Wahrscheinlichkeit(%)</value>
         <value xml:lang="en">Probability(%)</value>
@@ -3533,6 +3643,9 @@
         <value xml:lang="vi">Thêm nhanh Đầu mối</value>
         <value xml:lang="zh">快速添加线索</value>
         <value xml:lang="zh-TW">快速增加線索</value>
+    </property>
+    <property key="SfaSales">
+        <value xml:lang="en">Sales</value>
     </property>
     <property key="SfaSalesForecast">
         <value xml:lang="de">Verkaufsprognose</value>
@@ -3576,6 +3689,12 @@
         <value xml:lang="vi">Chọn Sở hữu Đầu mối</value>
         <value xml:lang="zh">选择线索拥有者</value>
         <value xml:lang="zh-TW">選擇線索擁有者</value>
+    </property>
+    <property key="SfaServices">
+        <value xml:lang="en">Services</value>
+    </property>
+    <property key="SfaSettings">
+        <value xml:lang="en">Settings</value>
     </property>
     <property key="SfaTaskAssignedByMe">
         <value xml:lang="de">Öffne Aufgaben die ich zugeteilt habe.</value>
@@ -3623,96 +3742,5 @@
     </property>
     <property key="SfaVCard">
         <value xml:lang="en">vCard</value>
-    </property>
-    <!-- SCIPIO: NEW LABELS -->
-    <property key="MarketingAnalytics">
-        <value xml:lang="en">Marketing Analytics</value>
-    </property>
-    <property key="MarketingAnalyticsForecast">
-        <value xml:lang="en">Forecast Analytics</value>
-    </property>
-    <property key="MarketingAnalyticsLeads">
-        <value xml:lang="en">Lead Analytics</value>
-    </property>
-    <property key="MarketingAnalyticsSales">
-        <value xml:lang="en">Sales Analytics</value>
-    </property>
-    <property key="MarketingAnalyticsSegments">
-        <value xml:lang="en">Segment Analytics</value>
-    </property>
-    <property key="MarketingCampaigns">
-        <value xml:lang="de">Kampagnen</value>
-        <value xml:lang="en">Campaigns</value>
-    </property>
-    <property key="MarketingCommunicationRoleStatusId">
-        <value xml:lang="en">Communication Role Status Id</value>
-    </property>
-    <property key="MarketingCommunicationStatusId">
-        <value xml:lang="en">Communication Status Id</value>
-    </property>
-    <property key="MarketingMarketing">
-        <value xml:lang="en">Marketing</value>
-    </property>
-    <property key="MarketingSegmentGroupNoSegmentGroupFound">
-        <value xml:lang="de">Keine Segmente gefunden</value>
-        <value xml:lang="en">No Segments found </value>
-    </property>
-    <property key="MarketingSegments">
-        <value xml:lang="de">Segmente</value>
-        <value xml:lang="en">Segments</value>
-    </property>
-    <property key="MarketingServiceCommunicationNotFound">
-        <value xml:lang="en">Could not find communications.</value>
-    </property>
-    <property key="SfaAnalytics">
-        <value xml:lang="de">Analyse</value>
-        <value xml:lang="en">Analytics</value>
-    </property>
-    <property key="SfaCalendar">
-        <value xml:lang="de">Kalender</value>
-        <value xml:lang="en">Calendar</value>
-    </property>
-    <property key="SfaCurrencyConvertedUsingLastKnownRates">
-        <value xml:lang="de">Währungen werden unter Verwendung der zuletzt bekannten / aktualisierten Wechselkurse von der Datenbank konvertiert.</value>
-        <value xml:lang="en">Currencies are converted using the last known/updated exchange rates, from database.</value>
-    </property>
-    <property key="SfaOnlyConvertibleCurrenciesListed">
-        <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
-        <value xml:lang="en">Only convertible currencies are listed.</value>
-    </property>
-    <property key="SfaOrderTotalsConvertedExchangeNotice">
-        <value xml:lang="de">${currencyConvertCount} Die Auftragssummen wurden unter Verwendung der zuletzt bekannten Wechselkurse in eine Währung von ${currencyUomId} umgewandelt.</value>
-        <value xml:lang="en">${currencyConvertCount} order totals were converted to ${currencyUomId} currency, using last known exchange rates.</value>
-    </property>
-    <property key="SfaOrderTotalsConvertFail">
-        <value xml:lang="de">${CurrencyFailCount} Auftragssummen fehlgeschlagene Währungsumrechnung in ${currencyUomId}.</value>
-        <value xml:lang="en">${currencyFailCount} order totals failed currency conversion to ${currencyUomId}.</value>
-    </property>
-    <property key="SfaSales">
-        <value xml:lang="en">Sales</value>
-    </property>
-    <property key="SfaServices">
-        <value xml:lang="en">Services</value>
-    </property>
-    <property key="SfaSettings">
-        <value xml:lang="en">Settings</value>
-    </property>
-    
-    
-    <!-- SCIPIO -->
-    <property key="MarketingTrackingCodeDesc">
-        <value xml:lang="de">Tracking Codes werden als URL parameter in den Shop übergeben. Die nachfolgenden sind verfügbar: &lt;br/&gt;
-        &lt;ul&gt;
-        &lt;li&gt;Partner Tracking Code = ptc (Beispiel: ?ptc=9000) &lt;/li&gt;
-        &lt;li&gt;Auto Tracking Code = atc (Beispiel: ?atc=9000) &lt;/li&gt;
-        &lt;li&gt;Default Tracking Code = dtc (Beispiel: ?dtc=9000) &lt;/li&gt;
-        &lt;/ul&gt;</value>
-        <value xml:lang="en">Tracking Codes are added as URL parameters. The following are available: &lt;br/&gt;
-        &lt;ul&gt;
-        &lt;li&gt;Partner Tracking Code = ptc (Example: ?ptc=9000) &lt;/li&gt;
-        &lt;li&gt;Auto Tracking Code = atc (Example: ?atc=9000) &lt;/li&gt;
-        &lt;li&gt;Default Tracking Code = dtc (Example: ?dtc=9000) &lt;/li&gt;
-        &lt;/ul&gt;
-        </value>
     </property>
 </resource>

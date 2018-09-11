@@ -29,6 +29,32 @@
         <value xml:lang="zh">键重复了。该键已存在。</value>
         <value xml:lang="zh-TW">鍵值重複.該鍵值已存在.</value>
     </property>
+    <property key="CommonErrorOccurredContactSupport">
+        <value xml:lang="en">An error occurred. Please contact support.</value>
+        <value xml:lang="de">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an den Support.</value>
+    </property>
+    <property key="CommonInvalidFileTypeForMediaCat">
+        <value xml:lang="en">Invalid file type (${mediaType}) for media type category (${providedType})</value>
+        <value xml:lang="de">Ungültiger Dateityp (${mediaType}) für Medientyp-Kategorie (${providedType})</value>
+    </property>
+    <property key="CommonMissingFieldWithName">
+        <value xml:lang="de">Fehlendes Feld: ${missingFieldName}</value>
+        <value xml:lang="en">Missing field: ${missingFieldName}</value>
+        <value xml:lang="fr">Champ manquant: ${missingFieldName}</value>
+    </property>
+    <property key="CommonQueryErrorReviewContactSupport">
+        <value xml:lang="en">An error occurred during the query. Please review your query; if the error persists, please contact our support.</value>
+        <value xml:lang="de">Bei der Abfrage ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Anfrage. Wenn der Fehler weiterhin besteht, wenden Sie sich bitte an unseren Support.</value>
+    </property>
+    <property key="CommonServerRequestUrlNotFound">
+        <value xml:lang="de">Die angeforderte URL ${requestUrl} wurde auf diesem Server nicht gefunden.</value>
+        <value xml:lang="en">The requested URL ${requestUrl} was not found on this server.</value>
+        <value xml:lang="fr">L'URL demandée ${requestUrl} n'a pas été trouvée sur ce serveur.</value>
+    </property>
+    <property key="CommonUnsupportedFileType">
+        <value xml:lang="en">Unsupported file type for selected media type category</value>
+        <value xml:lang="de">Nicht unterstützter Dateityp für ausgewählte Medientypen</value>
+    </property>
     <property key="ImageTransform.error_occurs_during_reading">
         <value xml:lang="da">Der opstår en fejl under læsning</value>
         <value xml:lang="en">An error occurs during reading</value>
@@ -178,32 +204,5 @@
         <value xml:lang="vi">Thiếu Bộ xử lý chỉnh sửa chiều rộng ảnh</value>
         <value xml:lang="zh">宽度缩放因子是null</value>
         <value xml:lang="zh-TW">寬度縮放因數是null</value>
-    </property>
-    <!-- SCIPIO: NEW LABELS -->
-    <property key="CommonErrorOccurredContactSupport">
-        <value xml:lang="en">An error occurred. Please contact support.</value>
-        <value xml:lang="de">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an den Support.</value>
-    </property>
-    <property key="CommonInvalidFileTypeForMediaCat">
-        <value xml:lang="en">Invalid file type (${mediaType}) for media type category (${providedType})</value>
-        <value xml:lang="de">Ungültiger Dateityp (${mediaType}) für Medientyp-Kategorie (${providedType})</value>
-    </property>
-    <property key="CommonMissingFieldWithName">
-        <value xml:lang="de">Fehlendes Feld: ${missingFieldName}</value>
-        <value xml:lang="en">Missing field: ${missingFieldName}</value>
-        <value xml:lang="fr">Champ manquant: ${missingFieldName}</value>
-    </property>
-    <property key="CommonQueryErrorReviewContactSupport">
-        <value xml:lang="en">An error occurred during the query. Please review your query; if the error persists, please contact our support.</value>
-        <value xml:lang="de">Bei der Abfrage ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Anfrage. Wenn der Fehler weiterhin besteht, wenden Sie sich bitte an unseren Support.</value>
-    </property>
-    <property key="CommonServerRequestUrlNotFound">
-        <value xml:lang="de">Die angeforderte URL ${requestUrl} wurde auf diesem Server nicht gefunden.</value>
-        <value xml:lang="en">The requested URL ${requestUrl} was not found on this server.</value>
-        <value xml:lang="fr">L'URL demandée ${requestUrl} n'a pas été trouvée sur ce serveur.</value>
-    </property>
-    <property key="CommonUnsupportedFileType">
-        <value xml:lang="en">Unsupported file type for selected media type category</value>
-        <value xml:lang="de">Nicht unterstützter Dateityp für ausgewählte Medientypen</value>
     </property>
 </resource>

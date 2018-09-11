@@ -1078,6 +1078,11 @@
         <value xml:lang="zh">电子邮件地址</value>
         <value xml:lang="zh-TW">電子郵件位址</value>
     </property>
+    <property key="ContactMechType.description.FTP_ADDRESS">
+        <value xml:lang="de">Fileserver</value>
+        <value xml:lang="en">File server</value>
+        <value xml:lang="fr">Serveur de fichier</value>
+    </property>
     <property key="ContactMechType.description.INTERNAL_PARTYID">
         <value xml:lang="ar">ملاحظة طرف داخلية</value>
         <value xml:lang="cs">Interní poznámka</value>
@@ -1522,6 +1527,13 @@
         <value xml:lang="vi">URL ảnh Logo</value>
         <value xml:lang="zh">标志图片网址</value>
         <value xml:lang="zh-TW">商標圖片網址</value>
+    </property>
+    <property key="PartyContentType.description.RESUME">
+        <value xml:lang="de">Lebenslauf</value>
+        <value xml:lang="en">Resume</value>
+        <value xml:lang="fr">Curriculum vitae</value>
+        <value xml:lang="it">Curriculum vitae</value>
+        <value xml:lang="pt-BR">Currículo</value>
     </property>
     <property key="PartyContentType.description.USERDEF">
         <value xml:lang="de">Benutzerdefinierter Inhalt</value>
@@ -2947,6 +2959,7 @@
     <property key="RoleType.description.FAM_ASSIGNEE">
         <value xml:lang="de">Anlagen Manager Beauftragter</value>
         <value xml:lang="en">Fixed Asset Maint Assignee</value>
+        <value xml:lang="fr">Gestionnaire des immobilisations</value>
         <value xml:lang="hi-IN">अचल संपत्ति रखरखाव अनुदिष्ट</value>
         <value xml:lang="it">Assegna manutenzione cespite</value>
         <value xml:lang="ja">固定資産メンテナンス受託者</value>
@@ -4543,13 +4556,5 @@
         <value xml:lang="vi">Ngưỡng</value>
         <value xml:lang="zh">阈值</value>
         <value xml:lang="zh-TW">門檻值</value>
-    </property>
-    <!-- SCIPIO: NEW LABELS -->
-    <property key="PartyContentType.description.RESUME">
-        <value xml:lang="de">Lebenslauf</value>
-        <value xml:lang="en">Resume</value>
-        <value xml:lang="fr">Curriculum vitae</value>
-        <value xml:lang="it">Curriculum vitae</value>
-        <value xml:lang="pt-BR">Currículo</value>
     </property>
 </resource>

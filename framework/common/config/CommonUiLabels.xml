@@ -18,6 +18,7 @@
     under the License.
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+
     <property key="Accounting - AP">
         <value xml:lang="ar">ذمم دائنة</value>
         <value xml:lang="cs">Závazky</value>
@@ -35,6 +36,7 @@
         <value xml:lang="zh">应付账户</value>
         <value xml:lang="zh-TW">應付帳款</value>
     </property>
+
     <property key="Accounting - AR">
         <value xml:lang="ar">ذمم مدينة</value>
         <value xml:lang="cs">Pohledávky</value>
@@ -82,7 +84,7 @@
         <value xml:lang="hi-IN">संपत्ति का रखरखाव</value>
         <value xml:lang="it">Manutenzione</value>
         <value xml:lang="ja">資産</value>
-        <value xml:lang="nl">Vermogensbeheer</value>
+        <value xml:lang="nl">Activa beheer</value>
         <value xml:lang="pt-BR">Manutenção de Ativos</value>
         <value xml:lang="ru">Обслуживание</value>
         <value xml:lang="th">การรักษาทรัพย์สิน</value>
@@ -188,6 +190,22 @@
         <value xml:lang="zh">已接受</value>
         <value xml:lang="zh-CN">接受</value>
         <value xml:lang="zh-TW">已接受</value>
+    </property>
+    <property key="CommonAccount">
+        <value xml:lang="en">Account</value>
+    </property>
+    <property key="CommonActions">
+        <value xml:lang="de">Aktionen</value>
+        <value xml:lang="en">Actions</value>
+        <value xml:lang="fr">Actions</value>
+        <value xml:lang="it">Azioni</value>
+        <value xml:lang="ja">操作</value>
+        <value xml:lang="pt">AÃ§Ãµes</value>
+        <value xml:lang="ro">Actiuni</value>
+        <value xml:lang="th">ขั้นตอน</value>
+        <value xml:lang="vi">Hành động</value>
+        <value xml:lang="zh">操作</value>
+        <value xml:lang="zh-TW">操作</value>
     </property>
     <property key="CommonActiveInactive">
         <value xml:lang="ar">فعال و غير فعال</value>
@@ -386,6 +404,16 @@
         <value xml:lang="en">Additions</value>
         <value xml:lang="nl">Toevoegingen</value>
     </property>
+    <property key="CommonAdjustment">
+        <value xml:lang="en">Adjustment</value>
+        <value xml:lang="nl">Aanpassing</value>
+        <value xml:lang="zh">调整</value>
+    </property>
+    <property key="CommonAdjustments">
+        <value xml:lang="en">Adjustments</value>
+        <value xml:lang="nl">Aanpassingen</value>
+        <value xml:lang="zh">调整</value>
+    </property>
     <property key="CommonAddNew">
         <value xml:lang="ar">إضافة الجديد</value>
         <value xml:lang="cs">Přidat nový</value>
@@ -441,6 +469,10 @@
         <value xml:lang="zh">新建问题</value>
         <value xml:lang="zh-CN">添加问题</value>
         <value xml:lang="zh-TW">增加問題</value>
+    </property>
+    <property key="CommonAddress">
+        <value xml:lang="de">Adresse</value>
+        <value xml:lang="en">Address</value>
     </property>
     <property key="CommonAddress1">
         <value xml:lang="ar">عنوان 1</value>
@@ -535,6 +567,15 @@
         <value xml:lang="zh-CN">地址</value>
         <value xml:lang="zh-TW">位址</value>
     </property>
+    <property key="CommonAdvanced">
+        <value xml:lang="de">Erweitert</value>
+        <value xml:lang="en">Advanced</value>
+        <value xml:lang="es">Avanzada</value>
+        <value xml:lang="fr">Avancé</value>
+        <value xml:lang="it">Avanzata</value>
+        <value xml:lang="pt-BR">Avançada</value>
+        <value xml:lang="ro">Avansata</value>
+    </property>
     <property key="CommonAdvancedFeatures">
         <value xml:lang="ar">مميزات متقدمة</value>
         <value xml:lang="cs">Pokročilé možnosti</value>
@@ -568,6 +609,10 @@
         <value xml:lang="vi">Tìm kiếm nâng cao</value>
         <value xml:lang="zh">高级搜索</value>
         <value xml:lang="zh-TW">進階搜尋</value>
+    </property>
+    <property key="CommonAdvancedSearchFields">
+        <value xml:lang="de">Erweiterte Suche</value>
+        <value xml:lang="en">Advanced Search</value>
     </property>
     <property key="CommonAll">
         <value xml:lang="ar">الكل</value>
@@ -1087,6 +1132,27 @@
         <value xml:lang="zh-CN">注</value>
         <value xml:lang="zh-TW">至</value>
     </property>
+    <property key="CommonAttribute">
+        <value xml:lang="de">Attribut</value>
+        <value xml:lang="en">Attribute</value>
+        <value xml:lang="nl">Attribuut</value>
+        <value xml:lang="zh">属性</value>
+    </property>
+    <property key="CommonAttributes">
+        <value xml:lang="de">Attribute</value>
+        <value xml:lang="en">Attributes</value>
+        <value xml:lang="es">Atributos</value>
+        <value xml:lang="fr">Attributs</value>
+        <value xml:lang="it">Attributi</value>
+        <value xml:lang="ja">属性</value>
+        <value xml:lang="nl">Attritbuten</value>
+        <value xml:lang="ro">Atribute</value>
+        <value xml:lang="ru">Атрибуты</value>
+        <value xml:lang="th">ลักษณะ</value>
+        <value xml:lang="vi">Thuộc tính</value>
+        <value xml:lang="zh">属性</value>
+        <value xml:lang="zh-TW">屬性</value>
+    </property>
     <property key="CommonAugust">
         <value xml:lang="ar">أغسطس</value>
         <value xml:lang="cs">Srpen</value>
@@ -1437,6 +1503,9 @@
         <value xml:lang="zh">从CDyne的ReturnCityState服务得到 ServiceError=true；zipcode=${zipcode}</value>
         <value xml:lang="zh-TW">從CDyne的ReturnCityState服務得到 ServiceError=true 的錯誤;zipcode=${zipcode}</value>
     </property>
+    <property key="CommonCalendar">
+        <value xml:lang="en">Calendar</value>
+    </property>
     <property key="CommonCancel">
         <value xml:lang="ar">إلغاء</value>
         <value xml:lang="cs">Storno</value>
@@ -1535,6 +1604,17 @@
         <value xml:lang="zh">无法找到</value>
         <value xml:lang="zh-TW">無法找到</value>
     </property>
+    <property key="CommonCannotDeleteRecordHasChildren">
+        <value xml:lang="en">This record cannot be removed, because it still has child record associations in the system.</value>
+        <value xml:lang="de">Dieser Datensatz kann nicht entfernt werden, da er im System noch Assoziationen zu untergeordneten Assoziationen enthält.</value>
+    </property>
+    <property key="CommonCannotDeleteRecordHasChildrenParam">
+        <value xml:lang="en">The record ${recordName} cannot be removed, because it still has child record associations in the system.</value>
+        <value xml:lang="de">Der Datensatz ${recordName} kann nicht entfernt werden, da er im System noch Assoziationen zu untergeordneten Datensätzen enthält.</value>
+    </property>
+    <property key="CommonCapacity">
+        <value xml:lang="en">Capacity</value>
+    </property>
     <property key="CommonCaptchaCode">
         <value xml:lang="ar">رمز كلمة التحقق</value>
         <value xml:lang="cs">Kód captcha</value>
@@ -1547,6 +1627,9 @@
         <value xml:lang="vi">Mã ảnh xác thực</value>
         <value xml:lang="zh">验证码</value>
         <value xml:lang="zh-TW">驗證碼</value>
+    </property>
+    <property key="CommonCategory">
+        <value xml:lang="en">Category</value>
     </property>
     <property key="CommonChange">
         <value xml:lang="ar">تغيير</value>
@@ -1818,6 +1901,10 @@
         <value xml:lang="zh-CN">点击这里</value>
         <value xml:lang="zh-TW">點擊這裡</value>
     </property>
+    <property key="CommonClickHereDetails">
+        <value xml:lang="de">Hier klicken für Details</value>
+        <value xml:lang="en">Click here for details</value>
+    </property>  
     <property key="CommonClickHereForFieldLookup">
         <value xml:lang="ar">انقر هنا للبحث عن الحقل </value>
         <value xml:lang="cs">Kliněte zde pro vyhledání pole</value>
@@ -2090,6 +2177,10 @@
         <value xml:lang="zh">确定要增加吗？</value>
         <value xml:lang="zh-TW">確定要增加嗎？</value>
     </property>
+    <property key="CommonConfirmCopyMoveRecordAssocParam">
+        <value xml:lang="en">Are you sure you want to copy/move the record association for ${recordName} to ${toRecordName}?</value>
+        <value xml:lang="de">Sind Sie sicher, dass Sie die Datensatzzuordnung für ${recordName} in ${toRecordName} kopieren / verschieben möchten?</value>
+    </property>
     <property key="CommonConfirmDelete">
         <value xml:lang="ar">هل تؤكد الحذف؟</value>
         <value xml:lang="cs">Souhlasíte se zrušením?</value>
@@ -2107,6 +2198,22 @@
         <value xml:lang="th">à¸¢à¸·à¸™à¸¢à¸±à¸™</value>
         <value xml:lang="zh">你确定要删除吗？</value>
         <value xml:lang="zh-TW">你確定要刪除嗎？</value>
+    </property>
+    <property key="CommonConfirmDeleteRecordAssocPermanent">
+        <value xml:lang="en">You are about to remove the record association. The record itself will remain in the system. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei, die Datensatzzuordnung zu entfernen. Der Datensatz selbst bleibt im System. Möchtest du fortfahren?</value>
+    </property>
+    <property key="CommonConfirmDeleteRecordAssocPermanentParam">
+        <value xml:lang="en">You are about to remove ${recordName} association to ${toRecordName}. The record itself will remain in the system. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei, die Zuordnung von ${recordName} zu ${toRecordName}. Der Datensatz selbst bleibt im System. Möchtest du fortfahren?</value>
+    </property>
+    <property key="CommonConfirmDeleteRecordPermanent">
+        <value xml:lang="en">You are about to delete the record permanently. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei den Eintrag dauerhaft zu löschen. Wollen Sie fortfahren?</value>
+    </property>
+    <property key="CommonConfirmDeleteRecordPermanentParam">
+        <value xml:lang="en">You are about to delete ${recordName} permanently. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei, ${recordName} dauerhaft zu löschen. Möchtest du fortfahren?</value>
     </property>
     <property key="CommonContactMechID">
         <value xml:lang="ar">دليل وسيلة الإتصال</value>
@@ -2679,6 +2786,45 @@
         <value xml:lang="zh-CN">日期过滤器</value>
         <value xml:lang="zh-TW">日期篩選器</value>
     </property>
+    <property key="CommonDateInfoFormat">
+        <value xml:lang="de">${dateFormatString}</value>
+        <value xml:lang="en">${dateFormatString}</value>
+        <value xml:lang="fr">${dateFormatString}</value>
+        <value xml:lang="it">${dateFormatString}</value>
+        <value xml:lang="ja">${dateFormatString}</value>
+        <value xml:lang="pt">${dateFormatString}</value>
+        <value xml:lang="ro">${dateFormatString}</value>
+        <value xml:lang="th">${dateFormatString}</value>
+        <value xml:lang="vi">${dateFormatString}</value>
+        <value xml:lang="zh">${dateFormatString}</value>
+        <value xml:lang="zh-TW">${dateFormatString}</value>
+    </property>
+    <property key="CommonDateInfoLabel">
+        <value xml:lang="de">${dateLabel}</value>
+        <value xml:lang="en">${dateLabel}</value>
+        <value xml:lang="fr">${dateLabel}</value>
+        <value xml:lang="it">${dateLabel}</value>
+        <value xml:lang="ja">${dateLabel}</value>
+        <value xml:lang="pt">${dateLabel}</value>
+        <value xml:lang="ro">${dateLabel}</value>
+        <value xml:lang="th">${dateLabel}</value>
+        <value xml:lang="vi">${dateLabel}</value>
+        <value xml:lang="zh">${dateLabel}</value>
+        <value xml:lang="zh-TW">${dateLabel}</value>
+    </property>
+    <property key="CommonDateInfoLabelAndFormat">
+        <value xml:lang="de">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="en">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="fr">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="it">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="ja">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="pt">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="ro">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="th">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="vi">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="zh">${dateLabel} (${dateFormatString})</value>
+        <value xml:lang="zh-TW">${dateLabel} (${dateFormatString})</value>
+    </property>
     <property key="CommonDates">
         <value xml:lang="ar">تواريخ</value>
         <value xml:lang="cs">Datumy</value>
@@ -2791,6 +2937,18 @@
         <value xml:lang="zh">十二月</value>
         <value xml:lang="zh-CN">十二月</value>
         <value xml:lang="zh-TW">十二月</value>
+    </property>
+    <property key="CommonDefault">
+        <value xml:lang="de">Voreinstellung</value>
+        <value xml:lang="en">Default</value>
+        <value xml:lang="fr">Défaut</value>
+        <value xml:lang="it">Default</value>
+        <value xml:lang="ja">デフォルト</value>
+        <value xml:lang="pt">PadrÃ£o</value>
+        <value xml:lang="th">ค่าที่เลือก</value>
+        <value xml:lang="vi">Mặc định</value>
+        <value xml:lang="zh">缺省</value>
+        <value xml:lang="zh-TW">預設</value>
     </property>
     <property key="CommonDefaultOrganizationPartyId">
         <value xml:lang="ar">دليل طرف المنظمة الإعتيادية</value>
@@ -2941,7 +3099,7 @@
         <value xml:lang="pt-PT">Descrição</value>
         <value xml:lang="ro">Descriere</value>
         <value xml:lang="ru">Описание</value>
-        <!--value xml:lang="th">รายละเอียด</value -->
+    <!--value xml:lang="th">รายละเอียด</value-->
         <value xml:lang="th">คำอธิบาย</value>
         <value xml:lang="vi">Mô tả</value>
         <value xml:lang="zh">描述</value>
@@ -2986,6 +3144,32 @@
         <value xml:lang="zh">详细</value>
         <value xml:lang="zh-CN">细节</value>
         <value xml:lang="zh-TW">詳細</value>
+    </property>
+    <property key="CommonDev">
+        <value xml:lang="de">Dev</value>
+        <value xml:lang="en">Dev</value>
+    </property>
+    <property key="CommonDevDocs">
+        <value xml:lang="de">Dev Docs</value>
+        <value xml:lang="en">Dev Docs</value>
+    </property>
+    <property key="CommonDeveloper">
+        <value xml:lang="de">Entwickler</value>
+        <value xml:lang="en">Developer</value>
+    </property>
+    <property key="CommonDevelopment">
+        <value xml:lang="en">Development</value>
+        <value xml:lang="es">Desarrollo</value>
+        <value xml:lang="fr">Développement</value>
+        <value xml:lang="it">Sviluppo</value>
+        <value xml:lang="ja">開発</value>
+        <value xml:lang="nl">Ontwikkeling</value>
+        <value xml:lang="ro">Dezvoltare</value>
+        <value xml:lang="ru">Совершенствование</value>
+        <value xml:lang="th">การพัฒนา</value>
+        <value xml:lang="vi">Phát triển</value>
+        <value xml:lang="zh">开发</value>
+        <value xml:lang="zh-TW">開發</value>
     </property>
     <property key="CommonDimension">
         <value xml:lang="ar">بعد</value>
@@ -3039,6 +3223,26 @@
         <value xml:lang="zh">显示${lowCount} - ${highCount}，共${total}</value>
         <value xml:lang="zh-TW">顯示${lowCount} - ${highCount},共${total}</value>
     </property>
+    <property key="CommonDisplayingShort">
+        <value xml:lang="ar">${lowCount} إلى ${highCount} من ${total}</value>
+        <value xml:lang="cs">${lowCount} - ${highCount} z ${total}</value>
+        <value xml:lang="de">${lowCount} - ${highCount} von ${total}</value>
+        <value xml:lang="en">${lowCount} - ${highCount} of ${total}</value>
+        <value xml:lang="es">${lowCount} - ${highCount} de ${total}</value>
+        <value xml:lang="fr">${lowCount} à ${highCount} sur ${total}</value>
+        <value xml:lang="hi-IN">${lowCount} - ${highCount} का ${total} </value>
+        <value xml:lang="it">${lowCount} a ${highCount} su ${total}</value>
+        <value xml:lang="ja">${lowCount} - ${highCount} / ${total}</value>
+        <value xml:lang="pt-BR">${lowCount} - ${highCount} de ${total}</value>
+        <value xml:lang="ru">${lowCount} - ${highCount} of ${total} </value>
+        <value xml:lang="vi">${lowCount} - ${highCount} của ${total}</value>
+        <value xml:lang="zh">${lowCount} - ${highCount}，共${total}</value>
+        <value xml:lang="zh-TW">${lowCount} - ${highCount},共${total}</value>
+    </property>
+    <property key="CommonDisplayOptions">
+        <value xml:lang="en">Display Options</value>
+        <value xml:lang="de">Anzeigeoptionen</value>
+    </property>
     <property key="CommonDistance">
         <value xml:lang="ar">مسافة</value>
         <value xml:lang="cs">Vzdálenost</value>
@@ -3056,6 +3260,11 @@
         <value xml:lang="vi">Khoảng cách</value>
         <value xml:lang="zh">距离</value>
         <value xml:lang="zh-TW">距離</value>
+    </property>
+    <property key="CommonDocument">
+        <value xml:lang="de">Dokument</value>
+        <value xml:lang="en">Document</value>
+        <value xml:lang="fr">Document</value>
     </property>
     <property key="CommonDone">
         <value xml:lang="ar">تم</value>
@@ -3090,6 +3299,9 @@
         <value xml:lang="vi">Đã tải xuống</value>
         <value xml:lang="zh">已下载。</value>
         <value xml:lang="zh-TW">已下載.</value>
+    </property>
+    <property key="CommonDue">
+        <value xml:lang="en">Due</value>
     </property>
     <property key="CommonDuplicate">
         <value xml:lang="ar">مضاعفة</value>
@@ -3647,6 +3859,24 @@
         <value xml:lang="zh-CN">条目</value>
         <value xml:lang="zh-TW">記錄</value>
     </property>
+    <property key="CommonError">
+        <value xml:lang="ar">خطأ</value>
+        <value xml:lang="cs">Chyba</value>
+        <value xml:lang="de">Fehler</value>
+        <value xml:lang="en">Error</value>
+        <value xml:lang="es">Error</value>
+        <value xml:lang="fr">Erreur</value>
+        <value xml:lang="hi-IN">त्रुटि</value>
+        <value xml:lang="it">Errore</value>
+        <value xml:lang="ja">エラー</value>
+        <value xml:lang="pt-BR">Erro</value>
+        <value xml:lang="ro">Eroare</value>
+        <value xml:lang="ru">Ошибка</value>
+        <value xml:lang="th">Error</value>
+        <value xml:lang="vi">Có lỗi xảy ra</value>
+        <value xml:lang="zh">错误</value>
+        <value xml:lang="zh-TW">錯誤</value>
+    </property>
     <property key="CommonErrorMessage1">
         <value xml:lang="ar">الحقول الإلزامية التالية وجدت فارغة</value>
         <value xml:lang="cs">Následující povinná pole jsou prázdná</value>
@@ -4098,6 +4328,10 @@
         <value xml:lang="zh">外部设备用户操作</value>
         <value xml:lang="zh-TW">外部設備使用者操作</value>
     </property>
+    <property key="CommonExtraFields">
+        <value xml:lang="de">Zusätzliche Felder</value>
+        <value xml:lang="en">Extra Fields</value>
+    </property>
     <property key="CommonFacility">
         <value xml:lang="en">Facility</value>
     </property>
@@ -4460,6 +4694,24 @@
         <value xml:lang="zh-CN">忘记密码</value>
         <value xml:lang="zh-TW">忘記密碼</value>
     </property>
+    <property key="CommonFormat">
+        <value xml:lang="cs">Formát</value>
+        <value xml:lang="de">Format</value>
+        <value xml:lang="en">Format</value>
+        <value xml:lang="en-GB">Format</value>
+        <value xml:lang="es">Formato</value>
+        <value xml:lang="fr">Format</value>
+        <value xml:lang="hi-IN">प्रारूप</value>
+        <value xml:lang="it">Formato</value>
+        <value xml:lang="ja">書式</value>
+        <value xml:lang="pt">Format</value>
+        <value xml:lang="pt-BR">Formato</value>
+        <value xml:lang="ru">Формат</value>
+        <value xml:lang="th">รูปแบบ</value>
+        <value xml:lang="vi">Định dạng ngày tháng</value>
+        <value xml:lang="zh">格式</value>
+        <value xml:lang="zh-TW">格式</value>
+    </property>
     <property key="CommonFormatDate">
         <value xml:lang="ar">النمط: ي ي-ش ش-ع ع ع ع</value>
         <value xml:lang="cs">Formát datumu: RRRR-MM-dd</value>
@@ -4522,6 +4774,24 @@
         <value xml:lang="zh">格式: yyyy-MM-dd HH:mm:ss.SSS</value>
         <value xml:lang="zh-CN">年-月-日 时:分:秒</value>
         <value xml:lang="zh-TW">格式: yyyy-MM-dd HH:mm:ss.SSS</value>
+    </property>
+    <property key="CommonFormatMonth">
+        <value xml:lang="cs">Formát datumu: RRRR-MM</value>
+        <value xml:lang="de">Datumsformat: yyyy-MM</value>
+        <value xml:lang="en">Format: yyyy-MM</value>
+        <value xml:lang="en-GB">Format: MM/yyyy</value>
+        <value xml:lang="es">Formato: mm/aaaa</value>
+        <value xml:lang="fr">Format: MM/AAAA</value>
+        <value xml:lang="hi-IN">प्रारूप: yyyy-MM</value>
+        <value xml:lang="it">Formato: AAAA-MM</value>
+        <value xml:lang="ja">書式: yyyy-MM</value>
+        <value xml:lang="pt">Format: yyyy-MM</value>
+        <value xml:lang="pt-BR">Formato: AAAA-MM</value>
+        <value xml:lang="ru">Формат: гггг-ММ</value>
+        <value xml:lang="th">รูปแบบ : yyyy-MM</value>
+        <value xml:lang="vi">Định dạng ngày tháng: yyyy-MM</value>
+        <value xml:lang="zh">格式: yyyy-MM</value>
+        <value xml:lang="zh-TW">格式: yyyy-MM</value>
     </property>
     <property key="CommonFormatTime">
         <value xml:lang="ar">النمط: س س:د د:ث ث</value>
@@ -4850,6 +5120,14 @@
         <value xml:lang="vi">Yêu cầu ${command} đến trang thông tin không thành công: ${replyString}</value>
         <value xml:lang="zh">运行站点命令 ${command} 时失败：${replyString}</value>
         <value xml:lang="zh-TW">站台指令執行 ${command} 時失敗:${replyString}</value>
+    </property>
+    <property key="CommonFunctionalityInTestingWarning">
+        <value xml:lang="en">Warning: This functionality is currently in testing. Please backup any important data before attempting to use.</value>
+        <value xml:lang="de">Warnung: Diese Funktion wird gerade getestet. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
+    </property>
+    <property key="CommonFunctionalityWorkInProgressWarning">
+        <value xml:lang="en">Warning: This functionality is a Work-In-Progress. Please backup any important data before attempting to use.</value>
+        <value xml:lang="de">Warnung: Diese Funktionalität ist ein Work-In-Progress. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
     </property>
     <property key="CommonGenericPermissionError">
         <value xml:lang="ar">خطأ في نظام الحماية: لتشغيل ${resourceDescription} يجب أن يكون لديك أحد الصلاحيات التالية: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
@@ -5225,6 +5503,10 @@
         <value xml:lang="zh-CN">组</value>
         <value xml:lang="zh-TW">群組</value>
     </property>
+    <property key="CommonHeader">
+        <value xml:lang="en">Header</value>
+        <value xml:lang="zh-TW">表頭</value>
+    </property>
     <property key="CommonHeight">
         <value xml:lang="ar">ارتفاع</value>
         <value xml:lang="cs">Výška</value>
@@ -5550,6 +5832,10 @@
         <value xml:lang="zh-CN">在</value>
         <value xml:lang="zh-TW">在</value>
     </property>
+    <property key="CommonIndexable">
+        <value xml:lang="en">Indexable</value>
+        <value xml:lang="de">Indexierbar</value>
+    </property>
     <property key="CommonInThe">
         <value xml:lang="ar">داخل ال</value>
         <value xml:lang="cs">z</value>
@@ -5725,6 +6011,10 @@
         <value xml:lang="en">Invoice</value>
         <value xml:lang="nl">Factuur</value>
     </property>
+    <property key="CommonInvoices">
+        <value xml:lang="en">Invoices</value>
+        <value xml:lang="de">Rechnungen</value>
+    </property>
     <property key="CommonIsA">
         <value xml:lang="ar">هو</value>
         <value xml:lang="cs">je</value>
@@ -5817,6 +6107,9 @@
         <value xml:lang="vi">Số hạng mục trên trang</value>
         <value xml:lang="zh">每页条数</value>
         <value xml:lang="zh-TW">每頁筆數</value>
+    </property>
+    <property key="CommonIteration">
+        <value xml:lang="en">Iteration</value>
     </property>
     <property key="CommonJanuary">
         <value xml:lang="ar">يناير</value>
@@ -5993,6 +6286,23 @@
         <value xml:lang="zh">纬度：</value>
         <value xml:lang="zh-TW">緯度:</value>
     </property>
+    <property key="CommonLeaveEmptyAutoValue">
+        <value xml:lang="de">Leer lassen, um einen Wert automatisch zu generieren</value>
+        <value xml:lang="en">Leave empty to auto-generate a value</value>
+        <value xml:lang="fr">Laisser vide pour générer automatiquement une valeur</value>
+    </property>
+    <property key="CommonLeaveEmptyForNowDate">
+        <value xml:lang="de">Leer lassen, um das aktuelle Datum (jetzt)</value>
+        <value xml:lang="en">Leave empty to use current date (now)</value>
+    </property>
+    <property key="CommonLeaveEmptyForNowTime">
+        <value xml:lang="de">Leer lassen, um das aktuelle Zeit (jetzt)</value>
+        <value xml:lang="en">Leave empty to use current time (now)</value>
+    </property>
+    <property key="CommonLeaveEmptyToAutoDetermine">
+        <value xml:lang="en">Leave empty to auto-determine</value>
+        <value xml:lang="de">Lassen Sie leer, um automatisch zu bestimmen</value>
+    </property>
     <property key="CommonLength">
         <value xml:lang="ar">الطول</value>
         <value xml:lang="cs">Délka</value>
@@ -6025,6 +6335,21 @@
         <value xml:lang="vi">nhỏ hơn</value>
         <value xml:lang="zh">小于</value>
         <value xml:lang="zh-TW">小於</value>
+    </property>
+    <property key="CommonLicense">
+        <value xml:lang="de">Lizenz</value>
+        <value xml:lang="en">License</value>
+        <value xml:lang="es">Licencia</value>
+        <value xml:lang="fr">License</value>
+        <value xml:lang="it">Licenza</value>
+        <value xml:lang="ja">ライセンス</value>
+        <value xml:lang="nl">Licentie</value>
+        <value xml:lang="ro">Licenta</value>
+        <value xml:lang="ru">Лицензия</value>
+        <value xml:lang="th">ใบอนุญาต</value>
+        <value xml:lang="vi">Bản cấp phép sử dụng</value>
+        <value xml:lang="zh">版权</value>
+        <value xml:lang="zh-TW">版權</value>
     </property>
     <property key="CommonLine">
         <value xml:lang="ar">سطر</value>
@@ -6143,6 +6468,10 @@
         <value xml:lang="zh">本地化</value>
         <value xml:lang="zh-TW">當地語系化</value>
     </property>
+    <property key="CommonLocalizedFields">
+        <value xml:lang="en">Localized Fields</value>
+        <value xml:lang="de">Lokalisierte Felder</value>
+    </property>
     <property key="CommonLocation">
         <value xml:lang="en">Location</value>
         <value xml:lang="nl">Locatie</value>
@@ -6213,6 +6542,20 @@
         <value xml:lang="zh">退出</value>
         <value xml:lang="zh-CN">注销</value>
         <value xml:lang="zh-TW">登出</value>
+    </property>
+    <property key="CommonLongDescription">
+        <value xml:lang="de">Ausführliche Beschreibung</value>
+        <value xml:lang="en">Long Description</value>
+        <value xml:lang="es">Descripción larga</value>
+        <value xml:lang="fr">Description longue</value>
+        <value xml:lang="it">Descrizione estesa</value>
+        <value xml:lang="ja">詳細</value>
+        <value xml:lang="ro">Descriere Lunga</value>
+        <value xml:lang="ru">Длинное описание</value>
+        <value xml:lang="th">คำอธิบาย</value>
+        <value xml:lang="vi">Miêu tả chi tiết</value>
+        <value xml:lang="zh">详细描述</value>
+        <value xml:lang="zh-TW">詳細描述</value>
     </property>
     <property key="CommonLongitude">
         <value xml:lang="ar">خط الطول</value>
@@ -6441,6 +6784,14 @@
         <value xml:lang="zh-CN">经理</value>
         <value xml:lang="zh-TW">管理者</value>
     </property>
+    <property key="CommonMandatory">
+        <value xml:lang="en">Mandatory</value>
+        <value xml:lang="fr">Obligatoire</value>
+        <value xml:lang="ja">必須</value>
+        <value xml:lang="vi">Bắt buộc</value>
+        <value xml:lang="zh">必须</value>
+        <value xml:lang="zh-TW">必須</value>
+    </property>
     <property key="CommonMany">
         <value xml:lang="ar">الكثير</value>
         <value xml:lang="cs">Mnoho</value>
@@ -6599,6 +6950,17 @@
         <value xml:lang="vi">Đo lường</value>
         <value xml:lang="zh">度量</value>
         <value xml:lang="zh-TW">度量</value>
+    </property>
+    <property key="CommonMedia">
+        <value xml:lang="de">Medien</value>
+        <value xml:lang="en">Media</value>
+        <value xml:lang="fr">Médias</value>
+    </property>
+    <property key="CommonMediaType">
+        <value xml:lang="en">Type</value>
+    </property>
+    <property key="CommonMediaTypes">
+        <value xml:lang="en">Media Types</value>
     </property>
     <property key="CommonMedium">
         <value xml:lang="ar">متوسط</value>
@@ -6764,6 +7126,9 @@
         <value xml:lang="zh">其它</value>
         <value xml:lang="zh-TW">其他</value>
     </property>
+    <property key="CommonModifiedBy">
+        <value xml:lang="en">Modified By</value>
+    </property>
     <property key="CommonModify">
         <value xml:lang="ar">تغيير</value>
         <value xml:lang="cs">Upravit</value>
@@ -6897,6 +7262,10 @@
         <value xml:lang="vi">nhiều hơn</value>
         <value xml:lang="zh">大于</value>
         <value xml:lang="zh-TW">大於</value>
+    </property>
+    <property key="CommonMove">
+        <value xml:lang="en">Move</value>
+        <value xml:lang="de">Bewegung</value>
     </property>
     <property key="CommonMovePortletBottom">
         <value xml:lang="ar">تحريك المدخل الى القاع</value>
@@ -7101,6 +7470,11 @@
     <property key="CommonNames">
         <value xml:lang="en">Name</value>
         <value xml:lang="nl">Naam</value>
+    </property>
+    <property key="CommonNavigation">
+        <value xml:lang="de">Navigation</value>
+        <value xml:lang="en">Navigation</value>
+        <value xml:lang="fr">Navigation</value>
     </property>
     <property key="CommonNbr">
         <value xml:lang="ar">#</value>
@@ -7523,6 +7897,26 @@
         <value xml:lang="zh">没有找到记录</value>
         <value xml:lang="zh-TW">沒有找到記錄</value>
     </property>
+    <property key="CommonNoRecordFoundSentence">
+        <value xml:lang="ar">لم يتم العثور على سجلات</value>
+        <value xml:lang="da">Der er ikke fundet nogen registreringer/</value>
+        <value xml:lang="cs">Žádný záznam nenalezen/</value>
+        <value xml:lang="de">Keine Datensätze gefunden/</value>
+        <value xml:lang="en">No Records Found.</value>
+        <value xml:lang="es">No se encontraron registros/</value>
+        <value xml:lang="fr">Aucun enregistrement trouvé/</value>
+        <value xml:lang="hi-IN">कोई जानकारी नहीं</value>
+        <value xml:lang="it">Nessun record trovato</value>
+        <value xml:lang="ja">対象はありません。</value>
+        <value xml:lang="nl">Geen records gevonden/</value>
+        <value xml:lang="pt-BR">Nenhum registro encontrado/</value>
+        <value xml:lang="ro">Nici-o inregistrare gasita/</value>
+        <value xml:lang="ru">Записи не найдены</value>
+        <value xml:lang="th">ไม่มีบันทึกที่ค้นหา</value>
+        <value xml:lang="vi">Không tìm thấy bản ghi nào</value>
+        <value xml:lang="zh">没有找到记录</value>
+        <value xml:lang="zh-TW">沒有找到記錄</value>
+    </property>
     <property key="CommonNoStatesProvinces">
         <!-- OFBIZ-5246 please use ": _NA_" at end, with a space between the colon and _NA_. getDependentDropdownValues relies on it -->
         <value xml:lang="ar">لا يوجد ولايات / مقاطعات: _NA_</value>
@@ -7630,6 +8024,10 @@
         <value xml:lang="vi">Bình thường</value>
         <value xml:lang="zh">正常</value>
         <value xml:lang="zh-TW">正常</value>
+    </property>
+    <property key="CommonNoRowSelected">
+        <value xml:lang="de">Keine Zeile ausgewählt</value>
+        <value xml:lang="en">No row selected</value>
     </property>
     <property key="CommonNot">
         <value xml:lang="ar">ليس</value>
@@ -7999,6 +8397,10 @@
         <value xml:lang="zh-CN">的</value>
         <value xml:lang="zh-TW">共</value>
     </property>
+    <property key="CommonOff">
+        <value xml:lang="de">Aus</value>
+        <value xml:lang="en">Off</value>
+    </property>
     <property key="CommonOn">
         <value xml:lang="ar">على</value>
         <value xml:lang="cs">na</value>
@@ -8218,6 +8620,10 @@
         <value xml:lang="zh-CN">订单</value>
         <value xml:lang="zh-TW">訂單</value>
     </property>
+    <property key="CommonOrganisation">
+        <value xml:lang="en">Organisation</value>
+        <value xml:lang="de">Organisation</value>
+    </property>
     <property key="CommonOrganizationLogo">
         <value xml:lang="ar">شعار المنظمة</value>
         <value xml:lang="cs">Logo organizace</value>
@@ -8229,6 +8635,13 @@
         <value xml:lang="th">โลโก้องค์กร</value>
         <value xml:lang="zh">机构图标</value>
         <value xml:lang="zh-TW">機構商標</value>
+    </property>
+    <property key="CommonOrLoginWith">
+        <value xml:lang="de">Oder melden Sie sich bei</value>
+        <value xml:lang="en">Or login with</value>
+        <value xml:lang="es">O inicia sesión con</value>
+        <value xml:lang="fr">Ou connectez-vous avec</value>
+        <value xml:lang="pt">Ou faça o login com</value>
     </property>
     <property key="CommonOther">
         <value xml:lang="ar">أخرى</value>
@@ -8250,6 +8663,9 @@
     </property>
     <property key="CommonOutputFileCouldNotBeCreated">
         <value xml:lang="en">The Outputfile could not be created: ${errorString}</value>
+    </property>
+    <property key="CommonOutstanding">
+        <value xml:lang="en">Outstanding</value>
     </property>
     <property key="CommonOverridesSelection">
         <value xml:lang="ar">تفنيد  أحد الإختيارين في الأعلى</value>
@@ -8348,6 +8764,9 @@
         <value xml:lang="zh">启用分页</value>
         <value xml:lang="zh-TW">啟用分頁</value>
     </property>
+    <property key="CommonPaid">
+        <value xml:lang="en">Paid</value>
+    </property>
     <property key="CommonParent">
         <value xml:lang="ar">الوالد</value>
         <value xml:lang="cs">Rodič</value>
@@ -8363,6 +8782,9 @@
         <value xml:lang="vi">Cấp quản lý trên</value>
         <value xml:lang="zh">上级</value>
         <value xml:lang="zh-TW">上層</value>
+    </property>
+    <property key="CommonParties">
+        <value xml:lang="en">Parties</value>
     </property>
     <property key="CommonParty">
         <value xml:lang="en">User</value>
@@ -8545,6 +8967,22 @@
         <value xml:lang="en">Per</value>
         <value xml:lang="nl">Per</value>
     </property>
+    <property key="CommonPerDay">
+        <value xml:lang="de">pro Tag</value>
+        <value xml:lang="en">per day</value>
+    </property>    
+    <property key="CommonPerMonth">
+        <value xml:lang="de">pro Monat</value>
+        <value xml:lang="en">per month</value>
+    </property>  
+    <property key="CommonPersons">
+        <value xml:lang="de">Personen</value>
+        <value xml:lang="en">Persons</value>
+    </property>
+    <property key="CommonPerWeek">
+        <value xml:lang="de">pro Woche</value>
+        <value xml:lang="en">per week</value>
+    </property>  
     <property key="CommonPerform">
         <value xml:lang="ar">إحراء</value>
         <value xml:lang="cs">Provést</value>
@@ -8856,6 +9294,9 @@
         <value xml:lang="zh">应用程序门户页面</value>
         <value xml:lang="zh-TW">應用程式入口網頁面</value>
     </property>
+    <property key="CommonPosition">
+        <value xml:lang="en">Position</value>
+    </property>
     <property key="CommonPostedBy">
         <value xml:lang="ar">مرسلة من</value>
         <value xml:lang="cs">Odesláno</value>
@@ -9038,6 +9479,10 @@
         <value xml:lang="zh">打印</value>
         <value xml:lang="zh-TW">列印</value>
     </property>
+    <property key="CommonPrintable">
+        <value xml:lang="de">Druckfähig</value>
+        <value xml:lang="en">Printable</value>
+    </property>
     <property key="CommonPrice">
         <value xml:lang="en">Price</value>
         <value xml:lang="nl">Prijs</value>
@@ -9047,37 +9492,6 @@
         <value xml:lang="en">Prices</value>
         <value xml:lang="nl">Prijzen</value>
         <value xml:lang="zh">价格</value>
-    </property>
-    <property key="CommonAdjustment">
-        <value xml:lang="en">Adjustment</value>
-        <value xml:lang="nl">Aanpassing</value>
-        <value xml:lang="zh">调整</value>
-    </property>
-    <property key="CommonAdjustments">
-        <value xml:lang="en">Adjustments</value>
-        <value xml:lang="nl">Aanpassingen</value>
-        <value xml:lang="zh">调整</value>
-    </property>
-    <property key="CommonAttribute">
-        <value xml:lang="de">Attribut</value>
-        <value xml:lang="en">Attribute</value>
-        <value xml:lang="nl">Attribuut</value>
-        <value xml:lang="zh">属性</value>
-    </property>
-    <property key="CommonAttributes">
-        <value xml:lang="de">Attribute</value>
-        <value xml:lang="en">Attributes</value>
-        <value xml:lang="es">Atributos</value>
-        <value xml:lang="fr">Attributs</value>
-        <value xml:lang="it">Attributi</value>
-        <value xml:lang="ja">属性</value>
-        <value xml:lang="nl">Attritbuten</value>
-        <value xml:lang="ro">Atribute</value>
-        <value xml:lang="ru">Атрибуты</value>
-        <value xml:lang="th">ลักษณะ</value>
-        <value xml:lang="vi">Thuộc tính</value>
-        <value xml:lang="zh">属性</value>
-        <value xml:lang="zh-TW">屬性</value>
     </property>
     <property key="CommonWorkEffort">
         <value xml:lang="en">Work Effort</value>
@@ -9508,6 +9922,9 @@
         <value xml:lang="zh">原因</value>
         <value xml:lang="zh-TW">原因</value>
     </property>
+    <property key="CommonReceipt">
+        <value xml:lang="en">Receipt</value>
+    </property>
     <property key="CommonReceive">
         <value xml:lang="ar">استقبال</value>
         <value xml:lang="cs">Přijmout</value>
@@ -9547,6 +9964,13 @@
         <value xml:lang="zh">已接收</value>
         <value xml:lang="zh-CN">接收到的</value>
         <value xml:lang="zh-TW">已接收</value>
+    </property>
+    <property key="CommonRecentActivity">
+        <value xml:lang="en">Recent Activity</value>
+    </property>
+    <property key="CommonRecreate">
+        <value xml:lang="de">Neu erstellen</value>
+        <value xml:lang="en">Recreate</value>        
     </property>
     <property key="CommonRed">
         <value xml:lang="ar">أحمر</value>
@@ -9736,6 +10160,14 @@
         <value xml:lang="zh">发布版本</value>
         <value xml:lang="zh-TW">發行版本</value>
     </property>
+    <property key="CommonReload">
+        <value xml:lang="de">Laden</value>
+        <value xml:lang="en">Reload</value>
+        <value xml:lang="es">Recargar</value>
+        <value xml:lang="fr">Recharger</value>
+        <value xml:lang="pt-BR">Recarregar</value>
+        <value xml:lang="ru">Перезагрузка</value>
+    </property>
     <property key="CommonReloadCaptchaCode">
         <value xml:lang="ar">تحميل رمز CAPTCHA</value>
         <value xml:lang="cs">Znovu načíst kód Captcha</value>
@@ -9769,6 +10201,10 @@
         <value xml:lang="zh">删除</value>
         <value xml:lang="zh-CN">删除</value>
         <value xml:lang="zh-TW">刪除</value>
+    </property>
+    <property key="CommonRemoveAssoc">
+        <value xml:lang="en">Remove Assoc</value>
+        <value xml:lang="de">Assoc entfernen</value>
     </property>
     <property key="CommonRemoveExpired">
         <value xml:lang="ar">نزع منتهى الصلاحية</value>
@@ -9805,6 +10241,11 @@
         <value xml:lang="vi">Gỡ bỏ ứng dụng porlet</value>
         <value xml:lang="zh">删除Portlet</value>
         <value xml:lang="zh-TW">刪除Portlet</value>
+    </property>
+    <property key="CommonRename">
+        <value xml:lang="de">Umbenennen</value>
+        <value xml:lang="en">Rename</value>
+        <value xml:lang="fr">Renommer</value>
     </property>
     <property key="CommonReport">
         <value xml:lang="ar">تقرير</value>
@@ -9857,6 +10298,23 @@
         <value xml:lang="en">Request</value>
         <value xml:lang="nl">Verzoek</value>
         <value xml:lang="zh">请求</value>
+    </property>
+    <property key="CommonRequests">
+        <value xml:lang="de">Anfragen</value>
+        <value xml:lang="en">Requests</value>
+        <value xml:lang="es">Peticiones</value>
+        <value xml:lang="fr">Demandes</value>
+        <value xml:lang="it">Richieste</value>
+        <value xml:lang="ja">リクエスト</value>
+        <value xml:lang="nl">Aanvragen</value>
+        <value xml:lang="pt-BR">Solicitações</value>
+        <value xml:lang="ro">Cerere</value>
+        <value xml:lang="ru">Запросы</value>
+        <value xml:lang="th">การร้องขอ</value>
+        <value xml:lang="vi">Yêu cầu từ Khách hàng</value>
+        <value xml:lang="zh">请求</value>
+        <value xml:lang="zh-CN">请求</value>
+        <value xml:lang="zh-TW">請求</value>
     </property>
     <property key="CommonRequired">
         <value xml:lang="ar">إلزامي</value>
@@ -9919,6 +10377,14 @@
         <value xml:lang="zh">重新设置</value>
         <value xml:lang="zh-CN">重置</value>
         <value xml:lang="zh-TW">重設</value>
+    </property>
+    <property key="CommonResource">
+        <value xml:lang="en">Resource</value>
+        <value xml:lang="de">Ressource</value>
+    </property>
+    <property key="CommonResult">
+        <value xml:lang="en">Result</value>
+        <value xml:lang="de">Ergebnis</value>
     </property>
     <property key="CommonResultLookup">
         <value xml:lang="ar">نتيجة البحث</value>
@@ -10020,6 +10486,10 @@
         <value xml:lang="zh">评价</value>
         <value xml:lang="zh-CN">评论</value>
         <value xml:lang="zh-TW">評論</value>
+    </property>
+    <property key="CommonRevision">
+        <value xml:lang="en">revision</value>
+        <value xml:lang="fr">révision</value>
     </property>
     <property key="CommonRole">
         <value xml:lang="de">Rolle</value>
@@ -10625,6 +11095,20 @@
         <value xml:lang="zh-CN">九月</value>
         <value xml:lang="zh-TW">九月</value>
     </property>
+    <property key="CommonSeqNum">
+        <value xml:lang="de">Seq. Nummer</value>
+        <value xml:lang="en">Seq Num</value>
+        <value xml:lang="es">Nº sec.</value>
+        <value xml:lang="fr">N° de séq.</value>
+        <value xml:lang="it">Num Seq</value>
+        <value xml:lang="ja">連番</value>
+        <value xml:lang="ro">Num Secventa</value>
+        <value xml:lang="ru">Посл. ном.</value>
+        <value xml:lang="th">หมายเลขรายการ</value>
+        <value xml:lang="vi">Số thứ tự</value>
+        <value xml:lang="zh">序号</value>
+        <value xml:lang="zh-TW">序號</value>
+    </property>
     <property key="CommonSequence">
         <value xml:lang="ar">تسلسل</value>
         <value xml:lang="cs">Pořadí</value>
@@ -10671,6 +11155,11 @@
         <value xml:lang="nl">Volg ID</value>
         <value xml:lang="zh">序号</value>
     </property>
+    <property key="CommonServerCommunicationError">
+        <value xml:lang="de">Server-Kommunikationsfehler</value>
+        <value xml:lang="en">Server communication error</value>
+        <value xml:lang="fr">Erreur de communication avec le serveur</value>
+    </property>
     <property key="CommonServerHour">
         <value xml:lang="en">Server Hour</value>
         <value xml:lang="fr">Heure du serveur </value>
@@ -10690,6 +11179,9 @@
         <value xml:lang="vi">Dịch vụ thực hiện không thành công : trả về lỗi</value>
         <value xml:lang="zh">返回错误服务：正在返回错误</value>
         <value xml:lang="zh-TW">返回錯誤服務:正在返回錯誤</value>
+    </property>
+    <property key="CommonServiceSuccessMessage">
+        <value xml:lang="en">Operation has been executed successfully</value>
     </property>
     <property key="CommonSessionTimeoutPleaseLogIn">
         <value xml:lang="ar">إنتهت صلاحية الجلسة ويتطلب إعادة تسجيل الدخول. يمكنك تحديث الصفحة أو حفظ البيانات الخاصة بك لتسجيل الدخول</value>
@@ -10777,6 +11269,9 @@
         <value xml:lang="zh">(如果空，将设置为当前时间)</value>
         <value xml:lang="zh-CN">(如果为空就按当前日期赋值)</value>
         <value xml:lang="zh-TW">(如果是空值,將設定為目前時間)</value>
+    </property>
+    <property key="CommonSettings">
+        <value xml:lang="en">Settings</value>
     </property>
     <property key="CommonShipment">
         <value xml:lang="en">Shipment</value>
@@ -10899,6 +11394,10 @@
         <value xml:lang="zh-CN">显示查找字段</value>
         <value xml:lang="zh-TW">顯示查詢欄位</value>
     </property>
+    <property key="CommonSideBar">
+        <value xml:lang="de">SideBar</value>
+        <value xml:lang="en">SideBar</value>
+    </property>
     <property key="CommonSince">
         <value xml:lang="ar">منذ</value>
         <value xml:lang="cs">Od</value>
@@ -10969,6 +11468,11 @@
         <value xml:lang="zh-CN">小</value>
         <value xml:lang="zh-TW">小</value>
     </property>
+    <property key="CommonSold">
+        <value xml:lang="en">Sold</value>
+        <value xml:lang="zh">售出</value>
+        <value xml:lang="zh-TW">售出</value>
+    </property>
     <property key="CommonSorryYouCannotSend">
         <value xml:lang="ar">للأسف, لا يمكنكم إرسال هذه الصفحة لصديق. إختر بدل ذلك من نوع أو سلعة</value>
         <value xml:lang="cs">Litujeme, ale tuto stránku nemůžete odeslat příteli. Prosíme vyberte si jinou v náhledu produktů či kategorií.</value>
@@ -11027,6 +11531,11 @@
         <value xml:lang="vi">Sắp xếp theo</value>
         <value xml:lang="zh">排序方法</value>
         <value xml:lang="zh-TW">排序方式</value>
+    </property>
+    <property key="CommonSpecifications">
+        <value xml:lang="de">Technische Daten</value>
+        <value xml:lang="en">Specifications</value>
+        <value xml:lang="fr">Spécifications</value>
     </property>
     <property key="CommonSpecified">
         <value xml:lang="ar">المشار إليها</value>
@@ -11219,6 +11728,9 @@
         <value xml:lang="vi">Trạng thái là 'hoàn thành'</value>
         <value xml:lang="zh">把状态设为完成</value>
         <value xml:lang="zh-TW">把狀態設為完成</value>
+    </property>
+    <property key="CommonStore">
+        <value xml:lang="en">Store</value>
     </property>
     <property key="CommonSubTitle">
         <value xml:lang="ar">العنوان الثانوي</value>
@@ -11670,6 +12182,10 @@
         <value xml:lang="zh-CN">这个</value>
         <value xml:lang="zh-TW">這個</value>
     </property>
+    <property key="CommonThisIsAPlaceholder">
+        <value xml:lang="de">Das ist ein Platzhalter!</value>
+        <value xml:lang="en">This is a placeholder!</value>
+    </property>
     <property key="CommonThru">
         <value xml:lang="ar">حتى</value>
         <value xml:lang="cs">Do</value>
@@ -11773,6 +12289,10 @@
         <value xml:lang="zh">时间</value>
         <value xml:lang="zh-CN">时间</value>
         <value xml:lang="zh-TW">時間</value>
+    </property>
+    <property key="CommonTimeInterval">
+        <value xml:lang="de">Zeitintervall</value>
+        <value xml:lang="en">Time Interval</value>        
     </property>
     <property key="CommonTimeZone">
         <value xml:lang="ar">منطقة زمنية</value>
@@ -12147,6 +12667,9 @@
         <value xml:lang="zh">合计金额</value>
         <value xml:lang="zh-TW">價值合計</value>
     </property>
+    <property key="CommonTransaction">
+        <value xml:lang="en">Transaction</value>
+    </property>
     <property key="CommonTrue">
         <value xml:lang="ar">صحيح</value>
         <value xml:lang="cs">Pravda</value>
@@ -12165,6 +12688,10 @@
         <value xml:lang="vi">Đúng</value>
         <value xml:lang="zh">是</value>
         <value xml:lang="zh-TW">真</value>
+    </property>
+    <property key="CommonTryReloadingPage">
+        <value xml:lang="en">Try reloading the page</value>
+        <value xml:lang="de">Versuchen Sie, die Seite neu zu laden</value>
     </property>
     <property key="CommonTuesday">
         <value xml:lang="ar">الثلاثاء</value>
@@ -12206,6 +12733,11 @@
         <value xml:lang="zh">类型</value>
         <value xml:lang="zh-CN">类型</value>
         <value xml:lang="zh-TW">類型</value>
+    </property>
+    <property key="CommonUnexpectedError">
+        <value xml:lang="de">unerwarteter Fehler</value>
+        <value xml:lang="en">Unexpected error</value>
+        <value xml:lang="fr">Erreur inattendue</value>
     </property>
     <property key="CommonUnitPrice">
         <value xml:lang="ar">سعر الوحدة</value>
@@ -12363,6 +12895,10 @@
         <value xml:lang="zh">更新链接</value>
         <value xml:lang="zh-CN">更新链接</value>
         <value xml:lang="zh-TW">更新連結</value>
+    </property>
+    <property key="CommonUpdateLocalizedFields">
+        <value xml:lang="en">Update Localized Fields</value>
+        <value xml:lang="de">Lokalisierte Felder aktualisieren</value>
     </property>
     <property key="CommonUpdated">
         <value xml:lang="ar">محدثة</value>
@@ -12562,6 +13098,10 @@
         <value xml:lang="zh">用户名</value>
         <value xml:lang="zh-CN">用户名</value>
         <value xml:lang="zh-TW">使用者名稱</value>
+    </property>
+    <property key="CommonValues">
+        <value xml:lang="de">Werte</value>
+        <value xml:lang="en">Values</value>
     </property>
     <property key="CommonValidFromDate">
         <value xml:lang="ar">صالح من تاريخ</value>
@@ -12946,6 +13486,11 @@
         <value xml:lang="zh">数量</value>
         <value xml:lang="zh-CN">容量</value>
         <value xml:lang="zh-TW">數量</value>
+    </property>
+    <property key="CommonWarning">
+        <value xml:lang="de">Warnung</value>
+        <value xml:lang="en">Warning</value>
+        <value xml:lang="fr">Avertissement</value>
     </property>
     <property key="CommonWebsite">
         <value xml:lang="ar">موقع الويب</value>
@@ -13513,6 +14058,18 @@
         <value xml:lang="en">External Person</value>
         <value xml:lang="nl">Extern persoon</value>
     </property>
+    <property key="FacebookLogin">
+        <value xml:lang="de">Anmeldung mit Facebook</value>
+        <value xml:lang="en">Sign in with Facebook</value>
+        <value xml:lang="fr">Connectez-vous avec Facebook</value>
+        <value xml:lang="hi-IN">Facebook के साथ में साइन इन करें</value>
+        <value xml:lang="it">Collegati a Facebook</value>
+        <value xml:lang="ja">Facebookのアカウントでログイン</value>
+        <value xml:lang="nl">Log in met Facebook</value>
+        <value xml:lang="pt">Faça login no Facebook</value>
+        <value xml:lang="zh">请用facebook</value>
+        <value xml:lang="zh-TW">請用facebook</value>
+    </property>
     <property key="Facility">
         <value xml:lang="ar">مرفق</value>
         <value xml:lang="cs">Zařízení/Sklady</value>
@@ -13587,6 +14144,26 @@
         <value xml:lang="zh">操作</value>
         <value xml:lang="zh-TW">操作</value>
     </property>
+    <property key="FormFieldTitle_addAction">
+        <value xml:lang="ar">إضافة</value>
+        <value xml:lang="cs">Přidat</value>
+        <value xml:lang="de">Hinzufügen</value>
+        <value xml:lang="en">Add</value>
+        <value xml:lang="es">Añadir</value>
+        <value xml:lang="fr">Ajouter</value>
+        <value xml:lang="hi-IN">जोड़ें</value>
+        <value xml:lang="it">Aggiungi</value>
+        <value xml:lang="ja">追加</value>
+        <value xml:lang="nl">Toevoegen</value>
+        <value xml:lang="pt">Adicionar</value>
+        <value xml:lang="ro">Adauga</value>
+        <value xml:lang="ru">Добавить</value>
+        <value xml:lang="th">เพิ่ม</value>
+        <value xml:lang="vi">Thêm</value>
+        <value xml:lang="zh">新建</value>
+        <value xml:lang="zh-CN">添加</value>
+        <value xml:lang="zh-TW">增加</value>
+    </property> 
     <property key="FormFieldTitle_addButton">
         <value xml:lang="ar">إضافة</value>
         <value xml:lang="cs">Přidat</value>
@@ -13626,13 +14203,52 @@
         <value xml:lang="zh">金额</value>
         <value xml:lang="zh-TW">金額</value>
     </property>
+    <property key="FormFieldTitle_applyAction">
+        <value xml:lang="ar">تطبيق</value>
+        <value xml:lang="cs">Použít</value>
+        <value xml:lang="de">Anwenden</value>
+        <value xml:lang="en">Apply</value>
+        <value xml:lang="es">Aplicar</value>
+        <value xml:lang="fr">Valider</value>
+        <value xml:lang="hi-IN">लागू करे</value>
+        <value xml:lang="it">Applica</value>
+        <value xml:lang="ja">適用</value>
+        <value xml:lang="nl">Wijs toe</value>
+        <value xml:lang="pt">Aplicar</value>
+        <value xml:lang="ro">Aplica</value>
+        <value xml:lang="ru">Применить</value>
+        <value xml:lang="th">ประยุกต์ใช้</value>
+        <value xml:lang="vi">Khớp lệnh</value>
+        <value xml:lang="zh">应用</value>
+        <value xml:lang="zh-CN">应用</value>
+        <value xml:lang="zh-TW">套用</value>
+    </property>
     <property key="FormFieldTitle_approve">
         <value xml:lang="ar">التصديق</value>
+        <value xml:lang="de">Genehmigen</value>
         <value xml:lang="cs">Schválit</value>
         <value xml:lang="en">Approve</value>
         <value xml:lang="es">Aprobar</value>
         <value xml:lang="fr">Approuver</value>
+        <value xml:lang="hi-IN">स्वीकृत</value>
         <value xml:lang="ja">承認</value>
+        <value xml:lang="pt">Aprovar</value>
+        <value xml:lang="th">อนุมัติ</value>
+        <value xml:lang="vi">Phê duyệt</value>
+        <value xml:lang="zh">批准</value>
+        <value xml:lang="zh-TW">核准</value>
+    </property>
+    <property key="FormFieldTitle_approveAction">
+        <value xml:lang="ar">التصديق</value>
+        <value xml:lang="cs">Schválit</value>
+        <value xml:lang="de">Genehmigen</value>
+        <value xml:lang="en">Approve</value>
+        <value xml:lang="es">Aprobar</value>
+        <value xml:lang="fr">Approuver</value>
+        <value xml:lang="hi-IN">स्वीकृत</value>
+        <value xml:lang="it">Approva</value>
+        <value xml:lang="ja">承認</value>
+        <value xml:lang="pt">Aprovar</value>
         <value xml:lang="th">อนุมัติ</value>
         <value xml:lang="vi">Phê duyệt</value>
         <value xml:lang="zh">批准</value>
@@ -13676,6 +14292,50 @@
         <value xml:lang="zh">属性值</value>
         <value xml:lang="zh-TW">屬性值</value>
     </property>
+    <property key="FormFieldTitle_cancelAction">
+        <value xml:lang="ar">إلغاء</value>
+        <value xml:lang="cs">Storno</value>
+        <value xml:lang="de">Abbrechen</value>
+        <value xml:lang="en">Cancel</value>
+        <value xml:lang="es">Cancelar</value>
+        <value xml:lang="fr">Annuler</value>
+        <value xml:lang="hi-IN">रद्द करें</value>
+        <value xml:lang="it">Annulla</value>
+        <value xml:lang="ja">取消</value>
+        <value xml:lang="nl">Annuleer</value>
+        <value xml:lang="pt">Cancelar</value>
+        <value xml:lang="ro">Sterge</value>
+        <value xml:lang="ru">Отменить</value>
+        <value xml:lang="th">ยกเลิก</value>
+        <value xml:lang="vi">Thôi</value>
+        <value xml:lang="zh">取消</value>
+        <value xml:lang="zh-CN">取消</value>
+        <value xml:lang="zh-TW">取消</value>
+    </property>
+    <property key="FormFieldTitle_checkAction"><!-- TODO: incomplete -->
+        <value xml:lang="de">Prüfen</value>
+        <value xml:lang="en">Check</value>
+    </property>     
+    <property key="FormFieldTitle_clearAction">
+        <value xml:lang="ar">محو</value>
+        <value xml:lang="cs">Vyčistit</value>
+        <value xml:lang="de">Leeren</value>
+        <value xml:lang="en">Clear</value>
+        <value xml:lang="es">Limpiar</value>
+        <value xml:lang="fr">Effacer</value>
+        <value xml:lang="hi-IN">साफ़ करें</value>
+        <value xml:lang="it">Pulisci</value>
+        <value xml:lang="ja">クリア</value>
+        <value xml:lang="nl">Wis</value>
+        <value xml:lang="pt">Limpar</value>
+        <value xml:lang="ro">Azereaza</value>
+        <value xml:lang="ru">Очистить</value>
+        <value xml:lang="th">เคลียร์</value>
+        <value xml:lang="vi">Xóa trắng</value>
+        <value xml:lang="zh">清除</value>
+        <value xml:lang="zh-CN">清除</value>
+        <value xml:lang="zh-TW">清除</value>
+    </property>   
     <property key="FormFieldTitle_cmdToCall">
         <value xml:lang="ar">إستدعاء الأمر</value>
         <value xml:lang="cs">Příkaz k zavolání</value>
@@ -13706,6 +14366,33 @@
         <value xml:lang="zh">评论</value>
         <value xml:lang="zh-TW">評論</value>
     </property>
+    <property key="FormFieldTitle_completeAction">
+        <value xml:lang="de">Abgeschlosen</value>
+        <value xml:lang="en">Complete</value>
+        <value xml:lang="es">Completo</value>
+        <value xml:lang="fr">Complet</value>
+        <value xml:lang="it">Completa</value>
+        <value xml:lang="ja">完了</value>
+        <value xml:lang="pt-BR">Completo</value>
+        <value xml:lang="ro">Completeaza</value>
+        <value xml:lang="th">เสร็จสิ้น</value>
+        <value xml:lang="vi">Hoàn thành</value>
+        <value xml:lang="zh">完成</value>
+        <value xml:lang="zh-TW">完成</value>
+    </property>
+    <property key="FormFieldTitle_confirmAction">
+        <value xml:lang="ar">تأكيد</value>
+        <value xml:lang="cs">Potvrdit</value>
+        <value xml:lang="en">Confirm</value>
+        <value xml:lang="es">Confirmar</value>
+        <value xml:lang="fr">Confirmer</value>
+        <value xml:lang="ja">確認</value>
+        <value xml:lang="ru">Подтвердить</value>
+        <value xml:lang="th">ยืนยัน</value>
+        <value xml:lang="vi">Xác nhận</value>
+        <value xml:lang="zh">确认</value>
+        <value xml:lang="zh-TW">確認</value>
+    </property>
     <property key="FormFieldTitle_confirmButton">
         <value xml:lang="ar">تأكيد</value>
         <value xml:lang="cs">Potvrdit</value>
@@ -13731,14 +14418,34 @@
         <value xml:lang="ja">問い合わせ方法ID</value>
         <value xml:lang="nl">Contact Mech ID</value>
         <value xml:lang="pt-BR">ID de mecanismo de Contato</value>
-        <!--value xml:lang="ro">Cod Contract</value -->
+        <!--value xml:lang="ro">Cod Contract</value-->
         <value xml:lang="ro">Numar Contact</value>
         <value xml:lang="ru">Код способа контакта</value>
-        <!--value xml:lang="th">รหัสการติดต่อการทำงาน</value -->
+        <!--value xml:lang="th">รหัสการติดต่อการทำงาน</value-->
         <value xml:lang="th">รหัสวิธีการติดต่อ</value>
         <value xml:lang="vi">Id thông tin liên lạc chi tiết</value>
         <value xml:lang="zh">联系方式标识</value>
         <value xml:lang="zh-TW">聯絡方式識別</value>
+    </property>
+    <property key="FormFieldTitle_createAction">
+        <value xml:lang="ar">خلق</value>
+        <value xml:lang="cs">Založit</value>
+        <value xml:lang="de">Anlegen</value>
+        <value xml:lang="en">Create</value>
+        <value xml:lang="es">Crear</value>
+        <value xml:lang="fr">Créer</value>
+        <value xml:lang="hi-IN">बनाएँ</value>
+        <value xml:lang="it">Creare</value>
+        <value xml:lang="ja">作成</value>
+        <value xml:lang="nl">Aanmaken</value>
+        <value xml:lang="pt">Criar</value>
+        <value xml:lang="ro">Creare</value>
+        <value xml:lang="ru">Создать</value>
+        <value xml:lang="th">สร้าง</value>
+        <value xml:lang="vi">Tạo mới</value>
+        <value xml:lang="zh">新建</value>
+        <value xml:lang="zh-CN">创建</value>
+        <value xml:lang="zh-TW">新建</value>
     </property>
     <property key="FormFieldTitle_createButton">
         <value xml:lang="ar">استحداث</value>
@@ -13907,6 +14614,28 @@
         <value xml:lang="en">custom screen type</value>
         <value xml:lang="fr">Type d'écran dédié</value>
     </property>
+    <property key="FormFieldTitle_deleteAction">
+        <value xml:lang="ar">حذف</value>
+        <value xml:lang="cs">Smazat</value>
+        <value xml:lang="de">Löschen</value>
+        <value xml:lang="en">Delete</value>
+        <value xml:lang="es">Eliminar</value>
+        <value xml:lang="fr">Supprimer</value>
+        <value xml:lang="hi-IN">मिटाए</value>
+        <value xml:lang="it">Cancella</value>
+        <value xml:lang="ja">削除</value>
+        <value xml:lang="nl">Wis</value>
+        <value xml:lang="pt">Apagar</value>
+        <value xml:lang="pt-BR">Excluir</value>
+        <value xml:lang="pt-PT">Eliminar</value>
+        <value xml:lang="ro">Sterge</value>
+        <value xml:lang="ru">Удалить</value>
+        <value xml:lang="th">ลบ</value>
+        <value xml:lang="vi">Xóa</value>
+        <value xml:lang="zh">删除</value>
+        <value xml:lang="zh-CN">删除</value>
+        <value xml:lang="zh-TW">刪除</value>
+    </property>
     <property key="FormFieldTitle_deleteButton">
         <value xml:lang="ar">حذف</value>
         <value xml:lang="cs">Smazat</value>
@@ -13976,30 +14705,83 @@
         <value xml:lang="zh">设备地点</value>
         <value xml:lang="zh-TW">設備地點</value>
     </property>
+    <property key="FormFieldTitle_downloadAction">
+        <value xml:lang="da">Download</value>
+        <value xml:lang="en">Download</value>
+        <value xml:lang="fr">Télécharger</value>
+        <value xml:lang="it">Scarica</value>
+        <value xml:lang="ja">ダウンロード</value>
+        <value xml:lang="nl">Download</value>
+        <value xml:lang="pt">Download</value>
+        <value xml:lang="vi">Tải về</value>
+        <value xml:lang="zh">下载</value>
+        <value xml:lang="zh-TW">下載</value>
+    </property>
+    <property key="FormFieldTitle_editAction">
+        <value xml:lang="ar">تحرير</value>
+        <value xml:lang="cs">upravit</value>
+        <value xml:lang="de">Bearbeiten</value>
+        <value xml:lang="en">Edit</value>
+        <value xml:lang="es">Editar</value>
+        <value xml:lang="fr">Modifier</value>
+        <value xml:lang="hi-IN">संपादित करें</value>
+        <value xml:lang="it">Aggiorna</value>
+        <value xml:lang="ja">編集</value>
+        <value xml:lang="nl">Wijzigen</value>
+        <value xml:lang="pt">Editar</value>
+        <value xml:lang="ro">Actualizare</value>
+        <value xml:lang="ru">Редактировать</value>
+        <value xml:lang="th">แก้ไข</value>
+        <value xml:lang="vi">Chỉnh sửa</value>
+        <value xml:lang="zh">编辑</value>
+        <value xml:lang="zh-CN">编辑</value>
+        <value xml:lang="zh-TW">編輯</value>
+    </property>
     <property key="FormFieldTitle_effectiveDate">
         <value xml:lang="ar">تاريخ الفاعلية</value>
         <value xml:lang="cs">Datum účinnosti</value>
         <value xml:lang="de">Effektives Datum</value>
         <value xml:lang="en">Effective Date</value>
-        <!--value xml:lang="es">Fecha efectivo</value -->
+        <!--value xml:lang="es">Fecha efectivo</value-->
         <value xml:lang="es">Fecha efectiva</value>
         <value xml:lang="fr">Date d'effet</value>
         <value xml:lang="hi-IN">प्रभावी दिनांक</value>
         <value xml:lang="it">Data effettiva</value>
-        <!--value xml:lang="nl">Werkelijke datum</value -->
+        <!--value xml:lang="nl">Werkelijke datum</value-->
         <value xml:lang="ja">発効日</value>
         <value xml:lang="nl">Effectieve Datum</value>
         <value xml:lang="pt">Data Efectiva</value>
         <value xml:lang="pt-BR">Data de Vigência</value>
         <value xml:lang="ro">Data Efectiva</value>
-        <!--value xml:lang="ru">Дата вст. в силу</value -->
+        <!--value xml:lang="ru">Дата вст. в силу</value-->
         <value xml:lang="ru">Дата вступления в силу</value>
-        <!--value xml:lang="th">วันที่มีประสิทธิภาพ</value -->
+        <!--value xml:lang="th">วันที่มีประสิทธิภาพ</value-->
         <value xml:lang="th">วันที่มีผล</value>
         <value xml:lang="vi">Ngày hiệu lực</value>
-        <!--value xml:lang="zh">生效日期</value -->
+        <!--value xml:lang="zh">生效日期</value-->
         <value xml:lang="zh">有效日期</value>
         <value xml:lang="zh-TW">有效日期</value>
+    </property>
+    <property key="FormFieldTitle_expireAction">
+        <value xml:lang="ar">إنهاء الصلاحية</value>
+        <value xml:lang="cs">Expirovat</value>
+        <value xml:lang="de">Ablaufen lassen</value>
+        <value xml:lang="en">Expire</value>
+        <value xml:lang="es">Expiración</value>
+        <value xml:lang="fr">Invalider</value>
+        <value xml:lang="hi-IN">निश्वासन</value>
+        <value xml:lang="it">Scade</value>
+        <value xml:lang="ja">失効</value>
+        <value xml:lang="nl">Maak verlopen</value>
+        <value xml:lang="pt">Expirar</value>
+        <value xml:lang="pt-PT">Terminar</value>
+        <value xml:lang="ro">Expira</value>
+        <value xml:lang="ru">Прекратить</value>
+        <value xml:lang="th">หมดเขต</value>
+        <value xml:lang="vi">Hết hạn</value>
+        <value xml:lang="zh">过期</value>
+        <value xml:lang="zh-CN">过期</value>
+        <value xml:lang="zh-TW">設成逾期</value>
     </property>
     <property key="FormFieldTitle_expireButton">
         <value xml:lang="ar">نهاية الصلاحية</value>
@@ -14057,6 +14839,28 @@
         <value xml:lang="zh">外部设备类型标识</value>
         <value xml:lang="zh-TW">外部設備類型識別</value>
     </property>
+    <property key="FormFieldTitle_findAction">
+        <value xml:lang="ar">إيجاد</value>
+        <value xml:lang="cs">Hledání</value>
+        <value xml:lang="de">Suchen</value>
+        <value xml:lang="en">Find</value>
+        <value xml:lang="es">Buscar</value>
+        <value xml:lang="fr">Rechercher</value>
+        <value xml:lang="hi-IN">खोजे</value>
+        <value xml:lang="it">Ricerca</value>
+        <value xml:lang="ja">検索</value>
+        <value xml:lang="nl">Zoek</value>
+        <value xml:lang="pt">Procurar</value>
+        <value xml:lang="pt-BR">Pesquisar</value>
+        <value xml:lang="pt-PT">Procura</value>
+        <value xml:lang="ro">Cauta</value>
+        <value xml:lang="ru">Найти</value>
+        <value xml:lang="th">ค้นหา</value>
+        <value xml:lang="vi">Tìm</value>
+        <value xml:lang="zh">查找</value>
+        <value xml:lang="zh-CN">查找</value>
+        <value xml:lang="zh-TW">查詢</value>
+    </property>
     <property key="FormFieldTitle_fromDate">
         <value xml:lang="ar">تاريخ البدء</value>
         <value xml:lang="cs">Od data</value>
@@ -14079,7 +14883,7 @@
     <property key="FormFieldTitle_hasTable">
         <value xml:lang="ar">يحوز على جدول</value>
         <value xml:lang="cs">Má tabulku</value>
-        <!--value xml:lang="de">Hat Tabelle</value -->
+        <!--value xml:lang="de">Hat Tabelle</value-->
         <value xml:lang="de">Besitzt Tabelle</value>
         <value xml:lang="en">Has Table</value>
         <value xml:lang="es">Tiene tabla</value>
@@ -14088,7 +14892,7 @@
         <value xml:lang="it">Ha tabella</value>
         <value xml:lang="ja">テーブルあり</value>
         <value xml:lang="pt-BR">Contém tabela</value>
-        <!--value xml:lang="ro">Are Tabelul</value -->
+        <!--value xml:lang="ro">Are Tabelul</value-->
         <value xml:lang="ro">Are Tabela</value>
         <value xml:lang="ru">Есть таблица?</value>
         <value xml:lang="th">มีตาราง</value>
@@ -14187,6 +14991,53 @@
         <value xml:lang="zh">行小计</value>
         <value xml:lang="zh-TW">行小計</value>
     </property>
+    <property key="FormFieldTitle_listAction">
+        <value xml:lang="ar">قائمة</value>
+        <value xml:lang="cs">Seznam</value>
+        <value xml:lang="de">Liste</value>
+        <value xml:lang="en">List</value>
+        <value xml:lang="es">Lista</value>
+        <value xml:lang="fr">Liste</value>
+        <value xml:lang="hi-IN">सूची</value>
+        <value xml:lang="it">Lista</value>
+        <value xml:lang="ja">一覧表示</value>
+        <value xml:lang="nl">Lijst</value>
+        <value xml:lang="pt">Listar</value>
+        <value xml:lang="pt-BR">Lista</value>
+        <value xml:lang="pt-PT">Lista</value>
+        <value xml:lang="ro">Lista</value>
+        <value xml:lang="ru">Список</value>
+        <value xml:lang="th">รายการ</value>
+        <value xml:lang="vi">Danh sách</value>
+        <value xml:lang="zh">列表</value>
+        <value xml:lang="zh-CN">列表</value>
+        <value xml:lang="zh-TW">清單</value>
+    </property>
+    <property key="FormFieldTitle_listAllAction">
+        <value xml:lang="cs">Vypsat vše</value>
+        <value xml:lang="ar">إدراج الكل</value>
+        <value xml:lang="de">Alles auflisten</value>
+        <value xml:lang="en">List All</value>
+        <value xml:lang="es">Listar todos</value>
+        <value xml:lang="fr">Tout énumérer</value>
+        <value xml:lang="hi-IN">सभी सूची</value>
+        <value xml:lang="it">Lista tutte</value>
+        <value xml:lang="ja">すべて表示</value>
+        <value xml:lang="nl">Gehele Lijst</value>
+        <value xml:lang="pt">Listar Tudo</value>
+        <value xml:lang="pt-BR">Listar todos</value>
+        <value xml:lang="ro">Lista Toate</value>
+        <value xml:lang="ru">Перечислить все</value>
+        <value xml:lang="th">รายการทั้งหมด</value>
+        <value xml:lang="vi">Liệt kê tất cả</value>
+        <value xml:lang="zh">全部列表</value>
+        <value xml:lang="zh-CN">所有列表</value>
+        <value xml:lang="zh-TW">全部清單</value>
+    </property>
+    <property key="FormFieldTitle_makeAction"><!-- TODO: incomplete -->
+        <value xml:lang="de">Machen</value>
+        <value xml:lang="en">Make</value>
+    </property>
     <property key="FormFieldTitle_maxRecurrenceCount">
         <value xml:lang="ar">عدد الحد الأقصى للتكرار</value>
         <value xml:lang="cs">Maximální hodnota zanoření</value>
@@ -14219,6 +15070,23 @@
         <value xml:lang="vi">Chỉnh sửa bởi người dùng đăng nhập</value>
         <value xml:lang="zh">由用户登录标识修改</value>
         <value xml:lang="zh-TW">修改的使用者登入識別</value>
+    </property>
+    <property key="FormFieldTitle_openAction">
+        <value xml:lang="ar">فتح</value>
+        <value xml:lang="cs">Otevřít</value>
+        <value xml:lang="de">Öffnen</value>
+        <value xml:lang="en">Open</value>
+        <value xml:lang="es">Abrir</value>
+        <value xml:lang="fr">Ouvrir</value>
+        <value xml:lang="hi-IN">खुला है</value>
+        <value xml:lang="it">Aperto</value>
+        <value xml:lang="ja">開く</value>
+        <value xml:lang="pt-BR">Abrir</value>
+        <value xml:lang="ru">Открыть </value>
+        <value xml:lang="th">เปิด</value>
+        <value xml:lang="vi">Mở</value>
+        <value xml:lang="zh">打开</value>
+        <value xml:lang="zh-TW">打開</value>
     </property>
     <property key="FormFieldTitle_originalPortalPageId">
         <value xml:lang="ar">الصفحة الأصلية</value>
@@ -14265,6 +15133,21 @@
         <value xml:lang="zh">上级页面</value>
         <value xml:lang="zh-TW">上層頁面</value>
     </property>
+    <property key="FormFieldTitle_pasteAction">
+        <value xml:lang="ar">الصق</value>
+        <value xml:lang="da">Sæt ind</value>
+        <value xml:lang="de">Einfügen</value>
+        <value xml:lang="en">Paste</value>
+        <value xml:lang="fr">Coller</value>
+        <value xml:lang="it">Incolla</value>
+        <value xml:lang="ja">貼り付け</value>
+        <value xml:lang="pt">Colar</value>
+        <value xml:lang="ro">Incolla</value>
+        <value xml:lang="th">วาง</value>
+        <value xml:lang="vi">Dán</value>
+        <value xml:lang="zh">粘贴</value>
+        <value xml:lang="zh-TW">貼上</value>
+    </property>
     <property key="FormFieldTitle_pending">
         <value xml:lang="ar">قيد الإنتظار</value>
         <value xml:lang="cs">Čekající</value>
@@ -14293,6 +15176,20 @@
         <value xml:lang="zh">门户页面名称</value>
         <value xml:lang="zh-TW">入口網頁名稱</value>
     </property>
+    <property key="FormFieldTitle_postAction"><!-- TODO: incomplete -->
+        <value xml:lang="de">Buchen</value>
+        <value xml:lang="en">Post</value>
+        <value xml:lang="es">Enviar</value>
+        <value xml:lang="fr">Enregistrer</value>
+        <value xml:lang="nl">Boek</value>
+        <value xml:lang="pt">Enviar</value>
+        <value xml:lang="ro">Contabilizeaza</value>
+        <value xml:lang="ru">Запись</value>
+    </property>
+    <property key="FormFieldTitle_prepareAction"><!-- TODO: incomplete -->
+        <value xml:lang="de">Vorbereiten</value>
+        <value xml:lang="en">Prepare</value>
+    </property>
     <property key="FormFieldTitle_price">
         <value xml:lang="ar">السعر</value>
         <value xml:lang="cs">Cena</value>
@@ -14310,6 +15207,24 @@
         <value xml:lang="vi">Giá</value>
         <value xml:lang="zh">价格</value>
         <value xml:lang="zh-TW">價格</value>
+    </property>
+    <property key="FormFieldTitle_printAction">
+        <value xml:lang="ar">طباعة</value>
+        <value xml:lang="cs">Tisk</value>
+        <value xml:lang="de">Drucken</value>
+        <value xml:lang="en">Print</value>
+        <value xml:lang="es">Imprimir</value>
+        <value xml:lang="fr">Imprimer</value>
+        <value xml:lang="hi-IN">प्रिंट</value>
+        <value xml:lang="it">Stampa</value>
+        <value xml:lang="ja">印刷</value>
+        <value xml:lang="pt">Imprimir</value>
+        <value xml:lang="ro">Tipareste</value>
+        <value xml:lang="ru">Печать</value>
+        <value xml:lang="th">พิมพ์</value>
+        <value xml:lang="vi">In</value>
+        <value xml:lang="zh">打印</value>
+        <value xml:lang="zh-TW">列印</value>
     </property>
     <property key="FormFieldTitle_quantity">
         <value xml:lang="ar">الكمية</value>
@@ -14330,6 +15245,22 @@
         <value xml:lang="zh">数量</value>
         <value xml:lang="zh-TW">數量</value>
     </property>
+    <property key="FormFieldTitle_rejectAction">
+        <value xml:lang="ar">إضافة</value>
+        <value xml:lang="cs">Odmítnout</value>
+        <value xml:lang="de">Ablehnen</value>
+        <value xml:lang="en">Reject</value>
+        <value xml:lang="es">Rechazar</value>
+        <value xml:lang="fr">Refuser</value>
+        <value xml:lang="hi-IN">अस्वीकार</value>
+        <value xml:lang="it">Rifiuta</value>
+        <value xml:lang="ja">却下</value>
+        <value xml:lang="pt-BR">Rejeitar</value>
+        <value xml:lang="ru">Отклонить</value>
+        <value xml:lang="vi">Từ chối</value>
+        <value xml:lang="zh">拒绝</value>
+        <value xml:lang="zh-TW">拒絕</value>
+    </property>
     <property key="FormFieldTitle_rejectButton">
         <value xml:lang="ar">إضافة</value>
         <value xml:lang="cs">Odmítnout</value>
@@ -14345,6 +15276,26 @@
         <value xml:lang="vi">Từ chối</value>
         <value xml:lang="zh">拒绝</value>
         <value xml:lang="zh-TW">拒絕</value>
+    </property>
+    <property key="FormFieldTitle_removeAction">
+        <value xml:lang="ar">نزع</value>
+        <value xml:lang="cs">Odstranit</value>
+        <value xml:lang="de">Entfernen</value>
+        <value xml:lang="en">Remove</value>
+        <value xml:lang="es">Eliminar</value>
+        <value xml:lang="fr">Supprimer</value>
+        <value xml:lang="hi-IN">हटाये</value>
+        <value xml:lang="it">Rimuovi</value>
+        <value xml:lang="ja">削除</value>
+        <value xml:lang="nl">Verwijderen</value>
+        <value xml:lang="pt">Remover</value>
+        <value xml:lang="ro">Sterge</value>
+        <value xml:lang="ru">Удалить</value>
+        <value xml:lang="th">ลบ</value>
+        <value xml:lang="vi">Xóa bỏ</value>
+        <value xml:lang="zh">删除</value>
+        <value xml:lang="zh-CN">删除</value>
+        <value xml:lang="zh-TW">刪除</value>
     </property>
     <property key="FormFieldTitle_removeButton">
         <value xml:lang="ar">نزع</value>
@@ -14365,6 +15316,27 @@
         <value xml:lang="zh">删除</value>
         <value xml:lang="zh-TW">刪除</value>
     </property>
+    <property key="FormFieldTitle_saveAction">
+        <value xml:lang="ar">حفظ</value>
+        <value xml:lang="cs">Uložit</value>
+        <value xml:lang="de">Speichern</value>
+        <value xml:lang="en">Save</value>
+        <value xml:lang="es">Guardar</value>
+        <value xml:lang="fr">Enregistrer</value>
+        <value xml:lang="hi-IN">सुरक्षित करे</value>
+        <value xml:lang="it">Salva</value>
+        <value xml:lang="ja">保存</value>
+        <value xml:lang="nl">Opslaan</value>
+        <value xml:lang="pt">Guardar</value>
+        <value xml:lang="pt-BR">Salvar</value>
+        <value xml:lang="ro">Salveaza</value>
+        <value xml:lang="ru">Сохранить</value>
+        <value xml:lang="th">บันทึก</value>
+        <value xml:lang="vi">Lưu</value>
+        <value xml:lang="zh">保存</value>
+        <value xml:lang="zh-CN">保存</value>
+        <value xml:lang="zh-TW">儲存</value>
+    </property>
     <property key="FormFieldTitle_saveButton">
         <value xml:lang="ar">حفظ</value>
         <value xml:lang="cs">Uložit</value>
@@ -14380,6 +15352,27 @@
         <value xml:lang="vi">Lưu</value>
         <value xml:lang="zh">保存</value>
         <value xml:lang="zh-TW">儲存</value>
+    </property>
+    <property key="FormFieldTitle_searchAction">
+        <value xml:lang="ar">البحث</value>
+        <value xml:lang="cs">Vyhledávání</value>
+        <value xml:lang="de">Suchen</value>
+        <value xml:lang="en">Search</value>
+        <value xml:lang="es">Buscar</value>
+        <value xml:lang="fr">Chercher</value>
+        <value xml:lang="hi-IN">खोजे</value>
+        <value xml:lang="it">Ricerca</value>
+        <value xml:lang="ja">検索</value>
+        <value xml:lang="nl">Zoek</value>
+        <value xml:lang="pt">Procurar</value>
+        <value xml:lang="pt-BR">Pesquisar</value>
+        <value xml:lang="ro">Cautare</value>
+        <value xml:lang="ru">Поиск</value>
+        <value xml:lang="th">ค้นหา</value>
+        <value xml:lang="vi">Tìm kiếm</value>
+        <value xml:lang="zh">搜索</value>
+        <value xml:lang="zh-CN">搜索</value>
+        <value xml:lang="zh-TW">搜尋</value>
     </property>
     <property key="FormFieldTitle_searchButton">
         <value xml:lang="ar">البحث</value>
@@ -14400,6 +15393,26 @@
         <value xml:lang="vi">Tìm kiếm</value>
         <value xml:lang="zh">搜索</value>
         <value xml:lang="zh-TW">搜尋</value>
+    </property>
+    <property key="FormFieldTitle_sendAction">
+        <value xml:lang="ar">ارسال</value>
+        <value xml:lang="cs">Odeslat</value>
+        <value xml:lang="de">Senden</value>
+        <value xml:lang="en">Send</value>
+        <value xml:lang="es">Enviar</value>
+        <value xml:lang="fr">Envoyer</value>
+        <value xml:lang="hi-IN">भेजे</value>
+        <value xml:lang="it">Invia</value>
+        <value xml:lang="ja">送信</value>
+        <value xml:lang="nl">Verzenden</value>
+        <value xml:lang="pt">Enviar</value>
+        <value xml:lang="ro">Trimite</value>
+        <value xml:lang="ru">Отправить</value>
+        <value xml:lang="th">ส่ง</value>
+        <value xml:lang="vi">Gửi</value>
+        <value xml:lang="zh">发送</value>
+        <value xml:lang="zh-CN">发送</value>
+        <value xml:lang="zh-TW">發送</value>
     </property>
     <property key="FormFieldTitle_sendButton">
         <value xml:lang="ar">إرسال</value>
@@ -14453,6 +15466,10 @@
         <value xml:lang="zh">序号数字</value>
         <value xml:lang="zh-TW">序號數字</value>
     </property>
+    <property key="FormFieldTitle_setupAction"><!-- TODO: incomplete -->
+        <value xml:lang="de">Konfiguration</value>
+        <value xml:lang="en">Setup</value>
+    </property>
     <property key="FormFieldTitle_statusId">
         <value xml:lang="ar">دليل الحالة</value>
         <value xml:lang="cs">Kód stavu</value>
@@ -14471,6 +15488,28 @@
         <value xml:lang="vi">Mã tình trạng</value>
         <value xml:lang="zh">状态标识</value>
         <value xml:lang="zh-TW">狀態</value>
+    </property>
+    <property key="FormFieldTitle_submitAction">
+        <value xml:lang="ar">إرسال</value>
+        <value xml:lang="cs">Odeslat</value>
+        <value xml:lang="de">Abschicken</value>
+        <value xml:lang="en">Submit</value>
+        <value xml:lang="es">Enviar</value>
+        <value xml:lang="fr">Envoyer</value>
+        <value xml:lang="hi-IN">जमा करें</value>
+        <value xml:lang="it">Invia</value>
+        <value xml:lang="ja">実行</value>
+        <value xml:lang="nl">Submit</value>
+        <value xml:lang="pt">Submeter</value>
+        <value xml:lang="pt-BR">Enviar</value>
+        <value xml:lang="pt-PT">Registar</value>
+        <value xml:lang="ro">Trimite</value>
+        <value xml:lang="ru">Отправить</value>
+        <value xml:lang="th">ยอมรับ</value>
+        <value xml:lang="vi">Đồng ý</value>
+        <value xml:lang="zh">提交</value>
+        <value xml:lang="zh-CN">提交</value>
+        <value xml:lang="zh-TW">提交</value>
     </property>
     <property key="FormFieldTitle_submitButton">
         <value xml:lang="ar">ارسال</value>
@@ -14586,6 +15625,27 @@
         <value xml:lang="zh">单位</value>
         <value xml:lang="zh-TW">度量單位</value>
     </property>
+    <property key="FormFieldTitle_updateAction">
+        <value xml:lang="ar">تحديث</value>
+        <value xml:lang="cs">Aktualizovat</value>
+        <value xml:lang="de">Aktualisieren</value>
+        <value xml:lang="en">Update</value>
+        <value xml:lang="es">Actualizar</value>
+        <value xml:lang="fr">Màj</value>
+        <value xml:lang="hi-IN">अद्यतन करे</value>
+        <value xml:lang="it">Aggiorna</value>
+        <value xml:lang="ja">更新</value>
+        <value xml:lang="nl">Wijzigen</value>
+        <value xml:lang="pt">Actualizar</value>
+        <value xml:lang="pt-BR">Atualizar</value>
+        <value xml:lang="ro">Actualizeaza</value>
+        <value xml:lang="ru">Обновить</value>
+        <value xml:lang="th">อัพเดท</value>
+        <value xml:lang="vi">Cập nhật</value>
+        <value xml:lang="zh">更新</value>
+        <value xml:lang="zh-CN">更新</value>
+        <value xml:lang="zh-TW">更新</value>
+    </property>
     <property key="FormFieldTitle_updateButton">
         <value xml:lang="ar">تحديث</value>
         <value xml:lang="cs">Aktualizovat</value>
@@ -14606,6 +15666,37 @@
         <value xml:lang="zh">更新</value>
         <value xml:lang="zh-TW">更新</value>
     </property>
+    <property key="FormFieldTitle_verifyAction"><!-- TODO: incomplete -->
+        <value xml:lang="de">Überprüfen</value>
+        <value xml:lang="en">Verify</value>
+        <value xml:lang="fr">Vérifier</value>
+        <value xml:lang="it">Verifica</value>
+        <value xml:lang="ja">確認</value>
+        <value xml:lang="vi">Xác minh</value>
+        <value xml:lang="zh">验证</value>
+        <value xml:lang="zh-TW">驗證</value>
+    </property>
+    <property key="FormFieldTitle_viewAction">
+        <value xml:lang="ar">مشاهدة</value>
+        <value xml:lang="cs">Pohled</value>
+        <value xml:lang="de">Sichten</value>
+        <value xml:lang="en">View</value>
+        <value xml:lang="es">Ver</value>
+        <value xml:lang="fr">Voir</value>
+        <value xml:lang="hi-IN">देखे</value>
+        <value xml:lang="it">Mostra</value>
+        <value xml:lang="ja">表示</value>
+        <value xml:lang="nl">Bekijk</value>
+        <value xml:lang="pt">Vêr</value>
+        <value xml:lang="pt-BR">Visualizar</value>
+        <value xml:lang="ro">Afiseaza</value>
+        <value xml:lang="ru">Просмотреть</value>
+        <value xml:lang="th">แสดง</value>
+        <value xml:lang="vi">Xem</value>
+        <value xml:lang="zh">浏览</value>
+        <value xml:lang="zh-CN">查看</value>
+        <value xml:lang="zh-TW">檢視</value>
+    </property>
     <property key="Google Base">
         <value xml:lang="en">Google Base</value>
         <value xml:lang="hi-IN">गूगल बेस</value>
@@ -14614,6 +15705,18 @@
         <value xml:lang="ru">Гугл база</value>
         <value xml:lang="vi">Trên nền tảng Google</value>
         <value xml:lang="zh">Google Base</value>
+    </property>
+    <property key="GoogleLogin">
+        <value xml:lang="de">Anmeldung mit Google+</value>
+        <value xml:lang="en">Sign in with Google+</value>
+        <value xml:lang="fr">Connectez-vous avec Google+</value>
+        <value xml:lang="hi-IN">Google+ के साथ में साइन इन करें</value>
+        <value xml:lang="it">Collegati a Google+</value>
+        <value xml:lang="ja">Google+のアカウントでログイン</value>
+        <value xml:lang="nl">Log in met Google+</value>
+        <value xml:lang="pt">Faça login no Google+</value>
+        <value xml:lang="zh">请用google+</value>
+        <value xml:lang="zh-TW">請用google+</value>
     </property>
     <property key="HR">
         <value xml:lang="ar">الموارد البشرية</value>
@@ -14689,6 +15792,18 @@
         <value xml:lang="vi">Hệ thống Quản trị thông tin</value>
         <value xml:lang="zh">是经理吗</value>
         <value xml:lang="zh-TW">是管理者嗎</value>
+    </property>
+    <property key="LinkedinLogin">
+        <value xml:lang="de">Anmeldung mit Linkedin</value>
+        <value xml:lang="en">Sign in with Linkedin</value>
+        <value xml:lang="fr">Connectez-vous avec Linkedin</value>
+        <value xml:lang="hi-IN">Linkedin के साथ में साइन इन करें</value>
+        <value xml:lang="it">Collegati a Linkedin</value>
+        <value xml:lang="ja">Twitterのアカウントでログイン</value>
+        <value xml:lang="nl">Log in met Linkedin</value>
+        <value xml:lang="pt">Faça login no Linkedin</value>
+        <value xml:lang="zh">请用linkedin</value>
+        <value xml:lang="zh-TW">請用linkedin</value>
     </property>
     <property key="Manufacturing">
         <value xml:lang="ar">تصنيع</value>
@@ -14942,6 +16057,24 @@
         <value xml:lang="zh">编辑数据源类型</value>
         <value xml:lang="zh-CN">编辑数据源类型</value>
         <value xml:lang="zh-TW">編輯資料源類型</value>
+    </property>
+    <property key="PageTitleError"> 
+        <value xml:lang="ar">خطأ</value>
+        <value xml:lang="cs">Chyba</value>
+        <value xml:lang="de">Fehler</value>
+        <value xml:lang="en">Error</value>
+        <value xml:lang="es">Error</value>
+        <value xml:lang="fr">Erreur</value>
+        <value xml:lang="hi-IN">त्रुटि</value>
+        <value xml:lang="it">Errore</value>
+        <value xml:lang="ja">エラー</value>
+        <value xml:lang="pt-BR">Erro</value>
+        <value xml:lang="ro">Eroare</value>
+        <value xml:lang="ru">Ошибка</value>
+        <value xml:lang="th">Error</value>
+        <value xml:lang="vi">Có lỗi xảy ra</value>
+        <value xml:lang="zh">错误</value>
+        <value xml:lang="zh-TW">錯誤</value>
     </property>
     <property key="PageTitleListDataSource">
         <value xml:lang="ar">قائمة مصادر المعلومات</value>
@@ -15199,6 +16332,18 @@
         <value xml:lang="vi">Quan hệ khách hàng (SFA)</value>
         <value xml:lang="zh">销售管理</value>
         <value xml:lang="zh-TW">營業支援(SFA)</value>
+    </property>
+    <property key="TwitterLogin">
+        <value xml:lang="de">Anmeldung mit Twitter</value>
+        <value xml:lang="en">Sign in with Twitter</value>
+        <value xml:lang="fr">Connectez-vous avec Twitter</value>
+        <value xml:lang="hi-IN">Twitter के साथ में साइन इन करें</value>
+        <value xml:lang="it">Collegati a Twitter</value>
+        <value xml:lang="ja">Twitterのアカウントでログイン</value>
+        <value xml:lang="nl">Log in met Twitter</value>
+        <value xml:lang="pt">Faça login no Twitter</value>
+        <value xml:lang="zh">请用twitter</value>
+        <value xml:lang="zh-TW">請用twitter</value>
     </property>
     <property key="Web Pos">
         <value xml:lang="en">Web POS</value>
@@ -15596,1125 +16741,5 @@
         <value xml:lang="zh">中文</value>
         <value xml:lang="zh-CN">中文</value>
         <value xml:lang="zh-TW">中文</value>
-    </property>
-    <!-- SCIPIO: NEW LABELS -->
-    <property key="CommonAccount">
-        <value xml:lang="en">Account</value>
-    </property>
-    <property key="CommonActions">
-        <value xml:lang="de">Aktionen</value>
-        <value xml:lang="en">Actions</value>
-        <value xml:lang="fr">Actions</value>
-        <value xml:lang="it">Azioni</value>
-        <value xml:lang="ja">操作</value>
-        <value xml:lang="pt">AÃ§Ãµes</value>
-        <value xml:lang="ro">Actiuni</value>
-        <value xml:lang="th">ขั้นตอน</value>
-        <value xml:lang="vi">Hành động</value>
-        <value xml:lang="zh">操作</value>
-        <value xml:lang="zh-TW">操作</value>
-    </property>
-    <property key="CommonAddress">
-        <value xml:lang="de">Adresse</value>
-        <value xml:lang="en">Address</value>
-    </property>
-    <property key="CommonAdvanced">
-        <value xml:lang="de">Erweitert</value>
-        <value xml:lang="en">Advanced</value>
-        <value xml:lang="es">Avanzada</value>
-        <value xml:lang="fr">Avancé</value>
-        <value xml:lang="it">Avanzata</value>
-        <value xml:lang="pt-BR">Avançada</value>
-        <value xml:lang="ro">Avansata</value>
-    </property>
-    <property key="CommonAdvancedSearchFields">
-        <value xml:lang="de">Erweiterte Suche</value>
-        <value xml:lang="en">Advanced Search</value>
-    </property>
-    <property key="CommonCalendar">
-        <value xml:lang="en">Calendar</value>
-    </property>
-    <property key="CommonCannotDeleteRecordHasChildren">
-        <value xml:lang="en">This record cannot be removed, because it still has child record associations in the system.</value>
-        <value xml:lang="de">Dieser Datensatz kann nicht entfernt werden, da er im System noch Assoziationen zu untergeordneten Assoziationen enthält.</value>
-    </property>
-    <property key="CommonCannotDeleteRecordHasChildrenParam">
-        <value xml:lang="en">The record ${recordName} cannot be removed, because it still has child record associations in the system.</value>
-        <value xml:lang="de">Der Datensatz ${recordName} kann nicht entfernt werden, da er im System noch Assoziationen zu untergeordneten Datensätzen enthält.</value>
-    </property>
-    <property key="CommonCapacity">
-        <value xml:lang="en">Capacity</value>
-    </property>
-    <property key="CommonCategory">
-        <value xml:lang="en">Category</value>
-    </property>
-    <property key="CommonClickHereDetails">
-        <value xml:lang="de">Hier klicken für Details</value>
-        <value xml:lang="en">Click here for details</value>
-    </property>  
-    <property key="CommonConfirmCopyMoveRecordAssocParam">
-        <value xml:lang="en">Are you sure you want to copy/move the record association for ${recordName} to ${toRecordName}?</value>
-        <value xml:lang="de">Sind Sie sicher, dass Sie die Datensatzzuordnung für ${recordName} in ${toRecordName} kopieren / verschieben möchten?</value>
-    </property>
-    <property key="CommonConfirmDeleteRecordAssocPermanent">
-        <value xml:lang="en">You are about to remove the record association. The record itself will remain in the system. Do you want to continue?</value>
-        <value xml:lang="de">Sie sind dabei, die Datensatzzuordnung zu entfernen. Der Datensatz selbst bleibt im System. Möchtest du fortfahren?</value>
-    </property>
-    <property key="CommonConfirmDeleteRecordAssocPermanentParam">
-        <value xml:lang="en">You are about to remove ${recordName} association to ${toRecordName}. The record itself will remain in the system. Do you want to continue?</value>
-        <value xml:lang="de">Sie sind dabei, die Zuordnung von ${recordName} zu ${toRecordName}. Der Datensatz selbst bleibt im System. Möchtest du fortfahren?</value>
-    </property>
-    <property key="CommonConfirmDeleteRecordPermanent">
-        <value xml:lang="en">You are about to delete the record permanently. Do you want to continue?</value>
-        <value xml:lang="de">Sie sind dabei den Eintrag dauerhaft zu löschen. Wollen Sie fortfahren?</value>
-    </property>
-    <property key="CommonConfirmDeleteRecordPermanentParam">
-        <value xml:lang="en">You are about to delete ${recordName} permanently. Do you want to continue?</value>
-        <value xml:lang="de">Sie sind dabei, ${recordName} dauerhaft zu löschen. Möchtest du fortfahren?</value>
-    </property>
-    <property key="CommonDateInfoFormat">
-        <value xml:lang="de">${dateFormatString}</value>
-        <value xml:lang="en">${dateFormatString}</value>
-        <value xml:lang="fr">${dateFormatString}</value>
-        <value xml:lang="it">${dateFormatString}</value>
-        <value xml:lang="ja">${dateFormatString}</value>
-        <value xml:lang="pt">${dateFormatString}</value>
-        <value xml:lang="ro">${dateFormatString}</value>
-        <value xml:lang="th">${dateFormatString}</value>
-        <value xml:lang="vi">${dateFormatString}</value>
-        <value xml:lang="zh">${dateFormatString}</value>
-        <value xml:lang="zh-TW">${dateFormatString}</value>
-    </property>
-    <property key="CommonDateInfoLabel">
-        <value xml:lang="de">${dateLabel}</value>
-        <value xml:lang="en">${dateLabel}</value>
-        <value xml:lang="fr">${dateLabel}</value>
-        <value xml:lang="it">${dateLabel}</value>
-        <value xml:lang="ja">${dateLabel}</value>
-        <value xml:lang="pt">${dateLabel}</value>
-        <value xml:lang="ro">${dateLabel}</value>
-        <value xml:lang="th">${dateLabel}</value>
-        <value xml:lang="vi">${dateLabel}</value>
-        <value xml:lang="zh">${dateLabel}</value>
-        <value xml:lang="zh-TW">${dateLabel}</value>
-    </property>
-    <property key="CommonDateInfoLabelAndFormat">
-        <value xml:lang="de">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="en">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="fr">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="it">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="ja">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="pt">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="ro">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="th">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="vi">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="zh">${dateLabel} (${dateFormatString})</value>
-        <value xml:lang="zh-TW">${dateLabel} (${dateFormatString})</value>
-    </property>
-    <property key="CommonDefault">
-        <value xml:lang="de">Voreinstellung</value>
-        <value xml:lang="en">Default</value>
-        <value xml:lang="fr">Défaut</value>
-        <value xml:lang="it">Default</value>
-        <value xml:lang="ja">デフォルト</value>
-        <value xml:lang="pt">PadrÃ£o</value>
-        <value xml:lang="th">ค่าที่เลือก</value>
-        <value xml:lang="vi">Mặc định</value>
-        <value xml:lang="zh">缺省</value>
-        <value xml:lang="zh-TW">預設</value>
-    </property>
-    <property key="CommonDev">
-        <value xml:lang="de">Dev</value>
-        <value xml:lang="en">Dev</value>
-    </property>
-    <property key="CommonDevDocs">
-        <value xml:lang="de">Dev Docs</value>
-        <value xml:lang="en">Dev Docs</value>
-    </property>
-    <property key="CommonDeveloper">
-        <value xml:lang="de">Entwickler</value>
-        <value xml:lang="en">Developer</value>
-    </property>
-    <property key="CommonDevelopment">
-        <value xml:lang="en">Development</value>
-        <value xml:lang="es">Desarrollo</value>
-        <value xml:lang="fr">Développement</value>
-        <value xml:lang="it">Sviluppo</value>
-        <value xml:lang="ja">開発</value>
-        <value xml:lang="nl">Ontwikkeling</value>
-        <value xml:lang="ro">Dezvoltare</value>
-        <value xml:lang="ru">Совершенствование</value>
-        <value xml:lang="th">การพัฒนา</value>
-        <value xml:lang="vi">Phát triển</value>
-        <value xml:lang="zh">开发</value>
-        <value xml:lang="zh-TW">開發</value>
-    </property>
-    <property key="CommonDisplayingShort">
-        <value xml:lang="ar">${lowCount} إلى ${highCount} من ${total}</value>
-        <value xml:lang="cs">${lowCount} - ${highCount} z ${total}</value>
-        <value xml:lang="de">${lowCount} - ${highCount} von ${total}</value>
-        <value xml:lang="en">${lowCount} - ${highCount} of ${total}</value>
-        <value xml:lang="es">${lowCount} - ${highCount} de ${total}</value>
-        <value xml:lang="fr">${lowCount} à ${highCount} sur ${total}</value>
-        <value xml:lang="hi-IN">${lowCount} - ${highCount} का ${total} </value>
-        <value xml:lang="it">${lowCount} a ${highCount} su ${total}</value>
-        <value xml:lang="ja">${lowCount} - ${highCount} / ${total}</value>
-        <value xml:lang="pt-BR">${lowCount} - ${highCount} de ${total}</value>
-        <value xml:lang="ru">${lowCount} - ${highCount} of ${total} </value>
-        <value xml:lang="vi">${lowCount} - ${highCount} của ${total}</value>
-        <value xml:lang="zh">${lowCount} - ${highCount}，共${total}</value>
-        <value xml:lang="zh-TW">${lowCount} - ${highCount},共${total}</value>
-    </property>
-    <property key="CommonDisplayOptions">
-        <value xml:lang="en">Display Options</value>
-        <value xml:lang="de">Anzeigeoptionen</value>
-    </property>
-    <property key="CommonDocument">
-        <value xml:lang="de">Dokument</value>
-        <value xml:lang="en">Document</value>
-        <value xml:lang="fr">Document</value>
-    </property>
-    <property key="CommonDue">
-        <value xml:lang="en">Due</value>
-    </property>
-    <property key="CommonError">
-        <value xml:lang="ar">خطأ</value>
-        <value xml:lang="cs">Chyba</value>
-        <value xml:lang="de">Fehler</value>
-        <value xml:lang="en">Error</value>
-        <value xml:lang="es">Error</value>
-        <value xml:lang="fr">Erreur</value>
-        <value xml:lang="hi-IN">त्रुटि</value>
-        <value xml:lang="it">Errore</value>
-        <value xml:lang="ja">エラー</value>
-        <value xml:lang="pt-BR">Erro</value>
-        <value xml:lang="ro">Eroare</value>
-        <value xml:lang="ru">Ошибка</value>
-        <value xml:lang="th">Error</value>
-        <value xml:lang="vi">Có lỗi xảy ra</value>
-        <value xml:lang="zh">错误</value>
-        <value xml:lang="zh-TW">錯誤</value>
-    </property>
-    <property key="CommonExtraFields">
-        <value xml:lang="de">Zusätzliche Felder</value>
-        <value xml:lang="en">Extra Fields</value>
-    </property>
-    <property key="CommonFormat">
-        <value xml:lang="cs">Formát</value>
-        <value xml:lang="de">Format</value>
-        <value xml:lang="en">Format</value>
-        <value xml:lang="en-GB">Format</value>
-        <value xml:lang="es">Formato</value>
-        <value xml:lang="fr">Format</value>
-        <value xml:lang="hi-IN">प्रारूप</value>
-        <value xml:lang="it">Formato</value>
-        <value xml:lang="ja">書式</value>
-        <value xml:lang="pt">Format</value>
-        <value xml:lang="pt-BR">Formato</value>
-        <value xml:lang="ru">Формат</value>
-        <value xml:lang="th">รูปแบบ</value>
-        <value xml:lang="vi">Định dạng ngày tháng</value>
-        <value xml:lang="zh">格式</value>
-        <value xml:lang="zh-TW">格式</value>
-    </property>
-    <property key="CommonFormatMonth">
-        <value xml:lang="cs">Formát datumu: RRRR-MM</value>
-        <value xml:lang="de">Datumsformat: yyyy-MM</value>
-        <value xml:lang="en">Format: yyyy-MM</value>
-        <value xml:lang="en-GB">Format: MM/yyyy</value>
-        <value xml:lang="es">Formato: mm/aaaa</value>
-        <value xml:lang="fr">Format: MM/AAAA</value>
-        <value xml:lang="hi-IN">प्रारूप: yyyy-MM</value>
-        <value xml:lang="it">Formato: AAAA-MM</value>
-        <value xml:lang="ja">書式: yyyy-MM</value>
-        <value xml:lang="pt">Format: yyyy-MM</value>
-        <value xml:lang="pt-BR">Formato: AAAA-MM</value>
-        <value xml:lang="ru">Формат: гггг-ММ</value>
-        <value xml:lang="th">รูปแบบ : yyyy-MM</value>
-        <value xml:lang="vi">Định dạng ngày tháng: yyyy-MM</value>
-        <value xml:lang="zh">格式: yyyy-MM</value>
-        <value xml:lang="zh-TW">格式: yyyy-MM</value>
-    </property>
-    <property key="CommonFunctionalityInTestingWarning">
-        <value xml:lang="en">Warning: This functionality is currently in testing. Please backup any important data before attempting to use.</value>
-        <value xml:lang="de">Warnung: Diese Funktion wird gerade getestet. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
-    </property>
-    <property key="CommonFunctionalityWorkInProgressWarning">
-        <value xml:lang="en">Warning: This functionality is a Work-In-Progress. Please backup any important data before attempting to use.</value>
-        <value xml:lang="de">Warnung: Diese Funktionalität ist ein Work-In-Progress. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
-    </property>
-    <property key="CommonHeader">
-        <value xml:lang="en">Header</value>
-        <value xml:lang="zh-TW">表頭</value>
-    </property>
-    <property key="CommonIndexable">
-        <value xml:lang="en">Indexable</value>
-        <value xml:lang="de">Indexierbar</value>
-    </property>
-    <property key="CommonInvoices">
-        <value xml:lang="en">Invoices</value>
-        <value xml:lang="de">Rechnungen</value>
-    </property>
-    <property key="CommonIteration">
-        <value xml:lang="en">Iteration</value>
-    </property>
-    <property key="CommonLeaveEmptyAutoValue">
-        <value xml:lang="de">Leer lassen, um einen Wert automatisch zu generieren</value>
-        <value xml:lang="en">Leave empty to auto-generate a value</value>
-        <value xml:lang="fr">Laisser vide pour générer automatiquement une valeur</value>
-    </property>
-    <property key="CommonLeaveEmptyForNowDate">
-        <value xml:lang="de">Leer lassen, um das aktuelle Datum (jetzt)</value>
-        <value xml:lang="en">Leave empty to use current date (now)</value>
-    </property>
-    <property key="CommonLeaveEmptyForNowTime">
-        <value xml:lang="de">Leer lassen, um das aktuelle Zeit (jetzt)</value>
-        <value xml:lang="en">Leave empty to use current time (now)</value>
-    </property>
-    <property key="CommonLeaveEmptyToAutoDetermine">
-        <value xml:lang="en">Leave empty to auto-determine</value>
-        <value xml:lang="de">Lassen Sie leer, um automatisch zu bestimmen</value>
-    </property>
-    <property key="CommonLicense">
-        <value xml:lang="de">Lizenz</value>
-        <value xml:lang="en">License</value>
-        <value xml:lang="es">Licencia</value>
-        <value xml:lang="fr">License</value>
-        <value xml:lang="it">Licenza</value>
-        <value xml:lang="ja">ライセンス</value>
-        <value xml:lang="nl">Licentie</value>
-        <value xml:lang="ro">Licenta</value>
-        <value xml:lang="ru">Лицензия</value>
-        <value xml:lang="th">ใบอนุญาต</value>
-        <value xml:lang="vi">Bản cấp phép sử dụng</value>
-        <value xml:lang="zh">版权</value>
-        <value xml:lang="zh-TW">版權</value>
-    </property>
-    <property key="CommonLocalizedFields">
-        <value xml:lang="en">Localized Fields</value>
-        <value xml:lang="de">Lokalisierte Felder</value>
-    </property>
-    <property key="CommonLongDescription">
-        <value xml:lang="de">Ausführliche Beschreibung</value>
-        <value xml:lang="en">Long Description</value>
-        <value xml:lang="es">Descripción larga</value>
-        <value xml:lang="fr">Description longue</value>
-        <value xml:lang="it">Descrizione estesa</value>
-        <value xml:lang="ja">詳細</value>
-        <value xml:lang="ro">Descriere Lunga</value>
-        <value xml:lang="ru">Длинное описание</value>
-        <value xml:lang="th">คำอธิบาย</value>
-        <value xml:lang="vi">Miêu tả chi tiết</value>
-        <value xml:lang="zh">详细描述</value>
-        <value xml:lang="zh-TW">詳細描述</value>
-    </property>
-    <property key="CommonMandatory">
-        <value xml:lang="en">Mandatory</value>
-        <value xml:lang="fr">Obligatoire</value>
-        <value xml:lang="ja">必須</value>
-        <value xml:lang="vi">Bắt buộc</value>
-        <value xml:lang="zh">必须</value>
-        <value xml:lang="zh-TW">必須</value>
-    </property>
-    <property key="CommonMedia">
-        <value xml:lang="de">Medien</value>
-        <value xml:lang="en">Media</value>
-        <value xml:lang="fr">Médias</value>
-    </property>
-    <property key="CommonMediaType">
-        <value xml:lang="en">Type</value>
-    </property>
-    <property key="CommonMediaTypes">
-        <value xml:lang="en">Media Types</value>
-    </property>
-    <property key="CommonModifiedBy">
-        <value xml:lang="en">Modified By</value>
-    </property>
-    <property key="CommonMove">
-        <value xml:lang="en">Move</value>
-        <value xml:lang="de">Bewegung</value>
-    </property>
-    <property key="CommonNavigation">
-        <value xml:lang="de">Navigation</value>
-        <value xml:lang="en">Navigation</value>
-        <value xml:lang="fr">Navigation</value>
-    </property>
-    <property key="CommonNoRecordFoundSentence">
-        <value xml:lang="ar">لم يتم العثور على سجلات</value>
-        <value xml:lang="da">Der er ikke fundet nogen registreringer/</value>
-        <value xml:lang="cs">Žádný záznam nenalezen/</value>
-        <value xml:lang="de">Keine Datensätze gefunden/</value>
-        <value xml:lang="en">No Records Found.</value>
-        <value xml:lang="es">No se encontraron registros/</value>
-        <value xml:lang="fr">Aucun enregistrement trouvé/</value>
-        <value xml:lang="hi-IN">कोई जानकारी नहीं</value>
-        <value xml:lang="it">Nessun record trovato</value>
-        <value xml:lang="ja">対象はありません。</value>
-        <value xml:lang="nl">Geen records gevonden/</value>
-        <value xml:lang="pt-BR">Nenhum registro encontrado/</value>
-        <value xml:lang="ro">Nici-o inregistrare gasita/</value>
-        <value xml:lang="ru">Записи не найдены</value>
-        <value xml:lang="th">ไม่มีบันทึกที่ค้นหา</value>
-        <value xml:lang="vi">Không tìm thấy bản ghi nào</value>
-        <value xml:lang="zh">没有找到记录</value>
-        <value xml:lang="zh-TW">沒有找到記錄</value>
-    </property>
-    <property key="CommonNoRowSelected">
-        <value xml:lang="de">Keine Zeile ausgewählt</value>
-        <value xml:lang="en">No row selected</value>
-    </property>
-    <property key="CommonOff">
-        <value xml:lang="de">Aus</value>
-        <value xml:lang="en">Off</value>
-    </property>
-    <property key="CommonOrganisation">
-        <value xml:lang="en">Organisation</value>
-        <value xml:lang="de">Organisation</value>
-    </property>
-    <property key="CommonOrLoginWith">
-        <value xml:lang="de">Oder melden Sie sich bei</value>
-        <value xml:lang="en">Or login with</value>
-        <value xml:lang="es">O inicia sesión con</value>
-        <value xml:lang="fr">Ou connectez-vous avec</value>
-        <value xml:lang="pt">Ou faça o login com</value>
-    </property>
-    <property key="CommonOutstanding">
-        <value xml:lang="en">Outstanding</value>
-    </property>
-    <property key="CommonPaid">
-        <value xml:lang="en">Paid</value>
-    </property>
-    <property key="CommonParties">
-        <value xml:lang="en">Parties</value>
-    </property>
-    <property key="CommonPerDay">
-        <value xml:lang="de">pro Tag</value>
-        <value xml:lang="en">per day</value>
-    </property>    
-    <property key="CommonPerMonth">
-        <value xml:lang="de">pro Monat</value>
-        <value xml:lang="en">per month</value>
-    </property>  
-    <property key="CommonPersons">
-        <value xml:lang="de">Personen</value>
-        <value xml:lang="en">Persons</value>
-    </property>
-    <property key="CommonPerWeek">
-        <value xml:lang="de">pro Woche</value>
-        <value xml:lang="en">per week</value>
-    </property>   
-    <property key="CommonPosition">
-        <value xml:lang="en">Position</value>
-    </property>
-    <property key="CommonPrintable">
-        <value xml:lang="de">Druckfähig</value>
-        <value xml:lang="en">Printable</value>
-    </property>
-    <property key="CommonReceipt">
-        <value xml:lang="en">Receipt</value>
-    </property>
-    <property key="CommonRecentActivity">
-        <value xml:lang="en">Recent Activity</value>
-    </property>
-    <property key="CommonRecreate">
-        <value xml:lang="de">Neu erstellen</value>
-        <value xml:lang="en">Recreate</value>        
-    </property>
-    <property key="CommonReload">
-        <value xml:lang="de">Laden</value>
-        <value xml:lang="en">Reload</value>
-        <value xml:lang="es">Recargar</value>
-        <value xml:lang="fr">Recharger</value>
-        <value xml:lang="pt-BR">Recarregar</value>
-        <value xml:lang="ru">Перезагрузка</value>
-    </property>
-    <property key="CommonRemoveAssoc">
-        <value xml:lang="en">Remove Assoc</value>
-        <value xml:lang="de">Assoc entfernen</value>
-    </property>
-    <property key="CommonRename">
-        <value xml:lang="de">Umbenennen</value>
-        <value xml:lang="en">Rename</value>
-        <value xml:lang="fr">Renommer</value>
-    </property>
-    <property key="CommonRequests">
-        <value xml:lang="de">Anfragen</value>
-        <value xml:lang="en">Requests</value>
-        <value xml:lang="es">Peticiones</value>
-        <value xml:lang="fr">Demandes</value>
-        <value xml:lang="it">Richieste</value>
-        <value xml:lang="ja">リクエスト</value>
-        <value xml:lang="nl">Aanvragen</value>
-        <value xml:lang="pt-BR">Solicitações</value>
-        <value xml:lang="ro">Cerere</value>
-        <value xml:lang="ru">Запросы</value>
-        <value xml:lang="th">การร้องขอ</value>
-        <value xml:lang="vi">Yêu cầu từ Khách hàng</value>
-        <value xml:lang="zh">请求</value>
-        <value xml:lang="zh-CN">请求</value>
-        <value xml:lang="zh-TW">請求</value>
-    </property>   
-    <property key="CommonResource">
-        <value xml:lang="en">Resource</value>
-        <value xml:lang="de">Ressource</value>
-    </property>
-    <property key="CommonResult">
-        <value xml:lang="en">Result</value>
-        <value xml:lang="de">Ergebnis</value>
-    </property>
-    <property key="CommonSeqNum">
-        <value xml:lang="de">Seq. Nummer</value>
-        <value xml:lang="en">Seq Num</value>
-        <value xml:lang="es">Nº sec.</value>
-        <value xml:lang="fr">N° de séq.</value>
-        <value xml:lang="it">Num Seq</value>
-        <value xml:lang="ja">連番</value>
-        <value xml:lang="ro">Num Secventa</value>
-        <value xml:lang="ru">Посл. ном.</value>
-        <value xml:lang="th">หมายเลขรายการ</value>
-        <value xml:lang="vi">Số thứ tự</value>
-        <value xml:lang="zh">序号</value>
-        <value xml:lang="zh-TW">序號</value>
-    </property>
-    <property key="CommonServerCommunicationError">
-        <value xml:lang="de">Server-Kommunikationsfehler</value>
-        <value xml:lang="en">Server communication error</value>
-        <value xml:lang="fr">Erreur de communication avec le serveur</value>
-    </property>
-    <property key="CommonServiceSuccessMessage">
-        <value xml:lang="en">Operation has been executed successfully</value>
-    </property>
-    <property key="CommonSettings">
-        <value xml:lang="en">Settings</value>
-    </property>
-    <property key="CommonSideBar">
-        <value xml:lang="de">SideBar</value>
-        <value xml:lang="en">SideBar</value>
-    </property>
-    <property key="CommonSold">
-        <value xml:lang="en">Sold</value>
-        <value xml:lang="zh">售出</value>
-        <value xml:lang="zh-TW">售出</value>
-    </property>
-    <property key="CommonSpecifications">
-        <value xml:lang="de">Technische Daten</value>
-        <value xml:lang="en">Specifications</value>
-        <value xml:lang="fr">Spécifications</value>
-    </property>
-    <property key="CommonStore">
-        <value xml:lang="en">Store</value>
-    </property>
-    <property key="CommonThisIsAPlaceholder">
-        <value xml:lang="de">Das ist ein Platzhalter!</value>
-        <value xml:lang="en">This is a placeholder!</value>
-    </property>
-    <property key="CommonTimeInterval">
-        <value xml:lang="de">Zeitintervall</value>
-        <value xml:lang="en">Time Interval</value>        
-    </property>
-    <property key="CommonTransaction">
-        <value xml:lang="en">Transaction</value>
-    </property>
-    <property key="CommonTryReloadingPage">
-        <value xml:lang="en">Try reloading the page</value>
-        <value xml:lang="de">Versuchen Sie, die Seite neu zu laden</value>
-    </property>
-    <property key="CommonUnexpectedError">
-        <value xml:lang="de">unerwarteter Fehler</value>
-        <value xml:lang="en">Unexpected error</value>
-        <value xml:lang="fr">Erreur inattendue</value>
-    </property>
-    <property key="CommonUpdateLocalizedFields">
-        <value xml:lang="en">Update Localized Fields</value>
-        <value xml:lang="de">Lokalisierte Felder aktualisieren</value>
-    </property>
-    <property key="CommonValues">
-        <value xml:lang="de">Werte</value>
-        <value xml:lang="en">Values</value>
-    </property>
-    <property key="CommonWarning">
-        <value xml:lang="de">Warnung</value>
-        <value xml:lang="en">Warning</value>
-        <value xml:lang="fr">Avertissement</value>
-    </property>
-    <property key="FacebookLogin">
-        <value xml:lang="de">Anmeldung mit Facebook</value>
-        <value xml:lang="en">Sign in with Facebook</value>
-        <value xml:lang="fr">Connectez-vous avec Facebook</value>
-        <value xml:lang="hi-IN">Facebook के साथ में साइन इन करें</value>
-        <value xml:lang="it">Collegati a Facebook</value>
-        <value xml:lang="ja">Facebookのアカウントでログイン</value>
-        <value xml:lang="nl">Log in met Facebook</value>
-        <value xml:lang="pt">Faça login no Facebook</value>
-        <value xml:lang="zh">请用facebook</value>
-        <value xml:lang="zh-TW">請用facebook</value>
-    </property>
-    <!-- SCIPIO: Default lookup titles for xxxAction field names. -->
-    <property key="FormFieldTitle_addAction">
-        <value xml:lang="ar">إضافة</value>
-        <value xml:lang="cs">Přidat</value>
-        <value xml:lang="de">Hinzufügen</value>
-        <value xml:lang="en">Add</value>
-        <value xml:lang="es">Añadir</value>
-        <value xml:lang="fr">Ajouter</value>
-        <value xml:lang="hi-IN">जोड़ें</value>
-        <value xml:lang="it">Aggiungi</value>
-        <value xml:lang="ja">追加</value>
-        <value xml:lang="nl">Toevoegen</value>
-        <value xml:lang="pt">Adicionar</value>
-        <value xml:lang="ro">Adauga</value>
-        <value xml:lang="ru">Добавить</value>
-        <value xml:lang="th">เพิ่ม</value>
-        <value xml:lang="vi">Thêm</value>
-        <value xml:lang="zh">新建</value>
-        <value xml:lang="zh-CN">添加</value>
-        <value xml:lang="zh-TW">增加</value>
-    </property>   
-    <property key="FormFieldTitle_applyAction">
-        <value xml:lang="ar">تطبيق</value>
-        <value xml:lang="cs">Použít</value>
-        <value xml:lang="de">Anwenden</value>
-        <value xml:lang="en">Apply</value>
-        <value xml:lang="es">Aplicar</value>
-        <value xml:lang="fr">Valider</value>
-        <value xml:lang="hi-IN">लागू करे</value>
-        <value xml:lang="it">Applica</value>
-        <value xml:lang="ja">適用</value>
-        <value xml:lang="nl">Wijs toe</value>
-        <value xml:lang="pt">Aplicar</value>
-        <value xml:lang="ro">Aplica</value>
-        <value xml:lang="ru">Применить</value>
-        <value xml:lang="th">ประยุกต์ใช้</value>
-        <value xml:lang="vi">Khớp lệnh</value>
-        <value xml:lang="zh">应用</value>
-        <value xml:lang="zh-CN">应用</value>
-        <value xml:lang="zh-TW">套用</value>
-    </property>    
-    <property key="FormFieldTitle_approveAction">
-        <value xml:lang="de">Genehmigen</value>
-        <value xml:lang="en">Approve</value>
-        <value xml:lang="fr">Approuver</value>
-        <value xml:lang="hi-IN">स्वीकृत</value>
-        <value xml:lang="it">Approva</value>
-        <value xml:lang="ja">承認</value>
-        <value xml:lang="pt">Aprovar</value>
-        <value xml:lang="vi">Phê duyệt</value>
-        <value xml:lang="zh">批准</value>
-        <value xml:lang="zh-TW">核准</value>
-    </property>      
-    <property key="FormFieldTitle_cancelAction">
-        <value xml:lang="ar">إلغاء</value>
-        <value xml:lang="cs">Storno</value>
-        <value xml:lang="de">Abbrechen</value>
-        <value xml:lang="en">Cancel</value>
-        <value xml:lang="es">Cancelar</value>
-        <value xml:lang="fr">Annuler</value>
-        <value xml:lang="hi-IN">रद्द करें</value>
-        <value xml:lang="it">Annulla</value>
-        <value xml:lang="ja">取消</value>
-        <value xml:lang="nl">Annuleer</value>
-        <value xml:lang="pt">Cancelar</value>
-        <value xml:lang="ro">Sterge</value>
-        <value xml:lang="ru">Отменить</value>
-        <value xml:lang="th">ยกเลิก</value>
-        <value xml:lang="vi">Thôi</value>
-        <value xml:lang="zh">取消</value>
-        <value xml:lang="zh-CN">取消</value>
-        <value xml:lang="zh-TW">取消</value>
-    </property>
-    <property key="FormFieldTitle_checkAction"><!-- TODO: incomplete -->
-        <value xml:lang="de">Prüfen</value>
-        <value xml:lang="en">Check</value>
-    </property>     
-    <property key="FormFieldTitle_clearAction">
-        <value xml:lang="ar">محو</value>
-        <value xml:lang="cs">Vyčistit</value>
-        <value xml:lang="de">Leeren</value>
-        <value xml:lang="en">Clear</value>
-        <value xml:lang="es">Limpiar</value>
-        <value xml:lang="fr">Effacer</value>
-        <value xml:lang="hi-IN">साफ़ करें</value>
-        <value xml:lang="it">Pulisci</value>
-        <value xml:lang="ja">クリア</value>
-        <value xml:lang="nl">Wis</value>
-        <value xml:lang="pt">Limpar</value>
-        <value xml:lang="ro">Azereaza</value>
-        <value xml:lang="ru">Очистить</value>
-        <value xml:lang="th">เคลียร์</value>
-        <value xml:lang="vi">Xóa trắng</value>
-        <value xml:lang="zh">清除</value>
-        <value xml:lang="zh-CN">清除</value>
-        <value xml:lang="zh-TW">清除</value>
-    </property>     
-    <property key="FormFieldTitle_completeAction">
-        <value xml:lang="de">Abgeschlosen</value>
-        <value xml:lang="en">Complete</value>
-        <value xml:lang="es">Completo</value>
-        <value xml:lang="fr">Complet</value>
-        <value xml:lang="it">Completa</value>
-        <value xml:lang="ja">完了</value>
-        <value xml:lang="pt-BR">Completo</value>
-        <value xml:lang="ro">Completeaza</value>
-        <value xml:lang="th">เสร็จสิ้น</value>
-        <value xml:lang="vi">Hoàn thành</value>
-        <value xml:lang="zh">完成</value>
-        <value xml:lang="zh-TW">完成</value>
-    </property>    
-    <property key="FormFieldTitle_confirmAction">
-        <value xml:lang="ar">تأكيد</value>
-        <value xml:lang="cs">Potvrdit</value>
-        <value xml:lang="en">Confirm</value>
-        <value xml:lang="es">Confirmar</value>
-        <value xml:lang="fr">Confirmer</value>
-        <value xml:lang="ja">確認</value>
-        <value xml:lang="ru">Подтвердить</value>
-        <value xml:lang="th">ยืนยัน</value>
-        <value xml:lang="vi">Xác nhận</value>
-        <value xml:lang="zh">确认</value>
-        <value xml:lang="zh-TW">確認</value>
-    </property>    
-    <property key="FormFieldTitle_createAction">
-        <value xml:lang="ar">خلق</value>
-        <value xml:lang="cs">Založit</value>
-        <value xml:lang="de">Anlegen</value>
-        <value xml:lang="en">Create</value>
-        <value xml:lang="es">Crear</value>
-        <value xml:lang="fr">Créer</value>
-        <value xml:lang="hi-IN">बनाएँ</value>
-        <value xml:lang="it">Creare</value>
-        <value xml:lang="ja">作成</value>
-        <value xml:lang="nl">Aanmaken</value>
-        <value xml:lang="pt">Criar</value>
-        <value xml:lang="ro">Creare</value>
-        <value xml:lang="ru">Создать</value>
-        <value xml:lang="th">สร้าง</value>
-        <value xml:lang="vi">Tạo mới</value>
-        <value xml:lang="zh">新建</value>
-        <value xml:lang="zh-CN">创建</value>
-        <value xml:lang="zh-TW">新建</value>
-    </property>    
-    <property key="FormFieldTitle_deleteAction">
-        <value xml:lang="ar">حذف</value>
-        <value xml:lang="cs">Smazat</value>
-        <value xml:lang="de">Löschen</value>
-        <value xml:lang="en">Delete</value>
-        <value xml:lang="es">Eliminar</value>
-        <value xml:lang="fr">Supprimer</value>
-        <value xml:lang="hi-IN">मिटाए</value>
-        <value xml:lang="it">Cancella</value>
-        <value xml:lang="ja">削除</value>
-        <value xml:lang="nl">Wis</value>
-        <value xml:lang="pt">Apagar</value>
-        <value xml:lang="pt-BR">Excluir</value>
-        <value xml:lang="pt-PT">Eliminar</value>
-        <value xml:lang="ro">Sterge</value>
-        <value xml:lang="ru">Удалить</value>
-        <value xml:lang="th">ลบ</value>
-        <value xml:lang="vi">Xóa</value>
-        <value xml:lang="zh">删除</value>
-        <value xml:lang="zh-CN">删除</value>
-        <value xml:lang="zh-TW">刪除</value>
-    </property>
-    <property key="FormFieldTitle_downloadAction">
-        <value xml:lang="da">Download</value>
-        <value xml:lang="en">Download</value>
-        <value xml:lang="fr">Télécharger</value>
-        <value xml:lang="it">Scarica</value>
-        <value xml:lang="ja">ダウンロード</value>
-        <value xml:lang="nl">Download</value>
-        <value xml:lang="pt">Download</value>
-        <value xml:lang="vi">Tải về</value>
-        <value xml:lang="zh">下载</value>
-        <value xml:lang="zh-TW">下載</value>
-    </property>            
-    <property key="FormFieldTitle_editAction">
-        <value xml:lang="ar">تحرير</value>
-        <value xml:lang="cs">upravit</value>
-        <value xml:lang="de">Bearbeiten</value>
-        <value xml:lang="en">Edit</value>
-        <value xml:lang="es">Editar</value>
-        <value xml:lang="fr">Modifier</value>
-        <value xml:lang="hi-IN">संपादित करें</value>
-        <value xml:lang="it">Aggiorna</value>
-        <value xml:lang="ja">編集</value>
-        <value xml:lang="nl">Wijzigen</value>
-        <value xml:lang="pt">Editar</value>
-        <value xml:lang="ro">Actualizare</value>
-        <value xml:lang="ru">Редактировать</value>
-        <value xml:lang="th">แก้ไข</value>
-        <value xml:lang="vi">Chỉnh sửa</value>
-        <value xml:lang="zh">编辑</value>
-        <value xml:lang="zh-CN">编辑</value>
-        <value xml:lang="zh-TW">編輯</value>
-    </property>
-    <property key="FormFieldTitle_expireAction">
-        <value xml:lang="ar">إنهاء الصلاحية</value>
-        <value xml:lang="cs">Expirovat</value>
-        <value xml:lang="de">Ablaufen lassen</value>
-        <value xml:lang="en">Expire</value>
-        <value xml:lang="es">Expiración</value>
-        <value xml:lang="fr">Invalider</value>
-        <value xml:lang="hi-IN">निश्वासन</value>
-        <value xml:lang="it">Scade</value>
-        <value xml:lang="ja">失効</value>
-        <value xml:lang="nl">Maak verlopen</value>
-        <value xml:lang="pt">Expirar</value>
-        <value xml:lang="pt-PT">Terminar</value>
-        <value xml:lang="ro">Expira</value>
-        <value xml:lang="ru">Прекратить</value>
-        <value xml:lang="th">หมดเขต</value>
-        <value xml:lang="vi">Hết hạn</value>
-        <value xml:lang="zh">过期</value>
-        <value xml:lang="zh-CN">过期</value>
-        <value xml:lang="zh-TW">設成逾期</value>
-    </property>
-    <property key="FormFieldTitle_findAction">
-        <value xml:lang="ar">إيجاد</value>
-        <value xml:lang="cs">Hledání</value>
-        <value xml:lang="de">Suchen</value>
-        <value xml:lang="en">Find</value>
-        <value xml:lang="es">Buscar</value>
-        <value xml:lang="fr">Rechercher</value>
-        <value xml:lang="hi-IN">खोजे</value>
-        <value xml:lang="it">Ricerca</value>
-        <value xml:lang="ja">検索</value>
-        <value xml:lang="nl">Zoek</value>
-        <value xml:lang="pt">Procurar</value>
-        <value xml:lang="pt-BR">Pesquisar</value>
-        <value xml:lang="pt-PT">Procura</value>
-        <value xml:lang="ro">Cauta</value>
-        <value xml:lang="ru">Найти</value>
-        <value xml:lang="th">ค้นหา</value>
-        <value xml:lang="vi">Tìm</value>
-        <value xml:lang="zh">查找</value>
-        <value xml:lang="zh-CN">查找</value>
-        <value xml:lang="zh-TW">查詢</value>
-    </property>
-    <property key="FormFieldTitle_listAction">
-        <value xml:lang="ar">قائمة</value>
-        <value xml:lang="cs">Seznam</value>
-        <value xml:lang="de">Liste</value>
-        <value xml:lang="en">List</value>
-        <value xml:lang="es">Lista</value>
-        <value xml:lang="fr">Liste</value>
-        <value xml:lang="hi-IN">सूची</value>
-        <value xml:lang="it">Lista</value>
-        <value xml:lang="ja">一覧表示</value>
-        <value xml:lang="nl">Lijst</value>
-        <value xml:lang="pt">Listar</value>
-        <value xml:lang="pt-BR">Lista</value>
-        <value xml:lang="pt-PT">Lista</value>
-        <value xml:lang="ro">Lista</value>
-        <value xml:lang="ru">Список</value>
-        <value xml:lang="th">รายการ</value>
-        <value xml:lang="vi">Danh sách</value>
-        <value xml:lang="zh">列表</value>
-        <value xml:lang="zh-CN">列表</value>
-        <value xml:lang="zh-TW">清單</value>
-    </property>
-    <property key="FormFieldTitle_listAllAction">
-        <value xml:lang="cs">Vypsat vše</value>
-        <value xml:lang="ar">إدراج الكل</value>
-        <value xml:lang="de">Alles auflisten</value>
-        <value xml:lang="en">List All</value>
-        <value xml:lang="es">Listar todos</value>
-        <value xml:lang="fr">Tout énumérer</value>
-        <value xml:lang="hi-IN">सभी सूची</value>
-        <value xml:lang="it">Lista tutte</value>
-        <value xml:lang="ja">すべて表示</value>
-        <value xml:lang="nl">Gehele Lijst</value>
-        <value xml:lang="pt">Listar Tudo</value>
-        <value xml:lang="pt-BR">Listar todos</value>
-        <value xml:lang="ro">Lista Toate</value>
-        <value xml:lang="ru">Перечислить все</value>
-        <value xml:lang="th">รายการทั้งหมด</value>
-        <value xml:lang="vi">Liệt kê tất cả</value>
-        <value xml:lang="zh">全部列表</value>
-        <value xml:lang="zh-CN">所有列表</value>
-        <value xml:lang="zh-TW">全部清單</value>
-    </property>
-    <property key="FormFieldTitle_makeAction"><!-- TODO: incomplete -->
-        <value xml:lang="de">Machen</value>
-        <value xml:lang="en">Make</value>
-    </property>         
-    <property key="FormFieldTitle_openAction">
-        <value xml:lang="ar">فتح</value>
-        <value xml:lang="cs">Otevřít</value>
-        <value xml:lang="de">Öffnen</value>
-        <value xml:lang="en">Open</value>
-        <value xml:lang="es">Abrir</value>
-        <value xml:lang="fr">Ouvrir</value>
-        <value xml:lang="hi-IN">खुला है</value>
-        <value xml:lang="it">Aperto</value>
-        <value xml:lang="ja">開く</value>
-        <value xml:lang="pt-BR">Abrir</value>
-        <value xml:lang="ru">Открыть </value>
-        <value xml:lang="th">เปิด</value>
-        <value xml:lang="vi">Mở</value>
-        <value xml:lang="zh">打开</value>
-        <value xml:lang="zh-TW">打開</value>
-    </property>    
-    <property key="FormFieldTitle_pasteAction">
-        <value xml:lang="ar">الصق</value>
-        <value xml:lang="da">Sæt ind</value>
-        <value xml:lang="de">Einfügen</value>
-        <value xml:lang="en">Paste</value>
-        <value xml:lang="fr">Coller</value>
-        <value xml:lang="it">Incolla</value>
-        <value xml:lang="ja">貼り付け</value>
-        <value xml:lang="pt">Colar</value>
-        <value xml:lang="ro">Incolla</value>
-        <value xml:lang="th">วาง</value>
-        <value xml:lang="vi">Dán</value>
-        <value xml:lang="zh">粘贴</value>
-        <value xml:lang="zh-TW">貼上</value>
-    </property>    
-    <property key="FormFieldTitle_postAction"><!-- TODO: incomplete -->
-        <value xml:lang="de">Buchen</value>
-        <value xml:lang="en">Post</value>
-        <value xml:lang="es">Enviar</value>
-        <value xml:lang="fr">Enregistrer</value>
-        <value xml:lang="nl">Boek</value>
-        <value xml:lang="pt">Enviar</value>
-        <value xml:lang="ro">Contabilizeaza</value>
-        <value xml:lang="ru">Запись</value>
-    </property>                 
-    <property key="FormFieldTitle_prepareAction"><!-- TODO: incomplete -->
-        <value xml:lang="de">Vorbereiten</value>
-        <value xml:lang="en">Prepare</value>
-    </property>       
-    <property key="FormFieldTitle_printAction">
-        <value xml:lang="ar">طباعة</value>
-        <value xml:lang="cs">Tisk</value>
-        <value xml:lang="de">Drucken</value>
-        <value xml:lang="en">Print</value>
-        <value xml:lang="es">Imprimir</value>
-        <value xml:lang="fr">Imprimer</value>
-        <value xml:lang="hi-IN">प्रिंट</value>
-        <value xml:lang="it">Stampa</value>
-        <value xml:lang="ja">印刷</value>
-        <value xml:lang="pt">Imprimir</value>
-        <value xml:lang="ro">Tipareste</value>
-        <value xml:lang="ru">Печать</value>
-        <value xml:lang="th">พิมพ์</value>
-        <value xml:lang="vi">In</value>
-        <value xml:lang="zh">打印</value>
-        <value xml:lang="zh-TW">列印</value>
-    </property>
-    <property key="FormFieldTitle_rejectAction">
-        <value xml:lang="ar">إضافة</value>
-        <value xml:lang="cs">Odmítnout</value>
-        <value xml:lang="de">Ablehnen</value>
-        <value xml:lang="en">Reject</value>
-        <value xml:lang="es">Rechazar</value>
-        <value xml:lang="fr">Refuser</value>
-        <value xml:lang="hi-IN">अस्वीकार</value>
-        <value xml:lang="it">Rifiuta</value>
-        <value xml:lang="ja">却下</value>
-        <value xml:lang="pt-BR">Rejeitar</value>
-        <value xml:lang="ru">Отклонить</value>
-        <value xml:lang="vi">Từ chối</value>
-        <value xml:lang="zh">拒绝</value>
-        <value xml:lang="zh-TW">拒絕</value>
-    </property>    
-    <property key="FormFieldTitle_removeAction">
-        <value xml:lang="ar">نزع</value>
-        <value xml:lang="cs">Odstranit</value>
-        <value xml:lang="de">Entfernen</value>
-        <value xml:lang="en">Remove</value>
-        <value xml:lang="es">Eliminar</value>
-        <value xml:lang="fr">Supprimer</value>
-        <value xml:lang="hi-IN">हटाये</value>
-        <value xml:lang="it">Rimuovi</value>
-        <value xml:lang="ja">削除</value>
-        <value xml:lang="nl">Verwijderen</value>
-        <value xml:lang="pt">Remover</value>
-        <value xml:lang="ro">Sterge</value>
-        <value xml:lang="ru">Удалить</value>
-        <value xml:lang="th">ลบ</value>
-        <value xml:lang="vi">Xóa bỏ</value>
-        <value xml:lang="zh">删除</value>
-        <value xml:lang="zh-CN">删除</value>
-        <value xml:lang="zh-TW">刪除</value>
-    </property>
-    <property key="FormFieldTitle_saveAction">
-        <value xml:lang="ar">حفظ</value>
-        <value xml:lang="cs">Uložit</value>
-        <value xml:lang="de">Speichern</value>
-        <value xml:lang="en">Save</value>
-        <value xml:lang="es">Guardar</value>
-        <value xml:lang="fr">Enregistrer</value>
-        <value xml:lang="hi-IN">सुरक्षित करे</value>
-        <value xml:lang="it">Salva</value>
-        <value xml:lang="ja">保存</value>
-        <value xml:lang="nl">Opslaan</value>
-        <value xml:lang="pt">Guardar</value>
-        <value xml:lang="pt-BR">Salvar</value>
-        <value xml:lang="ro">Salveaza</value>
-        <value xml:lang="ru">Сохранить</value>
-        <value xml:lang="th">บันทึก</value>
-        <value xml:lang="vi">Lưu</value>
-        <value xml:lang="zh">保存</value>
-        <value xml:lang="zh-CN">保存</value>
-        <value xml:lang="zh-TW">儲存</value>
-    </property>
-    <property key="FormFieldTitle_searchAction">
-        <value xml:lang="ar">البحث</value>
-        <value xml:lang="cs">Vyhledávání</value>
-        <value xml:lang="de">Suchen</value>
-        <value xml:lang="en">Search</value>
-        <value xml:lang="es">Buscar</value>
-        <value xml:lang="fr">Chercher</value>
-        <value xml:lang="hi-IN">खोजे</value>
-        <value xml:lang="it">Ricerca</value>
-        <value xml:lang="ja">検索</value>
-        <value xml:lang="nl">Zoek</value>
-        <value xml:lang="pt">Procurar</value>
-        <value xml:lang="pt-BR">Pesquisar</value>
-        <value xml:lang="ro">Cautare</value>
-        <value xml:lang="ru">Поиск</value>
-        <value xml:lang="th">ค้นหา</value>
-        <value xml:lang="vi">Tìm kiếm</value>
-        <value xml:lang="zh">搜索</value>
-        <value xml:lang="zh-CN">搜索</value>
-        <value xml:lang="zh-TW">搜尋</value>
-    </property>
-    <property key="FormFieldTitle_sendAction">
-        <value xml:lang="ar">ارسال</value>
-        <value xml:lang="cs">Odeslat</value>
-        <value xml:lang="de">Senden</value>
-        <value xml:lang="en">Send</value>
-        <value xml:lang="es">Enviar</value>
-        <value xml:lang="fr">Envoyer</value>
-        <value xml:lang="hi-IN">भेजे</value>
-        <value xml:lang="it">Invia</value>
-        <value xml:lang="ja">送信</value>
-        <value xml:lang="nl">Verzenden</value>
-        <value xml:lang="pt">Enviar</value>
-        <value xml:lang="ro">Trimite</value>
-        <value xml:lang="ru">Отправить</value>
-        <value xml:lang="th">ส่ง</value>
-        <value xml:lang="vi">Gửi</value>
-        <value xml:lang="zh">发送</value>
-        <value xml:lang="zh-CN">发送</value>
-        <value xml:lang="zh-TW">發送</value>
-    </property>      
-    <property key="FormFieldTitle_setupAction"><!-- TODO: incomplete -->
-        <value xml:lang="de">Konfiguration</value>
-        <value xml:lang="en">Setup</value>
-    </property>
-    <property key="FormFieldTitle_submitAction">
-        <value xml:lang="ar">إرسال</value>
-        <value xml:lang="cs">Odeslat</value>
-        <value xml:lang="de">Abschicken</value>
-        <value xml:lang="en">Submit</value>
-        <value xml:lang="es">Enviar</value>
-        <value xml:lang="fr">Envoyer</value>
-        <value xml:lang="hi-IN">जमा करें</value>
-        <value xml:lang="it">Invia</value>
-        <value xml:lang="ja">実行</value>
-        <value xml:lang="nl">Submit</value>
-        <value xml:lang="pt">Submeter</value>
-        <value xml:lang="pt-BR">Enviar</value>
-        <value xml:lang="pt-PT">Registar</value>
-        <value xml:lang="ro">Trimite</value>
-        <value xml:lang="ru">Отправить</value>
-        <value xml:lang="th">ยอมรับ</value>
-        <value xml:lang="vi">Đồng ý</value>
-        <value xml:lang="zh">提交</value>
-        <value xml:lang="zh-CN">提交</value>
-        <value xml:lang="zh-TW">提交</value>
-    </property>
-    <property key="FormFieldTitle_updateAction">
-        <value xml:lang="ar">تحديث</value>
-        <value xml:lang="cs">Aktualizovat</value>
-        <value xml:lang="de">Aktualisieren</value>
-        <value xml:lang="en">Update</value>
-        <value xml:lang="es">Actualizar</value>
-        <value xml:lang="fr">Màj</value>
-        <value xml:lang="hi-IN">अद्यतन करे</value>
-        <value xml:lang="it">Aggiorna</value>
-        <value xml:lang="ja">更新</value>
-        <value xml:lang="nl">Wijzigen</value>
-        <value xml:lang="pt">Actualizar</value>
-        <value xml:lang="pt-BR">Atualizar</value>
-        <value xml:lang="ro">Actualizeaza</value>
-        <value xml:lang="ru">Обновить</value>
-        <value xml:lang="th">อัพเดท</value>
-        <value xml:lang="vi">Cập nhật</value>
-        <value xml:lang="zh">更新</value>
-        <value xml:lang="zh-CN">更新</value>
-        <value xml:lang="zh-TW">更新</value>
-    </property>
-    <property key="FormFieldTitle_verifyAction"><!-- TODO: incomplete -->
-        <value xml:lang="de">Überprüfen</value>
-        <value xml:lang="en">Verify</value>
-        <value xml:lang="fr">Vérifier</value>
-        <value xml:lang="it">Verifica</value>
-        <value xml:lang="ja">確認</value>
-        <value xml:lang="vi">Xác minh</value>
-        <value xml:lang="zh">验证</value>
-        <value xml:lang="zh-TW">驗證</value>
-    </property>
-    <property key="FormFieldTitle_viewAction">
-        <value xml:lang="ar">مشاهدة</value>
-        <value xml:lang="cs">Pohled</value>
-        <value xml:lang="de">Sichten</value>
-        <value xml:lang="en">View</value>
-        <value xml:lang="es">Ver</value>
-        <value xml:lang="fr">Voir</value>
-        <value xml:lang="hi-IN">देखे</value>
-        <value xml:lang="it">Mostra</value>
-        <value xml:lang="ja">表示</value>
-        <value xml:lang="nl">Bekijk</value>
-        <value xml:lang="pt">Vêr</value>
-        <value xml:lang="pt-BR">Visualizar</value>
-        <value xml:lang="ro">Afiseaza</value>
-        <value xml:lang="ru">Просмотреть</value>
-        <value xml:lang="th">แสดง</value>
-        <value xml:lang="vi">Xem</value>
-        <value xml:lang="zh">浏览</value>
-        <value xml:lang="zh-CN">查看</value>
-        <value xml:lang="zh-TW">檢視</value>
-    </property>
-    <property key="GoogleLogin">
-        <value xml:lang="de">Anmeldung mit Google+</value>
-        <value xml:lang="en">Sign in with Google+</value>
-        <value xml:lang="fr">Connectez-vous avec Google+</value>
-        <value xml:lang="hi-IN">Google+ के साथ में साइन इन करें</value>
-        <value xml:lang="it">Collegati a Google+</value>
-        <value xml:lang="ja">Google+のアカウントでログイン</value>
-        <value xml:lang="nl">Log in met Google+</value>
-        <value xml:lang="pt">Faça login no Google+</value>
-        <value xml:lang="zh">请用google+</value>
-        <value xml:lang="zh-TW">請用google+</value>
-    </property>
-    <property key="LinkedinLogin">
-        <value xml:lang="de">Anmeldung mit Linkedin</value>
-        <value xml:lang="en">Sign in with Linkedin</value>
-        <value xml:lang="fr">Connectez-vous avec Linkedin</value>
-        <value xml:lang="hi-IN">Linkedin के साथ में साइन इन करें</value>
-        <value xml:lang="it">Collegati a Linkedin</value>
-        <value xml:lang="ja">Twitterのアカウントでログイン</value>
-        <value xml:lang="nl">Log in met Linkedin</value>
-        <value xml:lang="pt">Faça login no Linkedin</value>
-        <value xml:lang="zh">请用linkedin</value>
-        <value xml:lang="zh-TW">請用linkedin</value>
-    </property>
-    <property key="PageTitleError"> 
-        <value xml:lang="de">Error</value>
-        <value xml:lang="en">Error</value>
-    </property>
-    <property key="TwitterLogin">
-        <value xml:lang="de">Anmeldung mit Twitter</value>
-        <value xml:lang="en">Sign in with Twitter</value>
-        <value xml:lang="fr">Connectez-vous avec Twitter</value>
-        <value xml:lang="hi-IN">Twitter के साथ में साइन इन करें</value>
-        <value xml:lang="it">Collegati a Twitter</value>
-        <value xml:lang="ja">Twitterのアカウントでログイン</value>
-        <value xml:lang="nl">Log in met Twitter</value>
-        <value xml:lang="pt">Faça login no Twitter</value>
-        <value xml:lang="zh">请用twitter</value>
-        <value xml:lang="zh-TW">請用twitter</value>
     </property>
 </resource>

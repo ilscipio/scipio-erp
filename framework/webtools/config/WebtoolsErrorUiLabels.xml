@@ -249,6 +249,17 @@
         <value xml:lang="zh">把标签保存到xml文件时出错</value>
         <value xml:lang="zh-TW">把標簽保存到xml檔時出錯</value>
     </property>
+    <property key="utilCache.cacheNotFound">
+        <value xml:lang="en">Cache not found with name: ${name}</value>
+        <value xml:lang="fr">Aucun cache trouvé ayant comme nom ${name}</value>
+        <value xml:lang="it">Cache non trovata con nome: ${name}</value>
+        <value xml:lang="ja">キャッシュの要素を削除できませんでした: ${name}</value>
+        <value xml:lang="pt">Nenhum cache foi encontrado com o nome: ${name}</value>
+        <value xml:lang="ro">Nu gaseste chash cu nume: ${name}</value>
+        <value xml:lang="th">ไม่พบหน่วยความจำด้วยชื่อ: ${name}</value>
+        <value xml:lang="zh">没有找到名称为 ${name} 的缓存</value>
+        <value xml:lang="zh-TW">沒有找到名稱為 ${name} 的快取</value>
+    </property>
     <property key="utilCache.clearAllCaches">
         <value xml:lang="en">Cleared all caches</value>
         <value xml:lang="fr">Tous les caches ont été purgés</value>
@@ -380,17 +391,5 @@
         <value xml:lang="th">คุณไม่มีการอนุญาตถึงการทำงานการดำเนินการนี้, UTIL_CACHE_EDIT ต้องการ</value>
         <value xml:lang="zh">你没有执行这个操作的权限，需要UTIL_CACHE_EDIT</value>
         <value xml:lang="zh-TW">你沒有執行這個操作的權限,需要UTIL_CACHE_EDIT</value>
-    </property>
-    <!-- SCIPIO: NEW LABELS -->
-    <property key="utilCache.cacheNotFound">
-        <value xml:lang="en">Cache not found with name: ${name}</value>
-        <value xml:lang="fr">Aucun cache trouvé ayant comme nom ${name}</value>
-        <value xml:lang="it">Cache non trovata con nome: ${name}</value>
-        <value xml:lang="ja">キャッシュの要素を削除できませんでした: ${name}</value>
-        <value xml:lang="pt">Nenhum cache foi encontrado com o nome: ${name}</value>
-        <value xml:lang="ro">Nu gaseste chash cu nume: ${name}</value>
-        <value xml:lang="th">ไม่พบหน่วยความจำด้วยชื่อ: ${name}</value>
-        <value xml:lang="zh">没有找到名称为 ${name} 的缓存</value>
-        <value xml:lang="zh-TW">沒有找到名稱為 ${name} 的快取</value>
     </property>
 </resource>

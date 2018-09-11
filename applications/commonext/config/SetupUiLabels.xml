@@ -21,6 +21,7 @@
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="PageTitleEditProductCategory">
         <value xml:lang="en">Edit Product Category</value>
+        <value xml:lang="fr">Edition de la catégorie produit</value>
         <value xml:lang="it">Aggiorna categoria prodotti</value>
         <value xml:lang="ja">製品カテゴリを編集</value>
         <value xml:lang="pt-BR">Editar Categoria de Produto</value>
@@ -30,6 +31,7 @@
     </property>
     <property key="PageTitleProductInfomation">
         <value xml:lang="en">Product Infomation</value>
+        <value xml:lang="fr">Information produit</value>
         <value xml:lang="it">Informazione prodotti</value>
         <value xml:lang="ja">製品情報</value>
         <value xml:lang="pt-BR">Informações do produto</value>
@@ -58,27 +60,19 @@
         <value xml:lang="zh-TW">SCIPIO - 設置應用程式</value>
     </property>
     <property key="SetupCompanySubtitle">
-    <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
         <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
         <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
-    <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
         <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
         <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
         <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
-    <!--value xml:lang="nl">Onderdeel van de SCIPIO ERP'-suite</value-->
         <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
         <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
         <value xml:lang="pt-BR">Parte da família SCIPIO ERP de software de fonte aberta</value>
-    <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
         <value xml:lang="pt-PT">Parte da família SCIPIO ERP de software de fonte aberta</value>
-    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО SCIPIO ERP</valuevalue xml:lang="ru">Часть семейства "SCIPIO ERP Family" программных продуктов Open Source </value-->
         <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
-    <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件SCIPIO ERP的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO ERP的组成部分</value-->
         <value xml:lang="vi">Thành viên của gia đình 'SCIPIO ERP Family' của 'Open Source Software'</value>
         <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
         <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
@@ -86,6 +80,7 @@
     </property>
     <property key="SetupCreateNewOrganization">
         <value xml:lang="en">Create New Organization</value>
+        <value xml:lang="fr">Créer une nouvelle organisation</value>
         <value xml:lang="it">Creare nuova organizzazione</value>
         <value xml:lang="ja">新規組織を作成</value>
         <value xml:lang="pt-BR">Criar Nova Organização</value>
@@ -95,6 +90,7 @@
     </property>
     <property key="SetupEditOrganizationInformation">
         <value xml:lang="en">Edit Organization Information</value>
+        <value xml:lang="fr">Configuration de l'information sur l'organisation</value>
         <value xml:lang="it">Aggiorna informazioni organizzazione</value>
         <value xml:lang="ja">組織情報を編集</value>
         <value xml:lang="pt-BR">Editar informações da Organização</value>
@@ -104,6 +100,7 @@
     </property>
     <property key="SetupEditProductStore">
         <value xml:lang="en">Edit Product Store</value>
+        <value xml:lang="fr">Configuration du centre de profit</value>
         <value xml:lang="it">Aggiorna negozio prodotti</value>
         <value xml:lang="ja">製品店舗を編集</value>
         <value xml:lang="nl">Wijzigen winkel</value>
@@ -114,6 +111,7 @@
     </property>
     <property key="SetupEventMessage">
         <value xml:lang="en">Setup only works if there are no organizations defined yet</value>
+        <value xml:lang="fr">Setup n'est activé que si il n'y a pas encore d'organisation définie</value>
         <value xml:lang="it">Configura solo i lavori se non c'è ancora nessuna organizzazione definita</value>
         <value xml:lang="ja">組織がまだ定義されていない場合のみ設定できます</value>
         <value xml:lang="pt-BR">Instalação só funciona se não houver organizações definidas</value>
@@ -123,6 +121,7 @@
     </property>
     <property key="SetupFacility">
         <value xml:lang="en">Facility</value>
+        <value xml:lang="fr">Lieu de stockage</value>
         <value xml:lang="it">Stabilimento</value>
         <value xml:lang="ja">拠点</value>
         <value xml:lang="pt-BR">Instalação</value>
@@ -132,6 +131,7 @@
     </property>
     <property key="SetupFacilityDescription">
         <value xml:lang="en">Description</value>
+        <value xml:lang="fr">Description du lieu de stockage</value>
         <value xml:lang="it">Descrizione stabilimento</value>
         <value xml:lang="ja">詳細</value>
         <value xml:lang="pt-BR">Descrição</value>
@@ -141,6 +141,7 @@
     </property>
     <property key="SetupFacilityNameIsMissing">
         <value xml:lang="en">Facility Name is missing</value>
+        <value xml:lang="fr">Le nom du lieu de stockage est absent</value>
         <value xml:lang="it">Stabilimento mancante</value>
         <value xml:lang="pt-BR">Nome da Instalação está faltando</value>
         <value xml:lang="vi">Bạn chưa nhập tên cơ sở (Facility Name)</value>
@@ -149,6 +150,7 @@
     </property>
     <property key="SetupFirstCustomer">
         <value xml:lang="en">First Customer</value>
+        <value xml:lang="fr">Premier client</value>
         <value xml:lang="it">Primo cliente</value>
         <value xml:lang="ja">最初の顧客</value>
         <value xml:lang="pt-BR">Primeiro Cliente</value>
@@ -158,6 +160,7 @@
     </property>
     <property key="SetupFirstProduct">
         <value xml:lang="en">First Product</value>
+        <value xml:lang="fr">Premier produit</value>
         <value xml:lang="it">Primo prodotto</value>
         <value xml:lang="ja">最初の製品</value>
         <value xml:lang="pt-BR">Primeiro produto</value>
@@ -167,6 +170,7 @@
     </property>
     <property key="SetupInitialSetup">
         <value xml:lang="en">Initial Setup</value>
+        <value xml:lang="fr">Configuration initiale</value>
         <value xml:lang="it">Configurazione iniziale</value>
         <value xml:lang="ja">初期設定</value>
         <value xml:lang="pt-BR">Configuração inicial</value>
@@ -176,6 +180,7 @@
     </property>
     <property key="SetupNewComponent">
         <value xml:lang="en">Setup New Component</value>
+        <value xml:lang="fr">Configuration d'un nouveau composant</value>
         <value xml:lang="it">Configura nuovo componente</value>
         <value xml:lang="ja">新規コンポーネントを設定</value>
         <value xml:lang="pt-BR">Configurar novo componente</value>
@@ -185,6 +190,7 @@
     </property>
     <property key="SetupOrganization">
         <value xml:lang="en">Organization</value>
+        <value xml:lang="fr">Organisation</value>
         <value xml:lang="it">Organizzazione</value>
         <value xml:lang="ja">組織</value>
         <value xml:lang="pt-BR">Organização</value>
@@ -203,6 +209,7 @@
     </property>
     <property key="SetupOrganizationName">
         <value xml:lang="en">Organization name</value>
+        <value xml:lang="fr">Nom de l'organisation</value>
         <value xml:lang="it">Nome organizzazione</value>
         <value xml:lang="ja">組織名称</value>
         <value xml:lang="pt-BR">Nome da organização</value>
@@ -212,6 +219,7 @@
     </property>
     <property key="SetupOrganizationNameIsMissing">
         <value xml:lang="en">Organization name is missing</value>
+        <value xml:lang="fr">Nom de l'organisation est absente</value>
         <value xml:lang="it">Nome organizzazione è mancante</value>
         <value xml:lang="pt-BR">Nome da organização está faltando</value>
         <value xml:lang="vi">Bạn chưa nhập tên doanh nghiệp</value>
@@ -219,7 +227,7 @@
         <value xml:lang="zh-TW">缺少組織名稱</value>
     </property>
     <property key="SetupOrganizationPartyId">
-        <value xml:lang="en">Organization Party Id</value>
+        <value xml:lang="en">Organization Party ID</value>
         <value xml:lang="it">Soggetto organizzazione</value>
         <value xml:lang="ja">組織取引先ID</value>
         <value xml:lang="pt-BR">Id da Organização</value>
@@ -291,6 +299,7 @@
     </property>
     <property key="SetupTheFirstCustomerOf">
         <value xml:lang="en">The First Customer of</value>
+        <value xml:lang="fr">Le premier client de</value>
         <value xml:lang="it">Il primo cliente di</value>
         <value xml:lang="ja">最初の顧客</value>
         <value xml:lang="pt-BR">O primeiro cliente de</value>

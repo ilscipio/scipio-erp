@@ -26,7 +26,7 @@ under the License.
         as well as providing app implementation documentation and examples; 
         to this end it also frequently contains descriptions of many patterns used throughout the backend.
         Some descriptions are also found instead in the common component files such as component://common/widget/CommonScreens.xml and CommonMenus.xml,
-        and others in the create-component templated files under component://resources/templates/Screens.xml and Menus.xml.
+        and others in the create-component templated files under framework/resources/templates/Screens.xml and Menus.xml.
         For more elemental widget language definitions, see corresponding component://widget/dtd/widget-*.xsd files. -->
         
     <!-- SCIPIO: Common settings for other *Screens.xml files in this app (those that primarily use decorators referenced using parameters.mainDecoratorLocation) -->

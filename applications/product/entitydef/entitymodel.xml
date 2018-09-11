@@ -1139,6 +1139,35 @@ under the License.
             <key-map field-name="attrName"/>
         </relation>
     </entity>
+
+    <entity entity-name="FacilityCalendar" package-name="org.ofbiz.product.facility" title="Facility Calendar">
+        <field name="facilityId" type="id"/>
+        <field name="calendarId" type="id"/>
+        <field name="facilityCalendarTypeId" type="id"/>
+        <field name="fromDate" type="date-time"/>
+        <field name="thruDate" type="date-time"/>
+        <prim-key field="facilityId"/>
+        <prim-key field="calendarId"/>
+        <prim-key field="facilityCalendarTypeId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="FACILITY_CAL_FAC" rel-entity-name="Facility">
+            <key-map field-name="facilityId"/>
+        </relation>
+        <relation type="many" fk-name="FACILITY_TEC_CAL" rel-entity-name="TechDataCalendar">
+            <key-map field-name="calendarId"/>
+        </relation>
+        <relation type="one" fk-name="FACILITY_CAL_TYPE" rel-entity-name="FacilityCalendarType">
+            <key-map field-name="facilityCalendarTypeId"/>
+        </relation>
+    </entity>
+
+    <entity entity-name="FacilityCalendarType" package-name="org.ofbiz.product.facility" title="Facility Calendar Type">
+        <field name="facilityCalendarTypeId" type="id"/>
+        <field name="parentTypeId" type="id"/>
+        <field name="description" type="description"/>
+        <prim-key field="facilityCalendarTypeId"/>
+    </entity>
+
     <entity entity-name="FacilityCarrierShipment" package-name="org.ofbiz.product.facility" title="Facility Role Type">
         <field name="facilityId" type="id-ne"></field>
         <field name="partyId" type="id-ne"></field>
@@ -2222,6 +2251,7 @@ under the License.
       <field name="statusId" type="id-ne"></field>
       <field name="statusDatetime" type="date-time"></field>
       <field name="statusEndDatetime" type="date-time"></field>
+      <field name="changeByUserLoginId" type="id-vlong"></field>
       <field name="ownerPartyId" type="id"><description>Used to track a changed (new) ownerPartyId as a status changes.</description></field>
       <field name="productId" type="id"><description>Used to track a changed (new) productId as a status changes. In other words over time the item may be represented by a different Product (like new versus refurbished).</description></field>
       <prim-key field="inventoryItemId"/>
@@ -2232,6 +2262,9 @@ under the License.
       </relation>
       <relation type="one" fk-name="INV_ITEM_STTS_SI" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_STTS_USER" rel-entity-name="UserLogin">
+        <key-map field-name="changeByUserLoginId" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <view-entity entity-name="InventoryItemStatusForCount" package-name="org.ofbiz.product.inventory">
@@ -2818,8 +2851,8 @@ under the License.
       <field name="originalImageUrl" type="url"></field>
       <field name="detailScreen" type="long-varchar"></field>
       <field name="inventoryMessage" type="description"></field>
-      <field name="requireInventory" type="indicator"></field>
       <field name="inventoryItemTypeId" type="id"></field>
+      <field name="requireInventory" type="indicator"></field>
       <field name="quantityUomId" type="id"></field>
       <field name="quantityIncluded" type="fixed-point"><description>If you have a six-pack of 12oz soda cans you would have quantityIncluded=12, quantityUomId=oz, piecesIncluded=6.</description></field> 
       <field name="piecesIncluded" type="numeric"></field>
@@ -3957,6 +3990,7 @@ under the License.
         <field name="oldHeaderLogo" col-name="HEADER_LOGO" type="url"></field>
         <field name="oldHeaderMiddleBackground" col-name="HEADER_MIDDLE_BACKGROUND" type="url"></field>
         <field name="oldHeaderRightBackground" col-name="HEADER_RIGHT_BACKGROUND" type="url"></field>
+        
       <prim-key field="productStoreId"/>
       <relation type="one" fk-name="PROD_STR_PRSTRGP" title="Primary" rel-entity-name="ProductStoreGroup">
         <key-map field-name="primaryStoreGroupId" rel-field-name="productStoreGroupId"/>
@@ -4543,6 +4577,7 @@ under the License.
     <extend-entity entity-name="WebSite">
         <field name="productStoreId" type="id"></field>
         <field name="allowProductStoreChange" type="indicator"><description>Allow change of ProductStore for this WebSite (webapp). Defaults to N (no).</description></field>
+        <field name="isDefault" type="indicator"><description>If Y then it is default WebSite</description></field>
         <relation type="one" fk-name="WEB_SITE_PRDS" rel-entity-name="ProductStore">
             <key-map field-name="productStoreId"/>
         </relation>

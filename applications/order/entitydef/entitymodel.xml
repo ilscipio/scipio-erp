@@ -79,7 +79,7 @@ under the License.
       <field name="secondaryGeoId" type="id">
           <description>for tax entries this is the secondary jurisdiction Geo (usually a country, or other Geo that the primary is within)</description>
       </field>
-      <field name="exemptAmount" type="currency-precise"><!-- SCIPIO: Updated for included VAT calculation. Applies to customers with VatId-->
+      <field name="exemptAmount" type="currency-precise"><!-- SCIPIO: Updated to currency-amount->currency-precise for included VAT calculation. Applies to customers with VatId-->
           <description>an amount that would normally apply, but not to this order; for tax exemption represents the what the tax would have been</description>
       </field>
       <field name="taxAuthGeoId" type="id">
@@ -298,6 +298,37 @@ under the License.
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="OrderAndContactMech"
+                 package-name="org.ofbiz.order.order"
+                 title="Order Contact Detail View">
+        <member-entity entity-alias="OCM" entity-name="OrderContactMech"/>
+        <member-entity entity-alias="CMD" entity-name="ContactMechDetail"/>
+        <alias-all entity-alias="OCM"/>
+        <alias-all entity-alias="CMD"/>
+        <view-link entity-alias="OCM" rel-entity-alias="CMD">
+          <key-map field-name="contactMechId"/>
+        </view-link>
+        <relation type="many" rel-entity-name="OrderContactMech">
+          <key-map field-name="orderId"/>
+          <key-map field-name="contactMechPurposeTypeId"/>
+          <key-map field-name="contactMechId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="ContactMech">
+          <key-map field-name="contactMechId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="ContactMechPurposeType">
+          <key-map field-name="contactMechPurposeTypeId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="PostalAddress">
+          <key-map field-name="contactMechId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="TelecomNumber">
+          <key-map field-name="contactMechId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="FtpAddress">
+          <key-map field-name="contactMechId"/>
+        </relation>
+    </view-entity>
     <entity entity-name="OrderContent" package-name="org.ofbiz.order.order" title="Order Data Object">
         <field name="orderId" type="id-ne"></field>
         <field name="orderItemSeqId" type="id-ne"></field>
@@ -432,6 +463,9 @@ under the License.
       <relation type="one" fk-name="ORDER_HDR_CUOM" rel-entity-name="Uom">
         <key-map field-name="currencyUom" rel-field-name="uomId"/>
       </relation>
+      <relation type="one" fk-name="ORDER_HDR_WS" rel-entity-name="WebSite">
+        <key-map field-name="webSiteId"/>
+      </relation>
       <relation type="many" rel-entity-name="OrderHeaderNoteView">
         <key-map field-name="orderId"/>
       </relation>
@@ -564,6 +598,10 @@ under the License.
       <relation type="one" fk-name="ORDER_ITEM_QUIT" rel-entity-name="QuoteItem">
         <key-map field-name="quoteId"/>
         <key-map field-name="quoteItemSeqId"/>
+      </relation>
+      <relation type="one-nofk" fk-name="ORDER_ITEM_SLI" rel-entity-name="ShoppingListItem">
+        <key-map field-name="shoppingListId"/>
+        <key-map field-name="shoppingListItemSeqId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_OGLA" title="Override" rel-entity-name="GlAccount">
         <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
@@ -1980,6 +2018,7 @@ under the License.
       <field name="custRequestId" type="id"></field>
       <field name="custRequestItemSeqId" type="id"></field>
       <field name="statusDatetime" type="date-time"></field>
+      <field name="changeByUserLoginId" type="id-vlong"></field>
       <prim-key field="custRequestStatusId"/>
       <relation type="one" fk-name="CUST_REQST_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -1990,6 +2029,9 @@ under the License.
       <relation type="one-nofk" rel-entity-name="CustRequestItem">
         <key-map field-name="custRequestId"/>
         <key-map field-name="custRequestItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_RQSTTS_USRLGN" title="ChangeBy" rel-entity-name="UserLogin">
+          <key-map field-name="changeByUserLoginId" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <entity entity-name="CustRequestType"
@@ -2237,6 +2279,7 @@ under the License.
       <field name="requirementId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>
+      <field name="changeByUserLoginId" type="id-vlong"></field>
       <prim-key field="requirementId"/>
       <prim-key field="statusId"/>
       <relation type="one" fk-name="REQ_STTS_REQ" rel-entity-name="Requirement">
@@ -2244,6 +2287,9 @@ under the License.
       </relation>
       <relation type="one" fk-name="REQ_STTS_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="REQ_STTS_USRLGN" title="ChangeBy" rel-entity-name="UserLogin">
+          <key-map field-name="changeByUserLoginId" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <entity entity-name="RequirementType"
@@ -2910,6 +2956,5 @@ under the License.
             <key-map field-name="workEffortId"/>
         </relation>
     </entity>
-
  </entitymodel>
  

@@ -599,6 +599,8 @@ under the License.
       <field name="payGradeId" type="id-ne"></field>
       <field name="dateModified" type="date-time"></field>
       <field name="amount" type="currency-amount"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="salaryStepSeqId"/>
       <prim-key field="payGradeId"/>
       <relation type="one" fk-name="SLRY_STP_PGRD" rel-entity-name="PayGrade">

@@ -196,7 +196,9 @@ public class LabelReferences {
     }
     private void getLabelsFromGroovyFiles() throws IOException {
         for (String rootFolder : this.rootFolders) {
-            List<File> groovyFiles = FileUtil.findFiles("groovy", rootFolder + "groovyScripts", null, null);
+            // SCIPIO: search the whole component instead, these are everywhere
+            //List<File> groovyFiles = FileUtil.findFiles("groovy", rootFolder + "groovyScripts", null, null);
+            List<File> groovyFiles = FileUtil.findFiles("groovy", rootFolder, null, null);
             for (File file : groovyFiles) {
                 String inFile = FileUtil.readString("UTF-8", file);
                 findUiLabelMapInPattern(inFile, uiLabelMap, file.getPath());

@@ -160,6 +160,8 @@
         <dependency org="org.apache.shiro" name="shiro-core" rev="1.4.0" conf="base,sources"/>
         <dependency org="com.google.code.gson" name="gson" rev="2.8.5" conf="base,sources"/>
         <dependency org="com.googlecode.libphonenumber" name="libphonenumber" rev="8.9.12" conf="base,sources"/>
+        <dependency org="org.apache.sshd" name="sshd-core" rev="2.0.0" conf="base,sources"/>
+        <dependency org="org.apache.sshd" name="sshd-sftp" rev="2.0.0" conf="base,sources"/>
 
         <!-- base qrcode jars -->
         <dependency org="com.google.zxing" name="core" rev="3.3.3" conf="base,sources"/><!-- stock qrcode -->

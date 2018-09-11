@@ -35,6 +35,7 @@ import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.metrics.MetricsFactory;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -57,6 +58,8 @@ import org.xml.sax.SAXException;
 public class ModelServiceReader implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private static final boolean loadValidateHigh = "high".equals(UtilProperties.getPropertyValue("service", "services.load.validate.level"));    // SCIPIO
 
     /** is either from a URL or from a ResourceLoader (through the ResourceHandler) */
     protected boolean isFromURL;
@@ -141,6 +144,11 @@ public class ModelServiceReader implements Serializable {
                             "most recent will over-write previous definition(s)", module);
                     }
                     ModelService service = createModelService(curServiceElement, resourceLocation);
+
+                    // SCIPIO: 2018-09-10: new ability to perform additional validation at load time
+                    if (loadValidateHigh) {
+                        service.validateModel();
+                    }
 
                     modelServices.put(serviceName, service);
                 }

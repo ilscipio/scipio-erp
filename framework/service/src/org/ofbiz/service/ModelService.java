@@ -18,9 +18,11 @@
  *******************************************************************************/
 package org.ofbiz.service;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
@@ -60,6 +62,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.metrics.Metrics;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -68,6 +71,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.service.group.GroupModel;
 import org.ofbiz.service.group.GroupServiceModel;
 import org.ofbiz.service.group.ServiceGroupReader;
@@ -2086,5 +2090,88 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         types.setDocumentationElement(schema);
         return types;
+    }
+
+    /**
+     * SCIPIO: 2018-09-10: additional load-time validation support.
+     * <p>
+     * For now this stops on the first issue, good enough for now.
+     */
+    protected boolean validateModel() {
+        boolean valid = true;
+        if ("entity-auto".equals(this.engineName) && UtilValidate.isEmpty(this.defaultEntityName)) {
+            valid = false;
+            Debug.logError("entity-auto service '" + name + "' does not specify a default-entity-name", module);
+        }
+        if (UtilValidate.isNotEmpty(location)) {
+            if (location.startsWith("component://")) {
+                URL resolvedLocation = null;
+                try {
+                    resolvedLocation = FlexibleLocation.resolveLocation(location);
+                    if (resolvedLocation == null) {
+                        throw new NullPointerException();
+                    }
+                    if (!new java.io.File(resolvedLocation.toURI()).exists()) {
+                        throw new FileNotFoundException();
+                    }
+                } catch (Exception e) {
+                    valid = false;
+                    Debug.logError("Service '" + name + "' points to invalid file location: " + location 
+                            + " (" + e.toString() + ")", module);
+                    resolvedLocation = null;
+                }
+                if (resolvedLocation != null) {
+                    if ("simple".equals(engineName)) {
+                        try {
+                            Document document = null;
+                            try {
+                                document = UtilXml.readXmlDocument(resolvedLocation, true, true);
+                            } catch (Exception e) {
+                                throw new IllegalArgumentException("Could not read SimpleMethod XML document [" + resolvedLocation + "]: ", e);
+                            }
+                            boolean found = false;
+                            for (Element simpleMethodElement : UtilXml.childElementList(document.getDocumentElement(), "simple-method")) {
+                                String simpleMethodName = simpleMethodElement.getAttribute("method-name");
+                                if (invoke.equals(simpleMethodName)) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                throw new IllegalArgumentException("simple-method with name '" + invoke + "' not found");
+                            }
+                        } catch(Exception e) {
+                            valid = false;
+                            Debug.logError("simple-method service '" + name + "' points to an invalid method (" 
+                                    + invoke + ") in " + location + " (" + e.toString() + ")", module);
+                        }
+                    } else if ("groovy".equals(engineName)) {
+                        // TODO: how?
+                    }
+                }
+            } else if ("java".equals(engineName)) {
+                // FIXME?: always ClassNotFoundException for thirdparty classes during loading, skip for now...
+                if (!location.startsWith("org.ofbiz.accounting.thirdparty.") && 
+                    !location.startsWith("org.ofbiz.content.openoffice.")) {
+                    try {
+                        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                        Class<?> c = cl.loadClass(location);
+                        c.getMethod(invoke, DispatchContext.class, Map.class);
+                    } catch(ClassNotFoundException e) {
+                        valid = false;
+                        Debug.logError("java service '" + name + "' points to an invalid class (" + location + ") (" + e.toString() + ")", module);
+                    } catch(NoSuchMethodException e) {
+                        valid = false;
+                        Debug.logError("java service '" + name + "' points to an invalid method (" 
+                                + invoke + ") in class (" + location + ") (" + e.toString() + ")", module);
+                    } catch(Exception e) {
+                        valid = false;
+                        Debug.logError("java service '" + name + "' points to an invalid method (" 
+                                + invoke + ") or class (" + location + ") (" + e.toString() + ")", module);
+                    }
+                }
+            }
+        }
+        return valid;
     }
 }

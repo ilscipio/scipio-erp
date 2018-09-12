@@ -1057,6 +1057,13 @@ public class ModelFormField implements Serializable {
             }
         }
 
+        // SCIPIO: Optimization: Check for true/false from flexible expressions result to avoid second interpreter
+        if ("true".equals(useWhenStr)) {
+            return true;
+        } else if ("false".equals(useWhenStr)) {
+            return false;
+        }
+
         try {
             Interpreter bsh = this.modelForm.getBshInterpreter(context);
             Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhenStr));
@@ -4071,19 +4078,14 @@ public class ModelFormField implements Serializable {
             boolean shouldUse = true;
             String useWhen = this.getUseWhen(context);
             if (UtilValidate.isNotEmpty(useWhen)) {
-                // SCIPIO: optimization/shortcut: check for pre-evaluated true and false values
+                // SCIPIO: Optimization: Check for true/false from flexible expressions result to avoid second interpreter
                 if ("true".equals(useWhen)) {
                     return true;
                 } else if ("false".equals(useWhen)) {
                     return false;
                 }
                 try {
-                    Interpreter bsh = (Interpreter) context.get("bshInterpreter");
-                    if (bsh == null) {
-                        bsh = BshUtil.makeInterpreter(context);
-                        context.put("bshInterpreter", bsh);
-                    }
-
+                    Interpreter bsh = ModelForm.getBshInterpreterStatic(context); // SCIPIO: simplified with helper method
                     Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhen));
 
                     // retVal should be a Boolean, if not something weird is up...

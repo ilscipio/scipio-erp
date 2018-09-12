@@ -1088,6 +1088,10 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     }
 
     public Interpreter getBshInterpreter(Map<String, Object> context) throws EvalError {
+        return getBshInterpreterStatic(context);
+    }
+
+    public static Interpreter getBshInterpreterStatic(Map<String, Object> context) throws EvalError { // SCIPIO: static version
         Interpreter bsh = (Interpreter) context.get("bshInterpreter");
         if (bsh == null) {
             bsh = BshUtil.makeInterpreter(context);
@@ -1682,9 +1686,21 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         String styles = "";
         try {
             // use the same Interpreter (ie with the same context setup) for all evals
-            Interpreter bsh = this.getBshInterpreter(context);
+            Interpreter bsh = null; // SCIPIO: avoid creating bsh interpreter unless necessary
             for (AltRowStyle altRowStyle : this.altRowStyles) {
-                Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(altRowStyle.useWhen));
+                String useWhen = altRowStyle.useWhen.expandString(context); // SCIPIO: added FlexibleStringExpander support
+                Object retVal;
+                // SCIPIO: Optimization: Check for true/false from flexible expressions result to avoid second interpreter
+                if ("true".equals(useWhen)) {
+                    retVal = true;
+                } else if ("false".equals(useWhen)) {
+                    retVal = false;
+                } else {
+                    if (bsh == null) { // SCIPIO: Create interpreter only on demand, if necessary
+                        bsh = this.getBshInterpreter(context);
+                    }
+                    retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhen));
+                }
                 // retVal should be a Boolean, if not something weird is up...
                 if (retVal instanceof Boolean) {
                     Boolean boolVal = (Boolean) retVal;
@@ -1715,18 +1731,29 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         Map<String, Object> expanderContext = UtilCodec.EncodingMapWrapper.getEncodingMapWrapper(context, WidgetWorker.getEarlyEncoder(context)); // SCIPIO: simplified
         try {
             // use the same Interpreter (ie with the same context setup) for all evals
-            Interpreter bsh = this.getBshInterpreter(context);
+            Interpreter bsh = null; // SCIPIO: avoid creating bsh interpreter unless necessary
             for (AltTarget altTarget : this.altTargets) {
-                String useWhen = FlexibleStringExpander.expandString(altTarget.useWhen, context);
-                Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhen));
-                boolean condTrue = false;
-                // retVal should be a Boolean, if not something weird is up...
-                if (retVal instanceof Boolean) {
-                    Boolean boolVal = (Boolean) retVal;
-                    condTrue = boolVal;
+                String useWhen = altTarget.useWhen.expandString(context); // SCIPIO: changed for useWhen as FlexibleStringExpander
+                boolean condTrue;
+                // SCIPIO: Optimization: Check for true/false from flexible expressions result to avoid second interpreter
+                if ("true".equals(useWhen)) {
+                    condTrue = true;
+                } else if ("false".equals(useWhen)) {
+                    condTrue = false;
                 } else {
-                    throw new IllegalArgumentException("Return value from target condition eval was not a Boolean: "
-                            + retVal.getClass().getName() + " [" + retVal + "] of form " + getName());
+                    if (bsh == null) { // SCIPIO: Create interpreter only on demand, if necessary
+                        bsh = this.getBshInterpreter(context);
+                    }
+                    Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhen));
+                    condTrue = false;
+                    // retVal should be a Boolean, if not something weird is up...
+                    if (retVal instanceof Boolean) {
+                        Boolean boolVal = (Boolean) retVal;
+                        condTrue = boolVal;
+                    } else {
+                        throw new IllegalArgumentException("Return value from target condition eval was not a Boolean: "
+                                + retVal.getClass().getName() + " [" + retVal + "] of form " + getName());
+                    }
                 }
 
                 if (condTrue && !"inter-app".equals(targetType)) {
@@ -1896,21 +1923,21 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     }
 
     public static class AltRowStyle implements Serializable {
-        public final String useWhen;
+        public final FlexibleStringExpander useWhen; // SCIPIO: changed to FlexibleStringExpander
         public final String style;
 
         public AltRowStyle(Element altRowStyleElement) {
-            this.useWhen = altRowStyleElement.getAttribute("use-when");
+            this.useWhen = FlexibleStringExpander.getInstance(altRowStyleElement.getAttribute("use-when")); // SCIPIO: changed to FlexibleStringExpander
             this.style = altRowStyleElement.getAttribute("style");
         }
     }
 
     public static class AltTarget implements Serializable {
-        public final String useWhen;
+        public final FlexibleStringExpander useWhen; // SCIPIO: changed to FlexibleStringExpander
         public final FlexibleStringExpander targetExdr;
 
         public AltTarget(Element altTargetElement) {
-            this.useWhen = altTargetElement.getAttribute("use-when");
+            this.useWhen = FlexibleStringExpander.getInstance(altTargetElement.getAttribute("use-when")); // SCIPIO: changed to FlexibleStringExpander
             this.targetExdr = FlexibleStringExpander.getInstance(altTargetElement.getAttribute("target"));
         }
 

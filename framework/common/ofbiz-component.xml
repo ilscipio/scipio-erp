@@ -67,10 +67,13 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/UnitData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/PeriodData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/CommonPortletData.xml"/>
-    
+
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_cdyne.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_email.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_enum.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_method.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_geo.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_qrcode.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_security.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_test.xml"/>

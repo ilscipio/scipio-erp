@@ -45,23 +45,72 @@ under the License.
 
     <!-- MarketingCampaignPrice Services -->
     <service name="addPriceRuleToMarketingCampaign" default-entity-name="MarketingCampaignPrice" engine="entity-auto" invoke="create" auth="true">
+        <deprecated since="2018-09-10 (SCIPIO)" use-instead="createMarketingCampaignPrice">
+            Renaming service to respect service name best practice
+        </deprecated>
+        <implements service="createMarketingCampaignPrice"/>
+    </service>
+    <service name="createMarketingCampaignPrice" default-entity-name="MarketingCampaignPrice" engine="entity-auto" invoke="create" auth="true">
         <description>Add PriceRule to MarketingCampaign</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="removePriceRuleFromMarketingCampaign" default-entity-name="MarketingCampaignPrice" engine="entity-auto" invoke="delete" auth="true">
+            <deprecated since="2018-09-10 (SCIPIO)" use-instead="deleteMarketingCampaignPrice">
+                Renaming service to respect service name best practice
+            </deprecated>
+        <implements service="deleteMarketingCampaignPrice"/>
+    </service>
+    <service name="updateMarketingCampaignPrice" default-entity-name="MarketingCampaignPrice" engine="entity-auto" invoke="update" auth="true">
+        <description>Update PriceRule to MarketingCampaign</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteMarketingCampaignPrice" default-entity-name="MarketingCampaignPrice" engine="entity-auto" invoke="delete" auth="true">
         <description>Remove PriceRule from MarketingCampaign</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- SCIPIO: 2018-09-10: TODO: we do not have fromDate/thruDate on MarketingCampaignPrice yet, so this cannot work...
+    <service name="expireMarketingCampaignPrice" default-entity-name="MarketingCampaignPrice" engine="entity-auto" invoke="expire" auth="true">
+        <description>Expire PriceRule to MarketingCampaign</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>-->
 
     <!-- MarketingCampaignPromo Services -->
     <service name="addPromoToMarketingCampaign" default-entity-name="MarketingCampaignPromo" engine="entity-auto" invoke="create" auth="true">
+        <deprecated since="2018-09-10 (SCIPIO)" use-instead="createMarketingCampaignPromo">
+            Renaming service to respect service name best practice
+        </deprecated>
+        <implements service="createMarketingCampaignPromo"/>
+    </service>
+    <service name="createMarketingCampaignPromo" default-entity-name="MarketingCampaignPromo" engine="entity-auto" invoke="create" auth="true">
         <description>Add Promo to MarketingCampaign</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="removePromoFromMarketingCampaign" default-entity-name="MarketingCampaignPromo" engine="entity-auto" invoke="delete" auth="true">
-        <description>Remove Promo from MarketingCampaign</description>
+        <deprecated since="Upcoming Release" use-instead="deleteMarketingCampaignPromo">
+            Renaming service to respect service name best practice
+        </deprecated>
+        <implements service="deleteMarketingCampaignPromo"/>
+    </service>
+    <service name="updateMarketingCampaignPromo" default-entity-name="MarketingCampaignPromo" engine="entity-auto" invoke="update" auth="true">
+        <description>Update Promo to MarketingCampaign</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteMarketingCampaignPromo" default-entity-name="MarketingCampaignPromo" engine="entity-auto" invoke="delete" auth="true">
+        <description>Remove Promo to MarketingCampaign</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- SCIPIO: 2018-09-10: TODO: we do not have fromDate/thruDate on MarketingCampaignPromo yet, so this cannot work...
+    <service name="expireMarketingCampaignPromo" default-entity-name="MarketingCampaignPromo" engine="entity-auto" invoke="expire" auth="true">
+        <description>Expire Promo from MarketingCampaign</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>-->
+
     <service name="signUpForContactList" engine="java"
             location="org.ofbiz.marketing.marketing.MarketingServices" invoke="signUpForContactList" auth="false">
         <description>Signs an input email up for a ContactList with _NA_ party using the system userLogin.
@@ -96,7 +145,17 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteMarketingCampaignRole" default-entity-name="MarketingCampaignRole" engine="entity-auto"  invoke="delete" auth="true">
+    <service name="updateMarketingCampaignRole" default-entity-name="MarketingCampaignRole" engine="entity-auto" invoke="update" auth="true">
+        <description>Update Role to Campaign</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <!-- SCIPIO: 2018-09-10: TODO: we do not have fromDate/thruDate on MarketingCampaignPromo yet, so this cannot work...
+    <service name="expireMarketingCampaignRole" default-entity-name="MarketingCampaignRole" engine="entity-auto" invoke="expire" auth="true">
+        <description>Expire Role from Campaign</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>-->
+    <service name="deleteMarketingCampaignRole" default-entity-name="MarketingCampaignRole" engine="entity-auto" invoke="delete" auth="true">
         <description>Remove Role from Campaign</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
@@ -105,7 +164,7 @@ under the License.
     <service name="createContactList" default-entity-name="ContactList" engine="simple"
             location="component://marketing/script/org/ofbiz/marketing/contact/ContactListServices.xml" invoke="createContactList" auth="true">
         <description>Create a ContactList record</description>
-        <permission-service service-name="marketingManagerPermission" main-action="CREATE"/>
+        <permission-service service-name="marketingPermissionService" main-action="CREATE"/>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="contactListTypeId" optional="false"/>
@@ -135,9 +194,9 @@ under the License.
             location="component://marketing/script/org/ofbiz/marketing/contact/ContactListServices.xml" invoke="updateContactListParty" auth="true">
         <description>Update Party to ContactList Join</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>        
-        <attribute name="productStoreId" type="String" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactListId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="INOUT" optional="true"/>
         <attribute name="optInVerifyCode" type="String" mode="IN" optional="true"/>
         <attribute name="baseLocation" type="String" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
@@ -225,7 +284,9 @@ under the License.
     <!--  ContactList Comm Status Services -->
     <service name="updateContactListCommStatus" engine="simple" default-entity-name="ContactListCommStatus"
             location="component://marketing/script/org/ofbiz/marketing/contact/ContactListServices.xml" invoke="updateContactListCommStatus">
-        <auto-attributes include="all" mode="IN" optional="false"/>
+        <auto-attributes include="all" mode="IN" optional="false">
+            <exclude field-name="changeByUserLoginId"/>
+        </auto-attributes>
         <override name="partyId" optional="true"/>
         <override name="messageId" allow-html="any" optional="true"/>
     </service>
@@ -272,21 +333,21 @@ under the License.
     <service name="createTrackingCodeType" default-entity-name="TrackingCodeType" engine="simple"
             location="component://marketing/script/org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="createTrackingCodeType" auth="true">
         <description>Create a TrackingCodeType record</description>
-        <permission-service service-name="marketingManagerPermission" main-action="CREATE"/>
+        <permission-service service-name="marketingPermissionService" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateTrackingCodeType" default-entity-name="TrackingCodeType" engine="simple"
             location="component://marketing/script/org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="updateTrackingCodeType" auth="true">
         <description>Update a TrackingCodeType record</description>
-        <permission-service service-name="marketingManagerPermission" main-action="UPDATE"/>
+        <permission-service service-name="marketingPermissionService" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteTrackingCodeType" default-entity-name="TrackingCodeType" engine="simple"
             location="component://marketing/script/org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="deleteTrackingCodeType" auth="true">
         <description>Update a TrackingCodeType record</description>
-        <permission-service service-name="marketingManagerPermission" main-action="DELETE"/>
+        <permission-service service-name="marketingPermissionService" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
@@ -431,6 +492,12 @@ under the License.
         <attribute name="altPermission" type="String" mode="IN" optional="true"/>
     </service>
 
+    <service name="marketingManagerPermission" engine="simple"
+             location="component://common/script/org/ofbiz/common/permission/CommonPermissionServices.xml" invoke="genericBasePermissionCheck">
+        <deprecated use-instead="marketingPermissionService">SCIPIO: 2018-09-10: This service is long deprecated and may have been missing/broken altogether</deprecated>
+        <implements service="marketingManagerPermission"/>
+    </service>
+
     <!-- lead services -->
     <service name="createLead" engine="simple" location="component://marketing/script/org/ofbiz/sfa/lead/LeadServices.xml" invoke="createLead">
         <description>
@@ -529,6 +596,33 @@ under the License.
     </service>
     <service name="exportVCard" engine="java" location="org.ofbiz.sfa.vcard.VCard" invoke="exportVCard">
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <!-- MarketingCampaignNote services -->
+    <service name="createMarketingCampaignNote" default-entity-name="MarketingCampaignNote" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a MarketingCampaignNote</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="deleteMarketingCampaignNote" default-entity-name="MarketingCampaignNote" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a MarketingCampaignNote</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- SegmentGroupType Services -->
+    <service name="createSegmentGroupType" engine="entity-auto" default-entity-name="SegmentGroupType" invoke="create" auth="true">
+        <description>Create SegmentGroupType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSegmentGroupType" engine="entity-auto" default-entity-name="SegmentGroupType" invoke="update" auth="true">
+        <description>Update SegmentGroupType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSegmentGroupType" engine="entity-auto" default-entity-name="SegmentGroupType" invoke="delete" auth="true">
+        <description>Delete SegmentGroupType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
 </services>

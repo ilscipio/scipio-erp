@@ -34,6 +34,7 @@ under the License.
         <attribute name="body" type="String" mode="OUT" optional="true"/>
         <attribute name="sendTo" type="String" mode="IN" optional="true"/>
         <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
         <attribute name="note" type="String" mode="IN" optional="true"/>
         <attribute name="temporaryAnonymousUserLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="messageWrapper" type="org.ofbiz.service.mail.MimeMessageWrapper" mode="OUT" optional="true"/>
@@ -76,9 +77,10 @@ under the License.
         <attribute name="assignedRoleTypeId" type="String" mode="IN" optional="true"/>
     </service>
 
-    <service name="createOrderNotificationLog" engine="simple"
+    <service name="createOrderNotificationLog" engine="simple" default-entity-name="OrderNotification"
             location="component://order/script/org/ofbiz/order/order/OrderSimpleMethods.xml" invoke="createNotificationLog">
         <description>Logs when a notification was sent</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
@@ -672,12 +674,12 @@ under the License.
     <service name="createCommunicationEventOrder" engine="simple"
             location="component://order/script/org/ofbiz/order/communication/CommunicationEventServices.xml" invoke="createCommunicationEventOrder" auth="true">
         <description>Create a Communication Event Order</description>
-        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN"/>
     </service>
     <service name="removeCommunicationEventOrder" engine="simple"
             location="component://order/script/org/ofbiz/order/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventOrder" auth="true">
         <description>Remove a Communication Event Order</description>
-        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN"/>
     </service>
 
     <!-- Order Shipping and Contacts -->
@@ -788,7 +790,7 @@ under the License.
         <attribute name="invoicedQuantity" type="BigDecimal" mode="OUT" optional="false"/>
     </service>
 
-    <!-- SCIPIO: orig findOrders interface has been refactored -->
+    <!-- SCIPIO: Original findOrders interface has been refactored -->
     <!-- order lookup services -->
     <service name="findOrdersCommon" engine="interface">
         <description>Common order search fields</description>
@@ -1224,5 +1226,47 @@ under the License.
          <attribute name="oldContactMechId" type="String" mode="IN" optional="true"/>
          <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
          <attribute name="shipmentMethod" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <!-- OrderContent services -->
+    <service name="createOrderContent" default-entity-name="OrderContent" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a OrderContent</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="expireOrderContent" default-entity-name="OrderContent" engine="entity-auto" invoke="expire" auth="true">
+         <description>Expire a OrderContent</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createOrderAdjustmentTypeAttr" default-entity-name="OrderAdjustmentTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a OrderAdjustmentTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateOrderAdjustmentTypeAttr" default-entity-name="OrderAdjustmentTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a OrderAdjustmentTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteOrderAdjustmentTypeAttr" default-entity-name="OrderAdjustmentTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a OrderAdjustmentTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductOrderItem services -->
+    <service name="createProductOrderItem" default-entity-name="ProductOrderItem" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductOrderItem</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateProductOrderItem" default-entity-name="ProductOrderItem" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductOrderItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductOrderItem" default-entity-name="ProductOrderItem" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductOrderItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

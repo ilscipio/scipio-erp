@@ -59,6 +59,19 @@ under the License.
         <attribute name="groupId" type="String" mode="IN" optional="false"/>
         <attribute name="permissionId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="updateSecurityPermissionToSecurityGroup" engine="entity-auto" invoke="update" default-entity-name="SecurityGroupPermission" auth="true">
+        <description>Update a SecurityPermission from a SecurityGroup</description>
+        <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
+        <attribute name="groupId" type="String" mode="IN" optional="false"/>
+        <attribute name="permissionId" type="String" mode="IN" optional="false"/>
+    </service>
+    <!-- SCIPIO: 2018-09-10: TODO?: no fromDate/thruDate on SecurityGroupPermission yet
+    <service name="expireSecurityPermissionToSecurityGroup" engine="entity-auto" invoke="expire" default-entity-name="SecurityGroupPermission" auth="true">
+        <description>Expire a SecurityPermission from a SecurityGroup</description>
+        <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    -->
     <service name="removeSecurityPermissionFromSecurityGroup" engine="entity-auto" invoke="delete" default-entity-name="SecurityGroupPermission" auth="true">
         <description>Remove a SecurityPermission from a SecurityGroup</description>
         <permission-service service-name="securityPermissionCheck" main-action="DELETE"/>
@@ -82,6 +95,11 @@ under the License.
         <attribute name="groupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="expireUserLoginSecurityGroup" engine="entity-auto" invoke="expire" default-entity-name="UserLoginSecurityGroup" auth="true">
+        <description>Expire UserLoginSecurityGroup</description>
+        <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN"/>
     </service>
     <service name="removeUserLoginToSecurityGroup" engine="entity-auto" invoke="delete" default-entity-name="UserLoginSecurityGroup" auth="true">
         <description>Remove a UserLogin to SecurityGroup Appl</description>
@@ -124,4 +142,25 @@ under the License.
         <attribute name="primaryPermission" type="String" mode="IN" optional="true" default-value="SECURITY"/>
     </service>
     
+    <service name="createUserLoginSecurityQuestion" engine="entity-auto" invoke="create" default-entity-name="UserLoginSecurityQuestion" auth="true">
+        <description>Create a UserLoginSecurityQuestion</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateUserLoginSecurityQuestion" engine="entity-auto" invoke="update" default-entity-name="UserLoginSecurityQuestion" auth="true">
+        <description>Update a UserLoginSecurityQuestion</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeUserLoginSecurityQuestion" engine="entity-auto" invoke="delete" default-entity-name="UserLoginSecurityQuestion" auth="true">
+        <description>Remove UserLoginSecurityQuestion</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteSecurityGroup" default-entity-name="SecurityGroup" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SecurityGroup</description>
+        <permission-service service-name="securityPermissionCheck" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>

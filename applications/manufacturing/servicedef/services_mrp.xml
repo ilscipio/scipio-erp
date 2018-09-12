@@ -44,12 +44,14 @@ under the License.
         <attribute name="reInitialize" type="Boolean" mode="IN" optional="false"/>
         <attribute name="defaultYearsOffset" type="Integer" mode="IN" optional="true"/>
     </service>
+    <!-- SCIPIO: FIXME?: MrpServices.findProductMrpQoh is not a service method
     <service name="findProductMrpQoh" engine="java"
             location="org.ofbiz.manufacturing.mrp.MrpServices" invoke="findProductMrpQoh" auth="true">
         <description>Find the quantity on hand of products for the MRP</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="quantityOnHandTotal" type="BigDecimal" mode="OUT" optional="false"/>
     </service>
+    -->
     <service name="createMrpEvent" engine="java"
             location="org.ofbiz.manufacturing.mrp.InventoryEventPlannedServices" invoke="createMrpEvent" auth="false">
         <description>create an MrpEvent</description>
@@ -64,5 +66,20 @@ under the License.
     <service name="setEstimatedDeliveryDates" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="setEstimatedDeliveryDates">
         <description>Set estimated ship dates for order items based on outstanding production runs</description>
+    </service>
+
+    <service name="createMrpEventType" default-entity-name="MrpEventType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a MrpEventType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateMrpEventType" default-entity-name="MrpEventType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a MrpEventType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteMrpEventType" default-entity-name="MrpEventType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a MrpEventType record</description>
+        <auto-attributes include="pk" mode="IN"/>
     </service>
 </services>

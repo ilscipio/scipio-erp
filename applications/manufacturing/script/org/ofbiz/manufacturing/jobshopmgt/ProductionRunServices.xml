@@ -21,6 +21,21 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
+    
+    <simple-method method-name="createProductionRunPartyAssign" 
+        short-description="Assign the selected party to the production run or task">
+        
+        <set field="parameters.statusId" value="PRTYASGN_ASSIGNED"/>
+        
+        <if-empty field="parameters.workEffortId">
+            <set field="parameters.workEffortId" from-field="parameters.productionRunId"/>
+        </if-empty>
+        
+        <field-to-result field="parameters.productionRunId" result-name="productionRunId" />
+        <call-simple-method method-name="assignPartyToWorkEffort"
+            xml-resource="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" />
+        
+    </simple-method>
     <simple-method method-name="createProductionRunAssoc" short-description="Associate the production run to another production run">
         
         <if-compare field="parameters.workFlowSequenceTypeId" operator="equals" value="WF_PREDECESSOR">
@@ -39,7 +54,6 @@ under the License.
     <!-- Warehouse -->
     <simple-method method-name="issueProductionRunTask" short-description="Issues the Inventory for a Production Run Task" login-required="false">
         <entity-one entity-name="WorkEffort" value-field="workEffort"/>
-
         <if-empty field="parameters.failIfItemsAreNotAvailable">
             <set field="parameters.failIfItemsAreNotAvailable" value="Y"/>
         </if-empty>

@@ -254,11 +254,10 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
-
     <!-- PartyTaxAuthInfo methods -->
     <simple-method method-name="createPartyTaxAuthInfo" short-description="create a PartyTaxAuthInfo">
         <set value="_CREATE" field="securityAction"/>
-        <!--
+        <!-- SCIPIO: "Removed permission validation in service so that the user can set his own taxAuthority"
         <check-permission permission="ACCOUNTING" action="${securityAction}">
             <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>-->

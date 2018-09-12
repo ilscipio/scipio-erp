@@ -778,10 +778,10 @@ under the License.
 
     <!-- address match map 
     
-    SCIPIO: ToDo: Remove
-    Has never been implemented as discussed here 
-    http://ofbiz.135035.n4.nabble.com/Address-match-map-is-used-for-td157597.html
-    
+        SCIPIO: DEPRECATED
+        Has never been implemented as discussed here 
+        http://ofbiz.135035.n4.nabble.com/Address-match-map-is-used-for-td157597.html
+    -->
     <simple-method method-name="createAddressMatchMap" short-description="create a AddressMatchMap">
         <call-object-method obj-field="parameters.mapValue" method-name="toUpperCase" ret-field="parameters.mapValue"/>
         <call-object-method obj-field="parameters.mapKey" method-name="toUpperCase" ret-field="parameters.mapKey"/>
@@ -804,7 +804,6 @@ under the License.
         </iterate>
     </simple-method>
 
-    -->
     <!-- PartyRelationship services -->
     <simple-method method-name="createPartyRelationship" short-description="createPartyRelationship">
         <if-empty field="parameters.roleTypeIdFrom"><set field="parameters.roleTypeIdFrom" value="_NA_"/></if-empty>

@@ -90,7 +90,6 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthority">
         <description>Delete TaxAuthority</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <!-- TaxAuthorityAssoc -->
@@ -111,7 +110,6 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthorityAssoc">
         <description>Delete TaxAuthorityAssoc</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <!-- TaxAuthorityCategory -->
@@ -131,7 +129,6 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthorityCategory">
         <description>Delete TaxAuthorityCategory</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <!-- TaxAuthorityGlAccount -->
@@ -151,7 +148,6 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthorityGlAccount">
         <description>Delete TaxAuthorityGlAccount</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <!-- TaxAuthorityRateProduct -->
@@ -171,7 +167,6 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthorityRateProduct">
         <description>Delete TaxAuthorityRateProduct</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <!-- PartyTaxAuthInfo -->
@@ -193,7 +188,6 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deletePartyTaxAuthInfo">
         <description>Delete PartyTaxAuthInfo</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <service name="createCustomerTaxAuthInfo" default-entity-name="PartyTaxAuthInfo" engine="simple" auth="true"
@@ -217,5 +211,37 @@ under the License.
         location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="flatTaxCalc">
         <description>Zip Sales Calc Tax Service - change this to calcTax to run</description>
         <implements service="calcTaxInterface"/>
+    </service>
+
+    <!-- TaxAuthorityAssocType services -->
+    <service name="createTaxAuthorityAssocType" default-entity-name="TaxAuthorityAssocType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a TaxAuthorityAssocType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+   </service>
+    <service name="updateTaxAuthorityAssocType" default-entity-name="TaxAuthorityAssocType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a TaxAuthorityAssocType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTaxAuthorityAssocType" default-entity-name="TaxAuthorityAssocType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a TaxAuthorityAssocType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- TaxAuthorityRateType services -->
+    <service name="createTaxAuthorityRateType" default-entity-name="TaxAuthorityRateType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a TaxAuthorityRateType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+   </service>
+    <service name="updateTaxAuthorityRateType" default-entity-name="TaxAuthorityRateType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a TaxAuthorityRateType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTaxAuthorityRateType" default-entity-name="TaxAuthorityRateType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a TaxAuthorityRateType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

@@ -38,7 +38,6 @@ under the License.
         <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
         <now-timestamp field="newEntity.lastModifiedDate"/>
         <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
-
         <!-- if needed create some WorkEfforts and remember their IDs:
             estimatedShipDate: estimatedShipWorkEffId
             estimatedArrivalDate: estimatedArrivalWorkEffId
@@ -1980,6 +1979,7 @@ under the License.
             <set from-field="parameters.quantity" field="inputMap.quantity"/>
             <call-service service-name="createShipmentItem" in-map-name="inputMap">
                 <result-to-field result-name="shipmentItemSeqId" field="parameters.shipmentItemSeqId"/>
+                <result-to-result result-name="shipmentItemSeqId" service-result-name="shipmentItemSeqId"/>
             </call-service>
             <clear-field field="inputMap"/>
             <set from-field="parameters.userLogin" field="inputMap.userLogin"/>

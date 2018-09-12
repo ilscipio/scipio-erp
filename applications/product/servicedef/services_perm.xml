@@ -23,9 +23,16 @@ under the License.
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
-    <service name="facilityManagerPermission" engine="simple"
-            location="component://product/minilang/permission/PermissionServices.xml" invoke="facilityManagerPermission">
+    <service name="facilityPermissionCheck" engine="simple"
+            location="component://product/script/org/ofbiz/permission/PermissionServices.xml" invoke="facilityPermissionCheck">
         <description>Facility Manager permission Checking Logic</description>
         <implements service="permissionInterface"/>
+    </service>
+
+    <service name="facilityManagerPermission" engine="simple"
+            location="component://product/script/org/ofbiz/permission/PermissionServices.xml" invoke="facilityPermissionCheck">
+        <description>Facility Manager permission Checking Logic</description>
+        <deprecated use-instead="facilityPermissionCheck">SCIPIO: 2018-09-10: deprecated upstream</deprecated>
+        <implements service="facilityPermissionCheck"/>
     </service>
 </services>

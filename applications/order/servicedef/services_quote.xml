@@ -72,14 +72,31 @@ under the License.
     <service name="createQuoteRole" default-entity-name="QuoteRole" engine="simple"
                 location="component://order/script/org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteRole" auth="true">
         <description>Create a QuoteRole</description>
-        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes mode="IN" include="pk" />
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateQuoteRole" default-entity-name="QuoteRole" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a QuoteRole</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="ORDERMGR" action="_UPDATE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" />
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     <service name="removeQuoteRole" default-entity-name="QuoteRole" engine="simple"
                 location="component://order/script/org/ofbiz/order/quote/QuoteServices.xml" invoke="removeQuoteRole" auth="true">
         <description>Remove a QuoteRole</description>
-        <auto-attributes include="pk" mode="INOUT" optional="true"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- SCIPIO: 2018-09-10: TODO: Not yet supported as do not have QuoteRole.fromDate
+    <service name="expireQuoteRole" default-entity-name="QuoteRole" engine="entity-auto" invoke="expire" auth="true">
+        <description>Expire a QuoteRole</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="ORDERMGR" action="_UPDATE"/>
+        </required-permissions>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    -->
     <!-- QuoteItem  -->
     <service name="createQuoteItem" default-entity-name="QuoteItem" engine="simple"
                 location="component://order/script/org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteItem" auth="true">
@@ -258,4 +275,50 @@ under the License.
         <attribute name="noteInfo" type="String" mode="IN" allow-html="any"/>
         <attribute name="noteName" type="String" mode="IN" optional="true"/>
     </service>
+
+    <service name="createQuoteTermAttribute" default-entity-name="QuoteTermAttribute" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a QuoteTermAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateQuoteTermAttribute" default-entity-name="QuoteTermAttribute" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a QuoteTermAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteQuoteTermAttribute" default-entity-name="QuoteTermAttribute" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a QuoteTermAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createQuoteType" default-entity-name="QuoteType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a QuoteType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateQuoteType" default-entity-name="QuoteType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a QuoteType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteQuoteType" default-entity-name="QuoteType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a QuoteType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createQuoteTypeAttr" default-entity-name="QuoteTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a QuoteTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateQuoteTypeAttr" default-entity-name="QuoteTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a QuoteTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteQuoteTypeAttr" default-entity-name="QuoteTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a QuoteTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
 </services>

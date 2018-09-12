@@ -49,7 +49,7 @@ under the License.
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
-    <simple-method method-name="deleteRequirement" short-description="Delete a requirement">
+    <simple-method method-name="deleteRequirementAndRelated" short-description="Delete a requirement after deleting related entity records">
         <entity-one entity-name="Requirement" value-field="requirement" auto-field-map="true"/>
         <check-errors/>
         <remove-related value-field="requirement" relation-name="RequirementRole"/>

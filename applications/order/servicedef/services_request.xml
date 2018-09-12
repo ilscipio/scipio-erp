@@ -129,7 +129,12 @@ under the License.
     </service>
     <service name="deleteCustRequestParty" engine="simple" default-entity-name="CustRequestParty"
             location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="deleteCustRequestParty" auth="true">
-        <description>Delete a CustRequestParty record</description>
+        <description>Delete a CustRequestParty record (SCIPIO: NOTE: 2018-09-10: This now actually deletes CustRequestParty; previously only expired it; use expireCustRequestParty to expire)</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <service name="expireCustRequestParty" engine="simple" default-entity-name="CustRequestParty"
+            location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="expireCustRequestParty" auth="true">
+        <description>Expire a CustRequestParty record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     <service name="createCustRequestNote" engine="simple"
@@ -204,6 +209,17 @@ under the License.
         <override name="content" allow-html="any"/>
     </service>
 
+    <!-- SCIPIO: 2018-09-10: NOTE: this was made an entity-auto service upstream, but
+        we will call the old simple-method instead because otherwise statusDatetime field no longer gets set -->
+    <service name="createCustRequestStatus" engine="simple" default-entity-name="CustRequestStatus" 
+            location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestStatus" auth="true">
+        <description>Create a Cust Request Status Record</description>
+        <!-- SCIPIO: currently ignored, always gets new custRequestStatusId
+        <auto-attributes mode="IN" include="pk" optional="true"/>-->
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="custRequestStatusId" type="String" mode="OUT" optional="false"/>
+    </service>
+
     <!-- custRequest content services -->
     <!-- SCIPIO: New service for content files upload -->
     <service name="CustRequestUploadContentFile" engine="java"
@@ -225,6 +241,8 @@ under the License.
         <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceTypeId" type="String" optional="true"/>
     </service>
+
+    <!-- custRequest content services -->
     <service name="createCustRequestContent" engine="simple"
         location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml"
         invoke="createCustRequestContent"
@@ -241,6 +259,77 @@ under the License.
         <description>Update a Customer Request Content</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="createCustRequestCategory" engine="entity-auto" invoke="create" default-entity-name="CustRequestCategory" auth="true">
+        <description>Create a CustRequestCategory record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateCustRequestCategory" engine="entity-auto" invoke="update" default-entity-name="CustRequestCategory" auth="true">
+        <description>Update a CustRequestCategory record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCustRequestCategory" engine="entity-auto" invoke="delete" default-entity-name="CustRequestCategory" auth="true">
+        <description>Delete a CustRequestCategory record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createCustRequestResolution" engine="entity-auto" invoke="create" default-entity-name="CustRequestResolution" auth="true">
+        <description>Create a CustRequestResolution record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateCustRequestResolution" engine="entity-auto" invoke="update" default-entity-name="CustRequestResolution" auth="true">
+        <description>Update a CustRequestResolution record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCustRequestResolution" engine="entity-auto" invoke="delete" default-entity-name="CustRequestResolution" auth="true">
+        <description>Delete a CustRequestResolution record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createCustRequestType" engine="entity-auto" invoke="create" default-entity-name="CustRequestType" auth="true">
+        <description>Create a CustRequestType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateCustRequestType" engine="entity-auto" invoke="update" default-entity-name="CustRequestType" auth="true">
+        <description>Update a CustRequestType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCustRequestType" engine="entity-auto" invoke="delete" default-entity-name="CustRequestType" auth="true">
+        <description>Delete a CustRequestType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createCustRequestTypeAttr" engine="entity-auto" invoke="create" default-entity-name="CustRequestTypeAttr" auth="true">
+        <description>Create a CustRequestTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateCustRequestTypeAttr" engine="entity-auto" invoke="update" default-entity-name="CustRequestTypeAttr" auth="true">
+        <description>Update a CustRequestTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCustRequestTypeAttr" engine="entity-auto" invoke="delete" default-entity-name="CustRequestTypeAttr" auth="true">
+        <description>Delete a CustRequestTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createRespondingParty" engine="entity-auto" invoke="create" default-entity-name="RespondingParty" auth="true">
+        <description>Create a RespondingParty record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateRespondingParty" engine="entity-auto" invoke="update" default-entity-name="RespondingParty" auth="true">
+        <description>Update a RespondingParty record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteRespondingParty" engine="entity-auto" invoke="delete" default-entity-name="RespondingParty" auth="true">
+        <description>Delete a RespondingParty record</description>
+        <auto-attributes include="pk" mode="IN"/>
     </service>
 </services>
 

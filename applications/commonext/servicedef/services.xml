@@ -41,22 +41,21 @@ under the License.
     <service name="getSystemInfoNotes" engine="simple" auth="true"
         location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getSystemInfoNotes">
         <description>Get system notes for the logged on party</description>
-                <!-- view and page fields -->
+        <!-- view and page fields -->
         <attribute name="viewIndex" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="viewSize" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="showAll" type="String" mode="INOUT" optional="true"/>
         
         <attribute name="systemInfoNotes" type="List" mode="OUT" optional="true"/>
     </service>
-    <!-- SCIPIO: Deprecated
     <service name="getLastSystemInfoNote" engine="simple" auth="false"
         location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getLastSystemInfoNote">
         <description>Get last system note for the logged on party</description>
+        <deprecated use-instead="getSystemMessages">SCIPIO: Do not use, new SystemMessages system now exists.</deprecated>
         <attribute name="lastSystemInfoNote1" type="GenericValue" mode="OUT" optional="true"/>
         <attribute name="lastSystemInfoNote2" type="GenericValue" mode="OUT" optional="true"/>
         <attribute name="lastSystemInfoNote3" type="GenericValue" mode="OUT" optional="true"/>
     </service> 
-    -->
     <service name="getSystemInfoStatus" engine="simple" auth="true"
         location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getSystemInfoStatus">
         <description>Get system status for the logged on party</description>

@@ -71,6 +71,43 @@ under the License.
         <attribute name="sortField" type="String" mode="OUT" optional="true"/>
     </service>
 
+    <service name="performFindParty" engine="java"
+        location="org.ofbiz.party.party.PartyServices" invoke="performFindParty">
+        <description>General Party Find Service, duplicated for screen widget purpose, Used in the new findparty page in the Party Manager, etc</description>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/> <!-- can be null or ANY to include any -->
+        <attribute name="noConditionFind" type="String" mode="IN" optional="true" default-value="N"/>
+        <attribute name="extInfo" type="String" mode="IN" optional="true"/>
+        <attribute name="extCond" type="org.ofbiz.entity.condition.EntityCondition" mode="IN" optional="true">
+            <description>EntityCondition that can be send to this service to manage complex search case</description>
+        </attribute>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this, can do partial, case insensitive, etc -->
+        <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="userLoginId" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this, can do partial, case insensitive, etc -->
+        <attribute name="externalId" type="String" mode="IN" optional="true"/>
+        <attribute name="groupName" type="String" mode="IN" optional="true"/>
+        <attribute name="firstName" type="String" mode="IN" optional="true"/>
+        <attribute name="lastName" type="String" mode="IN" optional="true"/>
+        <attribute name="address1" type="String" mode="IN" optional="true"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="city" type="String" mode="IN" optional="true"/>
+        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
+        <attribute name="infoString" type="String" mode="IN" optional="true"/> <!-- the ContactMech infoString -->
+        <attribute name="countryCode" type="String" mode="IN" optional="true"/>
+        <attribute name="areaCode" type="String" mode="IN" optional="true"/>
+        <attribute name="contactNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="idValue" type="String" mode="IN" optional="true"/>
+        <attribute name="partyIdentificationTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this -->
+        <attribute name="serialNumber" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this -->
+        <attribute name="softIdentifier" type="String" mode="IN" optional="true"/> <!-- does a LIKE compare on this -->
+        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="ownerPartyIds" type="List" mode="IN" optional="true"/><!-- Lead Owners Parties -->
+        <attribute name="sortField" type="String" mode="IN" optional="true"/>
+
+        <attribute name="listIt" type="org.ofbiz.entity.util.EntityListIterator" mode="OUT" optional="true"/>
+    </service>
+
     <service name="getPartyContactMechValueMaps" engine="java"
             transaction-timeout="7200"
             location="org.ofbiz.party.contact.ContactMechServices" invoke="getPartyContactMechValueMaps" auth="true">
@@ -124,25 +161,6 @@ under the License.
         <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
         <override name="partyIdFrom" optional="false"/>
     </service>
-    <service name="getRelatedParties" engine="simple"
-            location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="getRelatedParties">
-        <description>
-            Get Parties Related to a Party
-            - The relatedPartyIdList coming out will include the original partyIdFrom
-            - The includeFromToSwitched and recurse attributes should by "Y" or "N" and default to N.
-            - The useCache attribute should be "true" or "false", defaults to "false"
-        </description>
-        <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
-        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeIdFromInclueAllChildTypes" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeIdToIncludeAllChildTypes" type="String" mode="IN" optional="true"/>
-        <attribute name="includeFromToSwitched" type="String" mode="IN" optional="true"/>
-        <attribute name="recurse" type="String" mode="IN" optional="true"/>
-        <attribute name="useCache" type="String" mode="IN" optional="true"/>
-        <attribute name="relatedPartyIdList" type="List" mode="OUT" optional="false"/>
-    </service>
 
     <service name="getParentOrganizations" engine="simple"
             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="getParentOrganizations">
@@ -176,5 +194,25 @@ under the License.
         <permission-service service-name="partyBasePermissionCheck" main-action="VIEW"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="geos" type="java.util.List" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="getRelatedParties" engine="simple"
+        location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="getRelatedParties">
+        <description>
+            Get Parties Related to a Party
+            - The relatedPartyIdList coming out will include the original partyIdFrom
+            - The includeFromToSwitched and recurse attributes should by "Y" or "N" and default to N.
+            - The useCache attribute should be "true" or "false", defaults to "false"
+        </description>
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdFromInclueAllChildTypes" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdToIncludeAllChildTypes" type="String" mode="IN" optional="true"/>
+        <attribute name="includeFromToSwitched" type="String" mode="IN" optional="true"/>
+        <attribute name="recurse" type="String" mode="IN" optional="true"/>
+        <attribute name="useCache" type="String" mode="IN" optional="true"/>
+        <attribute name="relatedPartyIdList" type="List" mode="OUT" optional="false"/>
     </service>
 </services>

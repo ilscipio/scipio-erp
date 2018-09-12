@@ -38,6 +38,18 @@ under the License.
         <attribute name="productionRunId" type="String" mode="OUT" optional="false"/>
         <attribute name="estimatedCompletionDate" type="java.sql.Timestamp" mode="OUT" optional="true"/>
     </service>
+    <service name="createProductionRunPartyAssign" engine="simple"
+        location="component://manufacturing/script/org/ofbiz/manufacturing/jobshopmgt/ProductionRunServices.xml" invoke="createProductionRunPartyAssign" auth="false">
+        <description>
+            Associate a party to the production run
+        </description>
+        <attribute name="productionRunId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortId" mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="INOUT" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
     <service name="createProductionRunAssoc" engine="simple"
                 location="component://manufacturing/script/org/ofbiz/manufacturing/jobshopmgt/ProductionRunServices.xml" invoke="createProductionRunAssoc" auth="false">
         <description>
@@ -151,13 +163,15 @@ under the License.
         <attribute name="estimatedSetupMillis" type="BigDecimal" mode="IN"/>
         <attribute name="estimatedMilliSeconds" type="BigDecimal" mode="IN"/>
     </service>
-    <!-- TODO: NOT STILL IMPLEMENTED ('deleteWorkEffort' is called directly) -->
+    <!-- TODO: NOT STILL IMPLEMENTED ('deleteWorkEffort' is called directly)
+        SCIPIO: indeed this is missing from the java... so don't define the service yet!
     <service name="deleteProductionRunRoutingTask" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="deleteProductionRunRoutingTask" auth="true">
         <description>delete a RoutingTask to an existing ProductionRun</description>
         <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
         <attribute name="routingTaskId" type="String" mode="IN" optional="false"/>
     </service>
+    -->
     <service name="addProductionRunComponent" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="addProductionRunComponent" auth="true">
         <description>add a Product Component to an existing ProductionRun</description>
@@ -174,13 +188,15 @@ under the License.
         <attribute name="workEffortId" type="String" mode="IN" optional="true"/>
         <attribute name="estimatedQuantity" type="BigDecimal" mode="IN" optional="true"/>
     </service>
-    <!-- TODO: NOT STILL IMPLEMENTED ('removeWorkEffortGoodStandard' is called directly) -->
+    <!-- TODO: NOT STILL IMPLEMENTED ('removeWorkEffortGoodStandard' is called directly) 
+        SCIPIO: indeed this is missing from the java... so don't define the service yet!
     <service name="deleteProductionRunComponent" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="deleteProductionRunComponent" auth="true">
         <description>delete a Product Component to an existing ProductionRun</description>
         <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
     </service>
+    -->
     <service name="issueProductionRunTask" engine="simple"
                 location="component://manufacturing/script/org/ofbiz/manufacturing/jobshopmgt/ProductionRunServices.xml" invoke="issueProductionRunTask" auth="false">
         <description>

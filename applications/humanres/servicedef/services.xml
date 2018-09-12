@@ -176,22 +176,8 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
-    <!-- SCIPIO: stock services are unsatisfactory, we need to do checks on emplPositionId and jobRequisitionId, required
-    <service name="createEmploymentApp" engine="entity-auto" default-entity-name="EmploymentApp" invoke="create" auth="true">
-        <description>Create an Employment Application</description>
-        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
-        <auto-attributes mode="INOUT" include="pk" optional="true"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
-
-    <service name="updateEmploymentApp" engine="entity-auto" default-entity-name="EmploymentApp" invoke="update" auth="true">
-        <description>Update an Employment Application</description>
-        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
-    -->
-    <service name="createEmploymentApp" engine="simple" default-entity-name="EmploymentApp" 
+    <!-- SCIPIO: stock services were unsatisfactory, we need to do checks on emplPositionId and jobRequisitionId, required -->
+     <service name="createEmploymentApp" engine="simple" default-entity-name="EmploymentApp" 
         location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createEmploymentApp" auth="true">
         <description>Create an Employment Application</description>
         <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
@@ -277,6 +263,11 @@ under the License.
         <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    <service name="expirePayHistory" engine="simple" default-entity-name="PayHistory" invoke="expire" auth="true">
+        <description>Expire Pay History</description>
+        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 
     <service name="createPayrollPreference" engine="entity-auto" default-entity-name="PayrollPreference" invoke="create" auth="true">
         <description>Create Payroll Preference</description>
@@ -300,15 +291,19 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
-    <service name="createSalaryStep" engine="entity-auto" default-entity-name="SalaryStep" invoke="create" auth="true">
+    <service name="createSalaryStep" engine="simple" default-entity-name="SalaryStep"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createSalaryStep" auth="true">
         <description>Create Salary Step</description>
         <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false">
+            <exclude field-name="salaryStepSeqId"/><!-- SCIPIO: 2018-09-10: this is ignored on IN by the simple-method -->
+        </auto-attributes>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <attribute name="payGradeId" mode="IN" type="String"/>
         <attribute name="salaryStepSeqId" mode="OUT" type="String"/>
     </service>
 
-    <service name="updateSalaryStep" engine="entity-auto" default-entity-name="SalaryStep" invoke="update" auth="true">
+    <service name="updateSalaryStep" engine="simple" default-entity-name="SalaryStep"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateSalaryStep" auth="true">
         <description>Update Salary Step</description>
         <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
@@ -799,7 +794,11 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="approverId" optional="false"/>
-        <override name="trainingClassTypeId" optional="true"/>
+        <override name="trainingClassTypeId" optional="false">
+            <type-validate>
+                <fail-property resource="HumanResErrorUiLabels.xml" property="HumanResRequiredFieldMissingTrainingClassTypeId"/>
+            </type-validate>
+        </override>
         <override name="fromDate" optional="true"/>
         <override name="workEffortId" optional="false"/>
     </service>
@@ -810,7 +809,11 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="approverId" optional="false"/>
-        <override name="trainingClassTypeId" optional="true"/>
+        <override name="trainingClassTypeId" optional="false">
+            <type-validate>
+                <fail-property resource="HumanResErrorUiLabels.xml" property="HumanResRequiredFieldMissingTrainingClassTypeId"/>
+            </type-validate>
+        </override>
     </service>
 
     <service name="createTrainingTypes" engine="entity-auto" default-entity-name="TrainingClassType" invoke="create" auth="true">
@@ -862,6 +865,22 @@ under the License.
         <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <!-- PartyQualType services -->
+    <service name="createPartyQualType" default-entity-name="PartyQualType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a PartyQualType record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updatePartyQualType" default-entity-name="PartyQualType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a PartyQualType record</description>
+        <auto-attributes mode="IN" include="pk"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deletePartyQualType" default-entity-name="PartyQualType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a PartyQualType record</description>
+        <auto-attributes mode="IN" include="pk"/>
     </service>
 
 </services>

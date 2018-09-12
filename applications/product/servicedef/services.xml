@@ -57,12 +57,15 @@ under the License.
         <implements service="interfaceProduct"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- SCIPIO: 2018-09-10: there is no updateProductQuickAdminShipping method in ProductServices!
+        It is in ProductEvents.java.
     <service name="updateProductQuickAdminShipping" default-entity-name="Product" engine="java"
                 location="org.ofbiz.product.product.ProductServices" invoke="updateProductQuickAdminShipping" auth="true">
         <description>Update product characteristics from Quick Admin</description>
         <implements service="interfaceProduct"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    -->
     <service name="duplicateProduct" engine="simple"
                 location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="duplicateProduct" auth="true">
         <description>Duplicate a Product using a new productId</description>
@@ -111,6 +114,13 @@ under the License.
         <attribute name="productFeatureIds" type="String" mode="IN" optional="false"/>
         <attribute name="productVariantId" type="String" mode="INOUT" optional="false"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+
+    <service name="createSalesAgreement" engine="group" location="createSalesAgreement" invoke="" auth="true">
+        <description>Create a new sales agreement with customer for the product</description>
+        <implements service="createAgreement"/>
+        <implements service="createAgreementItem"/>
+        <implements service="createAgreementProductAppl"/>
     </service>
 
     <service name="quickCreateVirtualWithVariants" engine="java"
@@ -240,13 +250,13 @@ under the License.
         <description>
             Create a Product Price. 
             
-            If taxAuthGeoId and taxAuthPartyId are (or taxAuthCombinedId is) passed in then the price will be considered a price 
+            If taxAuthGeoId and taxAuthPartyId are (or taxAuthCombinedId is (SCIPIO)) passed in then the price will be considered a price
             with tax included (the priceWithoutTax, priceWithTax, taxAmount, and taxPercentage fields will also be populated).
             
             If the taxInPrice field is 'Y' then the price field will be left with the tax included (price will be equal to priceWithTax),            
             otherwise tax will be removed from the passed in price and the price field will be equal to the priceWithoutTax field.
             
-            If taxAuthGeoId or taxAuthPartyId empty, and taxAuthCombinedId is empty, then the taxInPrice field will be ignored.
+            If taxAuthGeoId or taxAuthPartyId empty, and taxAuthCombinedId is empty (SCIPIO), then the taxInPrice field will be ignored.
         </description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true">
@@ -292,6 +302,7 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="oldPrice" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="productPriceChangeId" type="String" mode="OUT" optional="true"/>
     </service>
 
     <!-- Product PaymentMethodType Services -->
@@ -771,6 +782,8 @@ under the License.
         <attribute name="averageCost" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
     </service>
+
+    <!-- SCIPIO -->
     <service name="uploadProductCategoryImage" engine="groovy"
                 location="component://product/script/com/ilscipio/category/ProductCategoryContentServices.groovy" default-entity-name="ProductCategory" invoke="uploadProductCategoryImage" auth="true">
         <implements service="uploadFileInterface"/>                
@@ -888,7 +901,7 @@ under the License.
         <attribute name="originalProductCategoryId" type="String" mode="IN" optional="true"/>
     </service>
 
-    <!-- Product Category Attribute SErvices -->
+    <!-- Product Category Attribute Services -->
     <service name="createProductCategoryAttribute" default-entity-name="ProductCategoryAttribute" engine="simple"
             location="component://product/script/org/ofbiz/product/category/CategoryServices.xml"
             invoke="createProductCategoryAttribute" auth="true">
@@ -960,13 +973,12 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
-        <override name="contentId" optional="true" mode="INOUT"/>
+        <override name="contentId" optional="true" mode="INOUT"/><!-- SCIPIO: TODO: REVIEW: this was added for Scipio, but optional="true" makes no sense for an update service -->
     </service>
     <service name="removeCategoryContent" default-entity-name="ProductCategoryContent" engine="simple"
             location="component://product/script/org/ofbiz/product/category/CategoryContentServices.xml" invoke="removeCategoryContent" auth="true">
         <description>Remove Content From Category</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <service name="createSimpleTextContentForCategory" default-entity-name="ProductCategoryContent" engine="simple"
@@ -985,13 +997,13 @@ under the License.
         <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
         <attribute name="textDataResourceId" type="String" mode="IN" optional="true"/>
         <attribute name="text" type="String" mode="IN" optional="true" allow-html="any"/>
-        <override name="contentId" optional="true" mode="INOUT"/>
+        <override name="contentId" optional="true" mode="INOUT"/><!-- SCIPIO: TODO: REVIEW: this was added for Scipio, but optional="true" makes no sense for an update service -->
     </service>
 
     <service name="updateContentSEOForCategory" engine="simple"
             location="component://product/script/org/ofbiz/product/category/CategoryContentServices.xml" invoke="updateContentSEOForCategory" auth="true">
         <description>Update SEO Content For Product Category</description>
-        <attribute name="contentId" optional="true" type="String" mode="INOUT"/>
+        <attribute name="contentId" optional="true" type="String" mode="INOUT"/><!-- SCIPIO: TODO: REVIEW: this was added by Scipio, but optional="true" makes no sense for an update service -->
         <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
         <attribute name="title" mode="IN" type="String" optional="true"/>
         <attribute name="metaKeyword" mode="IN" type="String" optional="true"/>
@@ -1021,7 +1033,7 @@ under the License.
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="url" type="String" mode="IN" optional="true"/>
         <attribute name="localeString" type="String" mode="IN" optional="true"/>
-        <override name="contentId" optional="true" mode="INOUT"/>
+        <override name="contentId" optional="true" mode="INOUT"/><!-- SCIPIO: TODO: REVIEW: this was added by Scipio, but optional="true" makes no sense for an update service -->
     </service>
 
     <service name="createDownloadContentForCategory" default-entity-name="ProductCategoryContent" engine="simple"
@@ -1045,7 +1057,7 @@ under the License.
         <attribute mode="IN" name="_imageData_contentType" optional="true" type="String"/>
         <attribute mode="IN" name="_imageData_fileName" optional="true" type="String"/>
         <attribute name="fileDataResourceId" type="String" mode="IN" optional="true"/>
-        <override name="contentId" optional="true" mode="INOUT"/>
+        <override name="contentId" optional="true" mode="INOUT"/><!-- SCIPIO: TODO: REVIEW: this was added by Scipio, but optional="true" makes no sense for an update service -->
     </service>
 
     <!-- ProductFeatureDataResource services -->
@@ -1132,6 +1144,7 @@ under the License.
         <description>Create a Config Item</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="configItemId" mode="OUT"/>
     </service>
     <service name="updateProductConfigItem" default-entity-name="ProductConfigItem" auth="true" engine="simple"
         location="component://product/script/org/ofbiz/product/config/ConfigServices.xml" invoke="updateProductConfigItem">
@@ -1183,6 +1196,7 @@ under the License.
         <description>Delete ProductConfigProduct</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+
     <!-- Product Config Item content services -->
     <service name="createProductConfigItemContent" default-entity-name="ProdConfItemContent" engine="simple"
                 location="component://product/script/org/ofbiz/product/config/ProductConfigItemContentServices.xml" invoke="createProductConfigItemContent" auth="true">
@@ -1286,6 +1300,10 @@ under the License.
     </service>
     <service name="productCategoryGenericPermission" engine="simple"
         location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="productCategoryGenericPermission">
+        <implements service="permissionInterface"/>
+    </service>
+    <service name="productPriceGenericPermission" engine="simple"
+        location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="productPriceGenericPermission">
         <implements service="permissionInterface"/>
     </service>
     <service name="checkCategoryPermissionWithViewPurchaseAllow" engine="simple"
@@ -1406,7 +1424,7 @@ under the License.
     </service>
     <service name="removeProductPromoContent" default-entity-name="ProductPromoContent" engine="simple"
             location="component://product/script/org/ofbiz/product/product/ProductContentServices.xml" invoke="removeProductPromoContent" auth="true">
-        <description>Remove Product Promo Content</description>
+        <description>Cancel by the thru date a Product Promo Content</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
@@ -1419,7 +1437,7 @@ under the License.
         <override name="productPromoContentTypeId" optional="false"/>
         <override name="productPromoId" optional="false"/>
     </service>
-    
+
     <!-- Image Management Services -->
     <service name="addMultipleuploadForProduct" default-entity-name="ProductContent" engine="java"
         location="org.ofbiz.product.imagemanagement.ImageManagementServices" invoke="addMultipleuploadForProduct" auth="true">
@@ -1434,7 +1452,7 @@ under the License.
         <override name="productContentTypeId" optional="false"/>
         <override name="productId" optional="false"/>
     </service>
-    
+
     <service name="multipleUploadProductImages" engine="simple"
         location="component://product/script/org/ofbiz/product/imagemanagement/ImageManagementServices.xml" invoke="UploadProductImages" auth="true">
         <description>Multiple upload Images For Product</description>
@@ -1472,21 +1490,21 @@ under the License.
         <attribute name="_additionalImageTen_fileName" type="String" mode="IN" optional="true"/>
         <attribute name="_additionalImageTen_contentType" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="removeProductContentAndImageFile" default-entity-name="ProductContent" engine="simple"
         location="component://product/script/org/ofbiz/product/imagemanagement/ImageManagementServices.xml" invoke="removeProductContentAndImageFile" auth="true">
         <description>Remove Content From Product and File Image</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="removeProductContentForImageManagement" engine="simple"
         location="component://product/script/org/ofbiz/product/imagemanagement/ImageManagementServices.xml" invoke="removeProductContentForImageManagement" auth="true">
         <description>Delete Product Content Relationship Entity</description>
         <attribute mode="IN" name="contentId" optional="false" type="String"/>
         <attribute mode="IN" name="productId" optional="false" type="String"/>
     </service>
-    
+
     <service name="removeImageFileForImageManagement" engine="java"
         location="org.ofbiz.product.imagemanagement.ImageManagementServices" invoke="removeImageFileForImageManagement" auth="true">
         <description>Delete Image File</description>
@@ -1495,7 +1513,7 @@ under the License.
         <attribute mode="IN" name="objectInfo" optional="false" type="String"/>
         <attribute mode="IN" name="dataResourceName" optional="false" type="String"/>
     </service>
-    
+
     <service name="addImageFrame" engine="java"
         location="org.ofbiz.product.imagemanagement.FrameImage" invoke="addImageFrame" auth="true">
         <description>Create Image Frame For Product.</description>
@@ -1506,13 +1524,15 @@ under the License.
         <attribute mode="IN" name="frameContentId" optional="false" type="String"/>
         <attribute mode="IN" name="frameDataResourceId" optional="false" type="String"/>
     </service>
-    
+
+    <!-- SCIPIO: FIXME?: FrameImage.uploadFrame is an event, not a service...
     <service name="uploadFrame" engine="java"
         location="org.ofbiz.product.imagemanagement.FrameImage" invoke="uploadFrame" auth="true">
         <description>Upload Image Frame.</description>
         <attribute mode="IN" name="uploadedFile" optional="false" type="java.nio.ByteBuffer"/>
     </service>
-    
+    -->
+
     <service name="imageCrop" engine="java"
         location="org.ofbiz.product.imagemanagement.CropImage" invoke="imageCrop" auth="true">
         <description>Crop Image</description>
@@ -1523,7 +1543,7 @@ under the License.
         <attribute mode="IN" name="imageW" optional="false" type="String"/>
         <attribute mode="IN" name="imageH" optional="false" type="String"/>
     </service>
-    
+
     <service name="imageRotate" engine="java"
         location="org.ofbiz.product.imagemanagement.RotateImage" invoke="imageRotate" auth="true">
         <description>Rotate Image</description>
@@ -1531,7 +1551,7 @@ under the License.
         <attribute mode="IN" name="imageName" optional="false" type="String"/>
         <attribute mode="IN" name="angle" optional="false" type="String"/>
     </service>
-    
+
     <service name="setImageDetail" engine="simple" default-entity-name="ProductContent"
         location="component://product/script/org/ofbiz/product/imagemanagement/ImageManagementServices.xml" invoke="setImageDetail" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
@@ -1540,19 +1560,19 @@ under the License.
         <attribute name="drIsPublic" mode="IN" type="String" optional="true" default-value="N"/>
         <attribute name="description" mode="IN" type="String" optional="true"/>
     </service>
-    
+
     <service name="updateStatusImageManagement" engine="simple"
         location="component://product/script/org/ofbiz/product/imagemanagement/ImageManagementServices.xml" invoke="updateStatusImageManagement" auth="true">
         <attribute name="contentId" mode="IN" type="String" optional="false"/>
         <attribute name="checkStatusId" mode="IN" type="String" optional="true"/>
     </service>
-    
+
     <service name="addRejectedReasonImageManagement" engine="simple"
         location="component://product/script/org/ofbiz/product/imagemanagement/ImageManagementServices.xml" invoke="addRejectedReasonImageManagement" auth="true">
         <attribute name="contentId" mode="IN" type="String" optional="false"/>
         <attribute name="description" mode="IN" type="String" optional="true"/>
     </service>
-    
+
     <service name="createImageContentApproval" engine="simple"
         location="component://product/script/org/ofbiz/product/imagemanagement/ImageManagementServices.xml" invoke="createImageContentApproval" auth="true">
         <attribute name="contentId" mode="IN" type="String" optional="false"/>
@@ -1735,6 +1755,192 @@ under the License.
         location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="checkProductGroupOrderExpired" auth="true">
         <description>Check ProductGroupOrder Expired</description>
         <attribute name="groupOrderId" mode="IN" type="String" optional="false"/>
+    </service>
+
+    <service name="createGoodIdentificationType" default-entity-name="GoodIdentificationType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a GoodIdentificationType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateGoodIdentificationType" default-entity-name="GoodIdentificationType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a GoodIdentificationType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteGoodIdentificationType" default-entity-name="GoodIdentificationType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a GoodIdentificationType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProdCatalogCategoryType" default-entity-name="ProdCatalogCategoryType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create ProdCatalogCategoryType Record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateProdCatalogCategoryType" default-entity-name="ProdCatalogCategoryType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update ProdCatalogCategoryType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProdCatalogCategoryType" default-entity-name="ProdCatalogCategoryType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete ProdCatalogCategoryType Record</description>
+        <auto-attributes mode="IN" include="pk"/>
+    </service>
+
+    <service name="createProductAssocType" default-entity-name="ProductAssocType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductAssocType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductAssocType" default-entity-name="ProductAssocType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductAssocType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductAssocType" default-entity-name="ProductAssocType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductAssocType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductCategoryContentType services -->
+    <service name="createProductCategoryContentType" default-entity-name="ProductCategoryContentType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductCategoryContentType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateProductCategoryContentType" default-entity-name="ProductCategoryContentType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductCategoryContentType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductCategoryContentType" default-entity-name="ProductCategoryContentType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductCategoryContentType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductCategoryType services -->
+    <service name="createProductCategoryType" default-entity-name="ProductCategoryType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductCategoryType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateProductCategoryType" default-entity-name="ProductCategoryType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a GlFiscalType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductCategoryType" default-entity-name="ProductCategoryType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductCategoryType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductCategoryTypeAttr services -->
+    <service name="createProductCategoryTypeAttr" default-entity-name="ProductCategoryTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductCategoryTypeAttr</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateProductCategoryTypeAttr" default-entity-name="ProductCategoryTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductCategoryTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductCategoryTypeAttr" default-entity-name="ProductCategoryTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductCategoryTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductContentType services -->
+    <service name="createProductContentType" default-entity-name="ProductContentType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductContentType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateProductContentType" default-entity-name="ProductContentType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductContentType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductContentType" default-entity-name="ProductContentType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductContentType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductMaintType services -->
+    <service name="createProductMaintType" default-entity-name="ProductMaintType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductMaintType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateProductMaintType" default-entity-name="ProductMaintType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductMaintType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductMaintType" default-entity-name="ProductMaintType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductMaintType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductMeterType services -->
+    <service name="createProductMeterType" default-entity-name="ProductMeterType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductMeterType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateProductMeterType" default-entity-name="ProductMeterType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductMeterType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductMeterType" default-entity-name="ProductMeterType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductMeterType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductType" default-entity-name="ProductType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductType" default-entity-name="ProductType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductType" default-entity-name="ProductType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductTypeAttr" default-entity-name="ProductTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductTypeAttr</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductTypeAttr" default-entity-name="ProductTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductTypeAttr" default-entity-name="ProductTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProdCatalogInvFacility" default-entity-name="ProdCatalogInvFacility" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProdCatalogInvFacility</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProdCatalogInvFacility" default-entity-name="ProdCatalogInvFacility" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProdCatalogInvFacility</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="expireProdCatalogInvFacility" default-entity-name="ProdCatalogInvFacility" engine="entity-auto" invoke="expire" auth="true">
+        <description>Expire a ProdCatalogInvFacility Record</description>
+        <auto-attributes mode="IN" include="pk"/>
     </service>
 
     <!-- ======================================== -->

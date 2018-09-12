@@ -60,10 +60,9 @@ under the License.
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyMultiResp">
         <description>Create a SurveyMultiResp; surveyMultiRespId will be auto-sequenced</description>
         <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false">
-            <exclude field-name="surveyMultiRespId"/>
-        </auto-attributes>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="surveyId" mode="IN" type="String"/>
+        <attribute name="surveyMultiRespId" mode="OUT" type="String"/>
     </service>
     <service name="updateSurveyMultiResp" default-entity-name="SurveyMultiResp" auth="true" engine="simple"
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyMultiResp">
@@ -84,10 +83,10 @@ under the License.
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyMultiRespColumn">
         <description>Create a SurveyMultiRespColumn; surveyMultiRespColId will be auto-sequenced</description>
         <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false">
-            <exclude field-name="surveyMultiRespColId"/>
-        </auto-attributes>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="surveyId" mode="IN" type="String"/>
+        <attribute name="surveyMultiRespId" mode="IN" type="String"/>
+        <attribute name="surveyMultiRespColId" mode="OUT" type="String"/>
     </service>
     <service name="updateSurveyMultiRespColumn" default-entity-name="SurveyMultiRespColumn" auth="true" engine="simple"
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyMultiRespColumn">
@@ -108,10 +107,9 @@ under the License.
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyPage">
         <description>Create a SurveyPage; the surveyPageSeqId will be auto-generated</description>
         <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false">
-            <exclude field-name="surveyPageSeqId"/>
-        </auto-attributes>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="surveyId" mode="IN" type="String"/>
+        <attribute name="surveyPageSeqId" mode="OUT" type="String"/>
     </service>
     <service name="updateSurveyPage" default-entity-name="SurveyPage" auth="true" engine="simple"
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyPage">
@@ -177,11 +175,9 @@ under the License.
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyQuestionOption">
         <description>Create a SurveyQuestionOption</description>
         <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
-        <auto-attributes include="all" mode="IN" optional="true">
-            <exclude field-name="surveyOptionSeqId"/>
-        </auto-attributes>
-        <attribute name="surveyOptionSeqId" type="String" mode="OUT" optional="false"/>
-        <override name="surveyQuestionId" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="surveyQuestionId" type="String" mode="IN"/>
+        <attribute name="surveyOptionSeqId" type="String" mode="OUT"/>
     </service>
     <service name="updateSurveyQuestionOption" default-entity-name="SurveyQuestionOption" auth="true" engine="simple"
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyQuestionOption">
@@ -269,8 +265,11 @@ under the License.
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyTrigger">
         <description>Create a SurveyTrigger</description>
         <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false">
+            <exclude field-name="fromDate"/><!-- SCIPIO: 2018-10-09: fromDate is optional -->
+        </auto-attributes>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="String" mode="INOUT" optional="true"/><!-- SCIPIO: 2018-10-09: OUT missing from stock -->
     </service>
     <service name="updateSurveyTrigger" default-entity-name="SurveyTrigger" auth="true" engine="simple"
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyQuestionType">
@@ -291,7 +290,11 @@ under the License.
             location="component://content/script/org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyResponse">
         <description>Create a Survey Response w/ Response Answers</description>
         <auto-attributes mode="IN" entity-name="SurveyResponse" include="nonpk" optional="true"/>
-        <attribute name="answers" type="Map" mode="IN" optional="false" string-map-prefix="answers_"/>
+        <attribute name="answers" type="Map" mode="IN" optional="false" string-map-prefix="answers_">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingAnswers"/>
+            </type-validate>
+        </attribute>
         <attribute name="surveyResponseId" type="String" mode="INOUT" optional="true"/>
         <attribute name="productStoreSurveyId" type="String" mode="INOUT" optional="true"/>
         <attribute name="dataResourceId" type="String" mode="IN" optional="true"/>
@@ -300,7 +303,11 @@ under the License.
 
     <service name="surveyResponseProcessInterface" engine="interface">
         <description>Interface for Survey Response Processing services defined on the Survey</description>
-        <attribute name="surveyResponseId" type="String" mode="IN" optional="false"/>
+        <attribute name="surveyResponseId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingSurveyResponseId"/>
+            </type-validate>
+        </attribute>
     </service>
 
     <service name="buildSurveyFromPdf" engine="java"
@@ -339,7 +346,11 @@ under the License.
         <attribute name="pdfFileNameIn" type="String" mode="IN" optional="true"/>
         <attribute name="contentId" type="String" mode="IN" optional="true"/>
         <attribute name="inputByteBuffer" type="java.nio.ByteBuffer" mode="IN" optional="true"/>
-        <attribute name="surveyResponseId" type="String" mode="IN" optional="false"/>
+        <attribute name="surveyResponseId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingSurveyResponseId"/>
+            </type-validate>
+        </attribute>
         <attribute name="outByteBuffer" type="java.nio.ByteBuffer" mode="OUT" optional="true"/>
     </service>
 
@@ -349,20 +360,32 @@ under the License.
         <attribute name="pdfFileNameIn" type="String" mode="IN" optional="true"/>
         <attribute name="contentId" type="String" mode="IN" optional="true"/>
         <attribute name="inputByteBuffer" type="java.nio.ByteBuffer" mode="IN" optional="true"/>
-        <attribute name="acroFieldMap" type="Map" mode="IN" optional="false"/>
+        <attribute name="acroFieldMap" type="Map" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingAcroFieldMap"/>
+            </type-validate>
+        </attribute>
         <attribute name="outByteBuffer" type="java.nio.ByteBuffer" mode="OUT" optional="true"/>
     </service>
 
     <service name="buildPdfFromSurveyResponse" engine="java"
             location="org.ofbiz.content.survey.PdfSurveyServices" invoke="buildPdfFromSurveyResponse" auth="false">
         <description>Build Pdf From Survey Response</description>
-        <attribute name="surveyResponseId" type="String" mode="IN" optional="false"/>
+        <attribute name="surveyResponseId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingSurveyResponseId"/>
+            </type-validate>
+        </attribute>
         <attribute name="outByteBuffer" type="java.nio.ByteBuffer" mode="OUT" optional="false"/>
     </service>
     <service name="buildSurveyQuestionsAndAnswers" engine="java"
             location="org.ofbiz.content.survey.PdfSurveyServices" invoke="buildSurveyQuestionsAndAnswers" auth="false">
         <description>Build list of questions and answers From Survey Response</description>
-        <attribute name="surveyResponseId" type="String" mode="IN" optional="false"/>
+        <attribute name="surveyResponseId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingSurveyResponseId"/>
+            </type-validate>
+        </attribute>
         <attribute name="questionsAndAnswers" type="List" mode="OUT" optional="false"/>
     </service>
 </services>

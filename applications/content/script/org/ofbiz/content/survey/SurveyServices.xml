@@ -63,6 +63,7 @@
         </if-empty>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.surveyMultiRespId" result-name="surveyMultiRespId"/><!-- SCIPIO: 2018-09-10: fixed missing from upstream code -->
     </simple-method>
     <simple-method method-name="updateSurveyMultiResp" short-description="Update Survey Multi-Response">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -93,6 +94,7 @@
         <make-next-seq-id value-field="newEntity" seq-field-name="surveyMultiRespColId" numeric-padding="2"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.surveyMultiRespColId" result-name="surveyMultiRespColId"/><!-- SCIPIO: 2018-09-10: fixed missing from upstream code -->
     </simple-method>
     <simple-method method-name="updateSurveyMultiRespColumn" short-description="Update Survey Multi-Response Column/Category">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -123,6 +125,7 @@
         <make-next-seq-id value-field="newEntity" seq-field-name="surveyPageSeqId" numeric-padding="2"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.surveyPageSeqId" result-name="surveyPageSeqId"/><!-- SCIPIO: 2018-09-10: fixed missing from upstream code -->
     </simple-method>
     <simple-method method-name="updateSurveyPage" short-description="Update Survey Page">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -388,7 +391,11 @@
         <make-value entity-name="SurveyTrigger" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.fromDate"><!-- SCIPIO: 2018-09-10: missing from stock -->
+            <now-timestamp field="newEntity.fromDate"/>
+        </if-empty>
         <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.fromDate" result-name="fromDate"/><!-- SCIPIO: 2018-09-10: missing from stock -->
     </simple-method>
     <simple-method method-name="updateSurveyTrigger" short-description="Update SurveyTrigger">
         <check-permission action="_UPDATE" permission="CONTENTMGR">

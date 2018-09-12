@@ -32,9 +32,18 @@ under the License.
         <override name="rateTypeId" optional="false"/>
         <override name="rateAmount" optional="false"/>
     </service>
+    <service name="expireRateAmount" default-entity-name="RateAmount" engine="simple" auth="true"
+        location="component://accounting/script/org/ofbiz/accounting/rate/RateServices.xml" invoke="expireRateAmount">
+        <description>Expire Rate Amount</description>
+        <permission-service service-name="acctgBasePermissionCheck" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <override name="rateTypeId" optional="false"/>
+        <override name="fromDate" optional="false"/>
+    </service>
     <service name="deleteRateAmount" default-entity-name="RateAmount" engine="simple" auth="true"
         location="component://accounting/script/org/ofbiz/accounting/rate/RateServices.xml" invoke="deleteRateAmount">
-        <description>Delete (expire) Rate Amount</description>
+        <description>Delete Rate Amount (SCIPIO: NOTE: this actually expires it; always has)</description>
+        <deprecated use-instead="expireRateAmount">Deprecated please use expireRateAmount</deprecated>
         <permission-service service-name="acctgBasePermissionCheck" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <override name="rateTypeId" optional="false"/>
@@ -53,7 +62,7 @@ under the License.
         <override name="rateTypeId" optional="false"/>
     </service>
     <service name="getRatesAmountsFromWorkEffortId" default-entity-name="RateAmount" engine="simple" auth="true"
-             location="component://accounting/script/org/ofbiz/accounting/rate/RateServices.xml" invoke="getRatesAmountsFromWorkEffortId">
+        location="component://accounting/script/org/ofbiz/accounting/rate/RateServices.xml" invoke="getRatesAmountsFromWorkEffortId">
         <description>Get all Rates Amounts for a given workEffortId</description>
         <permission-service service-name="acctgBasePermissionCheck" main-action="VIEW"/>
         <auto-attributes include="pk" mode="IN" optional="true"/>
@@ -108,12 +117,33 @@ under the License.
         <attribute name="periodTypeId" type="String" mode="IN"/>
         <override name="fromDate" optional="true"/>
     </service>
-    <service name="deletePartyRate" default-entity-name="PartyRate" engine="simple" auth="true"
-        location="component://accounting/script/org/ofbiz/accounting/rate/RateServices.xml" invoke="deletePartyRate">
-        <description>Deletes PartyRate</description>
+    <service name="deletePartyRate" engine="group">
+        <description>Deletes (expires) PartyRate (SCIPIO: NOTE: This expires the PartyRate; it cannot be deleted)</description>
+        <group><invoke name="expirePartyRate"/></group>
+    </service>
+    <!-- SCIPIO: 2018-09-10: This is a new name for the old deletePartyRate, which did the same thing (expiry) but was misleading  -->
+    <service name="expirePartyRate" default-entity-name="PartyRate" engine="simple" auth="true"
+        location="component://accounting/script/org/ofbiz/accounting/rate/RateServices.xml" invoke="expirePartyRate">
+        <description>Expire PartyRate and expire related rateAmount</description>
         <permission-service service-name="acctgBasePermissionCheck" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="rateAmountFromDate" type="Timestamp" mode="IN" optional="true"/><!-- to be able to expire rateamount specific to a party records....-->
+    </service>
+
+    <!-- RateType services -->
+    <service name="createRateType" default-entity-name="RateType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a RateType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateRateType" default-entity-name="RateType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a RateType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteRateType" default-entity-name="RateType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a RateType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
 </services>

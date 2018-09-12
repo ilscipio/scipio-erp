@@ -243,7 +243,7 @@ under the License.
         <field name="reconciledAmount"><display/></field>
     </form>
     
-    <form name="ListRateAmounts" type="list" target="deleteRateAmount" paginate-target="viewRateAmounts"
+    <form name="ListRateAmounts" type="list" target="expireRateAmount" paginate-target="viewRateAmounts"
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="sortField" from-field="parameters.sortField" default-value="rateTypeId"/>

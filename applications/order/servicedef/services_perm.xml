@@ -24,7 +24,7 @@ under the License.
     <version>1.0</version>
 
     <service name="returnPermissionCheck" engine="simple"
-            location="component://order/minilang/permission/PermissionServices.xml" invoke="returnPermissionCheck">
+            location="component://order/script/org/ofbiz/order/permission/PermissionServices.xml" invoke="returnPermissionCheck">
         <description>Order permission Checking Logic</description>
         <implements service="permissionInterface"/>
     </service>

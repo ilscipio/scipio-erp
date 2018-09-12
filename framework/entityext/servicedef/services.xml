@@ -200,9 +200,9 @@ under the License.
         <permission-service service-name="entitySyncPermissionCheck" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="updateEntitySyncRunning" engine="simple"
-            location="component://entityext/script/org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="updateEntitySync" auth="true" require-new-transaction="true">
+    <service name="updateEntitySyncRunning" default-entity-name="EntitySync" engine="entity-auto" invoke="update" auth="true" require-new-transaction="true">
         <description>Update EntitySync while Running</description>
+        <permission-service service-name="entitySyncPermissionCheck" main-action="UPDATE"/>
         <implements service="updateEntitySync"/>
     </service>
     <service name="createEntitySyncHistory" default-entity-name="EntitySyncHistory" engine="simple"
@@ -466,6 +466,6 @@ under the License.
         <description>mysql timestamp Field migration service,
             it will generate sql file with alter query statement to update the datatype of timestamp field to support Fractional Seconds in Time Values
             mySql 5.6.4 added support for Fractional Seconds in Time Values. </description>
-        <attribute name="groupName" type="String" mode="IN" optional="true" default-value="org.apache.ofbiz"/>
+        <attribute name="groupName" type="String" mode="IN" optional="true" default-value="org.ofbiz"/>
     </service>
 </services>

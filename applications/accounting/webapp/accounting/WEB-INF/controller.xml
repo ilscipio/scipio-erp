@@ -742,10 +742,10 @@ under the License.
     
     <!-- 
     **************
-    * Conntracts
+    * Contracts
     **************
      -->
-     <request-map uri="FindAgreement"><security https="true" auth="true"/><response name="success" type="view" value="FindAgreement"/></request-map>
+    <request-map uri="FindAgreement"><security https="true" auth="true"/><response name="success" type="view" value="FindAgreement"/></request-map>
     <request-map uri="cancelAgreement">
         <security https="true" auth="true"/>
         <event type="service" invoke="cancelAgreement"/>
@@ -2233,9 +2233,15 @@ under the License.
         <response name="error" type="view" value="ViewRateAmounts"/>
     </request-map>
 
-    <request-map uri="deleteRateAmount">
+    <request-map uri="deleteRateAmount"><!-- SCIPIO: legacy request for backward-compat; it doesn't delete, it expires -->
         <security https="true" auth="true"/>
-        <event type="service" invoke="deleteRateAmount"/>
+        <event type="service" invoke="expireRateAmount"/><!-- SCIPIO: NOTE: there was no such thing as deletion, was always expire -->
+        <response name="success" type="view" value="ViewRateAmounts"/>
+        <response name="error" type="view" value="ViewRateAmounts"/>
+    </request-map>
+    <request-map uri="expireRateAmount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="expireRateAmount"/>
         <response name="success" type="view" value="ViewRateAmounts"/>
         <response name="error" type="view" value="ViewRateAmounts"/>
     </request-map>

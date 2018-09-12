@@ -142,9 +142,9 @@ under the License.
         </if-not-empty>
     </simple-method>
 
-    <!-- SCIPIO: Deprecated
+    <!-- SCIPIO: Deprecated -->
     <simple-method method-name="getLastSystemInfoNote"
-        short-description="Get the last 3 system info notes"
+        short-description="Get the last 3 system info notes (SCIPIO: DEPRECATED)"
         login-required="false">
         <if-not-empty field="parameters.userLogin">
             <entity-and entity-name="NoteData" list="systemInfoNotes">
@@ -173,12 +173,10 @@ under the License.
                 <field-to-result field="lastSystemInfoNote3"/>
             </if-not-empty>
         </if-not-empty>
-    </simple-method>
-     -->
-     
-     
-   <!-- SCIPIO-->
-   <simple-method method-name="getSystemMessages" short-description="Fetches System notifications/messages from the database">
+    </simple-method> 
+
+    <!-- SCIPIO-->
+    <simple-method method-name="getSystemMessages" short-description="Fetches System notifications/messages from the database">
         <set field="viewSize" from-field="parameters.viewSize" type="Integer" default-value="10"/>
         <set field="viewIndex" from-field="parameters.viewIndex" type="Integer" default-value="0"/>
         <set field="showAll" from-field="parameters.showAll" type="Boolean" default-value="false"/>
@@ -213,7 +211,7 @@ under the License.
             <field-to-result field="count"/>
         </if-not-empty>
     </simple-method>
-   
+
     <simple-method method-name="convertSystemMessageFromNoteData" short-description="Creates a new system message from a notedata entry">
         <make-value value-field="systemMessage" entity-name="SystemMessages"/>
         <sequenced-id sequence-name="SystemMessages" field="systemMessage.messageId"/>

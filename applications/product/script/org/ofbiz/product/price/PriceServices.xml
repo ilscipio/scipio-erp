@@ -195,6 +195,7 @@ under the License.
         <set field="newEntity.changedByUserLogin" from-field="userLogin.userLoginId"/>
 
         <create-value value-field="newEntity"/>
+        <field-to-result field="productPriceChangeId" result-name="productPriceChangeId"/><!-- SCIPIO: 2018-09-10: added, was missing OUT -->
     </simple-method>
 
     <!-- ProductPaymentMethodType methods -->

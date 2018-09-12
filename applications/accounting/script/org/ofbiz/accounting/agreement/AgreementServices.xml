@@ -55,16 +55,6 @@ under the License.
         <check-errors/>
     </simple-method>
 
-    <!-- cancel an existing Agreement -->
-    <simple-method method-name="cancelAgreement" short-description="Cancel an existing Agreement">
-        <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true"/>
-        <check-errors/>
-        <now-timestamp field="nowTimestamp"/>
-        <set from-field="nowTimestamp" field="agreement.thruDate"/>
-        <store-value value-field="agreement"/>
-        <check-errors/>
-    </simple-method>
-
     <!-- copy an existing Agreement -->
     <simple-method method-name="copyAgreement" short-description="Copy an existing Agreement">
         <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true"/>

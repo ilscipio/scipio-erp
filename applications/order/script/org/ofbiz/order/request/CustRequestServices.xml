@@ -290,12 +290,18 @@ under the License.
         <store-value value-field="lookedUpValue"/>
         <call-simple-method method-name="updateCustRequestLastModifiedDate"/>
     </simple-method>
-    <simple-method method-name="deleteCustRequestParty" short-description="Delete Customer CustRequestParty">
+    <simple-method method-name="expireCustRequestParty" short-description="Expire Customer CustRequestParty">
         <call-simple-method method-name="checkStatusCustRequest"/>
         <entity-one entity-name="CustRequestParty" value-field="lookedUpValue"/>
         <now-timestamp field="thruDate"/>
         <set field="lookedUpValue.thruDate" from-field="thruDate"/>
         <store-value value-field="lookedUpValue"/>
+        <call-simple-method method-name="updateCustRequestLastModifiedDate"/>
+    </simple-method>
+    <simple-method method-name="deleteCustRequestParty" short-description="Delete Customer CustRequestParty">
+        <call-simple-method method-name="checkStatusCustRequest"/>
+        <entity-one entity-name="CustRequestParty" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
         <call-simple-method method-name="updateCustRequestLastModifiedDate"/>
     </simple-method>
     <simple-method method-name="createCustRequestNote" short-description="Create Customer Request Note">
@@ -462,7 +468,10 @@ under the License.
             <now-timestamp field="nowTimestamp"/>
             <set from-field="nowTimestamp" field="newEntity.statusDatetime"/>
         </if-empty>
+        <!-- SCIPIO: 2018-09-10: added changeByUserLoginId to reflect new field on CustRequestStatus -->
+        <set field="newEntity.changeByUserLoginId" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.custRequestStatusId" result-name="custRequestStatusId"/><!-- SCIPIO: added 2018-09-10 -->
     </simple-method>
 
     <simple-method method-name="setCustRequestStatus" short-description="change the customer request Status">
@@ -508,7 +517,8 @@ under the License.
         </if-not-empty>
         <now-timestamp field="custRequest.lastModifiedDate"/>
         <store-value value-field="custRequest"/>
-        <call-simple-method method-name="createCustRequestStatus"/>
+        <set-service-fields service-name="createCustRequestStatus" map="parameters" to-map="rqMap"/>
+        <call-service service-name="createCustRequestStatus" in-map-name="rqMap"/>
     </simple-method>
 
     <simple-method method-name="createCustRequestFromCommEvent" short-description="Create a Customer request from a commEvent(email)">

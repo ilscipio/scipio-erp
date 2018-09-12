@@ -345,6 +345,10 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="deleteProductStoreGroupRollup" default-entity-name="ProductStoreGroupRollup" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductStoreGroupRollup</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     <service name="checkProductStoreGroupRollup" engine="simple"
             location="component://product/script/org/ofbiz/product/store/ProductStoreServices.xml" invoke="checkProductStoreGroupRollup" auth="true">
         <description>Check if a productStoreGroupId with a primaryParentGroupId has related productStoreGroupRollup or for first ProductStoreGroupRollup on a ProductStoreGroup set relation on primaryParentGroupId</description>
@@ -358,5 +362,29 @@ under the License.
     <service name="productStoreGenericPermission" engine="simple"
         location="component://product/script/org/ofbiz/product/store/ProductStoreServices.xml" invoke="productStoreGenericPermission">
         <implements service="permissionInterface"/>
+    </service>
+    <service name="createProductStoreGroupRole" default-entity-name="ProductStoreGroupRole" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductStoreGroupRole</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductStoreGroupRole" default-entity-name="ProductStoreGroupRole" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductStoreGroupRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductStoreGroupType" default-entity-name="ProductStoreGroupType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductStoreGroupType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductStoreGroupType" default-entity-name="ProductStoreGroupType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductStoreGroupType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductStoreGroupType" default-entity-name="ProductStoreGroupType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductStoreGroupType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

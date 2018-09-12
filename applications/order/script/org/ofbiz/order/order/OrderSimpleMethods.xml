@@ -101,6 +101,7 @@ under the License.
         <set from-field="parameters.comments" field="orderNotification.comments"/>
         <now-timestamp field="orderNotification.notificationDate"/>
         <create-value value-field="orderNotification"/>
+        <field-to-result field="orderNotification.orderNotificationId" result-name="orderNotificationId"/><!-- SCIPIO: 2018-09-10: return the new orderNotificationId -->
     </simple-method>
 
     <simple-method method-name="updateOrderStatusFromReceipt" short-description="Update Order Status From ShipmentReceipt">

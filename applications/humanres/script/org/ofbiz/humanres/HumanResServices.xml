@@ -146,9 +146,9 @@
         <now-timestamp field="lookedUpValue.thruDate"/>
         <store-value value-field="lookedUpValue"/>
 
-        <set-service-fields service-name="deleteRateAmount" map="parameters" to-map="delRateAmount"/>
+        <set-service-fields service-name="expireRateAmount" map="parameters" to-map="delRateAmount"/>
         <set field="delRateAmount.fromDate" from-field="parameters.rateAmountFromDate"/>
-        <call-service service-name="deleteRateAmount" in-map-name="delRateAmount"/>
+        <call-service service-name="expireRateAmount" in-map-name="delRateAmount"/>
     </simple-method>
 
     <simple-method method-name="createEmplLeave" short-description="Create Employee Leave">
@@ -208,7 +208,8 @@
         <set from-field="trainingRequest.trainingRequestId" field="personTraining.trainingRequestId"/>
         <set field="personTraining.fromDate" from-field="parameters.fromDate"/>
         <set field="personTraining.thruDate" from-field="parameters.thruDate"/>
-        <set field="personTraining.trainingClassTypeId" from-field="parameters.workEffortName"/>
+        <!-- SCIPIO: 2018-09-10: this makes no sense
+        <set field="personTraining.trainingClassTypeId" from-field="parameters.workEffortName"/>-->
         <create-value value-field="personTraining"/>
         <check-errors/>
     </simple-method>
@@ -227,6 +228,26 @@
         <check-errors/>
     </simple-method>
 
+    <simple-method method-name="createSalaryStep" short-description="Create a Salary Step">
+        <make-value entity-name="SalaryStep" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="newEntity.createdByUserLogin" from-field="parameters.userLogin.userLoginId"/>
+        <sequenced-id sequence-name="SalaryStep" field="newEntity.salaryStepSeqId"/>
+        <!-- SCIPIO: 2018-09-10: this is wrong
+        <field-to-result field="salaryStepSeqId" result-name="salaryStepSeqId"/>-->
+        <field-to-result field="newEntity.salaryStepSeqId" result-name="salaryStepSeqId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updateSalaryStep" short-description="Update Salary Step">
+        <entity-one entity-name="SalaryStep" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set field="lookedUpValue.lastModifiedByUserLogin" from-field="parameters.userLogin.userLoginId"/>
+        <now field="fromDate"/>
+        <set field="lookedUpValue.dateModified" from-field="fromDate"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
 
     <simple-method method-name="createEmploymentApp" short-description="SCIPIO: Create Employment App">
         <call-simple-method method-name="validateEmploymentAppParams" />

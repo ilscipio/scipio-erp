@@ -2737,18 +2737,18 @@ public class OrderServices {
         String orderItemSeqId = (String) context.get("orderItemSeqId");
         String sendTo = (String) context.get("sendTo");
         String sendCc = (String) context.get("sendCc");
+        String sendBcc = (String) context.get("sendBcc");
         String note = (String) context.get("note");
         String screenUri = (String) context.get("screenUri");
         GenericValue temporaryAnonymousUserLogin = (GenericValue) context.get("temporaryAnonymousUserLogin");
         Locale localePar = (Locale) context.get("locale");
         if (userLogin == null) {
-            // this may happen during anonymous checkout, try to the special
-            // case user
+            // this may happen during anonymous checkout, try to the special case user
             userLogin = temporaryAnonymousUserLogin;
         }
 
         // prepare the order information
-        Map<String, Object> sendMap = new HashMap<String, Object>();
+        Map<String, Object> sendMap = new HashMap<>();
 
         // get the order header and store
         GenericValue orderHeader = null;
@@ -2759,25 +2759,26 @@ public class OrderServices {
         }
 
         if (orderHeader == null) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), localePar));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
+                    "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), localePar));
         }
 
         if (orderHeader.get("webSiteId") == null) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "OrderOrderWithoutWebSite", UtilMisc.toMap("orderId", orderId), localePar));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
+                    "OrderOrderWithoutWebSite", UtilMisc.toMap("orderId", orderId), localePar));
         }
 
         GenericValue productStoreEmail = null;
         try {
-            productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting")
-                    .where("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType).queryOne();
+            productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType).queryOne();
         } catch (GenericEntityException e) {
-            Debug.logError(e,
-                    "Problem getting the ProductStoreEmailSetting for productStoreId=" + orderHeader.get("productStoreId") + " and emailType=" + emailType,
-                    module);
+            Debug.logError(e, "Problem getting the ProductStoreEmailSetting for productStoreId=" + orderHeader.get("productStoreId") + " and emailType=" + emailType, module);
         }
         if (productStoreEmail == null) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceProduct, "ProductProductStoreEmailSettingsNotValid",
-                    UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType), localePar));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceProduct,
+                    "ProductProductStoreEmailSettingsNotValid",
+                    UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"),
+                            "emailType", emailType), localePar));
         }
 
         // the override screenUri
@@ -2804,23 +2805,21 @@ public class OrderServices {
         String emailString = orh.getOrderEmailString();
         if (UtilValidate.isEmpty(emailString)) {
             Debug.logInfo("Customer is not setup to receive emails; no address(s) found [" + orderId + "]", module);
-            return ServiceUtil
-                    .returnFailure(UtilProperties.getMessage(resource, "OrderOrderWithoutEmailAddress", UtilMisc.toMap("orderId", orderId), localePar));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
+                    "OrderOrderWithoutEmailAddress", UtilMisc.toMap("orderId", orderId), localePar));
         }
 
-        // where to get the locale... from PLACING_CUSTOMER's
-        // UserLogin.lastLocale,
+        // where to get the locale... from PLACING_CUSTOMER's UserLogin.lastLocale,
         // or if not available then from ProductStore.defaultLocaleString
         // or if not available then the system Locale
         Locale locale = null;
         GenericValue placingParty = orh.getPlacingParty();
         GenericValue placingUserLogin = placingParty == null ? null : PartyWorker.findPartyLatestUserLogin(placingParty.getString("partyId"), delegator);
-        if (locale == null && placingParty != null) {
+        if (placingParty != null) {
             locale = PartyWorker.findPartyLastLocale(placingParty.getString("partyId"), delegator);
         }
 
-        // for anonymous orders, use the temporaryAnonymousUserLogin as the
-        // placingUserLogin will be null
+        // for anonymous orders, use the temporaryAnonymousUserLogin as the placingUserLogin will be null
         if (placingUserLogin == null) {
             placingUserLogin = temporaryAnonymousUserLogin;
         }
@@ -2836,8 +2835,7 @@ public class OrderServices {
             locale = Locale.getDefault();
         }
 
-        Map<String, Object> bodyParameters = UtilMisc.<String, Object> toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "userLogin",
-                placingUserLogin, "locale", locale);
+        Map<String, Object> bodyParameters = UtilMisc.<String, Object>toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "userLogin", placingUserLogin, "locale", locale);
         if (placingParty != null) {
             bodyParameters.put("partyId", placingParty.get("partyId"));
         }
@@ -2863,17 +2861,21 @@ public class OrderServices {
             sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
         }
 
+        if ((sendBcc != null) && UtilValidate.isEmailList(sendBcc)) {
+            sendMap.put("sendBcc", sendBcc);
+        }
+
         // send the notification
         Map<String, Object> sendResp = null;
         try {
             sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
+            if (ServiceUtil.isError(sendResp)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(sendResp));
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, 
                     "OrderServiceExceptionSeeLogs",locale));
-        } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderServiceExceptionSeeLogs", locale));
         }
 
         // check for errors

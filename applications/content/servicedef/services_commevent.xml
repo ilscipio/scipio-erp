@@ -39,7 +39,16 @@ under the License.
                 location="component://content/script/org/ofbiz/content/content/ContentServices.xml" invoke="createCommContentDataResource" auth="true">
         <description>Create CommunicationEvent and Content</description>
         <implements service="persistContentAndAssoc"/>
-        <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
+        <attribute name="communicationEventId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingCommunicationEventId"/>
+            </type-validate>
+        </attribute>
+        <attribute name="contentId" type="String" mode="IN" optional="true">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingContentId"/>
+            </type-validate>
+        </attribute>
         <attribute name="fromDate" type="java.sql.Timestamp" mode="OUT" optional="false"/>
     </service>
 
@@ -47,8 +56,16 @@ under the License.
                 location="component://content/script/org/ofbiz/content/content/ContentServices.xml" invoke="updateCommContentDataResource" auth="true">
         <description>Update CommunicationEvent and Content</description>
         <implements service="persistContentAndAssoc"/>
-        <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="communicationEventId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingCommunicationEventId"/>
+            </type-validate>
+        </attribute>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingFromDate"/>
+            </type-validate>
+        </attribute>
     </service>
 
     <service name="createCommEventContentAssoc" engine="simple"
@@ -64,19 +81,52 @@ under the License.
     <service name="updateCommEventContentAssoc" engine="simple"
                 location="component://content/script/org/ofbiz/content/content/ContentServices.xml" invoke="updateCommEventContentAssoc" auth="true">
         <description>Update CommEventContentAssoc</description>
-        <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
-        <attribute name="contentId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="communicationEventId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingCommunicationEventId"/>
+            </type-validate>
+        </attribute>
+        <attribute name="contentId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingContentId"/>
+            </type-validate>
+        </attribute>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingFromDate"/>
+            </type-validate>
+        </attribute>
         <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
          <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
 
+    <service name="expireCommEventContentAssoc" default-entity-name="CommEventContentAssoc" engine="entity-auto" invoke="expire" auth="true">
+        <description>Expire CommEventContentAssoc</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <!-- SCIPIO: 2018-09-10: NOTE: this was effectively removed upstream in favor of expireCommEventContentAssoc,
+        but currently unclear if it's really what we want (used mainly to remove attachments to comm events - remove seems logical) -->
     <service name="removeCommEventContentAssoc" engine="simple"
                 location="component://content/script/org/ofbiz/content/content/ContentServices.xml" invoke="removeCommEventContentAssoc" auth="true">
         <description>Remove CommEventContentAssoc</description>
         <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createCommContentAssocType" default-entity-name="CommContentAssocType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a new Comm Content Assoc Type Record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateCommContentAssocType" default-entity-name="CommContentAssocType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a Comm Content Assoc Type</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCommContentAssocType" default-entity-name="CommContentAssocType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete an existing Comm Content Assoc Type Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
 </services>

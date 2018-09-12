@@ -881,7 +881,7 @@ under the License.
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="updateOrderTerm" short-description="Update OrderTerm">
-        <check-permission permission="ORDERMGR" action="_DELETE">
+        <check-permission permission="ORDERMGR" action="_UPDATE">
             <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateOrderTerm"/>
         </check-permission>
         <check-errors/>

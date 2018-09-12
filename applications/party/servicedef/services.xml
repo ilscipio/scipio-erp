@@ -26,13 +26,14 @@ under the License.
 
     <!-- AddressMatchMap services 
     
-    SCIPIO: ToDo: Remove
-    Has never been implemented as discussed here 
-    http://ofbiz.135035.n4.nabble.com/Address-match-map-is-used-for-td157597.html
-    
+        SCIPIO: DEPRECATED
+        Has never been implemented as discussed here 
+        http://ofbiz.135035.n4.nabble.com/Address-match-map-is-used-for-td157597.html
+    -->
     <service name="createAddressMatchMap" engine="simple" default-entity-name="AddressMatchMap" auth="true"
             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createAddressMatchMap">
         <description>Create an AddressMatchMap record</description>
+        <deprecated use-instead="none">SCIPIO: Address Match Map is not used anywhere in the platform</deprecated>
         <permission-service service-name="partyBasePermissionCheck" main-action="CREATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
@@ -40,6 +41,7 @@ under the License.
     <service name="importAddressMatchMapCsv" engine="java" auth="true"
             location="org.ofbiz.party.party.PartyServices" invoke="importAddressMatchMapCsv">
         <description>Import a CSV (name,value) of AddressMatchMap records</description>
+        <deprecated use-instead="none">SCIPIO: Address Match Map is not used anywhere in the platform</deprecated>
         <permission-service service-name="partyBasePermissionCheck" main-action="CREATE"/>
         <attribute name="uploadedFile" type="java.nio.ByteBuffer" mode="IN" optional="false"/>
         <attribute name="_uploadedFile_fileName" type="String" mode="IN" optional="false"/>
@@ -48,16 +50,17 @@ under the License.
     <service name="removeAddressMatchMap" engine="simple" default-entity-name="AddressMatchMap" auth="true"
             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deleteAddressMatchMap">
         <description>Delete an AddressMatchMap record</description>
+        <deprecated use-instead="none">SCIPIO: Address Match Map is not used anywhere in the platform</deprecated>
         <permission-service service-name="partyBasePermissionCheck" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     <service name="clearAddressMatchMap" engine="simple" default-entity-name="AddressMatchMap" auth="true"
             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="clearAddressMatchMap">
         <description>Delete an AddressMatchMap record</description>
+        <deprecated use-instead="none">SCIPIO: Address Match Map is not used anywhere in the platform</deprecated>
         <permission-service service-name="partyBasePermissionCheck" main-action="DELETE"/>
     </service>
 
-    -->
     <!-- Party services -->
     <service name="deleteParty" engine="java"
             location="org.ofbiz.party.party.PartyServices" invoke="deleteParty" auth="true">
@@ -399,6 +402,11 @@ under the License.
         <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="contactMechTypeId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingContactMechTypeId"/>
+            </type-validate>
+        </attribute>
     </service>
     <service name="updateContactMech" engine="simple"
             location="component://party/script/org/ofbiz/party/contact/ContactMechServices.xml" invoke="updateContactMech" auth="true">
@@ -567,7 +575,40 @@ under the License.
         <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
         <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
     </service>
-
+    <service name="createPartyFtpAddress" engine="groovy"
+             location="component://party/script/org/ofbiz/party/contact/ContactMechServices.groovy" invoke="createPartyFtpAddress" auth="true">
+        <description>Create an Ftp Address associated to a party</description>
+        <permission-service service-name="partyContactMechPermissionCheck" main-action="CREATE"/>
+        <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="PartyContactMech" mode="IN" optional="true"/>
+        <auto-attributes entity-name="FtpAddress" mode="IN" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updatePartyFtpAddress" engine="groovy"
+             location="component://party/script/org/ofbiz/party/contact/ContactMechServices.groovy" invoke="updatePartyFtpAddress" auth="true">
+        <description>Update an Ftp Address associated to a party</description>
+        <permission-service service-name="partyContactMechPermissionCheck" main-action="UPDATE"/>
+        <auto-attributes entity-name="PartyContactMech" mode="IN" optional="true"/>
+        <auto-attributes entity-name="FtpAddress" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT"/>
+    </service>
+    <service name="createFtpAddress" default-entity-name="FtpAddress" engine="groovy" invoke="createFtpAddress"
+             location="component://party/script/org/ofbiz/party/contact/ContactMechServices.groovy">
+        <description>create FtpAddress</description>
+        <permission-service service-name="partyBasePermissionCheck" main-action="CREATE"/>
+        <auto-attributes mode="OUT" include="pk"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateFtpAddressWithHistory" default-entity-name="FtpAddress" engine="groovy" invoke="updateFtpAddressWithHistory"
+        location="component://party/script/org/ofbiz/party/contact/ContactMechServices.groovy">
+        <description>update FtpAddress</description>
+        <permission-service service-name="partyBasePermissionCheck" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT"/> <!-- the out paramater is the id of the new address -->
+        <attribute name="oldContactMechId" type="String" mode="OUT"/> <!-- this is the id of the old address -->
+    </service>
     <!-- contact mech attribute services -->
     <service name="createContactMechAttribute" engine="simple" default-entity-name="ContactMechAttribute"
             location="component://party/script/org/ofbiz/party/contact/ContactMechServices.xml" invoke="createContactMechAttribute" auth="true">
@@ -808,17 +849,27 @@ under the License.
         <auto-attributes entity-name="CommunicationEventPurpose" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="CommunicationEventPurpose" include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="createCustRequestCommEvent" engine="simple"
-            location="component://party/script/org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="createCustRequestCommEvent" auth="true">
-        <description>Create a CustRequestCommEvent</description>
-        <permission-service service-name="partyCommunicationEventPermissionCheck" main-action="CREATE"/>
-        <auto-attributes entity-name="CustRequestCommEvent" include="pk" mode="IN" optional="false"/>
+    <service name="updateCommunicationEventPurpose" default-entity-name="CommunicationEventPurpose" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a CommunicationEventPurpose</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="removeCommunicationEventPurpose" engine="simple"
             location="component://party/script/org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventPurpose" auth="true">
         <description>Remove a Communication Event Purpose</description>
         <permission-service service-name="partyCommunicationEventPermissionCheck" main-action="DELETE"/>
         <auto-attributes entity-name="CommunicationEventPurpose" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="createCustRequestCommEvent" engine="simple"
+            location="component://party/script/org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="createCustRequestCommEvent" auth="true">
+        <description>Create a CustRequestCommEvent</description>
+        <permission-service service-name="partyCommunicationEventPermissionCheck" main-action="CREATE"/>
+        <auto-attributes entity-name="CustRequestCommEvent" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteCustRequestCommEvent" default-entity-name="CustRequestCommEvent" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a CustRequestCommEvent</description>
+        <permission-service service-name="partyCommunicationEventPermissionCheck" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN"/>
     </service>
     <service name="createCommunicationEventRoleInterface" engine="interface" location="" invoke="">
         <description>Create a Communication Event Role with or w/o permission check</description>
@@ -855,8 +906,24 @@ under the License.
         <description>Creates a WorkEffort entity and CommunicationEventWorkEff</description>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
-        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="CommunicationEventWorkEff"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false" entity-name="CommunicationEventWorkEff"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEventWorkEff"/>
+        <override name="workEffortId" optional="true"/>
+        <override name="currentStatusId" optional="false">
+            <type-validate>
+                <fail-property resource="WorkEffortUiLabels" property="PartyRequiredFieldMissingCurrentStatusId"/>
+            </type-validate>
+        </override>
+        <override name="workEffortName" optional="false">
+            <type-validate>
+                <fail-property resource="WorkEffortUiLabels" property="PartyRequiredFieldMissingWorkEffortName"/>
+            </type-validate>
+        </override>
+        <override name="workEffortTypeId" optional="false">
+            <type-validate>
+                <fail-property resource="WorkEffortUiLabels" property="PartyRequiredFieldMissingWorkEffortTypeId"/>
+            </type-validate>
+        </override>
     </service>
     <service name="setCommEventRoleToRead" engine="simple" default-entity-name="CommunicationEventRole"
         location="component://party/script/org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="setCommEventRoleToRead" auth="false">
@@ -871,6 +938,25 @@ under the License.
             be of type EMAIL_COMMUNICATION. Will look for a contactMechIdTo to send the emails</description>
         <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
     </service>
+    <!-- ftp communicationEvent services -->
+    <service name="sendCommEventAsFtp" engine="java"
+             location="org.ofbiz.party.communication.CommunicationEventServices" invoke="sendCommEventAsFtp" auth="true"
+             transaction-timeout="7200">  <!-- set transaction time out for 2 hours, since this sometimes may last long during big file transfer -->
+        <description>Sends communication event associated contents to a ftp server. All parameters come from CommunicationEvent, which must
+            be of type FILE_TRANSFER_COMM. Will look for a contactMechIdTo to connect to Ftp</description>
+        <attribute name="communicationEventId" type="String" mode="IN"/>
+    </service>
+    <service name="createCommEventFromFtpTransfer" engine="java"
+             location="org.ofbiz.party.communication.CommunicationEventServices" invoke="createCommEventFromFtpTransfer" auth="true">
+        <description>Creates a CommunicationEvent record based on information before
+            running a sendContentToFtp service (to be used via ECA)
+        </description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="contentId" type="String" mode="IN"/>
+        <attribute name="contactMechId" type="String" mode="IN"/>
+        <attribute name="communicationEventId" type="String" mode="OUT"/>
+    </service>
+
 
     <!--  email to communication event ECA services -->
     <service name="createCommEventFromEmail" engine="java"
@@ -1255,6 +1341,7 @@ under the License.
         <attribute name="setShippingPurpose" type="String" mode="IN" optional="true"/>
         <attribute name="setBillingPurpose" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <override name="contactMechId" optional="false"/>
     </service>
     <service name="updateContactMechAndPurposes" engine="simple" location="component://party/script/org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updateContactMechAndPurposes">
         <description>Update postal address, telecom number and purposes. The setShippingPurpose and setBillingPurpose enable the service to create purposes for TelecomNumber</description>
@@ -1301,6 +1388,23 @@ under the License.
         <attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+        <!-- SCIPIO: 2018-09-10: TODO: REVIEW: new code from upstream, usually logical, but poor code location to enforce this...
+        <override name="address1" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingAddress1"/>
+            </type-validate>
+        </override>
+        <override name="city" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingCity"/>
+            </type-validate>
+        </override>
+        <override name="postalCode" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingPostalCode"/>
+            </type-validate>
+        </override>
+        -->
     </service>
 
      <!--  bounced message processing -->
@@ -1345,6 +1449,11 @@ under the License.
         <attribute name="countryCode" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <override name="partyIdTo" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingPartyIdTo"/>
+            </type-validate>
+        </override>
     </service>
     
     <!-- send account activated email notification -->
@@ -1353,6 +1462,20 @@ under the License.
         <attribute name="userLoginId" type="String" mode="IN" optional="false"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="createAgreementAttribute" default-entity-name="AgreementAttribute" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a AgreementAttribute entry</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateAgreementAttribute" default-entity-name="AgreementAttribute" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a AgreementAttribute record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteAgreementAttribute" default-entity-name="AgreementAttribute" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a AgreementAttribute record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 
     <service name="importParty" engine="java"
         location="org.ofbiz.party.party.PartyServices" invoke="importParty" auth="true">
@@ -1360,15 +1483,86 @@ under the License.
         <permission-service service-name="partyGroupPermissionCheck" main-action="CREATE"/>
         <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="true" />
     </service>
+    <service name="createAgreementItemTypeAttr" default-entity-name="AgreementItemTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a AgreementItemTypeAttr entry</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateAgreementItemTypeAttr" default-entity-name="AgreementItemTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a AgreementItemTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteAgreementItemTypeAttr" default-entity-name="AgreementItemTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a AgreementItemTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     
-    <!-- Login and Party Services - used by Social Logins -->
+    <!-- Party Role services -->
+    <service name="updateRoleType" default-entity-name="RoleType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a RoleType Record</description>
+        <auto-attributes mode="IN" include="pk"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deleteRoleType" default-entity-name="RoleType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a RoleType Record</description>
+        <auto-attributes mode="IN" include="pk"/>
+    </service>
+    <service name="createRoleTypeAttr" default-entity-name="RoleTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a RoleTypeAttr Record</description>
+        <auto-attributes mode="IN" include="pk"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateRoleTypeAttr" default-entity-name="RoleTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a RoleTypeAttr Record</description>
+        <auto-attributes mode="IN" include="pk"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deleteRoleTypeAttr" default-entity-name="RoleTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a RoleTypeAttr Record</description>
+        <auto-attributes mode="IN" include="pk"/>
+    </service>
+
+    <service name="createNeedType" default-entity-name="NeedType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a NeedType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateNeedType" default-entity-name="NeedType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a NeedType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteNeedType" default-entity-name="NeedType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a NeedType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- CommunicationEventPrpTyp services -->
+    <service name="createCommunicationEventPrpTyp" default-entity-name="CommunicationEventPrpTyp" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a CommunicationEventPrpTyp</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateCommunicationEventPrpTyp" default-entity-name="CommunicationEventPrpTyp" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a CommunicationEventPrpTyp</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCommunicationEventPrpTyp" default-entity-name="CommunicationEventPrpTyp" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a CommunicationEventPrpTyp</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- SCIPIO: Login and Party Services - used by Social Logins -->
     <service name="createPartyLoginAndSecurityGroups" engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="createPartyLoginAndSecurityGroups" auth="true">
         <description>Service to create a person, a UserLogin and add standard security groups to the new user</description>
         <implements service="createPersonAndUserLogin"/>
         <implements service="addUserLoginToSecurityGroup"/>
     </service>
     
-    <service name="findUserLogin"  engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="findUserLogin" auth="true">
+    <!-- SCIPIO -->
+    <service name="findUserLogin" engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="findUserLogin" auth="true">
         <description>Service to check, if a UserLogin exists for a given userLoginId</description>  
         <attribute name="userLoginId" mode="IN" type="String" optional="false"/>
         <attribute name="responseMessage" mode="OUT" type="String" optional="false"/>

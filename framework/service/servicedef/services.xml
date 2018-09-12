@@ -143,7 +143,7 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-
+    
     <service name="createCatalinaSession" default-entity-name="CatalinaSession" engine="entity-auto" invoke="create" auth="true">
         <description>Create a Catalina Session Record</description>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>

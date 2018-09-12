@@ -562,7 +562,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" widget-style="${styles.link_run_sys} ${styles.action_remove}">
-            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteCustRequestParty">
+            <hyperlink description="${uiLabelMap.CommonExpire}" target="expireCustRequestParty">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>

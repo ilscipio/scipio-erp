@@ -522,7 +522,7 @@ under the License.
                         <xs:enumeration value="bsh">
                             <xs:annotation>
                                 <xs:documentation>
-                                    SCIPIO: 2018-09: DEPRECATED: Beanshell interpreter is slated for eventual removal; 
+                                    SCIPIO: 2018: DEPRECATED: Beanshell interpreter is slated for eventual removal; 
                                     please use groovy instead.
                                 </xs:documentation>
                             </xs:annotation>

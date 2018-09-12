@@ -354,7 +354,9 @@ under the License.
     <screen name="language">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/webapp/shop/includes/language.ftl"/></html></platform-specific>
+                <!-- SCIPIO: This template was removed.
+                <platform-specific><html><html-template location="component://shop/webapp/shop/includes/language.ftl"/></html></platform-specific>-->
+                <include-screen name="listLocalesCompact" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>

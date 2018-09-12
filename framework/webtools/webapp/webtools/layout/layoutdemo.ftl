@@ -2436,6 +2436,8 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 
 <a name="validateSystemTools"></a>
 <@section title="Validate System Locations tools">
+  <p><em>In the paths field, you may enter component:// file paths to validate, one per line; 
+    in the class names field, fully-qualified (with package) Java class names to be looked up on the classpath.</em></p>
   <@render resource="component://webtools/widget/MiscScreens.xml#validateSystemLocations" 
     ctxVars={"vslTargetUri":"LayoutDemo?debugMode=true#validateSystemTools"}/>
 </@section>

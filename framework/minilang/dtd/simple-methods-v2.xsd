@@ -2369,7 +2369,7 @@ under the License.
             <xs:documentation>
                 Executes a BSH script. Deprecated - replace with script.
 
-                SCIPIO: WARNING: 2018: Do not use this in any new code; this is likely to be 
+                SCIPIO: WARNING: 2018: DEPRECATED: Do not use this in any new code; this is likely to be 
                 removed in the near future due to low maintenance of the beanshell project,
                 causing potential security concerns. 
                 Use groovy instead ("script" element with CDATA and "groovy:" at the beginning of the content).

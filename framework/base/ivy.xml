@@ -315,9 +315,6 @@
         <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.8" conf="base,sources"/>
         <dependency org="org.apache.poi" name="poi" rev="3.17" conf="base,sources"/>
 
-        <!-- product component (applications/product/ivy.xml) -->
-        <dependency org="watermarker" name="watermarker" rev="0.0.4" conf="base"/>
-
         <!-- solr component (applications/solr/ivy.xml) -->
         <dependency org="org.apache.solr" name="solr-solrj" rev="6.6.5" conf="base,sources"><!-- NOTE: at least 10 deps -->
             <!-- TODO: REVIEW: we cannot allow jcl-over-slf4j on the classpath just like that;

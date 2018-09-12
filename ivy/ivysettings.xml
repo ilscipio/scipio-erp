@@ -10,6 +10,8 @@
     <resolvers>
         <!-- Maven central (ivy knows address) -->
         <ibiblio name="central" m2compatible="true"/>
+        <!-- Spring Plugins Repository (e.g., Solr org.restlet.jee libs)
+        <ibiblio name="springplugins" root="https://repo.spring.io/plugins-release" m2compatible="true"/>-->
         <!-- Jitpack.IO (a git based package repository)
         <ibiblio name="jitpack" root="https://jitpack.io" m2compatible="true"/>-->
         <!-- ivy/localRepo/ for libs missing from central and custom/client libs -->
@@ -24,6 +26,7 @@
         <chain name="default" returnFirst="true">
             <resolver ref="local-ivy"/>
             <resolver ref="central"/>
+            <!--<resolver ref="springplugins"/>-->
             <!--<resolver ref="jitpack"/>-->
         </chain>
     </resolvers>

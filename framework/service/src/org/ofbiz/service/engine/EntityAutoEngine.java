@@ -93,7 +93,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
             boolean allPksInOnly = true;
             List<String> pkFieldNameOutOnly = null;
             /* Check for each pk if it's :
-             * 1. part IN 
+             * 1. part IN
              * 2. or part IN and OUT, but without value but present on parameters map
              * Help the engine to determinate the operation to realize for a create call or validate that
              * any pk is present for update/delete call.
@@ -278,7 +278,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                 newEntity.setPKFields(parameters, true);
                 String pkFieldName = pkFieldNameOutOnly.get(0);
                 //if it's a fromDate, don't update it now, it's will be done next step
-                if (! "fromDate".equals(pkFieldName)) { 
+                if (! "fromDate".equals(pkFieldName)) {
                     String pkValue = dctx.getDelegator().getNextSeqId(modelEntity.getEntityName());
                     newEntity.set(pkFieldName, pkValue);
                 }

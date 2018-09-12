@@ -137,7 +137,7 @@ public final class JobManager {
 
     /**
      * Get a List of each threads current state.
-     * 
+     *
      * @return List containing a Map of each thread's state.
      */
     public Map<String, Object> getPoolState() {
@@ -146,7 +146,7 @@ public final class JobManager {
 
     /**
      * Return true if the jobManager can run job.
-     * 
+     *
      * @return boolean.
      */
     public boolean isAvailable() {
@@ -467,7 +467,7 @@ public final class JobManager {
 
     /**
      * Schedule a job to start at a specific time with specific recurrence info
-     * 
+     *
      * @param serviceName
      *            The name of the service to invoke
      *@param context
@@ -487,7 +487,7 @@ public final class JobManager {
 
     /**
      * Schedule a job to start at a specific time with specific recurrence info
-     * 
+     *
      * @param serviceName
      *            The name of the service to invoke
      *@param context
@@ -509,7 +509,7 @@ public final class JobManager {
 
     /**
      * Schedule a job to start at a specific time with specific recurrence info
-     * 
+     *
      * @param serviceName
      *            The name of the service to invoke
      *@param context
@@ -529,7 +529,7 @@ public final class JobManager {
 
     /**
      * Schedule a job to start at a specific time with specific recurrence info
-     * 
+     *
      * @param poolName
      *            The name of the pool to run the service from
      *@param serviceName
@@ -554,7 +554,7 @@ public final class JobManager {
 
     /**
      * Schedule a job to start at a specific time with specific recurrence info
-     * 
+     *
      * @param poolName
      *            The name of the pool to run the service from
      *@param serviceName
@@ -572,7 +572,7 @@ public final class JobManager {
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
      * SCIPIO: Modified to accept an event ID.
-     * 
+     *
      * @param jobName
      *            The name of the job
      *@param poolName
@@ -611,12 +611,12 @@ public final class JobManager {
         // schedule the job
         schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, eventId);
     }
-    
+
     /**
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
      * SCIPIO: This is now delegating.
-     * 
+     *
      * @param jobName
      *            The name of the job
      *@param poolName
@@ -647,7 +647,7 @@ public final class JobManager {
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
      * SCIPIO: Modified to accept an event ID.
-     * 
+     *
      * @param jobName
      *            The name of the job
      *@param poolName
@@ -717,12 +717,12 @@ public final class JobManager {
             throw new JobManagerException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
      * SCIPIO: Now delegating.
-     * 
+     *
      * @param jobName
      *            The name of the job
      *@param poolName

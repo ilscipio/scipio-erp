@@ -211,7 +211,7 @@ public class PersistedServiceJob extends GenericServiceJob {
                 newJob.set("currentRetryCount", 0L);
             }
             nextRecurrence = next;
-            
+
             // SCIPIO: Transfer the special new eventId field
             // 2017-08-30: copy eventId (e.g. SCH_EVENT_STARTUP) ONLY if this is 
             // a regular recurrence and not a failure retry.

@@ -236,7 +236,7 @@ public class JavaMailContainer implements Container {
                 host = props.getProperty("mail.host");
             }
         }
-        
+
         // check the port
         int portProps = 0;
         String portStr = props.getProperty("mail." + protocol + ".port");
@@ -261,7 +261,7 @@ public class JavaMailContainer implements Container {
         if (portProps != 0) {
             port = portProps;
         }
- 
+
         if (Debug.verboseOn()) {
             Debug.logVerbose("Update URL - " + protocol + "://" + userName + "@" + host + ":" + port + "!" + password + ";" + file, module);
         }

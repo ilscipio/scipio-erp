@@ -84,7 +84,7 @@ public final class JobPoller implements ServiceConfigListener {
 
     /**
      * Register a {@link JobManager} with the job poller.
-     * 
+     *
      * @param jm The <code>JobManager</code> to register.
      * @throws IllegalArgumentException if <code>jm</code> is null
      */

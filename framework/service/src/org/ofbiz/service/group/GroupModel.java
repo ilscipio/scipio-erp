@@ -73,7 +73,7 @@ public class GroupModel implements Serializable { // SCIPIO: added Serializable
         }
 
         ((ArrayList<GroupServiceModel>) this.services).trimToSize(); // SCIPIO
-        
+
         if (Debug.verboseOn()) {
              Debug.logVerbose("Created Service Group Model --> " + this, module);
         }

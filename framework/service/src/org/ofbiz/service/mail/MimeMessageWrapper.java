@@ -530,7 +530,7 @@ public class MimeMessageWrapper implements java.io.Serializable {
 
     /**
      * Convert MimeMessageWrapper to String. This is used when sending emails.
-     * 
+     *
      */
     private static class MimeMessageToString<E> extends AbstractConverter<MimeMessageWrapper, String> {
         public MimeMessageToString() {

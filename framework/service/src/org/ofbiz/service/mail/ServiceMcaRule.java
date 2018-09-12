@@ -57,7 +57,7 @@ public class ServiceMcaRule implements java.io.Serializable {
         for (Element actionElement: UtilXml.childElementList(mca, "action")) {
             actions.add(new ServiceMcaAction(actionElement));
         }
-        
+
         // SCIPIO
         ((ArrayList<ServiceMcaCondition>) conditions).trimToSize();
         ((ArrayList<ServiceMcaAction>) actions).trimToSize();

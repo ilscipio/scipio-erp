@@ -71,7 +71,7 @@ public class XMLRPCClientEngine extends GenericAsyncEngine {
         }
         return result;
     }
-    
+
     /*
      *  Invoke the remote XMLRPC SERVICE : This engine convert all value in IN mode to one struct.
      */
@@ -79,7 +79,7 @@ public class XMLRPCClientEngine extends GenericAsyncEngine {
         if (modelService.location == null || modelService.invoke == null) {
             throw new GenericServiceException("Cannot locate service to invoke");
         }
-        
+
         XmlRpcClientConfigImpl config = null;
         XmlRpcClient client = null;
         String serviceName = modelService.invoke;
@@ -137,7 +137,7 @@ public class XMLRPCClientEngine extends GenericAsyncEngine {
                 params.put(modelParam.name, paramValue);
             }
         }
-        
+
         List<Map<String,Object>> listParams = UtilMisc.toList(params);
         try {
             result = UtilGenerics.cast(client.execute(serviceName, listParams.toArray()));

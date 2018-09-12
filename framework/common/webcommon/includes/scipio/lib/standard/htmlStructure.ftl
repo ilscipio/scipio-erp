@@ -265,7 +265,7 @@ Creates a grid cell.
     <#local stackValues = popRequestStack("scipioCellMarkupStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>
-  <@cell_markup open=open close=close class=class id=id last=last collapse=collapse attribs=attribs 
+  <@cell_markup open=open close=close class=class id=id style=style last=last collapse=collapse attribs=attribs 
     origArgs=origArgs passArgs=passArgs><#nested></@cell_markup>
   <#if close>
     <#-- pop grid sizes -->

@@ -440,9 +440,9 @@ under the License.
                                     </fail-widgets>
                                 </section>-->
                                 <section>
-                                    <condition>
-                                        <!-- <not><if-empty field="accountDescription"/></not> -->
-                                    </condition>
+                                    <!--<condition>
+                                         <not><if-empty field="accountDescription"/></not>
+                                    </condition>-->
                                     <widgets>
                                         <container style="${styles.grid_row}">
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">

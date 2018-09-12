@@ -77,6 +77,6 @@ under the License.
 
     <simple-method method-name="entitySyncPermissionCheck" short-description="Check user permission for entity sync.">
         <set field="primaryPermission" value="ENTITY_SYNC"/>
-        <call-simple-method method-name="genericBasePermissionCheck" xml-resource="component://common/minilang/permission/CommonPermissionServices.xml"/>
+        <call-simple-method method-name="genericBasePermissionCheck" xml-resource="component://common/script/org/ofbiz/common/permission/CommonPermissionServices.xml"/>
     </simple-method>
 </simple-methods>

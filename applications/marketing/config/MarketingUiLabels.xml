@@ -1016,8 +1016,9 @@
         <value xml:lang="zh-TW">員工數量</value>
     </property>
     <property key="MarketingNoPartyLoad">
-        <value xml:lang="en">No party load</value>
-        <value xml:lang="fr">Aucun acteur chargé</value>
+        <value xml:lang="de">Keine Benutzer geladen.</value>
+        <value xml:lang="en">No users loaded.</value>
+        <value xml:lang="fr">Aucun acteur chargé.</value>
     </property>
     <property key="MarketingOrderAmount">
         <value xml:lang="de">Auftragssumme</value>
@@ -1067,8 +1068,9 @@
         <value xml:lang="en">Parties Loaded</value>
         <value xml:lang="fr">Acteurs chargés</value>
     </property>
-    <property key="MarketingPartiesNoLoadedAlreadyExist">
-        <value xml:lang="en">Parties no loaded because they already exist on the system</value>
+    <property key="MarketingPartiesNotLoadedAlreadyExist">
+        <value xml:lang="de">Parties nicht geladen, weil sie bereits auf dem System existieren</value>
+        <value xml:lang="en">Parties not loaded because they already exist on the system</value>
         <value xml:lang="fr">Acteurs non chargés car déjà présent dans le système</value>
     </property>
     <property key="MarketingPartyStatusReport">

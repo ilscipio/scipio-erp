@@ -169,6 +169,39 @@ under the License.
         <field name="serviceName"><hidden value="createContact"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit button-type="button"/></field>
     </form>
+    <!-- SCIPIO: 2018-09-12: Moved here from original stock location CommonForms.xml -->
+    <form name="ViewPartiesCreatedByVCard" type="list" list-name="partiesCreated">
+        <row-actions>
+            <entity-one entity-name="Party" value-field="party" use-cache="true"/>
+            <set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(party, true)}"/>
+            <entity-and entity-name="PartyAndContactMech" list="emailAddresses">
+                <field-map field-name="partyId"/>
+                <field-map field-name="contactMechTypeId" value="EMAIL_ADDRESS"/>
+            </entity-and>
+            <entity-and entity-name="PartyAndContactMech" list="telecomNumbers">
+                <field-map field-name="partyId"/>
+                <field-map field-name="contactMechTypeId" value="TELECOM_NUMBER"/>
+            </entity-and>
+            <set field="telecomNumber" from-field="telecomNumbers[0]" type="Object"/>
+            <entity-and entity-name="PartyAndContactMech" list="postalAddresses">
+                <field-map field-name="partyId"/>
+                <field-map field-name="contactMechTypeId" value="POSTAL_ADDRESS"/>
+            </entity-and>
+            <set field="postalAddress" from-field="postalAddresses[0]" type="Object"/>
+        </row-actions>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
+            <hyperlink description="${partyName} [${partyId}]" target="viewprofile" target-window="_blank">
+                <parameter param-name="partyId"/>
+                <parameter param-name="roleTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="emailAddress"><display description="${emailAddresses[0].infoString}"/></field>
+        <field name="telecomNumber" title="${uiLabelMap.PartyPhoneNumber}">
+            <display description="${telecomNumber.tnCountryCode} ${telecomNumber.tnAreaCode} ${telecomNumber.tnContactNumber} ${telecomNumber.tnAskForName}"/>
+        </field>
+        <field name="city"><display description="${postalAddress.paCity}"/></field>
+    </form>
+    <form name="ViewPartiesExistInVCard" type="list" list-name="partiesExist" extends="ViewPartiesCreatedByVCard"/>
 
     <form name="QuickAddContact" type="single" target="quickAddContact">
         <field name="firstName" title="${uiLabelMap.PartyFirstName}*" required-field="true"><text size="15"/></field>

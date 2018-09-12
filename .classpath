@@ -37,6 +37,7 @@
 	<classpathentry kind="lib" path="framework/base/lib/commons-validator-1.6.jar" sourcepath="framework/base/libsrc/commons-validator-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/concurrentlinkedhashmap-lru-1.4.2.jar" sourcepath="framework/base/libsrc/concurrentlinkedhashmap-lru-1.4.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/esapi-2.1.0.1.jar" sourcepath="framework/base/libsrc/esapi-2.1.0.1-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/ez-vcard-0.10.4.jar" sourcepath="framework/base/libsrc/ez-vcard-0.10.4-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/fontbox-2.0.8.jar" sourcepath="framework/base/libsrc/fontbox-2.0.8-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/fop-2.3.jar" sourcepath="framework/base/libsrc/fop-2.3-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/freemarker-2.3.28.jar" sourcepath="framework/base/libsrc/freemarker-2.3.28-sources.jar"/>
@@ -81,7 +82,6 @@
 	<classpathentry kind="lib" path="framework/base/lib/oro-2.0.8.jar" sourcepath="framework/base/libsrc/oro-2.0.8-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/owasp-java-html-sanitizer-20180219.1.jar" sourcepath="framework/base/libsrc/owasp-java-html-sanitizer-20180219.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/pdfbox-2.0.8.jar" sourcepath="framework/base/libsrc/pdfbox-2.0.8-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/pim-0.1.jar" sourcepath="framework/base/libsrc/pim-0.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/poi-3.17.jar" sourcepath="framework/base/libsrc/poi-3.17-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/rome-1.9.0.jar" sourcepath="framework/base/libsrc/rome-1.9.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/serializer-2.7.2.jar" sourcepath="framework/base/libsrc/serializer-2.7.2-sources.jar"/>

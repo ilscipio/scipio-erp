@@ -141,10 +141,52 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <label style="common-msg-warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.CommonUnsupportedFunction}</label>
                         <screenlet>
                             <container><label text="${uiLabelMap.SfaAutoCreateContactByImportingVCard}"/></container>
-                            <include-form  name="NewContactFromVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                            <include-form name="NewContactFromVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                         </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: 2018-09-12: Moved here from original stock location CommonScreens.xml -->
+    <screen name="ViewPartiesCreatedByVCard">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleCreateContactFromVCard"/>
+                <set field="activeSubMenuItem" value="Contacts"/>
+                <!-- SCIPIO: TODO?: this is a very limited screen, only shows results from import,
+                    cannot list those imported before... -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="common-msg-warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.CommonUnsupportedFunction}</label>
+                        <section>
+                            <condition>
+                                <or>
+                                    <not><if-empty field="parameters.partiesCreated"/></not>
+                                    <not><if-empty field="parameters.partiesExist"/></not>
+                                </or>
+                            </condition>
+                            <actions>
+                                <set field="partiesCreated" from-field="parameters.partiesCreated"/>
+                                <set field="partiesExist" from-field="parameters.partiesExist"/>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.MarketingPartiesLoaded}">
+                                    <include-form name="ViewPartiesCreatedByVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.MarketingPartiesNotLoadedAlreadyExist}">
+                                    <include-form name="ViewPartiesExistInVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-result-norecord" text="${uiLabelMap.MarketingNoPartyLoad}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

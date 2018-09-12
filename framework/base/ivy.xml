@@ -162,12 +162,10 @@
         <dependency org="com.googlecode.libphonenumber" name="libphonenumber" rev="8.9.12" conf="base,sources"/>
         <dependency org="org.apache.sshd" name="sshd-core" rev="2.0.0" conf="base,sources"/>
         <dependency org="org.apache.sshd" name="sshd-sftp" rev="2.0.0" conf="base,sources"/>
+        <dependency org="com.googlecode.ez-vcard" name="ez-vcard" rev="0.10.4" conf="base,sources"/><!-- stock qrcode -->
 
         <!-- base qrcode jars -->
         <dependency org="com.google.zxing" name="core" rev="3.3.3" conf="base,sources"/><!-- stock qrcode -->
-
-        <!-- base jars - known to be missing/broken in central (2018-03-20) (see ivy/localRepo) -->
-        <dependency org="net.wimpi" name="pim" rev="0.1" conf="base"/><!-- previously "jpim-0.1.jar"; not in central, 3rd-party only -->
 
         <!-- base testing jars -->
         <dependency org="junit" name="junit" rev="4.12" conf="base,sources"/>

@@ -12780,6 +12780,10 @@
         <value xml:lang="zh">发生了一个不明错误！</value>
         <value xml:lang="zh-TW">發生了一個不明錯誤！</value>
     </property>
+    <property key="CommonUnsupportedFunction">
+        <value xml:lang="de">Diese Funktion wird derzeit nicht unterstützt und funktioniert möglicherweise nicht ordnungsgemäß.</value>
+        <value xml:lang="en">This function is currently unsupported and may not work properly.</value>
+    </property>
     <property key="CommonUntil">
         <value xml:lang="ar">حتى</value>
         <value xml:lang="cs">Do</value>

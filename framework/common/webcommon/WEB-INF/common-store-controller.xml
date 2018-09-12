@@ -334,7 +334,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
 
     <request-map uri="qrcode"><!-- SCIPIO: now needed in shops -->
-        <security auth="true" https="true" />
+        <security auth="false" https="true" />
         <event type="java" path="org.ofbiz.common.qrcode.QRCodeEvents" invoke="serveQRCodeImage"/>
         <response name="success" type="none" />
         <response name="error" type="none" />

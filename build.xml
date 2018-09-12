@@ -2741,7 +2741,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <input addproperty="component-resource-name" message="Theme resource name (CamelCase): (e.g. MyTheme) [Mandatory]"/>
         <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mytheme) [Mandatory]"/>
         <input addproperty="theme-id" message="Theme Id (uppercase): (e.g. MYTHEME) [Mandatory]"/>
-        <input addproperty="is-backend" message="Is backoffice theme? (N for ecommerce theme): [default: Y]" defaultvalue="Y" validargs="Y,N,y,n"/>
+        <input addproperty="is-backend" message="Is backoffice theme? (N for shop theme): [default: Y]" defaultvalue="Y" validargs="Y,N,y,n"/>
         <if>
             <equals arg1="${is-backend}" arg2="Y" casesensitive="false"/>
             <then>

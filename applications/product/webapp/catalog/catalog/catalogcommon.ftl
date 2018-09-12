@@ -49,7 +49,7 @@
   <#elseif catalogLocFieldsInfo?is_hash_ex><#-- common variable name -->
     <#return toSimpleMap(catalogLocFieldsInfo)>
   <#else>
-    <#local dummy = Static["org.ofbiz.base.util.GroovyUtil"].runScriptAtLocation("component://product/webapp/catalog/WEB-INF/actions/catalog/GetCatalogLocFieldInfo.groovy", DUMMY_NULL, context)!>
+    <#local dummy = Static["org.ofbiz.base.util.GroovyUtil"].runScriptAtLocation("component://product/webapp/catalog/WEB-INF/actions/catalog/GetCatalogLocFieldsInfo.groovy", null, context)!>
     <#return toSimpleMap(context.catalogLocFieldsInfo!{})>
   </#if>
 </#function>

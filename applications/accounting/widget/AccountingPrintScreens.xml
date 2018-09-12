@@ -97,9 +97,11 @@ under the License.
                 <set field="titleProperty" value="AccountingPrintChecks"/>
             </actions>
             <widgets>
+                <!-- SCIPIO: FIXME?: There is no printCheck.fo.ftl in stock, so this can only crash
                 <platform-specific>
                     <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/printCheck.fo.ftl"/></xsl-fo>
-                </platform-specific>
+                </platform-specific>-->
+                <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
             </widgets>
             <fail-widgets>
                 <label style="common-msg-error-perm" text="${uiLabelMap.AccountingPrintChecksPermissionError}"/>

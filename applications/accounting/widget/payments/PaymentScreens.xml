@@ -407,7 +407,8 @@ under the License.
             <widgets>
                 <platform-specific>
                     <!-- TODO: problem here: the original manualTx file referred to manualGCTx, but no such ftl files seems to exist, so this will blow up -->
-                    <html><html-template location="component://accounting/webapp/accounting/payment/manualGCTx.ftl"/></html>
+                    <!-- SCIPIO: FIXME?: The missing template and previous comment are from stock; commenting out so it doesn't crash...
+                    <html><html-template location="component://accounting/webapp/accounting/payment/manualGCTx.ftl"/></html>-->
                 </platform-specific>
             </widgets>
         </section>

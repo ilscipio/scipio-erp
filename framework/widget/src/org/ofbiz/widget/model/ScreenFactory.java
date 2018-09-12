@@ -73,10 +73,10 @@ public class ScreenFactory extends WidgetFactory {
         // split out the name on the last "#"
         int numSignIndex = combinedName.lastIndexOf("#");
         if (numSignIndex == -1) {
-            throw new IllegalArgumentException("Error in screen location/name: no \"#\" found to separate the location from the name; correct example: component://product/screen/product/ProductScreens.xml#EditProduct");
+            throw new IllegalArgumentException("Error in screen location/name: no \"#\" found to separate the location from the name; correct example: component://product/widget/catalog/ProductScreens.xml#EditProduct");
         }
         if (numSignIndex + 1 >= combinedName.length()) {
-            throw new IllegalArgumentException("Error in screen location/name: the \"#\" was at the end with no screen name after it; correct example: component://product/screen/product/ProductScreens.xml#EditProduct");
+            throw new IllegalArgumentException("Error in screen location/name: the \"#\" was at the end with no screen name after it; correct example: component://product/widget/catalog/ProductScreens.xml#EditProduct");
         }
         String resourceName = combinedName.substring(0, numSignIndex);
         return resourceName;
@@ -86,10 +86,10 @@ public class ScreenFactory extends WidgetFactory {
         // split out the name on the last "#"
         int numSignIndex = combinedName.lastIndexOf("#");
         if (numSignIndex == -1) {
-            throw new IllegalArgumentException("Error in screen location/name: no \"#\" found to separate the location from the name; correct example: component://product/screen/product/ProductScreens.xml#EditProduct");
+            throw new IllegalArgumentException("Error in screen location/name: no \"#\" found to separate the location from the name; correct example: component://product/widget/catalog/ProductScreens.xml#EditProduct");
         }
         if (numSignIndex + 1 >= combinedName.length()) {
-            throw new IllegalArgumentException("Error in screen location/name: the \"#\" was at the end with no screen name after it; correct example: component://product/screen/product/ProductScreens.xml#EditProduct");
+            throw new IllegalArgumentException("Error in screen location/name: the \"#\" was at the end with no screen name after it; correct example: component://product/widget/catalog/ProductScreens.xml#EditProduct");
         }
         String screenName = combinedName.substring(numSignIndex + 1);
         return screenName;

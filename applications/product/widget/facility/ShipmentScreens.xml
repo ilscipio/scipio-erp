@@ -57,10 +57,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!-- <platform-specific>
-                            <html><html-template location="component://product/webapp/facility/shipment/ShipmentTabBar.ftl"/></html>
-                        </platform-specific> -->
-                        <!-- <section>
+                        <!--<section>
                             <condition>
                                 <not><if-empty field="shipment"/></not>
                             </condition>
@@ -72,7 +69,7 @@ under the License.
                                     </link>
                                 </container>
                             </widgets>
-                        </section> -->
+                        </section>-->
                         <section>
                             <condition>
                                 <and>

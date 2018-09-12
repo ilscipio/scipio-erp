@@ -28,8 +28,8 @@ under the License.
         </section>
     </screen>
    
-   <!-- SCIPIO: To be removed -->
-   <!-- <screen name="CommonMarketingCampaignDecorator">
+   <!-- SCIPIO: Removed -->
+   <!--<screen name="CommonMarketingCampaignDecorator">
         <section>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
@@ -67,8 +67,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
-    
+
     <screen name="FindMarketingCampaign">
         <section>
             <actions>
@@ -114,10 +113,11 @@ under the License.
                 <platform-specific><html><html-template location="component://marketing/webapp/marketing/campaign/MarketingCampaignList.ftl"/></html></platform-specific>
             </widgets>
         </section>
-    </screen> -->
+    </screen>
+    -->
 
-    <!-- SCIPIO: To be removed -->
-    <!-- <screen name="EditMarketingCampaignRoles">
+    <!-- SCIPIO: Removed -->
+    <!--<screen name="EditMarketingCampaignRoles">
         <section>
             <actions>
                 <set field="titleProperty" value="MarketingCampaignRoleCreate" />

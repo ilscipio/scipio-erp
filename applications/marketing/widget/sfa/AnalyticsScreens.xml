@@ -49,9 +49,7 @@ under the License.
                 <entity-condition entity-name="Enumeration" list="salesChannelList">
                     <condition-expr field-name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
                 </entity-condition>
-                
-                <!-- <script location="component://marketing/webapp/sfa/WEB-INF/actions/analytics/FindMyCommunication.groovy"/> -->
-                
+
                 <!-- NOTE: we MUST run this early for any parameter processing -->
                 <include-screen-actions name="AnalyticsSalesStatsActions" />
             </actions>

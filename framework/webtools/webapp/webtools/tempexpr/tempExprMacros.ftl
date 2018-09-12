@@ -20,7 +20,7 @@ under the License.
 <#--
 To use these macros in your template, insert the following line in
 your template file:
-<#include "component://common/webcommon/includes/tempExprMacros.ftl"/>
+<#include "component://webtools/webapp/webtools/tempexpr/tempExprMacros.ftl"/><#- - SCIPIO: fixed location - ->
 -->
 
 <#include "component://common/webcommon/includes/commonMacros.ftl"/>

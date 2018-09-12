@@ -3708,6 +3708,14 @@
         <value xml:lang="en">Notifications</value>
         <value xml:lang="nl">Notificaties</value>
     </property>
+    <property key="CommonNotImplemented">
+        <value xml:lang="de">Nicht implementiert</value>
+        <value xml:lang="en">Not implemented</value>
+    </property>
+    <property key="CommonNotImplementedSentence">
+        <value xml:lang="de">Nicht implementiert.</value>
+        <value xml:lang="en">Not implemented.</value>
+    </property>
     <property key="CommonEmptyHeader">
         <!-- do not remove this! -->
         <value xml:lang="en" xml:space="preserve"> </value>

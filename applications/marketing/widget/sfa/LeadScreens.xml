@@ -121,7 +121,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenuItem" value="CloneLead"/>
-                <script location="component://marketing/webapp/sfa/WEB-INF/actions/CloneLead.groovy"/>
+                <script location="component://marketing/webapp/sfa/WEB-INF/action/CloneLead.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">

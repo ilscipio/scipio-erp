@@ -481,7 +481,9 @@ under the License.
     <screen name="sendPerEmailBody">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/sendPerEmail.ftl"/></html></platform-specific>
+                <!-- SCIPIO: FIXME?: There is no sendPerEmail.ftl in stock 14-17.
+                <platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/sendPerEmail.ftl"/></html></platform-specific>-->
+                <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
             </widgets>
         </section>
     </screen>

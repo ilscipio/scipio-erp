@@ -107,15 +107,18 @@ under the License.
                 
                 <set field="titleProperty" value="PageTitleSalesInvoiceByProductGlAccountSummary"/>
 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductGlAccountSummary.bsh"/>
+                <!-- SCIPIO: FIXME?: There is no SalesInvoiceByProductGlAccountSummary.bsh in stock 14-17.
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductGlAccountSummary.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <!-- SCIPIO: FIXME?: There is no SalesInvoiceByProductGlAccountSummary.ftl in stock 14-17.
                             <platform-specific>
                                 <html><html-template location="component://accounting/webapp/accounting/reports/SalesInvoiceByProductGlAccountSummary.ftl"/></html>
-                            </platform-specific>
+                            </platform-specific>-->
+                            <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -130,15 +133,18 @@ under the License.
             
                 <set field="titleProperty" value="PageTitlePaymentByMethodSummary"/>
 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PaymentByMethodSummary.bsh"/>
+                <!-- SCIPIO: FIXME?: There was no PaymentByMethodSummary.bsh in stock 14-17.
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PaymentByMethodSummary.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <!-- SCIPIO: FIXME?: There was no PaymentByMethodSummary.ftl in stock 14-17.
                             <platform-specific>
                                 <html><html-template location="component://accounting/webapp/accounting/reports/PaymentByMethodSummary.ftl"/></html>
-                            </platform-specific>
+                            </platform-specific>-->
+                            <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -152,15 +158,18 @@ under the License.
             
                 <set field="titleProperty" value="PageTitleInventoryIssueSummary"/>
 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/InventoryIssueSummary.bsh"/>
+                <!-- SCIPIO: FIXME?: There was no InventoryIssueSummary.bsh in stock 14-17.
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/InventoryIssueSummary.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <!-- SCIPIO: FIXME?: There was no InventoryIssueSummary.ftl in stock 14-17.
                             <platform-specific>
                                 <html><html-template location="component://accounting/webapp/accounting/reports/InventoryIssueSummary.ftl"/></html>
-                            </platform-specific>
+                            </platform-specific>-->
+                            <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -174,15 +183,18 @@ under the License.
             
                 <set field="titleProperty" value="PageTitleFinancialAccountSummary"/>
 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountSummary.bsh"/>
+                <!-- SCIPIO: FIXME?: There was no FinancialAccountSummary.bsh in stock 14-17.
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountSummary.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <!-- SCIPIO: FIXME?: There was no FinancialAccountSummary.ftl in stock 14-17.
                             <platform-specific>
                                 <html><html-template location="component://accounting/webapp/accounting/reports/FinancialAccountSummary.ftl"/></html>
-                            </platform-specific>
+                            </platform-specific>-->
+                            <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

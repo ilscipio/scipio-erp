@@ -30,7 +30,7 @@ under the License.
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}"><hyperlink target="backHome" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
     </form>
      -->
-    <form name="EditBillingAccount" type="single" target="updateBillingAccount" extends="EditBillingAccount" extends-resource="component://accounting/widget/BillingAccountForms.xml">
+    <form name="EditBillingAccount" type="single" target="updateBillingAccount" extends="EditBillingAccount" extends-resource="component://accounting/widget/billing/BillingAccountForms.xml">
         <field name="submitAction"><hidden/></field>
         <field name="saveAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">

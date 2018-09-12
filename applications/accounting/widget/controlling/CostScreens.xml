@@ -73,9 +73,9 @@ under the License.
                 <decorator-screen name="CommonControllingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AccountingCostComponentCalcPanel" title="${uiLabelMap.AccountingCreateCostComponentCalc}" collapsible="true">
-                            <include-form name="AddCostComponentCalc" location="component://accounting/widget/CostForms.xml"/>
+                            <include-form name="AddCostComponentCalc" location="component://accounting/widget/controlling/CostForms.xml"/>
                         </screenlet>
-                        <include-form name="ListCostComponentCalc" location="component://accounting/widget/CostForms.xml"/>
+                        <include-form name="ListCostComponentCalc" location="component://accounting/widget/controlling/CostForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

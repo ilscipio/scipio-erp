@@ -183,7 +183,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#UpdateCategoryContentAssoc -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CategoryForms.xml#UpdateCategoryContentAssoc -->
     <screen name="ScipioCategoryContentList">
         <section>
             <widgets>
@@ -344,7 +344,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#AddCategory* -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CategoryForms.xml#AddCategory* -->
     <screen name="ScipioAddCategoryAssociation">
         <section>
             <widgets>
@@ -355,7 +355,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#UpdateCategory* -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CategoryForms.xml#UpdateCategory* -->
     <screen name="ScipioCategoryAssociationList">
         <section>
             <widgets>

@@ -2832,11 +2832,6 @@ under the License.
     <view-map name="NewPurchaseInvoice" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#NewPurchaseInvoice"/>
     <view-map name="NewOutgoingPayment" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#NewOutgoingPayment"/>
 
-     
-    <!--
-    <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ap/LookupScreens.xml#LookupInvoice"/>
-    <view-map name="LookupPayment" type="screen" page="component://accounting/widget/ap/LookupScreens.xml#LookupPayment"/>-->
-    
     <!--
     **************
     * Accounts Receivable
@@ -2851,11 +2846,6 @@ under the License.
     <view-map name="ListARReports" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#ListARReports"/>
     <view-map name="FindArInvoices" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#FindArInvoices"/>
     <view-map name="FindArPayments" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindArPayments"/>
-    
-    <!-- 
-        
-    <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupInvoice"/>
-    <view-map name="LookupPayment" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupPayment"/>-->
     
     <!-- 
     **************
@@ -2906,7 +2896,7 @@ under the License.
     <!-- Party Accounts -->
     <view-map name="PartyAccountsSummary" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#PartyAccountsSummary"/>
     <view-map name="FindAcctgTrans" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#FindAcctgTrans"/>
-    <view-map name="CreateAcctgTransAndEntries" type="screen" page="component://accounting/scipio/ledger/widget/GlScreens.xml#CreateAcctgTransAndEntries"/>
+    <view-map name="CreateAcctgTransAndEntries" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#CreateAcctgTransAndEntries"/>
     <view-map name="EditAcctgTrans" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#EditAcctgTrans"/>
     <view-map name="FindAcctgTransEntries" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#FindAcctgTransEntries"/>
     <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#ListUnpostedAcctgTrans"/>
@@ -2979,7 +2969,7 @@ under the License.
     <view-map name="EditFinAccountRoles" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#EditFinAccountRoles"/>
     <view-map name="EditFinAccountTrans" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#EditFinAccountTrans"/>
     <view-map name="EditFinAccountAuths" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#EditFinAccountAuths"/>
-    <view-map name="EditFinAccountTypeGlAccounts" type="screen" page="component://accounting/widget/GlSetupScreens.xml#EditFinAccountTypeGlAccounts"/>
+    <view-map name="EditFinAccountTypeGlAccounts" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#EditFinAccountTypeGlAccounts"/>
     <view-map name="FindFinAccountTrans" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#FindFinAccountTrans"/>
     <view-map name="BankReconciliation" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#BankReconciliation"/>
     <view-map name="EditFinAccountReconciliations" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#EditFinAccountReconciliations"/>
@@ -3003,7 +2993,7 @@ under the License.
     <view-map name="EditFixedAssetMaint" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#EditFixedAssetMaint"/>
     <view-map name="ListFixedAssetMaints" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#ListFixedAssetMaints"/>
     <view-map name="EditFixedAssetMeters" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#EditFixedAssetMeters"/>
-    <view-map name="EditFixedAssetMaintOrders" type="screen" page="component://accounting/scipio/assets/widget/FixedAssetScreens.xml#EditFixedAssetMaintOrders"/>
+    <view-map name="EditFixedAssetMaintOrders" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#EditFixedAssetMaintOrders"/>
     <view-map name="calendar" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#Calendar"/>
     <view-map name="WorkEffortSummary" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#WorkEffortSummary"/>
 
@@ -3027,7 +3017,7 @@ under the License.
     <view-map name="invoiceTerms" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceTerms"/>
     -->
     <view-map name="sendPerEmail" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#SendPerEmail"/>
-    <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/invoice/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
+    <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/settings/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
 
     <view-map name="CommissionRun" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#CommissionRun"/> <!-- Migrated from ap/InvoiceScreens -->
     

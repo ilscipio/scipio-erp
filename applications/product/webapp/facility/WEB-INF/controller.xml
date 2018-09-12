@@ -387,8 +387,8 @@ under the License.
     </request-map>
 
     <!-- ================ Inventory Item Labels Requests ================= -->
-   <!-- SCIPIO: to be removed -->
-   <!--  <request-map uri="EditInventoryItemLabelTypes">
+    <!-- SCIPIO: Removed screens -->
+    <!--<request-map uri="EditInventoryItemLabelTypes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditInventoryItemLabelTypes"/>
     </request-map>
@@ -457,7 +457,7 @@ under the License.
         <event type="service" path="" invoke="deleteInventoryItemLabelAppl"/>
         <response name="success" type="view" value="EditInventoryItemLabelAppls"/>
         <response name="error" type="view" value="EditInventoryItemLabelAppls"/>
-    </request-map> -->
+    </request-map>-->
     <!-- ================ Inventory Requests ================= -->
     <request-map uri="EditInventoryItem">
         <security https="true" auth="true"/>
@@ -1395,14 +1395,14 @@ under the License.
     <view-map name="ReviewOrdersNotPickedOrPacked" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReviewOrdersNotPickedOrPacked"/>
 
     <!-- SCIPIO: Commented out for now -->
-    <!--    <view-map name="FindFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#FindFacilityGroup"/>
+    <!--<view-map name="FindFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#FindFacilityGroup"/>
     <view-map name="EditFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroup"/>
     <view-map name="EditFacilityGroupMembers" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupMembers"/>
     <view-map name="EditFacilityGroupRollup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRollup"/>
     <view-map name="EditFacilityGroupRoles" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRoles"/> -->
 
-    <!-- SCIPIO: To be removed -->
-<!--     <view-map name="EditInventoryItemLabelTypes" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelTypes"/>
+    <!-- SCIPIO: Removed -->
+    <!--<view-map name="EditInventoryItemLabelTypes" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelTypes"/>
     <view-map name="FindInventoryItemLabels" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#FindInventoryItemLabels"/>
     <view-map name="EditInventoryItemLabel" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabel"/>
     <view-map name="EditInventoryItemLabelAppls" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelAppls"/> -->

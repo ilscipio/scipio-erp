@@ -527,7 +527,39 @@ under the License.
     *******************
      -->
      
-     <form name="FindArPayments" type="single" target="findArPayments" extends="FindPayments" extends-resource="component://accounting/widget/payments/PaymentForms.xml">
+    <form name="FindBatchPayments" type="single" target="batchPayments">
+        <actions>
+            <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
+            <set field="noConditionFind" value="Y"/>
+        </actions>
+        <field name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PaymentMethodType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="noConditionFind"><hidden/></field>
+        <field name="cardType" tooltip="Select Credit Card from above list of Payment Method Types.">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${enumCode}" key-field-name="enumCode">
+                    <entity-constraint name="enumTypeId" operator="equals" value="CREDIT_CARD_TYPE"/>
+                    <entity-order-by field-name="enumId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingPartyIdFrom}">
+            <lookup target-form-name="LookupCustomerName"/>
+        </field> 
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="FindBatchPaymentsForDepositSlip" target="NewDepositSlip" extends="FindBatchPayments" extends-resource="component://accounting/widget/payments/PaymentForms.xml">
+        <field name="finAccountId"><hidden value="${finAccountId}"/></field>
+    </form>
+    <form name="FindArPayments" type="single" target="findArPayments" extends="FindPayments" extends-resource="component://accounting/widget/payments/PaymentForms.xml">
         <field name="parentTypeId"><hidden value="RECEIPT"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1">
             <drop-down allow-empty="true">
@@ -540,5 +572,4 @@ under the License.
     <form name="FindArPaymentGroups" target="FindArPaymentGroups" extends="FindPaymentGroup" extends-resource="component://accounting/widget/payments/PaymentGroupForms.xml">
         <field name="paymentGroupTypeId"><hidden value="BATCH_PAYMENT"/></field>
     </form>
-     
 </forms>

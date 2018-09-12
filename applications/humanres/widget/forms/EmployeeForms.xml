@@ -234,7 +234,7 @@
             <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
         </field>
     </form>
-    <form name="PayrollHistoryList" type="list" list-name="payroll" extends="ListInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml" paginate-target="PayrollHistory">
+    <form name="PayrollHistoryList" type="list" list-name="payroll" extends="ListInvoices" extends-resource="component://accounting/widget/invoice/InvoiceForms.xml" paginate-target="PayrollHistory">
         <field name="invoiceId" widget-style="${styles.link_nav_info_id}" sort-field="true">
             <hyperlink description="${invoiceId}" target="/accounting/control/invoiceOverview" target-type="inter-app">
                 <parameter param-name="invoiceId"/>

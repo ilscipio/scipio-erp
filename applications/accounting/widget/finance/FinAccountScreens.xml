@@ -348,7 +348,7 @@ under the License.
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
-                                <include-form name="FindBatchPaymentsForDepositSlip" location="component://accounting/widget/ar/forms/ArPaymentForms.xml"/>
+                                <include-form name="FindBatchPaymentsForDepositSlip" location="component://accounting/widget/payments/PaymentForms.xml"/>
                             </decorator-section> 
                             <decorator-section name="search-results">
                                 <platform-specific>

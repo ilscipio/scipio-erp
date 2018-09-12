@@ -259,7 +259,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
-    <form name="PaymentsDepositWithdraw" type="single" target="FindPaymentsForDepositOrWithdraw" extends="FindBatchPayments" extends-resource="component://accounting/widget/ar/forms/ArPaymentForms.xml">
+    <form name="PaymentsDepositWithdraw" type="single" target="FindPaymentsForDepositOrWithdraw" extends="FindBatchPayments" extends-resource="component://accounting/widget/payments/PaymentForms.xml">
         <field name="finAccountId"><hidden/></field>
         <field name="noConditionFind"><hidden/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>

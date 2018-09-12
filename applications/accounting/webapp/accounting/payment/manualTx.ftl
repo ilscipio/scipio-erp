@@ -67,9 +67,9 @@ under the License.
 
         <#-- payment method information -->
         <#if paymentMethodType?has_content && paymentMethodTypeId == "CREDIT_CARD">
-            <@render resource="component://accounting/widget/PaymentScreens.xml#manualCCTx" />
+            <@render resource="component://accounting/widget/payments/PaymentScreens.xml#manualCCTx" />
         <#elseif paymentMethodType?has_content && paymentMethodTypeId == "GIFT_CARD">
-            <@render resource="component://accounting/widget/PaymentScreens.xml#manualGCTx" />
+            <@render resource="component://accounting/widget/payments/PaymentScreens.xml#manualGCTx" />
         </#if>
 
         <#if requestAttributes.validTx?default("false") == "true">

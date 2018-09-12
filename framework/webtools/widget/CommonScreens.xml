@@ -339,14 +339,16 @@ under the License.
     <screen name="printStart">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://webtools/webapp/webtools/print/printStart.ftl"/></html></platform-specific>
+                <!-- SCIPIO: TODO: REVIEW: this template is removed/missing
+                <platform-specific><html><html-template location="component://webtools/webapp/webtools/print/printStart.ftl"/></html></platform-specific>-->
             </widgets>
         </section>
     </screen>
     <screen name="printDone">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://webtools/webapp/webtools/print/printDone.ftl"/></html></platform-specific>
+                <!-- SCIPIO: TODO: REVIEW: this template is removed/missing
+                <platform-specific><html><html-template location="component://webtools/webapp/webtools/print/printDone.ftl"/></html></platform-specific>-->
             </widgets>
         </section>
     </screen>

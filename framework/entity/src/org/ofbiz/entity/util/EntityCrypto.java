@@ -38,7 +38,6 @@ import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -351,6 +350,7 @@ public final class EntityCrypto {
     protected static final StorageHandler NormalHashStorageHandler = new LegacyStorageHandler() {
         @Override
         protected String getHashedKeyName(String originalKeyName) {
+            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
             return HashCrypt.digestHash("SHA", originalKeyName.getBytes());
         }
 
@@ -387,9 +387,9 @@ public final class EntityCrypto {
         @Override
         protected String getHashedKeyName(String originalKeyName) {
             // SCIPIO: 2018-09-13: For consistency and legacy reasons, leave this to the legacy code,
-            // because no other getBytes in this class does this. Functionally this makes practically no difference
-            // due to the system defaults.
+            // until this is better investigated.
             //return HashCrypt.digestHash64("SHA", originalKeyName.getBytes(UtilIO.getUtf8()));
+            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
             return HashCrypt.digestHash64("SHA", originalKeyName.getBytes());
         }
 

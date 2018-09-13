@@ -160,8 +160,8 @@ public class Base64 {
             return null;
         }
 
-        // SCIPIO: 2018-09-13: Handle null properly, and
-        // make sure we're interpreting the decode result as UTF-8 in String constructor
+        // SCIPIO: 2018-09-13: Make sure we're interpreting the decode result 
+        // as UTF-8 in String constructor
         //return new String(base64Decode(str.getBytes(UtilIO.getUtf8())));
         return new String(base64Decode(str.getBytes(UtilIO.getUtf8())), UtilIO.getUtf8());
     }
@@ -245,7 +245,7 @@ public class Base64 {
             return null;
         }
         
-        // SCIPIO: 2018-09-13: Handle null properly, add charset to String constructor
+        // SCIPIO: 2018-09-13: Add charset to String constructor
         // NOTE: The UTF8 for String constructor is just for show; the string will
         // be a limited base64 character range only.
         //return new String(base64Encode(str.getBytes(UtilIO.getUtf8())));

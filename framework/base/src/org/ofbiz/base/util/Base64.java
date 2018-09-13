@@ -236,7 +236,7 @@ public class Base64 {
      * SCIPIO: NOTE: 2018-09-13: This method assumes the string content should
      * be encoded to bytes using UTF-8 before being made into base64. If you need 
      * another charset, try {@link #base64EncodeToString(byte[])}.
-     * 
+     *
      * @param  str the string
      * @return the base64-encoded str
      */
@@ -245,7 +245,9 @@ public class Base64 {
             return null;
         }
         
-        // SCIPIO: 2018-09-13: Handle null properly, interpret decoded data as UTF-8
+        // SCIPIO: 2018-09-13: Handle null properly, add charset to String constructor
+        // NOTE: The UTF8 for String constructor is just for show; the string will
+        // be a limited base64 character range only.
         //return new String(base64Encode(str.getBytes(UtilIO.getUtf8())));
         return new String(base64Encode(str.getBytes(UtilIO.getUtf8())), UtilIO.getUtf8());
     }
@@ -266,7 +268,7 @@ public class Base64 {
             return null;
         }
  
-        // SCIPIO: NOTE: This UTF8 is just for show, the string will
+        // NOTE: The UTF8 for String constructor is just for show; the string will
         // be a limited base64 character range only.
         return new String(base64Encode(data), UtilIO.getUtf8());
     }

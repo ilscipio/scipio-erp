@@ -31,6 +31,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -59,7 +60,7 @@ public class FoPrintServerEvents {
             String base64String = null;
             try {
                 byte[] bytes = FoPrintServerEvents.getXslFo(dispatcher.getDispatchContext(), screenUri, reqParams);
-                base64String = new String(Base64.encodeBase64(bytes));
+                base64String = new String(Base64.encodeBase64(bytes), UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8()
             } catch (GeneralException e) {
                 Debug.logError(e, module);
                 try {
@@ -112,6 +113,6 @@ public class FoPrintServerEvents {
         } catch (Throwable t) {
             throw new GeneralException("Problems rendering FOP XSL-FO", t);
         }
-        return writer.toString().getBytes();
+        return writer.toString().getBytes(UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8()
     }
 }

@@ -214,7 +214,7 @@ public final class UtilXml {
         sb.append("<xsl:template match=\"@*|node()\">\n");
         sb.append("<xsl:copy><xsl:apply-templates select=\"@*|node()\"/></xsl:copy>\n");
         sb.append("</xsl:template>\n</xsl:stylesheet>\n");
-        ByteArrayInputStream bis = new ByteArrayInputStream(sb.toString().getBytes());
+        ByteArrayInputStream bis = new ByteArrayInputStream(sb.toString().getBytes(UtilIO.getUtf8())); // SCIPIO: UtilIO.getUtf8()
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         return transformerFactory.newTransformer(new StreamSource(bis));
     }

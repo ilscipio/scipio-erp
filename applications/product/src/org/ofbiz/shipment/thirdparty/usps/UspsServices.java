@@ -45,6 +45,7 @@ import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -1476,7 +1477,7 @@ public class UspsServices {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                             "FacilityShipmentUspsDeliveryConfirmationResponseIncompleteElementDeliveryConfirmationLabel", locale));
                 }
-                shipmentPackageRouteSeg.setBytes("labelImage", Base64.base64Decode(labelImageString.getBytes()));
+                shipmentPackageRouteSeg.setBytes("labelImage", Base64.base64Decode(labelImageString.getBytes(UtilIO.getUtf8())));
                 String trackingCode = UtilXml.childElementValue(responseElement, "DeliveryConfirmationNumber");
                 if (UtilValidate.isEmpty(trackingCode)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -1729,7 +1730,7 @@ public class UspsServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                         "FacilityShipmentUspsPriorityMailLabelResponseIncompleteElementLabelImage", locale));
             }
-            shipmentPackageRouteSeg.setBytes("labelImage", Base64.base64Decode(labelImageString.getBytes()));
+            shipmentPackageRouteSeg.setBytes("labelImage", Base64.base64Decode(labelImageString.getBytes(UtilIO.getUtf8())));
             String trackingCode = UtilXml.childElementValue(responseElement, "BarcodeNumber");
             if (UtilValidate.isEmpty(trackingCode)) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 

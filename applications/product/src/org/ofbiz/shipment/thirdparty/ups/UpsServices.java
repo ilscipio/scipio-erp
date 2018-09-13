@@ -44,6 +44,7 @@ import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
@@ -637,7 +638,7 @@ public class UpsServices {
                 String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentConfirmRequest" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
                 try {
                     FileOutputStream fileOut = new FileOutputStream(outFileName);
-                    fileOut.write(xmlString.toString().getBytes());
+                    fileOut.write(xmlString.toString().getBytes(UtilIO.getUtf8()));
                     fileOut.flush();
                     fileOut.close();
                 } catch (IOException e) {
@@ -658,7 +659,7 @@ public class UpsServices {
                 String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentConfirmResponse" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
                 try {
                     FileOutputStream fileOut = new FileOutputStream(outFileName);
-                    fileOut.write(shipmentConfirmResponseString.getBytes());
+                    fileOut.write(shipmentConfirmResponseString.getBytes(UtilIO.getUtf8()));
                     fileOut.flush();
                     fileOut.close();
                 } catch (IOException e) {
@@ -922,7 +923,7 @@ public class UpsServices {
                 String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentAcceptRequest" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
                 try {
                     FileOutputStream fileOut = new FileOutputStream(outFileName);
-                    fileOut.write(xmlString.toString().getBytes());
+                    fileOut.write(xmlString.toString().getBytes(UtilIO.getUtf8()));
                     fileOut.flush();
                     fileOut.close();
                 } catch (IOException e) {
@@ -943,7 +944,7 @@ public class UpsServices {
                 String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentAcceptResponse" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
                 try {
                     FileOutputStream fileOut = new FileOutputStream(outFileName);
-                    fileOut.write(shipmentAcceptResponseString.getBytes());
+                    fileOut.write(shipmentAcceptResponseString.getBytes(UtilIO.getUtf8()));
                     fileOut.flush();
                     fileOut.close();
                 } catch (IOException e) {
@@ -1131,12 +1132,12 @@ public class UpsServices {
                 }
                 byte[] labelImageBytes = null;
                 if (packageLabelGraphicImageString != null) {
-                    labelImageBytes = Base64.base64Decode(packageLabelGraphicImageString.getBytes());
+                    labelImageBytes = Base64.base64Decode(packageLabelGraphicImageString.getBytes(UtilIO.getUtf8()));
                     shipmentPackageRouteSeg.setBytes("labelImage", labelImageBytes);
                 }
                 byte[] labelInternationalSignatureGraphicImageBytes = null;
                 if (packageLabelInternationalSignatureGraphicImageString != null) {
-                    labelInternationalSignatureGraphicImageBytes = Base64.base64Decode(packageLabelInternationalSignatureGraphicImageString.getBytes());
+                    labelInternationalSignatureGraphicImageBytes = Base64.base64Decode(packageLabelInternationalSignatureGraphicImageString.getBytes(UtilIO.getUtf8()));
                     shipmentPackageRouteSeg.set("labelIntlSignImage", labelInternationalSignatureGraphicImageBytes);
                 }
                 String packageLabelHTMLImageStringDecoded = Base64.base64Decode(packageLabelHTMLImageString);
@@ -1169,7 +1170,7 @@ public class UpsServices {
                         String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentLabelHTMLImage" + shipmentRouteSegment.getString("shipmentId") + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + "_" + shipmentPackageRouteSeg.getString("shipmentPackageSeqId") + ".html";
                         try {
                             FileOutputStream fileOut = new FileOutputStream(outFileName);
-                            fileOut.write(packageLabelHTMLImageStringDecoded.getBytes());
+                            fileOut.write(packageLabelHTMLImageStringDecoded.getBytes(UtilIO.getUtf8()));
                             fileOut.flush();
                             fileOut.close();
                         } catch (IOException e) {
@@ -1228,7 +1229,7 @@ public class UpsServices {
                     String outFileName = shipmentUpsSaveCertificationPath + "/HighValueReport" + shipmentRouteSegment.getString("shipmentId") + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".html";
                     try {
                         FileOutputStream fileOut = new FileOutputStream(outFileName);
-                        fileOut.write(fileStringDecoded.getBytes());
+                        fileOut.write(fileStringDecoded.getBytes(UtilIO.getUtf8()));
                         fileOut.flush();
                         fileOut.close();
                     } catch (IOException e) {
@@ -1352,7 +1353,7 @@ public class UpsServices {
                 String outFileName = shipmentUpsSaveCertificationPath + "/UpsVoidShipmentRequest" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
                 try {
                     FileOutputStream fileOut = new FileOutputStream(outFileName);
-                    fileOut.write(xmlString.toString().getBytes());
+                    fileOut.write(xmlString.toString().getBytes(UtilIO.getUtf8()));
                     fileOut.flush();
                     fileOut.close();
                 } catch (IOException e) {
@@ -1373,7 +1374,7 @@ public class UpsServices {
                 String outFileName = shipmentUpsSaveCertificationPath + "/UpsVoidShipmentResponse" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
                 try {
                     FileOutputStream fileOut = new FileOutputStream(outFileName);
-                    fileOut.write(voidShipmentResponseString.getBytes());
+                    fileOut.write(voidShipmentResponseString.getBytes(UtilIO.getUtf8()));
                     fileOut.flush();
                     fileOut.close();
                 } catch (IOException e) {
@@ -1558,7 +1559,7 @@ public class UpsServices {
                 String outFileName = shipmentUpsSaveCertificationPath + "/UpsTrackRequest" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
                 try {
                     FileOutputStream fileOut = new FileOutputStream(outFileName);
-                    fileOut.write(xmlString.toString().getBytes());
+                    fileOut.write(xmlString.toString().getBytes(UtilIO.getUtf8()));
                     fileOut.flush();
                     fileOut.close();
                 } catch (IOException e) {
@@ -1579,7 +1580,7 @@ public class UpsServices {
                 String outFileName = shipmentUpsSaveCertificationPath + "/UpsTrackResponseString" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
                 try {
                     FileOutputStream fileOut = new FileOutputStream(outFileName);
-                    fileOut.write(trackResponseString.getBytes());
+                    fileOut.write(trackResponseString.getBytes(UtilIO.getUtf8()));
                     fileOut.flush();
                     fileOut.close();
                 } catch (IOException e) {
@@ -2752,7 +2753,7 @@ public class UpsServices {
                 String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentAcceptRequest" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
                 try {
                     FileOutputStream fileOut = new FileOutputStream(outFileName);
-                    fileOut.write(xmlString.toString().getBytes());
+                    fileOut.write(xmlString.toString().getBytes(UtilIO.getUtf8()));
                     fileOut.flush();
                     fileOut.close();
                 } catch (IOException e) {

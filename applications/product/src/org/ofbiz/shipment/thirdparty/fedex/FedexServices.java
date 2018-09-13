@@ -35,6 +35,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -1016,7 +1017,7 @@ public class FedexServices {
                             "fDXShipReplyString", fDXShipReplyString), locale));
         }
 
-        byte[] labelBytes = Base64.base64Decode(encodedImageString.getBytes());
+        byte[] labelBytes = Base64.base64Decode(encodedImageString.getBytes(UtilIO.getUtf8()));
 
         if (labelBytes != null) {
 

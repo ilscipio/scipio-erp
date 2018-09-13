@@ -1009,7 +1009,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 throw new GeneralException("Unsupported TEXT type; cannot stream");
             }
 
-            byte[] bytes = text.getBytes();
+            byte[] bytes = text.getBytes(UtilIO.getUtf8());
             return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
 
         // object (binary) data

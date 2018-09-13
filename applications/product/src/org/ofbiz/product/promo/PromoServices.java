@@ -33,6 +33,7 @@ import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -248,7 +249,7 @@ public class PromoServices {
         byte[] wrapper = bytebufferwrapper.array();
        
       // read the bytes into a reader
-        BufferedReader reader = new BufferedReader(new StringReader(new String(wrapper)));
+        BufferedReader reader = new BufferedReader(new StringReader(new String(wrapper, UtilIO.getUtf8())));
         List<Object> errors = new LinkedList<Object>();
         int lines = 0;
         String line;

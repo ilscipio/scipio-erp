@@ -33,6 +33,7 @@ import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -1090,7 +1091,7 @@ public class ContactMechServices {
         synchronized(ContactMechServices.class) {
             while (true) {
                 Long random = secureRandom.nextLong();
-                verifyHash = HashCrypt.digestHash("MD5", Long.toString(random).getBytes());
+                verifyHash = HashCrypt.digestHash("MD5", Long.toString(random).getBytes(UtilIO.getUtf8()));
                 List<GenericValue> emailAddVerifications = null;
                 try {
                     emailAddVerifications = EntityQuery.use(delegator).from("EmailAddressVerification").where("verifyHash", verifyHash).queryList();

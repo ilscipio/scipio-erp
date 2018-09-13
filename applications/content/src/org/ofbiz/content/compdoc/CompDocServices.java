@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -182,7 +183,7 @@ public class CompDocServices {
                 } else if (inputMimeType != null && inputMimeType.equals("text/html")) {
                     ByteBuffer byteBuffer = DataResourceWorker.getContentAsByteBuffer(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
                     inputByteArray = byteBuffer.array();
-                    String s = new String(inputByteArray);
+                    String s = new String(inputByteArray, UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8()
                     Debug.logInfo("text/html string:" + s, module);
                     continue;
                 } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
@@ -328,7 +329,7 @@ public class CompDocServices {
             } else if (inputMimeType != null && inputMimeType.equals("text/html")) {
                 ByteBuffer byteBuffer = DataResourceWorker.getContentAsByteBuffer(delegator, dataResourceId, https, webSiteId, locale, rootDir);
                 inputByteArray = byteBuffer.array();
-                String s = new String(inputByteArray);
+                String s = new String(inputByteArray, UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8() 
                 Debug.logInfo("text/html string:" + s, module);
             } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
                 String surveyResponseId = dataResource.getString("relatedDetailId");

@@ -20,6 +20,7 @@ package org.ofbiz.accounting.thirdparty.valuelink;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -157,7 +158,7 @@ public class ValueLinkApi {
         Cipher mwkCipher = this.getCipher(this.getMwkKey(), Cipher.ENCRYPT_MODE);
 
         // pin to bytes
-        byte[] pinBytes = pin.getBytes();
+        byte[] pinBytes = pin.getBytes(StandardCharsets.UTF_8);
 
         // 7 bytes of random data
         byte[] random = this.getRandomBytes(7);
@@ -210,7 +211,7 @@ public class ValueLinkApi {
         try {
             byte[] decryptedEan = mwkCipher.doFinal(StringUtil.fromHexString(pin));
             byte[] decryptedPin = getByteRange(decryptedEan, 8, 8);
-            decryptedPinString = new String(decryptedPin);
+            decryptedPinString = new String(decryptedPin, StandardCharsets.UTF_8);
         } catch (IllegalStateException e) {
             Debug.logError(e, module);
         } catch (IllegalBlockSizeException e) {

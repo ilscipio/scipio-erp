@@ -37,6 +37,7 @@ import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -869,7 +870,7 @@ public class DhlServices {
                 continue;
             sb.append(encodedImageString.charAt(i));
         }
-        byte[] labelBytes = Base64.base64Decode(sb.toString().getBytes());
+        byte[] labelBytes = Base64.base64Decode(sb.toString().getBytes(UtilIO.getUtf8()));
 
         if (labelBytes != null) {
             // store in db blob

@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -144,7 +145,7 @@ public class SaveLabelsToXmlFile {
                     FileOutputStream fos = new FileOutputStream(labelFile.file);
                     try {
                         if (apacheLicenseText != null) {
-                            fos.write(apacheLicenseText.getBytes());
+                            fos.write(apacheLicenseText.getBytes(UtilIO.getUtf8())); // SCIPIO: UtilIO.getUtf8()
                         }
                         UtilXml.writeXmlDocument(resourceElem, fos, "UTF-8", !(apacheLicenseText == null), true, 4);
                     } finally {

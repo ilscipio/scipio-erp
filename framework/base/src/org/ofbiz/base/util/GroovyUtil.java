@@ -48,15 +48,20 @@ public class GroovyUtil {
     private static final UtilCache<String, Class<?>> parsedScripts = UtilCache.createUtilCache("script.GroovyLocationParsedCache", 0, 0, false);
 
     private static final GroovyClassLoader groovyScriptClassLoader;
+    private static final CompilerConfiguration groovyScriptCompilerConfig; // SCIPIO
     static {
         GroovyClassLoader groovyClassLoader = null;
         String scriptBaseClass = UtilProperties.getPropertyValue("groovy", "scriptBaseClass");
+        CompilerConfiguration conf;
         if (!scriptBaseClass.isEmpty()) {
-            CompilerConfiguration conf = new CompilerConfiguration();
+            conf = new CompilerConfiguration();
             conf.setScriptBaseClass(scriptBaseClass);
             groovyClassLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), conf);
+        } else {
+            conf = CompilerConfiguration.DEFAULT;
         }
         groovyScriptClassLoader = groovyClassLoader;
+        groovyScriptCompilerConfig = conf; // SCIPIO
         /*
          *  With the implementation of @BaseScript annotations (introduced with Groovy 2.3.0) something was broken
          *  in the CompilerConfiguration.setScriptBaseClass method and an error is thrown when our scripts are executed;
@@ -64,13 +69,20 @@ public class GroovyUtil {
          */
         try {
             GroovyUtil.runScriptAtLocation("component://base/config/GroovyInit.groovy", null, null);
-        } catch(Exception e) {
+        } catch (Exception e) {
             Debug.logWarning("The following error occurred during the initialization of Groovy: " + e.getMessage(), module);
         }
     }
 
     /**
      * Evaluate a Groovy condition or expression
+     * <p>
+     * <strong>SCIPIO: WARNING:</strong> 2018-09-12: Currently this method is non-caching (script recompiled at every call).
+     * This method should only be used for performance-insensitive applications 
+     * and cases where arbitrary scripts are expected to be passed (such as admin webapp's TemplateTest).
+     * Also note that the absence of an outer-layer cache actually means the <code>GroovyClassLoader</code> hits
+     * an internal synchronization lock, bad for multi-threading.
+     * 
      * @param expression The expression to evaluate
      * @param context The context to use in evaluation (re-written)
      * @see <a href="StringUtil.html#convertOperatorSubstitutions(java.lang.String)">StringUtil.convertOperatorSubstitutions(java.lang.String)</a>
@@ -89,7 +101,9 @@ public class GroovyUtil {
             Debug.logVerbose("Using Context -- " + context, module);
         }
         try {
-            GroovyShell shell = new GroovyShell(getBinding(context));
+            // SCIPIO: 2018-09-12: Must use our custom config (for access to predefined helpers)
+            //GroovyShell shell = new GroovyShell(getBinding(context));
+            GroovyShell shell = new GroovyShell(groovyScriptClassLoader, getBinding(context), groovyScriptCompilerConfig);
             o = shell.evaluate(StringUtil.convertOperatorSubstitutions(expression));
             if (Debug.verboseOn()) {
                 Debug.logVerbose("Evaluated to -- " + o, module);
@@ -104,6 +118,23 @@ public class GroovyUtil {
         return o;
     }
 
+    /**
+     * SCIPIO: Evaluate a Groovy condition or expression, guaranteeing no caching.
+     * <p>
+     * This method should only be used for performance-insensitive applications 
+     * and cases where arbitrary scripts are expected to be passed (such as admin webapp's TemplateTest).
+     * Also note that the absence of an outer-layer cache actually means the <code>GroovyClassLoader</code> hits
+     * an internal synchronization lock, bad for multi-threading.
+     * <p>
+     * NOTE: This method exists as an explicitly clear version of {@link #eval(String, Map)},
+     * but currently (2018-09-12) they are the same.
+     * <p>
+     * Added 2018-09-12.
+     */
+    public static Object evalNoCache(String expression, Map<String, Object> context) throws CompilationFailedException {
+        return eval(expression, context);
+    }
+
     /** Returns a <code>Binding</code> instance initialized with the
      * variables contained in <code>context</code>. If <code>context</code>
      * is <code>null</code>, an empty <code>Binding</code> is returned.
@@ -112,7 +143,7 @@ public class GroovyUtil {
      * back to the caller. Any variables that are created in the script
      * are lost when the script ends unless they are copied to the
      * "context" <code>Map</code>.</p>
-     * 
+     *
      * @param context A <code>Map</code> containing initial variables
      * @return A <code>Binding</code> instance
      */
@@ -216,14 +247,14 @@ public class GroovyUtil {
         }
         return result;
     }
-    
+
     /**
      * SCIPIO: Special case of {@link #runScriptAtLocation} where no methodName is specified
      */
     public static Object runScriptAtLocation(String location, Map<String, Object> context) throws GeneralException {
         return runScriptAtLocation(location,"",context);
     }
-    
+
     /**
      * SCIPIO: Special case of {@link #runScriptAtLocation} that uses an empty context and returns the new
      * context (instead of script result).
@@ -233,7 +264,7 @@ public class GroovyUtil {
         runScriptAtLocation(location, methodName, context);
         return context;
     }
-    
+
     /**
      * SCIPIO: Returns a {@link groovy.lang.Script} instance for the script groovy class at the given location,
      * initialized with the given {@link groovy.lang.Binding}.
@@ -256,7 +287,7 @@ public class GroovyUtil {
     public static Script getScriptFromLocation(String location, Binding binding) throws GeneralException {
         return InvokerHelper.createScript(getScriptClassFromLocation(location), binding);
     }
-    
+
     /**
      * SCIPIO: Returns a {@link groovy.lang.Script} instance for the script groovy class at the given location,
      * initialized with binding built from the given context.
@@ -267,7 +298,7 @@ public class GroovyUtil {
     public static Script getScriptFromLocation(String location, Map<String, Object> context) throws GeneralException {
         return InvokerHelper.createScript(getScriptClassFromLocation(location), getBinding(context));
     }
-    
+
     /**
      * SCIPIO: Returns the static <code>GroovyClassLoader</code> instance, configured
      * for Ofbiz script base class and other settings.
@@ -275,6 +306,14 @@ public class GroovyUtil {
     public static GroovyClassLoader getGroovyScriptClassLoader() {
         return groovyScriptClassLoader;
     }
-    
+
+    /**
+     * SCIPIO: Returns the static <code>GroovyClassLoader</code> instance, configured
+     * for Ofbiz script base class and other settings.
+     */
+    public static CompilerConfiguration getGroovyScriptCompilerConfiguration() {
+        return groovyScriptCompilerConfig;
+    }
+
     private GroovyUtil() {}
 }

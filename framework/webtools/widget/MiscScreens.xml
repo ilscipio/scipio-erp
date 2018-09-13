@@ -863,8 +863,7 @@ under the License.
                                                     "\n" +
                                                     "final module = \"TemplateTest.groovy\";\n" +
                                                     "\n" +
-                                                    "// NOTE: Some screen groovy built-ins are not available from this form (such as the 'from' built-in; must use EntityQuery class here)\n" +
-                                                    "userParty = EntityQuery.use(delegator).from(\"Party\").select(\"partyId\", \"partyTypeId\").where(\"partyId\", context.userLogin?.partyId).queryOne();\n" +
+                                                    "userParty = from(\"Party\").select(\"partyId\", \"partyTypeId\").where(\"partyId\", context.userLogin?.partyId).queryOne();\n" +
                                                     "\n" +
                                                     "Debug.logInfo(\"Hello from test script and user party: \" + userParty, module);\n" +
                                                     "\n" +
@@ -878,7 +877,7 @@ under the License.
                                             
                                             execTemplate = (execDefault || request.getMethod().toLowerCase() == "post"); // security
                                             if (execTemplate && scriptBody) {
-                                                GroovyUtil.eval(scriptBody, context);
+                                                GroovyUtil.evalNoCache(scriptBody, context);
                                             }
                                             
                                             context.scriptBody = scriptBody;

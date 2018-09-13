@@ -107,7 +107,6 @@
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-util-8.5.33.jar" sourcepath="framework/base/libsrc/tomcat-util-8.5.33-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-util-scan-8.5.33.jar" sourcepath="framework/base/libsrc/tomcat-util-scan-8.5.33-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/urlrewritefilter-4.0.4.jar" sourcepath="framework/base/libsrc/urlrewritefilter-4.0.4-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/watermarker-0.0.4.jar" sourcepath="framework/base/libsrc/watermarker-0.0.4-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/woden-core-1.0M10.jar" sourcepath="framework/base/libsrc/woden-core-1.0M10-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/ws-commons-util-1.0.2.jar" sourcepath="framework/base/libsrc/ws-commons-util-1.0.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/wsdl4j-1.6.3.jar" sourcepath="framework/base/libsrc/wsdl4j-1.6.3-sources.jar"/>

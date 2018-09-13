@@ -203,7 +203,7 @@ public class EntitySaxReader extends DefaultHandler {
             Debug.logWarning("content was null, doing nothing", module);
             return 0;
         }
-        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes(UtilIO.getUtf8())); // SCIPIO: UtilIO.getUtf8()
 
         return this.parse(bis, "Internal Content");
     }

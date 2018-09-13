@@ -29,6 +29,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.Security;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -691,7 +692,7 @@ public class EmailServices {
         public StringDataSource(String content, String contentType) throws IOException {
             this.contentType = contentType;
             contentArray = new ByteArrayOutputStream();
-            contentArray.write(content.getBytes("iso-8859-1"));
+            contentArray.write(content.getBytes(StandardCharsets.ISO_8859_1)); // SCIPIO: StandardCharsets (instead of "iso-8859-1")
             contentArray.flush();
             contentArray.close();
         }

@@ -366,7 +366,7 @@ public final class UtilXml {
             Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing", module);
             return null;
         }
-        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes(UtilIO.getUtf8())); // SCIPIO: UtilIO.getUtf8()
         return readXmlDocument(bis, validate, "Internal Content");
     }
 
@@ -376,7 +376,7 @@ public final class UtilXml {
             Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing", module);
             return null;
         }
-        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes(UtilIO.getUtf8())); // SCIPIO: UtilIO.getUtf8()
         return readXmlDocument(bis, validate, "Internal Content", withPosition);
     }
 

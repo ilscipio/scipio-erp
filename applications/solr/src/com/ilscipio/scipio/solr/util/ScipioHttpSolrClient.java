@@ -52,7 +52,6 @@ import com.ilscipio.scipio.solr.SolrUtil;
 public class ScipioHttpSolrClient extends HttpSolrClient {
 
     private static final long serialVersionUID = -1505671185572707459L;
-    private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
     protected final String solrUsername;
     protected final String solrPassword;
@@ -136,7 +135,7 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
      */
     protected void setBasicAuthHeader(HttpRequestBase method, String username, String password) throws UnsupportedEncodingException {
         String userPass = username + ":" + password;
-        String encoded = Base64.byteArrayToBase64(userPass.getBytes(UTF_8));
+        String encoded = Base64.byteArrayToBase64(userPass.getBytes(StandardCharsets.UTF_8));
         method.setHeader(new BasicHeader("Authorization", "Basic " + encoded));
     }
     

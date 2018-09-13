@@ -30,6 +30,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.service.DispatchContext;
@@ -189,10 +190,10 @@ public class HttpEngine extends GenericAsyncEngine {
             response.setContentType("plain/text");
 
             if (errorMessage.length() > 0) {
-                response.setContentLength(errorMessage.toString().getBytes("UTF-8").length);
+                response.setContentLength(errorMessage.toString().getBytes(UtilIO.getUtf8()).length); // SCIPIO: UtilIO.getUtf8()
                 out.write(errorMessage.toString());
             } else {
-                response.setContentLength(resultString.getBytes("UTF-8").length);
+                response.setContentLength(resultString.getBytes(UtilIO.getUtf8()).length); // SCIPIO: UtilIO.getUtf8()
                 out.write(resultString);
             }
 

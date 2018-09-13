@@ -48,6 +48,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -335,7 +336,7 @@ public class CommonEvents {
         // set the JSON content type
         response.setContentType("application/json");
         // jsonStr.length is not reliable for unicode characters
-        response.setContentLength(jsonStr.getBytes("UTF8").length);
+        response.setContentLength(jsonStr.getBytes(UtilIO.getUtf8()).length); // SCIPIO: UtilIO.getUtf8()
 
         // return the JSON String
         Writer out;

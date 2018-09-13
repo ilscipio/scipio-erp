@@ -65,11 +65,15 @@ public class HashCrypt {
         if (crypted.startsWith("{PBKDF2")) {
             return doComparePbkdf2(crypted, password);
         } else if (crypted.startsWith("{")) {
-            return doCompareTypePrefix(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()));
+            // FIXME: should have been getBytes("UTF-8") originally
+            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
+            return doCompareTypePrefix(crypted, defaultCrypt, password.getBytes());
         } else if (crypted.startsWith("$")) {
             return doComparePosix(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()));
         } else {
-            return doCompareBare(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()));
+            // FIXME: should have been getBytes("UTF-8") originally
+            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
+            return doCompareBare(crypted, defaultCrypt, password.getBytes());
         }
     }
 
@@ -121,7 +125,8 @@ public class HashCrypt {
         if (hashType.startsWith("PBKDF2")) {
             return password != null ? pbkdf2HashCrypt(hashType, salt, password) : null;
         }
-        return password != null ? cryptBytes(hashType, salt, password.getBytes(UtilIO.getUtf8())) : null;
+        // FIXME: should have been getBytes("UTF-8") originally
+        return password != null ? cryptBytes(hashType, salt, password.getBytes()) : null;
     }
 
     public static String cryptUTF8(String hashType, String salt, String value) {
@@ -135,7 +140,8 @@ public class HashCrypt {
         if (hashType.startsWith("PBKDF2")) {
             return value != null ? pbkdf2HashCrypt(hashType, salt, value) : null;
         }
-        return value != null ? cryptBytes(hashType, salt, value.getBytes(UtilIO.getUtf8())) : null;
+        // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
+        return value != null ? cryptBytes(hashType, salt, value.getBytes()) : null;
     }
 
     public static String cryptBytes(String hashType, String salt, byte[] bytes) {
@@ -282,7 +288,8 @@ public class HashCrypt {
         byte[] codeBytes;
         try {
             if (code == null) {
-                codeBytes = str.getBytes(UtilIO.getUtf8());
+                // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
+                codeBytes = str.getBytes();
             } else {
                 codeBytes = str.getBytes(code);
             }
@@ -367,7 +374,8 @@ public class HashCrypt {
         }
         try {
             MessageDigest messagedigest = MessageDigest.getInstance(hashType);
-            byte[] strBytes = str.getBytes(UtilIO.getUtf8());
+            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
+            byte[] strBytes = str.getBytes();
 
             messagedigest.update(strBytes);
             return oldFunnyHex(messagedigest.digest());

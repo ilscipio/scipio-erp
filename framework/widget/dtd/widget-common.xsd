@@ -528,7 +528,6 @@ under the License.
                             </xs:annotation>
                         </xs:enumeration>
                         <xs:enumeration value="java" />
-                        <xs:enumeration value="javascript" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

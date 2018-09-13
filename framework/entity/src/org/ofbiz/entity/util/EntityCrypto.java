@@ -386,7 +386,11 @@ public final class EntityCrypto {
 
         @Override
         protected String getHashedKeyName(String originalKeyName) {
-            return HashCrypt.digestHash64("SHA", originalKeyName.getBytes(UtilIO.getUtf8()));
+            // SCIPIO: 2018-09-13: For consistency and legacy reasons, leave this to the legacy code,
+            // because no other getBytes in this class does this. Functionally this makes practically no difference
+            // due to the system defaults.
+            //return HashCrypt.digestHash64("SHA", originalKeyName.getBytes(UtilIO.getUtf8()));
+            return HashCrypt.digestHash64("SHA", originalKeyName.getBytes());
         }
 
         @Override

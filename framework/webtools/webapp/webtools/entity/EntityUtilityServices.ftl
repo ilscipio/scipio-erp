@@ -1,4 +1,11 @@
-<@section title=getLabel("WorkEffortGeneral", "WorkEffortUiLabels")>     
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
+    <@menuitem type="link" href=makeOfbizUrl("SolrServices") text=uiLabelMap.SolrSolrServices class="+${styles.action_nav!}" />
+  </@menu>
+</#macro>
+<@section menuContent=menuContent>
+
+  <@section title=getLabel("WorkEffortGeneral", "WorkEffortUiLabels")>     
       <@table type="data-list" autoAltRows=true scrollable=true> 
         <@thead>
         <@tr class="header-row">
@@ -30,5 +37,8 @@
           </@tr>
 
       </@table>
+      
+  </@section>
+ 
 </@section>
 

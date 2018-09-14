@@ -483,6 +483,7 @@ under the License.
     <screen name="EntityUtilityServices">
         <section>
             <actions>
+                <property-map resource="SolrUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="WebtoolsEntityUtilityServices"/>
                 <set field="activeSubMenuItem" value="EntityUtilityServices"/>                
             </actions>

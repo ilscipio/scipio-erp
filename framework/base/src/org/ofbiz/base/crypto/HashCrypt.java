@@ -48,11 +48,11 @@ public class HashCrypt {
     public static final String CRYPT_CHAR_SET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
 
     private static final String PBKDF2_SHA1 ="PBKDF2-SHA1";
-    private static final String PBKDF2_SHA256 ="PBKDF2-SHA256"; 
+    private static final String PBKDF2_SHA256 ="PBKDF2-SHA256";
     private static final String PBKDF2_SHA384 ="PBKDF2-SHA384";
     private static final String PBKDF2_SHA512 ="PBKDF2-SHA512";
     private static final int PBKDF2_ITERATIONS = UtilProperties.getPropertyAsInteger("security.properties", "password.encrypt.pbkdf2.iterations", 10000);
-    
+
     public static MessageDigest getMessageDigest(String type) {
         try {
             return MessageDigest.getInstance(type);
@@ -202,8 +202,8 @@ public class HashCrypt {
                 case "PBKDF2WithHmacSHA512":
                     pbkdf2Type = PBKDF2_SHA512;
                     break;
-                default: 
-                    pbkdf2Type = PBKDF2_SHA1; 
+                default:
+                    pbkdf2Type = PBKDF2_SHA1;
             }
             StringBuilder sb = new StringBuilder();
             sb.append("{").append(pbkdf2Type).append("}");
@@ -217,7 +217,7 @@ public class HashCrypt {
             throw new GeneralRuntimeException("Error while computing SecretKeyFactory", e);
         }
     }
-    
+
     public static boolean doComparePbkdf2(String crypted, String password){
         try {
             int typeEnd = crypted.indexOf("}");
@@ -226,7 +226,7 @@ public class HashCrypt {
             int iterations = Integer.parseInt(parts[0].substring(typeEnd+1));
             byte[] salt = org.ofbiz.base.util.Base64.base64Decode(parts[1]).getBytes(UtilIO.getUtf8());
             byte[] hash = Base64.decodeBase64(parts[2].getBytes(UtilIO.getUtf8()));
-            
+
             PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, hash.length * 8);
             switch (hashType.substring(hashType.indexOf("-")+1)) {
                 case "SHA256":
@@ -238,17 +238,17 @@ public class HashCrypt {
                 case "SHA512":
                     hashType = "PBKDF2WithHmacSHA512";
                     break;
-                default:  
+                default:
                     hashType = "PBKDF2WithHmacSHA1";
             }
             SecretKeyFactory skf = SecretKeyFactory.getInstance(hashType);
             byte[] testHash = skf.generateSecret(spec).getEncoded();
             int diff = hash.length ^ testHash.length;
-            
+
             for (int i = 0; i < hash.length && i < testHash.length; i++) {
                 diff |= hash[i] ^ testHash[i];
             }
-            
+
             return diff == 0;
         } catch (NoSuchAlgorithmException e) {
             throw new GeneralRuntimeException("Error while computing SecretKeyFactory", e);
@@ -256,7 +256,7 @@ public class HashCrypt {
             throw new GeneralRuntimeException("Error while creating SecretKey", e);
         }
     }
-    
+
     private static String getSalt() {
         try {
             SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
@@ -267,7 +267,7 @@ public class HashCrypt {
             throw new GeneralRuntimeException("Error while creating salt", e);
         }
     }
-    
+
     /**
      * @deprecated use digestHash("SHA", null, str)
      */

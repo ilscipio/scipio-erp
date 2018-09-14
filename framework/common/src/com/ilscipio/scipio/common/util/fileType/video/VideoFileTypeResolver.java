@@ -13,7 +13,7 @@ import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
 /**
  * File type resolver focused on resolving video types. This is likely to be
  * moved to an entity at some point.
- * 
+ *
  * @author jsoto
  *
  */
@@ -34,16 +34,16 @@ public class VideoFileTypeResolver extends FileTypeResolver {
         fileTypes = Collections.unmodifiableList(ft);
     }
     protected final Set<String> manualSupportedMediaTypes;
-    
+
     protected VideoFileTypeResolver(Delegator delegator, ResolverConfig resolverConfig) {
         super(delegator, resolverConfig);
-        
+
         Set<String> mediaTypes = collectManualSupportedMediaTypes(delegator, fileTypes);
         // 2017-02-08: not needed with new tika code; for manual, just define new type instead...
         //mediaTypes.add("video/x-flv");
         manualSupportedMediaTypes = Collections.unmodifiableSet(mediaTypes);
     }
-    
+
     public static VideoFileTypeResolver getInstance(Delegator delegator, ResolverConfig resolverConfig) {
         return new VideoFileTypeResolver(delegator, resolverConfig);
     }
@@ -161,7 +161,7 @@ public class VideoFileTypeResolver extends FileTypeResolver {
         public MpgFileType() {
             Collections.addAll(MAGIC_NUMBERS,
 
-            new MagicNumber("000001Bx", new byte[] { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xF0 }, "000001B7", 
+            new MagicNumber("000001Bx", new byte[] { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xF0 }, "000001B7",
                     "MPEG video file", 0, "mpeg", "mpg")
 
             );
@@ -246,12 +246,12 @@ public class VideoFileTypeResolver extends FileTypeResolver {
     protected List<AbstractFileType> getFileTypes() {
         return fileTypes;
     }
-    
+
     @Override
     protected Set<String> getManualSupportedMediaTypes() {
         return manualSupportedMediaTypes;
     }
-    
+
     @Override
     public String adjustMediaTypeManual(String mediaType) {
         if (mediaType.startsWith("audio/")) {

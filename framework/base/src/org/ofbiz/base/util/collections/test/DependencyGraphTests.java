@@ -18,7 +18,7 @@ public class DependencyGraphTests extends GenericTestCaseBase {
     public DependencyGraphTests(String name) {
         super(name);
     }
-    
+
     /**
      * TODO: Proper test case instead of debug lines
      */
@@ -27,7 +27,7 @@ public class DependencyGraphTests extends GenericTestCaseBase {
             Map<String, List<String>> in;
             DependencyGraph<String> depGraph;
             List<String> resolved;
-            
+
             in = new java.util.LinkedHashMap<>();
             in.put("testcomp1", Arrays.asList("testcomp8"));
             in.put("testcomp2", Arrays.asList("testcomp1"));
@@ -42,7 +42,7 @@ public class DependencyGraphTests extends GenericTestCaseBase {
             System.out.println("Scipio: Dependency graph test 1:"
                     + "\nOriginal order: " + new ArrayList<String>(in.keySet()).toString()
                     + "\nResolved order: " + resolved.toString());
-            
+
             in = new java.util.LinkedHashMap<>();
             in.put("testcomp1", new ArrayList<String>());
             in.put("testcomp2", Arrays.asList("testcomp1"));
@@ -57,7 +57,7 @@ public class DependencyGraphTests extends GenericTestCaseBase {
             System.out.println("Scipio: Dependency graph test 2: order should be unchanged: "
                     + "\nOriginal order: " + new ArrayList<String>(in.keySet()).toString()
                     + "\nResolved order: " + resolved.toString());
-            
+
             in = new java.util.LinkedHashMap<>();
             in.put("testcomp1", Arrays.asList("testcomp8"));
             in.put("testcomp2", Arrays.asList("testcomp1"));
@@ -81,5 +81,5 @@ public class DependencyGraphTests extends GenericTestCaseBase {
             System.err.println("ERROR: Scipio: Unexpected dependency graph test error: " + e.getMessage());
         }
     }
-    
+
 }

@@ -18,7 +18,7 @@ public class UtilRandom {
     /**
      * Method should generate random number that represents a time between two
      * dates.
-     * 
+     *
      * @return
      */
     private static long getRandomTimeBetweenTwoDates(Timestamp beginDate, Map<String, Object> context) {
@@ -72,10 +72,10 @@ public class UtilRandom {
         }
         return randomDate;
     }
-    
+
     static String generateRandomPassword(int len){
         System.out.println("Your Password ");
-        String charsCaps="ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+        String charsCaps="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String Chars="abcdefghijklmnopqrstuvwxyz";
         String nums="0123456789";
         String symbols="!@#$%^&*()_+-=.,/';:?><~*/-+";
@@ -115,7 +115,7 @@ public class UtilRandom {
         return x;
     }
 
-    public static String generateRandom() {        
+    public static String generateRandom() {
         return new BigInteger(130, new SecureRandom()).toString(32);
     }
 

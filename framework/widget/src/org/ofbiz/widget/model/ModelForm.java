@@ -64,7 +64,7 @@ import bsh.Interpreter;
 
 /**
  * Abstract base class for the &lt;form&gt; and &lt;grid&gt; elements.
- * 
+ *
  * @see <code>widget-form.xsd</code>
  */
 @SuppressWarnings("serial")
@@ -74,18 +74,18 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors. All behavior should be contained in model visitors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      * BE VERY CAREFUL when implementing "extends" - parent form collections
      * must be added to child collections, not replace them. In other words,
      * do not assign parent collection fields to child collection fields.
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -199,42 +199,42 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     /** Keeps track of conditional fields to help ensure that only one is rendered
      */
     private final Set<String> useWhenFields;
-    
+
     // SCIPIO: new fields
     private final FlexibleStringExpander hideHeaderWhen;
     private final FlexibleStringExpander hideTableWhen;
     private final FlexibleStringExpander useAlternateTextWhen;
     private final FlexibleStringExpander alternateText;
     private final FlexibleStringExpander alternateTextStyle;
-    
+
     private final Integer positions;
     private final Integer defaultPositionSpan;
-    
+
     private final boolean defaultCombineActionFields;
-    
+
     /**
      * SCIPIO: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
      */
     private final AttribsExpression attribsExpr;
-    
-    
+
+
     /**
      * SCIPIO: the <form> get or post method! somehow missing from stock defs.
      */
     private final FlexibleStringExpander method;
-    
+
     // SCIPIO: special select fields for when use-row-submit is true
     // FIXME: currently these are NOT included in the other field lists, but they should be!
     private final ModelFormField rowSubmitHeaderSelectField;
     private final ModelFormField rowSubmitSelectField;
-    
+
     // SCIPIO: new
     private final String submitHiddenFormNamePrefix;
     private final String rowSubmitSelectFieldNamePrefix;
     private final String rowSubmitSelectFieldParamNamePrefix;
     private final List<ModelPageScript> pageScripts;
-    
+
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
         super(formElement);
@@ -415,7 +415,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         } else {
             this.hideHeader = "true".equals(hideHeader);
         }
-        
+
         // SCIPIO: new fields
         FlexibleStringExpander hideHeaderWhen = FlexibleStringExpander.getInstance(formElement.getAttribute("hide-header-when"));
         if (hideHeaderWhen.isEmpty() && parentModel != null) {
@@ -427,7 +427,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             hideTableWhen = parentModel.hideTableWhen;
         }
         this.hideTableWhen = hideTableWhen;
-        
+
         FlexibleStringExpander useAlternateTextWhen = FlexibleStringExpander.getInstance(formElement.getAttribute("use-alternate-text-when"));
         if (useAlternateTextWhen.isEmpty() && parentModel != null) {
             useAlternateTextWhen = parentModel.useAlternateTextWhen;
@@ -443,7 +443,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             alternateTextStyle = parentModel.alternateTextStyle;
         }
         this.alternateTextStyle = alternateTextStyle;
-        
+
         String positionsStr = formElement.getAttribute("positions");
         Integer positions = null;
         try {
@@ -458,7 +458,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                     + "]; using the default of the form renderer", module);
         }
         this.positions = positions;
-        
+
         String defaultPositionSpanStr = formElement.getAttribute("default-position-span");
         int defaultPositionSpan = 0;
         try {
@@ -473,18 +473,18 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                     + "]; using the default of the form renderer", module);
         }
         this.defaultPositionSpan = defaultPositionSpan;
-        
+
         String defaultCombineActionFields = formElement.getAttribute("default-combine-action-fields");
         if (defaultCombineActionFields.isEmpty() && parentModel != null) {
             this.defaultCombineActionFields = parentModel.defaultCombineActionFields;
         } else {
             this.defaultCombineActionFields = "true".equals(defaultCombineActionFields);
         }
-        
+
         // SCIPIO: extra attribs map
         String attribsExprStr = formElement.getAttribute("attribs");
         this.attribsExpr = AttribsExpression.makeAttribsExpr(attribsExprStr, (parentModel != null ? parentModel.attribsExpr : null));
-        
+
         // SCIPIO: form submit method
         FlexibleStringExpander method = FlexibleStringExpander.getInstance(formElement.getAttribute("method"));
         if (method.isEmpty()) {
@@ -495,7 +495,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             }
         }
         this.method = method;
-        
+
         String clientAutocompleteFields = formElement.getAttribute("client-autocomplete-fields");
         if (clientAutocompleteFields.isEmpty() && parentModel != null) {
             this.clientAutocompleteFields = parentModel.clientAutocompleteFields;
@@ -595,7 +595,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         altRowStyles.trimToSize();
         this.altRowStyles = Collections.unmodifiableList(altRowStyles);
-        
+
         // SCIPIO: 2017-04-21: new page scripts
         ArrayList<ModelPageScript> pageScripts = new ArrayList<>();
         if (parentModel != null) {
@@ -607,7 +607,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         altRowStyles.trimToSize();
         this.pageScripts = Collections.unmodifiableList(pageScripts);
-        
+
         Set<String> useWhenFields = new HashSet<>();
         if (parentModel != null) {
             useWhenFields.addAll(parentModel.useWhenFields);
@@ -884,7 +884,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             focusFieldName = parentModel.focusFieldName;
         }
         this.focusFieldName = focusFieldName;
-        
+
         // SCIPIO: new
         // TODO: Unhardcode everything below
         this.submitHiddenFormNamePrefix = "postSubmitForm";
@@ -897,19 +897,19 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         String rowSubmitSelectFieldName = makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix);
         String rowSubmitSelectFieldParamName = this.rowSubmitSelectFieldParamNamePrefix;
         String rowSubmitSelectFieldTitle = "${uiLabelMap.CommonSelect}";
-        
+
         ModelFormField rowSubmitHeaderSelectField = null;
         ModelFormField rowSubmitSelectField = null;
         if (getUseRowSubmit()) {
             if ("list".equals(getType()) || "multi".equals(getType())) {
                 ModelFormFieldBuilder builder;
                 builder = getHeaderFieldBuilder();
-                builder.setName(rowSubmitSelectFieldName); 
+                builder.setName(rowSubmitSelectFieldName);
                 builder.setFieldName(rowSubmitSelectFieldName);
                 builder.setParameterName(rowSubmitSelectFieldName); // NOTE: SAME as Name, ONLY for header
                 builder.setTitle(rowSubmitSelectFieldTitle);
                 rowSubmitHeaderSelectField = builder.build();
-                
+
                 if ("list".equals(getType())) {
                     builder = getRadioFieldBuilder();
                 } else {
@@ -917,7 +917,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                 }
                 builder.setName(rowSubmitSelectFieldName);
                 builder.setFieldName(rowSubmitSelectFieldName);
-                builder.setParameterName(rowSubmitSelectFieldParamName); 
+                builder.setParameterName(rowSubmitSelectFieldParamName);
                 builder.setTitle(rowSubmitSelectFieldTitle);
                 rowSubmitSelectField = builder.build();
             }
@@ -1058,7 +1058,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             fieldBuilderMap.put(builder.getName(), builder);
         }
     }
-    
+
     public List<ModelAction> getActions() {
         return actions;
     }
@@ -1066,7 +1066,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public List<AltRowStyle> getAltRowStyles() {
         return altRowStyles;
     }
-    
+
     /**
      * SCIPIO: Returns page scripts.
      * New 2017-04-21.
@@ -1121,7 +1121,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public String getId() { // SCIPIO: new
         return getContainerId();
     }
-    
+
     public String getContainerStyle() {
         return this.containerStyle;
     }
@@ -1169,7 +1169,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public String getDefaultTitleAreaStyle() {
         return this.defaultTitleAreaStyle;
     }
-    
+
     public String getDefaultTitleStyle() {
         return this.defaultTitleStyle;
     }
@@ -1225,11 +1225,11 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public String getHeaderRowStyle() {
         return this.headerRowStyle;
     }
-    
+
     public boolean getHideHeader() {
         return this.hideHeader;
     }
-    
+
     public boolean getHideHeader(Map<String, Object> context) { // SCIPIO
         Boolean when = getHideHeaderWhen(context);
         if (when != null) {
@@ -1237,7 +1237,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return this.hideHeader;
     }
-    
+
     static String getWidgetDefDefault(Map<String, Object> context, String propName, boolean expand) { // SCIPIO
         Properties props = UtilProperties.getProperties("widget.properties");
         if (props == null) {
@@ -1273,12 +1273,12 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return "";
     }
-    
+
     static String getWidgetDefDefault(Map<String, Object> context, String propName) { // SCIPIO
         return getWidgetDefDefault(context, propName, true);
     }
-    
-    
+
+
     private Boolean getBooleanExprResult(String val, String name) { // SCIPIO
         if (UtilValidate.isNotEmpty(val)) {
             if ("true".equals(val)) {
@@ -1296,11 +1296,11 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return null;
     }
-    
+
     public String getHideHeaderWhen() { // SCIPIO
         return this.hideHeaderWhen.getOriginal();
     }
-    
+
     public Boolean getHideHeaderWhen(Map<String, Object> context) { // SCIPIO
         String when = this.hideHeaderWhen.expandString(context);
         if (UtilValidate.isEmpty(when)) {
@@ -1308,7 +1308,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return getBooleanExprResult(when, "hide-header-when");
     }
-    
+
     public boolean isHideHeaderWhen(Map<String, Object> context) { // SCIPIO
         Boolean res = getHideHeaderWhen(context);
         if (res != null) {
@@ -1316,11 +1316,11 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return false;
     }
-    
+
     public String getHideTableWhen() { // SCIPIO
         return this.hideTableWhen.getOriginal();
     }
-    
+
     public Boolean getHideTableWhen(Map<String, Object> context) { // SCIPIO
         String when = this.hideTableWhen.expandString(context);
         if (UtilValidate.isEmpty(when)) {
@@ -1328,7 +1328,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return getBooleanExprResult(when, "hide-table-when");
     }
-    
+
     public boolean isHideTableWhen(Map<String, Object> context) { // SCIPIO
         Boolean res = getHideTableWhen(context);
         if (res != null) {
@@ -1336,11 +1336,11 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return false;
     }
-    
+
     public String getUseAlternateTextWhen() { // SCIPIO
         return this.useAlternateTextWhen.getOriginal();
     }
-    
+
     public Boolean getUseAlternateTextWhen(Map<String, Object> context) { // SCIPIO
         String when = this.useAlternateTextWhen.expandString(context);
         if (UtilValidate.isEmpty(when)) {
@@ -1348,7 +1348,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return getBooleanExprResult(when, "use-alternate-text-when");
     }
-    
+
     public boolean isUseAlternateTextWhen(Map<String, Object> context) { // SCIPIO
         Boolean res = getUseAlternateTextWhen(context);
         if (res != null) {
@@ -1356,11 +1356,11 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return false;
     }
-    
+
     public String getAlternateText() { // SCIPIO
         return this.alternateText.getOriginal();
     }
-    
+
     public String getAlternateText(Map<String, Object> context) { // SCIPIO
         String val = this.alternateText.expandString(context);
         if (UtilValidate.isEmpty(val)) {
@@ -1368,11 +1368,11 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return val;
     }
-    
+
     public String getAlternateTextStyle() { // SCIPIO
         return this.alternateTextStyle.getOriginal();
     }
-    
+
     public String getAlternateTextStyle(Map<String, Object> context) { // SCIPIO
         String val = this.alternateTextStyle.expandString(context);
         if (UtilValidate.isEmpty(val)) {
@@ -1380,17 +1380,17 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return val;
     }
-    
+
     public Integer getPositions() { // SCIPIO
         return positions;
     }
-    
+
     public int getDefaultPositionSpan() { // SCIPIO
         if (this.defaultPositionSpan == null)
             return 0;
         return defaultPositionSpan;
     }
-    
+
     public boolean getDefaultCombineActionFields() { // SCIPIO
         return defaultCombineActionFields;
     }
@@ -1823,49 +1823,49 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public void runFormActions(Map<String, Object> context) {
         AbstractModelAction.runSubActions(this.actions, context);
     }
-    
+
     /**
      * SCIPIO: getAttribsExpr.
      */
     public AttribsExpression getAttribsExpr() {
         return attribsExpr;
     }
-    
+
     /**
      * SCIPIO: getMethod.
      */
     public String getMethod(Map<String, Object> context) {
         return method.expandString(context);
     }
-    
+
     /**
      * SCIPIO: getSubmitHiddenFormNamePrefix.
      */
     public String getSubmitHiddenFormNamePrefix() {
         return submitHiddenFormNamePrefix;
     }
-    
+
     /**
      * SCIPIO: getSubmitHiddenFormName.
      */
     public String getSubmitHiddenFormName(String uniquefix) {
         return getSubmitHiddenFormNamePrefix() + getItemIndexSeparator() + uniquefix;
     }
-    
+
     /**
      * SCIPIO: Returns row-submit special select field name prefix.
      */
     public String getRowSubmitSelectFieldNamePrefix() {
         return rowSubmitSelectFieldNamePrefix;
     }
-    
+
     /**
      * SCIPIO: Returns row-submit special select field name prefix.
      */
     public String getRowSubmitSelectFieldParamNamePrefix() {
         return rowSubmitSelectFieldParamNamePrefix;
     }
-    
+
     private String makeRowSubmitSelectFieldName(String prefix) {
         // FIXME: HARDCODED!
         return prefix + getItemIndexSeparator() + getName();
@@ -1877,7 +1877,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public ModelFormField getRowSubmitHeaderSelectField() {
         return rowSubmitHeaderSelectField;
     }
-    
+
     /**
      * SCIPIO: getHeaderFieldBuilder.
      */
@@ -1888,14 +1888,14 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         builder.setFieldInfo(displayField);
         return builder;
     }
-    
+
     /**
      * SCIPIO: Gets row-submit field (data rows).
      */
     public ModelFormField getRowSubmitSelectField() {
         return rowSubmitSelectField;
     }
-    
+
     /**
      * SCIPIO: getRadioFieldBuilder.
      */
@@ -1906,9 +1906,9 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
         builder.setModelForm(this);
         builder.setFieldInfo(radioField);
-        return builder; 
+        return builder;
     }
-    
+
     /**
      * SCIPIO: getCheckboxFieldBuilder.
      */
@@ -1916,7 +1916,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         List<OptionSource> optionSources = new ArrayList<>();
         optionSources.add(new SingleOption("Y", " ", null));
-        ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
+        ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);
         builder.setModelForm(this);
         builder.setFieldInfo(checkField);
         return builder;
@@ -1958,7 +1958,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         public final String defaultFieldType;
         public final int defaultPosition;
         public final Integer defaultPositionSpan;
-        
+
         /**
          * SCIPIO: string expression representing a json-like map of extra form attributes.
          * It is stored without wrapping brackets.
@@ -1980,7 +1980,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                         + "], using the default of the form renderer", module);
             }
             this.defaultPosition = position;
-            
+
             String positionSpanStr = element.getAttribute("default-position-span");
             Integer positionSpan = null;
             try {
@@ -1992,7 +1992,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                         + "], using the default of the form renderer", module);
             }
             this.defaultPositionSpan = positionSpan;
-            
+
             this.attribsExpr = AttribsExpression.makeAttribsExpr(element.getAttribute("attribs"));
         }
     }
@@ -2003,7 +2003,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         public final String defaultFieldType;
         public final int defaultPosition;
         public final Integer defaultPositionSpan;
-        
+
         /**
          * SCIPIO: string expression representing a json-like map of extra form attributes.
          * It is stored without wrapping brackets.
@@ -2025,7 +2025,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                         + "], using the default of the form renderer", module);
             }
             this.defaultPosition = position;
-            
+
             String positionSpanStr = element.getAttribute("default-position-span");
             Integer positionSpan = null;
             try {
@@ -2037,7 +2037,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                         + "], using the default of the form renderer", module);
             }
             this.defaultPositionSpan = positionSpan;
-            
+
             this.attribsExpr = AttribsExpression.makeAttribsExpr(element.getAttribute("attribs"));
         }
     }
@@ -2128,7 +2128,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                 }
                 for (Element sortFieldElement : UtilXml.childElementList(sortOrderElement, "sort-field")) {
                     sortOrderFields.add(new SortField(sortFieldElement.getAttribute("name"), sortFieldElement
-                            .getAttribute("position"), 
+                            .getAttribute("position"),
                             sortFieldElement.getAttribute("position-span"))); // SCIPIO: position-span
                     fieldGroupMap.put(sortFieldElement.getAttribute("name"), this);
                 }
@@ -2379,19 +2379,19 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             return parameterList;
         }
     }
-    
+
     @Override
     public String getContainerLocation() { // SCIPIO: new
         return formLocation;
     }
-    
+
     @Override
     public String getWidgetType() { // SCIPIO: new
         return "form";
     }
-    
+
     /**
-     * SCIPIO: Combines an extra style (like selected-style) to a main style 
+     * SCIPIO: Combines an extra style (like selected-style) to a main style
      * string (like widget-style).
      * <p>
      * NOTE: currently, the extra style is always added as an extra, and

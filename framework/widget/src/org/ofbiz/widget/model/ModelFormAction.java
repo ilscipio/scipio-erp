@@ -73,7 +73,7 @@ public abstract class ModelFormAction implements Serializable {
 
     /**
      * Models the &lt;call-parent-actions&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class CallParentActions extends AbstractModelAction {
@@ -122,7 +122,7 @@ public abstract class ModelFormAction implements Serializable {
 
     /**
      * Models the &lt;service&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class Service extends AbstractModelAction {

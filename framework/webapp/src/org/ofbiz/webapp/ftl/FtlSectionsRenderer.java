@@ -45,34 +45,34 @@ import freemarker.template.TemplateTransformModel;
 public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, Object> {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private final RenderContextFetcher contextFetcher;
     private final Map<String, Object> sectionMap;
-    
+
     public FtlSectionsRenderer(Map<String, Object> sectionMap, RenderContextFetcher contextFetcher) {
         this.sectionMap = sectionMap;
         this.contextFetcher = contextFetcher;
     }
-    
+
     public static FtlSectionsRenderer create(Map<String, Object> sectionMap) {
         return new FtlSectionsRenderer(sectionMap, new FtlContextFetcher.FallbackFtlFullFetcher(null, null));
     }
-    
+
     public static FtlSectionsRenderer create(TemplateHashModelEx sectionMapModel) throws TemplateModelException {
         return new FtlSectionsRenderer(LangFtlUtil.makeModelObjectMap(sectionMapModel), new FtlContextFetcher.FallbackFtlFullFetcher(null, null));
     }
-    
-    /** 
-     * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+
+    /**
+     * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker
      * <p>
      * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
      * */
     public String render(String sectionName, boolean asString) throws GeneralException, IOException, TemplateException {
         return render(sectionName, asString, getWriter());
     }
-    
-    /** 
-     * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+
+    /**
+     * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker
      * <p>
      * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
      * */
@@ -85,7 +85,7 @@ public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, O
         }
         return asString ? effWriter.toString() : "";
     }
-    
+
     @SuppressWarnings("deprecation")
     protected static void render(Appendable writer, Object section) throws TemplateException, IOException {
         if (section instanceof TemplateInvoker) {
@@ -140,15 +140,15 @@ public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, O
             throw new TemplateModelException("Unsupported ftl sections renderer section class: " + section.getClass().getName());
         }
     }
-    
-    /** 
-     * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+
+    /**
+     * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker
      */
     public String render(String sectionName) throws GeneralException, IOException, TemplateException {
         return render(sectionName, false);
     }
-    
-    /** 
+
+    /**
      * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
      */
     public String renderScoped(String sectionName, Boolean asString, Boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException, TemplateException {
@@ -174,23 +174,23 @@ public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, O
             return render(sectionName, asString);
         }
     }
-    
-    /** 
+
+    /**
      * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
      */
     public String renderScoped(String sectionName, Boolean asString, Boolean shareScope) throws GeneralException, IOException, TemplateException {
         return renderScoped(sectionName, asString, shareScope, null);
     }
-    
-    /** 
+
+    /**
      * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
      * generic object/ftl-friendly version.
      */
     public String renderScopedGen(String sectionName, Object asString, Object shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException, TemplateException {
         return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope), ctxVars);
     }
-    
-    /** 
+
+    /**
      * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
      * generic object/ftl-friendly version.
      */
@@ -201,7 +201,7 @@ public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, O
     public Appendable getWriter() { // SCIPIO
         return contextFetcher.getWriter();
     }
-    
+
     public MapStack<String> getContext() { // SCIPIO
         return contextFetcher.getContext();
     }

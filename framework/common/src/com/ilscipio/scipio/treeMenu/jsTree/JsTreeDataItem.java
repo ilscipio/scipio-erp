@@ -8,7 +8,7 @@ import org.ofbiz.base.util.UtilValidate;
 import com.ilscipio.scipio.treeMenu.TreeDataItem;
 
 /**
- * 
+ *
  * @author jsoto
  *
  */
@@ -36,7 +36,7 @@ public class JsTreeDataItem extends HashMap<String, Object> implements TreeDataI
         liAttrValues.put("original_id", originalId);
         put("li_attr", liAttrValues);
     }
-    
+
     public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, String parent) {
         this(id, id, text, icon, state, parent);
     }
@@ -95,7 +95,7 @@ public class JsTreeDataItem extends HashMap<String, Object> implements TreeDataI
             this(opened, selected);
             put("disabled", disabled);
         }
-        
+
         public JsTreeDataItemState(Map<String, Object> stateMap) {
             put("opened", (Boolean) stateMap.get("opened"));
             put("selected", (Boolean) stateMap.get("selected"));

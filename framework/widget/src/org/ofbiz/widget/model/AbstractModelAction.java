@@ -77,21 +77,21 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Returns a new <code>ModelAction</code> instance, built from <code>actionElement</code>.
-     * 
+     *
      * @param modelWidget The <code>ModelWidget</code> that contains the &lt;actions&gt; element
      * @param actionElement
      * @return A new <code>ModelAction</code> instance
@@ -140,7 +140,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Executes the actions contained in <code>actions</code>.
-     * 
+     *
      * @param actions
      * @param context
      */
@@ -159,14 +159,14 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
         }
     }
-    
+
     /**
      * SCIPIO: Executes the actions contained in <code>actions</code>, without wrapping exceptions
      * in RuntimeException.
-     * 
+     *
      * @param actions
      * @param context
-     * @throws GeneralException 
+     * @throws GeneralException
      */
     public static void runSubActionsEx(List<ModelAction> actions, Map<String, Object> context) throws GeneralException {
         if (actions == null) {
@@ -196,13 +196,13 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Returns the <code>ModelWidget</code> that contains the &lt;actions&gt; element.
-     * 
+     *
      * @return The <code>ModelWidget</code> that contains the &lt;actions&gt; element
      */
     public ModelWidget getModelWidget() {
         return modelWidget;
     }
-    
+
     /**
      * SCIPIO: Returns suffix log message with location/id of directive (best-effort).
      */
@@ -224,7 +224,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;entity-and&gt; element.
-     * 
+     *
      * @see <code>widget-screen.xsd</code>
      */
     public static class EntityAnd extends AbstractModelAction {
@@ -258,7 +258,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;entity-condition&gt; element.
-     * 
+     *
      * @see <code>widget-screen.xsd</code>
      */
     public static class EntityCondition extends AbstractModelAction {
@@ -292,7 +292,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;entity-one&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class EntityOne extends AbstractModelAction {
@@ -326,7 +326,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;get-related&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class GetRelated extends AbstractModelAction {
@@ -411,7 +411,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;get-related-one&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class GetRelatedOne extends AbstractModelAction {
@@ -476,7 +476,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;property-map&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class PropertyMap extends AbstractModelAction {
@@ -550,7 +550,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;property-to-field&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class PropertyToField extends AbstractModelAction {
@@ -644,11 +644,11 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * <p>
      * TODO: The child CDATA text should use a proper cache key instead of the
      * script body as ofbiz(?) coded it (should use: widgetloc#widgetname@line,col).
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class Script extends AbstractModelAction {
-        
+
         /**
          * SCIPIO: available languages. NOTE: may not same as XSD; this is more permissive.
          */
@@ -660,7 +660,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             langSet.add("simple-map-processor");
             supportedLangs = Collections.unmodifiableSet(langSet);
         }
-        
+
         // SCIPIO: these are patched for dynamic location support
         //private final String location;
         //private final String method;
@@ -673,14 +673,14 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             //this.location = WidgetWorker.getScriptLocation(scriptLocation);
             //this.method = WidgetWorker.getScriptMethodName(scriptLocation);
             this.locationExdr = FlexibleStringExpander.getInstance(scriptLocation);
-            
+
             // SCIPIO: inline script preparation derived from (but no longer resembles):
             //   org.ofbiz.minilang.method.callops.CallScript.CallScript(Element, SimpleMethod)
             String lang = scriptElement.getAttribute("lang");
             if (!lang.isEmpty() && !supportedLangs.contains(lang)) {
                 Debug.logError("script element: lang attribute unrecognized language: lang=\"" + lang + "\"", module);
             }
-            
+
             String inlineScript = scriptElement.getAttribute("script");
             boolean hasScriptPrefix = startsWithLangPrefix(inlineScript);
             Scriptlet scriptlet = null;
@@ -720,7 +720,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             this.scriptlet = scriptlet;
         }
-        
+
         /**
          * SCIPIO: Returns <code>true</code> if <code>str</code> starts with a recognized lang prefix.
          * @param str The string to test
@@ -736,7 +736,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             return false;
         }
-        
+
         /**
          * SCIPIO: makes scriptlet.
          */
@@ -752,7 +752,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                         + "support inline scripts for lang [" + lang + "]");
             }
         }
-        
+
         @Override
         public void accept(ModelActionVisitor visitor) throws Exception {
             visitor.visit(this);
@@ -764,7 +764,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 String scriptLocation = this.locationExdr.expandString(context);
                 String location = WidgetWorker.getScriptLocation(scriptLocation);
                 String method = WidgetWorker.getScriptMethodName(scriptLocation);
-                
+
                 if (location.endsWith(".xml")) {
                     Map<String, Object> localContext = new HashMap<>();
                     localContext.putAll(context);
@@ -780,7 +780,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                     ScriptUtil.executeScript(location, method, context);
                 }
             }
-            
+
             if (this.scriptlet != null) {
                 try {
                     this.scriptlet.executeScript(context);
@@ -803,7 +803,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;service&gt; element.
-     * 
+     *
      * @see <code>widget-screen.xsd</code>
      */
     public static class Service extends AbstractModelAction {
@@ -886,7 +886,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;set&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class SetField extends AbstractModelAction {
@@ -1011,13 +1011,13 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 }
             }
             if (!setIfNull && newValue == null){
-                if (Debug.verboseOn()) { // SCIPIO: 2018-09-04: Changed this from warning (??) to verbose 
+                if (Debug.verboseOn()) { // SCIPIO: 2018-09-04: Changed this from warning (??) to verbose
                     Debug.logVerbose("Field value not found (null) for the field: [" + this.field.getOriginalName() + " and there was no default value, so field was not set", module);
                 }
                 return;
             }
             if (!setIfEmpty && ObjectType.isEmpty(newValue)){
-                if (Debug.verboseOn()) { // SCIPIO: 2018-09-04: Changed this from warning (??) to verbose 
+                if (Debug.verboseOn()) { // SCIPIO: 2018-09-04: Changed this from warning (??) to verbose
                     Debug.logVerbose("Field value not found (empty) for the field: [" + this.field.getOriginalName() + " and there was no default value, so field was not set", module);
                 }
                 return;
@@ -1110,10 +1110,10 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return valueExdr;
         }
     }
-    
+
     /**
      * SCIPIO: Models the &lt;include-xxx-actions&gt; elements.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static abstract class IncludeActions extends AbstractModelAction {
@@ -1131,7 +1131,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         protected IncludeActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
         }
-        
+
         protected final String getDefaultLocation(Element element, String location) {
             String defaultLocation = WidgetDocumentInfo.retrieveAlways(element).getResourceLocation();
             if (defaultLocation == null || !defaultLocation.startsWith("component://")) {
@@ -1150,7 +1150,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             return defaultLocation;
         }
-        
+
         public static IncludeActions newInstance(ModelWidget modelWidget, Element element, String type) {
             DynamicIncludeActions dynInclude = DynamicIncludeActions.newInstance(modelWidget, element, type);
             if (dynInclude.isVariableInclude()) {
@@ -1160,31 +1160,31 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 return StaticIncludeActions.newInstance(modelWidget, element, dynInclude);
             }
         }
-        
+
         public static IncludeActions newInstance(ModelWidget modelWidget, Element element) {
             return newInstance(modelWidget, element, getIncludeActionsType(element));
         }
-        
+
         public static String getIncludeActionsType(Element element) {
             return elemTypeMap.get(element.getTagName());
         }
-        
+
         public static boolean isIncludeActions(Element element) {
             return elemTypeMap.containsKey(element.getTagName());
         }
 
         public abstract List<ModelAction> getIncludedActions(Map<String, Object> context) throws GeneralException;
-        
+
         @Override
         public void accept(ModelActionVisitor visitor) throws Exception {
             // TODO
         }
     }
-    
+
     /**
      * SCIPIO: Models the &lt;include-xxx-actions&gt; elements containing only static include expressions
      * (constants, no ${}).
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static abstract class StaticIncludeActions extends IncludeActions {
@@ -1192,11 +1192,11 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         protected StaticIncludeActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
         }
-        
+
         public static StaticIncludeActions newInstance(ModelWidget modelWidget, Element element) {
             return LazyStaticIncludeActions.newInstance(modelWidget, element);
         }
-        
+
         public static StaticIncludeActions newInstance(ModelWidget modelWidget, Element element, DynamicIncludeActions dynInclude) {
             return LazyStaticIncludeActions.newInstance(modelWidget, element, dynInclude);
         }
@@ -1206,20 +1206,20 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             AbstractModelAction.runSubActions(getIncludedActions(context), context); // NOTE: wraps in RunTimeExceptions
         }
     }
-    
+
     /**
      * SCIPIO: Models the &lt;include-xxx-actions&gt; elements containing only static includes
      * with a lazy caching static implementation.
      * <p>
      * optimizes xml includes that have only constant location#name.
      * Due to complications it delegates the lookup to first run and caches.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class LazyStaticIncludeActions extends StaticIncludeActions {
         private final DynamicIncludeActions dynInclude;
         private List<ModelAction> actions = null; // WARN: not volatile because using double-locking idiom
-        
+
         protected LazyStaticIncludeActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
             this.dynInclude = DynamicIncludeActions.newInstance(modelWidget, element);
@@ -1228,7 +1228,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                         + "contain a dynamic location#name expression");
             }
         }
-        
+
         protected LazyStaticIncludeActions(ModelWidget modelWidget, Element element, DynamicIncludeActions dynInclude) {
             super(modelWidget, element);
             this.dynInclude = dynInclude;
@@ -1237,15 +1237,15 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                         + "contain a dynamic location#name expression");
             }
         }
-        
+
         public static LazyStaticIncludeActions newInstance(ModelWidget modelWidget, Element element) {
             return new LazyStaticIncludeActions(modelWidget, element);
         }
-        
+
         public static LazyStaticIncludeActions newInstance(ModelWidget modelWidget, Element element, DynamicIncludeActions dynInclude) {
             return new LazyStaticIncludeActions(modelWidget, element, dynInclude);
         }
-        
+
         @Override
         public List<ModelAction> getIncludedActions(Map<String, Object> context) throws GeneralException {
             // WARN: special double-locking idiom for thread safety
@@ -1264,12 +1264,12 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             return actions;
         }
-        
+
     }
-    
+
     /**
      * SCIPIO: Models the &lt;include-xxx-actions&gt; elements supporting dynamic expressions (${}).
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static abstract class DynamicIncludeActions extends IncludeActions {
@@ -1283,7 +1283,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             this.locationExdr = FlexibleStringExpander.getInstance(element.getAttribute("location"));
             this.defaultLocation = getDefaultLocation(element, this.locationExdr.getOriginal());
         }
-        
+
         public static DynamicIncludeActions newInstance(ModelWidget modelWidget, Element element, String type) {
             DynamicIncludeActions includeActions;
             if ("screen".equals(type)) {
@@ -1291,7 +1291,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             } else if ("form".equals(type)) {
                 includeActions = new IncludeFormActions(modelWidget, element);
             } else if ("form-row".equals(type)) {
-                includeActions = new IncludeFormRowActions(modelWidget, element);    
+                includeActions = new IncludeFormRowActions(modelWidget, element);
             } else if ("menu".equals(type)) {
                 includeActions = new IncludeMenuActions(modelWidget, element);
             } else if ("tree".equals(type)) {
@@ -1301,11 +1301,11 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             return includeActions;
         }
-        
+
         public static DynamicIncludeActions newInstance(ModelWidget modelWidget, Element element) {
             return newInstance(modelWidget, element, getIncludeActionsType(element));
         }
-        
+
         @Override
         public void runAction(Map<String, Object> context) throws GeneralException {
             List<ModelAction> actions;
@@ -1320,7 +1320,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             AbstractModelAction.runSubActions(actions, context); // NOTE: wraps in RunTimeExceptions
         }
-        
+
         @Override
         public List<ModelAction> getIncludedActions(Map<String, Object> context) throws GeneralException {
             try {
@@ -1333,10 +1333,10 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 throw new GeneralException(e);
             }
         }
-        
+
         protected abstract List<ModelAction> getIncludedActions(Map<String, Object> context,
                 String location, String name) throws Exception;
-        
+
         /**
          * Returns true if location#name contains ${} expression.
          */
@@ -1344,7 +1344,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return FlexibleStringExpander.containsExpression(nameExdr) ||
                     FlexibleStringExpander.containsExpression(locationExdr);
         }
-        
+
         /**
          * Returns true if location#name is a constant.
          * <p>
@@ -1353,11 +1353,11 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         public boolean isStaticInclude() {
             return !isVariableInclude();
         }
-        
+
         public FlexibleStringExpander getNameExdr() {
             return this.nameExdr;
         }
-        
+
         public String getName(Map<String, Object> context) {
             return this.nameExdr.expandString(context);
         }
@@ -1369,7 +1369,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         public String getDefaultLocation() {
             return this.defaultLocation;
         }
-        
+
         public String getLocation(Map<String, Object> context) {
             String location = this.locationExdr.expandString(context);
             if (UtilValidate.isEmpty(location)) {
@@ -1378,10 +1378,10 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return location;
         }
     }
-    
+
     /**
      * SCIPIO: Models the &lt;include-screen-actions&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IncludeScreenActions extends DynamicIncludeActions {
@@ -1395,10 +1395,10 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return widget.getSection().getActions();
         }
     }
-    
+
     /**
      * SCIPIO: Models the &lt;include-form-actions&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IncludeFormActions extends DynamicIncludeActions {
@@ -1408,35 +1408,35 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         @Override
         protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
-            ModelForm widget = FormFactory.getFormFromLocation(location, name, 
-                    ((Delegator) context.get("delegator")).getModelReader(), 
+            ModelForm widget = FormFactory.getFormFromLocation(location, name,
+                    ((Delegator) context.get("delegator")).getModelReader(),
                     ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());
             return widget.getActions();
         }
     }
-    
+
     /**
      * SCIPIO: Models the &lt;include-form-row-actions&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IncludeFormRowActions extends DynamicIncludeActions {
         public IncludeFormRowActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
         }
-        
+
         @Override
         protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
-            ModelForm widget = FormFactory.getFormFromLocation(location, name, 
-                    ((Delegator) context.get("delegator")).getModelReader(), 
+            ModelForm widget = FormFactory.getFormFromLocation(location, name,
+                    ((Delegator) context.get("delegator")).getModelReader(),
                     ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());
             return widget.getRowActions();
         }
     }
-    
+
     /**
      * SCIPIO: Models the &lt;include-menu-actions&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IncludeMenuActions extends DynamicIncludeActions {
@@ -1450,10 +1450,10 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return widget.getActions();
         }
     }
-    
+
     /**
      * SCIPIO: Models the &lt;include-tree-actions&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IncludeTreeActions extends DynamicIncludeActions {
@@ -1464,21 +1464,21 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         @Override
         protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
-            ModelTree widget = TreeFactory.getTreeFromLocation(location, name, 
+            ModelTree widget = TreeFactory.getTreeFromLocation(location, name,
                     (Delegator) context.get("delegator"), (LocalDispatcher) context.get("dispatcher"));
             return widget.getRootActions();
         }
     }
-    
+
     /**
      * SCIPIO: Models the &lt;condition-to-field&gt; element.
      * <p>
      * NOTE: largely derived from SetField.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class ConditionToField extends AbstractModelAction {
-        
+
         private static final Map<String, Object> defaultPassValueMap;
         private static final Map<String, Object> defaultFailValueMap;
         static {
@@ -1495,7 +1495,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             map.put("Indicator", "N");
             defaultFailValueMap = map;
         }
-        
+
         private final ModelCondition condition;
         private final FlexibleMapAccessor<Object> field;
         private final FlexibleStringExpander globalExdr;
@@ -1517,7 +1517,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             this.failValueExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("fail-value"));
             this.useWhenExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("use-when"));
             List<? extends Element> children = UtilXml.childElementList(condToFieldElement);
-            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, 
+            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget,
                     UtilValidate.isNotEmpty(children) ? children.get(0) : null);
             this.onlyIfFieldNull = "null".equals(condToFieldElement.getAttribute("only-if-field"));
             this.onlyIfFieldEmpty = "empty".equals(condToFieldElement.getAttribute("only-if-field"));
@@ -1534,19 +1534,19 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             return condResult ? defaultPassValueMap.get(type) : defaultFailValueMap.get(type);
         }
-        
+
         @Override
         public void runAction(Map<String, Object> context) {
             String globalStr = this.globalExdr.expandString(context);
             // default to false
             boolean global = "true".equals(globalStr);
-            
+
             if (!this.useWhenExdr.getOriginal().isEmpty()) {
                 String setIf = this.useWhenExdr.expandString(context);
                 if ("false".equals(setIf)) {
                     return;
                 } else if (!"true".equals(setIf)) {
-                    throw new IllegalArgumentException("use-when expression '" + 
+                    throw new IllegalArgumentException("use-when expression '" +
                             this.useWhenExdr.getOriginal() + "' in condition-to-field evaluated to non-boolean expression: " + setIf);
                 }
             }
@@ -1570,7 +1570,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
 
             boolean condResult = condition.eval(context);
-            
+
             Object newValue = null;
             boolean convertType;
             if (condResult) {
@@ -1590,10 +1590,10 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                     newValue = getDefaultVal(condResult, this.type);
                 }
             }
-            
+
             // SCIPIO: NOTE: code below is copied from SetField.runAction
             // TODO: r
-            
+
             if (convertType && UtilValidate.isNotEmpty(this.type)) {
                 try {
                     newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, (TimeZone) context.get("timeZone"),
@@ -1604,7 +1604,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                     Debug.logError(e, errMsg, module);
                     throw new IllegalArgumentException(errMsg);
                 }
-                
+
             }
             if (this.toScope != null && this.toScope.equals("user")) {
                 String originalName = this.field.getOriginalName();
@@ -1702,12 +1702,12 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         }
 
     }
-    
+
     /**
      * Models the &lt;if&gt; element.
      * <p>
      * SCIPIO: 2016-11-11: Adapted from org.ofbiz.minilang.method.conditional.MasterIf.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class MasterIf extends AbstractModelAction {
@@ -1744,7 +1744,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 this.elseSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, elseElement));
             }
         }
-        
+
         /**
          * SCIPIO: read the condition element, then tries the condition attribute.
          */
@@ -1758,7 +1758,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             String conditionExdrStr = elem.attr("condition");
             if (!conditionExdrStr.isEmpty()) {
                 if (condition == null) {
-                    condition = ModelScreenCondition.makeBooleanExprCondition(modelWidget, 
+                    condition = ModelScreenCondition.makeBooleanExprCondition(modelWidget,
                             FlexibleStringExpander.getInstance(conditionExdrStr));
                 } else {
                     Debug.logError("Scipio: " + directiveName + " directive cannot have both condition element and condition attribute, will use only condition element" +
@@ -1771,7 +1771,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             return condition;
         }
-        
+
         @Override
         public void runAction(Map<String, Object> context) throws GeneralException {
             // if conditions fails, always return true; if a sub-op returns false
@@ -1803,7 +1803,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         public void accept(ModelActionVisitor visitor) throws Exception {
             // TODO
         }
-        
+
         public ModelCondition getCondition() {
             return condition;
         }
@@ -1819,18 +1819,18 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         public List<ModelAction> getThenSubOps() {
             return thenSubOps;
         }
-        
+
         /**
          * Models the &lt;else-if&gt; element.
          * <p>
          * SCIPIO: 2016-11-11: Adapted fromorg.ofbiz.minilang.method.conditional.ElseIf.
-         * 
+         *
          * @see <code>widget-common.xsd</code>
          */
         public class ElseIf extends AbstractModelAction implements ModelCondition {
             private final ModelCondition condition;
             private final List<ModelAction> thenSubOps;
-            
+
             public ElseIf(ModelWidget modelWidget, Element element) {
                 super(modelWidget, element);
                 ElementHelper elem = UtilXml.getElementHelper(element);
@@ -1843,12 +1843,12 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             public void runAction(Map<String, Object> context) throws GeneralException {
                 AbstractModelAction.runSubActions(this.thenSubOps, context);
             }
-            
+
             @Override
             public boolean eval(Map<String, Object> context) {
                 return condition.eval(context);
             }
-            
+
             @Override
             public void accept(ModelActionVisitor visitor) throws Exception {
                 // TODO
@@ -1868,5 +1868,5 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
         }
     }
-  
+
 }

@@ -53,7 +53,7 @@ public class MenuFactory extends WidgetFactory {
     public static MenuFactory getMenuFactory() { // SCIPIO: new
         return menuFactory;
     }
-    
+
     public static ModelMenu getMenuFromWebappContext(String resourceName, String menuName, HttpServletRequest request)
             throws IOException, SAXException, ParserConfigurationException {
         String webappName = UtilHttp.getApplicationName(request);
@@ -102,7 +102,7 @@ public class MenuFactory extends WidgetFactory {
     }
 
     /**
-     * Gets widget from location or exception. 
+     * Gets widget from location or exception.
      * <p>
      * SCIPIO: now delegating.
      */
@@ -113,7 +113,7 @@ public class MenuFactory extends WidgetFactory {
         }
         return modelMenu;
     }
-    
+
     /**
      * SCIPIO: Gets widget from location or null if name not within the location.
      */

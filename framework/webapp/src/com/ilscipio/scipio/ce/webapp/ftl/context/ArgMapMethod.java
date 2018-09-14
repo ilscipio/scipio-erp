@@ -37,11 +37,11 @@ import freemarker.template.TemplateModelException;
 public abstract class ArgMapMethod implements TemplateMethodModelEx {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected Object execMergeArgMaps(@SuppressWarnings("rawtypes") List methodArgs, boolean recordArgNames) throws TemplateModelException {
         return execMergeArgMaps(methodArgs, recordArgNames, CommonFtlUtil.getCurrentEnvironment());
-    }    
-    
+    }
+
     protected Object execMergeArgMaps(@SuppressWarnings("rawtypes") List methodArgs, boolean recordArgNames, Environment env) throws TemplateModelException {
         TemplateHashModelEx args = null;
         if (methodArgs.size() >= 1) {
@@ -59,21 +59,21 @@ public abstract class ArgMapMethod implements TemplateMethodModelEx {
         if (methodArgs.size() >= 4) {
             overrideArgs = (TemplateHashModelEx) methodArgs.get(3);
         }
-        
+
         // NOTE: Here the choice of wrapper makes no real difference.
         ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
         return ContextFtlUtil.mergeArgMaps(args, inlineArgs, defaultArgs, overrideArgs, recordArgNames, env, objectWrapper);
-    }    
-    
+    }
+
     protected Object execMergeArgMapsToLocals(@SuppressWarnings("rawtypes") List methodArgs, boolean recordArgNames) throws TemplateModelException {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        
+
         SimpleHash resArgs = (SimpleHash) execMergeArgMaps(methodArgs, recordArgNames, env);
-        
+
         LangFtlUtil.localsPutAll(resArgs, env);
         env.setLocalVariable("args", resArgs);
-        
-        return new SimpleScalar(""); 
-    }    
-    
+
+        return new SimpleScalar("");
+    }
+
 }

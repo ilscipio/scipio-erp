@@ -198,11 +198,11 @@ public final class UtilCacheEvents {
         String expireTimeStr = request.getParameter("UTIL_CACHE_EXPIRE_TIME");
         String useSoftReferenceStr = request.getParameter("UTIL_CACHE_USE_SOFT_REFERENCE");
         String maxSizeStr = request.getParameter("UTIL_CACHE_MAX_SIZE"); // SCIPIO: added 2017-05-23
-        
+
         Integer maxInMemory = null;
         Long expireTime = null;
         Integer maxSize = null;
-        
+
         try {
             maxInMemory = Integer.valueOf(maxInMemoryStr);
         } catch (Exception e) {}
@@ -212,7 +212,7 @@ public final class UtilCacheEvents {
         try {
             maxSize = Integer.valueOf(maxSizeStr);
         } catch (Exception e) {}
-        
+
         UtilCache<?, ?> utilCache = UtilCache.findCache(name);
 
         if (utilCache != null) {

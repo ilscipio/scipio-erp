@@ -162,7 +162,7 @@ public class UrlFilterHelper {
             // TODO?: here we could check for outUrlWebappInfo.equals(webappInfo)
             // and optimize? for now, appears safer to physically check to make sure the paths match
             // up, and have to anyway in order to extract the parts.
-            
+
             String currentContextPath = webappPathPrefix
                     + (webappInfo != null ? webappInfo.getContextPath() : request.getContextPath());
 

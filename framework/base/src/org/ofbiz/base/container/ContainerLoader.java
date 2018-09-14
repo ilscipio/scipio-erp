@@ -37,7 +37,7 @@ import org.ofbiz.base.util.UtilValidate;
 
 /**
  * An object that loads containers (background processes).
- * 
+ *
  * <p>Normally, instances of this class are created by OFBiz startup code, and
  * client code should not create instances of this class. Client code is
  * responsible for making sure containers are shut down properly. </p>

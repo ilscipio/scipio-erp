@@ -94,11 +94,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("screen");
     private static final String formrendererName = UtilProperties.getPropertyValue("widget", "screen.name");
-    
+
     // SCIPIO: special config and cache for html rendering
     protected static final Configuration ftlHtmlConfig = HtmlWidget.getFtlConfig();
     protected static final UtilCache<String, Template> ftlHtmlTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.macro", 0, 0, false);
-    
+
     public MacroScreenRenderer(String name, String macroLibraryPath) throws TemplateException, IOException {
         // SCIPIO: use special config for HTML
         this.macroLibrary = getTemplate(name, macroLibraryPath);
@@ -125,7 +125,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             return FreeMarkerWorker.getTemplate(macroLibraryPath);
         }
     }
-    
+
     /**
      * SCIPIO: Returns the basic Freemarker configuration used for rendering the given name/type.
      */
@@ -136,14 +136,14 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             return FreeMarkerWorker.getDefaultOfbizConfig();
         }
     }
-    
+
     /**
-     * SCIPIO: Returns macro library path used for this renderer. 
+     * SCIPIO: Returns macro library path used for this renderer.
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
     }
-    
+
     private String getNextElementId() {
         elementId++;
         return "hsr" + elementId;
@@ -151,7 +151,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
     private void executeMacro(Appendable writer, String macro) throws IOException {
         if (!shouldOutput(writer)) return; // SCIPIO: 2017-05-04: new, here as a failsafe (NOTE: not most efficient location for check)
-        
+
         try {
             Environment environment = getEnvironment(writer);
             Reader templateReader = new StringReader(macro);
@@ -171,7 +171,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private void handleError(Appendable writer, Throwable t) throws IOException, RuntimeException {
         handleError(writer, contextHandler.getInitialContext(writer), t);
     }
-    
+
     /**
      * SCIPIO: makes exception handling decision for executeMacro exceptions.
      */
@@ -195,7 +195,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
     private void executeMacro(Appendable writer, String macroName, Map<String, Object> parameters) throws IOException {
         if (!shouldOutput(writer)) return; // SCIPIO: 2017-05-04: new, here as a failsafe (NOTE: not most efficient location for check)
-        
+
         StringBuilder sb = new StringBuilder("<@");
         sb.append(macroName);
         if (parameters != null) {
@@ -232,7 +232,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 //    RenderTargetState getRenderTargetState(Appendable writer) throws IOException {
 //        return RenderTargetExpr.getRenderTargetState(contextHandler.getRenderContext(writer));
 //    }
-    
+
     /**
      * SCIPIO: Returns true if should render out.
      * <p>
@@ -242,7 +242,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     boolean shouldOutput(Appendable writer) throws IOException {
         return WidgetRenderTargetExpr.shouldOutput(writer, contextHandler.getInitialContext(writer));
     }
-    
+
     /**
      * SCIPIO: Returns true if should render out.
      * <p>
@@ -250,11 +250,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      * NOTE: can add other non-targeted logic in this method later as well.
      */
     boolean shouldOutput(Appendable writer, Map<String, Object> context) throws IOException {
-        // NOTE: explicitly using the initial context instead of passed one 
+        // NOTE: explicitly using the initial context instead of passed one
         return WidgetRenderTargetExpr.shouldOutput(writer, contextHandler.getInitialContext(writer));
     }
-    
-    
+
+
     public String getRendererName() {
         return rendererName;
     }
@@ -266,7 +266,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     public void registerContext(Appendable writer, Map<String, Object> context) throws IOException {
         contextHandler.registerInitialContext(writer, context);
     }
-    
+
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
         contextHandler.registerInitialContext(writer, context);
         executeMacro(writer, "renderScreenBegin", null);
@@ -331,7 +331,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
     public void renderContainerEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
-        String containerType = container.getType(context); 
+        String containerType = container.getType(context);
         executeMacro(writer, "renderContainerEnd", UtilMisc.toMap("type", containerType));
     }
 
@@ -373,7 +373,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             return 0;
         }
     }
-    
+
     public void renderLink(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenLink link) throws IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         HttpServletResponse response = (HttpServletResponse) context.get("response");
@@ -385,7 +385,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String uniqueItemName = link.getModelScreen().getName() + "_LF_" + UtilMisc.<String>addToBigDecimalInMap(context, "screenUniqueItemIndex", BigDecimal.ONE);
         // SCIPIO: make uniqueItemName actually globally unique; is NOT unique in stock ofbiz!
         uniqueItemName += "_" + MacroScreenRenderer.getNextUniqueItemNameIdNum(context);
-        
+
         String linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
         String linkUrl = "";
         String actionUrl = "";
@@ -659,7 +659,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
          if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
          String enableEditName = content.getEnableEditName(context);
          String enableEditValue = (String)context.get(enableEditName);
-    
+
          Map<String, Object> parameters = new HashMap<>();
          parameters.put("editContainerStyle", content.getEditContainerStyle(context));
          parameters.put("editRequest", content.getEditRequest(context));
@@ -1033,7 +1033,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         if (columnCount == null) {
             columnCount = 1;
         }
-        
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPageBegin ");
         sr.append("originalPortalPageId=");
@@ -1075,7 +1075,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String addPortletHint = "";
         String colWidthLabel = "";
         String setColumnSizeHint = "";
-        
+
         if (uiLabelMap == null) {
             Debug.logWarning("Could not find uiLabelMap in context", module);
         } else {
@@ -1096,7 +1096,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         if (columnIndex == null) {
             columnIndex = 0;
         }
-        
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPageColumnBegin ");
         sr.append("originalPortalPageId=");
@@ -1133,7 +1133,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(columnIndex.toString());
         sr.append(" />");
         executeMacro(writer, sr.toString());
-    }   
+    }
 
     public void renderPortalPageColumnEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
@@ -1162,7 +1162,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
         String columnWidthPercentage = (String) context.get("columnWidthPercentage"); // SCIPIO
         String columnWidthPixels = (String) context.get("columnWidthPixels"); // SCIPIO
-        
+
         Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         String delPortletHint = "";
         String editAttributeHint = "";
@@ -1181,7 +1181,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         if (columnIndex == null) {
             columnIndex = 0;
         }
-        
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPagePortletBegin ");
         sr.append("originalPortalPageId=");
@@ -1300,7 +1300,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
         executeMacro(writer, "<@renderColumnContainerEnd />");
     }
-    
+
     // This is a util method to get the style from a property file
     public static String getFoStyle(String styleName) {
         String value = UtilProperties.getPropertyValue("fo-styles", styleName);

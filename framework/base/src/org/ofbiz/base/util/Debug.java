@@ -339,7 +339,7 @@ public final class Debug {
     public static boolean get(int level) {
         return levelOnCache[level];
     }
-    
+
     /**
      * SCIPIO: Optimized object-based wrapper around the Debug logging methods.
      * <p>
@@ -353,21 +353,21 @@ public final class Debug {
      * }</pre>
      * <p>
      * In method bodies, the same <code>Debug.logXxx</code> invocation format as before can be preserved since new overloads
-     * are added which accept a OfbizLogger object. 
+     * are added which accept a OfbizLogger object.
      * <p>
-     * <strong>NOTE:</strong> 2018-05-24: Although the logXxx methods on this logger can be used, 
+     * <strong>NOTE:</strong> 2018-05-24: Although the logXxx methods on this logger can be used,
      * for consistency reasons it is recommended to use the Debug.logXxx overloads which accept a OfbizLogger
      * as parameter, for the foreseeable future. There is no real performance difference.
      * <p>
-     * When used in this fashion, this wrapper object provides optimized caching of the log4j 
+     * When used in this fashion, this wrapper object provides optimized caching of the log4j
      * {@link org.apache.logging.log4j.Logger} instance for much faster <code>Debug.logXxx</code> invocations,
      * compared to the legacy invocations that take a module String, which incur some string and lookup overhead.
      * <p>
      * Added 2018-05-24.
      */
     public static class OfbizLogger {
-        private static final OfbizLogger rootOfbizLogger = OfbizLogger.getInstance(Debug.root); 
-        
+        private static final OfbizLogger rootOfbizLogger = OfbizLogger.getInstance(Debug.root);
+
         private final Logger log4jLogger;
 
         private OfbizLogger(Logger log4jLogger) {
@@ -375,7 +375,7 @@ public final class Debug {
         }
 
         /**
-         * Returns a new OfbizLogger wrapper logger around the given log4j 
+         * Returns a new OfbizLogger wrapper logger around the given log4j
          * {@link org.apache.logging.log4j.Logger} instance.
          */
         public static OfbizLogger getInstance(Logger log4jLogger) {
@@ -667,7 +667,7 @@ public final class Debug {
     }
 
     /**
-     * Returns a new OfbizLogger wrapper logger around the given log4j 
+     * Returns a new OfbizLogger wrapper logger around the given log4j
      * {@link org.apache.logging.log4j.Logger} instance.
      */
     public static OfbizLogger getOfbizLogger(Logger log4jLogger) {
@@ -713,7 +713,7 @@ public final class Debug {
      * *********************************************************************
      * These provide compatibility with the legacy ofbiz Debug log line invocation interface,
      * when using the OfbizLogger instance from a class (instead of the legacy module String).
-     * NOTE: 2018-05-24: For the foreseeable future, it is recommended to use these 
+     * NOTE: 2018-05-24: For the foreseeable future, it is recommended to use these
      * instead of the OfbizLogger methods, for consistency reason. These do not add any overhead.
      */
 

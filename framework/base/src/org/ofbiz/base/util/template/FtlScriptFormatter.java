@@ -12,31 +12,31 @@ import org.apache.commons.lang.StringUtils;
 public class FtlScriptFormatter {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
-    
+
+
     /******************************************************/
     /* Properties */
     /******************************************************/
-    
+
     protected String literalDQStringDefault;
     protected String literalDQGeneralDefault;
-    
+
     protected String literalSQStringDefault;
     protected String literalSQGeneralDefault;
-    
+
 
     /******************************************************/
     /* Constructors */
     /******************************************************/
-    
+
     public FtlScriptFormatter() {
         this.literalDQStringDefault = "\"\"";
         this.literalDQGeneralDefault = "\"\"";
-        
+
         this.literalSQStringDefault = "''";
         this.literalSQGeneralDefault = "''";
     }
-    
+
     public static FtlScriptFormatter getInstance() {
         return new FtlScriptFormatter();
     }
@@ -45,7 +45,7 @@ public class FtlScriptFormatter {
     /******************************************************/
     /* Setters and configuration */
     /******************************************************/
-    
+
     public String getLiteralDQStringDefault() {
         return literalDQStringDefault;
     }
@@ -77,12 +77,12 @@ public class FtlScriptFormatter {
     public void setLiteralSQGeneralDefault(String literalSQGeneralDefault) {
         this.literalSQGeneralDefault = literalSQGeneralDefault;
     }
-    
-    
+
+
     /******************************************************/
     /* String literal and value building methods */
     /******************************************************/
-    
+
     /**
      * SCIPIO: Makes an escaped Freemarker string literal including enclosing double-quotes.
      * <p>
@@ -121,7 +121,7 @@ public class FtlScriptFormatter {
     /**
      * SCIPIO: Makes an escaped Freemarker string literal including enclosing double-quotes.
      * <p>
-     * Trivial implementation for non-String types (Integer, Boolean, ...), which get returned as strings. 
+     * Trivial implementation for non-String types (Integer, Boolean, ...), which get returned as strings.
      */
     public <T> String makeStringLiteral(T value) {
         return (value != null) ? ("\"" + makeStringValue(value) + "\"") : this.literalDQGeneralDefault;
@@ -131,7 +131,7 @@ public class FtlScriptFormatter {
      * SCIPIO: Makes an escaped Freemarker string value without enclosing double-quotes,
      * as intended for a regular (non-raw) string.
      * <p>
-     * Trivial implementation for non-String types (Integer, Boolean, ...), which get returned as strings. 
+     * Trivial implementation for non-String types (Integer, Boolean, ...), which get returned as strings.
      * Must be non-null.
      */
     public <T> String makeStringValue(T value) {
@@ -176,7 +176,7 @@ public class FtlScriptFormatter {
     /**
      * SCIPIO: Makes an escaped Freemarker string literal including enclosing single-quotes.
      * <p>
-     * Trivial implementation for non-String types (Integer, Boolean, ...), which get returned as strings. 
+     * Trivial implementation for non-String types (Integer, Boolean, ...), which get returned as strings.
      */
     public <T> String makeStringLiteralSQ(T value) {
         return (value != null) ? ("'" + makeStringValueSQ(value) + "'") : this.literalSQGeneralDefault;
@@ -186,35 +186,35 @@ public class FtlScriptFormatter {
      * SCIPIO: Makes an escaped Freemarker string value without enclosing single-quotes,
      * as intended for a regular (non-raw) string.
      * <p>
-     * Trivial implementation for non-String types (Integer, Boolean, ...), which get returned as strings. 
+     * Trivial implementation for non-String types (Integer, Boolean, ...), which get returned as strings.
      * Must be non-null.
      */
     public <T> String makeStringValueSQ(T value) {
         return value.toString();
     }
-    
-    
+
+
     /******************************************************/
     /* Boolean literal and value building methods */
     /******************************************************/
-    
+
     public String makeBooleanLiteral(boolean value) {
         return Boolean.toString(value);
     }
-    
+
     public String makeTernaryBooleanLiteral(Boolean value) {
         return value != null ? value.toString() : this.literalDQGeneralDefault;
     }
-    
+
     public String makeBooleanLiteralSQ(boolean value) {
         return Boolean.toString(value);
     }
-    
+
     public String makeTernaryBooleanLiteralSQ(Boolean value) {
         return value != null ? value.toString() : this.literalSQGeneralDefault;
     }
 
-    
+
     /******************************************************/
     /* Versatile literal and value building methods */
     /******************************************************/
@@ -227,7 +227,7 @@ public class FtlScriptFormatter {
         makeLiteral(sb, object, singleQuote);
         return sb.toString();
     }
-    
+
     /**
      * Makes a Freemarker literal from any supported object type.
      */
@@ -236,7 +236,7 @@ public class FtlScriptFormatter {
         makeLiteral(sb, object, false);
         return sb.toString();
     }
-    
+
     /**
      * Makes a Freemarker literal from any supported object type.
      */
@@ -245,7 +245,7 @@ public class FtlScriptFormatter {
         makeLiteral(sb, object, true);
         return sb.toString();
     }
-    
+
     /**
      * Makes a Freemarker literal from any supported object type, automatically producing the most
      * appropriate type.
@@ -303,14 +303,14 @@ public class FtlScriptFormatter {
             }
             sb.append("]");
         } else if (object instanceof String) {
-            sb.append(singleQuote ? makeStringLiteralSQ((String) object) : makeStringLiteral((String) object)); 
+            sb.append(singleQuote ? makeStringLiteralSQ((String) object) : makeStringLiteral((String) object));
         } else if (object instanceof Number) {
             sb.append(object.toString());
         } else if (object instanceof Boolean) {
             sb.append(((Boolean) object) ? "true" : "false");
         } else {
-            sb.append(singleQuote ? makeStringLiteralSQ(object.toString()) : makeStringLiteral(object.toString())); 
+            sb.append(singleQuote ? makeStringLiteralSQ(object.toString()) : makeStringLiteral(object.toString()));
         }
     }
-    
+
 }

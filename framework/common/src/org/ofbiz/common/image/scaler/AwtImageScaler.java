@@ -33,38 +33,38 @@ public class AwtImageScaler extends AbstractImageScaler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "java-awt";
-    
+
     /**
      * Maps <code>scalingOptions.filter</code> to {@link java.awt.Image#SCALE_SMOOTH} or substitutes.
      */
     private static final Map<String, Integer> filterMap;
     static {
         Map<String, Integer> map = new HashMap<>();
-        
+
         // GENERALIZED
         map.put("areaaveraging", Image.SCALE_AREA_AVERAGING);
         map.put("default", Image.SCALE_DEFAULT);
         map.put("fast", Image.SCALE_FAST);
         map.put("replicate", Image.SCALE_REPLICATE);
         map.put("smooth", Image.SCALE_SMOOTH);
-        
+
         // SPECIFIC ALGORITHMS
         // (none)
-        
+
         // API-SPECIFIC
         // (none)
-        
+
         filterMap = Collections.unmodifiableMap(map);
         Debug.logInfo(AbstractImageScaler.getFilterMapLogRepr(API_NAME, map), module);
     }
-    
+
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
         options.put("filter", filterMap.get("smooth")); // String
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
-    
+
     protected AwtImageScaler(Factory factory, String name, Map<String, Object> confOptions) {
         super(factory, name, confOptions, DEFAULT_OPTIONS);
     }
@@ -85,25 +85,25 @@ public class AwtImageScaler extends AbstractImageScaler {
         @Override protected String getApiName() { return API_NAME; }
         @Override public Map<String, Object> getDefaultOptions() { return DEFAULT_OPTIONS; }
     }
-    
+
     @Override
     public BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException {
         Integer filter = getFilter(options);
         if (filter == null) filter = 0;
-        
+
         // WARN: getScaledInstance is an ancient and hardcoded method. It's usually here for
         // backward-compat, because it's what Ofbiz was using.
         Image modifiedImage = image.getScaledInstance(targetWidth, targetHeight, filter);
 
         ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
         ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
-        
+
         if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
             //if (ImagePixelType.imageMatchesRequestedType(imageToTest, targetPixelType, targetColorMode, srcImage))
             ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
 
             // NOTE: this check and the first if block could probably be omitted, but passing BufferedImage instance
-            // is slightly better 
+            // is slightly better
             if (ImageType.imageMatchesType(image, resolvedTargetTypeInfo)) {
                 BufferedImage resultImage = ImageTransform.createCompatibleBufferedImage(image, modifiedImage.getWidth(null), modifiedImage.getHeight(null));
                 ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
@@ -118,7 +118,7 @@ public class AwtImageScaler extends AbstractImageScaler {
             return ImageTransform.toCompatibleBufferedImage(modifiedImage, ImageTypeInfo.from(image));
         }
     }
-    
+
     // NOTE: defaults are handled through the options merging with defaults
     protected static Integer getFilter(Map<String, Object> options) {
         Object filterObj = options.get("filter");

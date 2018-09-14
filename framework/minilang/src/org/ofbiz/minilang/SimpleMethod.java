@@ -75,7 +75,7 @@ import org.w3c.dom.Element;
  * (see <a href="http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html" target="_blank">ServiceLoader</a>)
  * </li>
  * </ul>
- * 
+ *
  * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
  */
 public final class SimpleMethod extends MiniLangElement {
@@ -207,7 +207,7 @@ public final class SimpleMethod extends MiniLangElement {
      * The ordering in the List is the same as the XML file.
      * <p>This method is used by unit test framework to run tests in the order they appear in the XML file.
      * Method caching is bypassed since the methods are executed only once.</p>
-     * 
+     *
      * @param xmlResource
      * @param loader
      * @return
@@ -297,7 +297,7 @@ public final class SimpleMethod extends MiniLangElement {
 
     /**
      * Execs the given operations returning true if all return true, or returning false and stopping if any return false.
-     * @throws MiniLangException 
+     * @throws MiniLangException
      */
     public static boolean runSubOps(List<MethodOperation> methodOperations, MethodContext methodContext) throws MiniLangException {
         Assert.notNull("methodOperations", methodOperations, "methodContext", methodContext);
@@ -481,9 +481,9 @@ public final class SimpleMethod extends MiniLangElement {
                 summaryErrorStringBuffer.append("; ");
                 summaryErrorStringBuffer.append(tempErrorMsgList.toString());
             }
-            
+
             // SCIPIO: 2018-03-01: NOTE: eventMsg handling code that was here is now moved below response check
-            
+
             response = (String) methodContext.getEnv(eventResponseCodeName);
             if (UtilValidate.isEmpty(response)) {
                 if (forceError) {
@@ -498,7 +498,7 @@ public final class SimpleMethod extends MiniLangElement {
                 response = null;
             }
             returnValue = response;
-            
+
             // SCIPIO: 2018-03-01: We now add event/success messages ONLY if no error (messages).
             // The majority of events/services work under this assumption, and otherwise inappropriate success messages
             // end up leaking through from use of call-service's default-message and such.
@@ -538,7 +538,7 @@ public final class SimpleMethod extends MiniLangElement {
                 summaryErrorStringBuffer.append("; ");
                 summaryErrorStringBuffer.append(errorMsgMap.toString());
             }
-            
+
             // SCIPIO: 2018-03-01: NOTE: successMsg handling code that was here is now moved below response check
 
             response = (String) methodContext.getEnv(serviceResponseMessageName);
@@ -554,7 +554,7 @@ public final class SimpleMethod extends MiniLangElement {
             }
             methodContext.putResult(ModelService.RESPONSE_MESSAGE, response);
             returnValue = response;
-            
+
             // SCIPIO: 2018-03-01: We now add event/success messages ONLY if no error (messages).
             // The majority of events/services work under this assumption, and otherwise inappropriate success messages
             // end up leaking through from use of call-service's default-message and such.

@@ -36,23 +36,23 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * OFBiz startup class.
- * 
+ *
  */
 public final class Start {
 
     private static final String module = Start.class.getName();
-    
+
     /*
      * This class implements a thread-safe state machine. The design is critical
      * for reliable starting and stopping of the server.
-     * 
+     *
      * The machine's current state and state changes must be encapsulated in this
      * class. Client code may query the current state, but it may not change it.
-     * 
+     *
      * This class uses a singleton pattern to guarantee that only one server instance
      * is running in the VM. Client code retrieves the instance by using the getInstance()
      * static method.
-     * 
+     *
      */
 
     private static final Start instance = new Start();
@@ -331,7 +331,7 @@ public final class Start {
 
     /**
      * Returns <code>true</code> if all loaders were started.
-     * 
+     *
      * @return <code>true</code> if all loaders were started.
      */
     boolean startStartLoaders() {
@@ -357,7 +357,7 @@ public final class Start {
      * to be triggered as soon as server state switches to running.
      * <p>
      * Added 2018-05-23.
-     * 
+     *
      * @return <code>true</code> if all loaders were started.
      */
     boolean execOnRunningStartLoaders() {
@@ -408,7 +408,7 @@ public final class Start {
         } else {
             // SCIPIO: 2017-03-28: new
             printStartupReadyMessage();
-            
+
             // SCIPIO: 2018-05-23: post-startup callbacks
             if (!execOnRunningStartLoaders()) {
                 if (this.serverState.get() == ServerState.STOPPING) {
@@ -423,7 +423,7 @@ public final class Start {
     public Config getConfig() {
         return this.config;
     }
-    
+
     /**
      * SCIPIO: prints the system startup ready/welcome message.
      * 2017-03-28.
@@ -439,7 +439,7 @@ public final class Start {
                 + "\n* Please wait for any startup jobs to finish..."
                 + "\n\n\n", module);
     }
-    
+
     /**
      * SCIPIO: Gets property value.
      * NOTE: because of bad ofbiz dependencies, we can't import base classes, so we have to use reflection.
@@ -455,7 +455,7 @@ public final class Start {
             return defaultValue;
         }
     }
-    
+
     /**
      * SCIPIO: Logs info message.
      * NOTE: because of bad ofbiz dependencies, we can't import base classes, so we have to use reflection.

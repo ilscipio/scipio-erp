@@ -148,7 +148,7 @@ public final class CommonWorkers {
                     EntityCondition.makeCondition("geoIdFrom", country),
                     EntityCondition.makeCondition("geoAssocTypeId", "REGIONS"),
                     EntityCondition.makeCondition(EntityOperator.OR, EntityCondition.makeCondition("geoTypeId", "STATE"), EntityCondition.makeCondition("geoTypeId", "PROVINCE"), EntityCondition.makeCondition("geoTypeId", "MUNICIPALITY"),
-                    		EntityCondition.makeCondition("geoTypeId", "TERRITORY"), EntityCondition.makeCondition("geoTypeId", "COUNTY")));
+                            EntityCondition.makeCondition("geoTypeId", "TERRITORY"), EntityCondition.makeCondition("geoTypeId", "COUNTY")));
             geoList.addAll(EntityQuery.use(delegator)
                                       .from("GeoAssocAndGeoToWithState")
                                       .where(stateProvinceFindCond)
@@ -174,7 +174,7 @@ public final class CommonWorkers {
      * @param parentTypeField Field in Type entity which stores the parent type.
      * @param parentType      Value of the parent type against which check is performed.
      * @return boolean value based on the check results.
-     * 
+     *
      * @deprecated Moved to {@link org.ofbiz.entity.util.EntityTypeUtil#hasParentType(Delegator, String, String, String, String, String) EntityTypeUtil}
      */
     @Deprecated

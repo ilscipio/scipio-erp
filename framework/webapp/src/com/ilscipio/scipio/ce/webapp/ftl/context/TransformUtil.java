@@ -32,7 +32,7 @@ import freemarker.template.TemplateScalarModel;
 public abstract class TransformUtil {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected TransformUtil() {
     }
 
@@ -46,7 +46,7 @@ public abstract class TransformUtil {
      * TODO: REVIEW: We will start with this more restrictive/safer behavior first and see in future if main
      * or current namespace should be considered. This should be made to match the FTL macro implementations.
      * Some of the more common variable names (such as "locale") can cause problematic conflicts.
-     * 
+     *
      * @see freemarker.core.Environment#getGlobalVariable(String)
      * @see com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil#getMainNsOrGlobalVar(String, Environment)
      * @see com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil#getCurrentNsOrGlobalVar(String, Environment)
@@ -55,7 +55,7 @@ public abstract class TransformUtil {
         //return LangFtlUtil.getMainNsOrGlobalVar(name, env);
         return env.getGlobalVariable(name);
     }
-    
+
     /**
      * Gets boolean arg.
      * <p>
@@ -78,22 +78,22 @@ public abstract class TransformUtil {
         }
         return defaultValue;
     }
-    
+
     public static Boolean getBooleanArg(TemplateModel obj) throws TemplateModelException {
         return getBooleanArg(obj, null);
     }
-    
-    // map 
-    
+
+    // map
+
     public static Boolean getBooleanArg(Map<?, ?> args, String key, Boolean defaultValue) throws TemplateModelException {
         return getBooleanArg(getModel(args, key), defaultValue);
     }
-    
+
     public static Boolean getBooleanArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getBooleanArg(getModel(args, key), null);
 
     }
-    
+
     /**
      * Gets string arg.
      * <p>
@@ -128,11 +128,11 @@ public abstract class TransformUtil {
     public static String getStringArg(TemplateModel obj, String defaultValue) throws TemplateModelException {
         return getStringArg(obj, defaultValue, false, false);
     }
-    
+
     public static String getStringArg(TemplateModel obj, boolean nonEscaping) throws TemplateModelException {
         return getStringArg(obj, null, false, nonEscaping);
     }
-    
+
     public static String getStringArg(TemplateModel obj) throws TemplateModelException {
         return getStringArg(obj, null, false, false);
     }
@@ -145,35 +145,35 @@ public abstract class TransformUtil {
     public static String getStringNonEscapingArg(TemplateModel obj, String defaultValue) throws TemplateModelException {
         return getStringArg(obj, defaultValue, false, true);
     }
-    
+
     public static String getStringNonEscapingArg(TemplateModel obj) throws TemplateModelException {
         return getStringArg(obj, null, false, true);
     }
-    
+
     public static String getStringArg(Map<?, ?> args, String key, String defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
         return getStringArg(getModel(args, key), defaultValue, useDefaultWhenEmpty, nonEscaping);
     }
-    
+
     public static String getStringArg(Map<?, ?> args, String key, String defaultValue) throws TemplateModelException {
         return getStringArg(getModel(args, key), defaultValue, false, false);
     }
-    
+
     public static String getStringArg(Map<?, ?> args, String key, boolean nonEscaping) throws TemplateModelException {
         return getStringArg(getModel(args, key), null, false, nonEscaping);
     }
-    
+
     public static String getStringArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getStringArg(getModel(args, key), null, false, false);
     }
-    
+
     public static String getStringNonEscapingArg(Map<?, ?> args, String key, String defaultValue) throws TemplateModelException {
         return getStringArg(getModel(args, key), defaultValue, false, true);
     }
-    
+
     public static String getStringNonEscapingArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getStringArg(getModel(args, key), null, false, true);
     }
-    
+
     public static Object getBooleanOrStringArg(TemplateModel obj, Object defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
         Object result = null;
         if (obj instanceof TemplateBooleanModel) {
@@ -191,23 +191,23 @@ public abstract class TransformUtil {
         }
         return result;
     }
-    
+
     public static Object getBooleanOrStringArg(TemplateModel obj) throws TemplateModelException {
         return getBooleanOrStringArg(obj, null, false, false);
     }
-    
+
     public static Object getBooleanOrStringNonEscapingArg(TemplateModel obj) throws TemplateModelException {
         return getBooleanOrStringArg(obj, null, false, true);
     }
-    
+
     public static Object getBooleanOrStringArg(Map<?, ?> args, String key, Object defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
         return getBooleanOrStringArg(getModel(args, key), defaultValue, useDefaultWhenEmpty, nonEscaping);
     }
-    
+
     public static Object getBooleanOrStringArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getBooleanOrStringArg(getModel(args, key), null, false, false);
     }
-    
+
     public static Object getBooleanOrStringNonEscapingArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getBooleanOrStringArg(getModel(args, key), null, false, true);
 
@@ -229,11 +229,11 @@ public abstract class TransformUtil {
         }
         throw new IllegalArgumentException("unexpected type for locale argument: " + obj.getClass().getName());
     }
-    
+
     public static Locale getOfbizLocaleArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getOfbizLocaleArg(getModel(args, key));
     }
-    
+
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale.
      * NOTE: this does NOT check the request locale!
@@ -243,7 +243,7 @@ public abstract class TransformUtil {
         if (locale != null) return locale;
         return ContextFtlUtil.getContextLocale(env);
     }
-    
+
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale,
      * or falls back on request if present.
@@ -253,7 +253,7 @@ public abstract class TransformUtil {
         if (locale != null) return locale;
         return ContextFtlUtil.getRequestLocale(env);
     }
-    
+
     /**
      * Gets integer arg.
      * <p>
@@ -278,19 +278,19 @@ public abstract class TransformUtil {
                     obj.getClass() + " instead");
         }
     }
-    
+
     public static Integer getIntegerArg(TemplateModel obj) throws TemplateModelException {
         return getIntegerArg(obj, null);
     }
-    
+
     public static Integer getIntegerArg(Map<?, ?> args, String key, Integer defaultValue) throws TemplateModelException {
         return getIntegerArg(getModel(args, key), defaultValue);
     }
-    
+
     public static Integer getIntegerArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getIntegerArg(getModel(args, key), null);
     }
-    
+
     /**
      * Gets a deep-unwrapped map.
      * FIXME: nonEscaping bool is currently not handled... it may bypass escaping in some cases but not others...
@@ -313,7 +313,7 @@ public abstract class TransformUtil {
         }
         return result;
     }
-    
+
     /**
      * Gets a deep-unwrapped map.
      * FIXME: nonEscaping bool is currently not handled... it may bypass escaping in some cases but not others...
@@ -321,11 +321,11 @@ public abstract class TransformUtil {
     public static <K,V> Map<K, V> getMapArg(Map<?, ?> args, String key, Map<K, V> defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
         return getMapArg(getModel(args, key), defaultValue, useDefaultWhenEmpty, nonEscaping);
     }
-    
+
     public static TemplateModel getModel(Map<?, ?> args, String key) {
         return (TemplateModel) args.get(key);
     }
-    
+
     /**
      * @deprecated use {@link UrlTransformUtil#escapeGeneratedUrl(String, String, boolean, Environment)}
      */

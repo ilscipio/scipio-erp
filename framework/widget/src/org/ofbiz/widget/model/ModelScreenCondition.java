@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 
 /**
  * Models the &lt;condition&gt; element.
- * 
+ *
  * @see <code>widget-screen.xsd</code>
  */
 @SuppressWarnings("serial")
@@ -39,14 +39,14 @@ public final class ModelScreenCondition implements Serializable {
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      */
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -89,13 +89,13 @@ public final class ModelScreenCondition implements Serializable {
             return super.newInstance(this, modelWidget,conditionElement);
         }
     }
-    
+
     /**
      * SCIPIO: Quick method to make an if-true value="" -like condition dynamically which only passes
      * if result is explicit true boolean or string.
      */
     public static ModelCondition makeBooleanExprCondition(ModelWidget modelWidget, FlexibleStringExpander expr) {
-        return new AbstractModelCondition.IfTrue(SCREEN_CONDITION_FACTORY, modelWidget, 
+        return new AbstractModelCondition.IfTrue(SCREEN_CONDITION_FACTORY, modelWidget,
                 new ValueAccessor.ExpanderAccessor(expr), true, true);
     }
 }

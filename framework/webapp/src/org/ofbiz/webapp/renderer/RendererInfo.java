@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
  * This interface is essential in order to make information
  * available to webapp component from widget package that we can't reference.
  * <p>
- * 2018-08-16: Currently this info is provided by the 
+ * 2018-08-16: Currently this info is provided by the
  * {@link org.ofbiz.widget.renderer.ScreenRenderer} class, because
  * it's the only thing available everywhere. But this is
  * Subject to change in the future! The implementations
@@ -23,7 +23,7 @@ public interface RendererInfo {
      * "xml", "csv", etc. (as used on right side of xxxx.name= in widget.properties).
      */
     String getRendererName();
-    
+
     @SuppressWarnings("unchecked")
     public static <T extends RendererInfo> T fromRequest(HttpServletRequest request) {
         return (T) request.getAttribute("screens"); // SUBJECT TO CHANGE

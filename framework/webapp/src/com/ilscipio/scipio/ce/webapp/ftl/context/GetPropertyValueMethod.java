@@ -49,7 +49,7 @@ public class GetPropertyValueMethod implements TemplateMethodModelEx {
 
         String resource = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));
         String name = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
-        
+
         String res = UtilProperties.getPropertyValue(resource, name);
 
         // here we do opposite of UtilProperties and return null if empty, so ! operator can work

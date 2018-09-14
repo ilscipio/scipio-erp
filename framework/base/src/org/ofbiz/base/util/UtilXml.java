@@ -254,7 +254,7 @@ public final class UtilXml {
     // ----- Java Object Marshalling/Unmarshalling ----- //
 
     /** Deserialize an object from an <code>InputStream</code>.
-     * 
+     *
      * @param input The <code>InputStream</code>
      * @return The deserialized <code>Object</code>
      */
@@ -263,7 +263,7 @@ public final class UtilXml {
     }
 
     /** Deserialize an object from a <code>Reader</code>.
-     * 
+     *
      * @param reader The <code>Reader</code>
      * @return The deserialized <code>Object</code>
      */
@@ -272,7 +272,7 @@ public final class UtilXml {
     }
 
     /** Deserialize an object from a <code>String</code>.
-     * 
+     *
      * @param str The <code>String</code>
      * @return The deserialized <code>Object</code>
      */
@@ -281,7 +281,7 @@ public final class UtilXml {
     }
 
     /** Serialize an object to an XML <code>String</code>.
-     * 
+     *
      * @param obj The object to serialize
      * @return An XML <code>String</code>
      */
@@ -290,7 +290,7 @@ public final class UtilXml {
     }
 
     /** Serialize an object to an <code>OutputStream</code>.
-     * 
+     *
      * @param obj The object to serialize
      * @param output The <code>OutputStream</code>
      */
@@ -299,7 +299,7 @@ public final class UtilXml {
     }
 
     /** Serialize an object to a <code>Writer</code>.
-     * 
+     *
      * @param obj The object to serialize
      * @param writer The <code>Writer</code>
      */
@@ -1259,14 +1259,14 @@ public final class UtilXml {
      * SCIPIO: Base class wrapping and delegating to an Element.
      */
     public static abstract class ElementWrapper implements Element {
-        
+
         protected final Element element;
 
         // Constructors
         public ElementWrapper(Element element) {
             this.element = element;
         }
-        
+
         // Element interface methods
 
         @Override
@@ -1568,54 +1568,54 @@ public final class UtilXml {
      * the regular Element methods.
      */
     public static class ElementHelper extends ElementWrapper {
-        
+
         // Constructors
-        
+
         public ElementHelper(Element element) {
             super(element);
         }
-        
+
         // Getters
-        
+
         public Element getWrappedElement() {
             return element;
         }
-        
+
         // Attribute helper methods
-        
+
         public String attr(String attrName) {
             return element.getAttribute(attrName);
         }
-        
+
         public String attr(String attrName, String defaultValue) {
             String attrValue = element.getAttribute(attrName);
             return UtilValidate.isNotEmpty(attrValue) ? attrValue : defaultValue;
         }
-        
+
         public Boolean attrAsBoolean(String attrName) {
             return UtilMisc.booleanValue(attr(attrName));
         }
-        
+
         public boolean attrAsBoolean(String attrName, boolean defaultValue) {
             return UtilMisc.booleanValue(attr(attrName), defaultValue);
         }
-        
+
         public FlexibleStringExpander attrAsExpander(String attrName) {
             return FlexibleStringExpander.getInstance(attr(attrName));
         }
-        
+
         public FlexibleStringExpander attrAsExpander(String attrName, String defaultValue) {
             return FlexibleStringExpander.getInstance(attr(attrName, defaultValue));
         }
-        
+
         public <T> FlexibleMapAccessor<T> attrAsAccessor(String attrName) {
             return FlexibleMapAccessor.getInstance(attr(attrName));
         }
-        
+
         public <T> FlexibleMapAccessor<T> attrAsAccessor(String attrName, String defaultValue) {
             return FlexibleMapAccessor.getInstance(attr(attrName, defaultValue));
         }
- 
+
         // UtilXml method delegates
 
         /** Creates a child element with the given name and appends it to the element child node list. */

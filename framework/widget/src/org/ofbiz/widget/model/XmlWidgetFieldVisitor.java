@@ -62,7 +62,7 @@ public class XmlWidgetFieldVisitor extends XmlAbstractWidgetVisitor implements M
     public XmlWidgetFieldVisitor(Appendable writer) {
         super(writer);
     }
-    
+
     @Override
     public void visit(CheckField checkField) throws Exception {
         visitModelField(checkField.getModelFormField());

@@ -320,14 +320,14 @@ public class CommonServices {
             efo.setMaxRows(randomUserCount);
             EntityCondition cond = EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null);
             try {
-                userLoginList = delegator.findList("UserLogin", cond, UtilMisc.toSet("userLoginId", "partyId"), 
+                userLoginList = delegator.findList("UserLogin", cond, UtilMisc.toSet("userLoginId", "partyId"),
                         null, efo, false);
                 userLoginList = new ArrayList<>(userLoginList);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Could not get UserLogins for dummy visit creation", module);
             }
         }
-        
+
         for (int i = 0; i < count; i++) {
             GenericValue v = delegator.makeValue("Visit");
             String seqId = delegator.getNextSeqId("Visit");
@@ -352,7 +352,7 @@ public class CommonServices {
                 v.set("userLoginId", randUserLogin.get("userLoginId"));
                 v.set("partyId", randUserLogin.get("partyId"));
             }
-            
+
             try {
                 delegator.create(v);
             } catch (GenericEntityException e) {

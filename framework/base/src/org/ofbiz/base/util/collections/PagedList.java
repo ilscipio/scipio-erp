@@ -78,7 +78,7 @@ public class PagedList<E> implements Iterable<E> {
     }
 
     /**
-     * @return the size of the full list, this can be the 
+     * @return the size of the full list, this can be the
      * result of <code>EntityListIterator.getResultsSizeAfterPartialList()</code>
      */
     public int getSize() {

@@ -23,7 +23,7 @@ package org.ofbiz.entity.datasource;
  * A container for datasource connection information.
  * <p><b>Note that this class is not synchronized.</b>
  * If multiple threads access a <code>GenericHelperInfo</code> concurrently it must be synchronized externally.
- * </p> 
+ * </p>
  *
  */
 public final class GenericHelperInfo {
@@ -34,7 +34,7 @@ public final class GenericHelperInfo {
     private String overrideUsername = "";
     private String overridePassword = "";
     private String helperFullName = "";
-    
+
     public GenericHelperInfo(String entityGroupName, String helperBaseName) {
         this.entityGroupName = entityGroupName == null ? "" : entityGroupName;
         this.helperBaseName = helperBaseName == null ? "" : helperBaseName;

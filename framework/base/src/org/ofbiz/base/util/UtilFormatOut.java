@@ -371,8 +371,8 @@ public final class UtilFormatOut {
     public static String formatDateTime(Date date, String dateTimeFormat, Locale locale, TimeZone timeZone) {
         return UtilDateTime.toDateTimeFormat(dateTimeFormat, timeZone, locale).format(date);
     }
-    
-    /** 
+
+    /**
      * SCIPIO: Formats a <code>Date</code> into a time <code>String</code> using the specified locale and time zone,
      * or using the specified format.
      *
@@ -385,7 +385,7 @@ public final class UtilFormatOut {
      */
     public static String formatTime(Date date, String dateTimeFormat, Locale locale, TimeZone timeZone) {
         return UtilDateTime.toTimeFormat(dateTimeFormat, timeZone, locale).format(date);
-    }    
+    }
 
     // ------------------- null string handlers -------------------
     /** Checks to see if the passed Object is null, if it is returns an empty but non-null string, otherwise calls toString() on the object
@@ -518,7 +518,7 @@ public final class UtilFormatOut {
     }
 
     // ------------------- web encode handlers -------------------
-    /** 
+    /**
      * Encodes an HTTP URL query String, replacing characters used for other
      * things in HTTP URL query strings, but not touching the separator
      * characters '?', '=', and '&amp;'
@@ -574,7 +574,7 @@ public final class UtilFormatOut {
     }
 
     // ------------------- web encode handlers -------------------
-    /** 
+    /**
      * Encodes an XML string replacing the characters '&lt;', '&gt;', '&quot;', '&#39;', '&amp;'
      * @param inString The plain value String
      * @return The encoded String

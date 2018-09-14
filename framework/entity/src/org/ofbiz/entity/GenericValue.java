@@ -251,18 +251,18 @@ public class GenericValue extends GenericEntity {
             return "[null-entity-value]";
         }
     }
-    
+
     public static String getStackTraceAsString() {
         return Arrays.toString(Thread.currentThread().getStackTrace());
     }
-    
+
     /*
      * SCIPIO: COMPLETELY DEPRECATED METHODS
      * These were removed all the way back in ofbiz 15 and should never be used anymore.
      * They are moved down here in Scipio to avoid maintenance issues.
      * The main reason these are going away is due to replacement with EntityQuery which is clearer.
      */
-    
+
     /** Get the named Related Entity for the GenericValue from the persistent
      *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
      *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file

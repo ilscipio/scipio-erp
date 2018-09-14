@@ -19,13 +19,13 @@ import org.ofbiz.base.util.Debug;
 
 /**
  * SCIPIO: Servlet API, servlet and ServletContext generic utilities.
- * 
+ *
  * @see RequestUtil
  */
 public abstract class ServletUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected ServletUtil() {
     }
 
@@ -37,7 +37,7 @@ public abstract class ServletUtil {
         if (reg == null) return null;
         return reg.getMappings();
     }
-    
+
     /**
      * Returns all servlet mappings for the given servlet name.
      */
@@ -52,7 +52,7 @@ public abstract class ServletUtil {
         }
         return servletMappings;
     }
-    
+
     /**
      * Returns the first mapping for the given servlet name, or null or none or not found.
      */
@@ -64,7 +64,7 @@ public abstract class ServletUtil {
         }
         return mappings.iterator().next();
     }
-    
+
     /**
      * Returns the first mapping for the given servlet name, or null or none or not found.
      */
@@ -78,21 +78,21 @@ public abstract class ServletUtil {
         }
         return null;
     }
-    
+
     /**
      * Returns the first mapping for the given servlet name with wildcard removed, or null or none or not found.
      */
     public static String getBaseServletMapping(ServletContext servletContext, String servletName) {
         return getBaseServletMapping(getServletMapping(servletContext, servletName));
     }
-    
+
     /**
      * Returns the first mapping for the given servlet name with wildcard removed, or null or none or not found.
      */
     public static String getBaseServletMapping(WebXml webXml, String servletName) {
         return getBaseServletMapping(getServletMapping(webXml, servletName));
     }
-    
+
     /**
      * Removes any wildcard in servlet mapping.
      * The returned never ends with "/" unless it's the root "/" mapping.
@@ -103,7 +103,7 @@ public abstract class ServletUtil {
         if (mapping.isEmpty()) mapping = "/";
         return mapping;
     }
-    
+
     /**
      * Gets map of context-params from servlet context
      * Fill-in for missing java servlet API method.
@@ -117,11 +117,11 @@ public abstract class ServletUtil {
         }
         return initParams;
     }
-    
+
     public static ServletContextInitParamsMapAdapter getContextParamsMapAdapter(ServletContext servletContext) {
         return new ServletContextInitParamsMapAdapter(servletContext);
     }
-    
+
     /**
      * Wraps a ServletContext and avoids creating whole map if only <code>get</code> calls are done.
      */
@@ -133,7 +133,7 @@ public abstract class ServletUtil {
         public ServletContextInitParamsMapAdapter(ServletContext config) {
             this.servletContext = config;
         }
-        
+
         protected Map<String, String> getInitParamsMap() {
             Map<String, String> initParams = this.initParams;
             if (initParams == null) {
@@ -166,9 +166,9 @@ public abstract class ServletUtil {
         @Override
         public Collection<String> values() { return getInitParamsMap().values(); }
         @Override
-        public Set<java.util.Map.Entry<String, String>> entrySet() { return getInitParamsMap().entrySet(); }        
+        public Set<java.util.Map.Entry<String, String>> entrySet() { return getInitParamsMap().entrySet(); }
     }
-    
+
     /**
      * Gets map of init-params from filter config.
      * Fill-in for missing java servlet API method.
@@ -182,11 +182,11 @@ public abstract class ServletUtil {
         }
         return initParams;
     }
-    
+
     public static FilterConfigInitParamsMapAdapter getInitParamsMapAdapter(FilterConfig filterConfig) {
         return new FilterConfigInitParamsMapAdapter(filterConfig);
     }
-    
+
     /**
      * Wraps a FilterConfig and avoids creating whole map if only <code>get</code> calls are done.
      */
@@ -198,7 +198,7 @@ public abstract class ServletUtil {
         public FilterConfigInitParamsMapAdapter(FilterConfig config) {
             this.config = config;
         }
-        
+
         protected Map<String, String> getInitParamsMap() {
             Map<String, String> initParams = this.initParams;
             if (initParams == null) {
@@ -231,6 +231,6 @@ public abstract class ServletUtil {
         @Override
         public Collection<String> values() { return getInitParamsMap().values(); }
         @Override
-        public Set<java.util.Map.Entry<String, String>> entrySet() { return getInitParamsMap().entrySet(); }        
+        public Set<java.util.Map.Entry<String, String>> entrySet() { return getInitParamsMap().entrySet(); }
     }
 }

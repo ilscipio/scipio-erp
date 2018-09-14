@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;calculate&gt; element.
- * 
+ *
  * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
  */
 public final class Calculate extends MethodOperation {
@@ -202,7 +202,7 @@ public final class Calculate extends MethodOperation {
 
     /**
      * Implements the &lt;calcop&gt; element.
-     * 
+     *
      * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
      */
     public final class CalcOp extends MiniLangElement implements SubCalc {
@@ -306,7 +306,7 @@ public final class Calculate extends MethodOperation {
 
     /**
      * Implements the &lt;number&gt; element.
-     * 
+     *
      * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
      */
     public final class NumberOp extends MiniLangElement implements SubCalc {

@@ -216,7 +216,7 @@ public final class TransactionUtil implements Status {
         }
         return true;
     }
-    
+
     /**
      * SCIPIO: Returns true if transaction is in place; false if no transaction in place or
      * if error determining.

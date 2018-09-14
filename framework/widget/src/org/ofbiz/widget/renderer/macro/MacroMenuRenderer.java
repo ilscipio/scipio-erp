@@ -60,12 +60,12 @@ import freemarker.template.TemplateException;
 public class MacroMenuRenderer implements MenuStringRenderer {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * SCIPIO: NOTE: This should always be true. Scipio no longer supports the old rendering method.
      */
     private static final boolean oneShotMacrosEnabled = UtilProperties.getPropertyAsBoolean("scipioWebapp", "scipio.templating.widget.oneshotmacros", true);
-    
+
     /**
      * SCIPIO: Maps traditional Ofbiz macro names to one-shot macro render entries.
      */
@@ -82,7 +82,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         map.put("renderSubMenuEnd", new OneShotMacro.EndEntry());
         renderEntryMacroNameMap = map;
     }
-    
+
     private int macroCount = 999;
     private final Map<Appendable, Environment> environments = new HashMap<>();
     private final Template macroLibrary;
@@ -93,7 +93,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("menu");
     private final String rendererName;
-    
+
     /**
      * SCIPIO: One-shot macro helper class. Controls whether render macros piecemeal or
      * in one invocation upon close.
@@ -101,7 +101,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
      * NOTE: 2017-04-25: removed final, in some case might need to switch it out temporarily.
      */
     private OneShotMacro oneShotMacro = makeOneShotMacroInst();
-    
+
     /**
      * Constructor.
      * <p>
@@ -118,21 +118,21 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private OneShotMacro makeOneShotMacroInst() { // SCIPIO
         return new OneShotMacro(oneShotMacrosEnabled, "renderMenuFull", renderEntryMacroNameMap, ftlFmt);
     }
-    
+
     /**
-     * SCIPIO: Returns macro library path used for this renderer. 
+     * SCIPIO: Returns macro library path used for this renderer.
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
     }
-    
+
     /**
      * SCIPIO: Returns the renderer name (html, xml, etc.).
      */
     public String getRendererName() {
         return rendererName;
     }
-    
+
     // Made this a separate method so it can be externalized and reused.
     private Map<String, Object> createImageParameters(Map<String, Object> context, Image image) {
         Map<String, Object> parameters = new HashMap<>();
@@ -199,7 +199,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         executeMacro(writer, sb.toString());
     }
-    
+
     /**
      * SCIPIO: Modified executeMacro.
      */
@@ -210,7 +210,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             executeMacroReal(writer, macroName, macroParameters);
         }
     }
-    
+
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
@@ -222,7 +222,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         return environment;
     }
 
-    
+
     /**
      * SCIPIO: NOTE: this now also considers the straight "disabled" attribute new in Scipio.
      */
@@ -232,7 +232,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         if (disabledDirect != null) {
             return disabledDirect;
         }
-        
+
         boolean disabled = false;
         String disableIfEmpty = menuItem.getDisableIfEmpty();
         if (UtilValidate.isNotEmpty(disableIfEmpty)) {
@@ -259,7 +259,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         MenuItemState itemState = MenuRenderState.retrieve(context).getItemState();
         return (hideIfSelected != null && hideIfSelected && itemState.isSelected());
     }
-    
+
     /**
      * SCIPIO: Renders full menu in one macro call using data previously collected in buffer.
      */
@@ -270,7 +270,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             throw new IOException(e);
         }
     }
-    
+
     @Override
     public void renderFormatSimpleWrapperClose(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException {
         // Nothing to do.
@@ -316,12 +316,12 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         //    target = null;
         //}
         boolean disabled = isDisableIfEmpty(menuItem, context);
-        
+
         // SCIPIO: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
-        
+
         boolean selected = menuItem.isSame(selectedMenuItem); // SCIPIO
         boolean selectedAncestor = !selected && menuItem.isAncestorOf(selectedMenuAndItem.getSubMenu()); // SCIPIO
         parameters.put("id", link.getId(context));
@@ -386,14 +386,14 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             imgStr = sw.toString();
         }
         parameters.put("imgStr", imgStr);
-        
+
         parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty()); // SCIPIO
-        
+
         // SCIPIO: add disabled and selected
         parameters.put("disabled", disabled);
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
-        
+
         try {
             executeMacro(writer, "renderLink", parameters);
         } catch (TemplateException e) {
@@ -409,7 +409,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("inlineEntries", MenuRenderState.retrieve(context).isInlineEntries());
         parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
-        
+
         if (ModelWidget.widgetBoundaryCommentsEnabled(context)) {
             StringBuilder sb = new StringBuilder("End Menu Widget ");
             sb.append(menu.getBoundaryCommentName());
@@ -435,14 +435,14 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         Map<String, Object> parameters = new HashMap<>();
         String style = menuItem.getWidgetStyle();
-        
+
         // SCIPIO: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         //ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
         ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
         MenuItemState menuItemState = renderState.getItemState();
-        
+
         boolean selected = menuItemState.isSelected();
         boolean selectedAncestor = menuItemState.isSelectedAncestor();
         if (selected) {
@@ -458,7 +458,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             // SCIPIO: fallback default does not work well here anymore, so now managed by ftl impl.
             //if (UtilValidate.isEmpty(selectedStyle)) {
             //    selectedStyle = "+selected";
-            //} 
+            //}
             style = ModelMenu.combineExtraStyle(style, selectedStyle);
         } else {
             // SCIPIO: support selected-ancestor
@@ -467,7 +467,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                 // SCIPIO: fallback default does not work well here anymore, so now managed by ftl impl.
                 //if (UtilValidate.isEmpty(selectedStyle)) {
                 //    selectedStyle = "+selected-ancestor";
-                //} 
+                //}
                 style = ModelMenu.combineExtraStyle(style, selectedStyle);
             }
         }
@@ -486,11 +486,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             //style = style.concat(" ").concat(alignStyle);
             style = ModelMenu.combineExtraStyle(style, alignStyle);
         }
-        
+
         // SCIPIO: expand the style here (not done previously, and _may_ expand on its own through FTL, but
         // may not produce expected results!)
         style = FlexibleStringExpander.expandString(style, context).trim();
-                
+
         parameters.put("style", style);
         parameters.put("toolTip", menuItem.getTooltip(context));
         String linkStr = "";
@@ -509,7 +509,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         // SCIPIO: we have a better check now
         //boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
         boolean containsNestedMenus = menuItem.hasSubMenu();
-        
+
         // SCIPIO: 2016-08-29: max depth check
         //if (renderState == null) {
         //    Debug.logWarning("No MenuRenderState present in context; no depth checks possible", module);
@@ -518,38 +518,38 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             containsNestedMenus = false;
         }
         //}
-        
+
         parameters.put("containsNestedMenus", containsNestedMenus);
-        
-        
+
+
         // SCIPIO: menu context role
         String menuCtxRole = MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty();
         parameters.put("menuCtxRole", menuCtxRole);
-        
+
         // SCIPIO: sub menu style
         // NOTE: there is another "getSubMenu" (for "sub-menu" attribute), but I don't know what it was intended for.
         @SuppressWarnings("deprecation")
         String subMenuStyle = menuItem.getSubMenuStyle(context);
         parameters.put("subMenuStyle", subMenuStyle); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
-        
+
         // SCIPIO: sub menu id
         @SuppressWarnings("deprecation")
         String subMenuId = menuItem.getSubMenuId(context);
         parameters.put("subMenuId", subMenuId); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
-        
+
         // SCIPIO: sub menu title
         @SuppressWarnings("deprecation")
         String subMenuTitle = menuItem.getSubMenuTitle(context);
         parameters.put("subMenuTitle", subMenuTitle); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
-        
+
         // SCIPIO: disabled and selected
         parameters.put("selected", selected);
         parameters.put("disabled", disabled);
         parameters.put("selectedAncestor", selectedAncestor);
-        
+
         // SCIPIO: 2017-02-17: new
         parameters.put("name", menuItem.getName());
-        
+
         try {
             executeMacro(writer, "renderMenuItemBegin", parameters);
         } catch (TemplateException e) {
@@ -579,20 +579,20 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                                 oneShotMacro.setMarker();
                                 try {
                                     childSubMenu.renderSubMenuString(writer, context, this);
-     
+
                                     subMenuOutput = oneShotMacro.getBufferFromFirstValueSinceMarker();
-                                    
+
                                     String origAction = renderState.getSeparateMenuConfig().getTargetOriginalAction();
                                     if (origAction.startsWith("remove")) {
                                         // simply delete the text output we made
                                         oneShotMacro.resetToMarker();
                                     } else { // preserve
-                                        // nothing to do, we leave the original alone 
+                                        // nothing to do, we leave the original alone
                                     }
                                 } finally {
                                     oneShotMacro.clearMarker();
                                 }
-                                
+
                                 if (UtilValidate.isNotEmpty(subMenuOutput)) {
                                     oneShotMacro.addExtraRootMacroArgRaw("sepMenuDef", subMenuOutput);
                                 }
@@ -612,12 +612,12 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                 }
             }
         }
- 
+
         parameters.clear();
         parameters.put("containsNestedMenus", containsNestedMenus);
-        
+
         parameters.put("menuCtxRole", menuCtxRole); // SCIPIO
-        
+
         try {
             executeMacro(writer, "renderMenuItemEnd", parameters);
         } catch (TemplateException e) {
@@ -642,23 +642,23 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("titleStyle", menu.getTitleStyle(context));
         parameters.put("inlineEntries", renderState.isInlineEntries());
         parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
-        
+
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
         ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
-        
+
         boolean selected = selectedSubMenu == null && menu.isParentOf(selectedMenuItem);
         boolean selectedAncestor = !selected && (selectedSubMenu != null || (selectedMenuItem != null && !menu.isParentOf(selectedMenuItem)));
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
-        
+
         // SCIPIO: 2017-02-17: new
         parameters.put("name", menu.getName());
-        
+
         // SCIPIO: 2017-04-25: new
         parameters.put("sepMenuType", renderState.getSeparateMenuConfig().getType());
         // NOTE: sepMenuDef is added using special code further below
-        
+
         try {
             executeMacro(writer, "renderMenuBegin", parameters);
         } catch (TemplateException e) {
@@ -671,38 +671,38 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu)
             throws IOException {
         // SCIPIO: new method
-        
+
         contextHandler.registerContext(writer, context);
-        
+
         Map<String, Object> parameters = new HashMap<>();
-        
+
         parameters.put("id", subMenu.getId(context));
         parameters.put("style", subMenu.getStyle(context));
         parameters.put("title", subMenu.getTitle(context));
         parameters.put("effectiveName", subMenu.getEffectiveName());
-        
+
         MenuRenderState renderState = MenuRenderState.retrieve(context);
-        
+
         // SCIPIO: menu context role
         parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
 
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
-        
+
         boolean selected = subMenu.isSame(selectedMenuAndItem.getSubMenu());
         boolean selectedAncestor = !selected && subMenu.isSameOrAncestorOf(selectedMenuAndItem.getSubMenu());
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
-        
+
         // SCIPIO: 2017-02-17: new
         parameters.put("name", subMenu.getName());
-        
+
         try {
             executeMacro(writer, "renderSubMenuBegin", parameters);
         } catch (TemplateException e) {
             throw new IOException(e);
         }
     }
-    
+
     // SCIPIO: new
     @Override
     public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu)
@@ -710,10 +710,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         // SCIPIO: new method
 
         Map<String, Object> parameters = new HashMap<>();
-        
+
         // SCIPIO: menu context role
         parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
-        
+
         try {
             executeMacro(writer, "renderSubMenuEnd", parameters);
         } catch (TemplateException e) {

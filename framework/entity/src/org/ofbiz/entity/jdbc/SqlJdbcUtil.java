@@ -590,8 +590,8 @@ public final class SqlJdbcUtil {
                 Debug.logError(e, module);
             }
         } else {
-            Debug.logWarning("JdbcValueHandler not found for java-type " + mft.getJavaType() + 
-                    ", falling back on switch statement. Entity = " + 
+            Debug.logWarning("JdbcValueHandler not found for java-type " + mft.getJavaType() +
+                    ", falling back on switch statement. Entity = " +
                     curField.getModelEntity().getEntityName() +
                     ", field = " + curField.getName() + ".", module);
         }
@@ -846,8 +846,8 @@ public final class SqlJdbcUtil {
                 throw new GenericDataSourceException("SQL Exception while setting value on field [" + modelField.getName() + "] of entity " + entityName + ": ", e);
             }
         } else {
-            Debug.logWarning("JdbcValueHandler not found for java-type " + mft.getJavaType() + 
-                    ", falling back on switch statement. Entity = " + 
+            Debug.logWarning("JdbcValueHandler not found for java-type " + mft.getJavaType() +
+                    ", falling back on switch statement. Entity = " +
                     modelField.getModelEntity().getEntityName() +
                     ", field = " + modelField.getName() + ".", module);
         }

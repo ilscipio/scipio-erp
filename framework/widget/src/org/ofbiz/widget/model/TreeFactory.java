@@ -51,9 +51,9 @@ public class TreeFactory extends WidgetFactory {
     public static TreeFactory getTreeFactory() { // SCIPIO: new
         return treeFactory;
     }
-    
+
     /**
-     * Gets widget from location or exception. 
+     * Gets widget from location or exception.
      * <p>
      * SCIPIO: now delegating.
      */
@@ -65,7 +65,7 @@ public class TreeFactory extends WidgetFactory {
         }
         return modelTree;
     }
-    
+
     /**
      * SCIPIO: Gets widget from location or null if name not within the location.
      */
@@ -77,7 +77,7 @@ public class TreeFactory extends WidgetFactory {
             Document treeFileDoc = UtilXml.readXmlDocument(treeFileUrl, true, true);
             // SCIPIO: New: Save original location as user data in Document
             if (treeFileDoc != null) {
-                WidgetDocumentInfo.retrieveAlways(treeFileDoc).setResourceLocation(resourceName); 
+                WidgetDocumentInfo.retrieveAlways(treeFileDoc).setResourceLocation(resourceName);
             }
             modelTreeMap = readTreeDocument(treeFileDoc, delegator, dispatcher, resourceName);
             modelTreeMap = treeLocationCache.putIfAbsentAndGet(resourceName, modelTreeMap);
@@ -108,7 +108,7 @@ public class TreeFactory extends WidgetFactory {
     public ModelTree getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
-            return getTreeFromLocation(modelLoc.getResource(), modelLoc.getName(), 
+            return getTreeFromLocation(modelLoc.getResource(), modelLoc.getName(),
                     dctx.getDelegator(), dctx.getDispatcher());
         } catch (SAXException e) {
             throw new IOException(e);
@@ -121,7 +121,7 @@ public class TreeFactory extends WidgetFactory {
     public ModelTree getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
-            return getTreeFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(), 
+            return getTreeFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(),
                     dctx.getDelegator(), dctx.getDispatcher());
         } catch (SAXException e) {
             throw new IOException(e);

@@ -49,7 +49,7 @@ public class ExtWebappInfo implements Serializable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String DEFAULT_WEBAPP_URLREWRITE_FILE = "WEB-INF/urlrewrite.xml";
-    
+
     private static final Object cacheLock = new Object(); // NOTE: both caches lock together
     private static Map<String, ExtWebappInfo> webSiteIdCache = Collections.emptyMap();
     private static Map<String, ExtWebappInfo> serverContextPathCache = Collections.emptyMap();
@@ -66,14 +66,14 @@ public class ExtWebappInfo implements Serializable {
 
     private Optional<Boolean> forwardRootControllerUris;
     private Optional<Boolean> forwardRootControllerUrisValid;
-    
+
     private final boolean urlRewriteFilter;
     private final String urlRewriteConfPath;
     private final String urlRewriteFullConfPath;
     private final String urlRewriteRealConfPath;
 
     private final boolean urlManualInterWebappFilter;
-    
+
     /**
      * Main constructor.
      */
@@ -113,7 +113,7 @@ public class ExtWebappInfo implements Serializable {
             this.urlRewriteRealConfPath = null;
         }
         this.urlRewriteFilter = (this.urlRewriteRealConfPath != null);
-        
+
         String urlManualInterWebappFilterStr = getContextParams().get("urlManualInterWebappFilter");
         if (UtilValidate.isNotEmpty(urlManualInterWebappFilterStr)) {
             this.urlManualInterWebappFilter = UtilMisc.booleanValueVersatile(urlManualInterWebappFilterStr,
@@ -208,7 +208,7 @@ public class ExtWebappInfo implements Serializable {
     public static ExtWebappInfo fromContextPath(String contextPath) throws IllegalArgumentException {
         return fromContextPath(null, contextPath);
     }
-    
+
     /**
      * Gets from webSiteId, no caching.
      * NOTE: This is the factory method that should be used during loading.
@@ -241,7 +241,7 @@ public class ExtWebappInfo implements Serializable {
      * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
      * incomplete instances.
      * <p>
-     * NOTE: This only works for paths starting from webapp contextPath; 
+     * NOTE: This only works for paths starting from webapp contextPath;
      * if it contains extra prefix such as webappPathPrefix, this will throw exception
      * or return the root webapp (if any mapped to /).
      */
@@ -256,7 +256,7 @@ public class ExtWebappInfo implements Serializable {
         }
         return fromContextPath(serverName, webappInfo.getContextRoot());
     }
-    
+
     @Deprecated
     public static ExtWebappInfo fromPath(String path) throws IllegalArgumentException {
         return fromPath(null, path, true);
@@ -293,10 +293,10 @@ public class ExtWebappInfo implements Serializable {
     public String getWebappName() {
         return webappInfo.getName();
     }
-    
+
     /**
      * Gets context path.
-     * If mapped to root, the result is empty string "" 
+     * If mapped to root, the result is empty string ""
      * (same format as {@link javax.servlet.http.HttpServletRequest#getContextPath()}.
      */
     public String getContextPath() {
@@ -415,7 +415,7 @@ public class ExtWebappInfo implements Serializable {
     public boolean hasUrlRewriteFilter() {
         return urlRewriteFilter;
     }
-    
+
     /**
      * Returns relation location of the urlrewrite file for this webapp, or null if no
      * UrlRewriteFilter for this webapp or error.
@@ -423,7 +423,7 @@ public class ExtWebappInfo implements Serializable {
     public String getUrlRewriteConfPath() {
         return urlRewriteConfPath;
     }
-    
+
     /**
      * Returns full location of the urlrewrite file for this webapp, or null if no
      * UrlRewriteFilter for this webapp or error. Does not check if file exists.
@@ -431,7 +431,7 @@ public class ExtWebappInfo implements Serializable {
     public String getUrlRewriteFullConfPath() {
         return urlRewriteFullConfPath;
     }
-    
+
     /**
      * Returns full file location of the urlrewrite file for this webapp, or null if no
      * UrlRewriteFilter for this webapp, file does not exist or error.
@@ -485,7 +485,7 @@ public class ExtWebappInfo implements Serializable {
                         + "' (mount-point '" + webappInfo.getContextRoot() + "'): " + e.getMessage(), e);
         }
     }
-    
+
     private static String getUrlRewriteConfPathFromWebXml(WebXml webXml) {
         for (FilterDef filterDef : webXml.getFilters().values()) {
             String filterClassName = filterDef.getFilterClass();

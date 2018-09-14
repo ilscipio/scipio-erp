@@ -185,7 +185,7 @@ public class HttpRequestFileUpload {
                     }
                     File savePathFile = new File(savePath);
                     if (!savePathFile.exists()) {
-                        if (!savePathFile.mkdirs()) { 
+                        if (!savePathFile.mkdirs()) {
                             Debug.logError("Directory could not be created: " + savePath, module); // SCIPIO: 2018-08-30: better message
                         }
 

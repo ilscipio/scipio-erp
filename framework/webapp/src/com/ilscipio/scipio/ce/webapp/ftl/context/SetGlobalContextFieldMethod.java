@@ -71,7 +71,7 @@ public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
         //    value = ((BeanModel) args.get(1)).getWrappedObject();
         // SCIPIO: NOTE: Unlike this above, this call will avoid the auto-escaping as implemented by Ofbiz (sensitive to DeepUnwrap implementation)
         value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
-        
+
         globalContext.put(name, value);
         return new SimpleScalar("");
     }

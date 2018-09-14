@@ -47,21 +47,21 @@ import freemarker.template.TemplateSequenceModel;
  * SCIPIO: Theme- and styling-framework-agnostic templating utilities.
  * <p>
  * Any theme- or styling-framework-specific code should be placed in a separate package.
- * 
+ *
  * @see com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil
  */
 public abstract class TemplateFtlUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
-    private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
+
+    private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache =
             UtilCache.createUtilCache("com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
 
     private static volatile Template escapeVal2ArgFunctionCall = null;
     private static volatile Template escapeVal3ArgFunctionCall = null;
     private static volatile Template escapeFullUrl2ArgFunctionCall = null;
     private static volatile Template escapeFullUrl3ArgFunctionCall = null;
-    
+
     /**
      * Keep this private, implied unmodifiable.
      */
@@ -84,7 +84,7 @@ public abstract class TemplateFtlUtil {
      * @param cacheId global unique cache ID that should uniquely identify combination of params other than styleStr and containerStyleStr
      * @return
      */
-    public static Map<String, Object> getHeadingElemSpecFromStyleStr(String styleStr, String containerStyleStr, 
+    public static Map<String, Object> getHeadingElemSpecFromStyleStr(String styleStr, String containerStyleStr,
             Object allowedHeadingElemTypes, Object allowedElemTypes, Object allowedContainerElemTypes,
             String cacheId) {
         Map<String, Object> res = null;
@@ -92,20 +92,20 @@ public abstract class TemplateFtlUtil {
         if (cacheId != null && !cacheId.isEmpty()) {
             cacheKey = styleStr + "::" + containerStyleStr + "::" + cacheId;
         }
-    
+
         if (cacheKey != null) {
             res = headingElemSpecFromStyleStrCache.get(cacheKey);
         }
-        
+
         if (res == null) {
             res = TemplateFtlUtil.getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr, allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes);
-            
+
             if (cacheKey != null) {
                 // note: probably no need to synchronize on cache; duplicate insertion is ok
                 headingElemSpecFromStyleStrCache.put(cacheKey, res);
             }
         }
-        
+
         return res;
     }
 
@@ -114,33 +114,33 @@ public abstract class TemplateFtlUtil {
      * <p>
      * Core implementation; never caches.
      */
-    public static Map<String, Object> getHeadingElemSpecFromStyleStr(String styleStr, String containerStyleStr, 
+    public static Map<String, Object> getHeadingElemSpecFromStyleStr(String styleStr, String containerStyleStr,
             Object allowedHeadingElemTypes, Object allowedElemTypes, Object allowedContainerElemTypes) {
         String allowedHeadingElemTypesStr = nameListArgToStr(allowedHeadingElemTypes);
         Set<String> allowedElemTypesSet = nameListArgToSet(allowedElemTypes);
         Set<String> allowedContainerElemTypesSet = nameListArgToSet(allowedContainerElemTypes);
-    
+
         String headingLevel = "";
         String relHeadingLevel = "";
         boolean isHeadingElem = false;
-        
+
         // TODO: clean up names. optimization not needed due to cache.
-        
+
         String titleStyle = styleStr;
         String titleContainerStyle = containerStyleStr;
-                
+
         Map<String, String> titleArgs = new HashMap<>();
         String titleArgsStr = titleStyle;
-        
+
         String[] titleStyleParts = titleStyle.split(";");
-        
+
         if (titleStyleParts.length > 3) {
             titleArgsStr = titleStyleParts[2];
         }
         else {
             titleArgsStr = titleStyleParts[titleStyleParts.length - 1];
         }
-        
+
         if (UtilValidate.isNotEmpty(titleArgsStr) && titleArgsStr.contains("=")) { //heuristic detect params part
             titleArgs = TemplateFtlUtil.splitStrParams(titleArgsStr, ",");
             if (titleStyleParts.length >= 3) {
@@ -158,10 +158,10 @@ public abstract class TemplateFtlUtil {
             titleContainerStyle = titleStyleParts[0];
             titleStyle = titleStyleParts[1];
         }
-        
+
         String titleContainerElemType = "";
         String titleContainerClass = "";
-        
+
         if (UtilValidate.isNotEmpty(titleContainerStyle)) {
             String[] titleContainerStyleParts = titleContainerStyle.split(":");
             if (titleContainerStyleParts.length <= 1) {
@@ -172,7 +172,7 @@ public abstract class TemplateFtlUtil {
                 titleContainerElemType = titleContainerStyleParts[0].toLowerCase();
                 titleContainerClass = titleContainerStyle.substring(titleContainerElemType.length() + 1);
             }
-            
+
             // if omitted, leave to caller to figure out if titleContainerStyle elem or class
             if (allowedContainerElemTypesSet != null) {
                 if (allowedContainerElemTypesSet.contains(titleContainerElemType)) {
@@ -186,13 +186,13 @@ public abstract class TemplateFtlUtil {
                 }
             }
         }
-        
+
         String titleElemType = "";
         String titleClass = "";
-        
+
         if (UtilValidate.isNotEmpty(titleStyle)) {
             titleStyleParts = titleStyle.split(":");
-            
+
             if (titleStyleParts.length <= 1) {
                 titleElemType = titleStyle.toLowerCase();
                 titleClass = titleStyle;
@@ -201,9 +201,9 @@ public abstract class TemplateFtlUtil {
                 titleElemType = titleStyleParts[0].toLowerCase();
                 titleClass = titleStyle.substring(titleElemType.length() + 1);
             }
-            
+
             boolean elemTypeFound = false;
-            
+
             if (UtilValidate.isNotEmpty(allowedHeadingElemTypesStr)) {
                 Pattern pat = Pattern.compile("(" + allowedHeadingElemTypesStr + ")(\\+)?(\\d*)");
                 Matcher m = pat.matcher(titleElemType);
@@ -227,8 +227,8 @@ public abstract class TemplateFtlUtil {
                     isHeadingElem = true;
                 }
             }
-            
-            
+
+
             // if not specified, let caller figure it out if titleStyle elem or class
             if (!elemTypeFound && allowedElemTypesSet != null) {
                 if (allowedElemTypesSet.contains(titleElemType)) {
@@ -243,30 +243,30 @@ public abstract class TemplateFtlUtil {
                     titleClass = titleStyle;
                 }
             }
-            
+
         }
-        
+
         Map<String, Object> res = new HashMap<>();
         res.putAll(titleArgs);
-        res.put("containerStyleStr", titleContainerStyle); 
-        res.put("containerElemType", titleContainerElemType); 
-        res.put("containerElemClass", titleContainerClass); 
-        
-        res.put("styleStr", titleStyle); 
-        res.put("elemType", titleElemType); 
+        res.put("containerStyleStr", titleContainerStyle);
+        res.put("containerElemType", titleContainerElemType);
+        res.put("containerElemClass", titleContainerClass);
+
+        res.put("styleStr", titleStyle);
+        res.put("elemType", titleElemType);
         res.put("elemClass", titleClass);
         //res.put("class", titleClass); // WARN: DO NOT USE, will conflict with getClass() method
-        
-        res.put("isHeadingElem", isHeadingElem); 
+
+        res.put("isHeadingElem", isHeadingElem);
         if (!headingLevel.isEmpty() || !res.containsKey("level")) { // may already come from args
-            res.put("level", headingLevel); 
+            res.put("level", headingLevel);
         }
         if (!relHeadingLevel.isEmpty() || !res.containsKey("relLevel")) {
-            res.put("relLevel", relHeadingLevel); 
+            res.put("relLevel", relHeadingLevel);
         }
-        
-        res.put("argsStr", titleArgsStr); 
-        
+
+        res.put("argsStr", titleArgsStr);
+
         return Collections.unmodifiableMap(res);
     }
 
@@ -321,41 +321,41 @@ public abstract class TemplateFtlUtil {
     /**
      * Makes a generic element attribute string for html, xml, etc. from attrib map.
      * <p>
-     * If emptyValToken non-empty, values matching emptyValToken are treated as empty and 
+     * If emptyValToken non-empty, values matching emptyValToken are treated as empty and
      * included regardless of includeEmpty setting.
      * noValToken is similar but prevents values altogether.
      * <p>
      * NOTE (2016-08-30):  emptyValToken and noValToken should be avoided in favor of {@link com.ilscipio.scipio.ce.webapp.ftl.template.AttribSpecialValue}.
-     * @throws IOException 
-     * @throws TemplateException 
+     * @throws IOException
+     * @throws TemplateException
      */
     public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, String noValToken,
             Collection<String> exclude, String attribNamePrefix, boolean alwaysAddPrefix,
             String attribNamePrefixStrip, Map<String, String> attribNameSubstitutes, boolean camelCaseToDashLowerNames, String escapeLang) throws TemplateModelException {
         StringBuilder sb = new StringBuilder();
-        
+
         Environment env = null;
         if (escapeLang != null && !escapeLang.isEmpty() && !"none".equals(escapeLang)) {
             env = FreeMarkerWorker.getCurrentEnvironment();
         } else {
             escapeLang = null;
         }
-        
+
         if (emptyValToken == null) {
             emptyValToken = "";
         }
-        
+
         if (noValToken != null && noValToken.isEmpty()) {
             noValToken = null;
         }
-        
+
         if (exclude == null || exclude.isEmpty()) {
             exclude = emptyStrSet;
         }
         else if (!(exclude instanceof Set)) {
             exclude = new HashSet<String>(exclude); // faster
         }
-        
+
         if (attribNameSubstitutes != null && attribNameSubstitutes.isEmpty()) {
             attribNameSubstitutes = null;
         }
@@ -365,10 +365,10 @@ public abstract class TemplateFtlUtil {
         if (attribNamePrefixStrip != null && attribNamePrefixStrip.isEmpty()) {
             attribNamePrefixStrip = null;
         }
-        
+
         for(Map.Entry<String, Object> pair : attribs.entrySet()) {
             String name = pair.getKey();
-            
+
             if (attribNamePrefix != null) {
                 if (alwaysAddPrefix || !name.startsWith(attribNamePrefix)) {
                     name = attribNamePrefix + name;
@@ -385,14 +385,14 @@ public abstract class TemplateFtlUtil {
                     name = newName;
                 }
             }
-    
+
             if (!exclude.contains(name)) {
                 Object val = pair.getValue();
                 String valStr = (val != null) ? val.toString() : "";
                 if (valStr == null) {
                     valStr = ""; // just in case
                 }
-                
+
                 if (AttribSpecialValue.isSpecialValue(val) || includeEmpty || !valStr.isEmpty()) {
                     sb.append(" ");
                     if (camelCaseToDashLowerNames) {
@@ -410,14 +410,14 @@ public abstract class TemplateFtlUtil {
                         sb.append("\"");
                     }
                 }
-            } 
+            }
         }
-        
+
         return sb.toString();
     }
 
     public static Map<String, Object> extractPrefixedStyleNamesWithInt(String styleStr, Map<String, String> prefixMap) {
-        Map<String, Object> res = new HashMap<>();        
+        Map<String, Object> res = new HashMap<>();
         Set<String> prefixes = prefixMap.keySet();
         Matcher m = Pattern.compile("(^|\\s)(" + StringUtils.join(prefixes, "|") + ")(\\d+)(?=\\s|$)").matcher(styleStr);
         while (m.find()) {
@@ -433,7 +433,7 @@ public abstract class TemplateFtlUtil {
      * <p>
      * Currently the link handling is similar to org.ofbiz.widget.WidgetWorker.buildHyperlinkUrl.
      */
-    public static String compileProgressSuccessAction(String progressSuccessAction, HttpServletRequest request, 
+    public static String compileProgressSuccessAction(String progressSuccessAction, HttpServletRequest request,
             HttpServletResponse response) {
         if (progressSuccessAction.startsWith("redirect;")) {
             String newAction = "none";
@@ -514,7 +514,7 @@ public abstract class TemplateFtlUtil {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         return compileProgressSuccessAction(progressSuccessAction, ContextFtlUtil.getRequest(env), ContextFtlUtil.getResponse(env));
     }
-    
+
     public static String getPlainClassArgNames(String style) {
         if (style.startsWith("+") || style.startsWith("=")) {
             return style.substring(1);
@@ -523,7 +523,7 @@ public abstract class TemplateFtlUtil {
             return style;
         }
     }
-    
+
     public static String getClassArgPrefix(String style) {
         if (style.startsWith("+") || style.startsWith("=")) {
             return style.substring(0, 1);
@@ -532,7 +532,7 @@ public abstract class TemplateFtlUtil {
             return "";
         }
     }
-    
+
     public static TemplateScalarModel execEscapeValFunction(TemplateModel arg1, TemplateModel arg2, Environment env) throws TemplateModelException {
         if (escapeVal2ArgFunctionCall == null) {
             // NOTE: no real need for synchronize here
@@ -548,26 +548,26 @@ public abstract class TemplateFtlUtil {
         }
         return (TemplateScalarModel) LangFtlUtil.execFunction(escapeVal3ArgFunctionCall, new TemplateModel[] { arg1, arg2, arg3}, env);
     }
-    
+
     public static String escapeVal(String value, String lang, Environment env) throws TemplateModelException {
         if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
             return value;
         }
         return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
     }
-    
+
     public static String escapeVal(String value, String lang, Boolean strict, Environment env) throws TemplateModelException {
         if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
             return value;
         }
         if (strict != null) {
-            return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang), 
+            return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang),
                     strict ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE, env).getAsString();
         } else {
             return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
         }
     }
-    
+
     public static TemplateScalarModel execEscapeFullUrlFunction(TemplateModel arg1, TemplateModel arg2, Environment env) throws TemplateModelException {
         if (escapeFullUrl2ArgFunctionCall == null) {
             // NOTE: no real need for synchronize here
@@ -583,20 +583,20 @@ public abstract class TemplateFtlUtil {
         }
         return (TemplateScalarModel) LangFtlUtil.execFunction(escapeFullUrl3ArgFunctionCall, new TemplateModel[] { arg1, arg2, arg3}, env);
     }
-    
+
     public static String escapeFullUrl(String value, String lang, Environment env) throws TemplateModelException {
         if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
             return value;
         }
         return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
     }
-    
+
     public static String escapeFullUrl(String value, String lang, Boolean strict, Environment env) throws TemplateModelException {
         if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
             return value;
         }
         if (strict != null) {
-            return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang), 
+            return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang),
                     strict ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE, env).getAsString();
         } else {
             return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
@@ -661,11 +661,11 @@ public abstract class TemplateFtlUtil {
         }
         return sb.toString();
     }
-    
+
     private static Object getRawVal(TemplateModel model) throws TemplateModelException {
         return (model != null) ? LangFtlUtil.unwrapAlways(model) : null;
     }
-    
+
     private static Object getAsStringEscapingIfString(TemplateModel model) throws TemplateModelException {
         if (model == null) {
             return null;

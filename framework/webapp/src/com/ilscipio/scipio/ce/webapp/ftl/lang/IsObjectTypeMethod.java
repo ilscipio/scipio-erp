@@ -26,7 +26,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * SCIPIO: IsObjectTypeMethod - Freemarker Method to check if variable is strictly a string or map or 
+ * SCIPIO: IsObjectTypeMethod - Freemarker Method to check if variable is strictly a string or map or
  * variant of, because ?is_string and ?is_hash are not sufficient for widget context vars.
  */
 public class IsObjectTypeMethod implements TemplateMethodModelEx {
@@ -46,5 +46,5 @@ public class IsObjectTypeMethod implements TemplateMethodModelEx {
 
         return OfbizFtlObjectType.isObjectTypeSafe(type, object);
     }
-    
+
 }

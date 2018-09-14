@@ -119,11 +119,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * Added 2017-11-28.
      */
     public static final List<String> SYS_RESPONSE_FIELDS = UtilMisc.unmodifiableArrayList(
-            RESPONSE_MESSAGE, 
-            ERROR_MESSAGE, ERROR_MESSAGE_LIST, ERROR_MESSAGE_MAP, 
+            RESPONSE_MESSAGE,
+            ERROR_MESSAGE, ERROR_MESSAGE_LIST, ERROR_MESSAGE_MAP,
             SUCCESS_MESSAGE, SUCCESS_MESSAGE_LIST
     );
-    
+
     public static final String resource = "ServiceErrorUiLabels";
 
     // SCIPIO: new 2017-09-13
@@ -132,7 +132,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         Integer level = Debug.getLevelFromString(UtilProperties.getPropertyValue("service", "run.logParamLevel"));
         logParamLevel = (level != null) ? level : Debug.INFO;
     }
-    
+
     /** The name of this service */
     public String name;
 
@@ -204,7 +204,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     /** Require a new transaction for this service */
     public boolean hideResultInLog;
-    
+
     /** Set of services this service implements */
     public Set<ModelServiceIface> implServices = new LinkedHashSet<>();
 
@@ -632,7 +632,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             List<String> errorMessageList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             for (ModelParam modelParam : this.contextInfo.values()) {
                 // the param is a String, allow-html is not any, and we are looking at an IN parameter during input parameter validation
-                if (context.get(modelParam.name) != null && ("String".equals(modelParam.type) || "java.lang.String".equals(modelParam.type)) 
+                if (context.get(modelParam.name) != null && ("String".equals(modelParam.type) || "java.lang.String".equals(modelParam.type))
                         && !"any".equals(modelParam.allowHtml) && (IN_OUT_PARAM.equals(modelParam.mode) || IN_PARAM.equals(modelParam.mode))) {
                     String value = (String) context.get(modelParam.name);
                     UtilCodec.checkStringForHtmlStrictNone(modelParam.name, value, errorMessageList);
@@ -928,7 +928,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
             if (source.containsKey("locale")) {
                 // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (this uses UtilMisc.parseLocale)
-                // NOTE: if includeInternal, the convert is run a second time further below; but if we are taking strings, 
+                // NOTE: if includeInternal, the convert is run a second time further below; but if we are taking strings,
                 // performance is not the concern anyway.
                 //locale = (Locale) source.get("locale");
                 Object value = source.get("locale");
@@ -940,7 +940,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     } catch (GeneralException e) {
                         // SCIPIO: NOTE: this message may be duplicated below in some cases when includeInternal==true,
                         // but we must always warn with special message here because this also affects the other fields
-                        String errMsg = "Type conversion of special field [locale] to type [" + Locale.class.getName() 
+                        String errMsg = "Type conversion of special field [locale] to type [" + Locale.class.getName()
                                 + "] failed for value \"" + value + "\" - other fields will use a default locale for conversion: " + e.toString();
                         Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
                         if (errorMessages != null) {
@@ -966,7 +966,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     try {
                         timeZone = (TimeZone) ObjectType.simpleTypeConvert(value, TimeZone.class.getName(), null, null, locale, true);
                     } catch (GeneralException e) {
-                        String errMsg = "Type conversion of special field [timeZone] to type [" + TimeZone.class.getName() 
+                        String errMsg = "Type conversion of special field [timeZone] to type [" + TimeZone.class.getName()
                                 + "] failed for value \"" + value + "\" - other fields will use a default TimeZone for conversion: " + e.toString();
                         Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
                         if (errorMessages != null) {
@@ -2116,7 +2116,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     }
                 } catch (Exception e) {
                     valid = false;
-                    Debug.logError("Service '" + name + "' points to invalid file location: " + location 
+                    Debug.logError("Service '" + name + "' points to invalid file location: " + location
                             + " (" + e.toString() + ")", module);
                     resolvedLocation = null;
                 }
@@ -2142,7 +2142,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                             }
                         } catch(Exception e) {
                             valid = false;
-                            Debug.logError("simple-method service '" + name + "' points to an invalid method (" 
+                            Debug.logError("simple-method service '" + name + "' points to an invalid method ("
                                     + invoke + ") in " + location + " (" + e.toString() + ")", module);
                         }
                     } else if ("groovy".equals(engineName)) {
@@ -2151,7 +2151,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 }
             } else if ("java".equals(engineName)) {
                 // FIXME?: always ClassNotFoundException for thirdparty classes during loading, skip for now...
-                if (!location.startsWith("org.ofbiz.accounting.thirdparty.") && 
+                if (!location.startsWith("org.ofbiz.accounting.thirdparty.") &&
                     !location.startsWith("org.ofbiz.content.openoffice.")) {
                     try {
                         ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -2162,11 +2162,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                         Debug.logError("java service '" + name + "' points to an invalid class (" + location + ") (" + e.toString() + ")", module);
                     } catch(NoSuchMethodException e) {
                         valid = false;
-                        Debug.logError("java service '" + name + "' points to an invalid method (" 
+                        Debug.logError("java service '" + name + "' points to an invalid method ("
                                 + invoke + ") in class (" + location + ") (" + e.toString() + ")", module);
                     } catch(Exception e) {
                         valid = false;
-                        Debug.logError("java service '" + name + "' points to an invalid method (" 
+                        Debug.logError("java service '" + name + "' points to an invalid method ("
                                 + invoke + ") or class (" + location + ") (" + e.toString() + ")", module);
                     }
                 }

@@ -23,7 +23,7 @@ public abstract class AdvancedPropertyUtil {
     }
 
     private static final Pattern numberedNameSuffixPat = Pattern.compile("^(\\d+)(\\.(.+))?$");
-    
+
     /**
      * Reads flexible class definitions from a single Properties object.
      * <p>
@@ -122,7 +122,7 @@ public abstract class AdvancedPropertyUtil {
         }
         return props;
     }
-    
+
     public static List<Properties> getAllComponentResourcePropsSafe(String resource, ClassLoader classLoader) {
         if (classLoader == null) {
             classLoader = getComponentClassLoader();
@@ -141,8 +141,8 @@ public abstract class AdvancedPropertyUtil {
         return allProps;
     }
 
-    
-    public static <T extends ClassDef<H>, H> List<T> createClassDefsFromMaps(Map<String, Map<String, String>> allMapDefs, 
+
+    public static <T extends ClassDef<H>, H> List<T> createClassDefsFromMaps(Map<String, Map<String, String>> allMapDefs,
             ClassLoader classLoader, ClassDefFactory<T, H> classDefFactory) {
         List<T> allDefs = new ArrayList<>(allMapDefs.size());
         for(Map<String, String> props : allMapDefs.values()) {
@@ -154,13 +154,13 @@ public abstract class AdvancedPropertyUtil {
         Collections.sort(allDefs);
         return allDefs;
     }
-    
+
     /**
      * High level helper method to read class defs from all components in one shot, with optional initial and override defs.
      * <p>
      * WARN: the defs can actually override each other; caller should expect his input maps may get altered.
      */
-    public static <T extends ClassDef<H>, H> List<T> readClassDefsFromAllComponents(Map<String, Map<String, String>> initialMapDefs, 
+    public static <T extends ClassDef<H>, H> List<T> readClassDefsFromAllComponents(Map<String, Map<String, String>> initialMapDefs,
             String resource, String propPrefix, Map<String, Map<String, String>> overrideMapDefs, ClassLoader classLoader, ClassDefFactory<T, H> classDefFactory) {
         Map<String, Map<String, String>> allMapDefs = (initialMapDefs != null) ? new HashMap<>(initialMapDefs) : new HashMap<>();
         if (resource != null) {
@@ -171,7 +171,7 @@ public abstract class AdvancedPropertyUtil {
         }
         return createClassDefsFromMaps(allMapDefs, classLoader, classDefFactory);
     }
-    
+
     /**
      * High level helper method to read class defs from all components in one shot.
      */
@@ -182,7 +182,7 @@ public abstract class AdvancedPropertyUtil {
     public interface ClassDefFactory<T extends ClassDef<H>, H> {
         T newInstance(Map<String, String> props, ClassLoader classLoader);
     }
-    
+
     public static ClassLoader getComponentClassLoader() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
@@ -191,7 +191,7 @@ public abstract class AdvancedPropertyUtil {
         }
         return classLoader;
     }
-    
+
     /**
      * An ordered class definition and instance.
      */

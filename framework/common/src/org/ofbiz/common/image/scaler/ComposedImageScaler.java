@@ -27,16 +27,16 @@ public class ComposedImageScaler extends AbstractImageScaler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "composed";
-    
+
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = makeOptionsMap();
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
-    
+
     private static final FlexibleStringExpander EXDR_TRUE = FlexibleStringExpander.getInstance("${true}");
     private static final FlexibleStringExpander EXDR_FALSE = FlexibleStringExpander.getInstance("${false}");
-    
+
     @SuppressWarnings("serial")
     protected static class OptionSetEntry implements Serializable {
         protected final String aliasName;
@@ -50,9 +50,9 @@ public class ComposedImageScaler extends AbstractImageScaler {
             this.options = Collections.unmodifiableMap(options);
         }
     }
-    
+
     protected Map<String, OptionSetEntry> compiledSets = null; // compiled on first run, optimization only
-    
+
     protected ComposedImageScaler(AbstractImageScalerFactory<ComposedImageScaler> factory, String name, Map<String, Object> confOptions) {
         super(factory, name, confOptions);
     }
@@ -79,47 +79,47 @@ public class ComposedImageScaler extends AbstractImageScaler {
         @Override protected Map<String, Object> makeOptionsMap(Map<String, Object> srcMap) { return new HashMap<>(srcMap); }
         @Override protected Map<String, Object> makeOptionsMap() { return new HashMap<>(); }
     }
-    
+
     protected static Map<String, Object> makeOptionsMap(Map<String, Object> srcMap) { return new HashMap<>(srcMap); }
     protected static Map<String, Object> makeOptionsMap() { return new HashMap<>(); }
-    
+
     @Override
     protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
-        
+
         Map<String, OptionSetEntry> sets = UtilGenerics.checkMap(options.get("sets"));
-        
+
         Map<String, Object> optionCtx = new HashMap<>();
         optionCtx.put("srcWidth", image.getWidth());
         optionCtx.put("srcHeight", image.getHeight());
         optionCtx.put("destWidth", targetWidth);
         optionCtx.put("destHeight", targetHeight);
         optionCtx.put("options", options);
-        
+
         if (UtilValidate.isEmpty(sets)) throw new IllegalArgumentException("composed scaler " + toString(options) + " has no option sets");
-        
+
         for(Map.Entry<String, OptionSetEntry> entry : sets.entrySet()) {
             String name = entry.getKey();
             OptionSetEntry optSet = entry.getValue();
             Object resObj = optSet.cond.expand(optionCtx);
             if (resObj instanceof Boolean) {
-                if (ImageUtil.verboseOn()) Debug.logInfo("Composed image scaler option set " + name 
+                if (ImageUtil.verboseOn()) Debug.logInfo("Composed image scaler option set " + name
                         + " evaluated to " + resObj + " for scaler:\n  " + this.toString(options) + " and context:\n  " + optionCtx.toString(), module);
                 if (Boolean.TRUE.equals(resObj)) {
-                    Map<String, Object> subOptions = makeOptionsMap(optSet.options); 
+                    Map<String, Object> subOptions = makeOptionsMap(optSet.options);
                     subOptions.putAll(options); // this merge allows callers to pass generic options without knowing the specific set, to a limited extent
                     return optSet.imageScaler.scaleImage(image, targetWidth, targetHeight, subOptions);
                 }
             } else {
-                Debug.logError("Composed image scaler option set " + name 
-                        + " did not evaluate to a Boolean for scaler " + this.toString(options) 
+                Debug.logError("Composed image scaler option set " + name
+                        + " did not evaluate to a Boolean for scaler " + this.toString(options)
                         + "; evaluated to type: " + (resObj != null ? resObj.getClass().getName() : "null"), module);
             }
         }
-        
+
         throw new IllegalStateException("composed scaler " + toString(options) + " failed to determine an image scaler to run");
     }
-    
+
     protected Map<String, Object> getEffectiveScalingOptions(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) {
         if (options == null || options.isEmpty() || !containsSetsSettings(options)) {
             Map<String, OptionSetEntry> compiledSets = this.compiledSets;
@@ -143,7 +143,7 @@ public class ComposedImageScaler extends AbstractImageScaler {
             return mergedMap;
         }
     }
-    
+
     protected boolean containsSetsSettings(Map<String, Object> options) {
         // this is a semi-optimization that should make most cases faster... but dynamic cases slower...
         for(String key : options.keySet()) {
@@ -151,7 +151,7 @@ public class ComposedImageScaler extends AbstractImageScaler {
         }
         return false;
     }
-    
+
     protected Map<String, OptionSetEntry> compileSets(Map<String, Object> options) {
         Map<String, OptionSetEntry> optSetMap = new HashMap<>();
         for(Map.Entry<String, Object> entry : options.entrySet()) {
@@ -212,5 +212,5 @@ public class ComposedImageScaler extends AbstractImageScaler {
     public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         throw new UnsupportedOperationException("Can't determine isNativeSupportedDestImagePixelType");
     }
-    
+
 }

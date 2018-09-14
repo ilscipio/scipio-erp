@@ -58,18 +58,18 @@ public class FormatDateMethod implements TemplateMethodModelEx {
         TemplateModel specLocaleModel = (args.size() > 2) ? ((TemplateModel) args.get(2)) : null;
         TemplateModel specTimeZoneModel = (args.size() > 3) ? ((TemplateModel) args.get(3)) : null;
         String dateType = (args.size() > 4) ? LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(4))) : null;
-        
+
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        
+
         Date date = dateModel.getAsDate();
-        
+
         if (dateTimeFormat != null && dateTimeFormat.isEmpty()) {
             dateTimeFormat = null;
         }
-        
+
         // NOTE: 2016-10-12: CANNOT pass null locale or timeZone because it causes crash.
         // warn when missing.
-        
+
         Locale locale;
         if (specLocaleModel == null || specLocaleModel instanceof TemplateBooleanModel) {
             if (specLocaleModel == null || ((TemplateBooleanModel) specLocaleModel).getAsBoolean()) {
@@ -89,7 +89,7 @@ public class FormatDateMethod implements TemplateMethodModelEx {
                 Debug.logWarning("Scipio: formatDate(Time): locale empty (from caller); using system default", module);
             }
         }
-        
+
         TimeZone timeZone;
         if (specTimeZoneModel == null || specTimeZoneModel instanceof TemplateBooleanModel) {
             if (specTimeZoneModel == null || ((TemplateBooleanModel) specTimeZoneModel).getAsBoolean()) {
@@ -110,7 +110,7 @@ public class FormatDateMethod implements TemplateMethodModelEx {
                         + " system default", module);
             }
         }
-        
+
         Object res;
         if (dateType == null || dateType.isEmpty() || "date".equals(dateType)) { // "date" is default
             res = UtilFormatOut.formatDate(date, dateTimeFormat, locale, timeZone);

@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;if-validate-method&gt; element.
- * 
+ *
  * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
  */
 public final class ValidateMethodCondition extends MethodOperation implements Conditional {
@@ -156,7 +156,7 @@ public final class ValidateMethodCondition extends MethodOperation implements Co
     }
 
     /**
-     * A &lt;if-validate-method&gt; element factory. 
+     * A &lt;if-validate-method&gt; element factory.
      */
     public static final class ValidateMethodConditionFactory extends ConditionalFactory<ValidateMethodCondition> implements Factory<ValidateMethodCondition> {
         @Override

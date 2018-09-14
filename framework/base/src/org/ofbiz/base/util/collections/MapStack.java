@@ -79,7 +79,7 @@ public class MapStack<K> extends MapContext<K, Object> {
     protected MapStack(Map<K, Object> baseMap) {
         super(baseMap);
     }
-    
+
     /**
      * Creates a MapStack object that has the same Map objects on its stack;
      * meant to be used to enable a

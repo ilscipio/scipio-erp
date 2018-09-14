@@ -63,14 +63,14 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -80,12 +80,12 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
      * SCIPIO: ModelCondition that always evaluates to false.
      */
     public static final ModelCondition FALSE_CONDITION = new FalseCondition();
-    
+
     /**
      * SCIPIO: ModelCondition that always evaluates to true.
      */
     public static final ModelCondition TRUE_CONDITION = new TrueCondition();
-    
+
     public static List<ModelCondition> readSubConditions(ModelConditionFactory factory, ModelWidget modelWidget,
             Element conditionElement) {
         List<? extends Element> subElementList = UtilXml.childElementList(conditionElement);
@@ -101,14 +101,14 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
     protected AbstractModelCondition(ModelConditionFactory factory, ModelWidget modelWidget, Element conditionElement) {
         this.modelWidget = modelWidget;
     }
-    
+
     /**
      * SCIPIO: Non-XML constructor.
      */
     protected AbstractModelCondition(ModelConditionFactory factory, ModelWidget modelWidget) {
         this.modelWidget = modelWidget;
     }
-    
+
     /**
      * SCIPIO: Non-XML constructor.
      */
@@ -119,7 +119,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
     public ModelWidget getModelWidget() {
         return modelWidget;
     }
-    
+
     /**
      * SCIPIO: Returns suffix log message with location/id of directive (best-effort).
      */
@@ -141,7 +141,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;and&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class And extends AbstractModelCondition {
@@ -250,7 +250,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;if-compare&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfCompare extends AbstractModelCondition {
@@ -327,7 +327,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;if-compare-field&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfCompareField extends AbstractModelCondition {
@@ -410,7 +410,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;if-empty&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfEmpty extends AbstractModelCondition {
@@ -441,25 +441,25 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         }
 
     }
-       
+
     /**
-     * SCIPIO: Models the &lt;if-true&gt; and &lt;if-false&gt; elements. 
+     * SCIPIO: Models the &lt;if-true&gt; and &lt;if-false&gt; elements.
      * 2016-11-09: New element, added for 1.14.3.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static abstract class IfTrueFalse extends AbstractModelCondition {
         protected final ValueAccessor accessor;
         protected final boolean verify;
         protected final boolean allowEmpty;
-        
+
         protected IfTrueFalse(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
             ValueAccessor accessor;
             try {
                 accessor = ValueAccessor.getFieldOrExpanderAccessor(condElement, "field", "value");
             } catch(Exception e) {
-                Debug.logError("if-true/if-false condition: error in specified field or value: " + 
+                Debug.logError("if-true/if-false condition: error in specified field or value: " +
                         e.getMessage() + getLogDirectiveLocationString(), module);
                 accessor = ValueAccessor.NULL_ACCESSOR;
             }
@@ -467,16 +467,16 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             this.verify = !"false".equals(condElement.getAttribute("verify"));
             this.allowEmpty = !"false".equals(condElement.getAttribute("allow-empty"));
         }
-        
-        protected IfTrueFalse(ModelConditionFactory factory, ModelWidget modelWidget, 
+
+        protected IfTrueFalse(ModelConditionFactory factory, ModelWidget modelWidget,
                 ValueAccessor accessor, boolean verify, boolean allowEmpty) {
             super(factory, modelWidget);
             this.accessor = accessor;
             this.verify = verify;
             this.allowEmpty = allowEmpty;
         }
-        
-        protected IfTrueFalse(ModelWidget modelWidget, 
+
+        protected IfTrueFalse(ModelWidget modelWidget,
                 ValueAccessor accessor, boolean verify, boolean allowEmpty) {
             super(modelWidget);
             this.accessor = accessor;
@@ -495,29 +495,29 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         public boolean isAllowEmpty() {
             return allowEmpty;
         }
-        
+
         @Override
         public void accept(ModelConditionVisitor visitor) throws Exception {
             // TODO
         }
     }
-    
+
     /**
-     * SCIPIO: Models the &lt;if-true&gt; element. 
+     * SCIPIO: Models the &lt;if-true&gt; element.
      * 2016-11-09: New element, added for 1.14.3.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfTrue extends IfTrueFalse {
         private IfTrue(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
         }
-        
-        public IfTrue(ModelConditionFactory factory, ModelWidget modelWidget, 
+
+        public IfTrue(ModelConditionFactory factory, ModelWidget modelWidget,
                 ValueAccessor accessor, boolean verify, boolean allowEmpty) {
             super(factory, modelWidget, accessor, verify, allowEmpty);
         }
-        
+
         public IfTrue(ModelWidget modelWidget, ValueAccessor accessor, boolean verify, boolean allowEmpty) {
             super(modelWidget, accessor, verify, allowEmpty);
         }
@@ -529,10 +529,10 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 return true;
             } else {
                 if (verify) {
-                    if (!((Boolean.FALSE.equals(fieldVal) || "false".equals(fieldVal)) 
+                    if (!((Boolean.FALSE.equals(fieldVal) || "false".equals(fieldVal))
                             || (allowEmpty && fieldVal == null || "".equals(fieldVal)))) {
-                        Debug.logError("if-true: " + accessor.getLogRepr() + 
-                                " produced invalid boolean value: [" + fieldVal + 
+                        Debug.logError("if-true: " + accessor.getLogRepr() +
+                                " produced invalid boolean value: [" + fieldVal +
                                 "]" + getLogDirectiveLocationString(), module);
                     }
                 }
@@ -540,11 +540,11 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             }
         }
     }
-    
+
     /**
-     * SCIPIO: Models the &lt;if-false&gt; element. 
+     * SCIPIO: Models the &lt;if-false&gt; element.
      * 2016-11-09: New element, added for 1.14.3.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfFalse extends IfTrueFalse {
@@ -552,11 +552,11 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             super(factory, modelWidget, condElement);
         }
 
-        public IfFalse(ModelConditionFactory factory, ModelWidget modelWidget, 
+        public IfFalse(ModelConditionFactory factory, ModelWidget modelWidget,
                 ValueAccessor accessor, boolean verify, boolean allowEmpty) {
             super(factory, modelWidget, accessor, verify, allowEmpty);
         }
-        
+
         public IfFalse(ModelWidget modelWidget, ValueAccessor accessor, boolean verify, boolean allowEmpty) {
             super(modelWidget, accessor, verify, allowEmpty);
         }
@@ -568,10 +568,10 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 return true;
             } else {
                 if (verify) {
-                    if (!((Boolean.TRUE.equals(fieldVal) || "true".equals(fieldVal)) 
+                    if (!((Boolean.TRUE.equals(fieldVal) || "true".equals(fieldVal))
                             || (allowEmpty && fieldVal == null || "".equals(fieldVal)))) {
-                        Debug.logError("if-false: " + accessor.getLogRepr() + 
-                                " produced invalid boolean value: [" + fieldVal + 
+                        Debug.logError("if-false: " + accessor.getLogRepr() +
+                                " produced invalid boolean value: [" + fieldVal +
                                 "]" + getLogDirectiveLocationString(), module);
                     }
                 }
@@ -579,10 +579,10 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             }
         }
     }
-    
+
     /**
      * Models the &lt;if-entity-permission&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfEntityPermission extends AbstractModelCondition {
@@ -610,7 +610,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;if-has-permission&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfHasPermission extends AbstractModelCondition {
@@ -662,7 +662,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;if-regexp&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfRegexp extends AbstractModelCondition {
@@ -722,7 +722,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;if-service-permission&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfServicePermission extends AbstractModelCondition {
@@ -766,7 +766,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             }
             return false;
         }
-        
+
         /**
          * SCIPIO: Factored out from the eval method, for reuse in code that needs to emulate minilang.
          */
@@ -776,7 +776,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             if (userLogin == null) {
                 return false;
             }
-            
+
             if (serviceContext != null) {
                 // copy the required internal fields
                 serviceContext.put("userLogin", context.get("userLogin"));
@@ -839,7 +839,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;if-validate-method&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfValidateMethod extends AbstractModelCondition {
@@ -923,7 +923,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;not&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class Not extends AbstractModelCondition {
@@ -952,7 +952,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;or&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class Or extends AbstractModelCondition {
@@ -986,7 +986,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
     /**
      * Models the &lt;xor&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class Xor extends AbstractModelCondition {
@@ -1022,11 +1022,11 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             return subConditions;
         }
     }
-    
+
     /**
-     * SCIPIO: Models the &lt;if-widget&gt; element. 
+     * SCIPIO: Models the &lt;if-widget&gt; element.
      * 2016-11-11: New element, added for 1.14.3.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfWidget extends AbstractModelCondition {
@@ -1035,7 +1035,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         private final WidgetFactory widgetFactory;
         private final String operator;
         private final boolean definedOperator;
-        
+
         private IfWidget(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
             this.name = FlexibleStringExpander.getInstance(condElement.getAttribute("name"));
@@ -1072,40 +1072,40 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             return location;
         }
     }
-    
-    
+
+
     /**
      * SCIPIO: always false condition.
      */
     public static final class FalseCondition implements ModelCondition {
         private FalseCondition() {}
-        
+
         @Override
         public boolean eval(Map<String, Object> context) {
             return false;
         }
-        
+
         @Override
         public void accept(ModelConditionVisitor visitor) throws Exception {
             // TODO Auto-generated method stub
         }
     }
-    
+
     /**
      * SCIPIO: always true condition.
      */
     public static final class TrueCondition implements ModelCondition {
         private TrueCondition() {}
-        
+
         @Override
         public boolean eval(Map<String, Object> context) {
             return true;
         }
-        
+
         @Override
         public void accept(ModelConditionVisitor visitor) throws Exception {
             // TODO Auto-generated method stub
         }
     }
-    
+
 }

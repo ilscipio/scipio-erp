@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceContainer;
 
 /**
  * Scipio File Listener
- * 
+ *
  * Implementes WatchService for specific directories and triggers service based on events
  *
  */
@@ -62,10 +62,10 @@ public class FileListener {
      *  Can be used to implements EECAs to auto-update information based on file changes
      **/
     public static void startFileListener(String name, String location){
-       
+
         try{
             if(UtilValidate.isNotEmpty(name) && UtilValidate.isNotEmpty(location)){
-                
+
                 if(getThreadByName(name)!=null){
                     Debug.logInfo("Filelistener "+name+" already started. Skipping...", module);
                 }else{
@@ -73,9 +73,9 @@ public class FileListener {
                     Path folderLocation = Paths.get(resLocation.toURI());
                     if(folderLocation == null) {
                         throw new UnsupportedOperationException("Directory not found");
-                    } 
-        
-            
+                    }
+
+
                     final WatchService folderWatcher = folderLocation.getFileSystem().newWatchService();
                     // register all subfolders
                     Files.walkFileTree(folderLocation, new SimpleFileVisitor<Path>() {
@@ -85,7 +85,7 @@ public class FileListener {
                             return FileVisitResult.CONTINUE;
                         }
                     });
-             
+
                     // start the file watcher thread below
                     ScipioWatchQueueReader fileListener = new ScipioWatchQueueReader(folderWatcher,name,location);
                     ScheduledExecutorService executor = ExecutionPool.getScheduledExecutor(FILE_LISTENER_THREAD_GROUP, "filelistener-startup", Runtime.getRuntime().availableProcessors(), 0, true);
@@ -94,31 +94,31 @@ public class FileListener {
                     } finally {
                         executor.shutdown();
                     }
-                    Debug.logInfo("Starting FileListener thread for "+name, module);    
+                    Debug.logInfo("Starting FileListener thread for "+name, module);
                 }
             }
         }catch(Exception e){
             Debug.logError("Could not start FileListener "+name+" for "+location+"\n"+e, module);
-            
+
         }
     }
-    
-    
+
+
     /**
      * Runnable used to listen for file changes and interpret the result
-     * 
+     *
      * */
     private static class ScipioWatchQueueReader implements Runnable {
- 
+
         private WatchService scipioWatcher;
         private String eventName,eventRoot;
-        
+
         public ScipioWatchQueueReader(WatchService scipioWatcher,String eventName, String eventRoot) {
             this.scipioWatcher = scipioWatcher;
             this.eventName = eventName;
             this.eventRoot = eventRoot;
         }
- 
+
 
         @Override
         public void run() {
@@ -129,7 +129,7 @@ public class FileListener {
                         GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
                         final Path filename = (Path) event.context();
                         Path dir = (Path) key.watchable();
-                        Path fullPath = dir.resolve(filename); 
+                        Path fullPath = dir.resolve(filename);
                         String fileType = Files.probeContentType(fullPath);
                         if(UtilValidate.isEmpty(fileType))fileType= FilenameUtils.getExtension(fullPath.toString());
                         dispatcher.runSync("triggerFileEvent", UtilMisc.toMap("fileEvent",""+event.kind(),"fileLocation",""+fullPath,"fileType",fileType,"eventName",eventName,"eventRoot",eventRoot,"userLogin",userLogin));
@@ -142,7 +142,7 @@ public class FileListener {
             }
         }
     }
-    
+
     public static Thread getThreadByName(String threadName) {
         for (Thread t : Thread.getAllStackTraces().keySet()) {
             if (t.getName().equals(threadName)) return t;

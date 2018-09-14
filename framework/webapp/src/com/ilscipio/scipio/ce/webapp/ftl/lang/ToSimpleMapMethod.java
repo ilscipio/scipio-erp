@@ -48,5 +48,5 @@ public class ToSimpleMapMethod implements TemplateMethodModelEx {
         ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
         return LangFtlUtil.toSimpleMap(object, null, objectWrapper);
     }
-    
+
 }

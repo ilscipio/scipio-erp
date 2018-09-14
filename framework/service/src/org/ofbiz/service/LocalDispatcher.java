@@ -326,7 +326,7 @@ public interface LocalDispatcher {
      * @throws GenericServiceException
      */
     ServiceSyncRegistrations getServiceSyncRegistrations() throws GenericServiceException;
-    
+
     /**
      * Gets the JobManager associated with this dispatcher
      * @return JobManager that is associated with this dispatcher

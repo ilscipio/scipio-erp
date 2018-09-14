@@ -13,7 +13,7 @@ import org.ofbiz.webapp.renderer.RenderOptions;
  * SCIPIO: An optional, dedicated class for render options stored in the
  * context and request.
  * <p>
- * Designed to avoid repeated lookups all the way through the MapStack 
+ * Designed to avoid repeated lookups all the way through the MapStack
  * especially for frequent operations like logging statements.
  * <p>
  * NOT thread-safe.
@@ -37,7 +37,7 @@ public class WidgetRenderOptions extends RenderOptions {
      */
     protected WidgetRenderOptions() {
     }
-    
+
     /**
      * Copy constructor.
      */
@@ -92,7 +92,7 @@ public class WidgetRenderOptions extends RenderOptions {
     public static WidgetRenderOptions fromContextIfPresent(Map<String, Object> context) {
         return (WidgetRenderOptions) context.get(RenderOptions.FIELD_NAME);
     }
-    
+
     /**
      * Returns from request only if it was set by the renderer setup/populate.
      */
@@ -127,11 +127,11 @@ public class WidgetRenderOptions extends RenderOptions {
     public static void setInRequest(HttpServletRequest request, WidgetRenderOptions options) {
         request.setAttribute(RenderOptions.FIELD_NAME, options);
     }
-    
+
     public Boolean getWarnMissingRenderer() {
         return warnMissingRenderer;
     }
-    
+
     public boolean isWarnMissingRendererEffective() {
         return Boolean.TRUE.equals(warnMissingRenderer);
     }
@@ -144,7 +144,7 @@ public class WidgetRenderOptions extends RenderOptions {
     public Boolean getWarnMissingFormRenderer() {
         return warnMissingFormRenderer;
     }
-    
+
     public boolean isWarnMissingFormRendererEffective() {
         return (warnMissingFormRenderer != null) ? warnMissingFormRenderer : isWarnMissingRendererEffective();
     }
@@ -157,7 +157,7 @@ public class WidgetRenderOptions extends RenderOptions {
     public Boolean getWarnMissingMenuRenderer() {
         return warnMissingMenuRenderer;
     }
-    
+
     public boolean isWarnMissingMenuRendererEffective() {
         return (warnMissingMenuRenderer != null) ? warnMissingMenuRenderer : isWarnMissingRendererEffective();
     }
@@ -170,7 +170,7 @@ public class WidgetRenderOptions extends RenderOptions {
     public Boolean getWarnMissingTreeRenderer() {
         return warnMissingTreeRenderer;
     }
-    
+
     public boolean isWarnMissingTreeRendererEffective() {
         return (warnMissingTreeRenderer != null) ? warnMissingTreeRenderer : isWarnMissingRendererEffective();
     }
@@ -179,11 +179,11 @@ public class WidgetRenderOptions extends RenderOptions {
         this.warnMissingTreeRenderer = warnMissingTreeRenderer;
         return this;
     }
-    
+
     protected static class ReadOnlyRenderOptions extends WidgetRenderOptions {
-        
+
         private static final WidgetRenderOptions defaultOptions = new ReadOnlyRenderOptions();
-        
+
         protected ReadOnlyRenderOptions() {
         }
 

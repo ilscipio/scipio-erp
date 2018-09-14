@@ -84,7 +84,7 @@ public class WebToolsServices {
         List<File> srcFiles = new LinkedList<File>();
         Timestamp createdDate = UtilDateTime.nowTimestamp();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         if (UtilValidate.isNotEmpty(entityFrom)) {
             entityFromCond = EntityCondition.makeCondition("lastUpdatedTxStamp", EntityComparisonOperator.GREATER_THAN, entityFrom);
         }
@@ -110,18 +110,18 @@ public class WebToolsServices {
                     Debug.logInfo(curEntityName + " is a view entity. Skipping...",module);
                     continue;
                 }
-        
+
                 boolean beganTx = TransactionUtil.begin();
-                
+
                 try {
-                    
+
                     values = EntityQuery.use(delegator).from(curEntityName).where(entityDateCond).orderBy(me.getPkFieldNames()).queryList();
                 } catch (Exception entityEx) {
                     Debug.logInfo("Error when looking up "+curEntityName + " "+entityEx,module);
                     continue;
                 }
-        
-                
+
+
                 // Iterate over all values
                 if (values != null) {
                     File outFile = new File(PathUtil.getTempFileDir(), curEntityName +".xml");
@@ -140,14 +140,14 @@ public class WebToolsServices {
                    writer.println("</entity-engine-xml>");
                    writer.close();
                    srcFiles.add(outFile);
-                   
+
                 } else {
                     Debug.logInfo(curEntityName + " has no records, not writing file",module);
                 }
                 TransactionUtil.commit(beganTx);
-               
+
             }
-            
+
             // Zip Files
             String fileSuffix = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
             String fileName = "Entityexport_"+fileSuffix+".zip";
@@ -165,10 +165,10 @@ public class WebToolsServices {
                  }
                  fis.close();
                  }
-            
+
              zipOut.close();
              fos.close();
-             
+
              //Upload to database
              GenericValue dataResource = delegator.makeValue("EntityExport");
              String seqId = delegator.getNextSeqId("EntityExport");
@@ -178,9 +178,9 @@ public class WebToolsServices {
              }else{
                  dataResource.put("description", "Generated on "+createdDate);
              }
-             
+
              if(UtilValidate.isNotEmpty(userLogin)){
-                 dataResource.put("createdBy", userLogin.getString("userLoginId"));                     
+                 dataResource.put("createdBy", userLogin.getString("userLoginId"));
              }
 
              FileInputStream fileInputStream = new FileInputStream(outZipFile);
@@ -188,12 +188,12 @@ public class WebToolsServices {
              dataResource.put("fileData", zipFile);
              dataResource.put("fileSize", new Long(zipFile.length));
              delegator.createOrStore(dataResource);
-             
+
              //Return fileId
              result.put("exportId", dataResource.getPrimaryKey().getString("exportId"));
-             
-             
-             //Cleanup 
+
+
+             //Cleanup
              for(File srcFile : srcFiles){
                  srcFile.delete();
              }
@@ -204,7 +204,7 @@ public class WebToolsServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> validateSystemLocations(DispatchContext dctx, Map<String, ? extends Object> context) {
         List<String> pathList = UtilGenerics.checkList(context.get("pathList"));
         String paths = (String) context.get("paths");
@@ -236,7 +236,7 @@ public class WebToolsServices {
                     }
                     pathResults.add(UtilMisc.toMap("value", path, "valid", true));
                 } catch (Exception e) {
-                    pathResults.add(UtilMisc.toMap("value", path, "valid", false, 
+                    pathResults.add(UtilMisc.toMap("value", path, "valid", false,
                             "errMsg", e.toString()));
                     success = false;
                 }
@@ -262,7 +262,7 @@ public class WebToolsServices {
                     cl.loadClass(className);
                     classNameResults.add(UtilMisc.toMap("value", className, "valid", true));
                 } catch(Exception e) {
-                    classNameResults.add(UtilMisc.toMap("value", className, "valid", false, 
+                    classNameResults.add(UtilMisc.toMap("value", className, "valid", false,
                             "errMsg", e.toString()));
                     success = false;
                 }

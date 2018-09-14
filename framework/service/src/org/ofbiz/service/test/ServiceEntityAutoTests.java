@@ -162,7 +162,7 @@ public class ServiceEntityAutoTests extends OFBizTestCase {
         delegator.create("TestingNode", "testingNodeId", "TESTNODE_6");
         Map<String, Object> testingNodeMemberPkMap = UtilMisc.toMap("testingId", "TESTING_6", "testingNodeId", "TESTNODE_6", "fromDate", now);
         delegator.create("TestingNodeMember", testingNodeMemberPkMap);
- 
+
         //test expire the thruDate
         Map<String, Object> results = dispatcher.runSync("testEntityAutoExpireTestingNodeMember", testingNodeMemberPkMap);
         assertTrue(ServiceUtil.isSuccess(results));

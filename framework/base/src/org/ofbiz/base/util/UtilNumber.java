@@ -264,7 +264,7 @@ public final class UtilNumber {
     private static final Map<String, RoundingMode> roundingModeStrMap; // SCIPIO: 2018-09-06: better string to RoundingMode conversion
     static {
         Map<String, RoundingMode> m = new HashMap<>();
-        
+
         // values supported by stock
         m.put("ROUND_HALF_UP", RoundingMode.HALF_UP);
         m.put("ROUND_HALF_DOWN", RoundingMode.HALF_DOWN);
@@ -274,7 +274,7 @@ public final class UtilNumber {
         m.put("ROUND_CEILING", RoundingMode.CEILING);
         m.put("ROUND_FLOOR", RoundingMode.FLOOR);
         m.put("ROUND_UNNECCESSARY", RoundingMode.UNNECESSARY);
-        
+
         // also support abbreviated names (SCIPIO)
         m.put("HALF_UP", RoundingMode.HALF_UP);
         m.put("HALF_DOWN", RoundingMode.HALF_DOWN);
@@ -284,10 +284,10 @@ public final class UtilNumber {
         m.put("CEILING", RoundingMode.CEILING);
         m.put("FLOOR", RoundingMode.FLOOR);
         m.put("UNNECCESSARY", RoundingMode.UNNECESSARY);
-        
+
         roundingModeStrMap = m;
     }
-    
+
     /**
      * Method to get the RoundingMode rounding mode int value from a string name.
      * @param   value - The name of the mode (e.g., "ROUND_HALF_UP")
@@ -350,7 +350,7 @@ public final class UtilNumber {
      * @param   locale - the Locale
      * @return  formatted string or an empty string if there was an error
      */
-    public static String formatRuleBasedAmount(double amount, String rule, Locale locale) { // SCIPIO: 2018-08-30: this overload was readded for backward-compat (upstream removed) 
+    public static String formatRuleBasedAmount(double amount, String rule, Locale locale) { // SCIPIO: 2018-08-30: this overload was readded for backward-compat (upstream removed)
         String ruleSet = rbnfRuleSets.get(locale);
         if (ruleSet == null) {
             Debug.logWarning("Cannot format rule based amount for locale " + locale.toString() + " because rule set for that locale does not exist", module);
@@ -392,7 +392,7 @@ public final class UtilNumber {
      * @param roundingMode  The BigDecimal rounding mode to apply
      * @return          The formatted string or "" if there were errors.
      * @deprecated Use {@link #toPercentString(Number number, int scale, RoundingMode roundingMode)} instead
-     * 
+     *
      */
     public static String toPercentString(Number number, int scale, int roundingMode) {
         // convert to BigDecimal

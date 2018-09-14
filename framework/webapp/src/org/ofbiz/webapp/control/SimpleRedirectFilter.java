@@ -22,29 +22,29 @@ public class SimpleRedirectFilter implements Filter {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected FilterConfig config = null;
-    
+
     protected Pattern matchPattern = null;
     protected String replacement = null;
-    
+
     protected boolean usePermanentRedirect = true;
     protected boolean matchFullPath = true;
-    
+
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig config) throws ServletException {
         this.config = config;
-        
+
         String matchPatternStr = config.getInitParameter("matchPattern");
         if (matchPatternStr != null && !matchPatternStr.isEmpty()) {
             matchPattern = Pattern.compile(matchPatternStr);
         }
 
         replacement = config.getInitParameter("replacement");
-        
+
         usePermanentRedirect = !"false".equals(config.getInitParameter("usePermanentRedirect"));
-        
+
         matchFullPath = "true".equals(config.getInitParameter("matchFullPath"));
     }
 
@@ -67,7 +67,7 @@ public class SimpleRedirectFilter implements Filter {
             } else {
                 matchPath = httpRequest.getContextPath();
             }
-            
+
             Matcher m = matchPattern.matcher(matchPath);
             if (m.find()) {
                 StringBuffer fullTargetSb = getFullHost(httpRequest);
@@ -76,7 +76,7 @@ public class SimpleRedirectFilter implements Filter {
                 if (!matchFullPath) {
                     fullTargetSb.append(getFullPostContextPath(httpRequest).toString());
                 }
-                
+
                 // SCIPIO: NOTE: It's possible this should be encodeURL + strip jsessionid instead (even if redirect)...
                 String fullTarget = httpResponse.encodeRedirectURL(fullTargetSb.toString());
 
@@ -90,7 +90,7 @@ public class SimpleRedirectFilter implements Filter {
                 }
             }
         }
-        
+
         // we're done checking; continue on
         chain.doFilter(request, response);
     }
@@ -101,7 +101,7 @@ public class SimpleRedirectFilter implements Filter {
     public void destroy() {
         config = null;
     }
-    
+
     public static StringBuffer getFullPostContextPath(HttpServletRequest request) {
         String contextPath = request.getContextPath();
         String contextPathWithDelim = contextPath;
@@ -109,28 +109,28 @@ public class SimpleRedirectFilter implements Filter {
             contextPathWithDelim += "/"; // needed for startswith check
         }
         boolean contextPathIsRoot = (contextPath.length() == 0 || "/".equals(contextPath)); // "/" is just in case, shouldn't happen
-        
+
         String requestUri = request.getRequestURI();
-        
+
         // SANITY CHECK: if request URI doesn't start with contextPath, just return nothing
         if (!contextPathIsRoot && !requestUri.equals(contextPath) && !requestUri.startsWith(contextPathWithDelim)) {
             return new StringBuffer();
         }
-        
+
         StringBuffer postContextPath;
         if (!contextPathIsRoot) {
             postContextPath = new StringBuffer(requestUri.substring(contextPath.length()));
         } else {
             postContextPath = new StringBuffer(requestUri);
         }
-        
+
         if (request.getQueryString() != null) {
             postContextPath.append("?");
             postContextPath.append(request.getQueryString());
         }
         return postContextPath;
     }
-    
+
     public static StringBuffer getFullHost(HttpServletRequest request) {
         StringBuffer url = new StringBuffer();
         String scheme = request.getScheme();
@@ -149,6 +149,6 @@ public class SimpleRedirectFilter implements Filter {
         }
 
         return url;
-    } 
+    }
 
 }

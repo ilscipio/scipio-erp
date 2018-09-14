@@ -441,7 +441,7 @@ public class LoginServices {
                 .orderBy("-fromDate")
                 .cursorScrollInsensitive();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        
+
         try (EntityListIterator eli = eq.queryIterator()) {
             GenericValue pwdHist;
             if ((pwdHist = eli.next()) != null) {

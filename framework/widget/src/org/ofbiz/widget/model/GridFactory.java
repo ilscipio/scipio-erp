@@ -56,7 +56,7 @@ public class GridFactory extends WidgetFactory {
     public static GridFactory getGridFactory() { // SCIPIO: new
         return gridFactory;
     }
-    
+
     public static Map<String, ModelGrid> getGridsFromLocation(String resourceName, ModelReader entityModelReader, DispatchContext dispatchContext)
             throws IOException, SAXException, ParserConfigurationException {
         URL gridFileUrl = FlexibleLocation.resolveLocation(resourceName);
@@ -69,7 +69,7 @@ public class GridFactory extends WidgetFactory {
     }
 
     /**
-     * Gets widget from location or exception. 
+     * Gets widget from location or exception.
      * <p>
      * SCIPIO: now delegating.
      */
@@ -81,7 +81,7 @@ public class GridFactory extends WidgetFactory {
         }
         return modelGrid;
     }
-    
+
     /**
      * SCIPIO: Gets widget from location or null if name not within the location.
      */
@@ -173,7 +173,7 @@ public class GridFactory extends WidgetFactory {
     public ModelGrid getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
-            return getGridFromLocation(modelLoc.getResource(), modelLoc.getName(), 
+            return getGridFromLocation(modelLoc.getResource(), modelLoc.getName(),
                     dctx.getDelegator().getModelReader(), dctx);
         } catch (SAXException e) {
             throw new IOException(e);
@@ -186,7 +186,7 @@ public class GridFactory extends WidgetFactory {
     public ModelGrid getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
-            return getGridFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(), 
+            return getGridFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(),
                     dctx.getDelegator().getModelReader(), dctx);
         } catch (SAXException e) {
             throw new IOException(e);

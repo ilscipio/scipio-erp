@@ -347,7 +347,7 @@ public class LoginWorker {
                 if (!ViewAsJsonUtil.isViewAsJson(request, viewAsJsonConfig) || ViewAsJsonUtil.isViewAsJsonUpdateSession(request, viewAsJsonConfig)) {
                     // keep the previous request name in the session
                     session.setAttribute("_PREVIOUS_REQUEST_", request.getPathInfo());
-    
+
                     // NOTE: not using the old _PREVIOUS_PARAMS_ attribute at all because it was a security hole as it was used to put data in the URL (never encrypted) that was originally in a form field that may have been encrypted
                     // keep 2 maps: one for URL parameters and one for form parameters
                     Map<String, Object> urlParams = UtilHttp.getUrlOnlyParameterMap(request);
@@ -386,18 +386,18 @@ public class LoginWorker {
      */
     public static String login(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        
-        // Prevent session fixation by making Tomcat generate a new jsessionId (ultimately put in cookie). 
-        if (!session.isNew()) {  // Only do when really signing in. 
+
+        // Prevent session fixation by making Tomcat generate a new jsessionId (ultimately put in cookie).
+        if (!session.isNew()) {  // Only do when really signing in.
             request.changeSessionId();
         }
-        
+
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        
+
         if(UtilValidate.isNotEmpty(userLogin)){
             return "loggedIn";
         }
-        
+
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
 
@@ -461,7 +461,7 @@ public class LoginWorker {
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
                     return "error";
                 }
-                
+
                 // SCIPIO: stop if delegator null, for now
                 if(delegator == null){
                     Map<String, String> messageMap = UtilMisc.toMap("errorMessage", "Tenant [" + tenantId + "]  not found...");
@@ -555,8 +555,8 @@ public class LoginWorker {
             // check to see if a password change is required for the user
             Map<String, Object> userLoginSession = checkMap(result.get("userLoginSession"), String.class, Object.class);
             if (userLogin != null && "Y".equals(userLogin.getString("requirePasswordChange"))) {
-            	// SCIPIO: 03/02/2018 added the userLogin as a tmpUserLogin in requestAttributes so we can extend the check in the screens
-            	request.setAttribute("tmpUserLogin", userLogin);
+                // SCIPIO: 03/02/2018 added the userLogin as a tmpUserLogin in requestAttributes so we can extend the check in the screens
+                request.setAttribute("tmpUserLogin", userLogin);
                 return "requirePasswordChange";
             }
             String autoChangePassword = EntityUtilProperties.getPropertyValue("security", "user.auto.change.password.enable", "false", delegator);
@@ -645,7 +645,7 @@ public class LoginWorker {
     public static void doBasicLogin(GenericValue userLogin, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("userLogin", userLogin);
-        
+
         // SCIPIO: This forces the language to be set accordingly to the user's
         // language settings. Unfortunately it seems to be changed some where
         // else. ShopSetup.groovy is used as a fallback, although it won't be
@@ -765,7 +765,7 @@ public class LoginWorker {
     }
 
     /**
-     * SCIPIO: Uses the web.xml context-param (or servlet context attribute) 
+     * SCIPIO: Uses the web.xml context-param (or servlet context attribute)
      * "autoUserLoginOn" to determine if should set and consult autoUserLogin.
      * <p>
      * Default: true
@@ -777,7 +777,7 @@ public class LoginWorker {
     }
 
     /**
-     * SCIPIO: Uses the web.xml context-param (or servlet context attribute) 
+     * SCIPIO: Uses the web.xml context-param (or servlet context attribute)
      * "autoUserLoginOn" to determine if should set and consult autoUserLogin.
      * <p>
      * Default: true
@@ -814,7 +814,7 @@ public class LoginWorker {
     protected static String getAutoLoginCookieName(String webappName) {
         return webappName + ".autoUserLoginId";
     }
-    
+
     public static String getAutoUserLoginId(HttpServletRequest request) {
         String autoUserLoginId = null;
         Cookie[] cookies = request.getCookies();

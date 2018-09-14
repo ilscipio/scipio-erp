@@ -117,12 +117,12 @@ public class ImageTransform {
      * SCIPIO: 2017-07-10: now supports scaling options/algorithm specs.
      * <p>
      * NOTE: 2017-07-15: by default this method is configured to use
-     * {@link org.ofbiz.common.image.ImageType#PRESERVE_IF_LOWLOSS} 
+     * {@link org.ofbiz.common.image.ImageType#PRESERVE_IF_LOWLOSS}
      * as image pixel type <code>scalingOptions.targettype</code>.
-     * This is roughly the same as stock ofbiz; 
+     * This is roughly the same as stock ofbiz;
      * HOWEVER, if the output of this method is the input of another operation,
      * you should consider setting <code>scalingOptions.targettype</code>
-     * to {@link org.ofbiz.common.image.ImageType#DEFAULT_IMAGEOP} or 
+     * to {@link org.ofbiz.common.image.ImageType#DEFAULT_IMAGEOP} or
      * another, to prevent lossy and/or needless image copying.
      *
      * @param   bufImg          Buffered image to scale
@@ -137,7 +137,7 @@ public class ImageTransform {
      */
     public static Map<String, Object> scaleImage(BufferedImage bufImg, double imgHeight, double imgWidth, Map<String, Map<String, String>> dimensionMap, String sizeType, Locale locale, Map<String, Object> scalingOptions) {
         double defaultHeight, defaultWidth;
-        
+
         /* DIMENSIONS from ImageProperties */
         // A missed dimension is authorized
         if (dimensionMap.get(sizeType).containsKey("height")) {
@@ -150,11 +150,11 @@ public class ImageTransform {
         } else {
             defaultWidth = -1;
         }
-        
+
         // SCIPIO: 2018-08-23: now delegating
         return scaleImage(bufImg, imgHeight, imgWidth, defaultHeight, defaultWidth, locale, scalingOptions);
     }
-    
+
     /**
      * scaleImage.
      * <p>
@@ -292,7 +292,7 @@ public class ImageTransform {
             // NOTE: stock ofbiz behavior in this method was to preserve, so for backward-compatibility we
             // set PRESERVE_IF_LOWLOSS, which is good enough in most cases; caller can specify.
             // In addition, we set this only if the scaler doesn't have a targettype, so this could be configured per-scaler in imageops.properties.
-            scalingOptions = ImageUtil.addImageOpOptionIfDefaultNotSet(ImageUtil.copyOptions(scalingOptions), "targettype", ImageType.COMMON_SCALEIMAGE, imageScaler); 
+            scalingOptions = ImageUtil.addImageOpOptionIfDefaultNotSet(ImageUtil.copyOptions(scalingOptions), "targettype", ImageType.COMMON_SCALEIMAGE, imageScaler);
             bufNewImg = imageScaler.scaleImage(bufImg, imgWidth, imgHeight, scalingOptions);
         } catch(IOException e) {
             throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
@@ -311,9 +311,9 @@ public class ImageTransform {
      * <p>
      * Added 2018-08-23.
      */
-    public static Map<String, Object> scaleImageVersatile(BufferedImage bufImg, double imgHeight, double imgWidth, double canvasHeight, double canvasWidth, 
+    public static Map<String, Object> scaleImageVersatile(BufferedImage bufImg, double imgHeight, double imgWidth, double canvasHeight, double canvasWidth,
             ImageScaleSpec scaleSpec, ImageScaleSpec maxScaleSpec, Locale locale, Map<String, Object> scalingOptions) {
-        
+
         ImageDim<Double> maxSize = null;
         if (maxScaleSpec != null) {
             maxSize = determineScaleSpecSize(imgHeight, imgWidth, canvasHeight, canvasWidth, maxScaleSpec);
@@ -325,18 +325,18 @@ public class ImageTransform {
 
         // TODO: optimizations to detect if requested size (after scale factor, must be delegated) is same
         // as current size and return null in that case
-        
-        Debug.logInfo("SCALE IMAGE VERSATILE: scaleSpec: " + scaleSpec + " -> " + targetSize 
+
+        Debug.logInfo("SCALE IMAGE VERSATILE: scaleSpec: " + scaleSpec + " -> " + targetSize
                 + "\nmaxScaleSpec: " + maxScaleSpec + " -> " + maxSize, module);
         if (targetSize != null) {
-            return scaleImage(bufImg, imgHeight, imgWidth, 
+            return scaleImage(bufImg, imgHeight, imgWidth,
                     applyMaxSizeForScale(targetSize.getHeight(), (maxSize != null) ? maxSize.getHeight() : null),
                     applyMaxSizeForScale(targetSize.getWidth(), (maxSize != null) ? maxSize.getWidth() : null),
                     locale, scalingOptions);
         } else if (maxSize != null) {
-            if ((maxSize.getHeight() != null && imgHeight > maxSize.getHeight()) || 
+            if ((maxSize.getHeight() != null && imgHeight > maxSize.getHeight()) ||
                 (maxSize.getWidth() != null && imgWidth > maxSize.getWidth())) {
-                return scaleImage(bufImg, imgHeight, imgWidth, 
+                return scaleImage(bufImg, imgHeight, imgWidth,
                         maxSize.getHeight(),
                         maxSize.getWidth(),
                         locale, scalingOptions);
@@ -347,7 +347,7 @@ public class ImageTransform {
         return result;
     }
 
-    private static ImageDim<Double> determineScaleSpecSize(double imgHeight, double imgWidth, double canvasHeight, double canvasWidth, 
+    private static ImageDim<Double> determineScaleSpecSize(double imgHeight, double imgWidth, double canvasHeight, double canvasWidth,
             ImageScaleSpec scaleSpec) {
         if (scaleSpec.getFixedAny() != null) {
             // TODO: REVIEW: always use width, unless applying to height makes it fit better?
@@ -360,7 +360,7 @@ public class ImageTransform {
                 return new ImageDim<>((double) scaleSpec.getFixedAny(), null);
             }
         } else if (scaleSpec.getFixedWidth() != null || scaleSpec.getFixedHeight() != null) {
-            return new ImageDim<>((scaleSpec.getFixedWidth() != null) ? (double) scaleSpec.getFixedWidth() : null, 
+            return new ImageDim<>((scaleSpec.getFixedWidth() != null) ? (double) scaleSpec.getFixedWidth() : null,
                     (scaleSpec.getFixedHeight() != null) ? (double) scaleSpec.getFixedHeight() : null);
         } else if (scaleSpec.getRatioAny() != null) {
             // auto-determine to scale via weight or height (TODO: REVIEW)
@@ -369,18 +369,18 @@ public class ImageTransform {
             double finalScale = Math.min(scalex, scaley) * scaleSpec.getRatioAny();
             return new ImageDim<>(imgWidth * finalScale, imgHeight * finalScale);
         } else if (scaleSpec.getRatioWidth() != null || scaleSpec.getRatioHeight() != null) {
-            return new ImageDim<>((scaleSpec.getRatioWidth() != null) ? scaleSpec.getRatioWidth() * canvasWidth : null, 
+            return new ImageDim<>((scaleSpec.getRatioWidth() != null) ? scaleSpec.getRatioWidth() * canvasWidth : null,
                     (scaleSpec.getRatioHeight() != null) ? scaleSpec.getRatioHeight() * canvasHeight : null);
         }
         return null;
     }
-    
+
     private static Double applyMaxSizeForScale(Double value, Double maxSize) {
         if (maxSize == null) return value;
         else if (value == null) return (double) maxSize;
         return (value > maxSize) ? maxSize : value;
     }
-    
+
     /**
      * getXMLValue
      * <p>
@@ -454,7 +454,7 @@ public class ImageTransform {
      * SCIPIO: NOTE: This does NOT preserve the image type such as index or color model; always creates as fixed
      * system default type (previously was hardcoded as TYPE_INT_ARGB_PRE; see {@link #DEFAULT_BUFIMAGE_TYPE}
      * for current value).
-     * 
+     *
      * @param image             Source image
      * @return BufferedImage
      */
@@ -468,7 +468,7 @@ public class ImageTransform {
      * toBufferedImage with specific type (legacy ofbiz method).
      * @deprecated SCIPIO: 2017-07-11: use {@link #toCompatibleBufferedImage} instead; this
      * method does not preserve enough information from the original images to preserve the types of
-     * original images - misses ColorModel and other - so it is unable to work properly 
+     * original images - misses ColorModel and other - so it is unable to work properly
      * on indexed images properly without color loss and potentially other types.
      */
     @Deprecated
@@ -476,13 +476,13 @@ public class ImageTransform {
         // SCIPIO: WARN: passing null ColorModel - officially should always be passed
         return toBufferedImage(image, ImageTypeInfo.from(bufImgType), new ImageType(bufImgType));
     }
-    
+
     /**
      * toBufferedImage with specific type and color model (used as needed for indexed images) (legacy ofbiz method).
      * SCIPIO: Modified 2017-07-11.
      * <p>
      * SCIPIO: NOTE: This is a modified legacy Ofbiz function; recommend using the new {@link #toCompatibleBufferedImage} instead.
-     * 
+     *
      * @param image the image (required)
      * @param imageTypeInfo the image type info, not contained in image (required)
      * @param fallbackImageType a fallback image type (optional - is a hint and may be ignored)
@@ -505,13 +505,13 @@ public class ImageTransform {
                             imageTypeInfo,
                             image.getWidth(null),
                             image.getHeight(null));
-                
+
                 copyToBufferedImage(image, bufferedImage); // SCIPIO: factored
 
                 return( bufferedImage );
         }
     }
-    
+
     /**
      * SCIPIO: Creates a new blank BufferedImage with the given type AND color model IF applicable.
      * WARN: we need to preserve the color model if there is one! stock ofbiz did not do this!
@@ -534,7 +534,7 @@ public class ImageTransform {
             return new BufferedImage(targetWidth, targetHeight, imgType);
         }
     }
-    
+
     /**
      * SCIPIO: Creates a new blank BufferedImage with the given type AND color model IF applicable.
      * WARN: we need to preserve the color model if there is one! stock ofbiz did not do this!
@@ -545,7 +545,7 @@ public class ImageTransform {
     public static BufferedImage createBufferedImage(ImageTypeInfo imageTypeInfo, int targetWidth, int targetHeight) {
         return createBufferedImage(imageTypeInfo, targetWidth, targetHeight, ImageType.DEFAULT);
     }
-    
+
     /**
      * SCIPIO: Converts the image to a new BufferedImage <b>IF</b> it's not already one, and preserves
      * the original image parameters as much as possible.
@@ -567,7 +567,7 @@ public class ImageTransform {
             return toCompatibleBufferedImageAlways(image, imageTypeInfo, targetWidth, targetHeight, fallbackImageType);
         }
     }
-    
+
     /**
      * SCIPIO: Converts the image to a new BufferedImage <b>IF</b> it's not already one, and preserves
      * the original image parameters as much as possible.
@@ -578,7 +578,7 @@ public class ImageTransform {
     public static BufferedImage toCompatibleBufferedImage(Image image, ImageTypeInfo imageTypeInfo) {
         return toCompatibleBufferedImage(image, imageTypeInfo, null, null, null);
     }
-    
+
     /**
      * SCIPIO: Converts the image to a new BufferedImage <b>ALWAYS</b>, and preserves
      * the original image parameters as much as possible except where explicit.
@@ -596,7 +596,7 @@ public class ImageTransform {
         copyToBufferedImage(image, bufferedImage); // SCIPIO: factored
         return( bufferedImage );
     }
-    
+
     /**
      * SCIPIO: Converts the image to a new BufferedImage <b>ALWAYS</b>, and preserves
      * the original image parameters as much as possible.
@@ -623,7 +623,7 @@ public class ImageTransform {
         ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
         return resultImage;
     }
-    
+
     /**
      * SCIPIO: This reconverts the given modified image (after some operation) back to the original
      * input image's type as best as possible, always.
@@ -639,7 +639,7 @@ public class ImageTransform {
         ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
         return resultImage;
     }
-    
+
     /**
      * SCIPIO: createCompatibleBufferedImage SPECIFIC implementation that relies almost entirely on ColorModel.
      * Based on mortennobel {@link com.mortennobel.imagescaling.AdvancedResizeOp#createCompatibleDestImage}.
@@ -647,12 +647,12 @@ public class ImageTransform {
      * Added 2017-07-12.
      */
     public static BufferedImage createCompatibleBufferedImageFromColorModelImpl(Image image, ColorModel colorModel, Integer targetWidth, Integer targetHeight) {
-        return new BufferedImage(colorModel, 
+        return new BufferedImage(colorModel,
                 //image.getRaster().createCompatibleWritableRaster(targetWidth != null ? targetWidth : image.getWidth(null), targetHeight != null ? targetHeight : image.getHeight(null)),
                 colorModel.createCompatibleWritableRaster(targetWidth != null ? targetWidth : image.getWidth(null), targetHeight != null ? targetHeight : image.getHeight(null)),
                 colorModel.isAlphaPremultiplied(), null);
     }
-    
+
     /**
      * SCIPIO: createCompatibleBufferedImage SPECIFIC implementation that relies almost entirely on ColorModel.
      * Based on mortennobel {@link com.mortennobel.imagescaling.AdvancedResizeOp#createCompatibleDestImage}.
@@ -662,7 +662,7 @@ public class ImageTransform {
     public static BufferedImage createCompatibleBufferedImageFromColorModelImpl(BufferedImage image, Integer targetWidth, Integer targetHeight) {
         return createCompatibleBufferedImageFromColorModelImpl(image, image.getColorModel(), targetWidth, targetHeight);
     }
-    
+
     /**
      * SCIPIO: Improved method for creating a compatible BufferedImage.
      * Added 2017-07-12.
@@ -680,7 +680,7 @@ public class ImageTransform {
         }
         return createCompatibleBufferedImageFromColorModelImpl(image, colorModel, targetWidth, targetHeight);
     }
-    
+
     /**
      * SCIPIO: Improved method for creating a compatible BufferedImage.
      * Added 2017-07-12.
@@ -690,7 +690,7 @@ public class ImageTransform {
     public static BufferedImage createCompatibleBufferedImage(Image image, ImageTypeInfo imageTypeInfo) {
         return createCompatibleBufferedImage(image, imageTypeInfo, null, null);
     }
-    
+
     /**
      * SCIPIO: Improved method for creating a compatible BufferedImage.
      * This version automatically gets the color model from the buffered image.
@@ -702,7 +702,7 @@ public class ImageTransform {
     public static BufferedImage createCompatibleBufferedImage(BufferedImage image, Integer targetWidth, Integer targetHeight) {
         return createCompatibleBufferedImageFromColorModelImpl(image, image.getColorModel(), targetWidth, targetHeight);
     }
-    
+
     /**
      * SCIPIO: Improved method for creating a compatible BufferedImage.
      * This version automatically gets the color model from the buffered image.
@@ -712,7 +712,7 @@ public class ImageTransform {
     public static BufferedImage createCompatibleBufferedImage(BufferedImage image) {
         return createCompatibleBufferedImage(image, null, null);
     }
-    
+
     /**
      * SCIPIO: Simple copy of a source image to a destination buffered image using the best
      * transfer method available, trying to minimize data/color loss.
@@ -737,7 +737,7 @@ public class ImageTransform {
             if (renderingHints != null && RenderingHints.VALUE_DITHER_ENABLE.equals(renderingHints.get(RenderingHints.KEY_DITHERING))) {
                 return copyToBufferedImageAwt(srcImage, destImage, renderingHints);
             } else {
-                // FIXME: here want to disable dithering for indexed images; however, 
+                // FIXME: here want to disable dithering for indexed images; however,
                 // Graphics2D.drawImage appears to ignore the KEY_DITHERING key!
                 // the workaround is to manually transfer the pixels, which is horrendous
                 renderingHints = ensureRenderingHintCopy(renderingHints, RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_DISABLE);
@@ -747,9 +747,9 @@ public class ImageTransform {
             return copyToBufferedImageAwt(srcImage, destImage, renderingHints);
         }
     }
-    
+
     /**
-     * SCIPIO: Simple copy of a source image to a destination buffered image using 
+     * SCIPIO: Simple copy of a source image to a destination buffered image using
      * {@link java.awt.Graphics#drawImage}.
      * <p>
      * WARN/FIXME: Graphics2D.drawImage appears to ignore RenderingHints.KEY_DITHERING and always applies dithering!
@@ -768,7 +768,7 @@ public class ImageTransform {
         }
         return destImage;
     }
-    
+
     /**
      * SCIPIO: Simple copy of a source image to a destination buffered image using a slow but surefire
      * transfer loop. WARN: slow and very slow.
@@ -793,7 +793,7 @@ public class ImageTransform {
                 // FIXME: even worse than above! creates a whole copy for nothing.
                 if (ImageUtil.verboseOn()) Debug.logInfo("Executing manual Image double pixel copy (extremely slow, but can avoid dithering)", module);
                 int[] pixels = new int[srcImage.getWidth(null)*srcImage.getHeight(null)];
-                PixelGrabber pg = new PixelGrabber(srcImage, 0, 0, srcImage.getWidth(null), 
+                PixelGrabber pg = new PixelGrabber(srcImage, 0, 0, srcImage.getWidth(null),
                         srcImage.getHeight(null), pixels, 0, srcImage.getWidth(null));
                 try {
                     pg.grabPixels();
@@ -814,7 +814,7 @@ public class ImageTransform {
         }
         return destImage;
     }
-    
+
     /**
      * SCIPIO: Simple copy of a source image to a destination buffered image.
      * Added 2017-07-12.
@@ -823,7 +823,7 @@ public class ImageTransform {
     public static BufferedImage copyToBufferedImage(Image srcImage, BufferedImage destImage) {
         return copyToBufferedImage(srcImage, destImage, null);
     }
-    
+
     /**
      * SCIPIO: Attempts to create an exact copy of the original image in a new instance.
      * WARN: TODO: currently not guaranteed to work for all images.
@@ -832,7 +832,7 @@ public class ImageTransform {
      */
     public static BufferedImage cloneBufferedImage(BufferedImage image) {
         ColorModel colorModel = image.getColorModel();
-        return new BufferedImage(colorModel, 
+        return new BufferedImage(colorModel,
                 //image.copyData(image.getRaster().createCompatibleWritableRaster()),
                 image.copyData(colorModel.createCompatibleWritableRaster(image.getWidth(null), image.getHeight(null))),
                 colorModel.isAlphaPremultiplied(), null);
@@ -848,7 +848,7 @@ public class ImageTransform {
             return new RenderingHints(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_DISABLE);
         else return null;
     }
-    
+
     /**
      * SCIPIO: Sets dithering value in new RenderingHints without modifying original; creates new if needed.
      * Added 2017-07-14.
@@ -864,7 +864,7 @@ public class ImageTransform {
         renderingHints.put(key, value);
         return renderingHints;
     }
-    
+
     /**
      * SCIPIO: Sets given value in RenderingHints in-place; creates new if needed.
      * Added 2017-07-14.
@@ -874,7 +874,7 @@ public class ImageTransform {
         renderingHints.put(key, value);
         return renderingHints;
     }
-    
+
     /**
      * SCIPIO: Helps to parse image scaling specification strings in the forms:
      * 50%
@@ -894,8 +894,8 @@ public class ImageTransform {
         protected final Double ratioAny;
         protected final Double ratioWidth;
         protected final Double ratioHeight;
-        
-        protected ImageScaleSpec(Integer fixedAny, Integer fixedWidth, Integer fixedHeight, 
+
+        protected ImageScaleSpec(Integer fixedAny, Integer fixedWidth, Integer fixedHeight,
                 Double ratioAny, Double ratioWidth, Double ratioHeight) {
             this.fixedAny = fixedAny;
             this.fixedWidth = fixedWidth;
@@ -904,7 +904,7 @@ public class ImageTransform {
             this.ratioWidth = ratioWidth;
             this.ratioHeight = ratioHeight;
         }
-        
+
         protected ImageScaleSpec(String expr, Locale locale) {
             Integer fixedAny = null;
             Integer fixedWidth = null;
@@ -912,7 +912,7 @@ public class ImageTransform {
             Double ratioAny = null;
             Double ratioWidth = null;
             Double ratioHeight = null;
-            
+
             int splitIndex = expr.indexOf('x');
             if (splitIndex >= 0) {
                 String widthExpr = expr.substring(0, splitIndex);
@@ -956,23 +956,23 @@ public class ImageTransform {
             this.ratioWidth = ratioWidth;
             this.ratioHeight = ratioHeight;
         }
-        
+
         public static ImageScaleSpec fromFixed(Integer fixedAny) {
             return new ImageScaleSpec(fixedAny, null, null, null, null, null);
         }
-        
+
         public static ImageScaleSpec fromFixed(Integer fixedWidth, Integer fixedHeight) {
             return new ImageScaleSpec(null, fixedWidth, fixedHeight, null, null, null);
         }
-        
+
         public static ImageScaleSpec fromRatio(Double ratioAny) {
             return new ImageScaleSpec(null, null, null, ratioAny, null, null);
         }
-        
+
         public static ImageScaleSpec fromRatio(Double ratioWidth, Double ratioHeight) {
             return new ImageScaleSpec(null, null, null, null, ratioWidth, ratioHeight);
         }
-        
+
         public static ImageScaleSpec fromExpr(String expr, Locale locale) {
             if ((expr == null || expr.isEmpty())) {
                 return null;

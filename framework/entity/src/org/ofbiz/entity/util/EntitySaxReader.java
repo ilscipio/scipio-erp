@@ -113,7 +113,7 @@ public class EntitySaxReader extends DefaultHandler {
     private Map<String, Object> placeholderValues = null; //contains map of values for corresponding placeholders (eg. ${key}) in the entity xml data file.
 
     private Set<String> allowedEntityNames = null; // SCIPIO: 2017-06-15: security filter to limit allowed names
-    
+
     protected EntitySaxReader() {}
 
     public EntitySaxReader(Delegator delegator, int transactionTimeout) {
@@ -152,7 +152,7 @@ public class EntitySaxReader extends DefaultHandler {
     public void setCheckDataOnly(boolean checkDataOnly) {
         this.checkDataOnly = checkDataOnly;
     }
-    
+
     public void setPlaceholderValues(Map<String,Object> placeholderValues) {
         this.placeholderValues = placeholderValues;
     }
@@ -189,7 +189,7 @@ public class EntitySaxReader extends DefaultHandler {
     public void setAllowedEntityNames(Set<String> allowedEntityNames) {
         this.allowedEntityNames = allowedEntityNames;
     }
-    
+
     /**
      * SCIPIO: Returns the entity names allowed to be parsed.
      * Added 2017-06-15.
@@ -265,7 +265,7 @@ public class EntitySaxReader extends DefaultHandler {
             throw new SAXException("A transaction error occurred reading data", e);
         }
         Debug.logImportant("Finished " + numberRead + " values from " + docDescription, module);
-        if (Debug.verboseOn()) { 
+        if (Debug.verboseOn()) {
             Debug.logVerbose("  Detail created : " + numberCreated + ", skipped : " + numberSkipped +
                     ", updated : " + numberUpdated + ", replaced : " + numberReplaced +
                     ", deleted : " + numberDeleted, module);
@@ -358,7 +358,7 @@ public class EntitySaxReader extends DefaultHandler {
                     } catch(Exception e) {
                         Debug.logError(e, "Could not get dispatcher for delegator " + delegator.getDelegatorName(), module);
                     }
-                    
+
                     context.put("doc", nodeModel);
                     template.process(context, outWriter);
                     String s = outWriter.toString();
@@ -574,7 +574,7 @@ public class EntitySaxReader extends DefaultHandler {
             if (allowedEntityNames != null && !allowedEntityNames.contains(entityName)) {
                 throw new org.xml.sax.SAXParseException(null, locator, new IllegalArgumentException("Entity name not allowed for this reader: " + entityName));
             }
-            
+
             try {
                 currentValue = delegator.makeValue(entityName);
                 if (this.maintainTxStamps) {

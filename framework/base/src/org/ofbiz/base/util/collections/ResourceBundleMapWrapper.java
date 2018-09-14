@@ -165,7 +165,7 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
     public Collection<Object> values() {
         return this.rbmwStack.values();
     }
-    
+
     /**
      * SCIPIO: Returns the context reference which was passed to this bundle wrapper
      * upon its creation.
@@ -173,14 +173,14 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
     public Map<String, Object> getContext() {
         return context;
     }
-    
+
     /**
      * SCIPIO: Returns the initial locale upon creation.
      */
     public Locale getInitialLocale() {
         return this.initialResourceBundle.getLocale();
     }
-    
+
     /**
      * SCIPIO: Returns the locale considered the main one for this bundle wrapper.
      * <p>
@@ -232,10 +232,10 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
         /* (non-Javadoc)
          * @see java.util.Map#size()
          */
-        public int size() {            
+        public int size() {
             if(isMapInitialized) {
                 // this is an approximate size, won't include elements from parent bundles
-                return topLevelMap.size() -1;                     
+                return topLevelMap.size() -1;
             }
             return resourceBundle.keySet().size();
         }

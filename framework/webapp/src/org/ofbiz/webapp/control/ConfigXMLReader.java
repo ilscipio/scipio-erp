@@ -142,7 +142,7 @@ public class ConfigXMLReader {
         File configFile = new File(filePath);
         return getControllerConfig(configFile.toURI().toURL());
     }
-    
+
     /**
      * SCIPIO: Overload that supports optional loading.
      * Added 2017-11-18.
@@ -160,7 +160,7 @@ public class ConfigXMLReader {
             // SCIPIO: use one single factory method from now on...
             //controllerConfig = controllerCache.putIfAbsentAndGet(url, new ControllerConfig(url));
             controllerConfig = readControllerConfig(url, false);
-            controllerConfig = controllerCache.putIfAbsentAndGet(url, 
+            controllerConfig = controllerCache.putIfAbsentAndGet(url,
                     controllerConfig != null ? controllerConfig : ControllerConfig.NULL_CONFIG); // special null cache key
             return controllerConfig;
         }
@@ -175,7 +175,7 @@ public class ConfigXMLReader {
         ControllerConfig controllerConfig = controllerCache.get(url);
         if (controllerConfig == null) {
             controllerConfig = readControllerConfig(url, optional);
-            controllerConfig = controllerCache.putIfAbsentAndGet(url, 
+            controllerConfig = controllerCache.putIfAbsentAndGet(url,
                     controllerConfig != null ? controllerConfig : ControllerConfig.NULL_CONFIG); // special null cache key
             return controllerConfig;
         }
@@ -210,7 +210,7 @@ public class ConfigXMLReader {
         }
     }
 
-    /** Loads the XML file and returns the root element 
+    /** Loads the XML file and returns the root element
      * @throws WebAppConfigurationException */
     private static Element loadDocument(URL location) throws WebAppConfigurationException {
         try {
@@ -234,28 +234,28 @@ public class ConfigXMLReader {
      * 2018-06-13.
      */
     public static abstract class ControllerConfigFactory {
-        private static final ControllerConfigFactory defaultFactory = 
+        private static final ControllerConfigFactory defaultFactory =
                 getFactoryFromProperty("requestHandler", "controller.config.factoryClass");
-        
+
         public abstract ControllerConfig readControllerConfig(URL url) throws WebAppConfigurationException;
 
         public static ControllerConfigFactory getFactory() {
             return defaultFactory;
         }
-        
+
         @SuppressWarnings("unchecked")
         public static ControllerConfigFactory getFactoryFromProperty(String resource, String property) {
             String factoryClassName = UtilProperties.getPropertyValue(resource, property);
             ControllerConfigFactory factory;
             try {
-                Class<? extends ControllerConfigFactory> factoryClass = 
+                Class<? extends ControllerConfigFactory> factoryClass =
                         (Class<? extends ControllerConfigFactory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClassName);
                 factory = (ControllerConfigFactory) factoryClass.newInstance();
             } catch (Exception e) {
                 Debug.logError(e, "Could not initialize controller config factory '" + factoryClassName + "': " + e.getMessage(), module);
                 factory = new ControllerConfig.Factory();
             }
-            Debug.logInfo("Initialized ControllerConfigFactory from properties (" 
+            Debug.logInfo("Initialized ControllerConfigFactory from properties ("
                 + resource + "#" + property + "): " + factory.getClass().getName(), module);
             return factory;
         }
@@ -264,7 +264,7 @@ public class ConfigXMLReader {
     public static class ControllerConfig {
         // SCIPIO: special key for cache lookups that return null
         public static final ControllerConfig NULL_CONFIG = new ControllerConfig();
-        
+
         public URL url;
         // SCIPIO: switched all to protected from private (see ResolvedControllerConfig)
         protected String errorpage;
@@ -291,7 +291,7 @@ public class ConfigXMLReader {
         protected ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
         protected Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
         protected List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
-        
+
         public ControllerConfig(URL url) throws WebAppConfigurationException {
             this.url = url;
             Element rootElement = loadDocument(url);
@@ -309,8 +309,8 @@ public class ConfigXMLReader {
                 }
             }
         }
-        
-        private ControllerConfig() { // SCIPIO: special null config 
+
+        private ControllerConfig() { // SCIPIO: special null config
             this.url = null;
         }
 
@@ -326,7 +326,7 @@ public class ConfigXMLReader {
         }
 
         // SCIPIO: all calls below modified for more complex include options (non-recursive include)
-        
+
         public Map<String, Event> getAfterLoginEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
@@ -1033,7 +1033,7 @@ public class ConfigXMLReader {
             this.allowViewSaveDefault = allowViewSaveDefault;
             this.allowViewSaveViewNameFilters = allowViewSaveViewNameFilters;
         }
-        
+
         private void loadHandlerMap(Element rootElement) {
             for (Element handlerElement : UtilXml.childElementList(rootElement, "handler")) {
                 String name = handlerElement.getAttribute("name");
@@ -1093,11 +1093,11 @@ public class ConfigXMLReader {
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-        
+
         public URL getUrl() {
             return url;
         }
-        
+
         private <K, V> MapContext<K, V> getMapContextForEventList() { // SCIPIO: refactored into factory method
             return MapContext.getMapContext();
         }
@@ -1110,29 +1110,29 @@ public class ConfigXMLReader {
             public final boolean recursive;
             public final boolean optional; // SCIPIO: added 2017-05-03
             public final Order order; // SCIPIO: added 2017-05-03
-            
+
             public Include(URL location, boolean recursive, boolean optional, Order order) {
                 this.location = location;
                 this.recursive = recursive;
                 this.optional = optional;
                 this.order = order;
             }
-            
+
             public Include(URL location, boolean recursive, boolean optional, String order) {
                 this(location, recursive, optional, Order.fromName(order));
             }
-            
+
             public Include(URL location, boolean recursive) {
                 this(location, recursive, false, Order.PRE_LOCAL);
             }
-            
+
             public boolean isPostLocal() {
                 return this.order == Order.POST_LOCAL;
             }
             public enum Order {
                 PRE_LOCAL,
                 POST_LOCAL;
-                
+
                 public static Order fromName(String name) {
                     if (name == null || name.isEmpty() || name.equals("pre-local")) {
                         return PRE_LOCAL;
@@ -1143,9 +1143,9 @@ public class ConfigXMLReader {
                     }
                 }
             }
-            
+
             // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-            
+
             public URL getLocation() {
                 return location;
             }
@@ -1176,10 +1176,10 @@ public class ConfigXMLReader {
     public static class ResolvedControllerConfig extends ControllerConfig {
 
         protected final ViewAsJsonConfig viewAsJsonConfigOrDefault;
-        
+
         public ResolvedControllerConfig(URL url) throws WebAppConfigurationException {
             super(url);
-            
+
             this.errorpage = super.getErrorpage();
             this.protectView = super.getProtectView();
             this.owner = super.getOwner();
@@ -1206,7 +1206,7 @@ public class ConfigXMLReader {
         private static <K, V> Map<K, V> getOptMap(Map<K, V> map) {
             return new HashMap<>(map); // convert MapContext to much faster HashMap
         }
-        
+
         private static <K, V> Map<K, V> getOrderedOptMap(Map<K, V> map) {
             // SCIPIO: 2018-06-14: FIXME: the MapContext iteration order will be wrong here...
             return new LinkedHashMap<>(map); // convert MapContext to much faster HashMap
@@ -1229,7 +1229,7 @@ public class ConfigXMLReader {
                 return new ResolvedControllerConfig(url);
             }
         }
-        
+
         @Override
         public Map<String, Event> getAfterLoginEventList() throws WebAppConfigurationException {
             return afterLoginEventList;
@@ -1325,7 +1325,7 @@ public class ConfigXMLReader {
             return allowViewSaveViewNameFilters;
         }
     }
-    
+
     public static class Event {
         public String type;
         public String path;
@@ -1334,7 +1334,7 @@ public class ConfigXMLReader {
         public int transactionTimeout;
         public Metrics metrics = null;
         public Boolean transaction = null; // SCIPIO: A generic transaction flag
-        public String abortTransaction = ""; // SCIPIO: Allow aborting transaction 
+        public String abortTransaction = ""; // SCIPIO: Allow aborting transaction
 
         public Event(Element eventElement) {
             this.type = eventElement.getAttribute("type");
@@ -1381,7 +1381,7 @@ public class ConfigXMLReader {
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-        
+
         public String getType() {
             return type;
         }
@@ -1475,7 +1475,7 @@ public class ConfigXMLReader {
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-        
+
         public String getUri() {
             return uri;
         }
@@ -1596,7 +1596,7 @@ public class ConfigXMLReader {
                     }
                 }
                 this.includeMode = redirectParametersElement.getAttribute("include-mode");
-            } 
+            }
             if (excludeParameterSet.size() > 0) {
                 this.excludeParameterSet = Collections.unmodifiableSet(excludeParameterSet);
             }
@@ -1606,7 +1606,7 @@ public class ConfigXMLReader {
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-        
+
         public String getName() {
             return name;
         }
@@ -1654,7 +1654,7 @@ public class ConfigXMLReader {
         public Boolean getAllowViewSave() { // SCIPIO
             return allowViewSave;
         }
-        
+
         public Type getTypeEnum() { // SCIPIO
             return typeEnum;
         }
@@ -1670,26 +1670,26 @@ public class ConfigXMLReader {
             REQUEST_REDIRECT_NOPARAM("request-redirect-noparam"),
             URL("url"),
             CROSS_REDIRECT("cross-redirect");
-            
+
             private static final Map<String, Type> nameMap;
             static {
                 Map<String, Type> map = new HashMap<>();
                 for(Type type : Type.values()) { map.put(type.getName(), type); }
                 nameMap = map;
             }
-            
+
             private final String name;
             private final boolean redirectType;
             private final boolean requestType;
             private final boolean viewType;
-            
+
             private Type(String name) {
                 this.name = name;
                 this.redirectType = name.contains("redirect") || "url".equals(name);
                 this.requestType = "request".equals(name);
                 this.viewType = name.contains("view");
             }
-            
+
             public static Type fromName(String name) {
                 Type type = nameMap.get(name);
                 if (type == null) throw new IllegalArgumentException("unrecognized"
@@ -1745,7 +1745,7 @@ public class ConfigXMLReader {
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-        
+
         public String getViewMap() {
             return viewMap;
         }
@@ -1792,7 +1792,7 @@ public class ConfigXMLReader {
         public boolean updateSession;
         public boolean regularLogin;
         public String jsonRequestUri;
-        
+
         public ViewAsJsonConfig(Element element) {
             this.enabled = UtilMisc.booleanValue(element.getAttribute("enabled"), false);
             this.updateSession = UtilMisc.booleanValue(element.getAttribute("update-session"), false);
@@ -1800,7 +1800,7 @@ public class ConfigXMLReader {
             this.jsonRequestUri = element.getAttribute("json-request-uri");
             if (jsonRequestUri.isEmpty()) this.jsonRequestUri = null;
         }
-        
+
         public ViewAsJsonConfig() {
             // all false/null by default
         }
@@ -1829,7 +1829,7 @@ public class ConfigXMLReader {
      */
     public static abstract class NameFilter<V> {
         private final V useValue;
-        
+
         public NameFilter(V useValue) {
             this.useValue = useValue;
         }
@@ -1845,7 +1845,7 @@ public class ConfigXMLReader {
                     try {
                         useValue = (V) ObjectType.simpleTypeConvert(useValueStr, cls.getName(), null, null);
                     } catch (GeneralException e) {
-                        Debug.logError("Could not convert controller name filter result '" 
+                        Debug.logError("Could not convert controller name filter result '"
                                 + useValueStr + "' to type: " + cls.getName(), module);
                     }
                 }
@@ -1864,7 +1864,7 @@ public class ConfigXMLReader {
         public V getUseValue() {
             return useValue;
         }
-        
+
         public abstract boolean matches(String fieldValue);
 
         public static class FalseNameFilter<V> extends NameFilter<V> {
@@ -1876,7 +1876,7 @@ public class ConfigXMLReader {
                 return false;
             }
         }
-        
+
         public static class PrefixNameFilter<V> extends NameFilter<V> {
             private final String prefix;
             public PrefixNameFilter(String prefix, V useValue) {
@@ -1888,7 +1888,7 @@ public class ConfigXMLReader {
                 return fieldValue.startsWith(prefix);
             }
         }
-        
+
         public static class SuffixNameFilter<V> extends NameFilter<V> {
             private final String suffix;
             public SuffixNameFilter(String suffix, V useValue) {

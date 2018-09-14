@@ -316,7 +316,7 @@ public class FindServices {
 
     /**
      * Creates a single <code>EntityCondition</code> based on a set of parameters.
-     * 
+     *
      * @param modelField
      * @param operation
      * @param fieldValue
@@ -370,7 +370,7 @@ public class FindServices {
             if (UtilValidate.isNotEmpty(UtilGenerics.toList(fieldValue))) {
                 fieldOp = EntityOperator.IN;
             } else {
-                fieldOp = EntityOperator.EQUALS;   
+                fieldOp = EntityOperator.EQUALS;
             }
         }
         Object fieldObject = fieldValue;
@@ -425,7 +425,7 @@ public class FindServices {
                 continue;
             }
             ignoreCase = "Y".equals(subMap2.get("ic"));
-            cond = createSingleCondition(modelField, opString, fieldValue, ignoreCase, delegator, context); 
+            cond = createSingleCondition(modelField, opString, fieldValue, ignoreCase, delegator, context);
             tmpList.add(cond);
             subMap2 = subMap.get("fld1");
             if (subMap2 == null) {
@@ -437,7 +437,7 @@ public class FindServices {
                 continue;
             }
             ignoreCase = "Y".equals(subMap2.get("ic"));
-            cond = createSingleCondition(modelField, opString, fieldValue, ignoreCase, delegator, context); 
+            cond = createSingleCondition(modelField, opString, fieldValue, ignoreCase, delegator, context);
             tmpList.add(cond);
             // add to queryStringMap
             List<Object[]> origList = origValueMap.get(fieldName);
@@ -753,7 +753,7 @@ public class FindServices {
                                                         // If it is an "op" field, it will be "equals", "greaterThan", etc.
             int iPos = -1;
             int iPos2 = -1;
-            
+
             fieldValue = entry.getValue();
             if (ObjectType.isEmpty(fieldValue)) {
                 continue;
@@ -792,7 +792,7 @@ public class FindServices {
      *
      * @param dctx
      * @param context
-     * @return returns the first item 
+     * @return returns the first item
      */
     public static Map<String, Object> performFindItem(DispatchContext dctx, Map<String, Object> context) {
         context.put("viewSize", 1);
@@ -814,13 +814,13 @@ public class FindServices {
             result.put("item",item);
         }
         result.remove("listIt");
-        
+
         if (result.containsKey("listSize")) {
             result.remove("listSize");
         }
         return result;
     }
-    
+
     /**
      * SCIPIO: Returns the entity operator parameter names to EntityComparisonOperators used by find services.
      * Added 2017-12-15.

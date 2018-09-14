@@ -169,7 +169,7 @@ public final class WidgetWorker {
                 externalWriter.append('=');
                 // SCIPIO: simplified
                 UtilCodec.SimpleEncoder simpleEncoder = WidgetWorker.getEarlyEncoder(context);
-                if (parameterValue != null) { // simpleEncoder != null && 
+                if (parameterValue != null) { // simpleEncoder != null &&
                     externalWriter.append(simpleEncoder.encode(URLEncoder.encode(parameterValue, Charset.forName("UTF-8").displayName())));
                 //} else {
                 //    // SCIPIO: even if HTML encoding were disabled, the link param should have been URL-encoded; they're two different layers
@@ -345,9 +345,9 @@ public final class WidgetWorker {
             return prefix + modelForm.getItemIndexSeparator() + modelForm.getName();
         else if (UtilValidate.isNotEmpty(context.get("formName")))
             return prefix + modelForm.getItemIndexSeparator()+ context.get("formName");
-        return prefix;    
+        return prefix;
     }
-    
+
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
         ModelForm modelForm = null;
         // SCIPIO: make sure model form field not empty
@@ -502,7 +502,7 @@ public final class WidgetWorker {
      * SCIPIO: Returns the generic platform simpleEncoder from context, appropriate for point-of-use encoding and other purposes.
      * If none, returns a dummy raw encoder so null tests never needed.
      * <p>
-     * NOTE: For macro rendering, this is conceptually inappropriate to use in most cases 
+     * NOTE: For macro rendering, this is conceptually inappropriate to use in most cases
      * (because point-of-use is within the macros); all the java code is prior to point-of-use
      * which means you should call {@link #getEarlyEncoder} instead, which we will disable
      * by default in Scipio in favor of encoding from macros (point-of-use).
@@ -514,10 +514,10 @@ public final class WidgetWorker {
         }
         return encoder;
     }
-    
+
     /**
-     * SCIPIO: Returns the renderer simpleEarlyEncoder, meant to encode widget values typically 
-     * at a point before their point-of-use (which is usually wrong in design, but here for legacy reasons). 
+     * SCIPIO: Returns the renderer simpleEarlyEncoder, meant to encode widget values typically
+     * at a point before their point-of-use (which is usually wrong in design, but here for legacy reasons).
      * If none, returns the platform encoder or a dummy raw encoder so null tests never needed.
      * <p>
      * This falls back to the generic platform encoder unless it is configured explicitly to use raw encoder.
@@ -532,9 +532,9 @@ public final class WidgetWorker {
         return encoder;
     }
 
-    private static final int minWidgetFolderPathLength = 
+    private static final int minWidgetFolderPathLength =
             ("component://".length() + 1 + "/widget/".length()); // SCIPIO
-    
+
     /**
      * SCIPIO: Returns base widget folder from component:// path, including terminating slash.
      */
@@ -551,7 +551,7 @@ public final class WidgetWorker {
         }
         return path.substring(0, i + "/widget/".length());
     }
-    
+
     /**
      * SCIPIO: Extracts ONLY the non-interpreted styles from a style string.
      * Skips anything that contains a flexible expression, removes + and = prefixes.

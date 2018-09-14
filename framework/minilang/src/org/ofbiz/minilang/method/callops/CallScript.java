@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;script&gt; element.
- * 
+ *
  * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
  */
 public final class CallScript extends MethodOperation {
@@ -49,7 +49,7 @@ public final class CallScript extends MethodOperation {
         }
         return false;
     }
-    
+
     /*
      * Developers - the location attribute is a constant for security reasons.
      * Script invocations should always be hard-coded.

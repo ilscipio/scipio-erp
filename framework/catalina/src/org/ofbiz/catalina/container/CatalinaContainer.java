@@ -570,7 +570,7 @@ public class CatalinaContainer implements Container {
 
         context.setDisplayName(appInfo.name);
         context.setDocBase(location);
-        
+
         StandardRoot resources = new StandardRoot(context);
         resources.setAllowLinking(true);
         context.setResources(resources);
@@ -601,7 +601,7 @@ public class CatalinaContainer implements Container {
         for (Map.Entry<String, String> entry: initParameters.entrySet()) {
             context.addParameter(entry.getKey(), entry.getValue());
         }
-        
+
         // SCIPIO: 2017-09-13: MAJOR FIX: the line below allows web.xml files to accurately specify
         // their welcome-file-lists; previously they did not work properly because the Tomcat defaults
         // were getting priority (e.g. index.html was always used if it existed).

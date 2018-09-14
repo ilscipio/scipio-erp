@@ -1091,11 +1091,11 @@ public class ModelViewEntity extends ModelEntity {
                 ModelEntity modelEntity = modelViewEntity.getAliasedEntity(entityAlias, modelReader);
                 ModelField modelField = modelViewEntity.getAliasedField(modelEntity, field, modelReader);
                 String colName = entityAlias + "." + modelField.getColName();
-    
+
                 if (UtilValidate.isNotEmpty(defaultValue)) {
                     colName = "COALESCE(" + colName + "," + defaultValue + ")";
                 }
-    
+
                 if (UtilValidate.isNotEmpty(function)) {
                     String prefix = functionPrefixMap.get(function);
                     if (prefix == null) {
@@ -1104,7 +1104,7 @@ public class ModelViewEntity extends ModelEntity {
                         colName = prefix + colName + ")";
                     }
                 }
-    
+
                 colNameBuffer.append(colName);
                 //set fieldTypeBuffer if not already set
                 if (fieldTypeBuffer.length() == 0) {

@@ -40,17 +40,17 @@ import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState.
  * SCIPIO: Represents an expression describing screen widget element to target for rendering,
  * compiled from an expression string. Used to implement targeted rendering.
  * <p>
- * The query expression is usually passed as a string as the "scpRenderTargetExpr" request parameter. 
+ * The query expression is usually passed as a string as the "scpRenderTargetExpr" request parameter.
  * <p>
  * WARN: THIS FEATURE IS IN EARLY STAGES AND SUBJECT TO CHANGE.
  * More documentation can be found in widget-screen.xsd, "contains" expression attribute.
  * <p>
- * In most case (by default) it is physically impossible for the renderer to know the path from top screen element to 
+ * In most case (by default) it is physically impossible for the renderer to know the path from top screen element to
  * a deep-nested element and which elements it doesn't need to render. So the client may need to specify
- * two or more anchor-like section names through these expressions, otherwise the renderer is forced to render 
+ * two or more anchor-like section names through these expressions, otherwise the renderer is forced to render
  * everything to prevent anything breaking, and there is no optimization.
  * <p>
- * Expressions are composed of individual section names and container IDs, which are all treated like global identifiers. 
+ * Expressions are composed of individual section names and container IDs, which are all treated like global identifiers.
  * When space-separated they perform a "ancestor descendent" selection like the common CSS descendent selector.
  * <p>
  * NOTE: In order for optimization to work meaningfully, the decorator itself must implement contains-expressions
@@ -86,7 +86,7 @@ import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState.
 public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implements RenderTargetExpr, Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     // WARN: this is public-facing so it must have size limits in cache.properties
     private static final UtilCache<String, WidgetRenderTargetExpr> cache = UtilCache.createUtilCache("widget.renderer.targeted.expr");
     private static final UtilCache<String, WidgetMultiRenderTargetExpr> multiCache = UtilCache.createUtilCache("widget.renderer.targeted.multiexpr");
@@ -109,7 +109,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     public static final char MET_ELEM = '%';
     // REMOVED: this is now integrated into the widget elem selector
     //public static final char MET_FTLELEM = '@'; // NOTE: limited implementation
-    
+
     /**
      * Matching Element Type character prefixes. Each of these matches a widget element tag OR a type of attribute.
      * NOTE: These are shared between {@link WidgetRenderTargetExpr} and {@link ContainsExpr} so the
@@ -119,33 +119,33 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     public static final String MET_ALL_STR = StringUtils.join(MET_ALL, ", "); // for log and exceptions
     public static final Set<Character> MET_GENERIC = UtilMisc.unmodifiableHashSet(MET_ELEM);
     public static final Set<Character> MET_SPECIFIC = UtilMisc.unmodifiableHashSet(MET_SECNAME, MET_ELEMID, MET_DECSECINCL, MET_DECSEC);
-    
+
     public static final char WILDCARD = '*';
     public static final String WILDCARD_STRING = String.valueOf(WILDCARD);
-    
+
     public static final char ATTR_OPEN = '[';
     public static final char ATTR_CLOSE = ']';
     public static final char ATTR_EQUALS = '=';
     public static final char ATTR_SEP = ',';
     public static final List<String> ATTR_NAMES = UtilMisc.unmodifiableArrayList("id", "name");
-    
+
     private final String strExpr;
     private final List<Token> tokens;
     //private final boolean useChildContent; // TODO?: FUTURE: this won't work
-    
+
     /******************************************************/
     /* Constructors */
     /******************************************************/
-    
+
     protected WidgetRenderTargetExpr(String strExpr) {
         this.strExpr = strExpr;
-        
+
         String[] tokenArr = targetExprTokenSeparatorPat.split(strExpr.trim());
         if (tokenArr.length < 1) {
             throw new IllegalArgumentException("Invalid render target expression: " + strExpr);
         }
         //this.useChildContent = ">".equals(tokenArr[tokenArr.length - 1]);
-        
+
         Arrays.asList(tokenArr);
         ArrayList<Token> tokens = new ArrayList<>(tokenArr.length);
         //if (this.useChildContent) {
@@ -162,7 +162,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         tokens.trimToSize();
         this.tokens = tokens; // Collections.unmodifiableList(tokens);
     }
-    
+
     /**
      * New expression from string, null if empty, or IllegalArgumentException if invalid. Uses global cache.
      */
@@ -175,7 +175,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         }
         return expr;
     }
-    
+
     /**
      * New expression from string, null if empty, or IllegalArgumentException if invalid. No cache.
      */
@@ -195,7 +195,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         else if (expr instanceof String) return fromString((String) expr);
         else throw new IllegalArgumentException("Cannot create RenderTargetExpr from type: " + expr.getClass());
     }
-    
+
     /**
      * Gets expression from object, either already RenderTargetExpr or string, null if empty,
      * or IllegalArgumentException if unrecognized class or invalid. Uses global cache.
@@ -216,15 +216,15 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         else if (expr instanceof Map) return WidgetMultiRenderTargetExpr.fromMultiMap((Map<String, Object>) expr);
         else throw new IllegalArgumentException("Cannot create RenderTargetExpr from type: " + expr.getClass());
     }
-    
+
     /******************************************************/
     /* Special Multi class */
     /******************************************************/
-    
+
     // this serves as a flag to say the multi was "compiled"
     public static class WidgetMultiRenderTargetExpr extends WidgetRenderTargetExprBase implements MultiRenderTargetExpr<WidgetRenderTargetExpr>, Serializable {
         private final Map<String, WidgetRenderTargetExpr> map; // NOTE: immutable after create
-        
+
         protected WidgetMultiRenderTargetExpr() {
             this.map = new HashMap<>();
         }
@@ -236,7 +236,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             }
             this.map = map;
         }
-        
+
         protected WidgetMultiRenderTargetExpr(String strExpr) {
             Map<String, WidgetRenderTargetExpr> map = new HashMap<>();
             String[] pairs = StringUtils.split(strExpr, ",");
@@ -250,7 +250,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             }
             this.map = map;
         }
-        
+
         public static WidgetMultiRenderTargetExpr fromExprListString(String strExpr) throws IllegalArgumentException {
             WidgetMultiRenderTargetExpr expr = multiCache.get(strExpr);
             if (expr == null) {
@@ -259,11 +259,11 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             }
             return expr;
         }
-        
+
         public static WidgetMultiRenderTargetExpr fromMultiMap(Map<String, Object> map) throws IllegalArgumentException {
             return new WidgetMultiRenderTargetExpr(map);
         }
-        
+
         public static WidgetMultiRenderTargetExpr fromSingle(WidgetRenderTargetExpr expr) {
             WidgetMultiRenderTargetExpr multiExpr = new WidgetMultiRenderTargetExpr();
             multiExpr.put(RenderTargetUtil.RENDERTARGETEXPR_MULTI_DEFAULT, expr);
@@ -327,12 +327,12 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
 //            return map.hashCode();
 //        }
     }
-    
-    
+
+
     /******************************************************/
     /* Token and name representations */
     /******************************************************/
-    
+
     /**
      * Represents a generic name such as tag name, name attribute, id attribute, etc.
      * Implements the wildcard matching, so this gets parsed once and not re-parsed
@@ -344,12 +344,12 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         protected Name(String name) {
             this.name = name;
         }
-        
+
         public static Name interpret(String name) {
             int wildIndex = name.indexOf(WILDCARD);
             if (wildIndex != name.lastIndexOf(WILDCARD))
                 throw new IllegalArgumentException("Targeted rendering expression: name contains multiple wildcards (only one supported): " + name);
-            
+
             if (wildIndex < 0) return new ExactName(name);
             else if (wildIndex == 0) {
                 if (name.length() == 1)
@@ -360,31 +360,31 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             else if (wildIndex == name.length() - 1) return new PrefixWildName(name, name.substring(0, wildIndex));
             else return new PrefixSuffixWildName(name, name.substring(0, wildIndex), name.substring(wildIndex + 1));
         }
-        
+
         public static Name interpretIfNotNull(String name) {
             if (name != null) return interpret(name);
             else return null;
         }
-        
+
         public static Name interpretIfNotEmpty(String name) {
             if (name != null && !name.isEmpty()) return interpret(name);
             else return null;
         }
-        
+
         public abstract boolean isWild();
-        
+
         public abstract boolean matches(String targetName);
-        
+
         public static boolean matches(Name expr, String targetName) {
             if (expr == null) return true; // if no expression, consider it matched
             else return expr.matches(targetName);
         }
-        
+
         public abstract int getPrecision();
-        
+
         @Override
         public String toString() { return name; }
-        
+
         public static class ExactName extends Name {
             protected ExactName(String name) { super(name); }
             @Override
@@ -394,13 +394,13 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             @Override
             public int getPrecision() { return 1; }
         }
-        
+
         public static abstract class WildName extends Name {
             public WildName(String name) { super(name); }
             @Override
             public boolean isWild() { return true; }
         }
-          
+
         public static class MatchAllWildName extends WildName {
             private static final MatchAllWildName INSTANCE = new MatchAllWildName("*");
             protected MatchAllWildName(String name) { super(name); }
@@ -410,7 +410,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             @Override
             public int getPrecision() { return 99; }
         }
-        
+
         public static class PrefixWildName extends WildName {
             protected final String prefix;
             protected PrefixWildName(String name, String prefix) {
@@ -434,7 +434,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             @Override
             public int getPrecision() { return 20; }
         }
-        
+
         public static class PrefixSuffixWildName extends WildName {
             protected final String prefix;
             protected final String suffix;
@@ -449,7 +449,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             public int getPrecision() { return 20; }
         }
     }
-    
+
     /**
      * Represents a space- or comma-separate entry in a query expression, intended to match an element.
      * <p>
@@ -460,27 +460,27 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         protected final String strExpr;
 //        protected final char type;
         protected final Name name; // this is the name following the type prefix, it's not necessarily "name" attribute
-        
+
         // NO NEED for this, because we'll only ever support name and id, so use those instead for optimize
         //protected final Map<String, String> attrMap;
         protected final Name nameAttr;
         protected final Name idAttr;
-        
+
         protected final String normStrExpr;
-        
+
         // private, may split into subclasses later
         protected Token(String strExpr, char type, String name, Map<String, String> attrMap) {
             this.strExpr = strExpr;
 //            this.type = type;
             this.name = Name.interpret(name);
-            
+
             // OPTIMIZATION: no need to keep map for these, we only support two attributes
             this.nameAttr = Name.interpretIfNotNull(attrMap.get("name"));
             this.idAttr = Name.interpretIfNotNull(attrMap.get("id"));
-            
+
             this.normStrExpr = makeNormStrExpr(type, this.name, idAttr, nameAttr); // FIXME: this is anti-polymorphism
         }
-        
+
         /**
          * TODO: this is INCOMPLETE, it does not convert in-between types properly!
          * for now we're keeping the base name as the only real comparison part,
@@ -491,12 +491,12 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             sb.append(type);
             if (type == MET_DECSEC_RECALL) {
                 sb.append("/");
-            } 
+            }
             sb.append(name.toString());
             makeNormAttrStr(sb, idAttr, nameAttr);
             return sb.toString();
         }
-        
+
         protected static void makeNormAttrStr(StringBuilder sb, Name... attrs) {
             boolean opened = false;
             for(int i=0; i < attrs.length; i++) {
@@ -515,12 +515,12 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 sb.append(ATTR_CLOSE);
             }
         }
-        
+
         public static Token interpret(String strExpr) throws IllegalArgumentException {
             if (WILDCARD_STRING.equals(strExpr)) {
                 return AllMatcher.getInstance();
             }
-            if (strExpr == null || strExpr.length() < 2) 
+            if (strExpr == null || strExpr.length() < 2)
                 throw new IllegalArgumentException("Empty or invalid render target expression token/name: " + strExpr);
             char type = strExpr.charAt(0);
             String rest = strExpr.substring(1);
@@ -540,13 +540,13 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             }
             return getInstance(strExpr, type, name, attrMap);
         }
-        
+
         public static Token getInstance(String strExpr, char type, String name, Map<String, String> attrMap) throws IllegalArgumentException {
             // FIXME: we will deny attributes on anything that isn't generic matcher for now
             // this will prevent more obscure errors until we fix the comparison code
             if (!(MET_GENERIC.contains(type) || MET_DECSEC == type) && !attrMap.isEmpty())
                 throw new IllegalArgumentException("Render target expression has bracketed attributes"
-                        + " - this is currently only supported for prefix types \"" 
+                        + " - this is currently only supported for prefix types \""
                         + MET_ELEM + "\" and \"" + MET_DECSEC + "\"");
             Token token;
             switch(type) {
@@ -571,7 +571,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 } else {
                     token = new DecoratorScreenSectionEarlyMatcher(strExpr, type, name, attrMap);
                 }
-                break;  
+                break;
             case WILDCARD:
                 throw new IllegalArgumentException("Invalid render target expression token/name type"
                         + " character prefix (should be one one: " + MET_ALL_STR + "), found wildcard: " + strExpr
@@ -582,7 +582,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             }
             return token;
         }
-        
+
         public static Map<String, String> parseTokenAttribStr(String attrStr, String strExpr) {
             if (attrStr == null || attrStr.length() <= 0)
                 throw new IllegalArgumentException("Invalid render target expression token/name: invalid attributes expression: " + strExpr);
@@ -602,28 +602,28 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             }
             return attrMap;
         }
-        
+
         /**
          * Returns the original full expression.
          */
         public String getStringExpr() {
             return strExpr;
         }
-        
+
         /**
          * Returns a normalized expression of the original.
-         * 
+         *
          * TODO: NOT IMPLEMENTED IN GENERAL
          */
         public String getNormStringExpr() {
             return normStrExpr;
         }
-        
+
         /**
          * Returns a normalized expression specifically for comparison purposes,
          * for use with {@link org.ofbiz.widget.model.ContainsExpr}.
          * may CHANGE the expression.
-         * 
+         *
          * TODO: NOT IMPLEMENTED IN GENERAL
          */
         public String getCmpNormStringExpr() {
@@ -633,7 +633,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
 //        public char getType() {
 //            return type;
 //        }
-        
+
         public char getType() {
             return strExpr.charAt(0);
         }
@@ -645,7 +645,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         public boolean hasAttr() {
             return idAttr != null || nameAttr != null;
         }
-        
+
 //        public Map<String, String> getAttrMap() {
 //            return attrMap;
 //        }
@@ -661,8 +661,8 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
          */
         protected abstract void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
                 WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo);
-        
-        // turns out this is not needed for the time being. this was called as special case from 
+
+        // turns out this is not needed for the time being. this was called as special case from
 //        /**
 //         * Called back after a delayed (future) match comes back to us.
 //         * Only some matcher types support this.
@@ -671,7 +671,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
 //                RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
 //            throw new UnsupportedOperationException("Internal error: Token/Matcher type does not support delayed widget matching: " + this.getClass().getName());
 //        }
-        
+
         /**
          * Current common implementation, this may get further split up or ruined later.
          */
@@ -688,14 +688,14 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             }
             return true;
         }
-        
+
         public static class AllMatcher extends Token {
             private static final AllMatcher INSTANCE = new AllMatcher();
-            
+
             protected AllMatcher() {
                 super(WILDCARD_STRING, WILDCARD, WILDCARD_STRING, null);
             }
-            
+
             public static AllMatcher getInstance() { return INSTANCE; }
 
             @Override
@@ -714,7 +714,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             @Override
             public boolean hasAttr() { return false; };
         }
-        
+
         public static class WidgetSectionMatcher extends Token {
             protected WidgetSectionMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
@@ -723,13 +723,13 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
                     WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
-                if ((widget instanceof ModelScreenWidget.Section || widget instanceof ModelVirtualSectionFtlWidget) && 
+                if ((widget instanceof ModelScreenWidget.Section || widget instanceof ModelVirtualSectionFtlWidget) &&
                     matchesWidget(widget, context, null, idAttr, name)) {
                     state.registerMatch(widget, execInfo, this);
                 }
             }
         }
-        
+
         public static class IdMatcher extends Token {
             protected IdMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
@@ -743,7 +743,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 }
             }
         }
-        
+
         public static class DecoratorSectionIncludeMatcher extends Token {
             protected DecoratorSectionIncludeMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
@@ -756,7 +756,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                     if (name.matches(widget.getName())) {
                         state.registerMatch(widget, execInfo, this);
                     } else {
-                        // SPECIAL: unlike most other widget, if the decorator-section name did not match, 
+                        // SPECIAL: unlike most other widget, if the decorator-section name did not match,
                         // we can safely exclude this element from rendering,
                         // because the selector only works on current include/decorator level.
                         execInfo.shouldExecuteCurrentExpr = false;
@@ -764,10 +764,10 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 }
             }
         }
-        
+
         public static class DecoratorScreenSectionEarlyMatcher extends Token {
             private final String normCmpStrExpr;
-            
+
             protected DecoratorScreenSectionEarlyMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
                 // SPECIAL: to prevent issues for now, force the name to be "decorator-screen"
@@ -785,16 +785,16 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                     state.registerMatch(decWidget, execInfo, this);
                 }
             }
-            
+
             @Override
             public String getCmpNormStringExpr() {
                 return normCmpStrExpr;
             }
         }
-        
+
         public static class DecoratorScreenSectionRecallMatcher extends Token {
             private final String normCmpStrExpr;
-            
+
             protected DecoratorScreenSectionRecallMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
                 this.normCmpStrExpr = MET_ELEM + "decorator-section[name='" + name + "']";
@@ -820,13 +820,13 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                     }
                 }
             }
-            
+
             @Override
             public String getCmpNormStringExpr() {
                 return normCmpStrExpr;
             }
         }
-        
+
         public static class GenericWidgetElementMatcher extends Token {
             protected GenericWidgetElementMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
@@ -840,7 +840,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 }
             }
         }
-        
+
 //        public static class GenericFtlElementMatcher extends Token {
 //            protected GenericFtlElementMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
 //                super(strExpr, type, name, attrMap);
@@ -859,24 +859,24 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     /******************************************************/
     /* Getters/Info */
     /******************************************************/
-    
+
     public String getStringExpr() {
         return strExpr;
     }
-    
+
     @Override
     public String toString() {
         return getStringExpr();
     }
-    
+
     public List<Token> getTokens() {
         return Collections.unmodifiableList(tokens);
     }
-    
+
     public int getNumTokens() {
         return tokens.size();
     }
-    
+
     public Token getToken(int index) {
         if (index < tokens.size()) {
             return tokens.get(index);
@@ -884,11 +884,11 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             return null;
         }
     }
-    
+
     public Token getLastToken() {
         return tokens.get(tokens.size() - 1);
     }
-    
+
 //    public boolean isUseChildContent() {
 //        return useChildContent;
 //    }
@@ -896,12 +896,12 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     /******************************************************/
     /* Context */
     /******************************************************/
-    
+
     /**
      * Gets state from context (actually global context) or request attributes or returns the disabled instance.
      * <p>
      * NOTE: this is best-effort, tries to avoid too many lookups too.
-     * 
+     *
      * @return the RenderTargetState instance, or the {@link WidgetRenderTargetState#DISABLED} instance if none found
      */
     public static WidgetRenderTargetState getRenderTargetState(Map<String, Object> context) {
@@ -916,13 +916,13 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             return WidgetRenderTargetState.DISABLED;
         }
     }
-    
+
     public static WidgetRenderTargetState getRenderTargetState(ServletRequest request) {
         WidgetRenderTargetState state = (WidgetRenderTargetState) request.getAttribute(RenderTargetUtil.RENDERTARGETSTATE_ATTR);
         if (state != null) return state;
         return WidgetRenderTargetState.DISABLED;
     }
-    
+
     /**
      * Gets state from context (actually global context) or request attributes if issues.
      * <p>
@@ -937,11 +937,11 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             return null;
         }
     }
-    
+
     public static WidgetRenderTargetState getRenderTargetStateOrNull(ServletRequest request) {
         return (WidgetRenderTargetState) request.getAttribute(RenderTargetUtil.RENDERTARGETSTATE_ATTR);
     }
-    
+
     /**
      * Sets the following global context vars AND request attributes:
      * scpRenderTargetState - RenderTargetState instance
@@ -952,7 +952,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         Object scpRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request);
         populateRenderTargetVars(context, request, WidgetRenderTargetExpr.fromObjectOrMulti(scpRenderTargetExpr));
     }
-    
+
     /**
      * Sets the following global context vars AND request attributes:
      * scpRenderTargetState - RenderTargetState instance
@@ -961,7 +961,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     public static void populateRenderTargetVars(Map<String, Object> context, WidgetRenderTargetExprBase expr) {
         populateRenderTargetVars(context, (HttpServletRequest) context.get("request"), expr);
     }
-    
+
     /**
      * Sets the following global context vars AND request attributes:
      * scpRenderTargetState - RenderTargetState instance
@@ -969,17 +969,17 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
      */
     public static void populateRenderTargetVars(Map<String, Object> context, HttpServletRequest request, WidgetRenderTargetExprBase expr) {
         Map<String, Object> globalContext = UtilGenerics.checkMap(context.get("globalContext"));
-        
+
         WidgetRenderTargetState state = WidgetRenderTargetState.fromExprOrDisabled(expr);
         String multiPrefix = null;
         boolean multi = state.isEnabled() && state.isMulti();
         if (multi && request != null) {
-            // NOTE: this prefix may already be set OR we have to generate and store a new one here; 
+            // NOTE: this prefix may already be set OR we have to generate and store a new one here;
             // the method does it all except globalContext
             multiPrefix = RenderTargetUtil.getOrGenerateSetMultiTargetDelimiterPrefix(request);
             state.setMultiPrefix(multiPrefix);
         }
-        
+
         if (globalContext != null) {
             globalContext.put(RenderTargetUtil.RENDERTARGETSTATE_ATTR, state);
             globalContext.put(RenderTargetUtil.RENDERTARGETON_ATTR, state.isEnabled());
@@ -987,7 +987,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 globalContext.put(RenderTargetUtil.MULTITARGET_DELIM_PREFIX_ATTR, multiPrefix);
             }
         }
-        
+
         if (request != null) {
             request.setAttribute(RenderTargetUtil.RENDERTARGETSTATE_ATTR, state);
             request.setAttribute(RenderTargetUtil.RENDERTARGETON_ATTR, state.isEnabled());
@@ -997,7 +997,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
 //            }
         }
     }
-    
+
     /**
      * Returns true if target matched and currently outputting or if targeting disabled.
      * <p>
@@ -1012,7 +1012,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             return getRenderTargetState(context).shouldOutput();
         }
     }
-    
+
     /**
      * Render Target State - Holds and manages the state information for targeted rendering.
      * <p>
@@ -1021,28 +1021,28 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
      */
     public static class WidgetRenderTargetState implements RenderTargetExpr.RenderTargetState, Serializable {
         public static final WidgetRenderTargetState DISABLED = new DisabledWidgetRenderTargetState();
-        
+
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-        
+
         private final WidgetRenderTargetExprBase expr;
-        
+
         //private ModelScreenWidget.DecoratorScreen skippedDecorator = null; // TODO? can't exploit (see below)
         private String multiPrefix = null;
-        
+
         private Map<String, ExprStateInfo> exprStateMap;
-        
+
         private Set<ExprStateInfo> activeTargets; // targets currently matching NOTE: due to nesting, it's possible for this to contain more than one at a time
         private Set<ExprStateInfo> unmatchedTargets; // targets never fully matched
         private Set<ExprStateInfo> finishedTargets; // targets completely done
         private boolean finished = false; // explicit finished flag, usually true once finishedTargets.size() == exprStates.size()
-        
+
         class ExprStateInfo {
             private String name;
             private WidgetRenderTargetExpr expr;
             private boolean targetMatched = false;
             private int nextTokenIndex = 0;
             private Map<ModelWidget, Token> matchedWidgets = new HashMap<>();
-            
+
             public ExprStateInfo(String name, WidgetRenderTargetExpr expr) {
                 this.name = name;
                 this.expr = expr;
@@ -1052,7 +1052,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             public WidgetRenderTargetExpr getExpr() { return expr; }
             public Token getNextToken() { return expr.getToken(nextTokenIndex); }
             public List<Token> getNextTokenAndChildren() { return expr.tokens.subList(nextTokenIndex, expr.tokens.size()); }
-            
+
             /**
              * NOTE: in the future could be need for parameters such as: boolean fullMatched, boolean consumeToken
              * but for now, trying to keep syntax straightforward enough so that 1 token ~= 1 full match.
@@ -1069,7 +1069,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                     activeTargets.add(this);
                 }
             }
-            
+
             void deregisterMatch(ModelWidget widget, ExecutionInfoImpl execInfo) {
                 if (this.targetMatched) {
                     // if we were matched, we do not need to modify our own state.
@@ -1084,33 +1084,33 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 }
             }
         }
-        
+
         private WidgetRenderTargetState(WidgetMultiRenderTargetExpr expr) {
             this.expr = expr;
             this.exprStateMap = new HashMap<>();
             for(Map.Entry<String, WidgetRenderTargetExpr> entry : expr.entrySet()) {
-                this.exprStateMap.put(entry.getKey(), 
+                this.exprStateMap.put(entry.getKey(),
                         new ExprStateInfo(entry.getKey(), entry.getValue()));
             }
             this.unmatchedTargets = new HashSet<>(this.exprStateMap.values());
             this.activeTargets = new HashSet<>();
             this.finishedTargets = new HashSet<>();
         }
-        
+
         private WidgetRenderTargetState(WidgetRenderTargetExpr expr) {
             this.expr = expr;
             this.exprStateMap = new HashMap<>();
-            this.exprStateMap.put(RenderTargetUtil.RENDERTARGETEXPR_MULTI_DEFAULT, 
+            this.exprStateMap.put(RenderTargetUtil.RENDERTARGETEXPR_MULTI_DEFAULT,
                     new ExprStateInfo(RenderTargetUtil.RENDERTARGETEXPR_MULTI_DEFAULT, expr));
             this.unmatchedTargets = new HashSet<>(this.exprStateMap.values());
             this.activeTargets = new HashSet<>();
             this.finishedTargets = new HashSet<>();
         }
-        
+
         private WidgetRenderTargetState() {
             this.expr = null;
         }
-        
+
         public static WidgetRenderTargetState fromExprOrDisabled(WidgetRenderTargetExprBase expr) {
             if (expr instanceof WidgetRenderTargetExpr) {
                 return new WidgetRenderTargetState((WidgetRenderTargetExpr) expr);
@@ -1126,7 +1126,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         public boolean isEnabled() {
             return true;
         }
-        
+
         public boolean isFinished() {
             return finished;
         }
@@ -1134,7 +1134,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         public WidgetRenderTargetExprBase getExpr() {
             return expr;
         }
-        
+
         /**
          * True if should output markup. This is only ever true if we matched the target.
          * NOTE: Code in ofbiz source files should call
@@ -1144,13 +1144,13 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         public boolean shouldOutput() {
             return !finished && isTargetMatched();
         }
-        
+
         public boolean isTargetMatched() {
             return activeTargets.size() > 0;
         }
-        
+
         // STATE UPDATE
-        
+
         /**
          * Marks finished, which prevents further rendering output at the least.
          * NOTE: Normally, {@link #handleFinished} should decide this.
@@ -1158,11 +1158,11 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         public void markFinished() {
             this.finished = true;
         }
-        
+
         public boolean isMulti() {
             return (expr instanceof WidgetMultiRenderTargetExpr);
         }
-        
+
         public String getMultiPrefix() {
             return multiPrefix;
         }
@@ -1170,7 +1170,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         public void setMultiPrefix(String multiPrefix) {
             this.multiPrefix = multiPrefix;
         }
-        
+
         /**
          * Sets up the Writer for targeted rendering if enabled and needed.
          */
@@ -1182,7 +1182,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 return (Writer) writer;
             }
         }
-        
+
         /**
          * Checks if should execute and enter the widget, and updates state.
          * <p>
@@ -1196,7 +1196,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             if (finished) {
                 execInfo.shouldExecute = false;
             } else {
-                // SPECIAL: initialize/intercept writer, BEST-EFFORT 
+                // SPECIAL: initialize/intercept writer, BEST-EFFORT
                 // try to convert the writer, which may be either response.getWriter() or
                 // a StringWriter or something else, to a SwitchRenderWriter with outputting off.
                 // we do this check at EVERY element because there are numerous instances of Writer created
@@ -1208,10 +1208,10 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 }
 
                 if (unmatchedTargets.size() > 0) {
-                    execInfo.shouldExecute = false; 
+                    execInfo.shouldExecute = false;
                     for(ExprStateInfo exprState : new ArrayList<>(unmatchedTargets)) { // FIXME: COPY required to fix concurrent mod
                         execInfo.shouldExecuteCurrentExpr = true;
-                        
+
                         // not needed for now: turns out not needed for the complex selectors... yet
 //                      // SPECIAL CASE: check for delayed matches - these are pre-allowed
 //                      Token delayedMatchToken = this.delayedMatches.get(widget);
@@ -1223,7 +1223,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                         // results are marked in execInfo
                         Token token = exprState.getNextToken();
                         token.handleShouldExecute(widget, context, exprState, execInfo);
-                        
+
                         // Finalize
                         if (execInfo.shouldExecuteCurrentExpr) {
                             if (exprState.targetMatched) {
@@ -1238,9 +1238,9 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                                 if (widget instanceof ContainsExpr.FlexibleContainsExprAttrWidget) {
                                     // Blacklist support, for execution optimization:
                                     // SPECIAL: <[section/element] contains="[expr]"> expression means we can potentially
-                                    // skip executing sections/elements that we have been told do NOT contain the sections or 
+                                    // skip executing sections/elements that we have been told do NOT contain the sections or
                                     // elements we're after, in a blacklist-like fashion.
-                                    // If ANY of the names are considered not contained (are blacklisted), 
+                                    // If ANY of the names are considered not contained (are blacklisted),
                                     // we don't need to enter the widget.
                                     ContainsExpr containsExpr = ((ContainsExpr.FlexibleContainsExprAttrWidget) widget).getContainsExpr(context);
                                     if (!containsExpr.matchesAllNameTokens(exprState.getNextTokenAndChildren())) {
@@ -1248,7 +1248,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                                     }
                                 }
                             }
-                            
+
                             // for the widget to NOT execute, ALL of the shouldExecuteCurrentExpr must be false.
                             if (execInfo.shouldExecuteCurrentExpr) {
                                 execInfo.shouldExecute = true;
@@ -1263,20 +1263,20 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             }
             return execInfo;
         }
-        
+
         public interface ExecutionInfo {
             /**
              * Returns true if the widget should be executed/rendered with actions.
              * NOTE: this is separate from whether it should output.
              */
             boolean shouldExecute();
-            
+
             /**
              * Returns the writer that the element should use for its rendering.
              * The state may decide a different one is needed.
              */
             Appendable getWriterForElementRender();
-            
+
             /**
              * Must be called after return from executing the target widget.
              * Should be in a finally block.
@@ -1289,7 +1289,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
              */
             void handleFinished(Map<String, Object> context) throws IOException;
         }
-        
+
         public class ExecutionInfoImpl implements ExecutionInfo {
             ModelWidget widget;
             boolean shouldExecute; // the whole node
@@ -1300,19 +1300,19 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
              * any token matched in any expr that matched the widget will generate an entry in this.
              */
             List<ExprStateInfo> exprTokenMatchedWidget;
-            
+
             ExecutionInfoImpl(ModelWidget widget, boolean shouldExecute, Appendable writerForElem) {
                 this.widget = widget;
                 this.shouldExecute = shouldExecute;
                 this.shouldExecuteCurrentExpr = shouldExecute;
                 this.writerForElem = writerForElem;
             }
-            
+
             public void registerExprTokenMatchedWidget(ExprStateInfo state) {
                 if (exprTokenMatchedWidget == null) exprTokenMatchedWidget = new ArrayList<>();
                 exprTokenMatchedWidget.add(state);
             }
-            
+
             @Override
             public boolean shouldExecute() { return shouldExecute; }
             @Override
@@ -1336,7 +1336,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                     } else if (activeTargets.size() == 0) {
                         ((SwitchRenderWriter) writerForElem).useAltWriter();
                     }
-                } 
+                }
             }
         }
 
@@ -1377,15 +1377,15 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             }
         }
     }
-    
+
     /******************************************************/
     /* Old comments  */
     /******************************************************/
-    
+
     // OLD COMMENTS
     // This code was previously in the state handleShouldExecute, it still contains
     // some explanations are to why things are but this hasn't been updated in awhile.
-    
+
     // NOTE: the following double-commented hack for PlatformSpecific
     // is being handled a different way to address point number 1.
     // comment is left for reference and because half the issues still apply:
@@ -1399,16 +1399,16 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     //     * this means we cannot have things like intermediate FTL files implementing the
     //     * decorator, even if the target is a widget included by the FTL.
     //     * (if the target is a html or macro in the FTL file, it is even less likely to be possible).
-    //     * 
+    //     *
     //     * the solution involves manipulating Environment.setOut to a dummy writer,
     //     * but it's complicated by the "screens", "sections", and other objects that hold references
     //     * to the writer, and various problems.
-    //     * (for trying to target macros by ID, i.e. future improvement, this appears almost impossible - 
-    //     * only possible is converting macros from the standard API to java transforms to manipulate writer, 
+    //     * (for trying to target macros by ID, i.e. future improvement, this appears almost impossible -
+    //     * only possible is converting macros from the standard API to java transforms to manipulate writer,
     //     * but this is a nightmare)
-    //     * 
+    //     *
     //     * to clarify, there are 2 scenarios:
-    //     * 1) trying to target a widget element that is included through an FTL file, 
+    //     * 1) trying to target a widget element that is included through an FTL file,
     //     *    in other words supporting FTL boundaries, in other words support FTL-implemented decorators
     //     *    -> FIXME A.S.A.P.
     //     * 2) trying to target an element (macro) defined in an FTL file itself
@@ -1435,24 +1435,24 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         }
     */
     /* ***************************************************************************************
-        TODO?: REVIEW/FUTURE: it is currently impossible to skip decorator invocation in a useful way using 
+        TODO?: REVIEW/FUTURE: it is currently impossible to skip decorator invocation in a useful way using
         the special "decorator-section" manipulation that was attempted below.
         originally this selector/feature was meant to select a "decorator-section" without having
         to know anything about the invoked decorator's implementation.
         this would have been a bit like "copy pasting" the decorator-section contents and running them on
         their own, but additional operations are required which make this unusable:
-        
-        SOLN 1: (safe, but non-optimizable) 
+
+        SOLN 1: (safe, but non-optimizable)
         the essential decorator (global) actions and security checks can only be guaranteed by
         entering the decorator and letting it run... but this means we have to
-        execute everything (all actions and enter all sections) in the decorator because it is 
+        execute everything (all actions and enter all sections) in the decorator because it is
         computationally impossible to predict the element tree where the decorator-section-include (that names our target decorator-section)
         will occur. so this feature - if implemented in a safe way - will prevent any optimization.
-        
+
         SOLN 2: (security risk, functionality not guaranteed)
         a completely different solution involves skipping the decorator execution entirely,
-        or trying to extract its actions (greater scope than this class)... but this is best-effort and likely to be full or errors, 
-        and it is a MAJOR security risk to allow bypassing execution from an AJAX request... 
+        or trying to extract its actions (greater scope than this class)... but this is best-effort and likely to be full or errors,
+        and it is a MAJOR security risk to allow bypassing execution from an AJAX request...
         essentially it can bypass the major permission checks,
         which the controller (through view rendering) already relies on heavily.
         there is no way to safely/assuredly reproduce the permission checks done by the decorators, making it a major security risk.

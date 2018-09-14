@@ -68,38 +68,38 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             String name, Map<String, Object> context, Writer writer) throws GeneralException, TemplateException, IOException {
         // SCIPIO: need this name early, check if html
         String screenRendererName = UtilProperties.getPropertyValue("widget", name + ".name");
-        
+
         String screenMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".screenrenderer");
         String formMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".formrenderer");
         String treeMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".treerenderer");
         String menuMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".menurenderer");
-        
+
         Map<String, List<String>> themeResources = VisualThemeWorker.getVisualThemeResources(context);
         if (themeResources != null) {
             // SCIPIO: all these lookups modified to go through platform and expression checks
             String macroLibraryPath;
-            
+
             macroLibraryPath = VisualThemeWorker.getMacroLibraryLocationStaticFromResources(screenRendererName, themeResources, "VT_SCRN_MACRO_LIB");
             if (macroLibraryPath != null) {
                 screenMacroLibraryPath = macroLibraryPath;
             }
-            
+
             macroLibraryPath = VisualThemeWorker.getMacroLibraryLocationStaticFromResources(screenRendererName, themeResources, "VT_FORM_MACRO_LIB");
             if (macroLibraryPath != null) {
                 formMacroLibraryPath = macroLibraryPath;
             }
-            
+
             macroLibraryPath = VisualThemeWorker.getMacroLibraryLocationStaticFromResources(screenRendererName, themeResources, "VT_TREE_MACRO_LIB");
             if (macroLibraryPath != null) {
                 treeMacroLibraryPath = macroLibraryPath;
             }
-            
+
             macroLibraryPath = VisualThemeWorker.getMacroLibraryLocationStaticFromResources(screenRendererName, themeResources, "VT_MENU_MACRO_LIB");
             if (macroLibraryPath != null) {
                 menuMacroLibraryPath = macroLibraryPath;
             }
         }
-        
+
         // SCIPIO: 2016-09-15: in addition, dump the renderers into the request attributes,
         // for some cases where only request is available
         ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(screenRendererName, screenMacroLibraryPath);
@@ -121,7 +121,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
         }
         return screenStringRenderer;
     }
-    
+
     private ScreenStringRenderer loadRenderers(HttpServletRequest request, HttpServletResponse response,
             Map<String, Object> context, Writer writer) throws GeneralException, TemplateException, IOException {
         return loadRenderers(request, response, getName(), context, writer);
@@ -149,10 +149,10 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             }
             MapStack<String> context = MapStack.create();
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
-            
+
             // SCIPIO: 2017-05-09: targeted rendering prep. NOTE: populateContextForRequest call set up the RenderTargetState object.
             writer = WidgetRenderTargetExpr.getRenderTargetState(context).prepareWriter(writer, context);
-            
+
             ScreenStringRenderer screenStringRenderer = loadRenderers(request, response, context, writer);
             ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, context, screenStringRenderer);
             context.put("screens", screens);

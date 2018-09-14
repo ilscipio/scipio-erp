@@ -15,12 +15,12 @@ import java.util.regex.Pattern;
  * TODO: Some of this code probably belongs in extending class.
  */
 public abstract class TemplateHelper {
-    
+
     protected MsgHandler msgHandler = new MsgHandler.VoidMsgHandler();
-    
+
     protected final String inFileExtension;
     protected final String outFileExtension;
-    
+
     protected TemplateHelper(String inFileExtension, String outFileExtension) {
         this.inFileExtension = (inFileExtension != null) ? inFileExtension : "";
         this.outFileExtension = (outFileExtension != null) ? outFileExtension : "";
@@ -39,7 +39,7 @@ public abstract class TemplateHelper {
             throw new IllegalArgumentException("Unrecognized or missing lib format when trying to find appropriate template helper");
         }
     }
-    
+
     public String getInFileExtension() {
         return inFileExtension;
     }
@@ -51,10 +51,10 @@ public abstract class TemplateHelper {
     public String stripIndent(String text, int charsToRemove) {
         return text.replaceAll("(\\n)[ ]{" + charsToRemove + "}", "$1");
     }
-     
+
     private static final Pattern firstLeadAsterixPat = Pattern.compile("^(\\s*\\n)?[*].*", Pattern.DOTALL);
     private static final Pattern leadAsterixPat = Pattern.compile("^[*]([ ]|[ ]*$)", Pattern.DOTALL + Pattern.MULTILINE);
-    
+
     public String stripCommentLeadingAsterix(String text) {
         if (firstLeadAsterixPat.matcher(text).matches()) {
             return leadAsterixPat.matcher(text).replaceAll("");
@@ -63,15 +63,15 @@ public abstract class TemplateHelper {
             return text;
         }
     }
-    
+
     private static final Pattern firstLinePat = Pattern.compile(
             "^\\s*(.*?)(?:\\n\\n(.*)|[\\s\\n]*?)$"
             , Pattern.DOTALL);
-    
+
     public Matcher getFirstLineMatcher(String text) {
         return firstLinePat.matcher(text);
     }
-    
+
     public String getFirstLine(String text) {
         Matcher m = getFirstLineMatcher(text);
         if (m.matches()) {
@@ -81,13 +81,13 @@ public abstract class TemplateHelper {
             return "";
         }
     }
-    
+
     public List<String> splitToParagraphs(String text) {
         // if two returns in a row (may be some extra spaces)
         return Arrays.asList(text.split("\\s*\\n\\s*\\n[\\s\\n]*"));
     }
-    
-    
+
+
     /**
      * Abstracted clean method, should be called for individual text values.
      * <p>
@@ -105,7 +105,7 @@ public abstract class TemplateHelper {
             return text;
         }
     }
-    
+
     /**
      * Will never remove leading whitespace...
      */
@@ -120,8 +120,8 @@ public abstract class TemplateHelper {
             return text;
         }
     }
-    
-    
+
+
     /**
      * Normalizes text by removing all trailing spaces and converting tabs to spaces.
      * <p>
@@ -131,10 +131,10 @@ public abstract class TemplateHelper {
     public String normalizeText(String text) {
         return text.replaceAll("\\t", "    ").replaceAll("[^\\S\\n]+(\\n)", "$1").replaceAll("[^\\S\\n]", " ");
     }
-    
+
 
     @SuppressWarnings("unchecked")
-    public Map<String, Object> findEntryGlobal(String nameRef, Map<String, Map<String, Object>> entryMap, 
+    public Map<String, Object> findEntryGlobal(String nameRef, Map<String, Map<String, Object>> entryMap,
             Map<String, Map<String, Object>> libMap) {
         String rawName = getEntryNameOnly(nameRef);
         // check in our entry map first
@@ -189,15 +189,15 @@ public abstract class TemplateHelper {
             }
         }
     }
-    
+
     public boolean isEntryNameOnly(String nameRef) {
         return (nameRef.lastIndexOf('@') <= 0) && (nameRef.lastIndexOf('#') <= 0);
     }
-    
+
     public boolean isEntryNameFullPath(String nameRef) {
         return (nameRef.lastIndexOf('@') >= 1) || (nameRef.lastIndexOf('#') >= 1);
     }
-    
+
     public String getEntryNameOnly(String nameRef) {
         int index = nameRef.lastIndexOf('@');
         if (index >= 0) {
@@ -209,7 +209,7 @@ public abstract class TemplateHelper {
         }
         return nameRef;
     }
-    
+
     public String getEntryLibLoc(String nameRef) {
         String res = null;
         int index = nameRef.indexOf('@');
@@ -229,7 +229,7 @@ public abstract class TemplateHelper {
         }
         return res;
     }
-    
+
     /**
      * 2016-10-27: NOTE: the java should not use this anymore; should be called from FTL
      * so the FTL can decide how to use this logic.
@@ -242,12 +242,12 @@ public abstract class TemplateHelper {
         }
         return res + targetLibDocPath;
     }
-    
-    
+
+
     private static final Pattern simpleWordPat = Pattern.compile("[a-zA-Z0-9]+");
-    
+
     /**
-     * This makes a cleaned camel-case name from an English title, 
+     * This makes a cleaned camel-case name from an English title,
      * using simple-character words extracted from it (only).
      */
     public String makeCamelCaseNameFromTitle(String title) {
@@ -265,7 +265,7 @@ public abstract class TemplateHelper {
         }
         return sb.toString();
     }
-    
+
     /**
      * Gets the index of the given closing char in the string.
      * Supports nesting. start should be the open char index + 1.
@@ -287,9 +287,9 @@ public abstract class TemplateHelper {
             i++;
         }
         return -1;
-    } 
-    
-    
+    }
+
+
     public String makeRegexRangeExpr(int minSize, int maxSize) {
         if (minSize > 0) {
             if (maxSize < 0) {
@@ -323,7 +323,7 @@ public abstract class TemplateHelper {
             }
         }
     }
-    
+
     /**
      * Entries are string for text, map with groups for match.
      * <p>
@@ -331,17 +331,17 @@ public abstract class TemplateHelper {
      */
     public List<Object> splitByPat(String text, Pattern pat, Map<String, Object> modelMap, String... groupKeyNames) {
         List<Object> res = new ArrayList<>();
-        
+
         Matcher m = pat.matcher(text);
-        
+
         int lastEndIndex = 0;
-        
+
         while(m.find()) {
             // add intermediate text
             if (lastEndIndex < m.start()) {
                 res.add(cleanTextValueSafe(text.substring(lastEndIndex, m.start())));
             }
-            
+
             Map<String, Object> info = FtlDocFileParser.makeObjectMap(modelMap);
             // Save group values (by index)
             for(int i = 0; i < groupKeyNames.length ; i++) {
@@ -349,22 +349,22 @@ public abstract class TemplateHelper {
                     info.put(groupKeyNames[i], m.group(i));
                 }
             }
-            
+
             // add the entry
             res.add(info);
-            
+
             //if (pat == ScipioLibTemplateHelper.codeTextPat) {
             //    msgHandler.logDebug("code-text found: " + info);
             //}
-            
+
             lastEndIndex = m.end();
         }
-        
+
         // add last text part
         if (lastEndIndex < text.length()) {
             res.add(cleanTextValueSafe(text.substring(lastEndIndex)));
         }
-        
+
         return res;
     }
 }

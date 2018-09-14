@@ -35,5 +35,5 @@ public class InterpretStdLocMethod extends InterpretStdMethod {
     public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         return execTyped(args, true);
     }
-    
+
 }

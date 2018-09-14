@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.MethodContext;
  * <P>
  * This is the OFBiz MiniLang SimpleMethod adapter for IBM's Bean Scripting Famework. It is an implementation of the BSFEngine class, allowing BSF aware applications to use SimpleMethod as a scripting
  * language.
- * 
+ *
  * <P>
  * There should only be ONE simple-method in the XML file and it will be run as an event.
  */
@@ -56,7 +56,7 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
 
     /**
      * Invoke method name on the specified scripted object. The object may be null to indicate the global namespace of the interpreter.
-     * 
+     *
      * @param object
      *            may be null for the global namespace.
      */
@@ -112,9 +112,9 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
 
     /*
      * public void compileApply (String source, int lineNo, int columnNo, Object funcBody, Vector paramNames, Vector arguments, CodeBuffer cb) throws BSFException;
-     * 
+     *
      * public void compileExpr (String source, int lineNo, int columnNo, Object expr, CodeBuffer cb) throws BSFException;
-     * 
+     *
      * public void compileScript (String source, int lineNo, int columnNo, Object script, CodeBuffer cb) throws BSFException;
      */
 

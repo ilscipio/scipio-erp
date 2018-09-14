@@ -23,7 +23,7 @@ public class EncoderResolver implements EncoderSource {
     private final Map<String, EncoderFactory> encoderFactories;
     private final Map<String, Map<String, String>> encoderConfigs;
     private final Map<String, SimpleEncoder> encoders = new HashMap<>();
-    
+
     public EncoderResolver(Map<String, EncoderFactory> encoderFactories,
             Map<String, Map<String, String>> encoderConfigs) {
         this.encoderFactories = encoderFactories;
@@ -57,7 +57,7 @@ public class EncoderResolver implements EncoderSource {
 
         EncoderResolver resolver = new EncoderResolver(encoderFactories, encoderConfigs);
         Map<String, SimpleEncoder> encoders = resolver.resolveEncoders();
-        Debug.logInfo("Resolved " + encoders.size() + " policy sanitizers from '" + resource 
+        Debug.logInfo("Resolved " + encoders.size() + " policy sanitizers from '" + resource
             + "' properties: " + new TreeSet<>(encoders.keySet()), module);
         return encoders;
     }
@@ -79,13 +79,13 @@ public class EncoderResolver implements EncoderSource {
     public SimpleEncoder getEncoder(String name) {
         SimpleEncoder encoder = encoders.get(name);
         if (encoder != null || encoders.containsKey(name)) { // NOTE: null means already tried and failed
-            return encoder; // 
+            return encoder; //
         }
         encoder = createEncoder(name);
         encoders.put(name, encoder);
         return encoder;
     }
-    
+
     protected SimpleEncoder createEncoder(String name) {
         SimpleEncoder encoder = null;
         EncoderFactory factory = encoderFactories.get(name);

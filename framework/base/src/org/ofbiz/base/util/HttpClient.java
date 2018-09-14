@@ -187,12 +187,12 @@ public class HttpClient {
     public String getContentType() {
         return this.contentType;
     }
-    
+
     /** Sets the scream charset */
     public void setStreamCharset(String streamCharset) {
         this.streamCharset = streamCharset;
     }
-    
+
     /** Returns the stream charset */
     public String getStreamCharset() {
         return this.streamCharset;

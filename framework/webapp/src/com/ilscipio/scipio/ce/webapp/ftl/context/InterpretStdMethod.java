@@ -59,14 +59,14 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
     public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         return execTyped((List<TemplateModel>) args, false);
     }
-    
+
     public Object execTyped(List<TemplateModel> args, boolean singleStrAsLoc) throws TemplateModelException {
         if (args.size() != 1 && args.size() != 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
         TemplateModel arg = args.get(0);
         TemplateModel arg2 = (args.size() >= 2) ? args.get(1) : null;
-        
+
         String body = null;
         String location = null;
         String invokeModeStr = null;
@@ -89,7 +89,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         if (arg != null) {
             if (OfbizFtlObjectType.MAP.isObjectType(arg)) {
                 Map<String, TemplateModel> argMap = LangFtlUtil.makeModelMap((TemplateHashModelEx) arg);
-                
+
                 if (!strLocRead) {
                     body = TransformUtil.getStringNonEscapingArg(argMap, "body");
                     location = TransformUtil.getStringNonEscapingArg(argMap, "location");
@@ -99,12 +99,12 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
                 modelStr = TransformUtil.getStringNonEscapingArg(argMap, "model");
                 boolean unwrapCtxVars = TransformUtil.getBooleanArg(argMap, "unwrapCtxVars", false);
                 envOut = TransformUtil.getBooleanArg(argMap, "envOut", false);
-    
+
                 TemplateModel invokeCtxModel = argMap.get("invokeCtx");
                 if (OfbizFtlObjectType.MAP.isObjectType(invokeCtxModel)) {
                     invokeCtx = UtilGenerics.checkMap(LangFtlUtil.unwrapAlways(invokeCtxModel));
                 }
-                
+
                 TemplateModel ctxVarsModel = argMap.get("ctxVars");
                 if (OfbizFtlObjectType.MAP.isObjectType(ctxVarsModel)) {
                     if (unwrapCtxVars) {
@@ -120,20 +120,20 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         InvokeMode invokeMode;
         WrapperModel model;
         try {
-            invokeMode = UtilValidate.isNotEmpty(invokeModeStr) ? 
+            invokeMode = UtilValidate.isNotEmpty(invokeModeStr) ?
                 InvokeMode.fromNameAlways(invokeModeStr) : null;
-            model = UtilValidate.isNotEmpty(modelStr) ? 
+            model = UtilValidate.isNotEmpty(modelStr) ?
                     WrapperModel.fromNameAlways(modelStr) : null;
         } catch(Exception e) {
             throw new TemplateModelException(e);
         }
-        
+
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         // TODO?: currently don't support specifying the configuration, can only reuse current
         // (ambiguous how would be specified)
         Configuration config = env.getConfiguration();
         UtilCache<String, Template> cache = null;
-        
+
         TemplateSource templateSource;
         try {
             if (UtilValidate.isNotEmpty(location)) {
@@ -148,7 +148,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
                 if (cache == null) {
                     Debug.logWarning("Scipio: #interpretStd: could not determine"
                             + " an inline template cache to use; not using cache", module);
-                } 
+                }
                 templateSource = TemplateSource.getForInlineSelfCache(body, cache, config);
             } else {
                 throw new TemplateModelException("Expected a 'location' or inline 'str' in interpretStd args map, but none passed");

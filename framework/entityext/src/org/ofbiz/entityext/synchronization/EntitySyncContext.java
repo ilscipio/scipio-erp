@@ -403,7 +403,7 @@ public class EntitySyncContext {
                         }
                         throw new SyncDataErrorException("Error getting values to create from the datasource", e);
                     }
-                    
+
                     Timestamp nextTxTime;
                     if (firstVal != null) {
                         nextTxTime = firstVal.getTimestamp(ModelEntity.CREATE_STAMP_TX_FIELD);
@@ -415,7 +415,7 @@ public class EntitySyncContext {
                         this.nextCreateTxTime = nextTxTime;
                         Debug.logInfo("EntitySync: Set nextCreateTxTime to [" + nextTxTime + "]", module);
                     }
-                    
+
                     Timestamp curEntityNextTxTime = this.nextEntityCreateTxTime.get(modelEntity.getEntityName());
                     if (curEntityNextTxTime == null || nextTxTime.before(curEntityNextTxTime)) {
                         this.nextEntityCreateTxTime.put(modelEntity.getEntityName(), nextTxTime);
@@ -456,13 +456,13 @@ public class EntitySyncContext {
             }
             Debug.logInfo(toCreateInfo.toString(), module);
         }
-        
+
         // As the this.nextCreateTxTime calculation is only based on entities without values to create, if there at least one value to create returned
         // this calculation is false, so it needs to be nullified
         if (valuesToCreate.size() > 0) {
             this.nextCreateTxTime = null;
         }
-        
+
         return valuesToCreate;
     }
 
@@ -608,12 +608,12 @@ public class EntitySyncContext {
             }
             Debug.logInfo(toStoreInfo.toString(), module);
         }
-        
+
         // As the this.nextUpdateTxTime calculation is only based on entities without values to store, if there at least one value to store returned
         // this calculation is false, so it needs to be nullified
         if (valuesToStore.size() > 0) {
             this.nextUpdateTxTime = null;
-        }        
+        }
 
         return valuesToStore;
     }
@@ -731,7 +731,7 @@ public class EntitySyncContext {
         if (keysToRemove.size() > 0) {
             this.nextRemoveTxTime = null;
         }
-        
+
         return keysToRemove;
     }
 

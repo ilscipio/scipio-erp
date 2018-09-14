@@ -87,7 +87,7 @@ public final class FlexibleLocation {
             return defaultValue;
         }
     }
-    
+
     /**
      * Find the location type descriptor for the passed location String;
      * generally is all text before the first ":" character.
@@ -133,7 +133,7 @@ public final class FlexibleLocation {
             throw new MalformedURLException("Could not find a LocationResolver for the location type: " + locationType);
         }
     }
-    
+
     public static String stripLocationType(String location) {
         if (UtilValidate.isEmpty(location)) {
             return "";
@@ -160,11 +160,11 @@ public final class FlexibleLocation {
     public static boolean isRegisteredProtocol(String protocolName) {
         return locationResolvers.containsKey(protocolName);
     }
-    
+
     /**
      * SCIPIO: Checks if the given location starts with a protocol that is registered.
      * NOTE: Does not guarantee that the location is a valid URL, nor that the location
-     * is in fact 
+     * is in fact
      * Added 2017-06-15.
      */
     public static boolean isRegisteredProtocolLocation(String location) {
@@ -172,7 +172,7 @@ public final class FlexibleLocation {
         int colonIndex = location.indexOf(":");
         return (colonIndex > 0) && locationResolvers.containsKey(location.substring(0, colonIndex));
     }
-    
+
     /**
      * SCIPIO: Checks if the given location is intended to be a URL (having a protocol prefix), which may be a candidate
      * for the {@link #resolveLocation} methods.
@@ -182,7 +182,7 @@ public final class FlexibleLocation {
      * 2) the location contains a colon followed by two front slashes.
      * In all other locations, this returns false to indicate maybe a file location was sought.
      * <p>
-     * NOTE: This is a best-effort heuristic intended to cope with user input and 
+     * NOTE: This is a best-effort heuristic intended to cope with user input and
      * automatically try to determine the most likely intended format;
      * but it does not guarantee that the location could not have been a simple file name or path.
      * It is case-sensitive and will only recognize lowercase protocol prefix.
@@ -192,12 +192,12 @@ public final class FlexibleLocation {
     public static boolean isUrlLocation(String location) {
         if (UtilValidate.isEmpty(location)) return false; // if empty, resolveLocation always returns null
         String type = getLocationType(location, null);
-        if (type == null) return false; 
+        if (type == null) return false;
         if (isRegisteredProtocol(type)) return true;
         if (location.indexOf("//", type.length() + 1) >= 0) return true;
         return false;
     }
-    
+
     /**
      * SCIPIO: Resolves the given location as a URL (having a protocol prefix) or as a filename.
      * If <code>isUrl</code> is true, treats as URL; if false, treats as filename; if null, automatically
@@ -209,7 +209,7 @@ public final class FlexibleLocation {
         else if (isUrl == Boolean.FALSE) return UtilURL.fromFilename(location);
         else return isUrlLocation(location) ? resolveLocation(location) : UtilURL.fromFilename(location);
     }
-    
+
     /**
      * SCIPIO: Resolves the given location as a URL (having a protocol prefix) or as a filename.
      * Tries to determined using the {@link #isUrlLocation} heuristic.
@@ -218,7 +218,7 @@ public final class FlexibleLocation {
     public static URL resolveLocationAsUrlOrFilename(String location) throws MalformedURLException {
         return isUrlLocation(location) ? resolveLocation(location) : UtilURL.fromFilename(location);
     }
-    
+
     /**
      * SCIPIO: Resolves the url parameter interpreting it as a filesystem location ("file://", "component://"
      * and any other that resolves to the local filesystem) and returns its absolute file path.
@@ -244,10 +244,10 @@ public final class FlexibleLocation {
         } else throw new IllegalArgumentException("The specified url '" + url
                 + "' does not designate or resolve to a local filesystem location (file://, component://, ...)");
     }
-    
+
     /**
-     * SCIPIO: If the given value parameter is a url, resolves the value parameter as url 
-     * interpreting it as a filesystem location ("file://", "component://" and any other that resolves 
+     * SCIPIO: If the given value parameter is a url, resolves the value parameter as url
+     * interpreting it as a filesystem location ("file://", "component://" and any other that resolves
      * to the local filesystem) and returns its absolute file path; if not a url, returns the default value.
      * Added 2017-07-14.
      * @throws MalformedURLException if the url is malformed, of unknown type or contains an invalid file path format
@@ -256,6 +256,6 @@ public final class FlexibleLocation {
     public static String resolveFileUrlAsPathIfUrl(String value, String defaultValue) throws MalformedURLException, IllegalArgumentException {
         return FlexibleLocation.isUrlLocation(value) ? resolveFileUrlAsPath(value) : defaultValue;
     }
-    
+
     private FlexibleLocation() {}
 }

@@ -30,7 +30,7 @@ package org.ofbiz.base.start;
  * Implementations should anticipate asynchronous calls to the methods by different
  * threads.
  * </p>
- * 
+ *
  */
 public interface StartupLoader {
 
@@ -48,7 +48,7 @@ public interface StartupLoader {
     /**
      * Start the startup class. This method must not block - implementations
      * that require thread blocking must create a separate thread and then return.
-     * 
+     *
      * @throws StartupException If an error was encountered.
      */
     public void start() throws StartupException;

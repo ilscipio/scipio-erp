@@ -53,13 +53,13 @@ public interface FormStringRenderer extends StringRenderer { // SCIPIO: StringRe
     public void renderFormOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
-    
+
     // SCIPIO: new
     public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 
     // SCIPIO: 2017-04-21: new
     public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
-    
+
     public void renderFormatListWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 
@@ -81,7 +81,7 @@ public interface FormStringRenderer extends StringRenderer { // SCIPIO: StringRe
     public void renderFormatHeaderRowFormCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatHeaderRowFormCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatHeaderRowFormCellTitleSeparator(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, boolean isLast) throws IOException;
-    
+
     // SCIPIO: Table footer
     public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;

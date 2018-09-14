@@ -62,14 +62,14 @@ public abstract class ModelWidgetCondition implements Serializable {
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -103,7 +103,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;and&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class And extends ModelWidgetCondition implements Condition {
@@ -137,7 +137,7 @@ public abstract class ModelWidgetCondition implements Serializable {
     public static interface ConditionFactory {
         /**
          * Returns a new <code>Condition</code> instance built from <code>conditionElement</code>.
-         * 
+         *
          * @param modelWidget The <code>ModelWidget</code> that contains the <code>Condition</code> instance.
          * @param conditionElement The XML element used to build the <code>Condition</code> instance.
          * @return A new <code>Condition</code> instance built from <code>conditionElement</code>.
@@ -196,7 +196,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;if-compare&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfCompare extends ModelWidgetCondition implements Condition {
@@ -247,7 +247,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;if-compare-field&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfCompareField extends ModelWidgetCondition implements Condition {
@@ -304,7 +304,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;if-empty&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfEmpty extends ModelWidgetCondition implements Condition {
@@ -328,7 +328,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;if-entity-permission&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfEntityPermission extends ModelWidgetCondition implements Condition {
@@ -347,7 +347,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;if-has-permission&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfHasPermission extends ModelWidgetCondition implements Condition {
@@ -386,7 +386,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;if-regexp&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfRegexp extends ModelWidgetCondition implements Condition {
@@ -433,7 +433,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;if-service-permission&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfServicePermission extends ModelWidgetCondition implements Condition {
@@ -515,7 +515,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;if-validate-method&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class IfValidateMethod extends ModelWidgetCondition implements Condition {
@@ -581,7 +581,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;not&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class Not extends ModelWidgetCondition implements Condition {
@@ -601,7 +601,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;or&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class Or extends ModelWidgetCondition implements Condition {
@@ -626,7 +626,7 @@ public abstract class ModelWidgetCondition implements Serializable {
 
     /**
      * Models the &lt;xor&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class Xor extends ModelWidgetCondition implements Condition {

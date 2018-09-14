@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
  * Tokens are associated in the provider with a map of tokens to values.
  * If caller doesn't need the values, simply use a dummy Object.
  * <p>
- * All the current implementations are thread-safe 
+ * All the current implementations are thread-safe
  * but differ on key weakness and performance.
  * <p>
  * Added 2018-05-05.
@@ -25,46 +25,46 @@ import javax.servlet.http.HttpSession;
 public abstract class AccessTokenProvider<V> {
 
     private final EventHandler<V> eventHandler;
-    
+
     protected AccessTokenProvider(EventHandler<V> eventHandler) {
         this.eventHandler = (eventHandler != null) ? eventHandler : NoopEventHandler.getInstance();
     }
 
     /**
      * Creates a new token string ID.
-     * By default, uses same UUID generation as 
+     * By default, uses same UUID generation as
      * {@link org.ofbiz.webapp.control.LoginWorker#getExternalLoginKey}.
      */
     public String newTokenString() {
         return UUID.randomUUID().toString();
     }
-    
+
     /**
      * Creates a new token.
      * The token is NOT automatically stored in the provider (see {@link #put(AccessToken, Object)).
      */
     public abstract AccessToken newToken();
     public abstract AccessToken newToken(String tokenString);
-    
+
     public abstract V put(AccessToken token, V value);
     public V put(String tokenString, V value) {
         return put(newToken(tokenString), value);
     }
-    
+
     public abstract V get(AccessToken token);
     public V get(String tokenString) {
         return get(newToken(tokenString));
     }
-    
+
     public abstract V remove(AccessToken token);
     public V remove(String tokenString) {
         return remove(newToken(tokenString));
     }
-    
+
     protected EventHandler<V> getEventHandler() {
         return eventHandler;
     }
-    
+
     /**
      * Access token, whose {@link #toString()} method provides the string
      * representation (for URLs).
@@ -96,7 +96,7 @@ public abstract class AccessTokenProvider<V> {
         protected SimpleAccessToken(String tokenString) {
             this.tokenString = tokenString;
         }
-        
+
         public static SimpleAccessToken newToken(String tokenString) {
             return (tokenString != null) ? new SimpleAccessToken(tokenString) : NullSimpleAccessToken.INSTANCE;
         }
@@ -106,11 +106,11 @@ public abstract class AccessTokenProvider<V> {
             return tokenString;
         }
     }
-    
+
     @SuppressWarnings("serial")
     public static class NullSimpleAccessToken extends SimpleAccessToken {
         public static final NullSimpleAccessToken INSTANCE = new NullSimpleAccessToken();
-        
+
         private NullSimpleAccessToken() {
             super(null);
         }
@@ -125,9 +125,9 @@ public abstract class AccessTokenProvider<V> {
             return (other == null) || (other.toString() == null);
         }
     }
-    
-    
-    
+
+
+
     /**
      * Returns a new THREAD-SAFE token provider that does NOT have weak keys (may be faster).
      * <p>
@@ -136,7 +136,7 @@ public abstract class AccessTokenProvider<V> {
     public static <V> AccessTokenProvider<V> newAccessTokenProvider(EventHandler<V> eventHandler) {
         return new ConcurrentSimpleAccessTokenProvider<V>(eventHandler);
     }
-    
+
     /**
      * Returns a new THREAD-SAFE token provider that uses weak keys (less chance of memory leaks, but slower).
      * <p>
@@ -150,21 +150,21 @@ public abstract class AccessTokenProvider<V> {
     public static <V> AccessTokenProvider<V> newWeakAccessTokenProvider(EventHandler<V> eventHandler) {
         return new WeakSimpleAccessTokenProvider<V>(eventHandler);
     }
-    
+
     /**
      * Returns a new NON-THREAD-SAFE token provider that does NOT have weak keys.
      */
     public static <V> AccessTokenProvider<V> newUnsafeAccessTokenProvider(EventHandler<V> eventHandler) {
         return new HashMapSimpleAccessTokenProvider<V>(eventHandler);
     }
-    
+
     /**
      * Returns a new NON-THREAD-SAFE token provider with weak keys.
      */
     public static <V> AccessTokenProvider<V> newUnsafeWeakAccessTokenProvider(EventHandler<V> eventHandler) {
         return new UnsafeWeakSimpleAccessTokenProvider<V>(eventHandler);
     }
-    
+
     public static abstract class SimpleAccessTokenProvider<V> extends AccessTokenProvider<V> {
         protected SimpleAccessTokenProvider(EventHandler<V> eventHandler) {
             super(eventHandler);
@@ -181,7 +181,7 @@ public abstract class AccessTokenProvider<V> {
         }
     }
 
-    
+
     public static abstract class MapSimpleAccessTokenProvider<V> extends SimpleAccessTokenProvider<V> {
         protected final Map<AccessToken, V> tokens;
 
@@ -199,13 +199,13 @@ public abstract class AccessTokenProvider<V> {
         public V put(AccessToken token, V value) {
             return tokens.put(token, value);
         }
-        
+
         @Override
         public V remove(AccessToken token) {
             return tokens.remove(token);
         }
     }
-    
+
     /**
      * Map token provider that synchronizes around the map.
      * <p>
@@ -222,14 +222,14 @@ public abstract class AccessTokenProvider<V> {
                 return tokens.get(token);
             }
         }
-        
+
         @Override
         public V put(AccessToken token, V value) {
             synchronized(tokens) {
                 return tokens.put(token, value);
             }
         }
-        
+
         @Override
         public V remove(AccessToken token) {
             synchronized(tokens) {
@@ -237,7 +237,7 @@ public abstract class AccessTokenProvider<V> {
             }
         }
     }
-    
+
     /**
      * Thread-safe fast token provider with non-weak keys.
      */
@@ -257,7 +257,7 @@ public abstract class AccessTokenProvider<V> {
             super(eventHandler, new WeakHashMap<AccessToken, V>());
         }
     }
-    
+
     /**
      * Non-thread-safe fast HashMap token provider with non-weak keys.
      */
@@ -266,7 +266,7 @@ public abstract class AccessTokenProvider<V> {
             super(eventHandler, new HashMap<>());
         }
     }
-    
+
     /**
      * Non-thread-safe fast WeakHashMap token provider with weak keys.
      */
@@ -325,9 +325,9 @@ public abstract class AccessTokenProvider<V> {
             return createSessionToken(session, request, attrName, initialValue);
         }
     }
-    
+
     /**
-     * Creates token in session with given value, removing any prior 
+     * Creates token in session with given value, removing any prior
      * <p>
      * After this call, the session is guaranteed to contain a token.
      * <p>
@@ -339,17 +339,17 @@ public abstract class AccessTokenProvider<V> {
     public AccessToken createSessionToken(HttpSession session, HttpServletRequest request, String attrName, V initialValue) {
         synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
             cleanupSessionToken(session, request, attrName);
-            
+
             AccessToken token = newToken();
             put(token, initialValue);
             session.setAttribute(attrName, token);
             request.setAttribute(attrName, token);
-            
-            getEventHandler().sessionTokenCreated(session, request, attrName, token, initialValue);            
+
+            getEventHandler().sessionTokenCreated(session, request, attrName, token, initialValue);
             return token;
         }
     }
-    
+
     public void cleanupSessionToken(HttpSession session, HttpServletRequest request, String attrName) {
         synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
             if (request != null) {
@@ -359,7 +359,7 @@ public abstract class AccessTokenProvider<V> {
                     remove(token);
                 }
             }
-    
+
             AccessToken token = (AccessToken) session.getAttribute(attrName);
             if (token != null) {
                 session.removeAttribute(attrName);
@@ -367,12 +367,12 @@ public abstract class AccessTokenProvider<V> {
             }
         }
     }
-    
+
     public interface EventHandler<V> {
-        void sessionTokenCreated(HttpSession session, HttpServletRequest request, 
+        void sessionTokenCreated(HttpSession session, HttpServletRequest request,
                 String attrName, AccessToken token, V value);
     }
-    
+
     public static class NoopEventHandler<V> implements EventHandler<V> {
         private static final NoopEventHandler<?> INSTANCE = new NoopEventHandler<Object>();
 
@@ -381,11 +381,11 @@ public abstract class AccessTokenProvider<V> {
             // implemented via type erasure to avoid needless extra objects
             return (NoopEventHandler<V>) INSTANCE;
         }
-        
+
         @Override
-        public void sessionTokenCreated(HttpSession session, HttpServletRequest request, 
+        public void sessionTokenCreated(HttpSession session, HttpServletRequest request,
                 String attrName, AccessToken token, V value) {
         }
     }
-    
+
 }

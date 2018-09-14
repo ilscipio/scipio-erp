@@ -111,23 +111,23 @@ public class ComponentContainer implements Container {
                 this.loadComponentFromConfig(parentPath, def, true, true, componentList); // SCIPIO: always considering top-levels explicit (for now)
             }
         }
-        
+
         Debug.logInfo("All components loaded (" + componentList.size() + ")", module); // SCIPIO: count
-        
+
         // SCIPIO: re-store the component definitions, in order to apply any load order or other modifications we may have made
         // FIXME: in theory we should only clear the ones we loaded (the sizes could differ), in case multiple loaders are involved... but likely never happen
         int allComponentsSize = ComponentConfig.getAllComponents().size();
         if (componentList.size() != allComponentsSize) {
-            Debug.logError("Scipio: The number of components loaded by our container (" +  componentList.size() 
-                + ") is different from the number of components that were registered in the system (" + allComponentsSize + 
+            Debug.logError("Scipio: The number of components loaded by our container (" +  componentList.size()
+                + ") is different from the number of components that were registered in the system (" + allComponentsSize +
                 "); this is either an unsupported configuration or an error", module);
         }
-        
+
         // SCIPIO: 2017-01-19: Post-process loaded components
         componentList = ComponentConfig.postProcessComponentConfigs(componentList);
-        
+
         Debug.logInfo("All components post-processed (" + componentList.size() + " final)", module); // SCIPIO
-        
+
         // SCIPIO: Replace the globally-cached component definitions with our revamped list
         ComponentConfig.clearStoreComponents(componentList);
     }
@@ -270,7 +270,7 @@ public class ComponentContainer implements Container {
             Map<String, ComponentConfig> nameMap = ComponentConfig.makeComponentNameMap(componentList);
             List<String> names = new ArrayList<>(nameMap.keySet());
             Map<String, ComponentConfig> alreadyLoadedNameMap = ComponentConfig.makeComponentNameMap(alreadyLoaded);
-            
+
             // Get the dependencies and perform some preliminary checks
             Map<String, List<String>> dependencies = new HashMap<>();
             for(Map.Entry<String, ComponentConfig> entry : nameMap.entrySet()) {
@@ -279,7 +279,7 @@ public class ComponentContainer implements Container {
                 List<String> deps = new ArrayList<>(config.getComponentDependencies().size());
                 for(String depName : config.getComponentDependencies()) {
                     if (!nameMap.containsKey(depName) && !alreadyLoadedNameMap.containsKey(depName)) {
-                        Debug.logError("Scipio: component '" + name + "' depends on component '" + depName 
+                        Debug.logError("Scipio: component '" + name + "' depends on component '" + depName
                                 + "', which is either missing or cannot be loaded before this component; ignoring dependency", module);
                         continue;
                     }
@@ -290,7 +290,7 @@ public class ComponentContainer implements Container {
                 }
                 dependencies.put(name, deps);
             }
-            
+
             DependencyGraph<String> depGraph = new DependencyGraph<>(names, dependencies);
             List<String> resolved = depGraph.getResolvedDependenciesDfs();
 
@@ -298,7 +298,7 @@ public class ComponentContainer implements Container {
             for(String resolvedName : resolved) {
                 resultList.add(nameMap.get(resolvedName));
             }
-            
+
             Debug.logInfo("Scipio: Performed automatic component dependency analysis and ordering for " + componentList.size() + " components:"
                     + "\nOriginal order: " + names.toString()
                     + "\nResolved order: " + resolved.toString(), module);

@@ -15,12 +15,12 @@ public abstract class CompositeReadOnlyMap<K, V> implements Map<K, V> {
 
     protected final Map<K, V> internalMap;
     protected final Map<K, V> readOnlyMap;
-    
+
     protected CompositeReadOnlyMap() {
         this.internalMap = new HashMap<K, V>();
         this.readOnlyMap = Collections.unmodifiableMap(this.internalMap);
     }
-    
+
     protected CompositeReadOnlyMap(Map<K, V> internalMap) {
         this.internalMap = internalMap;
         this.readOnlyMap = Collections.unmodifiableMap(this.internalMap);
@@ -29,11 +29,11 @@ public abstract class CompositeReadOnlyMap<K, V> implements Map<K, V> {
     protected Map<K, V> getInternalMap() {
         return internalMap;
     }
-    
+
     protected Map<K, V> getReadOnlyMap() {
         return readOnlyMap;
     }
-    
+
     @Override
     public int size() {
         return internalMap.size();

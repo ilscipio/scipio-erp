@@ -83,13 +83,13 @@ public final class EntityUtilProperties implements Serializable {
                     .queryOne();
             if (systemProperty != null) {
                 //property exists in database
-                
+
                 // SCIPIO: 2018-07-27: new useEmpty explicit flag
                 // NOTE: The default for useEmpty in Scipio is N, while the logical ofbiz 16+ default
                 // of this method is Y, so we effectively invert the logic.
                 //results.put("isExistInDb", "Y");
                 //results.put("value", (systemProperty.getString("systemPropertyValue") != null) ? systemProperty.getString("systemPropertyValue") : "");
-                
+
                 String value = systemProperty.getString("systemPropertyValue");
                 if (value == null) value = "";
                 if (value.isEmpty() && !Boolean.TRUE.equals(systemProperty.getBoolean("useEmpty"))) {
@@ -127,7 +127,7 @@ public final class EntityUtilProperties implements Serializable {
             return UtilProperties.getPropertyValue(resource, name, defaultValue);
         }
     }
-    
+
     public static String getPropertyValueFromDelegatorName(String resource, String name, String defaultValue, String delegatorName) {
         Delegator delegator = DelegatorFactory.getDelegator(delegatorName);
         if (delegator == null) { // This should not happen, but in case...

@@ -51,7 +51,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
 
     static final Set<String> validScreenElementTagNames = Collections.unmodifiableSet(
             UtilMisc.toSet("screen")); // SCIPIO: new, for future use
-    
+
     private final String sourceLocation;
     private final FlexibleStringExpander transactionTimeoutExdr;
     // SCIPIO: generalized
@@ -74,7 +74,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
         Element sectionElement = UtilXml.firstChildElement(screenElement, "section");
         if (sectionElement == null) {
             // SCIPIO: we support actions or widgets block shorthand
-            // NOTE: the XSD may not support widgets block shorthand for now, 
+            // NOTE: the XSD may not support widgets block shorthand for now,
             // because unlike actions shorthand, widgets shorthand usually ends up counterproductive...
             sectionElement = UtilXml.firstChildElement(screenElement, "actions");
             if (sectionElement == null) {
@@ -83,7 +83,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
                     throw new IllegalArgumentException("No section (or actions/widgets shorthand) found for the screen definition with name: " + getName());
                 }
             }
-        } 
+        }
         this.section = new ModelScreenWidget.Section(this, sectionElement, true);
     }
 
@@ -97,7 +97,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     public boolean isActionsOnly() {
         return section.isActionsOnly();
     }
-    
+
     /**
      * SCIPIO: Returns true if the named element is a screen (top-level) element or any element
      * that can stand in for it.
@@ -105,7 +105,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     public static boolean isScreenElement(Element element) {
         return validScreenElementTagNames.contains(element.getTagName());
     }
-    
+
     @Override
     public void accept(ModelWidgetVisitor visitor) throws Exception {
         visitor.visit(this);
@@ -126,7 +126,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
         //return modelScreenMap;
         return modelScreenGroup.getModelScreens();
     }
-    
+
     /**
      * SCIPIO: getModelScreenGroup (new).
      */
@@ -271,7 +271,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             }
         }
     }
-    
+
     public LocalDispatcher getDispatcher(Map<String, Object> context) {
         LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
         return dispatcher;
@@ -286,12 +286,12 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     public List<ModelScreen> getScreenList() { // SCIPIO: new
         return UtilMisc.toList(this);
     }
- 
+
     @Override
     public String getContainerLocation() { // SCIPIO: new
         return sourceLocation;
     }
-    
+
     @Override
     public String getWidgetType() { // SCIPIO: new
         return "screen";

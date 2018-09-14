@@ -37,10 +37,10 @@ import org.ofbiz.webapp.control.RequestLinkUtil;
 /**
  * Web site properties.
  * <p>
- * SCIPIO: NOTE: 2018-08: It is recommended not to load this class directly anymore 
- * but instead to go through {@link org.ofbiz.webapp.FullWebappInfo} and for link-building 
+ * SCIPIO: NOTE: 2018-08: It is recommended not to load this class directly anymore
+ * but instead to go through {@link org.ofbiz.webapp.FullWebappInfo} and for link-building
  * obtain its {@link org.ofbiz.webapp.OfbizUrlBuilder}.
- * Future improvements will likely be abstracted by those classes rather than by this one 
+ * Future improvements will likely be abstracted by those classes rather than by this one
  * (due to its limited scope).
  */
 @ThreadSafe
@@ -78,7 +78,7 @@ public final class WebSiteProperties {
      * WebSite entity value then the instance is initialized to the settings found
      * in the <code>url.properties</code> file.
      * SCIPIO: Intended for intra-webapp operations only. Cached in request.
-     * 
+     *
      * @param request
      * @throws GenericEntityException
      */
@@ -125,7 +125,7 @@ public final class WebSiteProperties {
         }
         return newFrom(webSiteValue, extWebappInfo, request, delegator);
     }
-    
+
     /**
      * SCIPIO: Shared factory for intra- and inter-webapp live request links.
      * <p>
@@ -246,7 +246,7 @@ public final class WebSiteProperties {
         try {
             extWebappInfo = ExtWebappInfo.fromWebSiteId(webSiteValue.getString("webSiteId"));
         } catch(Exception e) {
-            Debug.logWarning("Could not get webapp information (web.xml) for webSiteId '" 
+            Debug.logWarning("Could not get webapp information (web.xml) for webSiteId '"
                     + webSiteValue.getString("webSiteId") + "': " + e.toString(), module);
         }
         return newFrom(webSiteValue, extWebappInfo, request, webSiteValue.getDelegator());
@@ -317,7 +317,7 @@ public final class WebSiteProperties {
             Debug.logWarning("Could not get webapp information (web.xml) for webSiteId '" + webSiteValue.getString("webSiteId") + "'", module);
         }
         boolean webappPathPrefixUrlBuild = isWebappPathPrefixUrlBuild(webSiteValue, extWebappInfo, webSiteValue.getDelegator());
-        
+
         return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps,
                 webappPathPrefix, webappPathPrefixHeader, webappPathPrefixUrlBuild);
     }

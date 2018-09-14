@@ -26,5 +26,5 @@ public interface ViewHandlerExt extends ViewHandler {
      * @param writer the writer to print to (must NOT use response object)
      * @throws ViewHandlerException
      */
-    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response, Writer writer) throws ViewHandlerException;     
+    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response, Writer writer) throws ViewHandlerException;
 }

@@ -45,7 +45,7 @@ public class LocalServletContext implements ServletContext {
     public static final int SERVLET_API_MINOR_VER = 0;
 
     protected final LocalServletContainer container;
-    
+
     protected final Map<String, Object> attributes;
     protected final Map<String, String> initParameters;
 

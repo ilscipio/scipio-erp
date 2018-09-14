@@ -22,7 +22,7 @@ import freemarker.template.TemplateModel;
  * TODO: REVIEW: 2017: these checks must be reviewed for non BeanModel wrappers...
  */
 public enum OfbizFtlObjectType {
-    
+
     /**
      * Anything meant to be a string WITHOUT being a more complex type.
      */
@@ -41,7 +41,7 @@ public enum OfbizFtlObjectType {
             return false;
         }
     },
-    
+
     /**
      * Simple hash, or context map that exposes methods as keys (BeanModel with underlying Map)
      * (simplemap or complexmap).
@@ -64,7 +64,7 @@ public enum OfbizFtlObjectType {
             return false;
         }
     },
-    
+
     /**
      * Simple hash only (?keys to get elems).
      */
@@ -78,7 +78,7 @@ public enum OfbizFtlObjectType {
             return false;
         }
     },
-    
+
     /**
      * Context map that exposes methods as keys (BeanModel) only (.keySet() to get elems).
      */
@@ -94,7 +94,7 @@ public enum OfbizFtlObjectType {
             return false;
         }
     },
-    
+
     /**
      * Collection wrapped in a bean model.
      */
@@ -110,7 +110,7 @@ public enum OfbizFtlObjectType {
             return false;
         }
     },
-    
+
     /**
      * Anything wrapped in a bean model.
      */
@@ -123,9 +123,9 @@ public enum OfbizFtlObjectType {
             return false;
         }
     };
-    
+
     private static final Map<String, OfbizFtlObjectType> ftlNameHash;
-    
+
     static {
         Map<String, OfbizFtlObjectType> map = new HashMap<>();
         for (OfbizFtlObjectType type : OfbizFtlObjectType.values()) {
@@ -133,26 +133,26 @@ public enum OfbizFtlObjectType {
         }
         ftlNameHash = map;
     }
-    
+
     private final String fltName;
 
     private OfbizFtlObjectType(String fltName) {
         this.fltName = fltName;
     }
-    
+
     public String getFtlName() {
         return fltName;
     }
-    
+
     public static OfbizFtlObjectType fromFtlNameSafe(String ftlName) {
         return ftlNameHash.get(ftlName);
     }
-    
+
     /**
      * Checks if the given model matches this logical FTL object type.
      */
     public abstract boolean isObjectType(TemplateModel object);
-    
+
     /**
      * Checks if the given model matches the logical FTL object type.
      */

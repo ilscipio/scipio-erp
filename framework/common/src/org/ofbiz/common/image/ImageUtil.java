@@ -31,21 +31,21 @@ public abstract class ImageUtil {
     public static final String IMAGECOMMON_PROP_PREFIX = "image.";
     public static final String IMAGEOP_PROP_RESOURCE = "imageops.properties";
     public static final String IMAGEOP_PROP_PREFIX = "image.";
-    
-    private static boolean DEBUG = UtilProperties.getPropertyAsBoolean(IMAGECOMMON_PROP_RESOURCE, 
+
+    private static boolean DEBUG = UtilProperties.getPropertyAsBoolean(IMAGECOMMON_PROP_RESOURCE,
             IMAGECOMMON_PROP_PREFIX+"debug", false) || Debug.verboseOn(); // FIXME?: should really read verboseOn dynamically, not cache the value here...
-    
+
     protected ImageUtil() {
     }
 
     public static boolean debugOn() {
         return DEBUG;
     }
-    
+
     public static boolean verboseOn() {
         return DEBUG;
     }
-    
+
     public static Map<String, Object> readImagePropOptions(Properties props, String optionPropPrefix, Map<String, Object> options) {
         try {
             UtilProperties.putPropertiesWithPrefixSuffix(options, props, optionPropPrefix, null, true, false, false);
@@ -54,7 +54,7 @@ public abstract class ImageUtil {
         }
         return options;
     }
-    
+
     public static Map<String, Object> readImagePropOptions(Map<String, Object> props, String optionPropPrefix, Map<String, Object> options) {
         for(Map.Entry<String, Object> entry : props.entrySet()) {
             if (entry.getKey().startsWith(optionPropPrefix)) {
@@ -63,14 +63,14 @@ public abstract class ImageUtil {
         }
         return options;
     }
-    
+
     public static <T extends ImageOp> Map<String, T> readImagePropsToImageOpMap(Properties props, String propPrefix, Class<T> imageOpCls) {
         return readImagePropsToImageOpMap(Arrays.asList(new Properties[]{props}), propPrefix, imageOpCls);
     }
-    
+
     public static <T extends ImageOp> Map<String, T> readImagePropsToImageOpMap(Collection<Properties> propsList, String propPrefix, Class<T> imageOpCls) {
         Map<String, T> imageOpMap = new LinkedHashMap<>();
-        
+
         // first, get the real factories across all files, and simply replace in order found
         for(Properties props : propsList) {
             Set<String> factoryEntries = UtilProperties.getPropertyNamesWithPrefixSuffix(props, propPrefix, ".factoryClass", false, false, false);
@@ -96,8 +96,8 @@ public abstract class ImageUtil {
                 try {
                     scaler = factory.getImageOpInst(name, defaultOptions);
                     if (!imageOpCls.isAssignableFrom(scaler.getClass())) {
-                        throw new IllegalArgumentException("Invalid or broken image op factory: factory [" + scaler.getClass().getName() 
-                                + "] did not produce image op instance of expected type [" + imageOpCls.getClass().getName() 
+                        throw new IllegalArgumentException("Invalid or broken image op factory: factory [" + scaler.getClass().getName()
+                                + "] did not produce image op instance of expected type [" + imageOpCls.getClass().getName()
                                 + "]; instead got instance of type [" + scaler.getClass().getName() + "]");
                     }
                 } catch (Exception e) {
@@ -107,17 +107,17 @@ public abstract class ImageUtil {
                 imageOpMap.put(name, scaler);
             }
         }
-        
-        
+
+
         // for aliases, read them all and put them through dependency resolution, to avoid headaches
         Map<String, List<String>> depMap = new LinkedHashMap<>();
         // must add the factories first
         for(String key : imageOpMap.keySet()) {
             depMap.put(key, Collections.<String>emptyList());
         }
-        
+
         Map<String, Properties> aliasPropsMap = new HashMap<>(); // back-pointers to the orig Properties for each alias def
-        
+
         for(Properties props : propsList) {
             // resolve the aliases
             Set<String> aliasEntries = UtilProperties.getPropertyNamesWithPrefixSuffix(props, propPrefix, ".alias", false, false, false);
@@ -133,7 +133,7 @@ public abstract class ImageUtil {
                 aliasPropsMap.put(name, props);
             }
         }
-        
+
         List<String> allOrdered;
         try {
             DependencyGraph<String> aliasDepGraph = new DependencyGraph<>(depMap);
@@ -143,7 +143,7 @@ public abstract class ImageUtil {
                     + "please verify configuration and make sure no dangling or circular aliases: " + e.getMessage(), module);
             return imageOpMap; // abort
         }
-        
+
         for(String name : allOrdered) {
             Properties props = aliasPropsMap.get(name);
             if (props == null) continue; // this skips the factories
@@ -166,14 +166,14 @@ public abstract class ImageUtil {
                 continue;
             }
         }
-        
+
         if (verboseOn()) {
             StringBuilder sb = new StringBuilder("Image op properties resolved config ImageOp map:\n");
             Debug.logInfo(printImageOpMap(sb, imageOpMap, "\n").toString(), module);
         }
         return imageOpMap;
     }
-    
+
     public static StringBuilder printImageOpMap(StringBuilder sb, Map<String, ? extends ImageOp> imageOpMap, String sep) {
         for(Map.Entry<String, ? extends ImageOp> entry : imageOpMap.entrySet()) {
             sb.append(entry.getKey());
@@ -183,7 +183,7 @@ public abstract class ImageUtil {
         }
         return sb;
     }
-    
+
     public static Collection<Properties> getAllPropertiesFiles(String resource) {
         if (!resource.endsWith(".properties")) resource = resource+".properties";
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -207,19 +207,19 @@ public abstract class ImageUtil {
         }
         return propsList;
     }
-    
+
     public static Collection<Properties> getSinglePropertiesFile(String resource) {
         return Arrays.asList(new Properties[]{UtilProperties.getProperties(resource)});
     }
-    
+
     public static Map<String, Object> makeOptions() {
-        return new HashMap<String, Object>(); 
+        return new HashMap<String, Object>();
     }
-    
+
     public static Map<String, Object> copyOptions(Map<String, Object> options) {
-        return options != null ? new HashMap<String, Object>(options) : new HashMap<String, Object>(); 
+        return options != null ? new HashMap<String, Object>(options) : new HashMap<String, Object>();
     }
-    
+
     /**
      * Adds an image option to the options map and returns.
      * If options were null, returns a new map (result never null).
@@ -229,7 +229,7 @@ public abstract class ImageUtil {
         options.put(name, value);
         return options;
     }
-    
+
     /**
      * Adds an image option to the options map without modifying the original, and returns the new one,
      * but only if the map did not already contain the name as key.
@@ -246,7 +246,7 @@ public abstract class ImageUtil {
         }
         return options;
     }
-    
+
     /**
      * Similar to {@link #addImageOpOptionIfNotSet}, but only sets the option if neither the incoming options
      * nor the ImageOp's defaults already contain the option.
@@ -265,9 +265,9 @@ public abstract class ImageUtil {
         }
         return options;
     }
-    
+
     /**
-     * SCIPIO: Encodes an arbitrary filename (last part of a full file path) 
+     * SCIPIO: Encodes an arbitrary filename (last part of a full file path)
      * for secure usage inside a file path/URL used
      * for images - preventing directory separators and directory switches ("..").
      * <p>
@@ -286,9 +286,9 @@ public abstract class ImageUtil {
 //            return name.replaceAll("[^a-zA-Z0-9]", ""); // emergency fallback for security reasons
 //        }
     }
-    
+
     /**
-     * SCIPIO: Encodes an arbitrary directory name (non-last part of a full file path) 
+     * SCIPIO: Encodes an arbitrary directory name (non-last part of a full file path)
      * for secure usage inside a file path/URL used
      * for images - preventing directory separators and directory switches ("..").
      * <p>

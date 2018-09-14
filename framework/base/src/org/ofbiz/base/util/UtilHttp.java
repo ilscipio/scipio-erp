@@ -280,7 +280,7 @@ public final class UtilHttp {
         // SCIPIO: delegating
         return transformJSONAttributeMap(getAttributeMap(request));
     }
-    
+
     /**
      * SCIPIO: factored out from getJSONAttributeMap.
      * Added 2017-05-01.
@@ -732,7 +732,7 @@ public final class UtilHttp {
     public static TimeZone getTimeZone(HttpServletRequest request, HttpSession session, String appDefaultTimeZoneString) {
         // check session first, should override all if anything set there
         TimeZone timeZone = session != null ? (TimeZone) session.getAttribute(SESSION_KEY_TIMEZONE) : null;
-        
+
         // next see if the userLogin has a value
         if (timeZone == null) {
             Map<String, Object> userLogin = UtilGenerics.checkMap(session.getAttribute("userLogin"), String.class, Object.class);
@@ -1338,8 +1338,8 @@ public final class UtilHttp {
         return null;
     }
 
-    /** 
-     * Obtains the session ID from the request, or "unknown" if no session present. 
+    /**
+     * Obtains the session ID from the request, or "unknown" if no session present.
      * <p>
      * SCIPIO: <strong>WARN:</strong> Despite what is written above (by stock), at time of writing
      * (2016-05-26), this method will in fact cause new session creation, and may be unsafe to fix directly.
@@ -1350,19 +1350,19 @@ public final class UtilHttp {
         HttpSession session = request.getSession();
         return (session == null ? "unknown" : session.getId());
     }
-    
-    /** 
-     * SCIPIO: Obtains the session ID from the request, or "unknown" if no session present. 
+
+    /**
+     * SCIPIO: Obtains the session ID from the request, or "unknown" if no session present.
      * <p>
      * <strong>NOTE</strong>: Currently (2016-05-26) This version unlike {@link #getSessionId} ACTUALLY does
-     * what the description says, and will never implicitly create a new session if none 
+     * what the description says, and will never implicitly create a new session if none
      * existed. If the above is ever fixed, this one should remain the same.
      */
     public static String getSessionIdIfSet(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         return (session == null ? "unknown" : session.getId());
     }
-    
+
     /**
      * checks, if the current request comes from a searchbot
      *
@@ -1503,7 +1503,7 @@ public final class UtilHttp {
         request.setAttribute("UNIQUE_ID", uniqueIdNumber + 1);
         return "autoId_" + uniqueIdNumber;
     }
-    
+
     public static void setContentDisposition(final HttpServletResponse response, final String filename) {
         String dispositionType = UtilProperties.getPropertyValue("requestHandler", "content-disposition-type", "attachment");
         response.setHeader("Content-Disposition", String.format("%s; filename=\"%s\"", dispositionType, filename));
@@ -1554,7 +1554,7 @@ public final class UtilHttp {
     public static boolean isFullUrl(String uri) {
         return (uri.startsWith("http://") || uri.startsWith("https://") || uri.startsWith("//"));
     }
-    
+
     /**
      * SCIPIO: Checks if the given uri is a full URL, permissively, attempting to allow
      * some types of language encodings.
@@ -1583,7 +1583,7 @@ public final class UtilHttp {
      * SCIPIO: builds a list of prefixes used for checking full URL presence in permissive fashion.
      * <p>
      * WARN/FIXME?: Imprecise, bad, potential security risk, does not handle CSS
-     * 
+     *
      * @see #isFullUrlPerm
      */
     private static List<String> makeFullUrlPermPrefixes() {
@@ -1591,26 +1591,26 @@ public final class UtilHttp {
         prefixes.add("http://");
         prefixes.add("https://");
         prefixes.add("//");
-        
+
         for(String encoderName : new String[] { "html" }) {
             UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderName);
             prefixes.add(encoder.encode("http://"));
             prefixes.add(encoder.encode("https://"));
             prefixes.add(encoder.encode("//"));
         }
-        
+
         // SPECIAL CASE: the encoders don't deal with javascript properly, where the frontslashes
         // may be escaped by backslashes. even worse, in Freemarker, only the first slash is escaped...
         prefixes.add("\\/\\/");
         prefixes.add("\\//");
-        
+
         // FIXME: Doesn't handle CSS!
-        
+
         ArrayList<String> prefixList = new ArrayList<>(prefixes);
         prefixList.trimToSize();
         return prefixList;
     }
-    
+
     /**
      * SCIPIO: pre-built list of static full URL permissive prefixes
      */

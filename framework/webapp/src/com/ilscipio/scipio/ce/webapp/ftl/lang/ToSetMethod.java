@@ -45,10 +45,10 @@ public class ToSetMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("Invalid number of arguments (expected: 0-1)");
         }
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        
+
         if (args.size() > 0) {
             TemplateModel object = (TemplateModel) args.get(0);
-    
+
             ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
             return LangFtlUtil.toSet(object, objectWrapper);
         }
@@ -56,5 +56,5 @@ public class ToSetMethod implements TemplateMethodModelEx {
             return new HashSet<Object>();
         }
     }
-    
+
 }

@@ -25,7 +25,7 @@ import org.ofbiz.base.util.cache.UtilCache;
  * but it also abstracts a versatile image type specification (that returns different value depending
  * on its contents and the source image available in context).
  * <p>
- * This is split into low-level image pixel type-based definitions in 
+ * This is split into low-level image pixel type-based definitions in
  * {@link ImageType.ImagePixelType} (<code>TYPE_XXX</code> constants)
  * and high-level complex ImageType definitions (this class itself and its constants).
  * <p>
@@ -47,18 +47,18 @@ public class ImageType implements Serializable {
      * Generic static fields
      * *************************************************************
      */
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final UtilCache<String, ImageType> strReprCache = 
+    private static final UtilCache<String, ImageType> strReprCache =
             UtilCache.createUtilCache("common.image.imageType", 1000, 100000); // NOTE: we need limit because these could be passed from screens
 
-    
+
     /*
      * *************************************************************
      * Low-level image pixel type definitions
      * *************************************************************
      */
-    
+
     /**
      * Image pixel type constants, consisting of all the <code>TYPE_XXX</code> constants of
      * {@link java.awt.image.BufferedImage} plus additional ones supplementing them (informally).
@@ -81,7 +81,7 @@ public class ImageType implements Serializable {
          */
 
         // DEV NOTE: we start at -10 for future/external interoperability
-        
+
         /**
          * Forces preserving the input image type EVEN if it causes color loss
          * or is very slow.
@@ -107,35 +107,35 @@ public class ImageType implements Serializable {
          * conversions are simply skipped. Only unavoidable conversions as part of the main imageop are performed.
          */
         public static final int TYPE_NOPRESERVE = -20;
-        
+
         /*
          * *************************************************************
          * Context and reflection helpers
          * *************************************************************
          */
-        
+
         // DEV NOTE: if adding more, make sure not already in use - if unsure, use
         // weird negative numbers
-        
+
         public static Map<String, Integer> getTypeNameValueMap() {
             return ImageType.imagePixelTypeNameValueMap;
         }
-        
+
         public static Map<Integer, String> getTypeValueNameMap() {
             return ImageType.imagePixelTypeValueNameMap;
         }
 
-        
+
         public static boolean isValidTypeConstantName(String name) {
             return imagePixelTypeNameValueMap.containsKey(name);
         }
-        
+
         public static boolean isValidTypeConstant(int value) {
             return imagePixelTypeValueNameMap.containsKey(value);
         }
-        
+
         /**
-         * Gets {@link ImagePixelType} TYPE_XXX constant by name. 
+         * Gets {@link ImagePixelType} TYPE_XXX constant by name.
          * Throws IllegalArgumentException if invalid name.
          */
         public static int getTypeConstant(String name) throws IllegalArgumentException {
@@ -143,9 +143,9 @@ public class ImageType implements Serializable {
             if (value != null) return value;
             else throw new IllegalArgumentException(name + " is not a valid image pixel type TYPE_XXX constant name in " + ImagePixelType.class.getName());
         }
-        
+
         /**
-         * Gets {@link ImagePixelType} TYPE_XXX constant by name. 
+         * Gets {@link ImagePixelType} TYPE_XXX constant by name.
          * Returns default if invalid name.
          */
         public static Integer getTypeConstant(String name, Integer defaultValue) {
@@ -153,7 +153,7 @@ public class ImageType implements Serializable {
             return (value != null) ? value : defaultValue;
         }
 
-        
+
         /**
          * Gets {@link ImagePixelType} TYPE_XXX constant name by value.
          * Throws IllegalArgumentException if invalid value.
@@ -163,7 +163,7 @@ public class ImageType implements Serializable {
             if (name != null) return name;
             else throw new IllegalArgumentException(value + " is not a valid image pixel type TYPE_XXX constant value in " + ImagePixelType.class.getName());
         }
-        
+
         /**
          * Gets {@link ImagePixelType} TYPE_XXX constant name by value.
          * Returns default if invalid value.
@@ -173,9 +173,9 @@ public class ImageType implements Serializable {
             return (name != null) ? name : defaultValue;
         }
 
-        
-        
-        
+
+
+
         /**
          * SCIPIO: Dynamically gets BufferedImage int constant by name.
          * Added 2017-07-12.
@@ -188,7 +188,7 @@ public class ImageType implements Serializable {
                 throw new IllegalArgumentException("Buffered image type with name '" + typeName + "' does not exist in BufferedImage", e);
             }
         }
-        
+
         /**
          * SCIPIO: Dynamically gets BufferedImage int constant by name.
          * Added 2017-07-12.
@@ -202,63 +202,63 @@ public class ImageType implements Serializable {
                 return defaultValue;
             }
         }
-        
-        
+
+
         /*
          * *************************************************************
          * Pixel type helpers
          * *************************************************************
          */
-        
+
         public static boolean isTypeIndexed(int imagePixelType) {
-            return imagePixelType == TYPE_BYTE_INDEXED || 
+            return imagePixelType == TYPE_BYTE_INDEXED ||
                     imagePixelType == TYPE_BYTE_BINARY;
         }
-        
+
         public static boolean isTypeIndexed(BufferedImage image) {
             return isTypeIndexed(image.getType());
         }
-        
+
         public static boolean isTypeCustom(int imagePixelType) {
             return imagePixelType == TYPE_CUSTOM;
         }
-        
+
         public static boolean isTypeCustom(BufferedImage image) {
             return isTypeCustom(image.getType());
         }
-        
+
         public static boolean isTypeIndexedOrCustom(int imagePixelType) {
-            return imagePixelType == TYPE_BYTE_INDEXED || 
-                    imagePixelType == TYPE_BYTE_BINARY || 
+            return imagePixelType == TYPE_BYTE_INDEXED ||
+                    imagePixelType == TYPE_BYTE_BINARY ||
                     imagePixelType == TYPE_CUSTOM;
         }
-        
+
         public static boolean isTypeIndexedOrCustom(BufferedImage image) {
             return isTypeIndexedOrCustom(image.getType());
         }
-        
+
         public static boolean isTypePreserve(int imagePixelType) {
-            return imagePixelType == TYPE_PRESERVE_IF_LOSSLESS || 
+            return imagePixelType == TYPE_PRESERVE_IF_LOSSLESS ||
                     imagePixelType == TYPE_PRESERVE_ALWAYS ||
                     imagePixelType == TYPE_PRESERVE_IF_LOWLOSS;
         }
-        
+
         public static boolean isTypeNoPreserve(int imagePixelType) {
             return imagePixelType == TYPE_NOPRESERVE;
         }
-        
+
         public static boolean isTypeNoPreserveOrNull(Integer imagePixelType) {
             return imagePixelType == null || imagePixelType == TYPE_NOPRESERVE;
         }
-        
+
         public static boolean isTypeSpecial(int imagePixelType) {
             return isTypePreserve(imagePixelType) || isTypeNoPreserve(imagePixelType);
         }
-        
+
         public static boolean isTypeDirect(int imagePixelType) {
             return !isTypeIndexedOrCustom(imagePixelType);
         }
-        
+
         /**
          * Returns true mainly for "direct" non-indexed types that Graphics2D.drawImage has
          * no issues with, with respect to color loss.
@@ -282,15 +282,15 @@ public class ImageType implements Serializable {
     private static final Map<Integer, String> imagePixelTypeValueNameMap = Collections.unmodifiableMap(
             UtilMisc.putAllReverseMapping(new HashMap<Integer, String>(), imagePixelTypeNameValueMap));
 
-    
+
     /*
      * *************************************************************
      * High-level ImageType image type constants (ImageType)
      * *************************************************************
      */
-    
+
     /**
-     * Empty instance. 
+     * Empty instance.
      * NOTE: NOT strictly the only empty instance - use {@link #isEmpty()} for check.
      */
     public static final ImageType EMPTY = new ImageType();
@@ -349,9 +349,9 @@ public class ImageType implements Serializable {
      * NOTE: Ofbiz originally used TYPE_INT_ARGB_PRE only for this, but other image libraries
      * appear to use something more like TYPE_INT_ARGB/TYPE_INT_RGB, so will use that for the time being.
      */
-    public static final ImageType DEFAULT = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
-            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default"), 
-            INT_ARGB_OR_RGB, 
+    public static final ImageType DEFAULT = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE,
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default"),
+            INT_ARGB_OR_RGB,
             ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default");
     /**
      * Global system default BufferedImage/ImageType direct/non-indexed RGB type.
@@ -362,48 +362,48 @@ public class ImageType implements Serializable {
      * NOTE: Ofbiz originally used TYPE_INT_ARGB_PRE only for this, but other image libraries
      * appear to use something more like TYPE_INT_ARGB/TYPE_INT_RGB, so will use that for the time being.
      */
-    public static final ImageType DEFAULT_DIRECT = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
-            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.direct"), 
-            ImagePixelType.isTypeDirect(DEFAULT.getPixelTypeDefault()) ? DEFAULT : INT_ARGB_OR_RGB, 
+    public static final ImageType DEFAULT_DIRECT = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE,
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.direct"),
+            ImagePixelType.isTypeDirect(DEFAULT.getPixelTypeDefault()) ? DEFAULT : INT_ARGB_OR_RGB,
             ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.direct");
     /**
-     * Global system default BufferedImage/ImageType for image operations. 
+     * Global system default BufferedImage/ImageType for image operations.
      * This should usually be a single TYPE_INT_ARGB OR TYPE_4BYTE_ABGR value to preserve all color components.
      * NOTE: ofbiz used TYPE_PRESERVE_IF_NOT_CUSTOM for this but that may not even work at this time.
      */
-    public static final ImageType DEFAULT_IMAGEOP = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
-            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.imageop"), 
-            DEFAULT_DIRECT, 
+    public static final ImageType DEFAULT_IMAGEOP = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE,
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.imageop"),
+            DEFAULT_DIRECT,
             ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.imageop");
     /**
      * Default targetType specified by the central common scaling image helper methods, such as
      * {@link ImageTransform#scaleImage}; the default for this is PRESERVE_IF_LOWLOSS.
      */
-    public static final ImageType COMMON_SCALEIMAGE = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
-            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.common.scaleimage"), 
-            PRESERVE_IF_LOWLOSS, 
+    public static final ImageType COMMON_SCALEIMAGE = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE,
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.common.scaleimage"),
+            PRESERVE_IF_LOWLOSS,
             ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.common.scaleimage");
 
-    
+
     /*
      * *************************************************************
      * Instance fields
      * *************************************************************
      */
-    
+
     // the Integer types here are stored outside map for faster read
     private final ImageTypeInfo defaultInfo;
     private final ImageTypeInfo noAlphaInfo;
     private final Map<String, Integer> pixelTypes;
     private final Map<Integer, Integer> typeMappings;
-    
-    
+
+
     /*
      * *************************************************************
      * Constructors and factories
      * *************************************************************
      */
-    
+
     /**
      * Makes from default and noalpha.
      */
@@ -416,7 +416,7 @@ public class ImageType implements Serializable {
         this.pixelTypes = Collections.unmodifiableMap(pixelTypes);
         this.typeMappings = Collections.emptyMap();
     }
-    
+
     /**
      * Makes from default and noalpha.
      */
@@ -429,7 +429,7 @@ public class ImageType implements Serializable {
         this.pixelTypes = Collections.unmodifiableMap(pixelTypes);
         this.typeMappings = Collections.emptyMap();
     }
-    
+
     /**
      * Makes from default only.
      */
@@ -441,17 +441,17 @@ public class ImageType implements Serializable {
         this.pixelTypes = Collections.unmodifiableMap(pixelTypes);
         this.typeMappings = Collections.emptyMap();
     }
-    
+
     /**
      * Makes completely empty instance.
      */
-    public ImageType() { 
+    public ImageType() {
         this.defaultInfo = ImageTypeInfo.EMPTY;
         this.noAlphaInfo = ImageTypeInfo.EMPTY;
         this.pixelTypes = Collections.emptyMap();
         this.typeMappings = Collections.emptyMap();
     }
-    
+
     /**
      * Makes from given map and typemap.
      */
@@ -459,14 +459,14 @@ public class ImageType implements Serializable {
         pixelTypes = new HashMap<>(pixelTypes);
         this.defaultInfo = ImageTypeInfo.from(pixelTypes.get("default"));
         this.noAlphaInfo = ImageTypeInfo.from(pixelTypes.get("noalpha"));
-        
+
         if (typeMappings == null || typeMappings.isEmpty()) typeMappings = Collections.emptyMap();
         else typeMappings = Collections.unmodifiableMap(new HashMap<>(typeMappings));
         this.typeMappings = typeMappings;
-        
+
         this.pixelTypes = Collections.unmodifiableMap(new HashMap<>(pixelTypes));
     }
-    
+
     /**
      * Gets for object which can be ImageType, Integer or String repr. Uses cache.
      * <p>
@@ -482,7 +482,7 @@ public class ImageType implements Serializable {
             throw new IllegalArgumentException("Unrecognized type used to represent ImageType: " + obj.getClass().getName());
         }
     }
-    
+
     public static ImageType getForObjectNonEmptySafe(Object obj, ImageType defaultValue, String resource) {
         try {
             ImageType imageType = getForObject(obj);
@@ -512,7 +512,7 @@ public class ImageType implements Serializable {
             throw new IllegalArgumentException("Unrecognized type used to represent ImageType: " + obj.getClass().getName());
         }
     }
-    
+
     /**
      * Constructs from string representation. Uses cache.
      * <p>
@@ -534,14 +534,14 @@ public class ImageType implements Serializable {
         }
         return imageType;
     }
-    
+
     protected static ImageType createFromStrRepr(String str) throws IllegalArgumentException {
         if (UtilValidate.isEmpty(str)) return EMPTY;
         str = removeWhitespace(str);
         if (str.isEmpty()) return EMPTY;
         return createFromStrReprNormalized(str);
     }
-    
+
     /**
      * Assumes no spaces and non-empty.
      */
@@ -554,7 +554,7 @@ public class ImageType implements Serializable {
             return new ImageType(ImagePixelType.getTypeConstant(str));
         }
     }
-    
+
     protected static ImageType createFromMapInnerStrReprNormalized(String entries, String origStr) throws IllegalArgumentException {
         String[] pairs = StringUtils.split(entries, ",");
         Map<String, Integer> intMap = new HashMap<>();
@@ -569,7 +569,7 @@ public class ImageType implements Serializable {
         }
         return new ImageType(intMap, typeMapping);
     }
-    
+
     protected static Map<Integer, Integer> parseTypeMapStrReprNormalized(String entries, String origStr) throws IllegalArgumentException {
         if (entries.startsWith("{") && entries.endsWith("}")) {
             String[] pairs = StringUtils.split(entries, ",");
@@ -594,7 +594,7 @@ public class ImageType implements Serializable {
                     + "e.g. should be {...,typemap={TYPE_CUSTOM=TYPE_INT_ARGB,...},}), but found: " + origStr);
         }
     }
-    
+
     protected static Map<String, String> parseMapStrReprNormalized(String entries, String origStr) throws IllegalArgumentException {
         if (entries.startsWith("{") && entries.endsWith("}")) {
             String[] pairs = StringUtils.split(entries, ",");
@@ -608,7 +608,7 @@ public class ImageType implements Serializable {
             throw new IllegalArgumentException("Invalid ImageType map string representation: " + origStr);
         }
     }
-    
+
     protected static String[] parseMapEntryStrReprNormalized(String pair, String origStr) throws IllegalArgumentException {
         String[] nameValue = StringUtils.split(pair, "=", 2);
         if (nameValue.length != 2) throw new IllegalArgumentException("Invalid ImageType map string representation (missing '=' char): " + origStr);
@@ -620,21 +620,21 @@ public class ImageType implements Serializable {
         nameValue[1] = value;
         return nameValue;
     }
-    
-    
+
+
     /*
      * *************************************************************
      * Basic accessors
      * *************************************************************
      */
-    
+
     /**
      * Returns true if completely empty instance (doesn't check nulls much).
      */
     public boolean isEmpty() {
         return pixelTypes.isEmpty();
     }
-    
+
     /**
      * Returns true if there is a non-null pixel type for this instance.
      * This can be used as a more useful "non-empty" check.
@@ -642,50 +642,50 @@ public class ImageType implements Serializable {
     public boolean hasPixelTypeDefault() {
         return getPixelTypeDefault() != null;
     }
-    
+
     public boolean hasOnlyPixelTypeDefault() {
         return getPixelTypeDefault() != null && pixelTypes.size() == 1;
     }
-    
+
     /**
      * Returns default type info or ImageTypeInfo.EMPTY (never null).
      */
     public ImageTypeInfo getDefaultInfo() {
         return defaultInfo;
     }
-    
+
     /**
      * Returns noalpha type info, with fallback on default info or ImageTypeInfo.EMPTY (never null).
      */
     public ImageTypeInfo getNoAlphaInfo() {
         return noAlphaInfo != null ? noAlphaInfo : getDefaultInfo();
     }
-    
+
     /**
      * Returns noalpha type info or ImageTypeInfo.EMPTY (never null).
      */
     public ImageTypeInfo getNoAlphaInfoRaw() {
         return noAlphaInfo != null ? noAlphaInfo : ImageTypeInfo.EMPTY;
     }
-    
+
     /**
-     * The image type to use by default (no conditions). 
+     * The image type to use by default (no conditions).
      */
     public Integer getPixelTypeDefault() {
         return getPixelTypeDefaultRaw();
     }
-    
+
     public Integer getPixelTypeDefaultRaw() {
         return defaultInfo.getPixelType();
     }
-    
+
     /**
      * Optional image type to use when the image has no alpha channel - optimization.
      */
     public Integer getPixelTypeNoAlpha() {
         return getPixelTypeNoAlphaRaw() != null ? getPixelTypeNoAlphaRaw() : getPixelTypeDefault();
     }
-    
+
     public Integer getPixelTypeNoAlphaRaw() {
         return noAlphaInfo.getPixelType();
     }
@@ -697,11 +697,11 @@ public class ImageType implements Serializable {
         Integer result = getPixelTypeRaw(typeName);
         return result != null ? result : getPixelTypeDefault();
     }
-    
+
     protected Integer getPixelTypeRaw(String typeName) {
         return pixelTypes.get(typeName);
     }
-    
+
     /**
      * As read-only map.
      */
@@ -713,17 +713,17 @@ public class ImageType implements Serializable {
         }
         return Collections.unmodifiableMap(map);
     }
-    
+
     @Override
     public String toString() {
         if (hasOnlyPixelTypeDefault()) return makePixelTypeStrRepr(getPixelTypeDefault());
         else return makePixelTypeMapStrRepr(asMap());
     }
-    
+
     public static String makePixelTypeStrRepr(Integer pixelType) {
         return ImagePixelType.getTypeConstantName(pixelType, "{}");
     }
-    
+
     /**
      * TODO: REVIEW: sketchy
      */
@@ -737,7 +737,7 @@ public class ImageType implements Serializable {
         sb.append("}");
         return sb.toString();
     }
-    
+
     private static void makePixelTypeMapStrRepr(Map<?, ?> map, StringBuilder sb, String... skipKeys) {
         for(Map.Entry<?, ?> entry : map.entrySet()) {
             String name;
@@ -768,14 +768,14 @@ public class ImageType implements Serializable {
             }
         }
     }
-    
-    
+
+
     /*
      * *************************************************************
      * High-level queries
      * *************************************************************
      */
-    
+
     /**
      * The image type info needed to properly describe an image type.
      * NOTE: pixel type is NOT sufficient to describe type, that's why this exists, and
@@ -784,27 +784,27 @@ public class ImageType implements Serializable {
     public static class ImageTypeInfo implements Serializable {
         public static final ImageTypeInfo EMPTY = new ImageTypeInfo();
         private static Map<Integer, ImageTypeInfo> pixelTypeInfoCache = Collections.emptyMap(); // allows unique instances
-        
+
         protected final Integer pixelType;
         protected final ColorModel colorModel;
-        
+
         protected ImageTypeInfo(Integer pixelType, ColorModel colorModel) {
             this.pixelType = pixelType;
             this.colorModel = colorModel;
         }
-        
+
         protected ImageTypeInfo(Integer pixelType) {
             this.pixelType = pixelType;
             this.colorModel = null;
         }
-        
+
         protected ImageTypeInfo(BufferedImage image) {
             this.pixelType = image.getType();
             this.colorModel = image.getColorModel();
         }
-        
+
         protected ImageTypeInfo() { this(null, null); }
-        
+
         public static ImageTypeInfo from(Integer pixelType, ColorModel colorModel) throws IllegalArgumentException {
             if (colorModel != null) return new ImageTypeInfo(pixelType, colorModel);
             else if (pixelType == null) return EMPTY;
@@ -823,52 +823,52 @@ public class ImageType implements Serializable {
                 return info;
             }
         }
-        
+
         public static ImageTypeInfo from(Integer pixelType) throws IllegalArgumentException {
             return from(pixelType, null);
         }
-        
+
         public static ImageTypeInfo from(BufferedImage image) throws IllegalArgumentException {
             return from(image.getType(), image.getColorModel());
         }
-        
+
         /**
          * TODO: NOT IMPLEMENTED - IS IT POSSIBLE??
          */
         public static ImageTypeInfo from(Image image) throws IllegalArgumentException {
-            throw new UnsupportedOperationException("Cannot make ImageTypeInfo from " 
+            throw new UnsupportedOperationException("Cannot make ImageTypeInfo from "
                     + Image.class.getName() + " class; please use BufferedImage");
         }
-        
+
         public Integer getPixelType() {
             return pixelType;
         }
         public ColorModel getColorModel() {
             return colorModel;
         }
-        
+
         protected boolean imageMatchesType(BufferedImage imageToTest) {
             return ImageType.imageMatchesType(imageToTest, getPixelType(), getColorModel());
         }
-        
+
         protected boolean imageMatchesRequestedType(BufferedImage imageToTest, ImageTypeInfo imageType) {
             return ImageType.imageMatchesRequestedType(imageToTest, getPixelType(), getColorModel());
         }
-        
+
         protected boolean imageMatchesRequestedType(BufferedImage imageToTest, BufferedImage srcImage) {
             return ImageType.imageMatchesRequestedType(imageToTest, getPixelType(), getColorModel(), srcImage);
         }
-        
+
         protected ImageTypeInfo resolveTargetType(BufferedImage srcImage) {
             if (ImagePixelType.isTypePreserve(getPixelType())) return ImageTypeInfo.from(srcImage);
-            else if (ImagePixelType.isTypeNoPreserve(getPixelType())) 
+            else if (ImagePixelType.isTypeNoPreserve(getPixelType()))
                 throw new IllegalArgumentException("TARGET_NOPRESERVE or equivalent non-type was passed,"
                         + " but no 'current' image type value available from this overload");
             return this;
         }
-        
+
     }
-    
+
     /**
      * Resolves the image type info to use for the given image (RECOMMENDED OVERLOAD).
      * May return null.
@@ -876,7 +876,7 @@ public class ImageType implements Serializable {
     public ImageTypeInfo getImageTypeInfoFor(BufferedImage image) {
         return getImageTypeInfoFor(image.getType(), image.getColorModel());
     }
-    
+
     /**
      * Resolves the image type info to use for the given color model.
      * May return null.
@@ -884,14 +884,14 @@ public class ImageType implements Serializable {
     public ImageTypeInfo getImageTypeInfoFor(Integer targetPixelType, ColorModel colorModel) {
         Integer resultPixelType = null;
         ColorModel resultColorModel = null; // TODO: DEV NOTE: this must NOT be the colorModel parameter!!!
-        
+
         if (targetPixelType != null) resultPixelType = typeMappings.get(targetPixelType);
         if (resultPixelType == null && (colorModel != null && !colorModel.hasAlpha())) resultPixelType = getPixelTypeNoAlpha();
         if (resultPixelType == null) resultPixelType = getPixelTypeDefault();
-        
+
         return new ImageTypeInfo(resultPixelType, resultColorModel);
     }
-    
+
     /**
      * Resolves the image type info to use for the given color model.
      * May return null.
@@ -899,8 +899,8 @@ public class ImageType implements Serializable {
     public ImageTypeInfo getImageTypeInfoFor(Integer targetPixelType) {
         return getImageTypeInfoFor(targetPixelType, null);
     }
-    
-    
+
+
     /**
      * Resolves the image pixel type to use for the given image (RECOMMENDED OVERLOAD).
      * May return null.
@@ -908,7 +908,7 @@ public class ImageType implements Serializable {
     public Integer getPixelTypeFor(BufferedImage image) {
         return getPixelTypeFor(image.getType(), image.getColorModel());
     }
-    
+
     /**
      * Resolves the image pixel type to use for the given color model.
      * May return null.
@@ -921,7 +921,7 @@ public class ImageType implements Serializable {
         if (colorModel != null && !colorModel.hasAlpha()) return getPixelTypeNoAlpha();
         return getPixelTypeDefault();
     }
-    
+
     /**
      * Resolves the image pixel type to use for the given color model.
      * May return null.
@@ -929,29 +929,29 @@ public class ImageType implements Serializable {
     public Integer getPixelTypeFor(Integer targetPixelType) {
         return getPixelTypeFor(targetPixelType, null);
     }
-    
+
     /**
      * TODO: always returns null... (RECOMMENDED OVERLOAD)
      */
     public ColorModel getColorModelFor(BufferedImage image) {
         return null;
     }
-    
+
     /**
      * TODO: always returns null...
      */
     public ColorModel getColorModelFor(Integer targetPixelType, ColorModel colorModel) {
         return null;
     }
-    
+
     /**
      * TODO: always returns null...
      */
     public ColorModel getColorModelFor(Integer targetPixelType) {
         return getColorModelFor(targetPixelType, null);
     }
-    
-    
+
+
     /*
      * *************************************************************
      * Generic helpers
@@ -961,7 +961,7 @@ public class ImageType implements Serializable {
     protected static String removeWhitespace(String str) {
         return StringUtils.replace(str, " ", "");
     }
-    
+
     // TODO: move to reflection class
     protected static Map<String, Integer> populateClassIntFieldNameValueMapSafe(Class<?> cls, String fieldNamePrefix, Map<String, Integer> nameValueMap) {
         try {
@@ -975,8 +975,8 @@ public class ImageType implements Serializable {
         }
         return nameValueMap;
     }
-    
-    
+
+
     /*
      * *************************************************************
      * Image data/type helpers
@@ -991,7 +991,7 @@ public class ImageType implements Serializable {
     public static ImageTypeInfo resolveTargetType(ImageTypeInfo targetType, BufferedImage srcImage) {
         return targetType.resolveTargetType(srcImage);
     }
-    
+
     /**
      * If targetPixelType is a TYPE_PRESERVE_XX, returns srcImagePixelType;
      * if it is TYPE_NOPRESERVE, returns currentPixelType (usually the result type of an image op);
@@ -1000,7 +1000,7 @@ public class ImageType implements Serializable {
     public static ImageTypeInfo resolveTargetType(int targetPixelType, ColorModel targetColorModel, BufferedImage srcImage) {
         return ImageTypeInfo.from(targetPixelType, targetColorModel).resolveTargetType(srcImage);
     }
-    
+
     /**
      * Checks if the image type exactly matches the targetPixelType and targetColorModel (optional).
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
@@ -1008,7 +1008,7 @@ public class ImageType implements Serializable {
     public static boolean imageMatchesType(BufferedImage imageToTest, ImageTypeInfo imageType) {
         return imageType.imageMatchesType(imageToTest);
     }
-    
+
     /**
      * Checks if the image type exactly matches the targetPixelType and targetColorModel (optional).
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
@@ -1016,7 +1016,7 @@ public class ImageType implements Serializable {
     public static boolean imageMatchesType(BufferedImage imageToTest, int targetPixelType, ColorModel targetColorModel) {
         return imageToTest.getType() == targetPixelType; // TODO: check color model
     }
-    
+
     /**
      * Checks if the image type exactly matches the targetPixelType and targetColorModel (optional).
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
@@ -1024,7 +1024,7 @@ public class ImageType implements Serializable {
     public static boolean imageMatchesType(BufferedImage imageToTest, int targetPixelType) {
         return imageMatchesType(imageToTest, targetPixelType, null); // TODO: check color model
     }
-    
+
     /**
      * Checks if the image type exactly matches the targetTypeImage.
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
@@ -1032,7 +1032,7 @@ public class ImageType implements Serializable {
     public static boolean imageMatchesType(BufferedImage imageToTest, BufferedImage targetTypeImage) {
         return imageToTest.getType() == targetTypeImage.getType(); // TODO: check color model
     }
-    
+
     /**
      * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
@@ -1041,7 +1041,7 @@ public class ImageType implements Serializable {
     public static boolean imageMatchesRequestedType(BufferedImage imageToTest, ImageTypeInfo imageType) {
         return imageType.imageMatchesType(imageToTest);
     }
-    
+
     /**
      * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
@@ -1050,7 +1050,7 @@ public class ImageType implements Serializable {
     public static boolean imageMatchesRequestedType(BufferedImage imageToTest, int targetPixelType, ColorModel targetColorModel) {
         return imageMatchesType(imageToTest, targetPixelType, targetColorModel);
     }
-    
+
     /**
      * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type, which for this method is simply the srcImage's type.
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
@@ -1058,7 +1058,7 @@ public class ImageType implements Serializable {
     public static boolean imageMatchesRequestedType(BufferedImage imageToTest, BufferedImage srcImage) {
         return imageMatchesType(imageToTest, srcImage);
     }
-    
+
     /**
      * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
@@ -1067,7 +1067,7 @@ public class ImageType implements Serializable {
     public static boolean imageMatchesRequestedType(BufferedImage imageToTest, ImageTypeInfo imageType, BufferedImage srcImage) {
         return imageType.imageMatchesRequestedType(imageToTest, srcImage);
     }
-    
+
     /**
      * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
@@ -1075,7 +1075,7 @@ public class ImageType implements Serializable {
      */
     public static boolean imageMatchesRequestedType(BufferedImage imageToTest, Integer targetPixelType, ColorModel targetColorMode, BufferedImage srcImage) {
         // THIS IS THE ACTUAL IMPLEMENTATION
-        
+
         if (ImagePixelType.isTypePreserve(targetPixelType)) targetPixelType = resolveTargetType(targetPixelType, targetColorMode, srcImage).getPixelType();
 
         return imageToTest.getType() == targetPixelType;
@@ -1087,13 +1087,13 @@ public class ImageType implements Serializable {
         ColorModel cm = image.getColorModel();
         sb.append("; bits per pixel: ");
         sb.append(cm.getPixelSize());
-        
+
         if (image.getColorModel() instanceof IndexColorModel) {
             IndexColorModel icm = (IndexColorModel) cm;
             sb.append("; color array size: ");
             sb.append(icm.getMapSize());
         }
-        
+
         sb.append("]");
         return sb.toString();
     }

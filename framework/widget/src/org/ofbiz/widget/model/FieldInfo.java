@@ -161,7 +161,7 @@ public abstract class FieldInfo implements Serializable  {
 
     /**
      * Returns a new instance of this object.
-     * 
+     *
      * @param modelFormField
      */
     public abstract FieldInfo copy(ModelFormField modelFormField);
@@ -173,7 +173,7 @@ public abstract class FieldInfo implements Serializable  {
     public int getFieldType() {
         return fieldType;
     }
-    
+
     public String getFieldTypeName() { // SCIPIO
         return fieldTypeByNumber.get(getFieldType());
     }

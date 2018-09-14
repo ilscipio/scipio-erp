@@ -84,7 +84,7 @@ public final class ServiceEcaRule implements java.io.Serializable {
         // SCIPIO
         ((ArrayList<ServiceEcaCondition>) conditions).trimToSize();
         ((ArrayList<Object>) actionsAndSets).trimToSize();
-        
+
         if (Debug.verboseOn()) {
             Debug.logVerbose("actions and sets (intermixed): " + actionsAndSets, module);
         }

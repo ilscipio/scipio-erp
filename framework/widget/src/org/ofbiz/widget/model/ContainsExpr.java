@@ -18,7 +18,7 @@ import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.Token;
 import org.w3c.dom.Element;
 
 /**
- * SCIPIO: Widget screen section contains-expression - special expression that instructs renderer which sections 
+ * SCIPIO: Widget screen section contains-expression - special expression that instructs renderer which sections
  * contain or don't contain which other sections and elements.
  * <p>
  * See widget-screen.xsd "attlist.generic-screen-widget-elem" "contains" attribute for details.
@@ -45,7 +45,7 @@ public class ContainsExpr implements Serializable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, ContainsExpr> cache = UtilCache.createUtilCache("widget.screen.containsexpr");
-    
+
     // entries are comma-separated
     private static final Pattern containsExprTokenSplitPat = Pattern.compile("\\s*,\\s*");
 
@@ -62,15 +62,15 @@ public class ContainsExpr implements Serializable {
         cache.put(MATCH_NONE.getStrExpr(), MATCH_NONE);
         //cache.put(DEFAULT.getStrExpr(), DEFAULT);
     }
-    
-    /* 
+
+    /*
      * FIXME:
      * this whole class needs to be updated to support the Token expressions.
      * currently the "%" type and bracket attributes won't work properly.
      * I have not figured out the way to implement the comparison logic.
      * the current comparison logic is "dumb".
      */
-    
+
     // NOTE: these follow natural specificity
     private final String strExpr;
     private final Set<String> exactIncludes;
@@ -79,16 +79,16 @@ public class ContainsExpr implements Serializable {
     private final List<String> wildExcludes; // TODO: find way to optimize
     private final Map<Character, Boolean> matchAllTypes;
     private final boolean matchAll;
-    
+
     public ContainsExpr(String strExpr) throws IllegalArgumentException {
         this(strExpr, null);
     }
-    
+
     public ContainsExpr(String strExpr, Element widgetElement) throws IllegalArgumentException {
         this.strExpr = strExpr;
         String[] tokenArr = containsExprTokenSplitPat.split(strExpr.trim());
         if (tokenArr.length <= 0) throw new IllegalArgumentException(makeErrorMsg("no names in expression", null, strExpr, widgetElement));
-        
+
         // NOTE: these are layered by specificity from most exact to most generic
         Set<String> exactIncludes = new HashSet<>();
         Set<String> exactExcludes = new HashSet<>();
@@ -111,11 +111,11 @@ public class ContainsExpr implements Serializable {
 
             // OLD - this did not extract the attributes
 //            char type = tokenStr.charAt(0);
-//            if (!WidgetRenderTargetExpr.MET_ALL.contains(type)) 
+//            if (!WidgetRenderTargetExpr.MET_ALL.contains(type))
 //                throw new IllegalArgumentException(makeErrorMsg("name has missing"
 //                        + " or invalid type specifier (should start with one of: " + WidgetRenderTargetExpr.MET_ALL_STR + ")", fullToken, strExpr, widgetElement));
 //            String name = tokenStr.substring(1);
-            
+
             Token token;
             try {
                 token = Token.interpret(tokenStr);
@@ -125,11 +125,11 @@ public class ContainsExpr implements Serializable {
             String name = token.getName().toString();
             char type = token.getType();
             String normTokenStr = token.getCmpNormStringExpr();
-            
+
             // FIXME: this does not properly compare supported Tokens
-            // nor does it recognized the bracketed attributes 
+            // nor does it recognized the bracketed attributes
             // because we are ditching the Token instances
-            
+
             if (name.equals(WidgetRenderTargetExpr.WILDCARD_STRING)) {
                 // FIXME: missing attribute support - we are ditching attributes!
                 if (token.hasAttr()) {
@@ -162,7 +162,7 @@ public class ContainsExpr implements Serializable {
                 }
             }
         }
-        
+
         this.exactIncludes = exactIncludes.isEmpty() ? Collections.<String> emptySet() : exactIncludes;
         this.exactExcludes = exactExcludes.isEmpty() ? Collections.<String> emptySet() : exactExcludes;
         wildIncludes.trimToSize();
@@ -191,7 +191,7 @@ public class ContainsExpr implements Serializable {
         }
         return str;
     }
-    
+
     /**
      * Gets instance from CACHE.
      */
@@ -207,21 +207,21 @@ public class ContainsExpr implements Serializable {
         }
         else return null;
     }
-    
+
     public static ContainsExpr getInstanceOrDefault(String strExpr, Element widgetElement, ContainsExpr defaultValue) {
         ContainsExpr expr = getInstance(strExpr, widgetElement);
         return expr != null ? expr : defaultValue;
     }
-    
+
     public static ContainsExpr getInstanceOrDefault(String strExpr, Element widgetElement) {
         return getInstanceOrDefault(strExpr, widgetElement, DEFAULT);
     }
-    
+
     public static ContainsExpr getInstanceOrDefault(String strExpr) {
         return getInstanceOrDefault(strExpr, null, DEFAULT);
     }
-    
-    
+
+
     /**
      * Always creates new instance.
      */
@@ -230,21 +230,21 @@ public class ContainsExpr implements Serializable {
         if (!strExpr.isEmpty()) return new ContainsExpr(strExpr, widgetElement);
         else return null;
     }
-    
+
     public static ContainsExpr makeInstanceOrDefault(String strExpr, Element widgetElement, ContainsExpr defaultValue) {
         ContainsExpr expr = makeInstance(strExpr, widgetElement);
         return expr != null ? expr : defaultValue;
     }
-    
+
     public static ContainsExpr makeInstanceOrDefault(String strExpr, Element widgetElement) {
         return makeInstanceOrDefault(strExpr, widgetElement, DEFAULT);
     }
-    
+
     /**
      * Checks if name expression matches this contains expression.
      * Name MUST be prefixed by one of the characters defined in
      * {@link WidgetRenderTargetExpr#MET_ALL}.
-     * NOTE: this specific method ONLY supports an exact name (no wildcards) 
+     * NOTE: this specific method ONLY supports an exact name (no wildcards)
      * and no bracketed attributes and will never support more.
      */
     public boolean matches(String nameExpr) {
@@ -252,12 +252,12 @@ public class ContainsExpr implements Serializable {
         else if (exactExcludes.contains(nameExpr)) return false;
         else return matchesWild(nameExpr);
     }
-    
+
     /**
      * Returns true if and only if ALL of the names match.
      * So one false prevents match.
      * If no names, also returns true.
-     * NOTE: this specific method ONLY supports an exact name (no wildcards) 
+     * NOTE: this specific method ONLY supports an exact name (no wildcards)
      * and no bracketed attributes and will never support more.
      */
     public boolean matchesAllNames(List<String> nameExprList) {
@@ -266,14 +266,14 @@ public class ContainsExpr implements Serializable {
         }
         return true;
     }
-    
+
     /**
      * Returns true if and only if ALL of the tokens match.
      * So one false prevents match.
      * If no names, also returns true.
      * <p>
      * FIXME: currently this is not able to handle wildcard tokens or bracketed attributes.
-     * It will only recognize exact names and may ignore entries altogether (treated as matched). 
+     * It will only recognize exact names and may ignore entries altogether (treated as matched).
      * The comparison logic needed to resolve this is extremely complex.
      * <p>
      * TODO: currently this is unable to consolidate the ^ and % operators, or any other operators
@@ -295,13 +295,13 @@ public class ContainsExpr implements Serializable {
         }
         return true;
     }
-    
+
     private boolean matchesExact(String nameExpr) {
         if (exactIncludes.contains(nameExpr)) return true;
         else if (exactExcludes.contains(nameExpr)) return false;
         else return matchAll;
     }
-    
+
     private boolean matchesWild(String nameExpr) {
         if (wildIncludes != null) {
             for(String match : wildIncludes) {
@@ -324,7 +324,7 @@ public class ContainsExpr implements Serializable {
         }
         return matchAll;
     }
-    
+
     private boolean checkWildNameMatch(String match, String name) {
         if (match.charAt(0) == name.charAt(0)) { // same type
             String pureName = name.substring(1);
@@ -346,21 +346,21 @@ public class ContainsExpr implements Serializable {
         }
         return false;
     }
-    
+
     public String getStrExpr() {
         return strExpr;
     }
-    
+
     @Override
     public String toString() {
         return strExpr;
     }
-    
+
     @Override
     public boolean equals(Object other) {
         return (other instanceof ContainsExpr) && this.strExpr.equals(((ContainsExpr) other).strExpr);
     }
-    
+
     public static final class MatchAllContainsExpr extends ContainsExpr {
         private MatchAllContainsExpr() throws IllegalArgumentException { super("*"); }
         @Override
@@ -370,7 +370,7 @@ public class ContainsExpr implements Serializable {
         @Override
         public boolean matchesAllNameTokens(List<Token> nameTokenList) { return true; }
     }
-    
+
     public static final class MatchNoneContainsExpr extends ContainsExpr {
         private MatchNoneContainsExpr() throws IllegalArgumentException { super("!*"); }
         @Override
@@ -380,20 +380,20 @@ public class ContainsExpr implements Serializable {
         @Override
         public boolean matchesAllNameTokens(List<Token> nameTokenList) { return false; }
     }
-    
+
     /**
      * SCIPIO: For any ModelWidget that supports a contains-expression.
      */
     public interface FlexibleContainsExprAttrWidget {
         ContainsExpr getContainsExpr(Map<String, Object> context);
     }
-    
+
     /**
      * SCIPIO: Special holder that allows to manage Flexible expressions automatically
      * and prevent creating unnecessary ones.
      */
     public static abstract class ContainsExprHolder implements FlexibleContainsExprAttrWidget, Serializable {
-        
+
         public static ContainsExprHolder getInstanceOrDefault(String strExpr, Element widgetElement) {
             FlexibleStringExpander exdr = FlexibleStringExpander.getInstance(strExpr);
             if (FlexibleStringExpander.containsExpression(exdr)) {
@@ -418,7 +418,7 @@ public class ContainsExpr implements Serializable {
                 return ContainsExpr.DEFAULT;
             }
         }
-        
+
         public static class SimpleContainsExprHolder extends ContainsExprHolder {
             private final ContainsExpr containsExpr;
 
@@ -432,7 +432,7 @@ public class ContainsExpr implements Serializable {
                 return containsExpr;
             }
         }
-        
+
         public static class FlexibleContainsExprHolder extends ContainsExprHolder {
             private final FlexibleStringExpander containsExprExdr;
 
@@ -447,5 +447,5 @@ public class ContainsExpr implements Serializable {
             }
         }
     }
-    
+
 }

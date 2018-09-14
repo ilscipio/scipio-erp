@@ -29,7 +29,7 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 public final class AddressUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private AddressUtil() {
     }
 

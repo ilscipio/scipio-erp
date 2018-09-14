@@ -84,7 +84,7 @@ import bsh.Interpreter;
 
 /**
  * Models the &lt;field&gt; element.
- * 
+ *
  * @see <code>widget-form.xsd</code>
  */
 @SuppressWarnings("serial")
@@ -94,14 +94,14 @@ public class ModelFormField implements Serializable {
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors. All behavior should be contained in model visitors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -158,7 +158,7 @@ public class ModelFormField implements Serializable {
      * It is stored without wrapping brackets.
      */
     private final AttribsExpression attribsExpr;
-    
+
     private ModelFormField(ModelFormFieldBuilder builder) {
         this.action = builder.getAction();
         this.attributeName = builder.getAttributeName();
@@ -234,7 +234,7 @@ public class ModelFormField implements Serializable {
      * with this field. This can be used to get additional information about the field.
      * Use the getServiceName() method to get the Entity name that the field is in.
      *
-     * @return returns the name of the Service Attribute 
+     * @return returns the name of the Service Attribute
      */
     public String getAttributeName() {
         if (UtilValidate.isNotEmpty(this.attributeName)) {
@@ -378,7 +378,7 @@ public class ModelFormField implements Serializable {
                     Collection<Object> col = UtilGenerics.checkCollection(retVal);
                     Iterator<Object> iter = col.iterator();
                     List<Object> newCol = new ArrayList<>(col.size());
-                    UtilCodec.SimpleEncoder simpleEncoder = (allowEncode && this.getEncodeOutput()) ? WidgetWorker.getEarlyEncoder(context) : null; // SCIPIO: use our own encoder logic                  
+                    UtilCodec.SimpleEncoder simpleEncoder = (allowEncode && this.getEncodeOutput()) ? WidgetWorker.getEarlyEncoder(context) : null; // SCIPIO: use our own encoder logic
                     while (iter.hasNext()) {
                         Object item = iter.next();
                         if (item == null) {
@@ -425,7 +425,7 @@ public class ModelFormField implements Serializable {
      *     <li>If from an existing record (Map or GenericValue), returns true if either null or empty string.
      *     <li>If from context, returns true only if empty string.
      *   </ul>
-     * </ul> 
+     * </ul>
      * <p>
      * Added 2018-05-28.
      */
@@ -436,7 +436,7 @@ public class ModelFormField implements Serializable {
         if (this.getModelForm().isManyType()) {
             return true;
         }
-        
+
         if (Boolean.TRUE.equals(isError) && !Boolean.FALSE.equals(useRequestParameters)) {
             return true;
         } else if (Boolean.TRUE.equals(useRequestParameters)) {
@@ -485,15 +485,15 @@ public class ModelFormField implements Serializable {
     public String getEntry(Map<String, ? extends Object> context, String defaultValue) {
         return getEntry(context, defaultValue, true);
     }
-    
+
     public String getEntryRaw(Map<String, ? extends Object> context, String defaultValue) {
         return getEntry(context, defaultValue, false);
     }
-    
+
     public String getEntryRaw(Map<String, ? extends Object> context) {
         return getEntry(context, "", false);
     }
-    
+
     public FlexibleMapAccessor<Object> getEntryAcsr() {
         return entryAcsr;
     }
@@ -640,15 +640,15 @@ public class ModelFormField implements Serializable {
         }
         return position;
     }
-    
+
     public Integer getPositionSpan() { // SCIPIO
         return positionSpan;
     }
-    
+
     public Boolean getCombinePrevious() { // SCIPIO
         return combinePrevious;
     }
-    
+
     public boolean isCombinePrevious(Map<String, Object> context, ModelFormField prevField) { // SCIPIO
         if (combinePrevious != null) {
             return combinePrevious;
@@ -786,7 +786,7 @@ public class ModelFormField implements Serializable {
 
         return autoTitlewriterString;
     }
-    
+
     public boolean isBlankTitle(Map<String, Object> context) { // SCIPIO
         String title = getTitle(context);
         if (title == null || title.trim().length() == 0) {
@@ -808,7 +808,7 @@ public class ModelFormField implements Serializable {
         }
         return "";
     }
-    
+
     public String getTitleStyle() {
         if (UtilValidate.isNotEmpty(this.titleStyle)) {
             return this.titleStyle;
@@ -866,7 +866,7 @@ public class ModelFormField implements Serializable {
     public FlexibleStringExpander getWidgetStyle() { // SCIPIO: modified to return FlexibleStringExpander instead of String
         return widgetStyle;
     }
-    
+
     public String getWidgetStyle(Map<String, Object> context) { // SCIPIO: new overload
         if (UtilValidate.isNotEmpty(this.widgetStyle)) {
             return this.widgetStyle.expandString(context);
@@ -880,7 +880,7 @@ public class ModelFormField implements Serializable {
         }
         return "";
     }
-    
+
     public AttribsExpression getAttribsExpr() { // SCIPIO
         return attribsExpr;
     }
@@ -1037,11 +1037,11 @@ public class ModelFormField implements Serializable {
     static String getWidgetDefDefault(Map<String, Object> context, String propName, boolean expand) { // SCIPIO
         return ModelForm.getWidgetDefDefault(context, propName, expand);
     }
-    
+
     public boolean shouldUse(Map<String, Object> context) {
         String useWhenStr = this.getUseWhen(context);
         if (UtilValidate.isEmpty(useWhenStr)) {
-            // SCIPIO: lookup default useWhen behaviors 
+            // SCIPIO: lookup default useWhen behaviors
             String fieldType = getFieldInfo().getFieldTypeName();
             if (UtilValidate.isNotEmpty(fieldType)) {
                 String formType = modelForm.getType();
@@ -1086,7 +1086,7 @@ public class ModelFormField implements Serializable {
             throw new IllegalArgumentException(errMsg);
         }
     }
-    
+
     @Override
     public String toString() { // SCIPIO: added 2018-03-02 (debugging help)
         StringBuilder sb = new StringBuilder();
@@ -1098,11 +1098,11 @@ public class ModelFormField implements Serializable {
         }
         return sb.toString();
     }
-    
-    
+
+
     /**
      * Models the &lt;auto-complete&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class AutoComplete implements Serializable {
@@ -1161,7 +1161,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;check&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class CheckField extends FieldInfoWithOptions implements Serializable {
@@ -1193,12 +1193,12 @@ public class ModelFormField implements Serializable {
             this.key = fields.key != null ? FlexibleStringExpander.getInstance(fields.key) : null;
             this.altKey = fields.altKey != null ? FlexibleStringExpander.getInstance(fields.altKey) : null;
         }
-        
+
         private static class KeyFields { // SCIPIO: workaround for constructor limits
             String key;
             String altKey;
             Boolean useHidden;
-            
+
             public KeyFields(Element element, ModelFormField modelFormField) {
                 key = element.hasAttribute("key") ? element.getAttribute("key") : null;
                 altKey = element.hasAttribute("alt-key") ? element.getAttribute("alt-key") : null;
@@ -1207,7 +1207,7 @@ public class ModelFormField implements Serializable {
                 if (altKey == null && Boolean.TRUE.equals(useHidden)) altKey = "N";
             }
         }
-        
+
         // SCIPIO: allow a different default WARN: duplication required due to java
         private static List<OptionSource> makeDefaultOptions(Element element, ModelFormField modelFormField) {
             KeyFields fields = new KeyFields(element, modelFormField);
@@ -1223,7 +1223,7 @@ public class ModelFormField implements Serializable {
             this.altKey = null;
             this.useHidden = null;
         }
-        
+
         // SCIPIO: Allow adding options to check fields
         public CheckField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
             super(fieldSource, FieldInfo.CHECK, optionSourceList);
@@ -1272,11 +1272,11 @@ public class ModelFormField implements Serializable {
         public String getKey(Map<String, Object> context) { // SCIPIO
             return key != null ? this.key.expandString(context) : null;
         }
-        
+
         public String getAltKey(Map<String, Object> context) { // SCIPIO
             return altKey != null ? this.altKey.expandString(context) : null;
         }
-        
+
         public Boolean getUseHidden(Map<String, Object> context) { // SCIPIO
             return useHidden;
         }
@@ -1290,7 +1290,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;container&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class ContainerField extends FieldInfo implements Serializable {
@@ -1326,7 +1326,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;date-find&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class DateFindField extends DateTimeField implements Serializable {
@@ -1410,7 +1410,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;date-time&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class DateTimeField extends FieldInfo implements Serializable {
@@ -1545,7 +1545,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;display-entity&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class DisplayEntityField extends DisplayField implements Serializable {
@@ -1648,7 +1648,7 @@ public class ModelFormField implements Serializable {
             // try to get the entry for the field if description doesn't expand to anything
             if (UtilValidate.isEmpty(retVal)) {
                 retVal = fieldValue;
-            } 
+            }
             if (UtilValidate.isEmpty(retVal)) {
                 retVal = "";
             } else if (this.getModelFormField().getEncodeOutput()) {
@@ -1672,7 +1672,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;display&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class DisplayField extends FieldInfo implements Serializable {
@@ -1922,7 +1922,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;drop-down&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class DropDownField extends FieldInfoWithOptions implements Serializable {
@@ -2124,7 +2124,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;entity-options&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class EntityOptions extends OptionSource implements Serializable {
@@ -2219,7 +2219,7 @@ public class ModelFormField implements Serializable {
                 if (!localizedOrderBy) {
                     values = delegator.findList(this.entityName, findCondition, null, this.orderByList, null, this.cache);
                 } else {
-                    //if entity has localized label 
+                    //if entity has localized label
                     values = delegator.findList(this.entityName, findCondition, null, null, null, this.cache);
                     values = EntityUtil.localizedOrderBy(values, this.orderByList, locale);
                 }
@@ -2349,7 +2349,7 @@ public class ModelFormField implements Serializable {
             optionSources.trimToSize();
             this.optionSources = Collections.unmodifiableList(optionSources);
         }
-        
+
         public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
             this(element, modelFormField, null); // SCIPIO: now delegating
         }
@@ -2404,7 +2404,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;file&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class FileField extends TextField implements Serializable {
@@ -2602,7 +2602,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;hidden&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class HiddenField extends FieldInfo implements Serializable {
@@ -2660,7 +2660,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;hyperlink&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class HyperlinkField extends FieldInfo implements Serializable {
@@ -2882,7 +2882,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;ignored&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class IgnoredField extends FieldInfo implements Serializable {
@@ -2922,7 +2922,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;image&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class ImageField extends FieldInfo implements Serializable {
@@ -3054,7 +3054,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;in-place-editor&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class InPlaceEditor implements Serializable {
@@ -3234,7 +3234,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;list-options&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class ListOptions extends OptionSource implements Serializable {
@@ -3271,7 +3271,7 @@ public class ModelFormField implements Serializable {
             this.altKeyAcsr = FlexibleMapAccessor.getInstance(altKeyName); // SCIPIO
             this.description = FlexibleStringExpander.getInstance(description);
         }
-        
+
         public ListOptions(String listName, String listEntryName, String keyName, String description,
                 ModelFormField modelFormField) {
             this(listName, listEntryName, keyName, null, description, modelFormField); // SCIPIO: now delegating
@@ -3297,7 +3297,7 @@ public class ModelFormField implements Serializable {
                 }
             }
         }
-        
+
         private String getKeyValue(FlexibleMapAccessor<Object> keyAscr, Map<String, Object> localContext) { // SCIPIO: refactored from above
             // SCIPIO: 2017-04-20: factored out from main method
             if (keyAcsr == null) return null;
@@ -3329,7 +3329,7 @@ public class ModelFormField implements Serializable {
         public FlexibleMapAccessor<Object> getKeyAcsr() {
             return keyAcsr;
         }
-        
+
         public FlexibleMapAccessor<Object> getAltKeyAcsr() { // SCIPIO
             return altKeyAcsr;
         }
@@ -3345,7 +3345,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;lookup&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class LookupField extends TextField implements Serializable {
@@ -3576,7 +3576,7 @@ public class ModelFormField implements Serializable {
             this.altKey = altKey; // SCIPIO
             this.description = description;
         }
-        
+
         public OptionValue(String key, String description) {
             this(key, null, description); // SCIPIO: now delegating
         }
@@ -3588,7 +3588,7 @@ public class ModelFormField implements Serializable {
         public String getKey() {
             return key;
         }
-        
+
         /**
          * SCIPIO: Off state key, for check fields only (new 2017-04-20).
          * May be null.
@@ -3600,7 +3600,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;password&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class PasswordField extends TextField implements Serializable {
@@ -3636,7 +3636,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;radio&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class RadioField extends FieldInfoWithOptions implements Serializable {
@@ -3656,10 +3656,10 @@ public class ModelFormField implements Serializable {
         private RadioField(RadioField original, ModelFormField modelFormField) {
             super(original, modelFormField);
         }
-        
+
         // SCIPIO: new: Allow adding options to radio fields
         public RadioField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
-            super(fieldSource, FieldInfo.RADIO, optionSourceList);            
+            super(fieldSource, FieldInfo.RADIO, optionSourceList);
         }
 
         @Override
@@ -3681,7 +3681,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;range-find&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class RangeFindField extends TextField implements Serializable {
@@ -3733,7 +3733,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;reset&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class ResetField extends FieldInfo implements Serializable {
@@ -3842,7 +3842,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;option&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class SingleOption extends OptionSource implements Serializable {
@@ -3869,7 +3869,7 @@ public class ModelFormField implements Serializable {
         public SingleOption(String key, String description, ModelFormField modelFormField) {
             this(key, null, description, modelFormField); // SCIPIO: now delegating
         }
-        
+
         public SingleOption(String key, String altKey, String description, ModelFormField modelFormField) {
             super(modelFormField);
             this.key = FlexibleStringExpander.getInstance(key);
@@ -3879,7 +3879,7 @@ public class ModelFormField implements Serializable {
 
         @Override
         public void addOptionValues(List<OptionValue> optionValues, Map<String, Object> context, Delegator delegator) {
-            optionValues.add(new OptionValue(key.expandString(context), 
+            optionValues.add(new OptionValue(key.expandString(context),
                     altKey != null ? altKey.expandString(context) : null, // SCIPIO: altKey
                     description.expandString(context)));
         }
@@ -3896,7 +3896,7 @@ public class ModelFormField implements Serializable {
         public FlexibleStringExpander getKey() {
             return key;
         }
-        
+
         /**
          * SCIPIO: Off state key, for check fields only (new 2017-04-20).
          * May be null.
@@ -3908,7 +3908,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;sub-hyperlink&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class SubHyperlink implements Serializable {
@@ -4148,7 +4148,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;submit&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class SubmitField extends FieldInfo implements Serializable {
@@ -4253,7 +4253,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;textarea&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class TextareaField extends FieldInfo implements Serializable {
@@ -4380,7 +4380,7 @@ public class ModelFormField implements Serializable {
         public boolean isReadOnly() {
             return readOnly;
         }
-        
+
         @Override
         public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
                 throws IOException {
@@ -4390,7 +4390,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;text&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class TextField extends FieldInfo implements Serializable {
@@ -4572,7 +4572,7 @@ public class ModelFormField implements Serializable {
 
     /**
      * Models the &lt;text-find&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     public static class TextFindField extends TextField implements Serializable {

@@ -111,7 +111,7 @@ public final class JobManager {
 
     private final Delegator delegator;
     private boolean crashedJobsReloaded = false;
-    
+
     /**
      * SCIPIO: Determines if run-at-start jobs have been queued or not.
      * <p>
@@ -214,13 +214,13 @@ public final class JobManager {
         EntityCondition baseCondition = EntityCondition.makeCondition(expressions);
         EntityCondition poolCondition = EntityCondition.makeCondition(poolsExpr, EntityOperator.OR);
         EntityCondition mainCondition = EntityCondition.makeCondition(UtilMisc.toList(baseCondition, poolCondition));
-        
+
         // SCIPIO: We must add to the main condition that the special new field eventId must be null
         EntityCondition commonCondition = mainCondition;
         mainCondition = EntityCondition.makeCondition(commonCondition, EntityCondition.makeCondition("eventId", null));
-        
+
         boolean beganTransaction = false;
-        
+
         // SCIPIO: first, add the run-at-startup jobs
         if (!startupJobsQueued) {
             try {
@@ -229,16 +229,16 @@ public final class JobManager {
                     Debug.logWarning("Unable to poll JobSandbox for jobs; unable to begin transaction.", module);
                     return poll;
                 }
-                
+
                 try (EntityListIterator jobsIterator = queryStartupJobs(commonCondition)) {
                     // NOTE: due to synchronization, we could have null here
                     if (jobsIterator != null) {
                         // SCIPIO: FIXME?: We currently ignore the limit for the startup jobs;
                         // might want to find way to delay them to next poll, because we violate the limit request from caller...
                         ownAndCollectJobs(dctx, delegator, -1, jobsIterator, poll);
-                        
+
                         if (Debug.infoOn()) {
-                            Debug.logInfo("Scipio: Collected " + poll.size() + 
+                            Debug.logInfo("Scipio: Collected " + poll.size() +
                                     " SCH_EVENT_STARTUP run-at-startup jobs for queuing", module);
                         }
                     }
@@ -259,7 +259,7 @@ public final class JobManager {
                 return Collections.emptyList();
             }
         }
-        
+
         beganTransaction = false;
         try {
             beganTransaction = TransactionUtil.begin();
@@ -318,7 +318,7 @@ public final class JobManager {
                         }
                         jobValue = jobsIterator.next();
                     }
-                }    
+                }
                 //} catch (GenericEntityException e) { // SCIPIO: 2018-08-29: this catch is counter-productive
                 //    Debug.logWarning(e, module);
                 //}
@@ -360,11 +360,11 @@ public final class JobManager {
             }
         }
     }
-    
+
     /**
      * SCIPIO: Queries run-at-start Job entities if not already done.
      * If already done, returns null.
-     * @throws GenericEntityException 
+     * @throws GenericEntityException
      */
     public synchronized EntityListIterator queryStartupJobs(EntityCondition commonCondition) throws GenericEntityException {
         EntityListIterator res = null;
@@ -374,7 +374,7 @@ public final class JobManager {
         }
         return res;
     }
-    
+
     /**
      * SCIPIO: Queries run-at-start Job entities.
      * <p>
@@ -384,7 +384,7 @@ public final class JobManager {
         EntityCondition mainCondition = EntityCondition.makeCondition(commonCondition, EntityCondition.makeCondition("eventId", "SCH_EVENT_STARTUP"));
         return EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator();
     }
-    
+
     public synchronized void reloadCrashedJobs() {
         assertIsRunning();
         if (crashedJobsReloaded) {
@@ -409,7 +409,7 @@ public final class JobManager {
                     if (Debug.infoOn()) {
                         Debug.logInfo("Scheduling Job : " + job, module);
                     }
-                    
+
                     // SCIPIO: IMPORTANT: If the job was supposed to trigger on specific event, DO NOT
                     // reschedule anything. Otherwise, we may be running services during times at
                     // which they were never meant to run and cause unexpected problems.
@@ -430,10 +430,10 @@ public final class JobManager {
                         newJob.set("recurrenceInfoId", null);
                         delegator.createSetNextSeqId(newJob);
                     } else {
-                        if (Debug.infoOn()) Debug.logInfo("Scipio: Not rescheduling crashed job '" + job.getString("jobId") + 
+                        if (Debug.infoOn()) Debug.logInfo("Scipio: Not rescheduling crashed job '" + job.getString("jobId") +
                                 "' with event ID '" + job.getString("eventId") + "'", module);
                     }
-                    
+
                     // set the cancel time on the old job to the same as the re-schedule time
                     job.set("statusId", "SERVICE_CRASHED");
                     job.set("cancelDateTime", now);

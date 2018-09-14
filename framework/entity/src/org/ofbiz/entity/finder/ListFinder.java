@@ -214,7 +214,7 @@ public abstract class ListFinder extends Finder {
                     }
                     EntityListIterator eli = delegator.find(entityName, whereEntityCondition, havingEntityCondition, fieldsToSelect, orderByFields, options);
                     this.outputHandler.handleOutput(eli, context, listAcsr);
-                    // NOTE: the eli EntityListIterator is not closed here. It SHOULD be closed later after the returned list will be used (eg see EntityAnd.getChildren() in ModelTree.java)  
+                    // NOTE: the eli EntityListIterator is not closed here. It SHOULD be closed later after the returned list will be used (eg see EntityAnd.getChildren() in ModelTree.java)
                 } catch (GenericEntityException e) {
                     String errMsg = "Failure in by " + label + " find operation, rolling back transaction";
                     Debug.logError(e, errMsg, module);

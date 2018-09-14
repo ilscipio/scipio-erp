@@ -22,7 +22,7 @@ import org.ofbiz.widget.model.ScreenFactory;
 public abstract class WidgetScriptUtil {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected WidgetScriptUtil() {
     }
 
@@ -42,7 +42,7 @@ public abstract class WidgetScriptUtil {
      * screens that have same behavior as actions-only screens.
      * See <code>widget-screen.xsd</code> for more details on actions-only screens.
      * <p>
-     * NOTE: 
+     * NOTE:
      */
     public static Object runScreenActionsAtLocation(String location, String screenName, Map<String, Object> context) throws GeneralException, RuntimeException {
         ModelScreen widget;
@@ -54,31 +54,31 @@ public abstract class WidgetScriptUtil {
         AbstractModelAction.runSubActionsEx(widget.getSection().getActions(), context); // NOTE: wraps in RunTimeExceptions
         return null; // TODO? ever needed? made part of interface for future needs.
     }
-    
+
     /**
      * Runs the top-level screen actions defined by the given screen, on the given context,
      * effectively treating them as a script.
-     * 
+     *
      * @see #runScreenActionsAtLocation(String, String, Map)
      */
     public static Object runScreenActionsAtLocation(ModelLocation location, Map<String, Object> context) throws GeneralException {
         return runScreenActionsAtLocation(location.getResource(), location.getName(), context);
     }
-    
+
     /**
      * Runs the top-level screen actions defined by the given screen, on the given context,
      * effectively treating them as a script.
-     * 
+     *
      * @see #runScreenActionsAtLocation(String, String, Map)
      */
     public static Object runScreenActionsAtLocation(String combinedName, Map<String, Object> context) throws GeneralException {
         return runScreenActionsAtLocation(ModelLocation.fromAddress(combinedName), context);
     }
-    
+
     public static Object runFormActionsAtLocation(String location, String screenName, Map<String, Object> context) throws GeneralException {
         return runFormActionsAtLocation(ModelLocation.fromResAndName(location, screenName), context);
     }
-    
+
     public static Object runFormActionsAtLocation(ModelLocation location, Map<String, Object> context) throws GeneralException {
         ModelForm widget;
         try {
@@ -89,11 +89,11 @@ public abstract class WidgetScriptUtil {
         AbstractModelAction.runSubActionsEx(widget.getActions(), context); // NOTE: wraps in RunTimeExceptions
         return null; // TODO? ever needed? made part of interface for future needs.
     }
-    
+
     public static Object runFormActionsAtLocation(String combinedName, Map<String, Object> context) throws GeneralException {
         return runFormActionsAtLocation(ModelLocation.fromAddress(combinedName), context);
     }
-    
+
     public static Object runMenuActionsAtLocation(String location, String screenName, Map<String, Object> context) throws GeneralException {
         ModelMenu widget;
         try {
@@ -104,13 +104,13 @@ public abstract class WidgetScriptUtil {
         AbstractModelAction.runSubActionsEx(widget.getActions(), context);
         return null;
     }
-    
+
     public static Object runMenuActionsAtLocation(ModelLocation location, Map<String, Object> context) throws GeneralException {
         return runMenuActionsAtLocation(location.getResource(), location.getName(), context);
     }
-    
+
     public static Object runMenuActionsAtLocation(String combinedName, Map<String, Object> context) throws GeneralException {
         return runMenuActionsAtLocation(ModelLocation.fromAddress(combinedName), context);
     }
-    
+
 }

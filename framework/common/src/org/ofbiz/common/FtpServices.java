@@ -42,7 +42,7 @@ import org.ofbiz.service.ServiceUtil;
 
 /**
  * FTP Services.
- * 
+ *
  */
 public class FtpServices {
 

@@ -31,7 +31,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.job.JobManager;
 
 /**
- * A container for the service engine. 
+ * A container for the service engine.
  */
 public class ServiceContainer implements Container {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

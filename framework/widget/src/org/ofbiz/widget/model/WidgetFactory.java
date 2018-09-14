@@ -21,7 +21,7 @@ import org.ofbiz.service.ServiceContainer;
 public abstract class WidgetFactory implements Serializable {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     // SCIPIO: new: static factories
     protected static final ScreenFactory screenFactory = new ScreenFactory();
     protected static final FormFactory formFactory = new FormFactory();
@@ -40,7 +40,7 @@ public abstract class WidgetFactory implements Serializable {
     }
 
     public static final Set<String> widgetTypes = Collections.unmodifiableSet(new HashSet<>(factoryMap.keySet()));
-    
+
     @SuppressWarnings("unchecked")
     public static <T extends WidgetFactory> T getFactory(String type) throws IllegalArgumentException {
         WidgetFactory factory = factoryMap.get(type);
@@ -49,11 +49,11 @@ public abstract class WidgetFactory implements Serializable {
         }
         return (T) factory;
     }
-    
+
     public abstract ModelWidget getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException;
-    
+
     public abstract ModelWidget getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException;
-    
+
     @SuppressWarnings("unchecked")
     public static <T extends ModelWidget> T getWidgetFromLocation(String type, ModelLocation modelLoc) throws IOException {
         return (T) getFactory(type).getWidgetFromLocation(modelLoc);

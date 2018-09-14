@@ -48,5 +48,5 @@ public class CopyObjectMethod implements TemplateMethodModelEx {
         ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
         return LangFtlUtil.copyObject(object, null, objectWrapper);
     }
-    
+
 }

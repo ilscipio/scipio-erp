@@ -43,29 +43,29 @@ import freemarker.template.Version;
 public abstract class ScipioFtlWrappers {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final List<CustomFactoryInfo> customWrapperFactoryInfo = Collections.unmodifiableList(readCustomWrapperFactories());
     private static final DefaultScipioObjectWrapperFactory defaultObjectWrapperFactory = new DefaultScipioObjectWrapperFactory();
-    private static final ScipioObjectWrapperFactory systemObjectWrapperFactory = readPropertyObjectWrapperFactory("general.properties", 
+    private static final ScipioObjectWrapperFactory systemObjectWrapperFactory = readPropertyObjectWrapperFactory("general.properties",
             "render.global.systemObjectWrapperFactory", defaultObjectWrapperFactory);
-    
+
     protected ScipioFtlWrappers() {
     }
-    
 
-    /* 
+
+    /*
      **************************************************************
      * Individual model interfaces and base classes
-     ************************************************************** 
+     **************************************************************
      */
-    
+
     /**
      * SCIPIO: Special interface for template models that perform auto-escaping.
      * This is returned by object wrappers implementing ScipioExtendedObjectWrapper.
      */
     public interface EscapingModel extends WrapperTemplateModel {
     }
-    
+
     /**
      * Auto-escaping wrapper, originally from HtmlWidget.ExtendedWrapper.
      * <p>
@@ -97,19 +97,19 @@ public abstract class ScipioFtlWrappers {
             return ((ScipioExtendedObjectWrapper) wrapper).getEncoder().encode(super.getAsString());
         }
     }
-    
-    
-    /* 
+
+
+    /*
      **************************************************************
      * Model factories
      **************************************************************
      * NOTE: implementations should be plugged in using config/freemarkerWrapperFactories.properties files.
      * The format is:
-     * factoryName.class=org.ofbiz... 
+     * factoryName.class=org.ofbiz...
      * factoryName.priority=0-1000
      * factoryName.scope=[all|basic|extended|basic-beans|basic-default|extended-beans|extended-default]
      */
-    
+
     /**
      * Base model factory interface, based off of Freemarker's ModelFactory.
      */
@@ -119,7 +119,7 @@ public abstract class ScipioFtlWrappers {
          */
         TemplateModel wrap(Object object, ScipioObjectWrapper objectWrapper) throws TemplateModelException;
     }
-    
+
     /**
      * Turns a Freemarker ModelFactory into a ScipioModelFactory.
      */
@@ -137,8 +137,8 @@ public abstract class ScipioFtlWrappers {
     }
 
     /**
-     * SCIPIO: 2017-04-03: Reimplements HtmlWidget.ExtendedWrapper using composition. 
-     * This is plugged into the system through the freemarkerWrapperFactories.properties file. 
+     * SCIPIO: 2017-04-03: Reimplements HtmlWidget.ExtendedWrapper using composition.
+     * This is plugged into the system through the freemarkerWrapperFactories.properties file.
      */
     public static class AutoEscapingModelFactory implements ScipioModelFactory {
         @Override
@@ -152,9 +152,9 @@ public abstract class ScipioFtlWrappers {
             return null;
         }
     }
-    
-    
-    /* 
+
+
+    /*
      **************************************************************
      * Object wrapper general interfaces
      **************************************************************
@@ -164,19 +164,19 @@ public abstract class ScipioFtlWrappers {
      * they should NOT be on the same class - unlike what freemarker does with DefaultObjectWrapper
      * extending BeansWrapper - otherwise type checks become hard.
      */
-    
+
     /**
      * Special base tag interface used to recognized Scipio/OFbiz custom object wrappers.
      */
     public interface ScipioObjectWrapper extends ObjectWrapper {
     }
-    
+
     /**
      * Special tag interface used to recognized "basic" custom object wrappers - non-extended.
      */
     public interface ScipioBasicObjectWrapper extends ScipioObjectWrapper {
     }
-    
+
     /**
      * Special tag interface used to recognized the "extended" object wrappers - that provide
      * the legacy ofbiz auto html-escaping. The word "extended" is from legacy Ofbiz code.
@@ -188,35 +188,35 @@ public abstract class ScipioFtlWrappers {
         public String getEncodeLang();
         public SimpleEncoder getEncoder();
     }
-    
+
     /**
      * Special tag interface used to recognized classes that extend BeansWrapper but NOT DefaultObjectWrapper.
      */
     public interface ScipioBeansWrapper extends ScipioObjectWrapper {
     }
-    
+
     /**
      * Special tag interface used to recognized classes that extend DefaultObjectWrapper.
      */
     public interface ScipioDefaultObjectWrapper extends ScipioObjectWrapper {
     }
-    
-    
-    /* 
+
+
+    /*
      **************************************************************
      * Object wrapper specific interfaces
      **************************************************************
      * NOTE: Custom object wrappers should implement one of these.
      */
-    
+
     /**
-     * Basic BeansWrapper - corresponds to the stock ofbiz wrapper used in FreeMarkerWorker 
+     * Basic BeansWrapper - corresponds to the stock ofbiz wrapper used in FreeMarkerWorker
      * that performs no automatic html escaping.
      * NOTE: Implementing class must extend BeansWrapper.
      */
     public interface ScipioBasicBeansWrapper extends ScipioBasicObjectWrapper, ScipioBeansWrapper {
     }
-    
+
     /**
      * Basic DefaultObjectWrapper - a different object wrapper than the one usually used in ofbiz,
      * that can be used to return simple types such as simple maps instead of complex BeanModels.
@@ -224,7 +224,7 @@ public abstract class ScipioFtlWrappers {
      */
     public interface ScipioBasicDefaultObjectWrapper extends ScipioBasicObjectWrapper, ScipioDefaultObjectWrapper {
     }
-    
+
     /**
      * Extended BeansWrapper - reimplementation of the legacy ofbiz HtmlWidget.ExtendedWrapper that
      * performs html auto-escaping on top of returns complex BeanModels.
@@ -232,7 +232,7 @@ public abstract class ScipioFtlWrappers {
      */
     public interface ScipioExtendedBeansWrapper extends ScipioExtendedObjectWrapper, ScipioBeansWrapper {
     }
-    
+
     /**
      * Extended DefaultObjectWrapper - an extra combination that returns simple types but will
      * perform html auto-escaping on the strings.
@@ -244,19 +244,19 @@ public abstract class ScipioFtlWrappers {
      */
     public interface ScipioExtendedDefaultObjectWrapper extends ScipioExtendedObjectWrapper, ScipioDefaultObjectWrapper {
     }
-    
-    
-    /* 
+
+
+    /*
      **************************************************************
      * Object wrapper implementations (of specific interfaces)
-     ************************************************************** 
+     **************************************************************
      */
-    
+
     public static class ScipioBasicBeansWrapperImpl extends BeansWrapper implements ScipioBasicBeansWrapper {
         private static final List<ScipioModelFactory> systemWrapperFactories = Collections.unmodifiableList(makeCustomFactoryList(customWrapperFactoryInfo, "basic-beans"));
 
         private final List<ScipioModelFactory> customWrapperFactories;
-        
+
         public ScipioBasicBeansWrapperImpl(BeansWrapperConfiguration arg0, boolean arg1, boolean arg2, Collection<? extends ScipioModelFactory> customWrapperFactories) {
             super(arg0, arg1, arg2);
             this.customWrapperFactories = makeCleanFactoryList(customWrapperFactories);
@@ -271,11 +271,11 @@ public abstract class ScipioFtlWrappers {
             super(incompatibleImprovements);
             this.customWrapperFactories = makeCleanFactoryList(customWrapperFactories);
         }
-        
+
         public static ScipioBasicBeansWrapperImpl create(Version incompatibleImprovements) {
             return new ScipioBasicBeansWrapperImpl(incompatibleImprovements, systemWrapperFactories);
         }
-        
+
         public static ScipioBasicBeansWrapperImpl create(Version incompatibleImprovements, Boolean simpleMapWrapper) {
             ScipioBasicBeansWrapperImpl wrapper = new ScipioBasicBeansWrapperImpl(incompatibleImprovements, systemWrapperFactories);
             if (simpleMapWrapper != null) {
@@ -287,15 +287,15 @@ public abstract class ScipioFtlWrappers {
         public static List<ScipioModelFactory> getSystemWrapperFactories() {
             return systemWrapperFactories;
         }
-        
+
         public List<ScipioModelFactory> getCustomWrapperFactories() {
             return Collections.unmodifiableList(customWrapperFactories);
         }
-        
+
         protected List<ScipioModelFactory> getCustomWrapperFactoriesInternal() {
             return customWrapperFactories;
         }
-        
+
         @Override
         public TemplateModel wrap(Object object) throws TemplateModelException {
             if (object != null) {
@@ -307,12 +307,12 @@ public abstract class ScipioFtlWrappers {
             return super.wrap(object);
         }
     }
-    
+
     public static class ScipioBasicDefaultObjectWrapperImpl extends DefaultObjectWrapper implements ScipioBasicDefaultObjectWrapper {
         private static final List<ScipioModelFactory> systemWrapperFactories = Collections.unmodifiableList(makeCustomFactoryList(customWrapperFactoryInfo, "basic-default"));
 
         private final List<ScipioModelFactory> customWrapperFactories;
-                
+
         public ScipioBasicDefaultObjectWrapperImpl(BeansWrapperConfiguration bwCfg, boolean writeProtected, Collection<? extends ScipioModelFactory> customWrapperFactories) {
             super(bwCfg, writeProtected);
             this.customWrapperFactories = makeCleanFactoryList(customWrapperFactories);
@@ -327,11 +327,11 @@ public abstract class ScipioFtlWrappers {
             super(incompatibleImprovements);
             this.customWrapperFactories = makeCleanFactoryList(customWrapperFactories);
         }
-        
+
         public static ScipioBasicDefaultObjectWrapperImpl create(Version incompatibleImprovements) {
             return new ScipioBasicDefaultObjectWrapperImpl(incompatibleImprovements, systemWrapperFactories);
         }
-        
+
         public static ScipioBasicDefaultObjectWrapperImpl create(Version incompatibleImprovements,
                 Boolean simpleMapWrapper, Boolean useAdaptersForContainers) {
             ScipioBasicDefaultObjectWrapperImpl wrapper = new ScipioBasicDefaultObjectWrapperImpl(incompatibleImprovements, systemWrapperFactories);
@@ -347,15 +347,15 @@ public abstract class ScipioFtlWrappers {
         public static List<ScipioModelFactory> getSystemWrapperFactories() {
             return systemWrapperFactories;
         }
-        
+
         public List<ScipioModelFactory> getCustomWrapperFactories() {
             return Collections.unmodifiableList(customWrapperFactories);
         }
-        
+
         protected List<ScipioModelFactory> getCustomWrapperFactoriesInternal() {
             return customWrapperFactories;
         }
-        
+
         @Override
         public TemplateModel wrap(Object object) throws TemplateModelException {
             if (object != null) {
@@ -367,14 +367,14 @@ public abstract class ScipioFtlWrappers {
             return super.wrap(object);
         }
     }
-  
+
     public static class ScipioExtendedBeansWrapperImpl extends BeansWrapper implements ScipioExtendedBeansWrapper {
         private static final List<ScipioModelFactory> systemWrapperFactories = Collections.unmodifiableList(makeCustomFactoryList(customWrapperFactoryInfo, "extended-beans"));
 
         private final List<ScipioModelFactory> customWrapperFactories;
         private final String encodeLang;
         private final SimpleEncoder encoder;
-        
+
         public ScipioExtendedBeansWrapperImpl(BeansWrapperConfiguration arg0, boolean arg1, boolean arg2, Collection<? extends ScipioModelFactory> customWrapperFactories, String encodeLang) {
             super(arg0, arg1, arg2);
             this.customWrapperFactories = makeCleanFactoryList(customWrapperFactories);
@@ -395,11 +395,11 @@ public abstract class ScipioFtlWrappers {
             this.encodeLang = encodeLang;
             this.encoder = UtilCodec.getEncoder(this.encodeLang);
         }
-        
+
         public static ScipioExtendedBeansWrapperImpl create(Version incompatibleImprovements, String encodeLang) {
             return new ScipioExtendedBeansWrapperImpl(incompatibleImprovements, systemWrapperFactories, encodeLang);
         }
-        
+
         public static ScipioExtendedBeansWrapperImpl create(Version incompatibleImprovements, String encodeLang, Boolean simpleMapWrapper) {
             ScipioExtendedBeansWrapperImpl wrapper = new ScipioExtendedBeansWrapperImpl(incompatibleImprovements, systemWrapperFactories, encodeLang);
             if (simpleMapWrapper != null) {
@@ -411,25 +411,25 @@ public abstract class ScipioFtlWrappers {
         public static List<ScipioModelFactory> getSystemWrapperFactories() {
             return systemWrapperFactories;
         }
-        
+
         public List<ScipioModelFactory> getCustomWrapperFactories() {
             return Collections.unmodifiableList(customWrapperFactories);
         }
-        
+
         protected List<ScipioModelFactory> getCustomWrapperFactoriesInternal() {
             return customWrapperFactories;
         }
-        
+
         @Override
         public String getEncodeLang() {
             return encodeLang;
         }
-        
+
         @Override
         public SimpleEncoder getEncoder() {
             return encoder;
         }
-        
+
         @Override
         public TemplateModel wrap(Object object) throws TemplateModelException {
             if (object != null) {
@@ -441,14 +441,14 @@ public abstract class ScipioFtlWrappers {
             return super.wrap(object);
         }
     }
-    
+
     public static class ScipioExtendedDefaultObjectWrapperImpl extends DefaultObjectWrapper implements ScipioExtendedDefaultObjectWrapper {
         private static final List<ScipioModelFactory> systemWrapperFactories = Collections.unmodifiableList(makeCustomFactoryList(customWrapperFactoryInfo, "extended-default"));
 
         private final List<ScipioModelFactory> customWrapperFactories;
         private final String encodeLang;
         private final SimpleEncoder encoder;
-        
+
         public ScipioExtendedDefaultObjectWrapperImpl(BeansWrapperConfiguration bwCfg, boolean writeProtected, Collection<? extends ScipioModelFactory> customWrapperFactories, String encodeLang) {
             super(bwCfg, writeProtected);
             this.customWrapperFactories = makeCleanFactoryList(customWrapperFactories);
@@ -473,8 +473,8 @@ public abstract class ScipioFtlWrappers {
         public static ScipioExtendedDefaultObjectWrapperImpl create(Version incompatibleImprovements, String encodeLang) {
             return new ScipioExtendedDefaultObjectWrapperImpl(incompatibleImprovements, systemWrapperFactories, encodeLang);
         }
-        
-        public static ScipioExtendedDefaultObjectWrapperImpl create(Version incompatibleImprovements, String encodeLang, 
+
+        public static ScipioExtendedDefaultObjectWrapperImpl create(Version incompatibleImprovements, String encodeLang,
                 Boolean simpleMapWrapper, Boolean useAdaptersForContainers) {
             ScipioExtendedDefaultObjectWrapperImpl wrapper = new ScipioExtendedDefaultObjectWrapperImpl(incompatibleImprovements, systemWrapperFactories, encodeLang);
             if (simpleMapWrapper != null) {
@@ -485,15 +485,15 @@ public abstract class ScipioFtlWrappers {
             }
             return wrapper;
         }
-        
+
         public static List<ScipioModelFactory> getSystemWrapperFactories() {
             return systemWrapperFactories;
         }
-        
+
         public List<ScipioModelFactory> getCustomWrapperFactories() {
             return Collections.unmodifiableList(customWrapperFactories);
         }
-        
+
         protected List<ScipioModelFactory> getCustomWrapperFactoriesInternal() {
             return customWrapperFactories;
         }
@@ -502,12 +502,12 @@ public abstract class ScipioFtlWrappers {
         public String getEncodeLang() {
             return encodeLang;
         }
-        
+
         @Override
         public SimpleEncoder getEncoder() {
             return encoder;
         }
-        
+
         @Override
         public TemplateModel wrap(Object object) throws TemplateModelException {
             if (object != null) {
@@ -519,14 +519,14 @@ public abstract class ScipioFtlWrappers {
             return super.wrap(object);
         }
     }
-    
-    
-    /* 
+
+
+    /*
      **************************************************************
      * Object Wrapper Factories
-     ************************************************************** 
+     **************************************************************
      */
-    
+
     /**
      * Scipio ObjectWrapper Factory - can be used to plug in replacements into the system
      * at the global level.
@@ -534,38 +534,38 @@ public abstract class ScipioFtlWrappers {
      * anything else and allowing different ones is another major task.
      */
     public interface ScipioObjectWrapperFactory {
-        
+
         /**
          * FIXME: the result will always be cast to BeansWrapper.
          */
         ScipioObjectWrapper getDefaultOfbizWrapper(Version version);
-        
+
         /**
          * FIXME: the result will always be cast to BeansWrapper.
          */
         ScipioObjectWrapper getDefaultOfbizSimpleMapWrapper(Version version);
-        
+
         /**
          * FIXME: the result will always be cast to DefaultObjectWrapper.
          */
         ScipioObjectWrapper getDefaultSimpleTypeWrapper(Version version);
-        
+
         /**
          * FIXME: the result will always be cast to DefaultObjectWrapper.
          */
         ScipioObjectWrapper getDefaultSimpleTypeCopyingWrapper(Version version);
-        
+
         /**
          * FIXME: the result will always be cast to BeansWrapper.
          */
         ScipioExtendedObjectWrapper getExtendedWrapper(Version version, String encodeLang);
-        
+
         /**
          * FIXME: the result will always be cast to BeansWrapper.
          */
         ScipioExtendedObjectWrapper getExtendedSimpleMapWrapper(Version version, String encodeLang);
     }
-    
+
     public static class DefaultScipioObjectWrapperFactory implements ScipioObjectWrapperFactory {
 
         @Override
@@ -597,23 +597,23 @@ public abstract class ScipioFtlWrappers {
         public ScipioExtendedObjectWrapper getExtendedSimpleMapWrapper(Version version, String encodeLang) {
             return ScipioExtendedBeansWrapperImpl.create(FreeMarkerWorker.version, encodeLang, true);
         }
-        
+
     }
-    
+
     /**
      * Gets the configured system object wrapper factory.
      */
     public static ScipioObjectWrapperFactory getSystemObjectWrapperFactory() {
         return systemObjectWrapperFactory;
     }
-    
+
     /**
      * Gets the default Scipio object wrapper factory (not configurable).
      */
     public static ScipioObjectWrapperFactory getDefaultObjectWrapperFactory() {
         return defaultObjectWrapperFactory;
     }
-    
+
     public static ScipioObjectWrapperFactory readPropertyObjectWrapperFactory(String propertyResource, String propertyName, ScipioObjectWrapperFactory defaultValue) {
         String clsName = UtilProperties.getPropertyValue(propertyResource, propertyName);
         if (clsName == null || clsName.isEmpty()) {
@@ -627,23 +627,23 @@ public abstract class ScipioFtlWrappers {
             return defaultValue;
         }
     }
-    
-    /* 
+
+    /*
      **************************************************************
      * Utilities
-     ************************************************************** 
+     **************************************************************
      */
 
-    
+
     /**
      * Reads freemarkerWrapperFactories.properties files, with entries in the format:
-     * factoryName.class=org.ofbiz... 
+     * factoryName.class=org.ofbiz...
      * factoryName.priority=0-1000
      * factoryName.scope=[all|basic|extended|basic-beans|basic-default|extended-beans|extended-default]
      */
     static List<CustomFactoryInfo> readCustomWrapperFactories() {
         ArrayList<CustomFactoryInfo> infoList = new ArrayList<>();
-        
+
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources;
         try {
@@ -665,7 +665,7 @@ public abstract class ScipioFtlWrappers {
                         String prefix = key.substring(0, key.length() - 6);
                         String className = props.getProperty(key);
                         if (className != null) className = className.trim();
-                        
+
                         String priorityStr = props.getProperty(prefix + ".priority");
                         long priority = 1000;
                         if (priorityStr != null) {
@@ -678,13 +678,13 @@ public abstract class ScipioFtlWrappers {
                                 }
                             }
                         }
-                        
-                        // supports: all (default), basic, extended, 
+
+                        // supports: all (default), basic, extended,
                         // basic-beans, basic-default, extended-beans, extended-default
                         String scope = props.getProperty(prefix + ".scope");
                         if (scope != null) scope = scope.trim();
                         if (scope == null || scope.isEmpty()) scope = "all";
-                        
+
                         Class<?> cls = null;
                         try {
                             cls = loader.loadClass(className);
@@ -716,19 +716,19 @@ public abstract class ScipioFtlWrappers {
                 }
             }
         }
-        
+
         sortCustomFactoryInfoList(infoList);
         infoList.trimToSize();
-        
+
         String out = "Scipio Custom Freemarker Wrapper Factories Loaded (" + infoList.size() + ")\n";
         for(CustomFactoryInfo info : infoList) {
             out += info + "\n";
         }
         Debug.logInfo(out, module);
-        
+
         return infoList;
     }
-    
+
     static void sortCustomFactoryInfoList(List<CustomFactoryInfo> infoList) {
         Collections.sort(infoList, new Comparator<CustomFactoryInfo>() {
             @Override
@@ -737,25 +737,25 @@ public abstract class ScipioFtlWrappers {
             }
         });
     }
-    
+
     static List<ScipioModelFactory> makeCustomFactoryList(List<CustomFactoryInfo> infoList, String scope) {
         ArrayList<ScipioModelFactory> factories = new ArrayList<>(infoList.size());
         for(CustomFactoryInfo info : infoList) {
             if ("all".equals(scope) || "all".equals(info.getScope()) || scope.contains(info.getScope())) {
                 factories.add(info.getFactory());
-            }  
+            }
         }
         factories.trimToSize();
-        
+
         String out = "Scipio Custom Freemarker Wrapper Factories Loaded (" + factories.size() + ") for object wrapper [" + scope + "]\n";
         for(ScipioModelFactory factory : factories) {
             out += factory.getClass().getName() + "\n";
         }
         Debug.logInfo(out, module);
-        
+
         return factories;
     }
-    
+
     static class CustomFactoryInfo {
         private final long priority;
         private final ScipioModelFactory factory;
@@ -779,7 +779,7 @@ public abstract class ScipioFtlWrappers {
             return "[factory: " + factory.getClass().getName() + "; scope: " + scope + "; priority: " + priority + "]";
         }
     }
-    
+
     static List<ScipioModelFactory> makeCleanFactoryList(Collection<? extends ScipioModelFactory> factories) {
         ArrayList<ScipioModelFactory> list = new ArrayList<>(factories);
         list.trimToSize();

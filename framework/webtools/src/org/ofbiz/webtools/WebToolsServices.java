@@ -140,16 +140,16 @@ public class WebToolsServices {
         //String uploadedFileName = (String) context.get("_uploadedFile_fileName");
         //String uploadedFileContentType = (String) context.get("_uploadedFile_contentType");
         if (uploadedFileBuffer != null) {
-            // FIXME?: this is forcing the whole file in-memory (possibly even multiple copies - ?), 
+            // FIXME?: this is forcing the whole file in-memory (possibly even multiple copies - ?),
             // but the changes needed to get around this were too many, so I ditched them for now.
             // The right way around this would be to modify parseEntityXmlFile to accept an InputStream,
             // but to get the InputStream may have to modify ServiceEventHandler to pass
             // the FileItem for its getInputStream method... but this is too invasive for now.
             fulltext = java.nio.charset.StandardCharsets.UTF_8.decode(uploadedFileBuffer).toString();
         }
-        
+
         // SCIPIO: 2017-06-15: we can automatically deduce whether isUrl is needed... no need for flag...
-        
+
         // #############################
         // The filename to parse is prepared
         // #############################
@@ -245,7 +245,7 @@ public class WebToolsServices {
         Map<String, Object> resp = UtilMisc.toMap("messages", (Object) messages);
         return resp;
     }
-    
+
     public static Map<String, Object> entityImportDir(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -692,7 +692,7 @@ public class WebToolsServices {
             for (String pName : packageNames) {
                 Map<String, Object> packageMap = new HashMap<String, Object>();
                 TreeSet<String> entities = entitiesByPackage.get(pName);
-                List<Map<String, Object>> entitiesList = (search == null) ? new ArrayList<Map<String, Object>>(entities.size()) 
+                List<Map<String, Object>> entitiesList = (search == null) ? new ArrayList<Map<String, Object>>(entities.size())
                         : new ArrayList<Map<String, Object>>(); // SCIPIO: 2018-03-28: ArrayList + initial capacity
                 for (String entityName: entities) {
                     Map<String, Object> entityMap = new HashMap<String, Object>();

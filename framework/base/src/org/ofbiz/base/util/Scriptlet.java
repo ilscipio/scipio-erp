@@ -46,7 +46,7 @@ public final class Scriptlet implements Serializable { // SCIPIO: serializable
 
     /**
      * Executes the scriptlet and returns the result.
-     * 
+     *
      * @param context The script bindings
      * @return The scriptlet result
      * @throws Exception
@@ -73,5 +73,5 @@ public final class Scriptlet implements Serializable { // SCIPIO: serializable
     public String getScript() {
         return script;
     }
-    
+
 }

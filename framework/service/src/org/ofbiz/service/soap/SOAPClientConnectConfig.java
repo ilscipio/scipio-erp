@@ -77,7 +77,7 @@ public class SOAPClientConnectConfig {
         CUSTOM_CLIENT("custom-client"),
         CUSTOM_CONNMANAGER("custom-connmanager"),
         STOCK("stock");
-        
+
         private static final Map<String, ConnectCfgMode> nameMap;
         static {
             Map<String, ConnectCfgMode> map = new HashMap<>();
@@ -99,7 +99,7 @@ public class SOAPClientConnectConfig {
     public enum CertCheckCfgMode {
         CUSTOM("custom"),
         STOCK("stock");
-        
+
         private static final Map<String, CertCheckCfgMode> nameMap;
         static {
             Map<String, CertCheckCfgMode> map = new HashMap<>();
@@ -119,7 +119,7 @@ public class SOAPClientConnectConfig {
     protected final Integer maxConnectionsPerHost;
     protected final Integer connectTimeout;
     protected final Integer socketTimeout;
-    
+
     protected final String sslProtocol;
 
     protected final X509TrustManager trustManager; // NOTE: shared even when reuseClient==false
@@ -143,17 +143,17 @@ public class SOAPClientConnectConfig {
         connectCfgMode = ConnectCfgMode.fromNameSafe(UtilProperties.getPropertyValue(propResource, connectPropPrefix+"configMode"), ConnectCfgMode.STOCK);
         certCheckCfgMode = CertCheckCfgMode.fromNameSafe(UtilProperties.getPropertyValue(propResource, certPropPrefix+"validate.configMode"), CertCheckCfgMode.STOCK);
         if (connectCfgMode.isCustom()) {
-            reuseClient = (connectCfgMode == ConnectCfgMode.CUSTOM_CONNMANAGER) ? 
+            reuseClient = (connectCfgMode == ConnectCfgMode.CUSTOM_CONNMANAGER) ?
                     false : UtilProperties.getPropertyAsBoolean(propResource, connectPropPrefix+"reuseClient", false);
-            reuseConnManager = (reuseClient) ? true : 
+            reuseConnManager = (reuseClient) ? true :
                 UtilProperties.getPropertyAsBoolean(propResource, connectPropPrefix+"reuseConnManager", false);
-           
+
             maxConnections = UtilProperties.getPropertyAsIntegerInRange(propResource, connectPropPrefix+"maxConnections", 0, null, 200);
             maxConnectionsPerHost = UtilProperties.getPropertyAsIntegerInRange(propResource, connectPropPrefix+"maxConnectionsPerHost", 0, null, 200);
             connectTimeout = UtilProperties.getPropertyAsIntegerInRange(propResource, connectPropPrefix+"connectTimeout", 0, null, null);
             socketTimeout = UtilProperties.getPropertyAsIntegerInRange(propResource, connectPropPrefix+"socketTimeout", 0, null, null);
             sslProtocol = UtilProperties.getPropertyValue(propResource, certPropPrefix+"validate.sslProtocol", "TLS");
-                    
+
             if (log) Debug.logInfo("SOAP config: Basic SOAP Custom HttpClient/certificate configuration: ["
                     + "connectCfgMode=" + connectCfgMode.getName()
                     + ", reuseClient=" + reuseClient
@@ -200,7 +200,7 @@ public class SOAPClientConnectConfig {
             httpClient = null;
         }
     }
-    
+
     protected SOAPClientConnectConfig() {
         propResource = null;
         connectPropPrefix = null;
@@ -220,7 +220,7 @@ public class SOAPClientConnectConfig {
         poolingConnManager = null;
         httpClient = null;
     }
-            
+
     public static SOAPClientConnectConfig getDefaultInstance() {
         return INSTANCE;
     }
@@ -237,7 +237,7 @@ public class SOAPClientConnectConfig {
                 connCfg = DisabledSOAPClientConnectConfig.INSTANCE;
             }
         } catch(Exception e) {
-            Debug.logError(e, "SOAP: Error reading or initializing client config configuration from " 
+            Debug.logError(e, "SOAP: Error reading or initializing client config configuration from "
                     + propResource + " (system defaults will be used): " + e.getMessage(), module);
             connCfg = DisabledSOAPClientConnectConfig.INSTANCE;
         }
@@ -256,13 +256,13 @@ public class SOAPClientConnectConfig {
         // TODO?: does nothing because SOAPClientEngine is written with no "memory" anyway...
         //prevHttpClient.set(options.getProperty(HTTPConstants.CACHED_HTTP_CLIENT));
         //prevConnManager.set(options.getProperty(HTTPConstants.MULTITHREAD_HTTP_CONNECTION_MANAGER));
-        
+
         ClientConnectionManager connManager = getConnectionManager();
         if (connManager == null) {
             // can do nothing without this
             return false;
         }
-        
+
         if (connectCfgMode == ConnectCfgMode.CUSTOM_CLIENT) {
             // TODO: REVIEW: 2018-07-12: not clear if the HttpClient
             // returned here is thread-safe-enough or not...
@@ -275,10 +275,10 @@ public class SOAPClientConnectConfig {
                     // SOAPClientEngine does not reuse instances enough for that.
                     options.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, true);
                 }
-                
+
                 // This is the axis2 "official" way to pass a custom HttpClient
                 options.setProperty(HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
-                
+
                 if (reuseConnManager) {
                     options.setProperty(HTTPConstants.MULTITHREAD_HTTP_CONNECTION_MANAGER, connManager);
                 }
@@ -286,7 +286,7 @@ public class SOAPClientConnectConfig {
             }
         } else if (connectCfgMode == ConnectCfgMode.CUSTOM_CONNMANAGER) {
             options.setProperty(HTTPConstants.MULTITHREAD_HTTP_CONNECTION_MANAGER, connManager);
-            
+
             // use axis2 interface to set timeouts in this case; just about the only thing we _can_ set with it...
 
             if (connectTimeout != null) {
@@ -299,14 +299,14 @@ public class SOAPClientConnectConfig {
         }
         return false;
     }
-    
+
     /**
      * Returns a custom HttpClient4 instance if applicable and configured successfully, or null otherwise.
      */
     public CloseableHttpClient getHttpClient() {
         return getHttpClient(getConnectionManager());
     }
-    
+
     public CloseableHttpClient getHttpClient(ClientConnectionManager connManager) {
         if (connectCfgMode != ConnectCfgMode.CUSTOM_CLIENT) return null;
         if (reuseClient) return httpClient;
@@ -373,7 +373,7 @@ public class SOAPClientConnectConfig {
         if (maxConnectionsPerHost != null) ((PoolingClientConnectionManager)connManager).setDefaultMaxPerRoute(maxConnectionsPerHost);
         return connManager;
     }
-    
+
     public X509TrustManager getTrustManager() {
         return trustManager;
     }
@@ -402,7 +402,7 @@ public class SOAPClientConnectConfig {
         SSLSocketFactory sf;
         if (certCheckCfgMode.isCustom()) {
             try {
-               
+
                 SSLContext context = SSLContext.getInstance(sslProtocol); // "SSL", "TLS"
                 context.init(null, new TrustManager[] { trustManager }, new SecureRandom());
                 sf = new SSLSocketFactory(context);
@@ -422,7 +422,7 @@ public class SOAPClientConnectConfig {
                 new Scheme("https", 443, sf));
         return schemeRegistry;
     }
-    
+
     protected static class DisabledSOAPClientConnectConfig extends SOAPClientConnectConfig {
         private static final DisabledSOAPClientConnectConfig INSTANCE = new DisabledSOAPClientConnectConfig();
         private DisabledSOAPClientConnectConfig() { super(); }
@@ -431,6 +431,6 @@ public class SOAPClientConnectConfig {
         @Override public CloseableHttpClient makeHttpClient(ClientConnectionManager connManager) { return null; }
         @Override protected ClientConnectionManager makePoolingConnectionManager(SchemeRegistry schemeRegistry) { return null; }
         @Override protected X509TrustManager makeTrustManager(CertCheckConfig certCheckConfig, boolean log) { return null; }
-        @Override protected SchemeRegistry makeSchemeRegistry(X509TrustManager trustManager) { return null; } 
+        @Override protected SchemeRegistry makeSchemeRegistry(X509TrustManager trustManager) { return null; }
     }
 }

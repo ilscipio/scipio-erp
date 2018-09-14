@@ -95,7 +95,7 @@ public class EntityTestSuite extends EntityTestCase {
         modelField = modelEntity.getField("newDesc");
         assertNull("TestingType.newDesc field model is null", modelField);
     }
-    
+
     /*
      * Tests storing values with the delegator's .create, .makeValue, and .storeAll methods
      */
@@ -221,7 +221,7 @@ public class EntityTestSuite extends EntityTestCase {
         int qtyChanged = delegator.storeByCondition("TestingType", UtilMisc.toMap("description", "New Testing Type #Cache-0"), storeByCondition);
         assertEquals("Delegator.storeByCondition updated one value", 1, qtyChanged);
         testValue = EntityQuery.use(delegator).from("TestingType").where("testingTypeId", "TEST-CACHE-1").cache(true).queryFirst();
-        
+
         assertEquals("Retrieved from cache value has the correct description", "New Testing Type #Cache-0", testValue.getString("description"));
         // Test removeByCondition updates the cache
         qtyChanged = delegator.removeByCondition("TestingType", storeByCondition);
@@ -416,7 +416,7 @@ public class EntityTestSuite extends EntityTestCase {
         delegator.create("TestingType", "testingTypeId", typeId, "description", typeDescription);
         int i = 0;
         Timestamp now = UtilDateTime.nowTimestamp();
-        
+
         for (GenericValue node: EntityQuery.use(delegator)
                                            .from("TestingNode")
                                            .where(EntityCondition.makeCondition("description", EntityOperator.LIKE, descriptionPrefix + "%"))
@@ -475,7 +475,7 @@ public class EntityTestSuite extends EntityTestCase {
                                                             .from("Testing")
                                                             .where(EntityCondition.makeCondition("testingTypeId", EntityOperator.LIKE, "TEST-DISTINCT-%"))
                                                             .queryList();
-        
+
         assertEquals("No existing Testing entities for distinct", 0, testingDistinctList.size());
         delegator.removeByCondition("TestingType", EntityCondition.makeCondition("testingTypeId", EntityOperator.LIKE, "TEST-DISTINCT-%"));
         GenericValue testValue = EntityQuery.use(delegator).from("TestingType").where("testingTypeId", "TEST-DISTINCT-1").cache(true).queryOne();
@@ -944,8 +944,8 @@ public class EntityTestSuite extends EntityTestCase {
         strBufTemp.append(iNum);
         return strBufTemp.toString();
     }
-    
-    
+
+
     /*
      * This test will verify that the LIMIT and OFFSET options can work properly.
      * Commented out because it makes the framework dependent on the content component
@@ -999,7 +999,7 @@ public class EntityTestSuite extends EntityTestCase {
             long end = UtilDateTime.nowTimestamp().getTime();
             long time1 = end - start;
             Debug.logInfo("Time consumed WITH limit and offset option (ms): " + time1, module);
-            
+
             start = UtilDateTime.nowTimestamp().getTime();
             for (int page = 1; page <= pages; page++) {
                 Debug.logInfo("Page " + page + ":", module);
@@ -1038,7 +1038,7 @@ public class EntityTestSuite extends EntityTestCase {
     }*/
 
     /*
-     * Tests EntitySaxReader, verification loading data with tag create, create-update, create-replace, delete 
+     * Tests EntitySaxReader, verification loading data with tag create, create-update, create-replace, delete
      */
     public void testEntitySaxReaderCreation() throws Exception {
         String xmlContentLoad =
@@ -1149,7 +1149,7 @@ public class EntityTestSuite extends EntityTestCase {
     }
 
     public void testEntitySaxReaderDelete() throws Exception {
-        String xmlContentLoad = 
+        String xmlContentLoad =
                         "<delete>" +
                         "    <Testing testingId=\"T1\"/>" +
                         "    <Testing testingId=\"T2\"/>" +

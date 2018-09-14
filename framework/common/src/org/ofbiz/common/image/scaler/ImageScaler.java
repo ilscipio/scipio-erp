@@ -16,7 +16,7 @@ public interface ImageScaler extends ImageOp {
     BufferedImage scaleImage(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException;
 
     BufferedImage scaleImage(BufferedImage image, int targetWidth, int targetHeight) throws IOException;
-    
+
     public interface ImageScalerFactory extends ImageOpFactory<ImageScaler> {
     }
 }

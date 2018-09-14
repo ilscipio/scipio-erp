@@ -55,7 +55,7 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         Object res = ContextFtlUtil.getRequestVar(LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel)), env);
-        
+
         ObjectWrapper objectWrapper = getResultObjectWrapper(env);
         return LangFtlUtil.wrap(res, objectWrapper);
     }

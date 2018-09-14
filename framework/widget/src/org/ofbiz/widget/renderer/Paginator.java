@@ -174,7 +174,7 @@ public final class Paginator {
         }
         return viewSize;
     }
-    
+
     public static void preparePager(ModelForm modelForm, Map<String, Object> context) {
 
         String lookupName = modelForm.getListName();
@@ -273,7 +273,7 @@ public final class Paginator {
     /**
      * @param context
      * @param viewSizeName
-     * @return value of viewSizeName in context map (as an int) or return 
+     * @return value of viewSizeName in context map (as an int) or return
      *         default value from widget.properties
      */
     public static Integer getViewSize(Map<String, ? extends Object> context, String viewSizeName) {

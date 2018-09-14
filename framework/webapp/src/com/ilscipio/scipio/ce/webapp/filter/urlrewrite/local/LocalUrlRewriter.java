@@ -67,11 +67,11 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
         public LocalUrlRewriter loadForRequest(FullWebappInfo webappInfo, String urlConfPath,
                 HttpServletRequest request, HttpServletResponse response) throws IOException {
             Conf conf = UrlConfUtil.getConfFromLocationOrWebapp(urlConfPath, webappInfo.getExtWebappInfo());
-            
+
             LocalUrlRewriter rewriter = new LocalUrlRewriter(urlConfPath, conf,
                     LocalServletContainer.fromRequest(webappInfo, request, response));
 
-            // now done at processOutboundUrl call due to circular references: 
+            // now done at processOutboundUrl call due to circular references:
             // orig request contains cache of rewriters, rewriters holding orig request reference...
             //rewriter.getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_REQUEST, request);
 
@@ -82,11 +82,11 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
         public LocalUrlRewriter loadForContext(FullWebappInfo webappInfo, String urlConfPath,
                 Map<String, Object> context) throws IOException {
             Conf conf = UrlConfUtil.getConfFromLocationOrWebapp(urlConfPath, webappInfo.getExtWebappInfo());
-            
+
             LocalUrlRewriter rewriter = new LocalUrlRewriter(urlConfPath, conf,
                     LocalServletContainer.fromContext(webappInfo, context, RenderEnvType.fromContext(context)));
 
-            // now done at processOutboundUrl call due to circular references: 
+            // now done at processOutboundUrl call due to circular references:
             // orig context contains cache of rewriters, rewriters holding orig context reference...
             //rewriter.getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_CONTEXT, context);
 

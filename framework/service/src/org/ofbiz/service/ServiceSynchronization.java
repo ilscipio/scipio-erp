@@ -39,7 +39,7 @@ import org.ofbiz.entity.transaction.TransactionFactoryLoader;
 import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
- * This class is used to execute services when a transaction is either 
+ * This class is used to execute services when a transaction is either
  * committed or rolled back.  It should generally be accessed via
  * LocalDispatcher's addCommitService and addRollbackService methods
  * or by using the service ECA event attribute values global-commit,

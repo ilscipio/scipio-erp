@@ -64,7 +64,7 @@ public abstract class ModelMenuAction implements Serializable {
 
     /**
      * Models the &lt;set&gt; element.
-     * 
+     *
      * @see <code>widget-common.xsd</code>
      */
     public static class SetField extends AbstractModelAction {

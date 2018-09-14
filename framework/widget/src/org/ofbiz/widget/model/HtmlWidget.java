@@ -70,7 +70,7 @@ public class HtmlWidget extends ModelScreenWidget {
     // SCIPIO: NOTE: 2016-10-17: Exceptionally, the Ofbiz ExtendedWrapper that was present here
     // was so generic and needed elsewhere, that it has been MOVED to:
     // org.ofbiz.webapp.ftl.ExtendedWrapper
-    
+
     // End Static, begin class section
 
     private final List<ModelScreenWidget> subWidgets;
@@ -104,7 +104,7 @@ public class HtmlWidget extends ModelScreenWidget {
     public static Configuration getFtlConfig() {
         return specialConfig;
     }
-    
+
     public List<ModelScreenWidget> getSubWidgets() {
         return subWidgets;
     }
@@ -151,7 +151,7 @@ public class HtmlWidget extends ModelScreenWidget {
             throw new IllegalArgumentException("Rendering not yet supported for the template at location: " + location);
         }
     }
-    
+
     /**
      * SCIPIO: Renders an inlined template of given type.
      */
@@ -204,13 +204,13 @@ public class HtmlWidget extends ModelScreenWidget {
      * SCIPIO: this is turned abstract and the implementation moved to FileHtmlTemplate.
      */
     public static abstract class HtmlTemplate extends ModelScreenWidget {
-        
+
         private static final Set<String> supportedTypes = Collections.unmodifiableSet(UtilMisc.toSet("ftl", "fo-ftl"));
-        
+
         protected HtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
             super(modelScreen, htmlTemplateElement);
         }
-        
+
         public static HtmlTemplate getInstance(ModelScreen modelScreen, Element htmlTemplateElement) { // SCIPIO: made into factory
             if (!htmlTemplateElement.getAttribute("location").isEmpty()) {
                 return new FileHtmlTemplate(modelScreen, htmlTemplateElement);
@@ -236,7 +236,7 @@ public class HtmlWidget extends ModelScreenWidget {
             return "html-template";
         }
     }
-    
+
     /**
      * File-/Location-based HTML template.
      * <p>
@@ -269,7 +269,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
 
     }
-    
+
     /**
      * SCIPIO: Inlined HTML template.
      * <p>
@@ -279,7 +279,7 @@ public class HtmlWidget extends ModelScreenWidget {
         protected final String templateBody;
         protected final String lang;
         protected final String templateId;
-        
+
         public InlineHtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
             super(modelScreen, htmlTemplateElement);
             String lang = htmlTemplateElement.getAttribute("lang");

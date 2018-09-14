@@ -68,7 +68,7 @@ public class UtilCodec {
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
     private static final RawEncoder rawEncoder = getDefaultEncoder(new RawEncoder());
-    
+
     private static final UrlCodec urlCodec = new UrlCodec(); // SCIPIO: FIXME: this needs to be split between encode and decode...
     private static final List<Codec> codecs;
     static {
@@ -77,14 +77,14 @@ public class UtilCodec {
         tmpCodecs.add(new PercentCodec());
         codecs = Collections.unmodifiableList(tmpCodecs);
     }
-    
+
     /**
      * SCIPIO: list of available encoder names.
      */
     private static final Set<String> encoderNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
             "raw", "url", "xml", "html", "cssstr", "cssid", "string"
     })));
-    
+
     /**
      * SCIPIO: list of available decoder names.
      */
@@ -101,8 +101,8 @@ public class UtilCodec {
 
     public static interface SimpleEncoder {
         public String encode(String original);
-        public String sanitize(String outString); // Only really useful with HTML, else simply calls encode() method 
-        
+        public String sanitize(String outString); // Only really useful with HTML, else simply calls encode() method
+
         /**
          * SCIPIO: Returns the language of this encoder.
          * Added 2018-06-11 (backported from Scipio's own ContentLangUtil.ContentSanitizer, which will be killed).
@@ -286,7 +286,7 @@ public class UtilCodec {
             return "cssid";
         }
     }
-    
+
     /**
      * SCIPIO: CSS string literal encoder, ONLY for values placed between quotes.
      */
@@ -307,13 +307,13 @@ public class UtilCodec {
             return "cssstr";
         }
     }
-    
+
     /**
      * SCIPIO: Javascript string literal encoder, ONLY for values placed between quotes.
      */
     public static class JsStringEncoder implements SimpleEncoder {
         public String encode(String original) {
-            return (original != null) ? 
+            return (original != null) ?
                     freemarker.template.utility.StringUtil.javaScriptStringEnc(original) : null;
         }
         @Override
@@ -325,13 +325,13 @@ public class UtilCodec {
             return "jsstr";
         }
     }
-    
+
     /**
      * SCIPIO: JSON string literal encoder, ONLY for values placed between quotes.
      */
     public static class JsonStringEncoder implements SimpleEncoder {
         public String encode(String original) {
-            return (original != null) ? 
+            return (original != null) ?
                     freemarker.template.utility.StringUtil.jsonStringEnc(original) : null;
         }
         @Override
@@ -343,7 +343,7 @@ public class UtilCodec {
             return "jsonstr";
         }
     }
-    
+
     /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
@@ -360,8 +360,8 @@ public class UtilCodec {
             return "raw";
         }
     }
-    
-    
+
+
     // ================== Begin General Functions ==================
 
     private static final Map<String, SimpleEncoder> encoderMap;
@@ -370,7 +370,7 @@ public class UtilCodec {
 
         // SCIPIO: 2018-06-11: dump the html specific profile encoders into here
         map.putAll(policyEncoders);
-        
+
         map.put(rawEncoder.getLang(), rawEncoder); // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
         map.put(urlCodec.getLang(), urlCodec);
         map.put(xmlEncoder.getLang(), xmlEncoder);
@@ -392,36 +392,36 @@ public class UtilCodec {
             sb.append(map.get(name).getClass().getName());
         }
         Debug.logInfo(sb.toString(), module);
-        
+
         encoderMap = map;
     }
-    
+
     @SuppressWarnings("unchecked")
     private static <T extends SimpleEncoder> T getDefaultEncoder(T defaultEncoder) { // SCIPIO
         T encoder = null;
         try {
             encoder = (T) policyEncoders.get(defaultEncoder.getLang() + "-default");
         } catch(ClassCastException e) {
-            Debug.logError(e, "Unexpected script language encoder class for type '" 
+            Debug.logError(e, "Unexpected script language encoder class for type '"
                     + defaultEncoder.getLang() + "-default; verify property configuration", module);
         }
         return (encoder != null) ? encoder : defaultEncoder;
     }
-    
+
     public static SimpleEncoder getEncoder(String type) {
         return encoderMap.get(type);
     }
-    
+
     /**
      * SCIPIO: Returns raw/dummy encoder (quick method).
      * <p>
-     * NOTE: Generic SimpleEncoder type is returned as opposed to RawEncoder in order to 
+     * NOTE: Generic SimpleEncoder type is returned as opposed to RawEncoder in order to
      * preserve the abstraction provided by {@link #getEncoder(String)}.
      */
     public static SimpleEncoder getRawEncoder() {
         return rawEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns default html encoder (quick method).
      */
@@ -435,14 +435,14 @@ public class UtilCodec {
     public static SimpleEncoder getXmlEncoder() {
         return xmlEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns url encoder (quick method).
      */
     public static SimpleEncoder getUrlEncoder() {
         return urlCodec;
     }
-    
+
     /**
      * SCIPIO: Returns css string literator encoder (quick method).
      * @deprecated ambiguous; use {@link #getCssIdEncoder()} or {@link #getCssStringEncoder()} instead
@@ -451,21 +451,21 @@ public class UtilCodec {
     public static SimpleEncoder getCssEncoder() {
         return cssStringEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns css identifier encoder, aggressive (quick method).
      */
     public static SimpleEncoder getCssIdEncoder() {
         return cssIdEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns css string literator encoder, aggressive (quick method).
      */
     public static SimpleEncoder getCssStringEncoder() {
         return cssStringEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns Javascript string literator encoder.
      * Based on Freemarker ?js_string algorithm.
@@ -473,7 +473,7 @@ public class UtilCodec {
     public static SimpleEncoder getJsStringEncoder() {
         return jsStringEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns JSON string literator encoder.
      * Based on Freemarker ?json_string algorithm.
@@ -481,14 +481,14 @@ public class UtilCodec {
     public static SimpleEncoder getJsonStringEncoder() {
         return jsonStringEncoder;
     }
-    
+
     /**
      * SCIPIO: Checks if encoder is raw encoder (abstraction).
      */
     public static boolean isRawEncoder(SimpleEncoder encoder) {
         return (encoder instanceof RawEncoder);
     }
-    
+
     /**
      * SCIPIO: Checks if encoder is null or raw encoder (abstraction).
      */
@@ -503,28 +503,28 @@ public class UtilCodec {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Returns url decoder (quick method).
      */
     public static SimpleDecoder getUrlDecoder() {
         return urlCodec;
     }
-    
+
     /**
      * SCIPIO: Returns all available encoder names.
      */
     public static Set<String> getEncoderNames() {
         return encoderNames;
     }
-    
+
     /**
      * SCIPIO: Returns all available decoder names.
      */
     public static Set<String> getDecoderNames() {
         return decoderNames;
     }
-    
+
     /**
      * SCIPIO: Quick encoding method.
      * <p>
@@ -533,14 +533,14 @@ public class UtilCodec {
     public static String encode(String value, String lang) {
         return getEncoder(lang).encode(value);
     }
-    
+
     /**
      * SCIPIO: Quick decoding method.
      */
     public static String decode(String value, String lang) {
         return getDecoder(lang).decode(value);
     }
-    
+
     /**
      * SCIPIO: Quick sanitizing method.
      */
@@ -697,7 +697,7 @@ public class UtilCodec {
         @Override
         public String toString() { return this.internalMap.toString(); }
     }
-    
+
     /**
      * SCIPIO: the original HtmlEncodingMapWrapper, as a specialization.
      */

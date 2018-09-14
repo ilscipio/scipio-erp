@@ -265,7 +265,7 @@ public class ObjectType {
     public static boolean interfaceOf(Class<?> objectClass, Class<?> interfaceClass) {
         while (objectClass != null) {
             // SCIPIO (03/26/2018): objectClass.getInterfaces() only returned the interfaces directly implemented by the given objectClass.
-            // That was wrong because it didn't look for interfaces implemented in parent classes or implemented within those explicit 
+            // That was wrong because it didn't look for interfaces implemented in parent classes or implemented within those explicit
             // implemented interfaces.
             List<Class<?>> ifaces = ClassUtils.getAllInterfaces(objectClass);
 

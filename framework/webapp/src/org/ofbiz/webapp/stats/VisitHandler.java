@@ -163,7 +163,7 @@ public class VisitHandler {
                             GenericValue visitor = (GenericValue) session.getAttribute("visitor");
                             if (visitor != null) {
                                 String visitorId = visitor.getString("visitorId");
-                                
+
                                 // sometimes these values get stale, so check it before we use it
                                 try {
                                     GenericValue checkVisitor = EntityQuery.use(delegator).from("Visitor").where("visitorId", visitorId).queryOne();

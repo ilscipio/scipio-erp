@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
 
 /**
  * An object that models the <code>&lt;ofbiz-component&gt;</code> element.
- * 
+ *
  * @see <code>ofbiz-component.xsd</code>
  *
  */
@@ -187,7 +187,7 @@ public final class ComponentConfig {
         }
         return webappInfos;
     }
-    
+
     /**
      * SCIPIO: Returns webapp infos by context root (mount-point).
      */
@@ -280,7 +280,7 @@ public final class ComponentConfig {
             // SCIPIO: 2017-08-03: Need better exception below to identify specifically when component not found
             // so that caller can handle gracefully or simply skip.
             //throw new ComponentException("No component found named : " + globalName);
-            throw new ComponentException.ComponentNotFoundException("No component found named : " + globalName); 
+            throw new ComponentException.ComponentNotFoundException("No component found named : " + globalName);
         }
         componentConfig = new ComponentConfig(globalName, rootLocation);
         if (componentConfig.enabled()) {
@@ -288,7 +288,7 @@ public final class ComponentConfig {
         }
         return componentConfig;
     }
-    
+
     /**
      * SCIPIO: Special method for initialization only to set the global component order.
      * Public only by force - intended ONLY for use from {@link org.ofbiz.base.container.ComponentContainer}.
@@ -332,7 +332,7 @@ public final class ComponentConfig {
 
     // SCIPIO
     private static Map<String, Map<String, WebappInfo>> serverContextRootWebappInfoCache;
-    
+
     private static Map<String, Map<String, WebappInfo>> getServerContextRootWebappInfoMap() {
         if (serverContextRootWebappInfoCache != null) {
             return serverContextRootWebappInfoCache;
@@ -355,7 +355,7 @@ public final class ComponentConfig {
         serverContextRootWebappInfoCache = map;
         return map;
     }
-    
+
     private static Map<String, WebappInfo> contextRootWebappInfoCache;
 
     private static Map<String, WebappInfo> getContextRootWebappInfoMap() {
@@ -633,7 +633,7 @@ public final class ComponentConfig {
             Debug.logVerbose("Read component config : [" + rootLocation + "]", module);
         }
     }
-    
+
     /**
      * SCIPIO: Copy constructor, with extra optional overrides such as explicit webappInfos.
      */
@@ -823,7 +823,7 @@ public final class ComponentConfig {
         }
         return names;
     }
-    
+
     /**
      * SCIPIO: Creates a (order-preserving) map of component names to configs from a list of configs.
      */
@@ -889,12 +889,12 @@ public final class ComponentConfig {
         componentList = (postProcessWebappInfos(componentList));
         return componentList;
     }
-    
+
     /**
      * SCIPIO: Post-processes the webapp infos of component list.
      */
     private static List<ComponentConfig> postProcessWebappInfos(List<ComponentConfig> componentList) {
-        // Find all duplicate mount-points 
+        // Find all duplicate mount-points
         Map<String, ComponentConfig> modifiedComponentsByName = new HashMap<>();
         for(Map.Entry<String, List<WebappInfo>> entry : getAllWebappResourceInfosByContextRoot(componentList, null).entrySet()) {
             // FIXME?: this part is not the most efficient and in certain cases may create needless copies
@@ -931,11 +931,11 @@ public final class ComponentConfig {
                 }
             }
         }
-        
+
         if (modifiedComponentsByName.size() == 0) { // optimization
             return componentList;
         }
-        
+
         List<ComponentConfig> resultList = new ArrayList<>(componentList.size());
         for(ComponentConfig cc : componentList) {
             if (modifiedComponentsByName.containsKey(cc.getComponentName())) {
@@ -944,13 +944,13 @@ public final class ComponentConfig {
                 resultList.add(cc);
             }
         }
-        
+
         return resultList;
     }
-    
+
     /**
      * An object that models the <code>&lt;classpath&gt;</code> element.
-     * 
+     *
      * @see <code>ofbiz-component.xsd</code>
      *
      */
@@ -968,7 +968,7 @@ public final class ComponentConfig {
 
     /**
      * SCIPIO: An object that models the <code>&lt;classpath-special&gt;</code> element.
-     * 
+     *
      * @see <code>ofbiz-component.xsd</code>
      */
     public static class ClasspathSpecialInfo extends ClasspathInfo {
@@ -986,7 +986,7 @@ public final class ComponentConfig {
         private final Map<String, ComponentConfig> componentConfigs = new LinkedHashMap<>();
         // Root location mapped to global name.
         private final Map<String, String> componentLocations = new HashMap<>();
-        
+
         private synchronized ComponentConfig fromGlobalName(String globalName) {
             return componentConfigs.get(globalName);
         }
@@ -1009,7 +1009,7 @@ public final class ComponentConfig {
         private synchronized Collection<ComponentConfig> values() {
             return Collections.unmodifiableList(new ArrayList<>(componentConfigs.values()));
         }
-        
+
         /**
          * SCIPIO: Clears all (for reordering).
          */
@@ -1017,7 +1017,7 @@ public final class ComponentConfig {
             componentConfigs.clear();
             componentLocations.clear();
         }
-        
+
         /**
          * SCIPIO: putAll.
          */
@@ -1026,7 +1026,7 @@ public final class ComponentConfig {
                 put(config);
             }
         }
-        
+
         /**
          * SCIPIO: Atomic clear + putAll method.
          */
@@ -1038,7 +1038,7 @@ public final class ComponentConfig {
 
     /**
      * An object that models the <code>&lt;entity-resource&gt;</code> element.
-     * 
+     *
      * @see <code>ofbiz-component.xsd</code>
      *
      */
@@ -1055,7 +1055,7 @@ public final class ComponentConfig {
 
     /**
      * An object that models the <code>&lt;keystore&gt;</code> element.
-     * 
+     *
      * @see <code>ofbiz-component.xsd</code>
      *
      */
@@ -1132,7 +1132,7 @@ public final class ComponentConfig {
 
     /**
      * An object that models the <code>&lt;resource-loader&gt;</code> element.
-     * 
+     *
      * @see <code>ofbiz-component.xsd</code>
      *
      */
@@ -1152,7 +1152,7 @@ public final class ComponentConfig {
 
     /**
      * An object that models the <code>&lt;service-resource&gt;</code> element.
-     * 
+     *
      * @see <code>ofbiz-component.xsd</code>
      *
      */
@@ -1167,7 +1167,7 @@ public final class ComponentConfig {
 
     /**
      * An object that models the <code>&lt;test-suite&gt;</code> element.
-     * 
+     *
      * @see <code>ofbiz-component.xsd</code>
      *
      */
@@ -1179,7 +1179,7 @@ public final class ComponentConfig {
 
     /**
      * An object that models the <code>&lt;webapp&gt;</code> element.
-     * 
+     *
      * @see <code>ofbiz-component.xsd</code>
      *
      */
@@ -1312,7 +1312,7 @@ public final class ComponentConfig {
             this.accessPermission = other.accessPermission;
             this.overrideMode = other.overrideMode;
         }
-        
+
         public synchronized boolean getAppBarDisplay() {
             return this.appBarDisplay;
         }

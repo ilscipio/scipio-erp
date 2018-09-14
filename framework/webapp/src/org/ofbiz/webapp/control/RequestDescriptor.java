@@ -18,9 +18,9 @@ import javax.servlet.http.HttpServletResponse;
  * FIXME: this does not support inter-webapp links or all the new ofbiz URL parameters
  */
 public abstract class RequestDescriptor {
-    
+
     private static final Pattern pathParamPat = Pattern.compile(";(\\w+)=([^?#;/]*)");
-    
+
     public static RequestDescriptor fromUriStringRepr(HttpServletRequest request, HttpServletResponse response, String uriRepr) {
         if (uriRepr.startsWith("ofbizUrl://")) {
             return OfbizRequestDescriptor.fromUriStringRepr(request, response, uriRepr);
@@ -29,31 +29,31 @@ public abstract class RequestDescriptor {
             return WebRequestDescriptor.fromUriStringRepr(request, response, uriRepr);
         }
     }
-    
+
     /**
      * Returns type as a string.
      */
     public abstract String getType();
-    
+
     /**
      * Returns string representation of this descriptor as a URI before transformation, i.e.
      * its original representation.
      */
     public abstract String getUriStringRepr();
-    
+
     /**
      * Returns the main URI after transformation, i.e. stripped of any special protocols or arguments.
      */
     public abstract String getBaseUriString();
-    
+
     /**
      * Builds a final output URL.
      */
     public abstract String getWebUrlString();
-    
+
     public static class WebRequestDescriptor extends RequestDescriptor {
         protected final String uri;
-        
+
         public WebRequestDescriptor(HttpServletRequest request, HttpServletResponse response, String uri) {
             super();
             this.uri = uri;
@@ -62,7 +62,7 @@ public abstract class RequestDescriptor {
         public static WebRequestDescriptor fromUriStringRepr(HttpServletRequest request, HttpServletResponse response, String uriRepr) {
             return new WebRequestDescriptor(request, response, uriRepr);
         }
-        
+
         @Override
         public String getType() {
             return "web";
@@ -72,26 +72,26 @@ public abstract class RequestDescriptor {
         public String getUriStringRepr() {
             return uri;
         }
-        
+
         @Override
         public String getBaseUriString() {
             return uri;
         }
-        
+
         @Override
         public String getWebUrlString() {
             return uri;
         }
     }
-    
+
     /**
      * Parses a string URI in the form:
      * ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
      */
     public static class OfbizRequestDescriptor extends RequestDescriptor {
-        
+
         private static final Set<String> optionNames = new HashSet<String>(Arrays.asList("fullPath", "secure", "encode"));
-        
+
         protected final HttpServletRequest request;
         protected final HttpServletResponse response;
         protected final String requestUri;
@@ -124,7 +124,7 @@ public abstract class RequestDescriptor {
             }
             return new OfbizRequestDescriptor(request, response, path, fullPath, secure, encode);
         }
-        
+
         @Override
         public String getType() {
             return "ofbizUrl";
@@ -135,12 +135,12 @@ public abstract class RequestDescriptor {
             // TODO
             throw new UnsupportedOperationException("not implemented");
         }
-        
+
         @Override
         public String getBaseUriString() {
             return requestUri;
         }
-        
+
         @Override
         public String getWebUrlString() {
             return RequestHandler.makeUrl(request, response, requestUri, fullPath, secure, encode);
@@ -157,7 +157,7 @@ public abstract class RequestDescriptor {
         public Boolean getEncode() {
             return encode;
         }
-        
+
         private static Boolean stringToBool(String arg, Boolean defaultVal) {
             if ("true".equals(arg)) {
                 return true;
@@ -169,11 +169,11 @@ public abstract class RequestDescriptor {
                 return defaultVal;
             }
         }
-        
+
     }
-    
+
     /**
-     * Isolates descriptor parameters in a URI string. 
+     * Isolates descriptor parameters in a URI string.
      * These are currently implemented as URI path parameters (;).
      */
     public static String findStripUriStringDescriptorParameters(String uri, Set<String> paramNames, Map<String, String> paramValues) {
@@ -194,5 +194,5 @@ public abstract class RequestDescriptor {
         sb.append(uri.substring(i));
         return sb.toString();
     }
-    
+
 }

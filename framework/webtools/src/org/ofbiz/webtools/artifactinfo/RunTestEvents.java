@@ -32,7 +32,7 @@ public class RunTestEvents {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String runTest(HttpServletRequest request, HttpServletResponse response) throws ContainerException {
-        
+
         String component = request.getParameter("compName");
         String suiteName = request.getParameter("suiteName");
         String caseName = request.getParameter("caseName");

@@ -27,41 +27,41 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "imgscalr";
-    
+
     /**
      * Maps <code>scalingOptions.filter</code> to ResampleFilter instances.
      */
     private static final Map<String, Scalr.Method> filterMap;
     static {
         Map<String, Scalr.Method> map = new HashMap<>();
-        
+
         // GENERALIZED
         //map.put("areaaveraging", Image.SCALE_AREA_AVERAGING); // TODO
         //map.put("default", Image.SCALE_DEFAULT); // TODO
         map.put("fast", Scalr.Method.SPEED); // TODO
         //map.put("replicate", Image.SCALE_REPLICATE); // TODO
         map.put("smooth", Scalr.Method.ULTRA_QUALITY);
-        
+
         // SPECIFIC ALGORITHMS
         // (none)
-        
+
         // API-SPECIFIC
         map.put("ultra", Scalr.Method.ULTRA_QUALITY);
         map.put("quality", Scalr.Method.QUALITY);
         map.put("speed", Scalr.Method.SPEED);
-        
+
         filterMap = Collections.unmodifiableMap(map);
         Debug.logInfo(AbstractImageScaler.getFilterMapLogRepr(API_NAME, map), module);
     }
-    
+
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
         putDefaultImageTypeOptions(options);
-        options.put("filter", filterMap.get("smooth")); // String 
+        options.put("filter", filterMap.get("smooth")); // String
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
-    
+
     protected ImgscalrImageScaler(AbstractImageScalerFactory<ImgscalrImageScaler> factory, String name, Map<String, Object> confOptions) {
         super(factory, name, confOptions);
     }
@@ -84,14 +84,14 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
         @Override protected String getApiName() { return API_NAME; }
         @Override public Map<String, Object> getDefaultOptions() { return DEFAULT_OPTIONS; }
     }
-    
+
     @Override
     protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
-        
+
         // FIXME?: imgscalr supports no target image types at all...
         BufferedImage result = Scalr.resize(image, getFilter(options), Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
-        
+
         ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
         ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
 
@@ -99,7 +99,7 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
         return isPostConvertResultImage(image, options, targetTypeInfo) ?
                 checkConvertResultImageType(image, result, options, targetTypeInfo) : result;
     }
-    
+
     // NOTE: defaults are handled through the options merging with defaults
     protected static Scalr.Method getFilter(Map<String, Object> options) throws IllegalArgumentException {
         Object filterObj = options.get("filter");
@@ -112,7 +112,7 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
             return filterMap.get(filterName);
         }
     }
-    
+
     @Override
     public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         return false; // FIXME: this isn't true, it can output ONE format... should check...

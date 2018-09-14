@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class ScipioLibTemplateHelper extends TemplateHelper {
     // NOTE: some of the Parser methods could actually be moved here, but don't need for now
-    
+
     public ScipioLibTemplateHelper(String inFileExtension, String outFileExtension) {
         super(inFileExtension, outFileExtension);
     }
@@ -28,32 +28,32 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
     public boolean hasBulletList(String text) {
         return bulletPat.matcher(text).find();
     }
-    
-    
+
+
     private static final Pattern textLibEntryRefPat = Pattern.compile(
             "([a-zA-Z0-9][a-zA-Z0-9/._-]*[a-zA-Z0-9])?([@#])([a-zA-Z0-9_]{2,})"
             , Pattern.DOTALL);
-    
+
     /**
      * Parses the text for lib-entry like references, basically those containing
      * "@" or "#" characters, and returns a list where each entry is either
      * a piece of text or a map describing a link to an entry.
      */
-    public List<Object> splitByLibEntryRefs(String text, Map<String, Map<String, Object>> entryMap, 
+    public List<Object> splitByLibEntryRefs(String text, Map<String, Map<String, Object>> entryMap,
             Map<String, Map<String, Object>> libMap) {
         List<Object> textList = new ArrayList<>();
-        
+
         Matcher m = textLibEntryRefPat.matcher(text);
-        
+
         int lastEndIndex = 0;
         while(m.find()) {
             // Add text in between
             if (lastEndIndex < m.start()) {
                 textList.add(text.substring(lastEndIndex, m.start()));
             }
-            
+
             String ref = m.group();
-            
+
             Map<String, Object> entryInfo = findEntryGlobal(ref, entryMap, libMap);
             if (entryInfo != null) {
                 textList.add(entryInfo);
@@ -78,7 +78,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
 
             lastEndIndex = m.end();
         }
-        
+
         // Add last part, but combine with previous if was only text
         if (lastEndIndex < text.length()) {
             String finalPart = text.substring(lastEndIndex);
@@ -99,40 +99,40 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
         return textList;
     }
 
-    
+
     private static final Pattern rawTextPat = Pattern.compile(
             "\\[\\[\\[(.*?)\\]\\]\\]"
             , Pattern.DOTALL);
     private static final Pattern plainTextPat = Pattern.compile(
             "\\(\\(\\((.*?)\\)\\)\\)"
             , Pattern.DOTALL);
-    
+
     private static final Pattern codeTextPat = Pattern.compile(
             "\\{\\{\\{(.*?)\\}\\}\\}"
             , Pattern.DOTALL);
-    
+
     private static final Pattern linkManualPat = Pattern.compile(
             ">>>(.*?)<<<"
             , Pattern.DOTALL);
-    
+
     private static final Pattern linkAutoPat = Pattern.compile(
             "(^|\\b)((https?|file)://([^)\\s\\n])+)"
             , Pattern.DOTALL);
-    
+
     @SuppressWarnings("unchecked")
-    private Object fixupLink(Object linkObj, Map<String, Map<String, Object>> entryMap, 
+    private Object fixupLink(Object linkObj, Map<String, Map<String, Object>> entryMap,
             Map<String, Map<String, Object>> libMap, Map<String, Object> libInfo) {
         if (linkObj instanceof Map && ((Map<String, Object>) linkObj).get("type").equals("link")) {
             Map<String, Object> linkInfo = (Map<String, Object>) linkObj;
-            
+
             msgHandler.logDebug(
-                    "====================================\n" + 
+                    "====================================\n" +
                     "linkInfo: " + linkInfo.toString() + "\n" +
                     "====================================");
-            
+
             // FIXME?: Currently only support href==label
             String value = (String) linkInfo.get("value");
-            
+
             if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("file://") || value.startsWith("//")) {
                 // absolute, do nothing
                 linkInfo.put("text", value);
@@ -145,9 +145,9 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 // relative to current, just strip the prefix
                 value = value.substring(2);
                 linkInfo.put("text", value);
-                
+
                 // 2016-10-27: check if this is a valid doc link, so template can process it
-                if (libMap.containsKey(value) || 
+                if (libMap.containsKey(value) ||
                         (value.endsWith(inFileExtension) && libMap.containsKey(value.substring(0, value.length() - inFileExtension.length())))) {
                     linkInfo.put("isDocLink", Boolean.TRUE);
                 }
@@ -163,9 +163,9 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 // 2016-10-27: let the template process the link instead
                 // relative to doc root. need to adjust the link.
                 //value = getTargetRelLibDocPath(value, libDocPath);
-                
+
                 // 2016-10-27: check if this is a valid doc link, so template can process it
-                if (libMap.containsKey(value) || 
+                if (libMap.containsKey(value) ||
                         (value.endsWith(inFileExtension) && libMap.containsKey(value.substring(0, value.length() - inFileExtension.length())))) {
                     linkInfo.put("isDocLink", Boolean.TRUE);
                 }
@@ -180,26 +180,26 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             return linkObj;
         }
     }
-    
+
     /**
      * Splits by [[[, ]]], (((, ))), {{{, }}}, and potential entry refs.
      */
-    public List<Object> splitByTextualElems(String text, Map<String, Map<String, Object>> entryMap, 
+    public List<Object> splitByTextualElems(String text, Map<String, Map<String, Object>> entryMap,
             Map<String, Map<String, Object>> libMap, Map<String, Object> libInfo) {
         List<Object> res;
         Map<String, Object> modelMap;
         List<Object> prevSplit;
-        
+
         msgHandler.logDebug(
-                "====================================\n" + 
+                "====================================\n" +
                 "splitByTextualElems: " + (text.length() > 400 ? text.substring(0, 399) : text) + "\n" +
                 "====================================");
-        
+
         // split by raw text
         modelMap = FtlDocFileParser.makeObjectMap();
         modelMap.put("type", "text-raw");
         res = splitByPat(text, rawTextPat, modelMap, "origText", "value");
-        
+
         // split remaining text parts by plain pat
         prevSplit = res;
         res = new ArrayList<>();
@@ -214,7 +214,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 res.add(part);
             }
         }
-        
+
         // split remaining text parts by code pat
         prevSplit = res;
         res = new ArrayList<>();
@@ -230,7 +230,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             }
         }
 
-        
+
         // split remaining text parts by entry refs
         prevSplit = res;
         res = new ArrayList<>();
@@ -243,7 +243,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 res.add(part);
             }
         }
-        
+
         // split remaining text parts by manual links
         prevSplit = res;
         res = new ArrayList<>();
@@ -262,7 +262,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 res.add(part);
             }
         }
-        
+
         // split remaining text parts by automatic links
         prevSplit = res;
         res = new ArrayList<>();
@@ -295,17 +295,17 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 }
             }
         }*/
-        
+
         return res;
     }
-    
-    
-    
+
+
+
     // NOTE: don't end this with $; capture the newline
     private static final Pattern strictTitlePat = Pattern.compile(
             "^[ ]*[*][ ]*([^*\\n]*?)[ ]*[*][ ]*(\\n|\\z)"
             , Pattern.DOTALL + Pattern.MULTILINE);
-    
+
     /**
      * Splits text into a list of maps (titles) and strings (regular text).
      * Only parses strict top-level titles.
@@ -316,8 +316,8 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
         return splitByPat(text, strictTitlePat, modelMap, "origText", "value");
     }
 
-    
-    
+
+
     /**
      * Splits text into a list of maps (indented blocks) and strings (regular text).
      * Only parses strict top-level titles.
@@ -328,17 +328,17 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
         final Pattern indentLinePat = Pattern.compile(
                 "^([ ]" + makeRegexRangeExpr(minSize, maxSize) + ")(\\S.*)(\\n|\\z)"
                 , Pattern.MULTILINE); // NOTE: no DOTALL
-        
+
         // Get all the indented lines
         Map<String, Object> modelMap = FtlDocFileParser.makeObjectMap();
         modelMap.put("type", "indent");
         List<Object> lineList = splitByPat(text, indentLinePat, modelMap, "origText", "indentSpaces", "value");
-        
+
         // Combine the lines into blocks
         int lastBlockIndentSize = 0;
-        
+
         msgHandler.logDebug(
-                "====================================\n" + 
+                "====================================\n" +
                 "splitByIndentBlocks: entry count: " + lineList.size() + "\n" +
                 "====================================");
 
@@ -346,7 +346,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
         for(Object entry : lineList) {
             if (entry instanceof String) {
                 String entryText = (String) entry;
-                
+
                 msgHandler.logDebug("TEXT: " + entryText);
 
                 res.add(entryText);
@@ -357,52 +357,52 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             }
             else {
                 Map<String, Object> lineInfo = (Map<String, Object>) entry;
-                
+
                 String indentSpaces = (String) lineInfo.get("indentSpaces");
                 int indentSize = indentSpaces.length();
                 lineInfo.put("indentSize", indentSize);
-                
-                
+
+
                 msgHandler.logDebug("INDENT LINE: " + lineInfo.get("value").toString());
-                
+
                 msgHandler.logDebug("indentSize " + indentSize + " lastBlockIndentSize " + lastBlockIndentSize );
-                
+
                 if (lastBlockIndentSize > 0 && indentSize >= lastBlockIndentSize) {
                     msgHandler.logDebug("append: indentSize " + indentSize + " lastBlockIndentSize " + lastBlockIndentSize);
-                    
+
                     // combine with last line
                     Map<String, Object> blockInfo = (Map<String, Object>) res.get(res.size() - 1);
                     // Add the text, but make sure to keep right number of spaces
-                    
+
                     String blockText = (String) blockInfo.get("value");
                     String lineText = (String) lineInfo.get("value");
-                    
+
                     blockText += "\n"; // excluded from value in regexp
                     for(int i = 0; i < (indentSize - lastBlockIndentSize); i++) {
                         blockText += " ";
                     }
                     blockText += lineText;
-                    
+
                     blockInfo.put("value", blockText);
                 }
                 else {
                     msgHandler.logDebug("was new block");
-                    
+
                     // new block
                     res.add(lineInfo); // already in valid format for block
                     lastBlockIndentSize = indentSize;
                 }
             }
         }
-        
+
         return res;
     }
-    
+
     public List<Object> splitByIndentBlocks(String text) {
         return splitByIndentBlocks(text, 2, -1);
     }
-    
-    
+
+
     /**
      * Finds and parses the first list. The list will never have a "title" or
      * leading text; only sub-lists will. This parses using INDENTATION.
@@ -414,24 +414,24 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
         if (recurse == true) {
             throw new UnsupportedOperationException("findParseBulletList doesn't recurse at the moment, ambiguous");
         }
-        
+
         // get the first bullet
         Matcher m = bulletPat.matcher(text);
         if (m.find()) {
             Map<String, Object> listInfo = FtlDocFileParser.makeObjectMap();
-            
+
             int textStartIndex = m.start();
             int textEndIndex = text.length();   // don't know yet
             int indentSize = m.group(1).length();
 
             msgHandler.logDebug(
-                    "====================================\n" + 
+                    "====================================\n" +
                     "findParseBulletList: found bullet match: '" + m.group() + "'\n" +
                     "====================================");
-            
+
             // just cut text slow, but whatever
             String listText = text.substring(textStartIndex);
-            
+
             // NOTE: these pats use NOT DOTALL. Go line-by-line. MULTILINE is for ^ and $.
             // NOTE: don't end this with $; capture the newline
             Pattern listLinePat;
@@ -441,9 +441,9 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             else {
                 listLinePat = Pattern.compile("^([* ])[ ](.*)$");
             }
-            
+
             msgHandler.logDebug("Pattern: " + listLinePat.toString());
-            
+
             int lineCharsConsumed = 0;
             int numLinesConsumed = 0;
             // NOTE: intentionally hardcode \n for now
@@ -456,16 +456,16 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 if (linem.matches()) {
                     lineCharsConsumed += line.length();
                     numLinesConsumed += 1;
-                    
+
                     String firstChar = linem.group(1);
                     String lineText = linem.group(2);
-                    
+
                     if ("*".equals(firstChar)) {
                         if (listItemText != null) {
                             // save previous
                             listItemTexts.add(cleanTextValueSafe(listItemText));
                         }
-                        
+
                         // start new item
                         listItemText = lineText;
                     }
@@ -481,12 +481,12 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                     break;
                 }
             }
-            
+
             // finish off previous
             if (listItemText != null) {
                 listItemTexts.add(cleanTextValueSafe(listItemText));
             }
-            
+
             int charsConsumed;
             if (numLinesConsumed >= lines.length) {
                 charsConsumed = lineCharsConsumed + ("\n".length() * (numLinesConsumed - 1));
@@ -494,22 +494,22 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             else {
                 charsConsumed = lineCharsConsumed + ("\n".length() * numLinesConsumed);
             }
-            
+
             // must add original startIndex to get the real endIndex (on the orig text); relative
             textEndIndex = textStartIndex + charsConsumed;
-            
-            
+
+
 
             List<Object> items = listItemTexts;
-            
+
             /* this used to treat sub-lists as special items, but get more versatile markup if we don't.
                also now let caller do this.
             List<Map<String, Object>> items = new ArrayList<>();
-            
+
             // Go through items, and create sub-lists where necessary.
             for(String itemText : listItemTexts) {
                 Map<String, Object> itemInfo = makeObjectMap();
-                
+
                 Map<String, Object> subList = findParseBulletList(itemText);
                 if (subList != null) {
                     // leading text
@@ -523,7 +523,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                     if (subEndIndex < itemText.length()) {
                         itemInfo.put("trailingText", itemText.substring(subEndIndex));
                     }
-                    
+
                     itemInfo.put("items", subList.get("items"));
                 }
                 else {
@@ -531,15 +531,15 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 }
                 items.add(itemInfo);
             }*/
-            
+
             if (text.contains("generic field arrangement of no specific pattern and no")) {
                 msgHandler.logDebug("FOUND PROBLEMATIC");
             }
-            msgHandler.logDebug("text length: " + text.length() + 
+            msgHandler.logDebug("text length: " + text.length() +
                     " startIndex: " + textStartIndex + " endIndex: " + textEndIndex);
             //msgHandler.logDebug("items: " + items.toString());
-            
-            
+
+
             listInfo.put("items", items);
             listInfo.put("startIndex", textStartIndex);
             listInfo.put("endIndex", textEndIndex);
@@ -550,9 +550,9 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             return null;
         }
     }
-    
+
     /**
-     * Returns list of maps and strings. 
+     * Returns list of maps and strings.
      * String is piece of text, while each map describes a list.
      * <p>
      * If recurse, the list elems are passed through splitByMarkupElems
@@ -560,14 +560,14 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
     @SuppressWarnings("unchecked")
     public List<Object> splitByLists(String text, boolean recurse) {
         List<Object> textList = new ArrayList<>();
-        
+
         String remainText = text;
-        
+
         msgHandler.logDebug(
-                "====================================\n" + 
+                "====================================\n" +
                 "splitByLists\n" +
                 "====================================");
-        
+
         while (true) {
             Map<String, Object> listInfo = findParseBulletList(remainText, false); // we recurse ourselves below
             if (listInfo == null) {
@@ -576,12 +576,12 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
 
             int startIndex = (int) listInfo.get("startIndex");
             int endIndex = (int) listInfo.get("endIndex");
-            
+
             // Add text before list
             if (startIndex > 0) {
                 textList.add(remainText.substring(0, startIndex));
             }
-            
+
             if (recurse) {
                 List<Object> parsedItems = new ArrayList<>();
                 List<Object> itemTexts = (List<Object>) listInfo.get("items");
@@ -595,7 +595,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 // just replace directly, we know we can
                 listInfo.put("items", parsedItems);
             }
-            
+
             // Add the list
             textList.add(listInfo);
 
@@ -604,24 +604,24 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             // ... however also very simple
             remainText = remainText.substring(endIndex);
         }
-        
+
         // last piece of text remaining
         if (!remainText.isEmpty()) {
             textList.add(remainText);
         }
-        
+
         msgHandler.logDebug("textList size: " + textList.size());
-        
+
         return textList;
     }
-    
-    
+
+
     // just try to match everything possible here. note will consume (and discard) leading space.
     // NOTE: don't end this with $; capture the newline (but leave outside value)
     private static final Pattern notesPat = Pattern.compile(
             "(?:[ ]+|^[ ]*)([A-Z]{3}[A-Z ]*[A-Z])([?]:|:)[ ]*(.*?)(\\n|\\z)"
             , Pattern.MULTILINE); // NOTE: no DOTALL
-    
+
     /**
      * Splits text into a list of maps (titles) and strings (regular text).
      * <p>
@@ -639,22 +639,22 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
         List<Object> bareList = splitByPat(text, notesPat, modelMap,  "origText", "label", "sep", "value");
         // This is too unwieldly to do in regex:
         // check if note started a new line or not, and also clean value found so far (same line)
-        
+
         msgHandler.logDebug(
-                "====================================\n" + 
+                "====================================\n" +
                 "splitByNotes: entry count: " + bareList.size() + "\n" +
                 "====================================");
-        
-        
+
+
         List<Object> res = new ArrayList<>();
         boolean lastWasNewline = true;
-        
+
         for(Object bare : bareList) {
             if (bare instanceof String) {
                 String bareText = (String) bare;
                 if (bareText.isEmpty()) {
                     msgHandler.logDebug(" - text was empty");
-                    
+
                 }
                 else if (bareText.endsWith("\n")) {
                     lastWasNewline = true;
@@ -663,7 +663,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                     lastWasNewline = false;
                 }
                 res.add(bare);
-                
+
                 msgHandler.logDebug("TEXT: " + bareText);
             }
             else {
@@ -677,23 +677,23 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                     value = null;
                 }
                 noteInfo.put("value", value);
-                
+
                 noteInfo.put("labelAndSep", ((String) noteInfo.get("label")) + ((String) noteInfo.get("sep")));
-                
+
                 noteInfo.put("ownLine", lastWasNewline);
                 lastWasNewline = true;
-                
+
                 res.add(noteInfo);
-                
+
                 msgHandler.logDebug("NOTE: label: " + (String) noteInfo.get("label") + " value: " + value);
 
             }
         }
-        
+
         return res;
     }
-    
-    
+
+
     /**
      * This performs high-level combination of elements already split.
      * <p>
@@ -702,39 +702,39 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
     @SuppressWarnings("unchecked")
     public List<Object> combineStructuralElems(List<Object> elemList) {
         List<Object> res = new ArrayList<>();
-        
+
         int i = 0;
-        
+
         msgHandler.logDebug(
-                "====================================\n" + 
+                "====================================\n" +
                 "combineMarkupElems: entry count: " + elemList.size() + "\n" +
                 "====================================");
-        
+
         while(i < elemList.size()) {
             // NOTE: slow if not ArrayList
             Object elemObj = elemList.get(i);
-            
+
             if (elemObj instanceof Map) {
                 Map<String, Object> elemInfo = (Map<String, Object>) elemObj;
                 String type = (String) elemInfo.get("type");
-                
+
                 // notes should only consume next elem if they were on their own line
-                if (("note".equals(type) && 
+                if (("note".equals(type) &&
                     Boolean.TRUE.equals(elemInfo.get("ownLine")))) {
-                    
+
                     msgHandler.logDebug("Got NOTE on own line: " + elemInfo.toString());
 
                     Object nextElemObj = null;
                     if ((i+1) < elemList.size()) {
                         nextElemObj = elemList.get(i+1);
                     }
-                    
+
                     msgHandler.logDebug("Next elem is: " + nextElemObj);
 
                     if (nextElemObj != null && nextElemObj instanceof Map) {
                         Map<String, Object> nextElemInfo = (Map<String, Object>) nextElemObj;
                         String nextElemType = (String) nextElemInfo.get("type");
-                        
+
                         msgHandler.logDebug("Got next elem: " + nextElemInfo.toString());
 
                         // only allow consuming list if note has no value of its own
@@ -749,7 +749,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                             String currValue = (String) (elemInfo.get("value"));
                             String indentText = (String) nextElemInfo.get("value");
                             currValue = (currValue != null ? (currValue + "\n") : "") + indentText;
-                            
+
                             elemInfo.put("value", currValue);
                         }
                     }
@@ -762,12 +762,12 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             }
             i++;
         }
-        
+
         return res;
     }
-    
-    
-    
+
+
+
     /**
      * High-level, splits text into a list of maps (markup elements) and strings (regular text).
      * For lists, applies recursively.
@@ -779,7 +779,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
 
         // split by simple/strict titles first
         res = splitByTitles(text);
-        
+
         // split remaining text parts by lists, and also do lists recursively
         prevSplit = res;
         res = new ArrayList<>();
@@ -792,10 +792,10 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 res.add(part);
             }
         }
-        
+
         // split remaining text parts by notes ("NOTE:")
         prevSplit = res;
-        res = new ArrayList<>();            
+        res = new ArrayList<>();
         for(Object part : prevSplit) {
             if (part instanceof String) {
                 List<Object> listSplit = splitByNotes((String) part);
@@ -805,10 +805,10 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 res.add(part);
             }
         }
-        
+
         // split remaining text parts by indent blocks
         prevSplit = res;
-        res = new ArrayList<>();   
+        res = new ArrayList<>();
         for(Object part : prevSplit) {
             if (part instanceof String) {
                 List<Object> listSplit = splitByIndentBlocks((String) part);
@@ -818,11 +818,11 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 res.add(part);
             }
         }
-        
+
         // combine some of the resulting elems with high-level logic
         res = combineStructuralElems(res);
-        
+
         return res;
     }
-    
+
 }

@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 
 /**
  * Models the &lt;condition&gt; element.
- * 
+ *
  * @see <code>widget-tree.xsd</code>
  */
 @SuppressWarnings("serial")

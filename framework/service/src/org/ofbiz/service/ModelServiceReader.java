@@ -192,7 +192,7 @@ public class ModelServiceReader implements Serializable {
             service.useTransaction = true;
             Debug.logWarning("In service definition [" + service.name + "] the value use-transaction has been changed from false to true as required when require-new-transaction is set to true", module);
         }
-        service.hideResultInLog = !"false".equalsIgnoreCase(serviceElement.getAttribute("hideResultInLog"));        
+        service.hideResultInLog = !"false".equalsIgnoreCase(serviceElement.getAttribute("hideResultInLog"));
 
         // set the semaphore sleep/wait times
         String semaphoreWaitStr = UtilXml.checkEmpty(serviceElement.getAttribute("semaphore-wait-seconds"));
@@ -243,7 +243,7 @@ public class ModelServiceReader implements Serializable {
                 timeout = 0;
             }
         }
-        service.transactionTimeout = timeout;                
+        service.transactionTimeout = timeout;
 
         service.description = getCDATADef(serviceElement, "description");
         service.nameSpace = getCDATADef(serviceElement, "namespace");
@@ -264,7 +264,7 @@ public class ModelServiceReader implements Serializable {
         if (metricsElement != null) {
             service.metrics = MetricsFactory.getInstance(metricsElement);
         }
-        
+
         // SCIPIO
         if (service.contextParamList instanceof ArrayList) {
             ((ArrayList<ModelParam>) service.contextParamList).trimToSize();

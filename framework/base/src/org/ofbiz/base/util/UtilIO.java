@@ -342,9 +342,9 @@ public final class UtilIO {
     public static Charset getUtf8() {
         return UTF8;
     }
-    
+
     /**
-     * SCIPIO: added because {@link org.apache.commons.io.IOUtils#closeQuietly(Closeable)} 
+     * SCIPIO: added because {@link org.apache.commons.io.IOUtils#closeQuietly(Closeable)}
      * is not deprecated.
      */
     private static void closeQuietly(Closeable closeable) {

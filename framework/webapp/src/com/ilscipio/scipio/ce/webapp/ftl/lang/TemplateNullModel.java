@@ -8,17 +8,17 @@ import freemarker.template.AdapterTemplateModel;
 public final class TemplateNullModel implements AdapterTemplateModel {
 
     public static final TemplateNullModel nullModel = new TemplateNullModel();
-    
+
     static TemplateNullModel getNullModel() {
         return nullModel;
     }
-    
+
     private TemplateNullModel(){
     }
-    
+
     @Override
     public Object getAdaptedObject(Class<?> hint) {
         return null;
     }
-    
+
 }

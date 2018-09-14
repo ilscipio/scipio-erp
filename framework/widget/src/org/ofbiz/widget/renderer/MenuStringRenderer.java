@@ -39,7 +39,7 @@ public interface MenuStringRenderer extends StringRenderer { // SCIPIO: StringRe
     public void renderFormatSimpleWrapperRows(Appendable writer, Map<String, Object> context, Object menu) throws IOException ;
     public void renderLink(Appendable writer, Map<String, Object> context, ModelMenuItem.MenuLink link) throws IOException ;
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) throws IOException ;
-    
+
     /**
      * SCIPIO: Render sub menu open.
      */

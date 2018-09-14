@@ -18,12 +18,12 @@ public class SeoStringUtil {
     public static final String ASCII_REGEX = "^[0-9-_a-zA-Z]*$";
     public static final Pattern ASCII_PATTERN = Pattern.compile(ASCII_REGEX);
     public static final char[] dashedArray = new char[] {' ',',','.','/','\\','-','_','=','?',';'};
-    
+
     /**
      * Generates a hash of a given plainText using ISO_8859_1.
      * WARNING: FIXME?: 2018-09: This uses md5, fast but insecure.
      * @deprecated 2018-09: Use {@link #getHash(String, Charset)} instead.
-     * 
+     *
      * @param plainText
      * @return md5-hash
      */
@@ -59,7 +59,7 @@ public class SeoStringUtil {
 
     /**
      * taken from http://stackoverflow.com/questions/25259/how-does-stackoverflow-generate-its-seo-friendly-urls
-     * 
+     *
      * @param name
      * @return
      */
@@ -104,7 +104,7 @@ public class SeoStringUtil {
 
     /**
      * taken from http://meta.stackoverflow.com/questions/7435/non-us-ascii-characters-dropped-from-full-profile-url/7696#7696
-     * 
+     *
      * @param c
      * @return
      */

@@ -55,7 +55,7 @@ public final class ServiceEcaUtil {
     //private static Map<String, Map<String, List<ServiceEcaRule>>> ecaCache = new ConcurrentHashMap<String, Map<String, List<ServiceEcaRule>>>();
     private static volatile Map<String, Map<String, List<ServiceEcaRule>>> ecaCache = Collections.emptyMap();
     private static final Object ecaCacheLock = new Object();
-    
+
     private ServiceEcaUtil() {}
 
     // SCIPIO: NOTE: 2018-09-06: STOCK OFBIZ BUGFIX:
@@ -188,10 +188,10 @@ public final class ServiceEcaUtil {
                 ServiceEcaRule prevRule = rules.get(ruleIndex);
                 rules.remove(prevRule);
                 if (prevRule.getDefinitionLocation() != null && prevRule.getDefinitionLocation().equals(rule.getDefinitionLocation())) {
-                    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName 
+                    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName
                             + "] both from definition [" + prevRule.getDefinitionLocation() + "]", module);
                 } else {
-                    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName 
+                    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName
                             + "] from definition [" + prevRule.getDefinitionLocation() + "] and overriding definition [" + rule.getDefinitionLocation() + "]", module);
                 }
             }

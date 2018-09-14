@@ -37,5 +37,5 @@ public class PopRequestStackMethod extends RequestStackMethod {
     public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         return execRead(args, true);
     }
-    
+
 }

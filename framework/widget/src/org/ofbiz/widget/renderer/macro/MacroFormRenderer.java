@@ -124,7 +124,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("form");
     private final String rendererName;
-    
+
     /**
      * Constructor.
      * <p>
@@ -154,19 +154,19 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     /**
-     * SCIPIO: Returns macro library path used for this renderer. 
+     * SCIPIO: Returns macro library path used for this renderer.
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
     }
-    
+
     /**
      * SCIPIO: Returns the renderer name (html, xml, etc.).
      */
     public String getRendererName() {
         return rendererName;
     }
-    
+
     public boolean getRenderPagination() {
         return this.renderPagination;
     }
@@ -194,7 +194,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private void handleError(Appendable writer, Throwable t) throws IOException, RuntimeException {
         MacroScreenRenderer.handleError(writer, contextHandler.getInitialContext(writer), t);
     }
-    
+
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
@@ -205,7 +205,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         return environment;
     }
-    
+
     private String encode(String value, ModelFormField modelFormField, Map<String, Object> context) {
         if (UtilValidate.isEmpty(value)) {
             return value;
@@ -297,7 +297,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                     count++;
                     Entry<String, Object> field = fieldIterator.next();
                     // SCIPIO: added JS escaping and value toString() call here
-                    extraParameter += jsEnc.encode(field.getKey()) 
+                    extraParameter += jsEnc.encode(field.getKey())
                             + ":'" + jsEnc.encode(field.getValue() != null ? field.getValue().toString() : null) + "'";
                     if (count < fieldSet.size()) {
                         extraParameter += ',';
@@ -382,7 +382,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         this.request.setAttribute("width", hyperlinkField.getWidth());
         this.request.setAttribute("height", hyperlinkField.getHeight());
         makeHyperlinkByType(writer, hyperlinkField.getLinkType(), modelFormField.getWidgetStyle(context), hyperlinkField.getUrlMode(), hyperlinkField.getTarget(context), // SCIPIO: pass context to getWidgetStyle
-                hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName()), 
+                hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName()),
                 hyperlinkField.getDescription(context), hyperlinkField.getTargetWindow(context),
                 hyperlinkField.getConfirmation(context), modelFormField, this.request, this.response, context);
         // SCIPIO: FIXME: this should be set as tooltip/title on the hyperlink, not separate...
@@ -645,7 +645,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             builder.setEncodeOutput(memEncodeOutput);
         }
         modelFormField = builder.build();
-        
+
         // SCIPIO: any escaping must be done AFTER max length concat
         // TODO: review this entire encoding stuff
         //String contextValue = modelFormField.getEntry(context, dateTimeField.getDefaultValue(context));
@@ -710,7 +710,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                     cal = Calendar.getInstance();
                     cal.setTime(defaultTimestamp);
                 } catch (IllegalArgumentException e) {
-                    Debug.logWarning("Form widget field [" + paramName + "] with input-method=\"time-dropdown\" was not able to understand the default time [" + 
+                    Debug.logWarning("Form widget field [" + paramName + "] with input-method=\"time-dropdown\" was not able to understand the default time [" +
                             timeDropDownValue + "]. The parsing error was: " + e.getMessage(), module);
                 }
             }
@@ -952,13 +952,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         options.append("]");
         String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
-        
+
         // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
         // See ModelFormField#isExplicitEntry for conditions.
         if (dropDownField.getAllowEmpty() && UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
             noCurrentSelectedKey = "";
         }
-        
+
         String otherValue = "", fieldName = "";
         // Adapted from work by Yucca Korpela
         // http://www.cs.tut.fi/~jkorpela/forms/combo.html
@@ -1121,13 +1121,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String key = checkField.getKey(context);
         String altKey = checkField.getAltKey(context);
         String noCurrentSelectedKey = checkField.getNoCurrentSelectedKey(context);
-        
+
         // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
         // See ModelFormField#isExplicitEntry for conditions.
         if (UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
             noCurrentSelectedKey = "";
         }
-        
+
         Boolean useHidden = checkField.getUseHidden(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderCheckField ");
@@ -1196,13 +1196,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         String noCurrentSelectedKey = radioField.getNoCurrentSelectedKey(context);
-        
+
         // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
         // See ModelFormField#isExplicitEntry for conditions.
         if (UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
             noCurrentSelectedKey = "";
         }
-        
+
         String tabindex = modelFormField.getTabindex();
         items.append("[");
         for (ModelFormField.OptionValue optionValue : allOptionValues) {
@@ -1286,12 +1286,12 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (ajaxEnabled) {
             ajaxUrl = createAjaxParamsFromUpdateAreas(updateAreas, "", context);
         }
-        
+
         // SCIPIO: Getting the id of the element from the context
         String id = null;
         if (submitField.getModelFormField().getCurrentContainerId(context) != null) {
             id = submitField.getModelFormField().getCurrentContainerId(context);
-        }        
+        }
         String tabindex = modelFormField.getTabindex();
         StringWriter sr = new StringWriter();
         sr.append("<@renderSubmitField ");
@@ -1521,10 +1521,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
         // SCIPIO: extra attribs map (json-like)
         String attribs = modelForm.getAttribsExpr().compile(context);
-        
+
         // SCIPIO: form method
         String method = modelForm.getMethod(context);
-        
+
         // SCIPIO: special flags
         String formScope = (String) context.get("renderForm_formScope");
         if (UtilValidate.isEmpty(formScope)) {
@@ -1589,7 +1589,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 break;
             }
         }
-        
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormClose ");
         sr.append(" focusFieldName=");
@@ -1602,7 +1602,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(hasRequiredField));
         sr.append(" />");
         executeMacro(writer, sr.toString());
-        
+
         // SCIPIO: same as the multi type form, I think this is the cleanest way to do it
         // see if there is anything that needs to be added outside of the list-form
         Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
@@ -1684,10 +1684,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
             columnStyleListEscaped.add(ftlFmt.makeStringLiteral(style));
         }
         String columnStyleListString = StringUtil.join(columnStyleListEscaped, ", ");
-        
+
         // SCIPIO: extra attribs map (json-like)
         String attribs = modelForm.getAttribsExpr().compile(context);
-        
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatListWrapperOpen ");
         sr.append(" formName=");
@@ -1701,7 +1701,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         // SCIPIO: also pass formType, to remove all ambiguity (so macro doesn't have to assume)
         sr.append("] formType=");
-        sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));        
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));
         sr.append(" attribs=(");
         sr.append(attribs);
         sr.append(") ");
@@ -1915,7 +1915,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("/>");
         executeMacro(writer, sr.toString());
     }
-    
+
     public void renderFormatFieldRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         Integer positions = (Integer) context.get("formFieldRender_positions"); // SCIPIO
         StringWriter sr = new StringWriter();
@@ -1930,7 +1930,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("<@renderFormatFieldRowClose />");
         executeMacro(writer, sr.toString());
     }
-    
+
     /**
      * SCIPIO: appends position params.
      */
@@ -1958,20 +1958,20 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         sr.append(" fieldType=" + ftlFmt.makeStringLiteral(fieldType) + " ");
     }
-    
+
     // SCIPIO: new
     private void appendFieldInfo(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         appendFieldType(sr, context, modelFormField);
         boolean fieldTitleBlank = modelFormField.isBlankTitle(context);
         sr.append(" fieldTitleBlank=" + fieldTitleBlank + " ");
     }
-    
+
     public void renderFormatFieldRowTitleCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         String style = modelFormField.getTitleAreaStyle();
-        
+
         // SCIPIO: extra attribs map (json-like)
         String attribs = modelFormField.getAttribsExpr().compile(context);
-        
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatFieldRowTitleCellOpen ");
         sr.append(" style=");
@@ -1999,10 +1999,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void renderFormatFieldRowWidgetCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) throws IOException {
         String areaStyle = modelFormField.getWidgetAreaStyle();
-        
+
         // SCIPIO: extra attribs map (json-like)
         String attribs = modelFormField.getAttribsExpr().compile(context);
-        
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatFieldRowWidgetCellOpen ");
         // SCIPIO: TODO: REVIEW: why was this commented again? probably not needed, but usually better to give more info than less...
@@ -2031,7 +2031,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderFormatEmptySpace(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         renderFormatEmptySpace(writer, context, modelForm, (String) context.get("renderFormatEmptySpace_role")); // SCIPIO: now delegating
     }
-    
+
     // SCIPIO: 2017-01-13: new overloads for new role parameter
     public void renderFormatEmptySpace(Appendable writer, Map<String, Object> context, ModelForm modelForm, String role) throws IOException {
         StringWriter sr = new StringWriter();
@@ -2042,7 +2042,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" formType=");
         sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));
         sr.append("/>");
-        
+
         executeMacro(writer, sr.toString());
     }
 
@@ -2309,7 +2309,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 value2 = (String) parameters.get(name + "_fld1_value");
             }
         }
-        
+
         String titleStyle = "";
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
             titleStyle = modelFormField.getTitleStyle();
@@ -2434,7 +2434,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String formName = modelFormField.getParentFormName();
         if (UtilValidate.isEmpty(formName)) {
             formName = FormRenderer.getCurrentFormName(modelForm, context);
-        }        
+        }
         StringBuilder targetParameterIter = new StringBuilder();
         StringBuilder imgSrc = new StringBuilder();
         // FIXME: refactor using the StringUtils methods
@@ -2620,7 +2620,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // add viewIndex/viewSize parameters to request parameter String
         String urlPath = UtilHttp.removeQueryStringFromTarget(targetService);
         String prepLinkText = UtilHttp.getQueryStringFromTarget(targetService);
-        
+
         // SCIPIO: Prevent duplicate params between queryString and targetService
         if (UtilValidate.isNotEmpty(queryString) && !"null".equals(queryString) && UtilValidate.isNotEmpty(prepLinkText)) {
             // get queryString param names
@@ -2645,8 +2645,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
             // remove params already in queryString from targetService params
             newText += UtilHttp.stripNamedParamsFromQueryString(rawTsParams, qsParamNames);
             prepLinkText = newText;
-        }  
-        
+        }
+
         String prepLinkSizeText;
         if (UtilValidate.isNotEmpty(queryString)) {
             queryString = UtilHttp.encodeAmpersands(queryString);
@@ -3341,7 +3341,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
-    
+
     /**
      * SCIPIO: Appends tooltip & tooltipStyle parameters for a macro call.
      * Added 2017-06-29.
@@ -3380,7 +3380,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
-    
+
     /**
      * SCIPIO: Factors out renderAstericks macro args.
      */
@@ -3668,7 +3668,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     // SCIPIO: new
     @Override
-    public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {        
+    public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         // get the parameterized pagination index and size fields
         int paginatorNumber = WidgetWorker.getPaginatorNumber(context);
 
@@ -3682,7 +3682,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (viewSizeField.equals("viewSize" + "_" + paginatorNumber)) {
             viewSizeField = "VIEW_SIZE" + "_" + paginatorNumber;
         }
-        
+
         HashMap<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put(viewIndexField, Integer.toString(viewIndex));
         parameterMap.put(viewSizeField, Integer.toString(viewSize));
@@ -3690,7 +3690,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // this has to be rendered OUTSIDE/AFTER the multi form stuff; handled by FormRenderer
         //Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
         //Appendable effWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
-        //if (modelForm.getType().equals("multi")) {        
+        //if (modelForm.getType().equals("multi")) {
         //    if (effWriter == null) {
         //        effWriter = new StringWriter();
         //        if (wholeFormContext != null)
@@ -3700,23 +3700,23 @@ public final class MacroFormRenderer implements FormStringRenderer {
         //effWriter = writer;
         //}
         Appendable effWriter = writer;
-        
+
         // SCIPIO: now use a macro instead
         //WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
 
         // SCIPIO: WARN: the FTL must encode everything passed below!
-        
+
         String hiddenFormName = WidgetWorker.makeLinkHiddenFormName(context, modelForm,
-                modelForm.getSubmitHiddenFormName(Integer.toString(getNextRenderSubmitFormIdNum(writer, context, modelForm)))); 
-        
+                modelForm.getSubmitHiddenFormName(Integer.toString(getNextRenderSubmitFormIdNum(writer, context, modelForm))));
+
         StringWriter targetUrlSw = new StringWriter();
         String target = modelForm.getTarget(context, modelForm.getTargetType());
         if (UtilValidate.isNotEmpty(target)) {
-            WidgetWorker.buildHyperlinkUrl(targetUrlSw, target, 
+            WidgetWorker.buildHyperlinkUrl(targetUrlSw, target,
                 modelForm.getTargetType(), null, null, null, null, null, request, response, context);
         }
         String targetUrl = targetUrlSw.toString();
-        
+
         List<Map<String, Object>> submitEntries = new ArrayList<>();
         if (modelForm.getUseRowSubmit()) {
             List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
@@ -3740,7 +3740,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 }
             }
         }
-        
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderSubmitForm");
         sr.append(" hiddenFormName=");
@@ -3774,7 +3774,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         try {
             Object numObj = ContextFtlUtil.getRequestVar("renderSubmitForm_formIdNum", request, contextHandler.getRenderContext(writer, context));
             Integer num = (Integer) LangFtlUtil.unwrap(numObj);
-            
+
             if (num == null) {
                 num = 1;
             } else {
@@ -3784,9 +3784,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
             return num;
         } catch (TemplateModelException e) {
             throw new IOException(e);
-        } 
+        }
     }
-    
+
     // SCIPIO: new
     @Override
     public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
@@ -3807,7 +3807,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("<@renderFormatFooterRowClose />");
         executeMacro(writer, sr.toString());
     }
-    
+
     /**
      * SCIPIO: helper to append requiredField param.
      */
@@ -3827,7 +3827,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("/>");
         executeMacro(writer, sr.toString());
     }
-    
+
     /**
      * SCIPIO: appends special page scripts to macro call.
      * New 2017-04-21.
@@ -3848,7 +3848,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         sr.append(" pageScripts=_scpFormRenPageScripts");
     }
-    
+
     // SCIPIO: new 2017-04-21 - FIXME: hardcoded 'required' style added
     String combineRequiredStyle(String className, boolean allowDefault, Map<String, Object> context, ModelFormField modelFormField) {
         // ORIGINAL:
@@ -3865,7 +3865,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             requiredStyle = FlexibleStringExpander.expandString(requiredStyle, context);
         } else {
             if (allowDefault) {
-                // SCIPIO: FIXME: the 'required' style is currently hardcoded! 
+                // SCIPIO: FIXME: the 'required' style is currently hardcoded!
                 // this should be gotten from global styles (ftl) instead...
                 // but this is currently not done from the target macros...
                 requiredStyle = "required";
@@ -3875,7 +3875,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         return ModelForm.combineExtraStyle(className, requiredStyle);
     }
-    
+
     // SCIPIO: new
     String combineRequiredStyle(String className, Map<String, Object> context, ModelFormField modelFormField) {
         return combineRequiredStyle(className, true, context, modelFormField);

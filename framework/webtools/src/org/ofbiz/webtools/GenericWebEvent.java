@@ -152,7 +152,7 @@ public class GenericWebEvent {
 
         // if this is a delete, do that before getting all of the non-pk parameters and validating them
         if ("DELETE".equals(updateMode)) {
-            
+
             // SCIPIO: 2017-04-13: NOTE whether a delete attempt was made, and save the previous value
             request.setAttribute("updateGenericDeleteAttempt", Boolean.TRUE);
             try {
@@ -164,7 +164,7 @@ public class GenericWebEvent {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            
+
             int removed = 0;
             // Remove associated/dependent entries from other tables here
             // Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared

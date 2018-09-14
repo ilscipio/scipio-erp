@@ -114,7 +114,7 @@ public class ContextFilter implements Filter {
 
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
-        
+
         // SCIPIO: 2017-11-14: now pre-parsing allowedPath during init
         String allowedPath = config.getInitParameter("allowedPaths");
         List<String> allowList = null;
@@ -123,7 +123,7 @@ public class ContextFilter implements Filter {
             allowList.add("");   // No path is allowed.
         }
         this.allowedPaths = (allowList != null) ? new HashSet<>(allowList) : null;
-        
+
         // SCIPIO: new
         this.forwardRootControllerUris = getForwardRootControllerUrisSetting(ServletUtil.getInitParamsMapAdapter(config), false);
     }
@@ -154,7 +154,7 @@ public class ContextFilter implements Filter {
                 return;
             }
         }
-        
+
         // ----- Servlet Object Setup -----
 
         // set the ServletContext in the request for future use
@@ -183,7 +183,7 @@ public class ContextFilter implements Filter {
             }
             httpRequest.getSession().removeAttribute("_REQ_ATTR_MAP_");
         }
-        
+
         // ----- Context Security -----
         // check if we are disabled
         String disableSecurity = config.getInitParameter("disableContextSecurity");
@@ -211,7 +211,7 @@ public class ContextFilter implements Filter {
                 return;
             }
         }
-        
+
         // test to see if we have come through the control servlet already, if not do the processing
         String requestPath = null;
         String contextUri = null;
@@ -229,7 +229,7 @@ public class ContextFilter implements Filter {
 //            }
             // SCIPIO: 2017-11: allowList should always have been a Set, not a List
             Set<String> allowList = this.allowedPaths;
-            
+
             // SCIPIO: 2017-11: SPECIAL: auto-detect when ControlServlet is mapped to root (controlServletPath empty) and allow its requests
             Map<String, ?> allowRootList = Collections.emptyMap();
             if (UtilValidate.isEmpty(httpRequest.getServletPath()) && controlServletPath != null && controlServletPath.isEmpty()) {
@@ -284,7 +284,7 @@ public class ContextFilter implements Filter {
                 (!allowRootList.containsKey(RequestLinkUtil.getFirstPathInfoElem(httpRequest))) // SCIPIO: new 2017-11-14: allow root control requests
                 ) {
                 String filterMessage = "[Filtered request]: " + contextUri;
-                
+
                 if (redirectPath == null) {
                     int error = 404;
                     if (UtilValidate.isNotEmpty(errorCode)) {
@@ -329,14 +329,14 @@ public class ContextFilter implements Filter {
                 // if tenant was specified, replace delegator with the new per-tenant delegator and set tenantId to session attribute
                 Delegator delegator = getDelegator(config.getServletContext());
 
-                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant 
+                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant
                 Delegator baseDelegator = DelegatorFactory.getDelegator(delegator.getDelegatorBaseName());
                 GenericValue tenantDomainName = EntityQuery.use(baseDelegator).from("TenantDomainName").where("domainName", serverName).queryOne();
                 String tenantId = null;
                 if(UtilValidate.isNotEmpty(tenantDomainName)) {
                     tenantId = tenantDomainName.getString("tenantId");
                 }
-                
+
                 if(UtilValidate.isEmpty(tenantId)) {
                     tenantId = (String) httpRequest.getAttribute("userTenantId");
                 }
@@ -375,14 +375,14 @@ public class ContextFilter implements Filter {
                     request.setAttribute("delegator", delegator);
                     request.setAttribute("dispatcher", dispatcher);
                     request.setAttribute("security", security);
-                    
+
                     request.setAttribute("userTenantId", tenantId);
                 }
 
-                // NOTE DEJ20101130: do NOT always put the delegator name in the user's session because the user may 
-                // have logged in and specified a tenant, and even if no Tenant record with a matching domainName field 
-                // is found this will change the user's delegator back to the base one instead of the one for the 
-                // tenant specified on login 
+                // NOTE DEJ20101130: do NOT always put the delegator name in the user's session because the user may
+                // have logged in and specified a tenant, and even if no Tenant record with a matching domainName field
+                // is found this will change the user's delegator back to the base one instead of the one for the
+                // tenant specified on login
                 // httpRequest.getSession().setAttribute("delegatorName", delegator.getDelegatorName());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Unable to get Tenant", module);
@@ -534,7 +534,7 @@ public class ContextFilter implements Filter {
         }
         return serverId;
     }
-    
+
     /**
      * SCIPIO: local redirect URL encode method for ContextFilter redirects (only).
      * TODO: REVIEW: method used
@@ -544,16 +544,16 @@ public class ContextFilter implements Filter {
         // SCIPIO: TODO: REVIEW: It's possible this should be encodeURL + strip jsessionid instead (even if redirect)...
         return response.encodeRedirectURL(url);
     }
-    
+
     /**
      * SCIPIO: local redirect URL encode + send redirect for ContextFilter redirects (only).
      * Added 2017-11-03.
-     * @throws IOException 
+     * @throws IOException
      */
     protected void encodeAndSendRedirectURL(HttpServletResponse response, String url) throws IOException {
         response.sendRedirect(encodeRedirectURL(response, url));
     }
-    
+
     protected Map<String, ConfigXMLReader.RequestMap> getControllerRequestUriMap(HttpServletRequest request) throws ServletException {
         try {
             RequestHandler rh = RequestHandler.getRequestHandler(request);
@@ -563,14 +563,14 @@ public class ContextFilter implements Filter {
             throw new ServletException(e);
         }
     }
-    
+
     /**
      * SCIPIO: Reads the forwardRootControllerUris init-param as Boolean.
      */
     public static Boolean getForwardRootControllerUrisSetting(Map<String, ?> initParams, Boolean defaultValue) {
         return UtilMisc.booleanValueVersatile(initParams.get("forwardRootControllerUris"), defaultValue);
     }
-    
+
     /**
      * SCIPIO: Reads the forwardRootControllerUris value from ContextFilter init-params from webXml,
      * trying to find the most appropriate setting.
@@ -578,7 +578,7 @@ public class ContextFilter implements Filter {
     public static Boolean readForwardRootControllerUrisSetting(WebXml webXml, String logPrefix) {
         // HEURISTIC: we return the value of the highest-rated ContextFilter that
         // has forwardRootControllerUris present in its init-params (even if empty)
-        
+
         int bestRating = 0;
         String aliasStr = null;
         String filterName = null;
@@ -613,7 +613,7 @@ public class ContextFilter implements Filter {
         }
         return null;
     }
- 
+
     /**
      * SCIPIO: Verifies if the setting returned by {@link #readForwardRootControllerUrisSetting} is
      * sane for the given controlServletMapping (also works for controlServletPath).
@@ -624,19 +624,19 @@ public class ContextFilter implements Filter {
                 if (controlServletMapping != null && controlServletMapping.startsWith("/") && controlServletMapping.length() > 1) {
                     // aliasing is enabled and controlPath is not the root, so pass
                     if (logPrefix != null) Debug.logInfo(logPrefix+"web.xml appears to have ContextFilter init-param forwardRootControllerUris enabled"
-                            + " and a non-root control servlet mapping (" + controlServletMapping 
+                            + " and a non-root control servlet mapping (" + controlServletMapping
                             + "); now treating website as having enabled root aliasing/forwarding/rewriting of controller URIs", module);
                     return true;
                 } else {
                     if (logPrefix != null) Debug.logWarning(logPrefix+"web.xml invalid configuration: ContextFilter init-param forwardRootControllerUris is enabled"
-                            + ", but control servlet mapping (" + controlServletMapping 
+                            + ", but control servlet mapping (" + controlServletMapping
                             + ") appears it may be mapped to root - invalid configuration", module);
                 }
             }
         }
         return null;
     }
-    
+
     /**
      * Heuristic for finding the most probable real ContextFilter.
      * NOTE: This is a problem because OFbiz frustratingly made a bunch of other classes
@@ -647,23 +647,23 @@ public class ContextFilter implements Filter {
     public static int rateContextFilterCandidate(FilterDef filter) {
         String filterClass = filter.getFilterClass();
         if (filterClass == null || filterClass.isEmpty()) return 0;
-        
+
         // NOTE: this exact-class check is what stock code does for some other classes, so we have to follow suit
         if (ContextFilter.class.getName().equals(filterClass)) return 5;
-        
+
         try {
             Class<?> filterCls = Thread.currentThread().getContextClassLoader().loadClass(filterClass);
             if (!ContextFilter.class.isAssignableFrom(filterCls)) return 0;
         } catch(Exception e) {
-            Debug.logWarning("Could not load or test filter class (" + filterClass + "); may be invalid or a classloader issue: " 
+            Debug.logWarning("Could not load or test filter class (" + filterClass + "); may be invalid or a classloader issue: "
                     + e.getMessage(), module);
             return 0;
         }
-        
+
         String filterName = filter.getFilterName();
-        
+
         if (contextFilterClassName.equals(filterName)) return 4;
-        
+
         if (filterName != null && filterName.contains(contextFilterClassName)) {
             if (filterClass.contains(contextFilterClassName)) return 3;
         } else {

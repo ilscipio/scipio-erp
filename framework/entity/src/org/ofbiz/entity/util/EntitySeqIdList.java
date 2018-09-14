@@ -24,23 +24,23 @@ import org.ofbiz.entity.Delegator;
 public abstract class EntitySeqIdList<E> implements List<E> {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final boolean DEBUG = false;
-    
+
     protected EntitySeqIdList() {
     }
 
     /**
      * Returns new sequence IDs from the delegator through the {@link #get(int)} method.
      * <p>
-     * The list automatically grows as needed through access, though it needs an initialSize. 
+     * The list automatically grows as needed through access, though it needs an initialSize.
      */
     public static abstract class DynamicEntitySeqIdList<E> extends EntitySeqIdList<E> {
         protected final Delegator delegator;
         protected final String seqName;
         protected final ArrayList<E> seqIdList;
         protected int size;
-        
+
         protected DynamicEntitySeqIdList(Delegator delegator, String seqName, int initialSize) {
             this.delegator = delegator;
             this.seqName = seqName;
@@ -50,7 +50,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
         }
 
         protected abstract E getNextSeqId();
-        
+
         /**
          * Automatically grows the list to the given index (both capacity AND size).
          */
@@ -61,11 +61,11 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             // NOTE: this is the only place that this.size is adjusted, and size is never decreased.
             if (size < seqIdList.size()) size = seqIdList.size();
         }
-        
+
         protected void forcePreload() {
             forcePreload(0, size);
         }
-        
+
         protected void forcePreload(int fromIndex, int toIndex) {
             // TODO: optimize this
             if (toIndex > seqIdList.size()) {
@@ -77,7 +77,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
                 }
             }
         }
-        
+
         @Override
         public E get(int index) {
             E value = null;
@@ -93,7 +93,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             if (DEBUG) Debug.logInfo("Entity seq list internal after get at index " + index + ": " + seqIdList, module);
             return value;
         }
-        
+
 
         @Override
         public int size() {
@@ -245,7 +245,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             return Collections.unmodifiableList(seqIdList).subList(fromIndex, toIndex);
         }
     }
-    
+
     public static class DynamicEntitySeqIdStringList extends DynamicEntitySeqIdList<String> {
         public DynamicEntitySeqIdStringList(Delegator delegator, String seqName, int initialSize) {
             super(delegator, seqName, initialSize);
@@ -256,7 +256,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             return delegator.getNextSeqId(seqName);
         }
     }
-    
+
     public static class DynamicEntitySeqIdLongList extends DynamicEntitySeqIdList<Long> {
         public DynamicEntitySeqIdLongList(Delegator delegator, String seqName, int initialSize) {
             super(delegator, seqName, initialSize);
@@ -267,7 +267,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             return delegator.getNextSeqIdLong(seqName);
         }
     }
-    
+
     /**
      * Returns a consecutive ID through the {@link #get(int)} method, so that
      * callers don't have to allocate huge arrays with predictable values.
@@ -282,7 +282,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
         }
 
         protected abstract E toIdType(long value);
-        
+
         protected Long toLong(Object obj) {
             if (obj instanceof Long) return (Long) obj;
             else if (obj instanceof String) return Long.parseLong((String) obj);
@@ -290,14 +290,14 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             else if (obj == null) throw new NullPointerException("expected Long, String or Integer for entity sequence ID value, but got null instead");
             else throw new IllegalArgumentException("expected Long, String or Integer for entity sequence ID value, but instead got: " + obj.getClass().getName());
         }
-        
+
         @Override
         public E get(int index) {
             if (index >= size) size = index + 1; // auto-grow
             if (DEBUG) Debug.logInfo("Returning fixed entity seq ID: " + (baseId + index), module);
             return toIdType(baseId + index);
         }
-        
+
         @Override
         public int size() {
             return size;
@@ -390,9 +390,9 @@ public abstract class EntitySeqIdList<E> implements List<E> {
         @Override
         public int indexOf(Object o) {
             long value = toLong(o);
-            
+
             long index = (value - baseId);
-            
+
             if (index >= 0 && index < size) return (int) index;
             else return -1;
         }
@@ -417,7 +417,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             throw new UnsupportedOperationException("TODO - NOT YET IMPLEMENTED"); // TODO
         }
     }
-    
+
     public static class FixedEntitySeqIdStringList extends FixedEntitySeqIdList<String> {
         public FixedEntitySeqIdStringList(Object baseId, int size) {
             super(baseId, size);
@@ -428,7 +428,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             return String.valueOf(value);
         }
     }
-    
+
     public static class FixedEntitySeqIdLongList extends FixedEntitySeqIdList<Long> {
         public FixedEntitySeqIdLongList(Object baseId, int size) {
             super(baseId, size);
@@ -439,11 +439,11 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             return value;
         }
     }
-    
-    
+
+
     // OLD METHODS
     // for reference only - use above classes instead.
-    
+
     static List<String> reserveEntitySeqIdList(Delegator delegator, String seqName, Integer count) {
         List<String> list = new ArrayList<>(count);
         for(int i = 0; i < count; i++) {
@@ -451,7 +451,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
         }
         return list;
     }
-    
+
     static List<String> makeConsecutiveEntitySeqIdList(Long baseId, Integer count) {
         List<String> list = new ArrayList<>(count);
         for(long i = baseId; i < (baseId + count); i++) {

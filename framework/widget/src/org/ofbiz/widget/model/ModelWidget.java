@@ -60,7 +60,7 @@ public abstract class ModelWidget implements Serializable {
      * Derived classes must call this constructor.
      * <p>
      * SCIPIO: now supports explicit/custom name override; use empty string for explicit empty.
-     * 
+     *
      * @param widgetElement The XML Element for the widget
      */
     protected ModelWidget(Element widgetElement, String name) {
@@ -76,7 +76,7 @@ public abstract class ModelWidget implements Serializable {
         Integer startLine = (Integer) widgetElement.getUserData("startLine");
         this.startLine = (startLine != null) ? startLine.intValue() : 0;
     }
-    
+
     /**
      * Derived classes must call this constructor.
      * @param widgetElement The XML Element for the widget
@@ -148,7 +148,7 @@ public abstract class ModelWidget implements Serializable {
      * rendering context. If <code>widget.verbose</code> is set to <code>false</code> in the
      * <code>widget.properties</code> file, then that setting will override all other settings and
      * disable all widget boundary comments.
-     * 
+     *
      * @param context Optional context Map
      */
     public static boolean widgetBoundaryCommentsEnabled(Map<String, ? extends Object> context) {
@@ -169,7 +169,7 @@ public abstract class ModelWidget implements Serializable {
         }
         return result;
     }
-    
+
     /**
      * SCIPIO: Returns the location of container of the widget.
      * May be a file location only, or a combination of location#name if it is a sub-widget contained in another.
@@ -178,24 +178,24 @@ public abstract class ModelWidget implements Serializable {
      * and reuse operations and memory instances. It is to help track down the sources of errors.
      */
     public abstract String getContainerLocation();
-    
+
     /**
-     * SCIPIO: Returns widget type, usually same as tag name 
-     * 
+     * SCIPIO: Returns widget type, usually same as tag name
+     *
      */
     public abstract String getWidgetType();
-    
+
     /**
-     * SCIPIO: Returns tag name, usually same as widget type 
+     * SCIPIO: Returns tag name, usually same as widget type
      * (for post-construction logging, dynamic queries, targeted rendering).
      */
     public String getTagName() {
         return getWidgetType();
     }
-    
+
     /**
      * SCIPIO: Returns location#name widget string.
-     * May contain two sets of names to produce an absolute location, such as 
+     * May contain two sets of names to produce an absolute location, such as
      * location#containername#name.
      * <p>
      * NOTE: This is not guaranteed to be accurate for all widget types due to many merging
@@ -204,21 +204,21 @@ public abstract class ModelWidget implements Serializable {
     public String getFullLocationAndName() {
         return getContainerLocation() + "#" + getName();
     }
-    
+
     /**
      * SCIPIO: Returns suffix log message with location/id of widget (best-effort).
      */
     public String getLogWidgetLocationString() {
         return " (" + getWidgetType() +" widget: " + getFullLocationAndName() + ")";
     }
-    
+
     /**
      * SCIPIO: For any ModelWidget that supports a <code>id="..."</code> attribute.
      */
     public interface IdAttrWidget {
         String getId();
     }
-    
+
     /**
      * SCIPIO: For any ModelWidget that supports a flexible <code>name="..."</code> attribute.
      */
@@ -232,7 +232,7 @@ public abstract class ModelWidget implements Serializable {
     public interface FlexibleIdAttrWidget { // no need yet: extends IdAttrWidget
         String getId(Map<String, Object> context);
     }
-    
+
     /**
      * SCIPIO: Gets widget name, either flexible if available, or hardcoded if specified, or null.
      */
@@ -243,7 +243,7 @@ public abstract class ModelWidget implements Serializable {
             return widget.getName();
         }
     }
-    
+
     /**
      * SCIPIO: Gets widget id, either flexible if available, or hardcoded if available, or null.
      */
@@ -256,5 +256,5 @@ public abstract class ModelWidget implements Serializable {
             return null;
         }
     }
-    
+
 }

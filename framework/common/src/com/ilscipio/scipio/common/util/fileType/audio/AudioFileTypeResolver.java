@@ -13,7 +13,7 @@ import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
 /**
  * File type resolver focused on resolving audio types. This is likely to be
  * moved to an entity at some point.
- * 
+ *
  * @author jsoto
  *
  */
@@ -29,13 +29,13 @@ public class AudioFileTypeResolver extends FileTypeResolver {
         fileTypes = Collections.unmodifiableList(ft);
     }
     protected final Set<String> manualSupportedMediaTypes;
-    
+
     protected AudioFileTypeResolver(Delegator delegator, ResolverConfig resolverConfig) {
         super(delegator, resolverConfig);
-        
+
         manualSupportedMediaTypes = Collections.unmodifiableSet(collectManualSupportedMediaTypes(delegator, fileTypes));
     }
-    
+
     public static AudioFileTypeResolver getInstance(Delegator delegator, ResolverConfig resolverConfig) {
         return new AudioFileTypeResolver(delegator, resolverConfig);
     }
@@ -132,12 +132,12 @@ public class AudioFileTypeResolver extends FileTypeResolver {
     public boolean isAllowedMediaTypePermissive(String mediaType) {
         return mediaTypeOrAliasHasPrefix(mediaType, "audio/");
     }
-    
+
     @Override
     protected List<AbstractFileType> getFileTypes() {
         return fileTypes;
     }
-    
+
     @Override
     protected Set<String> getManualSupportedMediaTypes() {
         return manualSupportedMediaTypes;

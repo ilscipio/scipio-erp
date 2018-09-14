@@ -68,7 +68,7 @@ import freemarker.template.utility.RichObjectWrapper;
 public abstract class LangFtlUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     // NOTE: there's no _real_ need to synchronize on these. if two templates are built for one builtin its not big deal.
     private static final Map<String, Template> builtInCalls = new ConcurrentHashMap<>();
     private static Template stringBuiltInCall = null;
@@ -99,16 +99,16 @@ public abstract class LangFtlUtil {
 
     public static class GlobalFtlVarHandler implements FtlVarHandler {
         private final Environment env;
-    
+
         public GlobalFtlVarHandler(Environment env) {
             this.env = env;
         }
-    
+
         @Override
         public void setVariable(String name, TemplateModel model) throws TemplateModelException {
             env.setGlobalVariable(name, model);
         }
-    
+
         @Override
         public TemplateModel getVariable(String name) throws TemplateModelException {
             return env.getGlobalVariable(name);
@@ -117,16 +117,16 @@ public abstract class LangFtlUtil {
 
     public static class CurrentFtlVarHandler implements FtlVarHandler {
         private final Environment env;
-    
+
         public CurrentFtlVarHandler(Environment env) {
             this.env = env;
         }
-    
+
         @Override
         public void setVariable(String name, TemplateModel model) throws TemplateModelException {
             env.setVariable(name, model);
         }
-    
+
         @Override
         public TemplateModel getVariable(String name) throws TemplateModelException {
             return env.getVariable(name);
@@ -135,16 +135,16 @@ public abstract class LangFtlUtil {
 
     public static class LocalFtlVarHandler implements FtlVarHandler {
         private final Environment env;
-    
+
         public LocalFtlVarHandler(Environment env) {
             this.env = env;
         }
-    
+
         @Override
         public void setVariable(String name, TemplateModel model) throws TemplateModelException {
             env.setLocalVariable(name, model);
         }
-    
+
         @Override
         public TemplateModel getVariable(String name) throws TemplateModelException {
             return env.getLocalVariable(name);
@@ -161,21 +161,21 @@ public abstract class LangFtlUtil {
     public static TemplateModel getNullModelAlways() {
         return TemplateNullModel.getNullModel();
     }
-    
+
     /**
      * Gets current object wrapper, whatever it may be.
      */
     public static ObjectWrapper getCurrentObjectWrapper(Environment env) {
         return env.getObjectWrapper();
-    }    
-    
+    }
+
     /**
      * Gets current object wrapper, whatever it may be.
      */
     public static ObjectWrapper getCurrentObjectWrapper() {
         return FreeMarkerWorker.getCurrentEnvironment().getObjectWrapper();
-    }     
-    
+    }
+
     /**
      * Checks if the wrapper is a special escaping wrapper, and if so,
      * returns a non-escaping one.
@@ -187,7 +187,7 @@ public abstract class LangFtlUtil {
             return objectWrapper;
         }
     }
-    
+
     /**
      * Checks if the current env wrapper is a special escaping wrapper, and if so,
      * returns a non-escaping one.
@@ -199,8 +199,8 @@ public abstract class LangFtlUtil {
         } else {
             return objectWrapper;
         }
-    }    
-    
+    }
+
     /**
      * Checks if the current env wrapper is a special escaping wrapper, and if so,
      * returns a non-escaping one.
@@ -214,104 +214,104 @@ public abstract class LangFtlUtil {
             return objectWrapper;
         }
     }
-    
+
     /**
      * Returns a non-escaping, simple-types-only object wrapper.
      */
     public static ObjectWrapper getSimpleTypeNonEscapingObjectWrapper(ObjectWrapper objectWrapper) {
         return FreeMarkerWorker.getDefaultSimpleTypeWrapper();
     }
-    
+
     /**
      * Returns a non-escaping, simple-types-only object wrapper.
      */
     public static ObjectWrapper getSimpleTypeNonEscapingObjectWrapper(Environment env) {
         return FreeMarkerWorker.getDefaultSimpleTypeWrapper();
-    }    
-    
+    }
+
     /**
      * Returns a non-escaping, simple-types-only object wrapper.
      */
     public static ObjectWrapper getSimpleTypeNonEscapingObjectWrapper() {
         return FreeMarkerWorker.getDefaultSimpleTypeWrapper();
     }
-    
+
     /**
      * Returns a non-escaping, simple-types-only copying object wrapper.
      */
     public static ObjectWrapper getSimpleTypeCopyingNonEscapingObjectWrapper(ObjectWrapper objectWrapper) {
         return FreeMarkerWorker.getDefaultSimpleTypeCopyingWrapper();
     }
-    
+
     /**
      * Returns a non-escaping, simple-types-only copying object wrapper.
      */
     public static ObjectWrapper getSimpleTypeCopyingNonEscapingObjectWrapper(Environment env) {
         return FreeMarkerWorker.getDefaultSimpleTypeCopyingWrapper();
-    }    
-    
+    }
+
     /**
      * Returns a non-escaping, simple-types-only copying object wrapper.
      */
     public static ObjectWrapper getSimpleTypeCopyingNonEscapingObjectWrapper() {
         return FreeMarkerWorker.getDefaultSimpleTypeCopyingWrapper();
     }
-    
-    
+
+
     /**
      * Scipio wrapper around ObjectWrapper.wrap in case extra logic is needed.
      * <p>
-     * Currently leaving all to object wrapper, but may change... 
+     * Currently leaving all to object wrapper, but may change...
      */
     public static TemplateModel wrap(Object object, ObjectWrapper objectWrapper) throws TemplateModelException {
         return objectWrapper.wrap(object);
     }
-    
+
     /**
      * Scipio wrapper around ObjectWrapper.wrap in case extra logic is needed.
      * <p>
-     * Currently leaving all to object wrapper, but may change... 
+     * Currently leaving all to object wrapper, but may change...
      */
     public static TemplateModel wrap(Object object, Environment env) throws TemplateModelException {
         return getCurrentObjectWrapper(env).wrap(object);
     }
-    
+
     /**
      * Scipio wrapper around ObjectWrapper.wrap in case extra logic is needed.
      * <p>
-     * Currently leaving all to object wrapper, but may change... 
+     * Currently leaving all to object wrapper, but may change...
      */
     public static TemplateModel wrap(Object object) throws TemplateModelException {
         return getCurrentObjectWrapper().wrap(object);
     }
-   
+
     /**
      * Scipio wrapper around ObjectWrapper.wrap in case extra logic is needed.
      * <p>
-     * Currently leaving all to object wrapper, but may change... 
+     * Currently leaving all to object wrapper, but may change...
      */
     public static TemplateModel wrapNonEscaping(Object object, ObjectWrapper objectWrapper) throws TemplateModelException {
         return getNonEscapingObjectWrapper(objectWrapper).wrap(object);
-    }    
-    
+    }
+
     /**
      * Scipio wrapper around ObjectWrapper.wrap in case extra logic is needed.
      * <p>
-     * Currently leaving all to object wrapper, but may change... 
+     * Currently leaving all to object wrapper, but may change...
      */
     public static TemplateModel wrapNonEscaping(Object object, Environment env) throws TemplateModelException {
         return getNonEscapingObjectWrapper(env).wrap(object);
-    }    
-   
+    }
+
     /**
      * Scipio wrapper around ObjectWrapper.wrap in case extra logic is needed.
      * <p>
-     * Currently leaving all to object wrapper, but may change... 
+     * Currently leaving all to object wrapper, but may change...
      */
     public static TemplateModel wrapNonEscaping(Object object) throws TemplateModelException {
         return getNonEscapingObjectWrapper().wrap(object);
-    }       
-    
+    }
+
     /**
      * Unwraps template model; if cannot, returns null.
      * <p>
@@ -446,7 +446,7 @@ public abstract class LangFtlUtil {
             throw new TemplateModelException("Cannot unwrap non-TemplateModel value (type " + value.getClass().getName() + ")");
         }
     }
-    
+
     /**
      * Unwraps template model; if cannot, throws exception. Special case where null accepted.
      * <p>
@@ -482,8 +482,8 @@ public abstract class LangFtlUtil {
         else {
             throw new TemplateModelException("Cannot unwrap non-TemplateModel value (type " + value.getClass().getName() + ")");
         }
-    }    
-    
+    }
+
     /**
      * SCIPIO: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns the value as-is.
@@ -496,7 +496,7 @@ public abstract class LangFtlUtil {
         }
         return templateModel;
     }
-    
+
     /**
      * SCIPIO: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns the value as-is.
@@ -522,7 +522,7 @@ public abstract class LangFtlUtil {
         }
         return null;
     }
-    
+
     /**
      * SCIPIO: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns null.
@@ -554,7 +554,7 @@ public abstract class LangFtlUtil {
 
     /**
      * Checks if the given model matches the logical FTL object type.
-     * 
+     *
      * @see com.ilscipio.scipio.ce.webapp.ftl.lang.OfbizFtlObjectType
      */
     public static boolean isObjectType(String ftlTypeName, TemplateModel object) {
@@ -588,7 +588,7 @@ public abstract class LangFtlUtil {
 
     /**
      * Shallow-copies map or list. Note: won't preserve order for maps.
-     * 
+     *
      * @param object
      * @param toSimpleType if true, converts to simple FTL type instead of beans, where possible
      * @return
@@ -617,7 +617,7 @@ public abstract class LangFtlUtil {
      * <p>
      * FIXME: The rewrapping objectWrapper behavior is inconsistent! may lead to auto-escape issues
      */
-    public static Object copyMap(TemplateModel object, Set<String> inExKeys, Boolean include, 
+    public static Object copyMap(TemplateModel object, Set<String> inExKeys, Boolean include,
             TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (targetType == null) {
             targetType = TemplateValueTargetType.PRESERVE;
@@ -637,8 +637,8 @@ public abstract class LangFtlUtil {
             // TODO: this ignores targetType
             return LangFtlUtil.copyMapToSimple((TemplateHashModel) object, inExKeys, include, objectWrapper);
         }
-        throw new TemplateModelException("Cannot copy map of type " + object.getClass().toString() + 
-                " to target type: " + targetType.toString());        
+        throw new TemplateModelException("Cannot copy map of type " + object.getClass().toString() +
+                " to target type: " + targetType.toString());
     }
 
     public static SimpleHash copyMapToSimple(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, ObjectWrapper objectWrapper) throws TemplateModelException {
@@ -646,7 +646,7 @@ public abstract class LangFtlUtil {
         putAll(res, hashModel, inExKeys, include, objectWrapper);
         return res;
     }
-    
+
     public static void putAll(SimpleHash res, TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (include == Boolean.TRUE) {
             if (inExKeys == null) {
@@ -657,36 +657,36 @@ public abstract class LangFtlUtil {
                 if (inExKeys.contains(key)) {
                     res.put(key, valueModel);
                 }
-            }                
+            }
         }
         else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
             if (!(hashModel instanceof TemplateHashModelEx)) {
                 throw new TemplateModelException("Hash to copy does not support ?keys");
             }
-            
+
             TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
             TemplateModelIterator keysIt = keys.iterator();
-    
+
             while(keysIt.hasNext()) {
                 String key = getAsStringNonEscaping((TemplateScalarModel) keysIt.next());
                 res.put(key, hashModel.get(key));
-            }                
+            }
         }
         else {
             if (!(hashModel instanceof TemplateHashModelEx)) {
                 throw new TemplateModelException("Hash to copy does not support ?keys");
             }
-            
+
             TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
             TemplateModelIterator keysIt = keys.iterator();
-    
+
             while(keysIt.hasNext()) {
                 String key = getAsStringNonEscaping((TemplateScalarModel) keysIt.next());
                 TemplateModel valueModel = hashModel.get(key);
                 if (!inExKeys.contains(key)) {
                     res.put(key, valueModel);
                 }
-            } 
+            }
         }
     }
 
@@ -701,11 +701,11 @@ public abstract class LangFtlUtil {
                 if (inExKeys.contains(key)) {
                     res.put(key, valueModel);
                 }
-            }     
+            }
             return res;
         }
         else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
-            return new SimpleHash(map, objectWrapper);          
+            return new SimpleHash(map, objectWrapper);
         }
         else {
             SimpleHash res = new SimpleHash(objectWrapper);
@@ -713,7 +713,7 @@ public abstract class LangFtlUtil {
                 String key = entry.getKey();
                 if (!inExKeys.contains(key)) {
                     res.put(key, entry.getValue());
-                }                
+                }
             }
             return res;
         }
@@ -730,11 +730,11 @@ public abstract class LangFtlUtil {
                 if (inExKeys.contains(key)) {
                     res.put(key, valueModel);
                 }
-            }     
+            }
             return res;
         }
         else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
-            return new HashMap<>(map);        
+            return new HashMap<>(map);
         }
         else {
             Map<String, Object> res = new HashMap<>(map.size());
@@ -742,7 +742,7 @@ public abstract class LangFtlUtil {
                 String key = entry.getKey();
                 if (!inExKeys.contains(key)) {
                     res.put(key, entry.getValue());
-                }                
+                }
             }
             return res;
         }
@@ -761,7 +761,7 @@ public abstract class LangFtlUtil {
         else if (object instanceof TemplateModel) {
             return LangFtlUtil.copyList((TemplateModel) object, targetType, objectWrapper);
         }
-        throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() + 
+        throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() +
             " to target type: " + targetType.toString());
     }
 
@@ -804,9 +804,9 @@ public abstract class LangFtlUtil {
                     res.add(val);
                 }
                 return wrap(res, objectWrapper);
-            } 
+            }
         }
-        throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() + 
+        throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() +
                 " to target type: " + targetType.toString());
     }
 
@@ -850,7 +850,7 @@ public abstract class LangFtlUtil {
                     res.add(it.next());
                 }
                 return wrap(res, objectWrapper);
-            } 
+            }
         }
         else if (object instanceof TemplateSequenceModel) { // TODO: isObjectType
             TemplateSequenceModel seqModel = (TemplateSequenceModel) object;
@@ -874,7 +874,7 @@ public abstract class LangFtlUtil {
                     res.add(seqModel.get(i));
                 }
                 return wrap(res, objectWrapper);
-            } 
+            }
         }
         else if (object instanceof WrapperTemplateModel) {
             // WARN: bypasses auto-escaping
@@ -916,7 +916,7 @@ public abstract class LangFtlUtil {
                 }
             }
         }
-        throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() + 
+        throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() +
                 " to target type: " + targetType.toString());
     }
 
@@ -946,13 +946,13 @@ public abstract class LangFtlUtil {
             throw new TemplateModelException("object is not a recognized map type");
         }
     }
-    
+
     public static TemplateHashModelEx makeSimpleMapCopy(Map<?, ?> map, ObjectWrapper objectWrapper) throws TemplateModelException {
         return new SimpleHash(map, objectWrapper);
     }
-    
+
     /**
-     * Adapts a map to a TemplateHashModelEx using an appropriate simple adapter, normally 
+     * Adapts a map to a TemplateHashModelEx using an appropriate simple adapter, normally
      * DefaultMapAdapter (or SimpleMapModel for BeansWrapper compatibility).
      * <p>
      * The ObjectWrapper is expected to implement at least ObjectWrapperWithAPISupport.
@@ -978,8 +978,8 @@ public abstract class LangFtlUtil {
             }
         }
     }
-    
-    
+
+
     /**
      * Converts map to a simple wrapper, if applicable, by rewrapping
      * known complex map wrappers that implement <code>WrapperTemplateModel</code>.
@@ -991,7 +991,7 @@ public abstract class LangFtlUtil {
      * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
-     * 
+     *
      * @deprecated don't use
      */
     @SuppressWarnings("unused")
@@ -1015,7 +1015,7 @@ public abstract class LangFtlUtil {
             throw new TemplateModelException("object is not a recognized map type");
         }
     }
-    
+
     /**
      * Converts map to a simple wrapper, if applicable, by rewrapping
      * any map wrappers that implement <code>WrapperTemplateModel</code>.
@@ -1030,7 +1030,7 @@ public abstract class LangFtlUtil {
      * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
-     * 
+     *
      * @deprecated don't use
      */
     @SuppressWarnings("unused")
@@ -1054,7 +1054,7 @@ public abstract class LangFtlUtil {
             throw new TemplateModelException("object is not a recognized map type");
         }
     }
-    
+
 
     /**
      * Supposed to convert to simple sequence.
@@ -1093,7 +1093,7 @@ public abstract class LangFtlUtil {
                 throw new UnsupportedOperationException("Not yet implemented");
             }
             else {
-                throw new TemplateModelException("Cannot convert bean-wrapped object of type " + (object != null ? object.getClass() : "null") + " to simple sequence"); 
+                throw new TemplateModelException("Cannot convert bean-wrapped object of type " + (object != null ? object.getClass() : "null") + " to simple sequence");
             }
         }
         else if (object instanceof TemplateCollectionModel) {
@@ -1106,7 +1106,7 @@ public abstract class LangFtlUtil {
             return res;
         }
         else {
-            throw new TemplateModelException("Cannot convert object of type " + (object != null ? object.getClass() : "null") + " to simple sequence"); 
+            throw new TemplateModelException("Cannot convert object of type " + (object != null ? object.getClass() : "null") + " to simple sequence");
         }
     }
 
@@ -1133,18 +1133,18 @@ public abstract class LangFtlUtil {
             return res;
         }
         else {
-            throw new TemplateModelException("Cannot convert object of type " + (object != null ? object.getClass() : "null") + " to set"); 
+            throw new TemplateModelException("Cannot convert object of type " + (object != null ? object.getClass() : "null") + " to set");
         }
-    }    
-    
+    }
+
     /*
      * DEV NOTE: This has been removed along with all code that relied on it. it adds too much liability.
      * for now there are no more places we need it.
-     * 
+     *
      * Same as Freemarker's ?is_directive.
      * <p>
      * <em>NOTE:</em> This <em>must</em> have the exact same behavior as Freemarker's ?is_directive.
-     * Please refer to Freemarker source code. 
+     * Please refer to Freemarker source code.
      * Unfortunately there is no evident way of reusing their code from here...
      * <p>
      * <strong>WARNING:</strong> FIXME: This currently refers to the FTL freemarker.core.Macro class, which is set
@@ -1160,7 +1160,7 @@ public abstract class LangFtlUtil {
      * Adds to simple hash from source map.
      * <p>
      * <em>WARN</em>: This is not BeanModel-aware (complex map).
-     */    
+     */
     public static void addToSimpleMap(SimpleHash dest, TemplateHashModelEx source) throws TemplateModelException {
         TemplateCollectionModel keysModel = source.keys();
         TemplateModelIterator modelIt = keysModel.iterator();
@@ -1175,12 +1175,12 @@ public abstract class LangFtlUtil {
             dest.put(key, source.get(key));
         }
     }
-    
+
     /**
      * Adds the still-wrapped TemplateModels in hash to a java Map.
      * <p>
      * <em>WARN</em>: This is not BeanModel-aware (complex map).
-     */    
+     */
     public static void addModelsToMap(Map<String, ? super TemplateModel> dest, TemplateHashModelEx source) throws TemplateModelException {
         TemplateCollectionModel keysModel = source.keys();
         TemplateModelIterator modelIt = keysModel.iterator();
@@ -1189,7 +1189,7 @@ public abstract class LangFtlUtil {
             dest.put(key, source.get(key));
         }
     }
-    
+
     public static void addModelsToMap(Map<String, ? super TemplateModel> dest, TemplateHashModel source, Set<String> keys) throws TemplateModelException {
         for(String key : keys) {
             dest.put(key, source.get(key));
@@ -1218,13 +1218,13 @@ public abstract class LangFtlUtil {
         addToSimpleMap(res, map, LangFtlUtil.toStringSet(keys));
         return res;
     }
-    
+
     public static Map<String, TemplateModel> makeModelMap(TemplateHashModelEx source) throws TemplateModelException {
         Map<String, TemplateModel> map = new HashMap<>();
         addModelsToMap(map, source);
         return map;
     }
-    
+
     public static Map<String, Object> makeModelObjectMap(TemplateHashModelEx source) throws TemplateModelException {
         Map<String, Object> map = new HashMap<>();
         addModelsToMap(map, source);
@@ -1288,7 +1288,7 @@ public abstract class LangFtlUtil {
     /**
      * Combines two maps with the given operator into a new hash.
      */
-    public static TemplateHashModelEx combineMaps(TemplateHashModelEx first, TemplateHashModelEx second, SetOperations ops, 
+    public static TemplateHashModelEx combineMaps(TemplateHashModelEx first, TemplateHashModelEx second, SetOperations ops,
             ObjectWrapper objectWrapper) throws TemplateModelException {
         SimpleHash res = new SimpleHash(objectWrapper);
         if (ops == null || ops == SetOperations.UNION) {
@@ -1351,14 +1351,14 @@ public abstract class LangFtlUtil {
         while(it.hasNext()) {
             dest.add(it.next());
         }
-    }    
-    
+    }
+
     public static void addToSimpleList(SimpleSequence dest, TemplateSequenceModel source) throws TemplateModelException {
         for(int i=0; i < source.size(); i++) {
             dest.add(source.get(0));
         }
-    }   
-    
+    }
+
     public static void addToSimpleList(SimpleSequence dest, TemplateModel source) throws TemplateModelException {
         if (source instanceof TemplateCollectionModel) {
             addToSimpleList(dest, (TemplateCollectionModel) source);
@@ -1369,8 +1369,8 @@ public abstract class LangFtlUtil {
         else {
             throw new TemplateModelException("Can't add to simple list from source type (non-list type): " + source.getClass());
         }
-    }       
-    
+    }
+
     /**
      * Puts all values in hash into FTL variables, decided by a varHandler.
      * <p>
@@ -1378,7 +1378,7 @@ public abstract class LangFtlUtil {
      * <p>
      * @see copyMapToSimple
      */
-    public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, 
+    public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include,
             FtlVarHandler varHandler, Environment env) throws TemplateModelException {
         if (include == Boolean.TRUE) {
             if (inExKeys == null) {
@@ -1389,25 +1389,25 @@ public abstract class LangFtlUtil {
                 if (inExKeys.contains(key)) {
                     varHandler.setVariable(key, valueModel);
                 }
-            }                
+            }
         }
         else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
             if (!(hashModel instanceof TemplateHashModelEx)) {
                 throw new TemplateModelException("Hash to copy does not support ?keys");
             }
-            
+
             TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
             TemplateModelIterator keysIt = keys.iterator();
             while(keysIt.hasNext()) {
                 String key = getAsStringNonEscaping((TemplateScalarModel) keysIt.next());
                 varHandler.setVariable(key, hashModel.get(key));
-            }                
+            }
         }
         else {
             if (!(hashModel instanceof TemplateHashModelEx)) {
                 throw new TemplateModelException("Hash to copy does not support ?keys");
             }
-            
+
             TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
             TemplateModelIterator keysIt = keys.iterator();
             while(keysIt.hasNext()) {
@@ -1416,7 +1416,7 @@ public abstract class LangFtlUtil {
                 if (!inExKeys.contains(key)) {
                     varHandler.setVariable(key, valueModel);
                 }
-            } 
+            }
         }
     }
 
@@ -1428,7 +1428,7 @@ public abstract class LangFtlUtil {
     public static void globalsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Environment env) throws TemplateModelException {
         varsPutAll(hashModel, inExKeys, include, new GlobalFtlVarHandler(env), env);
     }
-    
+
     /**
      * Puts all values in hash into FTL globals (#global).
      * <p>
@@ -1459,18 +1459,18 @@ public abstract class LangFtlUtil {
     public static void localsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Environment env) throws TemplateModelException {
         varsPutAll(hashModel, inExKeys, include, new LocalFtlVarHandler(env), env);
     }
-    
+
     public static void localsPutAll(TemplateHashModelEx hashModel, Environment env) throws TemplateModelException {
         varsPutAll(hashModel, null, null, new LocalFtlVarHandler(env), env);
     }
-    
-    
+
+
     /**
      * Returns the given model as string, bypassing auto-escaping done by EscapingModels.
      * <p>
      * WARN (TODO?: REVIEW?): this can crash when model is CollectionModel or MapModel, childs of TemplateScalarModel.
      * we let it crash because non-strict typing may be dangerous and hide errors...
-     * 
+     *
      * @see org.ofbiz.webapp.ftl.EscapingModel
      */
     public static String getAsStringNonEscaping(TemplateScalarModel model) throws TemplateModelException {
@@ -1480,10 +1480,10 @@ public abstract class LangFtlUtil {
             return model.getAsString();
         }
     }
-    
+
     /**
      * Returns the given model as string, optionally bypassing auto-escaping done by EscapingModels.
-     * 
+     *
      * @see org.ofbiz.webapp.ftl.EscapingModel
      */
     public static String getAsString(TemplateScalarModel model, boolean nonEscaping) throws TemplateModelException {
@@ -1493,14 +1493,14 @@ public abstract class LangFtlUtil {
             return model.getAsString();
         }
     }
-    
+
     /**
      * Returns the given model as string, optionally bypassing auto-escaping done by EscapingModels;
      * if not a string, calles getAsString on it.
      * <p>
      * NOTE: this behaves similar to {@link #toRawString}, but returns a String.
      * They are almost the same.
-     * 
+     *
      * @see org.ofbiz.webapp.ftl.EscapingModel
      */
     public static String getAsOrToString(TemplateScalarModel model, boolean nonEscaping) throws TemplateModelException {
@@ -1524,7 +1524,7 @@ public abstract class LangFtlUtil {
     public static TemplateModel wrapObjectStd(Object value, String wrapper, Environment env) throws TemplateModelException {
         return ObjectWrapperUtil.getObjectWrapperByName(wrapper, env).wrap(unwrap(value));
     }
-    
+
     public static TemplateModel wrapObjectStd(Object value, String wrapper) throws TemplateModelException {
         return wrapObjectStd(value, wrapper, FreeMarkerWorker.getCurrentEnvironment());
     }
@@ -1556,14 +1556,14 @@ public abstract class LangFtlUtil {
             }
         }
     }
-    
+
     /* obsoleted, remove later when rewrapObject is fully implemented
     public static Object rewrapMap(TemplateHashModel model, WrappingOptions opts, Environment env) throws TemplateModelException {
         RewrapMode mode = opts.rewrapMode;
         if (mode.always) {
             return alwaysRewrapMap(model, opts, env);
         } else {
-            
+
             if (mode.deep) {
                 // WARN: Here we make one VERY delicate optimization:
                 // if the map is a simple hash, we do nothing to it.
@@ -1572,25 +1572,25 @@ public abstract class LangFtlUtil {
                 if (model instanceof SimpleHash) {
                     return model;
                 }
-                
+
                 // FIXME: Here we are forced to rewrap in most cases because Freemarker interface
                 // does not allow inspecting which object wrapper an object is using!
                 return alwaysRewrapMap(model, mode, env, curObjectWrapper);
             } else {
-                // Shallow re-wrap to simple, non-(necessarily-)raw map. 
+                // Shallow re-wrap to simple, non-(necessarily-)raw map.
                 // This is the rare case we can currently optimize...
                 return toSimpleMap(model, mode.copy, curObjectWrapper);
             }
         }
     }
-    
+
     public static Object alwaysRewrapMap(TemplateHashModel model, WrappingOptions opts, Environment env) throws TemplateModelException {
         Map<?, ?> unwrapped = (Map<?, ?>) LangFtlUtil.unwrapAlways(model);
-        return 
-        
+        return
+
         if (opts.rewrapMode.raw) {
             if (opts.rewrapMode.deep) {
-                ObjectWrapper modelWrapper = mode.copy ? 
+                ObjectWrapper modelWrapper = mode.copy ?
                         LangFtlUtil.getSimpleTypeCopyingNonEscapingObjectWrapper(curObjectWrapper) : LangFtlUtil.getSimpleTypeNonEscapingObjectWrapper(curObjectWrapper);
                 return modelWrapper.wrap(unwrapped);
             } else {
@@ -1609,12 +1609,12 @@ public abstract class LangFtlUtil {
         }
     }
     */
-    
+
     public static boolean isNullOrEmptyString(TemplateModel model) throws TemplateModelException {
         // this doesn't work out: TemplateScalarModel.EMPTY_STRING.equals(model)
         return (model == null || (model instanceof TemplateScalarModel && ((TemplateScalarModel) model).getAsString().isEmpty()));
     }
-    
+
     public static Locale getLocale(TemplateModel model) throws TemplateModelException {
         if (isNullOrEmptyString(model)) {
             return null;
@@ -1624,7 +1624,7 @@ public abstract class LangFtlUtil {
         }
         return (Locale) ((WrapperTemplateModel) model).getWrappedObject();
     }
-    
+
     public static TimeZone getTimeZone(TemplateModel model) throws TemplateModelException {
         if (isNullOrEmptyString(model)) {
             return null;
@@ -1634,7 +1634,7 @@ public abstract class LangFtlUtil {
         }
         return (TimeZone) ((WrapperTemplateModel) model).getWrappedObject();
     }
-    
+
 
     public static Template makeFtlCodeTemplate(String ftlCode) throws TemplateModelException {
         Reader templateReader = new StringReader(ftlCode);
@@ -1650,7 +1650,7 @@ public abstract class LangFtlUtil {
             }
         }
     }
-    
+
     public static void execFtlCode(Template ftlCode, Environment env) throws TemplateModelException {
         try {
             FreeMarkerWorker.includeTemplate(ftlCode, env);
@@ -1660,14 +1660,14 @@ public abstract class LangFtlUtil {
             throw new TemplateModelException(e);
         }
     }
-    
+
     /**
      * WARN: extremely slow, should be avoided! decompose into makeTemplate + executeFtlCode and cache the template instead.
      */
     public static void execFtlCode(String ftlCode, Environment env) throws TemplateModelException {
         execFtlCode(makeFtlCodeTemplate(ftlCode), env);
     }
- 
+
     /**
      * Executes an arbitrary FTL built-in.
      */
@@ -1675,14 +1675,14 @@ public abstract class LangFtlUtil {
         final int argCount = (builtInArgs != null) ? builtInArgs.length : 0;
         return execBuiltIn(getBuiltInCall(builtInName, argCount, env), value, builtInArgs, env);
     }
-    
+
     /**
      * Executes an arbitrary FTL built-in.
      */
     public static TemplateModel execBuiltIn(String builtInName, TemplateModel value, Environment env) throws TemplateModelException {
         return execBuiltIn(builtInName, value, null, env);
     }
-    
+
     /**
      * Gets an arbitrary FTL built-in call - non-abstracted version (for optimization only!).
      */
@@ -1704,7 +1704,7 @@ public abstract class LangFtlUtil {
         }
         return builtInCall;
     }
-    
+
     /**
      * Executes an arbitrary FTL built-in - non-abstracted version (for optimization only!).
      */
@@ -1717,7 +1717,7 @@ public abstract class LangFtlUtil {
         execFtlCode(builtInCall, env);
         return env.getVariable("_scpEbiRes");
     }
-    
+
     public static TemplateScalarModel execStringBuiltIn(TemplateModel value, Environment env) throws TemplateModelException {
         if (stringBuiltInCall == null) {
             // NOTE: no real need for synchronize here
@@ -1725,7 +1725,7 @@ public abstract class LangFtlUtil {
         }
         return (TemplateScalarModel) execBuiltIn(stringBuiltInCall, value, null, env);
     }
-    
+
     /**
      * Executes an arbitrary FTL function.
      */
@@ -1733,14 +1733,14 @@ public abstract class LangFtlUtil {
         final int argCount = (args != null) ? args.length : 0;
         return execFunction(getFunctionCall(functionName, argCount, env), args, env);
     }
-    
+
     /**
      * Executes an arbitrary FTL function.
      */
     public static TemplateModel execFunction(String functionName, Environment env) throws TemplateModelException {
         return execFunction(getFunctionCall(functionName, 0, env), null, env);
     }
-    
+
     /**
      * Gets an arbitrary FTL function call - non-abstracted version (for optimization only!).
      */
@@ -1760,7 +1760,7 @@ public abstract class LangFtlUtil {
         }
         return functionCall;
     }
-    
+
     /**
      * Executes an arbitrary FTL function - non-abstracted version (for optimization only!).
      */
@@ -1772,29 +1772,29 @@ public abstract class LangFtlUtil {
         execFtlCode(functionCall, env);
         return env.getVariable("_scpEfnRes");
     }
-    
+
     /**
      * Executes an arbitrary FTL function - non-abstracted version (for optimization only!).
      */
     public static TemplateModel execFunction(Template functionCall, Environment env) throws TemplateModelException {
         return execFunction(functionCall, null, env);
     }
-    
-    
+
+
     /**
      * Executes an arbitrary FTL macro.
      */
     public static void execMacro(String macroName, Map<String, TemplateModel> args, Environment env) throws TemplateModelException {
         execMacro(getMacroCall(macroName, (args != null ? args.keySet() : null), env), args, env);
     }
-    
+
     /**
      * Executes an arbitrary FTL macro.
      */
     public static void execMacro(String macroName, Environment env) throws TemplateModelException {
         execMacro(getMacroCall(macroName, null, env), null, env);
     }
-    
+
     /**
      * Gets an arbitrary FTL macro call - non-abstracted version (for optimization only!).
      */
@@ -1813,7 +1813,7 @@ public abstract class LangFtlUtil {
         }
         return macroCall;
     }
-    
+
     /**
      * Executes an arbitrary FTL macro - non-abstracted version (for optimization only!).
      */
@@ -1825,15 +1825,15 @@ public abstract class LangFtlUtil {
         }
         execFtlCode(macroCall, env);
     }
-    
+
     /**
      * Executes an arbitrary FTL macro - non-abstracted version (for optimization only!).
      */
     public static void execMacro(Template macroCall, Environment env) throws TemplateModelException {
         execMacro(macroCall, null, env);
     }
-    
-    
+
+
     /**
      * Gets a var from main namespace with fallback on globals/data-model, or null if doesn't exit or null.
      * <p>
@@ -1853,7 +1853,7 @@ public abstract class LangFtlUtil {
         }
         return result;
     }
-    
+
     /**
      * Gets a var from current namespace with fallback on globals/data-model, or null if doesn't exit or null.
      * <p>
@@ -1869,11 +1869,11 @@ public abstract class LangFtlUtil {
         }
         return result;
     }
-    
+
     public static TemplateBooleanModel toBooleanModel(boolean value, Environment env) throws TemplateModelException {
         return value ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
     }
-    
+
     /**
      * Performs the logical raw string operation on a single value.
      */
@@ -1886,7 +1886,7 @@ public abstract class LangFtlUtil {
             return execStringBuiltIn(value, env);
         }
     }
-    
+
     /**
      * Performs the logical {@link #toRawString(TemplateModel, Environment)} operation on a single value, but returns as String type instead
      * of template model.
@@ -1897,7 +1897,7 @@ public abstract class LangFtlUtil {
         }
         return getAsStringNonEscaping((TemplateScalarModel) value);
     }
-    
+
     /**
      * Performs the logical raw string operation on multiple values, concatenating the result.
      */
@@ -1912,5 +1912,5 @@ public abstract class LangFtlUtil {
         }
         return new SimpleScalar(sb.toString());
     }
-    
+
 }

@@ -36,7 +36,7 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "thumbnailator";
-    
+
     /**
      * Maps <code>scalingOptions.filter</code> to Thumbnailator ScalingMode instances.
      * FIXME?: this does not properly represent/support all the ResizerFactory/Resizer classes/combinations
@@ -46,37 +46,37 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
     private static final Map<String, ScalingMode> filterMap;
     static {
         Map<String, ScalingMode> map = new HashMap<>();
-        
+
         // GENERALIZED
         //map.put("areaaveraging", Image.SCALE_AREA_AVERAGING); // TODO
         //map.put("default", Image.SCALE_DEFAULT); // TODO
         //map.put("fast", Image.SCALE_FAST); // TODO
         //map.put("replicate", Image.SCALE_REPLICATE); // TODO
         map.put("smooth", null); // Thumbnailator default (smooth-auto)
-        
+
         // SPECIFIC ALGORITHMS
         map.put("bicubic", ScalingMode.BICUBIC);
         map.put("bilinear", ScalingMode.BILINEAR);
         map.put("progbilinear", ScalingMode.PROGRESSIVE_BILINEAR);
-        
+
         // API-SPECIFIC
         map.put("smooth-auto", null); // Thumbnailator default (selects between progbilinear, bicubic and bilinear automatically)
                                       // Behavior described in net.coobird.thumbnailator.resizers.DefaultResizerFactory
-        
+
         filterMap = Collections.unmodifiableMap(map);
         Debug.logInfo(AbstractImageScaler.getFilterMapLogRepr(API_NAME, map), module);
     }
-    
+
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
         putDefaultImageTypeOptions(options);
         options.put("filter", filterMap.get("smooth")); // String
         options.put("dithering", null); // Boolean; we set null to use Thumbnailator default
-        options.put("antialiasing", null); // Boolean 
+        options.put("antialiasing", null); // Boolean
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
-    
+
     protected ThumbnailatorImageScaler(AbstractImageScalerFactory<? extends AbstractImageScaler> factory, String name,
             Map<String, Object> confOptions) {
         super(factory, name, confOptions);
@@ -101,7 +101,7 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         @Override protected String getApiName() { return API_NAME; }
         @Override public Map<String, Object> getDefaultOptions() { return DEFAULT_OPTIONS; }
     }
-    
+
     @Override
     protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
@@ -118,16 +118,16 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         if (antialiasing != null) {
             builder = builder.antialiasing(antialiasing ? Antialiasing.ON : Antialiasing.OFF);
         }
-        
+
         // FIXME?: Thumbnailator doesn't appear to preserve the ColorModel of indexed images nor suppport setting it.
         // so for indexed we have no choice but to pass a hardcoded RGB type, which
         // will lose the original color model... oh well?
-        
+
         // FIXME?: can do the TYPE_PRESERVING logic better here...
 
         ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
         ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
-        
+
         BufferedImage resultImage;
         if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
             ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
@@ -139,7 +139,7 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
             } else {
                 if (isPostConvertResultImage(image, options, targetTypeInfo)) {
                     // for thumbnailator, we must always specify imageType because its default is to preserve and that doesn't work
-                    builder.imageType(ImageType.DEFAULT_DIRECT.getPixelTypeFor(image)); 
+                    builder.imageType(ImageType.DEFAULT_DIRECT.getPixelTypeFor(image));
                     resultImage = builder.asBufferedImage();
                     resultImage = checkConvertResultImageType(image, resultImage, options, targetTypeInfo);
                 } else {
@@ -148,12 +148,12 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
                 }
             }
         } else {
-            builder.imageType(getFirstSupportedDestPixelTypeFromAllDefaults(options, image)); 
+            builder.imageType(getFirstSupportedDestPixelTypeFromAllDefaults(options, image));
             resultImage = builder.asBufferedImage();
         }
         return resultImage;
     }
-    
+
     // NOTE: defaults are handled through the options merging with defaults
     protected static ScalingMode getFilter(Map<String, Object> options) throws IllegalArgumentException {
         Object filterObj = options.get("filter");
@@ -166,15 +166,15 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
             return filterMap.get(filterName);
         }
     }
-    
+
     protected static Boolean getDithering(Map<String, Object> options) {
         return UtilMisc.booleanValue(options.get("dithering"));
     }
-    
+
     protected static Boolean getAntialiasing(Map<String, Object> options) {
         return UtilMisc.booleanValue(options.get("antialiasing"));
     }
-    
+
     @Override
     public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         // NOTE: thumnnailator will accept indexed image as out but fails to preserve color space/palete...

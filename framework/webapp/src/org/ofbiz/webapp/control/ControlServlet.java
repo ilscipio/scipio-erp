@@ -83,7 +83,7 @@ public class ControlServlet extends HttpServlet {
         configureBsf();
         // initialize the request handler
         getRequestHandler();
-        
+
         // SCIPIO: 2017-11-14: new _CONTROL_MAPPING_ and _CONTROL_SERVPATH_ servlet attributes; setting
         // these here allows them to be available from early filters (instead of hardcoding there).
         String servletMapping = ServletUtil.getBaseServletMapping(config.getServletContext(), config.getServletName());
@@ -201,7 +201,7 @@ public class ControlServlet extends HttpServlet {
         request.setAttribute("security", security);
 
         request.setAttribute("_REQUEST_HANDLER_", requestHandler);
-        
+
         ServletContextHashModel ftlServletContext = new ServletContextHashModel(this, FreeMarkerWorker.getDefaultOfbizWrapper());
         request.setAttribute("ftlServletContext", ftlServletContext);
 
@@ -264,7 +264,7 @@ public class ControlServlet extends HttpServlet {
                 if (scpErrorRenderTargetExpr != null) {
                     RenderTargetUtil.setRawRenderTargetExpr(request, scpErrorRenderTargetExpr);
                 }
-                
+
                 request.setAttribute("_ERROR_OCCURRED_", Boolean.TRUE);
                 Debug.logError("Including errorPage: " + errorPage, module);
 
@@ -299,7 +299,7 @@ public class ControlServlet extends HttpServlet {
                         } catch (Throwable t2) {
                             try {
                                 int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() 
+                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString()
                                     + "; sending error code [" + errorToSend + "], but NOT message [" + errorMessage + "] because we are in secure RETHROW mode", module);
                                 response.sendError(errorToSend, genericErrorMessage);
                             } catch (Throwable t3) {
@@ -361,7 +361,7 @@ public class ControlServlet extends HttpServlet {
         GenericDelegator.clearUserIdentifierStack();
         GenericDelegator.clearSessionIdentifierStack();
     }
-    
+
     /**
      * @see javax.servlet.Servlet#destroy()
      */
@@ -434,7 +434,7 @@ public class ControlServlet extends HttpServlet {
         }
         if (Debug.verboseOn()) Debug.logVerbose("--- End ServletContext Attributes ---", module);
     }
-    
+
     /**
      * SCIPIO: Locates the ControlServlet servlet definition in the given WebXml, or null
      * if does not appear to be present.
@@ -462,7 +462,7 @@ public class ControlServlet extends HttpServlet {
                 } catch(Exception e) {
                     // NOTE: 2018-05-11: this should not be a warning because this is a regular occurrence
                     // for webapps which have servlet classes in libs under WEB-INF/lib
-                    //Debug.logWarning("Could not load or test servlet class (" + servletClassName + "); may be invalid or a classloader issue: " 
+                    //Debug.logWarning("Could not load or test servlet class (" + servletClassName + "); may be invalid or a classloader issue: "
                     //        + e.getMessage(), module);
                 }
             }

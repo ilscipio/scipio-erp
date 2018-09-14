@@ -16,7 +16,7 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 
     protected final Map<String, Object> attributes = new HashMap<>();
     protected Set<String> attributeNames = null;
-    
+
     public WrappedHttpServletRequest(HttpServletRequest request) {
         super(request);
     }
@@ -29,7 +29,7 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
     @Override
     public Enumeration<String> getAttributeNames() {
         if (attributeNames == null) {
-            
+
         }
         return super.getAttributeNames();
     }

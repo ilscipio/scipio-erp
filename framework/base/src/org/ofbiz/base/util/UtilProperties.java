@@ -82,7 +82,7 @@ public final class UtilProperties implements Serializable {
     /**
      * SCIPIO: A lightweight cache for storing Properties instances. Each Properties instance is keyed by its resource name.
      * Mainly intended for *.properties files (not localized resource bundles). This is a lightweight second-layer cache
-     * around the instances already stored in {@link #urlCache}, so as to not duplicate the Properties instances. 
+     * around the instances already stored in {@link #urlCache}, so as to not duplicate the Properties instances.
      * Improves access for the many individual property lookups.
      * Added 2018-07-18.
      */
@@ -92,8 +92,8 @@ public final class UtilProperties implements Serializable {
      * SCIPIO: A read-only empty properties instance.
      */
     private static final Properties emptyProperties = new ExtendedProperties();
-    
-    // SCIPIO: 2018-07-18: HashSet is not thread-safe! Use an immutable collection copy pattern instead. 
+
+    // SCIPIO: 2018-07-18: HashSet is not thread-safe! Use an immutable collection copy pattern instead.
     // NOTE: Here even omitting volatile because this does not appear to be critical or one-time information (mainly performance?).
     //private static final Set<String> propertiesNotFound = new HashSet<String>();
     private static Set<String> propertiesNotFound = Collections.emptySet();
@@ -181,7 +181,7 @@ public final class UtilProperties implements Serializable {
     private static Number getPropertyNumber(String resource, String name, Number defaultNumber, String type) {
         String str = getPropertyValue(resource, name);
         if (UtilValidate.isEmpty(str)) {
-            // SCIPIO: 2017-07-15: should not be a warning nor error 
+            // SCIPIO: 2017-07-15: should not be a warning nor error
             //Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
             Debug.logInfo("Property [" + resource + "/" + name + "] empty; using defaultNumber " + defaultNumber + ".", module);
             return defaultNumber;
@@ -212,7 +212,7 @@ public final class UtilProperties implements Serializable {
             return defaultValue;
         }
     }
-    
+
     /**
      * Returns a Boolean-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
      * If the specified property name or properties file is not found, the defaultValue is returned.
@@ -231,7 +231,7 @@ public final class UtilProperties implements Serializable {
             return defaultValue;
         }
     }
-    
+
     /**
      * Returns an Integer-Object of the specified property name from the specified resource/properties file.
      * If the specified property name or properties file is not found, the defaultNumber is returned.
@@ -243,7 +243,7 @@ public final class UtilProperties implements Serializable {
     public static Integer getPropertyAsInteger(String resource, String name, int defaultNumber) {
         return (Integer)getPropertyNumber(resource, name, defaultNumber, "Integer");
     }
-    
+
     /**
      * Returns an Integer-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
      * If the specified property name or properties file is not found, the defaultNumber is returned.
@@ -319,7 +319,7 @@ public final class UtilProperties implements Serializable {
     public static Float getPropertyAsFloat(String resource, String name, float defaultNumber) {
         return (Float)getPropertyNumber(resource, name, defaultNumber, "Float");
     }
-    
+
     /**
      * Returns a Float-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
      * If the specified property name or properties file is not found, the defaultNumber is returned.
@@ -343,7 +343,7 @@ public final class UtilProperties implements Serializable {
     public static Double getPropertyAsDouble(String resource, String name, double defaultNumber) {
         return (Double)getPropertyNumber(resource, name, defaultNumber, "Double");
     }
-    
+
     /**
      * Returns a Double-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
      * If the specified property name or properties file is not found, the defaultNumber is returned.
@@ -474,7 +474,7 @@ public final class UtilProperties implements Serializable {
      * Returns a new <code>Properties</code> instance created from <code>fileName</code>.
      * <p>This method is intended for low-level framework classes that need to read
      * properties files before OFBiz has been fully initialized.</p>
-     * 
+     *
      * @param fileName The full name of the properties file ("foo.properties")
      * @return A new <code>Properties</code> instance created from <code>fileName</code>, or
      * <code>null</code> if the file was not found
@@ -509,14 +509,14 @@ public final class UtilProperties implements Serializable {
     /** Returns the specified resource/properties file
      * <p>
      * SCIPIO: MERGED PROPERTIES (2018-07-18):
-     * This method now supports merged properties 
+     * This method now supports merged properties
      * by combining several resource names in the resource string.
      * Format: "+resource1+resource2+resource3"
      * In other words, a starting "+" indicates merged properties mode,
      * and the rest of the string is resource names separated by "+".
      * This is equivalent to calling {@code getMergedProperties("resource1", "resource2", "resource3")}.
      * The merged properties are cached and the result must not be modified.
-     * 
+     *
      * @param resource The name of the resource - can be a file, class, or URL
      * @return The properties file
      */
@@ -564,7 +564,7 @@ public final class UtilProperties implements Serializable {
      * If one or more of the resources are missing, they are skipped. If all of them
      * are missing, returns null.
      * <p>
-     * Added 2018-07-18. 
+     * Added 2018-07-18.
      */
     public static Properties getMergedProperties(String... resources) {
         String propResourceCacheKey = "+" + StringUtils.join(resources, "+");
@@ -588,7 +588,7 @@ public final class UtilProperties implements Serializable {
      * If one or more of the resources are missing, they are skipped. If all of them
      * are missing, returns null.
      * <p>
-     * Added 2018-07-18. 
+     * Added 2018-07-18.
      */
     public static Properties getMergedProperties(Collection<String> resources) {
         return getMergedProperties(resources.toArray(new String[resources.size()]));
@@ -615,7 +615,7 @@ public final class UtilProperties implements Serializable {
         Properties mergedProperties = (urlCacheKey.length() > 0) ? urlCache.get(urlCacheKey) : null;
         if (mergedProperties == null) {
             // DEV NOTE: This log message is only printed if the string resources map
-            // to a different set of URLs after filtering for normalization and missing ones, 
+            // to a different set of URLs after filtering for normalization and missing ones,
             // so less than you might expect; clear the cache using admin UI for testing properly.
             StringBuilder log = new StringBuilder("Merged properties: Resources: [");
             for(int i = 0; i < resources.length; i++) {
@@ -928,12 +928,12 @@ public final class UtilProperties implements Serializable {
         String value = getMessageNoTrim(resource, name, locale);
         return value == null ? name : value.trim();
     }
-    
+
     /** Returns the value of the specified property name from the specified
      *  resource/properties file corresponding to the given locale.
      * <p>
-     * SCIPIO: Version that guarantees there be no trim() operation. 
-     *  
+     * SCIPIO: Version that guarantees there be no trim() operation.
+     *
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
      * @param locale The locale that the given resource will correspond to
@@ -961,7 +961,7 @@ public final class UtilProperties implements Serializable {
             return name;
         }
         return value == null ? name : value; // SCIPIO: TODO: REVIEW: some redundancy in this statement?...
-    }    
+    }
 
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
@@ -1002,12 +1002,12 @@ public final class UtilProperties implements Serializable {
         }
         return value;
     }
-    
+
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
      * <p>
      * SCIPIO: Version that guarantees there to be no trim() operation.
-     * 
+     *
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
      * @param arguments A List of Objects to insert into the message argument place holders
@@ -1049,12 +1049,12 @@ public final class UtilProperties implements Serializable {
         }
         return value;
     }
-    
+
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the FlexibleStringExpander class
      * <p>
      * SCIPIO: Version that guarantees there to be no trim() operation.
-     * 
+     *
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
      * @param context A Map of Objects to insert into the message place holders using the ${} syntax of the FlexibleStringExpander
@@ -1071,7 +1071,7 @@ public final class UtilProperties implements Serializable {
             value = FlexibleStringExpander.expandString(value, context, locale);
         }
         return value;
-    }    
+    }
 
     public static String getMessageMap(String resource, String name, Locale locale, Object... context) {
         return getMessage(resource, name, UtilGenerics.toMap(String.class, context), locale);
@@ -1281,7 +1281,7 @@ public final class UtilProperties implements Serializable {
         return propertiesNotFound.contains(createResourceName(resource, locale, removeExtension));
     }
 
-    /** 
+    /**
      * Resolve a properties file URL.
      * <p>This method uses the following strategy:</p>
      * <ul>
@@ -1370,7 +1370,7 @@ public final class UtilProperties implements Serializable {
         if (propertiesNotFound.size() <= 300) {
             // Sanity check - list could get quite large
             // SCIPIO: 2018-07-18: HashSet is not thread-safe, so can't do this.
-            // However, also want to avoid locking globally on this, so use an immutable collection copy. 
+            // However, also want to avoid locking globally on this, so use an immutable collection copy.
             // Even omitting volatile since this does not appear critical to record.
             //propertiesNotFound.add(resourceName);
             Set<String> newPropertiesNotFound = new HashSet<>(propertiesNotFound);
@@ -1380,7 +1380,7 @@ public final class UtilProperties implements Serializable {
         return null;
     }
 
-    /** 
+    /**
      * Convert XML property file to Properties instance. This method will convert
      * both the Java XML properties file format and the OFBiz custom XML
      * properties file format.
@@ -1462,7 +1462,7 @@ public final class UtilProperties implements Serializable {
         }
         return properties;
     }
-    
+
     /**
      * SCIPIO: Returns all property names in the given Properties that start with given prefix
      * and end with given suffix, with option to forbid dots in between.
@@ -1502,7 +1502,7 @@ public final class UtilProperties implements Serializable {
             }
         }
     }
-    
+
     /**
      * SCIPIO: Puts all property name/value pairs in the given Properties that start with given prefix
      * with option to forbid dots in names, to the given out map.
@@ -1521,7 +1521,7 @@ public final class UtilProperties implements Serializable {
             }
         }
     }
-    
+
     /**
      * SCIPIO: Puts all property name/value pairs in the given Properties that start with given prefix,
      * stripping the prefix and allowing dots in names, to the given out map.
@@ -1530,7 +1530,7 @@ public final class UtilProperties implements Serializable {
     public static void putPropertiesWithPrefix(Map<String, ? super String> out, Properties properties, String prefix) {
         putPropertiesWithPrefix(out, properties, prefix, true, false);
     }
-    
+
     /**
      * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix
      * and end with given suffix, with option to forbid dots in between, in an unordered map.
@@ -1541,7 +1541,7 @@ public final class UtilProperties implements Serializable {
         putPropertiesWithPrefixSuffix(out, properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
         return out;
     }
-    
+
     /**
      * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix
      * with option to forbid dots in name, in an unordered map.
@@ -1552,7 +1552,7 @@ public final class UtilProperties implements Serializable {
         putPropertiesWithPrefix(out, properties, prefix, allowDots, returnPrefix);
         return out;
     }
-    
+
     /**
      * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix,
      * stripping the prefix and allowing dots in names, in an unordered map.
@@ -1563,7 +1563,7 @@ public final class UtilProperties implements Serializable {
         putPropertiesWithPrefix(out, properties, prefix, true, false);
         return out;
     }
-    
+
     /**
      * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
      * Added 2017-11.
@@ -1571,7 +1571,7 @@ public final class UtilProperties implements Serializable {
     public static <T> void extractPropertiesWithPrefixAndId(Map<String, Map<String, T>> out, Properties properties, String prefix) {
         extractPropertiesWithPrefixAndId(out, (Map<?, ?>) properties, prefix);
     }
-    
+
     /**
      * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
      * Added 2017-11.
@@ -1653,7 +1653,7 @@ public final class UtilProperties implements Serializable {
     public static String cleanValue(String value) {
         return value == null ? "" : value.trim();
     }
-    
+
     /**
      * SCIPIO: Returns the value or null.
      * NOTE: This assumes the string is already trimmed.
@@ -1662,7 +1662,7 @@ public final class UtilProperties implements Serializable {
     public static String valueOrNull(String value) {
         return (value == null || value.isEmpty()) ? null : value;
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a number type, following {@link #getPropertyNumber} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1681,7 +1681,7 @@ public final class UtilProperties implements Serializable {
             return defaultNumber;
         }
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a number type, following {@link #getPropertyNumber} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1690,7 +1690,7 @@ public final class UtilProperties implements Serializable {
     public static <N extends Number> N asNumber(Class<N> type, String value) {
         return asNumber(type, value, null);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a number type, following {@link #getPropertyNumber} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -1702,7 +1702,7 @@ public final class UtilProperties implements Serializable {
         else if (type.isAssignableFrom(value.getClass())) return (N) value;
         else return asNumber(type, (String) value, defaultNumber);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a number type, following {@link #getPropertyNumber} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -1713,7 +1713,7 @@ public final class UtilProperties implements Serializable {
         if (value == null || type.isAssignableFrom(value.getClass())) return (N) value;
         else return asNumber(type, (String) value, null);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1724,7 +1724,7 @@ public final class UtilProperties implements Serializable {
         else if ("false".equalsIgnoreCase(value)) return Boolean.FALSE;
         else return defaultValue;
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1733,7 +1733,7 @@ public final class UtilProperties implements Serializable {
     public static Boolean asBoolean(String value) {
         return asBoolean(value, null);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -1744,7 +1744,7 @@ public final class UtilProperties implements Serializable {
         else if (value instanceof Boolean) return (Boolean) value;
         else return asBoolean((String) value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -1754,7 +1754,7 @@ public final class UtilProperties implements Serializable {
         if (value == null || value instanceof Boolean) return (Boolean) value;
         else return asBoolean((String) value);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Integer type, following {@link #getPropertyAsInteger} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1763,7 +1763,7 @@ public final class UtilProperties implements Serializable {
     public static Integer asInteger(String value, Integer defaultValue) {
         return asNumber(Integer.class, value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Integer type, following {@link #getPropertyAsInteger} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1783,7 +1783,7 @@ public final class UtilProperties implements Serializable {
         else if (value instanceof Integer) return (Integer) value;
         else return asInteger((String) value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a Integer type, following {@link #getPropertyAsInteger} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -1793,7 +1793,7 @@ public final class UtilProperties implements Serializable {
         if (value == null || value instanceof Integer) return (Integer) value;
         else return asInteger((String) value, null);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Long type, following {@link #getPropertyAsLong} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1802,7 +1802,7 @@ public final class UtilProperties implements Serializable {
     public static Long asLong(String value, Long defaultValue) {
         return asNumber(Long.class, value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Long type, following {@link #getPropertyAsLong} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1822,7 +1822,7 @@ public final class UtilProperties implements Serializable {
         else if (value instanceof Long) return (Long) value;
         else return asLong((String) value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a Long type, following {@link #getPropertyAsLong} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -1832,7 +1832,7 @@ public final class UtilProperties implements Serializable {
         if (value == null || value instanceof Long) return (Long) value;
         else return asLong((String) value, null);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Float type, following {@link #getPropertyAsFloat} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1841,7 +1841,7 @@ public final class UtilProperties implements Serializable {
     public static Float asFloat(String value, Float defaultValue) {
         return asNumber(Float.class, value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Float type, following {@link #getPropertyAsFloat} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1861,7 +1861,7 @@ public final class UtilProperties implements Serializable {
         else if (value instanceof Float) return (Float) value;
         else return asFloat((String) value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a Float type, following {@link #getPropertyAsFloat} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -1871,7 +1871,7 @@ public final class UtilProperties implements Serializable {
         if (value == null || value instanceof Float) return (Float) value;
         else return asFloat((String) value, null);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Double type, following {@link #getPropertyAsDouble} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1880,7 +1880,7 @@ public final class UtilProperties implements Serializable {
     public static Double asDouble(String value, Double defaultValue) {
         return asNumber(Double.class, value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a Double type, following {@link #getPropertyAsDouble} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1900,7 +1900,7 @@ public final class UtilProperties implements Serializable {
         else if (value instanceof Double) return (Double) value;
         else return asDouble((String) value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a Double type, following {@link #getPropertyAsDouble} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -1910,7 +1910,7 @@ public final class UtilProperties implements Serializable {
         if (value == null || value instanceof Double) return (Double) value;
         else return asDouble((String) value, null);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1925,7 +1925,7 @@ public final class UtilProperties implements Serializable {
         }
         return result;
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1945,7 +1945,7 @@ public final class UtilProperties implements Serializable {
         else if (value instanceof BigInteger) return (BigInteger) value;
         else return asBigInteger((String) value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -1955,7 +1955,7 @@ public final class UtilProperties implements Serializable {
         if (value == null || value instanceof BigInteger) return (BigInteger) value;
         else return asBigInteger((String) value, null);
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1970,7 +1970,7 @@ public final class UtilProperties implements Serializable {
         }
         return result;
     }
-    
+
     /**
      * SCIPIO: Converts the given string value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
      * NOTE: This assumes the string is already trimmed.
@@ -1990,7 +1990,7 @@ public final class UtilProperties implements Serializable {
         else if (value instanceof BigDecimal) return (BigDecimal) value;
         else return asBigDecimal((String) value, defaultValue);
     }
-    
+
     /**
      * SCIPIO: Converts the given value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
      * NOTE: If string, this assumes the string is already trimmed.
@@ -2000,7 +2000,7 @@ public final class UtilProperties implements Serializable {
         if (value == null || value instanceof BigDecimal) return (BigDecimal) value;
         else return asBigDecimal((String) value, null);
     }
-    
+
     /** Custom ResourceBundle class. This class extends ResourceBundle
      * to add custom bundle caching code and support for the OFBiz custom XML
      * properties file format.

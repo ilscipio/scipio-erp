@@ -109,7 +109,7 @@ public class ServiceDispatcher {
                 Debug.logError(e, module);
             }
         }
-        
+
         // job manager needs to always be running, but the poller thread does not
         if (this.delegator != null) {
             try {
@@ -599,7 +599,7 @@ public class ServiceDispatcher {
         long timeToRun = System.currentTimeMillis() - serviceStartTime;
         long showServiceDurationThreshold = UtilProperties.getPropertyAsLong("service", "showServiceDurationThreshold", 0);
         long showSlowServiceThreshold = UtilProperties.getPropertyAsLong("service", "showSlowServiceThreshold", 1000);
-                
+
         if (Debug.timingOn() && timeToRun > showServiceDurationThreshold) {
             Debug.logTiming("Sync service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds", module);
         } else if (Debug.infoOn() && timeToRun > showSlowServiceThreshold) {

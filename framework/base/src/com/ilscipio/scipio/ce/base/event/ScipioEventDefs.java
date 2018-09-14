@@ -34,7 +34,7 @@ public class ScipioEventDefs<H> {
                 propPrefix);
 
         // component properties
-        List<EventDef<H>> allDefs = AdvancedPropertyUtil.readClassDefsFromAllComponents(staticMapDefs, ScipioEventDefs.EVENTS_PROPRES, 
+        List<EventDef<H>> allDefs = AdvancedPropertyUtil.readClassDefsFromAllComponents(staticMapDefs, ScipioEventDefs.EVENTS_PROPRES,
                 propPrefix, null, classLoader, new ClassDefFactory<EventDef<H>, H>() {
             @Override
             public EventDef<H> newInstance(Map<String, String> props, ClassLoader classLoader) {
@@ -48,7 +48,7 @@ public class ScipioEventDefs<H> {
                 }
             }
         });
-        
+
         StringBuilder sb = new StringBuilder("Scipio: Registered event handlers for " + EVENTS_PROPRES + " " + propPrefix + ":");
 
         if (allDefs.isEmpty()) {
@@ -60,7 +60,7 @@ public class ScipioEventDefs<H> {
             }
         }
         Debug.logInfo(sb.toString(), module);
-        
+
         return new ScipioEventDefs<H>(allDefs);
     }
 

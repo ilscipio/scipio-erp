@@ -36,17 +36,17 @@ import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.ScipioUrlRewriter;
 public class ReimplUrlRewriter extends ScipioUrlRewriter {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected final String urlConfPath;
     protected final Conf conf;
     protected final List<OutboundRule> supportedOutboundRules;
-    
+
     protected ReimplUrlRewriter(String urlConfPath, Conf conf) throws IOException {
         this.urlConfPath = urlConfPath;
         this.conf = conf;
         this.supportedOutboundRules = getSupportedOutboundRules(urlConfPath, conf);
     }
-    
+
     @SuppressWarnings("unchecked")
     protected static List<OutboundRule> getSupportedOutboundRules(String urlConfPath, Conf conf) {
         List<OutboundRule> filteredRules = new ArrayList<>();
@@ -69,19 +69,19 @@ public class ReimplUrlRewriter extends ScipioUrlRewriter {
         }
         return filteredRules;
     }
-    
+
     protected static boolean checkConditionsSupported(List<Condition> conds) {
         for(Condition cond : conds) {
             if (!checkConditionSupported(cond)) return false;
         }
         return true;
     }
-    
+
     protected static boolean checkConditionSupported(Condition cond) {
         // TODO: try to support context-path regexp, etc.
         return false;
     }
-    
+
     public static ReimplUrlRewriter loadConf(String urlConfPath) throws IOException {
         if (Debug.verboseOn()) {
             Debug.logVerbose("urlrewrite: loading " + urlConfPath, module);
@@ -89,18 +89,18 @@ public class ReimplUrlRewriter extends ScipioUrlRewriter {
         // load config
         URL confUrl;
         InputStream inputStream = null;
-        
+
         confUrl = FlexibleLocation.resolveLocation(urlConfPath);
 
         try {
             inputStream = confUrl.openStream();
             // attempt to retrieve from location other than local WEB-INF
-    
+
             if (inputStream == null) {
                 throw new IOException("Unable to find urlrewrite conf file at: " + urlConfPath);
             } else {
                 Conf conf = new Conf(null, inputStream, urlConfPath, confUrl.toString(), false);
-                
+
                 return new ReimplUrlRewriter(urlConfPath, conf);
             }
         } finally {
@@ -111,7 +111,7 @@ public class ReimplUrlRewriter extends ScipioUrlRewriter {
         }
 
     }
-    
+
     public String getUrlConfPath() {
         return urlConfPath;
     }
@@ -123,7 +123,7 @@ public class ReimplUrlRewriter extends ScipioUrlRewriter {
     public List<OutboundRule> getSupportedOutboundRules() {
         return supportedOutboundRules;
     }
-    
+
     /**
      * Use urlrewritefilter rules to convert urls - emulates urlrewritefilter - just like the original url would be
      * TODO: REVIEW: 2017: urlrewritefilter internals may have changed...
@@ -144,7 +144,7 @@ public class ReimplUrlRewriter extends ScipioUrlRewriter {
         }
 
         for (OutboundRule outboundRule : getSupportedOutboundRules()) {
-            
+
             // FIXME: even with fixes, this will still fail on complex rules with conditions
 
             Matcher m = Pattern.compile(outboundRule.getFrom()).matcher(rewriteUrl);
@@ -168,11 +168,11 @@ public class ReimplUrlRewriter extends ScipioUrlRewriter {
                     rewriteUrl = sb.toString();
                 }
             }
-            
+
             if (matched && outboundRule.isLast()) {
                 break;
             }
-            
+
             // invalid check
 //            if (rewriteUrl != null) {
 //                // means this rule has matched

@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Models the &lt;tree&gt; element.
- * 
+ *
  * @see <code>widget-tree.xsd</code>
  */
 @SuppressWarnings("serial")
@@ -68,14 +68,14 @@ public class ModelTree extends ModelWidget {
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -288,7 +288,7 @@ public class ModelTree extends ModelWidget {
     public FlexibleStringExpander getTrailNameExdr() {
         return trailNameExdr;
     }
-    
+
     /**
      * SCIPIO: Gets root actions.
      */
@@ -298,7 +298,7 @@ public class ModelTree extends ModelWidget {
 
     /**
      * Models the &lt;node&gt; element.
-     * 
+     *
      * @see <code>widget-tree.xsd</code>
      */
     public static class ModelNode extends ModelWidget {
@@ -659,7 +659,7 @@ public class ModelTree extends ModelWidget {
             }
             return showPeers;
         }
-        
+
         public List<ModelAction> getActions() {
             return actions;
         }
@@ -702,7 +702,7 @@ public class ModelTree extends ModelWidget {
 
         /**
          * Models the &lt;image&gt; element.
-         * 
+         *
          * @see <code>widget-tree.xsd</code>
          */
         public static class Image {
@@ -767,7 +767,7 @@ public class ModelTree extends ModelWidget {
 
         /**
          * Models the &lt;label&gt; element.
-         * 
+         *
          * @see <code>widget-tree.xsd</code>
          */
         public static final class Label {
@@ -823,7 +823,7 @@ public class ModelTree extends ModelWidget {
 
         /**
          * Models the &lt;link&gt; element.
-         * 
+         *
          * @see <code>widget-tree.xsd</code>
          */
         public static class Link {
@@ -1020,7 +1020,7 @@ public class ModelTree extends ModelWidget {
 
         /**
          * Models the &lt;sub-node&gt; element.
-         * 
+         *
          * @see <code>widget-tree.xsd</code>
          */
         public static class ModelSubNode extends ModelWidget {
@@ -1061,7 +1061,7 @@ public class ModelTree extends ModelWidget {
                 this.iteratorKey = this.rootNode.getName().concat(".").concat(this.nodeNameExdr.getOriginal())
                         .concat(".ITERATOR");
             }
-            
+
             @Override
             public void accept(ModelWidgetVisitor visitor) throws Exception {
                 visitor.visit(this);
@@ -1096,7 +1096,7 @@ public class ModelTree extends ModelWidget {
             public String getContainerLocation() { // SCIPIO: new
                 return rootNode != null ? rootNode.getFullLocationAndName() : null;
             }
-            
+
             @Override
             public String getWidgetType() { // SCIPIO: new
                 return "sub-node";
@@ -1107,7 +1107,7 @@ public class ModelTree extends ModelWidget {
         public String getContainerLocation() { // SCIPIO: new
             return modelTree != null ? modelTree.getFullLocationAndName() : null;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO: new
             return "node";
@@ -1118,10 +1118,10 @@ public class ModelTree extends ModelWidget {
     public String getContainerLocation() { // SCIPIO: new
         return location;
     }
-    
+
     @Override
     public String getWidgetType() { // SCIPIO: new
         return "tree";
     }
-    
+
 }

@@ -59,7 +59,7 @@ public class StringUtil {
         substitutionPatternMap.put(">", Pattern.compile("@gt", Pattern.LITERAL));
         return Collections.unmodifiableMap(substitutionPatternMap);
     }
-    
+
     private static final Pattern listElemDelim = Pattern.compile("\\,\\s"); // SCIPIO
 
     private StringUtil() {
@@ -379,7 +379,7 @@ public class StringUtil {
         if (s.startsWith("[") && s.endsWith("]")) {
             s = s.substring(1, s.length() - 1);
             // SCIPIO: Pre-compiled delim Pattern, because more than 2 chars (not optimized by String.split)
-            //String[] entries = s.split("\\,\\s"); 
+            //String[] entries = s.split("\\,\\s");
             String[] entries = listElemDelim.split(s);
             // SCIPIO: NOTE: Can't safely do Arrays.asList from here, because throws exception if tries to add items,
             // and can't assume a caller won't try (old interface); but assume few callers do that and set capacity tight

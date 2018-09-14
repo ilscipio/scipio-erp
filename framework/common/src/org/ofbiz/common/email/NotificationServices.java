@@ -48,7 +48,7 @@ import freemarker.template.TemplateException;
  * via email.
  * <p>
  * To use the NotificationService, a message specific service should be
- * defined for a particular 
+ * defined for a particular
  * <a href="http://freemarker.sourceforge.net/docs/dgui_quickstart_template.html">
  * Freemarker Template</a> mapping the required fields of the template to the
  * required attributes of the service.
@@ -70,7 +70,7 @@ import freemarker.template.TemplateException;
  * }
  * </pre>
  * <p>
- * An optional parameter available to all message templates is 
+ * An optional parameter available to all message templates is
  * <code>baseUrl</code> which can either be specified when the service is
  * invoked or let the <code>NotificationService</code> attempt to resolve it
  * as best it can, see {@link #setBaseUrl(Delegator, String, Map) setBaseUrl(Map)}
@@ -252,11 +252,11 @@ public class NotificationServices {
      * SCIPIO: This now also puts the following extra fields in the context:
      * <ul>
      * <li>baseWebSiteId (2015-10-16): the webSiteId, with extra prefix to prevent conflicts
-     * <li>baseWebappPath (2018-08-01): the combination of webappPathPrefix+contextRoot for 
+     * <li>baseWebappPath (2018-08-01): the combination of webappPathPrefix+contextRoot for
      *                                  the given website (this is simply the context root if
      *                                  webappPathPrefix is not explicitly configured)
      * </ul>
-     * 
+     *
      * @param context   The context to check and, if necessary, set the
      * <code>baseUrl</code>.
      */

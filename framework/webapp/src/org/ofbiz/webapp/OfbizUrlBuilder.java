@@ -439,7 +439,7 @@ public final class OfbizUrlBuilder {
      * <p>
      * SCIPIO: 2018-08-01: If uri is null, this only appends up to the servlet path, with no trailing slash.
      * If uri is empty string, does the same but appends trailing slash.
-     * 
+     *
      * @param buffer
      * @param uri
      * @throws WebAppConfigurationException

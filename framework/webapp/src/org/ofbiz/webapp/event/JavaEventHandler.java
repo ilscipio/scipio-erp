@@ -110,7 +110,7 @@ public class JavaEventHandler implements EventHandler {
                 }
                 rollback = true;
             }
-            
+
             if (t != null) {
                 Debug.logError(t, "Problems Processing Event", module);
                 throw new EventHandlerException("Problems processing event: " + t.toString(), t);
@@ -119,7 +119,7 @@ public class JavaEventHandler implements EventHandler {
                 throw new EventHandlerException("Problems processing event: " + e.toString(), e);
             }
         } catch (Exception e) {
-            
+
             // SCIPIO: Trigger transaction abort if configured
             if ("on-any-error".equals(event.abortTransaction) || "on-exception".equals(event.abortTransaction)) {
                 try {
@@ -129,7 +129,7 @@ public class JavaEventHandler implements EventHandler {
                 }
                 rollback = true;
             }
-            
+
             Debug.logError(e, "Problems Processing Event", module);
             throw new EventHandlerException("Problems processing event: " + e.toString(), e);
         } finally {

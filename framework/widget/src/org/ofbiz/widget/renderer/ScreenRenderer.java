@@ -90,7 +90,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
     // SCIPIO: these get set in context to indicate render init has been run for the context.
     public static final String WEBAPP_RENDER_INIT_GUARD = "_scpRdrInitWebappRun"; // stored as Boolean
     public static final String LOCAL_RENDER_INIT_GUARDS = "_scpRdrInitLocalRuns"; // stored as a Set
-    
+
     protected RenderContextFetcher contextFetcher; // SCIPIO: 2017-03-09: NEW: this can now attempt to fetch context and writer dynamically, if programmed
     protected ScreenStringRenderer screenStringRenderer;
     protected int renderFormSeqNumber = 0;
@@ -99,7 +99,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         this.contextFetcher = new SimpleContextFetcher(writer, context);
         this.screenStringRenderer = screenStringRenderer;
     }
-    
+
     /**
      * SCIPIO: new constructor that fetches context dynamically.
      */
@@ -118,17 +118,17 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
     public static ScreenRenderer makeWithEnvAwareFetching(Appendable writer, MapStack<String> context, ScreenStringRenderer screenStringRenderer) {
         return new ScreenRenderer(new FtlContextFetcher.FtlWriterOnlyFetcher(writer, context), screenStringRenderer);
     }
-    
+
     public static RenderContextFetcher makeEnvAwareContextFetcher(Appendable writer, MapStack<String> context) {
         // FIXME: CURRENTLY ONLY SUPPORT FTL ENV
         return new FtlContextFetcher.FtlWriterOnlyFetcher(writer, context);
     }
-    
+
     /**
      * Renders the named screen using the render environment configured when this ScreenRenderer was created.
      * <p>
      * SCIPIO: modified for asString boolean which returns as string instead of going straight to writer.
-     * 
+     *
      * @param combinedName A combination of the resource name/location for the screen XML file and the name of the screen within that file, separated by a pound sign ("#"). This is the same format that is used in the view-map elements on the controller.xml file.
      * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
      * @throws IOException
@@ -142,7 +142,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         return this.render(resourceName, screenName, asString, getContext(), getWriter());
         //return "";
     }
-    
+
     protected String render(String combinedName, boolean asString, MapStack<String> context, Appendable writer) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         String resourceName = ScreenFactory.getResourceNameFromCombined(combinedName);
         String screenName = ScreenFactory.getScreenNameFromCombined(combinedName);
@@ -150,12 +150,12 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         return this.render(resourceName, screenName, asString, context, writer);
         //return "";
     }
-    
+
     /**
      * Renders the named screen using the render environment configured when this ScreenRenderer was created.
      * <p>
      * SCIPIO: now delegating. Renders directly to writer.
-     * 
+     *
      * @param combinedName A combination of the resource name/location for the screen XML file and the name of the screen within that file, separated by a pound sign ("#"). This is the same format that is used in the view-map elements on the controller.xml file.
      * @throws IOException
      * @throws SAXException
@@ -168,11 +168,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         return this.render(resourceName, screenName, false);
         //return "";
     }
-    
+
     /**
      * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
      * and returns the result as a string (instead of directly to writer).
-     * 
+     *
      * @param combinedName A combination of the resource name/location for the screen XML file and the name of the screen within that file, separated by a pound sign ("#"). This is the same format that is used in the view-map elements on the controller.xml file.
      * @throws IOException
      * @throws SAXException
@@ -196,11 +196,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
-     */    
+     */
     public String render(String resourceName, String screenName) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         return render(resourceName, screenName, false);
     }
-    
+
     /**
      * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
      * and returns the result as a string (instead of directly to writer).
@@ -210,11 +210,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
-     */    
+     */
     public String renderAsString(String resourceName, String screenName) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         return render(resourceName, screenName, true);
     }
-       
+
     /**
      * Renders the named screen using the render environment configured when this ScreenRenderer was created.
      * <p>
@@ -230,7 +230,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
     public String render(String resourceName, String screenName, boolean asString) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         return render(resourceName, screenName, asString, getContext(), getWriter());
     }
-    
+
     /**
      * Renders the named screen using the render environment configured when this ScreenRenderer was created.
      * <p>
@@ -291,7 +291,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         }
         return "";
     }
-    
+
     /**
      * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
      * and (unlike the other methods) by default protects the context by pushing it before/after the render,
@@ -338,11 +338,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
             }
         }
     }
-    
+
     public String renderScoped(String resourceName, String screenName, Boolean asString, Boolean shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         return renderScoped(resourceName, screenName, asString, shareScope, null);
     }
-    
+
     /**
      * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
      * and (unlike the other methods) by default protects the context by pushing it before/after the render,
@@ -364,13 +364,13 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
     public String renderScopedGen(String resourceName, String screenName, Object asString, Object shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         return renderScoped(resourceName, screenName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope), ctxVars);
     }
-    
+
     public String renderScopedGen(String resourceName, String screenName, Object asString, Object shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         return renderScoped(resourceName, screenName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
     }
-    
+
     /**
-     * SCIPIO: SPECIAL INITIAL/TOP SCREEN INITIALIZATION. 
+     * SCIPIO: SPECIAL INITIAL/TOP SCREEN INITIALIZATION.
      * <p>
      * Should be run at the beginning of every screen render, just at the moment the top screen
      * render is about to start.
@@ -378,9 +378,9 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
     public void checkRunRenderInit(String resourceName) {
         checkRunRenderInit(resourceName, getContext());
     }
-    
+
     /**
-     * SCIPIO: SPECIAL INITIAL/TOP SCREEN INITIALIZATION. 
+     * SCIPIO: SPECIAL INITIAL/TOP SCREEN INITIALIZATION.
      * <p>
      * Should be run at the beginning of every screen render, just at the moment the top screen
      * render is about to start.
@@ -389,15 +389,15 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         if (!Boolean.TRUE.equals(context.get(WEBAPP_RENDER_INIT_GUARD))) {
             // run webapp init first (more general)
             runWebappRenderInitActions(context, resourceName);
-            
+
             context.put(WEBAPP_RENDER_INIT_GUARD, Boolean.TRUE);
         }
-        
+
         Set<String> localRunGuards = UtilGenerics.checkSet(context.get(LOCAL_RENDER_INIT_GUARDS));
         if (localRunGuards == null || !localRunGuards.contains(resourceName)) {
             // run local screens init last (more specific)
             runLocalRenderInitActions(context, resourceName);
-            
+
             if (localRunGuards == null) {
                 localRunGuards = new HashSet<>();
                 localRunGuards.add(resourceName);
@@ -405,7 +405,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
             }
         }
     }
-     
+
 
     public void setRenderFormUniqueSeq (int renderFormSeqNumber) {
         this.renderFormSeqNumber = renderFormSeqNumber;
@@ -418,7 +418,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
     public void populateBasicContext(Map<String, Object> parameters, Delegator delegator, LocalDispatcher dispatcher, Security security, Locale locale, GenericValue userLogin) {
         populateBasicContext(getContext(), this, parameters, delegator, dispatcher, security, locale, userLogin);
     }
-    
+
     // SCIPIO: new overload
     protected void populateBasicContext(MapStack<String> context, Map<String, Object> parameters, Delegator delegator, LocalDispatcher dispatcher, Security security, Locale locale, GenericValue userLogin) {
         populateBasicContext(context, this, parameters, delegator, dispatcher, security, locale, userLogin);
@@ -519,11 +519,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         TaglibFactory JspTaglibs = new TaglibFactory(servletContext);
         context.put("JspTaglibs", JspTaglibs);
         context.put("requestParameters",  UtilHttp.getParameterMap(request));
-       
+
         ServletContextHashModel ftlServletContext = (ServletContextHashModel) request.getAttribute("ftlServletContext");
         context.put("Application", ftlServletContext);
         context.put("Request", context.get("requestAttributes"));
- 
+
         // this is a dummy object to stand-in for the JPublish page object for backward compatibility
         // SCIPIO: DEPRECATED - TODO: REMOVE: this is long deprecated (NOTE: if remove here, should remove all other references throughout renderer)
         context.put("page", new HashMap<String, Object>());
@@ -593,28 +593,28 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
 
         // SCIPIO: set the request method for easy access. it is UPPERCASE.
         context.put("requestMethod", request.getMethod().toUpperCase());
-        
+
         // SCIPIO: 2017-05-03: some new special request parameters/attributes for potential use by renderers
         WidgetRenderTargetExpr.populateRenderTargetVars(context);
-        
+
         // SCIPIO: 2017-05-19: some new special request parameters/attributes for potential use by renderers
         ViewAsJsonUtil.copyRenderOutVarsToCtx(request, context);
-        
+
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);
-        
+
         // SCIPIO: General context scripts and per-webapp context scripts
         populateContextScripts(context);
         populateWebappContextScripts(context, request, response, servletContext);
-        
+
         // to preserve these values, push the MapStack
         context.push();
     }
-    
+
     public MapStack<String> getContext() {
         return contextFetcher.getContext(); // SCIPIO: now dynamic
     }
-    
+
     /**
      * SCIPIO: returns the writer used when asString is false in render calls.
      */
@@ -639,16 +639,16 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
 
     public void populateContextForService(DispatchContext dctx, Map<String, Object> serviceContext) {
         MapStack<String> context = getContext();
-        
+
         this.populateBasicContext(context, serviceContext, dctx.getDelegator(), dctx.getDispatcher(),
                 dctx.getSecurity(), (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin")); // SCIPIO: pass main context
-        
+
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);
-        
+
         populateContextScripts(serviceContext);
     }
-    
+
     /**
      * SCIPIO: Calls scripts defined in widgetContextScripts.properties to help populate root context.
      * <p>
@@ -677,7 +677,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
                     if (Debug.verboseOn()) {
                         Debug.logVerbose("Running widget context script " + scriptLocation, module);
                     }
-                    
+
                     String location = WidgetWorker.getScriptLocation(scriptLocation);
                     String method = WidgetWorker.getScriptMethodName(scriptLocation);
                     ScriptUtil.executeScript(location, method, context);
@@ -692,7 +692,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
      * Should be called after rest of context populated and scripts will fish out what they need out of the context,
      * and after #populateContextScripts, because these are more specific.
      */
-    public static void populateWebappContextScripts(Map<String, Object> context, 
+    public static void populateWebappContextScripts(Map<String, Object> context,
             HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         // first run generic groovy/minilang script
         String fullLoc = getWebappContextScriptLocation(request, servletContext);
@@ -702,7 +702,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
             ScriptUtil.executeScript(location, method, context);
         }
     }
-    
+
     /**
      * SCIPIO: Return webapp-specific context script location based on web.xml configuration:
      * renderContextScriptLocation init-parameter.
@@ -714,7 +714,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         }
         return null;
     }
-    
+
     /**
      * SCIPIO: Runs webapp-specific render init actions.
      */
@@ -726,11 +726,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
 
         // next run screen-based one
-        ModelLocation modelLoc = getRenderInitScriptScreenLocation(request, servletContext);        
+        ModelLocation modelLoc = getRenderInitScriptScreenLocation(request, servletContext);
         if (modelLoc.hasResource()) {
             ModelScreen scriptScreen;
             try {
-                scriptScreen = ScreenFactory.getScreenFromLocationOrNull(modelLoc.getResource(), 
+                scriptScreen = ScreenFactory.getScreenFromLocationOrNull(modelLoc.getResource(),
                         modelLoc.getName());
             } catch (Exception e) {
                 Debug.logError(e, "Could not resolve render init script screen location: " + modelLoc, module);
@@ -745,7 +745,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
             }
         }
     }
-    
+
     /**
      * SCIPIO: Return render init script screen location based on web.xml configuration:
      * renderInitScriptScreenLocation init-parameter, with fallback on mainDecoratorLocation.
@@ -756,7 +756,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         if (modelLoc != null) { // NOTE: no need for synchronization; getAttribute is thread safe and races don't matter
             return modelLoc;
         }
-        
+
         String strLoc = (String) servletContext.getAttribute("renderInitScriptScreenLocation");
         if (strLoc != null && !strLoc.isEmpty()) {
             if (!strLoc.contains("#")) { // is name only
@@ -773,7 +773,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
                 modelLoc = ModelLocation.fromResAndName(strLoc, "webapp-common-actions");
             }
         }
-        
+
         if (modelLoc == null) {
             modelLoc = ModelLocation.EMPTY_LOCATION;
         }
@@ -781,7 +781,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         servletContext.setAttribute("_RIS_screenModelLoc", modelLoc);
         return modelLoc;
     }
-    
+
     /**
      * SCIPIO: Runs local render init actions. NOTE: can be more than one of these run in a request if
      * screens from multiple webapps are involved.

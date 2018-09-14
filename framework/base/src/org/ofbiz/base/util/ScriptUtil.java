@@ -74,12 +74,12 @@ public final class ScriptUtil {
     private static ScriptHelperFactory helperFactory = null;
     /** A set of script names - derived from the JSR-223 scripting engines. */
     public static final Set<String> SCRIPT_NAMES;
-    /** 
+    /**
      * SCIPIO: New (2017-01-30) static ScriptEnginerManager instance, instead of recreating at every invocation.
      * NOTE: For this to be safe, we MUST use the static ClassLoader, and NOT the thread context classloader,
      * because the latter may be a Tomcat webapp classloader for an arbitrary webapp.
      * NOTE: This singleton means it is not possible for a webapp to provide its own script engines, but generally
-     * speaking, this was never supported or tested in ofbiz; to support webapp-specific languages with singleton instances, 
+     * speaking, this was never supported or tested in ofbiz; to support webapp-specific languages with singleton instances,
      * there would probably have to be a ScriptEngineManager cached in every ServletContext as attribute (TODO?).
      */
     private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager(ScriptUtil.class.getClassLoader());
@@ -87,7 +87,7 @@ public final class ScriptUtil {
     static {
         // SCIPIO: sanity check
         Debug.logInfo("ScriptUtil engine manager class loader: " + ScriptUtil.class.getClassLoader().getClass().getName(), module);
-        
+
         Set<String> writableScriptNames = new HashSet<>();
         ScriptEngineManager manager = getScriptEngineManager();
         List<ScriptEngineFactory> engines = manager.getEngineFactories();
@@ -132,7 +132,7 @@ public final class ScriptUtil {
 
     /**
      * Returns a compiled script.
-     * 
+     *
      * @param filePath Script path and file name.
      * @return The compiled script, or <code>null</code> if the script engine does not support compilation.
      * @throws IllegalArgumentException
@@ -179,7 +179,7 @@ public final class ScriptUtil {
 
     /**
      * Returns a compiled script.
-     * 
+     *
      * @param language
      * @param script
      * @return The compiled script, or <code>null</code> if the script engine does not support compilation.
@@ -227,7 +227,7 @@ public final class ScriptUtil {
      * <p>If a <code>CompiledScript</code> instance is to be shared by multiple threads, then
      * each thread must create its own <code>ScriptContext</code> and pass it to the
      * <code>CompiledScript</code> eval method.</p>
-     * 
+     *
      * @param context
      * @return
      */
@@ -251,7 +251,7 @@ public final class ScriptUtil {
      * <p>If a <code>CompiledScript</code> instance is to be shared by multiple threads, then
      * each thread must create its own <code>ScriptContext</code> and pass it to the
      * <code>CompiledScript</code> eval method.</p>
-     * 
+     *
      * @param context
      * @param protectedKeys
      * @return
@@ -280,7 +280,7 @@ public final class ScriptUtil {
 
      /**
      * Executes a script <code>String</code> and returns the result.
-     * 
+     *
      * @param language
      * @param script
      * @param scriptClass
@@ -318,7 +318,7 @@ public final class ScriptUtil {
 
     /**
      * Executes a compiled script and returns the result.
-     * 
+     *
      * @param script Compiled script.
      * @param functionName Optional function or method to invoke.
      * @param scriptContext Script execution context.
@@ -345,7 +345,7 @@ public final class ScriptUtil {
 
     /**
      * Executes the script at the specified location and returns the result.
-     * 
+     *
      * @param filePath Script path and file name.
      * @param functionName Optional function or method to invoke.
      * @param context Script execution context.
@@ -358,7 +358,7 @@ public final class ScriptUtil {
 
     /**
      * Executes the script at the specified location and returns the result.
-     * 
+     *
      * @param filePath Script path and file name.
      * @param functionName Optional function or method to invoke.
      * @param context Script execution context.
@@ -383,7 +383,7 @@ public final class ScriptUtil {
 
     /**
      * Executes the script at the specified location and returns the result.
-     * 
+     *
      * @param filePath Script path and file name.
      * @param functionName Optional function or method to invoke.
      * @param scriptContext Script execution context.
@@ -532,7 +532,7 @@ public final class ScriptUtil {
             return bindings.values();
         }
     }
-    
+
     /**
      * SCIPIO: Performs String.trim() on every line of script. Completely flattens the code.
      */
@@ -557,14 +557,14 @@ public final class ScriptUtil {
         }
         return sb.toString();
     }
-    
+
     /**
-     * SCIPIO: Applies global configurations to the given ScriptEngine, if any, for this invocation/thread. 
+     * SCIPIO: Applies global configurations to the given ScriptEngine, if any, for this invocation/thread.
      * Should be called by all ScriptUtil methods every time a new ScriptEngine is gotten
      * from the ScriptEngineManager.
      * <p>
      * NOTE: This is safe only with the assumption that the ScriptEngine instance
-     * passed was newly created for this thread (and not a singleton instance). 
+     * passed was newly created for this thread (and not a singleton instance).
      * At current time (2017-01-27), this was already being assumed (implied by the presence of
      * calls such as <code>ScriptEngine.setContext</code>, above),
      * and is known to be true for GroovyScriptEngineImpl (see Groovy source code),
@@ -574,7 +574,7 @@ public final class ScriptUtil {
     private static ScriptEngine configureScriptEngineForInvoke(ScriptEngine scriptEngine) {
         return configureScriptEngine(scriptEngine);
     }
-    
+
     /**
      * SCIPIO: Configures the given script engine with any non-default settings needed.
      * <p>
@@ -590,7 +590,7 @@ public final class ScriptUtil {
         }
         return scriptEngine;
     }
-    
+
     /**
      * SCIPIO: Returns an appropriate {@link javax.script.ScriptEngineManager} for current
      * thread, with ofbiz configuration (if any). Abstracts the creation and selection of the manager.

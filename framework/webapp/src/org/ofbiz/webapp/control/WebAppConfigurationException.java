@@ -20,7 +20,7 @@ package org.ofbiz.webapp.control;
 
 /**
  * Web application configuration exception.
- * 
+ *
  * @see <code>site-conf.xsd</code>
  */
 @SuppressWarnings("serial")

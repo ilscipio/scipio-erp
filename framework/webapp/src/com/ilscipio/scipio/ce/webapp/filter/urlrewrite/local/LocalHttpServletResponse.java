@@ -26,19 +26,19 @@ import org.ofbiz.base.util.Debug;
  */
 @SuppressWarnings({ "all", "deprecation" })
 public class LocalHttpServletResponse implements HttpServletResponse {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final LocalServletContainer container;
-    
+
     protected String charset;
     protected String contentType;
 
     protected Locale locale;
     protected int status = 200;
-    
+
     protected Map<String, List<String>> headers = new HashMap<>();
-    
+
     public LocalHttpServletResponse(LocalServletContainer container, String charset, String contentType,
             Locale locale) {
         this.container = container;

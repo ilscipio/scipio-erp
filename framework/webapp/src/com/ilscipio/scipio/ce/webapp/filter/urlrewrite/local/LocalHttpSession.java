@@ -21,11 +21,11 @@ import org.ofbiz.base.util.Debug;
  */
 @SuppressWarnings({ "all", "deprecation" })
 public class LocalHttpSession implements HttpSession {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String DUMMY_SESSION_ID = "123456789";
-    
+
     protected final LocalServletContainer container;
 
     protected final ServletContext servletContext;

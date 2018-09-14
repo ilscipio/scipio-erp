@@ -55,7 +55,7 @@ public class LocalServletContainer {
     protected final LocalHttpServletResponse response;
     protected final LocalHttpSession session;
     protected final LocalServletContext servletContext;
-    
+
     protected LocalServletContainer(FullWebappInfo webappInfo, Locale locale, String requestURL, String servletPath,
             Map<String, Object> reqAttribs, Map<String, String[]> headers, Map<String, String[]> reqParams) throws MalformedURLException {
         this.webappInfo = webappInfo;
@@ -63,21 +63,21 @@ public class LocalServletContainer {
         Map<String, String> scInitParams = new HashMap<>(webappInfo.getWebXml().getContextParams());
         LocalServletContext servletContext = new LocalServletContext(this, null, scInitParams);
         this.servletContext = servletContext;
-        
+
         LocalHttpSession session = new LocalHttpSession(this, servletContext, null, null);
         this.session = session;
-        
-        LocalHttpServletRequest request = new LocalHttpServletRequest(this, session, servletContext, 
+
+        LocalHttpServletRequest request = new LocalHttpServletRequest(this, session, servletContext,
                 requestURL, servletPath, reqAttribs, reqParams, headers, locale, "utf-8", "text/html; charset=UTF-8");
         this.request = request;
-        
+
         LocalHttpServletResponse response = new LocalHttpServletResponse(this, "utf-8", "text/html; charset=UTF-8", locale);
         this.response = response;
     }
-    
+
     public static LocalServletContainer fromRequest(FullWebappInfo webappInfo,
             HttpServletRequest request, HttpServletResponse response) {
-        
+
         // re-emulate context here, backward - easier than making a ton of overloads
         Map<String, Object> context = new HashMap<>();
 
@@ -92,7 +92,7 @@ public class LocalServletContainer {
         if (session != null) {
             context.put("userLogin", session.getAttribute("userLogin"));
         }
-        
+
         // TODO: REVIEW: must transfer headers for X-Forwarded-xxx at least...
         // but the others might not make sense for the target webapp!!
         Map<String, String[]> headers = new HashMap<>();
@@ -105,21 +105,21 @@ public class LocalServletContainer {
                 headers.put(headerName, headerValues.toArray(new String[headerValues.size()]));
             }
         }
-        
+
         // TODO: REVIEW: parameters? attributes? do they make sense to transfer over?
-        
+
         return fromContext(webappInfo, context, RenderEnvType.WEBAPP, null, null, headers);
     }
-    
+
     public static LocalServletContainer fromContext(FullWebappInfo webappInfo,
             Map<String, Object> context, RenderEnvType renderEnvType) {
         return fromContext(webappInfo, context, renderEnvType, null, null, null);
     }
-    
+
     public static LocalServletContainer fromContext(FullWebappInfo webappInfo,
             Map<String, Object> context, RenderEnvType renderEnvType, Map<String, Object> reqAttribs,
             Map<String, String[]> reqParams, Map<String, String[]> headers) {
-        
+
         Locale locale = (Locale) context.get("locale");
         if (locale == null) {
             Debug.logWarning("No locale found in context for LocalServletContainer; using default", module);
@@ -136,7 +136,7 @@ public class LocalServletContainer {
         } catch (Exception e) {
             throw new IllegalStateException("Could not build a dummy URL for webapp " + webappInfo);
         }
-        
+
         LocalServletContainer container;
         try {
             container = new LocalServletContainer(webappInfo, locale, requestUrl.toString(), servletPath, reqAttribs, headers, reqParams);
@@ -144,13 +144,13 @@ public class LocalServletContainer {
             throw new IllegalStateException("Could not build a valid dummy URL for webapp " + webappInfo + ": " + requestUrl);
         }
         container.setupFromOfbizContext(context, renderEnvType);
-        
+
         // set this for UrlFilterHelper
         container.getRequest().setAttribute(UrlFilterHelper.URLREWRITE_CONF_WEBAPP, webappInfo);
-        
+
         return container;
     }
-    
+
     /**
      * APPROXIMATION of ofbiz setup of request, session and servlet context.
      */
@@ -159,13 +159,13 @@ public class LocalServletContainer {
         setupServletContextContextFilter();
         setupRequestContextFilter();
         setupRequestControlServlet();
-        
+
         // override these in request and session if present...
         Delegator delegator = (Delegator) context.get("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
         Security security = (Security) context.get("security");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         if (delegator != null) {
             request.setAttribute("delegator", delegator);
             session.setAttribute("delegatorName", delegator.getDelegatorName());
@@ -178,21 +178,21 @@ public class LocalServletContainer {
         }
         session.setAttribute("userLogin", userLogin);
     }
-    
+
     protected void setupServletContextCatalina() {
         String serverId = (String) getServletContext().getAttribute("_serverId");
         if (serverId == null) {
             getServletContext().setAttribute("_serverId", getWebappInfo().getServerId());
         }
-        
+
         // TODO?: could be more needed...
     }
 
     protected void setupServletContextContextFilter() {
         // FIXME massive copy paste for now, due to old ContextFilter code
-        
+
         LocalServletContainer config = this; // hack
-        
+
         Enumeration<String> initParamEnum = UtilGenerics.cast(config.getServletContext().getInitParameterNames());
         while (initParamEnum.hasMoreElements()) {
             String initParamName = initParamEnum.nextElement();
@@ -206,7 +206,7 @@ public class LocalServletContainer {
             serverId = config.getServletContext().getInitParameter("ofbizServerName");
             config.getServletContext().setAttribute("_serverId", serverId);
         }
-        
+
         Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
         if (delegator == null) {
             String delegatorName = servletContext.getInitParameter("entityDelegatorName");
@@ -221,7 +221,7 @@ public class LocalServletContainer {
                 Debug.logError("[ContextFilter.init] ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"", module);
             }
         }
-        
+
         Security security = (Security) config.getServletContext().getAttribute("security");
         if (security == null) {
             delegator = (Delegator) config.getServletContext().getAttribute("delegator");
@@ -238,19 +238,19 @@ public class LocalServletContainer {
                 Debug.logError("An invalid (null) Security object has been set in the servlet context.", module);
             }
         }
-        
+
         LocalDispatcher dispatcher = (LocalDispatcher) servletContext.getAttribute("dispatcher");
         if (dispatcher == null) {
             dispatcher = ContextFilter.makeWebappDispatcher(servletContext, delegator);
             servletContext.setAttribute("dispatcher", dispatcher);
         }
     }
-    
-    protected void setupRequestContextFilter() { 
+
+    protected void setupRequestContextFilter() {
         LocalServletContainer config = this; // hack
         LocalHttpServletRequest httpRequest = request;
-        
-        
+
+
         // set the ServletContext in the request for future use
         httpRequest.setAttribute("servletContext", config.getServletContext());
 
@@ -344,7 +344,7 @@ public class LocalServletContainer {
         request.setAttribute("security", security);
 
         request.setAttribute("_REQUEST_HANDLER_", requestHandler);
-        
+
 
         // setup some things that should always be there
         UtilHttp.setInitialRequestInfo(request);
@@ -369,15 +369,15 @@ public class LocalServletContainer {
     public LocalHttpServletResponse getResponse() {
         return response;
     }
-    
+
     public LocalHttpSession getSession() {
         return session;
-    }    
-    
+    }
+
     public LocalServletContext getServletContext() {
         return servletContext;
     }
-    
+
     protected RequestHandler getRequestHandler() {
         return RequestHandler.getRequestHandler(getServletContext());
     }

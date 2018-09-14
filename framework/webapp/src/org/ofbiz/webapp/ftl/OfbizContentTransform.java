@@ -63,22 +63,22 @@ public class OfbizContentTransform implements TemplateTransformModel {
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
         boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
         final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
-        
+
         final String imgSize = TransformUtil.getStringArg(args, "variant", rawParams);
         final String uri = TransformUtil.getStringArg(args, "uri", rawParams); // SCIPIO: uri as alternative to nested
         final Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode"); // SCIPIO: new
         final Object ctxPrefixObj = TransformUtil.getBooleanOrStringArg(args, "ctxPrefix", null, false, rawParams); // SCIPIO: new
-        
+
         // SCIPIO: autoVariant params: added 2017-08-08
         final String autoVariant = TransformUtil.getStringNonEscapingArg(args, "autoVariant");
         final Integer imgWidth = TransformUtil.getIntegerArg(args, "width");
         final Integer imgHeight = TransformUtil.getIntegerArg(args, "height");
         final String imgVariantCfg = TransformUtil.getStringNonEscapingArg(args, "variantCfg");
-        
+
         final String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams);
         final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO
         final String type = TransformUtil.getStringNonEscapingArg(args, "type");
-        
+
         return new Writer(out) {
             @Override
             public void write(char cbuf[], int off, int len) {
@@ -96,7 +96,7 @@ public class OfbizContentTransform implements TemplateTransformModel {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     HttpServletRequest request = ContextFtlUtil.getRequest(env);
                     HttpServletResponse response = ContextFtlUtil.getResponse(env);
-          
+
                     String ctxPrefix = getContentPathPrefix(ctxPrefixObj, rawParams, env); // SCIPIO: new
 
                     String srcUri = UtilValidate.isNotEmpty(uri) ? uri : buf.toString();
@@ -104,17 +104,17 @@ public class OfbizContentTransform implements TemplateTransformModel {
                     // SCIPIO: delegated to our new methods
                     String url;
                     if (request != null) {
-                        url = ContentRequestWorker.makeContentLink(request, response, srcUri, imgSize, webSiteId, 
+                        url = ContentRequestWorker.makeContentLink(request, response, srcUri, imgSize, webSiteId,
                             ctxPrefix, urlDecode, strict, secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
                     } else {
                         Map<String, Object> context = ContextFtlUtil.getContext(env);
                         if (context != null) {
-                            url = ContentRequestWorker.makeContentLink(context, srcUri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, 
+                            url = ContentRequestWorker.makeContentLink(context, srcUri, imgSize, webSiteId, ctxPrefix, urlDecode, strict,
                                     secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
                         } else {
                             Debug.logWarning("@ofbizContentUrl: no request or render context available - unusual context!", module);
                             // try anyway (original request-based method in ContentUrlTag will catch it)
-                            url = ContentRequestWorker.makeContentLink(null, null, srcUri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, 
+                            url = ContentRequestWorker.makeContentLink(null, null, srcUri, imgSize, webSiteId, ctxPrefix, urlDecode, strict,
                                     secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
                         }
                     }
@@ -126,17 +126,17 @@ public class OfbizContentTransform implements TemplateTransformModel {
             }
         };
     }
-    
+
     /**
      * Returns the contextPathPrefix from the environment or request
      * or null if not found. May be empty string.
-     * @throws TemplateModelException 
+     * @throws TemplateModelException
      */
     public static String getContentPathPrefix(boolean nonEscaping, Environment env) throws TemplateModelException {
         TemplateModel model = TransformUtil.getFtlContextGlobalVar("contentPathPrefix", env);
         if (model instanceof TemplateScalarModel) {
             return LangFtlUtil.getAsString((TemplateScalarModel) model, nonEscaping);
-        } 
+        }
         HttpServletRequest request = ContextFtlUtil.getRequest(env);
         if (request != null) {
             Object res = request.getAttribute("contentPathPrefix");
@@ -146,12 +146,12 @@ public class OfbizContentTransform implements TemplateTransformModel {
         }
         return null;
     }
-    
+
     /**
-     * Returns the string passed in ctxPrefix or the contextPathPrefix from the environment or request, 
+     * Returns the string passed in ctxPrefix or the contextPathPrefix from the environment or request,
      * bypassing auto screen escaping,
      * or null if not found. May be empty string.
-     * @throws TemplateModelException 
+     * @throws TemplateModelException
      */
     public static String getContentPathPrefix(Object ctxPrefixObj, boolean nonEscaping, Environment env) throws TemplateModelException {
         String ctxPrefix = null;

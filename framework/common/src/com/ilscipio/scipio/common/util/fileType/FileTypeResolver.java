@@ -35,32 +35,32 @@ import com.ilscipio.scipio.common.util.fileType.video.VideoFileTypeResolver;
  * and non-strict types. non-strict means all video types named "video/*" are allowed, and such.
  */
 public abstract class FileTypeResolver {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static final String IMAGE_TYPE = "IMAGE_OBJECT";
     public static final String VIDEO_TYPE = "VIDEO_OBJECT";
     public static final String AUDIO_TYPE = "AUDIO_OBJECT";
     public static final String DOCUMENT_TYPE = "DOCUMENT_OBJECT";
 
     private static final ResolverConfig defaultResolverConfig = ResolverConfig.fromSettings("general");
-    
+
     protected final ResolverConfig resolverConfig;
     protected final Delegator delegator;
-    
+
     protected FileTypeResolver(Delegator delegator, ResolverConfig resolverConfig) {
         this.delegator = delegator;
         this.resolverConfig = resolverConfig;
     }
-    
+
     public static ResolverConfig getDefaultResolverConfig() {
         return defaultResolverConfig;
     }
-    
+
     public static FileTypeResolver getInstance(Delegator delegator, String providedType) {
         return getInstance(delegator, providedType, getDefaultResolverConfig());
     }
-    
+
     public static FileTypeResolver getInstance(Delegator delegator, String providedType, ResolverConfig resolverConfig) {
         if (providedType.equals(IMAGE_TYPE)) {
             return ImageFileTypeResolver.getInstance(delegator, resolverConfig);
@@ -78,8 +78,8 @@ public abstract class FileTypeResolver {
     public ResolverConfig getResolverConfig() {
         return new ResolverConfig(resolverConfig); // immutable
     }
-    
-    
+
+
     /**
      * Finds media type and returns a string in xxx/yyy format similar to mime-type (usually will be a valid mime-type).
      * If unsupported, returns null.
@@ -119,7 +119,7 @@ public abstract class FileTypeResolver {
     }
 
     public abstract String getProvidedType();
-    
+
     /**
      * Determines if allowed media type. The media types are the ones defined by Apache Tika (tika-mimetypes.xml),
      * which are basically mime-times (but we call them media type here to generalize), in the format
@@ -129,12 +129,12 @@ public abstract class FileTypeResolver {
         if (UtilValidate.isEmpty(mediaType)) {
             return false;
         }
-        return AllowMode.ALL.equals(resolverConfig.getAllowMode()) || isManualSupportedMediaType(mediaType) 
+        return AllowMode.ALL.equals(resolverConfig.getAllowMode()) || isManualSupportedMediaType(mediaType)
                 || (AllowMode.PERMISSIVE.equals(resolverConfig.getAllowMode()) && isAllowedMediaTypePermissive(mediaType));
     }
-    
+
     public abstract boolean isAllowedMediaTypePermissive(String mediaType);
-    
+
     /**
      * Checks if a media/mime-type starts with a prefix, such as "audio/" or "video/",
      * or if any of its aliases starts with such a prefix.
@@ -151,8 +151,8 @@ public abstract class FileTypeResolver {
             return false;
         }
     }
-    
-    
+
+
     /**
      * Performs any necessary coercions on the media/mime-type, such as replacing "audio/" prefix by "video/"
      * or vice-versa, in manual mode.
@@ -160,11 +160,11 @@ public abstract class FileTypeResolver {
      */
     @Deprecated
     public abstract String adjustMediaTypeManual(String mediaType);
-    
+
     protected abstract List<AbstractFileType> getFileTypes();
-    
+
     protected abstract Set<String> getManualSupportedMediaTypes();
-    
+
     protected Set<String> collectManualSupportedMediaTypes(Delegator delegator, List<AbstractFileType> fileTypes) {
         // 2017-02-08: since tika, only collect these in strict mode, but usually shouldn't use strict mode anymore
         if (!AllowMode.STRICT.equals(resolverConfig.getAllowMode())) {
@@ -187,11 +187,11 @@ public abstract class FileTypeResolver {
         }
         return mediaTypes;
     }
-    
+
     protected boolean isManualSupportedMediaType(String mediaType) {
         return getManualSupportedMediaTypes().contains(mediaType);
     }
-    
+
     protected GenericValue findMimeTypeManual(ByteBuffer byteBuffer, String fileName) throws GeneralException {
         MagicNumber magicNumber = findMagicNumberManual(byteBuffer, fileName);
         if (magicNumber != null) {
@@ -200,13 +200,13 @@ public abstract class FileTypeResolver {
                 GenericValue mimeType = findMimeTypeForExtension(extension);
                 // NOTE: here if mimeType is missing from system; means a configuration problem
                 if (mimeType == null) {
-                    Debug.logError("Cms: Manual File Type Resolution configuration error: could not find MimeType for file extension '" 
+                    Debug.logError("Cms: Manual File Type Resolution configuration error: could not find MimeType for file extension '"
                         + extension + "' for MagicNumber '" + magicNumber.getDescription()
                         + "' please review FileExtension and MimeType entities", module);
                 }
                 return mimeType;
             }
-        } 
+        }
         return null;
     }
 
@@ -218,10 +218,10 @@ public abstract class FileTypeResolver {
             if (mediaType != null) {
                 return adjustMediaTypeManual(mediaType);
             }
-        } 
+        }
         return null;
     }
-    
+
     protected final MagicNumber findMagicNumberManual(ByteBuffer byteBuffer, String fileName) {
         for (AbstractFileType fileType : getFileTypes()) {
             for (MagicNumber magicNumber : fileType.getMagicNumbers()) {
@@ -314,7 +314,7 @@ public abstract class FileTypeResolver {
 
         return isValid;
     }
-    
+
     /**
      * Finds mime-type based on extension ONLY, WITH adjustments/coercions/restrictions applied.
      */
@@ -334,39 +334,39 @@ public abstract class FileTypeResolver {
                     mimeType = delegator.findOne("MimeType", true, UtilMisc.toMap("mimeTypeId", adjustedMimeTypeId));
                 }
             }
-            
+
             if (mimeType != null) {
                 // Check if the final result is an allowed type...
                 if (!isAllowedMediaType(mimeType.getString("mimeTypeId"))) {
-                    throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonInvalidFileTypeForMediaCat", 
+                    throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonInvalidFileTypeForMediaCat",
                             UtilMisc.toMap("mediaType", mimeType.getString("mimeTypeId"), "providedType", getProvidedType())));
                 }
             }
         }
         return mimeType;
     }
-    
+
     /**
      * Finds MimeType (through Apache Tika library), as string representation, based on filename and magic numbers.
      */
     protected GenericValue findMimeTypeLib(ByteBuffer byteBuffer, String fileName) throws GeneralException {
         MediaType mediaType = TikaUtil.findMediaTypeSafe(byteBuffer, fileName);
-        
+
         if (mediaType != null) {
             String mimeTypeId = TikaUtil.getMimeTypeId(mediaType);
             // SPECIAL: here we assume Tika identified the file correctly.
             // so if it maps to a non-allowed type, we must throw error, NOT return null.
             if (!isAllowedMediaType(mimeTypeId)) {
-                throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonInvalidFileTypeForMediaCat", 
+                throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonInvalidFileTypeForMediaCat",
                         UtilMisc.toMap("mediaType", mimeTypeId, "providedType", getProvidedType())));
             }
         }
-        
+
         // check if we have an exact match in system
         // NOTE: is possible there is no exact match in the system (though should try to minimize this)
         return TikaUtil.findEntityMimeTypeForMediaType(delegator, mediaType, true);
     }
-    
+
     /**
      * Finds media type (through Apache Tika library), as string representation,
      * based on filename and magic numbers.
@@ -375,39 +375,39 @@ public abstract class FileTypeResolver {
         MediaType mediaType = TikaUtil.findMediaTypeSafe(byteBuffer, fileName);
         return (mediaType != null) ? TikaUtil.getMimeTypeId(mediaType) : null;
     }
-    
+
     public static class ResolverConfig {
-        
+
         /**
          * whether should only allow explicitly recognized types, or more permissive media file types that fall
-         * within known categories. 
+         * within known categories.
          * <p>
          * only makes a difference if <code>libraryMediaTypeDetection</code> is true.
          * <p>
          * 2017-02-07: TODO: REVIEW DEFAULT
-         * 
+         *
          * @see #isAllowedMediaType(String)
          */
         private AllowMode allowMode;
-        
+
         private boolean libraryMediaTypeDetection;
         private boolean manualMediaTypeDetection;
         private boolean manualMediaTypeDetectionPrioritized;
-        
+
         public ResolverConfig() {
             this.allowMode = AllowMode.PERMISSIVE;
             this.libraryMediaTypeDetection = true;
             this.manualMediaTypeDetection = false;
             this.manualMediaTypeDetectionPrioritized = false;
         }
-        
+
         public ResolverConfig(ResolverConfig other) {
             this.allowMode = other.allowMode;
             this.libraryMediaTypeDetection = other.libraryMediaTypeDetection;
             this.manualMediaTypeDetection = other.manualMediaTypeDetection;
             this.manualMediaTypeDetectionPrioritized = other.manualMediaTypeDetectionPrioritized;
         }
-        
+
         public static ResolverConfig fromSettings(String resource) {
             ResolverConfig.Builder builder = new ResolverConfig.Builder();
             builder.setAllowMode(AllowMode.getFromNameSafe(UtilProperties.getPropertyValue(resource, "media.detect.allowMode", "permissive")));
@@ -416,7 +416,7 @@ public abstract class FileTypeResolver {
             builder.setManualMediaTypeDetectionPrioritized(UtilProperties.getPropertyAsBoolean(resource, "media.detect.manualMediaTypeDetectionPrioritized", false));
             return builder.getConfig();
         }
-        
+
         public AllowMode getAllowMode() {
             return allowMode;
         }
@@ -429,14 +429,14 @@ public abstract class FileTypeResolver {
         public boolean isManualMediaTypeDetectionPrioritized() {
             return manualMediaTypeDetectionPrioritized;
         }
-        
+
         public static class Builder {
             private ResolverConfig config;
 
             public Builder(ResolverConfig config) {
                 this.config = new ResolverConfig(config);
             }
-            
+
             public Builder() {
                 this.config = new ResolverConfig();
             }
@@ -444,19 +444,19 @@ public abstract class FileTypeResolver {
             public void setAllowMode(AllowMode allowMode) {
                 config.allowMode = allowMode != null ? allowMode : AllowMode.PERMISSIVE;
             }
-            
+
             public void setManualMediaTypeDetection(boolean manualMediaTypeDetection) {
                 config.manualMediaTypeDetection = manualMediaTypeDetection;
             }
-            
+
             public void setLibraryMediaTypeDetection(boolean libraryMediaTypeDetection) {
                 config.libraryMediaTypeDetection = libraryMediaTypeDetection;
             }
-            
+
             public void setManualMediaTypeDetectionPrioritized(boolean manualMediaTypeDetectionPrioritized) {
                 config.manualMediaTypeDetectionPrioritized = manualMediaTypeDetectionPrioritized;
             }
-            
+
             public ResolverConfig getConfig() {
                 ResolverConfig res = config;
                 this.config = null; // invalidate builder so can't modify further
@@ -464,31 +464,31 @@ public abstract class FileTypeResolver {
             }
         }
     }
-    
+
     public enum AllowMode {
         STRICT("strict"),
         PERMISSIVE("permissive"),
         ALL("all");
-        
+
         private static final Map<String, AllowMode> nameMap;
         static {
             Map<String, AllowMode> map = new HashMap<>();
             for(AllowMode mode : AllowMode.values()) {
                 map.put(mode.getName(), mode);
             }
-            nameMap = map;     
+            nameMap = map;
         }
-        
+
         private final String name;
 
         private AllowMode(String name) {
             this.name = name;
         }
-        
+
         public String getName() {
             return name;
         }
-        
+
         public static AllowMode getFromNameSafe(String name) {
             return nameMap.get(name);
         }

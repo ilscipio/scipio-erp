@@ -78,18 +78,18 @@ public final class WidgetContextCacheKey {
         // parameters
         fieldNamesToSkip.add("visit");
         fieldNamesToSkip.add("visitor");
-        
+
         // SCIPIO: additional names to skip (some new, some bugfixes)
         fieldNamesToSkip.add("rendererVisualThemeResourcesChecked");
         fieldNamesToSkip.add("rendererVisualThemeResources");
-        fieldNamesToSkip.add("formStringRenderer"); 
-        fieldNamesToSkip.add("treeStringRenderer"); 
-        fieldNamesToSkip.add("menuStringRenderer"); 
-        fieldNamesToSkip.add("screenStringRenderer"); 
-        
-        fieldNamesToSkip.add("requestMethod"); 
+        fieldNamesToSkip.add("formStringRenderer");
+        fieldNamesToSkip.add("treeStringRenderer");
+        fieldNamesToSkip.add("menuStringRenderer");
+        fieldNamesToSkip.add("screenStringRenderer");
+
+        fieldNamesToSkip.add("requestMethod");
         fieldNamesToSkip.add(RenderOptions.FIELD_NAME);
-        
+
         return Collections.unmodifiableSet(fieldNamesToSkip);
     }
 

@@ -68,7 +68,7 @@ public class SetContextFieldTransform implements TemplateMethodModelEx {
         //    value = ((BeanModel) args.get(1)).getWrappedObject();
         // SCIPIO: NOTE: Unlike this above, this call will avoid the auto-escaping as implemented by Ofbiz (sensitive to DeepUnwrap implementation)
         value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
-                
+
         context.put(name, value);
         return new SimpleScalar("");
     }

@@ -86,7 +86,7 @@ public class WebSiteWorker {
         }
         return result;
     }
-    
+
     /**
      * SCIPIO: Extracts the webSiteId from the given context according to its render environment type.
      * <p>

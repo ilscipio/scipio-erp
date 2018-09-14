@@ -52,7 +52,7 @@ public final class ComponentLoaderConfig {
 
     public static List<ComponentDef> getRootComponents(String configFile) throws ComponentException {
         // SCIPIO: some changes to this method to prevent synchronization errors
-        List<ComponentDef> result = componentsToLoad; 
+        List<ComponentDef> result = componentsToLoad;
         if (result == null) {
             synchronized (ComponentLoaderConfig.class) {
                 result = componentsToLoad;

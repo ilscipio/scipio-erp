@@ -99,12 +99,12 @@ public class ModelEntityChecker {
                 if (entity.getPlainTableName() != null && reservedWords.contains(entity.getPlainTableName().toUpperCase(Locale.getDefault()))) {
                         warningList.add("[TableNameRW] Table name [" + entity.getPlainTableName() + "] of entity " + entity.getEntityName() + " is a reserved word.");
                 }
-                
+
                 // don't check columns/relations/keys when never-check is set to "true"
                 if (entity.getNeverCheck()) {
                     continue;
                 }
-                
+
                 Set<String> ufields = new HashSet<>();
                 Iterator<ModelField> fieldIter = entity.getFieldsIterator();
                 while (fieldIter.hasNext()) {
@@ -205,7 +205,7 @@ public class ModelEntityChecker {
 
                         // make sure all FK names are <= 18 characters
                         if (relation.getFkName().length() > 18) {
-                            warningList.add("[RelFKNameGT18] The foreign key named " + relation.getFkName() 
+                            warningList.add("[RelFKNameGT18] The foreign key named " + relation.getFkName()
                                             + " (length:" + relation.getFkName().length()
                                             + ") was greater than 18 characters in length for relation " + relation.getTitle() + relation.getRelEntityName()
                                             + " of entity " + entity.getEntityName() + ".");

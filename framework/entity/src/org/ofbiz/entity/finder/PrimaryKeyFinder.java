@@ -83,7 +83,7 @@ public class PrimaryKeyFinder extends Finder {
         if (modelEntity == null) {
             throw new IllegalArgumentException("No entity definition found for entity name [" + entityName + "]");
         }
-        
+
         GenericValue valueOut = runFind(modelEntity, context, delegator, useCacheBool, autoFieldMapBool, this.fieldMap, this.selectFieldExpanderList);
 
         if (!valueNameAcsr.isEmpty()) {
@@ -110,7 +110,7 @@ public class PrimaryKeyFinder extends Finder {
                 ModelField curField = iter.next();
                 String fieldName = curField.getName();
                 Object fieldValue = null;
-                if (parametersObjExists) {        
+                if (parametersObjExists) {
                     fieldValue = ((Map<?, ?>) parametersObj).get(fieldName);
                 }
                 if (context.containsKey(fieldName)) {
@@ -121,7 +121,7 @@ public class PrimaryKeyFinder extends Finder {
         }
         EntityFinderUtil.expandFieldMapToContext(fieldMap, context, entityContext);
         // then convert the types...
-        
+
         // need the timeZone and locale for conversion, so add here and remove after
         entityContext.put("locale", context.get("locale"));
         entityContext.put("timeZone", context.get("timeZone"));

@@ -40,19 +40,19 @@ import org.ofbiz.base.util.UtilGenerics;
  * <p>
  * SCIPIO: This class has been modified for:
  * <ul>
- * <li>new traversal operations (for partial preservation of key insert order of underlying maps) 
+ * <li>new traversal operations (for partial preservation of key insert order of underlying maps)
  * <li>better copy construction and construction with initial map
  * <li>making the main {@link #stackList} variable private
  * <li>optimization: switching the {@link #stackList} to {@link java.util.ArrayList} instead of LinkedList
- * <li>optimization: reversing {@link #stackList} structure so that {@link #push} appends to end of list, 
+ * <li>optimization: reversing {@link #stackList} structure so that {@link #push} appends to end of list,
  *     for ArrayList to avoid insert-firsts (NOTE: now {@link #addToBottom(Map)} for property-maps/uiLabelMap uses
  *     insert-firsts, but it is better because there is no removeFromBotton compared to push/pop; in any case,
  *     in practice ArrayList with small capacity is faster for insert-first than LinkedList anyway)
  * <li>optimization: using indexed loops for ArrayList (avoids iterator creation)
  * </ul>
  * <p>
- * Optimization notes: These were sorely needed because this class performs expensive multi-map lookups 
- * for every {@link #get(Object)} and similar call, while being used for hundreds of map lookups at each render, 
+ * Optimization notes: These were sorely needed because this class performs expensive multi-map lookups
+ * for every {@link #get(Object)} and similar call, while being used for hundreds of map lookups at each render,
  * through its use as main context and property-maps (uiLabelMap). While we cannot improve on the
  * basic algorithm, switching to ArrayList and preventing iterator usage can double the speed, according to practical
  * tests with recent JDKs. Only a straight array would be faster (but cannot handle growing well).
@@ -110,7 +110,7 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         super();
         stackList = new ArrayList<Map<K, V>>(STACK_INITIAL_CAPACITY); // SCIPIO: switched to ArrayList
     }
-    
+
     /**
      * SCIPIO: Shallow copy constructor - copies the stackList.
      */

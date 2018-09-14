@@ -14,7 +14,7 @@ public class ImageDim<N extends Number> implements Serializable {
 
     protected final N width;
     protected final N height;
-    
+
     public ImageDim(N width, N height) {
         this.width = width;
         this.height = height;

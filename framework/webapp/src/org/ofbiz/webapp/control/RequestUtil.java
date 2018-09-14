@@ -16,15 +16,15 @@ import org.ofbiz.base.util.UtilValidate;
 public abstract class RequestUtil {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     // TODO: unhardcode
     private static final String GENERICERRMSG_EN_FALLBACK = "An error occurred. Please contact support.";
-    
+
     protected RequestUtil() {
     }
-    
+
     /**
-     * @deprecated 2018-02-26: This should now be done by Freemarker files or 
+     * @deprecated 2018-02-26: This should now be done by Freemarker files or
      * whatever output method is used, unless the error is going directly out to browser (bypassing renderer);
      * in such cases, you may still use {@link #encodeErrorMessage}.
      */
@@ -32,11 +32,11 @@ public abstract class RequestUtil {
     public static String getEncodedSecureErrorMessage(HttpServletRequest request, Throwable t) {
         return encodeErrorMessage(request, getSecureErrorMessage(request, t.toString()));
     }
-    
+
     public static String getSecureErrorMessage(HttpServletRequest request, Throwable t) {
         return getSecureErrorMessage(request, t.toString());
     }
-    
+
     /**
      * SCIPIO: prevents setting a too specific _ERROR_MESSAGE_ that may compromise security.
      * Added 2017-05-12.
@@ -48,7 +48,7 @@ public abstract class RequestUtil {
             return getGenericErrorMessage(request);
         }
     }
-    
+
     /**
      * HTML-encodes the given message.
      * <p>
@@ -60,7 +60,7 @@ public abstract class RequestUtil {
         // is not appropriate for JSON and possibly other cases...
         return UtilCodec.getEncoder("html").encode(msg);
     }
-    
+
     /**
      * Returns a generic "An error occurred. Please contact support." error message.
      */
@@ -78,7 +78,7 @@ public abstract class RequestUtil {
         }
         return msg;
     }
-    
+
     public static String getGenericErrorMessage(Locale locale) {
         String msg = null;
         try {
@@ -92,7 +92,7 @@ public abstract class RequestUtil {
         }
         return msg;
     }
-    
+
     public static String getGenericErrorMessage() {
         return getGenericErrorMessage(Locale.ENGLISH);
     }

@@ -107,7 +107,7 @@ public class EntityDataLoader {
                     throw new IllegalArgumentException("Reader name list does not contain String(s) or Element(s)");
                 }
                 readerName = readerName.trim();
-                
+
                 // ignore the "tenant" reader if multitenant is disabled
                 if ("tenant".equals(readerName) && !EntityUtil.isMultiTenantEnabled()) {
                     continue;
@@ -218,7 +218,7 @@ public class EntityDataLoader {
             if ("tenant".equals(readerName) && "N".equals(UtilProperties.getPropertyValue("general", "multitenant"))) {
                 continue;
             }
-            
+
             readerNames.add(readerName);
         }
         return getUrlByComponentList(helperName, components, readerNames);

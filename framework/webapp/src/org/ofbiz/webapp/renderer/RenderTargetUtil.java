@@ -24,31 +24,31 @@ import org.ofbiz.webapp.renderer.RenderWriter.SwitchRenderWriter;
 public abstract class RenderTargetUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static final String RENDERTARGETEXPR_REQPARAM = "scpRenderTargetExpr";
     public static final String ERRORRENDERTARGETEXPR_REQPARAM = "scpErrorRenderTargetExpr";
     public static final String LOGINRENDERTARGETEXPR_REQPARAM = "scpLoginRenderTargetExpr";
 
     public static final Set<String> RENDERTARGET_REQPARAM_ALL = UtilMisc.unmodifiableHashSet(RENDERTARGETEXPR_REQPARAM,
             ERRORRENDERTARGETEXPR_REQPARAM, LOGINRENDERTARGETEXPR_REQPARAM);
-    
+
     public static final String RENDERTARGETSTATE_ATTR = "scpRenderTargetState";
     public static final String RENDERTARGETON_ATTR = "scpRenderTargetOn";
 
     public static final boolean DEBUG = false || Debug.verboseOn();
-    
+
     /**
      * for an expr in the format:
      * "+multi:somename:$My-Section,
      */
     public static final String RENDERTARGETEXPR_RAW_MULTI_PREFIX = "+multi:";
     public static final String RENDERTARGETEXPR_RAW_EMPTY = "";
-    
+
     public static final String RENDERTARGETEXPR_MULTI_DEFAULT = "_default_";
 
     /**
      * SPECIAL DELIMITER attribute name for non-optimized multi targeting support.
-     * It consists of: 
+     * It consists of:
      * prefix + random chars + name + name-terminator + open-/close-flag
      * The random chars are to prevent clashes with page content; this could theoretically
      * still happen but the odds are statistically extremely small. Nevertheless this remains
@@ -71,7 +71,7 @@ public abstract class RenderTargetUtil {
         if (scpRenderTargetExpr != null) return scpRenderTargetExpr;
         else return request.getParameter(paramName);
     }
-    
+
     // now taken care of in WidgetMultiRenderTargetExpr, so that it's faster and cacheable
 //    public static Map<String, Object> splitMultiExprToMap(String expr) {
 //        Map<String, Object> exprMap = new HashMap<>();
@@ -86,19 +86,19 @@ public abstract class RenderTargetUtil {
 //        }
 //        return exprMap;
 //    }
-    
+
     public static Object getRawRenderTargetExpr(HttpServletRequest request) {
         return getRawRenderTargetExpr(request, RENDERTARGETEXPR_REQPARAM);
     }
-    
+
     public static void setRawRenderTargetExpr(HttpServletRequest request, String paramName, Object expr) {
         request.setAttribute(paramName, expr);
     }
-    
+
     public static void setRawRenderTargetExpr(HttpServletRequest request, Object expr) {
         setRawRenderTargetExpr(request, RENDERTARGETEXPR_REQPARAM, expr);
     }
-    
+
     /**
      * This caches the result of the first get so next fetch doesn't re-preprocess it.
      */
@@ -114,22 +114,22 @@ public abstract class RenderTargetUtil {
     public static boolean isRenderTargetExprOn(HttpServletRequest request, Object expr) {
         return (expr != null) && !(expr instanceof String && ((String) expr).isEmpty());
     }
-    
+
     public static boolean isRenderTargetExprMulti(Object expr) {
-        return (expr instanceof MultiRenderTargetExpr || expr instanceof Map 
+        return (expr instanceof MultiRenderTargetExpr || expr instanceof Map
                 || (expr instanceof String && ((String) expr).startsWith(RENDERTARGETEXPR_RAW_MULTI_PREFIX)));
     }
-    
+
     public static String generateMultiTargetDelimiterPrefix(HttpServletRequest request) {
         return MULTITARGET_DELIM_PREFIX + RandomStringUtils.randomAlphanumeric(MULTITARGET_DELIM_RANDOM_SIZE);
     }
-    
+
     public static String generateSetMultiTargetDelimiterPrefix(HttpServletRequest request) {
         String prefix = generateMultiTargetDelimiterPrefix(request);
         request.setAttribute(MULTITARGET_DELIM_PREFIX_ATTR, prefix);
         return prefix;
     }
-    
+
     public static String getOrGenerateMultiTargetDelimiterPrefix(HttpServletRequest request) {
         String prefix = (String) request.getAttribute(MULTITARGET_DELIM_PREFIX_ATTR);
         if (prefix == null || prefix.isEmpty()) {
@@ -137,7 +137,7 @@ public abstract class RenderTargetUtil {
         }
         return prefix;
     }
-    
+
     public static String getOrGenerateSetMultiTargetDelimiterPrefix(HttpServletRequest request) {
         String prefix = (String) request.getAttribute(MULTITARGET_DELIM_PREFIX_ATTR);
         if (prefix == null || prefix.isEmpty()) {
@@ -145,21 +145,21 @@ public abstract class RenderTargetUtil {
         }
         return prefix;
     }
-    
+
     public static void makeMultiTargetDelimOpen(Appendable out, String name, String prefix) throws IOException {
         out.append(prefix);
         out.append(name);
         out.append(MULTITARGET_DELIM_NAMESUFFIX);
         out.append(MULTITARGET_DELIM_OPEN);
     }
-    
+
     public static void makeMultiTargetDelimClose(Appendable out, String name, String prefix) throws IOException {
         out.append(prefix);
         out.append(name);
         out.append(MULTITARGET_DELIM_NAMESUFFIX);
         out.append(MULTITARGET_DELIM_CLOSE);
     }
-    
+
     public static Map<String, Object> extractMultiTargetOutputs(Appendable out, String prefix) {
         if (out instanceof SwitchRenderWriter) {
             // TODO: NOT IMPLEMENTED: fast mode not yet implemented because it is more likely to fail.
@@ -171,14 +171,14 @@ public abstract class RenderTargetUtil {
             throw new UnsupportedOperationException();
         }
     }
-    
+
     /**
      * DIRTY TEXT EXTRACTION - slow and memory hog, but only method guaranteed success
      */
     public static Map<String, Object> extractMultiTargetOutputsTextual(StringBuffer sb, String prefix) {
         Map<String, Object> map = new HashMap<>();
         int prefixLength = prefix.length();
-        
+
         //if (DEBUG) {
         //    Debug.logInfo("FULL OUTPUT: " + sb.toString(), module);
         //}
@@ -244,5 +244,5 @@ public abstract class RenderTargetUtil {
 //        }
         return map;
     }
-    
+
 }

@@ -129,7 +129,7 @@ public final class FileUtil {
             try {
                 path = ComponentLocationResolver.getBaseLocation(path).toString();
             } catch (MalformedURLException e) {
-                Debug.logError(e, module); 
+                Debug.logError(e, module);
                 return null;
             }
         } else if (root == null && path.startsWith("file://")) { // SCIPIO: 2017-06-15: new workaround to allow URL file paths through this method (but strict)
@@ -404,7 +404,7 @@ public final class FileUtil {
        }
        return false;
    }
-   
+
    /**
    *
    *
@@ -419,7 +419,7 @@ public final class FileUtil {
        File f = new File(fileName);
        return f.isFile();
    }
-   
+
     /**
      * For an inputStream and a file name, create a zip stream containing only one entry with the inputStream set to fileName
      * If fileName is empty, generate a unique one.

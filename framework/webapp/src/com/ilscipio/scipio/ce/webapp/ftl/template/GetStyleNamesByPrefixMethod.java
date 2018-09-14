@@ -47,9 +47,9 @@ public class GetStyleNamesByPrefixMethod implements TemplateMethodModelEx {
         }
         String styleString = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));
         styleString = TemplateFtlUtil.getPlainClassArgNames(styleString);
-        
+
         String prefix = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
-        
+
         String[] names = StringUtils.split(styleString, ' ');
         // NOTE: For emergency/safety reasons, use the current wrapper, which MAY be escaping.
         // style strings contain only simple characters anyway.
@@ -61,7 +61,7 @@ public class GetStyleNamesByPrefixMethod implements TemplateMethodModelEx {
                 res.add(name);
             }
         }
-        
+
         // redundant
         //return LangFtlUtil.wrap(res, objectWrapper);
         return res;

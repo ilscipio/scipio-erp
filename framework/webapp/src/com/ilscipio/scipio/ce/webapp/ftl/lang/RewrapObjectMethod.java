@@ -45,15 +45,15 @@ public class RewrapObjectMethod implements TemplateMethodModelEx {
         }
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
-        
+
         String wrapperStr = null;
         String modeStr = null;
-        if (args.size() >= 2) {        
+        if (args.size() >= 2) {
             TemplateScalarModel wrapperModel = (TemplateScalarModel) args.get(1);
             if (wrapperModel != null) {
                 wrapperStr = wrapperModel.getAsString();
             }
-            
+
             if (args.size() >= 3) {
                 TemplateScalarModel modeModel = (TemplateScalarModel) args.get(2);
                 if (modeModel != null) {
@@ -65,5 +65,5 @@ public class RewrapObjectMethod implements TemplateMethodModelEx {
         Object res = LangFtlUtil.rewrapObject(object, WrappingOptions.makeOptions(wrapperStr, modeStr, env), env);
         return res;
     }
-    
+
 }

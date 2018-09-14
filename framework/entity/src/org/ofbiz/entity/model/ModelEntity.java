@@ -312,19 +312,19 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         if (extendEntityElement.hasAttribute("enable-lock")) {
             this.doLock = UtilXml.checkBoolean(extendEntityElement.getAttribute("enable-lock"), false);
         }
-        
+
         if (extendEntityElement.hasAttribute("no-auto-stamp")) {
             this.noAutoStamp = UtilXml.checkBoolean(extendEntityElement.getAttribute("no-auto-stamp"), false);
         }
-        
+
         if (extendEntityElement.hasAttribute("auto-clear-cache")) {
             this.autoClearCache = UtilXml.checkBoolean(extendEntityElement.getAttribute("auto-clear-cache"), false);
         }
-        
+
         if (extendEntityElement.hasAttribute("never-cache")) {
             this.neverCache = UtilXml.checkBoolean(extendEntityElement.getAttribute("never-cache"), false);
         }
-        
+
         if (extendEntityElement.hasAttribute("sequence-bank-size")) {
             String sequenceBankSizeStr = UtilXml.checkEmpty(extendEntityElement.getAttribute("sequence-bank-size"));
             if (UtilValidate.isNotEmpty(sequenceBankSizeStr)) {
@@ -335,7 +335,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                 }
             }
         }
-        
+
         for (Element fieldElement : UtilXml.childElementList(extendEntityElement, "field")) {
             ModelField newField = ModelField.create(this, fieldElement, false);
             ModelField existingField = this.getField(newField.getName());
@@ -459,20 +459,20 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     public void setNeverCache(boolean neverCache) {
         this.neverCache = neverCache;
     }
-    
+
     /**
      * An indicator to specific if this entity should ignore automatic DB checks.
      * This should be set when the entity is mapped to a database view to prevent
-     * warnings and attempts to modify the schema.     
+     * warnings and attempts to modify the schema.
      */
     public boolean getNeverCheck() {
         return neverCheck;
     }
-    
+
     public void setNeverCheck(boolean neverCheck) {
         this.neverCheck = neverCheck;
     }
-        
+
     public boolean getAutoClearCache() {
         return this.autoClearCache;
     }
@@ -1465,7 +1465,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         if (this.getNeverCache()) {
             root.setAttribute("never-cache", "true");
         }
-        
+
         if (this.getNeverCheck()) {
             root.setAttribute("never-check", "true");
         }

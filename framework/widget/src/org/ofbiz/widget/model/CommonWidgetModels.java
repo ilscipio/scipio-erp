@@ -600,7 +600,7 @@ public final class CommonWidgetModels {
         public FlexibleStringExpander getUseWhenExdr() { // SCIPIO: new
             return useWhenExdr;
         }
-        
+
         public Boolean getUseWhen(Map<String, Object> context) { // SCIPIO: new
             String useWhenStr = useWhenExdr.expandString(context);
             if ("true".equals(useWhenStr)) {
@@ -615,7 +615,7 @@ public final class CommonWidgetModels {
 
     /**
      * Models the &lt;parameter&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
     @SuppressWarnings("serial")
@@ -692,7 +692,7 @@ public final class CommonWidgetModels {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Reads a parameter map from a context field.
      * Added 2017-09-21.
@@ -700,16 +700,16 @@ public final class CommonWidgetModels {
     @SuppressWarnings("serial")
     public static class AutoParameterMap implements Serializable  {
         protected final FlexibleMapAccessor<Object> fromField;
-        
+
         public AutoParameterMap(Element element) {
             this.fromField = UtilValidate.isNotEmpty(element.getAttribute("from-field")) ? FlexibleMapAccessor
                     .getInstance(element.getAttribute("from-field")) : null;
         }
-        
+
         public FlexibleMapAccessor<Object> getFromField() {
             return fromField;
         }
-        
+
         public void putAllParametersMap(Map<String, String> out, Map<String, Object> context) {
             Object retVal = null;
             if (this.fromField != null && this.fromField.get(context) != null) {

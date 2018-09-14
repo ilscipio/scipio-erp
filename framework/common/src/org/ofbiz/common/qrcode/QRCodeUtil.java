@@ -37,7 +37,7 @@ public class QRCodeUtil {
      */
     @Deprecated
     public static BufferedImage drawLogo(BufferedImage qrImage, BufferedImage logoImage) {
-        double determineImageScale = determineImageScale(logoImage.getWidth(), logoImage.getHeight(), 
+        double determineImageScale = determineImageScale(logoImage.getWidth(), logoImage.getHeight(),
                 qrImage.getWidth(), qrImage.getHeight());
         BufferedImage overlay = resizeImg(logoImage, determineImageScale);
 
@@ -51,7 +51,7 @@ public class QRCodeUtil {
         g.drawImage(overlay, Math.round(deltaWidth/2), Math.round(deltaHeight/2), null);
         return combined;
     }
-    
+
     /**
      * Function to scale an image down, requires scaledWidth (original Scipio method).
      * @deprecated covered in generateQRCodeImage service; this does not use the system scalers currently.

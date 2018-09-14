@@ -24,7 +24,7 @@ public class PreserveImageScaler extends AbstractImageScaler {
         Map<String, Object> options = new HashMap<>();
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
-    
+
     protected PreserveImageScaler(Factory factory, String name, Map<String, Object> confOptions) {
         super(factory, name, confOptions, DEFAULT_OPTIONS);
     }
@@ -44,7 +44,7 @@ public class PreserveImageScaler extends AbstractImageScaler {
         @Override protected String getApiName() { return API_NAME; }
         @Override public Map<String, Object> getDefaultOptions() { return DEFAULT_OPTIONS; }
     }
-    
+
     @Override
     public BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException {
         if (image.getWidth() == targetWidth && image.getHeight() == targetHeight) {
@@ -60,7 +60,7 @@ public class PreserveImageScaler extends AbstractImageScaler {
             return destImage;
         }
     }
-    
+
     @Override
     public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         return true;

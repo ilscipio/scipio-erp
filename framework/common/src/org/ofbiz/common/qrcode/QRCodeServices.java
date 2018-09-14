@@ -95,7 +95,7 @@ public class QRCodeServices {
 
     static {
         // SCIPIO: this block rearranged for final field and not swallowing exceptions
-        BufferedImage img = null; 
+        BufferedImage img = null;
         if (UtilValidate.isNotEmpty(QRCODE_DEFAULT_LOGOIMAGE)) {
             try {
                 Map<String, Object> logoImageResult = ImageTransform.getBufferedImage(FileUtil.getFile(QRCODE_DEFAULT_LOGOIMAGE).getAbsolutePath(), Locale.getDefault());

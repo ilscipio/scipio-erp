@@ -60,7 +60,7 @@ public class ContentUrlTag {
             throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
         }
     }
-    
+
     /**
      * Appends content prefix to buffer.
      * <p>
@@ -73,7 +73,7 @@ public class ContentUrlTag {
             throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
         }
     }
-    
+
     /**
      * Appends content prefix to buffer.
      * <p>
@@ -108,7 +108,7 @@ public class ContentUrlTag {
     public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer) throws IOException {
         appendContentPrefix(request, urlBuffer, null, null, null);
     }
-    
+
     /**
      * SCIPIO: Appends content prefix to buffer, with optional webSiteId.
      */
@@ -135,7 +135,7 @@ public class ContentUrlTag {
         boolean isXslFo = isXslFo(RendererInfo.fromRequest(request));
         if (secure == null) {
             if (isXslFo) {
-                // SPECIAL: FOP external-graphic cannot reach via HTTPS at current time, and such is very slow anyway 
+                // SPECIAL: FOP external-graphic cannot reach via HTTPS at current time, and such is very slow anyway
                 secure = false;
             } else {
                 secure = RequestLinkUtil.isEffectiveSecure(request);
@@ -166,7 +166,7 @@ public class ContentUrlTag {
         boolean isXslFo = isXslFo(RendererInfo.fromContext(context));
         if (secure == null) {
             if (isXslFo) {
-                // SPECIAL: FOP external-graphic cannot reach via HTTPS at current time, and such is very slow anyway 
+                // SPECIAL: FOP external-graphic cannot reach via HTTPS at current time, and such is very slow anyway
                 secure = false;
             } else {
                 secure = true;
@@ -176,7 +176,7 @@ public class ContentUrlTag {
         if (checkDoLocalContentPrefix(delegator, urlBuffer, secure, type, isXslFo)) {
             return;
         }
-        
+
         // SCIPIO: if webSiteId, get that specific one
         //GenericValue webSite = WebSiteWorker.getWebSite(request);
         GenericValue webSite;
@@ -200,14 +200,14 @@ public class ContentUrlTag {
     private static boolean isXslFo(RendererInfo renderInfo) {
         return (renderInfo != null && "xsl-fo".equals(renderInfo.getRendererName()));
     }
-    
+
     private static boolean checkDoLocalContentPrefix(Delegator delegator, Appendable urlBuffer, boolean secure, String type, boolean isXslFo) throws IOException {
         if (type == null || type.isEmpty()) {
             type = isXslFo ? "local" : null;
         }
         if (type != null) {
             if (secure) {
-                String prefix = (useSysProp && delegator != null) ? 
+                String prefix = (useSysProp && delegator != null) ?
                         EntityUtilProperties.getPropertyValue("url", type+".content.url.prefix.secure", delegator) :
                         UtilProperties.getPropertyValue("url", type+".content.url.prefix.secure");
                 if (!prefix.isEmpty()) {
@@ -217,7 +217,7 @@ public class ContentUrlTag {
                     return true;
                 }
             } else {
-                String prefix = (useSysProp && delegator != null) ? 
+                String prefix = (useSysProp && delegator != null) ?
                         EntityUtilProperties.getPropertyValue("url", type+".content.url.prefix.standard", delegator) :
                         UtilProperties.getPropertyValue("url", type+".content.url.prefix.standard");
                 if (!prefix.isEmpty()) {
@@ -234,7 +234,7 @@ public class ContentUrlTag {
     // SCIPIO: Modified to support Boolean, heavily modified
     public static void appendContentPrefix(GenericValue webSite, Boolean secure, Appendable urlBuffer) throws IOException {
         // SCIPIO: WARN: Don't have request, can't determine sane default when secure null, so assume false
-        secure = !Boolean.FALSE.equals(secure); // default TRUE (2018-08) 
+        secure = !Boolean.FALSE.equals(secure); // default TRUE (2018-08)
         if (secure) {
             String prefix;
             if (webSite != null && UtilValidate.isNotEmpty(webSite.getString("secureContentPrefix"))) {

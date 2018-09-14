@@ -476,7 +476,7 @@ public final class UtilValidate {
         }
     }
 
-    /** 
+    /**
      * Returns true if string s is an integer &lt;= 0
      */
     public static boolean isNonpositiveInteger(String s) {
@@ -1215,11 +1215,11 @@ public final class UtilValidate {
             return defaultEmptyOK;
         }
         String st = stripCharsInBag(stPassed, creditCardDelimiters);
-        
+
         if (!isInteger(st)) {
             return false;
         }
-        
+
         // encoding only works on cars with less the 19 digits
         if (st.length() > 19) {
             return false;

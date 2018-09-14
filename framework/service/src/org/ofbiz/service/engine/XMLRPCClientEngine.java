@@ -41,7 +41,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.xmlrpc.XmlRpcClient;
 
 /**
- * Engine For XML RPC CLient Configuration management 
+ * Engine For XML RPC CLient Configuration management
  */
 public class XMLRPCClientEngine extends GenericAsyncEngine {
 

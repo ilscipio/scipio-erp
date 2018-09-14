@@ -33,21 +33,21 @@ public class MnjimImageScaler extends AbstractImageScaler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "mortennobel";
-    
+
     /**
      * Maps <code>scalingOptions.filter</code> to ResampleFilter instances.
      */
     private static final Map<String, ResampleFilter> filterMap;
     static {
         Map<String, ResampleFilter> map = new HashMap<>();
-        
+
         // GENERALIZED
         //map.put("areaaveraging", Image.SCALE_AREA_AVERAGING); // TODO
         //map.put("default", Image.SCALE_DEFAULT); // TODO
         //map.put("fast", Image.SCALE_FAST); // TODO
         //map.put("replicate", Image.SCALE_REPLICATE); // TODO
         map.put("smooth", ResampleFilters.getLanczos3Filter());
-        
+
         // SPECIFIC ALGORITHMS
         map.put("lanczos3", ResampleFilters.getLanczos3Filter());
         map.put("bicubic", ResampleFilters.getBiCubicFilter());
@@ -58,14 +58,14 @@ public class MnjimImageScaler extends AbstractImageScaler {
         map.put("triangle", ResampleFilters.getTriangleFilter());
         map.put("bell", ResampleFilters.getBellFilter());
         map.put("box", ResampleFilters.getBoxFilter());
-        
+
         // API-SPECIFIC
         // (none)
-        
+
         filterMap = Collections.unmodifiableMap(map);
         Debug.logInfo(AbstractImageScaler.getFilterMapLogRepr(API_NAME, map), module);
     }
-    
+
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
@@ -73,7 +73,7 @@ public class MnjimImageScaler extends AbstractImageScaler {
         options.put("filter", filterMap.get("smooth")); // String
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
-    
+
     protected MnjimImageScaler(AbstractImageScalerFactory<MnjimImageScaler> factory, String name, Map<String, Object> confOptions) {
         super(factory, name, confOptions);
     }
@@ -96,13 +96,13 @@ public class MnjimImageScaler extends AbstractImageScaler {
         @Override protected String getApiName() { return API_NAME; }
         @Override public Map<String, Object> getDefaultOptions() { return DEFAULT_OPTIONS; }
     }
-    
+
     @Override
     protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
         ResampleFilter filter = getFilter(options);
-        
-        // this appears to be pointless - morten already converts to a type that it likes - it's 
+
+        // this appears to be pointless - morten already converts to a type that it likes - it's
         // the result image type that matters to us...
 //        // PRE-CONVERT: morten doesn't use the same defaults as us...
 //        if (image.getType() == BufferedImage.TYPE_BYTE_BINARY ||
@@ -114,12 +114,12 @@ public class MnjimImageScaler extends AbstractImageScaler {
 //            //image = ImageUtils.convert(image, image.getColorModel().hasAlpha() ?
 //            //        BufferedImage.TYPE_4BYTE_ABGR : BufferedImage.TYPE_3BYTE_BGR);
 //        }
-        
+
         ResampleOp op = new ResampleOp(targetWidth, targetHeight);
         if (filter != null) {
             op.setFilter(filter);
         }
-        
+
         // HOW THIS WORKS: we try our best to get the filter to write directly in the image pixel type requested.
         // But morten does not support indexed images as output, and in addition, reconverting after is not guaranteed lossless.
         // In that case there are two options:
@@ -129,11 +129,11 @@ public class MnjimImageScaler extends AbstractImageScaler {
         // maybe we should re-check TYPE_PRESERVE and call ImageTransform.createCompatibleBufferedImage...
         ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
         ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
-        
+
         BufferedImage resultImage;
         if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
             ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
-            
+
             if (isNativeSupportedDestImageType(resolvedTargetTypeInfo)) {
                 // here lib will _probably_ support the type we want...
                 BufferedImage destImage = ImageTransform.createBufferedImage(resolvedTargetTypeInfo, targetWidth, targetHeight);
@@ -153,7 +153,7 @@ public class MnjimImageScaler extends AbstractImageScaler {
         }
         return resultImage;
     }
-    
+
     // NOTE: defaults are handled through the options merging with defaults
     protected static ResampleFilter getFilter(Map<String, Object> options) throws IllegalArgumentException {
         Object filterObj = options.get("filter");
@@ -166,7 +166,7 @@ public class MnjimImageScaler extends AbstractImageScaler {
             return filterMap.get(filterName);
         }
     }
-    
+
     @Override
     public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         // TODO: REVIEW

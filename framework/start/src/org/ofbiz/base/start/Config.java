@@ -294,10 +294,10 @@ public class Config {
         collectClasspathEntries(new File(home, "framework"), classPath, libraryPath);
         collectClasspathEntries(new File(home, "applications"), classPath, libraryPath);
         collectClasspathEntries(new File(home, "specialpurpose"), classPath, libraryPath);
-        
+
         // SCIPIO: 2016-06-30: Also load from addons folder (supersedes specialpurpose but acts more or less like hot-deploy)
         collectClasspathEntries(new File(home, "addons"), classPath, libraryPath);
-        
+
         collectClasspathEntries(new File(home, "hot-deploy"), classPath, libraryPath);
         System.setProperty("java.library.path", libraryPath.toString());
         classPath.instrument(this.instrumenterFile, this.instrumenterClassName);

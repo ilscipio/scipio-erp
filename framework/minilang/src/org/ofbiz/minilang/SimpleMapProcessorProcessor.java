@@ -16,10 +16,10 @@ import org.ofbiz.base.util.UtilGenerics;
 public class SimpleMapProcessorProcessor implements MapProcessor {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected final String xmlResource;
     protected final String name;
-    
+
     protected SimpleMapProcessorProcessor(String xmlResource, String name) {
         super();
         this.xmlResource = xmlResource;
@@ -31,7 +31,7 @@ public class SimpleMapProcessorProcessor implements MapProcessor {
     }
 
     @Override
-    public void process(Map<String, Object> inMap, Map<String, Object> results, Map<String, List<String>> fieldErrorMessages, 
+    public void process(Map<String, Object> inMap, Map<String, Object> results, Map<String, List<String>> fieldErrorMessages,
             List<String> errorMessages, Locale locale) throws GeneralException {
         //try {
         SimpleMapProcessor.runSimpleMapProcessor(xmlResource, name, inMap, results, UtilGenerics.checkList(errorMessages), locale);

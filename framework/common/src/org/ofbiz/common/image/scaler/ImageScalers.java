@@ -20,16 +20,16 @@ public abstract class ImageScalers {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String IMAGE_PROP_SCALER_PREFIX = ImageUtil.IMAGEOP_PROP_PREFIX + "scaler.";
-    
+
     public static final String SCALER_NAME_OPT = "scalerName";
-    
+
     private static final Map<String, ImageScaler> scalers = Collections.unmodifiableMap(readScalers(
             ImageUtil.getAllPropertiesFiles(ImageUtil.IMAGEOP_PROP_RESOURCE), IMAGE_PROP_SCALER_PREFIX));
     private static final ImageScaler defaultScaler = extractDefaultScaler(scalers, true, true);
-    
+
     protected ImageScalers() {
     }
-    
+
     /**
      * Returns scaler for a given name.
      * The name can be an algorithm name or any other name chosen to represent the scaler,
@@ -38,11 +38,11 @@ public abstract class ImageScalers {
     public static ImageScaler getScaler(String name) {
         return scalers.get(name);
     }
-    
+
     public static ImageScaler getScaler(Map<String, Object> scalingOptions) {
         return scalingOptions != null ? getScaler((String) scalingOptions.get(SCALER_NAME_OPT)) : null;
     }
-    
+
     public static ImageScaler getScalerOrDefault(String name) {
         if (UtilValidate.isEmpty(name)) return getDefaultScaler();
         ImageScaler scaler = getScaler(name);
@@ -51,19 +51,19 @@ public abstract class ImageScalers {
         }
         return scaler != null ? scaler : getDefaultScaler();
     }
-    
+
     public static ImageScaler getScalerOrDefault(Map<String, Object> scalingOptions) {
         return getScalerOrDefault(scalingOptions != null ? (String) scalingOptions.get(SCALER_NAME_OPT) : null);
     }
-    
+
     public static ImageScaler getDefaultScaler() {
         return defaultScaler;
     }
-    
+
     public static Map<String, ImageScaler> readScalers(Collection<Properties> propList, String propPrefix) {
         return ImageUtil.readImagePropsToImageOpMap(propList, propPrefix, ImageScaler.class);
     }
-    
+
     public static ImageScaler extractDefaultScaler(Map<String, ImageScaler> scalerMap, boolean fallback, boolean log) {
         ImageScaler scaler = scalerMap.get("default");
         if (fallback && scaler == null) {

@@ -34,9 +34,9 @@ import freemarker.template.TemplateScalarModel;
  * to the Freemarker <code>?interpret</code> call which inlines
  * in the current renderer (and therefore poses restrictions).
  * <p>
- * This is needed to: 
+ * This is needed to:
  * 1) carry the compilation and invocation options around
- * 2) allow nested Freemarker template renders that behave like separate renders 
+ * 2) allow nested Freemarker template renders that behave like separate renders
  *    (and not like inlined interprets like <code>?interpret</code> does)
  * 3) enable evaluating templates using <code>?string</code> operator from freemarker templates
  * 4) allow lazy compilation but that still gets cached
@@ -55,7 +55,7 @@ import freemarker.template.TemplateScalarModel;
 public class TemplateInvoker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected final TemplateSource templateSource;
     protected final InvokeOptions invokeOptions;
     /**
@@ -71,23 +71,23 @@ public class TemplateInvoker {
      * manual wrapping call has to be done.
      */
     protected final WrapperModel preferredModel;
-    
+
     public static class InvokeOptions {
 
         public enum InvokeMode {
-            
+
             /**
              * Standard, standalone Ofbiz-like invocation, as if using FreeMarkerWorker.
              */
             OFBIZ_STD("ofbiz-std");
-            
+
             /*
              * Inline, simulation of <code>?interpret</code> directive behavior.
              * TODO: not sure this will even possible. the point would be
              * to get ?string support.
              */
             //FTL_INLINE; // TODO
-            
+
             private static final Map<String, InvokeMode> nameMap;
             static {
                 Map<String, InvokeMode> map = new HashMap<>();
@@ -96,7 +96,7 @@ public class TemplateInvoker {
                 }
                 nameMap = map;
             }
-            
+
             private final String name;
 
             private InvokeMode(String name) {
@@ -106,11 +106,11 @@ public class TemplateInvoker {
             public String getName() {
                 return name;
             }
-            
+
             public static InvokeMode fromName(String str) {
                 return nameMap.get(str);
             }
-            
+
             public static InvokeMode fromNameAlways(String str) {
                 InvokeMode mode = fromName(str);
                 if(mode == null) {
@@ -119,21 +119,21 @@ public class TemplateInvoker {
                 return mode;
             }
         }
-        
+
         protected final InvokeMode invokeMode;
-        
+
         protected final Map<String, Object> context;
-        
+
         /**
          * If true, pushes the Ofbiz MapStack context before invoke and pops after.
          */
         protected final Boolean shareScope;
 
         protected final Map<String, Object> ctxVars;
-        
+
         protected final boolean envOut;
-        
-        public InvokeOptions(InvokeMode invokeMode, Map<String, Object> context, 
+
+        public InvokeOptions(InvokeMode invokeMode, Map<String, Object> context,
                 Boolean shareScope, Map<String, Object> ctxVars, boolean envOut) {
             this.invokeMode = invokeMode;
             this.context = context;
@@ -141,7 +141,7 @@ public class TemplateInvoker {
             this.ctxVars = ctxVars;
             this.envOut = envOut;
         }
-        
+
         public InvokeOptions(InvokeMode invokeMode, Boolean shareScope, Map<String, Object> ctxVars) {
             this(invokeMode, null, shareScope, ctxVars, false);
         }
@@ -160,7 +160,7 @@ public class TemplateInvoker {
         public Boolean getShareScope() {
             return shareScope;
         }
-        
+
         public Boolean getShareScope(Boolean defaultVal) {
             return shareScope != null ? shareScope : defaultVal;
         }
@@ -171,7 +171,7 @@ public class TemplateInvoker {
         public Map<String, Object> getCtxVars() {
             return ctxVars;
         }
-        
+
         public boolean isEnvOut() {
             return envOut;
         }
@@ -189,7 +189,7 @@ public class TemplateInvoker {
         SCALAR("scalar"),
         DIRECTIVE("directive"),
         HYBRID("hybrid");
-        
+
         private static final Map<String, WrapperModel> nameMap;
         static {
             Map<String, WrapperModel> map = new HashMap<>();
@@ -198,7 +198,7 @@ public class TemplateInvoker {
             }
             nameMap = map;
         }
-        
+
         private final String name;
 
         private WrapperModel(String name) {
@@ -208,11 +208,11 @@ public class TemplateInvoker {
         public String getName() {
             return name;
         }
-        
+
         public static WrapperModel fromName(String str) {
             return nameMap.get(str);
         }
-        
+
         public static WrapperModel fromNameAlways(String str) {
             WrapperModel mode = fromName(str);
             if(mode == null) {
@@ -221,7 +221,7 @@ public class TemplateInvoker {
             return mode;
         }
     }
-    
+
     protected TemplateInvoker(TemplateSource templateSource, InvokeOptions invokeOptions, WrapperModel preferredModel) {
         this.templateSource = templateSource;
         this.invokeOptions = invokeOptions;
@@ -231,21 +231,21 @@ public class TemplateInvoker {
     /* ***************************************************** */
     /* Factory Methods */
     /* ***************************************************** */
-    
+
     /**
-     * Gets a standard template invoker. 
+     * Gets a standard template invoker.
      */
     public static TemplateInvoker getInvoker(TemplateSource templateSource, InvokeOptions invokeOptions, WrapperModel preferredModel) throws TemplateException, IOException {
         return new TemplateInvoker(templateSource, invokeOptions, preferredModel);
     }
-    
+
     /**
-     * Gets a standard template invoker. 
+     * Gets a standard template invoker.
      */
     public static TemplateInvoker getInvoker(TemplateSource templateSource, InvokeOptions invokeOptions) throws TemplateException, IOException {
         return new TemplateInvoker(templateSource, invokeOptions, null);
     }
-    
+
 //    /**
 //     * Gets a template invoker same as standard except its toString() method invokes rendering.
 //     * @deprecated should be avoided because breaks toString contract and the original exception type is lost
@@ -254,11 +254,11 @@ public class TemplateInvoker {
 //        return new StringTemplateInvoker(templateSource, invokeOptions, preferredModel);
 //    }
 
-    
+
     /* ***************************************************** */
     /* Main Invocation Calls */
     /* ***************************************************** */
-    
+
     /**
      * Invokes rendering and outputs to Writer.
      */
@@ -285,7 +285,7 @@ public class TemplateInvoker {
             throw new UnsupportedOperationException("Unsupported template invoke mode: " + invokeOptions.invokeMode);
         }
     }
-    
+
     /**
      * Invokes rendering and returns as a String.
      */
@@ -294,9 +294,9 @@ public class TemplateInvoker {
         invoke(sw);
         return sw.toString();
     }
-    
 
-    
+
+
     /* ***************************************************** */
     /* Getters and Helpers */
     /* ***************************************************** */
@@ -304,7 +304,7 @@ public class TemplateInvoker {
     public Template getTemplate() throws TemplateException, IOException {
         return templateSource.getTemplate();
     }
-    
+
     protected TemplateSource getTemplateSource() throws TemplateException, IOException {
         return templateSource;
     }
@@ -312,11 +312,11 @@ public class TemplateInvoker {
     public InvokeOptions getInvokeOptions() {
         return invokeOptions;
     }
-    
+
     public WrapperModel getPreferredModel() {
         return preferredModel;
     }
-    
+
     protected Map<String, Object> getContext() {
         Map<String, Object> context = invokeOptions.getContext();
         if (context == null) {
@@ -335,7 +335,7 @@ public class TemplateInvoker {
     /* ***************************************************** */
     /* Specific Invoker Implementations */
     /* ***************************************************** */
-    
+
 //    /**
 //     * Variant of TemplateInvoker that invokes rendering when toString() is called.
 //     * @deprecated should be avoided because breaks toString contract and the original exception type is lost
@@ -361,7 +361,7 @@ public class TemplateInvoker {
 //                            return "";
 //                        }
 //                    }
-//                } 
+//                }
 //                return this.invoke();
 //                // FIXME: we're not supposed to do this AT ALL because it breaks toString() contract,
 //                // but in the circumstances we have no choice but to rethrow this, because otherwise
@@ -380,11 +380,11 @@ public class TemplateInvoker {
 //            }
 //        }
 //    }
-    
+
     /* ***************************************************** */
     /* Invoker Freemarker Wrappers */
     /* ***************************************************** */
-    
+
     /**
      * Wraps the TemplateInvoker in an appropriate TemplateModel, using invoker's preferred model.
      * Can be called manually as this logic may not be present in <code>ObjectWrapper.wrap</code>.
@@ -395,11 +395,11 @@ public class TemplateInvoker {
     public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, ObjectWrapper objectWrapper) throws TemplateModelException {
         return wrap(invoker, invoker.getPreferredModel(), objectWrapper);
     }
-    
+
     public static <T extends TemplateModel> T wrap(TemplateInvoker invoker) throws TemplateModelException {
         return wrap(invoker, invoker.getPreferredModel(), null);
     }
-    
+
     /**
      * Wraps the TemplateInvoker in an appropriate TemplateModel, using explicit model type.
      * Can be called manually as this logic may not be present in <code>ObjectWrapper.wrap</code>.
@@ -420,11 +420,11 @@ public class TemplateInvoker {
         }
         throw new UnsupportedOperationException("Unsupported template invoker FTL wrapper model: " + targetModel);
     }
-    
+
     public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, WrapperModel targetModel) throws TemplateModelException {
         return wrap(invoker, targetModel, null);
     }
-    
+
     /**
      * Custom Freemarker wrapper TemplateModel around the TemplateInvoker.
      * <p>
@@ -437,12 +437,12 @@ public class TemplateInvoker {
         protected InvokerWrapper(TemplateInvoker invoker) {
             this.invoker = invoker;
         }
-        
+
         @Override
         public Object getWrappedObject() {
             return invoker;
         }
-        
+
         protected String invokeAsString() throws TemplateModelException {
             try {
                 return invoker.invoke();
@@ -453,7 +453,7 @@ public class TemplateInvoker {
             }
         }
     }
-    
+
     public static class DirectiveInvokerWrapper extends InvokerWrapper implements TemplateDirectiveModel {
         public DirectiveInvokerWrapper(TemplateInvoker invoker) {
             super(invoker);
@@ -466,7 +466,7 @@ public class TemplateInvoker {
             invoker.invoke(env.getOut());
         }
     }
-    
+
     public static class ScalarInvokerWrapper extends InvokerWrapper implements TemplateScalarModel {
         public ScalarInvokerWrapper(TemplateInvoker invoker) {
             super(invoker);
@@ -495,7 +495,7 @@ public class TemplateInvoker {
             return invokeAsString();
         }
     }
-    
+
     /**
      * SPECIAL model factory plugged in via freemarkerWrapperFactories.properties.
      * This ELIMINATES the need to try to work around BeanModel and toString() and all
@@ -510,5 +510,5 @@ public class TemplateInvoker {
             return null;
         }
     }
-    
+
 }

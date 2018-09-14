@@ -70,7 +70,7 @@ public class FullWebappInfo {
         //this.delegator = delegator;
         this.extWebappInfo = extWebappInfo;
     }
-    
+
     protected FullWebappInfo(HttpServletRequest request) {
         try {
             // SPECIAL: in this case we must initialize WebSiteProperties immediately because
@@ -85,7 +85,7 @@ public class FullWebappInfo {
             throw new IllegalArgumentException(e);
         }
     }
-    
+
     protected FullWebappInfo(ExtWebappInfo extWebappInfo, HttpServletRequest request) {
         try {
             // SPECIAL: in this case we must initialize WebSiteProperties immediately because
@@ -104,7 +104,7 @@ public class FullWebappInfo {
     protected FullWebappInfo(ExtWebappInfo extWebappInfo, Map<String, Object> context) {
         this(extWebappInfo, (Delegator) context.get("delegator"));
     }
-    
+
     protected FullWebappInfo(ExtWebappInfo extWebappInfo, Delegator delegator) {
         try {
             // SPECIAL: in this case we must initialize WebSiteProperties immediately because
@@ -123,7 +123,7 @@ public class FullWebappInfo {
             throw new IllegalArgumentException(e);
         }
     }
-    
+
     /*
      * ******************************************************
      * Intra-webapp live request factory methods
@@ -324,7 +324,7 @@ public class FullWebappInfo {
         }
         return fullWebappInfo;
     }
-    
+
     /*
      * ******************************************************
      * High-level/combination factory methods

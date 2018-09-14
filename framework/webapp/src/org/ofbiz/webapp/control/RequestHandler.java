@@ -92,7 +92,7 @@ public class RequestHandler {
     private final boolean trackServerHit;
     private final boolean trackVisit;
     private final String charset;
-    
+
     /**
      * SCIPIO: Allows or prevents override view URIs, based on web.xml config. Default: true (stock behavior).
      */
@@ -106,7 +106,7 @@ public class RequestHandler {
         }
         return rh;
     }
-    
+
     /**
      * SCIPIO: Gets request handler for the ServletContext associated to current request.
      * Added 2017-05-08.
@@ -130,7 +130,7 @@ public class RequestHandler {
         this.trackServerHit = !"false".equalsIgnoreCase(context.getInitParameter("track-serverhit"));
         this.trackVisit = !"false".equalsIgnoreCase(context.getInitParameter("track-visit"));
         this.charset = context.getInitParameter("charset");
-        
+
         // SCIPIO: New (currently true by default)
         this.allowOverrideViewUri = !"false".equalsIgnoreCase(context.getInitParameter("allowOverrideViewUri"));
     }
@@ -194,7 +194,7 @@ public class RequestHandler {
         if (allowOverrideViewUri) {
             overrideViewUri = RequestHandler.getOverrideViewUri(request.getPathInfo());
         }
-        
+
         String requestMissingErrorMessage = "Unknown request [" + defaultRequestUri + "]; this request does not exist or cannot be called directly.";
         ConfigXMLReader.RequestMap requestMap = null;
         if (defaultRequestUri != null) {
@@ -500,7 +500,7 @@ public class RequestHandler {
                         requestMap = requestMapMap.get("ajaxCheckLogin");
                     }
                 }
-                
+
                 // SCIPIO: if we require login, we may need to support an alternate render expr to handle login case
                 Object scpLoginRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.LOGINRENDERTARGETEXPR_REQPARAM);
                 if (scpLoginRenderTargetExpr != null) {
@@ -534,10 +534,10 @@ public class RequestHandler {
 
                     // run the request event
                     eventReturn = this.runEvent(request, response, requestMap.event, requestMap, "request");
-                                        
+
                     if (requestMap.event.metrics != null) {
                         requestMap.event.metrics.recordServiceRate(1, System.currentTimeMillis() - startTime);
-                    }                    
+                    }
 
                     // save the server hit for the request event
                     if (this.trackStats(request)) {
@@ -637,7 +637,7 @@ public class RequestHandler {
                 if (UtilValidate.isNotEmpty(queryString)) {
                     redirectTarget += "?" + queryString;
                 }
-                
+
                 // SCIPIO: Always make full link early
                 //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
                 callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCodeString);
@@ -711,8 +711,8 @@ public class RequestHandler {
 
             String responseStatusCode  = nextRequestResponse.statusCode;
             if(UtilValidate.isNotEmpty(responseStatusCode))
-                statusCodeString = responseStatusCode;            
-            
+                statusCodeString = responseStatusCode;
+
             if ("url".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -877,7 +877,7 @@ public class RequestHandler {
     }
 
     /**
-     * SCIPIO: New feature that allows controller responses to dig values out of request attributes using the 
+     * SCIPIO: New feature that allows controller responses to dig values out of request attributes using the
      * EL-like syntax: ${scope.name}. The value must be a string otherwise an error is logged.
      * returned.
      * <p>
@@ -938,8 +938,8 @@ public class RequestHandler {
         }
         return value;
     }
-    
-    
+
+
     /** Find the event handler and invoke an event. */
     public String runEvent(HttpServletRequest request, HttpServletResponse response,
             ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
@@ -1045,7 +1045,7 @@ public class RequestHandler {
             statusCode = Integer.valueOf(statusCodeString);
         } catch (NumberFormatException e) {
             statusCode = 303;
-        } 
+        }
         while (attributeNameEnum.hasMoreElements()) {
             String name = attributeNameEnum.nextElement();
             Object obj = req.getAttribute(name);
@@ -1054,7 +1054,7 @@ public class RequestHandler {
             }
         }
         // SCIPIO: 2018-07-10: Do not include multiPartMap, to prevent storing uploaded files in session;
-        // NOTE: This is a heuristic based on most common usage of multiPartMap - may be tweaked in future. 
+        // NOTE: This is a heuristic based on most common usage of multiPartMap - may be tweaked in future.
         reqAttrMap.remove("multiPartMap");
         if (reqAttrMap.size() > 0) {
             reqAttrMap.remove("_REQUEST_HANDLER_");  // RequestHandler is not serializable and must be removed first.  See http://issues.apache.org/jira/browse/OFBIZ-750
@@ -1065,7 +1065,7 @@ public class RequestHandler {
         }
 
         // send the redirect
-        try {            
+        try {
             resp.setStatus(statusCode);
             resp.setHeader("Location", url);
             resp.setHeader("Connection", "close");
@@ -1079,7 +1079,7 @@ public class RequestHandler {
             Debug.logError("Scipio: View name is empty", module);
             throw new RequestHandlerException("Scipio: View name is empty");
         }
-        
+
         GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
         // workaround if we are in the root webapp
         String cname = UtilHttp.getApplicationName(req);
@@ -1127,13 +1127,13 @@ public class RequestHandler {
                 req.getSession().setAttribute("_LAST_VIEW_NAME_", view);
             }
             req.getSession().setAttribute("_LAST_VIEW_PARAMS_", paramMap);
-    
+
             if ("SAVED".equals(saveName)) {
                 //Debug.logInfo("======save current view: " + view);
                 req.getSession().setAttribute("_SAVED_VIEW_NAME_", view);
                 req.getSession().setAttribute("_SAVED_VIEW_PARAMS_", paramMap);
             }
-    
+
             if ("HOME".equals(saveName)) {
                 //Debug.logInfo("======save home view: " + view);
                 req.getSession().setAttribute("_HOME_VIEW_NAME_", view);
@@ -1179,7 +1179,7 @@ public class RequestHandler {
         } else {
             charset = UtilFormatOut.checkEmpty(this.charset, req.getCharacterEncoding(), "UTF-8");
         }
-        
+
         if (!viewAsJson) {
             String viewCharset = viewMap.encoding;
             //NOTE: if the viewCharset is "none" then no charset will be used
@@ -1245,28 +1245,28 @@ public class RequestHandler {
             }
         }
 
-        //The only x-content-type-options defined value, "nosniff", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type. 
+        //The only x-content-type-options defined value, "nosniff", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type.
         // This also applies to Google Chrome, when downloading extensions.
-        resp.addHeader("x-content-type-options", "nosniff"); 
+        resp.addHeader("x-content-type-options", "nosniff");
 
-        // This header enables the Cross-site scripting (XSS) filter built into most recent web browsers. 
-        // It's usually enabled by default anyway, so the role of this header is to re-enable the filter for this particular website if it was disabled by the user. 
+        // This header enables the Cross-site scripting (XSS) filter built into most recent web browsers.
+        // It's usually enabled by default anyway, so the role of this header is to re-enable the filter for this particular website if it was disabled by the user.
         // This header is supported in IE 8+, and in Chrome (not sure which versions). The anti-XSS filter was added in Chrome 4. Its unknown if that version honored this header.
         // FireFox has still an open bug entry and "offers" only the noscript plugin
-        // https://wiki.mozilla.org/Security/Features/XSS_Filter 
+        // https://wiki.mozilla.org/Security/Features/XSS_Filter
         // https://bugzilla.mozilla.org/show_bug.cgi?id=528661
-        resp.addHeader("X-XSS-Protection","1; mode=block"); 
+        resp.addHeader("X-XSS-Protection","1; mode=block");
 
         resp.setHeader("Referrer-Policy", "no-referrer-when-downgrade"); // This is the default (in Firefox at least)
-        
+
         //resp.setHeader("Content-Security-Policy", "default-src 'self'");
         //resp.setHeader("Content-Security-Policy-Report-Only", "default-src 'self'; report-uri webtools/control/ContentSecurityPolicyReporter");
         // SCIPIO: 2018-07-10: the following line is commented BY US (but not the two above);
         // this is inappropriate for production and is missing configuration.
         //resp.setHeader("Content-Security-Policy-Report-Only", "default-src 'self'");
-        
+
         // TODO in custom project. Public-Key-Pins-Report-Only is interesting but can't be used OOTB because of demos (the letsencrypt certificate is renewed every 3 months)
-        
+
         // Security headers ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
         try {
@@ -1295,7 +1295,7 @@ public class RequestHandler {
             }
             doRequest(req, resp, jsonRequestUri, userLogin, (Delegator) req.getAttribute("delegator"));
         }
-        
+
         // before getting the view generation time flush the response output to get more consistent results
         try {
             resp.flushBuffer();
@@ -1314,7 +1314,7 @@ public class RequestHandler {
                 System.currentTimeMillis() - viewStartTime, userLogin);
         }
     }
-    
+
     /**
      * SCIPIO: factored out viewAsJson view handler render wrapper code.
      */
@@ -1340,10 +1340,10 @@ public class RequestHandler {
      * <p>
      * Added 2018-06-13.
      */
-    static boolean isAllowViewSave(String viewName, HttpServletRequest req, 
+    static boolean isAllowViewSave(String viewName, HttpServletRequest req,
             ConfigXMLReader.ControllerConfig controllerConfig, ConfigXMLReader.RequestMap requestMap,
             ConfigXMLReader.RequestResponse requestResponse, boolean viewAsJson, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig) {
-        
+
         // Static configuration lookup first
         Boolean allowViewSave = requestResponse.getAllowViewSave();
         if (allowViewSave == null) {
@@ -1363,16 +1363,16 @@ public class RequestHandler {
         if (Boolean.FALSE.equals(allowViewSave)) {
             return false;
         }
-        
+
         // Dynamic request circumstances lookups
-        return !"N".equals(req.getParameter("_ALLOW_VIEW_SAVE_")) 
+        return !"N".equals(req.getParameter("_ALLOW_VIEW_SAVE_"))
                 && (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(req, viewAsJsonConfig));
     }
 
     /**
      * Returns a URL String that contains only the scheme and host parts. This method
      * should not be used because it ignores settings in the WebSite entity.
-     * 
+     *
      * @param request
      * @param secure
      * @deprecated Use OfbizUrlBuilder
@@ -1399,7 +1399,7 @@ public class RequestHandler {
                 httpsPort = httpsPortValue.toString();
             }
         }
-        
+
         StringBuilder newURL = new StringBuilder();
 
         if (secure && useHttps) {
@@ -1440,7 +1440,7 @@ public class RequestHandler {
      * @return return the query string
      */
     public String makeQueryString(HttpServletRequest request, ConfigXMLReader.RequestResponse requestResponse) {
-        if (requestResponse == null || 
+        if (requestResponse == null ||
                 ("auto".equals(requestResponse.includeMode) && requestResponse.redirectParameterMap.size() == 0 && requestResponse.redirectParameterValueMap.size() == 0) ||
                 !"url-params".equals(requestResponse.includeMode) || "all-params".equals(requestResponse.includeMode)) {
             Map<String, Object> urlParams;
@@ -1448,7 +1448,7 @@ public class RequestHandler {
                 urlParams = UtilHttp.getParameterMap(request, requestResponse.excludeParameterSet, false);
             } else {
                 urlParams = UtilHttp.getUrlOnlyParameterMap(request);
-                
+
                 // SCIPIO: remove excluded
                 if (requestResponse.excludeParameterSet != null) {
                     for(String name : requestResponse.excludeParameterSet) {
@@ -1476,7 +1476,7 @@ public class RequestHandler {
 
                 urlParams.put(name, value);
             }
-            
+
             String queryString = UtilHttp.urlEncodeArgs(urlParams, false);
             if(UtilValidate.isEmpty(queryString)) {
                 return queryString;
@@ -1528,7 +1528,7 @@ public class RequestHandler {
      * SCIPIO: Modified overload to allow boolean flags.
      * SCIPIO: Modified to include query string in makeLink call.
      */
-    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode, 
+    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode,
             ConfigXMLReader.RequestResponse requestResponse) {
         // SCIPIO: 2017-11-21: include the query string inside the makeLink call
         //String initialLink = this.makeLink(request, response, url, fullPath, secure, encode);
@@ -1536,7 +1536,7 @@ public class RequestHandler {
         //return initialLink + queryString;
         return this.makeLink(request, response, url + this.makeQueryString(request, requestResponse), fullPath, secure, encode);
     }
-    
+
     /**
      * Builds links with added query string.
      * <p>
@@ -1545,24 +1545,24 @@ public class RequestHandler {
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
         return makeLinkWithQueryString(request, response, url, null, null, null, requestResponse);
     }
-    
+
     /**
      * SCIPIO: Builds a full-path link (HTTPS as necessary) with added query string.
      */
     public String makeLinkFullWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
         return makeLinkWithQueryString(request, response, url, true, null, null, requestResponse);
-    }    
+    }
 
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeLink(request, response, url, null, null, null);
     }
-    
+
     /**
      * SCIPIO: Builds a full-path link (HTTPS as necessary).
      */
     public String makeLinkFull(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeLink(request, response, url, true, null, null);
-    }    
+    }
 
     /**
      * Builds an Ofbiz navigation link.
@@ -1572,21 +1572,21 @@ public class RequestHandler {
      * navigation links. However, it will only build links for webapps recognized by the server,
      * because in most cases we require information from the webapp.
      * <p>
-     * <strong>fullPath behavior change</strong>: In Scipio, when fullPath is specified for a controller request, if the 
-     * request is defined as secure, a secure URL will be created. This method will now never allow an 
-     * insecure URL to built for a controller request marked secure. In stock Ofbiz, this behavior was 
-     * different: fullPath could generate insecure URLs to secure requests. In addition, fullPath will 
-     * by default no longer downgrade HTTPS connections. To allow downgrades, you must explicitly specify 
+     * <strong>fullPath behavior change</strong>: In Scipio, when fullPath is specified for a controller request, if the
+     * request is defined as secure, a secure URL will be created. This method will now never allow an
+     * insecure URL to built for a controller request marked secure. In stock Ofbiz, this behavior was
+     * different: fullPath could generate insecure URLs to secure requests. In addition, fullPath will
+     * by default no longer downgrade HTTPS connections. To allow downgrades, you must explicitly specify
      * request it by passing secure false, and this may still produce a secure link if the target
      * is marked secure. Currently, this applies to all links including inter-webapp links.
      * <p>
-     * <strong>secure behavior change</strong>: In Scipio, if current browsing is secure, we NEVER downgrade to HTTPS unless 
+     * <strong>secure behavior change</strong>: In Scipio, if current browsing is secure, we NEVER downgrade to HTTPS unless
      * explicitly requested by passing secure false, and secure false may still produce a secure link if
-     * needed. Currently (2016-04-06), for security reasons, this 
+     * needed. Currently (2016-04-06), for security reasons, this
      * downgrading request request only applies to the case where the target link is marked as non-secure (or is missing/unknown, as of 2016-07-14), such
      * that in general, setting secure false does not mean the link will be insecure in all cases.
-     * In addition, in Scipio, secure flag no longer forces a fullPath link. Specify fullPath true in addition to 
-     * secure to force a fullPath link. Links may still generate full-path secure links when needed even 
+     * In addition, in Scipio, secure flag no longer forces a fullPath link. Specify fullPath true in addition to
+     * secure to force a fullPath link. Links may still generate full-path secure links when needed even
      * if not requested, however.
      * <p>
      * <strong>encode behavior</strong>: The <code>encode</code> flag controls whether the link should
@@ -1628,7 +1628,7 @@ public class RequestHandler {
      * @param encode if true, pass through response.encodeURL (default: null/true) (Scipio: changed to Boolean instead of boolean)
      * @return the resulting URL
      */
-    public static String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, FullWebappInfo targetWebappInfo, Boolean controller, 
+    public static String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, FullWebappInfo targetWebappInfo, Boolean controller,
             Boolean fullPath, Boolean secure, Boolean encode) {
         // SCIPIO: We now accept nulls for all booleans to prevent rehardcoding defaults and allow more options
         if (interWebapp == null) {
@@ -1649,7 +1649,7 @@ public class RequestHandler {
         if (encode == null) {
             encode = Boolean.TRUE;
         }
-        
+
         Delegator delegator = (Delegator) request.getAttribute("delegator"); // SCIPIO: need delegator
         OfbizUrlBuilder builder = null; // SCIPIO: reuse this outside
 
@@ -1657,16 +1657,16 @@ public class RequestHandler {
         if (interWebapp && targetWebappInfo == null) {
             throw new IllegalArgumentException("makeLink: Cannot build inter-webapp URL without target webapp info");
         }
-        
+
         // SCIPIO: Sanity check: null/missing URL
         if (url == null || url.isEmpty()) {
             Debug.logError("makeLink: Received null URL; returning null", module);
             return null;
         }
-        
+
         WebSiteProperties webSiteProps;
         WebSiteProperties requestWebSiteProps;
-        
+
         // SCIPIO: always get current request webSiteProps
         FullWebappInfo currentWebappInfo;
         try {
@@ -1677,11 +1677,11 @@ public class RequestHandler {
             Debug.logError("makeLink: Error getting current webapp info from request: " + e.toString(), module);
             return null;
         }
-        
+
         // SCIPIO: Multiple possible ways to get webSiteProps
         if (interWebapp) {
             try {
-                webSiteProps = targetWebappInfo.getWebSiteProperties(); 
+                webSiteProps = targetWebappInfo.getWebSiteProperties();
             } catch (Exception e) {
                 Debug.logError("makeLink: Error getting web site properties for webapp "
                         + targetWebappInfo + ": " + e.toString(), module);
@@ -1691,10 +1691,10 @@ public class RequestHandler {
             // SCIPIO: stock case (get from request, or defaults)
             webSiteProps = requestWebSiteProps;
         }
-        
+
         // SCIPIO: Special case: If we have inter-webapp, we need to check if the web site properties
         // for this link different from the current request's. If so, we have to force full-path
-        // link. Here we compare the effective values to ensure correctness. 
+        // link. Here we compare the effective values to ensure correctness.
         // TODO? It is possible we could want to always force fullPath for all inter-webapp links.
         // Maybe make a url.properties option and allow force fullPath and force secure.
         if (interWebapp) {
@@ -1702,14 +1702,14 @@ public class RequestHandler {
                 fullPath = true;
             }
         }
-        
+
         String requestUri = null;
         ConfigXMLReader.RequestMap requestMap = null;
-        
+
         // SCIPIO: only lookup if we want to use controller
         if (controller) {
             requestUri = RequestHandler.getRequestUri(url);
-            
+
             if (requestUri != null) {
                 if (interWebapp) {
                     try {
@@ -1730,23 +1730,23 @@ public class RequestHandler {
                     }
                 }
             }
-            
+
             // SCIPIO: 2016-05-06: If controller requested and request could not be found, show an error and return null.
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
-                Debug.log(getMakeLinkErrorLogLevel(request, delegator), null, "makeLink: Cannot build link: could not locate the expected request '" 
+                Debug.log(getMakeLinkErrorLogLevel(request, delegator), null, "makeLink: Cannot build link: could not locate the expected request '"
                         + requestUri + "' in controller config for webapp " + (interWebapp ? targetWebappInfo : currentWebappInfo), module);
-                return null; 
+                return null;
             }
         }
-        
+
         boolean didFullSecure = false;
         boolean didFullStandard = false;
         // SCIPIO: We need to enter even if no controller (and other cases)
         //if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
         // We don't need this condition anymore, because it doesn't make sense to require enableHttps to produce full path URLs
-        //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {    
+        //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {
         {
             if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
             // SCIPIO: These conditions have been change (see method)
@@ -1771,7 +1771,7 @@ public class RequestHandler {
             try {
                 if (builder == null) {
                     if (interWebapp) {
-                        // SCIPIO: builder should be made using webappInfo if one was passed to us 
+                        // SCIPIO: builder should be made using webappInfo if one was passed to us
                         builder = targetWebappInfo.getOfbizUrlBuilder();
                     } else {
                         // SCIPIO: stock case
@@ -1781,12 +1781,12 @@ public class RequestHandler {
                 builder.buildHostPart(newURL, url, didFullSecure, controller); // SCIPIO: controller flag
             } catch (Exception e) {
                 // If we can't read the controller.xml file, then there is no point in continuing.
-                Debug.logError("makeLink: Error building url for webapp " 
+                Debug.logError("makeLink: Error building url for webapp "
                         + (interWebapp ? targetWebappInfo : currentWebappInfo) + ": " + e.toString(), module);
                 return null;
             }
         }
-        
+
         // SCIPIO: build the path part (context root, servlet/controller path)
         if (interWebapp) {
             try {
@@ -1818,7 +1818,7 @@ public class RequestHandler {
                 return null;
             }
 
-            if (controller) { 
+            if (controller) {
                 // SCIPIO: This is the original stock case: intra-webapp, controller link
                 // create the path to the control servlet
                 String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
@@ -1828,7 +1828,7 @@ public class RequestHandler {
                 String contextPath = request.getContextPath();
                 newURL.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
             }
-            
+
             // now add the actual passed url, but if it doesn't start with a / add one first
             if (!url.startsWith("/")) {
                 newURL.append("/");
@@ -1846,8 +1846,8 @@ public class RequestHandler {
 
         return encodedUrl;
     }
-    
-    public static String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, WebappInfo webappInfo, Boolean controller, 
+
+    public static String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, WebappInfo webappInfo, Boolean controller,
             Boolean fullPath, Boolean secure, Boolean encode) {
         FullWebappInfo targetWebappInfo = null;
         if (webappInfo != null) {
@@ -1860,12 +1860,12 @@ public class RequestHandler {
         }
         return makeLink(request, response, url, interWebapp, targetWebappInfo, controller, fullPath, secure, encode);
     }
-    
+
     /**
      * SCIPIO: makeLink overload that works without request; requires explicit webapp.
      * Added 2018-08-01.
      */
-    public static String makeLink(Delegator delegator, Locale locale, String url, FullWebappInfo targetWebappInfo, Boolean controller, 
+    public static String makeLink(Delegator delegator, Locale locale, String url, FullWebappInfo targetWebappInfo, Boolean controller,
             Boolean fullPath, Boolean secure, Boolean encode, FullWebappInfo currentWebappInfo, Map<String, Object> context) {
         if (controller == null) {
             controller = Boolean.TRUE;
@@ -1873,7 +1873,7 @@ public class RequestHandler {
         if (encode == null) {
             encode = Boolean.TRUE;
         }
-        
+
         OfbizUrlBuilder builder = null; // SCIPIO: reuse this outside
         WebSiteProperties webSiteProps; // SCIPIO: NOTE: we *possibly* could want to accept this var as method parameter (as optimization/special), but to be safe, don't for now
 
@@ -1886,13 +1886,13 @@ public class RequestHandler {
             }
         }
         boolean interWebapp = !targetWebappInfo.equals(currentWebappInfo);
-        
+
         // SCIPIO: Sanity check: null/missing URL
         if (url == null || url.isEmpty()) {
             Debug.logError("makeLink: Received null URL; returning null", module);
             return null;
         }
-        
+
         // SCIPIO: Multiple possible ways to get webSiteProps
         try {
             webSiteProps = targetWebappInfo.getWebSiteProperties();
@@ -1908,14 +1908,14 @@ public class RequestHandler {
                 fullPath = true;
             }
         }
-        
+
         String requestUri = null;
         ConfigXMLReader.RequestMap requestMap = null;
-        
+
         // SCIPIO: only lookup if we want to use controller
         if (controller) {
             requestUri = RequestHandler.getRequestUri(url);
-            
+
             if (requestUri != null) {
                 try {
                     requestMap = targetWebappInfo.getControllerConfig().getRequestMapMap().get(requestUri);
@@ -1926,23 +1926,23 @@ public class RequestHandler {
                     return null;
                 }
             }
-            
+
             // SCIPIO: 2016-05-06: If controller requested and request could not be found, show an error and return null.
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
-                Debug.log(getMakeLinkErrorLogLevel((HttpServletRequest) context.get("request"), delegator), null, "makeLink: Cannot build link: could not locate the expected request '" 
+                Debug.log(getMakeLinkErrorLogLevel((HttpServletRequest) context.get("request"), delegator), null, "makeLink: Cannot build link: could not locate the expected request '"
                         + requestUri + "' in controller config for webapp " + targetWebappInfo, module);
-                return null; 
+                return null;
             }
         }
-        
+
         boolean didFullSecure = false;
         boolean didFullStandard = false;
         // SCIPIO: We need to enter even if no controller (and other cases)
         //if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
         // We don't need this condition anymore, because it doesn't make sense to require enableHttps to produce full path URLs
-        //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {    
+        //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {
         {
             if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
             // SCIPIO: These conditions have been change (see method)
@@ -1961,7 +1961,7 @@ public class RequestHandler {
             }
         }
         StringBuilder newURL = new StringBuilder(250);
-        
+
         try {
             if (builder == null) {
                 builder = targetWebappInfo.getOfbizUrlBuilder();
@@ -1972,7 +1972,7 @@ public class RequestHandler {
                     + targetWebappInfo + ": " + e.toString(), module);
             return null;
         }
-        
+
         if (didFullSecure || didFullStandard) {
             try {
                 builder.buildHostPart(newURL, url, didFullSecure, controller);
@@ -1982,7 +1982,7 @@ public class RequestHandler {
                 return null;
             }
         }
-        
+
         // SCIPIO: build the path part (context root, servlet/controller path)
         try {
             if (controller) {
@@ -1998,7 +1998,7 @@ public class RequestHandler {
 
         String encodedUrl;
         if (encode) {
-            encodedUrl = doLinkURLEncode(delegator, locale, newURL, targetWebappInfo, currentWebappInfo, 
+            encodedUrl = doLinkURLEncode(delegator, locale, newURL, targetWebappInfo, currentWebappInfo,
                         didFullStandard, didFullSecure, context);
         } else {
             encodedUrl = newURL.toString();
@@ -2006,7 +2006,7 @@ public class RequestHandler {
         return encodedUrl;
     }
 
-    public static String makeLink(Map<String, Object> context, Delegator delegator, Locale locale, String url, FullWebappInfo targetWebappInfo, Boolean controller, 
+    public static String makeLink(Map<String, Object> context, Delegator delegator, Locale locale, String url, FullWebappInfo targetWebappInfo, Boolean controller,
             Boolean fullPath, Boolean secure, Boolean encode) {
         FullWebappInfo currentWebappInfo;
         try {
@@ -2015,7 +2015,7 @@ public class RequestHandler {
             Debug.logError("makeLink: Could not get current webapp info from context: " + e.toString(), module);
             return null;
         }
-        return makeLink(delegator, locale, url, targetWebappInfo, controller, fullPath, secure, encode, 
+        return makeLink(delegator, locale, url, targetWebappInfo, controller, fullPath, secure, encode,
                 currentWebappInfo, context);
     }
 
@@ -2025,7 +2025,7 @@ public class RequestHandler {
     }
 
     /**
-     * SCIPIO: Determines whether the link should be fullpath secure/https, fullpath plain/http, 
+     * SCIPIO: Determines whether the link should be fullpath secure/https, fullpath plain/http,
      * or absolute from server root (factored-out makeLink code).
      * <p>
      * 2018-08-02: Conditions rewritten to match new HTTPS-high priority policy.
@@ -2045,7 +2045,7 @@ public class RequestHandler {
      * <p>
      * @return null if no full required, true if secure fullpath required, false if standard fullpath required.
      */
-    protected static Boolean checkFullSecureOrStandard(HttpServletRequest request, Boolean isCurrentSecure, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
+    protected static Boolean checkFullSecureOrStandard(HttpServletRequest request, Boolean isCurrentSecure, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap,
             Boolean interWebapp, Boolean fullPath, Boolean secure) {
         // The only case we can produce plain http link is if secure=false requested and the target request map is not marked https=true.
         // NOTE: 2018-08-02: We now ignore secure=false if also have explicit fullPath=false (see method description)
@@ -2060,7 +2060,7 @@ public class RequestHandler {
         }
     }
 
-    protected static Boolean checkFullSecureOrStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
+    protected static Boolean checkFullSecureOrStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap,
             Boolean interWebapp, Boolean fullPath, Boolean secure) {
         return checkFullSecureOrStandard(request, (request != null) ? RequestLinkUtil.isEffectiveSecure(request) : null, webSiteProps, requestMap, interWebapp, fullPath, secure);
     }
@@ -2068,7 +2068,7 @@ public class RequestHandler {
     /**
      * SCIPIO: Factored-out makeLink code, that we must expose so other link-building code may reuse.
      * <p>
-     * WARN: newURL is modified in-place, and then discarded, so only use the result. 
+     * WARN: newURL is modified in-place, and then discarded, so only use the result.
      */
     protected static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
             FullWebappInfo targetWebappInfo, FullWebappInfo currentWebappInfo, boolean didFullStandard, boolean didFullSecure) {
@@ -2085,7 +2085,7 @@ public class RequestHandler {
                 request.setAttribute(UrlFilterHelper.OUT_URL_WEBAPP, targetWebappInfo);
                 encodedUrl = response.encodeURL(newURL.toString());
                 if (interWebapp) {
-                    // SCIPIO: SPECIAL: Since urlrewrite.xml is what normally delegates the inter-webapp rewriting 
+                    // SCIPIO: SPECIAL: Since urlrewrite.xml is what normally delegates the inter-webapp rewriting
                     // (through response.encodeURL above and urlrewrite.xml invokes UrlFilterHelper.doInterWebappUrlRewrite),
                     // if the "current" webapp web.xml doesn't have UrlRewriterFilter, we will
                     // have to emulate by adding an extra rewrite, which will behave as if
@@ -2110,7 +2110,7 @@ public class RequestHandler {
                                 ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(targetWebappInfo, request, response, true);
                                 encodedUrl = rewriter.processOutboundUrl(encodedUrl, targetWebappInfo, request, response);
                             } catch (Exception e) {
-                                Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) inter-webapp link for webapp " + targetWebappInfo 
+                                Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) inter-webapp link for webapp " + targetWebappInfo
                                         + ": " + e.toString(), module);
                             }
                         }
@@ -2124,24 +2124,24 @@ public class RequestHandler {
         }
         return encodedUrl;
     }
-    
-    protected static String doLinkURLEncode(Delegator delegator, Locale locale, StringBuilder newURL, FullWebappInfo targetWebappInfo, 
+
+    protected static String doLinkURLEncode(Delegator delegator, Locale locale, StringBuilder newURL, FullWebappInfo targetWebappInfo,
             FullWebappInfo currentWebappInfo, boolean didFullStandard, boolean didFullSecure, Map<String, Object> context) {
         FullWebappInfo webappInfo = (targetWebappInfo != null) ? targetWebappInfo : currentWebappInfo;
         try {
             return ScipioUrlRewriter.getForContext(webappInfo, context, true)
                 .processOutboundUrl(newURL.toString(), targetWebappInfo, context);
         } catch (IOException e) {
-            Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) link for webapp " + webappInfo 
-                    + ": " + e.toString(), module); 
+            Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) link for webapp " + webappInfo
+                    + ": " + e.toString(), module);
             return newURL.toString();
         }
     }
-    
+
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode) {
         return makeLink(request, response, url, null, (FullWebappInfo) null, null, fullPath, secure, encode);
     }
-    
+
     /**
      * SCIPIO: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
      * and <code>webSiteId</code>.
@@ -2152,10 +2152,10 @@ public class RequestHandler {
      * <p>
      * For inter-webapp, if <code>webSiteId</code> is specified, it will determine the target webapp.
      * Some webapps don't have their own webSiteId, in which case the webapp will be inferred from
-     * the absolute target link. If not enough information is available to pinpoint a web app (<code>WebappInfo<code>), 
+     * the absolute target link. If not enough information is available to pinpoint a web app (<code>WebappInfo<code>),
      * the call will fail and return null.
      * <p>
-     * Each of the options can be passed null to let the method figure out. If specified it 
+     * Each of the options can be passed null to let the method figure out. If specified it
      * will be taken into consideration. <strong>Exceptions</strong>: Currently, <code>interWebapp</code>
      * should be specified, otherwise <code>false</code> is always assumed regardless of <code>url</code> format
      * (there are currently no known cases where we need to infer this and creates ambiguities).
@@ -2167,7 +2167,7 @@ public class RequestHandler {
      * <strong>WARN</strong>: Due to technical limitations (notably Java servlet spec), this method may
      * be forced to make inexact assumptions, which is one reason why it is implemented as a distinct method.
      */
-    public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, 
+    public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller,
             Boolean fullPath, Boolean secure, Boolean encode) {
         return makeLinkAutoCore(true, request, response, null, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, null, null);
     }
@@ -2178,22 +2178,22 @@ public class RequestHandler {
      * NOTE: For this overload, request/response are not considered determinant of the method behavior,
      * and are instead mainly here for logging purposes (e.g. trying to render a static template in static fashion within another unrelated webapp request).
      */
-    public static String makeLinkAuto(Map<String, Object> context, Delegator delegator, Locale locale, String webSiteId, String url, Boolean absPath, Boolean interWebapp, Boolean controller, 
+    public static String makeLinkAuto(Map<String, Object> context, Delegator delegator, Locale locale, String webSiteId, String url, Boolean absPath, Boolean interWebapp, Boolean controller,
             Boolean fullPath, Boolean secure, Boolean encode) {
         return makeLinkAutoCore(false, null, null, context, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, delegator, locale);
     }
 
-    private static String makeLinkAutoCore(boolean requestBased, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, 
+    private static String makeLinkAutoCore(boolean requestBased, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller,
             Boolean fullPath, Boolean secure, Boolean encode, Delegator delegator, Locale locale) {
-        
+
         boolean absControlPathChecked = false;
         boolean absContextPathChecked = false;
-        
+
         // Check inter-webapp
         if (interWebapp == null) {
             // FIXME? For now, can assume false unless requested otherwise.
             interWebapp = Boolean.FALSE;
-            
+
             /* This is incomplete or invalid... don't always have webSiteId...
              * would have to compare WebappInfo from request to ours.. but the tests become circular...
             boolean sameWebSite = true;
@@ -2205,7 +2205,7 @@ public class RequestHandler {
             }
             */
         }
-        
+
         // Check if absolute path
         if (absPath == null) {
             // FIXME?: Current default behavior is predictable but is non-reactive to the url format.
@@ -2222,7 +2222,7 @@ public class RequestHandler {
                 absPath = false;
             }
         }
-        
+
         // Get target webapp info
         FullWebappInfo targetWebappInfo = null;
         FullWebappInfo currentWebappInfo = null;
@@ -2277,7 +2277,7 @@ public class RequestHandler {
         if (!contextPath.endsWith("/")) {
             contextPath += "/";
         }
-        
+
         // Check if controller should be used
         String controlPath = null;
         if (controller == null) {
@@ -2301,14 +2301,14 @@ public class RequestHandler {
                 return null;
             }
         }
-        
+
         // Sanity check only, for absolute paths (NOTE: slows things down... but do it for now);
         // make sure it starts with the same webapp we're targeting
         if (absPath) {
             if (controller) {
                 if (!absControlPathChecked) {
                     if (!url.startsWith(controlPath)) {
-                        Debug.logError("makeLinkAuto: Trying to make a controller link for webapp " + targetWebappInfo 
+                        Debug.logError("makeLinkAuto: Trying to make a controller link for webapp " + targetWebappInfo
                                 + " using absolute path url, but prefix does not match (uri: " + url + ", control path: " + controlPath + ")", module);
                         return null;
                     }
@@ -2325,7 +2325,7 @@ public class RequestHandler {
                 }
             }
         }
-        
+
         // Extract the relative part of the URL; this simplifies the makeLink function (and moves sanity checks here)
         String relUrl;
         if (absPath) {
@@ -2348,22 +2348,22 @@ public class RequestHandler {
     /**
      * SCIPIO: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
      * and <code>webSiteId</code>.
-     * 
+     *
      * @see #makeLinkAuto(HttpServletRequest, HttpServletResponse, String, Boolean, Boolean, String, Boolean, Boolean, Boolean, Boolean)
      */
     public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller) {
         return makeLinkAuto(request, response, url, absPath, interWebapp, webSiteId, controller, null, null, null);
     }
-    
+
     /**
      * SCIPIO: Builds an Ofbiz navigation full link (with HTTPS as necessary), where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
      * and <code>webSiteId</code>.
-     * 
+     *
      * @see #makeLinkAuto(HttpServletRequest, HttpServletResponse, String, Boolean, Boolean, String, Boolean, Boolean, Boolean, Boolean)
      */
     public static String makeLinkAutoFull(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller) {
         return makeLinkAuto(request, response, url, absPath, interWebapp, webSiteId, controller, true, null, null);
-    }    
+    }
 
     /**
      * Builds an Ofbiz URL.
@@ -2382,14 +2382,14 @@ public class RequestHandler {
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         return rh.makeLink(request, response, url, fullPath, secure, encode);
     }
-    
+
     /**
      * SCIPIO: Builds a full-path link (HTTPS as necessary).
      */
     public static String makeUrlFull(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeUrl(request, response, url, true, null, null);
-    }    
-    
+    }
+
 
     public void runAfterLoginEvents(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -2468,7 +2468,7 @@ public class RequestHandler {
         //Delegator delegator = (Delegator) request.getAttribute("delegator");
         //EntityUtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y", delegator);
         if (showSessionIdInLog) {
-            return " sessionId=" + UtilHttp.getSessionId(request); 
+            return " sessionId=" + UtilHttp.getSessionId(request);
         }
         // SCIPIO: needlessly verbose
         //return " hidden sessionId by default.";
@@ -2486,7 +2486,7 @@ public class RequestHandler {
         RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
         return rh.controllerHasRequestUriDirect(uri);
     }
-    
+
     /**
      * SCIPIO: Utility method that can be used for security checks to check if controller of current webapp
      * has the specified URI and allows direct/public access.
@@ -2494,31 +2494,31 @@ public class RequestHandler {
     public boolean controllerHasRequestUriDirect(String uri) {
         try {
             ConfigXMLReader.RequestMap requestMap = getControllerConfig().getRequestMapMap().get(uri);
-            
+
             if (requestMap != null && requestMap.securityDirectRequest) {
                 return true;
             }
-            
+
         } catch (Exception e) {
             ;
         }
         return false;
     }
-    
+
     /**
      * SCIPIO: Necessary accessor method for external code.
      */
     public boolean isUseCookies() {
         return true; // 2018-07-09: now always true (assumed)
     }
-    
+
     /**
      * SCIPIO: Returns the static charset (only).
      */
     public String getCharset() {
         return charset;
     }
-    
+
     /**
      * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
      * (same rules as {@link HttpServletRequest#getServletPath()}).
@@ -2529,7 +2529,7 @@ public class RequestHandler {
     public static String getControlServletPath(ServletRequest request) {
         return getControlServletPath(request.getServletContext());
     }
-    
+
     /**
      * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
      * (same rules as {@link HttpServletRequest#getServletPath()}).
@@ -2542,7 +2542,7 @@ public class RequestHandler {
     public static String getControlServletPath(ServletContext servletContext) {
         return (String) servletContext.getAttribute("_CONTROL_SERVPATH_");
     }
-    
+
     /**
      * SCIPIO: Returns the servlet mapping for the controller.
      * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
@@ -2552,7 +2552,7 @@ public class RequestHandler {
     public static String getControlServletMapping(ServletRequest request) {
         return getControlServletMapping(request.getServletContext());
     }
-    
+
     /**
      * SCIPIO: Returns the servlet mapping for the controller.
      * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
@@ -2571,13 +2571,13 @@ public class RequestHandler {
         INCOMING_URL,
         INCOMING_URL_STATICHOST,
         OFBIZ_URL;
-        
+
         public static final SecureUrlRedirFmt VALUE;
         static {
             switch(UtilProperties.getPropertyValue("requestHandler", "secure-redirect-url-format", "ofbiz-url")) {
             case "incoming-url": VALUE = INCOMING_URL; break;
             case "incoming-url-statichost": VALUE = INCOMING_URL_STATICHOST; break;
-            default: VALUE = OFBIZ_URL;   
+            default: VALUE = OFBIZ_URL;
             }
         }
         public boolean isIncoming() { return this != OFBIZ_URL; }

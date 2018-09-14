@@ -53,11 +53,11 @@ public class ScreenFactory extends WidgetFactory {
     // it maintains backward-compat by implementing Map, so all old code should still work.
     public static final UtilCache<String, ModelScreens> screenLocationCache = UtilCache.createUtilCache("widget.screen.locationResource", 0, 0, false);
     public static final UtilCache<String, ModelScreens> screenWebappCache = UtilCache.createUtilCache("widget.screen.webappResource", 0, 0, false);
-    
+
     public static ScreenFactory getScreenFactory() { // SCIPIO: new
         return screenFactory;
     }
-    
+
     public static boolean isCombinedName(String combinedName) {
         int numSignIndex = combinedName.lastIndexOf("#");
         if (numSignIndex == -1) {
@@ -111,7 +111,7 @@ public class ScreenFactory extends WidgetFactory {
         }
         return modelScreen;
     }
-    
+
     /**
      * SCIPIO: Returns the specified screen, or null if the name does not exist in the given location.
      * <p>
@@ -123,7 +123,7 @@ public class ScreenFactory extends WidgetFactory {
         String screenName = getScreenNameFromCombined(combinedName);
         return getScreenFromLocationOrNull(resourceName, screenName);
     }
-    
+
     /**
      * SCIPIO: Returns the specified screen, or null if the name does not exist in the given location.
      * <p>
@@ -210,7 +210,7 @@ public class ScreenFactory extends WidgetFactory {
     }
 
     /**
-     * Renders referenced screen, with fallback support, optionally taking care of checking 
+     * Renders referenced screen, with fallback support, optionally taking care of checking
      * the screen name for combined loc#name format.
      * <p>
      * SCIPIO: modified to support fallback and make name parsing optional.
@@ -250,7 +250,7 @@ public class ScreenFactory extends WidgetFactory {
                         if (UtilValidate.isEmpty(fallbackName)) {
                             fallbackName = name;
                         }
-                        
+
                         if (UtilValidate.isNotEmpty(fallbackLocation)) {
                             try {
                                 modelScreen = ScreenFactory.getScreenFromLocation(fallbackLocation, fallbackName);
@@ -291,7 +291,7 @@ public class ScreenFactory extends WidgetFactory {
                 if (UtilValidate.isEmpty(fallbackName)) {
                     fallbackName = name;
                 }
-                
+
                 if (UtilValidate.isNotEmpty(fallbackLocation)) {
                     try {
                         modelScreen = ScreenFactory.getScreenFromLocation(fallbackLocation, fallbackName);
@@ -315,7 +315,7 @@ public class ScreenFactory extends WidgetFactory {
         }
         modelScreen.renderScreenString(writer, context, screenStringRenderer);
     }
-    
+
     /**
      * Renders referenced screen, taking care of checking the screen name for combined loc#name format.
      * <p>

@@ -278,7 +278,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
-     * 
+     *
      * @deprecated Use hasChanged()
      */
     public boolean isModified() {
@@ -1060,7 +1060,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         }
         return aMap;
     }
-    
+
     /** Used by clients to update particular fields in the entity
      * @param keyValuePairs java.util.Map
      */
@@ -1183,7 +1183,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     public void writeXmlText(PrintWriter writer, String prefix) {
         writeXmlText(writer, prefix, null);
     }
-    
+
     /** Writes XML text with an attribute or CDATA element for each field of the entity
      * SCIPIO: 2017-05-30: modified to support alwaysCdataFields.
      *@param writer A PrintWriter to write to
@@ -1244,7 +1244,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
                              * Some common character for these invalid values, have seen these are mostly from MS Word, but may be part of some standard:
                              * 5 = ... 18 = apostrophe 19 = left quotation mark 20 = right quotation mark 22 = – 23 = - 25 = tm
                              */
-    
+
                             switch (curChar) {
                             case '\'':
                                 value.replace(i, i+1, "&apos;");

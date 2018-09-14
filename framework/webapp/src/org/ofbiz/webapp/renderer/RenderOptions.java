@@ -19,7 +19,7 @@ import java.io.Serializable;
 public abstract class RenderOptions implements Serializable {
 
     public static final String FIELD_NAME = "scpRenderOpts";
-    
+
     /**
      * Default constructor.
      */

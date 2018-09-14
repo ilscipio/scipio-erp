@@ -73,7 +73,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
 import freemarker.template.utility.DeepUnwrap;
 
-/** 
+/**
  * FreeMarkerWorker - Freemarker Template Engine Utilities.
  * <p>
  * SCIPIO: 2017-04-03: All ObjectWrappers are now made from custom types in ScipioFtlWrappers and
@@ -93,58 +93,58 @@ public final class FreeMarkerWorker {
     //private static final BeansWrapper defaultOfbizWrapper = new BeansWrapperBuilder(version).build();
     private static final BeansWrapper defaultOfbizWrapper = (BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultOfbizWrapper(version);
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
-    
+
     /**
      * SCIPIO: The default escaping charset for the Freemarker <code>?url</code> built-in.
      * <p>
      * NOTE: This is hardcoded here because it is also already hardcoded in <code>UrlCodec</code>.
      */
     private static final String defaultUrlEscapingCharset = "UTF-8";
-    
+
     /**
      * SCIPIO: A version of defaultOfbizWrapper that produces simple maps (SimpleMapAdapter).
      * FIXME: should not force BeansWrapper in the future...
      */
     private static final BeansWrapper defaultOfbizSimpleMapWrapper = (BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultOfbizSimpleMapWrapper(version);
-    
+
     /**
-     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
+     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types,
      * using adapters for collections.
      * FIXME: should not force DefaultObjectWrapper in the future...
      */
     private static final DefaultObjectWrapper defaultSimpleTypeWrapper = (DefaultObjectWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultSimpleTypeWrapper(version);
-    
+
     /**
-     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
+     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types,
      * using copies for collections.
      * FIXME: should not force DefaultObjectWrapper in the future...
      */
     private static final DefaultObjectWrapper defaultSimpleTypeCopyingWrapper = (DefaultObjectWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultSimpleTypeCopyingWrapper(version);
-    
+
     /**
      * SCIPIO: A copy of the current thread Environment.
      * @see #getCurrentEnvironment
      */
     private static final ThreadLocal<Environment> threadEnv = new ThreadLocal<Environment>();
-    
+
     public static BeansWrapper getDefaultOfbizWrapper() {
         return defaultOfbizWrapper;
     }
-    
+
     /**
      * SCIPIO: Get version of getDefaultOfbizWrapper that is the same but produces simple maps.
      */
     public static ObjectWrapper getDefaultOfbizSimpleMapWrapper() {
         return defaultOfbizSimpleMapWrapper;
     }
-    
+
     /**
      * SCIPIO: Get a Freemarker simple type wrapper.
      */
     public static ObjectWrapper getDefaultSimpleTypeWrapper() {
         return defaultSimpleTypeWrapper;
     }
-    
+
     /**
      * SCIPIO: Get a Freemarker simple type copying wrapper.
      */
@@ -171,17 +171,17 @@ public final class FreeMarkerWorker {
         newConfig.setSharedVariable("StringUtil", new BeanModel(StringUtil.INSTANCE, wrapper));
         newConfig.setTemplateLoader(new FlexibleTemplateLoader());
         newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
-        
+
         // SCIPIO: New code for includes and shared vars...
         Properties includeProperties = UtilProperties.getProperties("freemarkerIncludes");
         Properties sharedVarsProperties = UtilProperties.getProperties("freemarkerSharedVars");
         loadSharedVars(sharedVarsProperties,newConfig);
-        List<Object> includeFreemarkerTemplates = new ArrayList<Object>(includeProperties.values()); 
+        List<Object> includeFreemarkerTemplates = new ArrayList<Object>(includeProperties.values());
         if (includeFreemarkerTemplates.size() > 0) {
             newConfig.setAutoIncludes(includeFreemarkerTemplates);
         }
         // ... end.
-        
+
         newConfig.setTemplateExceptionHandler(new FreeMarkerWorker.OFBizTemplateExceptionHandler());
         try {
             newConfig.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
@@ -194,7 +194,7 @@ public final class FreeMarkerWorker {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources;
         try {
-            resources = loader.getResources("freemarkerTransforms.properties"); 
+            resources = loader.getResources("freemarkerTransforms.properties");
         } catch (IOException e) {
             Debug.logError(e, "Could not load list of freemarkerTransforms.properties", module);
             throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
@@ -219,7 +219,7 @@ public final class FreeMarkerWorker {
     public static String getDefaultUrlEscapingCharset() {
         return defaultUrlEscapingCharset;
     }
-    
+
     private static void loadTransforms(ClassLoader loader, Properties props, Configuration config) {
         for (Object object : props.keySet()) {
             String key = (String) object;
@@ -234,7 +234,7 @@ public final class FreeMarkerWorker {
             }
         }
     }
-    
+
     /**
      * SCIPIO: Loads shared vars.
      */
@@ -406,7 +406,7 @@ public final class FreeMarkerWorker {
      * call this method instead of creating its own <code>Configuration</code> instance. The instance
      * returned by this method includes the <code>component://</code> resolver and the OFBiz custom
      * transformations.
-     * 
+     *
      * @return A <code>Configuration</code> instance.
      */
     public static Configuration getDefaultOfbizConfig() {
@@ -475,14 +475,14 @@ public final class FreeMarkerWorker {
         }
         return template;
     }
-    
+
     /**
      * SCIPIO: Gets template from string out of custom cache (new). Template name is set to same as key.
      */
     public static Template getTemplateFromString(String templateString, String templateKey, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
         return getTemplateFromString(templateString, templateKey, templateKey, cache, config);
     }
-    
+
     /**
      * SCIPIO: Gets template from string out of custom cache (new).
      * 2017-02-21: May now pass cache null to bypass caching.
@@ -850,11 +850,11 @@ public final class FreeMarkerWorker {
                 handleTemplateExceptionRethrow(te, env, out);
             }
         }
-        
+
         protected void handleTemplateExceptionRethrow(TemplateException te, Environment env, Writer out) throws TemplateException {
             TemplateExceptionHandler.RETHROW_HANDLER.handleTemplateException(te, env, out);
         }
-        
+
         protected void handleTemplateExceptionDebug(TemplateException te, Environment env, Writer out) throws TemplateException {
             StringWriter tempWriter = new StringWriter();
             PrintWriter pw = new PrintWriter(tempWriter, true);
@@ -871,7 +871,7 @@ public final class FreeMarkerWorker {
                 Debug.logError(e, module);
             }
         }
-        
+
         protected void handleTemplateExceptionBlank(TemplateException te, Environment env, Writer out) throws TemplateException {
             ; // do nothing, should already be logged by Freemarker
         }
@@ -880,7 +880,7 @@ public final class FreeMarkerWorker {
     public static String encodeDoubleQuotes(String htmlString) {
         return htmlString.replaceAll("\"", "\\\\\"");
     }
-    
+
     /**
      * SCIPIO: Returns the Freemarker environment associated with current thread, or null
      * if no rendering.
@@ -888,7 +888,7 @@ public final class FreeMarkerWorker {
      * <p>
      * <strong>IMPORTANT</strong>: This exists as a workaround for quirks in Freemarker/Ofbiz rendering.
      * Normally calling <code>Environment.getCurrentEnvironment</code> should be enough,
-     * but Ofbiz macro renderer uses <code>Environment.include</code> to render macros as opposed to 
+     * but Ofbiz macro renderer uses <code>Environment.include</code> to render macros as opposed to
      * <code>Environment.process</code>, and in those cases the calls return null and inevitable crash.
      * So a patch to the renderer is required so the environment is accessible from macros, and
      * all transforms must use this method. This method uses a second local source for Environment.
@@ -902,7 +902,7 @@ public final class FreeMarkerWorker {
      * On top, an extra fix is added to {@link #renderTemplate(Template, Map, Appendable)} to
      * try to make it so - as much as possible - at most one of threadEnv OR the Freemarker-saved env
      * is non-null at any given time. We cannot guarantee this but this should cover most cases in Ofbiz.
-     * 
+     *
      * @see #includeTemplate
      * @see #renderTemplate(Template, Map, Appendable)
      */
@@ -913,12 +913,12 @@ public final class FreeMarkerWorker {
         }
         return env;
     }
-    
+
     /**
      * SCIPIO: Includes the given template with the given environment.
-     * <em>All macro renderer template include calls must be wrapped with this method! 
+     * <em>All macro renderer template include calls must be wrapped with this method!
      * See {@link #getCurrentEnvironment}.</em>
-     * 
+     *
      * @see #getCurrentEnvironment
      */
     public static void includeTemplate(Template template, Environment env) throws TemplateException, IOException {
@@ -931,12 +931,12 @@ public final class FreeMarkerWorker {
             threadEnv.set(savedEnv);
         }
     }
-    
+
     /**
      * SCIPIO: Gets the render exception mode from the environment or more generic variables (best-effort).
      */
     public static UtilRender.RenderExceptionMode getRenderExceptionMode(Environment env) {
-        // TODO: REVIEW SECURITY IMPLICATIONS 
+        // TODO: REVIEW SECURITY IMPLICATIONS
         // (currently moot because Ofbiz already relies heavily on context for security e.g. simpleEncoder)
         if (env != null) {
             try {
@@ -960,7 +960,7 @@ public final class FreeMarkerWorker {
         }
         return UtilRender.getGlobalRenderExceptionMode();
     }
-    
+
     /**
      * SCIPIO: Gets the render exception mode from the exception, environment or more generic variables (best-effort).
      * NOTE: the exception causes are consulted, but only the FIRST that implements RenderExceptionModeHolder is

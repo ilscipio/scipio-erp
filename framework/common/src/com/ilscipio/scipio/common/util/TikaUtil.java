@@ -41,22 +41,22 @@ import org.ofbiz.entity.GenericValue;
 public abstract class TikaUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private TikaUtil() {
     }
-    
+
     /* ******************************************************************** */
     /* Core Tika lookup and manipulation methods */
     /* ******************************************************************** */
-    
+
     public static MediaTypeRegistry getMediaTypeRegistry() {
         return MediaTypeRegistry.getDefaultRegistry(); // TODO?: unhardcode registry selection;
     }
-    
+
     public static MimeTypes getMimeTypeRegistry() {
         return MimeTypes.getDefaultMimeTypes(); // TODO?: unhardcode registry selection;
     }
-    
+
     /**
      * Returns a mime type name/ID for MediaType as a standardized ID that can be used within Ofbiz,
      * such as for MimeType entity's mimeTypeId.
@@ -68,7 +68,7 @@ public abstract class TikaUtil {
     public static String getMimeTypeId(MediaType mediaType) {
         return getMimeTypeId(mediaType.toString());
     }
-    
+
     /**
      * Returns a mime type name/ID for the given mime-type as a standardized ID that can be used within Ofbiz,
      * such as for MimeType entity's mimeTypeId.
@@ -77,7 +77,7 @@ public abstract class TikaUtil {
         // NOTE: names with semicolon-separated parameters receive extra spaces in toString; we need to strip
         return StringUtils.replace(mediaType, " ", "");
     }
-    
+
     /**
      * Makes a non-normalized tika MediaType instance (non-normalized means it may be an alias).
      * Result NOT necessarily exists in the registry.
@@ -88,7 +88,7 @@ public abstract class TikaUtil {
         //MimeType mimeType = getMimeTypeForMediaTypeSafe(mediaType, getMimeTypeRegistry(), exact);
         //return mimeType != null ? mimeType.getType() : null;
     }
-    
+
     /**
      * Makes a normalized tika MediaType instance (normalized means alias translated to the main recognized name).
      * Result NOT necessarily exists in the registry.
@@ -99,10 +99,10 @@ public abstract class TikaUtil {
         //MimeType mimeType = getMimeTypeForMediaTypeSafe(mediaType, getMimeTypeRegistry(), exact);
         //return mimeType != null ? mimeType.getType() : null;
     }
-    
+
     /**
      * Finds media type (through Apache Tika library), based on filename and magic numbers.
-     * @throws IOException 
+     * @throws IOException
      */
     public static MediaType findMediaType(ByteBuffer byteBuffer, String fileName) throws IOException {
         InputStream is = new ByteBufferInputStream(byteBuffer);
@@ -116,7 +116,7 @@ public abstract class TikaUtil {
             }
         }
     }
-    
+
     /**
      * Finds media type (through Apache Tika library), based on filename and magic numbers.
      * @throws IOException
@@ -138,7 +138,7 @@ public abstract class TikaUtil {
             }
         }
     }
-    
+
     public static MediaType findMediaTypeSafe(InputStream is, String fileName) {
         try {
             return findMediaType(is, fileName);
@@ -146,7 +146,7 @@ public abstract class TikaUtil {
             return null;
         }
     }
-    
+
     public static MediaType findMediaTypeSafe(ByteBuffer byteBuffer, String fileName) {
         try {
             return findMediaType(byteBuffer, fileName);
@@ -154,14 +154,14 @@ public abstract class TikaUtil {
             return null;
         }
     }
-    
+
     public static Set<MediaType> getMediaTypeAliases(MediaType mediaType) {
         return getMediaTypeAliases(mediaType, getMediaTypeRegistry());
     }
-    
+
     /**
      * WARN: the registry.getAliases method does not work reliably. This method instead tries to work around
-     * it so any alias can be passed, not just the canonical form... 
+     * it so any alias can be passed, not just the canonical form...
      * TODO: REVIEW: this may not work right for media types with parameters...
      */
     public static Set<MediaType> getMediaTypeAliases(MediaType mediaType, MediaTypeRegistry registry) {
@@ -182,7 +182,7 @@ public abstract class TikaUtil {
             return al;
         }
     }
-    
+
     public static Set<String> getMediaTypeAliasMimeTypeIds(MediaType mediaType) {
         Set<String> ids = new LinkedHashSet<>();
         for(MediaType alias : getMediaTypeAliases(mediaType)) {
@@ -190,11 +190,11 @@ public abstract class TikaUtil {
         }
         return ids;
     }
-    
+
     public static Set<String> getMediaTypeAliasMimeTypeIds(String mediaType) {
         return getMediaTypeAliasMimeTypeIds(asMediaType(mediaType));
     }
-    
+
     public static GenericValue findEntityMimeTypeForMediaType(Delegator delegator, MediaType mediaType, boolean checkAliases) throws GenericEntityException {
         if (mediaType == null) {
             return null;
@@ -213,14 +213,14 @@ public abstract class TikaUtil {
         }
         return null;
     }
-    
+
     /**
      * NOTE: this returns only normalized types, not aliases.
      */
     public static Set<MediaType> getAllMediaTypes() {
         return getMediaTypeRegistry().getTypes();
     }
-    
+
     /**
      * Returns the top tika mime-type definition for the media type.
      * WARN: this only returns explicit defined mime-types (canonical), NOT aliases.
@@ -244,7 +244,7 @@ public abstract class TikaUtil {
             return null;
         }
     }
-    
+
     /**
      * WARN: this only returns explicit defined mime-types (canonical), NOT aliases.
      * FIXME: exact doesn't handle parameter order.
@@ -252,10 +252,10 @@ public abstract class TikaUtil {
     public static MimeType getMimeTypeForMediaTypeSafe(MediaType mediaType, MimeTypes mimeTypes, boolean exact) {
         return getMimeTypeForMediaTypeSafe(mediaType.toString(), mimeTypes, exact);
     }
-    
+
     /**
      * Finds charset (through Apache Tika library), based on filename, using default encoding detector class without media type
-     * 
+     *
      * @param byteBuffer
      * @param fileName
      * @return
@@ -267,7 +267,7 @@ public abstract class TikaUtil {
 
     /**
      * Finds charset (through Apache Tika library), based on filename, using default encoding detector class without media type
-     * 
+     *
      * @param is
      * @param fileName
      * @return
@@ -279,7 +279,7 @@ public abstract class TikaUtil {
 
     /**
      * Finds charset (through Apache Tika library), based on filename, using custom encoding detector class without media type
-     * 
+     *
      * @param byteBuffer
      * @param fileName
      * @param encodingDetectorClass
@@ -289,10 +289,10 @@ public abstract class TikaUtil {
     public static Charset findCharset(ByteBuffer byteBuffer, String fileName, Class<? extends EncodingDetector> encodingDetectorClass) throws IOException {
         return findCharset(byteBuffer, fileName, encodingDetectorClass, null);
     }
-    
+
     /**
      * Finds charset (through Apache Tika library) from a ByteBuffer, based on filename, using custom encoding detector and media type
-     * 
+     *
      * @param byteBuffer
      * @param fileName
      * @param encodingDetectorClass
@@ -315,7 +315,7 @@ public abstract class TikaUtil {
 
     /**
      * Finds charset (through Apache Tika library) from an InputStream, based on filename, using custom encoding detector and media type
-     * 
+     *
      * @param is
      * @param fileName
      * @param encodingDetectorClass
@@ -349,7 +349,7 @@ public abstract class TikaUtil {
             }
         }
     }
-    
+
     public static Charset findCharsetSafe(InputStream is, String fileName) {
         return findCharsetSafe(is, fileName, null);
     }
@@ -381,11 +381,11 @@ public abstract class TikaUtil {
             return null;
         }
     }
-    
+
     /* ******************************************************************** */
     /* Meta-Information and XML Data Utilities  */
     /* ******************************************************************** */
-    
+
     public static String getMediaTypeDescriptionAlwaysSafe(MediaType mediaType, MimeTypes mimeTypes, String overrideDesc, String defaultDesc) {
         if (UtilValidate.isNotEmpty(overrideDesc)) {
             return overrideDesc;
@@ -397,11 +397,11 @@ public abstract class TikaUtil {
             return defaultDesc;
         }
     }
-    
+
     public static String getMediaTypeDescriptionOrNullSafe(MediaType mediaType, MimeTypes mimeTypes) {
         MimeType mimeType = getMimeTypeForMediaTypeSafe(mediaType, mimeTypes, true);
         String description = null;
-        
+
         if (mimeType != null) {
             description = mimeType.getDescription();
         } else {
@@ -424,11 +424,11 @@ public abstract class TikaUtil {
         }
         return null;
     }
-    
+
     public static List<GenericValue> getEntityMimeTypes(Delegator delegator) throws GenericEntityException {
         return delegator.findAll("MimeType", true);
     }
-    
+
     /**
      * WARN: very slow, not for heavy use.
      */
@@ -442,13 +442,13 @@ public abstract class TikaUtil {
             if (aliases) {
                 Set<MediaType> aliasSet = getMediaTypeAliases(mediaType, mimeTypes.getMediaTypeRegistry());
                 for(MediaType alias : aliasSet) {
-                    GenericValue aliasValue = makeEntityMimeType(delegator, alias, mimeTypes, 
-                            mainValue.getString("description") + " (alias)", 
+                    GenericValue aliasValue = makeEntityMimeType(delegator, alias, mimeTypes,
+                            mainValue.getString("description") + " (alias)",
                             getMimeTypeId(alias) + " (alias for " + getMimeTypeId(mediaType) + ")");
                     if (!missingOnly || UtilValidate.isEmpty(delegator.findOne("MimeType", true, UtilMisc.toMap("mimeTypeId", getMimeTypeId(alias))))) {
                         mimeTypeValues.add(aliasValue);
                     }
-                    
+
                     // SANITY CHECK
                     Set<MediaType> aliasAliasSet = getMediaTypeAliases(alias, mimeTypes.getMediaTypeRegistry());
                     if (aliasAliasSet.isEmpty()) {
@@ -461,13 +461,13 @@ public abstract class TikaUtil {
         }
         return mimeTypeValues;
     }
-    
+
     public static GenericValue makeEntityMimeType(Delegator delegator, MediaType mediaType, MimeTypes mimeTypes, String overrideDesc, String defaultDesc) throws GenericEntityException {
-        return delegator.makeValue("MimeType", 
-                "mimeTypeId", getMimeTypeId(mediaType), 
+        return delegator.makeValue("MimeType",
+                "mimeTypeId", getMimeTypeId(mediaType),
                 "description", getMediaTypeDescriptionAlwaysSafe(mediaType, mimeTypes, overrideDesc, defaultDesc));
     }
-    
+
     /**
      * Makes a new GenericValue MimeType for each Tika MediaType.
      * <p>
@@ -478,7 +478,7 @@ public abstract class TikaUtil {
         MimeTypes mimeTypes = getMimeTypeRegistry();
         return makeEntityMimeTypes(delegator, mimeTypes.getMediaTypeRegistry().getTypes(), mimeTypes, aliases, false);
     }
-    
+
     /**
      * Makes a new GenericValue MimeType for each Tika MediaType that does not have an entity MimeType in the system.
      * <p>
@@ -489,30 +489,30 @@ public abstract class TikaUtil {
         MimeTypes mimeTypes = getMimeTypeRegistry();
         return makeEntityMimeTypes(delegator, mimeTypes.getMediaTypeRegistry().getTypes(), mimeTypes, aliases, true);
     }
-    
-    
+
+
     /* ******************************************************************** */
     /* Private Utilities  */
     /* ******************************************************************** */
-        
+
     /**
      * FIXME: use something better
      */
     @SuppressWarnings("unused")
     private static class ByteBufferInputStream extends InputStream {
-        private ByteBuffer buf;        
+        private ByteBuffer buf;
         private int mark;
-        
+
         public ByteBufferInputStream(ByteBuffer buf) {
             this.buf = buf;
             this.mark = -1;
         }
-        
+
         @Override
         public final int available() {
             return buf.remaining();
         }
-        
+
         @Override
         public int read() throws IOException {
             if (!buf.hasRemaining()) {
@@ -520,12 +520,12 @@ public abstract class TikaUtil {
             }
             return buf.get() & 0xFF;
         }
-        
+
         @Override
         public final int read(byte[] bytes) throws IOException {
             return read(bytes, 0, bytes.length);
         }
-        
+
         @Override
         public final int read(byte[] bytes, int off, int len) throws IOException {
             if (bytes == null) {
@@ -579,7 +579,7 @@ public abstract class TikaUtil {
             }
             return maxLen;
         }
-        
+
         @Override
         public final boolean markSupported() {
             return true;
@@ -597,7 +597,7 @@ public abstract class TikaUtil {
             }
             buf.position(mark);
         }
-        
+
         @Override
         public final long skip(final long n) throws IOException {
             if (0 > n) {
@@ -607,8 +607,8 @@ public abstract class TikaUtil {
             buf.position(buf.position() + s);
             return s;
         }
-        
+
         public final ByteBuffer getBuffer() { return buf; }
     }
-    
+
 }

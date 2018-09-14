@@ -31,31 +31,31 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "twelvemonkeys";
-    
+
     /**
      * Maps <code>scalingOptions.filter</code> to ResampleFilter instances.
      */
     private static final Map<String, Integer> filterMap;
     static {
         Map<String, Integer> map = new HashMap<>();
-        
+
         // GENERALIZED
         //map.put("areaaveraging", Image.SCALE_AREA_AVERAGING); // TODO
         //map.put("default", Image.SCALE_DEFAULT); // TODO
         //map.put("fast", Image.SCALE_FAST); // TODO
         //map.put("replicate", Image.SCALE_REPLICATE); // TODO
         map.put("smooth", ResampleOp.FILTER_LANCZOS);
-        
+
         // SPECIFIC ALGORITHMS
         map.put("lanczos3", ResampleOp.FILTER_LANCZOS);
-        
+
         // API-SPECIFIC
         // (none)
-        
+
         filterMap = Collections.unmodifiableMap(map);
         Debug.logInfo(AbstractImageScaler.getFilterMapLogRepr(API_NAME, map), module);
     }
-    
+
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
@@ -63,7 +63,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
         options.put("filter", filterMap.get("smooth")); // String
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
-    
+
     protected TwelvemonkeysImageScaler(AbstractImageScalerFactory<TwelvemonkeysImageScaler> factory, String name, Map<String, Object> confOptions) {
         super(factory, name, confOptions);
     }
@@ -86,7 +86,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
         @Override protected String getApiName() { return API_NAME; }
         @Override public Map<String, Object> getDefaultOptions() { return DEFAULT_OPTIONS; }
     }
-    
+
     @Override
     protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
@@ -99,14 +99,14 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
         }
 
         // TODO: REVIEW: this is copy-pasted from morten scaler because very similar interfaces
-    
+
         ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
         ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
-        
+
         BufferedImage resultImage;
         if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
             ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
-            
+
             if (isNativeSupportedDestImageType(resolvedTargetTypeInfo)) {
                 // here lib will _probably_ support the type we want...
                 BufferedImage destImage = ImageTransform.createBufferedImage(resolvedTargetTypeInfo, targetWidth, targetHeight);
@@ -126,7 +126,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
         }
         return resultImage;
     }
-    
+
     // NOTE: defaults are handled through the options merging with defaults
     protected static Integer getFilter(Map<String, Object> options) throws IllegalArgumentException {
         Object filterObj = options.get("filter");
@@ -139,7 +139,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
             return filterMap.get(filterName);
         }
     }
-    
+
     @Override
     public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         return !ImagePixelType.isTypeIndexedOrCustom(imagePixelType);

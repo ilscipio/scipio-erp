@@ -57,7 +57,7 @@ import freemarker.template.TemplateTransformModel;
  * exists, it is prepended to the contents of the transform (the part between
  * <code>&lt;@ofbizUrl&gt;</code> and <code>&lt;/@ofbizUrl&gt;</code>), and all transform arguments are
  * ignored.</p>
- * 
+ *
  */
 public class OfbizUrlTransform implements TemplateTransformModel {
 
@@ -67,7 +67,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
     @SuppressWarnings("rawtypes")
     public Writer getWriter(final Writer out, final Map args) throws TemplateModelException {
         final StringBuilder buf = new StringBuilder();
-        
+
         final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
         boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
@@ -78,7 +78,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         final String uriArg = TransformUtil.getStringArg(args, "uri", rawParams);
         // SCIPIO: more new parameters
         final String type = TransformUtil.getStringArg(args, "type", rawParams);
-        final Boolean absPath = TransformUtil.getBooleanArg(args, "absPath"); 
+        final Boolean absPath = TransformUtil.getBooleanArg(args, "absPath");
         final Boolean interWebapp = TransformUtil.getBooleanArg(args, "interWebapp"); // Alias for type="inter-webapp"
         final Boolean controller = TransformUtil.getBooleanArg(args, "controller");
         final boolean extLoginKey = TransformUtil.getBooleanArg(args, "extLoginKey", false);
@@ -95,7 +95,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     if (uriArg != null) {
                         buf.append(uriArg);
                     }
-                    
+
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     HttpServletRequest request = FreeMarkerWorker.unwrap(env.getVariable("request"));
                     HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
@@ -120,7 +120,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                             interWebappEff = true;
                         }
                     }
-                    
+
                     String requestUrl = buf.toString();
                     if (request != null) {
                         // SCIPIO: If requested, add external login key
@@ -140,7 +140,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         }
                     } else if (webSiteId != null || webappInfoCache.getCurrentWebappWebSiteId() != null) {
                         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
-                        String link = RequestHandler.makeLinkAuto(ContextFtlUtil.getContext(env), delegator, locale, webSiteId, requestUrl, absPath, 
+                        String link = RequestHandler.makeLinkAuto(ContextFtlUtil.getContext(env), delegator, locale, webSiteId, requestUrl, absPath,
                                 interWebappEff, controller, fullPath, secure, encode);
                         if (link != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env));
@@ -183,7 +183,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
             }
         };
     }
-    
+
     /**
      * Gets boolean arg.
      * <p>
@@ -198,7 +198,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
             return defaultValue;
         }
     }
-    
+
     /**
      * Gets string arg.
      * <p>

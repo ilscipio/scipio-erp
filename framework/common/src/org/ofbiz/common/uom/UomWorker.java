@@ -98,7 +98,7 @@ public class UomWorker {
     public static Calendar addUomTime(Timestamp startTime, String uomId, int value) {
         return addUomTime(null, startTime, uomId, value);
     }
-    
+
     /**
     * SCIPIO: Method to use a conversion unit from a specific date
     */
@@ -108,7 +108,7 @@ public class UomWorker {
        //BigDecimal conversionRate = BigDecimal.ONE;
        //BigDecimal convertedValue = BigDecimal.ZERO;
        //Delegator delegator = dispatcher.getDelegator();
-       
+
        Map<String, Object> svcInMap = new LinkedHashMap<String, Object>();
        svcInMap.put("originalValue", originalValue);
        svcInMap.put("uomId", uomId);
@@ -134,7 +134,7 @@ public class UomWorker {
        Debug.logError("Failed to perform conversion for value [" + originalValue.toPlainString() + "] from Uom [" + uomId + "] to Uom [" + uomIdTo + "]",module);
        return null;
    }
-   
+
     /**
      * Convenience method to call the convertUom service
      * <p>
@@ -168,7 +168,7 @@ public class UomWorker {
         Debug.logError("Failed to perform conversion for value [" + originalValue.toPlainString() + "] from Uom [" + uomId + "] to Uom [" + uomIdTo + "]",module);
         return null;
     }
-    
+
 
     /**
      * Convenience method to call the convertUom service
@@ -178,7 +178,7 @@ public class UomWorker {
     public static BigDecimal convertUom(BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher) {
         return convertUom(originalValue, uomId, uomIdTo, dispatcher, false);
     }
-    
+
     /**
      * SCIPIO: Convenience method to call the convertUom service, which is always safe to call
      * from screens and will not throw exceptions or trigger transaction failures.
@@ -193,7 +193,7 @@ public class UomWorker {
      * in the UI.
      * <p>
      * TODO: this is slow; should optimize somehow...
-     * 
+     *
      * @param asTarget ternary Boolean value: true means match only convertible-to Uoms, false means convertible-from, and null means both
      */
     public static List<GenericValue> getConvertibleUoms(Delegator delegator, LocalDispatcher dispatcher, Boolean asTarget,
@@ -215,13 +215,13 @@ public class UomWorker {
                             EntityOperator.OR,
                             EntityCondition.makeCondition("uomIdTo", uom.getString("uomId")));
                 }
-                
+
                 conversionList = delegator.findList("UomConversion", srcTargetCond, null, null, null, cache);
                 if (!conversionList.isEmpty()) {
                     resultUomList.add(uom);
                     continue;
                 }
- 
+
                 EntityCondition cond = srcTargetCond;
                 if (filterByDate) {
                     cond = EntityCondition.makeCondition(cond, EntityOperator.AND,
@@ -233,7 +233,7 @@ public class UomWorker {
                     continue;
                 }
             }
-            
+
             return resultUomList;
         } catch(Exception e) {
             Debug.logError(e, module);

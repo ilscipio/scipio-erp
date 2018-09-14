@@ -23,12 +23,12 @@ import freemarker.template.TemplateModelException;
  * of variables. this means duplicate memory instances for now. there is no way around this
  * with the current classes.
  * this can be considered non-urgent because this class is not in widespread use,
- * and unlikely to 
+ * and unlikely to
  */
 public abstract class TemplateSource {
 
     private static final long configTmplCacheExpireTime = UtilProperties.getPropertyAsLong("cache", "template.ftl.general.expireTime", 0);
-    
+
     /**
      * SUPER-cache for all configurations.
      * WARN: first layer is implemented manually with double-locking idiot for thread safety,
@@ -37,17 +37,17 @@ public abstract class TemplateSource {
     private static Map<Configuration, UtilCache<String, Template>> configTmplLocCaches = Collections.emptyMap();
     private static Map<Configuration, UtilCache<String, Template>> configTmplInlineSelfCaches = Collections.emptyMap();
 
-    
+
     public abstract Template getTemplate() throws TemplateException, IOException;
-    
+
     public static TemplateSource getForLocation(String templateLoc, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
         return new DirectTemplateSource(FreeMarkerWorker.getTemplate(templateLoc, cache, config));
     }
-    
+
     public static TemplateSource getForLocationNoCache(String templateLoc, Configuration config) throws TemplateException, IOException {
         return new DirectTemplateSource(FreeMarkerWorker.getTemplate(templateLoc, null, config)); // NOTE: null support is new in Scipio
     }
-    
+
     /**
      * @deprecated use overloads with explicit cache and configuration
      */
@@ -55,14 +55,14 @@ public abstract class TemplateSource {
     public static TemplateSource getForLocation(String templateLoc) throws TemplateException, IOException {
         return new DirectTemplateSource(FreeMarkerWorker.getTemplate(templateLoc));
     }
-    
+
     /**
      * Gets source for inline template, where the cache key is different from the template itself.
      */
     public static TemplateSource getForInline(String templateBody, String templateKey, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
         return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, templateKey, templateName, cache, config));
     }
-    
+
     /**
      * Gets source for inline template, where the cache key is the template string itself.
      * NOTE: this is probably not appropriate for large templates.
@@ -70,7 +70,7 @@ public abstract class TemplateSource {
     public static TemplateSource getForInlineSelfCache(String templateBody, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
         return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, templateBody, templateName, cache, config));
     }
-    
+
     /**
      * Gets source for inline template, where the cache key is the template string itself.
      * The template name is auto-decided.
@@ -79,14 +79,14 @@ public abstract class TemplateSource {
     public static TemplateSource getForInlineSelfCache(String templateBody, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
         return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, templateBody, makeTemplateNameForInline(templateBody), cache, config));
     }
-    
+
     /**
      * Gets source for inline template, but with NO caching.
      */
     public static TemplateSource getForInlineNoCache(String templateBody, String templateName, Configuration config) throws TemplateException, IOException {
         return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, null, templateName, null, config));
     }
-    
+
     /**
      * Gets source for inline template, but with NO caching.
      * The template name is auto-decided.
@@ -94,12 +94,12 @@ public abstract class TemplateSource {
     public static TemplateSource getForInlineNoCache(String templateBody, Configuration config) throws TemplateException, IOException {
         return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, null, makeTemplateNameForInline(templateBody), null, config));
     }
-    
+
     public static String makeTemplateNameForInline(String templateBody) {
         // FIXME: using date hack for unique template name for now (what macro renderer does)
         return "inline_template_" + (new java.util.Date()).toString();
     }
-    
+
     /**
      * Tries to get appropriate location-based UtilCache in use for templates being rendered.
      * <p>
@@ -109,7 +109,7 @@ public abstract class TemplateSource {
      */
     public static UtilCache<String, Template> getTemplateLocationCacheForConfig(Configuration config, Environment env) throws TemplateModelException {
         Map<Configuration, UtilCache<String, Template>> configTmplLocCaches = TemplateSource.configTmplLocCaches;
-        
+
         UtilCache<String, Template> cache = configTmplLocCaches.get(config);
         if (cache == null) {
             // double-locking idiom, with configTmplLocCaches as unmodifiable
@@ -118,17 +118,17 @@ public abstract class TemplateSource {
                 cache = configTmplLocCaches.get(config);
                 if (cache == null) {
                     Map<Configuration, UtilCache<String, Template>> newConfigCacheMap = new HashMap<>(configTmplLocCaches);
-                    cache = UtilCache.createUtilCache("templatesource.ftl.location." + (configTmplLocCaches.size() + 1), 
+                    cache = UtilCache.createUtilCache("templatesource.ftl.location." + (configTmplLocCaches.size() + 1),
                                 0, configTmplCacheExpireTime, false);
                     newConfigCacheMap.put(config, cache);
-                    
+
                     TemplateSource.configTmplLocCaches = newConfigCacheMap;
                 }
             }
         }
         return cache;
     }
-    
+
     /**
      * Heuristically tries to get the inline template UtilCache in use for templates being rendered.
      * Cache has the templates themselves as keys.
@@ -137,7 +137,7 @@ public abstract class TemplateSource {
      */
     public static UtilCache<String, Template> getTemplateInlineSelfCacheForConfig(Configuration config, Environment env) throws TemplateModelException {
         Map<Configuration, UtilCache<String, Template>> configTmplInlineSelfCaches = TemplateSource.configTmplInlineSelfCaches;
-        
+
         UtilCache<String, Template> cache = configTmplInlineSelfCaches.get(config);
         if (cache == null) {
             // double-locking idiom, with configTmplInlineSelfCaches as unmodifiable
@@ -146,20 +146,20 @@ public abstract class TemplateSource {
                 cache = configTmplInlineSelfCaches.get(config);
                 if (cache == null) {
                     Map<Configuration, UtilCache<String, Template>> newConfigCacheMap = new HashMap<>(configTmplInlineSelfCaches);
-                    cache = UtilCache.createUtilCache("templatesource.ftl.inline.self." + (configTmplInlineSelfCaches.size() + 1), 
+                    cache = UtilCache.createUtilCache("templatesource.ftl.inline.self." + (configTmplInlineSelfCaches.size() + 1),
                                 0, configTmplCacheExpireTime, false);
                     newConfigCacheMap.put(config, cache);
-                    
+
                     TemplateSource.configTmplInlineSelfCaches = newConfigCacheMap;
                 }
             }
         }
         return cache;
     }
-    
+
     public static class DirectTemplateSource extends TemplateSource {
         protected final Template template;
-        
+
         protected DirectTemplateSource(Template template) {
             this.template = template;
         }
@@ -169,5 +169,5 @@ public abstract class TemplateSource {
             return template;
         }
     }
-      
+
 }

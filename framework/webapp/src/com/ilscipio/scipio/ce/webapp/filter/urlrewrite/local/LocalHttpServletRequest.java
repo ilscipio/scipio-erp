@@ -45,55 +45,55 @@ public class LocalHttpServletRequest implements HttpServletRequest {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final LocalServletContainer container;
-    
+
     protected final LocalHttpSession session;
     protected final LocalServletContext servletContext;
 
     protected final Map<String, Object> attributes;
     protected final Map<String, String[]> parameters;
     protected final Map<String, String[]> headers;
-    
+
     protected final Locale locale;
     protected String charset;
     protected String contentType;
     protected final long creationTime = System.currentTimeMillis();
-    
+
     protected final URL requestURL;
     protected final String servletPath;
     protected final String pathInfo;
 
-    protected LocalHttpServletRequest(LocalServletContainer container, LocalHttpSession session, 
+    protected LocalHttpServletRequest(LocalServletContainer container, LocalHttpSession session,
             LocalServletContext servletContext, String requestURL, String servletPath,
-            Map<String, Object> attributes, Map<String, String[]> parameters, Map<String, String[]> headers, 
+            Map<String, Object> attributes, Map<String, String[]> parameters, Map<String, String[]> headers,
             Locale locale, String charset, String contentType) throws MalformedURLException {
         this.container = container;
         this.session = session;
         this.servletContext = servletContext;
-        
+
         this.attributes = (attributes != null) ? new HashMap<>(attributes) : new HashMap<>();
         this.parameters = (parameters != null) ? Collections.unmodifiableMap(new HashMap<>(parameters)) : Collections.emptyMap();
         this.headers = (headers != null) ? Collections.unmodifiableMap(new HashMap<>(headers)) : Collections.emptyMap();
-        
+
         this.locale = locale;
         this.charset = charset;
         this.contentType = contentType;
-        
+
         this.requestURL = new URL(requestURL);
         servletPath = (servletPath != null) ? servletPath : "";
         this.servletPath = servletPath;
-        
+
         String fullServletPath = getContextPath() + servletPath;
         String reqUri = this.requestURL.getPath();
         String pathInfo = null;
         if (fullServletPath.length() == 0) {
             ;
-        } else if (reqUri != null && reqUri.startsWith(fullServletPath) 
+        } else if (reqUri != null && reqUri.startsWith(fullServletPath)
                 && (reqUri.length() == fullServletPath.length() || reqUri.charAt(fullServletPath.length()) == '/')) {
             pathInfo = reqUri.substring(fullServletPath.length());
             pathInfo = pathInfo.length() > 0 ? pathInfo : null;
         } else {
-            Debug.logWarning("Provided request URL '" + requestURL 
-                    + "' does not match specified contextPath+servletPath '" + fullServletPath 
+            Debug.logWarning("Provided request URL '" + requestURL
+                    + "' does not match specified contextPath+servletPath '" + fullServletPath
                     + "'; using null pathInfo", module);
         }
         this.pathInfo = pathInfo;

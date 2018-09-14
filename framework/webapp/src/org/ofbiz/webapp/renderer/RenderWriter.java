@@ -10,12 +10,12 @@ import java.io.Writer;
  */
 public abstract class RenderWriter extends Writer {
     protected Writer origWriter;
-    
+
     protected RenderWriter() {
         super();
         this.origWriter = null;
     }
-    
+
     protected RenderWriter(Writer origWriter) {
         super();
         this.origWriter = origWriter;
@@ -28,17 +28,17 @@ public abstract class RenderWriter extends Writer {
 //    public void setOrigWriter(Writer origWriter) {
 //        this.origWriter = origWriter;
 //    }
-    
+
     /**
      * Returns true if the writer is currently discarding output.
      */
     public abstract boolean isDiscarding();
-    
+
     public abstract void beginSection(String name, String delimInfo) throws IOException;
-    
+
     public abstract void endSection(String name, String delimInfo) throws IOException;
-    
-    
+
+
     /**
      * Returns true if the writer is RenderWriter and currently discarding output.
      */
@@ -56,17 +56,17 @@ public abstract class RenderWriter extends Writer {
         protected DelegRenderWriter(Writer origWriter) {
             super(origWriter);
         }
-        
+
         protected DelegRenderWriter(Writer origWriter, Writer targetWriter) {
             super(origWriter);
             this.targetWriter = targetWriter;
         }
-        
+
 //        public static DelegRenderWriter getInstance(Writer targetWriter, Writer origWriter) {
-//            return new DelegRenderWriter(origWriter, 
+//            return new DelegRenderWriter(origWriter,
 //                    targetWriter != null ? targetWriter : origWriter);
 //        }
-//        
+//
 //        public static DelegRenderWriter getInstance(Writer targetWriter) {
 //            return new DelegRenderWriter(null, targetWriter);
 //        }
@@ -134,56 +134,56 @@ public abstract class RenderWriter extends Writer {
             targetWriter.close();
         }
     }
-    
+
     /**
      * Writer that writes and appends to one of two possible delegated writers - original or alternate - depending
      * on state flag. If not specified, the alt writer is set to a dummy writer that does nothing.
-     * SPECIAL CASE: the {@link SwitchRenderWriter#flush()} and 
+     * SPECIAL CASE: the {@link SwitchRenderWriter#flush()} and
      * {@link SwitchRenderWriter#close()} methods delegate BOTH writers.
-     * 
+     *
      * TODO: may want a fast multi-switch writer via begin/endSection calls to implement
      * {@link org.ofbiz.webapp.control.ViewAsJsonUtil#VIEWASJSONSPLITMODE_REQPARAM}.
      */
     public static class SwitchRenderWriter extends DelegRenderWriter {
         private Writer altWriter;
         private boolean master;
-        
+
         protected SwitchRenderWriter(Writer origWriter, Writer altWriter, boolean stateUseOrig, boolean master) {
             super(origWriter);
             this.altWriter = altWriter;
             this.setState(stateUseOrig);
             this.master = master;
         }
-        
+
         protected SwitchRenderWriter(Writer origWriter, boolean stateUseOrig, boolean master) {
             super(origWriter);
             this.altWriter = DummyRenderWriter.getDefaultInstance();
             this.setState(stateUseOrig);
             this.master = master;
         }
-        
+
         /**
          * Creates with explicit alt (off) writer and initial state.
          */
         public static SwitchRenderWriter getInstance(Writer origWriter, Writer altWriter, boolean useOrigWriter, boolean master) {
             return new SwitchRenderWriter(origWriter, altWriter, useOrigWriter, master);
         }
-        
+
         /**
          * Creates with dummy alt (off) writer and initial state.
          */
         public static SwitchRenderWriter getInstance(Writer origWriter, boolean useOrigWriter, boolean master) {
             return new SwitchRenderWriter(origWriter, useOrigWriter, master);
         }
-        
+
         public void setState(boolean useOrigWriter) {
             this.targetWriter = useOrigWriter ? this.origWriter : this.altWriter;
         }
-        
+
         public void useOrigWriter() {
             this.targetWriter = this.origWriter;
         }
-        
+
         public void useAltWriter() {
             this.targetWriter = this.altWriter;
         }
@@ -195,13 +195,13 @@ public abstract class RenderWriter extends Writer {
 //        public void setAltWriter(Writer altWriter) {
 //            this.altWriter = altWriter;
 //        }
-        
+
         public boolean isMaster() {
             return master;
         }
 
         @Override
-        public void flush() throws IOException {    
+        public void flush() throws IOException {
             // SPECIAL: applies to both writers.
             origWriter.flush();
             altWriter.flush();
@@ -234,15 +234,15 @@ public abstract class RenderWriter extends Writer {
 //            }
         }
     }
-    
+
     /**
      * Dummy writer that outputs nothing.
-     * Optionally can hold a reference to another writer for it to be passed around, 
+     * Optionally can hold a reference to another writer for it to be passed around,
      * but they do not interact.
      */
     public static class DummyRenderWriter extends RenderWriter {
         private static final DummyRenderWriter DEFAULT_INSTANCE = new ImmutableDummyRenderWriter();
-        
+
         protected DummyRenderWriter() {
             super();
         }
@@ -254,15 +254,15 @@ public abstract class RenderWriter extends Writer {
         public static DummyRenderWriter getDefaultInstance() {
             return DEFAULT_INSTANCE;
         }
-        
+
         public static DummyRenderWriter getInstance() {
             return new DummyRenderWriter();
         }
-        
+
         public static DummyRenderWriter getInstance(Writer origWriter) {
             return new DummyRenderWriter(origWriter);
         }
-        
+
         @Override
         public boolean isDiscarding() {
             return true;
@@ -330,5 +330,5 @@ public abstract class RenderWriter extends Writer {
         public void endSection(String name, String delimInfo) throws IOException {
         }
     }
-    
+
 }

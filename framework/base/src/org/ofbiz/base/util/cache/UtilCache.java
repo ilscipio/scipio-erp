@@ -77,7 +77,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     /** SCIPIO: If false, the cache will never store value on put, and always return null on get (added 2018-03). Can be set false using "enabled" cache property. */
     private boolean enabled = true;
-    
+
     /** A count of the number of cache hits */
     protected AtomicLong hitCount = new AtomicLong(0);
 

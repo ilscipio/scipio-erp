@@ -117,7 +117,7 @@ public class EmailServices {
         results.put("communicationEventId", communicationEventId);
         results.put("partyId", partyId);
         results.put("subject", subject);
-        
+
         if (UtilValidate.isNotEmpty(orderId)) {
             results.put("orderId", orderId);
         }
@@ -432,7 +432,7 @@ public class EmailServices {
         String attachmentNameParam = (String) serviceContext.remove("attachmentName");
         List<String> xslfoAttachScreenLocationListParam = UtilGenerics.checkList(serviceContext.remove("xslfoAttachScreenLocationList"));
         List<String> attachmentNameListParam = UtilGenerics.checkList(serviceContext.remove("attachmentNameList"));
-        
+
         List<String> xslfoAttachScreenLocationList = new LinkedList<>();
         List<String> attachmentNameList = new LinkedList<>();
         if (UtilValidate.isNotEmpty(xslfoAttachScreenLocationParam)) {
@@ -447,7 +447,7 @@ public class EmailServices {
         if (UtilValidate.isNotEmpty(attachmentNameListParam)) {
             attachmentNameList.addAll(attachmentNameListParam);
         }
-        
+
         Locale locale = (Locale) serviceContext.get("locale");
         Map<String, Object> bodyParameters = UtilGenerics.checkMap(serviceContext.remove("bodyParameters"));
         if (bodyParameters == null) {
@@ -464,7 +464,7 @@ public class EmailServices {
         }
         String orderId = (String) bodyParameters.get("orderId");
         String custRequestId = (String) bodyParameters.get("custRequestId");
-        
+
         bodyParameters.put("communicationEventId", serviceContext.get("communicationEventId"));
         NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
         String contentType = (String) serviceContext.remove("contentType");
@@ -476,7 +476,7 @@ public class EmailServices {
 
         ScreenStringRenderer screenStringRenderer = null;
         try {
-            screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenemail.name", EntityUtilProperties.getPropertyValue("widget", "screen.name", dctx.getDelegator()), dctx.getDelegator()), 
+            screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenemail.name", EntityUtilProperties.getPropertyValue("widget", "screen.name", dctx.getDelegator()), dctx.getDelegator()),
                     EntityUtilProperties.getPropertyValue("widget", "screenemail.screenrenderer", EntityUtilProperties.getPropertyValue("widget", "screen.screenrenderer", dctx.getDelegator()), dctx.getDelegator())); // SCIPIO: now using screenemail properties + fallback if missing
         } catch (TemplateException | IOException e) {
             Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
@@ -506,7 +506,7 @@ public class EmailServices {
             } else {
                 bodyParts.add(UtilMisc.<String, Object>toMap("content", bodyWriter.toString(), "type", UtilValidate.isNotEmpty(contentType) ? contentType : "text/html"));
             }
-            
+
             for (int i = 0; i < xslfoAttachScreenLocationList.size(); i++) {
                 String xslfoAttachScreenLocation = xslfoAttachScreenLocationList.get(i);
                 String attachmentName = "Details.pdf";
@@ -525,7 +525,7 @@ public class EmailServices {
                     screensAtt.populateContextForService(dctx, bodyParameters);
                     screenContextAtt.putAll(bodyParameters);
                     screensAtt.render(xslfoAttachScreenLocation);
-                    
+
                     /*
                     try { // save generated fo file for debugging
                         String buf = writer.toString();
@@ -535,7 +535,7 @@ public class EmailServices {
                     } catch (IOException e) {
                         Debug.logError(e, "Couldn't save xsl-fo xml debug file: " + e.toString(), module);
                     }*/
-                    
+
 
                     // create the input stream for the generation
                     StreamSource src = new StreamSource(new StringReader(writer.toString()));
@@ -558,7 +558,7 @@ public class EmailServices {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenPdfError",
                             UtilMisc.toMap("errorString", e.toString()), locale));
                 }
-                
+
                 serviceContext.put("bodyParts", bodyParts);
             }
         } else {
@@ -590,11 +590,11 @@ public class EmailServices {
         serviceContext.put("partyId", partyId);
         if (UtilValidate.isNotEmpty(orderId)) {
             serviceContext.put("orderId", orderId);
-        }            
+        }
         if (UtilValidate.isNotEmpty(custRequestId)) {
             serviceContext.put("custRequestId", custRequestId);
-        }            
-        
+        }
+
         if (Debug.verboseOn()) {
             Debug.logVerbose("sendMailFromScreen sendMail context: " + serviceContext, module);
         }
@@ -630,10 +630,10 @@ public class EmailServices {
         result.put("communicationEventId", sendMailResult.get("communicationEventId"));
         if (UtilValidate.isNotEmpty(orderId)) {
             result.put("orderId", orderId);
-        }            
+        }
         if (UtilValidate.isNotEmpty(custRequestId)) {
             result.put("custRequestId", custRequestId);
-        }            
+        }
         return result;
     }
 
@@ -646,10 +646,10 @@ public class EmailServices {
      */
     public static Map<String, Object> sendMailHiddenInLogFromScreen(DispatchContext dctx, Map<String, ? extends Object> rServiceContext) {
         Map<String, Object> serviceContext = UtilMisc.makeMapWritable(rServiceContext);
-        serviceContext.put("hideInLog", true);        
+        serviceContext.put("hideInLog", true);
         return sendMailFromScreen(dctx, serviceContext);
     }
-    
+
     public static void sendFailureNotification(DispatchContext dctx, Map<String, ? extends Object> context, MimeMessage message, List<SMTPAddressFailedException> failures) {
         Locale locale = (Locale) context.get("locale");
         Map<String, Object> newContext = new LinkedHashMap<>();

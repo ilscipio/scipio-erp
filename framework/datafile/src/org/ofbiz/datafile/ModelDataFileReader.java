@@ -258,7 +258,7 @@ public final class ModelDataFileReader {
     /**
      * Creates a Collection with the dataFileName of each DataFile defined in the
      * specified XML DataFile Descriptor file.
-     * 
+     *
      * @return A Collection of dataFileName Strings
      */
     public Collection<String> getDataFileNames() {
@@ -268,7 +268,7 @@ public final class ModelDataFileReader {
     /**
      * Creates a Iterator with the dataFileName of each DataFile defined in the specified
      * XML DataFile Descriptor file.
-     * 
+     *
      * @return A Iterator of dataFileName Strings
      */
     public Iterator<String> getDataFileNamesIterator() {
@@ -278,7 +278,7 @@ public final class ModelDataFileReader {
     /**
      * Gets an DataFile object based on a definition from the specified XML DataFile
      * descriptor file.
-     * 
+     *
      * @param dataFileName
      *            The dataFileName of the DataFile definition to use.
      * @return An DataFile object describing the specified dataFile of the specified

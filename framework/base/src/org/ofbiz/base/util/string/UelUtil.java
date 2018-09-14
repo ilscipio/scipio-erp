@@ -266,7 +266,7 @@ public class UelUtil {
         public boolean isLiteralText() {
             return false;
         }
-        
+
     }
 
     @SuppressWarnings("serial")

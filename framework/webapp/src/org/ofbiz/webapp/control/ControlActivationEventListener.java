@@ -44,14 +44,14 @@ public class ControlActivationEventListener implements HttpSessionActivationList
         ControlEventListener.countActivateSession();
         Debug.logInfo("Activating session: " + showSessionId(event.getSession()), module);
     }
-    
+
     public static String showSessionId(HttpSession session) {
         if (showSessionIdInLog) {
-            return " sessionId=" + session.getId(); 
+            return " sessionId=" + session.getId();
         }
         // SCIPIO: needlessly verbose
         //return " hidden sessionId by default.";
         return " sessionId=[hidden]";
     }
-    
+
 }

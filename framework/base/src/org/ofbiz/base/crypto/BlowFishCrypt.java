@@ -111,7 +111,7 @@ public class BlowFishCrypt {
      * Decrypt the byte array with the secret key.
      * <p>
      * SCIPIO: WARN: 2018-08-30: the interface for this method on error case
-     * appears inconsistent; old code returned null on error, but current code 
+     * appears inconsistent; old code returned null on error, but current code
      * (since 2017-10) returns empty array on error (TODO: REVIEW).
      * <p>
      * @param bytes The array of bytes to decrypt.
@@ -168,7 +168,7 @@ public class BlowFishCrypt {
 
         byte[] key = generateKey();
         if (testKey(key)) {
-            try (FileOutputStream fos = new FileOutputStream(args[0]); 
+            try (FileOutputStream fos = new FileOutputStream(args[0]);
                     ObjectOutputStream os = new ObjectOutputStream(fos)) {
                 String keyString = new String(key, StandardCharsets.UTF_8);
                 os.writeObject(keyString);

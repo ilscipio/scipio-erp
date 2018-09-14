@@ -89,9 +89,9 @@ public class EntityQuery {
     }
 
     /** Set the fields to be returned when the query is executed.
-     * 
-     * Note that the select methods are not additive, if a subsequent 
-     * call is made to select then the existing fields for selection 
+     *
+     * Note that the select methods are not additive, if a subsequent
+     * call is made to select then the existing fields for selection
      * will be replaced.
      * @param fieldsToSelect - A Set of Strings containing the field names to be selected
      * @return this EntityQuery object, to enable chaining
@@ -102,9 +102,9 @@ public class EntityQuery {
     }
 
     /** Set the fields to be returned when the query is executed.
-     * 
-     * Note that the select methods are not additive, if a subsequent 
-     * call is made to select then the existing fields for selection 
+     *
+     * Note that the select methods are not additive, if a subsequent
+     * call is made to select then the existing fields for selection
      * will be replaced.
      * @param fields - Strings containing the field names to be selected
      * @return this EntityQuery object, to enable chaining
@@ -135,7 +135,7 @@ public class EntityQuery {
     }
 
     /** Set the EntityCondition to be used as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * @param entityCondition - An EntityCondition object to be used as the where clause for this query
      * @return this EntityQuery object, to enable chaining
@@ -146,7 +146,7 @@ public class EntityQuery {
     }
 
     /** Set a Map of field name/values to be ANDed together as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * @param fieldMap - A Map of field names/values to be ANDed together as the where clause for the query
      * @return this EntityQuery object, to enable chaining
@@ -157,7 +157,7 @@ public class EntityQuery {
     }
 
     /** Set a series of field name/values to be ANDed together as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * @param fields - A series of field names/values to be ANDed together as the where clause for the query
      * @return this EntityQuery object, to enable chaining
@@ -168,7 +168,7 @@ public class EntityQuery {
     }
 
     /** Set a series of EntityConditions to be ANDed together as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * @param entityCondition - A series of EntityConditions to be ANDed together as the where clause for the query
      * @return this EntityQuery object, to enable chaining
@@ -179,7 +179,7 @@ public class EntityQuery {
     }
 
     /** Set a list of EntityCondition objects to be ANDed together as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * @param andConditions - A list of EntityCondition objects to be ANDed together as the WHERE clause for the query
      * @return this EntityQuery object, to enable chaining
@@ -190,7 +190,7 @@ public class EntityQuery {
     }
 
     /** Set a list of EntityCondition objects to be combined together with given operator as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * <p>
      * SCIPIO: New, added 2018-05-17.
@@ -204,7 +204,7 @@ public class EntityQuery {
     }
 
     /** Set the EntityCondition to be used as the HAVING clause for the query.
-     * 
+     *
      * NOTE: Each successive call to any of the having(...) methods will replace the currently set condition for the query.
      * @param entityCondition - The EntityCondition object that specifies how to constrain
      *            this query after any groupings are done (if this is a view
@@ -217,7 +217,7 @@ public class EntityQuery {
     }
 
     /** The fields of the named entity to order the resultset by; optionally add a " ASC" for ascending or " DESC" for descending
-     * 
+     *
      * NOTE: Each successive call to any of the orderBy(...) methods will replace the currently set orderBy fields for the query.
      * @param orderBy - The fields of the named entity to order the resultset by
      * @return this EntityQuery object, to enable chaining
@@ -228,7 +228,7 @@ public class EntityQuery {
     }
 
     /** The fields of the named entity to order the resultset by; optionally add a " ASC" for ascending or " DESC" for descending
-     * 
+     *
      * NOTE: Each successive call to any of the orderBy(...) methods will replace the currently set orderBy fields for the query.
      * @param fields - The fields of the named entity to order the resultset by
      * @return this EntityQuery object, to enable chaining
@@ -239,7 +239,7 @@ public class EntityQuery {
     }
 
     /** Indicate that the ResultSet object's cursor may move only forward (this is the default behavior)
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery cursorForwardOnly() {
@@ -248,7 +248,7 @@ public class EntityQuery {
     }
 
     /** Indicate that the ResultSet object's cursor is scrollable but generally sensitive to changes to the data that underlies the ResultSet.
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery cursorScrollSensitive() {
@@ -257,7 +257,7 @@ public class EntityQuery {
     }
 
     /** Indicate that the ResultSet object's cursor is scrollable but generally not sensitive to changes to the data that underlies the ResultSet.
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery cursorScrollInsensitive() {
@@ -266,7 +266,7 @@ public class EntityQuery {
     }
 
     /** Specifies the fetch size for this query. -1 will fall back to datasource settings.
-     * 
+     *
      * @param fetchSize - The fetch size for this query
      * @return this EntityQuery object, to enable chaining
      */
@@ -276,7 +276,7 @@ public class EntityQuery {
     }
 
     /** Specifies the max number of rows to return, 0 means all rows.
-     * 
+     *
      * @param maxRows - the max number of rows to return
      * @return this EntityQuery object, to enable chaining
      */
@@ -286,7 +286,7 @@ public class EntityQuery {
     }
 
     /** Specifies that the values returned should be filtered to remove duplicate values.
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery distinct() {
@@ -295,7 +295,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether the values returned should be filtered to remove duplicate values.
-     * 
+     *
      * @param distinct - boolean indicating whether the values returned should be filtered to remove duplicate values
      * @return this EntityQuery object, to enable chaining
      */
@@ -305,7 +305,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether results should be read from the cache (or written to the cache if the results have not yet been cached)
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery cache() {
@@ -314,7 +314,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether results should be read from the cache (or written to the cache if the results have not yet been cached)
-     * 
+     *
      * @param useCache - boolean to indicate if the cache should be used or not
      * @return this EntityQuery object, to enable chaining
      */
@@ -324,7 +324,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are currently active using from/thruDate fields.
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate() {
@@ -335,7 +335,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields.
-     * 
+     *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
      */
@@ -354,7 +354,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields.
-     * 
+     *
      * @param moment - Date representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
      */
@@ -364,7 +364,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are currently active using the specified from/thru field name pairs.
-     * 
+     *
      * @param filterByFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
      */
@@ -373,7 +373,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are active during the specified moment using the specified from/thru field name pairs.
-     * 
+     *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @param filterByFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
@@ -389,10 +389,10 @@ public class EntityQuery {
     }
 
     /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
-     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
-     * 
+     *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
      */
@@ -404,34 +404,34 @@ public class EntityQuery {
     }
 
     /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
-     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
-     * 
+     *
      * @param moment - Date representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate(boolean enable, Date moment) {
         return this.filterByDate(enable, new java.sql.Timestamp(moment.getTime()));
     }
-    
+
     /** SCIPIO: Specifies whether the query should return only values that are currently active using the specified from/thru field name pairs,
-     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
-     * 
+     *
      * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate(boolean enable, String... filterByFieldName) {
         return this.filterByDate(enable, (Timestamp) null, filterByFieldName);
     }
-    
+
     /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using the specified from/thru field name pairs,
-     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
-     * 
+     *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
@@ -447,21 +447,21 @@ public class EntityQuery {
         }
         return this;
     }
-    
+
     /** Executes the EntityQuery and returns a list of results
-     * 
+     *
      * @return Returns a List of GenericValues representing the results of the query
      */
     public List<GenericValue> queryList() throws GenericEntityException {
         return query(null);
     }
 
-    /** Executes the EntityQuery and returns an EntityListIterator representing the result of the query. 
-     * 
+    /** Executes the EntityQuery and returns an EntityListIterator representing the result of the query.
+     *
      * NOTE:  THAT THIS MUST BE CLOSED (preferably in a finally block) WHEN YOU
      *        ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT
      *        WILL MAINTAIN A DATABASE CONNECTION.
-     * 
+     *
      * @return Returns an EntityListIterator representing the result of the query
      */
     public EntityListIterator queryIterator() throws GenericEntityException {
@@ -476,7 +476,7 @@ public class EntityQuery {
     }
 
     /** Executes the EntityQuery and returns the first result
-     * 
+     *
      * @return GenericValue representing the first result record from the query
      */
     public GenericValue queryFirst() throws GenericEntityException {
@@ -490,7 +490,7 @@ public class EntityQuery {
     }
 
     /** Executes the EntityQuery and a single result record
-     * 
+     *
      * @return GenericValue representing the only result record from the query
      */
     public GenericValue queryOne() throws GenericEntityException {
@@ -500,9 +500,9 @@ public class EntityQuery {
     }
 
     /** Executes the EntityQuery and returns the result count
-     * 
+     *
      * If the query generates more than a single result then an exception is thrown
-     * 
+     *
      * @return GenericValue representing the only result record from the query
      */
     public long queryCount() throws GenericEntityException {
@@ -525,7 +525,7 @@ public class EntityQuery {
         if (dynamicViewEntity == null) {
             result = delegator.findList(entityName, makeWhereCondition(useCache), fieldsToSelect, orderBy, findOptions, useCache);
         } else {
-            try (EntityListIterator it = queryIterator()) { 
+            try (EntityListIterator it = queryIterator()) {
                 result = it.getCompleteList();
             }
         }
@@ -534,7 +534,7 @@ public class EntityQuery {
         }
         return result;
     }
-    
+
     private EntityFindOptions makeEntityFindOptions() {
         EntityFindOptions findOptions = new EntityFindOptions();
         if (resultSetType != null) {

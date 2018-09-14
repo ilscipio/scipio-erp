@@ -42,9 +42,9 @@ import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 public final class UrlServletHelper extends ContextFilter {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static void setRequestAttributes(ServletRequest request, Delegator delegator, ServletContext servletContext) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         // check if multi tenant is enabled
@@ -56,7 +56,7 @@ public final class UrlServletHelper extends ContextFilter {
                 // if tenant was specified, replace delegator with the new per-tenant delegator and set tenantId to session attribute
                 delegator = getDelegator(servletContext);
 
-                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant 
+                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant
                 Delegator baseDelegator = DelegatorFactory.getDelegator(delegator.getDelegatorBaseName());
                 GenericValue tenantDomainName = EntityQuery.use(baseDelegator).from("TenantDomainName").where("domainName", serverName).queryOne();
 
@@ -70,7 +70,7 @@ public final class UrlServletHelper extends ContextFilter {
                     delegator = DelegatorFactory.getDelegator(tenantDelegatorName);
                     servletContext.setAttribute("delegator", delegator);
                 }
-                
+
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Unable to get Tenant", module);
             }
@@ -85,7 +85,7 @@ public final class UrlServletHelper extends ContextFilter {
             httpRequest.getSession().setAttribute("webSiteId", httpRequest.getServletContext().getAttribute("webSiteId")); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         }
     }
-    
+
     public static void setViewQueryParameters(ServletRequest request, StringBuilder urlBuilder) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         if (UtilValidate.isEmpty(httpRequest.getServletPath())) {
@@ -96,7 +96,7 @@ public final class UrlServletHelper extends ContextFilter {
         String viewSize = null;
         String viewSort = null;
         String searchString = null;
-        
+
         int queryStringIndex = pathInfo.indexOf("?");
         if (queryStringIndex >= 0) {
             List<String> queryStringTokens = StringUtil.split(pathInfo.substring(queryStringIndex + 1), "&");
@@ -104,7 +104,7 @@ public final class UrlServletHelper extends ContextFilter {
                 int equalIndex = queryStringToken.indexOf("=");
                 String name = queryStringToken.substring(0, equalIndex - 1);
                 String value = queryStringToken.substring(equalIndex + 1, queryStringToken.length() - 1);
-                
+
                 if ("viewIndex".equals(name)) {
                     viewIndex = value;
                 } else if ("viewSize".equals(name)) {
@@ -116,7 +116,7 @@ public final class UrlServletHelper extends ContextFilter {
                 }
             }
         }
-        
+
         if (UtilValidate.isNotEmpty(httpRequest.getParameter("viewIndex"))) {
             viewIndex = httpRequest.getParameter("viewIndex");
         }
@@ -129,7 +129,7 @@ public final class UrlServletHelper extends ContextFilter {
         if (UtilValidate.isNotEmpty(httpRequest.getParameter("searchString"))) {
             searchString = httpRequest.getParameter("searchString");
         }
-        
+
         //Set query string parameters to url
         if(UtilValidate.isNotEmpty(viewIndex)){
             urlBuilder.append("/~VIEW_INDEX=" + viewIndex);
@@ -195,7 +195,7 @@ public final class UrlServletHelper extends ContextFilter {
             }
         }
     }
-    
+
     public static String invalidCharacter(String str) {
         str = str.replace("&", "-");
         str = str.replace("\"", "-");

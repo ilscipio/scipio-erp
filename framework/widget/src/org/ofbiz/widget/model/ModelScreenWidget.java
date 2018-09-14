@@ -104,7 +104,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
      * <p>
      * If we haven't found the target element to render yet, we will for the most part
      * enter into all elements here EXCEPT those that have been explicitly marked as not
-     * containing the target element, using section contains string such as: 
+     * containing the target element, using section contains string such as:
      * {@code <section contains="!$My-Section">}.
      * Those that are entered perform their actions as usual, but output is prevented where possible
      * (FTL may cause issues with this).
@@ -133,7 +133,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
      * As of 2017-05-04, all subclasses now override this instead of {@link #renderWidgetString} (they were all renamed).
      */
     protected abstract void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException;
-    
+
     protected static List<ModelScreenWidget> readSubWidgets(ModelScreen modelScreen, List<? extends Element> subElementList) {
         if (subElementList.isEmpty()) {
             return Collections.emptyList();
@@ -162,7 +162,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
     public ModelScreen getModelScreen() {
         return this.modelScreen;
     }
-    
+
     /**
      * SCIPIO: Returns the complex contains-expression. Never null.
      */
@@ -178,7 +178,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         //private final Map<String, Object> context;
         //private final Appendable writer;
         private final RenderContextFetcher contextFetcher;
-        
+
         // SCIPIO: (other) new fields
         // SCIPIO: New feature: Ability to render previously-defined sections (from a caller) as if part of these sections.
         // Essentially we mix sections from different decorators therefore different contexts.
@@ -198,7 +198,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             this.sectionMap = Collections.unmodifiableMap(localMap);
             this.contextFetcher = contextFetcher; // SCIPIO
             this.screenStringRenderer = screenStringRenderer;
-            
+
             // SCIPIO: (other) new fields
             this.includePrevSections = false;
             this.localSectionMap = this.sectionMap;
@@ -206,9 +206,9 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             this.prevSections = null;
             this.sourceDecoratorScreen = sourceDecoratorScreen;
         }
-        
+
         public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, RenderContextFetcher contextFetcher,
-                ScreenStringRenderer screenStringRenderer, 
+                ScreenStringRenderer screenStringRenderer,
                 SectionsRenderer prevSections, Map<String, ModelScreenWidget> prevSectionMap, boolean includePrevSections, ModelScreenWidget sourceDecoratorScreen) {
             Map<String, ModelScreenWidget> localMap = new HashMap<String, ModelScreenWidget>();
             if (includePrevSections && prevSections != null && prevSectionMap != null) {
@@ -219,7 +219,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             this.sectionMap = Collections.unmodifiableMap(localMap);
             this.contextFetcher = contextFetcher; // SCIPIO
             this.screenStringRenderer = screenStringRenderer;
-            
+
             // SCIPIO: (other) new fields
             this.includePrevSections = includePrevSections;
             if (includePrevSections) {
@@ -240,8 +240,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             this.sourceDecoratorScreen = sourceDecoratorScreen;
         }
 
-        /** 
-         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+        /**
+         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker
          * <p>
          * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
          * NOTE: this method has shareScope=true implied (no protection). See renderScoped for protection.
@@ -249,8 +249,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public String render(String sectionName, boolean asString) throws GeneralException, IOException {
             return render(sectionName, asString, true, null);
         }
-        
-        /** 
+
+        /**
          * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
          * */
         protected String render(String sectionName, boolean asString, boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException {
@@ -278,7 +278,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 return asString ? effWriter.toString() : "";
             }
         }
-        
+
         /**
          * SCIPIO: the inner call around renderWidgetString
          * 2017-04-26: this is refactored because the ctxVars put and the context push has to be done around
@@ -312,40 +312,40 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 }
             }
         }
-        
-        /** 
-         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+
+        /**
+         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker
          */
         public String render(String sectionName) throws GeneralException, IOException {
             return render(sectionName, false);
         }
-        
-        /** 
+
+        /**
          * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
-         * 
+         *
          * @param asString whether to render as string instead of saved writer; default: false
          * @param shareScope whether to share scope; default: false (for renderScoped only!)
          */
         public String renderScoped(String sectionName, Boolean asString, Boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException {
             return render(sectionName, asString != null ? asString : Boolean.FALSE, shareScope != null ? shareScope : Boolean.FALSE, ctxVars);
         }
-        
-        /** 
+
+        /**
          * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
          */
         public String renderScoped(String sectionName, Boolean asString, Boolean shareScope) throws GeneralException, IOException {
             return renderScoped(sectionName, asString, shareScope, null);
         }
-        
-        /** 
+
+        /**
          * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
          * generic object/ftl-friendly version.
          */
         public String renderScopedGen(String sectionName, Object asString, Object shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException {
             return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope), ctxVars);
         }
-        
-        /** 
+
+        /**
          * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
          * generic object/ftl-friendly version.
          */
@@ -356,7 +356,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public Appendable getWriter() { // SCIPIO
             return contextFetcher.getWriter();
         }
-        
+
         public MapStack<String> getContext() { // SCIPIO
             return contextFetcher.getContext();
         }
@@ -449,7 +449,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public Section(ModelScreen modelScreen, Element sectionElement) {
             this(modelScreen, sectionElement, false);
         }
-        
+
         public Section(ModelScreen modelScreen, Element sectionElement, boolean isMainSection) {
             super(modelScreen, sectionElement);
 
@@ -457,7 +457,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             boolean hasActionsElement = false;
             boolean hasWidgetsElement = false;
             boolean hasFailWidgetsElement = false;
-            
+
             // SCIPIO: SHORTHANDS: this code now support having an actions or widgets element in place of section.
             // this is remarkable easy!
             String tagName = UtilXml.getTagNameIgnorePrefix(sectionElement);
@@ -483,7 +483,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 } else {
                     this.condition = null;
                 }
-    
+
                 // read all actions under the "actions" element
                 Element actionsElement = UtilXml.firstChildElement(sectionElement, "actions");
                 if (actionsElement != null) {
@@ -492,7 +492,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 } else {
                     this.actions = Collections.emptyList();
                 }
-    
+
                 // read sub-widgets
                 Element widgetsElement = UtilXml.firstChildElement(sectionElement, "widgets");
                 if (widgetsElement != null) {
@@ -502,7 +502,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 } else {
                     this.subWidgets = Collections.emptyList();
                 }
-    
+
                 // read fail-widgets
                 Element failWidgetsElement = UtilXml.firstChildElement(sectionElement, "fail-widgets");
                 if (failWidgetsElement != null) {
@@ -515,7 +515,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             }
             this.isMainSection = isMainSection;
             this.shareScopeExdr = FlexibleStringExpander.getInstance(sectionElement.getAttribute("share-scope"));
-            
+
             // SCIPIO: warn about this case, which should basically be considered an error
             if (condition != null && hasActionsElement && !hasWidgetsElement && !hasFailWidgetsElement) {
                 Debug.logWarning("screen [" + modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "] " +
@@ -525,7 +525,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             }
 
             // SCIPIO: determine if actions-only
-            this.actionsOnly = hasActionsElement && condition == null && !hasFailWidgetsElement && 
+            this.actionsOnly = hasActionsElement && condition == null && !hasFailWidgetsElement &&
                     UtilValidate.isEmpty(subWidgets) && UtilValidate.isEmpty(failWidgets) &&
                     !(UtilValidate.isEmpty(this.actions) && hasWidgetsElement); // NOTE: the last is special case, ambiguous, but bias toward widgets
         }
@@ -536,7 +536,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public boolean isActionsOnly() {
             return actionsOnly;
         }
-        
+
         @Override
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);
@@ -552,7 +552,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 }
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
-            
+
             // check the condition, if there is one
             boolean condTrue = true;
             if (this.condition != null) {
@@ -594,7 +594,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     throw new RuntimeException(errMsg);
                 }
             }
-            
+
             // SCIPIO: share-scope
             if (protectScope) {
                 UtilGenerics.<MapStack<String>>cast(context).pop();
@@ -628,7 +628,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public ModelCondition getCondition() {
             return condition;
         }
-        
+
         public boolean shareScope(Map<String, Object> context) { // SCIPIO
             String shareScopeString = this.shareScopeExdr.expandString(context);
             // defaults to true, so anything but false is true
@@ -694,7 +694,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -703,7 +703,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
 
     public static final class Column extends ModelWidget {
         public static final String TAG_NAME = "column"; // SCIPIO: added for consistency, but NOTE: not in xsd
-        
+
         private final FlexibleStringExpander idExdr;
         private final FlexibleStringExpander styleExdr;
         private final List<ModelScreenWidget> subWidgets;
@@ -717,7 +717,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             this.subWidgets = Collections.unmodifiableList(readSubWidgets(modelScreen, subElementList));
             this.modelScreen = modelScreen; // SCIPIO
         }
-        
+
         public List<ModelScreenWidget> getSubWidgets() {
             return this.subWidgets;
         }
@@ -742,12 +742,12 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO: new
             return TAG_NAME;
         }
-        
+
         @Override
         public String getContainerLocation() { // SCIPIO: new
             return modelScreen != null ? modelScreen.getFullLocationAndName() : null;
@@ -843,7 +843,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getAutoUpdateInterval() {
             return autoUpdateInterval;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -994,7 +994,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             title = WidgetWorker.getEarlyEncoder(context).encode(title); // SCIPIO: simplified
             return title;
         }
-        
+
         public String getTitleStyle(Map<String, Object> context) { // SCIPIO
             return this.titleStyleExdr.expandString(context);
         }
@@ -1039,7 +1039,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public boolean getPadded() {
             return padded;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -1082,7 +1082,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -1103,7 +1103,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             return null; //Collections.emptyList();
         }
     }
-    
+
     public static final class IncludeScreen extends ModelScreenWidget implements FlexibleNameAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "include-screen";
         private final FlexibleStringExpander nameExdr;
@@ -1131,9 +1131,9 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 int renderSeqNumber = (Integer) (context.get("renderSeqNumber") != null ? context.get("renderSeqNumber") : 0);
                 renderSeqNumber++;
                 context.put("renderSeqNumber", renderSeqNumber);
-                
+
                 UtilGenerics.<MapStack<String>>cast(context).push();
-                
+
                 // build the widgetpath
                 List<String> widgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
                 if (widgetTrail == null) {
@@ -1144,7 +1144,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 widgetTrail.add(thisName);
                 context.put("_WIDGETTRAIL_", widgetTrail);
             }
-            
+
             AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
             // don't need the renderer here, will just pass this on down to another screen call; screenStringRenderer.renderContainerBegin(writer, context, this);
@@ -1195,7 +1195,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -1207,18 +1207,18 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
         private final Map<String, ModelScreenWidget> sectionMap;
-        
+
         // SCIPIO: fallback decorator
         private final FlexibleScreenFallbackSettings fallbackSettings;
-        
+
         // SCIPIO: FIXME: Terrible ThreadLocal-based hack to propagate default values from screen-group
         // NOTE: the initial value for this is NULL and must be set back to NULL before the construction is over (use a stack-like idiom).
         private static ThreadLocal<FlexibleScreenFallbackSettings> overridingDefaultFallbackSettings = new ThreadLocal<>();
 
-        private static final FlexibleScreenFallbackSettings defaultFallbackSettings = 
+        private static final FlexibleScreenFallbackSettings defaultFallbackSettings =
                 new SimpleFlexibleScreenFallbackSettings("", "", Boolean.FALSE); // SCIPIO
-               
-        
+
+
         // SCIPIO: if true, automatically include sections defined in higher screens
         private final boolean autoDecoratorSectionIncludes;
 
@@ -1233,18 +1233,18 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 sectionMap.put(decoratorSection.getName(), decoratorSection);
             }
             this.sectionMap = Collections.unmodifiableMap(sectionMap);
-            
+
             // SCIPIO: new fields
             FlexibleScreenFallbackSettings defFallbackSettings = getOverridingDefaultFallbackSettings();
             if (defFallbackSettings == null) {
                 defFallbackSettings = DecoratorScreen.defaultFallbackSettings;
             }
-            this.fallbackSettings = new SimpleFlexibleScreenFallbackSettings(defFallbackSettings, 
+            this.fallbackSettings = new SimpleFlexibleScreenFallbackSettings(defFallbackSettings,
                 FlexibleStringExpander.getInstance(decoratorScreenElement.getAttribute("fallback-name")),
                 FlexibleStringExpander.getInstance(decoratorScreenElement.getAttribute("fallback-location")),
                 UtilMisc.booleanValue(decoratorScreenElement.getAttribute("fallback-if-empty"))
                 );
-            
+
             this.autoDecoratorSectionIncludes = !"false".equals(decoratorScreenElement.getAttribute("auto-decorator-section-include"));
         }
 
@@ -1269,7 +1269,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 }
             }
             filteredSectionMap = Collections.unmodifiableMap(filteredSectionMap);
-            
+
             // SCIPIO: get previous sections renderer and include if auto-decorator-section-include enabled
             // Must not recognize any sections from prev for which this decorator-screen already had a decorator-section in xml
             Map<String, ModelScreenWidget> filteredPrevSectionMap = new HashMap<String, ModelScreenWidget>();
@@ -1279,7 +1279,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     if (section != null && section instanceof DecoratorSection) {
                         String name = entry.getKey();
                         ModelScreenWidget defSection = this.sectionMap.get(name);
-                        // autoDecoratorSectionIncludes only adds auto-includes for sections not already defined, statically 
+                        // autoDecoratorSectionIncludes only adds auto-includes for sections not already defined, statically
                         // use sectionMap here, not filteredSectionMap, so that use-when doesn't permit auto-includes when it evaluates to false...
                         if (this.autoDecoratorSectionIncludes && defSection == null) {
                             filteredPrevSectionMap.put(name, section);
@@ -1299,7 +1299,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 }
             }
             filteredPrevSectionMap = Collections.unmodifiableMap(filteredPrevSectionMap);
-            
+
             // isolate the scope
             if (!(context instanceof MapStack)) {
                 context = MapStack.create(context);
@@ -1312,21 +1312,21 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             // SCIPIO: 2017-03-09: workaround for context fetching problems
             RenderContextFetcher contextFetcher = ScreenRenderer.makeEnvAwareContextFetcher(writer, standAloneStack);
             standAloneStack.put("screens", new ScreenRenderer(contextFetcher, screenStringRenderer));
-            
+
             SectionsRenderer sections;
             if (!filteredPrevSectionMap.isEmpty()) {
                 sections = new SectionsRenderer(filteredSectionMap, contextFetcher, screenStringRenderer, prevSections, filteredPrevSectionMap, true, this);
             } else {
                 sections = new SectionsRenderer(filteredSectionMap, contextFetcher, screenStringRenderer, this);
             }
-            
+
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
             contextMs.push();
             context.put("sections", sections);
 
             String name = this.getName(context);
             String location = this.getLocation(context);
-            
+
             // SCIPIO: fallback added
             ScreenFactory.renderReferencedScreen(name, location, this, writer, context, screenStringRenderer,
                     true, this.fallbackSettings.getResolvedForScreenLogic(context));
@@ -1383,7 +1383,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
     public static final class DecoratorSection extends ModelScreenWidget {
         public static final String TAG_NAME = "decorator-section";
         private final List<ModelScreenWidget> subWidgets;
-        
+
         // SCIPIO: feature: conditional section definitions
         private final FlexibleStringExpander useWhen;
         private final boolean fallbackAutoInclude;
@@ -1399,7 +1399,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             this.fallbackAutoInclude = "true".equals(decoratorSectionElement.getAttribute("fallback-auto-include"));
             this.overrideByAutoInclude = "true".equals(decoratorSectionElement.getAttribute("override-by-auto-include"));
         }
-        
+
         @Override
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException { // SCIPIO: renamed to *Core
             // render sub-widgets
@@ -1413,15 +1413,15 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getUseWhen() { // SCIPIO
             return useWhen;
         }
-        
+
         public boolean isFallbackAutoInclude() { // SCIPIO
-            return fallbackAutoInclude;  
+            return fallbackAutoInclude;
         }
-        
+
         public boolean isOverrideByAutoInclude() { // SCIPIO
             return overrideByAutoInclude;
         }
-        
+
         /**
          * SCIPIO: Returns true if this section should be used as-is,
          * based on the decorator-section use-when minilang/EL/bsh/groovy-style condition
@@ -1437,26 +1437,26 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 // no use-when
                 return true;
             }
-            
+
             boolean condTrue;
             Object retVal;
-            
+
             try {
                 retVal = this.getUseWhen().expand(context);
             }
             catch(Exception e) {
                 String errMsg = "Error evaluating use-when condition [" + this.getUseWhen().toString() + "] on the "
-                        + "decoration-section " + this.getName() + " of screen " 
+                        + "decoration-section " + this.getName() + " of screen "
                         + this.getModelScreen().getSourceLocation() + "#" + this.getModelScreen().getName()
                         + ": " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg, e);
             }
-            
+
             if (retVal instanceof Boolean) {
                 Boolean boolVal = (Boolean) retVal;
                 condTrue = boolVal.booleanValue();
-            } 
+            }
             else if ("true".equals(retVal)) {
                 condTrue = true;
             }
@@ -1465,17 +1465,17 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             } else {
                 throw new IllegalArgumentException("Return value from use-when condition eval was not a boolean: "
                         + "[" + this.getUseWhen().toString() + "] on the "
-                        + "decoration-section " + this.getName() + " of screen " 
+                        + "decoration-section " + this.getName() + " of screen "
                         + this.getModelScreen().getSourceLocation() + "#" + this.getModelScreen().getName());
             }
             return condTrue;
         }
-        
+
         @Override
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -1499,7 +1499,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             int renderSeqNumber = (Integer) (context.get("renderSeqNumber") != null ? context.get("renderSeqNumber") : 0);
             renderSeqNumber++;
             context.put("renderSeqNumber", renderSeqNumber);
-            
+
             UtilGenerics.<MapStack<String>>cast(context).push();
             if (preRenderedContent != null && preRenderedContent.containsKey(getName())) {
                 try {
@@ -1525,7 +1525,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -1595,7 +1595,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -1631,7 +1631,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 }
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
-            
+
             AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
             try {
@@ -1700,7 +1700,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -1736,7 +1736,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 }
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
-            
+
             AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
             try {
@@ -1814,7 +1814,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -1895,7 +1895,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -1956,7 +1956,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public Map<String, ModelScreenWidget> getSubWidgets() {
             return subWidgets;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -2123,7 +2123,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getEnableEditName() {
             return enableEditName;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -2194,7 +2194,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             // TODO Auto-generated method stub
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -2229,7 +2229,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 return;
             }
             ModelMenu modelMenu = getModelMenu(context);
-            
+
             // SCIPIO: targeted rendering applicability check + this whole method heavily refactored.
             WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
             WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelMenu, writer, context, screenStringRenderer);
@@ -2239,7 +2239,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             try {
                 // SCIPIO: caller may have set these. Remove and transfer them to MenuRenderState
                 Map<String, Object> menuRenderArgs = UtilGenerics.checkMap(context.remove("menuRenderArgs"));
-                
+
                 // SCIPIO: added scope protect
                 boolean protectScope = !shareScope(context);
                 if (protectScope) {
@@ -2248,9 +2248,9 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     }
                     UtilGenerics.<MapStack<String>>cast(context).push();
                 }
-                
+
                 AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
-    
+
                 // SCIPIO: new render state to carry around max depth
                 // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
                 MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
@@ -2265,13 +2265,13 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     }
                     renderState.setMaxDepth(getMaxDepth(context));
                     renderState.setSubMenuFilter(getSubMenuFilter(context));
-                    
+
                     modelMenu.renderMenuString(writer, context, menuStringRenderer);
                 } finally {
                     // SCIPIO: restore the previous render state just in case
                     MenuRenderState.store(context, prevRenderState);
                 }
-                
+
                 // SCIPIO: added scope protect
                 if (protectScope) {
                     UtilGenerics.<MapStack<String>>cast(context).pop();
@@ -2311,11 +2311,11 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getLocationExdr() {
             return locationExdr;
         }
-        
+
         public FlexibleStringExpander getShareScopeExdr() { // SCIPIO: added
             return shareScopeExdr;
         }
-        
+
         public boolean shareScope(Map<String, Object> context) { // SCIPIO: added
             String shareScopeString = this.shareScopeExdr.expandString(context);
             // defaults to false, so anything but true is false
@@ -2325,7 +2325,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getMaxDepthExdr() { // SCIPIO
             return maxDepthExdr;
         }
-        
+
         public Integer getMaxDepth(Map<String, Object> context) { // SCIPIO
             String maxDepthStr = this.maxDepthExdr.expandString(context);
             if (UtilValidate.isEmpty(maxDepthStr)) {
@@ -2344,11 +2344,11 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getSubMenuFilterExdr() { // SCIPIO
             return subMenuFilterExdr;
         }
-        
+
         public String getSubMenuFilter(Map<String, Object> context) { // SCIPIO
             return this.subMenuFilterExdr.expandString(context);
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -2498,7 +2498,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public Link getLink() {
             return link;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -2597,7 +2597,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public Image getImage() {
             return image;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;
@@ -2658,26 +2658,26 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                                                .orderBy("columnSeqId")
                                                .cache(true)
                                                .queryList();
-                
+
                 // SCIPIO: columnCount
                 int columnCount = portalPageColumns.size();
                 context.put("portletColumnCount", columnCount);
-                
+
                 // Renders the portalPage header
                 screenStringRenderer.renderPortalPageBegin(writer, context, this);
-                
+
                 // First column has no previous column
                 String prevColumnSeqId = "";
-                
+
                 // Iterates through the PortalPage columns
                 ListIterator <GenericValue>columnsIterator = portalPageColumns.listIterator();
                 int columnIndex = 0; // SCIPIO
                 while(columnsIterator.hasNext()) {
                     GenericValue columnValue = columnsIterator.next();
                     String columnSeqId = columnValue.getString("columnSeqId");
-                    
+
                     context.put("portletColumnIndex", columnIndex); // SCIPIO
-                    
+
                     // Renders the portalPageColumn header
                     screenStringRenderer.renderPortalPageColumnBegin(writer, context, this, columnValue);
 
@@ -2696,7 +2696,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     if (columnsIterator.hasNext()) {
                         nextColumnSeqId = portalPageColumns.get(columnsIterator.nextIndex()).getString("columnSeqId");
                     }
-                    
+
                     // Iterates through the Portlets in the Column
                     ListIterator <GenericValue>portletsIterator = portalPagePortlets.listIterator();
                     while(portletsIterator.hasNext()) {
@@ -2717,23 +2717,23 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                         context.put("nextPortletSeqId", nextPortletSeqId);
                         context.put("prevColumnSeqId", prevColumnSeqId);
                         context.put("nextColumnSeqId", nextColumnSeqId);
-                        
+
                         // SCIPIO: make these available to portlets
                         context.put("columnWidthPercentage", columnValue.getString("columnWidthPercentage"));
                         context.put("columnWidthPixels", columnValue.getString("columnWidthPixels"));
-                       
+
                         // Get portlet's attributes
                         portletAttributes = EntityQuery.use(delegator)
                                                        .from("PortletAttribute")
                                                        .where("portalPageId", portletValue.get("portalPageId"), "portalPortletId", portletValue.get("portalPortletId"), "portletSeqId", portletValue.get("portletSeqId"))
                                                        .queryList();
-                        
+
                         ListIterator <GenericValue>attributesIterator = portletAttributes.listIterator();
                         while (attributesIterator.hasNext()) {
                             GenericValue attribute = attributesIterator.next();
                             context.put(attribute.getString("attrName"), attribute.getString("attrValue"));
                         }
-                        
+
                         // Renders the portalPagePortlet
                         screenStringRenderer.renderPortalPagePortletBegin(writer, context, this, portletValue);
                         screenStringRenderer.renderPortalPagePortletBody(writer, context, this, portletValue);
@@ -2744,7 +2744,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                             GenericValue attribute = attributesIterator.previous();
                             context.remove(attribute.getString("attrName"));
                         }
-                        
+
                         // Uses the actual portlet as prevPortlet for next iteration
                         prevPortletId = (String) portletValue.get("portalPortletId");
                         prevPortletSeqId = (String) portletValue.get("portletSeqId");
@@ -2773,7 +2773,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             GenericValue portalPage = getPortalPageValue(context);
             return portalPage.getString("originalPortalPageId");
         }
-        
+
         public String getActualPortalPageId(Map<String, Object> context) {
             GenericValue portalPage = getPortalPageValue(context);
             return portalPage.getString("portalPageId");
@@ -2799,7 +2799,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public FlexibleStringExpander getConfModeExdr() {
             return confModeExdr;
         }
-        
+
         @Override
         public String getWidgetType() { // SCIPIO
             return TAG_NAME;

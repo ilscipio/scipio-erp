@@ -171,7 +171,7 @@ public final class UtilMisc {
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Found Map value that is not Serializable: " + mapEntry.getKey() + "=" + mapEntry.getValue(), module);
                 }
-                
+
             }
         }
         for (String keyToRemove: keysToRemove) { map.remove(keyToRemove); }
@@ -580,13 +580,13 @@ public final class UtilMisc {
     // Private lazy-initializer class
     private static class LocaleHolder {
         private static final List<Locale> availableLocaleList = getAvailableLocaleList();
-        
+
         /** SCIPIO: SPECIAL: Available locales automatically expanded to include countries (country required) (added 2017-10-11) */
         private static final List<Locale> availableLocaleExpandedCountryRequiredList = getAvailableLocaleExpandedCountryRequiredList();
-        
+
         /** SCIPIO: SPECIAL: Available locales automatically expanded to include countries, but will also show locales not having countries (added 2017-10-11) */
         private static final List<Locale> availableLocaleExpandedCountryOptionalList = getAvailableLocaleExpandedCountryOptionalList();
-        
+
         private static List<Locale> getAvailableLocaleList() {
             TreeMap<String, Locale> localeMap = new TreeMap<>();
             String localesString = UtilProperties.getPropertyValue("general", "locales.available");
@@ -607,7 +607,7 @@ public final class UtilMisc {
             }
             return Collections.unmodifiableList(new ArrayList<>(localeMap.values()));
         }
-        
+
         /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes (added 2017-10-11) */
         private static List<Locale> getAvailableLocaleExpandedCountryRequiredList() {
             List<Locale> list = getAvailableLocaleExpandedCountryOptionalList();
@@ -620,7 +620,7 @@ public final class UtilMisc {
             filtered.trimToSize();
             return Collections.unmodifiableList(filtered);
         }
-        
+
         /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes and also without country codes (added 2017-10-11) */
         private static List<Locale> getAvailableLocaleExpandedCountryOptionalList() {
             TreeMap<String, Locale> localeMap = new TreeMap<>();
@@ -661,13 +661,13 @@ public final class UtilMisc {
     public static List<Locale> availableLocales() {
         return LocaleHolder.availableLocaleList;
     }
-    
-    /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes (added 2017-10-11) 
+
+    /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes (added 2017-10-11)
      * NOTE: This list may be subject to restrictions by user configuration (now or in the future) - do not rely on this to get a list of all existing countries. */
     public static List<Locale> availableLocalesExpandedCountryRequired() {
         return LocaleHolder.availableLocaleExpandedCountryRequiredList;
     }
-    
+
     /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes and also without country codes (added 2017-10-11).
      * NOTE: This list may be subject to restrictions by user configuration (now or in the future) - do not rely on this to get a list of all existing countries. */
     public static List<Locale> availableLocalesExpandedCountryOptional() {
@@ -747,7 +747,7 @@ public final class UtilMisc {
         }
         return res;
     }
-    
+
     /**
      * SCIPIO: Creates a new, empty map (abstraction).
      * <p>
@@ -760,7 +760,7 @@ public final class UtilMisc {
     public static <K, V> Map<K, V> newMap() {
         return new HashMap<>();
     }
-    
+
     /**
      * SCIPIO: Creates a new map initialized from the given map (abstraction).
      * <p>
@@ -771,7 +771,7 @@ public final class UtilMisc {
     public static <K, V> Map<K, V> newMap(Map<? extends K, ? extends V> map) {
         return new HashMap<>(map);
     }
-    
+
     /**
      * SCIPIO: Creates a new map with given initial capacity hint (abstraction).
      * <p>
@@ -783,7 +783,7 @@ public final class UtilMisc {
     public static <K, V> Map<K, V> newMap(int initialCapacity) {
         return new HashMap<>(initialCapacity);
     }
-    
+
     /**
      * SCIPIO: Creates a new, insert-order-preserving empty map (abstraction).
      * <p>
@@ -795,9 +795,9 @@ public final class UtilMisc {
     public static <K, V> Map<K, V> newInsertOrderMap() {
         return new LinkedHashMap<>();
     }
-    
+
     /**
-     * SCIPIO: Creates a new, insert-order-preserving empty map initialized from the 
+     * SCIPIO: Creates a new, insert-order-preserving empty map initialized from the
      * given collection (abstraction).
      * <p>
      * This returns a general-purpose insert-order-preserving map type, such as LinkedHashMap.
@@ -806,12 +806,12 @@ public final class UtilMisc {
     public static <K, V> Map<K, V> newInsertOrderMap(Map<? extends K, ? extends V> map) {
         return new LinkedHashMap<>(map);
     }
-    
+
     /**
      * SCIPIO: Creates a new, empty list (abstraction).
      * <p>
-     * This returns a general-purpose list type with no specific initial capacity or structure, 
-     * appropriate for general use in most Scipio code and services - it may be ArrayList, 
+     * This returns a general-purpose list type with no specific initial capacity or structure,
+     * appropriate for general use in most Scipio code and services - it may be ArrayList,
      * LinkedList, or even another.
      * <p>
      * NOTE: Often it is better to choose a specific List type such as ArrayList or LinkedList
@@ -825,13 +825,13 @@ public final class UtilMisc {
     public static <V> List<V> newList() {
         return new ArrayList<>(); // new LinkedList<V>()
     }
-    
+
     /**
      * SCIPIO: Creates a new list initialized from the given collection (abstraction).
      * <p>
-     * This returns a general-purpose list type with no specific structure, 
+     * This returns a general-purpose list type with no specific structure,
      * with contents duplicated from the passed collection,
-     * appropriate for general use in most Scipio code and services - it may be ArrayList, 
+     * appropriate for general use in most Scipio code and services - it may be ArrayList,
      * LinkedList, or even another.
      * <p>
      * NOTE: Usually it is better to choose a specific List type such as ArrayList or LinkedList
@@ -843,13 +843,13 @@ public final class UtilMisc {
     public static <V> List<V> newList(Collection<? extends V> c) {
         return new ArrayList<>(c); // new LinkedList<V>(c)
     }
-    
+
     /**
      * SCIPIO: Creates a new, empty list, with given initial capacity hint (abstraction).
      * <p>
-     * This returns a general-purpose list type with no specific structure, 
+     * This returns a general-purpose list type with no specific structure,
      * and which may or may not honor the passed initialCapacity,
-     * appropriate for general use in most Scipio code and services - it may be ArrayList, 
+     * appropriate for general use in most Scipio code and services - it may be ArrayList,
      * LinkedList, or even another.
      * <p>
      * NOTE: Usually it is better to choose a specific List type such as ArrayList or LinkedList
@@ -861,11 +861,11 @@ public final class UtilMisc {
     public static <V> List<V> newList(int initialCapacity) {
         return new ArrayList<>(initialCapacity); // new LinkedList<V>()
     }
-    
+
     /**
      * SCIPIO: Creates a new, empty set (abstraction).
      * <p>
-     * This returns a general-purpose set type with no specific initial capacity, structure, 
+     * This returns a general-purpose set type with no specific initial capacity, structure,
      * and not guaranteed to preserve order,
      * appropriate for general use in most Scipio code and services.
      * <p>
@@ -875,11 +875,11 @@ public final class UtilMisc {
     public static <V> Set<V> newSet() {
         return new HashSet<>();
     }
-    
+
     /**
      * SCIPIO: Creates a new set initialized from the given collection (abstraction).
      * <p>
-     * This returns a general-purpose set type with no specific initial capacity, structure, 
+     * This returns a general-purpose set type with no specific initial capacity, structure,
      * and not guaranteed to preserve order,
      * appropriate for general use in most Scipio code and services.
      * @see #newSet()
@@ -887,12 +887,12 @@ public final class UtilMisc {
     public static <V> Set<V> newSet(Collection<? extends V> c) {
         return new HashSet<>(c);
     }
-    
+
     /**
      * SCIPIO: Creates a new, empty insert-order-preserving set (abstraction).
      * <p>
-     * This returns a general-purpose insert-order-preserving set type with no specific 
-     * initial capacity or structure, 
+     * This returns a general-purpose insert-order-preserving set type with no specific
+     * initial capacity or structure,
      * appropriate for general use in most Scipio code and services.
      * <p>
      * This is useful for Freemarker workarounds and to guarantee a list
@@ -901,21 +901,21 @@ public final class UtilMisc {
     public static <V> Set<V> newInsertOrderSet() {
         return new LinkedHashSet<>();
     }
-    
+
     /**
      * SCIPIO: Creates a new insert-order-preserving set initialized from the given collection (abstraction).
      * <p>
-     * This returns a general-purpose insert-order-preserving set type with no specific 
+     * This returns a general-purpose insert-order-preserving set type with no specific
      * initial capacity or structure, appropriate for general use in most Scipio code and services.
      * @see #newInsertOrderSet()
      */
     public static <V> Set<V> newInsertOrderSet(Collection<? extends V> c) {
         return new LinkedHashSet<>(c);
     }
-    
+
     /**
      * SCIPIO: Returns a new list of entries, where each entry corresponds to the value
-     * for the given key for each map in the collection. 
+     * for the given key for each map in the collection.
      */
     public static <K, V extends R, R> List<R> collectMapValuesForKey(Collection<Map<K, V>> collection, K key) {
         List<R> res = new ArrayList<>(collection.size());
@@ -956,7 +956,7 @@ public final class UtilMisc {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Returns true if value is Boolean.TRUE or "true", or
      * false if value is Boolean.FALSE or "false", or defaultValue if
@@ -968,7 +968,7 @@ public final class UtilMisc {
         Boolean res = booleanValue(value);
         return res != null ? res : defaultValue;
     }
-        
+
     /**
      * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE or "Y", or
      * Boolean.FALSE if value is Boolean.FALSE or "N", or null if
@@ -987,7 +987,7 @@ public final class UtilMisc {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Returns true if value is Boolean.TRUE or "Y", or
      * false if value is Boolean.FALSE or "N", or defaultValue if
@@ -999,7 +999,7 @@ public final class UtilMisc {
         Boolean res = booleanValueIndicator(value);
         return res != null ? res : defaultValue;
     }
-    
+
     /**
      * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE, "true" or "Y", or
      * Boolean.FALSE if value is Boolean.FALSE, "false" or "N", or null if
@@ -1018,7 +1018,7 @@ public final class UtilMisc {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Returns true if value is Boolean.TRUE, "true" or "Y", or
      * false if value is Boolean.FALSE, "false" or "N", or defaultValue if
@@ -1047,7 +1047,7 @@ public final class UtilMisc {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Returns "Y" if value is Boolean.TRUE or "Y", or
      * "N" if value is Boolean.FALSE or "N", or defaultValue if
@@ -1057,7 +1057,7 @@ public final class UtilMisc {
         String res = indicatorValue(value);
         return (res != null) ? res : defaultValue;
     }
-    
+
     /**
      * SCIPIO: Returns "Y" if value is Boolean.TRUE, "true" or "Y", or
      * "N" if value is Boolean.FALSE, "false" or "N", or null if
@@ -1076,7 +1076,7 @@ public final class UtilMisc {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Returns "Y" if value is Boolean.TRUE, "true" or "Y", or
      * "N" if value is Boolean.FALSE, "false" or "N", or defaultValue if
@@ -1095,14 +1095,14 @@ public final class UtilMisc {
     public static <T> Set<T> unmodifiableHashSet(T... elems) {
         return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(elems)));
     }
-    
+
     /**
      * SCIPIO: Returns an unmodifiable hash set copied from the given collection.
      */
     public static <T> Set<T> unmodifiableHashSetCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableSet(new HashSet<T>(collection));
     }
-    
+
     /**
      * SCIPIO: Returns an unmodifiable linked hash set.
      */
@@ -1110,14 +1110,14 @@ public final class UtilMisc {
     public static <T> Set<T> unmodifiableLinkedHashSet(T... elems) {
         return Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(elems)));
     }
-    
+
     /**
      * SCIPIO: Returns an unmodifiable linked hash set copied from the given collection.
      */
     public static <T> Set<T> unmodifiableLinkedHashSetCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableSet(new LinkedHashSet<>(collection));
     }
-    
+
     /**
      * SCIPIO: Returns an unmodifiable array list.
      */
@@ -1125,14 +1125,14 @@ public final class UtilMisc {
     public static <T> List<T> unmodifiableArrayList(T... elems) {
         return Collections.unmodifiableList(new ArrayList<>(Arrays.asList(elems)));
     }
-    
+
     /**
      * SCIPIO: Returns an unmodifiable array list copied from the given collection.
      */
     public static <T> List<T> unmodifiableArrayListCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableList(new ArrayList<>(collection));
     }
-    
+
     /**
      * SCIPIO: Returns an unmodifiable linked list.
      */
@@ -1140,14 +1140,14 @@ public final class UtilMisc {
     public static <T> List<T> unmodifiableLinkedList(T... elems) {
         return Collections.unmodifiableList(new LinkedList<>(Arrays.asList(elems)));
     }
-    
+
     /**
      * SCIPIO: Returns an unmodifiable linked list copied from the given collection.
      */
     public static <T> List<T> unmodifiableLinkedListCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableList(new LinkedList<>(collection));
     }
-    
+
     /**
      * SCIPIO: For an inMap with generics Map&lt;K, V&gt;, populates and returns the opposite mapping outMap, Map&lt;V, K&gt;
      * Added 2017-07-12.
@@ -1158,7 +1158,7 @@ public final class UtilMisc {
         }
         return outMap;
     }
-    
+
     /**
      * SCIPIO: Transfers the specified keys from inMap to outMap.
      * Added 2017-12-04.
@@ -1166,7 +1166,7 @@ public final class UtilMisc {
     public static <K, V> void putKeys(Map<K, V> outMap, Map<? extends K, ? extends V> inMap, Collection<K> keys) {
         for(K key : keys) { outMap.put(key, inMap.get(key)); }
     }
-    
+
     /**
      * SCIPIO: Transfers the specified keys from inMap to outMap.
      * Added 2017-12-04.
@@ -1175,7 +1175,7 @@ public final class UtilMisc {
     public static <K, V> void putKeys(Map<K, V> outMap, Map<? extends K, ? extends V> inMap, K... keys) {
         for(K key : keys) { outMap.put(key, inMap.get(key)); }
     }
-    
+
     /**
      * SCIPIO: Creates a hash map copy with specified keys.
      * Added 2017-12-04.
@@ -1185,7 +1185,7 @@ public final class UtilMisc {
         for(K key : keys) { outMap.put(key, inMap.get(key)); }
         return outMap;
     }
-    
+
     /**
      * SCIPIO: Creates a hash map copy including specified keys.
      * Added 2017-12-04.
@@ -1196,7 +1196,7 @@ public final class UtilMisc {
         for(K key : keys) { outMap.put(key, inMap.get(key)); }
         return outMap;
     }
-    
+
     /**
      * SCIPIO: Creates a hash map copy excluding specified keys.
      * Added 2017-12-04.
@@ -1208,7 +1208,7 @@ public final class UtilMisc {
         }
         return outMap;
     }
-    
+
     /**
      * SCIPIO: Creates a hash map copy excluding specified keys.
      * Added 2017-12-04.
@@ -1217,7 +1217,7 @@ public final class UtilMisc {
     public static <K, V> Map<K, V> toHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, K... keys) {
         return toHashMapWithoutKeys(inMap, new HashSet<>(Arrays.asList(keys)));
     }
-    
+
     /**
      * SCIPIO: Creates a linked (ordered) hash map copy with specified keys, preserving
      * the original insertion order.
@@ -1231,7 +1231,7 @@ public final class UtilMisc {
         }
         return outMap;
     }
-    
+
     /**
      * SCIPIO: Creates a linked (ordered) hash map copy with specified keys, preserving
      * the original insertion order.
@@ -1242,7 +1242,7 @@ public final class UtilMisc {
     public static <K, V> Map<K, V> toLinkedHashMapWithKeysOrigOrder(Map<? extends K, ? extends V> inMap, K... keys) {
         return toLinkedHashMapWithKeysOrigOrder(inMap, new HashSet<>(Arrays.asList(keys)));
     }
-    
+
     /**
      * SCIPIO: Creates a linked (ordered) hash map copy including specified keys, with the
      * key order determined by the order of the passed keys collection parameter.
@@ -1253,7 +1253,7 @@ public final class UtilMisc {
         for(K key : keys) { outMap.put(key, inMap.get(key)); }
         return outMap;
     }
-    
+
     /**
      * SCIPIO: Creates a linked (ordered) hash map copy including specified keys, with the
      * key order determined by the order of the passed keys collection parameter.
@@ -1265,7 +1265,7 @@ public final class UtilMisc {
         for(K key : keys) { outMap.put(key, inMap.get(key)); }
         return outMap;
     }
-    
+
     /**
      * SCIPIO: Creates a linked (ordered) hash map copy excluding specified keys.
      * The original key order is preserved.
@@ -1278,7 +1278,7 @@ public final class UtilMisc {
         }
         return outMap;
     }
-    
+
     /**
      * SCIPIO: Creates a linked (ordered) hash map copy excluding specified keys.
      * The original key order is preserved.
@@ -1288,28 +1288,28 @@ public final class UtilMisc {
     public static <K, V> Map<K, V> toLinkedHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, K... keys) {
         return toLinkedHashMapWithoutKeys(inMap, new HashSet<>(Arrays.asList(keys)));
     }
-    
+
     /**
      * SCIPIO: For each map in the given collection, extracts the value for the specified key and adds
      * it to the given outValueCollection.
      * Added 2018-05-29.
      */
     @SuppressWarnings("unchecked")
-    public static <K, V, T extends V, C extends Collection<T>> C extractValuesForKey(Collection<? extends Map<K, V>> mapList, 
+    public static <K, V, T extends V, C extends Collection<T>> C extractValuesForKey(Collection<? extends Map<K, V>> mapList,
             K key, C outValueCollection) {
         for(Map<K, V> map : mapList) {
             outValueCollection.add((T) map.get(key));
         }
         return outValueCollection;
     }
-    
+
     /**
      * SCIPIO: For each map in the given collection, extracts the value for the specified key and adds
      * it to the given outValueCollection; skips null values.
      * Added 2018-05-29.
      */
     @SuppressWarnings("unchecked")
-    public static <K, V, T extends V, C extends Collection<T>> C extractValuesForKeyNonNull(Collection<? extends Map<K, V>> mapList, 
+    public static <K, V, T extends V, C extends Collection<T>> C extractValuesForKeyNonNull(Collection<? extends Map<K, V>> mapList,
             K key, C outValueCollection) {
         for(Map<K, V> map : mapList) {
             V value = map.get(key);
@@ -1319,28 +1319,28 @@ public final class UtilMisc {
         }
         return outValueCollection;
     }
-    
+
     /**
-     * SCIPIO: For each map in the given collection, extracts the value for the specified key and 
+     * SCIPIO: For each map in the given collection, extracts the value for the specified key and
      * maps it to the original map value in the outValueMap.
      * Added 2018-05-29.
      */
     @SuppressWarnings("unchecked")
-    public static <K, V, T extends V, E extends Map<K, V>, M extends Map<T, E>> M extractValuesForKeyAsMap(Collection<E> mapList, 
+    public static <K, V, T extends V, E extends Map<K, V>, M extends Map<T, E>> M extractValuesForKeyAsMap(Collection<E> mapList,
             K key, M outValueMap) {
         for(E map : mapList) {
             outValueMap.put((T) map.get(key), map);
         }
         return outValueMap;
     }
-    
+
     /**
-     * SCIPIO: For each map in the given collection, extracts the value for the specified key and 
+     * SCIPIO: For each map in the given collection, extracts the value for the specified key and
      * maps it to the original map value in the outValueMap; skips null values.
      * Added 2018-05-29.
      */
     @SuppressWarnings("unchecked")
-    public static <K, V, T extends V, E extends Map<K, V>, M extends Map<T, E>> M extractValuesForKeyAsMapNonNull(Collection<E> mapList, 
+    public static <K, V, T extends V, E extends Map<K, V>, M extends Map<T, E>> M extractValuesForKeyAsMapNonNull(Collection<E> mapList,
             K key, M outValueMap) {
         for(E map : mapList) {
             V value = map.get(key);

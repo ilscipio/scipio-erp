@@ -14,15 +14,15 @@ import java.util.Map;
 public class MapProcessorInvoker {
 
     protected Map<String, Object> inMap;
-    
+
     protected Map<String, List<String>> entryErrorMessages;
     protected List<String> generalErrorMessages;
     protected Map<String, Object> lastResults = null;
     protected Map<String, Object> combinedResults = new HashMap<String, Object>();
-    
+
     protected Locale locale;
-    
-    public MapProcessorInvoker(Map<String, Object> inMap, 
+
+    public MapProcessorInvoker(Map<String, Object> inMap,
             Map<String, List<String>> entryErrorMessages, List<String> errorMessages, Locale locale) {
         super();
         this.inMap = inMap;
@@ -30,7 +30,7 @@ public class MapProcessorInvoker {
         this.generalErrorMessages = errorMessages;
         this.locale = locale;
     }
-    
+
     public MapProcessorInvoker(Map<String, Object> inMap, Locale locale) {
         super();
         this.inMap = inMap;
@@ -56,15 +56,15 @@ public class MapProcessorInvoker {
             }
         }
     }
-    
+
     public void process(MapProcessor processor, boolean resultsToInMap, boolean resultsToCombined) throws GeneralException {
         process(Arrays.asList(new MapProcessor[] { processor }), resultsToInMap, resultsToCombined);
     }
-    
+
     public void process(boolean resultsToInMap, boolean resultsToCombined, MapProcessor... processors) throws GeneralException {
         process(Arrays.asList(processors), resultsToInMap, resultsToCombined);
     }
-    
+
     public void process(MapProcessor[] processors, boolean resultsToInMap, boolean resultsToCombined) throws GeneralException {
         process(Arrays.asList(processors), resultsToInMap, resultsToCombined);
     }
@@ -72,11 +72,11 @@ public class MapProcessorInvoker {
     public Map<String, Object> getLastResults() {
         return lastResults;
     }
-    
+
     public Map<String, Object> getCombinedResults() {
         return combinedResults;
     }
-    
+
     public Map<String, Object> getFinalMap() {
         return inMap;
     }
@@ -92,7 +92,7 @@ public class MapProcessorInvoker {
     public List<String> getAllErrorMessages() {
         return getAllErrorMessages(entryErrorMessages, generalErrorMessages);
     }
-    
+
     public Locale getLocale() {
         return locale;
     }
@@ -102,13 +102,13 @@ public class MapProcessorInvoker {
             outErrorMessages.addAll(list);
         }
     }
-    
+
     public static List<String> getAllErrorMessages(Map<String, List<String>> entryErrorMessages, List<String> errorMessages) {
         List<String> res = new ArrayList<String>();
         res.addAll(errorMessages);
         addEntryErrorMessagesToList(entryErrorMessages, res);
         return res;
     }
-    
-    
+
+
 }

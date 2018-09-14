@@ -40,23 +40,23 @@ public class EscapeMethod implements TemplateMethodModelEx {
         }
         throw new UnsupportedOperationException("TODO - not implemented");
     }
-    
+
     public static class EscapeValMethod extends EscapeMethod {
         // TODO
     }
-    
+
     public static class EscapeFullMethod extends EscapeMethod {
         // TODO
     }
-    
+
     public static class EscapeFullUrlMethod extends EscapeMethod {
         // TODO
     }
-    
+
     public static class EscapeMsgMethod extends EscapeMethod {
         // TODO
     }
-    
+
     public static class EscapeEventMsgMethod extends EscapeMethod {
         // TODO
     }

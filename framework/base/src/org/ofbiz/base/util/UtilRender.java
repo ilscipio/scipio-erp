@@ -13,13 +13,13 @@ import javax.servlet.ServletRequest;
 public abstract class UtilRender {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static final String RENDER_EXCEPTION_MODE_VAR = "scipioRenderExMode";
-    
+
     // WARN: implicit dependency on common component (circular)...
-    private static final RenderExceptionMode globalRenderExMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("general.properties", 
+    private static final RenderExceptionMode globalRenderExMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("general.properties",
             "render.global.exception.mode"), RenderExceptionMode.RETHROW);
-    
+
     protected UtilRender() {
     }
 
@@ -40,7 +40,7 @@ public abstract class UtilRender {
         BLANK;
 
         /**
-         * Gets value permissively or null for any invalid value. 
+         * Gets value permissively or null for any invalid value.
          */
         public static RenderExceptionMode valueOfPermissive(String val) {
             try {
@@ -53,14 +53,14 @@ public abstract class UtilRender {
             }
             return null;
         }
-        
+
         public static RenderExceptionMode valueOfPermissive(String val, RenderExceptionMode defaultVal) {
             RenderExceptionMode mode = valueOfPermissive(val);
             return mode != null ? mode : defaultVal;
         }
-        
+
         /**
-         * Gets value permissively or null for any invalid value. 
+         * Gets value permissively or null for any invalid value.
          * Supports RenderExceptionMode instance and its string representation.
          */
         public static RenderExceptionMode valueOfPermissive(Object val) {
@@ -71,22 +71,22 @@ public abstract class UtilRender {
             }
             return null;
         }
-        
+
         public static RenderExceptionMode valueOfPermissive(Object val, RenderExceptionMode defaultVal) {
             RenderExceptionMode mode = valueOfPermissive(val);
             return mode != null ? mode : defaultVal;
         }
     }
-    
+
     public static RenderExceptionMode getGlobalRenderExceptionMode() {
         return globalRenderExMode;
     }
-    
+
     /**
      * Gets the render exception mode from the context or more generic variables (best-effort).
      */
     public static RenderExceptionMode getRenderExceptionMode(Map<String, ?> context) {
-        // TODO: REVIEW SECURITY IMPLICATIONS 
+        // TODO: REVIEW SECURITY IMPLICATIONS
         // (currently moot because Ofbiz already relies heavily on context for security e.g. simpleEncoder)
         if (context != null) {
             RenderExceptionMode mode = RenderExceptionMode.valueOfPermissive(context.get(RENDER_EXCEPTION_MODE_VAR));
@@ -98,12 +98,12 @@ public abstract class UtilRender {
         }
         return getGlobalRenderExceptionMode();
     }
-    
+
     /**
      * Gets the render exception mode from the request or more generic variables (best-effort).
      */
     public static RenderExceptionMode getRenderExceptionMode(ServletRequest request) {
-        // TODO: REVIEW SECURITY IMPLICATIONS 
+        // TODO: REVIEW SECURITY IMPLICATIONS
         // (currently moot because Ofbiz already relies heavily on context for security e.g. simpleEncoder)
         if (request != null) {
             RenderExceptionMode mode = RenderExceptionMode.valueOfPermissive(request.getAttribute(RENDER_EXCEPTION_MODE_VAR));
@@ -117,7 +117,7 @@ public abstract class UtilRender {
         }
         return getGlobalRenderExceptionMode();
     }
-    
+
     /**
      * Gets the render exception mode from the exception or its causes that implement RenderExceptionModeHolder.
      * If skipNull i
@@ -134,7 +134,7 @@ public abstract class UtilRender {
         }
         return null;
     }
-    
+
     /**
      * Tries to get a non-null RenderExceptionMode from the exception or the FIRST cause it finds that
      * implements RenderExceptionModeHolder (even if it's null). (skipNull==false)

@@ -462,7 +462,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         // for classProperties add attribute names AND relationship names to get a nice, complete chart
         // SCIPIO: 2018-03-28: reordered for ArrayList initial capacity
         List<ModelParam> modelParamList = this.modelService.getModelParamList();
-        
+
         List<String> classPropertiesList = new ArrayList<>(modelParamList.size() + callingServiceSet.size()
                 + calledServiceSet.size() + callingServiceEcaSet.size() + calledServiceEcaSet.size()); // SCIPIO: 2018-03-28: ArrayList initial capacity
         topLevelMap.put("classProperties", classPropertiesList);

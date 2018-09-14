@@ -19,5 +19,5 @@ public interface EncoderFactory {
         SimpleEncoder getEncoder(String name);
         Map<String, String> getEncoderConfig(String name);
     }
-    
+
 }

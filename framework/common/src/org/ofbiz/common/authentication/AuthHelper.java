@@ -39,7 +39,7 @@ public final class AuthHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // SCIPIO: 2018-08-30: added volatile for thread safety
-    private static volatile List<Authenticator> authenticators = new ArrayList<>(); 
+    private static volatile List<Authenticator> authenticators = new ArrayList<>();
     private static volatile boolean authenticatorsLoaded = false;
 
     private AuthHelper() {
@@ -122,7 +122,7 @@ public final class AuthHelper {
             }
 
             Collections.sort(authenticators, new AuthenticationComparator());
-            authenticators.trimToSize(); // SCIPIO            
+            authenticators.trimToSize(); // SCIPIO
             AuthHelper.authenticators = Collections.unmodifiableList(authenticators); // SCIPIO: fix for thread safety
             authenticatorsLoaded = true;
         }

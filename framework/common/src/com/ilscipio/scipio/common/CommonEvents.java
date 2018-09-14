@@ -34,7 +34,7 @@ public class CommonEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    
+
     /**
      * Checks if scipioSysMsg exists in parameter map and updates message indicator to isRead. Ensures that a user has read and followed up on a system message.
      * */
@@ -53,7 +53,7 @@ public class CommonEvents {
              } catch (Exception e) {
                  Debug.logWarning(e, "Problem updating systemMessage", module);
              }
-            
+
         }
 
         return "success";

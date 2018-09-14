@@ -312,7 +312,7 @@ public class CoreEvents {
         if (eventId != null && eventId.isEmpty()) {
             eventId = null;
         }
-        
+
         // return the errors
         if (errorBuf.length() > 0) {
             request.setAttribute("_ERROR_MESSAGE_", errorBuf.toString());
@@ -327,10 +327,10 @@ public class CoreEvents {
             } else if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").startsWith("ASYNC")) {
                 // SCIPIO: 2018-02-16: new ability to run async services without need to go through Job Manager (starts quicker)
                 // NOTE: Default for persist is False, because Job Manager is more intuitive in those cases
-                // NOTE: semantically strange "ASYNC" value for parameter named "_RUN_SYNC_" - cannot use "N" 
+                // NOTE: semantically strange "ASYNC" value for parameter named "_RUN_SYNC_" - cannot use "N"
                 // because in legacy code it would imply to use job scheduler.
                 dispatcher.runAsync(serviceName, serviceContext, request.getParameter("_RUN_SYNC_").endsWith("_PERSIST"));
-                String asyncMsg = UtilProperties.getMessage("WebtoolsUiLabels", "WebtoolsRunServiceAsyncStartedInfo", 
+                String asyncMsg = UtilProperties.getMessage("WebtoolsUiLabels", "WebtoolsRunServiceAsyncStartedInfo",
                         UtilMisc.toMap("serviceName", serviceName), locale);
                 syncServiceResult = ServiceUtil.returnSuccess(asyncMsg);
             } else {

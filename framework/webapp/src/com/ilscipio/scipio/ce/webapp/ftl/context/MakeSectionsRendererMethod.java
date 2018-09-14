@@ -45,20 +45,20 @@ public class MakeSectionsRendererMethod implements TemplateMethodModelEx {
     public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         return execTyped(args);
     }
-    
+
     public Object execTyped(List<TemplateModel> args) throws TemplateModelException {
         if (args.size() != 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 2)");
         }
-        
+
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
-        
+
         TemplateModel arg1 = args.get(0);
         if (!(arg1 instanceof TemplateScalarModel)) {
             throw new TemplateModelException("First argument (type) was not a string");
         }
         String type = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg1);
-        
+
         TemplateModel arg2 = args.get(1);
         if (!(arg2 instanceof TemplateHashModel)) {
             throw new TemplateModelException("Second argument (sectionsMap) was not a map");
@@ -76,5 +76,5 @@ public class MakeSectionsRendererMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("First argument (type) currently only supports: ftl");
         }
     }
-    
+
 }

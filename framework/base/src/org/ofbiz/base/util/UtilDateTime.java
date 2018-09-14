@@ -59,7 +59,7 @@ public final class UtilDateTime {
         {"24", "hour"},
         {"168", "week"}
     };
-    
+
     public static final String[] TIME_INTERVALS =  {"hour", "day", "week", "month", "quarter", "semester", "year"};
 
 
@@ -495,7 +495,7 @@ public final class UtilDateTime {
         }
         return new Timestamp(date.getTime());
     }
-    
+
     /**
      * SCIPIO: Converts a timestamp  into a Date
      *
@@ -838,7 +838,7 @@ public final class UtilDateTime {
         tempCal.add(adjType, adjQuantity);
         return new Timestamp(tempCal.getTimeInMillis());
     }
-    
+
     public static Timestamp getHourStart(Timestamp stamp, TimeZone timeZone, Locale locale) {
         return getHourStart(stamp, 0, timeZone, locale);
     }
@@ -851,7 +851,7 @@ public final class UtilDateTime {
         retStamp.setNanos(0);
         return retStamp;
     }
-    
+
     public static Timestamp getHourEnd(Timestamp stamp, TimeZone timeZone, Locale locale) {
         return getHourEnd(stamp, Long.valueOf(0), timeZone, locale);
     }
@@ -1287,7 +1287,7 @@ public final class UtilDateTime {
         }
 
     }
-    
+
     public static String getDateFormat() {
         return DATE_FORMAT;
     }
@@ -1311,14 +1311,14 @@ public final class UtilDateTime {
     public static TimeInterval getPeriodInterval(String period, Timestamp fromDate, Locale locale, TimeZone timezone) {
         return getPeriodInterval(period, 0, fromDate, locale, timezone);
     }
-    
+
     public static TimeInterval getPeriodInterval(String period, int timeShift, Timestamp fromDate, Locale locale, TimeZone timezone) {
         Timestamp dateBegin = null;
         Timestamp dateEnd = null;
         if (!checkValidInterval(period))
             return null;
         Timestamp date = (UtilValidate.isNotEmpty(fromDate)) ? fromDate : UtilDateTime.nowTimestamp();
-        
+
         switch (period) {
         case "hour":
             dateBegin = getHourStart(date, timeShift, timezone, locale);
@@ -1367,10 +1367,10 @@ public final class UtilDateTime {
             dateEnd = getMonthEnd(dateBegin, timezone, locale);
             break;
         }
-        
+
         return new TimeInterval(dateBegin, dateEnd);
     }
-    
+
     /**
      * SCIPIO: Enhanced version of getPeriodInterval that returns also a date formatter for a given period.
      * @param period
@@ -1382,7 +1382,7 @@ public final class UtilDateTime {
     public static TimeInterval getPeriodIntervalAndFormatter(String period, Timestamp fromDate, Locale locale, TimeZone timezone) {
         return getPeriodIntervalAndFormatter(period, 0, fromDate, locale, timezone);
     }
-    
+
     public static TimeInterval getPeriodIntervalAndFormatter(String period, int timeShift, Timestamp fromDate, Locale locale, TimeZone timezone) {
         if (!checkValidInterval(period))
             return null;
@@ -1390,7 +1390,7 @@ public final class UtilDateTime {
         timeInterval.setDateFormatter(getCommonPeriodDateFormat(period, locale, timezone));
         return timeInterval;
     }
-    
+
     /**
      * SCIPIO: new
      * FIXME: currently only supports format, not parse!
@@ -1446,7 +1446,7 @@ public final class UtilDateTime {
             }
         };
     }
-    
+
     /**
      * SCIPIO: Returns a DateFormat for semester.
      * FIXME: currently only supports format, not parse!
@@ -1467,7 +1467,7 @@ public final class UtilDateTime {
             }
         };
     }
-    
+
     /**
      * SCIPIO: Checks if the interval passed is a valid one
      *
@@ -1479,15 +1479,15 @@ public final class UtilDateTime {
     public static boolean checkValidInterval(String interval) {
         return Arrays.asList(TIME_INTERVALS).contains(interval);
     }
-    
+
     public static Timestamp getTimeStampFromIntervalScope(String iScope) {
         return getTimeStampFromIntervalScope(iScope, -1);
     }
-    
+
     public static Timestamp getTimeStampFromIntervalScope(String iScope, int iCount) {
         return getTimeStampFromIntervalScope(iScope, iCount, null);
     }
-    
+
     public static Timestamp getTimeStampFromIntervalScope(String iScope, int iCount, Timestamp thruDate) {
         iCount--;
         if (iCount < 0)
@@ -1508,7 +1508,7 @@ public final class UtilDateTime {
             calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - (iCount * 3));
         } else if (iScope.equals("semester")) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - (iCount * 6));  
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - (iCount * 6));
         } else if (iScope.equals("year")) {
             calendar.set(Calendar.DAY_OF_YEAR, 1);
             calendar.set(Calendar.MONTH, 1);
@@ -1516,7 +1516,7 @@ public final class UtilDateTime {
         }
         return UtilDateTime.toTimestamp(calendar.getTime());
     }
-    
+
     public static int getIntervalDefaultCount(String iScope) {
         int iCount = 0;
         if (iScope.equals("hour")) {
@@ -1536,17 +1536,17 @@ public final class UtilDateTime {
         }
         return iCount;
     }
-    
+
     public static class TimeInterval {
         private final Timestamp dateBegin;
         private final Timestamp dateEnd;
         private DateFormat dateFormatter;
-        
+
         TimeInterval(Timestamp dateBegin, Timestamp dateEnd) {
             this.dateBegin = dateBegin;
             this.dateEnd = dateEnd;
         }
-        
+
         TimeInterval(Timestamp dateBegin, Timestamp dateEnd, DateFormat dateFormatter) {
             this(dateBegin, dateEnd);
             this.setDateFormatter(dateFormatter);
@@ -1568,5 +1568,5 @@ public final class UtilDateTime {
             this.dateFormatter = dateFormatter;
         }
     }
-    
+
 }

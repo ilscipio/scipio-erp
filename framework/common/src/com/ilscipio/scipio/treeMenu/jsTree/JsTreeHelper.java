@@ -11,9 +11,9 @@ import org.ofbiz.base.util.UtilValidate;
 /**
  * Provides several utilities for handling jsTree objects (data, settings,
  * etc.). Compatible with jsTree version 3.x.x
- * 
+ *
  * @author jsoto
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
@@ -67,7 +67,7 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
     }
 
     /**
-     * 
+     *
      * @author jsoto
      *
      */
@@ -108,7 +108,7 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
     /**
      * Updates the dataItemids that matches the id passed and as well as all the
      * parent references
-     * 
+     *
      * @param id
      */
     private void updateTreeDataItemsIdAndParentReference(String id) {

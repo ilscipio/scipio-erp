@@ -26,14 +26,14 @@ public class WrappedRequestUrlRewriter extends ScipioUrlRewriter {
 
     protected final String urlConfPath;
     protected final Conf conf;
-    
+
     // tuckey objects
     protected final UrlRewriter tuckRewriter;
     //protected final UrlRewriteWrappedResponse tuckResponse;
-    
+
     protected final FullWebappInfo webappInfo;
-    
-    public WrappedRequestUrlRewriter(String urlConfPath, Conf conf, 
+
+    public WrappedRequestUrlRewriter(String urlConfPath, Conf conf,
             FullWebappInfo webappInfo) throws IOException {
         this.urlConfPath = urlConfPath;
         this.conf = conf;
@@ -42,7 +42,7 @@ public class WrappedRequestUrlRewriter extends ScipioUrlRewriter {
         //        this.container.getRequest(), this.tuckRewriter);
         this.webappInfo = webappInfo;
     }
-    
+
     public static class WrappedRequestFactory implements ScipioUrlRewriter.UrlRewriterFactory {
 
         @Override
@@ -58,7 +58,7 @@ public class WrappedRequestUrlRewriter extends ScipioUrlRewriter {
                 Map<String, Object> context) throws IOException {
             throw new UnsupportedOperationException();
         }
-        
+
     }
 
     @Override
@@ -73,13 +73,13 @@ public class WrappedRequestUrlRewriter extends ScipioUrlRewriter {
         }
         try {
             HttpServletRequest wrappedRequest = new WrappedHttpServletRequest(request);
-            
+
             // NOTE: because attribs are buffered, don't need to unset this in finally block
             wrappedRequest.setAttribute(UrlFilterHelper.URLREWRITE_CONF_WEBAPP, webappInfo);
             wrappedRequest.setAttribute(UrlFilterHelper.OUT_URL_WEBAPP, urlWebappInfo);
-            
-            return new UrlRewriteWrappedResponse(response, 
-                    wrappedRequest, 
+
+            return new UrlRewriteWrappedResponse(response,
+                    wrappedRequest,
                     tuckRewriter).encodeURL(url);
         } catch(Exception e) {
             Debug.logError(e, "Error encoding url '"

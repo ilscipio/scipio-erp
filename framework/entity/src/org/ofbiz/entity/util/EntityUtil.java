@@ -338,7 +338,7 @@ public final class EntityUtil {
     }
 
     /**
-     *returns the values in the order specified after with localized value 
+     *returns the values in the order specified after with localized value
      *
      *@param values List of GenericValues
      *@param orderBy The fields of the named entity to order the query by;
@@ -579,7 +579,7 @@ public final class EntityUtil {
 
     /**
      * @param iter EntityListIterator
-     * @param viewIndex 
+     * @param viewIndex
      * @param viewSize
      * @return PagedList object with a subset of data items from EntityListIterator based on viewIndex and viewSize
      * @throws GenericEntityException
@@ -616,7 +616,7 @@ public final class EntityUtil {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Type conversion of Strings that resemble "Y" or "N" values to Boolean
      * @deprecated use {@link org.ofbiz.base.util.UtilMisc#booleanValueIndicator(Object, boolean)} instead.
@@ -626,7 +626,7 @@ public final class EntityUtil {
         Boolean result = toBoolean(indicator);
         return result != null ? result : defaultVal;
     }
-    
+
     /*
      * SCIPIO: COMPLETELY DEPRECATED METHODS
      * These were removed all the way back in ofbiz 15 and should never be used anymore.

@@ -341,10 +341,10 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         if (modelMenuItem.getLink() != null) {
             visitLink(modelMenuItem.getLink().getLink());
         }
-        
+
         // SCIPIO: TODO: print sub-menu elements
-        
-        for (ModelMenuItem menuItem : modelMenuItem.getDirectInlineMenuItemList()) { // SCIPIO: getMenuItemList->getDirectInlineMenuItemList 
+
+        for (ModelMenuItem menuItem : modelMenuItem.getDirectInlineMenuItemList()) { // SCIPIO: getMenuItemList->getDirectInlineMenuItemList
             menuItem.accept(this);
             ;
         }

@@ -298,9 +298,9 @@ public class CommonEvents {
         }
         return "success";
     }
-    
+
     /**
-     * SCIPIO: variant of jsonResponseFromRequestAttributes version of "json" that will only output 
+     * SCIPIO: variant of jsonResponseFromRequestAttributes version of "json" that will only output
      * attributes specifically requested in "scpOutParams" map or "scpOutAttrNames" list,
      * or the names otherwise listed in AjaxRequestUtil.
      * NOTE: this is important for security reasons.
@@ -513,8 +513,8 @@ public class CommonEvents {
      * The targetPage is re-saved in request attributes as "targetPage". targetPage must be a controller
      * request URI within current controller that supports direct (public) requests.
      * <p>
-     * Prepares a redirects to the controller URI named in the "targetPage" 
-     * request attribute or parameter, where parameter also supports "TARGET_PAGE". This is used if 
+     * Prepares a redirects to the controller URI named in the "targetPage"
+     * request attribute or parameter, where parameter also supports "TARGET_PAGE". This is used if
      * targetPageResponse is "redirect-target". In this case the result is "redirect".
      * <p>
      * If targetPageResponse is "forward-target", then it does a forward to targetPage, and result is "forward".
@@ -537,7 +537,7 @@ public class CommonEvents {
      * The event response "error" can point to another event which sets an error.
      */
     public static String processTargetPage(HttpServletRequest request, HttpServletResponse response) {
-        
+
         String targetPageResponse = (String) request.getAttribute("targetPageResponse");
         if (targetPageResponse == null) {
             targetPageResponse = request.getParameter("targetPageResponse");
@@ -565,7 +565,7 @@ public class CommonEvents {
                         }
                     }
                 }
-                
+
                 if (UtilValidate.isEmpty(targetPage)) {
                     Debug.logError("Scipio: Missing target page for targetPageResponse " + targetPageResponse, module);
                     return "error";

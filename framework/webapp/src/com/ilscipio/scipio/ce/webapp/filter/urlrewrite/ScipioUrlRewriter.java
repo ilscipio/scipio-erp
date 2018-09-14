@@ -18,7 +18,7 @@ public abstract class ScipioUrlRewriter {
 
     // TODO: REVIEW: 2018-08-08: inter-webapp request factory has been tentatively switched to a wrapper factory
     // many implications...
-    
+
     private static final UrlRewriterFactory requestFactory = new WrappedRequestUrlRewriter.WrappedRequestFactory(); // TODO?: unhardcode in future
     private static final UrlRewriterFactory contextFactory = new LocalUrlRewriter.LocalFactory(); // TODO?: unhardcode in future
 
@@ -51,14 +51,14 @@ public abstract class ScipioUrlRewriter {
         }
         return rewriter;
     }
-    
+
     /**
      * Loads URL rewriter for webapp using its own urlrewrite file,
      * or dummy rewriter if it has no such file, and caches the rewriter in the passed context if requested (context modified).
      * The context is used to fetch delegator, dispatcher, and other ofbiz context fields.
      * <p>
      * NOTE: Currently (2018-08) this assumes all contexts passed are some kind of
-     * static render context (see {@link org.ofbiz.webapp.renderer.RenderEnvType}), 
+     * static render context (see {@link org.ofbiz.webapp.renderer.RenderEnvType}),
      * and prefers storing the cache in globalContext.
      */
     public static ScipioUrlRewriter getForContext(FullWebappInfo webappInfo,
@@ -128,7 +128,7 @@ public abstract class ScipioUrlRewriter {
      * Processes the URL through urlrewrite outbound-rules, derived from a webapp request.
      * Intended mainly for inter-webapp links.
      * <p>
-     * urlWebappInfo can be optionally specified as a hint to disambiguate which webapp the link 
+     * urlWebappInfo can be optionally specified as a hint to disambiguate which webapp the link
      * was built for.
      */
     public abstract String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, HttpServletRequest request, HttpServletResponse response);
@@ -137,16 +137,16 @@ public abstract class ScipioUrlRewriter {
      * Processes the URL through urlrewrite outbound-rules, derived from a render context.
      * Intended mainly for emails, sitemap, etc.
      * <p>
-     * urlWebappInfo can be optionally specified as a hint to disambiguate which webapp the link 
+     * urlWebappInfo can be optionally specified as a hint to disambiguate which webapp the link
      * was built for.
      */
     public abstract String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, Map<String, Object> context);
-    
+
     public boolean isPresent() {
         return (this != DUMMY);
     }
 
-    
+
     public interface UrlRewriterFactory {
         /**
          * Loads URL rewriter for webapp using specified urlrewrite file.
@@ -161,12 +161,12 @@ public abstract class ScipioUrlRewriter {
         public ScipioUrlRewriter loadForContext(FullWebappInfo webappInfo,
                 String urlConfPath, Map<String, Object> context) throws IOException;
     }
-    
+
     public static class Cache {
         private Map<String, ScipioUrlRewriter> contextPathCache = new HashMap<>();
-        
+
         public static final String CACHE_FIELD = "scpUrlRewriterCache";
-        
+
         public ScipioUrlRewriter getUrlRewriter(FullWebappInfo webappInfo) {
             return contextPathCache.get(webappInfo.getContextPath());
         }
@@ -179,7 +179,7 @@ public abstract class ScipioUrlRewriter {
 
     public static class DummyUrlRewriter extends ScipioUrlRewriter {
         private DummyUrlRewriter() {
-            
+
         }
         //@Override
         //public String processOutboundUrl(String url) {

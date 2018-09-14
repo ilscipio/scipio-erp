@@ -78,11 +78,11 @@ public class GroovyUtil {
      * Evaluate a Groovy condition or expression
      * <p>
      * <strong>SCIPIO: WARNING:</strong> 2018-09-12: Currently this method is non-caching (script recompiled at every call).
-     * This method should only be used for performance-insensitive applications 
+     * This method should only be used for performance-insensitive applications
      * and cases where arbitrary scripts are expected to be passed (such as admin webapp's TemplateTest).
      * Also note that the absence of an outer-layer cache actually means the <code>GroovyClassLoader</code> hits
      * an internal synchronization lock, bad for multi-threading.
-     * 
+     *
      * @param expression The expression to evaluate
      * @param context The context to use in evaluation (re-written)
      * @see <a href="StringUtil.html#convertOperatorSubstitutions(java.lang.String)">StringUtil.convertOperatorSubstitutions(java.lang.String)</a>
@@ -121,7 +121,7 @@ public class GroovyUtil {
     /**
      * SCIPIO: Evaluate a Groovy condition or expression, guaranteeing no caching.
      * <p>
-     * This method should only be used for performance-insensitive applications 
+     * This method should only be used for performance-insensitive applications
      * and cases where arbitrary scripts are expected to be passed (such as admin webapp's TemplateTest).
      * Also note that the absence of an outer-layer cache actually means the <code>GroovyClassLoader</code> hits
      * an internal synchronization lock, bad for multi-threading.
@@ -195,7 +195,7 @@ public class GroovyUtil {
     }
 
     /**
-     * @throws IOException 
+     * @throws IOException
      * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
      */
     @Deprecated
@@ -216,13 +216,13 @@ public class GroovyUtil {
         groovyClassLoader.close();
         return classLoader;
     }
-    
+
     public static Class<?> parseClass(InputStream in, String location, GroovyClassLoader groovyClassLoader) throws IOException {
         return groovyClassLoader.parseClass(UtilIO.readString(in), location);
     }
 
     /**
-     * @throws IOException 
+     * @throws IOException
      * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
      */
     @Deprecated
@@ -232,7 +232,7 @@ public class GroovyUtil {
         groovyClassLoader.close();
         return classLoader;
     }
-    
+
     public static Class<?> parseClass(String text, GroovyClassLoader groovyClassLoader) throws IOException { // SCIPIO: added 2017-01-27
         return groovyClassLoader.parseClass(text);
     }

@@ -378,8 +378,8 @@ public class ServiceEventHandler implements EventHandler {
 
             request.setAttribute("_EVENT_MESSAGE_LIST_", result.get(ModelService.SUCCESS_MESSAGE_LIST));
             request.setAttribute("_EVENT_MESSAGE_", result.get(ModelService.SUCCESS_MESSAGE));
-            
-            // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...) 
+
+            // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...)
             // or because the service is just a direct DB operation
             if (responseString.equals(ModelService.RESPOND_SUCCESS) && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_LIST_"))
                     && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_"))) {
@@ -406,7 +406,7 @@ public class ServiceEventHandler implements EventHandler {
 
     public static void checkSecureParameter(RequestMap requestMap, Set<String> urlOnlyParameterNames, String name, HttpSession session, String serviceName, Delegator delegator) throws EventHandlerException {
         // special case for security: if this is a request-map defined as secure in controller.xml then only accept body parameters coming in, ie don't allow the insecure URL parameters
-        // NOTE: the RequestHandler will check the HttpSerletRequest security to make sure it is secure if the request-map -> security -> https=true, 
+        // NOTE: the RequestHandler will check the HttpSerletRequest security to make sure it is secure if the request-map -> security -> https=true,
         // but we can't just look at the request.isSecure() method here because it is allowed to send secure requests for request-map with https=false
         if (requestMap != null && requestMap.securityHttps) {
             if (urlOnlyParameterNames.contains(name)) {

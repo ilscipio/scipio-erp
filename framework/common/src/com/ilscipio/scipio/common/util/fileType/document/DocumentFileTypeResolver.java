@@ -17,7 +17,7 @@ import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
 /**
  * File type resolver focused on resolving document types. This is likely to be
  * moved to an entity at some point.
- * 
+ *
  * @author jsoto
  */
 public class DocumentFileTypeResolver extends FileTypeResolver {
@@ -37,13 +37,13 @@ public class DocumentFileTypeResolver extends FileTypeResolver {
 
     protected DocumentFileTypeResolver(Delegator delegator, ResolverConfig resolverConfig) {
         super(delegator, resolverConfig);
-        
+
         Set<String> mediaTypes = collectManualSupportedMediaTypes(delegator, fileTypes);
         // 2017-02-08: not needed with new tika code; for manual, just define new type instead...
         //mediaTypes.add("image/x-psd");
         manualSupportedMediaTypes = Collections.unmodifiableSet(mediaTypes);
     }
-    
+
     public static DocumentFileTypeResolver getInstance(Delegator delegator, ResolverConfig resolverConfig) {
         return new DocumentFileTypeResolver(delegator, resolverConfig);
     }
@@ -51,14 +51,14 @@ public class DocumentFileTypeResolver extends FileTypeResolver {
     @Override
     public GenericValue findMimeType(ByteBuffer byteBuffer, String fileName) throws GeneralException {
         GenericValue mimeType = super.findMimeType(byteBuffer, fileName);
-        
+
         // SPECIAL: for documents, if we couldn't determine a mime-type,
         // or the mime-type determined is not registered in MimeType entity,
         // just get as octet-stream.
         if (mimeType == null) {
             mimeType = delegator.findOne("MimeType", true, UtilMisc.toMap("mimeTypeId", "application/octet-stream"));
         }
-        
+
         return mimeType;
     }
 
@@ -227,16 +227,16 @@ public class DocumentFileTypeResolver extends FileTypeResolver {
 
     @Override
     public boolean isAllowedMediaTypePermissive(String mediaType) {
-        // SPECIAL: no condition here: Document will allow anything: 
+        // SPECIAL: no condition here: Document will allow anything:
         //return mediaTypeOrAliasHasPrefix(mediaType, "application/");
-        return true; 
+        return true;
     }
-    
+
     @Override
     protected List<AbstractFileType> getFileTypes() {
         return fileTypes;
     }
-    
+
     @Override
     protected Set<String> getManualSupportedMediaTypes() {
         return manualSupportedMediaTypes;

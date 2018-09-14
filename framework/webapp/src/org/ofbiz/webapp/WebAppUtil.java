@@ -69,22 +69,22 @@ public final class WebAppUtil {
      * SCIPIO: Fast, light homemache cache to optimize control servlet path lookups.
      */
     private static final Map<String, String> controlServletPathWebappInfoCache = new ConcurrentHashMap<String, String>();
-    
+
     /**
      * SCIPIO: Fast, light homemache cache to optimize WebappInfo lookups by webSiteId.
      */
     private static final Map<String, WebappInfo> webappInfoWebSiteIdCache = new ConcurrentHashMap<String, WebappInfo>();
 
     private static final Pattern urlQueryDelimPat = Pattern.compile("[?;#&]");
-    
+
     /**
      * Returns the control servlet path. The path consists of the web application's mount-point
      * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
      * in the web application's <code>web.xml</code> file.
      * <p>
      * SCIPIO: NOTE: This stock method always returns with a trailing slash (unless null).
-     * 
-     * 
+     *
+     *
      * @param webAppInfo
      * @param optional SCIPIO: if true, return null if not found; otherwise throw IllegalArgumentException (added 2017-11-18)
      * @throws IOException
@@ -119,7 +119,7 @@ public final class WebAppUtil {
             }
             servletMapping = servletMapping.replace("*", "");
             if (!servletMapping.endsWith("/")) { // SCIPIO: 2017-12-05: extra guarantee the path ends with trailing slash
-                servletMapping += "/"; 
+                servletMapping += "/";
             }
             String servletPath = webAppInfo.contextRoot.concat(servletMapping);
             // SCIPIO: save result
@@ -127,12 +127,12 @@ public final class WebAppUtil {
             return servletPath;
         }
     }
-    
+
     /**
      * Returns the control servlet path. The path consists of the web application's mount-point
      * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
      * in the web application's <code>web.xml</code> file.
-     * 
+     *
      * @param webAppInfo
      * @throws IOException
      * @throws SAXException
@@ -140,13 +140,13 @@ public final class WebAppUtil {
     public static String getControlServletPath(WebappInfo webAppInfo) throws IOException, SAXException, IllegalArgumentException {
         return getControlServletPath(webAppInfo, false);
     }
-    
+
     /**
      * SCIPIO: Returns the control servlet path with no exceptions generated and with a terminating slash,
      * or null. The path consists of the web application's mount-point
      * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
      * in the web application's <code>web.xml</code> file.
-     * 
+     *
      * @param webAppInfo
      * @throws IOException
      * @throws SAXException
@@ -160,7 +160,7 @@ public final class WebAppUtil {
         }
         return controlPath;
     }
-    
+
     /**
      * SCIPIO: Returns the control servlet path with no exceptions generated and with a terminating slash,
      * or null. The path consists of the web application's mount-point
@@ -168,8 +168,8 @@ public final class WebAppUtil {
      * in the web application's <code>web.xml</code> file.
      * @deprecated 2017-12-05: call {@link #getControlServletPathSafe(WebappInfo)} instead;
      * the central {@link #getControlServletPath} method already ensured a trailing slash,
-     * so this one actually becomes misleading. 
-     * 
+     * so this one actually becomes misleading.
+     *
      * @param webAppInfo
      * @throws IOException
      * @throws SAXException
@@ -202,7 +202,7 @@ public final class WebAppUtil {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Gets the control servlet mapping for given webappInfo, WITHOUT the
      * webapp context root. There is never a terminating slash, except if root,
@@ -212,10 +212,10 @@ public final class WebAppUtil {
         String controlPath = WebAppUtil.getControlServletPath(webAppInfo);
         return getControlServletOnlyPathFromFull(webAppInfo, controlPath);
     }
-    
+
     /**
      * SCIPIO: Gets the control servlet mapping for given webappInfo, WITHOUT the
-     * webapp context root, throwing no exceptions. There is never a terminating slash, 
+     * webapp context root, throwing no exceptions. There is never a terminating slash,
      * except if root, where it will be "/".
      */
     public static String getControlServletOnlyPathSafe(WebappInfo webAppInfo) {
@@ -227,11 +227,11 @@ public final class WebAppUtil {
         }
         return controlPath;
     }
-    
+
     /**
      * Returns the <code>WebappInfo</code> instance associated to the specified web site ID.
      * Throws <code>IllegalArgumentException</code> if the web site ID was not found.
-     * 
+     *
      * @param webSiteId
      * @throws IOException
      * @throws SAXException
@@ -253,18 +253,18 @@ public final class WebAppUtil {
         }
         // SCIPIO: much clearer message
         //throw new IllegalArgumentException("Web site ID '" + webSiteId + "' not found.");
-        throw new IllegalArgumentException("Could not get webapp info for website ID '" + webSiteId 
+        throw new IllegalArgumentException("Could not get webapp info for website ID '" + webSiteId
                 + "'; the website may not exist, or may not have a webapp (web.xml)"
                 + ", or its webapp may be shadowed/overridden in the system (ofbiz_component.xml)");
     }
-    
+
     /**
      * SCIPIO: Returns the <code>WebappInfo</code> instance that has the same mount-point prefix as
      * the given path.
      * <p>
      * <strong>WARN:</strong> Webapp mounted on root (/*) will usually cause a catch-all here.
      * <p>
-     * NOTE: This only works for paths starting from webapp contextPath; 
+     * NOTE: This only works for paths starting from webapp contextPath;
      * if it contains extra prefix such as webappPathPrefix, this will throw exception
      * or return the root webapp (if any mapped to /).
      */
@@ -274,9 +274,9 @@ public final class WebAppUtil {
         if (path.length() > 0 && !path.startsWith("/")) {
             throw new IllegalArgumentException("Scipio: Web app for path '" + path + "' not found (must be absolute path).");
         }
-        
+
         if (stripQuery) {
-            Matcher m = urlQueryDelimPat.matcher(path); 
+            Matcher m = urlQueryDelimPat.matcher(path);
             if (m.find()) {
                 path = path.substring(0, m.start());
             }
@@ -317,7 +317,7 @@ public final class WebAppUtil {
         }
         return webappInfo;
     }
-    
+
     /**
      * SCIPIO: Returns the <code>WebappInfo</code> instance that the given exact context path as mount-point
      * @deprecated use {@link #getWebappInfoFromContextPath(String, String)} and specify sever name
@@ -333,7 +333,7 @@ public final class WebAppUtil {
         }
         return webappInfo;
     }
-    
+
     /**
      * SCIPIO: Returns the <code>WebappInfo</code> instance for the current request's webapp.
      */
@@ -341,12 +341,12 @@ public final class WebAppUtil {
         Assert.notNull("request", request);
         String contextPath = request.getContextPath();
         return getWebappInfoFromContextPath(getServerId(request), contextPath);
-    }    
+    }
 
     /**
      * Returns the web site ID - as configured in the web application's <code>web.xml</code> file,
      * or <code>null</code> if no web site ID was found.
-     * 
+     *
      * @param webAppInfo
      * @throws IOException
      * @throws SAXException
@@ -372,7 +372,7 @@ public final class WebAppUtil {
 
     /**
      * Returns a <code>WebXml</code> instance that models the web application's <code>web.xml</code> file.
-     * 
+     *
      * @param webAppInfo
      * @throws IOException
      * @throws SAXException
@@ -392,7 +392,7 @@ public final class WebAppUtil {
 
     /**
      * Parses the specified <code>web.xml</code> file into a <code>WebXml</code> instance.
-     * 
+     *
      * @param webXmlFileLocation
      * @param validate
      * @throws IOException
@@ -445,7 +445,7 @@ public final class WebAppUtil {
             throw new IllegalArgumentException("Web app xml definition for webapp with context root '" + webappInfo.contextRoot + "' not found.", e);
         }
     }
-    
+
     /**
      * SCIPIO: Returns the web.xml context-params for webappInfo, with no exceptions thrown if anything missing.
      */
@@ -456,7 +456,7 @@ public final class WebAppUtil {
             return Collections.<String, String> emptyMap();
         }
     }
-    
+
     /**
      * SCIPIO: Returns the web.xml context-params for webSiteId.
      */
@@ -472,7 +472,7 @@ public final class WebAppUtil {
             throw new IllegalArgumentException("Web app xml definition for webSiteId '" + webSiteId + "' not found.", e);
         }
     }
-    
+
     /**
      * SCIPIO: Returns the web.xml context-params for webSiteId, with no exceptions thrown if anything missing.
      */
@@ -512,7 +512,7 @@ public final class WebAppUtil {
                 if (delegator != null) {
                     return delegator;
                 } else {
-                    Debug.logError("ERROR: delegator factory returned null for delegatorName \"" 
+                    Debug.logError("ERROR: delegator factory returned null for delegatorName \""
                             + delegatorName + "\" from session attributes", module);
                 }
             }
@@ -522,7 +522,7 @@ public final class WebAppUtil {
             // NOTE: this means the web.xml is not properly configured, because servlet context
             // delegator should have been made available by ContextFilter.init.
             Debug.logError("ERROR: delegator not found in servlet context; please make sure the webapp's"
-                    + " web.xml file is properly configured to load ContextFilter and specify entityDelegatorName", module); 
+                    + " web.xml file is properly configured to load ContextFilter and specify entityDelegatorName", module);
         }
         return delegator;
     }
@@ -565,7 +565,7 @@ public final class WebAppUtil {
             // NOTE: this means the web.xml is not properly configured, because servlet context
             // dispatcher should have been made available by ContextFilter.init.
             Debug.logError("ERROR: dispatcher not found in servlet context; please make sure the webapp's"
-                    + " web.xml file is properly configured to load ContextFilter and specify localDispatcherName", module); 
+                    + " web.xml file is properly configured to load ContextFilter and specify localDispatcherName", module);
         }
         return dispatcher;
     }
@@ -593,7 +593,7 @@ public final class WebAppUtil {
     public static String getServerId(ServletContext servletContext) {
         return (String) servletContext.getAttribute("_serverId");
     }
-    
+
     /**
      * SCIPIO: Gets server ID from a render context.
      * <p>

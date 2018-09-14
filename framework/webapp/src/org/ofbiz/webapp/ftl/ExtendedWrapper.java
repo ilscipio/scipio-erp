@@ -25,8 +25,8 @@ public abstract class ExtendedWrapper extends BeansWrapper implements ScipioExte
 
     protected final String lang;
     protected final SimpleEncoder encoder;
-    
-    // SCIPIO: 2017-04-03: this is now PRIVATE - use 
+
+    // SCIPIO: 2017-04-03: this is now PRIVATE - use
     private ExtendedWrapper(Version version, String lang) {
         super(version);
         this.lang = lang;
@@ -45,5 +45,5 @@ public abstract class ExtendedWrapper extends BeansWrapper implements ScipioExte
 //        }
 //        return super.wrap(object);
 //    }
-    
+
 }

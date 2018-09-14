@@ -15,17 +15,17 @@ import org.ofbiz.base.util.GeneralException;
 public class ServiceErrorException extends GeneralException {
 
     private final Map<String, Object> serviceResult;
-    
+
     public ServiceErrorException(String exceptionMessage, Map<String, Object> serviceResult) {
         super(exceptionMessage);
         this.serviceResult = serviceResult;
     }
-    
+
     public ServiceErrorException(String exceptionMessage, List<String> serviceErrorMessageList) {
         super(exceptionMessage);
         this.serviceResult = ServiceUtil.returnError(serviceErrorMessageList);
     }
-    
+
     public ServiceErrorException(String exceptionMessage, String serviceErrorMessage) {
         super(exceptionMessage);
         this.serviceResult = ServiceUtil.returnError(serviceErrorMessage);
@@ -34,5 +34,5 @@ public class ServiceErrorException extends GeneralException {
     public Map<String, Object> getServiceResult() {
         return serviceResult;
     }
-    
+
 }

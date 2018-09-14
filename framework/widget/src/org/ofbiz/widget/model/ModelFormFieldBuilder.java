@@ -120,7 +120,7 @@ public class ModelFormFieldBuilder {
      * It is stored without wrapping brackets.
      */
     private AttribsExpression attribsExpr = AttribsExpression.makeAttribsExpr();
-    
+
     public ModelFormFieldBuilder() {
     }
 
@@ -189,7 +189,7 @@ public class ModelFormFieldBuilder {
         this.tabindex = fieldElement.getAttribute("tabindex");
         this.conditionGroup = fieldElement.getAttribute("condition-group");
         this.attribsExpr = AttribsExpression.makeAttribsExpr(fieldElement.getAttribute("attribs")); // SCIPIO
-        
+
         Element childElement = null;
         List<? extends Element> subElements = UtilXml.childElementList(fieldElement);
         for (Element subElement : subElements) {
@@ -447,11 +447,11 @@ public class ModelFormFieldBuilder {
     public Integer getPosition() {
         return position;
     }
-    
+
     public Integer getPositionSpan() { // SCIPIO
         return positionSpan;
     }
-    
+
     public Boolean getCombinePrevious() { // SCIPIO
         return combinePrevious;
     }
@@ -507,7 +507,7 @@ public class ModelFormFieldBuilder {
     public String getTitleAreaInlineStyle() { // SCIPIO
         return titleAreaInlineStyle;
     }
-    
+
     public String getTitleStyle() {
         return titleStyle;
     }
@@ -969,12 +969,12 @@ public class ModelFormFieldBuilder {
         this.position = position;
         return this;
     }
-    
+
     public ModelFormFieldBuilder setPositionSpan(Integer positionSpan) { // SCIPIO
         this.positionSpan = positionSpan;
         return this;
     }
-    
+
     public ModelFormFieldBuilder setCombinePrevious(Boolean combinePrevious) { // SCIPIO
         this.combinePrevious = combinePrevious;
         return this;

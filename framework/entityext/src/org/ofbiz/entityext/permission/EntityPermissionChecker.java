@@ -233,7 +233,7 @@ public class EntityPermissionChecker {
         if (modelEntity.getField("privilegeEnumId") != null)
             hasPrivilegeField = true;
 
-        
+
         ModelEntity modelOperationEntity = delegator.getModelEntity(entityName + "PurposeOperation");
         if (modelOperationEntity == null) {
             modelOperationEntity = delegator.getModelEntity(entityName + "Operation");
@@ -320,7 +320,7 @@ public class EntityPermissionChecker {
         // check permission for each id in passed list until success.
         // Note that "quickCheck" id come first in the list
         // Check with no roles or purposes on the chance that the permission fields contain _NA_ s.
-        
+
         Map<String, List<String>> purposes = new HashMap<String, List<String>>();
         Map<String, List<String>> roles = new HashMap<String, List<String>>();
         //List purposeList = null;
@@ -533,7 +533,7 @@ public class EntityPermissionChecker {
 //            //if (Debug.infoOn()) Debug.logInfo(entityIdString, module);
 //        }
 
-        
+
         Map<String, GenericValue> entities = new HashMap<String, GenericValue>();
         //List purposeList = null;
         //List roleList = null;
@@ -674,7 +674,7 @@ public class EntityPermissionChecker {
 
     public static boolean hasMatch(String entityName, List<GenericValue> targetOperations, List<String> roles, boolean hasPurposeOp, List<String> purposes, boolean hasStatusOp, String targStatusId) {
         boolean isMatch = false;
-        
+
     //    if (UtilValidate.isNotEmpty(targPrivilegeEnumId) && !targPrivilegeEnumId.equals("_NA_") && !targPrivilegeEnumId.equals("_00_")) {
             // need to do a lookup here to find the seq value of targPrivilegeEnumId.
             // The lookup could be a static store or it could be done on Enumeration entity.

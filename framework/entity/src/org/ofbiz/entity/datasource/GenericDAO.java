@@ -569,7 +569,7 @@ public class GenericDAO {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@param findOptions An instance of EntityFindOptions that specifies advanced query options. See the EntityFindOptions JavaDoc for more details.
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE
-     *      DONE WITH IT (preferably in a finally block), 
+     *      DONE WITH IT (preferably in a finally block),
      *      AND DON'T LEAVE IT OPEN TOO LONG BECAUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
     public EntityListIterator selectListIteratorByCondition(Delegator delegator, ModelEntity modelEntity, EntityCondition whereEntityCondition,
@@ -706,7 +706,7 @@ public class GenericDAO {
 
         // OFFSET clause
         makeOffsetString(sqlBuffer, findOptions);
-        
+
         // make the final SQL String
         String sql = sqlBuffer.toString();
 
@@ -990,8 +990,8 @@ public class GenericDAO {
 
         if (findOptions.getDistinct()) {
             // old style, not sensitive to selecting limited columns: sqlBuffer.append("DISTINCT COUNT(*) ");
-            /* DEJ20100304: the code below was causing problems so the line above may be used instead, but hopefully this is fixed now 
-             * may need varying SQL for different databases, and also in view-entities in some cases it seems to 
+            /* DEJ20100304: the code below was causing problems so the line above may be used instead, but hopefully this is fixed now
+             * may need varying SQL for different databases, and also in view-entities in some cases it seems to
              * cause the "COUNT(DISTINCT " to appear twice, causing an attempt to try to count a count (function="count-distinct", distinct=true in find options)
              */
             if (selectFields != null && selectFields.size() > 0) {

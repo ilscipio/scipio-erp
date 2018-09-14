@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  * @deprecated SCIPIO: 2018: This class may not populate the context for the form renderer
- * correctly; use other form rendering facilities instead, such as 
+ * correctly; use other form rendering facilities instead, such as
  * the Scipio Freemarker templating API <code>@render</code> macro (utilities.ftl).
  * <p>
  * SCIPIO: NOTE: 2016-09-15: This now renders using the Macro Freemarker renderer.
@@ -92,7 +92,7 @@ public class HtmlFormWrapper {
             Debug.logWarning("No FormStringRenderer available in request - creating temporary html form renderer, but this may not work properly"
                     + " - please report this issue", module);
             try {
-                this.renderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator), 
+                this.renderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator),
                         EntityUtilProperties.getPropertyValue("widget", "screen.formrenderer", delegator), request, response);
             } catch (Exception e) {
                 throw new IOException("Could not create temporary MacroFormRenderer for HtmlFormWrapper", e);
@@ -128,7 +128,7 @@ public class HtmlFormWrapper {
         if (UtilValidate.isNotEmpty(delegator) && context.get("delegator") == null) {
             context.put("delegator", delegator);
         }
-        
+
         // SCIPIO: transfer the screens renderer object (REQUIRED)
         context.put("screens", request.getAttribute("screens"));
     }
@@ -174,11 +174,11 @@ public class HtmlFormWrapper {
     }
     /**
      * renderFormString using the context prepared and stored in this instance.
-     * @deprecated SCIPIO: NOTE: 2018-09-10: This method uses a locally-built context 
+     * @deprecated SCIPIO: NOTE: 2018-09-10: This method uses a locally-built context
      * (from {@link #HtmlFormWrapper(String, String, HttpServletRequest, HttpServletResponse)})
      * which may contain insufficient data and the code for which may not be maintained.
      * It is recommended to simply replace usage of this class with Scipio Freemarker template API
-     * utilities usage if possible; otherwise switch to {@link #renderFormString(MapStack)} 
+     * utilities usage if possible; otherwise switch to {@link #renderFormString(MapStack)}
      * and push the context before adding your custom fields to it and pop it after the call.
      */
     @Deprecated
@@ -249,7 +249,7 @@ public class HtmlFormWrapper {
      */
     @Deprecated
     public void setFormOverrideName(String formName) {
-        Debug.logError("Scipio: Known broken stock HtmlFormWrapper method called, setFormOverrideName(string) - please fix or remove this call", module); 
+        Debug.logError("Scipio: Known broken stock HtmlFormWrapper method called, setFormOverrideName(string) - please fix or remove this call", module);
         this.userContext.put("formName", formName); // SCIPIO: callContext
     }
 

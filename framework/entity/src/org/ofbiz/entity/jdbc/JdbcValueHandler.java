@@ -166,7 +166,7 @@ public abstract class JdbcValueHandler<T> implements Serializable { // SCIPIO: a
 
     /** Returns the <code>JdbcValueHandler</code> that corresponds to a field
      * type.
-     *  
+     *
      * @param javaType The Java type specified in fieldtype*.xml
      * @param sqlType The SQL type specified in fieldtype*.xml
      * @return A <code>JdbcValueHandler</code> instance
@@ -224,7 +224,7 @@ public abstract class JdbcValueHandler<T> implements Serializable { // SCIPIO: a
      * type. Subclasses override this method to cast <code>obj</code>
      * to the correct data type and call the appropriate
      * <code>PreparedStatement.setXxx</code> method.
-     * 
+     *
      * @param ps
      * @param parameterIndex
      * @param obj
@@ -251,7 +251,7 @@ public abstract class JdbcValueHandler<T> implements Serializable { // SCIPIO: a
     /** Returns a value from a <code>ResultSet</code>. The returned
      * object is converted to the Java data type specified in the fieldtype
      * file.
-     * 
+     *
      * @param rs the ResultSet object
      * @param columnIndex the column index
      * @return get value from result set
@@ -272,7 +272,7 @@ public abstract class JdbcValueHandler<T> implements Serializable { // SCIPIO: a
     /** Sets a value in a <code>PreparedStatement</code>. The
      * <code>obj</code> argument is converted to the correct data
      * type.
-     * 
+     *
      * @param ps
      * @param parameterIndex
      * @param obj
@@ -765,7 +765,7 @@ public abstract class JdbcValueHandler<T> implements Serializable { // SCIPIO: a
      * don't support sub-second precision. If the date-time field type
      * is a <code>CHAR(30)</code> SQL type, <code>java.sql.Timestamp</code>s
      * will be stored as JDBC timestamp escape format strings
-     * (<code>yyyy-mm-dd hh:mm:ss.fffffffff</code>), referenced to UTC.</p> 
+     * (<code>yyyy-mm-dd hh:mm:ss.fffffffff</code>), referenced to UTC.</p>
      */
     protected static class TimestampJdbcValueHandler extends JdbcValueHandler<java.sql.Timestamp> {
         protected TimestampJdbcValueHandler(int jdbcType) {

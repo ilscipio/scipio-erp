@@ -35,12 +35,12 @@ public class VirtualSectionDirective implements TemplateDirectiveModel {
             throws TemplateException, IOException {
         this.executeTyped(env, params, loopVars, body);
     }
-    
+
     protected void executeTyped(Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body)
             throws TemplateException, IOException {
         Writer writer = env.getOut();
-        
-        // NOTE: this can only work if we already had a RenderWriter. 
+
+        // NOTE: this can only work if we already had a RenderWriter.
         // if not, don't even bother trying.
         if (writer instanceof RenderWriter) {
             Map<String, Object> context = ContextFtlUtil.getContext(env);
@@ -50,7 +50,7 @@ public class VirtualSectionDirective implements TemplateDirectiveModel {
                 String containsExpr = TransformUtil.getStringNonEscapingArg(params, "contains");
                 String location = "unknown-location"; // FIXME
                 ModelFtlWidget widget = new ModelVirtualSectionFtlWidget(name, location, containsExpr);
-                
+
                 WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(widget, writer, context, null);
                 if (!execInfo.shouldExecute()) {
                     return;
@@ -65,7 +65,7 @@ public class VirtualSectionDirective implements TemplateDirectiveModel {
                 return;
             }
         }
-        
+
         body.render(writer);
     }
 

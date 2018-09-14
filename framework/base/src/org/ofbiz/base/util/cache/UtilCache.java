@@ -813,6 +813,15 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return storeCache(new UtilCache<>(cacheName, 0, 0, 0, false, "default"));
     }
 
+    /**
+     * SCIPIO: Creates UtilCache without storing. FOR TESTING ONLY.
+     * <p>
+     * Added 2018-09-14.
+     */
+    public static <K, V> UtilCache<K, V> createOnlyUtilCache(String cacheName, int sizeLimit, int maxInMemory, long expireTimeMillis, boolean useSoftReference, String propName, String... propNames) {
+        return new UtilCache<>(cacheName, sizeLimit, maxInMemory, expireTimeMillis, useSoftReference, propName, propNames);
+    }
+
     private static <K, V> UtilCache<K, V> storeCache(UtilCache<K, V> cache) {
         utilCacheTable.put(cache.getName(), cache);
         return cache;

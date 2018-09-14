@@ -36,7 +36,7 @@ if (workEffort?.currentStatusId) {
     
     statusValidChangeList = from("StatusValidChange").where("statusId", workEffort.currentStatusId).cache().queryList();
     
-    currentStatusItem = workEffort.getRelatedOne("CurrentStatusItem");
+    currentStatusItem = workEffort.getRelatedOne("CurrentStatusItem", false);
     
     condList = [];
     condList.add(EntityCondition.makeCondition("statusId", workEffort.currentStatusId)); // NOTE: must be here AND below

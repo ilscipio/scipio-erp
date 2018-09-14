@@ -25,7 +25,7 @@ under the License.
 </#if>
 <#assign workEffortStatusLabel = "">
 <#if workEffort.currentStatusId?has_content>
-  <#assign workEffortStatusLabel = (workEffort.getRelatedOne("CurrentStatusItem").get("description", locale))!"">
+  <#assign workEffortStatusLabel = (workEffort.getRelatedOne("CurrentStatusItem", false).get("description", locale))!"">
 </#if>
 
 <#assign calEventVerbose = calEventVerbose!true>

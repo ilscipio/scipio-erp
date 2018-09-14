@@ -18,12 +18,12 @@ under the License.
 -->
     <@row>
     <@cell columns=6>
-    ${uiLabelMap.WebtoolsLabelManagerTemporarySearchTitle}<br/><br/><br/>
+    <p>${uiLabelMap.WebtoolsLabelManagerTemporarySearchTitle}</p>
     
   <form action="<@ofbizUrl>SearchLabels</@ofbizUrl>" method="post">
-   
-    
+
     <@field type="input" label=uiLabelMap.WebtoolsLabelManagerKey name="labelKey" size="30" maxlength="70" value=(parameters.labelKey!) />
+    <@field type="input" label=(rawLabel('WebtoolsLabelManagerKey')+" (regex)")  name="labelKeyRegex" size="30" maxlength="70" value=(parameters.labelKeyRegex!) />
     <@field type="select" label=uiLabelMap.WebtoolsLabelManagerComponentName name="labelComponentName">
             <option value="">${uiLabelMap.WebtoolsLabelManagerAllComponents}</option>
             <#list componentNamesFound as componentNameFound>
@@ -53,6 +53,7 @@ under the License.
         </@field>
         <@field type="checkbox" name="onlyNotUsedLabels" value="Y" checked=requestParameters.onlyNotUsedLabels!"N" label=uiLabelMap.WebtoolsLabelManagerOnlyNotUsedLabels/>
         <@field type="checkbox" name="onlyMissingTranslations" value="Y" checked=requestParameters.onlyMissingTranslations!"N" label=uiLabelMap.WebtoolsLabelManagerOnlyMissingTranslations/>
+          <#-- SCIPIO: who cares??
           <#if (duplicatedLocalesLabels > 0)>
             <@row>
                 <@cell>${uiLabelMap.WebtoolsLabelManagerWarningMessage} (${duplicatedLocalesLabels})
@@ -64,9 +65,9 @@ under the License.
             </ul>
             </@cell>
             </@row>
-          <#else>
+          <#else>-->
             <@field type="submit" name="searchLabels" text=uiLabelMap.CommonFind class="+${styles.link_run_sys!} ${styles.action_find!}"/>
-          </#if>
+          <#--</#if>-->
   </form>
  </@cell>
 </@row>

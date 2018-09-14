@@ -77,9 +77,14 @@ under the License.
             </@th>
           </@tr>
       </@tfoot>-->
+      
+      <#-- SCIPIO: support simple wildcard regexp -->
+      <#assign labelKeyRegex = rawString(parameters.labelKeyRegex!)>
+      
       <#list labelsList as labelList>
         <#assign label = labels.get(labelList)>
         <#assign labelKey = label.labelKey>
+        <#assign labelKeyRaw = rawString(labelKey)><#-- SCIPIO -->
         <#assign totalLabels = totalLabels + 1>
         <#if references??>
           <#assign referenceNum = 0>
@@ -105,9 +110,13 @@ under the License.
         <#if showLabel && parameters.labelKey?? && parameters.labelKey != "" && parameters.labelKey != label.labelKey>
           <#assign showLabel = false>
         </#if>
+        <#if showLabel && labelKeyRegex?has_content && !labelKeyRaw?matches(labelKeyRegex)><#-- SCIPIO -->
+          <#assign showLabel = false>
+        </#if>
         <#if showLabel && parameters.labelFileName?? && parameters.labelFileName != "" && parameters.labelFileName != label.fileName>
           <#assign showLabel = false>
         </#if>
+        <#if showLabel == true>
           <@tr>
             <#--<@td>${rowNumber}</@td>-->
             <@td><a href="<@ofbizUrl>UpdateLabel?sourceKey=${labelKey}&amp;sourceFileName=${label.fileName}&amp;sourceKeyComment=${label.labelKeyComment!}</@ofbizUrl>" <#if previousKey == labelKey>class="submenutext"</#if>>${label.labelKey}</a></@td>
@@ -132,6 +141,7 @@ under the License.
           </@tr>
           <#assign previousKey = labelKey>
           <#assign rowNumber = rowNumber + 1>
+        </#if>
       </#list>
   </@table>
 </@section>  

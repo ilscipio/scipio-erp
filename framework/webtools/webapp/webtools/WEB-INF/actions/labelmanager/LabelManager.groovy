@@ -22,7 +22,8 @@ import org.ofbiz.webtools.labelmanager.*;
 
 LabelManagerFactory factory = LabelManagerFactory.getInstance();
 context.factory = factory;
-factory.findMatchingLabels(parameters.labelComponentName, parameters.labelFileName, parameters.labelKey, parameters.labelLocaleName)
+// SCIPIO: FIXME: parameters.labelKeyRegex hack to allow lookup with only regexp
+factory.findMatchingLabels(parameters.labelComponentName, parameters.labelFileName, parameters.labelKey ?: parameters.labelKeyRegex, parameters.labelLocaleName)
 context.labels = factory.getLabels();
 context.labelsList = factory.getLabelsList();
 context.localesFound = factory.getLocalesFound();

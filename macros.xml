@@ -138,8 +138,8 @@ If you are running from command line, an ant jar is provided with Scipio (framew
 using a system ant installation is not recommended, as such configurations may not be tested.
 
 From command line, Scipio build should be invoked using the provided ant launch scripts in project root:
-* Linux:    ./ant [target]
-* Windows:  ant [target] (ant.bat)</fail>
+* Linux, Mac, Cygwin, Windows Git Bash:    ./ant [target]
+* Windows (no Bash, through ant.bat):      ant [target]</fail>
 
                     <condition property="antlib.check.ok">
                         <contains substring="framework${file.separator}base${file.separator}lib${file.separator}ant${file.separator}" string="${ant.core.lib}"/>
@@ -156,8 +156,8 @@ From command line, Scipio build should be invoked using the provided ant launch 
 You are running: ${ant.version} (${ant.core.lib})
 
 From command line, Scipio build should be invoked using the provided ant launch scripts in project root:
-* Linux:    ./ant [target]
-* Windows:  ant [target] (ant.bat)
+* Linux, Mac, Cygwin, Windows Git Bash:    ./ant [target]
+* Windows (no Bash, through ant.bat):      ant [target]
 (Developers can eliminate this message for IDEs by setting the antlib.check.ok property to true)</echo>
                         </then>
                     </if>

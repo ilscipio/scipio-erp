@@ -33,6 +33,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 
 /**
@@ -44,7 +45,7 @@ import org.ofbiz.base.util.GeneralException;
  */
 public class DesCrypt {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Generate a DES key.
@@ -54,6 +55,9 @@ public class DesCrypt {
      */
     public static Key generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance("DESede");
+
+        Debug.logWarning("WARNING: A call to DES generateKey() was made"
+                + "; DES encryption is insecure and should not be used to encrypt any new data", module);
 
         // generate the DES3 key
         return keyGen.generateKey();

@@ -430,12 +430,24 @@ public class HashCrypt {
 
     /**
      * digestHashOldFunnyHex.
-     * <p>
-     * SCIPIO: <strong>WARNING:</strong> This uses the system charset and for that reasons,
-     * this method should not called by anything other than
-     * {@link org.ofbiz.entity.util.EntityCrypto#OldFunnyHashStorageHandler}.
+     * @deprecated SCIPIO: This method should not called by anything other than
+     * {@link org.ofbiz.entity.util.EntityCrypto#OldFunnyHashStorageHandler}, and
+     * it encrypts using the system charset, which is not necessarily UTF-8.
      */
+    @Deprecated
     public static String digestHashOldFunnyHex(String hashType, String str) {
+        return digestHashOldFunnyHex(hashType, null, str);
+    }
+
+    /**
+     * digestHashOldFunnyHex.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> This method is intended only for
+     * {@link org.ofbiz.entity.util.EntityCrypto#OldFunnyHashStorageHandler}
+     * and its use anywhere else is unsupported. If code is null, the system
+     * charset is used, which is not necessarily UTF-8.
+     */
+    public static String digestHashOldFunnyHex(String hashType, Charset code, String str) {
         if (UtilValidate.isEmpty(hashType)) {
             hashType = "SHA";
         }
@@ -444,10 +456,8 @@ public class HashCrypt {
         }
         try {
             MessageDigest messagedigest = MessageDigest.getInstance(hashType);
-            // SCIPIO: WARNING: USES SYSTEM CHARSET: For backward-compatibility reasons,
-            // this call must keep using no-arg String.getBytes() and the system charset (NOT explicit UTF-8),
-            // otherwise, existing clients on some platforms may be affected.
-            byte[] strBytes = str.getBytes();
+            // SCIPIO: 2018-09-13: use requested charset
+            byte[] strBytes = (code != null) ? str.getBytes(code) : str.getBytes();
 
             messagedigest.update(strBytes);
             return oldFunnyHex(messagedigest.digest());

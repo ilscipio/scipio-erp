@@ -19,6 +19,7 @@
 package org.ofbiz.base.crypto;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -53,6 +54,8 @@ public class HashCrypt {
     private static final String PBKDF2_SHA512 ="PBKDF2-SHA512";
     private static final int PBKDF2_ITERATIONS = UtilProperties.getPropertyAsInteger("security.properties", "password.encrypt.pbkdf2.iterations", 10000);
 
+    private static Boolean systemCharsetUtf8 = null; // SCIPIO
+
     public static MessageDigest getMessageDigest(String type) {
         try {
             return MessageDigest.getInstance(type);
@@ -61,20 +64,48 @@ public class HashCrypt {
         }
     }
 
+    /**
+     * comparePassword.
+     * <p>
+     * SCIPIO: 2018-09-13: Modified so that <code>doCompareTypePrefix</code> and <code>doCompareBare</code> cases
+     * now check using platform-independent UTF-8 in String->byte[] conversion first, with compatibility fallback on system charset
+     * for legacy records. New records should always be byte-encoded in explicit UTF-8 (see {@link #cryptUTF8(String, String, String)},
+     * {@link #digestHash(String, String, String)}), but Scipio maintains support for checking older-type
+     * password hashes created before this time.
+     */
     public static boolean comparePassword(String crypted, String defaultCrypt, String password) {
         if (crypted.startsWith("{PBKDF2")) {
             return doComparePbkdf2(crypted, password);
         } else if (crypted.startsWith("{")) {
-            // FIXME: should have been getBytes("UTF-8") originally
-            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
-            return doCompareTypePrefix(crypted, defaultCrypt, password.getBytes());
+            // SCIPIO: 2018-09-13: Check with UTF-8 first, then fallback to system charset (for backward-compat)
+            if (doCompareTypePrefix(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()))) {
+                return true;
+            } else if (isSystemCharsetUtf8()) {
+                return false;
+            } else {
+                // SCIPIO: Fallback on system charset - NOTE: this is the old stock code
+                return doCompareTypePrefix(crypted, defaultCrypt, password.getBytes());
+            }
         } else if (crypted.startsWith("$")) {
             return doComparePosix(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()));
         } else {
-            // FIXME: should have been getBytes("UTF-8") originally
-            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
-            return doCompareBare(crypted, defaultCrypt, password.getBytes());
+            // SCIPIO: 2018-09-13: Check with UTF-8 first, then fallback to system charset (for backward-compat)
+            if (doCompareBare(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()))) {
+                return true;
+            } else if (isSystemCharsetUtf8()) {
+                return false;
+            } else {
+                // SCIPIO: Fallback on system charset - NOTE: this is the old stock code
+                return doCompareBare(crypted, defaultCrypt, password.getBytes());
+            }
         }
+    }
+
+    private static boolean isSystemCharsetUtf8() { // SCIPIO: avoid rechecking this more than once/twice in beginning
+        if (systemCharsetUtf8 == null) {
+            systemCharsetUtf8 = UtilIO.getUtf8().equals(Charset.defaultCharset());
+        }
+        return systemCharsetUtf8;
     }
 
     private static boolean doCompareTypePrefix(String crypted, String defaultCrypt, byte[] bytes) {
@@ -137,15 +168,22 @@ public class HashCrypt {
     }
 
     /**
-     * @deprecated SCIPIO: 2018-09-13: Unused, DO NOT USE, uses system Charset
-     * (<code>value.getBytes()</code>); use {@link #cryptUTF8(String, String, String)} instead.
+     * cryptValue.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-09-13: This method has been altered to
+     * use explicit UTF-8 (instead of old behavior to use system charset) in the passed string->byte[] conversion,
+     * so that it is consistent with {@link #cryptUTF8(String, String, String)} as used
+     * in <code>LoginServices</code>. A compatibility workaround for client systems that
+     * did not use UTF-8 as default system charset and already had records is now integrated into the
+     * {@link #comparePassword(String, String, String)} method.
      */
-    @Deprecated
     public static String cryptValue(String hashType, String salt, String value) {
         if (hashType.startsWith("PBKDF2")) {
             return value != null ? pbkdf2HashCrypt(hashType, salt, value) : null;
         }
-        return value != null ? cryptBytes(hashType, salt, value.getBytes()) : null;
+        // SCIPIO: 2018-09-13: UtilIO.getUtf8()
+        //return value != null ? cryptBytes(hashType, salt, value.getBytes()) : null;
+        return value != null ? cryptBytes(hashType, salt, value.getBytes(UtilIO.getUtf8())) : null;
     }
 
     /**
@@ -295,6 +333,16 @@ public class HashCrypt {
         return digestHash(hashType, code, str);
     }
 
+    /**
+     * digestHash, with input as string.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-09-13: This method has been altered to
+     * use explicit UTF-8 (instead of old behavior to use system charset) in the passed string->byte[] conversion,
+     * so that it is consistent with {@link #cryptUTF8(String, String, String)} as used
+     * in <code>LoginServices</code>. A compatibility workaround for client systems that
+     * did not use UTF-8 as default system charset and already had records is now integrated into the
+     * {@link #comparePassword(String, String, String)} method.
+     */
     public static String digestHash(String hashType, String code, String str) {
         if (str == null) {
             return null;
@@ -302,8 +350,9 @@ public class HashCrypt {
         byte[] codeBytes;
         try {
             if (code == null) {
-                // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
-                codeBytes = str.getBytes();
+                // SCIPIO: 2018-09-13: UtilIO.getUtf8()
+                //codeBytes = str.getBytes();
+                codeBytes = str.getBytes(UtilIO.getUtf8());
             } else {
                 codeBytes = str.getBytes(code);
             }

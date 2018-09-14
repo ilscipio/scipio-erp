@@ -870,7 +870,7 @@ under the License.
                                                     "context.testVar1 = \"This is a test string value from groovy from user party: \" + userParty;\n";
                                             }
                                             if (templateBody == null) {
-                                                templateBody = "<#assign ftlTestVar1 = testVar1>" +
+                                                templateBody = "<#assign ftlTestVar1 = testVar1!>" +
                                                     "\n" +
                                                     "\n<p><strong>testVar1:</strong> <em>\${escapeVal(ftlTestVar1, 'htmlmarkup')}</em>";
                                             }

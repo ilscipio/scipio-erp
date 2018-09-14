@@ -831,7 +831,8 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
                 <property-to-field resource="fop.properties" field="defaultFontFamily" property="fop.font.family" default="Arial"/>
             </actions>
             <widgets>
@@ -844,7 +845,8 @@ under the License.
     <screen name="GlobalFoDecorator">
         <section>
             <actions>
-                <set field="layoutSettings.commonHeaderImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
+                <set field="layoutSettings.commonHeaderImageUrl" default-value="/images/scipio/scipio-logo.svg"/>
             </actions>
             <widgets>
                 <platform-specific>
@@ -867,6 +869,7 @@ under the License.
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -884,7 +887,8 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
             </actions>
             <widgets>
                 <platform-specific>

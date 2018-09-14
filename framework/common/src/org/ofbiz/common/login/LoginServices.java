@@ -994,14 +994,8 @@ public class LoginServices {
     }
 
     public static String getHashType() {
-        String hashType = UtilProperties.getPropertyValue("security", "password.encrypt.hash.type");
-
-        if (UtilValidate.isEmpty(hashType)) {
-            Debug.logWarning("Password encrypt hash type is not specified in security.properties, use SHA", module);
-            hashType = "SHA";
-        }
-
-        return hashType;
+        // SCIPIO: 2018-09-13: Implementation MOVED to HashCrypt
+        return HashCrypt.getPasswordEncryptHashType();
     }
 
     private static boolean checkPassword(String oldPassword, boolean useEncryption, String currentPassword) {

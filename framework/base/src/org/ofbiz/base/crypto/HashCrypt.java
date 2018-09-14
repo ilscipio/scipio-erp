@@ -148,7 +148,10 @@ public class HashCrypt {
      */
     @Deprecated
     public static String getDigestHash(String str) {
-        return digestHash("SHA", null, str);
+        // SCIPIO: 2018-09-13: This method may still be called from UserEvents.xml,
+        // so must not use hardcode hash type!
+        //return digestHash("SHA", null, str);
+        return digestHash(getPasswordEncryptHashType(), null, str);
     }
 
     /**
@@ -274,5 +277,21 @@ public class HashCrypt {
             k += 2;
         }
         return new String(digestChars);
+    }
+
+    /**
+     * SCIPIO: Gets the system-configured hash type to use.
+     * <p>
+     * Moved here from {@link org.ofbiz.common.login.LoginServices#getHashType()} (2018-09-13).
+     */
+    public static String getPasswordEncryptHashType() {
+        String hashType = UtilProperties.getPropertyValue("security", "password.encrypt.hash.type");
+
+        if (UtilValidate.isEmpty(hashType)) {
+            Debug.logWarning("Password encrypt hash type is not specified in security.properties, use SHA", module);
+            hashType = "SHA";
+        }
+
+        return hashType;
     }
 }

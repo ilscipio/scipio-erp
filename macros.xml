@@ -142,7 +142,7 @@ From command line, Scipio build should be invoked using the provided ant launch 
 * Windows:  ant [target] (ant.bat)</fail>
 
                     <condition property="antlib.check.ok">
-                        <contains substring="framework/base/lib/ant/" string="${ant.core.lib}"/>
+                        <contains substring="framework${file.separator}base${file.separator}lib${file.separator}ant${file.separator}" string="${ant.core.lib}"/>
                     </condition>
                     <if>
                         <not><isset property="antlib.check.ok"/></not>

@@ -270,6 +270,7 @@ under the License.
                 <set field="titleProperty" value="WorkEffort"/>
                 <set field="eventDetailWidgetName" from-field="eventDetailWidgetName" default-value="eventDetail" />
                 <set field="eventDetailWidgetLocation" from-field="eventDetailWidgetLocation" default-value="component://workeffort/widget/CalendarScreens.xml" />
+                <set field="eventDetailCols" from-field="eventDetailCols" default-value="12"/><!-- here 12 means half the screen -->
                 <set field="parameters.period" from-field="parameters.period" default-value="${initialView}"/>
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/CreateUrlParam.groovy"/>
                 <set field="parentTypeId" from-field="parameters.parentTypeId" default-value="EVENT"/><!-- workeffortTypeId parent to ad events --> 

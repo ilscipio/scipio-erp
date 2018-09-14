@@ -259,6 +259,7 @@ under the License.
                         <set field="useEditForm" value="true" />
                     </then>
                 </if>
+                <set field="eventDetailCols" from-field="eventDetailCols" default-value="6"/>
             </actions>
             <widgets>
                 <section>
@@ -270,7 +271,7 @@ under the License.
                     </actions>
                     <widgets>
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                            <container style="${styles.grid_large}${eventDetailCols} ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WorkEffortAddCalendarEvent}">
                                     <section>
                                         <condition>
@@ -301,7 +302,7 @@ under the License.
                                     <not><if-empty field="workEffort" /></not>
                                 </condition>
                                 <widgets>
-                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                    <container style="${styles.grid_large}${eventDetailCols} ${styles.grid_cell}">
                                          <screenlet title="${uiLabelMap.WorkEffortParticipants}">
                                              <include-form name="showCalEventRolesDel" location="component://workeffort/widget/CalendarForms.xml" />
                                              <section>
@@ -330,7 +331,7 @@ under the License.
                     </widgets>
                     <fail-widgets>
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                            <container style="${styles.grid_large}${eventDetailCols} ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WorkEffortSummary}">
                                     <section>
                                         <actions>
@@ -342,7 +343,7 @@ under the License.
                                     </section>
                                 </screenlet>
                             </container>
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                            <container style="${styles.grid_large}${eventDetailCols} ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WorkEffortParticipants}">
                                     <section>
                                         <actions>

@@ -313,8 +313,11 @@ under the License.
             <!-- If password encryption is enabled, encrpyt it now -->
             <set field="delegator" from-field="parameters.delegator" type="Object"/>
             <script>groovy:
-                boolean useEncryption = "true".equals(org.ofbiz.entity.util.EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator));
-                if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))); }
+                boolean useEncryption = "true".equals(org.ofbiz.entity.util.EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator))
+                if (useEncryption) {
+                    String hashType = org.ofbiz.common.login.LoginServices.getHashType()
+                    newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.digestHash(hashType, null, (String) newUserLogin.get("currentPassword")))
+                }
             </script>
 
             <!-- create the UserLogin manually to get around ordering and security constraints in the service -->

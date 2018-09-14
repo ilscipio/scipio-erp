@@ -52,8 +52,12 @@ function ShowTab(lname) {
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&find=true&VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
-        <#if hasCreatePermission>          
+        <#if modelEntity??>
+          <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&find=true&VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
+        <#else>
+          <@menuitem type="link" href=makeOfbizUrl("entitymaint") text=uiLabelMap.WebtoolsBackToEntityList class="+${styles.action_nav!} ${styles.action_cancel!}" />
+        </#if>
+        <#if hasCreatePermission && modelEntity??>          
           <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
           <#if !enableEdit>
             <#--WARN: TODO: REVIEW for security issues-->
@@ -75,7 +79,7 @@ function ShowTab(lname) {
 </#macro>
 
 <@section menuContent=menuContent><#-- redundant:  title="${rawLabel('WebtoolsViewValue')} ${rawLabel('WebtoolsForEntity')} ${rawString(entityName)}" -->
-
+  <#if modelEntity??>
     <@nav type="magellan">
         <#if value?has_content><@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli></#if>
         <#--<@mli arrival="common-view"><a href="#common-view">${uiLabelMap.CommonView}</a></@mli>-->
@@ -345,4 +349,10 @@ function ShowTab(lname) {
             </@cell>
       </@row> 
     </#if>
+    
+  <#else>
+    <#--<#if entityName?has_content>
+      <@commonMsg type="error">${getLabel('WebtoolsEntityNotFoundSpecified', '', {"entityName":entityName})}.</@commonMsg>
+    </#if>-->
+  </#if>
 </@section>

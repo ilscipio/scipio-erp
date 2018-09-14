@@ -24,7 +24,9 @@ import java.sql.Timestamp
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilFormatOut
 import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.base.util.UtilValidate
+import org.ofbiz.entity.GenericModelException
 import org.ofbiz.entity.GenericPK
 import org.ofbiz.entity.GenericValue
 import org.ofbiz.entity.model.ModelEntity
@@ -38,19 +40,33 @@ String entityName = parameters.get("entityName");
 context.put("entityName", entityName);
 
 ModelReader reader = delegator.getModelReader();
-ModelEntity entity = reader.getModelEntity(entityName);
-
+ModelEntity modelEntity = null; // SCIPIO: more accurate name (see other *.groovy)
+entity = null;
+try { // SCIPIO: handle missing and store in context
+    modelEntity = reader.getModelEntity(entityName);
+    entity = modelEntity;
+} catch(GenericModelException e) {
+    errorMessageList = context.errorMessageList;
+    if (errorMessageList == null) errorMessageList = [];
+    errorMessageList.add(UtilProperties.getMessage("WebtoolsUiLabels", 
+        "WebtoolsEntityNotFoundSpecified", [entityName: entityName], context.locale));
+    context.errorMessageList = errorMessageList;
+}
+context.modelEntity = modelEntity;
 context.put("entity", entity);
-context.put("plainTableName", entity.getPlainTableName());
+
+// SCIPIO: refactored
+plainTableName = entity?.getPlainTableName();
+context.put("plainTableName", plainTableName);
 
 boolean hasAllView = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session);
 boolean hasAllCreate = security.hasEntityPermission("ENTITY_DATA", "_CREATE", session);
 boolean hasAllUpdate = security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session);
 boolean hasAllDelete = security.hasEntityPermission("ENTITY_DATA", "_DELETE", session);
-boolean hasViewPermission = hasAllView || security.hasEntityPermission(entity.getPlainTableName(), "_VIEW", session);
-boolean hasCreatePermission = hasAllCreate || security.hasEntityPermission(entity.getPlainTableName(), "_CREATE", session);
-boolean hasUpdatePermission = hasAllUpdate || security.hasEntityPermission(entity.getPlainTableName(), "_UPDATE", session);
-boolean hasDeletePermission = hasAllDelete || security.hasEntityPermission(entity.getPlainTableName(), "_DELETE", session);
+boolean hasViewPermission = hasAllView || security.hasEntityPermission(plainTableName, "_VIEW", session);
+boolean hasCreatePermission = hasAllCreate || security.hasEntityPermission(plainTableName, "_CREATE", session);
+boolean hasUpdatePermission = hasAllUpdate || security.hasEntityPermission(plainTableName, "_UPDATE", session);
+boolean hasDeletePermission = hasAllDelete || security.hasEntityPermission(plainTableName, "_DELETE", session);
 
 context.put("hasAllView", hasAllView);
 context.put("hasAllCreate", hasAllCreate);
@@ -60,7 +76,6 @@ context.put("hasViewPermission", hasViewPermission);
 context.put("hasCreatePermission", hasCreatePermission);
 context.put("hasUpdatePermission", hasUpdatePermission);
 context.put("hasDeletePermission" , hasDeletePermission);
-
 
 // SCIPIO: 2017-04-13: special flags to identify if a delete just happened in the event
 deleteAttempt = (context.deleteAttempt != null) ? Boolean.TRUE.equals(context.deleteAttempt) : Boolean.TRUE.equals(request.getAttribute("updateGenericDeleteAttempt"));
@@ -73,6 +88,11 @@ if (deleteSuccess) {
         eventMessageList.add(org.ofbiz.base.util.UtilProperties.getMessage('WebtoolsUiLabels', 'WebtoolsSpecifiedEntityValueRemovedSuccess', context.locale) + " (" + entityName + ")");
         context.eventMessageList = eventMessageList;
     }
+}
+
+context.modelEntity = modelEntity;
+if (!modelEntity) { // SCIPIO
+    return;
 }
 
 boolean useValue = true;

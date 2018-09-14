@@ -342,11 +342,23 @@ under the License.
             <link target="entitymaint" />
         </menu-item>
         <menu-item name="ViewRelations" title="${uiLabelMap.WebtoolsViewRelations}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <condition>
+                <and>
+                    <not><if-empty field="entityName"/></not>
+                    <not><if-empty field="modelEntity"/></not>
+                </and>
+            </condition>
             <link target="ViewRelations">
                 <parameter param-name="entityName" from-field="entityName"/>
             </link>
         </menu-item>
         <menu-item name="ViewGeneric" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <and>
+                    <not><if-empty field="entityName"/></not>
+                    <not><if-empty field="modelEntity"/></not>
+                </and>
+            </condition>
             <link target="ViewGeneric">
                 <parameter param-name="entityName" from-field="entityName"/>
                 <parameter param-name="enableEdit" value="true"/>

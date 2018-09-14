@@ -21,6 +21,7 @@ import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.security.Security;
 import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.model.ModelEntity;
@@ -49,7 +50,17 @@ import java.sql.Time;
 entityName = parameters.entityName;
 
 ModelReader reader = delegator.getModelReader();
-ModelEntity modelEntity = reader.getModelEntity(entityName);
+ModelEntity modelEntity = null;
+try { // SCIPIO: handle missing and store in context
+    modelEntity = reader.getModelEntity(entityName);
+} catch(GenericModelException e) {
+    errorMessageList = context.errorMessageList;
+    if (errorMessageList == null) errorMessageList = [];
+    errorMessageList.add(UtilProperties.getMessage("WebtoolsUiLabels", 
+        "WebtoolsEntityNotFoundSpecified", [entityName: entityName], context.locale));
+    context.errorMessageList = errorMessageList;
+}
+context.modelEntity = modelEntity; // SCIPIO
 
 groupByFields = [];
 functionFields = [];
@@ -65,13 +76,15 @@ if (modelEntity instanceof ModelViewEntity) {
     }
 }
 
-context.entityName = modelEntity.getEntityName();
-context.plainTableName = modelEntity.getPlainTableName();
+// SCIPIO: refactored
+context.entityName = modelEntity?.getEntityName() ?: entityName;
+plainTableName = modelEntity?.getPlainTableName()
+context.plainTableName = plainTableName;
 
-String hasViewPermission = (security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(modelEntity.getPlainTableName(), "_VIEW", session)) == true ? "Y" : "N";
-String hasCreatePermission = (security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(modelEntity.getPlainTableName(), "_CREATE", session)) == true ? "Y" : "N";
-String hasUpdatePermission = (security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session) || security.hasEntityPermission(modelEntity.getPlainTableName(), "_UPDATE", session)) == true ? "Y" : "N";
-String hasDeletePermission = (security.hasEntityPermission("ENTITY_DATA", "_DELETE", session) || security.hasEntityPermission(modelEntity.getPlainTableName(), "_DELETE", session)) == true ? "Y" : "N";
+String hasViewPermission = (security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(plainTableName, "_VIEW", session)) == true ? "Y" : "N";
+String hasCreatePermission = (security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(plainTableName, "_CREATE", session)) == true ? "Y" : "N";
+String hasUpdatePermission = (security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session) || security.hasEntityPermission(plainTableName, "_UPDATE", session)) == true ? "Y" : "N";
+String hasDeletePermission = (security.hasEntityPermission("ENTITY_DATA", "_DELETE", session) || security.hasEntityPermission(plainTableName, "_DELETE", session)) == true ? "Y" : "N";
 
 context.hasViewPermission = hasViewPermission;
 context.hasCreatePermission = hasCreatePermission;
@@ -81,6 +94,10 @@ context.hasDeletePermission = hasDeletePermission;
 String find = parameters.find;
 if (find == null) {
     find = "false";
+}
+
+if (modelEntity == null) { // SCIPIO
+    return;
 }
 
 String curFindString = "entityName=" + entityName + "&find=" + find;

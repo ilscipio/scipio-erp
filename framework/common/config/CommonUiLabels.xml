@@ -3796,6 +3796,19 @@
         <value xml:lang="zh-CN">结束日期/时间</value>
         <value xml:lang="zh-TW">結束日期/時間</value>
     </property>
+    <property key="CommonEntity">
+        <value xml:lang="de">Entität</value>
+        <value xml:lang="en">Entity</value>
+        <value xml:lang="es">Entidad</value>
+        <value xml:lang="fr">Entité</value>
+        <value xml:lang="it">Entità</value>
+        <value xml:lang="ja">エンティティ</value>
+        <value xml:lang="ro">Entitate</value>
+        <value xml:lang="ru">Сущность</value>
+        <value xml:lang="th">เอกลักษณ์</value>
+        <value xml:lang="zh">实体</value>
+        <value xml:lang="zh-TW">資料實體</value>
+    </property>    
     <property key="CommonEntityChildren">
         <value xml:lang="ar">الفروع</value>
         <value xml:lang="cs">Děti</value>
@@ -3814,6 +3827,11 @@
         <value xml:lang="zh">子</value>
         <value xml:lang="zh-TW">子</value>
     </property>
+    <property key="CommonEntityField">
+        <value xml:lang="de">Entitätsfeld</value>
+        <value xml:lang="en">Entity Field</value>
+        <value xml:lang="fr">Champ d'entité</value>
+    </property>  
     <property key="CommonEntityTestFailure">
         <value xml:lang="ar">غير قادر على إنشاء كيان اختبار</value>
         <value xml:lang="cs">Nepodařilo se vytvořit testovací entitu</value>
@@ -4400,6 +4418,11 @@
         <value xml:lang="vi">Nữ</value>
         <value xml:lang="zh">女</value>
         <value xml:lang="zh-TW">女</value>
+    </property>
+    <property key="CommonField">
+        <value xml:lang="de">Feld</value>
+        <value xml:lang="en">Field</value>
+        <value xml:lang="fr">Champ</value>
     </property>
     <property key="CommonFieldLookup">
         <value xml:lang="ar">إستعراض حقل</value>

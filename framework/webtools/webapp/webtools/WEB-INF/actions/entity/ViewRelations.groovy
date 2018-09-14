@@ -16,23 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.security.Security;
 import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelRelation;
 import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.GenericModelException;
 
 entityName = parameters.entityName;
 context.entityName = entityName;
 
 reader = delegator.getModelReader();
-modelEntity = reader.getModelEntity(entityName);
+modelEntity = null;
+try { // SCIPIO: handle missing and store in context
+    modelEntity = reader.getModelEntity(entityName);
+} catch(GenericModelException e) {
+    errorMessageList = context.errorMessageList;
+    if (errorMessageList == null) errorMessageList = [];
+    errorMessageList.add(UtilProperties.getMessage("WebtoolsUiLabels",
+        "WebtoolsEntityNotFoundSpecified", [entityName: entityName], context.locale));
+    context.errorMessageList = errorMessageList;
+}
+context.modelEntity = modelEntity;
 
-context.plainTableName = modelEntity.getPlainTableName();
+// SCIPIO: refactored
+plainTableName = modelEntity?.getPlainTableName();
+context.plainTableName = plainTableName;
 
-hasViewPermission = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(modelEntity.getPlainTableName(), "_VIEW", session);
+hasViewPermission = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(plainTableName, "_VIEW", session);
 context.hasViewPermission = hasViewPermission;
+
+// SCIPIO: return instead of crashing
+if (!modelEntity) {
+    return;
+}
 
 relations = [];
 for (rit = modelEntity.getRelationsIterator(); rit.hasNext();) {

@@ -1934,6 +1934,10 @@
         <value xml:lang="zh">实体名称</value>
         <value xml:lang="zh-TW">資料實體名稱</value>
     </property>
+    <property key="WebtoolsEntityNotFoundSpecified">
+        <value xml:lang="de">Entität nicht gefunden: ${entityName}</value>
+        <value xml:lang="en">Entity not found: ${entityName}</value>
+    </property>
     <property key="WebtoolsEntityPackages">
         <value xml:lang="de">Entitätenpakete</value>
         <value xml:lang="en">Entity Packages</value>

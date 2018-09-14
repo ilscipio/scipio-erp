@@ -191,21 +191,40 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonEntityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                            <decorator-section name="menu-bar">
-                                <include-menu name="EntitySubTabBar" location="component://webtools/widget/Menus.xml"/><!-- SCIPIO: links merged into a sub tab bar -->
-                            </decorator-section>
-                            <decorator-section name="search-options">
-                                <platform-specific>
-                                    <html><html-template location="component://webtools/webapp/webtools/entity/FindGeneric.ftl"/></html>
-                                </platform-specific>
-                            </decorator-section>
-                            <decorator-section name="search-results">
-                                <platform-specific>
-                                    <html><html-template location="component://webtools/webapp/webtools/entity/ListGeneric.ftl"/></html>
-                                </platform-specific>
-                            </decorator-section>
-                        </decorator-screen>
+                        <section><!-- SCIPIO: check entity exists -->
+                            <condition>
+                                <not><if-empty field="modelEntity"/></not>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <!-- SCIPIO: links merged into a sub tab bar -->
+                                        <include-menu name="EntitySubTabBar" location="component://webtools/widget/Menus.xml"/><!-- SCIPIO: links merged into a sub tab bar -->
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <platform-specific>
+                                            <html><html-template location="component://webtools/webapp/webtools/entity/FindGeneric.ftl"/></html>
+                                        </platform-specific>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <platform-specific>
+                                            <html><html-template location="component://webtools/webapp/webtools/entity/ListGeneric.ftl"/></html>
+                                        </platform-specific>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <include-menu name="EntitySubTabBar" location="component://webtools/widget/Menus.xml"/>
+                                <!--<section>
+                                    <condition>
+                                        <not><if-empty field="entityName"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="common-msg-error">${uiLabelMap.WebtoolsEntityNotFoundSpecified}.</label>
+                                    </widgets>
+                                </section>-->
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

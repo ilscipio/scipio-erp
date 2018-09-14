@@ -36,13 +36,13 @@ import com.ilscipio.scipio.cms.template.CmsTemplateVersion;
  * are used by the template, and is recurring source of errors.
  */
 public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersion {
-    
+
     private static final long serialVersionUID = -714031134721469544L;
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected static final CmsPageActiveVersionWorker activeVersionWorker = new CmsPageActiveVersionWorker();
-    
+
     private CmsPage page;
     private Map<String, ?> content = null;
     protected Optional<String> contentString = null; // NOTE: this is left null in live render; for create/update only
@@ -61,7 +61,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
         setContentFromFields(fields, true);
         setVersionCommentFromFields(fields, true);
     }
-    
+
     protected CmsPageVersion(CmsPageVersion other, Map<String, Object> copyArgs, CmsPage page) {
         super(other, copyArgs);
         if (page != null) {
@@ -77,27 +77,27 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
         //this.versionComment = other.getVersionComment();
         this.versionComment = null;
     }
-    
-    @Override    
+
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
         setContentFromFields(fields, setIfEmpty);
         setVersionCommentFromFields(fields, setIfEmpty);
     }
-    
+
     @Override
     public CmsPageVersion copy(Map<String, Object> copyArgs) throws CmsException {
         return new CmsPageVersion(this, copyArgs, null);
     }
-    
+
     public CmsPageVersion copy(Map<String, Object> copyArgs, CmsPage page) throws CmsException {
         return new CmsPageVersion(this, copyArgs, page);
     }
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -107,15 +107,15 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
         this.content = preloadWorker.transformContainer(this.getContent());
         //this.getVersionComment(); // no need when live
     }
-    
+
     public String getContentId() {
         return entity.getString("contentId");
     }
-    
+
     public void setContentId(String contentId) {
         entity.setString("contentId", contentId);
     }
-    
+
     protected void setContentFromFields(Map<String, ?> fields, boolean setIfEmpty) {
         if (setIfEmpty) {
             if (fields.containsKey("content")) {
@@ -127,7 +127,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
             }
         }
     }
-    
+
 //    public void setContent(String jsonContent) {
 //        entity.setString("content", jsonContent);
 //    }
@@ -146,7 +146,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
         TemplateBodySource tmplBodySrc = CmsTemplate.getTemplateBodySourceFromContent(getDelegator(), contentId, false);
         return tmplBodySrc.getEffectiveBody();
     }
-    
+
     @SuppressWarnings("unchecked")
     public Map<String, ?> getContent() {
         Map<String, ?> content = this.content;
@@ -156,7 +156,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
                 try {
                     content = (Map<String, ?>) JSON.from(entityContent).toObject(Map.class);
                 } catch (IOException e) {
-                    Debug.logError(e, "Cms: Error loading page version content (pageId: " 
+                    Debug.logError(e, "Cms: Error loading page version content (pageId: "
                             + getPageId() + ", versionId: " + getId() + ", contentId: " + getContentId() + "): " + e.getMessage(), module);
                 }
             }
@@ -168,7 +168,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
 
     public String getVersionComment() {
         preventIfImmutable();
-        
+
         String versionComment = this.versionComment;
         if (versionComment == null) {
             //versionComment = entity.getString("versionComment");
@@ -188,7 +188,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
         }
         return versionComment;
     }
-    
+
     @Deprecated
     public String getComment() {
         return getVersionComment();
@@ -198,7 +198,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
         //entity.setString("versionComment", comment);
         this.versionComment = versionComment; // defer to store()
     }
-    
+
     protected void setVersionCommentFromFields(Map<String, ?> fields, boolean setIfEmpty) {
         if (setIfEmpty) {
             if (fields.containsKey("versionComment")) {
@@ -210,18 +210,18 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
             }
         }
     }
-    
+
     public String getCreatedBy() {
         return entity.getString("createdBy");
     }
-    
+
     public String getCreatedByName() {
         try {
             return CmsUtil.getPersonDisplayName(getDelegator(), entity.getString("createdBy"));
         } catch (GenericEntityException e) {
             throw new CmsException(
                 "Could not retrieve user for pageVersion " + entity.getString("versionId"), e);
-        }  
+        }
     }
 
     public void setCreatedBy(String createdBy) {
@@ -240,15 +240,15 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
     public String getPageId() {
         return getEntityPageId();
     }
-    
+
     public String getEntityPageId() {
         return this.entity.getString("pageId");
     }
-    
+
     void setEntityPageId(String pageId) {
         this.entity.setString("pageId", pageId);
     }
-    
+
     @Override
     public void store() throws CmsException {
         ensurePageId();
@@ -258,14 +258,14 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
             contentFields.put("description", versionComment);
         }
         TemplateBodySource tmplBodySrc = TemplateBodySource.fromBody(this.contentString != null ? this.contentString.orElse("") : "");
-        GenericValue content = CmsTemplate.replaceTemplateContent(getDelegator(), getContentId(), tmplBodySrc, 
+        GenericValue content = CmsTemplate.replaceTemplateContent(getDelegator(), getContentId(), tmplBodySrc,
                 contentFields, null);
         if (content != null) {
             setContentId(content.getString("contentId"));
         }
         super.store();
     }
-    
+
     /**
      * SPECIAL: it's possible we have memory instance of template that wasn't stored when
      * this instance was created; if so this synchs the ID.
@@ -276,31 +276,31 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
             String pageId = null;
             if (page != null) {
                 pageId = page.getId();
-            } 
+            }
             if (pageId != null) {
                 setEntityPageId(pageId);
             } else {
-                throw new CmsDataException("internal or schema error: CmsPageVersion '" + getId() 
+                throw new CmsDataException("internal or schema error: CmsPageVersion '" + getId()
                     + "' has no page association (pageId null) and unable to determine one");
             }
         }
     }
-    
+
     @Override
     public int remove() throws CmsException {
         Delegator delegator = getDelegator();
         String contentId = getContentId();
         return super.remove() + CmsTemplate.removeTemplateBodySourceCommon(delegator, contentId);
     }
-    
-    
+
+
     // Helpers
 
     @Override
     public PageVersionWorker getWorkerInst() {
         return PageVersionWorker.worker;
     }
-    
+
     public static PageVersionWorker getWorker() {
         return PageVersionWorker.worker;
     }
@@ -316,10 +316,10 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
             return "pageId";
         }
     }
-    
+
     public static class PageVersionWorker extends DataObjectWorker<CmsPageVersion> {
         private static final PageVersionWorker worker = new PageVersionWorker();
-        
+
         protected PageVersionWorker() {
             super(CmsPageVersion.class);
         }
@@ -336,7 +336,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
 
         /**
          * Returns the most current page version.
-         * 
+         *
          * @param pageId
          * @return
          */
@@ -351,7 +351,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
 
         /**
          * Returns all versions of a page starting with the most recent.
-         * 
+         *
          * @param pageId
          * @return
          */
@@ -379,7 +379,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
 
         /**
          * Returns a specific page version.
-         * 
+         *
          * @param pageId
          * @param versionId
          * @return

@@ -30,7 +30,7 @@ import org.ofbiz.base.util.UtilValidate;
  * <p>
  * TODO/FIXME (2017-09-01):
  * <ul>
- * <li>{@link #escapeTermPlain} known issue - solr 5 query parser does not respect whitespace escape! 
+ * <li>{@link #escapeTermPlain} known issue - solr 5 query parser does not respect whitespace escape!
  *     and due to parser wierdness, quotes can't be used instead!
  * <li>{@link #extractTopTerms} is makeshift and best-effort only, there should be an ext lib for this.
  * </ul>
@@ -38,12 +38,12 @@ import org.ofbiz.base.util.UtilValidate;
 public abstract class SolrExprUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     // TODO: REVIEW: the "!" standalone character appears not recognized in solr 5 query parser;
     // it only works if space after is removed. but it shouldn't do any harm here so leaving in...
     static final Set<String> noPrefixTerms = UtilMisc.unmodifiableHashSet("AND", "OR", "NOT", "&&", "||", "!", "/*");
     static final Set<Character> noPrefixTermCharPrefixes = UtilMisc.unmodifiableHashSet('+', '-');
-    static final Map<Character, Character> termEnclosingCharMap; 
+    static final Map<Character, Character> termEnclosingCharMap;
     static {
         Map<Character, Character> map = new HashMap<>();
         map.put('"', '"');
@@ -52,7 +52,7 @@ public abstract class SolrExprUtil {
         map.put('(', ')');
         termEnclosingCharMap = Collections.unmodifiableMap(map);
     }
-    
+
     static final Pattern solrFieldNameAllowedChars = Pattern.compile("[a-zA-Z0-9_-]");
     static final Pattern solrFieldNamePrefixExpr = Pattern.compile("^([a-zA-Z0-9_-]+:)(.*)$");
 
@@ -62,7 +62,7 @@ public abstract class SolrExprUtil {
     /**
      * Escapes all special solr/query characters in the given query term
      * <em>not</em> enclosed in quotes (single term).
-     * At current time, this includes at least: 
+     * At current time, this includes at least:
      * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
      * NOTE: The result should NOT be enclosed in quotes; use {@link SolrUtil#escapeTermForQuote} for that.
      * FIXME?: whitespace escaping appears to not always be honored by solr parser?...
@@ -85,7 +85,7 @@ public abstract class SolrExprUtil {
 //        }
 //        return sb.toString();
     }
-    
+
     static boolean isSyntaxDelimChar(char c) {
         return c == '+' || c == '-' || c == '!'  || c == '(' || c == ')' || c == ':'
                 || c == '^' || c == '[' || c == ']' || c == '\"' || c == '{' || c == '}' || c == '~'
@@ -150,12 +150,12 @@ public abstract class SolrExprUtil {
      */
     public static List<String> extractTopTerms(String queryExpr) {
         List<String> terms = new ArrayList<>();
-    
+
         queryExpr = queryExpr.trim().replaceAll("\\s+", " "); // normalize
-        
+
         int backslashCount = 0;
         StringBuilder term = new StringBuilder();
-        
+
         int i = 0;
         while (i < queryExpr.length()) {
             char c = queryExpr.charAt(i);
@@ -172,7 +172,7 @@ public abstract class SolrExprUtil {
                     if (endIndex > i) {
                         term.append(queryExpr.substring(i, endIndex+1));
                         i = endIndex; // NOTE: gets ++ after
-                    } else { 
+                    } else {
                         // BAD SYNTAX (probably): append the rest, even though it will probably fail...
                         term.append(queryExpr.substring(i));
                         i = queryExpr.length(); // abort
@@ -188,7 +188,7 @@ public abstract class SolrExprUtil {
             i++;
         }
         if (term.length() > 0) terms.add(term.toString());
-        
+
         return terms;
     }
 
@@ -260,7 +260,7 @@ public abstract class SolrExprUtil {
                 }
                 i++;
             }
-        } 
+        }
         return -1;
     }
 
@@ -279,14 +279,14 @@ public abstract class SolrExprUtil {
      * enforced by this method.
      * <p>
      * Solr field name rules (https://lucene.apache.org/solr/guide/6_6/defining-fields.html):
-     * "Field names should consist of alphanumeric or underscore characters only 
-     * and not start with a digit. This is not currently strictly enforced, but 
-     * other field names will not have first class support from all components and 
-     * back compatibility is not guaranteed. Names with both leading and trailing 
+     * "Field names should consist of alphanumeric or underscore characters only
+     * and not start with a digit. This is not currently strictly enforced, but
+     * other field names will not have first class support from all components and
+     * back compatibility is not guaranteed. Names with both leading and trailing
      * underscores (e.g., _version_) are reserved."
      * <p>
      * NOTE: 2018-05-29: This method currently works by URL-encoding the whole string and
-     * then replacing the "%" characters with "_". 
+     * then replacing the "%" characters with "_".
      * This is SUBJECT TO CHANGE and should not be relied on for permanent value storage.
      * <p>
      * Added 2018-05-29.
@@ -294,7 +294,7 @@ public abstract class SolrExprUtil {
     public static String escapeFieldNamePart(String namePart) {
         try {
             namePart = URLEncoder.encode(namePart, "UTF-8");
-            
+
             // handle special chars not covered by URLEncoder, including %,
             // which gets converted to underscore
             StringBuilder sb = new StringBuilder();
@@ -360,7 +360,7 @@ public abstract class SolrExprUtil {
         }
         return newTerms;
     }
-    
+
     public enum WildcardMode {
         /**
          * Produces wildcard term in the form: *xxx*
@@ -379,7 +379,7 @@ public abstract class SolrExprUtil {
          */
         EDGE_NGRAM_BOTH
     }
-    
+
     /**
      * Transforms all the simple terms in the query into wildcarded terms ORed in parenthesis.
      * Simple pre-parser to implement partial word matching in the query itself, instead of using Ngram filters.
@@ -387,15 +387,15 @@ public abstract class SolrExprUtil {
      * Ignores quoted terms.
      * <p>
      * For example, with WildcardMode=EDGE_NGRAM_BOTH, retainNonWild=true, wildWeight="0.5":
-     *   "hello world" 
+     *   "hello world"
      * become:
      *   "(hello OR hello*^0.5 OR *hello^0.5) (world OR world*^0.5 OR *world^0.5)"
-     *   
+     *
      * TODO: currently only supports the edismax syntax elements most used by common users.
      * Missing (not exhaustive): fuzzy/prox search (~), single wildcard (?), range searches...
-     * 
+     *
      * @param queryExpr the input query expression
-     * @param wildcardMode 
+     * @param wildcardMode
      * @param retainNonWild if true, include non-wildcard expression with optional different weight
      * @param nonWildWeight weight (^) added to the non-wildcard expression, if present
      * @param wildWeight weight (^) added to the wildcard expressions
@@ -404,12 +404,12 @@ public abstract class SolrExprUtil {
      * @param deep whether first level only or also do nested expressions in parenthesis too
      * @return the transformed query expression
      */
-    public static String makeWildcardSimpleSearchTerms(String queryExpr, WildcardMode wildcardMode, boolean retainNonWild, 
+    public static String makeWildcardSimpleSearchTerms(String queryExpr, WildcardMode wildcardMode, boolean retainNonWild,
             String nonWildWeight, String wildWeight, Integer minTermSize, Integer maxTermSize, boolean deep) {
         return StringUtils.join(makeWildcardSimpleSearchTerms(extractTopTerms(queryExpr), wildcardMode, retainNonWild, nonWildWeight, wildWeight, minTermSize, maxTermSize, deep), " ");
     }
-    
-    public static List<String> makeWildcardSimpleSearchTerms(List<String> terms, WildcardMode wildcardMode, boolean retainNonWild, 
+
+    public static List<String> makeWildcardSimpleSearchTerms(List<String> terms, WildcardMode wildcardMode, boolean retainNonWild,
             String nonWildWeight, String wildWeight, Integer minTermSize, Integer maxTermSize, boolean deep) {
         if (minTermSize == null) minTermSize = 0;
         if (maxTermSize == null) maxTermSize = Integer.MAX_VALUE;
@@ -438,7 +438,7 @@ public abstract class SolrExprUtil {
                         suffix = "^" + weightParts[1];
                     }
                     char last = coreTerm.charAt(coreTerm.length() - 1);
-                    
+
                     // if already a wildcard, skip it (leading wildcard counted in isSyntaxDelimChar)
                     if (last != '*') {
                         if (first == '(') {
@@ -446,10 +446,10 @@ public abstract class SolrExprUtil {
                                 // recursion for parenthesis (must be well-formed, otherwise don't touch)
                                 StringBuilder sb = new StringBuilder(prefix);
                                 sb.append("(");
-                                
+
                                 String subQueryExpr = coreTerm.substring(1, coreTerm.length() - 1);
                                 sb.append(makeWildcardSimpleSearchTerms(subQueryExpr, wildcardMode, retainNonWild, nonWildWeight, wildWeight, minTermSize, maxTermSize, deep));
-                                
+
                                 sb.append(")");
                                 sb.append(suffix);
                                 resultTerm = sb.toString();
@@ -458,7 +458,7 @@ public abstract class SolrExprUtil {
                             // replace "term" with "(term term* *term)" or as requested
                             StringBuilder sb = new StringBuilder(prefix);
                             sb.append("(");
-                            
+
                             if (retainNonWild) {
                                 sb.append(coreTerm);
                                 if (nonWildWeight != null) {
@@ -467,7 +467,7 @@ public abstract class SolrExprUtil {
                                 }
                                 sb.append(" OR ");
                             }
-                            
+
                             if (wildcardMode == WildcardMode.EDGE_NGRAM_BOTH) {
                                 if (wildWeight != null) {
                                     sb.append(coreTerm);
@@ -507,7 +507,7 @@ public abstract class SolrExprUtil {
                                     sb.append(wildWeight);
                                 }
                             }
-                            
+
                             sb.append(")");
                             sb.append(suffix);
                             resultTerm = sb.toString();
@@ -522,7 +522,7 @@ public abstract class SolrExprUtil {
 
     /**
      * Makes an expression to match a category ID for a special category field, whose values
-     * are in the format: <code>X/PARENT/CATEGORY</code> (where X is the category depth); 
+     * are in the format: <code>X/PARENT/CATEGORY</code> (where X is the category depth);
      * assumes the passed category ID is already escaped.
      * NOTE: the field name is not escaped (should be hardcoded).
      */
@@ -530,7 +530,7 @@ public abstract class SolrExprUtil {
         // can be:
         // */CATID
         // */CATID/*
-        // NOTE: at this time, should not be any CATID/*, 
+        // NOTE: at this time, should not be any CATID/*,
         // because there should always be a category depth as first entry (this was the chosen convention)
         StringBuilder sb = new StringBuilder();
         sb.append(fieldName);
@@ -559,7 +559,7 @@ public abstract class SolrExprUtil {
         USER("user"),
         FULL("full"),
         LITERAL("literal");
-        
+
         private static final Map<String, UserQueryMode> nameMap;
         static {
             Map<String, UserQueryMode> m = new HashMap<>();
@@ -568,7 +568,7 @@ public abstract class SolrExprUtil {
             }
             nameMap = m;
         }
-        
+
         private final String name;
 
         private UserQueryMode(String name) {
@@ -578,23 +578,23 @@ public abstract class SolrExprUtil {
         public String getName() {
             return name;
         }
-        
+
         public static UserQueryMode fromName(String name) throws IllegalArgumentException {
             UserQueryMode res = nameMap.get(name);
             if (res == null) throw new IllegalArgumentException("invalid user query mode name: " + name);
             return res;
         }
-        
+
         public static UserQueryMode fromNameSafe(String name) throws IllegalArgumentException {
             return nameMap.get(name);
         }
     }
-    
+
     /**
      * Applies extra custom pre-parsing to user queries depending on the mode.
      * This is an extra factoring point for custom pre-parsing at point of input.
      * NOTE: 2017-09-05: The USER mode currently has no effect; it will be done
-     * via dismax/edismax. 
+     * via dismax/edismax.
      */
     public static String preparseUserQuery(String userQuery, UserQueryMode mode) {
         if (UtilValidate.isEmpty(userQuery)) return userQuery;
@@ -608,7 +608,7 @@ public abstract class SolrExprUtil {
             return userQuery;
         }
     }
-    
+
     public static String preparseUserQuery(String userQuery, String mode) throws IllegalArgumentException {
         return preparseUserQuery(userQuery, UtilValidate.isNotEmpty(mode) ? UserQueryMode.fromName(mode) : null);
     }
@@ -623,17 +623,17 @@ public abstract class SolrExprUtil {
         }
         return expr;
     }
-    
+
     public static String makeSortFieldFallbackExpr(String... fieldNames) {
         return makeSortFieldFallbackExpr(Arrays.asList(fieldNames));
     }
-    
+
     public static String makeIfExistsExpr(String existsExpr, String trueExpr, String falseExpr) {
         StringBuilder sb = new StringBuilder();
         appendIfExistsExpr(sb, existsExpr, trueExpr, falseExpr);
         return sb.toString();
     }
-    
+
     public static void appendIfExistsExpr(StringBuilder sb, String existsExpr, String trueExpr, String falseExpr) {
         sb.append("if(exists(");
         sb.append(existsExpr);
@@ -648,7 +648,7 @@ public abstract class SolrExprUtil {
      * Formats a timestamp in Solr-recognized format for insertion in
      * double-quotes or range expression.
      * <p>
-     * Currently (2018-05-25) this formats in 
+     * Currently (2018-05-25) this formats in
      * {@link java.time.format.DateTimeFormatter#ISO_INSTANT} format.
      * <p>
      * Added 2018-05-25.

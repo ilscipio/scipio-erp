@@ -39,7 +39,7 @@ public abstract class CmsPageServices {
 
     protected CmsPageServices() {
     }
-    
+
     /**
      * Returns the page content, template and information of a page.
      */
@@ -52,12 +52,12 @@ public abstract class CmsPageServices {
         String pageId = (String) context.get("pageId");
         String webSiteId = (String) context.get("webSiteId");
         String primaryPath = (String) context.get("primaryPath");
-        
+
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         // NOTE: request.getServletContext() new in servlet API 3.0
         ServletContext servletContext = request != null ? request.getServletContext() : null;
-        
+
         boolean verifyWebSite = Boolean.TRUE.equals(context.get("verifyWebSite"));
         boolean useStaticWebSite = Boolean.TRUE.equals(context.get("useStaticWebSite"));
 
@@ -76,12 +76,12 @@ public abstract class CmsPageServices {
             } else {
                 return ServiceUtil.returnFailure("Page not found. PageId or a combination of primaryPath and webSiteId are required.");
             }
-    
+
             result.put("pageId", page.getId());
             CmsPageTemplate template = page.getTemplate();
             Set<String> candidateWebSiteIds = page.getCandidateWebSiteIds();
 
-            // 2016: this isn't used in rendering, and the backend app doesn't have a webSiteId, 
+            // 2016: this isn't used in rendering, and the backend app doesn't have a webSiteId,
             // so it doesn't make sense here. instead if webSiteId is null we'll get the best
             // candidate, for the page context variables stuff...
 //                if (webSiteId == null && request != null) {
@@ -113,7 +113,7 @@ public abstract class CmsPageServices {
                             + "specified webSiteId '" + webSiteId + "' has no mappings or associations to page");
                 }
             }
-            
+
             Map<String, ?> pageDesc = page.getDescriptor(webSiteId, locale);
             result.put("meta", pageDesc);
 
@@ -140,12 +140,12 @@ public abstract class CmsPageServices {
             }
 
             CmsPageContent pageVars = new CmsPageContent(page);
-            
+
             if (request.getAttribute("delegator") == null) {
                 Debug.logError("CMS: Delegator not found in request during getPage setup", module);
             }
-            
-            page.getTemplate().getRenderer().populateBasicContextVariables(pageVars, 
+
+            page.getTemplate().getRenderer().populateBasicContextVariables(pageVars,
                     new CmsPageContext(request, response, servletContext, webSiteId, false, RendererType.CMS_EDITOR));
             result.put("variables", getPageVariablesDescriptor(pageVars));
 
@@ -190,7 +190,7 @@ public abstract class CmsPageServices {
 
         return wrapperMap;
     }
-    
+
     /**
      * Creates a new page version in the repository. The content is not live
      * until it is approved.
@@ -227,14 +227,14 @@ public abstract class CmsPageServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = null;
-        
+
         String primaryPath = (String) context.get("primaryPath");
         if (primaryPath == null) {
             primaryPath = (String) context.get("path"); // DEPRECATED: TODO: REMOVE
         }
-        
+
         String primaryTargetPath = (String) context.get("primaryTargetPath");
-        
+
         try {
             userLogin = (GenericValue) context.get("userLogin");
             if (userLogin == null) {
@@ -242,11 +242,11 @@ public abstract class CmsPageServices {
             }
 
             // Create empty page
-            Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreatePage", 
+            Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreatePage",
                     UtilGenerics.<String, Object> checkMap(context), userLogin, null, null);
             fields.put("primaryPath", primaryPath);
             fields.put("primaryTargetPath", primaryTargetPath);
-            
+
             // 2017-11-29: new pages will have their primary process mapping set active false,
             // then first publish operation will then toggle it to true.
             // see activePageVersion service below
@@ -254,7 +254,7 @@ public abstract class CmsPageServices {
             if (CmsPage.newPagePrimaryProcessMappingActive != null && (initialActive == null || (initialActive instanceof String && ((String) initialActive).isEmpty()))) {
                 fields.put("active", CmsPage.newPagePrimaryProcessMappingActive);
             }
-            
+
             CmsPage page = CmsPage.createAndStoreWithPrimaryProcessMapping(delegator, fields);
 
             // Add Base user authorization
@@ -282,7 +282,7 @@ public abstract class CmsPageServices {
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> copyArgs = new HashMap<>();
         copyArgs.put("webSiteId", context.get("webSiteId"));
-        
+
         Map<String, Object> primaryProcessMappingCopyArgs = new HashMap<>();
         primaryProcessMappingCopyArgs.put("webSiteId", context.get("webSiteId"));
         primaryProcessMappingCopyArgs.put("primaryPath", context.get("primaryPath"));
@@ -291,7 +291,7 @@ public abstract class CmsPageServices {
             primaryProcessMappingCopyArgs.put("active", CmsPage.newPagePrimaryProcessMappingActive);
         }
         copyArgs.put("primaryProcessMapping", primaryProcessMappingCopyArgs);
-        
+
         copyArgs.put("copyVersionId", context.get("srcVersionId"));
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (userLogin != null) {
@@ -301,9 +301,9 @@ public abstract class CmsPageServices {
             String srcPageId = (String) context.get("srcPageId");
             CmsPage srcPage = CmsPage.getWorker().findByIdAlways(delegator, srcPageId, false);
             CmsPage page = srcPage.copy(copyArgs);
-            
+
             page.update(UtilMisc.toHashMapWithKeys(context, "pageName", "description"));
-            
+
             page.store();
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("pageId", page.getId());
@@ -315,16 +315,16 @@ public abstract class CmsPageServices {
             return err.returnError();
         }
     }
-    
+
     public static Map<String, Object> updatePageInfo(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
         try {
             Map<String, Object> fields = UtilMisc.makeMapWritable(context);
-            
+
             // 2016: FIXME?: see com.ilscipio.scipio.cms.content.CmsPage.setPrimaryProcessMappingFields(Map<String, ?>)
             fields.put("primaryWebSiteIdOverride", "Y");
-            
+
             String pageId = (String) context.get("pageId");
             CmsPage page = CmsPage.getWorker().findByIdAlways(delegator, pageId, false);
             page.update(fields);
@@ -336,7 +336,7 @@ public abstract class CmsPageServices {
         }
         return result;
     }
-    
+
     /**
      * Sets a page version as live version. The live version is the content that
      * will be displayed to regular page visitors.
@@ -349,7 +349,7 @@ public abstract class CmsPageServices {
             String versionId = (String) context.get("versionId");
             CmsPage page = CmsPage.getWorker().findByIdAlways(delegator, pageId, false);
             page.setActiveVersion(versionId);
-            
+
             // 2017-11-29: new pages will have their primary process mapping set active false,
             // then first publish operation will then toggle it to true.
             // see createPage service above
@@ -362,11 +362,11 @@ public abstract class CmsPageServices {
                     page.setPrimaryProcessMappingFields(fields, true);
                 }
             } else {
-                Debug.logWarning("Cms: activatePageVersion: Page '" + pageId 
+                Debug.logWarning("Cms: activatePageVersion: Page '" + pageId
                         + "' appears to have no primary process mapping webSiteIds"
                         + " - cannot activate primary process mapping - activation may be incomplete", module);
             }
-            
+
             page.store();
             result.put("pageId", pageId);
             result.put("versionId", versionId);
@@ -382,7 +382,7 @@ public abstract class CmsPageServices {
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         try {
             CmsPageScriptAssoc.getWorker().createUpdateScriptTemplateAndAssoc(delegator, context, userLogin);
         } catch (Exception e) {
@@ -392,7 +392,7 @@ public abstract class CmsPageServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> deletePage(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -407,7 +407,7 @@ public abstract class CmsPageServices {
         }
         return result;
     }
-    
+
     /**
      * Returns all pages for the current user.
      */
@@ -423,12 +423,12 @@ public abstract class CmsPageServices {
         }
         boolean shortDesc = !Boolean.FALSE.equals(context.get("short"));
         boolean editable = Boolean.TRUE.equals(context.get("editable"));
-        
+
         List<Map<String, ?>> pagesList = new ArrayList<>();
         try {
-            // NOTE: if webSiteId set we'll manually filter in loop for now... (TODO: optimize later) 
+            // NOTE: if webSiteId set we'll manually filter in loop for now... (TODO: optimize later)
             List<CmsPage> pages = CmsPage.getWorker().findAll(delegator, false); // findAllWithWebsite(delegator, false)
-    
+
             for (CmsPage page : pages) {
                 String pageWebSiteId;
                 if (webSiteId != null) {
@@ -437,7 +437,7 @@ public abstract class CmsPageServices {
                     if (!page.isLinkedToWebSiteId(webSiteId)) {
                         continue;
                     }
-    
+
                     pageWebSiteId = webSiteId;
                 } else {
                     // For organization purposes in this method (ONLY), prefer the CmsPage.webSiteId; if empty get from primary mapping
@@ -446,14 +446,14 @@ public abstract class CmsPageServices {
                         pageWebSiteId = page.getPrimaryWebSiteId();
                     }
                 }
-    
+
                 Map<String, Object> pageMap;
                 if (shortDesc) {
                     pageMap = page.getShortDescriptor(pageWebSiteId, locale);
                 } else {
                     pageMap = page.getDescriptor(pageWebSiteId, locale);
                 }
-    
+
                 if (editable) {
                     String userId = CmsServiceUtil.getUserId(context);
                     UserRole userRole = page.getUserAuthorization(userId, delegator, dispatcher);
@@ -461,7 +461,7 @@ public abstract class CmsPageServices {
                         pageMap.put("permission", userRole.toString());
                         pagesList.add(pageMap);
                     }
-    
+
                 } else {
                     pagesList.add(pageMap);
                 }

@@ -16,10 +16,10 @@ public interface Preloadable {
      * 2016: Loads ALL this object's content into the current instance,
      * and depending on the PreloadWorker configuration, may also make it immutable.
      * <p>
-     * NOTE: this is for implementations. client code should call 
+     * NOTE: this is for implementations. client code should call
      * {@link PreloadWorker#preload(Preloadable)} instead.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY
      * (EVEN if the instance is not physically made immutable!).
      * Essential for thread safety!!!
@@ -30,7 +30,7 @@ public interface Preloadable {
      * <p>
      * NOTE: The implementation should mark itself as preloaded as early as possible in the preload
      * call implementation, so that the {@link #isPreloaded} method can be used by PreloadWorker
-     * to prevent endless loops in preloads. 
+     * to prevent endless loops in preloads.
      * It should then use the {@link PreloadWorker} methods instead of direct calls in order to avoid
      * such endless loops.
      */
@@ -39,16 +39,16 @@ public interface Preloadable {
     // DEV NOTE: these are not necessary as long as the first call is super.preload(preloadWorker)
     // so the flags always get set early before all other calls
     //public void markPreloaded();
-    
+
     //public void markImmutable();
-    
-    
+
+
     /**
      * Returns whether this instance was preloaded, or whether a preload() call was already run
      * for the instance (regardless of whether it has returned yet or not - for endless loop prevention).
      */
-    public boolean isPreloaded(); 
-    
+    public boolean isPreloaded();
+
     /**
      * Returns whether this instance is immutable, or whether a preloadImmutable() call was already run
      * for the instance (regardless of whether it has returned yet or not - for endless loop prevention).
@@ -58,61 +58,61 @@ public interface Preloadable {
     /**
      * Preload utility, especially for assisting in implementations of preload() and preloadImmutable().
      * <p>
-     * NOTE: 
+     * NOTE:
      */
     public static class PreloadWorker {
-        
+
         private static final PreloadWorker preloadWorker = new PreloadWorker(true);
         private static final PreloadWorker preloadImmutableWorker = new PreloadWorker(false);
 
         private final boolean mutable;
-        
+
         public PreloadWorker(boolean mutable) {
             this.mutable = mutable;
         }
-        
+
         /**
          * Returns a worker that preloads but without making instance immutable.
          */
         public static PreloadWorker getPreloadWorker() {
-            return preloadWorker; 
+            return preloadWorker;
         }
-        
+
         /**
          * Returns a worker that preloads AND makes instance immutable.
          */
         public static PreloadWorker getPreloadImmutableWorker() {
             return preloadImmutableWorker;
         }
-        
+
         /**
          * Returns a worker that preloads with optional immutable instance making (if mutable false passed).
          */
         public static PreloadWorker getPreloadWorker(boolean mutable) {
-            return mutable ? preloadWorker : preloadImmutableWorker; 
+            return mutable ? preloadWorker : preloadImmutableWorker;
         }
-        
+
         /**
          * Returns true if this PreloadWorker is creating immutable instances in addition to preloads.
          */
         public boolean isImmutable() {
             return !mutable;
         }
-        
+
         public boolean isMutable() {
             return mutable;
         }
-        
+
         public boolean isHandled(Preloadable preloadable) {
             if (preloadable == null) {
                 return true;
             } else if (this.isImmutable()) {
-                return preloadable.isPreloaded() && preloadable.isImmutable(); 
+                return preloadable.isPreloaded() && preloadable.isImmutable();
             } else {
                 return preloadable.isPreloaded();
             }
         }
-        
+
         /**
          * Preloads a Preloadable instance if it is not null and it does not register as preloaded
          * (and immutable, if applicable) already.
@@ -129,7 +129,7 @@ public interface Preloadable {
             }
             return preloadable;
         }
-        
+
         /**
          * Preloads a wrapped Preloadable instance if it is not null and it does not register as preloaded
          * (and immutable, if applicable) already.
@@ -146,7 +146,7 @@ public interface Preloadable {
             }
             return preloadable;
         }
-        
+
         public <T extends Preloadable> Collection<T> preloadDeep(Collection<T> preloadables) {
             if (preloadables != null) {
                 for(Preloadable preloadable : preloadables) {
@@ -157,7 +157,7 @@ public interface Preloadable {
                 return null;
             }
         }
-        
+
         public <T extends Preloadable> Set<T> preloadDeep(Set<T> preloadables) {
             if (preloadables != null) {
                 for(Preloadable preloadable : preloadables) {
@@ -168,7 +168,7 @@ public interface Preloadable {
                 return null;
             }
         }
-        
+
         public <T extends Preloadable> List<T> preloadDeep(List<T> preloadables) {
             if (preloadables != null) {
                 for(Preloadable preloadable : preloadables) {
@@ -179,7 +179,7 @@ public interface Preloadable {
                 return null;
             }
         }
-        
+
         public <S, T extends Preloadable> Map<S, T> preloadDeep(Map<S, T> preloadables) {
             if (preloadables != null) {
                 for(Preloadable preloadable : preloadables.values()) {
@@ -190,8 +190,8 @@ public interface Preloadable {
                 return null;
             }
         }
-        
-       
+
+
         /**
          * Preloads the preloadables in a map of lists and makes the containers immutable if applicable,
          * including both the inner and outer containers.
@@ -208,7 +208,7 @@ public interface Preloadable {
                 return null;
             }
         }
-        
+
         public GenericValue preloadEntity(GenericValue entity) {
             if (entity != null) {
                 // TODO: investigate if more could be needed some cases
@@ -219,9 +219,9 @@ public interface Preloadable {
                 return entity;
             } else {
                 return null;
-            }            
+            }
         }
-        
+
         /**
          * Checks a generic container for needed alterations for preload (non-deep, no Preloadable involved).
          * Currently, this returns unmodifiable container if we're preloading to immutable.
@@ -229,19 +229,19 @@ public interface Preloadable {
         public <V> Collection<V> transformContainer(Collection<V> collection) {
             return (collection != null) ? (this.mutable ? collection : Collections.unmodifiableCollection(collection)) : null;
         }
-        
+
         public <V> List<V> transformContainer(List<V> list) {
             return (list != null) ? (this.mutable ? list : Collections.unmodifiableList(list)) : null;
         }
-        
+
         public <V> Set<V> transformContainer(Set<V> set) {
             return (set != null) ? (this.mutable ? set : Collections.unmodifiableSet(set)) : null;
         }
-   
+
         public <K, V> Map<K, V> transformContainer(Map<K, V> map) {
             return (map != null) ? (this.mutable ? map : Collections.unmodifiableMap(map)) : null;
         }
-        
+
     }
 
     /**
@@ -252,12 +252,12 @@ public interface Preloadable {
 
         protected boolean preloaded;
         protected boolean mutable;
-        
+
         public AbstractPreloadable(boolean preloaded, boolean mutable) {
             this.preloaded = preloaded;
             this.mutable = mutable;
         }
-        
+
         public AbstractPreloadable() {
             this.preloaded = false;
             this.mutable = true;
@@ -296,5 +296,5 @@ public interface Preloadable {
             }
         }
     }
-    
+
 }

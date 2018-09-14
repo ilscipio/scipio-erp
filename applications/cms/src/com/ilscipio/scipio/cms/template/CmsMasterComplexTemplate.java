@@ -31,7 +31,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
     private static final long serialVersionUID = -5341063606131700832L;
 
     protected static final boolean removeAssociatedScripts = UtilProperties.getPropertyAsBoolean("cms", "page.template.remove.removeAssociatedScripts", true);
-    
+
     /**
      * A list of script templates (assocs) sorted by inputPosition.
      * <p>
@@ -39,7 +39,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
      * for preloadContent().
      */
     protected List<CmsScriptTemplate> sortedScriptTemplates;
-    
+
     protected CmsMasterComplexTemplate(GenericValue entity) {
         super(entity);
     }
@@ -47,7 +47,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
     public CmsMasterComplexTemplate(Delegator delegator, Map<String, ?> fields) {
         super(delegator, fields);
     }
-    
+
     protected CmsMasterComplexTemplate(CmsMasterComplexTemplate<T, V> other, Map<String, Object> copyArgs) {
         super(other, copyArgs);
         this.sortedScriptTemplates = copyScriptTemplateAssocs(other.getSortedScriptTemplates(), copyArgs);
@@ -64,7 +64,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
             CmsScriptTemplateAssoc otherAssoc = otherScript.getAssoc();
             // this should never happen...
             if (otherAssoc == null) throw new CmsException("internal error: source template's script instances are missing associations");
-            
+
             CmsScriptTemplateAssoc newAssoc = otherAssoc.copy(copyArgs);
             newAssoc.clearTemplate(); // will get updated on store
             CmsScriptTemplate script = new CmsScriptTemplate(otherScript.getEntity(), newAssoc);
@@ -72,16 +72,16 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
         }
         return scripts;
     }
-    
-    @Override    
+
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
     }
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -90,7 +90,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
         super.preload(preloadWorker);
         this.sortedScriptTemplates = preloadWorker.preloadDeep(this.getSortedScriptTemplates());
     }
-    
+
     /**
      * Skip preload of the active version if have a local activeContentId.
      */
@@ -98,7 +98,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
     protected boolean hasLocalActiveTemplateBodySource() {
         return UtilValidate.isNotEmpty(getActiveTemplateContentId());
     }
-    
+
     @Override
     public TemplateBodySource getTemplateBodySource() {
         TemplateBodySource tmplBodySrc = this.tmplBodySrc;
@@ -112,7 +112,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
         return tmplBodySrc;
     }
 
-    
+
     /**
      * Gets body source from local activeContentId instead of going through active version.
      */
@@ -128,13 +128,13 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
         }
         return tmplBodySrc;
     }
-    
+
     @Override
     public V getActiveVersion() {
         return super.getActiveVersion();
     }
-    
-    
+
+
     /**
      * Returns a list of sorted script templates linked to this page template.
      */
@@ -150,11 +150,11 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
         }
         return sortedScriptTemplates;
     }
-    
+
     public static List<CmsScriptTemplate> readSortedScriptTemplates(GenericValue entity, TemplateScriptAssocWorker<?> assocWorker) throws GenericEntityException {
         List<CmsScriptTemplate> sortedScriptTemplates;
         // NOTE: nulls first corresponds to default value 0
-        List<GenericValue> assocEntities = entity.getRelated(assocWorker.getEntityName(), null, 
+        List<GenericValue> assocEntities = entity.getRelated(assocWorker.getEntityName(), null,
                 UtilMisc.toList("inputPosition ASC NULLS FIRST"), false);
         if (assocEntities.size() > 0) {
             ArrayList<CmsScriptTemplate> sortedScriptTmplArr = new ArrayList<>(assocEntities.size());
@@ -173,13 +173,13 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
     public List<CmsScriptTemplate> getScriptTemplates() {
         return getSortedScriptTemplates();
     }
-    
+
     @Override
     public void store() throws CmsException {
         super.store();
         checkStoreScriptTemplateAssocs(this, this.sortedScriptTemplates);
     }
-    
+
     /**
      * Check if the given templates need a template and a store call and stores.
      * This is usually triggered by copy() operation, because creating new assocs
@@ -197,7 +197,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
             }
         }
     }
-    
+
     @Override
     protected void updateStoreLocalActiveContent(String activeContentId) {
         String prevContentId = getActiveTemplateContentId();
@@ -217,7 +217,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
             this.storeSelfOnly();
         }
     }
-    
+
     /**
      * Sets the local field activeContentId IF supported, which is a cached optimized
      * lookup for live renders.
@@ -225,7 +225,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
     public void setActiveTemplateContentId(String activeContentId) {
         entity.setString("activeContentId", activeContentId);
     }
-    
+
     /**
      * Returns the local field activeContentId IF supported, which is a cached optimized
      * lookup for live renders.
@@ -233,30 +233,30 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
     public String getActiveTemplateContentId() {
         return entity.getString("activeContentId");
     }
-    
+
     @Override
     public int remove() throws CmsException {
         int rowsAffected = 0;
-        
+
         try {
             rowsAffected += removeScriptTemplates(entity, getTemplateScriptAssocWorker());
         } catch (GenericEntityException e) {
             throw makeRemoveException(e);
         }
-        
+
         return super.remove() + rowsAffected;
     }
-    
+
     public static int removeScriptTemplates(GenericValue entity, TemplateScriptAssocWorker<?> assocWorker) throws GenericEntityException {
         int rowsAffected = 0;
         // delete CmsXxxScriptAssoc (and CmsScriptTemplate if configured to do so)
         List<GenericValue> scriptAssoc = entity.getRelated(assocWorker.getEntityName(), null, null, false);
         for (GenericValue scriptValue : scriptAssoc) {
             GenericValue targetScript = scriptValue.getRelatedOne("CmsScriptTemplate", false);
-            
+
             scriptValue.remove();
             rowsAffected += 1;
-            
+
             if (targetScript != null) {
                 CmsScriptTemplate scriptTemplate = CmsScriptTemplate.getWorker().makeFromValue(targetScript);
                 rowsAffected += scriptTemplate.removeIfOrphan();
@@ -264,9 +264,9 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
         }
         return rowsAffected;
     }
-    
+
     protected abstract CmsTemplateScriptAssoc.TemplateScriptAssocWorker<?> getTemplateScriptAssocWorker();
-    
+
     /**
      * NOTE: Do not confuse for CmsScriptTemplateAssoc (!).
      */
@@ -277,7 +277,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
         protected CmsTemplateScriptAssoc(GenericValue entity) {
             super(entity);
         }
-        
+
         public CmsTemplateScriptAssoc(Delegator delegator, Map<String, ?> fields, CmsScriptTemplate scriptTemplate) {
             super(delegator, fields, scriptTemplate);
         }
@@ -286,16 +286,16 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
             super(other, copyArgs);
             // NOTE: don't bother clearing out the ID fields here, caller should handle
         }
-        
-        @Override    
+
+        @Override
         public void update(Map<String, ?> fields, boolean setIfEmpty) {
             super.update(fields, setIfEmpty);
         }
-        
+
         /**
          * 2016: Loads ALL this object's content into the current instance.
          * <p>
-         * WARN: IMPORTANT: AFTER THIS CALL, 
+         * WARN: IMPORTANT: AFTER THIS CALL,
          * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
          * Essential for thread safety!!!
          */
@@ -303,7 +303,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
         public void preload(PreloadWorker preloadWorker) {
             super.preload(preloadWorker);
         }
-        
+
         public static abstract class TemplateScriptAssocWorker<T extends CmsTemplateScriptAssoc> extends ScriptTemplateAssocWorker<T> {
 
             protected TemplateScriptAssocWorker(Class<T> dataObjectClass) {
@@ -314,12 +314,12 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
                 T scriptAssoc;
                 Map<String, Object> fields = new HashMap<>(origFields);
                 fields.put("lastUpdatedBy", userLogin.get("userLoginId"));
-                
+
                 String scriptAssocId = (String) fields.get("scriptAssocId");
                 if (UtilValidate.isNotEmpty(scriptAssocId)) {
                     scriptAssoc = findByIdAlways(delegator, scriptAssocId, false);
                     scriptAssoc.update(fields, true);
-                    
+
                     CmsScriptTemplate scriptTemplate = scriptAssoc.getScriptTemplate();
                     if (scriptTemplate == null) {
                         throw new CmsException(getEntityName() + " scriptAssocId '" + scriptAssocId + "' is missing scriptTemplateId");
@@ -328,15 +328,15 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
                 } else {
                     // Only create a new CmsScriptTemplate if also creating a new assoc. existing assoc should always have existing script template.
                     // NOTE: store=false; done by scriptAssoc.store()
-                    CmsScriptTemplate scriptTemplate = CmsScriptTemplate.createUpdateScriptTemplate(delegator, fields, userLogin, false); 
-                    
+                    CmsScriptTemplate scriptTemplate = CmsScriptTemplate.createUpdateScriptTemplate(delegator, fields, userLogin, false);
+
                     scriptAssoc = makeFromFields(delegator, fields, scriptTemplate);
                 }
 
                 scriptAssoc.store();
                 return scriptAssoc;
             }
-            
+
             protected abstract T makeFromFields(Delegator delegator, Map<String, ?> fields, CmsScriptTemplate scriptTemplate) throws CmsException;
 
         }

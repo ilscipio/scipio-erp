@@ -46,7 +46,7 @@ public class CmsMediaServlet extends HttpServlet {
     private static final String fnSrcFieldName = "origfn".equals(FN_SOURCE) ? "objectInfo" : "dataResourceName";
     private static final String fnSrcFieldNameFallback = "origfn".equals(FN_SOURCE) ? "dataResourceName" : "objectInfo";
     private static final boolean variantsEnabled = UtilProperties.getPropertyAsBoolean("cms", "media.variants.enabled", true);
-    
+
     public CmsMediaServlet() {
         super();
     }
@@ -71,9 +71,9 @@ public class CmsMediaServlet extends HttpServlet {
     /**
      * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
      *      javax.servlet.http.HttpServletResponse)
-     *      
+     *
      * reference: {@link org.ofbiz.content.data.DataEvents#serveImage}
-     * 
+     *
      * TODO: still missing an "auto" best-size selection based on width and height
      * TODO: this isn't looking at the global debug flag yet for the error msgs
      * WARN: autoVariant logic has severe limitations - see {@link CmsMediaWorker#selectBestImageVariant}
@@ -85,10 +85,10 @@ public class CmsMediaServlet extends HttpServlet {
         LocalDispatcher dispatcher = WebAppUtil.getDispatcherFilterSafe(request, delegator);
         Locale locale = UtilHttp.getLocale(request);
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        
+
         String contentId = request.getParameter("contentId");
         String dataResourceId = request.getParameter("dataResourceId");
-        
+
         String variant = null; // this specifies an exact variant to use, by name
         ImageVariantConfig.FitMode autoVariantMode = null; // this tries to find a best-fit variant
         String widthStr = null;
@@ -102,11 +102,11 @@ public class CmsMediaServlet extends HttpServlet {
                 autoVariantMode = ImageVariantConfig.FitMode.DEFAULT;
             }
         }
-        
+
         GenericValue dataResource;
         try {
             String isPublic;
-            
+
             // AUTO VARIANT MODE - more difficult
             if (autoVariantMode != null) {
                 /**
@@ -121,8 +121,8 @@ public class CmsMediaServlet extends HttpServlet {
                     if (CmsUtil.verboseOn()) {
                         Debug.logInfo("Cms: Auto-selecting image variant [contentId: " + contentId + ", mode: " + autoVariantMode.getStrName() + "]", module);
                     }
-                    ImageVariantConfig.VariantInfo variantInfo = imgVariantCfg.getCanvasBestFitVariant(autoVariantMode, 
-                            UtilValidate.isNotEmpty(widthStr) ? Integer.parseInt(widthStr) : null, 
+                    ImageVariantConfig.VariantInfo variantInfo = imgVariantCfg.getCanvasBestFitVariant(autoVariantMode,
+                            UtilValidate.isNotEmpty(widthStr) ? Integer.parseInt(widthStr) : null,
                             UtilValidate.isNotEmpty(heightStr) ? Integer.parseInt(heightStr) : null);
                     if (variantInfo != null) {
                         variant = variantInfo.getName();
@@ -140,7 +140,7 @@ public class CmsMediaServlet extends HttpServlet {
                     }
                 }
             }
-            
+
             if ((UtilValidate.isEmpty(variant) || "original".equals(variant))) {
                 // STANDARD CASE
                 if (UtilValidate.isNotEmpty(dataResourceId)) {
@@ -161,11 +161,11 @@ public class CmsMediaServlet extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Missing or invalid dataResourceId or contentId parameter - cannot determine media");
                     return;
                 }
-                
+
                 if (CmsUtil.verboseOn()) {
                     Debug.logInfo("Cms: Serving media (original) [contentId: " + contentId + "]", module);
                 }
-                
+
                 isPublic = dataResource.getString("isPublic");
             } else {
                 GenericValue origDataResource = null;
@@ -185,11 +185,11 @@ public class CmsMediaServlet extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Missing or invalid dataResourceId or contentId parameter - cannot determine media");
                     return;
                 }
-                
+
                 // this implies we're getting IMAGE_OBJECT type
-                GenericValue contentAssoc = EntityUtil.getFirst(EntityQuery.use(delegator).from("ContentAssoc").where("contentId", contentId, 
+                GenericValue contentAssoc = EntityUtil.getFirst(EntityQuery.use(delegator).from("ContentAssoc").where("contentId", contentId,
                         "contentAssocTypeId", "IMGSZ_" + variant.toUpperCase()).queryList());
-                
+
                 if (contentAssoc != null) {
                     dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("coContentId", contentAssoc.getString("contentIdTo")).queryList());
                     if (dataResource == null) {
@@ -197,7 +197,7 @@ public class CmsMediaServlet extends HttpServlet {
                                 "Media not found with contentId [" + contentId + "]");
                         return;
                     }
-                    
+
                     if (CmsUtil.verboseOn()) {
                         Debug.logInfo("Cms: Serving image variant [contentId: " + contentId + ", variant: " + variant + ", variant contentId: " + dataResource.getString("coContentId") + "]", module);
                     }
@@ -216,19 +216,19 @@ public class CmsMediaServlet extends HttpServlet {
                         }
                     }
                 }
-                
+
                 // WARN: we are getting the isPublic from the RESIZED image here, NOT the original; this may allow
-                // faster lookup (and more exact), but it relies on the media services properly updating the resized 
+                // faster lookup (and more exact), but it relies on the media services properly updating the resized
                 // images!!
                 isPublic = dataResource.getString("isPublic");
             }
-            
+
             // SECURITY: absolutely must deny anything not marked as CMS media, otherwise this could be used to read sensitive internal documents!
             if (dataResource.getString("coContentTypeId") == null || !dataResource.getString("coContentTypeId").startsWith("SCP_MEDIA")) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Media not found");
                 return;
             }
-            
+
             // SECURITY: 2017-08-02: isPublic check; borrowed from DataEvents.serveObjectData
             String permissionService = EntityUtilProperties.getPropertyValue("content", "stream.permission.service", "genericContentPermission", delegator);
             // see if data resource is public or not
@@ -270,17 +270,17 @@ public class CmsMediaServlet extends HttpServlet {
                     return;
                 }
             }
-            
+
             String fileName = (UtilValidate.isNotEmpty(dataResource.getString(fnSrcFieldName))) ? dataResource.getString(fnSrcFieldName)
                     : dataResource.getString(fnSrcFieldNameFallback);
-            
+
             // see org.ofbiz.content.data.DataEvents#serveImage for reference code
             ServletContext application = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
             Map<String, Object> streamResult = DataResourceWorker.getDataResourceStream(dataResource, "", application.getInitParameter("webSiteId"), locale, application.getRealPath("/"), false);
             byte[] mediaData = (byte[]) streamResult.get("streamBytes");
             InputStream mediaStream = (InputStream) streamResult.get("stream");
             long mediaLength = (long) streamResult.get("length");
-            
+
             response.setContentType(dataResource.getString("mimeTypeId"));
             response.setHeader("Content-Disposition", "inline; filename= " + fileName);
             response.setContentLengthLong(mediaLength);

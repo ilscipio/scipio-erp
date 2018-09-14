@@ -25,13 +25,13 @@ import com.ilscipio.scipio.cms.data.CmsEntityInfo;
 import com.ilscipio.scipio.cms.data.importexport.CmsDataExportWorker.GenericWorkerArgs;
 
 public abstract class CmsImportExportServices {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
 
     protected CmsImportExportServices() {
     }
-    
+
     public static Map<String, Object> exportDataAsXmlInline(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         //GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -63,8 +63,8 @@ public abstract class CmsImportExportServices {
                 if (namedEntities == null) namedEntities = new HashSet<>();
                 namedEntities.add(singlePkfEntityName);
             }
-            
-            // WARN: this only works right in object group mode right now... will break other modes... 
+
+            // WARN: this only works right in object group mode right now... will break other modes...
             // hence why entityNoPkFindAll true by default
             if (!entityNoPkFindAll && namedEntities != null) {
                 // remove the target
@@ -75,11 +75,11 @@ public abstract class CmsImportExportServices {
                     workerArgs.setTargetEntityNames(newNames);
                 }
             }
-            
+
             workerArgs.setEntityCondMap(entityCondMap).setCommonEfo();
-            
+
             CmsDataExportWorker worker = CmsDataExportWorker.makeSingleFileWorker(workerArgs);
-            
+
             StringWriter writer = new StringWriter();
             worker.executeExport(writer);
             Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -91,7 +91,7 @@ public abstract class CmsImportExportServices {
             return err.returnError();
         }
     }
-    
+
     public static Map<String, Object> exportDataAsXml(DispatchContext dctx, Map<String, Object> context) {
         //Delegator delegator = dctx.getDelegator();
         //GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -103,16 +103,16 @@ public abstract class CmsImportExportServices {
         //}
         try {
             if (null == null) throw new UnsupportedOperationException("INCOMPLETE");
-            
-            // TODO: 
+
+            // TODO:
 //            try {
 //                outputMode.checkAllowed(security, userLogin);
-//                
+//
 //            } catch (Exception e) {
 //                Debug.logError(e, "Cms: Data Export: " + e.getMessage(), module);
 //                return ServiceUtil.returnError(e.getMessage());
 //            }
-            
+
             // TODO: NOT IMPLEMENTED
 
             Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -124,14 +124,14 @@ public abstract class CmsImportExportServices {
             return err.returnError();
         }
     }
-    
+
     public static Map<String, Object> importXmlData(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Security security = dctx.getSecurity();
-        
+
         boolean hasEntityMaintPerm = security.hasPermission("ENTITY_MAINT", userLogin);
-        
+
         Set<String> allowedEntityNames = new HashSet<>();
         allowedEntityNames.addAll(CmsEntityInfo.getInst(delegator).getCmsEntityNames());
         allowedEntityNames.addAll(CmsEntityInfo.getInst(delegator).getExtCmsEntityNames());
@@ -139,7 +139,7 @@ public abstract class CmsImportExportServices {
         if (UtilValidate.isNotEmpty(explAllowedEntityNames)) {
             allowedEntityNames.retainAll(explAllowedEntityNames);
         }
-        
+
         context.put("allowedEntityNames", allowedEntityNames);
         context.put("allowLocations", hasEntityMaintPerm);
         return WebToolsServices.entityImport(dctx, context);

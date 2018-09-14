@@ -22,7 +22,7 @@ import com.ilscipio.scipio.cms.content.CmsPage;
  * Cms control data-related Ofbiz services.
  */
 public abstract class CmsControlDataServices {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
 
@@ -30,7 +30,7 @@ public abstract class CmsControlDataServices {
 
     public static Map<String, Object> createUpdateProcessMapping(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
-        
+
         String processMappingId = (String) context.get("processMappingId");
         String sourceWebSiteId = (String) context.get("sourceWebSiteId");
 
@@ -43,12 +43,12 @@ public abstract class CmsControlDataServices {
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-    
+
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("processMappingId", processMappingId);
         return result;
     }
-    
+
     public static Map<String, Object> deleteProcessMapping(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
 
@@ -61,11 +61,11 @@ public abstract class CmsControlDataServices {
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-    
+
         Map<String, Object> result = ServiceUtil.returnSuccess();
         return result;
     }
-    
+
     public static Map<String, Object> createUpdateProcessViewMapping(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
 
@@ -81,12 +81,12 @@ public abstract class CmsControlDataServices {
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-    
+
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("processViewMappingId", processViewMappingId);
         return result;
     }
-    
+
     public static Map<String, Object> deleteProcessViewMapping(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
 
@@ -99,17 +99,17 @@ public abstract class CmsControlDataServices {
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-    
+
         Map<String, Object> result = ServiceUtil.returnSuccess();
         return result;
     }
-    
+
     public static Map<String, Object> createUpdateViewMapping(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
 
         String viewMappingId = (String) context.get("viewMappingId");
         String webSiteId = (String) context.get("webSiteId");
-        
+
         try {
             CmsViewMapping viewMapping = CmsViewMapping.getWorker()
                     .createOrUpdateControlDataObject(delegator, webSiteId, viewMappingId, context);
@@ -119,14 +119,14 @@ public abstract class CmsControlDataServices {
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-    
+
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("viewMappingId", viewMappingId);
         return result;
     }
-    
+
     public static Map<String, Object> deleteViewMapping(DispatchContext dctx, Map<String, Object> context) {
-        
+
         Delegator delegator = dctx.getDelegator();
 
         String viewMappingId = (String) context.get("viewMappingId");
@@ -138,17 +138,17 @@ public abstract class CmsControlDataServices {
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-    
+
         Map<String, Object> result = ServiceUtil.returnSuccess();
         return result;
     }
 
-    
+
     public static Map<String, Object> clearMappingCaches(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
-        
+
         List<String> errMsgList = new ArrayList<>();
-        
+
         Boolean clearMemoryCaches = (Boolean) context.get("clearMemoryCaches");
         if (clearMemoryCaches == null) {
             clearMemoryCaches = true;
@@ -157,7 +157,7 @@ public abstract class CmsControlDataServices {
         if (clearEntityCaches == null) {
             clearEntityCaches = true;
         }
-        
+
         if (clearEntityCaches) {
             try {
                 CmsPage.getWorker().clearEntityCaches(delegator);
@@ -171,7 +171,7 @@ public abstract class CmsControlDataServices {
                 Debug.logError(e, "Cms: " + errMsg, module);
             }
         }
-        
+
         if (clearMemoryCaches) {
             CmsPage.getWorker().clearMemoryCaches();
             CmsView.getWorker().clearMemoryCaches();
@@ -179,7 +179,7 @@ public abstract class CmsControlDataServices {
             CmsProcessViewMapping.getWorker().clearMemoryCaches();
             CmsProcessMapping.getWorker().clearMemoryCaches();
         }
-        
+
         Map<String, Object> result;
         if (errMsgList.size() > 0) {
             result = ServiceUtil.returnFailure(errMsgList);
@@ -188,10 +188,10 @@ public abstract class CmsControlDataServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> deleteAllMappingRecords(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
-        
+
         List<String> errMsgList = new ArrayList<>();
         boolean includePrimary = Boolean.TRUE.equals(context.get("includePrimary"));
 
@@ -216,14 +216,14 @@ public abstract class CmsControlDataServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> deleteWebSiteMappingRecords(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         List<String> errMsgList = new ArrayList<>();
-        
+
         String webSiteId = (String) context.get("webSiteId");
         boolean includePrimary = Boolean.TRUE.equals(context.get("includePrimary"));
-        
+
         int numRemoved = 0;
         try {
             numRemoved = CmsControlDataUtil.deleteWebSiteMappingRecords(delegator, webSiteId, includePrimary);
@@ -248,7 +248,7 @@ public abstract class CmsControlDataServices {
 
     public static Map<String, Object> addRemovePageViewMappings(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
-        
+
         // NOTE: 2016: perform auth here, this is a frontend service...
         Locale locale = (Locale) context.get("locale");
 
@@ -263,15 +263,15 @@ public abstract class CmsControlDataServices {
 
         try {
             // NOTE: wrecking abstractions here, but CmsViewMapping is simple (CmsViewMapping.remove() is trivial)
-            
+
             if (UtilValidate.isNotEmpty(addViewNameList)) {
                 for(String viewNameExpr : addViewNameList) {
                     if (UtilValidate.isNotEmpty(viewNameExpr)) {
                         Map<String, Object> fields = makeViewMappingCandidateKeyFields(webSiteId, viewNameExpr, locale);
-                        
+
                         // first, remove all existing mappings to other pages for this candidate key, to ensure we add only unique
                         delegator.removeByAnd("CmsViewMapping", fields);
-                        
+
                         // then, add a record for our page
                         fields.put("pageId", pageId);
                         fields.put("active", CmsViewMapping.ACTIVE_INITIAL_VALUE); // NOTE: 2016-12-02: CURRENTLY ALWAYS ACTIVE - TODO? review in future
@@ -280,7 +280,7 @@ public abstract class CmsControlDataServices {
                     }
                 }
             }
-            
+
             if (UtilValidate.isNotEmpty(removeViewNameList)) {
                 for(String viewNameExpr : removeViewNameList) {
                     if (UtilValidate.isNotEmpty(viewNameExpr)) {
@@ -294,7 +294,7 @@ public abstract class CmsControlDataServices {
                     }
                 }
             }
-            
+
             if (UtilValidate.isNotEmpty(removeIdList)) {
                 for(String viewMappingId : removeIdList) {
                     if (UtilValidate.isNotEmpty(viewMappingId)) {
@@ -309,10 +309,10 @@ public abstract class CmsControlDataServices {
             Debug.logError(e, "Cms: " + e.getMessage(), module);
             return ServiceUtil.returnError(e.getMessage());
         }
-    
+
         return ServiceUtil.returnSuccess();
     }
-    
+
     // TODO: localize
     private static Map<String, Object> makeViewMappingCandidateKeyFields(String webSiteId, String viewNameExpr, Locale locale) throws IllegalArgumentException {
         String targetViewName;
@@ -334,7 +334,7 @@ public abstract class CmsControlDataServices {
         }
         return UtilMisc.toMap("webSiteId", webSiteId, "targetViewName", targetViewName);
     }
-    
+
     @SuppressWarnings("serial")
     public static class LocalizedIllegalArgumentException extends IllegalArgumentException {
 
@@ -344,7 +344,7 @@ public abstract class CmsControlDataServices {
             super(s);
             this.localizedMsg = localizedMsg;
         }
-        
+
         @Deprecated
         LocalizedIllegalArgumentException(String s) {
             super(s);
@@ -353,9 +353,9 @@ public abstract class CmsControlDataServices {
 
         public String getLocalizedMsg() {
             return localizedMsg;
-        } 
+        }
     }
-    
+
     public static Map<String, Object> getWebsiteIndexableProcessMappingUris(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         String webSiteId = (String) context.get("webSiteId");

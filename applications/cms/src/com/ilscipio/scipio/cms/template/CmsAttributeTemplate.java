@@ -26,7 +26,7 @@ import com.ilscipio.scipio.cms.template.AttributeExpander.ExpandLang;
 public class CmsAttributeTemplate extends CmsDataObject {
 
     private static final long serialVersionUID = 8475667988447131968L;
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
@@ -39,7 +39,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
      * DEV NOTE: if ever changed, make sure to update the sorting code in {@link CmsComplexTemplate#getExpansionSortedAttributeTemplates}.
      */
     public static final Long DEFAULT_INPUT_POSITION = 0L;
-    
+
     /**
      * Attribute type.
      * NOTE: Type-related implementations can be found in {@link AttributeExpander}.
@@ -49,59 +49,59 @@ public class CmsAttributeTemplate extends CmsDataObject {
         // for now am creating a expandLang=FTL value
         // to handle Freemarker code interpretation, but it could also have been done
         // using a dedicated type here... both could be supported simultaneously anyway, in case compatibility needed.
-        
-        SHORT_TEXT, 
-        LONG_TEXT, 
+
+        SHORT_TEXT,
+        LONG_TEXT,
         //DYNAMIC_LIST, // 2017-02-08: not supported
         BOOLEAN,
         INTEGER,
         // TODO?: NOT CURRENTLY SELECTABLE - NOT IMPLEMENTED - OMITTED FROM DISPLAYVALUES
         COMPLEX_LIST, // NOTE: may be different from DYNAMIC_LIST (old)
         COMPLEX_MAP;
-        
+
         private static final List<Type> displayValues = Collections.unmodifiableList(new ArrayList<>(Arrays.asList(new Type[] {
                 SHORT_TEXT, LONG_TEXT, BOOLEAN, INTEGER
         })));
-        
+
         public static final Set<Type> STRING_TYPES = Collections.unmodifiableSet(EnumSet.of(SHORT_TEXT, LONG_TEXT));
         public static final List<Type> STRING_TYPES_LIST = Collections.unmodifiableList(new ArrayList<>(STRING_TYPES));
 
         public static Set<Type> getStringTypes() {
             return STRING_TYPES;
         }
-        
+
         public static List<Type> getStringTypesList() {
             return STRING_TYPES_LIST;
         }
-        
+
         public boolean isStringType() {
             return STRING_TYPES.contains(this);
         }
-        
+
         public static boolean isStringType(Type type) {
             return type == null || type.isStringType();
         }
-        
+
         public static Type fromString(String str, Type defaultType) throws IllegalArgumentException {
             if (UtilValidate.isEmpty(str)) return defaultType;
             return Enum.valueOf(Type.class, str);
         }
-        
+
         public static Type fromStringSafe(String str, Type defaultType) {
             try {
                 return fromString(str, defaultType);
             } catch(Exception e) {
-                Debug.logWarning("Cms: Invalid attribute type value encountered: '" + str 
+                Debug.logWarning("Cms: Invalid attribute type value encountered: '" + str
                         + "'; using default: '" + defaultType + "'", module);
             }
             return defaultType;
         }
-        
+
         public static List<Type> getDisplayValues() {
             return displayValues;
         }
     }
-    
+
     protected CmsAttributeTemplate(GenericValue entity) {
         super(entity);
     }
@@ -109,7 +109,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public CmsAttributeTemplate(Delegator delegator, Map<String, ?> fields) {
         super(delegator, fields);
     }
-    
+
     protected CmsAttributeTemplate(CmsAttributeTemplate other, Map<String, Object> copyArgs) {
         super(other, copyArgs);
         // we don't have to the IDs here, this is not stored until later so caller can update them
@@ -118,7 +118,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
         //}
     }
 
-    @Override    
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
     }
@@ -127,11 +127,11 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public CmsAttributeTemplate copy(Map<String, Object> copyArgs) throws CmsException {
         return new CmsAttributeTemplate(this, copyArgs);
     }
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -139,12 +139,12 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public void preload(PreloadWorker preloadWorker) {
         super.preload(preloadWorker);
     }
-    
+
     @Override
     protected void verifyNewFields(Delegator delegator, Map<String, Object> fields, boolean isNew) throws CmsException {
         // NOTE: 2017-04-11: we can now safely modify the fields in-place from this call.
         CmsDataObject.trimFields(fields, "targetType");
-        
+
         String groupingField;
         if (UtilValidate.isNotEmpty((String) fields.get("pageTemplateId"))) {
             groupingField = "pageTemplateId";
@@ -169,7 +169,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
             try {
                 AttributeExpander.checkValidJavaType(targetType);
             } catch (ClassNotFoundException e) {
-                throw new CmsInputException("Invalid targetType: " + targetType 
+                throw new CmsInputException("Invalid targetType: " + targetType
                         + ". Should be a short or fully-qualified Java type such as: "
                         + StringUtils.join(AttributeExpander.getJavaTypeExampleList(), ", ") + ", ...", e); // TODO: localize
             }
@@ -207,7 +207,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public String getDefaultValue() {
         return entity.getString("defaultValue");
     }
-    
+
     public String getCleanedDefaultValue() {
         String defVal = getDefaultValue();
         return StringUtils.isNotBlank(defVal) ? defVal : null;
@@ -224,19 +224,19 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public Type getType() {
         return Type.fromStringSafe(getTypeRaw(), Type.SHORT_TEXT);
     }
-    
+
     public String getTypeRaw() {
         return entity.getString("inputType");
     }
-    
+
     public static ExpandLang getDefaultExpandLang() {
         return AttributeExpander.ExpandLang.getDefaultExpandLang();
     }
-    
+
     public void setExpandLang(ExpandLang expandLang) {
         entity.setString("expandLang", expandLang.toString());
     }
-    
+
     /**
      * NOTE: returns system default when null.
      */
@@ -246,46 +246,46 @@ public class CmsAttributeTemplate extends CmsDataObject {
         try {
             return ExpandLang.fromString(expandLangStr, defaultLang);
         } catch(IllegalArgumentException e) {
-            Debug.logWarning("Cms: Error in CmsAttributeTemplate '" + getId() + "': invalid expandLang value encountered: '" + 
+            Debug.logWarning("Cms: Error in CmsAttributeTemplate '" + getId() + "': invalid expandLang value encountered: '" +
                     expandLangStr + "'; using default instead: '" + defaultLang + "'", module);
             return defaultLang;
         }
     }
-    
+
     /**
      * NOTE: returns null as null
      */
     public String getExpandLangRaw() {
         return entity.getString("expandLang");
     }
-    
+
     public AttributeExpander getExpander() {
         return AttributeExpander.getExpander(getExpandLang());
     }
-    
+
     public void setExpandPosition(Long expandPosition) {
         entity.set("expandPosition", expandPosition);
     }
-    
+
     /**
      * The position of attribute evaluation relative to Scripts' inputPosition.
      */
     public Long getExpandPosition() {
         return entity.getLong("expandPosition") != null ? entity.getLong("expandPosition") : DEFAULT_EXPAND_POSITION;
     }
-    
+
     /**
      * Returns true if the script is intended to expand (and possibly evaluate) before
      * given script.
      * <p>
-     * The attributes expands before the script if its expandPosition is lower or equal than the script's 
+     * The attributes expands before the script if its expandPosition is lower or equal than the script's
      * inputPosition (NOTE: goes through its Assoc entity).
      * In other words, for the same position, attribute always runs first.
      */
     public boolean expandsBefore(CmsScriptTemplate scriptTemplate) {
         return getExpandPosition() <= scriptTemplate.getInputPosition();
     }
-    
+
 
     public void setInputPosition(Long inputPosition) {
         entity.set("inputPosition", inputPosition);
@@ -297,7 +297,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public Long getInputPosition() {
         return entity.getLong("inputPosition") != null ? entity.getLong("inputPosition") : DEFAULT_INPUT_POSITION;
     }
-    
+
     public void setMaxLength(Long maxLength) {
         entity.set("maxLength", maxLength);
     }
@@ -305,7 +305,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public Long getMaxLength() {
         return entity.getLong("maxLength") != null ? entity.getLong("maxLength") : null; // no, bad: 0L
     }
-    
+
     public void setRegularExpression(String regexp) {
         entity.set("regularExpression", regexp);
     }
@@ -313,7 +313,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public String getRegularExpression() {
         return entity.getString("regularExpression") != null ? entity.getString("regularExpression") : "";
     }
-    
+
     public String getTargetType() {
         return entity.getString("targetType");
     }
@@ -325,11 +325,11 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public boolean isRequired() {
         return entity.getBoolean("required") != null ? entity.getBoolean("required") : false;
     }
-    
+
     public void setPermission(String roleTypeId) {
         setPermission(Enum.valueOf(UserRole.class, roleTypeId));
     }
-    
+
     public void setPermission(UserRole role) {
         entity.set("permission", role.toString());
     }
@@ -337,7 +337,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public UserRole getPermission() {
         return entity.getString("permission") != null ? Enum.valueOf(UserRole.class, entity.getString("permission")) : UserRole.CMS_EDITOR;
     }
-    
+
     public void setTemplate(CmsComplexTemplate t) {
         if (t instanceof CmsPageTemplate) {
             entity.setString("pageTemplateId", t.getId());
@@ -350,7 +350,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
                     + "or asset templates.");
         }
     }
-    
+
     /**
      * WARN: this is a temporary operation; if caller forgets to update the template,
      * result will be dangling attributes in the system.
@@ -359,11 +359,11 @@ public class CmsAttributeTemplate extends CmsDataObject {
         entity.setString("pageTemplateId", null);
         entity.setString("assetTemplateId", null);
     }
-    
+
     public boolean hasTemplate() {
         return entity.get("pageTemplateId") != null || entity.get("assetTemplateId") != null;
     }
-    
+
     /**
      * TODO: REVIEW: What is this again?
      */
@@ -376,13 +376,13 @@ public class CmsAttributeTemplate extends CmsDataObject {
         preventIfImmutable(); // WARN: currently dangerous if called from rendering!
 
         Map<String, Object> map = super.getDescriptor(locale);
-        map.putAll(UtilMisc.toMap("name", getName(), 
+        map.putAll(UtilMisc.toMap("name", getName(),
                     "id", getId(),
                     "displayName", getDisplayName(),
-                    "type", getType().toString(), 
+                    "type", getType().toString(),
                     "targetType", getTargetType(),
-                    "defaultValue", getDefaultValue(), 
-                    "help", getHelp(), 
+                    "defaultValue", getDefaultValue(),
+                    "help", getHelp(),
                     "required", new Boolean(isRequired()).toString(),
                     "permission", getPermission().toString(),
                     "maxLength", getMaxLength(),
@@ -398,14 +398,14 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public AttributeTemplateWorker getWorkerInst() {
         return AttributeTemplateWorker.worker;
     }
-    
+
     public static AttributeTemplateWorker getWorker() {
         return AttributeTemplateWorker.worker;
     }
 
     public static class AttributeTemplateWorker extends DataObjectWorker<CmsAttributeTemplate> {
         private static final AttributeTemplateWorker worker = new AttributeTemplateWorker();
-        
+
         protected AttributeTemplateWorker() {
             super(CmsAttributeTemplate.class);
         }

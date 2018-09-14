@@ -22,9 +22,9 @@ import com.ilscipio.scipio.cms.CmsException;
 public abstract class CmsObject implements Serializable, Preloadable {
 
     private static final long serialVersionUID = 8922531894662530516L;
-    
+
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     // Cache flags. Note: In general if one or our methods is called with useCache false, that means don't
     // use any kind of cache. Basically you have a generic "useCache" flag passed around
     // and then you have some specific caches (global object, local object, db) which will be
@@ -32,26 +32,26 @@ public abstract class CmsObject implements Serializable, Preloadable {
 
     // 2016: this flag is better if it's hardcoded in methods.
     //private static final boolean USE_CACHE_DEFAULT = true;
-    
+
     // 2016: NOTE: Flags below are all TRUE by default - they're negative flags so they
     // will only disable caching but never enable
-    // NOTE: the 
-    
+    // NOTE: the
+
     static final boolean ALLOW_DB_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.db.allow", true);
     static final boolean ALLOW_LOCAL_OBJ_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.obj.local.allow", true);
     static final boolean ALLOW_GLOBAL_OBJ_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.obj.global.allow", true);
 
-// 2016: currently no occurrences of these. 
+// 2016: currently no occurrences of these.
 //    protected boolean isUseCache() {
 //        // Currently, we don't indicate this on the object itself; caller must specify per method call
 //        // Could also check object member...
 //        return isUseCacheStatic();
 //    }
-//    
+//
 //    protected static boolean isUseCacheStatic() {
 //        return USE_CACHE_DEFAULT;
 //    }
-    
+
     /**
      * Logic to determine if the entity delegator cache should be enabled, based on passed generic
      * useCache bool.
@@ -59,7 +59,7 @@ public abstract class CmsObject implements Serializable, Preloadable {
     protected static boolean isUseDbCacheStatic(boolean useCache) {
         return useCache && ALLOW_DB_CACHE;
     }
-    
+
     protected boolean isUseLocalObjCache(boolean useCache) {
         return useCache && ALLOW_LOCAL_OBJ_CACHE;
     }
@@ -71,16 +71,16 @@ public abstract class CmsObject implements Serializable, Preloadable {
     protected static boolean isUseGlobalObjCacheStatic(boolean useCache) {
         return useCache && ALLOW_GLOBAL_OBJ_CACHE;
     }
-    
+
     /**
      * Returns the delegator associated to this instance, or a default one if somehow not available.
      */
     public abstract Delegator getDelegator();
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY
      * (EVEN if the instance is not physically made immutable!).
      * Essential for thread safety!!!
@@ -88,7 +88,7 @@ public abstract class CmsObject implements Serializable, Preloadable {
     @Override
     public void preload(PreloadWorker preloadWorker) {
     }
-    
+
     /**
      * Throws IllegalStateException if the object is marked immutable.
      * <p>
@@ -103,38 +103,38 @@ public abstract class CmsObject implements Serializable, Preloadable {
                     + " (usually this is due to running editing-mode-only methods on a CMS object cached for live render)");
         }
     }
-    
+
     /**
      * Gets a full Map representation of this object.
      * <p>
      * NOTE: should never be called from live renders (various reasons, including terrible performance).
      * <p>
-     * NOTE: 2017: We should remove use of this in all cases except AJAX - it is not necessary for 
+     * NOTE: 2017: We should remove use of this in all cases except AJAX - it is not necessary for
      * Freemarker and just complicates the screens.
      */
     public Map<String, Object> getDescriptor(Locale locale) {
         preventIfImmutable(); // don't allow in live renders
-        
+
         return new HashMap<>();
     }
-    
+
     public boolean isMajorEntity() {
         return (this instanceof CmsMajorObject);
     }
 
     public static abstract class ObjectWorker<T extends CmsObject> {
-        
+
         /*
          * Cache operations
          */
-        
+
         public void clearMemoryCaches() {
         }
-        
+
         public void clearEntityCaches(Delegator delegator) throws CmsException {
         }
-        
+
     }
 
-    
+
 }

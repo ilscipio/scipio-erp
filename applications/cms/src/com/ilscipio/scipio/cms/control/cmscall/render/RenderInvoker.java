@@ -15,21 +15,21 @@ import com.ilscipio.scipio.cms.control.cmscall.CmsInvoker;
 public abstract class RenderInvoker extends CmsInvoker {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected RenderInvoker(ServletContext servletCtx) {
         super(servletCtx);
     }
-    
+
     public static RenderInvoker getRenderInvoker(ServletContext servletCtx) {
         // Using local CMS page
         return LocalCmsPageRenderInvoker.getRenderInvoker(servletCtx);
     }
-    
+
     // 2016: better to pass CmsPage for local
-//    public abstract void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response, 
+//    public abstract void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response,
 //            ServletContext servletCtx, CmsPageInfo page, CmsView view, String webSiteId) throws CmsCallException, Exception;
-    
-    public abstract void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response, 
+
+    public abstract void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response,
             ServletContext servletCtx, CmsPage cmsPage, CmsView view, String webSiteId, CmsCallType renderMode, Writer writer) throws CmsCallException, Exception;
-    
+
 }

@@ -34,23 +34,23 @@ import freemarker.template.TemplateModelException;
 public abstract class CmsRenderUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
-    private static final RenderExceptionMode liveExceptionMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms", 
+
+    private static final RenderExceptionMode liveExceptionMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms",
             "render.live.exception.mode"));
-    
-    static final RenderExceptionMode directiveLiveExceptionMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms", 
+
+    static final RenderExceptionMode directiveLiveExceptionMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms",
             "render.live.exception.directive.mode"));
-    
+
     protected CmsRenderUtil() {
     }
 
     // ERROR HANDLING
-    
+
     public static RenderExceptionMode getLiveExceptionMode() {
         if (liveExceptionMode != null) return liveExceptionMode;
         return UtilRender.getGlobalRenderExceptionMode();
     }
-    
+
     public static RenderExceptionMode getLiveExceptionMode(ServletContext servletContext) { // NOTE: never returns null
         if (servletContext != null) {
             RenderExceptionMode mode = RenderExceptionMode.valueOfPermissive(servletContext.getAttribute(UtilRender.RENDER_EXCEPTION_MODE_VAR));
@@ -74,7 +74,7 @@ public abstract class CmsRenderUtil {
                 super.handleTemplateExceptionDebug(te, env, out);
             }
         }
-        
+
         protected void handleTemplateExceptionDebugCms(CmsTemplateException cte, TemplateException te, Environment env, Writer out) throws TemplateException {
             // TODO? no localization support... should follow freemarker (?)...
             String msg = encode(cte.getFriendlyMessage(), env);
@@ -91,44 +91,44 @@ public abstract class CmsRenderUtil {
             }
             write(out, msg);
         }
-        
+
         protected boolean isPreviewMode(Environment env) {
             CmsPageContext pageContext = CmsRenderUtil.getBestPageContext(env);
             return pageContext != null && pageContext.isPreview();
         }
-        
+
         protected String makeCmsMsgMarkup(String label, String msg) {
             return "<b>" + label + ":</b> " + msg;
         }
-        
+
         protected String makeCmsMsgMarkup(String msg) {
             return "<b>CMS error:</b> " + msg;
         }
-        
+
         protected void handleTemplateExceptionDebugLegacy(TemplateException te, Environment env, Writer out) throws TemplateException {
             String stackTrace = getStackTrace(te);
             stackTrace = encode(stackTrace, env);
             write(out, stackTrace);
         }
-        
+
         protected String getStackTrace(TemplateException te) {
             StringWriter tempWriter = new StringWriter();
             PrintWriter pw = new PrintWriter(tempWriter, true);
             te.printStackTrace(pw);
             return tempWriter.toString();
         }
-        
+
         protected String encode(String msg, Environment env) {
             if (msg == null) return msg;
             // TODO: REVIEW: this context fetch from stock is an example of why it currently doesn't matter
-            // that we rely on context for security - it's like that everywhere. 
+            // that we rely on context for security - it's like that everywhere.
             UtilCodec.SimpleEncoder simpleEncoder = FreeMarkerWorker.getWrappedObject("simpleEncoder", env);
             if (simpleEncoder != null) {
                 msg = simpleEncoder.encode(msg);
             }
             return msg;
         }
-        
+
         protected void write(Writer out, String msg) {
             try {
                 out.write(msg);
@@ -140,7 +140,7 @@ public abstract class CmsRenderUtil {
 
     /**
      * Error handling for markup-generating transforms and code running within FTL (non-FTL also available),
-     * a.k.a. user directives. 
+     * a.k.a. user directives.
      * <p>
      * DEV NOTE: DO NOT USE THIS FOR RENDERER/INTERNAL CODE.
      * <p>
@@ -158,7 +158,7 @@ public abstract class CmsRenderUtil {
             Map<String, Object> context = null;
             CmsPageContext pageContext = null;
             CmsPageTemplate pageTemplate = null;
-        
+
             context = CmsRenderUtil.getRenderContext(env);
             if (context != null) {
                 // don't use Always on the following...
@@ -174,7 +174,7 @@ public abstract class CmsRenderUtil {
         }
     }
 
-    public static boolean handleDirectiveError(CmsPageContext pageContext, CmsPageTemplate pageTemplate, 
+    public static boolean handleDirectiveError(CmsPageContext pageContext, CmsPageTemplate pageTemplate,
             String label, Throwable t, String msg, RenderExceptionMode liveExMode, Debug.OfbizLogger module) throws CmsTemplateException {
         String sysMsg = msg;
         String userMsg = msg;
@@ -190,12 +190,12 @@ public abstract class CmsRenderUtil {
         }
         return handleDirectiveError(label, t, sysMsg, userMsg, (pageContext != null ? pageContext.isPreview() : false), liveExMode, module);
     }
-    
+
     public static boolean handleDirectiveError(String label, Throwable t, String msg,
             boolean isPreview, RenderExceptionMode liveExMode, String module) throws CmsTemplateException {
         return handleDirectiveError(label, t, msg, isPreview, liveExMode, module);
     }
-    
+
     public static boolean handleDirectiveError(String label, Throwable t, String sysMsg, String userMsg,
             boolean isPreview, RenderExceptionMode liveExMode, Debug.OfbizLogger module) throws CmsTemplateException {
         String msg;
@@ -214,7 +214,7 @@ public abstract class CmsRenderUtil {
         ex.setFriendlyMessage(userMsg + (t != null ? ": " + t.getMessage() : ""));
         throw ex;
     }
-    
+
     /**
      * Get directive live render exception mode, or null if no special config for directives.
      * If specified specificLiveExMode is null, uses the generic one.
@@ -223,14 +223,14 @@ public abstract class CmsRenderUtil {
         if (specificLiveExMode != null) return specificLiveExMode;
         else return getDirectiveLiveRenderExceptionMode();
     }
-    
+
     /**
      * Returns the generic directive live exception mode, or null if no special config for directives.;
      */
     public static RenderExceptionMode getDirectiveLiveRenderExceptionMode() {
         return directiveLiveExceptionMode;
     }
-    
+
     /**
      * Special helper for directives to check what the render mode is going to be when exception is caught.
      * This can be used for alternate output.
@@ -253,10 +253,10 @@ public abstract class CmsRenderUtil {
         if (!isPreview && liveExMode != null) return liveExMode;
         return UtilRender.getRenderExceptionMode(pageContext != null ? pageContext.getRequest() : null);
     }
-    
+
 
     // CONTEXT VARIABLE ACCESSORS
-    
+
     @SuppressWarnings("unchecked")
     public static MapStack<String> getRenderContext(Environment env) throws TemplateModelException {
         TemplateModel pcm = env.getVariable("context");

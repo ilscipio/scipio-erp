@@ -22,7 +22,7 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
     private static final long serialVersionUID = -3008583211100355776L;
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected List<CmsAttributeTemplate> attributeTemplates = null;
 
     protected CmsComplexTemplate(GenericValue entity) {
@@ -32,12 +32,12 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
     protected CmsComplexTemplate(Delegator delegator, Map<String, ?> fields) {
         super(delegator, fields);
     }
-    
+
     protected CmsComplexTemplate(CmsComplexTemplate other, Map<String, Object> copyArgs) {
         super(other, copyArgs);
         this.attributeTemplates = copyAttributeTemplates(this, other.getAttributeTemplates(), copyArgs);
     }
-    
+
     public static List<CmsAttributeTemplate> copyAttributeTemplates(CmsComplexTemplate template, List<CmsAttributeTemplate> otherAttr, Map<String, Object> copyArgs) {
         List<CmsAttributeTemplate> attrList = new ArrayList<>(otherAttr.size());
         for(CmsAttributeTemplate attr : otherAttr) {
@@ -47,16 +47,16 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
         }
         return attrList;
     }
-    
-    @Override    
+
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
     }
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -65,25 +65,25 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
         super.preload(preloadWorker);
         this.attributeTemplates = preloadWorker.preloadDeep(this.getAttributeTemplates());
     }
-    
+
     @Override
     public String getName() {
         return entity.getString("templateName");
     }
-    
+
     public void setName(String name) {
         preventIfImmutable();
         entity.setString("templateName", name);
     }
-    
+
     public String getDescription() {
         return getDescription(entity, null);
     }
-    
+
     public String getDescription(Locale locale) {
         return getDescription(entity, locale);
     }
-    
+
     /**
      * Get description with optional locale.
      * NOTE: the value stored in the entity if present takes precedence over
@@ -93,12 +93,12 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
     public static String getDescription(GenericValue entity, Locale locale) {
         return getStoredOrLocalizedField(entity, "description", locale);
     }
-    
+
     public void setDescription(String description) {
         preventIfImmutable();
         entity.setString("description", description);
     }
-    
+
     public String getTemplateName() {
         return entity.getString("templateName");
     }
@@ -107,16 +107,16 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
         preventIfImmutable();
         entity.set("active", active);
     }
-    
+
     public Boolean getActive() {
         return entity.getBoolean("active");
     }
-    
+
     public void setCreatedBy(String createdBy) {
         preventIfImmutable();
         entity.setString("createdBy", createdBy);
     }
-    
+
     public String getCreatedBy() {
         return entity.getString("createdBy");
     }
@@ -132,7 +132,7 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
             attributeTemplates = new ArrayList<>();
             try {
                 // NOTE: NULL values should sort to top, which matches default of value 0
-                List<GenericValue> ate = entity.getRelated(CmsAttributeTemplate.class.getSimpleName(), null, 
+                List<GenericValue> ate = entity.getRelated(CmsAttributeTemplate.class.getSimpleName(), null,
                         UtilMisc.toList("expandPosition ASC NULLS FIRST", "inputPosition ASC NULLS FIRST"), false);
                 for (GenericValue at : ate) {
                     attributeTemplates.add(CmsAttributeTemplate.getWorker().makeFromValue(at));
@@ -144,15 +144,15 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
         }
         return attributeTemplates;
     }
-    
+
     /**
-     * Returns the attribute templates sorted first by expandPosition (global order relative to CmsScriptTemplates) 
+     * Returns the attribute templates sorted first by expandPosition (global order relative to CmsScriptTemplates)
      * and then by inputPosition (relative to each other only).
      */
     public List<CmsAttributeTemplate> getExpansionSortedAttributeTemplates() {
         return getAttributeTemplates();
     }
-    
+
     /**
      * Returns attributes sorted by inputPosition only (NOT by expandPosition).
      * <p>
@@ -163,7 +163,7 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
         if (srcAttributeTemplates == null) {
             return null;
         }
-        
+
         List<CmsAttributeTemplate> attributeTemplates = new ArrayList<>(srcAttributeTemplates);
         Collections.<CmsAttributeTemplate> sort(attributeTemplates, new Comparator<CmsAttributeTemplate>() {
             @Override
@@ -171,13 +171,13 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
                 return first.getInputPosition().compareTo(second.getInputPosition());
             }
         });
-        
+
         return attributeTemplates;
     }
 
     public void addAttributeTemplate(CmsAttributeTemplate template) {
         preventIfImmutable();
-        
+
         try {
             List<CmsAttributeTemplate> templates = getAttributeTemplates();
             if (templates != null) {
@@ -192,7 +192,7 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
     @Override
     public void store() throws CmsException {
         super.store();
-        
+
         if (this.attributeTemplates != null) {
             for(CmsAttributeTemplate attributeTemplate : this.attributeTemplates) {
                 if (!attributeTemplate.hasTemplate()) {
@@ -202,7 +202,7 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
             }
         }
     }
-    
+
     /**
      * Explicitly Stores only the template record. For special circumstances.
      */
@@ -221,7 +221,7 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
         }
         return rowsAffected + super.remove();
     }
-    
+
     @Override
     public Map<String, Object> getDescriptor(Locale locale) {
         preventIfImmutable(); // WARN: currently dangerous if called from rendering!
@@ -229,15 +229,15 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
         Map<String, Object> descriptor = super.getDescriptor(locale);
         descriptor.put("name", getName());
         descriptor.put("description", getDescription(locale));
-        
+
         List<CmsAttributeTemplate> attributeTemplates = getLocallySortedAttributeTemplates();
-        
+
         List<Map<String, ?>> atts = new ArrayList<>();
         for (CmsAttributeTemplate attributeTemplate : attributeTemplates) {
             atts.add(attributeTemplate.getDescriptor(locale));
         }
         descriptor.put("attributes", atts);
-        
+
         return descriptor;
     }
 

@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class CheckOutEvents extends org.ofbiz.order.shoppingcart.CheckOutEvents {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected CheckOutEvents() {
     }
-    
+
     /**
      * NOT IMPLEMENTED - CURRENTLY HANDLED BY CustomerEvents.xml#checkCreateUpdateAnonUser.
      * <p>
@@ -22,7 +22,7 @@ public abstract class CheckOutEvents extends org.ofbiz.order.shoppingcart.CheckO
      * Currently it will always create a new anon user if the screen requested it.
      * This at least may prevent (or cause!) some issues with session.
      * <p>
-     * It will use a minimal set of info (first and last name) to create the Person; 
+     * It will use a minimal set of info (first and last name) to create the Person;
      * the rest should be handled by other events.
      * <p>
      * It stores the fake userLogin (userLoginId "anonymous", partyId to a new party) in session.
@@ -40,6 +40,6 @@ public abstract class CheckOutEvents extends org.ofbiz.order.shoppingcart.CheckO
         */
         throw new UnsupportedOperationException("Not implemented");
     }
-    
-    
+
+
 }

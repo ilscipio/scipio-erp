@@ -16,7 +16,7 @@ import org.ofbiz.entity.GenericValue;
  */
 public abstract class CmsMenuUtil {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static CmsMenu getMenuById(Delegator delegator, String menuId) {
         GenericValue value;
         CmsMenu cmsMenu = null;
@@ -30,7 +30,7 @@ public abstract class CmsMenuUtil {
         }
         return cmsMenu;
     }
-    
+
     public static Object getMenuJsonById(Delegator delegator, String menuId) {
         GenericValue value;
         Object returnObj = new ArrayList<Object>();
@@ -47,5 +47,5 @@ public abstract class CmsMenuUtil {
             Debug.logError(e, module);
         }
         return returnObj;
-    }    
+    }
 }

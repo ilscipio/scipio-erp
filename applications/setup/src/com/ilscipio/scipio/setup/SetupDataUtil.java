@@ -31,8 +31,8 @@ import com.ilscipio.scipio.setup.ContactMechPurposeInfo.FacilityContactMechPurpo
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeInfo;
 
 /**
- * Raw setup step data check logic. 
- * USE {@link SetupWorker} TO INVOKE THESE DURING REAL SETUP. 
+ * Raw setup step data check logic.
+ * USE {@link SetupWorker} TO INVOKE THESE DURING REAL SETUP.
  * This is for general reuse and to keep the core logic clear/separate.
  */
 public abstract class SetupDataUtil {
@@ -42,27 +42,27 @@ public abstract class SetupDataUtil {
     public static final Set<String> ORGANIZATION_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
             "GENERAL_LOCATION", "PAYMENT_LOCATION", "BILLING_LOCATION"
     );
-        
+
     public static final Set<String> FACILITY_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
             "SHIP_ORIG_LOCATION", "SHIPPING_LOCATION"
     );
-    
+
     public static final Set<String> USER_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
             "GENERAL_LOCATION", "SHIPPING_LOCATION"
     );
-    
+
     protected SetupDataUtil() {
     }
 
     /*
-     * ******************************************* 
-     * Setup step elemental data state queries 
+     * *******************************************
+     * Setup step elemental data state queries
      * *******************************************
      */
 
     /*
      * These serve as partial substitutes for the screen groovy scripts.
-     * 
+     *
      * These methods return 2-3 different things at the same time (TODO: maybe separate in future; combined for performance reasons):
      * * the "completed" state boolean (always)
      * * generic queries needed for all screens
@@ -70,11 +70,11 @@ public abstract class SetupDataUtil {
      *   -> if the ID requested is invalid or inapplicable (new/create), the method must NOT return
      *      any main record (facility/store/etc), but it must still evaluate the "completed" boolean.
      *      it may return extra records if needed (e.g. defaultFacility)
-     *      
+     *
      * WARN: params map may contain unvalidated user input - others in the map may be already validated.
      * The caller (SetupWorker.CommonStepState subclasses) handles the implicit deps and decides which params must be pre-validated.
      * DO NOT call these methods from screen - all must go through SetupWorker.
-     * 
+     *
      * TODO: these could return error message via ServiceUtil.returnError + let caller log, but not much point yet.
      */
 
@@ -87,11 +87,11 @@ public abstract class SetupDataUtil {
         String orgPartyId = (String) params.get("orgPartyId");
 
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Organization");
-        
+
         if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
             GenericValue party = delegator.findOne("Party", UtilMisc.toMap("partyId", orgPartyId), useCache);
             if (party != null) {
-                GenericValue partyRole = delegator.findOne("PartyRole", 
+                GenericValue partyRole = delegator.findOne("PartyRole",
                         UtilMisc.toMap("partyId", orgPartyId, "roleTypeId", "INTERNAL_ORGANIZATIO"), useCache);
                 if (partyRole != null) {
                     GenericValue partyGroup = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", orgPartyId), useCache);
@@ -100,12 +100,12 @@ public abstract class SetupDataUtil {
                         result.put("party", party);
                         result.put("partyGroup", partyGroup);
                         result.put("coreCompleted", true);
-                        
+
                         // TODO?: check for CARRIER roleTypeId??
-                        
+
                         PartyContactMechPurposeInfo contactMechInfo = PartyContactMechPurposeInfo.forParty(delegator, dispatcher, orgPartyId, useCache, "Setup: Organization: ");
                         contactMechInfo.resultsToMap(result);
-                        
+
                         Set<String> generalAddressContactMechPurposes = null;
                         GenericValue generalAddressContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "GENERAL_LOCATION", useCache);
                         if (generalAddressContactMech == null) {
@@ -121,12 +121,12 @@ public abstract class SetupDataUtil {
                         result.put("generalAddressContactMechPurposes", generalAddressContactMechPurposes);
                         boolean generalAddressStandaloneCompleted = (generalAddressContactMech != null) && setContainsAll(generalAddressContactMechPurposes, ORGANIZATION_MAINADDR_PURPOSES);
                         result.put("generalAddressStandaloneCompleted", generalAddressStandaloneCompleted);
-                        
+
                         result.put("locationPurposes", ORGANIZATION_MAINADDR_PURPOSES);
                         Map<String, GenericValue> locationContactMechs = contactMechInfo.getPartyContactMechForPurposeMap(delegator, ORGANIZATION_MAINADDR_PURPOSES, useCache);
                         boolean locationAddressesCompleted = (locationContactMechs.size() >= ORGANIZATION_MAINADDR_PURPOSES.size());
                         result.put("locationAddressesCompleted", locationAddressesCompleted);
-                        
+
                         GenericValue workPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PHONE_WORK", useCache);
                         GenericValue faxPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "FAX_NUMBER", useCache);
                         GenericValue primaryEmailContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PRIMARY_EMAIL", useCache);
@@ -135,14 +135,14 @@ public abstract class SetupDataUtil {
                         result.put("faxPhoneContactMech", faxPhoneContactMech);
                         result.put("primaryEmailContactMech", primaryEmailContactMech);
                         // not required anymore
-//                        boolean simpleContactMechsCompleted = (workPhoneContactMech != null) && 
+//                        boolean simpleContactMechsCompleted = (workPhoneContactMech != null) &&
 //                                (faxPhoneContactMech != null) &&
 //                                (primaryEmailContactMech != null);
 //                        result.put("simpleContactMechsCompleted", simpleContactMechsCompleted);
-                        
+
                         boolean contactMechsCompleted = locationAddressesCompleted; // && simpleContactMechsCompleted
                         result.put("contactMechsCompleted", contactMechsCompleted);
-                        
+
                         if (contactMechsCompleted) {
                             result.put("completed", true);
                         }
@@ -158,7 +158,7 @@ public abstract class SetupDataUtil {
         }
         return result;
     }
-    
+
     public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
             throws GeneralException {
         Map<String, Object> result = UtilMisc.toMap("completed", false, "coreCompleted", false);
@@ -206,7 +206,7 @@ public abstract class SetupDataUtil {
             userPartyId = party.getString("partyId");
             GenericValue userUserLogin = EntityUtil.getFirst(party.getRelated("UserLogin", UtilMisc.toMap("partyId", userPartyId), null, false));
             GenericValue userPerson = party.getRelatedOne("Person", false);
-            
+
             result.put("userUserLogin", userUserLogin);
             result.put("userPerson", userPerson);
             result.put("userPartyId", userPartyId);
@@ -294,7 +294,7 @@ public abstract class SetupDataUtil {
                 Map<String, Object>  entityImportCtx = UtilMisc.newMap();
                 GenericValue systemUserLogin = delegator.findOne("UserLogin", true, UtilMisc.toMap("userLoginId", "system"));
                 entityImportCtx.put("isUrl", "Y");
-                entityImportCtx.put("filename", defaultGLUrl);  
+                entityImportCtx.put("filename", defaultGLUrl);
                 entityImportCtx.put("userLogin", systemUserLogin);
                 Map<String, Object> defaultGLImportResult = dispatcher.runSync("entityImport", entityImportCtx, 0, true);
                 if (ServiceUtil.isSuccess(defaultGLImportResult)) {
@@ -306,7 +306,7 @@ public abstract class SetupDataUtil {
                     Debug.logError("Error importing default GL [" + importPredefinedGL + "]", module);
                 }
             }
-            
+
             GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("glAccountId", topGlAccountId));
             if (UtilValidate.isNotEmpty(topGlAccountId)) {
                 if (topGlAccount == null) {
@@ -336,7 +336,7 @@ public abstract class SetupDataUtil {
                     }
                 }
             }
-            
+
             boolean isAcctgPreferencesSet = false;
             GenericValue partyAcctgPreference = delegator.findOne("PartyAcctgPreference", false, UtilMisc.toMap("partyId", orgPartyId));
             if (UtilValidate.isNotEmpty(partyAcctgPreference)) {
@@ -345,21 +345,21 @@ public abstract class SetupDataUtil {
             }
 
             if (topGlAccount != null) {
-                result.put("coreCompleted", true);                
+                result.put("coreCompleted", true);
                 boolean isFiscalPeriodSet = false;
                 if (UtilValidate.isEmpty(glAccountOrganization)) {
                     glAccountOrganization = delegator.makeValue("GlAccountOrganization", UtilMisc.toMap("glAccountId", topGlAccountId, "organizationPartyId", orgPartyId,
                             "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate", UtilDateTime.nowTimestamp()));
                     delegator.create(glAccountOrganization);
-                }                
+                }
                 Timestamp now = UtilDateTime.nowTimestamp();
-                List<EntityCondition> openedCurrentFiscalPeriodsCond = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.NOT_EQUAL, "Y"));                
+                List<EntityCondition> openedCurrentFiscalPeriodsCond = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.NOT_EQUAL, "Y"));
                 openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, now)));
-                openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, now)));                               
-                
+                openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, now)));
+
                 GenericValue openedCurrentFiscalPeriods = EntityQuery.use(delegator).from("CustomTimePeriod").where(openedCurrentFiscalPeriodsCond, EntityOperator.AND).queryFirst();
                 if (UtilValidate.isNotEmpty(openedCurrentFiscalPeriods)) {
-                	isFiscalPeriodSet = true;
+                    isFiscalPeriodSet = true;
                 }
 
                 if (isAcctgPreferencesSet && isFiscalPeriodSet) {
@@ -398,7 +398,7 @@ public abstract class SetupDataUtil {
         // if new or failed create, we must still determine if overall "completed", but we cannot return
         // a specific facility ID - see the result map assignments below
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Facility");
-        
+
         GenericValue facility = null;
         if (UtilValidate.isNotEmpty(orgPartyId)) {
             if (UtilValidate.isNotEmpty(facilityId) && !isNewOrFailedCreate) { // ignore ID if new or failed create
@@ -418,7 +418,7 @@ public abstract class SetupDataUtil {
                 if (UtilValidate.isNotEmpty(productStoreId)) {
                     // this case selects the best facility for the passed store
                     // TODO: REVIEW: this is not reusing the getStoreStepStateData for now because
-                    // facility step now comes first and will create endless loop 
+                    // facility step now comes first and will create endless loop
                     GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), useCache);
                     if (productStore != null) {
                         if (orgPartyId.equals(productStore.getString("payToPartyId"))) {
@@ -429,8 +429,8 @@ public abstract class SetupDataUtil {
                                     if (orgPartyId.equals(facility.getString("ownerPartyId"))) {
                                         ; // ok
                                     } else {
-                                        Debug.logError("Setup: Warehouse '" + facilityId + "'" 
-                                                + " does not belong to organization '" 
+                                        Debug.logError("Setup: Warehouse '" + facilityId + "'"
+                                                + " does not belong to organization '"
                                                 + orgPartyId + "'; ignoring", module);
                                         facility = null;
                                     }
@@ -441,7 +441,7 @@ public abstract class SetupDataUtil {
                                 // TODO: REVIEW: there are multiple reasons for this;
                                 // * does not support ProductStoreFacility-only or multi-facility for now;
                                 // * product store was created without a facility
-                                Debug.logWarning("Setup: Cannot get warehouse for store '" 
+                                Debug.logWarning("Setup: Cannot get warehouse for store '"
                                         + productStoreId + "'" + " because ProductStore.inventoryFacilityId is not set", module);
                             }
                         } else {
@@ -456,7 +456,7 @@ public abstract class SetupDataUtil {
                     List<GenericValue> facilities = delegator.findByAnd("Facility", UtilMisc.toMap("ownerPartyId", orgPartyId), null, useCache);
                     facility = EntityUtil.getFirst(facilities);
                     if (facilities.size() >= 2) {
-                        Debug.logInfo("Setup: Multiple warehouses found for organization '" + orgPartyId 
+                        Debug.logInfo("Setup: Multiple warehouses found for organization '" + orgPartyId
                                 + "'; selecting first ('" + facility.getString("facilityId") + "')", module);
                     }
                 }
@@ -472,17 +472,17 @@ public abstract class SetupDataUtil {
 
             // supporting one address only for now
 //            Map<String, Object> fields = UtilMisc.toMap("facilityId", facilityId);
-//            List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("FacilityContactMechPurpose", 
+//            List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("FacilityContactMechPurpose",
 //                    fields, UtilMisc.toList("fromDate DESC"), useCache));
 //            if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
 //                result.put("facilityContactMechPurposeList", contactMechPurposes);
 //            }
-            
+
             FacilityContactMechPurposeInfo contactMechInfo = FacilityContactMechPurposeInfo.forFacility(delegator, dispatcher, facilityId, useCache, "Setup: Facility: ");
             if (!isNewOrFailedCreate) {
                 contactMechInfo.resultsToMap(result);
             }
-            
+
             Set<String> shipAddressContactMechPurposes = null;
             GenericValue shipAddressContactMech = contactMechInfo.getFacilityContactMechForPurpose(delegator, "SHIP_ORIG_LOCATION", useCache);
             if (shipAddressContactMech == null) {
@@ -507,7 +507,7 @@ public abstract class SetupDataUtil {
             Map<String, GenericValue> locationContactMechs = contactMechInfo.getFacilityContactMechForPurposeMap(delegator, FACILITY_MAINADDR_PURPOSES, useCache);
             boolean locationAddressesCompleted = (locationContactMechs.size() >= FACILITY_MAINADDR_PURPOSES.size());
             result.put("locationAddressesCompleted", locationAddressesCompleted);
-            
+
             boolean completed = locationAddressesCompleted;
             result.put("completed", completed);
         }
@@ -522,11 +522,11 @@ public abstract class SetupDataUtil {
         String prodCatalogId = (String) params.get("prodCatalogId");
 
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Catalog");
-        
+
         List<GenericValue> productStoreCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog")
                 .where("productStoreId", productStoreId).orderBy("sequenceNum ASC").filterByDate().cache(useCache).queryList();
         result.put("productStoreCatalogList", productStoreCatalogList);
-        
+
         GenericValue productStoreCatalog = null;
         if (UtilValidate.isNotEmpty(prodCatalogId) && !isNewOrFailedCreate) { // ignore ID if new or failed create
             List<GenericValue> filteredList = EntityUtil.filterByAnd(productStoreCatalogList, UtilMisc.toMap("prodCatalogId", prodCatalogId));
@@ -537,7 +537,7 @@ public abstract class SetupDataUtil {
         } else {
             productStoreCatalog = EntityUtil.getFirst(productStoreCatalogList);
             if (productStoreCatalogList.size() >= 2) {
-                Debug.logInfo("Setup: Store '" + productStoreId + "' has multiple active catalogs, selecting first ('" 
+                Debug.logInfo("Setup: Store '" + productStoreId + "' has multiple active catalogs, selecting first ('"
                         + productStoreCatalog.getString("prodCatalogId") + "') as default for setup"
                         + " (catalogs: " + getEntityStringFieldValues(productStoreCatalogList, "prodCatalogId", new ArrayList<>(productStoreCatalogList.size())) + ")",
                         productStoreCatalog.getString("prodCatalogId"));
@@ -545,7 +545,7 @@ public abstract class SetupDataUtil {
                 Debug.logInfo("Setup: Store '" + productStoreId + "' has no active catalog", module);
             }
         }
-        
+
         if (productStoreCatalog != null) {
             GenericValue prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", useCache);
             if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
@@ -554,7 +554,7 @@ public abstract class SetupDataUtil {
             }
             result.put("completed", true);
         }
-        
+
         return result;
     }
 
@@ -564,9 +564,9 @@ public abstract class SetupDataUtil {
 
         String productStoreId = (String) params.get("productStoreId");
         String orgPartyId = (String) params.get("orgPartyId");
-        
+
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Store");
-        
+
         GenericValue productStore = null;
         if (UtilValidate.isNotEmpty(productStoreId) && !isNewOrFailedCreate) { // ignore ID if new or failed create
             if (UtilValidate.isNotEmpty(orgPartyId)) {
@@ -587,7 +587,7 @@ public abstract class SetupDataUtil {
                 if (UtilValidate.isNotEmpty(productStores)) {
                     productStore = productStores.get(0);
                     if (productStores.size() >= 2) {
-                        Debug.logInfo("Setup: Organization '" + orgPartyId 
+                        Debug.logInfo("Setup: Organization '" + orgPartyId
                             + "' has multiple ProductStores (" + productStores.size()
                             + "); assume first as default for the setup process (productStoreId: "
                             + productStore.getString("productStoreId") + ")", module);
@@ -608,7 +608,7 @@ public abstract class SetupDataUtil {
             String facilityId = productStore.getString("inventoryFacilityId");
             if (UtilValidate.isNotEmpty(facilityId)) {
                 Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "facilityId", facilityId);
-                List<GenericValue> productFacilityList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreFacility", 
+                List<GenericValue> productFacilityList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreFacility",
                         fields, UtilMisc.toList("sequenceNum ASC"), useCache));
                 if (UtilValidate.isNotEmpty(productFacilityList)) {
                     productStoreCompleted = true;
@@ -623,7 +623,7 @@ public abstract class SetupDataUtil {
                 result.put("facilityId", facilityId);
             }
             result.put("productStoreCompleted", productStoreCompleted);
-            
+
             if (includeWebsite) {
                 Map<String, Object> websiteParams = new HashMap<>(params);
                 websiteParams.put("productStoreId", productStoreId);
@@ -631,10 +631,10 @@ public abstract class SetupDataUtil {
                 //websiteParams.put("unspecReqWebsite", isNewOrFailedCreate);
                 Map<String, Object> websiteResult = getWebsiteStepStateData(delegator, dispatcher, websiteParams, useCache);
                 result.putAll(websiteResult); // this magically works for now
-                
+
                 boolean websiteCompleted = Boolean.TRUE.equals(websiteResult.get("completed"));
                 result.put("websiteCompleted", websiteCompleted);
-                
+
                 result.put("completed", productStoreCompleted && websiteCompleted);
             } else {
                 result.put("completed", productStoreCompleted);
@@ -645,15 +645,15 @@ public abstract class SetupDataUtil {
     public static Map<String, Object> getStoreStepStateData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache) throws GeneralException {
         return getStoreStepStateData(delegator, dispatcher, params, true, useCache);
     }
-    
+
     public static Map<String, Object> getWebsiteStepStateData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
             throws GeneralException {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
 
         String productStoreId = (String) params.get("productStoreId");
-        
+
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Website");
-        
+
         GenericValue webSite = null;
         Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId);
         List<GenericValue> webSiteList = delegator.findByAnd("WebSite", fields, null, useCache);
@@ -663,25 +663,25 @@ public abstract class SetupDataUtil {
                 for(GenericValue ws : webSiteList) {
                     if (webSiteId.equals(ws.getString("webSiteId"))) {
                         webSite = ws;
-                        break;    
+                        break;
                     }
                 }
                 if (webSite == null) {
-                    Debug.logError("Setup: Received webSiteId '" + webSiteId 
-                            + "' does not match any WebSite for productStoreId '" + productStoreId 
+                    Debug.logError("Setup: Received webSiteId '" + webSiteId
+                            + "' does not match any WebSite for productStoreId '" + productStoreId
                             + "' in system; ignoring and using default (if any)", module);
                 }
             }
         }
         // NOTE: this isn't fully accurate (for the bad webSiteId param case), but won't matter for now
         if (webSite == null) webSite = getFirstMaxOneExpected(webSiteList, fields);
-        
+
         // will need this always
         //if (!isNewOrFailedCreate) {
         result.put("webSiteList", webSiteList);
         //}
         result.put("webSiteCount", webSiteList.size());
-        
+
         if (webSite != null) {
             if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
                 result.put("webSiteId", webSite.getString("webSiteId"));
@@ -693,7 +693,7 @@ public abstract class SetupDataUtil {
     }
 
     /*
-     * ******************************************* 
+     * *******************************************
      * Generic helpers
      * *******************************************
      */
@@ -702,13 +702,13 @@ public abstract class SetupDataUtil {
         GenericValue value = EntityUtil.getFirst(values);
         if (values != null && values.size() >= 2) {
             // essential for debugging
-            Debug.logWarning("Setup: Expected one " + value.getEntityName() 
+            Debug.logWarning("Setup: Expected one " + value.getEntityName()
                 + " record at most, but found " + values.size() + " records matching for query: "
                 + query + "; using first only (" + value.getPkShortValueString() + ")", module);
         }
         return value;
     }
-    
+
     // TODO: REVIEW: unclear which code should order fromDate by ASC or DESC, so in the meantime,
     // use this to centralize any fix needed (for setup code only!)
     private static final List<String> defaultContactOrderBy = UtilMisc.unmodifiableArrayList("fromDate DESC");
@@ -724,17 +724,17 @@ public abstract class SetupDataUtil {
         }
         return out;
     }
-    
+
     private static boolean isEventError(Map<String, Object> params) {
         return SetupEvents.isPreviousEventSavedError(params);
     }
-    
+
     // Exact request states
-    
+
     static boolean isNewRecordRequest(Map<String, Object> params, String recordTypeCamel) {
         return UtilMisc.booleanValueVersatile(params.get("new" + recordTypeCamel), false);
     }
-    
+
     /**
      * Generalized record action check, naming pattern: "isXxxYyy" where Xxx = action, Yyy = record type (step name).
      */
@@ -745,59 +745,59 @@ public abstract class SetupDataUtil {
             return UtilMisc.booleanValueVersatile(params.get("is" + actionNameCamel + recordTypeCamel), false);
         }
     }
-    
+
     static boolean isActionRecordSuccessRequest(Map<String, Object> params, String actionNameCamel, String recordTypeCamel) {
         return isActionRecordRequest(params, actionNameCamel, recordTypeCamel) && !isEventError(params);
     }
-    
+
     static boolean isActionRecordFailedRequest(Map<String, Object> params, String actionNameCamel, String recordTypeCamel) {
         return isActionRecordRequest(params, actionNameCamel, recordTypeCamel) && isEventError(params);
     }
-    
+
     static boolean isCreateRecordRequest(Map<String, Object> params, String recordTypeCamel) {
         return UtilMisc.booleanValueVersatile(params.get("isCreate" + recordTypeCamel), false);
     }
-    
+
     static boolean isCreateRecordSuccessRequest(Map<String, Object> params, String recordTypeCamel) {
         return isCreateRecordRequest(params, recordTypeCamel) && !isEventError(params);
     }
-    
+
     static boolean isCreateRecordFailedRequest(Map<String, Object> params, String recordTypeCamel) {
         return isCreateRecordRequest(params, recordTypeCamel) && isEventError(params);
     }
-    
+
     static boolean isDeleteRecordRequest(Map<String, Object> params, String recordTypeCamel) {
         return UtilMisc.booleanValueVersatile(params.get("isDelete" + recordTypeCamel), false);
     }
-    
+
     static boolean isDeleteRecordSuccessRequest(Map<String, Object> params, String recordTypeCamel) {
         return isDeleteRecordRequest(params, recordTypeCamel) && !isEventError(params);
     }
-    
+
     static boolean isDeleteRecordFailedRequest(Map<String, Object> params, String recordTypeCamel) {
         return isDeleteRecordRequest(params, recordTypeCamel) && isEventError(params);
     }
-    
+
     static boolean isAddRecordRequest(Map<String, Object> params, String recordTypeCamel) {
         return UtilMisc.booleanValueVersatile(params.get("isAdd" + recordTypeCamel), false);
     }
-    
+
     static boolean isAddRecordSuccessRequest(Map<String, Object> params, String recordTypeCamel) {
         return isAddRecordRequest(params, recordTypeCamel) && !isEventError(params);
     }
-    
+
     static boolean isAddRecordFailedRequest(Map<String, Object> params, String recordTypeCamel) {
         return isAddRecordRequest(params, recordTypeCamel) && isEventError(params);
     }
-    
+
     // Aggregate/high-level states
-    
+
     /**
-     * Returns true if "new" form was requested 
+     * Returns true if "new" form was requested
      * OR if a form was submitted as create and creation failed
      * OR it's a delete request.
      * <p>
-     * For second case, if create form was submitted with a specific ID requested but error because the ID already exists, 
+     * For second case, if create form was submitted with a specific ID requested but error because the ID already exists,
      * we don't want the page to look up existing, because it discards the user input.
      * <p>
      * newXxx: passed when loading the page/form
@@ -806,23 +806,23 @@ public abstract class SetupDataUtil {
      */
     static boolean isUnspecificRecordRequest(Map<String, Object> params, String recordTypeCamel) {
         //stepName = stepName.substring(0, 1).toUpperCase() + stepName.substring(1);
-        
+
         // SPECIAL: this can be used internally to override
         Boolean unspecific = UtilMisc.booleanValue(params.get("unspecReq" + recordTypeCamel));
         if (unspecific != null) return unspecific;
-        
-        return isNewRecordRequest(params, recordTypeCamel) || 
-                isCreateRecordFailedRequest(params, recordTypeCamel) || 
+
+        return isNewRecordRequest(params, recordTypeCamel) ||
+                isCreateRecordFailedRequest(params, recordTypeCamel) ||
                 isDeleteRecordSuccessRequest(params, recordTypeCamel) ||
                 isAddRecordFailedRequest(params, recordTypeCamel);
     }
-    
+
     static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String recordTypeCamel) {
-        return isNewRecordRequest(params, recordTypeCamel) || 
+        return isNewRecordRequest(params, recordTypeCamel) ||
                 isCreateRecordFailedRequest(params, recordTypeCamel);
     }
-    
-    
+
+
     private static <T> boolean setContainsAll(Set<T> set, Iterable<T> values) {
         if (set == null) return false;
         for(T value : values) {

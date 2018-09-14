@@ -62,7 +62,7 @@ import freemarker.template.TemplateModel;
  * As with <code>@ofbizUrl</code>, by default args may get auto-escaped when passed, and the resulting
  * URL is not html-escaped. The best way to handle all this is to use <code>escapeAs='html'</code>,
  * which prevents most issues and automatically prevents the escaping of the arguments, before finally
- * escaping the whole thing.  
+ * escaping the whole thing.
  * <p>
  * The default for <code>paramDelim</code> is <code>&amp;</code> (default) if rawParams resolves
  * to false, and <code>&</code> if it resolves to false. It can be overridden as explicit arg.
@@ -75,14 +75,14 @@ import freemarker.template.TemplateModel;
 public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
 
     private static final long serialVersionUID = 4165213097346590960L;
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final PageLinkDirective instance = new PageLinkDirective();
-    
-    static final RenderExceptionMode urlLiveExceptionMode = CmsRenderUtil.getDirectiveLiveRenderExceptionMode(RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms", 
-            "render.live.exception.directive.url.mode")));   
-    
+
+    static final RenderExceptionMode urlLiveExceptionMode = CmsRenderUtil.getDirectiveLiveRenderExceptionMode(RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms",
+            "render.live.exception.directive.url.mode")));
+
     public PageLinkDirective() {
         super();
     }
@@ -90,7 +90,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
     public static PageLinkDirective getInstance() {
         return instance;
     }
-    
+
     /**
      * @see freemarker.template.TemplateDirectiveModel#execute(freemarker.core.Environment,
      *      java.util.Map, freemarker.template.TemplateModel[],
@@ -104,7 +104,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
         Writer out = env.getOut();
         if (output != null) out.write(output);
     }
-    
+
     static String makeLinkFromFtl(Environment env, Map<String, TemplateModel> args, TemplateModel[] loopVars, TemplateDirectiveBody body)
             throws TemplateException, IOException {
         MapStack<String> context = CmsRenderUtil.getRenderContextAlways(env);
@@ -113,22 +113,22 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
         //HttpServletRequest request = pageContext.getRequest();
         // TODO: REVIEW: may be special for CMS vs other transforms
         //RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
-        
+
         final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
         boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
         boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
         final boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
-        
+
         Object webSiteIdObj = TransformUtil.getBooleanOrStringArg(args, "webSiteId", null, false, rawParams);
         Object lookupWebSiteIdObj = TransformUtil.getBooleanOrStringArg(args, "lookupWebSiteId", null, false, rawParams);
-        
+
         String webSiteId = (webSiteIdObj instanceof String) ? (String) webSiteIdObj : null;
         String lookupWebSiteId = (lookupWebSiteIdObj instanceof String) ? (String) lookupWebSiteIdObj : null;
         boolean useWebSiteIdLookup = !Boolean.FALSE.equals(lookupWebSiteIdObj); // true default
-        
+
         String webSiteLookupMode = TransformUtil.getStringArg(args, "webSiteLookupMode"); // SCIPIO: new
-        
+
         // NOTE: although this appears similar to our @ofbizUrl, there is small difference:
         // here we bind the logical "interWebapp" boolean to the presence of "webSiteId".
         // the difference from ofbizXxxUrl is that CMS pages always need a webSiteId one way
@@ -139,7 +139,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
         if (interWebapp == null) {
             interWebapp = UtilValidate.isNotEmpty(webSiteId);
         }
-        
+
         // TODO: REVIEW: may be special for CMS vs other transforms
         //Boolean fullPath = TransformUrlUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
         Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath");
@@ -157,11 +157,11 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
         if (UtilValidate.isEmpty(lookupWebSiteId)) {
             lookupWebSiteId = webSiteId;
         }
-        
+
         // TODO: REVIEW: may be special for CMS vs other transforms
         //// for email context
         //webSiteId = TransformUrlUtil.determineWebSiteId(webSiteId, renderEnvType, env);
-        
+
         String output = null;
         Map<String, Object> lookupFields = new HashMap<>();
         String value = null;
@@ -184,18 +184,18 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
         // the name parameter is there, so let's try to find the link
         if (UtilValidate.isNotEmpty(value)) {
             // get page name from directive
-            try {        
+            try {
                 Delegator delegator = (Delegator) context.get("delegator");
-                
+
                 // this should have been done earlier, using non-static delegator
                 //// we have to make sure the delegator is set so the
                 //// RequestHandler can look up the WebSite
                 //pageContext.getRequest().setAttribute("delegator", getDefaultDelegator());
                 // get link
-                
+
                 // NOTE: 2016: for live renders we will use the cache here.
                 final boolean useCache = !pageContext.isPreview();
-                
+
                 CmsPage page = null;
                 if (isFindById) {
                     page = CmsPage.getWorker().findById(delegator, value, useCache);
@@ -205,7 +205,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
                 if (page == null) {
                     throw new IllegalArgumentException("Could not locate page using fields: " + lookupFields.toString());
                 }
-                
+
                 String paramStr;
                 if (paramsModel == null) {
                     paramStr = null;
@@ -219,7 +219,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
                 } else {
                     throw new IllegalArgumentException("pageUrl params: expect string or map, but instead got: " + paramsModel.getClass());
                 }
-                
+
                 if (extLoginKey == Boolean.TRUE) {
                     // FIXME: kludge
                     if (paramStr == null) {
@@ -242,7 +242,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
         }
         return output;
     }
-    
+
     /**
      * Gets page by name and webSiteId.
      */
@@ -256,10 +256,10 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
                 webSiteIdLegacyLookup = false;
             }
         }
-        
+
         // 2016: double-lookup:
         // do a manual fast cached DB lookup to find the pageId, and afterward re-query
-        // the CmsPage using using the findById call - 
+        // the CmsPage using using the findById call -
         // this is probably the best way to reuse the memory instances (fewer duplicates)
         GenericValue pageValue = null;
         if (webSiteIdLegacyLookup) {
@@ -286,8 +286,8 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
             page = CmsPage.getWorker().findById(delegator, pageValue.getString("pageId"), useCache);
         }
         return page;
-    } 
-    
+    }
+
     private static CmsPage getPageByNameAlways(Delegator delegator, Map<String, Object> lookupFields, String webSiteLookupMode, boolean useCache) throws GenericEntityException {
         CmsPage page = getPageByName(delegator, lookupFields, webSiteLookupMode, useCache);
         if (page == null) {
@@ -308,7 +308,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
      */
     public static String makeLinkAuto(CmsPageContext context, CmsPage page, Boolean interWebapp, String webSiteId,
             Boolean fullPath, Boolean secure, Boolean encode, String paramStr) {
-        try {        
+        try {
             return makeLinkAutoEx(context, page, interWebapp, webSiteId, fullPath, secure, encode, paramStr);
         } catch (Exception e) {
             final String errMsg = "Could not create link to page '" + (page != null ? page.getId() : "null") + "'";
@@ -316,7 +316,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
             return null;
         }
     }
-    
+
     /**
      * Builds the URL string for a page, specified by pageId, by wrapping around and emulating
      * the standard RequestHandler.makeLinkAuto call.
@@ -329,7 +329,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
      */
     public static String makeLinkAuto(CmsPageContext context, String pageId, Boolean interWebapp, String webSiteId,
             Boolean fullPath, Boolean secure, Boolean encode, String paramStr) {
-        try {  
+        try {
             final boolean useCache = !context.isPreview();
             CmsPage page = CmsPage.getWorker().findByIdAlways(context.getDelegator(), pageId, useCache);
             return makeLinkAutoEx(context, page, interWebapp, webSiteId, fullPath, secure, encode, paramStr);
@@ -339,7 +339,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
             return null;
         }
     }
-    
+
     /**
      * Builds the URL string for a page, specified by pageName and webSiteId, by wrapping around and emulating
      * the standard RequestHandler.makeLinkAuto call.
@@ -355,7 +355,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
      */
     public static String makeLinkAutoByName(CmsPageContext context, String pageName, Boolean interWebapp, String webSiteId,
             Boolean fullPath, Boolean secure, Boolean encode, String paramStr, String webSiteLookupMode) {
-        try {  
+        try {
             final boolean useCache = !context.isPreview();
             CmsPage page = getPageByNameAlways(context.getDelegator(), UtilMisc.<String, Object> toMap("pageName", pageName, "webSiteId", webSiteId), webSiteLookupMode, useCache);
             return makeLinkAutoEx(context, page, interWebapp, webSiteId, fullPath, secure, encode, paramStr);
@@ -365,7 +365,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
             return null;
         }
     }
-    
+
     public static String makeLinkAutoEx(CmsPageContext context, CmsPage page, Boolean interWebapp, String webSiteId,
             Boolean fullPath, Boolean secure, Boolean encode, String paramStr) {
         String path = page.getPrimaryPathExpanded(UtilValidate.isNotEmpty(webSiteId) ? webSiteId : context.getWebSiteId());
@@ -373,7 +373,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
             throw new IllegalArgumentException("Page '" + page.getId() + "' does not have a primary path "
                     + "for webSiteId '" + webSiteId + "'; cannot build link");
         }
-        
+
         if (paramStr != null && !paramStr.isEmpty()) {
             if (paramStr.startsWith("?")) {
                 path += paramStr;
@@ -381,21 +381,21 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
                 path += "?" + paramStr;
             }
         }
-        
+
         final boolean absUrl = false; // the page path (sourcePath) is never from server root; always relative to context root
         final boolean controller = false; // TODO?: no way to exploit controller currently, not sure how could...
-        
+
         // 2016: FIXME: this should be calling RequestHandler.makeLinkAutoEx, but no such method exists yet...
         return RequestHandler.makeLinkAuto(context.getRequest(), context.getResponse(),
                 path, absUrl, interWebapp, webSiteId, controller, fullPath, secure, encode);
     }
-    
 
-    
+
+
     /**
      * Builds the URL string for a page using current request.
      * 2016: TODO: WARN: REVIEW: this maybe should not be considered public at this time.
-     * 
+     *
      * @param request
      *            the current request
      * @param page

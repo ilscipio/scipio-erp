@@ -26,13 +26,13 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
     private static final long serialVersionUID = 2461746703166121074L;
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected enum VersionStatus {
         ACTIVE,
         INACTIVE,
         UNKNOWN // Not all calling code needs to know status; affect only when necessary.
     }
-    
+
     private VersionStatus nextVersionStatus = VersionStatus.UNKNOWN;
 
     protected CmsTemplateVersion(GenericValue entity) {
@@ -42,16 +42,16 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
     public CmsTemplateVersion(Delegator delegator, Map<String, ?> fields) {
         super(delegator, fields);
     }
-    
+
     protected CmsTemplateVersion(CmsTemplateVersion other, Map<String, Object> copyArgs) {
         super(other, copyArgs);
     }
-    
-    @Override    
+
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
     }
-    
+
     @Override
     public abstract CmsTemplateVersion copy(Map<String, Object> copyArgs) throws CmsException;
 
@@ -60,11 +60,11 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
      * specified template.
      */
     public abstract CmsTemplateVersion copy(Map<String, Object> copyArgs, CmsVersionedComplexTemplate<?, ?> template) throws CmsException;
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -78,24 +78,24 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
     public String getName() {
         return getTemplate().getName();
     }
-    
+
     /**
      * Marks version as inactive (only applied upon store).
      */
     public void setAsInactiveVersion() {
         nextVersionStatus = VersionStatus.INACTIVE;
     }
-    
+
     /**
      * Marks version as active (only applied upon store).
      */
     public void setAsActiveVersion() {
         nextVersionStatus = VersionStatus.ACTIVE;
     }
-    
-    /** 
+
+    /**
      * Commits the template version and any other necessary data.
-     * <p> 
+     * <p>
      * @see org.CmsDataObject.cms.data.CmsDataObject#store()
      */
     @Override
@@ -104,7 +104,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
         super.store();
         storeVersionStatus();
     }
-    
+
     /**
      * SPECIAL: it's possible we have memory instance of template that wasn't stored when
      * this instance was created; if so this synchs the ID.
@@ -115,11 +115,11 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             String templateId = null;
             if (template != null) {
                 templateId = template.getId();
-            } 
+            }
             if (templateId != null) {
                 setTemplateId(templateId);
             } else {
-                throw new CmsException("internal or schema error: " + this.getClass().getSimpleName() + " '" + getId() 
+                throw new CmsException("internal or schema error: " + this.getClass().getSimpleName() + " '" + getId()
                     + "' has no template association (template ID null) and unable to determine one");
             }
         }
@@ -130,29 +130,29 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
         // This must be done AFTER the template version is stored.
         if (nextVersionStatus == VersionStatus.ACTIVE) {
             getActiveVersionWorkerInst().createOrUpdateRecord(getDelegator(), getTemplateId(), getVersionId());
-            
+
             getTemplate().updateStoreLocalActiveContent(getTemplateContentId());
         } else if (nextVersionStatus == VersionStatus.INACTIVE) {
             getActiveVersionWorkerInst().removeRecord(getDelegator(), getTemplateId(), getVersionId());
-            
+
             getTemplate().updateStoreLocalActiveContent(null);
         } else {
             // always update in case contentId changed on the active version without actual status change
             getTemplate().updateStoreLocalActiveContent(null);
         }
     }
-    
+
     protected abstract ActiveVersionWorker<?, ?> getActiveVersionWorkerInst();
-    
+
     public abstract String getTemplateId();
-    
+
     public abstract CmsVersionedComplexTemplate<?, ?> getTemplate();
-    
+
     protected abstract void setTemplate(CmsVersionedComplexTemplate<?, ?> template);
 
     protected abstract void setTemplateId(String templateId);
 
-    
+
     public String getVersionId() {
         return getId();
     }
@@ -160,10 +160,10 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
     @Override
     public int remove() {
         // Remove active status (always run this, even if not active, just in case)
-        return getActiveVersionWorkerInst().removeRecord(getDelegator(), getTemplateId(), getVersionId()) + 
+        return getActiveVersionWorkerInst().removeRecord(getDelegator(), getTemplateId(), getVersionId()) +
                 super.remove();
     }
-    
+
     public static <T extends CmsTemplateVersion> boolean areSameVersion(T first, T second) {
         if (first != null && second != null) {
             String firstVersionId = first.getVersionId();
@@ -176,17 +176,17 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             return false;
         }
     }
-    
+
     public <T extends CmsTemplateVersion> boolean isSameVersion(T other) {
         return areSameVersion(this, other);
     }
-    
+
     /**
      * Determines if this is an active version.
      * <p>
      * knownInfo is merely an optimization. May be null. May be set by caller to avoid
      * excess queries in loops (could encapsulate this in an iterator later).
-     * 
+     *
      * @param knownInfo
      * @return
      */
@@ -196,12 +196,12 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
         } else {
             return isSameVersion(getTemplate().getActiveVersion());
         }
-    }  
-    
+    }
+
     public boolean isActiveVersion() {
         return isActiveVersion(null);
     }
-    
+
     public boolean isLastVersion(ExtendedInfo knownInfo) {
         if (knownInfo != null && knownInfo.getLastVersionId() != null) {
             return knownInfo.getLastVersionId().equals(getVersionId());
@@ -209,11 +209,11 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             return isSameVersion(getTemplate().getLastVersion());
         }
     }
-    
+
     public boolean isLastVersion() {
         return isLastVersion(null);
     }
-    
+
     public boolean isFirstVersion(ExtendedInfo knownInfo) {
         if (knownInfo != null && knownInfo.getFirstVersionId() != null) {
             return knownInfo.getFirstVersionId().equals(getVersionId());
@@ -221,19 +221,19 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             return isSameVersion(getTemplate().getFirstVersion());
         }
     }
-   
+
     public boolean isFirstVersion() {
         return isFirstVersion(null);
     }
-    
+
     Date getOriginalVersionDate() {
         return (Date) entity.get("origVersionDate");
     }
-    
+
     void setOriginalVersionDate(Date date) {
         entity.set("origVersionDate", date);
     }
-    
+
     public Date getVersionDate() {
         Date result = getOriginalVersionDate();
         if (UtilValidate.isEmpty(result)) {
@@ -241,38 +241,38 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
         }
         return result;
     }
-    
+
     public String getCreatedBy() {
         return entity.getString("createdBy");
     }
-    
+
     public void setCreatedBy(String createdBy) {
         entity.set("createdBy", createdBy);
     }
-    
+
     public String getCreatorName() {
         try {
             return CmsUtil.getPersonDisplayName(getDelegator(), getCreatedBy());
         } catch (GenericEntityException e) {
             throw new CmsException(
                 "Could not retrieve user for page template version " + getVersionId(), e);
-        }  
+        }
     }
-    
+
     void putRawDataIntoMap(Map<String, Object> in) {
         in.putAll(entity);
     }
-    
+
     Map<String, Object> getRawDataAsMap() {
         Map<String, Object> result = new HashMap<>();
         putRawDataIntoMap(result);
         return result;
     }
-    
+
     /**
      * Puts this template versions's fields into a map resembling its entity.
-     * 
-     * @param in 
+     *
+     * @param in
      * @param minimalInfoOnly   if true, returns only necessary/raw data (entity contents);
      *                          otherwise, returns a template-friendly map
      * @param knownInfo         for optimization purposes; may be null
@@ -282,7 +282,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
         // Special overrides
         in.put("versionId", getVersionId()); // Some instances may have special IDs
         in.put("versionDate", getVersionDate());
-        
+
         if (!minimalInfoOnly) {
             //ExtendedInfo knownInfoLoc = (knownInfo != null ? knownInfo : new ExtendedInfo());
             in.put("isActive", isActiveVersion(knownInfo));
@@ -290,21 +290,21 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             in.put("isFirst", isFirstVersion(knownInfo));
         }
     }
-    
+
     public void putIntoMap(Map<String, Object> in) {
         putIntoMap(in, false, null);
     }
-    
+
     public Map<String, Object> getAsMap(boolean minimalInfoOnly, ExtendedInfo knownInfo) {
         Map<String, Object> result = new HashMap<>();
         putIntoMap(result, minimalInfoOnly, knownInfo);
         return result;
     }
-    
+
     public Map<String, Object> getAsMap() {
         return getAsMap(false, null);
     }
-    
+
     @SuppressWarnings("serial")
     public static class ExtendedInfo implements Serializable {
         private String activeVersionId = null;
@@ -324,7 +324,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             }
             setActiveVersionId(verId);
         }
-        
+
         public String getLastVersionId() {
             return lastVersionId;
         }
@@ -338,7 +338,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             }
             setLastVersionId(verId);
         }
-        
+
         public String getFirstVersionId() {
             return firstVersionId;
         }
@@ -353,21 +353,21 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             setFirstVersionId(verId);
         }
     }
-    
+
     /**
      * Worker class to help manipulate the CmsXxxVersionState entities procedurally and
-     * internally within CmsXxxVersion code (CmsXxxVersionState should be abstracted by 
+     * internally within CmsXxxVersion code (CmsXxxVersionState should be abstracted by
      * CmsXxxVersion class).
      * <p>
      * NOTE: This is also used for some non-template e.g. CmsPage/Version, so this is
      * kept separate from XxxTemplateWorker.
      */
     public static abstract class ActiveVersionWorker<T extends CmsDataObject, S extends CmsDataObject> {
-    
+
         protected abstract String getStateEntityName();
-    
+
         protected abstract String getRecordIdFieldName();
-        
+
         public GenericValue makeRecord(Delegator delegator, String templateId, String versionId) {
             GenericValue activeRecord = delegator.makeValue(getStateEntityName());
             activeRecord.set(getRecordIdFieldName(), templateId);
@@ -375,11 +375,11 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             activeRecord.set("versionStateId", "CMS_VER_ACTIVE");
             return activeRecord;
         }
-        
+
         public void updateRecord(Delegator delegator, GenericValue activeRecord, String versionId) {
             activeRecord.set("versionId", versionId);
         }
-        
+
         public GenericValue createOrUpdateRecord(Delegator delegator, String templateId, String versionId) throws CmsException {
             GenericValue activeRecord = getRecord(delegator, templateId);
             if (activeRecord == null) {
@@ -393,16 +393,16 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
                 throw new CmsException(e);
             }
         }
-                    
+
         public GenericValue getRecord(Delegator delegator, String templateId) throws CmsException {
             try {
-                return delegator.findOne(getStateEntityName(), 
+                return delegator.findOne(getStateEntityName(),
                         UtilMisc.toMap(getRecordIdFieldName(), templateId, "versionStateId", "CMS_VER_ACTIVE"), false);
             } catch (GenericEntityException e) {
                 throw new CmsException(e);
             }
         }
-        
+
         public String getRecordVersionId(Delegator delegator, String templateId) throws CmsException {
             GenericValue record = getRecord(delegator, templateId);
             if (record != null) {
@@ -410,12 +410,12 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             }
             return null;
         }
-        
+
         public GenericValue getRecord(Delegator delegator, String templateId, String versionId) throws CmsException {
             GenericValue result = null;
             List<GenericValue> activeRecords;
             try {
-                activeRecords = delegator.findByAnd(getStateEntityName(), 
+                activeRecords = delegator.findByAnd(getStateEntityName(),
                         UtilMisc.toMap(getRecordIdFieldName(), templateId, "versionId", versionId, "versionStateId", "CMS_VER_ACTIVE"), null, false);
             } catch (GenericEntityException e) {
                 throw new CmsException(e);
@@ -425,9 +425,9 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
             }
             return result;
         }
-        
+
         /**
-         * Makes the active template version procedurally for a given page template inactive. 
+         * Makes the active template version procedurally for a given page template inactive.
          * If none, causes no issue.
          */
         public int removeRecord(Delegator delegator, String templateId) throws CmsException {
@@ -437,13 +437,13 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
                 throw new CmsException(e);
             }
         }
-        
+
         /**
          * Makes the given template version inactive. If already inactive, causes no issue.
          */
         public int removeRecord(Delegator delegator, String templateId, String versionId) throws CmsException {
             try {
-                return delegator.removeByAnd(getStateEntityName(), 
+                return delegator.removeByAnd(getStateEntityName(),
                         UtilMisc.toMap(getRecordIdFieldName(), templateId, "versionId", versionId, "versionStateId", "CMS_VER_ACTIVE"));
             } catch (GenericEntityException e) {
                 throw new CmsException(e);

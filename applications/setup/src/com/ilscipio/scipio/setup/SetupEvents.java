@@ -16,16 +16,16 @@ import org.ofbiz.base.util.UtilValidate;
 public abstract class SetupEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected SetupEvents() {
     }
-    
+
     /**
      * Returns the next setup step AND clears the cached setup state/worker in request attributes.
      */
     public static String getNextSetupStep(HttpServletRequest request, HttpServletResponse response) {
         savePreviousEventErrors(request, response); // SPECIAL: needed for worker to know if event success or fail
-        
+
         SetupWorker worker = null;
         try {
             SetupWorker.clearCached(request); // in case previous events cached stuff for a different step
@@ -41,7 +41,7 @@ public abstract class SetupEvents {
             return "error";
         }
     }
-    
+
     public static String getSubmittedSetupStep(HttpServletRequest request, HttpServletResponse response) {
         try {
             return SetupWorker.getWorker(request).getSubmittedStep();
@@ -52,18 +52,18 @@ public abstract class SetupEvents {
             return "error";
         }
     }
-    
+
     /**
      * This uses a hack to force the effective step to the name of the request uri, in the form:
      * setup[stepname] which gets lowercased.
      */
     public static String setEffectiveSetupStep(HttpServletRequest request, HttpServletResponse response) {
         savePreviousEventErrors(request, response); // SPECIAL: needed for worker to know if event success or fail
-        
+
         SetupWorker worker = SetupWorker.getWorker(request);
-        
+
         worker.setEffectiveStep(SetupWorker.ERROR_STEP); // in case fail
-        
+
         String thisRequestUri = (String) request.getAttribute("thisRequestUri");
         if (thisRequestUri == null || !thisRequestUri.startsWith("setup")) {
             Debug.logError("Setup: setSubmittedSetupStep: controller error: thisRequestUri is not in \"setup[Step]\" name format"
@@ -71,7 +71,7 @@ public abstract class SetupEvents {
             request.setAttribute("_ERROR_MESSAGE_", "INTERNAL ERROR: please contact developers"); // shouldn't happen (TODO: localize)
             return "error";
         }
-        
+
         String setupStep = thisRequestUri.substring("setup".length()).toLowerCase();
         if (!worker.getAllStepValues().contains(setupStep)) {
             Debug.logError("Setup: setSubmittedSetupStep: controller error: thisRequestUri \"setup[Step]\" name does not designate a valid setup step "
@@ -79,11 +79,11 @@ public abstract class SetupEvents {
             request.setAttribute("_ERROR_MESSAGE_", "INTERNAL ERROR: please contact developers"); // shouldn't happen (TODO: localize)
             return "error";
         }
-        
+
         worker.setEffectiveStep(setupStep);
         return "success";
     }
-    
+
     /**
      * Saves the previous event errors in special request attributes, because they get removed
      * and this messes up the SetupWorker.
@@ -93,11 +93,11 @@ public abstract class SetupEvents {
         request.setAttribute("_SETUP_ERROR_MESSAGE_", request.getAttribute("_ERROR_MESSAGE_"));
         return "success";
     }
-    
+
     public static boolean isPreviousEventSavedError(Map<String, Object> params) {
         Object errListObj = params.get("_SETUP_ERROR_MESSAGE_LIST_");
         return (errListObj instanceof Collection && UtilValidate.isNotEmpty(UtilGenerics.<String>checkCollection(errListObj))) ||
                 UtilValidate.isNotEmpty((String)params.get("_SETUP_ERROR_MESSAGE_"));
     }
-    
+
 }

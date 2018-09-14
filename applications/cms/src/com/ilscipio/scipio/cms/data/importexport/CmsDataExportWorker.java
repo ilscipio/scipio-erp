@@ -93,19 +93,19 @@ import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
 public abstract class CmsDataExportWorker implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected static final int DEFAULT_TRANSACTION_TIMEOUT = 3600;
     protected static final int LOG_RECORD_COUNT_INTERVAL = 500;
-    
+
     private static final List<String> extEntityOrder = UtilMisc.unmodifiableArrayList("DataResource", "ElectronicText", "Content");
-    
+
     public static final String LOG_PREFIX = "Cms: Data Export: ";
-    
+
     /******************************************************/
     /* Essential/Configuration Variables */
     /******************************************************/
     // NOTE: See cmsExportData* service interfaces for descriptions of worker options
-    
+
     protected final Delegator delegator;
     // DEV NOTE: final could be removed on some of these, using to prevent errors
     protected final CmsEntityInfo entityInfo;
@@ -126,7 +126,7 @@ public abstract class CmsDataExportWorker implements Serializable {
     protected final String pmpsMappingTypeId; // NOTE: this is pre-included in entityCondMap
     protected final boolean doSpecialProcessViewMappingFilter;
     protected final boolean mediaExportVariants;
-    
+
     /******************************************************/
     /* State Variables */
     /******************************************************/
@@ -134,20 +134,20 @@ public abstract class CmsDataExportWorker implements Serializable {
     private Set<String> seenContentIds = new LinkedHashSet<>(); // SCIPIO: prevent duplicate outs and allows delayed output when recordGroupingByType
     private Set<String> seenCmsProcessMappingIds = new LinkedHashSet<>(); // using with doSpecialProcessViewMappingFilter
     private ModelEntity currentRecordModel = null;
-    private String currentRecordName = null; 
+    private String currentRecordName = null;
     private Set<String> currentContentIdFieldNames = null;
     private PrintWriter writer = null;
-    
-    
+
+
     /******************************************************/
     /* Constructors */
     /******************************************************/
-    
+
     /**
      * Base common worker args.
      * NOTE: See cmsExportData* service interfaces for descriptions of worker options
      * <p>
-     * Initialized from defaults and/or presets. 
+     * Initialized from defaults and/or presets.
      * The last assignment to a field gets priority, unless null was passed in which case ignored;
      * this is how defaults are handled (slow but clear).
      * <p>
@@ -155,16 +155,16 @@ public abstract class CmsDataExportWorker implements Serializable {
      * In case they don't is the reason for <T> which allows "return (T) this;" for one free level of subclassing later.
      */
     @SuppressWarnings("unchecked")
-    public static class CommonWorkerArgs<T extends CommonWorkerArgs<T>> { 
+    public static class CommonWorkerArgs<T extends CommonWorkerArgs<T>> {
         // context
         final Delegator delegator;
         final CmsEntityInfo entityInfo;
-        
+
         PresetConfig presetConfig = null; // currently this is only the last applied preset
         boolean useTrans = true;
         boolean newTrans = false;
         int transTimeout = DEFAULT_TRANSACTION_TIMEOUT;
-        
+
         // general options
         Collection<String> targetEntityNames;
         Collection<String> enterEntityNames; // used in Object grouping mode only
@@ -175,7 +175,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         EntityCondition entityDateCond = null;
         Map<String, EntityCondition> entityCondMap = new HashMap<>(); // NOTE: only affects the main queries, not the slave queries in Object grouping mode
         EntityFindOptions mainEfo;
-        
+
         // mode-specific options
         RecordGrouping recordGrouping = null; // default would depend on file modes...
         boolean includeMajorDeps = false;
@@ -187,12 +187,12 @@ public abstract class CmsDataExportWorker implements Serializable {
         String pmpsMappingTypeId = null; // NOTE: when the args are finalized, this is simply merged as conditions into entityCondMap (convenience option)
 
         Boolean mediaExportVariants = null;
-        
-        public CommonWorkerArgs(Delegator delegator) { 
+
+        public CommonWorkerArgs(Delegator delegator) {
             this.delegator = delegator;
             this.entityInfo = CmsEntityInfo.getInst(this.delegator);
         }
-        
+
         public T applyPreset(PresetConfig preset) {
             if (preset == null) return (T) this;
             this.presetConfig = preset;
@@ -206,24 +206,24 @@ public abstract class CmsDataExportWorker implements Serializable {
 
         /**
          * this is used to apply the entity names from the preset to the lateral entity traversing instead
-         * of the bulk main queries. In order for this to take effect, 
+         * of the bulk main queries. In order for this to take effect,
          */
-        protected void setEnterEntityNamesFromPresetInternal(PresetConfig preset) { 
+        protected void setEnterEntityNamesFromPresetInternal(PresetConfig preset) {
             if (preset != null) {
                 this.enterEntityNames = preset.getEntityNames();
             }
         }
-        
+
         /**
          * this is used to apply the entity names from the preset to the lateral entity traversing instead
-         * of the bulk main queries. In order for this to take effect, 
+         * of the bulk main queries. In order for this to take effect,
          */
-        protected void setEnterMajorEntityNamesFromPresetInternal(PresetConfig preset) { 
+        protected void setEnterMajorEntityNamesFromPresetInternal(PresetConfig preset) {
             if (preset != null) {
                 this.enterMajorEntityNames = preset.getEntityNames();
             }
         }
-        
+
         public Delegator getDelegator() { return delegator; }
         public boolean isUseTrans() { return useTrans; }
         public boolean isNewTrans() { return newTrans; }
@@ -243,7 +243,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         public String getAttribTmplAssocType() { return attribTmplAssocType; }
         public String getPmpsMappingTypeId() { return pmpsMappingTypeId; }
         public Boolean getMediaExportVariants() { return mediaExportVariants; }
-        
+
         // NOTE: set* methods ignore null values. for string and collections you can override with empty string and collection, however.
         //public T setDelegator(Delegator delegator) { this.delegator = delegator; return (T) this; } // don't change this
         public T setUseTrans(boolean useTrans) { this.useTrans = useTrans; return (T) this; }
@@ -268,19 +268,19 @@ public abstract class CmsDataExportWorker implements Serializable {
         public T setIncludeMajorDeps(boolean includeMajorDeps) { this.includeMajorDeps = includeMajorDeps; return (T) this; }
         public T setMaxRecordsPerFile(int maxRecordsPerFile) { this.maxRecordsPerFile = maxRecordsPerFile; return (T) this; }
         public T setAttribTmplAssocType(String attribTmplAssocType) { this.attribTmplAssocType = attribTmplAssocType; return (T) this; }
-        public T setPmpsMappingTypeId(String pmpsMappingTypeId) { this.pmpsMappingTypeId = pmpsMappingTypeId; return (T) this; } 
-        public T setMediaExportVariants(Boolean mediaExportVariants) { this.mediaExportVariants = mediaExportVariants; return (T) this; } 
-        
-        public T setAllFromMap(Map<String, ?> ctx) { 
-            applyPresetFromMap(ctx); 
-            setFieldsFromMap(ctx); 
-            return (T) this; 
+        public T setPmpsMappingTypeId(String pmpsMappingTypeId) { this.pmpsMappingTypeId = pmpsMappingTypeId; return (T) this; }
+        public T setMediaExportVariants(Boolean mediaExportVariants) { this.mediaExportVariants = mediaExportVariants; return (T) this; }
+
+        public T setAllFromMap(Map<String, ?> ctx) {
+            applyPresetFromMap(ctx);
+            setFieldsFromMap(ctx);
+            return (T) this;
         }
-        public T applyPresetFromMap(Map<String, ?> ctx) { 
+        public T applyPresetFromMap(Map<String, ?> ctx) {
             if (ctx.containsKey("presetConfigName")) applyPreset((String) ctx.get("presetConfigName"));
             if (ctx.containsKey("enterPresetConfigName")) setEnterEntityNamesFromPreset((String) ctx.get("enterPresetConfigName"));
             if (ctx.containsKey("enterMajorPresetConfigName")) setEnterMajorEntityNamesFromPreset((String) ctx.get("enterMajorPresetConfigName"));
-            return (T) this; 
+            return (T) this;
         }
         public T setFieldsFromMap(Map<String, ?> ctx) {
             if (ctx.containsKey("targetEntityNames")) setTargetEntityNames(UtilGenerics.<String>checkCollection(ctx.get("targetEntityNames")));
@@ -288,28 +288,28 @@ public abstract class CmsDataExportWorker implements Serializable {
             if (ctx.containsKey("enterMajorEntityNames")) setEnterMajorEntityNames(UtilGenerics.<String>checkCollection(ctx.get("enterMajorEntityNames")));
             if (ctx.containsKey("attribTmplAssocType")) setAttribTmplAssocType(getString(ctx, "attribTmplAssocType"));
             if (ctx.containsKey("pmpsMappingTypeId")) setPmpsMappingTypeId(getString(ctx, "pmpsMappingTypeId"));
-            
+
             if (ctx.containsKey("recordGrouping")) setRecordGrouping(getString(ctx, "recordGrouping"));
             if (ctx.containsKey("exportFilesAsTextData")) setExportFilesAsTextData((Boolean) ctx.get("exportFilesAsTextData"));
             if (ctx.containsKey("includeMajorDeps")) setIncludeMajorDeps((Boolean) ctx.get("includeMajorDeps"));
             if (ctx.containsKey("includeContentRefs")) setIncludeContentRefs((Boolean) ctx.get("includeContentRefs"));
             if (ctx.containsKey("maxRecordsPerFile")) setMaxRecordsPerFile((Integer) ctx.get("maxRecordsPerFile"));
-            
+
             if (ctx.containsKey("entityCond")) setEntityCond((EntityCondition) ctx.get("entityCond"));
             if (ctx.containsKey("entityDateCond")) setEntityDateCond((EntityCondition) ctx.get("entityDateCond"));
             if (ctx.containsKey("entityCondMap")) setEntityCondMap(UtilGenerics.<String, EntityCondition>checkMap(ctx.get("entityCondMap")));
-            
+
             if (ctx.containsKey("mainEfo")) setMainEfo((EntityFindOptions) ctx.get("mainEfo"));
             if (Boolean.TRUE.equals(ctx.get("useCommonEfo"))) {
                 setCommonEfo();
             }
             if (ctx.containsKey("transTimeout")) setTransTimeout((Integer) ctx.get("transTimeout"));
-     
-            return (T) this; 
+
+            return (T) this;
         }
-        
+
         private String getString(Map<String, ?> ctx, String key) { return (String) ctx.get(key); }
-        
+
         // Finalization methods
         /**
          * Returns copy of entityCondMap plus attribTmplAssocType and pmpsMappingTypeId factored in.
@@ -325,7 +325,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             }
             return effCondMap;
         }
-        
+
         protected Set<String> getEffectiveTargetEntityNames() {
             return entityInfo.filterCmsEntityNames((targetEntityNames != null) ? getTargetEntityNames() : Collections.<String>emptySet());
         }
@@ -341,12 +341,12 @@ public abstract class CmsDataExportWorker implements Serializable {
             return entityInfo.filterMajorCmsEntityNames(getEnterMajorEntityNames());
         }
     }
-    
+
     // NOTE: may have more args subclass later, but simplified to 1.5 for now, as most args could be reused
     public static class GenericWorkerArgs extends CommonWorkerArgs<GenericWorkerArgs> {
         public GenericWorkerArgs(Delegator delegator) { super(delegator); }
     }
-    
+
     protected CmsDataExportWorker(CommonWorkerArgs<?> args) throws IllegalArgumentException {
         this.delegator = args.getDelegator();
         this.useTrans = args.isUseTrans();
@@ -376,7 +376,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         if (mediaExportVariants == null) mediaExportVariants = getTargetSpecialEntityNames().contains("CmsMediaVariants");
         this.mediaExportVariants = mediaExportVariants;
     }
-    
+
     protected CmsDataExportWorker(CmsDataExportWorker other, Delegator delegator) {
         this.delegator = (delegator != null) ? delegator : other.delegator;
         this.useTrans = other.useTrans;
@@ -398,7 +398,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         this.doSpecialProcessViewMappingFilter = other.doSpecialProcessViewMappingFilter;
         this.mediaExportVariants = other.mediaExportVariants;
     }
-    
+
     /**
      * Clones the worker but with a fresh new state, with optional replacement delegator (pass null to keep).
      */
@@ -416,7 +416,7 @@ public abstract class CmsDataExportWorker implements Serializable {
     public static MultiFileWorker makeMultiFileWorker(GenericWorkerArgs args) throws IllegalArgumentException {
         return new MultiFileWorker(args);
     }
-    
+
     /******************************************************/
     /* Getters/Setters/Info */
     /******************************************************/
@@ -424,7 +424,7 @@ public abstract class CmsDataExportWorker implements Serializable {
     public Delegator getDelegator() {
         return delegator;
     }
-    
+
     /**
      * Gets the target CMS entity names (i.e. gotten via passedEntityNames request parameter).
      * NOTE: These may be reordered compared to the ones passed to the controller.
@@ -432,7 +432,7 @@ public abstract class CmsDataExportWorker implements Serializable {
     public Set<String> getTargetEntityNames() {
         return targetEntityNames;
     }
-    
+
     /**
      * Gets the SPECIAL target CMS entity names (i.e. gotten via passedEntityNames request parameter), can include fake entities,
      * e.g. "CmsMedia".
@@ -441,14 +441,14 @@ public abstract class CmsDataExportWorker implements Serializable {
     public Set<String> getTargetSpecialEntityNames() {
         return targetSpecialEntityNames;
     }
-    
+
     /**
      * Returns {@link #getTargetEntityNames} + {@link #getTargetSpecialEntityNames}.
      */
     public Set<String> getTargetCombinedEntityNames() {
         return targetCombinedEntityNames;
     }
-    
+
     /**
      * Sanity check, don't use in implementation.
      */
@@ -459,15 +459,15 @@ public abstract class CmsDataExportWorker implements Serializable {
     public EntityCondition getEntityCond() {
         return entityCond;
     }
-    
+
     public EntityCondition getEntityDateCond() {
         return entityDateCond;
     }
-    
+
     public Map<String, EntityCondition> getEntityCondMap() {
         return Collections.unmodifiableMap(entityCondMap);
     }
-    
+
     protected Map<String, EntityCondition> getEntityCondMapInternal() {
         return entityCondMap;
     }
@@ -481,7 +481,7 @@ public abstract class CmsDataExportWorker implements Serializable {
     }
 
     public abstract boolean isMultiFile();
-    
+
     public boolean isSingleFile() {
         return !isMultiFile();
     }
@@ -493,7 +493,7 @@ public abstract class CmsDataExportWorker implements Serializable {
     public void setWriter(PrintWriter writer) {
         this.writer = writer;
     }
-    
+
     public EntityFindOptions getMainEfo() {
         return mainEfo;
     }
@@ -505,7 +505,7 @@ public abstract class CmsDataExportWorker implements Serializable {
     public ModelEntity getCurrentRecordModel() {
         return currentRecordModel;
     }
-    
+
     /**
      * WARN: this may be different from getCurrentRecordModel().getEntityName()!
      */
@@ -517,11 +517,11 @@ public abstract class CmsDataExportWorker implements Serializable {
         this.currentRecordModel = currentRecordModel;
         this.setCurrentContentIdFieldNames(entityInfo.getCmsContentIdFieldNames(currentRecordModel));
     }
-    
+
     public boolean isIncludeContentRefs() {
         return includeContentRefs;
     }
-    
+
     public Set<String> getCurrentContentIdFieldNames() {
         return Collections.unmodifiableSet(currentContentIdFieldNames);
     }
@@ -533,18 +533,18 @@ public abstract class CmsDataExportWorker implements Serializable {
     public boolean hasSeenContentId(String contentId) {
         return seenContentIds.contains(contentId);
     }
-    
+
     protected boolean registerContentId(String contentId) {
         return seenContentIds.add(contentId);
     }
-    
+
     protected abstract RecordGrouping getRecordGrouping();
 
 
     public EntityCondition getEntitySpecificCond(String entityName) {
         return entityCondMap.get(entityName);
     }
-    
+
     public EntityCondition getEffectiveEntityCond(String entityName, boolean excludeDateCond) {
         List<EntityCondition> condList = new ArrayList<>(4);
         EntityCondition commonCond = getEntityCond();
@@ -576,16 +576,16 @@ public abstract class CmsDataExportWorker implements Serializable {
         }
         return condList.isEmpty() ? null : EntityCondition.makeCondition(condList, EntityOperator.AND);
     }
-    
+
     public EntityCondition getEffectiveEntityCond(String entityName) {
         return getEffectiveEntityCond(entityName, false);
     }
-    
+
     public boolean isMediaExportVariants() {
         return mediaExportVariants;
     }
 
-    
+
     /******************************************************/
     /* Essential/Configuration Variables */
     /******************************************************/
@@ -609,19 +609,19 @@ public abstract class CmsDataExportWorker implements Serializable {
          * Grouping by object, slowest export and import, but most readable.
          */
         MAJOR_OBJECT("CmsRecordGroupingGroupByMajorObject", "CmsRecordGroupingGroupByMajorObjectHint");
-        
+
         public static final RecordGrouping DEFAULT = getDisplayValues().get(0); // default = always the first
         public static final String LABEL_RESOURCE = "CMSUiLabels";
         //private static final List<RecordGrouping> displayValues = UtilMisc.unmodifiableArrayList(NONE, ENTITY_TYPE);
-        
+
         private final String labelName;
         private final String hintLabelName;
-        
+
         private RecordGrouping(String labelName, String hintLabelName) {
             this.labelName = labelName;
             this.hintLabelName = hintLabelName;
         }
-        
+
         public String getLabelResource() { return LABEL_RESOURCE; }
         public String getLabelName() { return labelName; }
         public String getLabel(Locale locale) { return UtilProperties.getMessage(getLabelResource(), getLabelName(), locale); }
@@ -643,18 +643,18 @@ public abstract class CmsDataExportWorker implements Serializable {
         public static RecordGrouping getDefault() { return DEFAULT; }
         public static List<RecordGrouping> getDisplayValues() { return Arrays.asList(RecordGrouping.values()); } // return displayValues; }
     }
-    
+
     public enum OutputMode {
         SF_DL("CmsSingleFileDownload", null),
         SF_IL("CmsSingleFileInline", "CmsSingleFileInlineDesc"),
         SF_FS("CmsSingleFileServerFile", null),
         MF_FS("CmsMultiFileServerDirectory", "CmsExportFuncMultiFileInfo");
-        
+
         public static final String LABEL_RESOURCE = "CMSUiLabels";
         private static final List<OutputMode> restrictedDisplayModes = Collections.unmodifiableList(new ArrayList<>(Arrays.asList(OutputMode.values())));
         private static final List<OutputMode> allowedAllDisplayModes = UtilMisc.unmodifiableArrayList(SF_DL, SF_IL);
         public static final OutputMode DEFAULT = getDisplayValues().get(0); // default = always the first
-        
+
         private final String labelName;
         private final String descLabelName;
 
@@ -681,11 +681,11 @@ public abstract class CmsDataExportWorker implements Serializable {
         }
         public static OutputMode getDefault() { return DEFAULT; }
         public static List<OutputMode> getDisplayValues() { return allowedAllDisplayModes; }
-        public static List<OutputMode> getDisplayValues(Security security, GenericValue userLogin) { 
+        public static List<OutputMode> getDisplayValues(Security security, GenericValue userLogin) {
             if (security != null && userLogin != null && security.hasPermission("ENTITY_MAINT", userLogin)) {
                 return restrictedDisplayModes;
             } else {
-                return allowedAllDisplayModes; 
+                return allowedAllDisplayModes;
             }
         }
         public void checkAllowed(Security security, GenericValue userLogin) throws IllegalStateException {
@@ -693,11 +693,11 @@ public abstract class CmsDataExportWorker implements Serializable {
             else {
                 if (!security.hasPermission("ENTITY_MAINT", userLogin)) {
                     throw new IllegalStateException("User missing ENTITY_MAINT permission for output mode " + this); // FIXME: more appropriate exception
-                } 
+                }
             }
         }
     }
-    
+
     /**
      * Presets for entity selections and queries.
      * See {@link #buildDefaultEntityPresets} body for available presets, or simply visit Cms Data Export page.
@@ -711,18 +711,18 @@ public abstract class CmsDataExportWorker implements Serializable {
         /**
          * Main constructor, private - use {@link #buildDefaultEntityPresets} or {@link PresetConfig.Builder}.
          */
-        EntityPresetMap(Map<String, PresetConfig> map, Set<String> simpleOptionKeys) { 
-            this.map = map; 
+        EntityPresetMap(Map<String, PresetConfig> map, Set<String> simpleOptionKeys) {
+            this.map = map;
             this.simpleOptionKeys = (simpleOptionKeys != null) ? Collections.unmodifiableSet(simpleOptionKeys) : null;
         }
-        
+
         /**
          * Returns a map of export presets to the names of the entities they should export.
          */
         public static EntityPresetMap getInst(Delegator delegator) {
             return INSTANCE;
         }
-        
+
         /**
          * Builds map of export preset names to the names of the entities they should export and other settings;
          * this overload adds to given builder.
@@ -731,29 +731,29 @@ public abstract class CmsDataExportWorker implements Serializable {
             PresetConfig.Builder b = builder;
             String pfx = CmsEntityInfo.CMS_ENTITY_BASE_PKG_PREFIX;
             CmsEntityInfo ei = b.getCmsEntityInfo();
-            
+
             // NOTE: the variants take up huge space, so we exclude them by default
             b.newConfig("CmsAllEntities").setEntityNames(ei.copyCmsEntityNames(null, ei.getCombinedCmsEntityNames(), b.list("CmsMediaVariants"))).complete();
             b.newConfig("CmsAllEntitiesNoMedia").setEntityNames(ei.getCmsEntityNames()).complete();
-            
+
             // NOTE: CmsPages includes the CmsProcessMapping and CmsPageSpecialMapping in order to save the primary path
             b.newConfig("CmsPages").setPmpsMappingTypeId("CMS_PGSPCMAP_PRIMARY").setEntityNames(ei.copyCmsEntityNames(b.list(pfx+"content"), b.list("CmsProcessMapping", "CmsProcessViewMapping", "CmsPageSpecialMapping"))).complete();
             b.newConfig("CmsPagesStrict").setEntityNames(ei.copyCmsEntityNames(b.list(pfx+"content"))).complete();
-            
-            // NOTE: CmsMappings tries to exclude primary process mappings 
+
+            // NOTE: CmsMappings tries to exclude primary process mappings
             b.newConfig("CmsMappings").setPmpsMappingTypeId("CMS_PGSPCMAP_STD").setEntityNames(ei.copyCmsEntityNames(pfx+"control")).complete();
             b.newConfig("CmsMappingsStrict").setEntityNames(ei.copyCmsEntityNames(pfx+"control")).complete();
             b.newConfig("CmsPagesMappings").setEntityNames(ei.copyCmsEntityNames(b.list(pfx+"content", pfx+"control"))).complete();
-            
+
             b.newConfig("CmsTemplates").setEntityNames(ei.copyCmsEntityNames(pfx+"template")).complete();
             b.newConfig("CmsPageTemplates").setAttribTmplAssocType("PAGE_TEMPLATE").setEntityNames(ei.copyCmsEntityNames(null, b.list("CmsPageTemplate", "CmsPageTemplateAssetAssoc", "CmsPageTemplateScriptAssoc", "CmsPageTemplateVersion", "CmsPageTemplateVersionState", "CmsAttributeTemplate"))).complete();
             b.newConfig("CmsAssetTemplates").setAttribTmplAssocType("ASSET_TEMPLATE").setEntityNames(ei.copyCmsEntityNames(null, b.list("CmsAssetTemplate", "CmsAssetTemplateScriptAssoc", "CmsAssetTemplateVersion", "CmsAssetTemplateVersionState", "CmsAttributeTemplate"))).complete();
             b.newConfig("CmsScriptTemplates").setEntityNames(ei.copyCmsEntityNames(null, b.list("CmsScriptTemplate"))).complete();
-            
+
             // SPECIAL CASES
             b.newConfig("CmsMedia").setEntityNames(UtilMisc.toHashSet("CmsMedia")).complete();
             b.newConfig("CmsMediaWithVariants").setEntityNames(UtilMisc.toHashSet("CmsMedia", "CmsMediaVariants")).complete();
-            
+
             // Simplified (non-advanced) list of names to show in the UI...
             // this must be separate because internally we need access to all the presets
             b.setSimplePresetNames(new LinkedHashSet<>(Arrays.asList(new String[] {
@@ -764,7 +764,7 @@ public abstract class CmsDataExportWorker implements Serializable {
 
             return b;
         }
-        
+
         /**
          * Builds map of export preset names to the names of the entities they should export and other settings;
          * this overload creates a builder with a LinkedHashMap and unmodifiable EntityPresetMap.
@@ -786,10 +786,10 @@ public abstract class CmsDataExportWorker implements Serializable {
         @Override public Collection<PresetConfig> values() { return map.values(); }
         @Override public Set<Map.Entry<String, PresetConfig>> entrySet() { return map.entrySet(); }
         @Override public boolean equals(Object o) { return map.equals(o); }
-        
+
         public PresetConfig getOrNone(Object key) { PresetConfig res = get(key); return res != null ? res : PresetConfig.NONE; }
         public PresetConfig getOrDefaults(Object key) { PresetConfig res = get(key); return res != null ? res : PresetConfig.DEFAULTS; }
-        
+
         public Collection<String> getAllPresetNames() { return keySet(); }
         public Collection<String> getSimplePresetNames() { return (simpleOptionKeys != null) ? simpleOptionKeys : keySet(); }
     }
@@ -805,13 +805,13 @@ public abstract class CmsDataExportWorker implements Serializable {
             NONE = b.newConfig("None").complete();
             DEFAULTS = b.newConfig("Defaults").complete();
         }
-        
+
         protected final String presetName;
         protected final String pmpsMappingTypeId;
         protected final String attribTmplAssocType;
         protected final String labelName;
         protected final Set<String> entityNames;
-        
+
         protected final Map<String, Object> map;
 
         private PresetConfig(Builder other) {
@@ -828,7 +828,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         public String getAttribTmplAssocType() { return attribTmplAssocType; }
         public String getLabelName() { return labelName; }
         public Set<String> getEntityNames() { return entityNames; }
-        
+
         private Map<String, Object> toMap(Map<String, Object> other) {
             other.put("presetName", presetName);
             other.put("pmpsMappingTypeId", pmpsMappingTypeId);
@@ -837,7 +837,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             other.put("entityNames", entityNames);
             return other;
         }
-        
+
         /**
          * Dual PresetConfig and EntityPresetMap builder.
          */
@@ -845,14 +845,14 @@ public abstract class CmsDataExportWorker implements Serializable {
             private Delegator delegator;
             private CmsEntityInfo ei;
             private Map<String, PresetConfig> rawEntityPresetMap;
-            
+
             protected String presetName;
             protected String pmpsMappingTypeId;
             protected String attribTmplAssocType;
             protected String labelName;
             protected Set<String> entityNames;
             protected Set<String> simpleOptionKeys = null;
-            
+
             /**
              * Builder with a LinkedHashMap for rawEntityPresetMap.
              */
@@ -860,9 +860,9 @@ public abstract class CmsDataExportWorker implements Serializable {
             /**
              * Builder with a custom map or no map (to create only configs).
              */
-            public Builder(Delegator delegator, Map<String, PresetConfig> rawEntityPresetMap) { 
-                this.delegator = delegator; 
-                this.rawEntityPresetMap = rawEntityPresetMap; 
+            public Builder(Delegator delegator, Map<String, PresetConfig> rawEntityPresetMap) {
+                this.delegator = delegator;
+                this.rawEntityPresetMap = rawEntityPresetMap;
                 this.ei = CmsEntityInfo.getInst(delegator);
             }
             public Builder newConfig(String presetName) { resetPreset(); setPresetName(presetName); return this; }
@@ -882,10 +882,10 @@ public abstract class CmsDataExportWorker implements Serializable {
                 this.entityNames = other.entityNames;
                 return this;
             }
-            
-            public Delegator getDelegator() { return delegator; } 
-            public CmsEntityInfo getCmsEntityInfo() { return ei; } 
-            
+
+            public Delegator getDelegator() { return delegator; }
+            public CmsEntityInfo getCmsEntityInfo() { return ei; }
+
             public String getPresetName() { return presetName; }
             public Builder setPresetName(String presetName) { this.presetName = presetName; return this; }
             public Builder setPmpsMappingTypeId(String pmpsMappingTypeId) { this.pmpsMappingTypeId = pmpsMappingTypeId; return this; }
@@ -893,15 +893,15 @@ public abstract class CmsDataExportWorker implements Serializable {
             public Builder setLabelName(String labelName) { this.labelName = labelName; return this; }
             public Builder setEntityNames(Set<String> entityNames) { this.entityNames = entityNames; return this; }
             public void setSimplePresetNames(Set<String> simpleOptionKeys) { this.simpleOptionKeys = simpleOptionKeys; }
-            
-            @SafeVarargs public final <T> List<T> list(T... args) { return new ArrayList<>(Arrays.asList(args)); }            
-            @SafeVarargs public final <T> Set<T> set(T... args) { return new LinkedHashSet<>(Arrays.asList(args)); }  
-            
+
+            @SafeVarargs public final <T> List<T> list(T... args) { return new ArrayList<>(Arrays.asList(args)); }
+            @SafeVarargs public final <T> Set<T> set(T... args) { return new LinkedHashSet<>(Arrays.asList(args)); }
+
             /**
              * Builds the PresetConfig and adds it to the internal map.
              */
-            public PresetConfig complete() { 
-                PresetConfig pc = new PresetConfig(this); 
+            public PresetConfig complete() {
+                PresetConfig pc = new PresetConfig(this);
                 if (rawEntityPresetMap != null) rawEntityPresetMap.put(pc.getPresetName(), pc);
                 return pc;
             }
@@ -911,7 +911,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             public EntityPresetMap completePresetMap() { return new EntityPresetMap(Collections.unmodifiableMap(rawEntityPresetMap), simpleOptionKeys); }
         }
 
-        @Override public int size() { return map.size(); }        
+        @Override public int size() { return map.size(); }
         @Override public boolean isEmpty() { return map.isEmpty(); }
         @Override public boolean containsKey(Object key) { return map.containsKey(key); }
         @Override public boolean containsValue(Object value) { return map.containsValue(value); }
@@ -925,12 +925,12 @@ public abstract class CmsDataExportWorker implements Serializable {
         @Override public Set<Map.Entry<String, Object>> entrySet() { return map.entrySet(); }
         @Override public boolean equals(Object o) { return map.equals(o); }
     }
-    
+
 
     /******************************************************/
     /* Entity Query helpers */
     /******************************************************/
-    
+
     // FIXME: this is duplicated in the CmsEntityVisit class; both are in use
     /**
      * Gets content and related values.
@@ -953,11 +953,11 @@ public abstract class CmsDataExportWorker implements Serializable {
                 } else if (exportFilesAsTextData) {
                     try {
                         TemplateBodySource tmplBodySrc = com.ilscipio.scipio.cms.template.CmsTemplate.getTemplateBodySourceFromContent(delegator, contentId, false);
-                        
+
                         dataRes.put("dataResourceTypeId", "ELECTRONIC_TEXT"); // WARN: DO NOT COMMIT THIS VALUE!
                         values.add(dataRes);
-                        
-                        GenericValue elecText = delegator.makeValue("ElectronicText", 
+
+                        GenericValue elecText = delegator.makeValue("ElectronicText",
                             UtilMisc.toMap("dataResourceId",dataRes.getString("dataResourceId"), "textData",tmplBodySrc.getEffectiveBody()));
                         values.add(elecText);
                     } catch(Exception e) {
@@ -973,13 +973,13 @@ public abstract class CmsDataExportWorker implements Serializable {
             values.add(content);
         }
     }
-    
+
     public List<GenericValue> getContentAndRelatedValues(String contentId) throws GenericEntityException {
         List<GenericValue> values = new ArrayList<>();
         getContentAndRelatedValues(contentId, values);
         return values;
     }
-    
+
     public Map<String, List<GenericValue>> getContentAndRelatedValuesByEntity(Set<String> contentIds) throws GenericEntityException {
         Map<String, List<GenericValue>> map = new LinkedHashMap<>();
         // establish order
@@ -1000,7 +1000,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         }
         return map;
     }
-    
+
     public static void addToEntityCondMap(Delegator delegator, Map<String, EntityCondition> entityCondMap, String entityName, EntityCondition cond) {
         EntityCondition prevCond = entityCondMap.get(entityName);
         if (prevCond == null) {
@@ -1009,7 +1009,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             entityCondMap.put(entityName, EntityCondition.makeCondition(prevCond, EntityOperator.AND, cond));
         }
     }
-    
+
     public static EntityCondition makeEntityDateCond(Delegator delegator, Timestamp entityFrom, Timestamp entityThru) {
         EntityCondition entityFromCond = null;
         EntityCondition entityThruCond = null;
@@ -1029,13 +1029,13 @@ public abstract class CmsDataExportWorker implements Serializable {
         }
         return entityDateCond;
     }
-    
+
     public static EntityCondition makeEntityDateCond(Delegator delegator, String entityFromStr, String entityThruStr) {
         Timestamp entityFrom = UtilValidate.isNotEmpty(entityFromStr) ? UtilDateTime.toTimestamp(entityFromStr) : null;
         Timestamp entityThru = UtilValidate.isNotEmpty(entityThruStr) ? UtilDateTime.toTimestamp(entityThruStr) : null;
         return makeEntityDateCond(delegator, entityFrom, entityThru);
     }
-    
+
     public static GenericValue getStdPageSpecialMappingEnumValue(Delegator delegator) throws GenericEntityException {
         // TODO: review
         // this record shouldn't exist in the system, doesn't make sense, so we make a virtual one for UI use only
@@ -1053,9 +1053,9 @@ public abstract class CmsDataExportWorker implements Serializable {
     }
 
     public static List<GenericValue> getPageSpecialMappingCondEnumerations(Delegator delegator) throws GenericEntityException {
-        List<GenericValue> realValues = delegator.findByAnd("Enumeration", 
+        List<GenericValue> realValues = delegator.findByAnd("Enumeration",
                 UtilMisc.toMap("enumTypeId", "CMS_PAGE_SPCMAP_TYPE"), UtilMisc.toList("sequenceId"), true);
-        
+
         List<GenericValue> results = new ArrayList<>();
         // TODO/FIXME: we can only do STD & PRIMARY for now, remove this filter later
         boolean hasStd = false;
@@ -1072,7 +1072,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         }
         return results;
     }
-    
+
     public static List<GenericValue> getPageSpecialMappingCondEnumerationsSafe(Delegator delegator) {
         try {
             return getPageSpecialMappingCondEnumerations(delegator);
@@ -1081,12 +1081,12 @@ public abstract class CmsDataExportWorker implements Serializable {
             return Collections.emptyList();
         }
     }
-    
+
     public static void addPageSpecialMappingConds(Delegator delegator, String pmpsMappingTypeId, Map<String, EntityCondition> entityCondMap) {
         if (UtilValidate.isEmpty(pmpsMappingTypeId)) return;
-        
+
         // FIXME: these conditions are bad, because we can't do complex queries, but close enough for now
-        if ("CMS_PGSPCMAP_STD".equals(pmpsMappingTypeId)) { // this is sort of like "NOT primary", but not exact 
+        if ("CMS_PGSPCMAP_STD".equals(pmpsMappingTypeId)) { // this is sort of like "NOT primary", but not exact
             // special case
             addToEntityCondMap(delegator, entityCondMap, "CmsProcessMapping", EntityCondition.makeCondition("primaryForPageId", EntityOperator.EQUALS, null));
             addToEntityCondMap(delegator, entityCondMap, "CmsPageSpecialMapping", EntityCondition.makeCondition("mappingTypeId", EntityOperator.NOT_EQUAL, "CMS_PGSPCMAP_PRIMARY"));
@@ -1098,22 +1098,22 @@ public abstract class CmsDataExportWorker implements Serializable {
         } else {
             // TODO: others would be harder, require an sql "IN"
             throw new UnsupportedOperationException("Process mapping page special mapping filter doesn't yet support: " + pmpsMappingTypeId);
-        } 
+        }
     }
 
     public static void addAttribTmplAssocTypeConds(Delegator delegator, String attribTmplAssocType, Map<String, EntityCondition> entityCondMap) {
         if (UtilValidate.isEmpty(attribTmplAssocType)) return;
         if ("PAGE_TEMPLATE".equals(attribTmplAssocType)) {
-            addToEntityCondMap(delegator, entityCondMap, "CmsAttributeTemplate", 
+            addToEntityCondMap(delegator, entityCondMap, "CmsAttributeTemplate",
                     EntityCondition.makeCondition("pageTemplateId", EntityOperator.NOT_EQUAL, null));
         } else if ("ASSET_TEMPLATE".equals(attribTmplAssocType)) {
-            addToEntityCondMap(delegator, entityCondMap, "CmsAttributeTemplate", 
+            addToEntityCondMap(delegator, entityCondMap, "CmsAttributeTemplate",
                     EntityCondition.makeCondition("assetTemplateId", EntityOperator.NOT_EQUAL, null));
         } else {
             throw new UnsupportedOperationException("Unrecognized attribTmplAssocType value: " + attribTmplAssocType);
-        } 
+        }
     }
-    
+
     public static void addEntityPkFilterConds(Delegator delegator, Map<String, ?> entityPks, Map<String, EntityCondition> entityCondMap) {
         for(Map.Entry<String, ?> entry : entityPks.entrySet()) {
             String entityName = entry.getKey();
@@ -1124,14 +1124,14 @@ public abstract class CmsDataExportWorker implements Serializable {
                 addEntityPkFilterConds(delegator, entityName, UtilGenerics.<String>checkCollection(pkVals), entityCondMap);
             }
         }
-        
+
     }
-    
+
     public static void addEntityPkFilterConds(Delegator delegator, String entityName, String pkValue, Map<String, EntityCondition> entityCondMap) throws IllegalArgumentException {
         EntityCondition cond = EntityCondition.makeCondition(EntityInfoUtil.getSinglePkFieldNameStrict(delegator, entityName), pkValue);
         addToEntityCondMap(delegator, entityCondMap, entityName, cond);
     }
-    
+
     public static void addEntityPkFilterConds(Delegator delegator, String entityName, Collection<String> pkValues, Map<String, EntityCondition> entityCondMap) throws IllegalArgumentException {
         String pkFieldName = EntityInfoUtil.getSinglePkFieldNameStrict(delegator, entityName);
         List<EntityCondition> condList = new ArrayList<>(pkValues.size());
@@ -1148,27 +1148,27 @@ public abstract class CmsDataExportWorker implements Serializable {
         //return new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
         return new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
     }
-    
+
     /******************************************************/
     /* Mid-Level handler callbacks */
     /******************************************************/
     // DEV NOTE: these handlers were added before I migrated the high-level export methods, since which they've become less useful...
-    
+
     public void handleBegin() throws GenericEntityException, IOException {
     }
-    
+
     public void handleFileBegin(PrintWriter writer) throws GenericEntityException, IOException {
         this.setWriter(writer);
     }
-    
+
     public void handleNewRecordName(String entityName) {
         this.currentRecordName = entityName;
     }
-    
+
     public void handleEntityQueryBegin(ModelEntity modelEntity, ListIterator<GenericValue> values) throws GenericEntityException, IOException {
         this.setCurrentRecordModel(modelEntity);
     }
-    
+
     /**
      * Subclass should override if need to handle visitor; default impl ignores visitor.
      */
@@ -1176,13 +1176,13 @@ public abstract class CmsDataExportWorker implements Serializable {
         assert(visitor == null);
         return handleRecordCommon(value);
     }
-    
+
     public int handleRecordCommon(GenericValue value) throws Exception {
         // SPECIAL: CmsMedia
         if (isMediaContentRecord(value)) {
             return handleMediaContentRecord(value);
         }
-        
+
         // SPECIAL: workaround for CmsProcessViewMapping filter failure
         if (doSpecialProcessViewMappingFilter && "CmsProcessMapping".equals(value.getEntityName())) {
             seenCmsProcessMappingIds.add(value.getString("processMappingId"));
@@ -1213,21 +1213,21 @@ public abstract class CmsDataExportWorker implements Serializable {
         numberWritten++;
         return numberWritten;
     }
-    
+
     public void writeOut(GenericValue value) throws GenericEntityException, IOException {
         value.writeXmlText(writer, "", entityCdataFields.get(value.getEntityName())); // NOTE: 3rd parameter is a SCIPIO patch
     }
-    
+
     public void handleEntityQueryEnd(ListIterator<GenericValue> values) throws GenericEntityException, IOException {
         this.setCurrentRecordModel(null);
     }
-    
+
     public void handleFileEnd() throws GenericEntityException, IOException {
         if (isMultiFile()) {
             this.setWriter(null);
         }
     }
-    
+
     public void handleEnd() throws GenericEntityException, IOException {
         this.setWriter(null);
     }
@@ -1235,9 +1235,9 @@ public abstract class CmsDataExportWorker implements Serializable {
     /******************************************************/
     /* High-Level Execution and Implementations */
     /******************************************************/
-    
+
     // Public execution methods
-    
+
     public static class ExecResult {
         protected List<String> errorMsgs = new ArrayList<>();
         protected List<String> resultMsgs = new ArrayList<>();
@@ -1245,13 +1245,13 @@ public abstract class CmsDataExportWorker implements Serializable {
 
         protected void addMsg(String msg) { resultMsgs.add(msg); }
         protected void addErrorMsg(String msg) { errorMsgs.add(msg); }
-        
+
         public boolean isSuccess() { return errorMsgs.isEmpty(); }
         public List<String> getErrorMessages() { return errorMsgs; }
         public List<String> getResultMessages() { return resultMsgs; }
         public int getNumberWritten() { return numberWritten; }
     }
-    
+
     /**
      * Executes export to the writer, IF single-writer output is supported.
      */
@@ -1265,7 +1265,7 @@ public abstract class CmsDataExportWorker implements Serializable {
              resumeTrans(suspendedTrans);
          }
     }
-    
+
     public ExecResult executeExport(Writer writer) throws Exception {
         Transaction suspendedTrans = null;
         try {
@@ -1275,7 +1275,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             resumeTrans(suspendedTrans);
         }
     }
-    
+
     public ExecResult executeExport(File outFile) throws Exception {
         Transaction suspendedTrans = null;
         try {
@@ -1288,14 +1288,14 @@ public abstract class CmsDataExportWorker implements Serializable {
 
 
     // Real/Internal Implementations
-    
+
     protected abstract ExecResult executeExportInternal(PrintWriter writer) throws Exception;
     protected abstract ExecResult executeExportInternal(File outFile) throws Exception;
-    
+
     protected EntityListIterator doMainEntityQuery(ModelEntity me) throws GenericEntityException {
         return delegator.find(me.getEntityName(), getEffectiveEntityCond(me.getEntityName(), me.getNoAutoStamp()), null, null, me.getPkFieldNames(), getMainEfo());
     }
-    
+
     protected <T extends ListIterator<GenericValue>> T closeIteratorSafe(T values) {
         if (values instanceof EntityListIterator) {
             try {
@@ -1306,20 +1306,20 @@ public abstract class CmsDataExportWorker implements Serializable {
         }
         return null;
     }
-    
+
     protected Transaction suspendTrans() throws GenericTransactionException {
         try {
             return (useTrans && this.newTrans) ? TransactionUtil.suspend() : null;
         } catch (GenericTransactionException e) {
             Debug.logError(e, LOG_PREFIX+"Error suspending transaction: " + e.getMessage(), module);
-            throw e; 
+            throw e;
         }
     }
-    
+
     protected boolean beginTrans() throws GenericTransactionException {
         return useTrans ? TransactionUtil.begin(this.transTimeout) : false;
     }
-    
+
     protected void resumeTrans(Transaction trans) throws GenericTransactionException {
         if (trans != null) {
             try {
@@ -1329,19 +1329,19 @@ public abstract class CmsDataExportWorker implements Serializable {
             }
         }
     }
-    
+
     protected ModelEntity resolveModelEntity(String entityName) throws GenericEntityException {
         if ("CmsMedia".equals(entityName)) entityName = "Content";
         ModelEntity me = delegator.getModelReader().getModelEntity(entityName);
         if (me instanceof ModelViewEntity) throw new IllegalArgumentException("passed entity name was a View entity - not supported by CMS exporter: " + entityName);
         return me;
     }
-    
+
     protected boolean isMediaContentRecord(GenericValue value) {
         // TODO: REVIEW: check
         return "Content".equals(value.getEntityName()) && "SCP_MEDIA".equals(value.getString("contentTypeId"));
     }
-    
+
     protected int handleMediaContentRecord(GenericValue content) throws GenericEntityException, IOException {
         int numberWritten = 0;
         String contentId = content.getString("contentId");
@@ -1349,16 +1349,16 @@ public abstract class CmsDataExportWorker implements Serializable {
         if (UtilValidate.isNotEmpty(content.getString("dataResourceId"))) {
             numberWritten += handleMediaDataResourceRecord(content.getRelatedOne("DataResource", false));
         }
-        
+
         writeOut(content);
         numberWritten++;
-        
+
         for(GenericValue attr : content.getRelated("ContentAttribute", null, null, false)) {
             writeOut(attr);
             numberWritten++;
         }
-        
-        List<GenericValue> assocList = delegator.findList("ContentAssoc", 
+
+        List<GenericValue> assocList = delegator.findList("ContentAssoc",
                 EntityCondition.makeCondition("contentId", contentId), null, null, null, false);
         for(GenericValue assoc : assocList) {
             GenericValue contentTo = assoc.getRelatedOne("ToContent", false);
@@ -1372,24 +1372,24 @@ public abstract class CmsDataExportWorker implements Serializable {
 
         return numberWritten;
     }
-    
+
     protected int handleMediaDataResourceRecord(GenericValue dataRes) throws GenericEntityException, IOException {
         int numberWritten = 0;
-        
+
         writeOut(dataRes);
         numberWritten++;
-        
+
         for(GenericValue attr : dataRes.getRelated("DataResourceAttribute", null, null, false)) {
             writeOut(attr);
             numberWritten++;
         }
-        
+
         GenericValue elecText = dataRes.getRelatedOne("ElectronicText", false);
         if (elecText != null) {
             writeOut(elecText);
             numberWritten++;
         }
-        
+
         SpecDataResEntityInfo specDataResInfo = SpecDataResEntityInfo.fromDataResource(dataRes);
         if (specDataResInfo != null) {
             GenericValue specDataRes = specDataResInfo.getMediaDataResourceFromDataResource(dataRes, false);
@@ -1401,21 +1401,21 @@ public abstract class CmsDataExportWorker implements Serializable {
 
         return numberWritten;
     }
-    
+
     protected static boolean crossedInterval(int curCount, int lastCount, int interval) {
         // treat first as crossed
-        if (lastCount == 0) return true; 
-        
+        if (lastCount == 0) return true;
+
         // round up lastCount to next interval
         int boundary = ((lastCount / interval) * interval) + interval; // (integer div)
-        
+
         // did we reach it?
         return (curCount >= boundary);
     }
-    
-    
+
+
     // TODO: REVIEW: this class design is poor, I'm trying to figure it out as we go along
-    
+
     /**
      * Generic worker, doesn't implement any executeExport method, all implementation in CmsDataExportWorker.
      */
@@ -1423,25 +1423,25 @@ public abstract class CmsDataExportWorker implements Serializable {
         protected GenericWorker(CommonWorkerArgs<?> args) throws IllegalArgumentException { super(args); }
         protected GenericWorker(CmsDataExportWorker other, Delegator delegator) { super(other, delegator); }
         @Override public CmsDataExportWorker cloneWorkerNewState(Delegator delegator) { return new GenericWorker(this, delegator);}
-        
+
         @Override public boolean isMultiFile() { return false; }
         @Override protected RecordGrouping getRecordGrouping() { return RecordGrouping.NONE; }
         @Override public ExecResult executeExportInternal(PrintWriter writer) throws Exception { throw new UnsupportedOperationException(); }
         @Override public ExecResult executeExportInternal(File outFile) throws Exception { throw new UnsupportedOperationException(); }
     }
-    
+
     /**
      * Single file exporter.
      */
     public static class SingleFileWorker extends CmsDataExportWorker {
         protected final RecordGrouping recordGrouping;
-        
+
         protected SingleFileWorker(CommonWorkerArgs<?> args)
                 throws IllegalArgumentException {
             super(args);
             this.recordGrouping = args.getRecordGrouping() != null ? args.getRecordGrouping() : RecordGrouping.getDefault();
         }
-        
+
         protected SingleFileWorker(SingleFileWorker other, Delegator delegator) {
             super(other, delegator);
             this.recordGrouping = other.recordGrouping;
@@ -1474,17 +1474,17 @@ public abstract class CmsDataExportWorker implements Serializable {
                 }
             }
         }
-        
+
         @Override
         protected ExecResult executeExportInternal(PrintWriter writer) throws Exception {
             ExecResult result = new ExecResult();
-            
+
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             writer.println("<entity-engine-xml>");
-  
+
             int numberWritten = 0;
             boolean beganTransaction;
-            
+
             PrintWriter origWriter = writer;
             StringWriter tempWriter = null;
             boolean specialTypeGrouping = (getRecordGrouping() == RecordGrouping.ENTITY_TYPE) && this.isIncludeContentRefs();
@@ -1499,11 +1499,11 @@ public abstract class CmsDataExportWorker implements Serializable {
 
             this.handleBegin();
             this.handleFileBegin(writer);
-            
+
             for(String curEntityName : getTargetEntityNames()) {
                 numberWritten += exportEntityRecords(null, curEntityName, numberWritten);
             }
-            
+
             if (specialTypeGrouping) {
                 // we write the Content records to the origWriter so they come before
                 // everything else; then add our string buffer
@@ -1520,7 +1520,7 @@ public abstract class CmsDataExportWorker implements Serializable {
                 } catch(Exception e) {
                     handleError(e, beganTransaction);
                 }
-                
+
                 for(Map.Entry<String, List<GenericValue>> entry : valuesByEntity.entrySet()) {
                     String curEntityName = entry.getKey();
                     List<GenericValue> entityValues = entry.getValue();
@@ -1530,25 +1530,25 @@ public abstract class CmsDataExportWorker implements Serializable {
                 // append the temp buffer
                 writer.append(tempWriter.getBuffer());
             }
-            
+
             if (getTargetSpecialEntityNames().contains("CmsMedia")) {
                 // FIXME: non-integrated solution for now
                 numberWritten += exportEntityRecords(null, "CmsMedia", numberWritten);
             }
-            
+
             this.handleFileEnd();
             this.handleEnd();
-            
+
             writer.println("</entity-engine-xml>");
             Debug.logInfo(LOG_PREFIX+"Total records written from all entities: " + numberWritten, module);
             result.numberWritten = numberWritten;
             return result;
         }
-        
+
         protected int exportEntityRecords(CmsEntityVisitor visitor, String curEntityName, int numberWritten) throws Exception {
             return exportEntityRecords(visitor, curEntityName, null, numberWritten);
         }
-        
+
         protected int exportEntityRecords(CmsEntityVisitor visitor, String curEntityName, ListIterator<GenericValue> values, int numberWritten) throws Exception {
             boolean beganTransaction = false;
             this.handleNewRecordName(curEntityName);
@@ -1556,7 +1556,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             try {
                 beganTransaction = beginTrans();
                 ModelEntity me = resolveModelEntity(curEntityName);
-                
+
                 // FIXME?: hardcoded special case, doesn't really belong here
                 if ("CmsMedia".equals(curEntityName) && isMediaExportVariants()) {
                     ListIterator<GenericValue> catValues = null;
@@ -1576,7 +1576,7 @@ public abstract class CmsDataExportWorker implements Serializable {
 
                 curNumberWritten += handleEntityRecordsCore(visitor, curEntityName, me, values, numberWritten);
                 numberWritten += curNumberWritten;
-                
+
                 values = closeIteratorSafe(values);
                 TransactionUtil.commit(beganTransaction);
                 Debug.logInfo(LOG_PREFIX+"Committed records [" + curEntityName + "]: Main query: " + curNumberWritten + "; Total All: " + numberWritten, module);
@@ -1586,7 +1586,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             }
             return curNumberWritten;
         }
-        
+
         protected int handleEntityRecordsCore(CmsEntityVisitor visitor, String curEntityName, ModelEntity me, ListIterator<GenericValue> values, int numberWritten) throws Exception {
             this.handleEntityQueryBegin(me, values);
             GenericValue value = null;
@@ -1605,7 +1605,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             this.handleEntityQueryEnd(values);
             return curNumberWritten;
         }
-        
+
         protected void handleError(Exception e, boolean beganTransaction) throws Exception {
             String errMsg = "Failure in operation, rolling back transaction";
             Debug.logError(e, LOG_PREFIX+errMsg, module);
@@ -1656,17 +1656,17 @@ public abstract class CmsDataExportWorker implements Serializable {
         @Override
         protected ExecResult executeExportInternal(PrintWriter writer) throws Exception {
             ExecResult result = new ExecResult();
-            
+
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             writer.println("<entity-engine-xml>");
-  
+
             int numberWritten = 0;
 
             this.handleBegin();
             this.handleFileBegin(writer);
-            
+
             Set<String> targetMajorEntityNames = entityInfo.filterMajorCmsEntityNames(this.getTargetEntityNames());
-            
+
             // SPECIAL: in record-grouping mode, if CMS_PGSPCMAP_PRIMARY was targeted and CmsPage
             // was included, we'll remove CmsProcessMapping from the entities to target because already included in the CmsPage visiting
             // and this simplifies to PK filter
@@ -1676,27 +1676,27 @@ public abstract class CmsDataExportWorker implements Serializable {
                 if (UtilValidate.isNotEmpty(this.pmpsMappingTypeId) && !"CMS_PGSPCMAP_STD".equals(this.pmpsMappingTypeId)) {
                     targetMajorEntityNames.remove("CmsProcessMapping");
                 }
-            } 
-            
+            }
+
             ObjGrpEntityVisitor visitor = new ObjGrpEntityVisitor(delegator);
             visitor.setEnterContent(this.isIncludeContentRefs()); // usually do enter content records, unless disabled
             visitor.setEnterMajor(includeMajorDeps); // usually don't enter deep deps, unless enabled
-            
+
             visitor.setEnterEntityNames(enterEntityNames);
             visitor.setEnterMajorEntityNames(enterMajorEntityNames);
-            
+
             for(String curEntityName : targetMajorEntityNames) {
                 numberWritten += exportEntityRecords(visitor, curEntityName, numberWritten);
             }
-            
+
             if (getTargetSpecialEntityNames().contains("CmsMedia")) {
                 // FIXME: non-integrated solution for now (NOTE: do not pass visitor!)
                 numberWritten += exportEntityRecords(null, "CmsMedia", numberWritten);
             }
-            
+
             this.handleFileEnd();
             this.handleEnd();
-            
+
             writer.println("</entity-engine-xml>");
             Debug.logInfo(LOG_PREFIX+"Total records written from all entities: " + numberWritten, module);
             result.numberWritten = numberWritten;
@@ -1706,20 +1706,20 @@ public abstract class CmsDataExportWorker implements Serializable {
         @Override
         protected int handleRecord(CmsEntityVisitor visitorObj, GenericValue value) throws Exception {
             if (visitorObj == null) return handleRecordCommon(value);
-            
+
             ObjGrpEntityVisitor visitor = (ObjGrpEntityVisitor) visitorObj;
             visitor.setNumberWritten(0);
-            
+
             DataObjectWorker<?> dataObjWorker = CmsObjectRegistry.getEntityDataObjectWorkerAlways(value.getEntityName());
             CmsMajorObject majorDataObj = (CmsMajorObject) dataObjWorker.makeFromValue(value);
-            
+
             // begin visiting
             majorDataObj.acceptEntityDepsVisitor(visitor, null, null, majorDataObj);
-            
+
             return visitor.getNumberWritten();
         }
     }
-    
+
     /**
      * Object grouping entity visitor implementation.
      * TODO: REVIEW
@@ -1730,7 +1730,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         protected Set<String> seenMajorEntities = new HashSet<>(); // entityName + "@" + PK
         // NOTE: seenAllEntities could get very big, so we only use seenMajorEntities in production
         protected Set<String> seenAllEntities = CmsUtil.debugOn() ? new HashSet<String>() : null;
-        
+
         public ObjGrpEntityVisitor(Delegator delegator) {
             super(delegator);
             this.visitContext = new ObjGrpVisitContext();
@@ -1738,7 +1738,7 @@ public abstract class CmsDataExportWorker implements Serializable {
 
         @Override
         public ObjGrpVisitContext getVisitContext() { return visitContext; }
-        
+
         public int getNumberWritten() { return numberWritten; }
         public void setNumberWritten(int numberWritten) { this.numberWritten = numberWritten; }
 
@@ -1753,13 +1753,13 @@ public abstract class CmsDataExportWorker implements Serializable {
                 return false;
             }
         }
-        
+
         protected void registerMajorEntity(String entityName, String pk) {
             seenMajorEntities.add(entityName + "@" + pk);
         }
-        
+
         // PRE-LOOKUP FILTERS
-        
+
         @Override
         protected boolean shouldEnterMajor(VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) {
             // Here we check if the PKs of given major entities were already visited (one relations)
@@ -1783,9 +1783,9 @@ public abstract class CmsDataExportWorker implements Serializable {
             }
             return !seen;
         }
-        
+
         // POST-LOOKUP FILTERS
-        
+
         @Override
         public boolean shouldEnter(GenericValue value, VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) {
             // Here we check if the PKs of given major entities were already visited (many & self relations)
@@ -1802,7 +1802,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             visitRecordOnly(value, relation, relValue, majorDataObj);
             visitWriteOnly(value, relation, relValue, majorDataObj);
         }
-        
+
         @Override
         public void visitRecordOnly(GenericValue value, VisitRelation relation, GenericValue relValue,
                 CmsMajorObject majorDataObj) throws Exception {
@@ -1855,7 +1855,7 @@ public abstract class CmsDataExportWorker implements Serializable {
      */
     public static class MultiFileWorker extends CmsDataExportWorker {
         protected int maxRecordsPerFile;
-        
+
         protected MultiFileWorker(CommonWorkerArgs<?> args) throws IllegalArgumentException {
             super(args);
             this.maxRecordsPerFile = args.getMaxRecordsPerFile();
@@ -1882,17 +1882,17 @@ public abstract class CmsDataExportWorker implements Serializable {
         protected ExecResult executeExportInternal(File outdir) throws Exception {
             ExecResult result = new ExecResult();
             boolean beganTransaction;
-            
+
             if (outdir.isDirectory() && outdir.canWrite()) {
                 // SCIPIO: we start at 4 so that Content, DataResource & ElectronicText will get loaded first,
                 // and leaving space for others...
                 int fileNumber = 10;
                 this.handleBegin();
-                
+
                 for(String curEntityName : getTargetEntityNames()) {
                     fileNumber += exportEntityRecords(null, curEntityName, result, fileNumber, outdir, true);
                 }
-                
+
                 Map<String, List<GenericValue>> valuesByEntity = Collections.emptyMap();
                 beganTransaction = false;
                 try {
@@ -1902,19 +1902,19 @@ public abstract class CmsDataExportWorker implements Serializable {
                 } catch(Exception e) {
                     handleError(e, "Error when querying additional Content(/DataResource/ElectronicText) records: " + e.getMessage(), result, beganTransaction);
                 }
-                
+
                 // SCIPIO: now do the Content values
                 fileNumber = 1;
                 for(Map.Entry<String, List<GenericValue>> entry : valuesByEntity.entrySet()) {
                     if (entry.getValue().isEmpty()) continue;
                     fileNumber += exportEntityRecords(null, entry.getKey(), entry.getValue().listIterator(), result, fileNumber, outdir, false);
                 }
-                
+
                 if (getTargetSpecialEntityNames().contains("CmsMedia")) {
                     // FIXME: non-flexible solution, but it's not that bad for now
                     fileNumber += exportEntityRecords(null, "CmsMedia", result, fileNumber, outdir, true);
                 }
-                
+
                 this.handleEnd();
             }
 
@@ -1924,8 +1924,8 @@ public abstract class CmsDataExportWorker implements Serializable {
         protected int exportEntityRecords(CmsEntityVisitor visitor, String curEntityName, ExecResult result, int fileNumber, File outdir, boolean doHooks) throws Exception {
             return exportEntityRecords(visitor, curEntityName, null, result, fileNumber, outdir, doHooks);
         }
-        
-        protected int exportEntityRecords(CmsEntityVisitor visitor, String curEntityName, ListIterator<GenericValue> values, 
+
+        protected int exportEntityRecords(CmsEntityVisitor visitor, String curEntityName, ListIterator<GenericValue> values,
                 ExecResult result, int fileNumber, File outdir, boolean doHooks) throws Exception {
             this.handleNewRecordName(curEntityName);
             boolean beganTransaction = false;
@@ -1933,7 +1933,7 @@ public abstract class CmsDataExportWorker implements Serializable {
                 beganTransaction = beginTrans();
 
                 ModelEntity me = resolveModelEntity(curEntityName);
-                
+
                 // FIXME?: hardcoded special case, doesn't really belong here
                 if ("CmsMedia".equals(curEntityName) && isMediaExportVariants()) {
                     ListIterator<GenericValue> catValues = null;
@@ -1945,13 +1945,13 @@ public abstract class CmsDataExportWorker implements Serializable {
                         catValues = closeIteratorSafe(catValues);
                     }
                 }
-                
+
                 if (values == null) {
                     values = doMainEntityQuery(me);
                 }
-                
+
                 handleEntityRecordsCore(visitor, curEntityName, me, values, result, fileNumber, outdir, doHooks);
-                
+
                 values = closeIteratorSafe(values);
                 // only commit the transaction if we started one... this will throw an exception if it fails
                 TransactionUtil.commit(beganTransaction);
@@ -1961,16 +1961,16 @@ public abstract class CmsDataExportWorker implements Serializable {
             }
             return 1;
         }
-        
+
         // TODO: REVIEW: can't remember why doHooks was here...
-        protected void handleEntityRecordsCore(CmsEntityVisitor visitor, String curEntityName, ModelEntity me, ListIterator<GenericValue> values, 
+        protected void handleEntityRecordsCore(CmsEntityVisitor visitor, String curEntityName, ModelEntity me, ListIterator<GenericValue> values,
                 ExecResult result, int fileNumber, File outdir, boolean doHooks) throws Exception {
             int numberWritten = 0;
             String fileName = (maxRecordsPerFile > 0) ? UtilFormatOut.formatPaddedNumber((long) fileNumber, 3) + "_" : "";
             fileName = fileName + curEntityName;
-            
+
             this.handleEntityQueryBegin(me, values);
-            
+
             boolean isFirst = true;
             PrintWriter writer = null;
             int fileSplitNumber = 1;
@@ -1986,7 +1986,7 @@ public abstract class CmsDataExportWorker implements Serializable {
                     isFirst = false;
                     this.handleFileBegin(writer);
                 }
-                
+
                 numberWritten += this.handleRecord(visitor, value);
 
                 // split into small files
@@ -2010,9 +2010,9 @@ public abstract class CmsDataExportWorker implements Serializable {
                     Debug.logInfo(LOG_PREFIX+"Records written [" + curEntityName + "]: " + numberWritten, module);
                 }
             }
-            
+
             this.handleEntityQueryEnd(values);
-            
+
             if (writer != null) {
                 this.handleFileEnd();
                 writer.println("</entity-engine-xml>");
@@ -2026,7 +2026,7 @@ public abstract class CmsDataExportWorker implements Serializable {
                 result.addMsg(thisResult);
             }
         }
-        
+
         private void handleError(Exception e, String errorMsg, ExecResult result, boolean beganTransaction) throws Exception {
             Debug.logError(e, LOG_PREFIX+errorMsg, module);
             result.addMsg(errorMsg);
@@ -2037,7 +2037,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             }
             throw e;
         }
-        
+
         private void handleEntityWriteError(Exception e, ExecResult result, boolean beganTransaction, String curEntityName, int fileNumber) throws Exception {
             handleError(e, "[" + fileNumber + "] Error while writing " + curEntityName + ": " + e.getMessage(), result, beganTransaction);
         }

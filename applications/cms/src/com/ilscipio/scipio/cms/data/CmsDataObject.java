@@ -40,12 +40,12 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      * (The default value specified in new records is recorded elsewhere)
      */
     public static final boolean MAPPING_ACTIVE_DEFAULT = false;
-    
+
     protected GenericValue entity;
     // IMPORTANT: these flags help prevent endless loops when used in conjunction with PreloadWorker
-    protected boolean preloaded = false; 
+    protected boolean preloaded = false;
     protected boolean mutable = true; // 2016-12: NOTE: CANNOT rely on entity.mutable anymore, because of the GenericValue-accepting constructor
-    
+
     /**
      * Makes data object from already-looked-up entity, used as given.
      */
@@ -71,7 +71,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         verifyNewFields(delegator, flds, true);
         this.entity = makeValue(delegator, this.getEntityName(), flds);
     }
-    
+
     /**
      * Copy constructor.
      * NOTE: This automatically tries to clear a few fields common to various subclasses
@@ -81,7 +81,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     public CmsDataObject(CmsDataObject other, Map<String, Object> copyArgs) {
         this.copyEntityForCopy(other, copyArgs);
     }
-    
+
     /**
      * UPDATES data object, NOT persisted. setIfEmpty should usually be true.
      * <p>
@@ -102,9 +102,9 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         verifyNewFields(getDelegator(), flds, false);
         entity.setNonPKFields(flds, setIfEmpty); // NOTE: setIfEmpty must be TRUE
     }
-    
+
     /**
-     * UPDATES data object, NOT persisted. ALL fields present keys are overridden even 
+     * UPDATES data object, NOT persisted. ALL fields present keys are overridden even
      * if null or empty.
      */
     public final void update(Map<String, ?> fields) {
@@ -123,14 +123,14 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         //return getWorkerInst().makeCopy(this, copyArgs);
 //        GenericValue valueCopy = getDelegator().makeValue(
 //                entity.getEntityName());
-//        
+//
 //        valueCopy.setNonPKFields(entity.getAllFields());
 //        // no such thing in current schema
 //        //if (valueCopy.getModelEntity().isField("uuid")) {
 //        //    valueCopy.set("uuid", UUID.randomUUID().toString());
-//        //} 
-//        
-//        CmsDataObject doCopy = null;        
+//        //}
+//
+//        CmsDataObject doCopy = null;
 //        try {
 //            getDelegator().createSetNextSeqId(valueCopy);
 //            doCopy = this.getClass().getConstructor(GenericValue.class)
@@ -142,23 +142,23 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
 //        }
 //        return doCopy;
     }
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
     @Override
     public void preload(PreloadWorker preloadWorker) {
         super.preload(preloadWorker);
-        
+
         this.preloaded = true;
         if (preloadWorker.isImmutable()) {
             this.mutable = false;
         }
-        
+
         // make the entity immutable and anything else required for it
         preloadWorker.preloadEntity(this.entity);
 
@@ -166,46 +166,46 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             Debug.logInfo("Cms: Running preload for " + getEntityName() + " with id '" + getId() + "'", module);
         }
     }
-    
+
     @Override
     public boolean isPreloaded() {
         return this.preloaded;
     }
-    
+
     @Override
     public boolean isImmutable() {
         // CANNOT rely on the entity's flag, must use our own
         //return !entity.isMutable();
         return !this.mutable;
     }
-    
+
     @Override
     public Delegator getDelegator() {
         return entity.getDelegator();
     }
-    
+
     public String getEntityName() {
         return getEntityName(this.getClass());
     }
-    
+
     public static String getEntityName(Class<? extends CmsDataObject> dataObjectClass) {
         return dataObjectClass.getSimpleName();
     }
-    
+
 
     /**
      * Returns the GenericValue entity encapsulated by this data object.
-     * 
+     *
      * @return entity object
      */
     public GenericValue getEntity() {
         return entity;
     }
-    
+
     public boolean hasId() {
         return getId() != null;
     }
-    
+
     /**
      * Checks if the entity contains the named field.
      * TODO: OPTIMIZE: the ofbiz function relies on a synchronization lock
@@ -213,22 +213,22 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     public boolean isField(String fieldName) {
         return getModelEntity().isField(fieldName);
     }
-    
+
     public ModelEntity getModelEntity() {
         return entity.getModelEntity();
     }
-    
+
     /**
      * Returns true if entity was modified.
      */
     public boolean hasChanged() {
         return entity.hasChanged();
     }
-    
+
     public boolean hasChangedOrNoId() {
         return hasChanged() || !hasId();
     }
-    
+
     public boolean isEntityPersisted() {
         if (!entity.containsPrimaryKey()) {
             return false;
@@ -255,23 +255,23 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      */
     protected void verifyNewFields(Delegator delegator, Map<String, Object> fields, boolean isNew) throws CmsException {
     }
-    
+
     protected void verifyNamePresent(Delegator delegator, Map<String, ?> fields, boolean isNew, String nameField) throws CmsException {
         if ((isNew || fields.containsKey(nameField)) && UtilValidate.isEmpty((String) fields.get(nameField))) {
             throw new CmsNameException("Missing name (" + nameField + ")"); // TODO: localize
         }
     }
-    
+
     protected void verifyGroupingPresent(Delegator delegator, Map<String, ?> fields, boolean isNew, String groupingField) throws CmsException {
         if ((isNew || fields.containsKey(groupingField)) && UtilValidate.isEmpty((String) fields.get(groupingField))) {
             throw new CmsNameException("Missing " + groupingField); // TODO: localize
         }
     }
-    
+
     /**
      * Reusable name uniqueness verification logic.
      * <p>
-     * If groupingNullSignificant is true, it means a value of null for the grouping field is treated 
+     * If groupingNullSignificant is true, it means a value of null for the grouping field is treated
      * as if it was any other grouping value, and it's always part of the lookup fields.
      * If groupingNullSignificant is false, it means when grouping value is null, it is excluded from
      * lookup fields, so the method will then deny a lookup for the name if there is any record
@@ -279,12 +279,12 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      * <p>
      * groupingNullSignificant is implied/forced to be true if groupingOptional is false.
      */
-    protected void verifyUniqueName(Delegator delegator, Map<String, ?> fields, boolean isNew, 
+    protected void verifyUniqueName(Delegator delegator, Map<String, ?> fields, boolean isNew,
             String nameField, boolean nameOptional, String groupingField, boolean groupingOptional, boolean groupingNullSignificant) throws CmsException {
         if (!groupingOptional) {
             groupingNullSignificant = true;
         }
-        
+
         // check for basic name presence
         if (nameOptional) {
             if (UtilValidate.isEmpty((String) fields.get(nameField))) {
@@ -297,13 +297,13 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                 return;
             }
         }
-        
+
         if (groupingOptional) {
             ;
         } else {
             verifyGroupingPresent(delegator, fields, isNew, groupingField);
         }
-        
+
         Map<String, Object> lookupFields = new HashMap<>();
         String nameVal;
         if (fields.containsKey(nameField) || isNew) {
@@ -314,9 +314,9 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         if (UtilValidate.isEmpty(nameVal)) {
             nameVal = null;
         }
-        
+
         lookupFields.put(nameField, nameVal);
-        
+
         String groupVal;
         if (groupingField == null) {
             groupVal = null;
@@ -330,7 +330,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                 groupVal = null;
             }
             // THE WAY THIS WORKS: when grouping null NOT significant, if the group is not set, we only allow the name if there are no
-            // other records having the name, whether they have group or not 
+            // other records having the name, whether they have group or not
             // (instead of only checking for records that have null group)
             // when grouping null is significant, it acts exactly like a groupVal of its own,
             // so it is always part of the lookup fields.
@@ -338,7 +338,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                 lookupFields.put(groupingField, groupVal);
             }
         }
-        
+
         List<GenericValue> existingList;
         try {
             existingList = delegator.findByAnd(getEntityName(), lookupFields, null, false);
@@ -357,7 +357,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             }
         }
     }
-    
+
     public static void trimFields(Map<String, ? super String> fields, String... fieldNames) {
         for(String name : fieldNames) {
             if (fields.containsKey(name)) {
@@ -372,20 +372,20 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             }
         }
     }
-    
+
     // Common fields
     // Note: Not all types will support all of these; simply don't use those not supported
     // (bad interface, but ignore since these classes meant for internal use only)
-    
+
     /**
      * Returns the identifier for this entity.
-     * 
+     *
      * @return Id
      */
     public String getId() {
         return getId(entity);
     }
-    
+
     public static String getId(GenericValue entity) {
         // 2016: special case: don't use the combo if avoidable because it may return string "null"
         if (entity.getModelEntity().getPkFields().size() == 1) {
@@ -399,16 +399,16 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             }
         }
     }
-    
+
 //    public String getUuid() {
 //        if (this.entity != null && this.isField("uuid")) {
 //          return this.entity.getString("uuid");
 //        } else {
-//          return null;  
-//        }        
+//          return null;
+//        }
 //    }
 
-    
+
     /**
      * This checks if the field is non-empty and returns it, or if not, then it looks
      * into localized defaults.
@@ -421,7 +421,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             return (String) entity.get(fieldName, locale);
         }
     }
-    
+
     /**
      * This checks if the field is localized and if so returns the localization, or if not,
      * returns the stored field.
@@ -429,10 +429,10 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     public static String getLocalizedOrStoredField(GenericValue entity, String fieldName, Locale locale) {
         return (String) entity.get(fieldName, locale);
     }
-    
-    
+
+
     // Operations
-    
+
 
     /**
      * Creates or stores the current entity. If no PK is set, creates one.
@@ -446,21 +446,21 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     protected void createWithNewIdIfNoneOrStore() throws CmsException {
         GenericValue value;
         Delegator d = getDelegator();
-        
+
         if (entity.containsPrimaryKey()) {
             try {
                 value = d.createOrStore(entity);
             } catch(GenericEntityException e) {
-                throw new CmsDataException("Entity " + entity.getEntityName() 
+                throw new CmsDataException("Entity " + entity.getEntityName()
                     + " could not be stored (ID: " + entity.getPkShortValueString() + "): " + e.getMessage(), e);
             }
         } else {
             try {
                 value = d.createSetNextSeqId(entity);
             } catch(GenericEntityException e) {
-                throw new CmsDataException("Entity " + entity.getEntityName() 
+                throw new CmsDataException("Entity " + entity.getEntityName()
                     + " could not be created (with new ID): " + e.getMessage(), e);
-            }    
+            }
         }
 
         if (value != null) {
@@ -481,10 +481,10 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     public void store() throws CmsException {
         createWithNewIdIfNoneOrStore();
     }
-    
+
     /**
      * Removes the entity from the database.
-     * 
+     *
      * @return number of rows affected (in any entity)
      */
     public int remove() throws CmsException {
@@ -496,7 +496,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         }
         return rowsAffected;
     }
-    
+
     protected CmsException makeRemoveException(Exception e) {
         return new CmsDataException(getEntityName() + " could not be removed "
                 + "(are there still other records that depend on this one?): " + e.getMessage()); // TODO: localize
@@ -504,19 +504,19 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
 
     public static int removeAll(Collection<? extends CmsDataObject> dataObjects) throws CmsException {
         int rowsAffected = 0;
-        
+
         if (dataObjects != null) {
             for(CmsDataObject dataObject : dataObjects) {
                 rowsAffected += dataObject.remove();
             }
         }
-        
+
         return rowsAffected;
     }
-    
+
     /**
      * Returns the last modification of the entity record as date.
-     * 
+     *
      * @return modification date
      */
     public Date getLastModified() {
@@ -526,7 +526,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     public void setFields(Map<String, ? extends Object> fields) {
         entity.setFields(fields);
     }
-    
+
     /**
      * Creates an empty value of an entity with the given fields preset.
      */
@@ -535,13 +535,13 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         if (fields != null) {
             gv = delegator.makeValidValue(entityName, fields);
         } else {
-            gv = delegator.makeValue(entityName);  
+            gv = delegator.makeValue(entityName);
         }
         // NEVER do this - always use createSetNextSeqId
         //gv.setNextSeqId();
         return gv;
     }
-    
+
     /**
      * Copy value, without PK.
      */
@@ -550,7 +550,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         gv.setNonPKFields(otherEntity);
         return gv;
     }
-    
+
     /**
      * Core common CmsDataObject copy constructor code.
      * (there are no final fields, so kept informal)
@@ -559,13 +559,13 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         this.entity = copyValue(other.getEntity());
         this.checkCommonEntityFieldsForCopy(other, copyArgs);
     }
-    
+
     protected void checkCommonEntityFieldsForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
         checkSetCreatedByForCopy(other, copyArgs);
         checkClearContentIdForCopy(other, copyArgs);
         checkClearActiveContentIdForCopy(other, copyArgs);
     }
-    
+
     protected void checkSetCreatedByForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
         if (isField("createdBy")) {
             // Store the name of the person who created the copy (which is NOT the same as the person who
@@ -576,13 +576,13 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             }
         }
     }
-    
+
     protected void checkClearContentIdForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
         if (isField("contentId")) {
             this.entity.set("contentId", null);
         }
     }
-    
+
     protected void checkClearActiveContentIdForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
         if (isField("activeContentId")) {
             this.entity.set("activeContentId", null);
@@ -592,19 +592,19 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     public void fieldsToMap(Map<String, Object> out) {
         out.putAll(entity);
     }
-    
+
     public static boolean nonEmptyOrDefault(Boolean val, boolean defaultVal) {
         return val != null ? val : defaultVal;
     }
-    
+
     public static <T> T nonEmptyOrDefault(T val, T defaultVal) {
         return UtilValidate.isNotEmpty(val) ? val : defaultVal;
     }
-    
+
     public static boolean isActiveLogical(Boolean active) {
         return (active != null) ? active : MAPPING_ACTIVE_DEFAULT;
     }
-    
+
     public static <T extends CmsDataObject> Map<String, T> makeIdDataObjectMap(Iterable<? extends T> dataObjects) {
         Map<String, T> map = new HashMap<>();
         if (dataObjects != null) {
@@ -614,7 +614,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         }
         return map;
     }
-    
+
     public static List<GenericValue> getEntityValues(Collection<? extends CmsDataObject> dataObjects) {
         List<GenericValue> res = new ArrayList<>(dataObjects.size());
         for(CmsDataObject dataObj : dataObjects) {
@@ -622,7 +622,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         }
         return res;
     }
-    
+
     /**
      * Returns a type-appropriate DataObjectWorker for this instance.
      * <p>
@@ -630,12 +630,12 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      * factory type. This default implementation is less safe and constructs needlessly.
      */
     public abstract DataObjectWorker<?> getWorkerInst();
-    
+
 //    /**
 //     * Returns a rudimentary DataObjectWorker for the given class, implemented using reflection
 //     * and older-style code.
 //     * @deprecated This is a <em>compatibility</em> and <em>transition</em> method only!
-//     * CmsDataObject classes should extend DataObjectWorker with a non-reflective 
+//     * CmsDataObject classes should extend DataObjectWorker with a non-reflective
 //     * implementation which then gets returned by {@link CmsDataObject#getWorkerInst()} as well
 //     * as by a zero-parameter <code>getWorker()</code> method in its top file.
 //     */
@@ -643,11 +643,11 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
 //    public static <T extends CmsDataObject> DataObjectWorker<T> getWorker(final Class<T> dataObjectClass) {
 //        return new ReflexiveDataObjectWorker<T>(dataObjectClass);
 //    }
-    
-    
-    
+
+
+
     /**
-     * Data Object Factory and delegator-like worker, where each subclass represents a 
+     * Data Object Factory and delegator-like worker, where each subclass represents a
      * single data object type (primarily, though operations may involve related).
      * <p>
      * 2016: Every CmsDataObject subclass should be getting one of these at some point.
@@ -659,45 +659,45 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      * can be moved into this worker...
      */
     public static abstract class DataObjectWorker<T extends CmsDataObject> extends ObjectWorker<T> {
-        
+
         // TODO: REVIEW: I have no idea if syncObj is still needed, but this is easy, so just do it...
         // this simply ensures each Class<?> will get a single distinct object globally (through worker)
         protected static final Map<Class<?>, Object> dataObjectClassSyncObjMap = new ConcurrentHashMap<>();
-        
+
         protected final Object syncObj;
         protected final Class<T> dataObjectClass;
-        
+
         protected DataObjectWorker(Class<T> dataObjectClass) {
             this.dataObjectClass = dataObjectClass;
             dataObjectClassSyncObjMap.putIfAbsent(dataObjectClass, new Object());
             this.syncObj = dataObjectClassSyncObjMap.get(dataObjectClass);
         }
-  
+
         /*
          * Basic type and data model info methods
          */
-        
+
         public Class<T> getDataObjectClass() {
             return dataObjectClass;
         }
-        
+
         public String getEntityName() {
             return getDataObjectClass().getSimpleName();
         }
-        
+
         public ModelEntity getModelEntity(Delegator delegator) {
             return delegator.getModelEntity(getEntityName());
         }
-        
+
         /**
-         * Returns candidate PK field names, which may or may not have any kind of 
+         * Returns candidate PK field names, which may or may not have any kind of
          * actual constraints in the entity schema. The default implementation simply
          * returns the official entity PK.
          */
         public List<String> getLogicalPkFieldNames(Delegator delegator) {
             return getModelEntity(delegator).getPkFieldNames();
         }
-        
+
         /**
          * Returns names of candidate PK fields that (despite terminology) may accept
          * empty values.
@@ -709,10 +709,10 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         }
 
         /**
-         * Returns an application-level sync object that <em>may</em> (?) currently be used 
-         * for data locking, to enforce the logical (candidate) keys for our mapping entities, 
+         * Returns an application-level sync object that <em>may</em> (?) currently be used
+         * for data locking, to enforce the logical (candidate) keys for our mapping entities,
          * for entities that used constraint-less PK IDs rather than traditional constraints.
-         * @deprecated insufficient solution for complex deployments. 
+         * @deprecated insufficient solution for complex deployments.
          * TODO?: 2016: Investigate need and possibilities for database (row-level?) locking
          * instead of this; should be removed entirely at some point...
          */
@@ -720,8 +720,8 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         public Object getDataObjectOpsSyncObject() {
             return syncObj;
         }
-        
-        
+
+
         /*
          * Core factory methods
          */
@@ -734,7 +734,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
          * NOTE: 2016: this should slowly start taking the place of the old Reflection API calls.
          */
         public abstract T makeFromValue(GenericValue value) throws CmsException;
-        
+
         public abstract T makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException;
 
         // this turns out to be inferior to simply having copy() on the instance due to typing.
@@ -745,18 +745,18 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
 //         * The copy options are not standardized, sometimes they are simple field names.
 //         */
 //        public abstract T makeCopy(T other, Map<String, Object> copyArgs) throws CmsException;
-        
+
         /*
          * Find operations.
-         * 
-         * NOTE: most of these will produce data object instances using 
+         *
+         * NOTE: most of these will produce data object instances using
          * the method makeFromValue(Generic) above.
          */
 
         public T findById(Delegator delegator, String id, boolean useCache) throws CmsException {
             return findOne(delegator, UtilMisc.toMap(getModelEntity(delegator).getFirstPkFieldName(), id), useCache);
         }
-        
+
         public T findByIdAlways(Delegator delegator, String id, boolean useCache) throws CmsException {
             T result = findById(delegator, id, useCache);
             if (result == null) {
@@ -769,9 +769,9 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         /**
          * Finds all entities matching a given set of fields and wraps them in data
          * objects of the given class.
-         * 
+         *
          * @return List of data objects of the given class
-         * @throws CmsException 
+         * @throws CmsException
          */
         public List<T> findAll(Delegator delegator, Map<String, ?> fields, List<String> orderBy, boolean cache) throws CmsException {
             final String entityName = getEntityName();
@@ -793,13 +793,13 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             }
             return dataObjects;
         }
-        
+
         /**
          * Finds all entities matching a given set of conditions and wraps them in data
          * objects of the given class.
-         * 
+         *
          * @return List of data objects of the given class
-         * @throws CmsException 
+         * @throws CmsException
          */
         public List<T> findAll(Delegator delegator, EntityCondition whereCondition, List<String> orderBy, boolean cache) throws CmsException {
             final String entityName = getEntityName();
@@ -820,18 +820,18 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                 }
             }
             return dataObjects;
-        }  
-        
+        }
+
         /**
          * Finds all entities matching a given set of fields and wraps them in data
          * objects of the given class.
          * <p>
          * 2016: NOTE: I removed a webSiteId check that seems like it doesn't belong here, and
          * changed the lone caller instead.
-         * 
+         *
          * @param dataObjectClass
          * @return List of data objects of the given class
-         * @throws CmsException 
+         * @throws CmsException
          */
         public List<T> findAll(Delegator delegator, List<String> orderBy, boolean cache) throws CmsException {
             final String entityName = getEntityName();
@@ -839,7 +839,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             try {
                 // caller should handle this:
                 // EntityCondition.makeCondition("webSiteId", EntityOperator.NOT_EQUAL, null)
-                genericValues = delegator.findList(entityName, null, 
+                genericValues = delegator.findList(entityName, null,
                         null, orderBy, null, isUseDbCacheStatic(cache));
             } catch (GenericEntityException e) {
                 throw new CmsException("Entity could not be found. Entity: "
@@ -859,7 +859,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         public List<T> findAll(Delegator delegator, boolean cache) throws CmsException {
             return findAll(delegator, null, cache);
         }
-        
+
         /**
          * This is to help find/detect DB errors (important since not enforced in schema).
          */
@@ -868,19 +868,19 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             CANDIDATE_KEY_PERMISSIVE, // Log warning if many found
             CANDIDATE_KEY_STRICT // Exception if many found
         }
-        
+
         public T findFirst(Delegator delegator, Map<String, ?> fields, boolean cache) throws CmsException {
             return findFirst(delegator, fields, cache, null);
         }
-        
+
         /**
          * Finds the first (and usually only) entity matching the fields and wraps
          * it into a data object of the given class.
-         * 
+         *
          * @param fields
          * @param dataObjectClass
          * @return Data object of the given class
-         * @throws CmsException 
+         * @throws CmsException
          */
         public T findFirst(Delegator delegator, Map<String, ?> fields, boolean cache, SingleFindMode findMode) throws CmsException {
             final String entityName = getEntityName();
@@ -903,7 +903,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                                 ": Fields: " + fields.toString(), module);
                     }
                 }
-                
+
                 try {
                     dataObject = makeFromValue(genericValues.get(0));
                 } catch (Exception e) {
@@ -912,17 +912,17 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             }
             return dataObject;
         }
-        
+
         public T findFirst(Delegator delegator, EntityCondition whereCondition, List<String> orderBy, boolean cache) throws CmsException {
             return findFirst(delegator, whereCondition, orderBy, cache, null);
         }
-        
+
         /**
          * Finds the first (and usually only) entity matching the fields and wraps
          * it into a data object of the given class.
-         * 
+         *
          * @return Data object of the given class
-         * @throws CmsException 
+         * @throws CmsException
          */
         public T findFirst(Delegator delegator, EntityCondition whereCondition,
                 List<String> orderBy, boolean cache, SingleFindMode findMode) throws CmsException {
@@ -930,7 +930,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             List<GenericValue> genericValues;
             T dataObject = null;
             try {
-                genericValues = delegator.findList(entityName, 
+                genericValues = delegator.findList(entityName,
                         whereCondition, null, orderBy, null, isUseDbCacheStatic(cache));
             } catch (GenericEntityException e) {
                 throw new CmsException("Entity could not be found. Entity: " + entityName + " Condition: "
@@ -946,7 +946,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                                 ": Search condition: " + (whereCondition != null ? whereCondition.toString() : "(none)"), module);
                     }
                 }
-                
+
                 try {
                     dataObject = makeFromValue(genericValues.get(0));
                 } catch (Exception e) {
@@ -975,12 +975,12 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             }
             return dataObject;
         }
-        
+
         public T findByCandidateKey(Delegator delegator, Map<String, ?> candidateKey, boolean useCache) throws CmsException {
             return findFirst(delegator, candidateKey, useCache, SingleFindMode.CANDIDATE_KEY_PERMISSIVE);
         }
-        
-        
+
+
         /*
          * Modification (create, update and delete) operations.
          * <p>
@@ -989,13 +989,13 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
          * or more appropriate to apply these operations without doing a separate lookup;
          * these provide the next-best abstraction in these cases.
          */
-        
+
         public T createDataObject(Delegator delegator, Map<String, ?> fields) throws CmsException {
             T dataObj = makeFromFields(delegator, fields);
             dataObj.store();
             return dataObj;
         }
-        
+
         public T updateDataObject(Delegator delegator, Map<String, ?> fields) throws CmsException {
             Map<String, Object> pkFields = extractPkFields(delegator, fields);
             T dataObj = findOne(delegator, pkFields, false);
@@ -1006,7 +1006,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             dataObj.store();
             return dataObj;
         }
-        
+
         public T createOrUpdateDataObject(Delegator delegator, Map<String, ?> fields) throws CmsException {
             // depressing trick to check if pk present
             GenericValue tempPkValue = delegator.makeValidValue(getEntityName(), fields);
@@ -1016,17 +1016,17 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                 return createDataObject(delegator, fields);
             }
         }
-        
+
         public void deleteDataObject(Delegator delegator, Map<String, ?> fields) throws CmsException {
             T dataObj = findOne(delegator, extractPkFields(delegator, fields), false);
             dataObj.remove();
         }
-        
+
         public void deleteDataObject(Delegator delegator, String idField) throws CmsException {
             T dataObj = findById(delegator, idField, false);
             dataObj.remove();
         }
-        
+
         protected Map<String, Object> extractPkFields(Delegator delegator, Map<String, ?> fields) {
             ModelEntity modelEntity = getModelEntity(delegator);
             Map<String, Object> pkFields = new HashMap<>();
@@ -1035,7 +1035,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             }
             return pkFields;
         }
-        
+
         protected Map<String, Object> hasPkFields(Delegator delegator, Map<String, ?> fields) {
             ModelEntity modelEntity = getModelEntity(delegator);
             Map<String, Object> pkFields = new HashMap<>();
@@ -1044,26 +1044,26 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
             }
             return pkFields;
         }
-        
-        
+
+
         /*
          * Cache operations
          */
-        
+
         @Override
         public void clearEntityCaches(Delegator delegator) throws CmsException {
             delegator.clearCacheLine(getEntityName());
         }
-        
+
     }
-    
+
 //    /**
-//     * Old-style reflexive-invoking worker. 
+//     * Old-style reflexive-invoking worker.
 //     * @deprecated limits factory potential and frustrates debugging.
 //     */
 //    @Deprecated
 //    public static class ReflexiveDataObjectWorker<T extends CmsDataObject> extends DataObjectWorker<T> {
-//   
+//
 //        public ReflexiveDataObjectWorker(Class<T> dataObjectClass) {
 //            super(dataObjectClass);
 //        }

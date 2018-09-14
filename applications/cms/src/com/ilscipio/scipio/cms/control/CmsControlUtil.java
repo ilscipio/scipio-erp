@@ -26,10 +26,10 @@ public abstract class CmsControlUtil {
 
     public static final String CMS_NOCACHERESPONSESET_REQATTRNAME = "_CMS_NOCACHERESPONSE_SET_";
     public static final String CMS_NOCACHECMSRENDER_REQATTRNAME = "cmsSetResponseBrowserNoCacheCmsPage";
-    
+
     private CmsControlUtil() {
     }
-    
+
     /**
      * Gets a system-wide unique ID for the current request. WARNING: We cheat and use current thread ID for now!
      * Note the name: "current".
@@ -45,7 +45,7 @@ public abstract class CmsControlUtil {
         request.setAttribute(CMS_NOCACHERESPONSESET_REQATTRNAME, Boolean.TRUE);
         //}
     }
-    
+
     public static boolean getPreviewModeParam(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
         String previewMode = (String) request.getAttribute(webSiteConfig.getPreviewModeParamName());
         if (previewMode == null) {
@@ -59,7 +59,7 @@ public abstract class CmsControlUtil {
         }
         return "Y".equals(previewMode);
     }
-    
+
     public static CmsCallType getRenderModeParam(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
         CmsCallType renderMode;
         if (webSiteConfig.isAllowPreviewMode()) {
@@ -70,7 +70,7 @@ public abstract class CmsControlUtil {
         }
         return renderMode;
     }
-    
+
     public static String getAccessTokenParam(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
         String accessToken = (String) request.getAttribute(webSiteConfig.getAccessTokenParamName());
         if (accessToken == null) {
@@ -88,7 +88,7 @@ public abstract class CmsControlUtil {
         }
         return accessToken.isEmpty() ? null : accessToken;
     }
-    
+
     public static boolean verifyValidAccessToken(HttpServletRequest request, CmsWebSiteConfig webSiteConfig, CmsCallType renderMode) {
         if (renderMode == CmsCallType.OFBIZ_PREVIEW || webSiteConfig.isRequireLiveAccessToken()) {
             String accessToken = CmsControlUtil.getAccessTokenParam(request, webSiteConfig);
@@ -105,37 +105,37 @@ public abstract class CmsControlUtil {
         if (servletPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(servletPath);
     }
-    
+
     public static String normalizeServletPathNoNull(String servletPath) { // Servlet path only
         if (servletPath == null) return "/";
         return PathUtil.ensureStartAndNoTrailDelim(servletPath);
     }
-    
+
     public static String normalizeServerRootRequestPath(String requestPath) { // Path from server root to before query string
         if (requestPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
-    
+
     public static String normalizeServerRootRequestPathNoNull(String requestPath) { // Path from server root to before query string
         if (requestPath == null) return "/";
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
-    
+
     public static String normalizeContextRootRequestPath(String requestPath) { // Path from servlet context (webapp) root to before query string
         if (requestPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
-    
+
     public static String normalizeContextRootRequestPathNoNull(String requestPath) { // Path from servlet context (webapp) root to before query string
         if (requestPath == null) return "/";
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
-    
+
     public static String normalizeServletRootRequestPath(String requestPath) { // Path from servlet (controller) root to before query string
         if (requestPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
-    
+
     public static String normalizeServletRootRequestPathNoNull(String requestPath) { // Path from servlet (controller) root to before query string
         if (requestPath == null) return "/";
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
@@ -149,29 +149,29 @@ public abstract class CmsControlUtil {
         if (cmsReqPath == null) return null;
         return PathUtil.ensureStartDelim(cmsReqPath);
     }
-    
+
     public static String getReqLogIdStr(HttpServletRequest request) {
         HttpSession session = (request != null) ? request.getSession(false) : null;
         return (request != null ? "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) + "; " : "") + "threadId: " + Thread.currentThread().getId();
     }
-    
+
     public static String getReqLogIdDelimStr(HttpServletRequest request) {
         HttpSession session = (request != null) ? request.getSession(false) : null;
         return (request != null ? "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)): "") + "; threadId: " + Thread.currentThread().getId();
     }
-    
+
     // only use if request is not available
     public static String getReqLogIdStr(HttpSession session) {
         return "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) + "; threadId: " + Thread.currentThread().getId();
     }
-    
+
     // only use if request is not available
     public static String getReqLogIdDelimStr(HttpSession session) {
         return "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) + "; threadId: " + Thread.currentThread().getId();
     }
 
     /**
-     * Gets the response writer, in the same fashion as done by 
+     * Gets the response writer, in the same fashion as done by
      * {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler}.
      */
     public static Writer getResponseWriter(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -185,7 +185,7 @@ public abstract class CmsControlUtil {
         //      }
         return response.getWriter();
     }
-    
+
     public static String getPagePreviewVersionId(HttpServletRequest request) {
         String cmsPageVersionId = (String) request.getAttribute("cmsPageVersionId");
         if (cmsPageVersionId == null) {
@@ -200,7 +200,7 @@ public abstract class CmsControlUtil {
     public static boolean isShowSessionIdInLog() {
         return showSessionIdInLog;
     }
-    
+
     public static String getSessionIdForLog(HttpSession session) {
         return showSessionIdInLog ? session.getId() : "[hidden]";
     }

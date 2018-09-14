@@ -34,10 +34,10 @@ import com.ilscipio.scipio.cms.CmsUtil;
 public class CmsEntityInfo {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static final String CMS_ENTITY_BASE_PKG = "com.ilscipio.scipio.cms";
     public static final String CMS_ENTITY_BASE_PKG_PREFIX = CMS_ENTITY_BASE_PKG + ".";
-    
+
     /**
      * Default preferred CMS entity order, mainly for data export, but anything that lists the entities
      * should follow this so the order is the same everywhere.
@@ -52,21 +52,21 @@ public class CmsEntityInfo {
      */
     static final List<String> cmsEntityNamesPrefOrderDefault = UtilMisc.unmodifiableArrayList(
             "CmsScriptTemplate",
-            
-            "CmsAssetTemplate", "CmsAssetTemplateScriptAssoc", 
+
+            "CmsAssetTemplate", "CmsAssetTemplateScriptAssoc",
             "CmsAssetTemplateVersion", "CmsAssetTemplateVersionState",
-            
-            "CmsPageTemplate", "CmsPageTemplateAssetAssoc", "CmsPageTemplateScriptAssoc", 
+
+            "CmsPageTemplate", "CmsPageTemplateAssetAssoc", "CmsPageTemplateScriptAssoc",
             "CmsPageTemplateVersion", "CmsPageTemplateVersionState",
-            
+
             "CmsAttributeTemplate",
-            
+
             "CmsPage", "CmsPageAuthorization", "CmsPageProductAssoc", "CmsPageScriptAssoc",
             "CmsPageVersion", "CmsPageVersionState",
-            
+
             "CmsProcessMapping", "CmsPageSpecialMapping", "CmsProcessViewMapping", "CmsViewMapping"
     );
-    
+
     /**
      * Major entity names, see {@link #getMajorCmsEntityNames()} for info.
      */
@@ -74,18 +74,18 @@ public class CmsEntityInfo {
             "CmsScriptTemplate", "CmsAssetTemplate", "CmsPageTemplate", "CmsPage",
             "CmsProcessMapping", "CmsViewMapping"
     })));
-    
+
     static final Set<String> extCmsEntityNames = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(new String[] {
             "Content", "DataResource", "ElectronicText"
     })));
-    
+
     /**
      * Special entity names that are treated as special cases; these may not actually exist.
      */
     static final Set<String> specialCmsEntityNames = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(new String[] {
             "CmsMedia", "CmsMediaVariants"
     })));
-    
+
     static final Set<String> specialMajorCmsEntityNames = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(new String[] {
             "CmsMedia"
     })));
@@ -98,11 +98,11 @@ public class CmsEntityInfo {
         }))));
         specialCmsEntityNamesByPkg = Collections.unmodifiableMap(map);
     }
-    
+
     // NOTE: special fast cache pattern (read-only cache)
     private static Map<ModelEntity, Set<String>> cmsContentIdFieldNamesCache = Collections.emptyMap();
     private static Map<ModelEntity, List<ModelRelation>> cmsContentModelRelationsCache = Collections.emptyMap();
-    
+
     // doesn't depend on model reader
     protected static final Map<String, Set<String>> entityCdataFields = Collections.unmodifiableMap(makeEntityCdataFieldsMap());
 
@@ -113,7 +113,7 @@ public class CmsEntityInfo {
         Delegator delegator = null;
         try {
             delegator = EntityInfoUtil.getDefaultDelegatorAlways();
-            inst = new CmsEntityInfo(delegator, getCmsEntityNamesPrefOrderDefault(), 
+            inst = new CmsEntityInfo(delegator, getCmsEntityNamesPrefOrderDefault(),
                     OrderMode.Explicit.INSTANCE, true);
         } catch(Throwable t) {
             Debug.logError(t, "Could not build information for default CmsEntityInfo instance", module);
@@ -121,30 +121,30 @@ public class CmsEntityInfo {
         }
         INSTANCE = inst;
     }
-    
+
     protected final OrderMode orderMode;
     protected final Set<ModelEntity> cmsModelEntities;
     protected final Set<String> cmsEntityNames;
     protected final Map<String, Set<ModelEntity>> cmsModelEntitiesByPkg;
     protected final Map<String, Set<String>> cmsEntityNamesByPkg;
-    
+
     protected final Set<String> combinedCmsEntityNames;
     protected final Map<String, Set<String>> combinedCmsEntityNamesByPkg;
     protected final Set<String> combinedMajorCmsEntityNames;
-    
+
     protected final ModelReader modelReader;
 
     /******************************************************/
     /* Special Types */
     /******************************************************/
-    
+
     public static abstract class OrderMode {
         public abstract <T> Set<T> makeSet();
         public abstract <K, V> Map<K, V> makeMap();
-        
+
         public <T> Set<T> makeEntitySet() { return makeSet(); }
         public <K, V> Map<K, V> makeEntityPkgMap() { return makeMap(); }
-        
+
         public static class None extends OrderMode {
             public static final None INSTANCE = new None();
             private None() {}
@@ -160,7 +160,7 @@ public class CmsEntityInfo {
             public <T> Set<T> makeSet() { return new LinkedHashSet<>(); }
             @Override
             public <K, V> Map<K, V> makeMap() { return new LinkedHashMap<>(); }
-            
+
             @Override
             public <K, V> Map<K, V> makeEntityPkgMap() {
                 // TODO/FIXME: We're making TreeMaps for these because we don't support explicit order for them yet
@@ -176,7 +176,7 @@ public class CmsEntityInfo {
             public <K, V> Map<K, V> makeMap() { return new TreeMap<>(); }
         }
     }
-    
+
     /******************************************************/
     /* Constructors */
     /******************************************************/
@@ -188,11 +188,11 @@ public class CmsEntityInfo {
     public static CmsEntityInfo getInst(Delegator delegator) {
         return INSTANCE; // TODO: review if new instance or caches needed
     }
-    
+
 //    private static CmsEntityInfo getInst(ModelReader reader) {
 //        return INSTANCE; // TODO: review if new instance or caches needed
 //    }
-    
+
     protected CmsEntityInfo(Delegator delegator, boolean empty) { // limited mitigation in case of unexpected init fail
         this.modelReader = (delegator != null) ? delegator.getModelReader() : null;
         this.orderMode = OrderMode.Explicit.INSTANCE;
@@ -204,7 +204,7 @@ public class CmsEntityInfo {
         this.combinedCmsEntityNamesByPkg = Collections.emptyMap();
         this.combinedMajorCmsEntityNames = Collections.emptySet();
     }
-    
+
     /**
      * Regular constructor, with ordering of collections by preferred/dependency order and read-only.
      * WARN: readOnly not guaranteed to make nested collections unmodifiable.
@@ -212,7 +212,7 @@ public class CmsEntityInfo {
     public CmsEntityInfo(Delegator delegator) {
         this(delegator, getCmsEntityNamesPrefOrderDefault(delegator), OrderMode.Explicit.INSTANCE, true);
     }
-    
+
     /**
      * Full constructor.
      * WARN: readOnly not guaranteed to make nested collections unmodifiable.
@@ -220,7 +220,7 @@ public class CmsEntityInfo {
     public CmsEntityInfo(Delegator delegator, List<String> cmsEntityNamesPrefOrder, OrderMode orderMode, boolean readOnly) {
         this(delegator.getModelReader(), cmsEntityNamesPrefOrder, OrderMode.Explicit.INSTANCE, readOnly);
     }
-    
+
     /**
      * Full constructor.
      * WARN: readOnly not guaranteed to make nested collections unmodifiable.
@@ -245,7 +245,7 @@ public class CmsEntityInfo {
         this.cmsEntityNames = readOnly ? Collections.unmodifiableSet(cmsEntityNames) : cmsEntityNames;
         this.cmsModelEntitiesByPkg = readOnly ? Collections.unmodifiableMap(cmsModelEntitiesByPkg) : cmsModelEntitiesByPkg;
         this.cmsEntityNamesByPkg = readOnly ? Collections.unmodifiableMap(cmsEntityNamesByPkg) : cmsEntityNamesByPkg;
-        
+
         // FIXME: order is being imposed here
         Set<String> combinedCmsEntityNames = orderMode.makeEntitySet();
         combinedCmsEntityNames.addAll(cmsEntityNames);
@@ -257,14 +257,14 @@ public class CmsEntityInfo {
         combinedCmsEntityNamesByPkg.putAll(cmsEntityNamesByPkg);
         combinedCmsEntityNamesByPkg.putAll(specialCmsEntityNamesByPkg);
         this.combinedCmsEntityNamesByPkg = readOnly ? Collections.unmodifiableMap(combinedCmsEntityNamesByPkg) : combinedCmsEntityNamesByPkg;
-        
+
         // FIXME: order is being imposed here
         Set<String> combinedMajorCmsEntityNames = orderMode.makeEntitySet();
         combinedMajorCmsEntityNames.addAll(majorCmsEntityNames);
         combinedMajorCmsEntityNames.addAll(specialMajorCmsEntityNames);
         this.combinedMajorCmsEntityNames = readOnly ? Collections.unmodifiableSet(combinedMajorCmsEntityNames) : combinedMajorCmsEntityNames;
     }
-    
+
     /******************************************************/
     /* Static Info/Getters */
     /******************************************************/
@@ -272,19 +272,19 @@ public class CmsEntityInfo {
     public static List<String> getCmsEntityNamesPrefOrderDefault(Delegator delegator) {
         return cmsEntityNamesPrefOrderDefault;
     }
-    
+
     public static List<String> getCmsEntityNamesPrefOrderDefault() {
         return cmsEntityNamesPrefOrderDefault;
     }
-    
+
     public static Set<String> getMajorCmsEntityNamesStatic() {
         return majorCmsEntityNames;
     }
-    
+
     /******************************************************/
     /* Getters/Meta Information */
     /******************************************************/
-   
+
     public String getCmsEntityBasePkg() { // (for easier access from other langs)
         return CMS_ENTITY_BASE_PKG;
     }
@@ -300,7 +300,7 @@ public class CmsEntityInfo {
     public OrderMode getOrderMode() {
         return orderMode;
     }
-    
+
     /**
      * Returns the CMS model entities set.
      * If this instance is pref-ordering - such as all instances returned by the {@link #getInst} methods,
@@ -336,21 +336,21 @@ public class CmsEntityInfo {
     public Map<String, Set<String>> getCmsEntityNamesByPkg() {
         return cmsEntityNamesByPkg;
     }
-    
+
     /**
      * Returns entity names for full package name, or null if no such package registered.
      */
     public Set<String> getCmsEntityNamesForPkg(String pkgName) {
         return cmsEntityNamesByPkg.get(pkgName);
     }
-    
+
     /**
      * Returns external/extra/ofbiz entity names used by CMS, such as Content, DataResource, etc.
      */
     public Set<String> getExtCmsEntityNames() {
         return extCmsEntityNames;
     }
-    
+
     /**
      * Returns the special entity names set; e.g. CmsMedia "fake" entity name.
      * Ordering behaves the same as {@link #getCmsModelEntities}.
@@ -358,15 +358,15 @@ public class CmsEntityInfo {
     public Set<String> getSpecialCmsEntityNames() {
         return specialCmsEntityNames;
     }
-    
+
     public Map<String, Set<String>> getSpecialCmsEntityNamesByPkg() {
         return specialCmsEntityNamesByPkg;
     }
-    
+
     public Set<String> getSpecialMajorCmsEntityNames() {
         return specialMajorCmsEntityNames;
     }
-    
+
     /**
      * Returns {@link #getCmsEntityNames()} + {@link #getSpecialCmsEntityNames()}.
      */
@@ -380,7 +380,7 @@ public class CmsEntityInfo {
     public Map<String, Set<String>> getCombinedCmsEntityNamesByPkg() {
         return combinedCmsEntityNamesByPkg;
     }
-    
+
     /**
      * Returns {@link #getMajorCmsEntityNames()} + {@link #getSpecialMajorCmsEntityNames()}.
      */
@@ -402,7 +402,7 @@ public class CmsEntityInfo {
         if (removeEntityNames != null) res.removeAll(removeEntityNames);
         return res;
     }
-    
+
     /**
      * Same as {@link #getCmsEntityNamesForPkg} but creates a copy and returns empty set instead of null,
      * and supports multiple package names (names concatenated). The combined sets are reordered if applicable.
@@ -412,15 +412,15 @@ public class CmsEntityInfo {
     public Set<String> copyCmsEntityNames(Collection<String> pkgNames, Collection<String> addEntityNames, Collection<String> removeEntityNames) {
         return filterCombinedCmsEntityNames(copyCmsEntityNamesNoFilter(pkgNames, addEntityNames, removeEntityNames));
     }
-    
+
     public Set<String> copyCmsEntityNames(Collection<String> pkgNames, Collection<String> addEntityNames) {
         return copyCmsEntityNames(pkgNames, addEntityNames, null);
     }
-    
+
     public Set<String> copyCmsEntityNames(Collection<String> pkgNames) {
         return copyCmsEntityNames(pkgNames, null, null);
     }
-    
+
     public Set<String> copyCmsEntityNames(String pkgName) {
         Set<String> res = getOrderMode().makeEntitySet();
         Set<String> entityNames = cmsEntityNamesByPkg.get(pkgName);
@@ -429,20 +429,20 @@ public class CmsEntityInfo {
         }
         return res; // no reorder needed in this case
     }
-    
+
     /**
-     * Returns set of "major" entities' names, entities that represent high-level 
-     * objects or concepts or demarcations in CMS, and whose CmsDataObject class 
+     * Returns set of "major" entities' names, entities that represent high-level
+     * objects or concepts or demarcations in CMS, and whose CmsDataObject class
      * implements {@link CmsMajorObject}.
      */
     public Set<String> getMajorCmsEntityNames() {
         return majorCmsEntityNames;
     }
-    
+
     public boolean isMajorCmsEntity(String entityName) {
         return majorCmsEntityNames.contains(entityName);
     }
-    
+
     /******************************************************/
     /* Instance Helpers and Checks */
     /******************************************************/
@@ -459,7 +459,7 @@ public class CmsEntityInfo {
         outEntityNames.retainAll(names);
         return outEntityNames;
     }
-    
+
     /**
      * Same as {@link #filterCmsEntityNames} but uses <code>getOrderMode().<String>makeEntitySet()</code>
      * for the out; ordering not guaranteed.
@@ -467,17 +467,17 @@ public class CmsEntityInfo {
     public Set<String> filterCmsEntityNames(Collection<String> names) {
         return filterCmsEntityNames(names, getOrderMode().<String>makeEntitySet());
     }
-    
+
     /**
      * Filters AND orders the given entity names using the same order this instance is using for {@link #getCmsEntityNames()},
-     * and eliminates any names not recognized as part of those. 
+     * and eliminates any names not recognized as part of those.
      * The returned collection is a LinkedHashSet to preserve order.
      * NOTE: will eliminate Content/DataResource/ElectronicText.
      */
     public Set<String> filterOrderCmsEntityNames(Collection<String> names) {
         return filterCmsEntityNames(names, OrderMode.Explicit.INSTANCE.<String>makeEntitySet());
     }
-    
+
     /**
      * Similar to {@link #filterCmsEntityNames(Collection, Set)} but returns only Major entity names,
      * in other words entities corresponding to the data object classes that implement {@link CmsMajorObject}.
@@ -488,60 +488,60 @@ public class CmsEntityInfo {
         outEntityNames.retainAll(names);
         return outEntityNames;
     }
-    
+
     public Set<String> filterMajorCmsEntityNames(Collection<String> names) {
         return filterMajorCmsEntityNames(names, getOrderMode().<String>makeEntitySet());
     }
-    
+
     public Set<String> filterOrderMajorCmsEntityNames(Collection<String> names) {
         return filterMajorCmsEntityNames(names, OrderMode.Explicit.INSTANCE.<String>makeEntitySet());
     }
-    
+
     public Set<String> filterSpecialCmsEntityNames(Collection<String> names, Set<String> outEntityNames) {
         if (names == null) return outEntityNames;
         outEntityNames.addAll(getSpecialCmsEntityNames());
         outEntityNames.retainAll(names);
         return outEntityNames;
     }
-    
+
     public Set<String> filterSpecialCmsEntityNames(Collection<String> names) {
         return filterSpecialCmsEntityNames(names, getOrderMode().<String>makeEntitySet());
     }
-    
+
     public Set<String> filterCombinedCmsEntityNames(Collection<String> names, Set<String> outEntityNames) {
         if (names == null) return outEntityNames;
         outEntityNames.addAll(getCombinedCmsEntityNames());
         outEntityNames.retainAll(names);
         return outEntityNames;
     }
-    
+
     public Set<String> filterCombinedCmsEntityNames(Collection<String> names) {
         return filterCombinedCmsEntityNames(names, getOrderMode().<String>makeEntitySet());
     }
-    
+
     /**
      * Determines the special contentId reference field names for the given CMS entity.
      */
     public Set<String> getCmsContentIdFieldNames(ModelEntity modelEntity) {
         return getCmsContentIdFieldNamesStatic(modelEntity);
     }
-    
+
     public List<ModelRelation> getCmsContentModelRelations(ModelEntity modelEntity) {
         return getCmsContentModelRelationsStatic(modelEntity);
     }
-    
+
     public boolean containsCmsModelEntityInstance(ModelEntity modelEntity) {
         return cmsModelEntities.contains(modelEntity);
     }
-    
+
     public boolean isCmsModelEntity(ModelEntity modelEntity) {
         return cmsModelEntities.contains(modelEntity) || isCmsModelEntityStatic(modelEntity);
     }
-    
+
     /******************************************************/
     /* Static Helpers */
     /******************************************************/
-    
+
     /**
      * Determines the special contentId reference field names for the given CMS entity.
      * Uses a fast homemade cache so there will be no issue calling this on thousands of records (e.g. for data export).
@@ -561,11 +561,11 @@ public class CmsEntityInfo {
             Map<ModelEntity, Set<String>> cache = new HashMap<>(cmsContentIdFieldNamesCache);
             cache.put(modelEntity, fieldNames);
             // the unmodifiableMap inner "final" should give thread safety as long as no further changes (hence the copy)
-            cmsContentIdFieldNamesCache = Collections.unmodifiableMap(cache); 
+            cmsContentIdFieldNamesCache = Collections.unmodifiableMap(cache);
         }
         return fieldNames;
     }
-    
+
     /**
      * Determines the contentId fields on any entity.
      * WARN: does not check that modelEntity is a CMS entity.
@@ -573,7 +573,7 @@ public class CmsEntityInfo {
     public static Set<String> findContentIdFieldNamesStatic(ModelEntity modelEntity) {
         return EntityInfoUtil.getRelationFieldNames(modelEntity, "Content", true, true, false);
     }
-    
+
     public static List<ModelRelation> getCmsContentModelRelationsStatic(ModelEntity modelEntity) {
         List<ModelRelation> fieldNames = cmsContentModelRelationsCache.get(modelEntity);
         if (fieldNames == null && modelEntity != null) {
@@ -583,22 +583,22 @@ public class CmsEntityInfo {
             fieldNames = Collections.unmodifiableList(findCmsContentModelRelationsStatic(modelEntity));
             Map<ModelEntity, List<ModelRelation>> cache = new HashMap<>(cmsContentModelRelationsCache);
             cache.put(modelEntity, fieldNames);
-            cmsContentModelRelationsCache = Collections.unmodifiableMap(cache); 
+            cmsContentModelRelationsCache = Collections.unmodifiableMap(cache);
         }
         return fieldNames;
     }
-    
+
     public static List<ModelRelation> findCmsContentModelRelationsStatic(ModelEntity modelEntity) {
         return EntityInfoUtil.findModelRelationsByRelEntityName(modelEntity, "Content", true, true, false);
     }
-    
+
     /**
      * Figures out if the given entity is a CMS entity.
      */
     public static boolean isCmsModelEntityStatic(ModelEntity modelEntity) {
         return (modelEntity.getPackageName() != null && modelEntity.getPackageName().startsWith(CMS_ENTITY_BASE_PKG_PREFIX));
     }
-    
+
     /**
      * Makes a map of sets of all the entity field names we want to always print out as CDATA blocks in XML output.
      */
@@ -618,28 +618,28 @@ public class CmsEntityInfo {
      */
     public static Collection<ModelEntity> findCmsModelEntitiesWithPrefOrder(ModelReader reader, List<String> cmsEntityNamesPrefOrder) {
         return findModelEntitiesWithPrefOrder(reader, cmsEntityNamesPrefOrder,
-                false, Arrays.asList(new String[] { CMS_ENTITY_BASE_PKG_PREFIX }), 
+                false, Arrays.asList(new String[] { CMS_ENTITY_BASE_PKG_PREFIX }),
                 "Cms: ", " - please verify the preferred entity order (see " + module + ")", true, true, true);
     }
-    
+
     /**
-     * Determines a preferred-ordering set of all relevant model entities, based on a combination of 
+     * Determines a preferred-ordering set of all relevant model entities, based on a combination of
      * a list of preferred names and a filter on all entities,
      * with dependencies optionally enforced, such that least-dependent appears first and most-dependent appears last.
      * <p>
      * TODO?: move to EntityInfoUtil later
      */
-    public static Collection<ModelEntity> findModelEntitiesWithPrefOrder(ModelReader reader, 
-            Collection<String> entityNamesPrefOrder, boolean allowViews, Collection<String> allowedPkgPrefixes, 
+    public static Collection<ModelEntity> findModelEntitiesWithPrefOrder(ModelReader reader,
+            Collection<String> entityNamesPrefOrder, boolean allowViews, Collection<String> allowedPkgPrefixes,
             String logPrefix, String logErrorSuffix, boolean depCheck, boolean prefChecks, boolean prefOrderCheck) {
         // First, get the explicitly-named CMS entities in the order we prefer
         LinkedHashSet<String> candidateEntityNames = new LinkedHashSet<>(entityNamesPrefOrder);
-    
+
         // Sanity check
         if (prefChecks && candidateEntityNames.size() != entityNamesPrefOrder.size()) {
             Debug.logError(logPrefix + "EntityInfo: Preferred entity order contains duplicate names" + logErrorSuffix, module);
         }
-        
+
         // Second, add anything we missed at the end (if any, sorted by name)
         try {
             Set<String> foundNames = new TreeSet<>(); // NOTE: the extra values can only be ordered by name at best...
@@ -660,7 +660,7 @@ public class CmsEntityInfo {
         } catch (GenericEntityException e) {
             Debug.logError(e, logPrefix + "EntityInfo: Entity engine error reading global entity list: " + e.getMessage() + logErrorSuffix, module);
         }
-        
+
         // Third, sanity checks
         LinkedHashSet<ModelEntity> candidateModelEntities = new LinkedHashSet<>();
         for(String name : candidateEntityNames) {
@@ -688,8 +688,8 @@ public class CmsEntityInfo {
             // filter out the invalid names
             candidateEntityNames = new LinkedHashSet<>();
             EntityInfoUtil.getEntityNames(candidateModelEntities, candidateEntityNames);
-        } 
-        
+        }
+
         if (depCheck) {
             // Four, enforce dependencies by running the dep graph ago
             // DEV NOTE: this ensures entitymodel corrections won't break everything too easily.
@@ -705,7 +705,7 @@ public class CmsEntityInfo {
                             + "\nPreferred order:\n" + candidateEntityNamesList.toString()
                             + "\nComputed order:\n" + resolvedEntityNames.toString()
                             + "\n" + logErrorSuffix, module);
-                    
+
                     candidateEntityNames = new LinkedHashSet<>(resolvedEntityNames);
                     candidateModelEntities = new LinkedHashSet<>();
                     EntityInfoUtil.getModelEntitiesSafe(reader, candidateEntityNames, candidateModelEntities);
@@ -723,7 +723,7 @@ public class CmsEntityInfo {
         }
         return candidateModelEntities;
     }
-    
+
     public static void buildCmsModelEntityInfoCollections(ModelReader reader, List<String> cmsEntityNamesPrefOrder, OrderMode orderMode,
             Collection<ModelEntity> modelEntities, Collection<String> allCmsEntityNames,
             Map<String, Set<ModelEntity>> modelEntitiesByPkg, Map<String, Set<String>> cmsEntityNamesByPkg) {
@@ -742,7 +742,7 @@ public class CmsEntityInfo {
                         cmsEntityNamesByPkg.put(subPkg, nameList);
                     }
                     nameList.add(modelEntity.getEntityName());
-                    
+
                     modelEntities.add(modelEntity);
                     Set<ModelEntity> modelEntityList = modelEntitiesByPkg.get(subPkg);
                     if (modelEntityList == null) {

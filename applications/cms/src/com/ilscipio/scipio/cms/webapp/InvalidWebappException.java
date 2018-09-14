@@ -2,7 +2,7 @@ package com.ilscipio.scipio.cms.webapp;
 
 
 /**
- * Exception thrown when an otherwise valid webapp ID of any sort is used to and 
+ * Exception thrown when an otherwise valid webapp ID of any sort is used to and
  * fails to resolve to a webapp.
  */
 @SuppressWarnings("serial")

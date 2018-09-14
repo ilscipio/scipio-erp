@@ -12,14 +12,14 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
 public abstract class CmsServiceUtil {
-    
+
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final ServiceErrorFormatter errorFmt = new ServiceErrorFormatter("Cms: ", ServiceErrorFormatter.Precision.DETAILED);
-    
+
     private CmsServiceUtil() {
     }
-    
+
     /**
      * Generic error formatter for service exception handling.
      * NOTE: each *Services class can derive its own for more precise messages.
@@ -27,11 +27,11 @@ public abstract class CmsServiceUtil {
     public static ServiceErrorFormatter getErrorFormatter() {
         return errorFmt;
     }
-    
+
     /**
      * NOTE: better to use cmsGenericPermission on service def because self-documenting.
      */
-    public static void checkCmsPermission(DispatchContext dctx, Map<String, ?> context, 
+    public static void checkCmsPermission(DispatchContext dctx, Map<String, ?> context,
             String permAction) throws CmsPermissionException {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!dctx.getSecurity().hasEntityPermission("CMS", permAction, userLogin)) {
@@ -39,7 +39,7 @@ public abstract class CmsServiceUtil {
             throw new CmsPermissionException(propMsg);
         }
     }
-    
+
     public static String getUserId(Map<String, ?> context) {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
@@ -58,7 +58,7 @@ public abstract class CmsServiceUtil {
         String partyId = userLogin.getString("partyId");
         return partyId;
     }
-    
+
     public static GenericValue getUserLoginOrSystem(DispatchContext dctx, Map<String, ?> context) throws GenericEntityException {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (userLogin == null) {

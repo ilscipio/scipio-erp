@@ -25,17 +25,17 @@ import org.ofbiz.entity.util.EntityListIterator;
 public abstract class CmsMediaWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
-     * NOTE: currently (2017-08-01) it is recommended to not use this file and to use 
+     * NOTE: currently (2017-08-01) it is recommended to not use this file and to use
      * /applications/content/config/ImageProperties.xml instead, so images everywhere are the same
      * (there may currently be issues if they differ... TODO: REVIEW).
      */
     public static final String CMS_IMAGEPROP_FILEPATH = "/applications/cms/config/ImageProperties.xml";
-    
+
     public static final Map<String, FlexibleStringExpander> RESIZEIMG_CONTENT_FIELDEXPR = ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR;
     public static final Map<String, FlexibleStringExpander> RESIZEIMG_DATARESOURCE_FIELDEXPR = ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR;
-    
+
     public static final Set<String> VALID_DATA_RESOURCE_TYPE_LIST = Collections.unmodifiableSet(UtilMisc.toHashSet("AUDIO_OBJECT", "VIDEO_OBJECT", "IMAGE_OBJECT", "DOCUMENT_OBJECT"));
 
     private static final ImageVariantConfig defaultCmsImgVariantCfg;
@@ -49,10 +49,10 @@ public abstract class CmsMediaWorker {
         defaultCmsImgVariantCfg = cfg;
     }
 
-    
+
     protected CmsMediaWorker() {
     }
-    
+
     public static ImageVariantConfig getDefaultCmsImageVariantConfig() {
         return defaultCmsImgVariantCfg;
     }
@@ -80,10 +80,10 @@ public abstract class CmsMediaWorker {
         }
         return content;
     }
-    
+
     /**
      * Returns as ContentDataResourceRequiredView values (NOTE: the DataResource fields have "dr" prefix).
-     * @throws GenericEntityException 
+     * @throws GenericEntityException
      */
     public static EntityListIterator getAllMediaContentDataResourceRequired(Delegator delegator, String dataResourceTypeId, List<String> orderBy) throws GenericEntityException {
         List<EntityCondition> condList = new ArrayList<>();
@@ -91,7 +91,7 @@ public abstract class CmsMediaWorker {
         if (dataResourceTypeId != null) condList.add(EntityCondition.makeCondition("drDataResourceTypeId", dataResourceTypeId));
         return delegator.find("ContentDataResourceRequiredView", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, orderBy, null);
     }
-    
+
     public static EntityListIterator getMediaContentDataResourceRequiredByContentId(Delegator delegator, String dataResourceTypeId, Collection<String> contentIdList, List<String> orderBy) throws GenericEntityException {
         List<EntityCondition> condList = new ArrayList<>();
         condList.add(EntityCondition.makeCondition("contentTypeId", "SCP_MEDIA"));
@@ -101,11 +101,11 @@ public abstract class CmsMediaWorker {
             contentIdCondList.add(EntityCondition.makeCondition("contentId", contentId));
         }
         condList.add(EntityCondition.makeCondition(contentIdCondList, EntityOperator.OR));
-        return delegator.find("ContentDataResourceRequiredView", 
+        return delegator.find("ContentDataResourceRequiredView",
                 EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, null);
     }
 
-    
+
     /**
      * SCIPIO: Returns the full path to the ImageProperties.xml file to use for cms image size definitions.
      * Uses the one from cms component if available; otherwise falls back on the generic one under content component.
@@ -120,7 +120,7 @@ public abstract class CmsMediaWorker {
             return ContentImageWorker.getContentImagePropertiesFullPath();
         }
     }
-    
+
     public static String getCmsImagePropertiesPath() throws IOException {
         String path = ImageVariantConfig.getImagePropertiesFullPath(CMS_IMAGEPROP_FILEPATH);
         if (new java.io.File(path).exists()) {
@@ -129,10 +129,10 @@ public abstract class CmsMediaWorker {
             return ContentImageWorker.getContentImagePropertiesPath();
         }
     }
-    
+
     // TODO: REVIEW: for now we are intentionally ignoring the thruDate on ContentAssoc to simplify.
     // I don't see the point in keeping old records...
-    
+
     public static List<GenericValue> getVariantContentAssocTo(Delegator delegator, String contentId) throws GenericEntityException {
         EntityCondition cond = EntityCondition.makeCondition(
                 EntityCondition.makeCondition("contentIdStart", contentId),
@@ -140,7 +140,7 @@ public abstract class CmsMediaWorker {
                 EntityCondition.makeCondition("contentTypeId", "SCP_MEDIA_VARIANT")); // alternative: EntityCondition.makeCondition("caContentAssocTypeId", EntityOperator.LIKE, "IMGSZ_%")
         return delegator.findList("ContentAssocViewTo", cond, null, null, null, false);
     }
-    
+
     public static Set<String> getVariantContentAssocContentIdTo(Delegator delegator, String contentId) throws GenericEntityException {
         List<GenericValue> assocList = getVariantContentAssocTo(delegator, contentId);
         Set<String> res = new LinkedHashSet<>();
@@ -151,7 +151,7 @@ public abstract class CmsMediaWorker {
         }
         return res;
     }
-    
+
     public static List<String> getVariantContentMapKeys(Delegator delegator, String contentId) throws GenericEntityException {
         List<GenericValue> assocList = getVariantContentAssocTo(delegator, contentId);
         List<String> res = new ArrayList<>();
@@ -162,13 +162,13 @@ public abstract class CmsMediaWorker {
         }
         return res;
     }
-    
+
     public static EntityListIterator findVariantContentAssocTypes(Delegator delegator) throws GenericEntityException {
-        return delegator.find("ContentAssocType", 
+        return delegator.find("ContentAssocType",
                 EntityCondition.makeCondition("contentAssocTypeId", EntityOperator.LIKE, "IMGSZ_%"),
                 null, null, null, null);
     }
-    
+
     // TODO: optimize
     public static boolean hasVariantContent(Delegator delegator, String contentId) throws GenericEntityException {
         EntityCondition cond = EntityCondition.makeCondition(

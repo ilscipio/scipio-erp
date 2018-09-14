@@ -14,9 +14,9 @@ import org.ofbiz.entity.util.EntityUtil;
 public abstract class CmsDataUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private CmsDataUtil() {}
-    
+
     /**
      * SCIPIO: findUserLoginSecurityGroupByUserLoginId.
      * <p>
@@ -31,9 +31,9 @@ public abstract class CmsDataUtil {
             return Collections.<GenericValue>emptyList();
         }
     }
-    
+
     public static void getContentTypes(Delegator delegator, String parentTypeId, boolean deep, List<GenericValue> outTypes) throws GenericEntityException {
-        List<GenericValue> types = delegator.findByAnd("ContentType", 
+        List<GenericValue> types = delegator.findByAnd("ContentType",
                 UtilMisc.toMap("parentTypeId", parentTypeId), UtilMisc.toList("sequenceId"), true);
         for(GenericValue type : types) {
             outTypes.add(type);

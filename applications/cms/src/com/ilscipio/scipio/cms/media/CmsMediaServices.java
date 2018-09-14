@@ -53,12 +53,12 @@ public abstract class CmsMediaServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     static final String logPrefix = "Cms: Media: ";
-    private static final ServiceErrorFormatter errorFmt = 
+    private static final ServiceErrorFormatter errorFmt =
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Media Error").build();
-    
+
     protected CmsMediaServices() {
     }
-    
+
     /**
      * Generates a list of all available media files. Can be filtered by
      * DataResourceType (TODO).
@@ -74,7 +74,7 @@ public abstract class CmsMediaServices {
         Integer viewSize = (Integer) context.get("viewSize") != null ? (Integer) context.get("viewSize") : 50;
         String dataResourceTypeId = (String) context.get("dataResourceTypeId");
         Map<String, Object> inputFields = UtilGenerics.checkMap(context.get("inputFields"));
-        
+
         try {
             Map<String, Object> queryStringMap = new LinkedHashMap<String, Object>();
             ModelEntity modelEntity = delegator.getModelEntity("DataResourceMediaFileView");
@@ -84,7 +84,7 @@ public abstract class CmsMediaServices {
             } else {
                 tmpList = null;
             }
-            
+
             EntityCondition cond;
             if (tmpList != null && tmpList.size() > 0) {
                 if (UtilValidate.isNotEmpty(dataResourceTypeId)) {
@@ -101,14 +101,14 @@ public abstract class CmsMediaServices {
                     cond = null;
                 }
             }
-            
+
             EntityCondition scpMediaCond = EntityCondition.makeCondition("contentTypeId", "SCP_MEDIA");
             if (cond != null) {
                 cond = EntityCondition.makeCondition(cond, EntityOperator.AND, scpMediaCond);
             } else {
                 cond = scpMediaCond;
             }
-            
+
             Map<String, Object> findContext = new HashMap<>();
             findContext.put("userLogin", context.get("userLogin"));
 
@@ -123,7 +123,7 @@ public abstract class CmsMediaServices {
             try {
                 listSize = listIt.getResultsSizeAfterPartialList();
                 list = listIt.getPartialList(start + 1, viewSize);
-    
+
                 listSize = listIt.getResultsSizeAfterPartialList();
             } finally {
                 if (listIt != null) listIt.close();
@@ -144,7 +144,7 @@ public abstract class CmsMediaServices {
 
     /**
      * Uploads a media file
-     * 
+     *
      * @param dctx
      * @param context
      * @return
@@ -165,10 +165,10 @@ public abstract class CmsMediaServices {
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
         boolean autoResize = Boolean.TRUE.equals(context.get("autoVariants"));
-        
+
         // USE SAME CREATED DATE FOR EVERYTHING RELATED
         Timestamp createdDate = UtilDateTime.nowTimestamp();
-        
+
         StringToInteger std = new StringToInteger();
         Integer fileSizeConverted = 0;
         try {
@@ -214,8 +214,8 @@ public abstract class CmsMediaServices {
                             mediaDataResource.put("documentData", byteBuffer.array());
                         } else {
                             // TODO: REVIEW: I'm not sure we should cover this case (2017-07-31: at least log it)
-                            Debug.logInfo(logPrefix+"Could not determine media category for dataResourceTypeId '" 
-                                    + dataResourceTypeId + "' and mimeTypeId '" + mimeType.getString("mimeTypeId") 
+                            Debug.logInfo(logPrefix+"Could not determine media category for dataResourceTypeId '"
+                                    + dataResourceTypeId + "' and mimeTypeId '" + mimeType.getString("mimeTypeId")
                                     + "'; storing as OtherDataResource", module);
                             mediaDataResource = delegator.makeValue("OtherDataResource");
                             mediaDataResource.put("dataResourceContent", byteBuffer.array());
@@ -243,7 +243,7 @@ public abstract class CmsMediaServices {
                         String dataResourceId = dataResource.getString("dataResourceId");
                         result.put("dataResourceId", dataResourceId);
                         result.put("dataResourceTypeId", dataResourceTypeId);
-                        
+
                         GenericValue fileSizeDataResourceAttr = delegator.makeValue("DataResourceAttribute");
                         fileSizeDataResourceAttr.put("dataResourceId", dataResource.get("dataResourceId"));
                         fileSizeDataResourceAttr.put("attrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);
@@ -252,7 +252,7 @@ public abstract class CmsMediaServices {
 
                         mediaDataResource.put("dataResourceId", dataResourceId);
                         mediaDataResource.create();
-                        
+
                         GenericValue content = delegator.makeValue("Content");
                         content.put("contentTypeId", "SCP_MEDIA");
                         content.put("contentName", contentName);
@@ -261,7 +261,7 @@ public abstract class CmsMediaServices {
                         content = delegator.createSetNextSeqId(content);
                         String contentId = content.getString("contentId");
                         result.put("contentId", contentId);
-                        
+
                         if (dataResourceTypeId.equals(FileTypeResolver.IMAGE_TYPE) && autoResize) {
                             try {
                                 Map<String, Object> resizeCtx = dctx.makeValidContext("cmsRebuildMediaVariants", ModelService.IN_PARAM, context);
@@ -278,7 +278,7 @@ public abstract class CmsMediaServices {
                                 return err.returnError();
                             }
                         }
-                        
+
                     } else {
                         throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
                     }
@@ -306,7 +306,7 @@ public abstract class CmsMediaServices {
 
     /**
      * Updates a media file
-     * 
+     *
      * @param dctx
      * @param context
      * @return
@@ -322,12 +322,12 @@ public abstract class CmsMediaServices {
         String contentId = (String) context.get("contentId");
         String dataResourceId = (String) context.get("dataResourceId");
         String dataResourceTypeId;
-        
+
         if (UtilValidate.isEmpty(contentId) && UtilValidate.isEmpty(dataResourceId)) {
             result = ServiceUtil.returnError("cmsUpdateMediaFile requires either a contentId or dataResourceId, not passed");
             return result;
         }
-        
+
         String contentName = (String) context.get("contentName");
         Boolean isPublic = (Boolean) context.get("isPublic");
         String statusId = (String) context.get("statusId");
@@ -366,21 +366,21 @@ public abstract class CmsMediaServices {
             // field modifications to the entities of its variant/resized images (may help optimizations also)
             if ("IMAGE_OBJECT".equals(dataResourceTypeId)) {
                 Set<String> visitedContentIdTo = new HashSet<>();
-                
+
                 for(GenericValue varContentAssocTo : CmsMediaWorker.getVariantContentAssocTo(delegator, contentId)) {
                     String varContentId = varContentAssocTo.getString("contentId");
                     if (visitedContentIdTo.contains(varContentId)) continue;
                     visitedContentIdTo.add(varContentId);
-                    
+
                     String sizeType = varContentAssocTo.getString("caMapKey");
-                    
+
                     GenericValue varContent = delegator.findOne("Content", UtilMisc.toMap("contentId", varContentId), false);
                     if (UtilValidate.isEmpty(dataResource)) {
                         return ServiceUtil.returnError("Bad media file - Content not found for variant contentId '" + varContentId + "'");
                     }
-                    
+
                     // TODO: REVIEW: here dataResourceName could be set to either contentName OR the filename...
-                    
+
                     // FIXME: this emulates the DB image resize service... poorly
                     Map<String, Object> imageCtx = new HashMap<>();
                     //imageCtx.put("origfn", imageOrigFnNoExt);
@@ -391,14 +391,14 @@ public abstract class CmsMediaServices {
                     imageCtx.put("fields", fieldsCtx);
                     imageCtx.put("sizetype", sizeType);
                     imageCtx.put("type", sizeType);
-                    
+
                     if (UtilValidate.isNotEmpty(contentName)) {
                         // SPECIAL
                         varContent.put("contentName", CmsMediaWorker.RESIZEIMG_CONTENT_FIELDEXPR.get("contentName").expandString(imageCtx, timeZone, locale));
                     }
                     varContent.store();
                     String varDataResourceId = varContent.getString("dataResourceId");
-                    
+
                     GenericValue varDataResource = delegator.findOne("DataResource", UtilMisc.toMap("dataResourceId", varDataResourceId), false);
                     if (UtilValidate.isEmpty(varDataResource)) {
                         return ServiceUtil.returnError("Bad media file - DataResource not found for variant dataResourceId '" + varDataResourceId + "'");
@@ -428,10 +428,10 @@ public abstract class CmsMediaServices {
         result.put("dataResourceTypeId", dataResourceTypeId);
         return result;
     }
-    
+
     /**
      * Deletes a media file
-     * 
+     *
      * @param dctx
      * @param context
      * @return
@@ -451,11 +451,11 @@ public abstract class CmsMediaServices {
             result = ServiceUtil.returnError("cmsDeleteMediaFile requires either a contentId or dataResourceId, not passed");
             return result;
         }
-        
+
         try {
             GenericValue content = CmsMediaWorker.getContentForMedia(delegator, contentId, dataResourceId);
             contentId = content.getString("contentId");
-            
+
             // delete any associated first
             for(GenericValue contentAssoc : delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", contentId), null, false)) {
                 try {
@@ -475,7 +475,7 @@ public abstract class CmsMediaServices {
                     return err.returnError();
                 }
             }
-            
+
             try {
                 Map<String, Object> servCtx = new HashMap<>();
                 servCtx.put("userLogin", userLogin);
@@ -499,7 +499,7 @@ public abstract class CmsMediaServices {
 
         return result;
     }
-    
+
     public static Map<String, Object> rebuildMediaVariants(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -507,18 +507,18 @@ public abstract class CmsMediaServices {
         //GenericValue userLogin = (GenericValue) context.get("userLogin");
         //TimeZone timeZone = (TimeZone) context.get("timeZone");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
+
         Collection<String> contentIdList = UtilGenerics.checkCollection(context.get("contentIdList"));
         boolean force = Boolean.TRUE.equals(context.get("force"));
         // USE SAME CREATED DATE FOR EVERYTHING RELATED
         Timestamp createdDate = (Timestamp) context.get("createdDate");
         if (createdDate == null) createdDate = UtilDateTime.nowTimestamp();
-        
+
         EntityListIterator contentDataResourceList;
-        
+
         Boolean sepTrans = (Boolean) context.get("sepTrans");
         if (sepTrans == null) sepTrans = (contentIdList == null);
-        
+
         Set<String> remainingContentIds = new HashSet<>();
         boolean doLog = false;
         String imagePropXmlPath;
@@ -531,14 +531,14 @@ public abstract class CmsMediaServices {
                 remainingContentIds = new HashSet<>(contentIdList);
                 contentDataResourceList = CmsMediaWorker.getMediaContentDataResourceRequiredByContentId(delegator, "IMAGE_OBJECT", contentIdList, null);
             }
-            
+
             imagePropXmlPath = CmsMediaWorker.getCmsImagePropertiesPath();
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error creating resized images", context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-        
+
         if (contentDataResourceList != null) {
             try {
                 if (doLog) {
@@ -553,7 +553,7 @@ public abstract class CmsMediaServices {
                         if (doLog) {
                             Debug.logInfo(logPrefix+"rebuildMediaVariants: Rebuilding variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
                         }
-                        
+
                         try {
                             Map<String, Object> resizeCtx = dctx.makeValidContext("contentImageDbScaleInAllSizeCore", ModelService.IN_PARAM, context);
                             resizeCtx.put("imageOrigContentId", contentId);
@@ -562,12 +562,12 @@ public abstract class CmsMediaServices {
                             }
                             resizeCtx.put("imagePropXmlPath", imagePropXmlPath);
                             resizeCtx.put("fileSizeDataResAttrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);
-                            
+
                             Map<String, Object> contentFields = new HashMap<>();
                             contentFields.putAll(CmsMediaWorker.RESIZEIMG_CONTENT_FIELDEXPR);
                             contentFields.put("contentTypeId", "SCP_MEDIA_VARIANT");
                             resizeCtx.put("contentFields", contentFields);
-            
+
                             Map<String, Object> dataResourceFields = new HashMap<>();
                             dataResourceFields.putAll(CmsMediaWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);
                             dataResourceFields.put("dataResourceTypeId", "IMAGE_OBJECT");
@@ -575,7 +575,7 @@ public abstract class CmsMediaServices {
                             dataResourceFields.put("isPublic", contentDataResource.get("drIsPublic"));
                             resizeCtx.put("dataResourceFields", dataResourceFields);
                             resizeCtx.put("createdDate", createdDate);
-                            
+
                             Map<String, Object> resizeResult;
                             if (sepTrans) {
                                 resizeResult = dispatcher.runSync("contentImageDbScaleInAllSizeCore", resizeCtx, -1, true);
@@ -615,7 +615,7 @@ public abstract class CmsMediaServices {
         }
         return result;
     }
-    
+
     // TODO: REVIEW: for now we are intentionally ignoring the thruDate on ContentAssoc to simplify.
     // I don't see the point in keeping old records...
     public static Map<String, Object> removeMediaVariants(DispatchContext dctx, Map<String, ?> context) {
@@ -625,10 +625,10 @@ public abstract class CmsMediaServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         TimeZone timeZone = (TimeZone) context.get("timeZone");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
+
         Collection<String> contentIdList = UtilGenerics.checkCollection(context.get("contentIdList"));
         EntityListIterator contentDataResourceList;
-        
+
         Set<String> remainingContentIds = new HashSet<>();
         boolean doLog = false;
         try {
@@ -645,7 +645,7 @@ public abstract class CmsMediaServices {
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-        
+
         if (contentDataResourceList != null) {
             try {
                 if (doLog) {
@@ -659,7 +659,7 @@ public abstract class CmsMediaServices {
                     if (doLog) {
                         Debug.logInfo(logPrefix+"removeMediaVariants: Removing variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
                     }
-                    
+
                     for(String contentIdTo : CmsMediaWorker.getVariantContentAssocContentIdTo(delegator, contentId)) {
                         try {
                             Map<String, Object> servCtx = new HashMap<>();
@@ -679,7 +679,7 @@ public abstract class CmsMediaServices {
                         }
                     }
                     delegator.removeByAnd("ContentAttribute", UtilMisc.toMap("contentId", contentId, "attrName", ContentImageWorker.CONTENTATTR_VARIANTCFG));
-                    
+
                     imgCount++;
                 }
                 if (remainingContentIds.size() > 0) {

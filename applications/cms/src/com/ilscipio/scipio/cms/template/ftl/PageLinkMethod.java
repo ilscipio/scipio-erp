@@ -39,7 +39,7 @@ import freemarker.template.TemplateModelException;
  * Two variants supported:
  * <ul>
  * <li><code>makeCmsPageUrl(pageName)</code> - single string page name arg, no other options.
- * <li><code>makeCmsPageUrl({"name":pageName, "escapeAs":"html", ...})</code> - single map arg, 
+ * <li><code>makeCmsPageUrl({"name":pageName, "escapeAs":"html", ...})</code> - single map arg,
  *     with each entry an option to <code>@cmsPageUrl</code>.
  * </ul>
  * Unlike the macro, by default, this uses <code>rawParams=true</code> and <code>strict=true</code> (NOTE: strict
@@ -58,9 +58,9 @@ public class PageLinkMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }
         Environment env = Environment.getCurrentEnvironment();
-        
+
         Map<String, TemplateModel> linkArgs;
-        
+
         TemplateModel firstArg = (TemplateModel) args.get(0);
         if (LangFtlUtil.isObjectType("map", firstArg)) {
             linkArgs = LangFtlUtil.makeModelMap((TemplateHashModelEx) firstArg);
@@ -77,7 +77,7 @@ public class PageLinkMethod implements TemplateMethodModelEx {
             linkArgs.put("rawParams", TemplateBooleanModel.TRUE);
             linkArgs.put("strict", TemplateBooleanModel.TRUE);
         }
-        
+
         String output;
         try {
             output = PageLinkDirective.makeLinkFromFtl(env, linkArgs, null, null);

@@ -14,33 +14,33 @@ import com.ilscipio.scipio.party.PartyUtil;
 public abstract class CmsUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("cms", "debug", false);
-    
+
     static {
         if (DEBUG) {
             Debug.logInfo("Cms: Debug mode enabled", module);
         }
     }
-    
+
     private CmsUtil() {
-        
+
     }
-    
+
     /**
      * Returns a person's full name in a manner appropriate for display within CMS.
-     * 
+     *
      * @param delegator
      * @param partyId
      * @return
      * @throws GenericEntityException
      */
-    public static String getPersonDisplayName(Delegator delegator, 
+    public static String getPersonDisplayName(Delegator delegator,
             String partyId) throws GenericEntityException {
         // Currently delegates to a standard method.
         return PartyUtil.getPersonFullName(delegator, partyId);
     }
-    
+
     /**
      * Substitute (factored out control) for Debug.verboseOn(). Callers should check this first
      * and then log with Debug.logInfo, NOT Debug.logVerbose, for now (to be reviewed)...
@@ -50,7 +50,7 @@ public abstract class CmsUtil {
         //return Debug.verboseOn() || DEBUG;
         return DEBUG;
     }
-    
+
     /**
      * Substitute (factored out control) for Debug.verboseOn(). Callers should check this first
      * and then log with Debug.logInfo, NOT Debug.logVerbose, for now (to be reviewed)...

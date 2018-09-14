@@ -58,10 +58,10 @@ import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
  *   <filter>
  *     <filter-name>CmsProcessMappingFilter</filter-name>
  *     <display-name>CmsProcessMappingFilter</display-name>
- *     <filter-class>com.ilscipio.scipio.cms.control.CmsProcessMappingFilter</filter-class> 
- *     <init-param><param-name>defaultForwardServletPathOverride</param-name><param-value></param-value></init-param>   
- *     <init-param><param-name>defaultForwardExtraPathInfo</param-name><param-value>true</param-value></init-param>     
- *   </filter>    
+ *     <filter-class>com.ilscipio.scipio.cms.control.CmsProcessMappingFilter</filter-class>
+ *     <init-param><param-name>defaultForwardServletPathOverride</param-name><param-value></param-value></init-param>
+ *     <init-param><param-name>defaultForwardExtraPathInfo</param-name><param-value>true</param-value></init-param>
+ *   </filter>
  *   <filter>
  *     <filter-name>ContextFilter</filter-name>
  *     <display-name>ContextFilter</display-name>
@@ -72,14 +72,14 @@ import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
  *   <filter-mapping>
  *     <filter-name>CmsProcessMappingFilter</filter-name>
  *     <url-pattern>/*</url-pattern>
- *     <dispatcher>REQUEST</dispatcher>  
- *     <dispatcher>FORWARD</dispatcher>   
+ *     <dispatcher>REQUEST</dispatcher>
+ *     <dispatcher>FORWARD</dispatcher>
  *   </filter-mapping>
  *   <filter-mapping>
  *     <filter-name>ContextFilter</filter-name>
  *     <url-pattern>/*</url-pattern>
- *     <dispatcher>REQUEST</dispatcher>  
- *     <dispatcher>FORWARD</dispatcher>   
+ *     <dispatcher>REQUEST</dispatcher>
+ *     <dispatcher>FORWARD</dispatcher>
  *   </filter-mapping>
  * }
  * </pre>
@@ -94,7 +94,7 @@ public class CmsProcessFilter implements Filter {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private CmsWebSiteConfig webSiteConfig = CmsWebSiteConfig.getDefault();
-    
+
     // DEV NOTE: To disable the process rewriting, set the two following booleans to false:
     private boolean forwardSourcePathParam = true;
     private boolean urlRewriteSourcePath = true;
@@ -110,8 +110,8 @@ public class CmsProcessFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res; 
-        
+        HttpServletResponse response = (HttpServletResponse) res;
+
         boolean cmsRequestForwarded = Boolean.TRUE.equals(req.getAttribute("cmsRequestForwarded"));
         boolean cmsRequestChained = Boolean.TRUE.equals(req.getAttribute("cmsRequestChained"));
         boolean cmsRequestVisited = (cmsRequestForwarded || cmsRequestChained);
@@ -127,7 +127,7 @@ public class CmsProcessFilter implements Filter {
                 request.setAttribute("cmsRequestServletPath", CmsControlUtil.normalizeServletPathNoNull(request.getServletPath()));
                 request.setAttribute("cmsRequestPath", CmsControlUtil.normalizeServletRootRequestPathNoNull(request.getPathInfo()));
             }
-            
+
             if (cmsRequestForwarded) {
                 // ONLY SUPPORT ONE PROCESS MAP MATCHING PER REQUEST (LIMITATION)
                 // Currently, should prevent self-forwards from invoking a second time because
@@ -137,12 +137,12 @@ public class CmsProcessFilter implements Filter {
                 return;
             }
         }
- 
+
         // We are supposed to set character encoding before reading any request parameters.
         ContextFilter.setCharacterEncoding(request);
 
         CmsProcessMapping mapping = null;
-        
+
         // NOTE: 2016: currently no need to strip the preview path from this path; done in the findByRequest lookup
         String mappingPath = CmsProcessMapping.getMappingPath(request);
         String origSourcePath = CmsProcessMapping.getMappingPath(request, false, false);
@@ -150,13 +150,13 @@ public class CmsProcessFilter implements Filter {
         boolean mappingActive = false;
         String processSourcePath = null;
         String relRequestUrl = request.getRequestURI() + (request.getQueryString() != null ? ("?" + request.getQueryString()) : "");
-        
+
         if (!cmsRequestVisited) {
             request.setAttribute("cmsOrigRequestUri", request.getRequestURI());
             request.setAttribute("cmsOrigRequestContextPath", request.getContextPath());
             request.setAttribute("cmsOrigRequestSourcePath", origSourcePath);
             request.setAttribute("cmsOrigRequestQueryString", request.getQueryString());
-            
+
             if (webSiteConfig.isSetResponseBrowserNoCache()) {
                 if (CmsUtil.verboseOn()) {
                     Debug.logInfo("Cms: Setting browser no-proxy no-cache response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
@@ -164,7 +164,7 @@ public class CmsProcessFilter implements Filter {
                 CmsControlUtil.checkSetNoCacheResponse(request, response);
             }
         }
-        
+
         if (CmsUtil.verboseOn()) {
             Debug.logInfo("Cms: Process Mapping Request: " + mappingPath + CmsControlUtil.getReqLogIdDelimStr(request), module);
         }
@@ -188,19 +188,19 @@ public class CmsProcessFilter implements Filter {
                 }
             }
         }
-        
+
         // WARN/FIXME?: The delegator lookup will be one request out of sync for tenant delegator switches
         // when the process filter run before ofbiz's ContextFilter.
         Delegator delegator = WebAppUtil.getDelegatorFilterSafe(request);
         String webSiteId = WebSiteWorker.getWebSiteId(request);
         // 2016: check render mode
         CmsCallType renderMode = CmsControlUtil.getRenderModeParam(request, webSiteConfig);
-        
+
         // 2017-11: _SCP_FWDROOTURIS_ instructs ContextFilter (Scipio feature) to forward these root request URIs,
         // if configured to do so using forwardRootControllerUris.
         // This allows CMS mappings to follow the controller URI config.
         if (request.getAttribute("cmsControlUris") == null) {
-            Set<String> cmsControlUris = CmsProcessMapping.getWorker().getRequestUrisUnderControl(delegator, webSiteId, RequestHandler.getControlServletPath(request), 
+            Set<String> cmsControlUris = CmsProcessMapping.getWorker().getRequestUrisUnderControl(delegator, webSiteId, RequestHandler.getControlServletPath(request),
                     webSiteConfig.getDefaultSourceServletPath(), webSiteConfig.getDefaultSourceFromContextRoot(), renderMode.cachingAllowed());
             request.setAttribute("cmsControlUris", cmsControlUris);
             if (request.getAttribute("_SCP_FWDROOTURIS_") == null) {
@@ -217,7 +217,7 @@ public class CmsProcessFilter implements Filter {
         try {
             requestPath = CmsProcessMapping.getRequestPath(request);
 
-            FindByRequestResult findRes = CmsProcessMapping.getWorker().findByRequestPath(delegator, requestPath, webSiteId, 
+            FindByRequestResult findRes = CmsProcessMapping.getWorker().findByRequestPath(delegator, requestPath, webSiteId,
                     webSiteConfig.getDefaultSourceServletPath(), webSiteConfig.getDefaultSourceFromContextRoot(),
                     renderMode.isPreview(), renderMode.cachingAllowed(),
                     request);
@@ -230,7 +230,7 @@ public class CmsProcessFilter implements Filter {
         } catch (Exception e) {
             // an exception is thrown, return a 500 error
             Debug.logError(e, "Cms: Error retrieving page from database. URI: " + mappingPath + CmsControlUtil.getReqLogIdDelimStr(request), module);
-            
+
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } catch (IOException e1) {
@@ -238,7 +238,7 @@ public class CmsProcessFilter implements Filter {
             }
             return;
         }
-        
+
         // check cmsAccessToken (NOTE: we must do this in both CmsProcessFilter and CmsScreenViewHandler)
         boolean validAccessToken = CmsControlUtil.verifyValidAccessToken(request, webSiteConfig, renderMode);
         if (!validAccessToken) {
@@ -250,7 +250,7 @@ public class CmsProcessFilter implements Filter {
             }
             return;
         }
-        
+
         boolean extraPathReqOk = true;
         if (mapping != null) {
             Boolean requireExtraPathInfo = mapping.getRequireExtraPathInfo();
@@ -261,25 +261,25 @@ public class CmsProcessFilter implements Filter {
                 extraPathReqOk = false;
             }
         }
-        
+
         if (mapping == null || !(mappingActive || renderMode.isPreview()) || !extraPathReqOk) {
             if (CmsUtil.verboseOn()) {
                if (mapping == null) {
-                   Debug.logInfo("Cms: Process Mapping Request: No mapping found for " + mappingPath + 
+                   Debug.logInfo("Cms: Process Mapping Request: No mapping found for " + mappingPath +
                            "; continuing" + CmsControlUtil.getReqLogIdDelimStr(request), module);
                } else if (!(mappingActive || renderMode.isPreview())) {
-                   Debug.logInfo("Cms: Process Mapping Request: Found mapping for " + mappingPath + 
+                   Debug.logInfo("Cms: Process Mapping Request: Found mapping for " + mappingPath +
                            "(" + mapping.getLogIdRepr() + "), but inactive" + "; continuing" + CmsControlUtil.getReqLogIdDelimStr(request), module);
                } else if (!extraPathReqOk) {
-                   Debug.logInfo("Cms: Process Mapping Request: Found mapping for " + mappingPath + 
+                   Debug.logInfo("Cms: Process Mapping Request: Found mapping for " + mappingPath +
                            "(" + mapping.getLogIdRepr() + "), but mapping requires extra path info and " +
                            "none present in source path; continuing" + CmsControlUtil.getReqLogIdDelimStr(request), module);
                }
             }
-            
+
             // We don't have a control servlet setting this anymore...
             //boolean wasForwarded = Boolean.TRUE.equals((Boolean) request.getAttribute("_HTTP_FORWARDED_"));
-            
+
             if (!response.isCommitted()) { // || wasForwarded
                 // Note: wrap response here to URL rewriting may happen post-login or basically all the time
                 req.setAttribute("cmsRequestChained", Boolean.TRUE);
@@ -292,49 +292,49 @@ public class CmsProcessFilter implements Filter {
             } else {
                 effectiveTargetServletPath = CmsDataObject.nonEmptyOrDefault(mapping.getTargetServletPath(), webSiteConfig.getDefaultTargetServletPath());
             }
-            
-            String forwardPathRequestUri = mapping.getForwardPathRequestUri(request, 
+
+            String forwardPathRequestUri = mapping.getForwardPathRequestUri(request,
                     webSiteConfig.getDefaultForwardServletPath(), effectiveTargetServletPath, webSiteConfig.getDefaultForwardFromContextRoot());
-            
+
             if (UtilValidate.isNotEmpty(forwardPathRequestUri)) {
                 if (CmsUtil.verboseOn()) {
                     Debug.logInfo("Cms: Process Mapping Request: Mapping for " + mappingPath + " found: " +
                             mapping.getLogIdRepr() +
-                            "; forwarding to " + forwardPathRequestUri + 
+                            "; forwarding to " + forwardPathRequestUri +
                             "; extra path info: " + extraPathInfo + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
-                
+
                 // FIXME: 2017: we should probably rename these attributes to use a unique prefix,
                 // like "sysCmsProcessMapping" or "cmsSys_xxx", because in the event there are screens that handle CMS parts while
                 // hooked into CMS, this will conflict and crash.
                 // ALTERNATIVE: bundle them all into a single object with getters and setters, would be much cleaner
-                
+
                 request.setAttribute("cmsProcessMapping", mapping);
                 request.setAttribute("cmsProcessMappingId", mapping.getId());
                 request.setAttribute("cmsPageRenderMode", renderMode); // 2016: new
                 // CAN'T SET THIS HERE - instead we set at the BEGINNING of the servlet AFTER forward - see above
                 //request.setAttribute("cmsRequestServletPath", CmsControlUtil.normalizeServletPathNoNull(request.getServletPath()));
                 //request.setAttribute("cmsRequestPath", CmsControlUtil.normalizeServletRootRequestPathNoNull(request.getPathInfo()));
-                
+
                 boolean forwardExtraPathInfo = mapping.isForwardExtraPathInfoLogical(webSiteConfig.getDefaultForwardExtraPathInfo());
-                
+
                 String fullForwardPath;
                 if (forwardExtraPathInfo && UtilValidate.isNotEmpty(extraPathInfo)) {
                     fullForwardPath = PathUtil.concatPaths(forwardPathRequestUri, extraPathInfo);
                 } else {
                     fullForwardPath = forwardPathRequestUri;
                 }
-                
+
                 request.setAttribute("cmsProcessFullForwardPath", fullForwardPath);
                 request.setAttribute("cmsProcessExtraPathInfo", extraPathInfo);
                 // 2016: make sure we include the preview mount point
                 request.setAttribute("cmsProcessSourcePath", processSourcePath);
                 request.setAttribute("cmsProcessSourcePathMatch", processSourcePath); // without any extra prefix paths (there used to be a preview path prefix)
-                
+
                 String fullForwardUrl;
                 if (forwardSourcePathParam) {
                     fullForwardUrl = fullForwardPath + "?cmsProcessSourcePath=" + CmsWebappUtil.urlEncode(processSourcePath);
-                    // NOTE: DOES NOT WORK - if do this, the container will return 2 values for each parameter 
+                    // NOTE: DOES NOT WORK - if do this, the container will return 2 values for each parameter
                     // in the query string when request.getParameterValues() is called - instead, use CmsProcessRequestWrapper
                     //if (request.getQueryString() != null) {
                     //    fullForwardUrl += "&" + request.getQueryString();
@@ -342,7 +342,7 @@ public class CmsProcessFilter implements Filter {
                 } else {
                     fullForwardUrl = fullForwardPath;
                 }
-                
+
                 RequestDispatcher rd = request.getRequestDispatcher(fullForwardUrl);
                 req.setAttribute("cmsRequestForwarded", Boolean.TRUE);
                 rd.forward(getForwardedRequest(req, cmsRequestForwarded), getChainedResponse(req, res, cmsRequestVisited));
@@ -351,19 +351,19 @@ public class CmsProcessFilter implements Filter {
                     Debug.logInfo("Cms: Process Mapping Request: Can't forward mapping " +
                             mapping.getLogIdRepr() + "; no forward path specified" + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
-                
+
                 if (!response.isCommitted()) { // || wasForwarded
                     req.setAttribute("cmsRequestChained", Boolean.TRUE);
                     chain.doFilter(req, getChainedResponse(req, res, cmsRequestVisited));
                 }
             }
-        }        
+        }
     }
 
     @Override
     public void destroy() {
     }
-    
+
     protected ServletRequest getForwardedRequest(ServletRequest req, boolean previousRequestWrapped) {
         // NOTE: 2017-11: here previousRequestWrapped should always be false, and in any case we
         // would be require to re-wrap anyway.
@@ -372,7 +372,7 @@ public class CmsProcessFilter implements Filter {
         }
         return req;
     }
-    
+
     protected ServletResponse getChainedResponse(ServletRequest req, ServletResponse res, boolean previousResponseWrapped) {
         if (previousResponseWrapped) {
             // 2017-11: DO NOT WRAP RESPONSE TWICE
@@ -383,26 +383,26 @@ public class CmsProcessFilter implements Filter {
             return res;
         }
     }
-    
+
     /**
      * Overrides getQueryString because in the forwarded servlet whenever
      * getRequestDispatcher contains a query string it overrides the incoming query string,
      * and everything relies on getQueryString including Ofbiz functions.
      * <p>
      * NOTE: The original query string cannot be passed to the RequestDispatcher forward (see above), because
-     * it results in parameter duplication (request.getParameterValues() returns two copies); 
+     * it results in parameter duplication (request.getParameterValues() returns two copies);
      * we can only achieve the right behavior by overriding request.getQueryString().
      * <p>
-     * WARN: This does not override getParameterXxx(); the parameters returned by getParameterXxx() here may 
-     * not be from our getQueryString() call below (this is also why we must pass ?cmsProcessSourcePath= 
-     * to the RequestDispatcher forward - which can do because there's only one forward allowed and 
+     * WARN: This does not override getParameterXxx(); the parameters returned by getParameterXxx() here may
+     * not be from our getQueryString() call below (this is also why we must pass ?cmsProcessSourcePath=
+     * to the RequestDispatcher forward - which can do because there's only one forward allowed and
      * that param is denied from external by security check).
      */
     public static class CmsProcessRequestWrapper extends HttpServletRequestWrapper {
 
         private final String origQueryString;
         private final String pspQueryString;
-        
+
         public CmsProcessRequestWrapper(HttpServletRequest request) {
             super(request);
             // TODO: REVIEW: the fact we call getQueryString in the constructor may limit
@@ -422,29 +422,29 @@ public class CmsProcessFilter implements Filter {
         }
 
     }
-    
+
     public static class CmsProcessResponseWrapper extends HttpServletResponseWrapper {
 
         private final HttpServletRequest request;
-        
+
         public CmsProcessResponseWrapper(HttpServletRequest request, HttpServletResponse response) {
             super(response);
             this.request = request;
         }
 
-        /* 
+        /*
          * OLD COMMENT (pre-2016) - FOR OLD OFBIZ:
          * FOR THE TIME BEING we don't need to rewrite for encodeXxxURL methods; in fact the RequestHandler
          * doesn't even send redirect requests through these. So only intercept the callRedirect method.
          * This minimizes the odds of the cmsProcessSourcePath parameter causing issues.
          * Later if more cases are identified, may need to override these as well.
-         * 
+         *
          * NEW (2016):
          * In Scipio, controller redirects do go through encodeURL. There is a further issue
          * that redirects do not go through the sendRedirect method anymore. So for now, we're forced
          * to use the encodeURL and encodeRedirectURL hooks as well.
          */
-        
+
         @Override
         public String encodeURL(String url) {
             // Note: Here we must apply our transformation BEFORE the next URL encode, because the
@@ -476,12 +476,12 @@ public class CmsProcessFilter implements Filter {
                 super.sendRedirect(location);
             }
         }
-        
+
     }
-    
+
     private static final Pattern absUrlPat = Pattern.compile("(((.*?):)?//([^/]*))?(.*)");
     private static final Pattern sourcePathUrlPat = Pattern.compile("([^?&;=#]*)(.*)([?&]cmsProcessSourcePath=([^?&;=#]*))(.*)");
-    
+
     /**
      * Rewrites the given url using the cmsProcessSourcePath parameter found in the link itself.
      * <p>
@@ -490,27 +490,27 @@ public class CmsProcessFilter implements Filter {
     public static String rewriteProcessLinkFromParam(HttpServletRequest request, String url) {
         String rewrittenUrl = null;
         if (url != null) {
-            
+
             // Extract the relative URL from absolute
             Matcher mrel = absUrlPat.matcher(url);
             if (mrel.matches()) {
-                
+
                 String absPrefix = mrel.group(1);
                 if (absPrefix == null) {
                     absPrefix = "";
                 }
                 String relUrl = mrel.group(5);
-                
+
                 // Check if within same webapp
                 // (Note: in Ofbiz the encoded URLs contain the webapp context root in relative URLs)
                 String contextRoot = request.getContextPath();
                 if (relUrl.startsWith(contextRoot)) {
                     // (if same length, will be nothing interesting for us)
                     if (relUrl.length() > contextRoot.length()) {
-                        
+
                         char contextDelim = relUrl.charAt(contextRoot.length());
                         if (contextDelim == '/' || contextDelim == '?' || contextDelim == ';' || contextDelim == '#') {
-                            
+
                             // Check if processSourcePath exists and try to fetch out along with the other parts
                             Matcher msp = sourcePathUrlPat.matcher(relUrl.substring(contextRoot.length()));
                             if (msp.matches()) {
@@ -519,9 +519,9 @@ public class CmsProcessFilter implements Filter {
                                 String processSourcePathAndParam = msp.group(3);
                                 String encodedProcessSourcePath = msp.group(4);
                                 String postQueryString = msp.group(5);
-                                
+
                                 String processSourcePath = CmsWebappUtil.urlDecode(encodedProcessSourcePath);
-                                
+
                                 // Rebuild the query string without the process path parameter
                                 String queryString = preQueryString;
                                 // We're removing a parameter here; make sure doesn't break the query
@@ -535,14 +535,14 @@ public class CmsProcessFilter implements Filter {
                                 } else {
                                     queryString += postQueryString;
                                 }
-                                
+
                                 rewrittenUrl = absPrefix + contextRoot + processSourcePath + queryString;
                             }
                         }
                     }
                 }
             }
-            
+
         }
         return rewrittenUrl;
     }

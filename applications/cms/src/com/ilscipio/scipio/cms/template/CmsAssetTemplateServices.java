@@ -30,14 +30,14 @@ import com.ilscipio.scipio.cms.template.CmsAssetTemplate.CmsAssetTemplateScriptA
  *
  */
 public abstract class CmsAssetTemplateServices {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final ServiceErrorFormatter errorFmt = 
+    private static final ServiceErrorFormatter errorFmt =
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Asset Template Error").build();
 
     protected CmsAssetTemplateServices() {
     }
-    
+
     /**
      * Creates or updates an Asset.
      */
@@ -49,11 +49,11 @@ public abstract class CmsAssetTemplateServices {
             GenericValue userLogin = CmsServiceUtil.getUserLoginOrSystem(dctx, context);
             //Debug.logInfo("createUpdateAsset triggered",module);
             String assetTemplateId = (String) context.get("assetTemplateId");
-            
+
             // Create empty template
-            Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreateUpdateAsset", 
+            Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreateUpdateAsset",
                     UtilGenerics.<String, Object> checkMap(context), userLogin, null, null);
-            
+
             CmsAssetTemplate assetTmp = null;
             if (UtilValidate.isNotEmpty(assetTemplateId)) {
                 assetTmp = CmsAssetTemplate.getWorker().findByIdAlways(delegator, assetTemplateId, false);
@@ -63,7 +63,7 @@ public abstract class CmsAssetTemplateServices {
                 fields.put("lastUpdatedBy", (String) userLogin.get("userLoginId"));
                 assetTmp = new CmsAssetTemplate(delegator, fields);
             }
-            
+
             assetTmp.store();
             result.put("assetTemplateId", assetTmp.getId());
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> copyAsset(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> copyArgs = new HashMap<>();
@@ -86,7 +86,7 @@ public abstract class CmsAssetTemplateServices {
             String srcAssetTemplateId = (String) context.get("srcAssetTemplateId");
             CmsAssetTemplate srcAssetTemplate = CmsAssetTemplate.getWorker().findByIdAlways(delegator, srcAssetTemplateId, false);
             CmsAssetTemplate assetTemplate = srcAssetTemplate.copy(copyArgs);
-            
+
             assetTemplate.update(UtilMisc.toHashMapWithKeys(context, "templateName", "description"));
 
             // NOTE: store() now updates the version automatically using assetTemplate.lastVersion
@@ -100,7 +100,7 @@ public abstract class CmsAssetTemplateServices {
             return err.returnError();
         }
     }
-    
+
     public static Map<String, Object> updateAssetTemplateInfo(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -117,7 +117,7 @@ public abstract class CmsAssetTemplateServices {
         return result;
     }
 
-    
+
     /**
      * NOTE: 2016: TODO?: I moved this here because it's where it belongs, but there
      * is no service def for this and the description that was here was wrong.
@@ -136,7 +136,7 @@ public abstract class CmsAssetTemplateServices {
             // check if you want update the actual thang
             if (context.get("assetTemplateId") != null) {
                 // Partos unos : Copy original template
-                CmsAssetTemplate originalTemplate = CmsAssetTemplate.getWorker().findByIdAlways(delegator, 
+                CmsAssetTemplate originalTemplate = CmsAssetTemplate.getWorker().findByIdAlways(delegator,
                         (String) context.get("assetTemplateId"), false);
                 // Update the original template so it is inactive;
                 // originalTemplate.setInactive(true);
@@ -171,7 +171,7 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Sets an asset template version as live version. The live version is the content that
      * will be displayed to regular page visitors.
@@ -180,10 +180,10 @@ public abstract class CmsAssetTemplateServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
             Delegator delegator = dctx.getDelegator();
-            
+
             String versionId = (String) context.get("versionId");
             CmsAssetTemplateVersion version = CmsAssetTemplateVersion.getWorker().findFirst(delegator, UtilMisc.toMap("versionId", versionId), false);
-            
+
             if (version != null) {
                 version.setAsActiveVersion();
                 version.store();
@@ -197,7 +197,7 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Gets the active/default asset template version of the given asset template.
      */
@@ -207,10 +207,10 @@ public abstract class CmsAssetTemplateServices {
         try {
             String webSiteId = (String) context.get("webSiteId");
             String templateName = (String) context.get("templateName");
-            
+
             CmsAssetTemplateVersion assetTemplateVersion = CmsAssetTemplate.getVerComTemplateWorker().findActiveVersion(delegator,
                     templateName, webSiteId, false);
-            
+
             if (assetTemplateVersion != null) {
                 result.put("assetTemplate", assetTemplateVersion.getAssetTemplate().getEntity());
                 result.put("assetTemplateModel", assetTemplateVersion.getAssetTemplate());
@@ -227,7 +227,7 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Gets all asset information
      */
@@ -265,7 +265,7 @@ public abstract class CmsAssetTemplateServices {
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         try {
             CmsAssetTemplateScriptAssoc.getWorker().createUpdateScriptTemplateAndAssoc(delegator, context, userLogin);
         } catch (Exception e) {
@@ -275,7 +275,7 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> deleteAssetTemplate(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -290,7 +290,7 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Gets the active/default asset template version of the given asset template.
      */
@@ -327,7 +327,7 @@ public abstract class CmsAssetTemplateServices {
             return err.returnFailure();
         }
         return result;
-    }    
+    }
 
     public static Map<String, Object> getAssetTemplateTypes(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -344,7 +344,7 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> getAssetTemplates(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -352,7 +352,7 @@ public abstract class CmsAssetTemplateServices {
             String webSiteId = (String) context.get("webSiteId");
             Boolean webSiteOptional = !Boolean.FALSE.equals(context.get("webSiteOptional"));
             String contentTypeId = (String) context.get("contentTypeId");
-            
+
             List<EntityCondition> condList = new ArrayList<>();
             if (context.containsKey("webSiteId")) {
                 if (UtilValidate.isEmpty(webSiteId)) {
@@ -373,8 +373,8 @@ public abstract class CmsAssetTemplateServices {
                 }
                 condList.add(EntityCondition.makeCondition("contentTypeId", contentTypeId));
             }
-            List<GenericValue> values = delegator.findList("CmsAssetTemplate", 
-                    EntityCondition.makeCondition(condList, EntityOperator.AND), 
+            List<GenericValue> values = delegator.findList("CmsAssetTemplate",
+                    EntityCondition.makeCondition(condList, EntityOperator.AND),
                     null, UtilMisc.toList("templateName"), null, false);
             result.put("assetTemplateValues", values);
         } catch (Exception e) {
@@ -384,7 +384,7 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> getAssetTemplateAttributes(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -399,5 +399,5 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }
-    
+
 }

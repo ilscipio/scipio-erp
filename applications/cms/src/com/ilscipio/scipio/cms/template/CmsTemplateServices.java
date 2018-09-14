@@ -17,13 +17,13 @@ import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
  * fall into the more specific classes)
  */
 public abstract class CmsTemplateServices {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
-    
+
     protected CmsTemplateServices() {
     }
-    
+
     /**
      * Creates or updates an attribute for a given template (page or asset).
      */
@@ -41,7 +41,7 @@ public abstract class CmsTemplateServices {
                 attr = new CmsAttributeTemplate(delegator, context);
             }
             attr.store();
-            
+
             result.put("attributeTemplateId", attr.getId());
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error creating or updating attribute", context);
@@ -50,5 +50,5 @@ public abstract class CmsTemplateServices {
         }
         return result;
     }
-    
+
 }

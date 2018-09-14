@@ -26,7 +26,7 @@ import org.ofbiz.service.ServiceDispatcher;
  * TODO: refactor: some of these methods belong in non-solr classes.
  */
 public abstract class SolrCategoryUtil {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
@@ -38,11 +38,11 @@ public abstract class SolrCategoryUtil {
         List<GenericValue> catalogs = getProdCatalogCategoryByCategoryId(delegator, productCategoryId, useCache);
         return getStringFieldList(catalogs, "prodCatalogId");
     }
-    
+
     static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
         return getCatalogIdsByCategoryId(delegator, productCategoryId, false); // legacy
     }
-    
+
     static List<GenericValue> getProdCatalogCategoryByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
         List<GenericValue> catalogs = null;
         try {
@@ -54,7 +54,7 @@ public abstract class SolrCategoryUtil {
         }
         return catalogs;
     }
-    
+
     static Map<String, List<String>> getCatalogIdsByCategoryIdMap(Delegator delegator, List<String> categoryIds, boolean useCache) {
         Map<String, List<String>> map = new HashMap<>();
         if (categoryIds == null) return map;
@@ -63,7 +63,7 @@ public abstract class SolrCategoryUtil {
         }
         return map;
     }
-    
+
     // FIXME: doesn't belong in solr
     static List<String> getStringFieldList(List<GenericValue> values, String fieldName) {
         List<String> fieldList;
@@ -77,7 +77,7 @@ public abstract class SolrCategoryUtil {
         }
         return fieldList;
     }
-    
+
     static void addAllStringFieldList(Collection<String> out, List<GenericValue> values, String fieldName) {
         if (values != null) {
             for (GenericValue c : values) {
@@ -85,29 +85,29 @@ public abstract class SolrCategoryUtil {
             }
         }
     }
-    
+
     /**
      * Best-effort.
      */
     static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
         return CatalogWorker.getProductStoresFromCatalogIds(delegator, catalogIds, useCache);
     }
-    
+
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
         return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, true);
     }
-    
+
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx, boolean useCache) {
         return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, useCache);
     }
-    
+
     /**
      * Returns categoryName with trail.
      */
     public static String getCategoryNameWithTrail(String productCategoryId, String catalogId, DispatchContext dctx, List<String> currentTrail) {
         return getCategoryNameWithTrail(productCategoryId, catalogId, true,  dctx, currentTrail);
     }
-    
+
     /**
      * Returns categoryName with trail.
      * <p>
@@ -148,14 +148,14 @@ public abstract class SolrCategoryUtil {
                         catMember.append("/");
                         i++;
                     }
-                    
+
                     catMember.append(trailString);
                 }
             }
         }
-        
+
         if (catMember.length() == 0){catMember.append(productCategoryId);}
-        
+
         if(showDepth) {
             cm = i +"/"+ catMember.toString();
         } else {
@@ -200,9 +200,9 @@ public abstract class SolrCategoryUtil {
         } else {
             List<String> best = null;
             Integer bestIndex = null;
-            
+
             List<GenericValue> topCats = CatalogWorker.getProdCatalogCategories(dctx.getDelegator(), catalogId, "PCCT_BROWSE_ROOT");
-            
+
             for(List<String> trail : trails) {
                 if (trail != null && !trail.isEmpty()) {
                     String catId = trail.get(0);
@@ -232,9 +232,9 @@ public abstract class SolrCategoryUtil {
             return best;
         }
     }
-    
-    
-    
+
+
+
     /**
      * Finds best trail match.
      * <p>
@@ -245,7 +245,7 @@ public abstract class SolrCategoryUtil {
     public static List<String> findBestTrailMatch(List<List<String>> trails, List<String> matchTrail, boolean containFullTrail, boolean exact) {
         List<String> best = null;
         int partMatches = 0;
-        
+
         for(List<String> candidateTrail : trails) {
             int candidatePartMatches = 0;
             Iterator<String> candidateIt = candidateTrail.iterator();
@@ -259,7 +259,7 @@ public abstract class SolrCategoryUtil {
                     break;
                 }
             }
-            
+
             if (candidatePartMatches == matchTrail.size() && matchTrail.size() == candidateTrail.size()) {
                 // Found exact match, return it right away as shortcut
                 return candidateTrail;
@@ -270,7 +270,7 @@ public abstract class SolrCategoryUtil {
                 }
             }
         }
-        
+
         if (exact) {
             // If there was an exact match, it would have returned above
             return null;
@@ -286,8 +286,8 @@ public abstract class SolrCategoryUtil {
             }
         }
     }
-    
-    
+
+
     /**
      * Returns nextLevel from trailed category.
      * <p>
@@ -306,7 +306,7 @@ public abstract class SolrCategoryUtil {
             return 0;
         }
     }
-    
+
     /**
      * Returns proper FacetFilter from trailed category.
      * <p>
@@ -329,21 +329,21 @@ public abstract class SolrCategoryUtil {
             return productCategoryId;
         }
     }
-    
+
     /**
      * @deprecated 2018-05-25: use the solrAvailableCategories or solrSideDeepCategory services instead.
      */
     @Deprecated
-    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, 
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId,
             boolean displayproducts, int viewIndex, int viewSize, List<String> queryFilters, Boolean excludeVariants) {
         return categoriesAvailable(catalogId, categoryId, productId, null, displayproducts, viewIndex, viewSize, queryFilters, excludeVariants, null);
     }
-    
+
     /**
      * @deprecated 2018-05-25: use the solrAvailableCategories or solrSideDeepCategory services instead.
      */
     @Deprecated
-    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, 
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId,
             String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, List<String> queryFilters, Boolean excludeVariants) {
         return categoriesAvailable(catalogId, categoryId, productId, facetPrefix, displayproducts, viewIndex, viewSize, queryFilters, excludeVariants, null);
     }
@@ -352,7 +352,7 @@ public abstract class SolrCategoryUtil {
      * @deprecated 2018-05-25: use the solrAvailableCategories or solrSideDeepCategory services instead.
      */
     @Deprecated
-    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, 
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId,
             String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, List<String> queryFilters, Boolean excludeVariants, String core) {
         LocalDispatcher dispatcher = ServiceDispatcher.getLocalDispatcher("default", DelegatorFactory.getDelegator("default"));
         Map<String, Object> context = new HashMap<>();

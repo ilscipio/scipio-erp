@@ -17,18 +17,18 @@ import com.ilscipio.scipio.cms.CmsException;
 public class CmsPageTemplateVersion extends CmsTemplateVersion {
 
     private static final long serialVersionUID = 8929881699136390307L;
-    
+
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private CmsPageTemplate pageTemplate; // Mutable - set on first get if necessary.    
+    private CmsPageTemplate pageTemplate; // Mutable - set on first get if necessary.
     private String versionComment = null; // Content.description
-    
+
     // Constructors
 
     protected CmsPageTemplateVersion(GenericValue entity) {
         this(entity, null);
     }
-    
+
     CmsPageTemplateVersion(GenericValue entity, CmsPageTemplate pageTemplate) {
         super(entity);
         this.pageTemplate = pageTemplate; // Ability to specify pageTemplate here is almost merely an internal optimization
@@ -37,7 +37,7 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
     /**
      * Creates a new template version with the given fields (see CmsPageTemplateVersion entity for available fields)
      * for the given page. If page template ID is passed in fields, must match given page template instance's.
-     * 
+     *
      * @param fields
      * @param pageTemplate
      */
@@ -47,7 +47,7 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         this.setPageTemplateId(pageTemplate.getId());
         setVersionCommentFromFields(fields, true);
     }
-    
+
     protected CmsPageTemplateVersion(CmsPageTemplateVersion other, Map<String, Object> copyArgs, CmsPageTemplate pageTemplate) {
         super(other, copyArgs);
         if (pageTemplate != null) { // if null, we must be keeping the same parent template
@@ -58,7 +58,7 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
             this.setPageTemplateId(this.pageTemplate.getId());
         }
     }
-    
+
     private static Map<String, ?> checkPageTemplateId(Delegator delegator, Map<String, ?> fields, CmsPageTemplate pageTemplate,
             boolean useCache) {
         String fieldsTmpId = getPageTemplateId(fields);
@@ -71,29 +71,29 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         }
         return fields;
     }
-    
-    @Override    
+
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
         setVersionCommentFromFields(fields, setIfEmpty);
     }
-    
+
     @Override
     public CmsPageTemplateVersion copy(Map<String, Object> copyArgs) throws CmsException {
         return new CmsPageTemplateVersion(this, copyArgs, null);
     }
-    
+
     @Override
     public CmsPageTemplateVersion copy(Map<String, Object> copyArgs, CmsVersionedComplexTemplate<?, ?> template) throws CmsException {
         return new CmsPageTemplateVersion(this, copyArgs, (CmsPageTemplate) template);
     }
-    
-    
-    
+
+
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -103,8 +103,8 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         //this.getPageTemplate(); // NOTE: parent covers this.getTemplate()
         //this.getVersionComment(); // no need when live
     }
- 
-    // Getters and operational methods    
+
+    // Getters and operational methods
     public CmsPageTemplate getPageTemplate() {
         CmsPageTemplate pageTemplate = this.pageTemplate;
         if (pageTemplate == null) {
@@ -117,18 +117,18 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
     public String getPageTemplateId() {
         return entity.getString("pageTemplateId");
     }
-    
+
     public static String getPageTemplateId(Map<String, ?> fields) {
         return (String) fields.get("pageTemplateId");
     }
-    
+
     void setPageTemplateId(String pageTemplateId) {
         entity.set("pageTemplateId", pageTemplateId);
     }
-    
+
     public String getVersionComment() {
         preventIfImmutable();
-        
+
         String versionComment = this.versionComment;
         if (versionComment == null) {
             //versionComment = entity.getString("versionComment");
@@ -148,19 +148,19 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         }
         return versionComment;
     }
-    
+
     /**
      * Sets version comment.
      * <p>
      * Note: Is only public because it may be desirable to be able to edit past comments (i.e., like SVN).
-     * 
+     *
      * @param versionComment
      */
     public void setVersionComment(String versionComment) {
         //entity.set("versionComment", versionComment);
         this.versionComment = versionComment; // defer to store()
     }
-    
+
     protected void setVersionCommentFromFields(Map<String, ?> fields, boolean setIfEmpty) {
         if (setIfEmpty) {
             if (fields.containsKey("versionComment")) {
@@ -172,10 +172,10 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
             }
         }
     }
-    
+
     @Override
     protected void storeTemplateBodySource() {
-        // SPECIAL for page template version ONLY: 
+        // SPECIAL for page template version ONLY:
         // override this to store versionComment as description
         // TODO: REVIEW: possible issues with the empty string check?
         Map<String, Object> contentFields = new HashMap<>();
@@ -183,13 +183,13 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         if (versionComment != null) {
             contentFields.put("description", versionComment);
         }
-        GenericValue content = replaceTemplateContent(getDelegator(), getTemplateContentId(), tmplBodySrc, 
+        GenericValue content = replaceTemplateContent(getDelegator(), getTemplateContentId(), tmplBodySrc,
                 contentFields, null);
         if (content != null) {
             setTemplateContentId(content.getString("contentId"));
         }
     }
-    
+
     @Override
     public int remove() {
         Delegator delegator = getDelegator();
@@ -208,7 +208,7 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
     public CmsVersionedComplexTemplate<?, ?> getTemplate() {
         return getPageTemplate();
     }
-    
+
     @Override
     protected void setTemplate(CmsVersionedComplexTemplate<?, ?> template) {
         if (template == null) {
@@ -230,14 +230,14 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
     public PageTemplateVersionWorker getWorkerInst() {
         return PageTemplateVersionWorker.worker;
     }
-    
+
     public static PageTemplateVersionWorker getWorker() {
         return PageTemplateVersionWorker.worker;
     }
 
     public static class PageTemplateVersionWorker extends DataObjectWorker<CmsPageTemplateVersion> {
         private static final PageTemplateVersionWorker worker = new PageTemplateVersionWorker();
-        
+
         protected PageTemplateVersionWorker() {
             super(CmsPageTemplateVersion.class);
         }
@@ -252,19 +252,19 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
             return new CmsPageTemplateVersion(delegator, fields, null);
         }
     }
-    
+
     @Override
     protected CmsPageTemplateActiveVersionWorker getActiveVersionWorkerInst() {
         return CmsPageTemplateActiveVersionWorker.activeVersionWorker;
     }
-    
+
     protected static CmsPageTemplateActiveVersionWorker getActiveVersionWorker() {
         return CmsPageTemplateActiveVersionWorker.activeVersionWorker;
-    }  
+    }
 
     public static class CmsPageTemplateActiveVersionWorker extends CmsTemplateVersion.ActiveVersionWorker<CmsPageTemplate, CmsPageTemplateVersion> {
         protected static final CmsPageTemplateActiveVersionWorker activeVersionWorker = new CmsPageTemplateActiveVersionWorker();
-        
+
         @Override
         protected String getStateEntityName() {
             return "CmsPageTemplateVersionState";

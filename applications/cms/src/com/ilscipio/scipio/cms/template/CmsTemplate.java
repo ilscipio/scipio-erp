@@ -28,11 +28,11 @@ import com.ilscipio.scipio.cms.CmsInputException;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
 
 /**
- * Basic template and template common code for all template and template-like classes - 
+ * Basic template and template common code for all template and template-like classes -
  * used as base for both Version classes and the template sub-classes that don't support versions.
  * <p>
  * NOTE: "Template" refers to the most generic definition of the word possible; template
- * for any kind of code. It does NOT imply it's a renderable template (such as Freemarker); 
+ * for any kind of code. It does NOT imply it's a renderable template (such as Freemarker);
  * see {@link CmsRenderTemplate} interface for those.
  * <p>
  * DEV NOTE: This is different from the old class that was named CmsTemplate; that one
@@ -43,14 +43,14 @@ public abstract class CmsTemplate extends CmsDataObject {
     private static final long serialVersionUID = -9152090660349076392L;
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * Fields recognized by service but not physically present in entity.
      */
     public static final Set<String> virtualFields = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String[] {
             "templateLocation", "templateBody", "templateSource"
     })));
-    
+
 
     /**
      * Cached template body as either stored body or location,
@@ -68,7 +68,7 @@ public abstract class CmsTemplate extends CmsDataObject {
         super(delegator, fields);
         this.setTemplateBodySource(fields);
     }
-    
+
     /**
      * Copy constructor.
      * <p>
@@ -79,24 +79,24 @@ public abstract class CmsTemplate extends CmsDataObject {
         super(other, copyArgs);
         this.setTemplateBodySource(getTemplateBodySourceCopy(other, copyArgs));
     }
-    
+
     @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
         this.setTemplateBodySource(fields);
     }
-    
+
     /**
      * Subclasses may need to override this - versioned templates should do nothing here.
      */
     protected TemplateBodySource getTemplateBodySourceCopy(CmsTemplate other, Map<String, Object> copyArgs) {
         return TemplateBodySource.fromTemplateBodySource(other.getTemplateBodySource());
     }
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -105,9 +105,9 @@ public abstract class CmsTemplate extends CmsDataObject {
         super.preload(preloadWorker);
         this.getTemplateBodySource();
     }
-    
+
     public abstract String getName();
-    
+
     /**
      * Returns the template body source, including effective template body.
      * <p>
@@ -126,19 +126,19 @@ public abstract class CmsTemplate extends CmsDataObject {
         }
         return tmplBodySrc;
     }
-    
+
     /**
      * Returns the template body.
-     * 
+     *
      * @return freemarker template
      */
     public String getTemplateBody() {
         return getTemplateBodySource().getEffectiveBody();
     }
-    
+
     /**
      * Returns the template location, if any.
-     * 
+     *
      * @return freemarker template
      */
     public String getTemplateLocation() {
@@ -146,19 +146,19 @@ public abstract class CmsTemplate extends CmsDataObject {
     }
 
     public String getTemplateContentId() {
-        return entity.getString("contentId"); 
+        return entity.getString("contentId");
     }
-    
+
     protected void setTemplateContentId(String contentId) {
-        entity.setString("contentId", contentId); 
+        entity.setString("contentId", contentId);
     }
-    
+
     @Override
     public void store() throws CmsException {
         storeTemplateBodySource();
         super.store();
     }
-    
+
     @Override
     public int remove() throws CmsException {
         // WARNING: This does NOT attempt to remove the related Content entities
@@ -178,7 +178,7 @@ public abstract class CmsTemplate extends CmsDataObject {
     protected void storeSelfOnly() throws CmsException {
         super.store();
     }
-    
+
     /**
      * NOTE: subclasses may override this to extend or prevent.
      */
@@ -188,7 +188,7 @@ public abstract class CmsTemplate extends CmsDataObject {
             setTemplateContentId(content.getString("contentId"));
         }
     }
-    
+
     public static int removeTemplateBodySourceCommon(Delegator delegator, String contentId) {
         int rowsAffected = 0;
         if (UtilValidate.isNotEmpty(contentId)) {
@@ -206,21 +206,21 @@ public abstract class CmsTemplate extends CmsDataObject {
             this.tmplBodySrc = newTmplBodySrc;
         }
     }
-    
+
     /**
      * 2016: checks and sets body or location as appropriate - helper.
      */
     protected void setTemplateBodySource(TemplateBodySource tmplBodySrc) {
         this.tmplBodySrc = tmplBodySrc;
     }
-    
+
     /**
-     * Master content create/update method - replaces template body or location - only if required, creating a new Content record, 
+     * Master content create/update method - replaces template body or location - only if required, creating a new Content record,
      * with optional extra Content fields.
      * <p>
      * NOTE: this method is complicated because of the effort to update in-place, which is mostly optimization and easier to debug IDs.
      */
-    public static GenericValue replaceTemplateContent(Delegator delegator, String contentId, TemplateBodySource tmplBodySrc, 
+    public static GenericValue replaceTemplateContent(Delegator delegator, String contentId, TemplateBodySource tmplBodySrc,
             Map<String, ?> contentFields, Map<String, ?> dataResourceFields) throws CmsException {
         if (tmplBodySrc == null) {
             tmplBodySrc = TemplateBodySource.getUndefined();
@@ -238,7 +238,7 @@ public abstract class CmsTemplate extends CmsDataObject {
                 throw new CmsInputException("Invalid template file location: " + tmplBodySrc.getLocation());
             }
         }
-        
+
         if (UtilValidate.isNotEmpty(contentId)) {
             try {
                 GenericValue content = delegator.findOne("Content", UtilMisc.toMap("contentId", contentId), false);
@@ -249,20 +249,20 @@ public abstract class CmsTemplate extends CmsDataObject {
                 if (dataResource == null) {
                     throw new CmsException("Could not get DataResource entity for template with contentId " + contentId);
                 }
-              
+
                 boolean createNew;
                 if (tmplBodySrc.isDefined()) {
                     // need prev body for checks
-                    String prevEffectiveBody = DataResourceWorker.getDataResourceText(dataResource, 
+                    String prevEffectiveBody = DataResourceWorker.getDataResourceText(dataResource,
                             "text/plain", Locale.getDefault(), new HashMap<>(), delegator, false);
-                    
+
                     String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
                     if ("ELECTRONIC_TEXT".equals(dataResourceTypeId)) {
                         GenericValue electronicText = delegator.findOne("ElectronicText", UtilMisc.toMap("dataResourceId", dataResource.getString("dataResourceId")), false);
                         if (electronicText == null) {
                             throw new CmsException("Could not get ElectronicText entity for template (schema error - ELECTRONIC_TYPE dataResourceTypeId but no ElectronicText value)");
-                        }  
-                        
+                        }
+
                         boolean isSame;
                         boolean isBodyUpdate;
                         if (UtilValidate.isNotEmpty(tmplBodySrc.getLocation())) {
@@ -281,7 +281,7 @@ public abstract class CmsTemplate extends CmsDataObject {
                             isSame = StringUtils.equals(tmplBodySrc.getStoredBody(), prevEffectiveBody);
                             isBodyUpdate = true;
                         }
-                        
+
                         if (!isSame) {
                             if (isBodyUpdate) {
                                 electronicText.set("textData", tmplBodySrc.getStoredBody());
@@ -292,7 +292,7 @@ public abstract class CmsTemplate extends CmsDataObject {
                                 electronicText.remove();
                             }
                         }
-                        
+
                         createNew = false;
                     } else if ("URL_RESOURCE".equals(dataResourceTypeId)) {
                         boolean isSame;
@@ -319,19 +319,19 @@ public abstract class CmsTemplate extends CmsDataObject {
                             isSame = StringUtils.equals(tmplBodySrc.getLocation(), dataResource.getString("objectInfo"));
                             isLocationUpdate = true;
                         }
-                        
+
                         if (!isSame) {
                             if (isLocationUpdate) {
                                 dataResource.set("objectInfo", tmplBodySrc.getLocation());
                             } else {
-                                GenericValue electronicText = delegator.makeValue("ElectronicText", 
-                                        UtilMisc.toMap("dataResourceId", dataResource.getString("dataResourceId"), 
+                                GenericValue electronicText = delegator.makeValue("ElectronicText",
+                                        UtilMisc.toMap("dataResourceId", dataResource.getString("dataResourceId"),
                                                 "textData", tmplBodySrc.getStoredBody()));
                                 electronicText = delegator.create(electronicText);
                                 dataResource.set("dataResourceTypeId", "ELECTRONIC_TEXT");
                             }
                         }
-                        
+
                         createNew = false;
                     } else {
                         Debug.logWarning("CMS: DataResource " + dataResource.getString("dataResourceId") + " had"
@@ -342,7 +342,7 @@ public abstract class CmsTemplate extends CmsDataObject {
                     // here we can update the extra fields in-place
                     createNew = false;
                 }
-                
+
                 if (!createNew) {
                     if (UtilValidate.isNotEmpty(contentFields)) {
                         content.setNonPKFields(contentFields);
@@ -360,17 +360,17 @@ public abstract class CmsTemplate extends CmsDataObject {
                 throw new CmsException("Could not get template content", e);
             } catch (GeneralException e) {
                 throw new CmsException("Could not get template content", e);
-            } 
+            }
         }
-        
+
         // if above checks failed, we enter remove and create mode...
-        
+
         if (UtilValidate.isNotEmpty(contentId)) {
             // NOTE: this should not really happen unless data was defined in weird way
             Debug.logInfo("CMS: removing previous template Content record because unable to update in-place, contentId: " + contentId, module);
             removeTemplateContent(delegator, contentId);
         }
-        
+
         if (UtilValidate.isNotEmpty(tmplBodySrc.getStoredBody())) { // NOTE: stored body gets priority
             return createContentWithTemplateBody(delegator, tmplBodySrc.getStoredBody(), contentFields, dataResourceFields);
         } else if (UtilValidate.isNotEmpty(tmplBodySrc.getLocation())) {
@@ -397,11 +397,11 @@ public abstract class CmsTemplate extends CmsDataObject {
             if (dataResource == null) {
                 throw new CmsException("Could not get DataResource entity for template");
             }
-            
+
             // force this for now: dataResource.getString("mimeTypeId")
-            String effectiveBody = DataResourceWorker.getDataResourceText(dataResource, 
+            String effectiveBody = DataResourceWorker.getDataResourceText(dataResource,
                     "text/plain", Locale.getDefault(), new HashMap<>(), delegator, useCache);
-            
+
             String storedBody = null;
             String location = null;
             // NOTE: we make some assumptions here that might not hold in the future, but that's ok
@@ -420,7 +420,7 @@ public abstract class CmsTemplate extends CmsDataObject {
                     throw new CmsException("Unsupported template content dataResourceTypeId LOCAL_FILE - does not begin with 'component://': " + dataResourceTypeId);
                 }
             } else {
-                // NOTE: reject OFBIZ_FILE and LOCAL_FILE for now because interface 
+                // NOTE: reject OFBIZ_FILE and LOCAL_FILE for now because interface
                 throw new CmsException("Unsupported template content dataResourceTypeId: " + dataResourceTypeId);
             }
             return new TemplateBodySource(dataResourceTypeId, effectiveBody, storedBody, location);
@@ -432,7 +432,7 @@ public abstract class CmsTemplate extends CmsDataObject {
             throw new CmsException("Could not get template content", e);
         }
     }
-    
+
     /**
      * Returns the effective template body no matter storage mechanism.
      * NOTE: already done by getTemplateBodySourceFromContent
@@ -452,7 +452,7 @@ public abstract class CmsTemplate extends CmsDataObject {
                 throw new CmsException("Could not get DataResource entity for template");
             }
             // force this for now: dataResource.getString("mimeTypeId")
-            String templateBody = DataResourceWorker.getDataResourceText(dataResource, 
+            String templateBody = DataResourceWorker.getDataResourceText(dataResource,
                     "text/plain", Locale.getDefault(), new HashMap<>(), delegator, useCache);
             return templateBody;
         } catch (GenericEntityException e) {
@@ -463,7 +463,7 @@ public abstract class CmsTemplate extends CmsDataObject {
             throw new CmsException("Could not get template content", e);
         }
     }
-    
+
     public static GenericValue getContent(Delegator delegator, String contentId, boolean useCache) throws CmsException {
         if (UtilValidate.isEmpty(contentId)) {
             throw new CmsException("Could not get template content");
@@ -478,7 +478,7 @@ public abstract class CmsTemplate extends CmsDataObject {
             throw new CmsException("Could not get template content", e);
         }
     }
-    
+
     public static void updateContent(Delegator delegator, String contentId, Map<String, ?> contentFields) {
         if (UtilValidate.isEmpty(contentId)) {
             throw new CmsException("Could not get template content");
@@ -494,28 +494,28 @@ public abstract class CmsTemplate extends CmsDataObject {
             throw new CmsException("Could not get template content", e);
         }
     }
-    
+
     /**
      * Creates an ElectronicText DataResource and Content and returns the new Content for it.
      * optional extra manual fields.
      */
-    private static GenericValue createContentWithTemplateBody(Delegator delegator, String templateBody, 
+    private static GenericValue createContentWithTemplateBody(Delegator delegator, String templateBody,
             Map<String, ?> contentFields, Map<String, ?> dataResourceFields) throws CmsException {
         try {
-            GenericValue dataResource = delegator.makeValue("DataResource", 
-                    UtilMisc.toMap("dataResourceTypeId", "ELECTRONIC_TEXT", "mimeTypeId", "text/plain", 
+            GenericValue dataResource = delegator.makeValue("DataResource",
+                    UtilMisc.toMap("dataResourceTypeId", "ELECTRONIC_TEXT", "mimeTypeId", "text/plain",
                             "dataTemplateTypeId", "NONE"));
             if (dataResourceFields != null) {
                 dataResource.setNonPKFields(dataResourceFields);
             }
             dataResource = delegator.createSetNextSeqId(dataResource);
-           
-            GenericValue electronicText = delegator.makeValue("ElectronicText", 
-                    UtilMisc.toMap("dataResourceId", dataResource.getString("dataResourceId"), 
+
+            GenericValue electronicText = delegator.makeValue("ElectronicText",
+                    UtilMisc.toMap("dataResourceId", dataResource.getString("dataResourceId"),
                             "textData", templateBody));
             electronicText = delegator.create(electronicText);
-           
-            GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("dataResourceId", dataResource.getString("dataResourceId"), 
+
+            GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("dataResourceId", dataResource.getString("dataResourceId"),
                     "contentTypeId", "DOCUMENT"));
             if (contentFields != null) {
                 content.setNonPKFields(contentFields);
@@ -526,27 +526,27 @@ public abstract class CmsTemplate extends CmsDataObject {
             throw new CmsException("Could not create template content", e);
         }
     }
-        
+
     /**
      * Creates a new Content and DataResource as URL_RESOURCE (component://) and returns the new Content.
      * optional extra content fields.
      */
-    private static GenericValue createContentWithTemplateLocation(Delegator delegator, String templateLocation, 
+    private static GenericValue createContentWithTemplateLocation(Delegator delegator, String templateLocation,
             Map<String, ?> contentFields, Map<String, ?> dataResourceFields) throws CmsException {
         try {
             // NOTE: dataResourceTypeId could be either URL_RESOURCE or LOCAL_FILE, both
             // will work with component:// prefix
             // I think URL_RESOURCE is more powerful(?) so use that
-            GenericValue dataResource = delegator.makeValue("DataResource", 
-                    UtilMisc.toMap("dataResourceTypeId", "URL_RESOURCE", "mimeTypeId", "text/plain", 
+            GenericValue dataResource = delegator.makeValue("DataResource",
+                    UtilMisc.toMap("dataResourceTypeId", "URL_RESOURCE", "mimeTypeId", "text/plain",
                             "objectInfo", templateLocation,
                             "dataTemplateTypeId", "NONE"));
             if (dataResourceFields != null) {
                 dataResource.setNonPKFields(dataResourceFields);
             }
             dataResource = delegator.createSetNextSeqId(dataResource);
-           
-            GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("dataResourceId", dataResource.getString("dataResourceId"), 
+
+            GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("dataResourceId", dataResource.getString("dataResourceId"),
                     "contentTypeId", "DOCUMENT"));
             if (contentFields != null) {
                 content.setNonPKFields(contentFields);
@@ -557,7 +557,7 @@ public abstract class CmsTemplate extends CmsDataObject {
             throw new CmsException("Could not create template content", e);
         }
     }
-    
+
     /**
      * Deletes a Content and associated records.
      */
@@ -596,7 +596,7 @@ public abstract class CmsTemplate extends CmsDataObject {
         }
         return removed;
     }
-    
+
 
     /**
      * Holds the body, location, any possible source of body for the template,
@@ -611,32 +611,32 @@ public abstract class CmsTemplate extends CmsDataObject {
         private static final TemplateBodySource UNSUPPORTED = new UnsupportedTemplateBodySource();
 
         private final String dataResourceTypeId; // used transiently
-        
+
         // NOTE: currently if storedBody is non-null, then when effective body is non-null,
         // they should always be the same reference; but code should NOT assume this
         private final String effectiveBody;
-        
+
         private final String storedBody;
         private final String location;
-        
+
         private TemplateBodySource(String dataResourceTypeId, String effectiveBody, String storedBody, String location) {
             this.dataResourceTypeId = dataResourceTypeId;
             this.effectiveBody = effectiveBody;
             this.storedBody = storedBody;
             this.location = location;
         }
-        
+
         private TemplateBodySource() {
             this.dataResourceTypeId = null;
             this.effectiveBody = null;
             this.storedBody = null;
             this.location = null;
         }
-        
+
         public static TemplateBodySource fromFields(String dataResourceTypeId, String effectiveBody, String storedBody, String location) {
             return new TemplateBodySource(dataResourceTypeId, effectiveBody, storedBody, location);
         }
-        
+
         /**
          * Builds instance using the fields supported by the service interfaces.
          * templateBody - the EFFECTIVE body (treated as incoming stored)
@@ -647,19 +647,19 @@ public abstract class CmsTemplate extends CmsDataObject {
         public static TemplateBodySource fromFields(String templateBody, String location) {
             return new TemplateBodySource(null, null, templateBody, location);
         }
-        
+
         public static TemplateBodySource fromLocation(String location) {
             return new TemplateBodySource(null, null, null, location);
         }
-        
+
         public static TemplateBodySource fromBody(String templateBody) {
             return new TemplateBodySource(null, null, templateBody, null);
         }
-        
+
         public static TemplateBodySource fromTemplateBodySource(TemplateBodySource other) {
             return new TemplateBodySource(null, null, other.storedBody, other.location);
         }
-        
+
         /**
          * Builds instance using the fields supported by the service interfaces.
          * templateBody - the EFFECTIVE body (treated as incoming stored)
@@ -671,7 +671,7 @@ public abstract class CmsTemplate extends CmsDataObject {
         public static TemplateBodySource fromFields(Map<String, ?> fields) {
             if (fields.containsKey("templateBody") || fields.containsKey("templateLocation") || fields.containsKey("templateSource")) {
                 String source = (String) fields.get("templateSource");
-                
+
                 String storedBody = null;
                 String location = null;
                 if ("Body".equals(source)) {
@@ -720,46 +720,46 @@ public abstract class CmsTemplate extends CmsDataObject {
             fields.put("templateBody", effectiveBody);
             fields.put("templateLocation", location);
         }
-        
+
         public static TemplateBodySource getUndefined() {
             return UNDEFINED;
         }
-        
+
         public static TemplateBodySource getEmptyStrings() {
             return EMPTY_STRINGS;
         }
-        
+
         public static TemplateBodySource getUnsupported() {
             return UNSUPPORTED;
         }
-        
+
         public boolean isDefined() {
             return storedBody != null || location != null;
         }
-        
+
         public String getStoredBody() {
             return storedBody;
         }
-        
+
         public String getLocation() {
             return location;
         }
-        
+
         /**
          * NOTE: this will return null if getting between set and store operations.
          */
         public String getEffectiveBody() {
             return effectiveBody;
         }
-        
+
         public String getDataResourceTypeId() {
             return dataResourceTypeId;
         }
-        
+
         public String getAvailableBody() {
             return effectiveBody != null ? effectiveBody : storedBody;
         }
-        
+
         public static class UnsupportedTemplateBodySource extends TemplateBodySource {
             @Override
             public boolean isDefined() {

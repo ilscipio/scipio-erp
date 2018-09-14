@@ -40,14 +40,14 @@ import freemarker.core.Environment;
  * The page template determines the presentation of a page. It includes a
  * FreeMarker template and attribute definitions. Page templates also have zero
  * or more asset templates attached which can be embedded into page.
- * 
+ *
  */
 public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, CmsPageTemplateVersion> implements CmsRenderTemplate, CmsMajorObject  {
 
     private static final long serialVersionUID = 9154893402134263580L;
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     // default is TRUE
     private static final boolean firstVersionActive = UtilProperties.getPropertyAsBoolean("cms", "page.template.firstVersionActive", true);
 
@@ -58,9 +58,9 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
      * for preloadContent().
      */
     private Map<String, CmsAssetTemplate> assetTemplatesByImportName;
-    
+
     protected final PageTemplateRenderer renderer = new PageTemplateRenderer(this); // 2016: dedicated renderer object
-    
+
     /**
      * Constructs new CmsPageTemplate from the given entity.
      *
@@ -71,27 +71,27 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
     private CmsPageTemplate(GenericValue entity, boolean isNewTemplate) {
         super(entity);
     }
-    
+
     protected CmsPageTemplate(GenericValue entity) {
         this(entity, false);
     }
-    
+
     public CmsPageTemplate(Delegator delegator, Map<String, ?> fields) {
         super(delegator, fields);
     }
-    
+
     protected CmsPageTemplate(CmsPageTemplate other, Map<String, Object> copyArgs) {
         super(other, copyArgs); // NOTE: super invokes getInitialVersionCopy
-        
+
         // copy asset templates - this stores them in-memory, they will get committed during store()
         this.assetTemplatesByImportName = copyAssetTemplates(getAssetTemplatesByImportName(), copyArgs, other);
     }
 
-    @Override    
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
     }
-    
+
     /**
      * Copies this page template and the lates version.
      */
@@ -101,7 +101,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         copyInitialVersionToTemplateCopy(newTemplate, copyArgs);
         return newTemplate;
     }
-    
+
     protected static Map<String, CmsAssetTemplate> copyAssetTemplates(Map<String, CmsAssetTemplate> srcAssetTemplates, Map<String, Object> copyArgs, CmsPageTemplate other) {
         Map<String, CmsAssetTemplate> assetTemplates = new LinkedHashMap<>();
         for (Map.Entry<String, CmsAssetTemplate> entry : srcAssetTemplates.entrySet()) {
@@ -120,7 +120,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -129,18 +129,18 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         super.preload(preloadWorker);
         preloadWorker.preload(this.renderer);
         this.assetTemplatesByImportName = preloadWorker.preloadDeep(this.getAssetTemplatesByImportName());
-        
+
         // SPECIAL CASE: To prevent memory wastage, don't keep original template body
         // source in memory because Freemarker template will already contain it.
         // NOTE: this works in conjunction with activeContentId which also evades the need
         // for needless cached Version instance
         this.tmplBodySrc = TemplateBodySource.getUndefined();
-        
+
         // SPECIAL CASE: discard the active version reference, because here the renderer
         // already loaded the template
         this.activeVersion = Optional.empty();
     }
-    
+
     @Override
     protected void verifyNewFields(Delegator delegator, Map<String, Object> fields, boolean isNew) throws CmsException {
         // NOTE: in theory, could want groupingNullSignificant=false here because it makes the duplicate name check more aggressive...
@@ -151,7 +151,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
     @Override
     public Map<String, Object> getDescriptor(Locale locale) {
         preventIfImmutable(); // WARN: currently dangerous if called from rendering!
-        
+
         Map<String, Object> descriptor = super.getDescriptor(locale);
         // TODO: We currently get the "ACTIVE" asset templates as descriptors for CmsEditor; it's not clear
         // whether conceptually this should be the "ACTIVE" or "LATEST" templates being used here, though in
@@ -164,30 +164,30 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         descriptor.put("assets", atDescriptors);
         return descriptor;
     }
-    
+
     @Override
     public CmsPageTemplateVersion createNewVersion(Map<String, ?> fields) {
         return new CmsPageTemplateVersion(getDelegator(), fields, this);
     }
-    
-    
+
+
     /**
      * Returns a map of asset templates linked to this page template. The map
      * key is the import name under which this asset is available in the
      * freemarker source code of this page template.
-     * 
+     *
      * @return Map of asset templates
      */
     protected Map<String, CmsAssetTemplate> readAssetTemplates() {
         Map<String, CmsAssetTemplate> result = new LinkedHashMap<>();
         try {
             // NOTE: nulls first corresponds to default value 0
-            List<GenericValue> assocEntities = entity.getRelated("CmsPageTemplateAssetAssoc", null, 
+            List<GenericValue> assocEntities = entity.getRelated("CmsPageTemplateAssetAssoc", null,
                     UtilMisc.toList("inputPosition ASC NULLS FIRST"), false);
             for (GenericValue assoce : assocEntities) {
                 CmsPageTemplateAssetAssoc asset = CmsPageTemplateAssetAssoc.getWorker().makeFromValue(assoce);
                 if (result.containsKey(asset.getImportName())) {
-                    Debug.logError("Cms: Duplicate CmsPageTemplateAssetAssoc.importName ('" + asset.getImportName() + 
+                    Debug.logError("Cms: Duplicate CmsPageTemplateAssetAssoc.importName ('" + asset.getImportName() +
                             "') detected for page template " + getId(), module);
                 }
                 result.put(asset.getImportName(), asset.getAssetTemplate());
@@ -197,12 +197,12 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         }
         return result;
     }
-    
+
     /**
      * Returns a map of asset templates linked to this page template. The map
      * key is the import name under which this asset is available in the
      * freemarker source code of this page template.
-     * 
+     *
      * @return Map of asset templates
      */
     public Map<String, CmsAssetTemplate> getAssetTemplatesByImportName() {
@@ -213,11 +213,11 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         }
         return assetTemplates;
     }
-    
+
     public CmsAssetTemplate getAssetTemplateByImportName(String importName) {
         return getAssetTemplatesByImportName().get(importName);
     }
-    
+
     /**
      * Gets local asset by ID.
      * NOTE: This uses a slow iteration to lookup by ID, and is used live.
@@ -227,12 +227,12 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
     public CmsAssetTemplate getAssetTemplateById(String id) {
         for(CmsAssetTemplate assetTemplate : getAssetTemplatesByImportName().values()) {
             if (id.equals(assetTemplate.getId())) {
-                return assetTemplate; 
+                return assetTemplate;
             }
         }
         return null;
     }
-    
+
     public List<CmsAssetTemplate> getSortedAssetTemplates() {
         List<CmsAssetTemplate> assetTemplates = new ArrayList<>(getAssetTemplatesByImportName().values());
         Collections.<CmsAssetTemplate> sort(assetTemplates, new Comparator<CmsAssetTemplate>() {
@@ -243,14 +243,14 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         });
         return assetTemplates;
     }
-    
+
     public List<CmsAssetTemplate> getAssetTemplates() {
         return new ArrayList<>(getAssetTemplatesByImportName().values());
     }
 
     public void store(boolean forceStoreAssetAssoc) throws CmsException {
         super.store();
-        
+
         // 2017-11: we'll now store the linked asset template associations IF they were not
         // yet persisted OR entity has changed OR if forceStoreAssetAssoc (off by default)
         if (this.assetTemplatesByImportName != null) {
@@ -265,7 +265,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             }
         }
     }
-    
+
     @Override
     public void store() throws CmsException {
         store(false);
@@ -273,7 +273,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
 
     /**
      * Removes the page template from the database.
-     * 
+     *
      * @return True if delete was successful, otherwise false
      */
     @Override
@@ -283,21 +283,21 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             // SPECIAL: we have to remove the active reference, otherwise deps will prevent delete
             setActiveTemplateContentId(null);
             entity.store();
-            
+
             // delete CmsPageTemplateAssetAssoc
             List<GenericValue> pageAssetAssoc = entity.getRelated("CmsPageTemplateAssetAssoc", null, null, false);
             for (GenericValue pageAsset : pageAssetAssoc) {
                 pageAsset.remove();
                 rowsAffected += 1;
             }
-            
+
         } catch (GenericEntityException e) {
             throw makeRemoveException(e);
         }
         // delete the rest (see CmsVersionedComplexTemplate.remove())
         return rowsAffected + super.remove();
     }
-    
+
     public void setWebSiteId(String webSiteId) { // legacy webSiteId field
         entity.setString("webSiteId", webSiteId);
     }
@@ -312,7 +312,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         pageTmp.putTemplateFieldsIntoMap(result);
         return result;
     }
-    
+
     public static class CmsPageTemplateAssetAssoc extends CmsAssetTemplate.CmsAssetTemplateAssoc {
 
         private static final long serialVersionUID = 5839674451619496850L;
@@ -328,21 +328,21 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         protected CmsPageTemplateAssetAssoc(CmsPageTemplateAssetAssoc other, Map<String, Object> copyArgs) {
             super(other, copyArgs);
         }
-        
-        @Override    
+
+        @Override
         public void update(Map<String, ?> fields, boolean setIfEmpty) {
             super.update(fields, setIfEmpty);
         }
-        
+
         @Override
         public CmsPageTemplateAssetAssoc copy(Map<String, Object> copyArgs) throws CmsException {
             return new CmsPageTemplateAssetAssoc(this, copyArgs);
         }
-        
+
         /**
          * 2016: Loads ALL this object's content into the current instance.
          * <p>
-         * WARN: IMPORTANT: AFTER THIS CALL, 
+         * WARN: IMPORTANT: AFTER THIS CALL,
          * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
          * Essential for thread safety!!!
          */
@@ -350,7 +350,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         public void preload(PreloadWorker preloadWorker) {
             super.preload(preloadWorker);
         }
-        
+
         protected static <T> Map<String, T> checkFields(Map<String, T> fields, boolean isNew) throws CmsException {
             if (isNew || fields.containsKey("inputPosition")) {
                 if (UtilValidate.isEmpty((Long) fields.get("inputPosition"))) {
@@ -359,25 +359,25 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             }
             return fields;
         }
-        
+
         @Override
         protected void clearTemplate() {
             this.entity.set("pageTemplateId", null);
         }
-        
+
         @Override
         protected void setTemplate(CmsDataObject template) {
-            if (!(template instanceof CmsPageTemplate)) throw new CmsException("CmsPageTemplateAssocAssoc requires a CmsPageTemplate, got: " 
+            if (!(template instanceof CmsPageTemplate)) throw new CmsException("CmsPageTemplateAssocAssoc requires a CmsPageTemplate, got: "
                     + (template != null ? template.getClass().getName() : null));
             entity.set("pageTemplateId", template.getId());
         }
-        
+
         @Override
         protected boolean hasTemplate() {
             return (this.entity.getString("pageTemplateId") != null);
         }
-        
-        
+
+
         protected void ensureTemplate(CmsPageTemplate template) {
             String curTemplateId = this.entity.getString("pageTemplateId");
             if (curTemplateId == null) {
@@ -391,19 +391,19 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
                 }
             }
         }
-        
+
         @Override
         public PageAssetTemplateAssocWorker getWorkerInst() {
             return PageAssetTemplateAssocWorker.worker;
         }
-        
+
         public static PageAssetTemplateAssocWorker getWorker() {
             return PageAssetTemplateAssocWorker.worker;
         }
 
         public static class PageAssetTemplateAssocWorker extends DataObjectWorker<CmsPageTemplateAssetAssoc> {
             private static final PageAssetTemplateAssocWorker worker = new PageAssetTemplateAssocWorker();
-            
+
             protected PageAssetTemplateAssocWorker() {
                 super(CmsPageTemplateAssetAssoc.class);
             }
@@ -417,7 +417,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             public CmsPageTemplateAssetAssoc makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
                 return new CmsPageTemplateAssetAssoc(delegator, fields, null);
             }
-            
+
             /**
              * Adds or updates a link to an asset template to this page template. Fields will be filtered.
              */
@@ -440,13 +440,13 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             }
         }
     }
-    
-    
+
+
     @Override
     protected CmsPageTemplateScriptAssoc.PageTemplateScriptAssocWorker getTemplateScriptAssocWorker() {
         return CmsPageTemplateScriptAssoc.getWorker();
     }
-    
+
     public static class CmsPageTemplateScriptAssoc extends CmsTemplateScriptAssoc {
 
         private static final long serialVersionUID = -7223454711555662977L;
@@ -454,7 +454,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         protected CmsPageTemplateScriptAssoc(GenericValue entity) {
             super(entity);
         }
-        
+
         public CmsPageTemplateScriptAssoc(Delegator delegator, Map<String, ?> fields, CmsScriptTemplate scriptTemplate) {
             super(delegator, fields, scriptTemplate);
         }
@@ -463,21 +463,21 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             super(other, copyArgs);
             // NOTE: don't bother clearing out the ID fields here, caller should handle
         }
-        
-        @Override    
+
+        @Override
         public void update(Map<String, ?> fields, boolean setIfEmpty) {
             super.update(fields, setIfEmpty);
         }
-        
+
         @Override
         public CmsPageTemplateScriptAssoc copy(Map<String, Object> copyArgs) throws CmsException {
             return new CmsPageTemplateScriptAssoc(this, copyArgs);
         }
-        
+
         /**
          * 2016: Loads ALL this object's content into the current instance.
          * <p>
-         * WARN: IMPORTANT: AFTER THIS CALL, 
+         * WARN: IMPORTANT: AFTER THIS CALL,
          * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
          * Essential for thread safety!!!
          */
@@ -490,31 +490,31 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         protected void clearTemplate() {
             entity.set("pageTemplateId", null);
         }
-        
+
         @Override
         protected void setTemplate(CmsDataObject template) {
-            if (!(template instanceof CmsPageTemplate)) throw new CmsException("CmsPageTemplateScriptAssoc requires a CmsPageTemplate, got: " 
+            if (!(template instanceof CmsPageTemplate)) throw new CmsException("CmsPageTemplateScriptAssoc requires a CmsPageTemplate, got: "
                     + (template != null ? template.getClass().getName() : null));
             entity.set("pageTemplateId", template.getId());
         }
-        
+
         @Override
         protected boolean hasTemplate() {
             return (entity.get("pageTemplateId") != null);
         }
-        
+
         @Override
         public PageTemplateScriptAssocWorker getWorkerInst() {
             return PageTemplateScriptAssocWorker.worker;
         }
-        
+
         public static PageTemplateScriptAssocWorker getWorker() {
             return PageTemplateScriptAssocWorker.worker;
         }
 
         public static class PageTemplateScriptAssocWorker extends TemplateScriptAssocWorker<CmsPageTemplateScriptAssoc> {
             private static final PageTemplateScriptAssocWorker worker = new PageTemplateScriptAssocWorker();
-            
+
             protected PageTemplateScriptAssocWorker() {
                 super(CmsPageTemplateScriptAssoc.class);
             }
@@ -536,16 +536,16 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             }
         }
     }
-    
-    
+
+
 
     // Helpers
-    
+
     @Override
     public PageTemplateRenderer getRenderer() {
         return renderer;
     }
-    
+
     /**
      * Dedicated page renderer object.
      */
@@ -559,7 +559,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
 
         public static class PtRenderArgs extends RenderArgs {
             private boolean runPageScripts = false;
-            
+
             public PtRenderArgs() {
                 super();
             }
@@ -598,17 +598,17 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
                 this.runPageScripts = runPageScripts;
             }
         }
-        
+
         @Override
         public Object processAndRender(RenderArgs renderArgs) throws CmsException {
             return super.processAndRender(renderArgs);
         }
-        
+
         @Override
         protected List<CmsScriptTemplate> getSortedScriptTemplates() {
             return template.getSortedScriptTemplates();
         }
-        
+
         @Override
         protected void populateScriptsAndContent(RenderArgs renderArgs, Set<String> contextSkipNames) {
             if (renderArgs instanceof PtRenderArgs) {
@@ -624,19 +624,19 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         }
 
     }
-    
+
     @Override
     public PageTemplateWorker getWorkerInst() {
         return PageTemplateWorker.worker;
     }
-    
+
     public static PageTemplateWorker getWorker() {
         return PageTemplateWorker.worker;
     }
 
     public static class PageTemplateWorker extends DataObjectWorker<CmsPageTemplate> {
         private static final PageTemplateWorker worker = new PageTemplateWorker();
-        
+
         protected PageTemplateWorker() {
             super(CmsPageTemplate.class);
         }
@@ -651,25 +651,25 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             return new CmsPageTemplate(delegator, fields);
         }
     }
-    
+
     @Override
     protected PageVerComTemplateWorker getVerComTemplateWorkerInst() {
         return PageVerComTemplateWorker.templateWorker;
     }
-    
+
     protected static PageVerComTemplateWorker getVerComTemplateWorker() {
         return PageVerComTemplateWorker.templateWorker;
     }
-    
+
     public static class PageVerComTemplateWorker extends VerComTemplateWorker<CmsPageTemplate, CmsPageTemplateVersion> {
 
         protected static final PageVerComTemplateWorker templateWorker = new PageVerComTemplateWorker();
-        
+
         @Override
         protected DataObjectWorker<CmsPageTemplate> getDataObjectWorker() {
             return CmsPageTemplate.getWorker();
         }
-        
+
         @Override
         protected CmsPageTemplateVersion createVersion(GenericValue value, CmsPageTemplate template) {
             return new CmsPageTemplateVersion(value, template);
@@ -706,12 +706,12 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         }
 
     }
-    
+
     @Override
     public void acceptEntityDepsVisitor(CmsEntityVisitor visitor, GenericValue relValue, VisitRelation relValueRelation, CmsMajorObject majorDataObj) throws Exception {
         CmsEntityVisit.acceptRelatedEntityDepsVisitor(visitor, VisitRelPlan.visitRelations, this.getEntity(), relValueRelation, relValue, this);
     }
-    
+
     public static class VisitRelPlan extends VisitRelations.BuildPlan {
         public static final VisitRelPlan INSTANCE = new VisitRelPlan("CmsPageTemplate");
         static final VisitRelations visitRelations = INSTANCE.buildSafe();

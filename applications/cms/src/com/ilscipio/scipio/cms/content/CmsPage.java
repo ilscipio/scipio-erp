@@ -64,38 +64,38 @@ import com.ilscipio.scipio.cms.template.CmsScriptTemplate;
  * are used by the template, and is recurring source of errors.
  */
 public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersionedDataObject {
-    
+
     private static final long serialVersionUID = -6442528536238200118L;
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
-     * NOTE: 2016: page cache is almost completely covered by CmsProcess/ViewMapping; 
+     * NOTE: 2016: page cache is almost completely covered by CmsProcess/ViewMapping;
      * the only exception is for the defaultCmsPageId in CmsScreenViewHandler.
      * Leaving this one in place because of potential uses.
      */
     private static final CmsObjectCache<CmsPage> idCache = CmsObjectCache.getGlobalCache("cms.content.page.id");
-    
+
     public static final UserRole DEFAULT_USER_ROLE = UserRole.CMS_VISITOR;
-    
+
     // NOTE: 2016: Optional is required for thread safety (preload)
     private Optional<CmsPageTemplate> template = null;
     private CmsPageContent activeContentModel = null; // don't need Optional because once get called, can't be null
     private Map<String, Map<String, ?>> products = null;
-    
+
     private Optional<CmsPageVersion> lastVersion = null; // NOTE: NOT cached when live.
     private Optional<CmsPageVersion> activeVersion = null; // NOTE: NOT cached when live.
-    
+
     private String activeVersionId = null; // NOTE: NOT cached when live. // 2016: this is no longer stored on CmsPage. NOTE: empty string "" means cache checked OR unset active upon store().
-    
+
     private Set<String> candidateWebSiteIds = null; // NOTE: NOT cached when live.
-    
+
     /**
      * 2017-11-29: new pages will have their primary process mapping set active false,
      * then first publish operation will then toggle it to true.
      */
     static final String newPagePrimaryProcessMappingActive = "N";
-    
+
     /**
      * 2016: new backpointers to process mappings that act as "primary" ones for this page.
      * NOTE: 2016-11: currently there should usually be only one per webSiteId (sourceWebSiteId).
@@ -105,9 +105,9 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      * to safely exploit the CmsPage.pageId global cache.
      */
     private Map<String, List<CmsProcessMapping>> primaryProcessMappingsByWebSiteId = null;
-    
+
     protected final PageRenderer renderer = new PageRenderer(this);
-    
+
     /**
      * A list of script templates (assocs) sorted by inputPosition.
      * <p>
@@ -118,19 +118,19 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      * works out okay.
      */
     protected List<CmsScriptTemplate> sortedScriptTemplates;
-    
+
     /**
      * This constructor creates a new CmsPage instance from a prefilled
      * GenericValue. It should be ensured that the GenericValue is valid, no
      * further validation takes place.
      * NOTE: this is called through java reflection.
-     * 
+     *
      * @param entity GenericValue of an CmsPage entity
      */
     protected CmsPage(GenericValue entity) {
         super(entity);
     }
-    
+
     /**
      * Creates a new CmsPage from a field map.
      * NOTE: 2016: this does not perform create or store operation.
@@ -139,9 +139,9 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         super(delegator, fields);
         // TODO: REVIEW: 2017-11-29: this was in duplicate with createAndStoreWithPrimaryProcessMapping,
         // I don't think it should be here and hopefully nothing was relying on this
-        //this.setPrimaryProcessMappingFields(fields); 
-    } 
-    
+        //this.setPrimaryProcessMappingFields(fields);
+    }
+
     protected CmsPage(CmsPage other, Map<String, Object> copyArgs) {
         super(other, copyArgs);
         this.sortedScriptTemplates = CmsMasterComplexTemplate.copyScriptTemplateAssocs(other.getSortedScriptTemplates(), copyArgs);
@@ -152,26 +152,26 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //            this.addProduct((String) product.get("productId"), name);
 //        }
     }
-    
+
     public static CmsPage createAndStore(Delegator delegator, Map<String, ?> fields) {
         CmsPage page = new CmsPage(delegator, fields);
         page.store();
         return page;
     }
-    
+
     public static CmsPage createAndStoreWithPrimaryProcessMapping(Delegator delegator, Map<String, ?> fields) {
-        CmsPage page = new CmsPage(delegator, fields);  
-        page.setPrimaryProcessMappingFields(fields, true); 
+        CmsPage page = new CmsPage(delegator, fields);
+        page.setPrimaryProcessMappingFields(fields, true);
         page.store();
         return page;
     }
-    
-    @Override    
+
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
-        this.setPrimaryProcessMappingFields(fields, setIfEmpty); 
+        this.setPrimaryProcessMappingFields(fields, setIfEmpty);
     }
-    
+
     /**
      * Copies this page including all linked products and the latest or requested version.
      * Caller must call store().
@@ -202,31 +202,31 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         //newVersion.setActive...
         newPage.setLastVersion(newVersion);
     }
-    
+
     /**
-     * Creates an in-memory copy of the specified (in copyArgs) or last version 
-     * from the <code>other</code> instance, the result then associated to <code>this</code> instance, 
+     * Creates an in-memory copy of the specified (in copyArgs) or last version
+     * from the <code>other</code> instance, the result then associated to <code>this</code> instance,
      * using any config in copyArgs.
      * NOTE: this swaps <code>this</code> (because it was originally in the copy constructor).
      */
     protected CmsPageVersion copyOtherVersion(CmsPage other, Map<String, Object> copyArgs) {
         return copyOtherVersion(other.getVersionForCopyAndVerify(copyArgs), copyArgs);
     }
-    
+
     protected CmsPageVersion copyOtherVersion(CmsPageVersion otherVersion, Map<String, Object> copyArgs) {
         CmsPageVersion newVersion = otherVersion.copy(copyArgs, this);
-        
+
         // redundant?
         //// Copy the original version date from the last template
         //newVersion.setOriginalVersionDate(otherVersion.getVersionDate());
-        
+
         return newVersion;
     }
-    
+
     /**
      * 2016: Loads ALL this page's content and products into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY
      * (EVEN if the instance is not physically made immutable!).
      * Essential for thread safety!!!
@@ -242,7 +242,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         this.primaryProcessMappingsByWebSiteId = preloadWorker.preloadDeepListMap(getPrimaryProcessMappingsByWebSiteIdInternal());
         this.sortedScriptTemplates = preloadWorker.preloadDeep(this.getSortedScriptTemplates());
     }
-    
+
     @Override
     protected void verifyNewFields(Delegator delegator, Map<String, Object> fields, boolean isNew) throws CmsException {
         // FIXME?: this will NOT verify the name across its multiple possible primary process mappings
@@ -250,7 +250,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         // this may be an issue in the future
         verifyUniqueName(delegator, fields, isNew, "pageName", true, "webSiteId", false, true);
     }
-    
+
     @Override
     public void store() throws CmsException {
         preventIfImmutable();
@@ -261,11 +261,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             // TODO: REVIEW: could remove this condition, and also store activeVersion?
             // unclear if will cause problems anywhere.
             // For now this detects copy and change only.
-            if (lastVer.hasChangedOrNoId() || lastVer.getEntityPageId() == null) { 
+            if (lastVer.hasChangedOrNoId() || lastVer.getEntityPageId() == null) {
                 lastVer.store();
             }
         }
-        
+
         // update active version record
         if (this.activeVersionId != null) {
             if (UtilValidate.isNotEmpty(this.activeVersionId)) {
@@ -275,11 +275,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 CmsPageVersion.activeVersionWorker.removeRecord(getDelegator(), getId());
             }
         }
-        
+
         if (UtilValidate.isNotEmpty(this.primaryProcessMappingsByWebSiteId)) {
             for(List<CmsProcessMapping> mappingList : this.primaryProcessMappingsByWebSiteId.values()) {
                 for(CmsProcessMapping mapping : mappingList) {
-                    // NOTE: must update any missing references here post-store, 
+                    // NOTE: must update any missing references here post-store,
                     // because the page and the whole mapping could be completely new and have no IDs whatsoever
                     String pageId = this.getId();
                     if (!pageId.equals(mapping.getPrimaryForPageId())) {
@@ -289,7 +289,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 }
             }
         }
-        
+
         // needed for copy operation
         CmsMasterComplexTemplate.checkStoreScriptTemplateAssocs(this, this.sortedScriptTemplates);
     }
@@ -313,30 +313,30 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return version;
     }
-    
+
     /**
      * Adds the product to this page. It will be available in templates under
      * the given import name.
-     * 
+     *
      * @param product The product to be added as GenericValue instance
      * @param importName The name this product should be available as
      */
     public void addProduct(GenericValue product, String importName) {
         preventIfImmutable();
-        
+
         addProduct(product.getString("productId"), importName);
     }
 
     /**
      * Adds the product to this page. It will be available in templates under
      * the given import name.
-     * 
+     *
      * @param productId The id of the product to be added
      * @param importName The name this product should be available as
      */
     public void addProduct(String productId, String importName) {
         preventIfImmutable();
-        
+
         try {
             GenericValue productAssoc = entity.getDelegator().makeValue("CmsPageProductAssoc", "pageId", this.getId(),
                     "productId", productId, "importName", importName);
@@ -355,15 +355,15 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     /**
      * Adds a new content version to this page. This version is not live at this
      * point but can be activated using {@link #setActiveVersion(String)}.
-     * 
+     *
      * @param content
      *            Page content as map with fields, field values and asset
      *            content as embedded field -> value maps.
-     * @throws IOException 
+     * @throws IOException
      */
     public CmsPageVersion addVersion(Map<String, ?> content) throws IOException {
         preventIfImmutable();
-        
+
         return addVersion(JSON.from(content).toString());
     }
 
@@ -380,7 +380,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public boolean isActive() {
         return getActiveVersionId() != null ? true : false;
     }
-    
+
     public String getActiveVersionId(boolean cacheActiveVersionId) {
         String activeVersionId = this.activeVersionId;
         if (activeVersionId == null) {
@@ -396,11 +396,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return activeVersionId.length() > 0 ? activeVersionId : null; // empty string as cache query event record, but MUST return as null
     }
-    
+
     public String getActiveVersionId() {
         return getActiveVersionId(true);
     }
-    
+
     /**
      * Returns the page version currently active for this page.
      */
@@ -417,11 +417,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return activeVersion.orElse(null);
     }
-    
+
     public CmsPageVersion getActiveVersion() {
         return getActiveVersion(true);
     }
-    
+
     /**
      * Returns the page version currently active for this page or a new BLANK version if none.
      * The BLANK must not be used for anything other than live render.
@@ -433,13 +433,13 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             version = new CmsPageVersion(getDelegator(), new HashMap<>(), this);
         }
         return version;
-    }    
+    }
 
 
 
     /**
      * Returns the content as map.
-     * 
+     *
      * @return page content
      */
     @SuppressWarnings("unchecked")
@@ -463,7 +463,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public CmsPageContent getActiveContentModel() {
         return getActiveContentModel(true);
     }
-    
+
     protected CmsPageContent getActiveContentModel(boolean cacheActiveVersion) {
         return getContentModel(null, null, cacheActiveVersion);
     }
@@ -471,7 +471,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public CmsPageContent getContentModel(CmsPageContext context, String versionId) {
         return getContentModel(context, versionId, true);
     }
-    
+
     /**
      * Retrieves the content model of this page. If the context specifies this
      * call to be a preview call the last version or given version (as parameter
@@ -508,7 +508,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
         return cm != null ? cm : activeContentModel;
     }
-    
+
     /**
      * 2017: returns script templates associated to page definition.
      * This is an extra layer of optional scripts that run before the template scripts.
@@ -516,7 +516,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public List<CmsScriptTemplate> getScriptTemplates() {
         return getSortedScriptTemplates();
     }
-    
+
     public List<CmsScriptTemplate> getSortedScriptTemplates() {
         List<CmsScriptTemplate> sortedScriptTemplates = this.sortedScriptTemplates;
         if (sortedScriptTemplates == null) {
@@ -529,7 +529,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return sortedScriptTemplates;
     }
-    
+
     /**
      * Returns a descriptor of this page as map. The descriptor contains the
      * metadata of this page but not the content. The following values are
@@ -555,11 +555,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      */
     public Map<String, Object> getDescriptor(String webSiteId, Locale locale) {
         preventIfImmutable(); // WARN: currently dangerous if called from rendering!
-        
+
         Map<String, Object> descriptor = super.getDescriptor(locale);
-        
+
         populateBasicDescriptorFields(descriptor, webSiteId, locale);
-        
+
         Map<String, Map<String, ?>> products = getProducts();
         List<Map<String, ?>> productList = new ArrayList<>();
         Map<String, ?> product = null;
@@ -569,10 +569,10 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     product.get("internalName")));
         }
         descriptor.put("products", productList);
-        
+
         List<Map<String, ?>> versionList = new ArrayList<>();
         //ToDo: Check if yyyy-MM-dd'T'HH:mm:ss.SSSZ is more suitable
-        SimpleDateFormat isoDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
+        SimpleDateFormat isoDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         for (CmsPageVersion version : getVersions()) {
             String date="";
             if(version.getLastModified()!=null){
@@ -582,63 +582,63 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     new Boolean(version.getId().equals(getActiveVersionId()))));
         }
         descriptor.put("versions", versionList);
-        
+
         descriptor.put("candidateWebSiteIds", new ArrayList<>(getCandidateWebSiteIds()));
-        
+
         return descriptor;
     }
-    
+
     @Deprecated
     @Override
     public Map<String, Object> getDescriptor(Locale locale) {
         throw new UnsupportedOperationException("CmsPage getDescriptor must now be called with a webSiteId");
     }
-    
+
     public Map<String, Object> getShortDescriptor(String webSiteId, Locale locale) {
         preventIfImmutable(); // WARN: currently dangerous if called from rendering!
-        
+
         Map<String, Object> descriptor = new HashMap<>();
         populateBasicDescriptorFields(descriptor, webSiteId, locale);
         return descriptor;
     }
-    
+
     protected void populateBasicDescriptorFields(Map<String, Object> descriptor, String webSiteId, Locale locale) {
         preventIfImmutable(); // WARN: currently dangerous if called from rendering!
-        
-        descriptor.putAll(UtilMisc.toMap("id", getId(), 
-                "name", getName(), 
-                "primaryPath", getPrimaryPath(webSiteId), 
+
+        descriptor.putAll(UtilMisc.toMap("id", getId(),
+                "name", getName(),
+                "primaryPath", getPrimaryPath(webSiteId),
                 "primaryPathExpanded", getPrimaryPathExpanded(webSiteId),
                 "primaryTargetPath", getPrimaryTargetPath(webSiteId),
                 "primaryPathIndexable", getPrimaryPathIndexable(webSiteId),
                 "path", getPrimaryPath(webSiteId), // TODO: DEPRECATED: REMOVE
                 "webSiteId", webSiteId,
                 "defaultWebSiteId", getWebSiteId(),
-                "pageTemplateId", getTemplate().getId(), 
+                "pageTemplateId", getTemplate().getId(),
                 "primaryMappingCount", getPrimaryProcessMappingsListCopy().size(),
                 "status", isActive(),
                 "description", getDescription(locale)));
     }
-    
+
     /**
      * Returns identification info for page for use in system logs and errors.
      */
     public String getLogIdRepr() {
         return "[page ID: " + getId() + "]"; // don't show this, too heavy and will lead to confusion: getPrimaryPath()
     }
-    
+
     static String getLogIdRepr(String id, String primaryPath) {
         return "[page ID: " + id + (primaryPath != null ? ("; primary path: " + primaryPath ) : "") + "]";
     }
 
     /**
      * Returns the most current page version.
-     * 
+     *
      * @return Page version
      */
     public CmsPageVersion getLastVersion() {
         preventIfImmutable();
-        
+
         Optional<CmsPageVersion> lastVersion = this.lastVersion;
         if (lastVersion == null) {
             CmsPageVersion version = CmsPageVersion.getWorker().findLast(getDelegator(), this.getId(), false);
@@ -647,16 +647,16 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return lastVersion.orElse(null);
     }
-    
+
     void setLastVersion(CmsPageVersion version) {
         preventIfImmutable();
-        
+
         this.lastVersion = Optional.ofNullable(version);
     }
-    
+
     /**
      * Returns the most current page version or new.
-     * 
+     *
      * @return Page version
      */
     public CmsPageVersion getLastVersionOrNewVersion() {
@@ -669,17 +669,17 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Returns the name of the page.
-     * 
+     *
      * @return Page name
      */
     public String getName() {
         return entity.getString("pageName");
     }
-    
+
     public String getDescription() {
         return CmsComplexTemplate.getDescription(entity, null);
     }
-    
+
     public String getDescription(Locale locale) {
         return CmsComplexTemplate.getDescription(entity, locale);
     }
@@ -691,7 +691,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public boolean isLinkedToWebSiteId(String webSiteId) {
         return (webSiteId.equals(getWebSiteId()) || getPrimaryProcessMapping(webSiteId) != null);
     }
-    
+
     /**
      * 2016: Returns the primary page path stored in this page's primary CmsProcessMapping record.
      * <p>
@@ -709,7 +709,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             return null;
         }
     }
-    
+
     public String getPrimaryPathExpanded(String webSiteId) {
         //return entity.getString("pagePath");
         CmsProcessMapping primaryProcessMapping = getPrimaryProcessMapping(webSiteId);
@@ -718,7 +718,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         } else {
             return null;
         }
-    }    
+    }
 
     public String getPrimaryTargetPath(String webSiteId) {
         //return entity.getString("pagePath");
@@ -729,7 +729,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             return null;
         }
     }
-    
+
     public Boolean getPrimaryPathIndexable(String webSiteId) {
         CmsProcessMapping primaryProcessMapping = getPrimaryProcessMapping(webSiteId);
         if (primaryProcessMapping != null) {
@@ -738,7 +738,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             return null;
         }
     }
-    
+
     public Map<String, ?> getProduct(String name) {
         return getProducts().get(name);
     }
@@ -787,7 +787,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Returns a specific page version for this page.
-     * 
+     *
      * @param versionId
      * @return
      */
@@ -797,7 +797,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     public List<CmsPageVersion> getVersions() {
         preventIfImmutable();
-        
+
         return CmsPageVersion.getWorker().findAll(getDelegator(), this.getId(), false);
     }
 
@@ -815,7 +815,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         List<CmsProcessMapping> primaryProcessMappings = getPrimaryProcessMappingsByPrio();
         return !primaryProcessMappings.isEmpty() ? primaryProcessMappings.get(0).getSourceWebSiteId() : null;
     }
-    
+
     /**
      * Returns LEGACY webSiteId to which the page belongs, for organizational purposes.
      * NOTE: 2016: NOT used in live renders or functionally.
@@ -824,14 +824,14 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public String getWebSiteId() {
         return entity.getString("webSiteId");
     }
-    
+
     public String getPageTemplateId() {
         return entity.getString("pageTemplateId");
     }
-    
+
     /**
      * Removes the page from the database.
-     * 
+     *
      * @return True if delete was successful, otherwise false
      * @throws GenericEntityException
      */
@@ -839,47 +839,47 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public int remove() {
         return remove(true);
     }
-    
+
     public int remove(boolean removeRelatedOrphaned) throws CmsException {
         int rowsAffected = 0;
         try {
             Delegator delegator = getDelegator();
-            
+
             // delete CmsPageSpecialMapping
             rowsAffected += delegator.removeByAnd("CmsPageSpecialMapping", UtilMisc.toMap("pageId", this.getId()));
-            
+
             // delete CmsPageAuthorization
             List<GenericValue> pageAuthorizations = entity.getRelated("CmsPageAuthorization", null, null, false);
             for (GenericValue pageAuthorization : pageAuthorizations) {
                 pageAuthorization.remove();
                 rowsAffected += 1;
             }
-            
+
             // delete CmsPageProductAssoc
             List<GenericValue> pageProducts = entity.getRelated("CmsPageProductAssoc", null, null, false);
             for (GenericValue pageProduct : pageProducts) {
                 pageProduct.remove();
                 rowsAffected += 1;
             }
-            
+
             // delete the active active
             rowsAffected += CmsPageVersion.activeVersionWorker.removeRecord(delegator, getId());
-            
+
             // delete CmsPageVersion
             rowsAffected += getDelegator().removeByAnd("CmsPageVersion", "pageId", getId());
-            
+
             // delete all primary process mappings
             rowsAffected += removeAll(this.getPrimaryProcessMappingsListCopy());
-            
+
             // NOTE: 2016: do NOT delete non-primary process mappings here because they
             // can be complex and involve multiple pages so the result may surprise user too much
-            
+
             // delete all view mappings (pretty much harmless)
             rowsAffected += removeAll(CmsViewMapping.getWorker().findAll(delegator, UtilMisc.toMap("pageId", getId()), null, false));
-            
+
             // remove script associations (and scripts themselves IF not standalone)
             rowsAffected += CmsMasterComplexTemplate.removeScriptTemplates(entity, getTemplateScriptAssocWorker());
-            
+
         } catch (GenericEntityException e) {
             throw makeRemoveException(e);
         }
@@ -893,20 +893,20 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return removed;
     }
-    
+
     public boolean isOrphan() throws CmsException {
         // 2016: for local cms, CmsPage is NEVER orphan, so just return false but leave the code
         // for future use
 //        Delegator delegator = getDelegator();
 //        boolean isOrphan = false;
 //        try {
-//            List<GenericValue> parentViewMappings = delegator.findByAnd("CmsViewMapping", 
+//            List<GenericValue> parentViewMappings = delegator.findByAnd("CmsViewMapping",
 //                    UtilMisc.toMap("pageId", getId()), null, false);
 //            if (UtilValidate.isEmpty(parentViewMappings)) {
-//                List<GenericValue> parentProcessViewMappings = delegator.findByAnd("CmsProcessViewMapping", 
+//                List<GenericValue> parentProcessViewMappings = delegator.findByAnd("CmsProcessViewMapping",
 //                        UtilMisc.toMap("pageId", getId()), null, false);
 //                if (UtilValidate.isEmpty(parentProcessViewMappings)) {
-//                    List<GenericValue> parentProcessMappings = delegator.findByAnd("CmsProcessMapping", 
+//                    List<GenericValue> parentProcessMappings = delegator.findByAnd("CmsProcessMapping",
 //                            UtilMisc.toMap("pageId", getId()), null, false);
 //                    if (UtilValidate.isEmpty(parentProcessMappings)) {
 //                        isOrphan = true;
@@ -920,7 +920,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //        return isOrphan;
         return false;
     }
-    
+
     public void removeProduct(String productId) {
         removeProducts(productId);
     }
@@ -950,7 +950,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     userId), e);
         }
     }
-    
+
     public void removeGroupAuthorization(String groupId) {
         try {
             getDelegator().removeByAnd("CmsPageAuthorization", "pageId", this.getId(), "groupId", groupId);
@@ -958,11 +958,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             throw new CmsException(String.format("Could not remove group authorization. Page: %s UserId: %s", this.getName(),
                     groupId), e);
         }
-    }    
+    }
 
     /**
      * Sets the version with the given version id as live version.
-     * 
+     *
      * @param versionId
      */
     public void setActiveVersion(String versionId) {
@@ -971,9 +971,9 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets the content of a page as map.
-     * 
+     *
      * @param content
-     * @throws IOException 
+     * @throws IOException
      */
     public void setContent(Map<String, ?> content) throws IOException {
         setContent(JSON.from(content).toString());
@@ -981,14 +981,14 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets the content of a page as CmsPageContent object.
-     * 
+     *
      * @param content
      */
     public void setContent(CmsPageContent content) {
         try{
             JSON json = JSON.from(content);
             Debug.logInfo(json.toString(), module);
-            
+
             setContent(json.toString());
         } catch(Exception e) {
             Debug.logError(e, module);
@@ -997,7 +997,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets the content of the page as json string.
-     * 
+     *
      * @param jsonContent
      */
     public void setContent(String jsonContent) {
@@ -1006,7 +1006,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets the name of the page.
-     * 
+     *
      * @param name
      */
     public void setName(String name) {
@@ -1015,7 +1015,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets id of pageTemplate to which the page belongs.
-     * 
+     *
      * @param pageTemplate
      *            id
      */
@@ -1024,21 +1024,21 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     }
 
     /**
-     * 2016: Sets the primary page path on this page's associated CmsProcessMapping record. 
+     * 2016: Sets the primary page path on this page's associated CmsProcessMapping record.
      * The path is normalized and any trailing slashs are removed.
      * <p>
      * FIXME: setIfEmpty IS NOT CURRENTLY HONORED HERE
-     * 
+     *
      * @param path
      */
     public void setPrimaryProcessMappingFields(Map<String, ?> fields, boolean setIfEmpty) {
         String webSiteId = (String) fields.get("webSiteId");
-  
+
         // bare minimum fields needed
         // NOTE: for simplicity we require webSiteId in all update cases even if changing only path.
-        if (UtilValidate.isNotEmpty(webSiteId)) { 
+        if (UtilValidate.isNotEmpty(webSiteId)) {
             CmsProcessMapping primaryProcessMapping = getPrimaryProcessMapping(webSiteId);
-            
+
             // 2016: FIXME?: this next check was not in original code I wrote.
             // but is required if we are changing the webSiteId at same time as path otherwise we produce multiple primary mappings.
             // basically this check may prevent proper expression of the full schema.
@@ -1048,8 +1048,8 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 if (mappings.size() > 0) {
                     if (mappings.size() == 1) {
                         primaryProcessMapping = mappings.get(0);
-                        Debug.logInfo("Cms: Changing the sourceWebSiteId of sole primary process mapping for page '" + getId() + 
-                                "' from '" + primaryProcessMapping.getSourceWebSiteId() + "' to '" + webSiteId + 
+                        Debug.logInfo("Cms: Changing the sourceWebSiteId of sole primary process mapping for page '" + getId() +
+                                "' from '" + primaryProcessMapping.getSourceWebSiteId() + "' to '" + webSiteId +
                                 "' (simplified primary process mappings update mode)", module);
                     } else {
                         // can't correct automatically without producing extreme confusion and risk worsening state of data
@@ -1061,14 +1061,14 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     }
                 }
             }
-            
+
             Map<String, Object> processFields = new HashMap<>();
             if (fields.containsKey("primaryPath")) {
                 // we can't allow setting an empty primaryPath during updates
                 if (UtilValidate.isNotEmpty((String) fields.get("primaryPath"))) {
                     processFields.put("sourcePath", fields.get("primaryPath"));
                 } else {
-                    Debug.logWarning("Cms: Attempted setPrimaryProcessMappingFields for page '" + getLogIdRepr() 
+                    Debug.logWarning("Cms: Attempted setPrimaryProcessMappingFields for page '" + getLogIdRepr()
                         + "' with explicitly empty primaryPath (sourcePath) - not allowed - calling code should be fixed"
                         + " to either not set primaryPath or to re-send its previous value (or a different value)", module);
                 }
@@ -1105,7 +1105,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     // it makes sense if the UI enforces alone, as this could return in the future...
                     // (it could also be enforced by the service)
                     if (getId() != null) {
-                        Debug.logWarning("Cms: Invoked add new primary process mapping for page '" + getId() 
+                        Debug.logWarning("Cms: Invoked add new primary process mapping for page '" + getId()
                             + "' but primaryPath field was empty - skipping primary process mapping creation (primaryPath/sourcePath cannot be empty)", module);
                     } else {
                         Debug.logWarning("Cms: Creating a new page with empty primaryPath field"
@@ -1118,11 +1118,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
     }
 
-    
+
     /**
      * Sets the template of this page. The page has to be stored to persist this
      * change.
-     * 
+     *
      * @param template
      */
     public void setTemplate(CmsPageTemplate template) {
@@ -1146,12 +1146,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     this.getName(), userId, role.toString()), e);
         }
     }
-    
-    
+
+
     public void setGroupAuthorization(String groupId, String roleTypeId) {
         setGroupAuthorization(groupId, Enum.valueOf(UserRole.class, roleTypeId));
     }
-    
+
     public void setGroupAuthorization(String groupId, UserRole role) {
         removeGroupAuthorization(groupId);
         try {
@@ -1181,15 +1181,15 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return primaryProcessMappingsByWebSiteId;
     }
-    
+
     protected List<CmsProcessMapping> getPrimaryProcessMappingsInternal(String webSiteId) {
         return getPrimaryProcessMappingsByWebSiteIdInternal().get(webSiteId);
     }
-    
+
     public Set<String> getPrimaryProcessMappingsWebSiteIds() {
         return Collections.unmodifiableSet(getPrimaryProcessMappingsByWebSiteIdInternal().keySet());
     }
-    
+
     public List<CmsProcessMapping> getPrimaryProcessMappingsListCopy() {
         List<CmsProcessMapping> mappings = new ArrayList<>();
         for(List<CmsProcessMapping> webSiteMappings : getPrimaryProcessMappingsByWebSiteIdInternal().values()) {
@@ -1204,7 +1204,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         mappings = CmsProcessMapping.sortProcessMappingsSpecWebSiteFirst(mappings, getWebSiteId());
         return mappings;
     }
-    
+
     public List<CmsProcessMapping> getPrimaryProcessMappings(String webSiteId) {
        List<CmsProcessMapping> primaryProcessMappings = getPrimaryProcessMappingsInternal(webSiteId);
        if (primaryProcessMappings != null) {
@@ -1213,7 +1213,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
            return Collections.emptyList();
        }
     }
-    
+
     public CmsProcessMapping getPrimaryProcessMapping(String webSiteId) {
         List<CmsProcessMapping> primaryProcessMappings = getPrimaryProcessMappingsInternal(webSiteId);
         if (primaryProcessMappings == null || primaryProcessMappings.isEmpty()) {
@@ -1255,7 +1255,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //        }
 //        return false;
 //    }
-    
+
     protected boolean addPrimaryProcessMapping(CmsProcessMapping newMapping) {
         String sourceWebSiteId = newMapping.getSourceWebSiteId();
         List<CmsProcessMapping> primaryProcessMappings = getPrimaryProcessMappingsInternal(sourceWebSiteId);
@@ -1274,7 +1274,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         if (primaryProcessMappings == null) {
             primaryProcessMappings = new ArrayList<>();
         }
-        primaryProcessMappings.add(newMapping); 
+        primaryProcessMappings.add(newMapping);
         this.primaryProcessMappingsByWebSiteId.put(sourceWebSiteId, primaryProcessMappings);
         return false;
     }
@@ -1290,23 +1290,23 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      * 2016: Returns all the web site IDs potentially referencing this page through process and view mappings,
      * in order of most important to least relevant (loose heuristic).
      * <p>
-     * NOTE: this does not include CmsPage.webSiteId (since it is dubious), but does 
+     * NOTE: this does not include CmsPage.webSiteId (since it is dubious), but does
      * include the webSiteId on its primary process mapping.
      */
     public Set<String> getCandidateWebSiteIds() {
         preventIfImmutable();
-        
+
         Set<String> webSiteIds = this.candidateWebSiteIds;
         if (candidateWebSiteIds == null) {
             Delegator delegator = this.getDelegator();
             String pageId = this.getId();
-            
+
             webSiteIds = new LinkedHashSet<String>();
-            
+
             // primary mappings get priority
             List<CmsProcessMapping> prioPrimaryProcessMappings = getPrimaryProcessMappingsByPrio();
             webSiteIds.addAll(CmsProcessMapping.getWebSiteIdsFromMappings(prioPrimaryProcessMappings));
-    
+
             // other mappings
             addWebSiteIdsFromMappings(delegator, pageId, "Y", webSiteIds);
             addWebSiteIdsFromMappings(delegator, pageId, null, webSiteIds);
@@ -1315,18 +1315,18 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return webSiteIds;
     }
-    
+
     private static void addWebSiteIdsFromMappings(Delegator delegator, String pageId, String active, Collection<String> webSiteIds) {
         Map<String, Object> fields = new HashMap<>();
         fields.put("pageId", pageId);
         fields.put("active", active);
-        
+
         List<String> orderBy = new ArrayList<>();
         orderBy.add("lastUpdatedStamp DESC");
-        
+
         try {
             List<GenericValue> values = delegator.findByAnd("CmsViewMapping", fields, orderBy, false);
-            
+
             if (values != null) {
                 for(GenericValue value : values) {
                     String webSiteId = value.getString("webSiteId");
@@ -1335,19 +1335,19 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     }
                 }
             }
-            
+
         } catch (Exception e) {
             ;
         }
 
         // WARN: It is technically possible for this to include the root of wildcard page matches that allow root match,
         // but it's not really important
-        
+
         try {
             // WARN: approximation of live behavior
             EntityCondition cond = EntityCondition.makeCondition(
                     EntityCondition.makeCondition(EntityCondition.makeCondition("processPrimaryForPageId", pageId),
-                        EntityOperator.OR,    
+                        EntityOperator.OR,
                         EntityCondition.makeCondition(
                                 EntityCondition.makeCondition("pageId", pageId),
                                 EntityOperator.OR,
@@ -1362,7 +1362,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     EntityCondition.makeCondition("active", active));
 
             List<GenericValue> values = delegator.findList("CmsProcessAndViewMapping", cond, null, orderBy, null, false);
-            
+
             if (values != null) {
                 for(GenericValue value : values) {
                     String webSiteId = value.getString("sourceWebSiteId");
@@ -1371,7 +1371,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     }
                 }
             }
-            
+
         } catch (Exception e) {
             ;
         }
@@ -1379,7 +1379,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         /* this does not define a real mapping on its own
         try {
             List<GenericValue> values = delegator.findByAnd("CmsProcessMapping", fields, orderBy, false);
-            
+
             if (values != null) {
                 for(GenericValue value : values) {
                     String webSiteId = value.getString("sourceWebSiteId");
@@ -1388,14 +1388,14 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     }
                 }
             }
-            
+
         } catch (Exception e) {
             ;
         }
         */
     }
-    
-    
+
+
     // 2016: left for reference but doesn't work for local cms invoke
 //    /**
 //     * Builds a list of candidate WebSiteIds that may currently map to the given path, in descending
@@ -1405,18 +1405,18 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //     * {@link #getCandidatePagesForPath}.
 //     * <p>
 //     * WARN: this is an estimation of live behavior only. Currently not guaranteed
-//     * to match live behavior. Exact, active mappings have priority. 
+//     * to match live behavior. Exact, active mappings have priority.
 //     * Is complicated by wildcard mappings and priorities
 //     * related to active status. All other things equal, it will tend to prioritize
 //     * last-updated records.
 //     */
 //    public static List<String> getPageCandidateWebSiteIds(Delegator delegator, String path, List<GenericValue> cmsPages) {
 //        Set<String> webSiteIds = new LinkedHashSet<String>();
-//        
+//
 //        if (delegator != null && path != null && path.length() > 0) {
 //            List<String> exactPageIds = new ArrayList<>();
 //            List<String> wildcardPageIds = new ArrayList<>();
-//            
+//
 //            for(GenericValue cmsPage : cmsPages) {
 //                String cmsPagePath = cmsPage.getString("cmsPageReqPath");
 //                if (cmsPagePath.length() >= path.length()) {
@@ -1425,7 +1425,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //                    wildcardPageIds.add(cmsPage.getString("pageId"));
 //                }
 //            }
-//            
+//
 //            // exact page matches first
 //            // add active first, then non-marked, then N
 //            // WARN: It is technically possible for this to include the root of wildcard page matches that allow root match,
@@ -1439,7 +1439,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //            for(String pageId : exactPageIds) {
 //                addWebSiteIdsFromMappings(delegator, pageId, "N", webSiteIds);
 //            }
-//            
+//
 //            // wildcard page matches last
 //            // add active first, then non-marked, then N
 //            // CMS: 2016: not applicable for local renders
@@ -1453,10 +1453,10 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 ////                addWebSiteIdsFromWildcardMappings(delegator, pageId, "N", webSiteIds);
 ////            }
 //        }
-//        
+//
 //        return new ArrayList<>(webSiteIds);
 //    }
-    
+
     // 2016: not appropriate unless rewritten
 //    /**
 //     * Finds all the CmsPages that *could* be related to the given path or potentially
@@ -1469,7 +1469,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //            orderBy.add("lastUpdatedStamp DESC");
 //            try {
 //                EntityCondition cond = EntityCondition.makeCondition("cmsPageReqPath", path);
-//                
+//
 //                if (!exactOnly) {
 //                    // each sub-path of path is a possible reference...
 //                    List<String> subPaths = PathUtil.makeAllRequestPathPrefixes(path);
@@ -1481,9 +1481,9 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //                        }
 //                    }
 //                }
-//                
+//
 //                res = delegator.findList("CmsPage", cond, null, orderBy, null, false);
-//                
+//
 //                // reorder the result by path length, descending
 //                Collections.sort(res, new Comparator<GenericValue>() {
 //                    @Override
@@ -1496,13 +1496,13 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //                ;
 //            }
 //        }
-//        
+//
 //        if (res == null) {
 //            res = new ArrayList<>();
 //        }
 //        return res;
 //    }
-    
+
     // 2016: not appropriate unless rewritten
 //    /**
 //     * Gets the first page ID for the exact path.
@@ -1511,7 +1511,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //     */
 //    public static String getPageIdForPath(Delegator delegator, String path) {
 //        String pageId = null;
-//        
+//
 //        if (delegator != null && path != null) {
 //            Map<String, Object> fields = new HashMap<>();
 //            fields.put("cmsPageReqPath", path);
@@ -1519,19 +1519,19 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //            orderBy.add("lastUpdatedStamp DESC");
 //            try {
 //                List<GenericValue> values = delegator.findByAnd("CmsPage", fields, orderBy, false);
-//                
-//                if (values != null && !values.isEmpty()) { 
+//
+//                if (values != null && !values.isEmpty()) {
 //                    pageId = values.get(0).getString("pageId");
 //                }
-//                
+//
 //            } catch (Exception e) {
 //                ;
 //            }
 //        }
-//        
+//
 //        return pageId;
 //    }
-    
+
 
     /**
      * Helper class to identify if a page authorization is dealing with a user authorization
@@ -1542,12 +1542,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         // Note: the name "party" in this type does not signify a "Party" entity type
         USER ("userId"),
         GROUP ("groupId");
-        
+
         private final String fieldName;
         private PageAuthPartyType(String fieldName) {
             this.fieldName = fieldName;
         }
-        
+
         public EntityCondition makeNullCond() { // This null
             return EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, null);
         }
@@ -1558,35 +1558,35 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     conds.add(type.makeNullCond());
                 }
             }
-            return EntityCondition.makeCondition(conds, EntityOperator.AND);            
+            return EntityCondition.makeCondition(conds, EntityOperator.AND);
         }
-        
+
         public EntityCondition makeNonNullCond() { // This non-null
             return EntityCondition.makeCondition(fieldName, EntityOperator.NOT_EQUAL, null);
         }
         public EntityCondition makeExclusiveNonNullCond() { // All null except this, non-null
             return EntityCondition.makeCondition(
-                    makeAllOthersNullCond(), 
+                    makeAllOthersNullCond(),
                     EntityOperator.AND,
                     this.makeNonNullCond()
                 );
         }
-        
+
         public EntityCondition makeIdCond(String id) { // This equals ID
             return EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, id);
         }
         public EntityCondition makeExclusiveIdCond(String id) { // All null except this, equals ID
             return EntityCondition.makeCondition(
-                    makeAllOthersNullCond(), 
+                    makeAllOthersNullCond(),
                     EntityOperator.AND,
                     this.makeIdCond(id)
                 );
-        } 
+        }
     }
-    
+
     /**
      * Retrieves the users authorized to edit this page by user role.
-     * 
+     *
      * @param role
      *            The role the users should have on the page
      * @return List of users
@@ -1594,25 +1594,25 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public List<GenericValue> getAuthorizedUsers(UserRole role) {
         return findUsersByPageRole(getDelegator(), this, role, false);
     }
-    
+
     /**
      * Retrieves the users authorized to edit this page by user role.
-     * 
+     *
      * @param role
      *            The role the users should have on the page
      * @return List of users
      */
     public List<GenericValue> getAuthorizedGroups(UserRole role) {
         return findGroupsByPageRole(getDelegator(), this, role, false);
-    }    
-    
+    }
+
     /**
      * Gets user's authorization.
      * <p>
      * Note: Delegator and dispatcher needed here; can't have
      * these as instance variables because they're not serializable and instances of this class *could* find
      * their way into session attributes.
-     * 
+     *
      * @param userId
      * @param delegator
      * @param dispatcher
@@ -1621,34 +1621,34 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public UserRole getUserAuthorization(String userId, Delegator delegator, LocalDispatcher dispatcher) {
         return findPageRoleForUser(this, userId, delegator, dispatcher);
     }
-    
+
     /**
      * Returns the most senior role that the user is assigned for the given page.
      * <p>
      * A user can be part of many groups and also be named individually in the authorization
      * for a given page.
-     * 
+     *
      * @param page
      * @param userId
      * @param delegator
      * @param dispatcher
      * @return
      */
-    public static UserRole findPageRoleForUser(CmsPage page, String userId, 
+    public static UserRole findPageRoleForUser(CmsPage page, String userId,
             Delegator delegator, LocalDispatcher dispatcher) {
         UserRole role;
         List<GenericValue> auths = null;
         try {
-            // New in security groups: 
+            // New in security groups:
             // We find all the auths for which the user is explicitly specified or
             // the auths for which one of his security groups is specified.
-            
+
             // Condition to find specific users
             EntityCondition userCond = makeUserCond(userId, delegator, dispatcher);
-                
+
             // Condition to find user security groups
             EntityCondition userSecGroupsCond = makeUserSecGroupsCond(userId, delegator, dispatcher);
-            
+
             // Combined user & group condition
             EntityCondition userOrGroupsCond;
             if (userSecGroupsCond != null) {
@@ -1656,13 +1656,13 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             } else {
                 userOrGroupsCond = userCond;
             }
-            
+
             // Page condition
             EntityCondition whereCond = EntityCondition.makeCondition(
                     EntityCondition.makeCondition("pageId", EntityOperator.EQUALS, page.getId()),
                     EntityOperator.AND,
                     userOrGroupsCond);
-            
+
             auths = delegator.findList("CmsPageAuthorization", whereCond, null, null, null, false);
         } catch (GenericEntityException e) {
             throw new CmsException("Could not retrieve page role for user. Page: " + page.getName() + " User: " + userId, e);
@@ -1676,26 +1676,26 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return role;
     }
-    
+
     private static EntityCondition makeUserCond(String userId, Delegator delegator, LocalDispatcher dispatcher) {
         return PageAuthPartyType.USER.makeExclusiveIdCond(userId);
     }
-    
+
     private static EntityCondition makeUserSecGroupsCond(String userId, Delegator delegator, LocalDispatcher dispatcher) {
         // Get all the user's groups
         List<GenericValue> userSecGroups = CmsDataUtil.findUserLoginSecurityGroupByUserLoginId(delegator, userId);
-        
+
         List<EntityCondition> userSecGroupsConds = new ArrayList<>();
         for(GenericValue userSecGroup : userSecGroups) {
             String groupId = userSecGroup.getString("groupId");
             userSecGroupsConds.add(PageAuthPartyType.GROUP.makeIdCond(groupId));
         }
-        
+
         EntityCondition userSecGroupsCond = null;
         if (!userSecGroupsConds.isEmpty()) {
             // Make an OR condition to select all rows containing any one of the user's groups
             userSecGroupsCond = EntityCondition.makeCondition(userSecGroupsConds, EntityOperator.OR);
-            
+
             // When making this condition, make sure it is exclusive; all other ID identifiers (userId, etc.) must be null for integrity/consistency
             userSecGroupsCond = EntityCondition.makeCondition(userSecGroupsCond, EntityOperator.AND,
                     PageAuthPartyType.GROUP.makeAllOthersNullCond()
@@ -1704,12 +1704,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
         return userSecGroupsCond;
     }
-    
+
 
     /**
-     * Finds users currently authorized for the given page with the given role - only those 
+     * Finds users currently authorized for the given page with the given role - only those
      * named individually in the page authorization. Does not attempt to get all users from all allowed groups.
-     * 
+     *
      * @param page
      * @param role
      * @return
@@ -1729,18 +1729,18 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return users;
     }
-    
+
     public static enum UserRole {
-        CMS_ADMIN(4), 
-        CMS_EDITOR(3), 
-        CMS_SUPERVISOR(2), 
+        CMS_ADMIN(4),
+        CMS_EDITOR(3),
+        CMS_SUPERVISOR(2),
         CMS_VISITOR(1);
-        
+
         private final int seniorityRank; // Higher -> more senior
         UserRole(int seniorityRank) {
             this.seniorityRank = seniorityRank;
         }
-        
+
         public boolean isMoreSeniorThan(UserRole other) {
             if (other == null) {
                 return true;
@@ -1748,7 +1748,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 return this.seniorityRank > other.seniorityRank;
             }
         }
-        
+
         public static UserRole findMostSeniorRole(Iterable<UserRole> roles) {
             UserRole result = null;
             if (roles != null) {
@@ -1762,7 +1762,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             }
             return result;
         }
-        
+
         public static <T extends Map<String, Object>> UserRole findMostSeniorRole(Iterable<T> auths, String roleFieldName) {
             List<UserRole> roles = new ArrayList<>();
             if (auths != null) {
@@ -1774,10 +1774,10 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             return UserRole.findMostSeniorRole(roles);
         }
     }
-    
+
     /**
      * Finds security groups currently authorized for the given page with the given role.
-     * 
+     *
      * @param page
      * @param role
      * @return
@@ -1797,11 +1797,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         return groups;
     }
-    
+
     protected CmsPageScriptAssoc.PageScriptAssocWorker getTemplateScriptAssocWorker() {
         return CmsPageScriptAssoc.getWorker();
     }
-    
+
     public static class CmsPageScriptAssoc extends CmsTemplateScriptAssoc {
 
         private static final long serialVersionUID = -7223454711555662977L;
@@ -1809,30 +1809,30 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         protected CmsPageScriptAssoc(GenericValue entity) {
             super(entity);
         }
-        
+
         public CmsPageScriptAssoc(Delegator delegator, Map<String, ?> fields, CmsScriptTemplate scriptTemplate) {
             super(delegator, fields, scriptTemplate);
         }
-        
+
         protected CmsPageScriptAssoc(CmsPageScriptAssoc other, Map<String, Object> copyArgs) {
             super(other, copyArgs);
             // NOTE: don't bother clearing out the ID fields here, caller should handle
         }
 
-        @Override    
+        @Override
         public void update(Map<String, ?> fields, boolean setIfEmpty) {
             super.update(fields, setIfEmpty);
         }
-        
+
         @Override
         public CmsPageScriptAssoc copy(Map<String, Object> copyArgs) throws CmsException {
             return new CmsPageScriptAssoc(this, copyArgs);
         }
-        
+
         /**
          * 2016: Loads ALL this object's content into the current instance.
          * <p>
-         * WARN: IMPORTANT: AFTER THIS CALL, 
+         * WARN: IMPORTANT: AFTER THIS CALL,
          * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
          * Essential for thread safety!!!
          */
@@ -1840,7 +1840,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         public void preload(PreloadWorker preloadWorker) {
             super.preload(preloadWorker);
         }
-        
+
         @Override
         protected void clearTemplate() {
             entity.set("pageId", null);
@@ -1848,7 +1848,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
         @Override
         protected void setTemplate(CmsDataObject template) {
-            if (!(template instanceof CmsPage)) throw new CmsException("CmsPageScriptAssoc requires a CmsPage, got: " 
+            if (!(template instanceof CmsPage)) throw new CmsException("CmsPageScriptAssoc requires a CmsPage, got: "
                     + (template != null ? template.getClass().getName() : null));
             entity.set("pageId", template.getId());
         }
@@ -1857,19 +1857,19 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         protected boolean hasTemplate() {
             return (entity.get("pageId") != null);
         }
-        
+
         @Override
         public PageScriptAssocWorker getWorkerInst() {
             return PageScriptAssocWorker.worker;
         }
-        
+
         public static PageScriptAssocWorker getWorker() {
             return PageScriptAssocWorker.worker;
         }
 
         public static class PageScriptAssocWorker extends TemplateScriptAssocWorker<CmsPageScriptAssoc> {
             private static final PageScriptAssocWorker worker = new PageScriptAssocWorker();
-            
+
             protected PageScriptAssocWorker() {
                 super(CmsPageScriptAssoc.class);
             }
@@ -1891,11 +1891,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             }
         }
     }
-    
+
     public PageRenderer getRenderer() {
         return renderer;
     }
-    
+
     /**
      * Dedicated renderer object.
      * <p>
@@ -1904,20 +1904,20 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      */
     @SuppressWarnings("serial")
     public static class PageRenderer implements Serializable {
-        
+
         protected final CmsPage page;
 
         public PageRenderer(CmsPage page) {
             super();
             this.page = page;
         }
-        
+
         /**
          * Renders the page to given writer.
          * <p>
          * NOTE: 2016: this creates a deep copy of content model so as not to affect
          * the page instance.
-         * 
+         *
          * @param context
          * @return
          */
@@ -1932,22 +1932,22 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             renderArgs.setRunPageScripts(true);
             page.getTemplate().getRenderer().processAndRender(renderArgs);
         }
-        
+
     }
-    
-    
+
+
     @Override
     public PageWorker getWorkerInst() {
         return PageWorker.worker;
     }
-    
+
     public static PageWorker getWorker() {
         return PageWorker.worker;
     }
 
     public static class PageWorker extends DataObjectWorker<CmsPage> {
         private static final PageWorker worker = new PageWorker();
-        
+
         protected PageWorker() {
             super(CmsPage.class);
         }
@@ -1961,7 +1961,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         public CmsPage makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
             return new CmsPage(delegator, fields);
         }
-        
+
         public CmsPage findById(Delegator delegator, String pageId, boolean useCache) throws CmsException {
             return findById(delegator, pageId, useCache, null);
         }
@@ -1970,7 +1970,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
          * 2016: Finds page by ID.
          * <p>
          * NOTE: this is the only place where a page cache could still be useful.
-         * 
+         *
          * @param request OPTIONAL request, used for logging
          */
         public CmsPage findById(Delegator delegator, String pageId, boolean useCache, HttpServletRequest request) throws CmsException {
@@ -1979,11 +1979,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             if (useGlobalCache) {
                 cache = idCache;
             }
-            
+
             String key = delegator.getDelegatorName() + "::" + pageId;
             CmsPage page = null;
             CacheEntry<CmsPage> pageEntry = null;
-            
+
             if (useGlobalCache) {
                 pageEntry = cache.getEntry(key);
             }
@@ -1992,7 +1992,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 if (CmsUtil.verboseOn()) {
                     Debug.logInfo("Cms: Retrieving page from database: id: " + pageId + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
-                page = findOne(delegator, UtilMisc.toMap("pageId", pageId), 
+                page = findOne(delegator, UtilMisc.toMap("pageId", pageId),
                         isUseDbCacheStatic(useCache));
 
                 if (useGlobalCache) {
@@ -2009,7 +2009,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
             return page;
         }
-        
+
         /**
          * 2016: Finds page by ID or throws exception.
          */
@@ -2036,39 +2036,39 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             // this is now variable
             //condList.add(EntityCondition.makeCondition("sourceFromContextRoot", "Y"));
             condList.add(EntityCondition.makeCondition("primaryForPageId", EntityOperator.NOT_EQUAL, null));
-            
-            CmsProcessMapping mapping = CmsProcessMapping.getWorker().findFirst(delegator, 
+
+            CmsProcessMapping mapping = CmsProcessMapping.getWorker().findFirst(delegator,
                     EntityCondition.makeCondition(condList, EntityOperator.AND), null, useCache);
             if (mapping != null) {
                 return mapping.getPrimaryForPage();
             }
             return null;
         }
-        
+
         /**
          * Returns all pages, with ordering.
-         * 
+         *
          * @return List of pages
          */
         @Override
         public List<CmsPage> findAll(Delegator delegator, boolean useCache) {
             return findAll(delegator, getPagesOrderBy(), useCache);
         }
-        
+
         /**
          * Returns all pages that are assigned a (any) website.
-         * 
+         *
          * @return List of pages
          */
         public List<CmsPage> findAllWithWebsite(Delegator delegator, boolean useCache) {
-            return findAll(delegator, 
+            return findAll(delegator,
                     EntityCondition.makeCondition("webSiteId", EntityOperator.NOT_EQUAL, null), // 2016: this used to be in findAll, but doesn't belong there
                     getPagesOrderBy(), useCache);
         }
-        
+
         /**
          * Returns all pages of a given website.
-         * 
+         *
          * @param webSiteId
          *            Id of the website
          * @return List of pages
@@ -2076,7 +2076,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         public List<CmsPage> findByWebSiteId(Delegator delegator, String webSiteId, boolean useCache) {
             return findAll(delegator, UtilMisc.toMap("webSiteId", webSiteId), getPagesOrderBy(), useCache);
         }
-        
+
         public List<String> getPagesOrderBy() {
             return UtilMisc.toList("pageName ASC");
         }
@@ -2091,7 +2091,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public void acceptEntityDepsVisitor(CmsEntityVisitor visitor, GenericValue relValue, VisitRelation relValueRelation, CmsMajorObject majorDataObj) throws Exception {
         CmsEntityVisit.acceptRelatedEntityDepsVisitor(visitor, VisitRelPlan.visitRelations, this.getEntity(), relValueRelation, relValue, this);
     }
-    
+
     public static class VisitRelPlan extends VisitRelations.BuildPlan {
         public static final VisitRelPlan INSTANCE = new VisitRelPlan("CmsPage");
         static final VisitRelations visitRelations = INSTANCE.buildSafe();
@@ -2109,7 +2109,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     .relation("CmsPageSpecialMapping") // this treats the Primary process mapping as a non-major relation
                     .relationMajor("CmsProcessMapping") // this treats all remaining (non-primary) process mappings as major relations
                     .relationMajor("CmsViewMapping")
-                .entity("CmsPageVersion")  
+                .entity("CmsPageVersion")
                     .self()
                     .relation("CmsPageVersionState")
                 .entity("CmsPageSpecialMapping")    // NOTE: reversed self() order here avoids having to create special case conditions

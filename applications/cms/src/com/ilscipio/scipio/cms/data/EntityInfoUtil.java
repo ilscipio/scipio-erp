@@ -31,9 +31,9 @@ import com.ilscipio.scipio.ce.build.util.DependencyGraph;
 public abstract class EntityInfoUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static final String DEFAULT_DELEGATOR_NAME = "default";
-    
+
     protected EntityInfoUtil() {
     }
 
@@ -41,7 +41,7 @@ public abstract class EntityInfoUtil {
      * Returns the field names of the entity that are foreign keys to the specified relEntityName.
      * Only useful if relEntityName is entity with single-field PK.
      */
-    public static Set<String> getRelationFieldNames(ModelEntity modelEntity, String relEntityName, 
+    public static Set<String> getRelationFieldNames(ModelEntity modelEntity, String relEntityName,
             boolean includeOne, boolean includeOneNoFk, boolean includeMany) {
         if (modelEntity == null) return null;
         Set<String> fieldNames = new LinkedHashSet<>(); // NOTE: using LinkedHashSet so order is more predictable...
@@ -54,11 +54,11 @@ public abstract class EntityInfoUtil {
         }
         return fieldNames;
     }
-    
+
     /**
      * Returns the ModelRelations of the entity that are foreign keys to the specified relEntityName.
      */
-    public static List<ModelRelation> findModelRelationsByRelEntityName(ModelEntity modelEntity, String relEntityName, 
+    public static List<ModelRelation> findModelRelationsByRelEntityName(ModelEntity modelEntity, String relEntityName,
             boolean includeOne, boolean includeOneNoFk, boolean includeMany) {
         if (modelEntity == null) return null;
         List<ModelRelation> modelRelations = new ArrayList<>(); // NOTE: using LinkedHashSet so order is more predictable...
@@ -106,7 +106,7 @@ public abstract class EntityInfoUtil {
     public static List<String> makeEntityNameDependencyOrderFromDepMap(Map<String, List<String>> depMap) throws IllegalArgumentException {
         return new DependencyGraph<>(depMap).getResolvedDependenciesDfs();
     }
-    
+
     /**
      * Returns a list of entity names ordered by resolved dependencies based on relations, with least dependent
      * first and most dependent last. Only considers the entities within the passed set and ignores the relations
@@ -125,7 +125,7 @@ public abstract class EntityInfoUtil {
             return new DependencyGraph<>(depMap).getResolvedDependenciesDfs();
         }
     }
-    
+
     /**
      * Returns a list of entity names ordered by resolved dependencies based on relations, with least dependent
      * first and most dependent last. Only considers the entities within the passed set and ignores the relations
@@ -150,7 +150,7 @@ public abstract class EntityInfoUtil {
         }
         return outModelEntities;
     }
-    
+
     public static <T extends Collection<ModelEntity>> T getModelEntitiesSafe(ModelReader reader, Collection<String> entityNames, T outModelEntities) {
         for(String name : entityNames) {
             try {
@@ -161,7 +161,7 @@ public abstract class EntityInfoUtil {
         }
         return outModelEntities;
     }
-    
+
 
     /**
      * Checks if entity package starts with any one of given prefixes.
@@ -176,7 +176,7 @@ public abstract class EntityInfoUtil {
         }
         return false;
     }
-    
+
     /**
      * For "one.two.three", generates: ["one", "one.two", "one.two.three"].
      */
@@ -192,7 +192,7 @@ public abstract class EntityInfoUtil {
         }
         return parts;
     }
-    
+
     public static String getSinglePkFieldNameStrict(Delegator delegator, String entityName) throws IllegalArgumentException {
         ModelReader reader = delegator.getModelReader();
         ModelEntity modelEntity;
@@ -203,7 +203,7 @@ public abstract class EntityInfoUtil {
         }
         return getSinglePkFieldNameStrict(modelEntity);
     }
-    
+
     public static String getSinglePkFieldNameStrict(ModelEntity modelEntity) throws IllegalArgumentException {
         List<String> pkNames = modelEntity.getPkFieldNames();
         if (pkNames.size() != 1) {
@@ -211,11 +211,11 @@ public abstract class EntityInfoUtil {
         }
         return pkNames.get(0);
     }
-    
+
     public static Delegator ensureDelegator(Delegator delegator) throws IllegalArgumentException {
         return delegator != null ? delegator : getDefaultDelegatorAlways();
     }
-    
+
     /**
      * Returns the default delegator, sometimes needed in static field init (but avoid elsewhere).
      */
@@ -224,7 +224,7 @@ public abstract class EntityInfoUtil {
         if (delegator == null) throw new IllegalArgumentException("Could not get default delegator (\"" + DEFAULT_DELEGATOR_NAME + "\")");
         return delegator;
     }
-    
+
     /**
      * Returns the default model reader, sometimes needed in static field init (but avoid elsewhere).
      */
@@ -235,7 +235,7 @@ public abstract class EntityInfoUtil {
             throw new IllegalArgumentException(e);
         }
     }
-    
+
     public static ModelEntity getModelEntityAlways(ModelReader reader, String entityName) throws IllegalArgumentException {
         try {
             return reader.getModelEntity(entityName);
@@ -243,10 +243,10 @@ public abstract class EntityInfoUtil {
             throw new IllegalArgumentException(e);
         }
     }
-    
+
     @Deprecated
     public static ModelEntity getModelEntityAlways(String entityName) throws IllegalArgumentException {
         return getModelEntityAlways(getDefaultModelReaderAlways(), entityName);
     }
-    
+
 }

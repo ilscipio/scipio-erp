@@ -22,11 +22,11 @@ import org.ofbiz.webapp.control.ConfigXMLReader.ViewMap;
 /**
  * Component utilities
  * <p>
- * 2017-02-08: moved back to CMS package because too specific code inside. 
+ * 2017-02-08: moved back to CMS package because too specific code inside.
  * TODO?: re-refactor out generic code later.
  */
 public class ComponentUtil {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
@@ -225,11 +225,11 @@ public class ComponentUtil {
         }
         if (!path.startsWith("/")) {
             // we'll adjust it, but other code elsewhere is likely to fail, so warn.
-            Debug.logWarning("Cms: generateMapFromRequestUri: passed path did not start with a slash (/): " 
+            Debug.logWarning("Cms: generateMapFromRequestUri: passed path did not start with a slash (/): "
                     + path + "; this may get mishandled elsewhere", module);
             path = "/" + path;
         }
-        
+
         String[] items = path.split("/");
         StringBuilder subPath = new StringBuilder();
         // Iterate over all Subpaths
@@ -244,7 +244,7 @@ public class ComponentUtil {
                 String parentPath = subPath.toString();
                 subPath.append("/" + item);
                 String subPathStr = subPath.toString();
-                
+
                 // NOTE: 2017-02-14: id must contain webSiteId otherwise may not be unique globally.
                 String idPath = subPath.toString().replaceAll("/", "_");
                 String id = webSiteId + idPath;
@@ -274,7 +274,7 @@ public class ComponentUtil {
         if (UtilValidate.isEmpty(webSiteId)) {
             throw new IllegalArgumentException("generateMapFromViewName: missing webSiteId");
         }
-        
+
         String id = webSiteId + "_" + viewName;
         String formalId = webSiteId + "::" + viewName;
         Map<String, Object> itemMap = null;

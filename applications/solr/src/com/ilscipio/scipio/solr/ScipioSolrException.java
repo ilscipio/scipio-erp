@@ -9,7 +9,7 @@ package com.ilscipio.scipio.solr;
 public class ScipioSolrException extends Exception {
 
     private boolean lightweight = false;
-    
+
     public ScipioSolrException() {
     }
 

@@ -55,14 +55,14 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
 
     protected final String solrUsername;
     protected final String solrPassword;
-    
+
     protected ScipioHttpSolrClient(String baseURL, HttpClient httpClient, ResponseParser parser, boolean allowCompression,
             ModifiableSolrParams invariantParams, String solrUsername, String solrPassword) {
         super(baseURL, httpClient, parser, allowCompression, invariantParams);
         this.solrUsername = solrUsername;
         this.solrPassword = solrPassword;
     }
-    
+
     /**
      * Creates a new client from URL and username/password, where all operations will use
      * the given auth.
@@ -70,9 +70,9 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
      * DEV NOTE: Implementation must be maintained with the superclass; the default values
      * are taken from {@link HttpSolrClient.Builder} and are subject to change at solrj updates.
      */
-    public static HttpSolrClient create(String baseURL, HttpClient httpClient, String solrUsername, String solrPassword, 
+    public static HttpSolrClient create(String baseURL, HttpClient httpClient, String solrUsername, String solrPassword,
             Integer maxConnections, Integer maxConnectionsPerHost, Integer connectTimeout, Integer socketTimeout) {
-        
+
         if (httpClient == null) {
             ModifiableSolrParams params = new ModifiableSolrParams();
             if (maxConnections != null) {
@@ -84,26 +84,26 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
             params.set(HttpClientUtil.PROP_FOLLOW_REDIRECTS, true);
             httpClient = HttpClientUtil.createClient(params);
         }
- 
+
         // DEV NOTE: the defaults must match what HttpSolrClient.Builder does! Must keep up to date!
-        HttpSolrClient client = new ScipioHttpSolrClient(baseURL, httpClient, new BinaryResponseParser(), 
+        HttpSolrClient client = new ScipioHttpSolrClient(baseURL, httpClient, new BinaryResponseParser(),
                 false, new ModifiableSolrParams(), solrUsername, solrPassword);
-        
-        // TODO: In Solr 7, these are deprecated and moved to Builder/constructor 
+
+        // TODO: In Solr 7, these are deprecated and moved to Builder/constructor
         if (connectTimeout != null) {
             client.setConnectionTimeout(connectTimeout);
         }
         if (socketTimeout != null) {
             client.setSoTimeout(socketTimeout);
         }
-        
+
         return client;
     }
 
-    /** 
+    /**
      * Executes request.
      * <p>
-     * DEV NOTE: This is copied from superclass, 
+     * DEV NOTE: This is copied from superclass,
      */
     @SuppressWarnings("rawtypes")
     @Override
@@ -127,7 +127,7 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
             setBasicAuthHeader(method, this.solrUsername, this.solrPassword);
         }
     }
-    
+
     /**
      * Sets basic auth header to the given username and password.
      * <p>
@@ -138,5 +138,5 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
         String encoded = Base64.byteArrayToBase64(userPass.getBytes(StandardCharsets.UTF_8));
         method.setHeader(new BasicHeader("Authorization", "Basic " + encoded));
     }
-    
+
 }

@@ -53,14 +53,14 @@ import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
 public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObject  {
 
     private static final long serialVersionUID = -1589382218994735791L;
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Fields recognized by service but not physically present in entity.
      */
     public static final Set<String> virtualFields = CmsTemplate.virtualFields;
-    
+
     private static final CmsObjectCache<CmsScriptTemplate> idCache = CmsObjectCache.getGlobalCache("cms.template.script.id");
     private static final CmsObjectCache<CmsScriptTemplate> nameCache = CmsObjectCache.getGlobalCache("cms.template.script.name");
 
@@ -82,18 +82,18 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                     EntityCondition.makeCondition("standalone", null));
         }
     }
-    
+
     private static final String processorLocation = UtilProperties.getPropertyValue("cms", "contentprocessor.script.location");
 
     private static final ScriptExecutor processorScriptExecutor = makeProcessorExecutor();
-    
+
     private ScriptExecutor executor; // 2016: dedicated executor object
     private CmsScriptTemplateAssoc assoc; // 2016: backreference to association
-    
+
     protected CmsScriptTemplate(GenericValue entity) {
         super(entity);
     }
-    
+
     protected CmsScriptTemplate(GenericValue entity, CmsScriptTemplateAssoc assoc) {
         super(entity);
         this.assoc = assoc;
@@ -102,27 +102,27 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
     public CmsScriptTemplate(Delegator delegator, Map<String, ?> fields) {
         super(delegator, checkFields(fields, true));
     }
-    
+
     protected CmsScriptTemplate(Delegator delegator, Map<String, ?> fields, CmsScriptTemplateAssoc assoc) {
         super(delegator, checkFields(fields, true));
         this.assoc = assoc;
     }
-    
+
     protected CmsScriptTemplate(CmsScriptTemplate other, Map<String, Object> copyArgs) {
         super(other, copyArgs);
     }
-    
-    @Override    
+
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(checkFields(fields, false), setIfEmpty);
     }
-    
+
     @Override
     public CmsScriptTemplate copy(Map<String, Object> copyArgs) throws CmsException {
         return new CmsScriptTemplate(this, copyArgs);
     }
 
-    public static CmsScriptTemplate createUpdateScriptTemplate(Delegator delegator, Map<String, ?> fields, 
+    public static CmsScriptTemplate createUpdateScriptTemplate(Delegator delegator, Map<String, ?> fields,
             GenericValue userLogin, boolean store) {
         Map<String, Object> scriptMap = new HashMap<>(fields);
         CmsScriptTemplate scriptTemplate;
@@ -139,11 +139,11 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         }
         return scriptTemplate;
     }
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -155,7 +155,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         // rather than the assoc itself!
         preloadWorker.preload(this.assoc);
     }
-    
+
     protected static <T> Map<String, T> checkFields(Map<String, T> fields, boolean isNew) throws CmsException {
         if (isNew || fields.containsKey("standalone")) {
             if (UtilValidate.isEmpty((String) fields.get("standalone"))) {
@@ -164,9 +164,9 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         }
         return fields;
     }
-    
+
     @Override
-    public List<CmsAttributeTemplate> getAttributeTemplates() { 
+    public List<CmsAttributeTemplate> getAttributeTemplates() {
         return null;
     }
 
@@ -174,11 +174,11 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
     public void addAttributeTemplate(CmsAttributeTemplate template) {
         throw new UnsupportedOperationException();
     }
-    
+
     public String getScriptLang() { // 2016: new
         return entity.getString("scriptLang");
     }
-    
+
     public String getResolvedScriptLang() {
         try {
             ScriptExecutor executor = this.getExecutor();
@@ -188,31 +188,31 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             return null;
         }
     }
-    
+
     public Boolean getStandaloneBoolean() { // 2016: new
         return entity.getBoolean("standalone");
     }
-    
+
     public boolean isStandalone() {
         Boolean standalone = getStandaloneBoolean();
         return standalone != null ? standalone : STANDALONE_DEFAULT;
     }
-    
+
     public static EntityCondition getStandaloneCond() {
         return standaloneCond;
     }
-    
+
     public static EntityCondition getNotStandaloneCond() {
         return notStandaloneCond;
     }
-    
+
     public boolean isOrphan() {
         try {
-            return UtilValidate.isEmpty(getDelegator().findByAnd("CmsPageTemplateScriptAssoc", 
-                    UtilMisc.toMap("scriptTemplateId", getId()), null, false)) && 
-                    UtilValidate.isEmpty(getDelegator().findByAnd("CmsAssetTemplateScriptAssoc", 
+            return UtilValidate.isEmpty(getDelegator().findByAnd("CmsPageTemplateScriptAssoc",
+                    UtilMisc.toMap("scriptTemplateId", getId()), null, false)) &&
+                    UtilValidate.isEmpty(getDelegator().findByAnd("CmsAssetTemplateScriptAssoc",
                             UtilMisc.toMap("scriptTemplateId", getId()), null, false)) &&
-                    UtilValidate.isEmpty(getDelegator().findByAnd("CmsPageScriptAssoc", 
+                    UtilValidate.isEmpty(getDelegator().findByAnd("CmsPageScriptAssoc",
                             UtilMisc.toMap("scriptTemplateId", getId()), null, false));
         } catch (GenericEntityException e) {
             throw new CmsDataException(e);
@@ -223,24 +223,24 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         TemplateBodySource tmplBodySrc = getTemplateBodySource();
         String location = tmplBodySrc.getLocation();
         String invokeName = getAssoc() != null ? getAssoc().getInvokeName() : null;
-        
+
         String qualName;
         if (UtilValidate.isNotEmpty(location)) {
             qualName = location;
         } else if (tmplBodySrc.getStoredBody() != null) {
             qualName = "[stored body]";
         } else {
-            Debug.logError("Cms: Detected invalid template body source for script template " + getId() + 
+            Debug.logError("Cms: Detected invalid template body source for script template " + getId() +
                     "; neither location nor stored body exists", module);
             qualName = "[invalid]";
         }
-        
+
         if (UtilValidate.isNotEmpty(invokeName)) {
             qualName += "#" + invokeName;
         }
         return qualName;
     }
-    
+
 
     @Override
     public int remove() {
@@ -271,7 +271,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         String contentId = getTemplateContentId();
         return rowsAffected + super.remove() + removeTemplateBodySourceCommon(delegator, contentId);
     }
-    
+
     public int removeIfOrphan() {
         if (!isStandalone() && isOrphan()) {
             Debug.logInfo("Cms: Deleting script '" + getId() + "' because it is marked as non-standalone (dependent)"
@@ -281,12 +281,12 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             return 0;
         }
     }
-    
+
     public ScriptExecutor getExecutor() {
         ScriptExecutor executor = this.executor;
         if (executor == null) {
             try {
-                executor = ScriptExecutor.getExecutor(getScriptLang(), getId(), 
+                executor = ScriptExecutor.getExecutor(getScriptLang(), getId(),
                         getTemplateBodySource(), getAssoc() != null ? getAssoc().getInvokeName() : null);
                 if (executor == null) {
                     throw new CmsException("Invalid script template");
@@ -315,11 +315,11 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         }
         return executor != null ? executor : ScriptExecutor.getDummyExecutor();
     }
-    
+
     public static String getProcessorLocation() {
         return processorLocation;
     }
-    
+
     public String getScriptLogRepr() {
         TemplateBodySource tmplBodySrc = getTemplateBodySource();
         if (UtilValidate.isNotEmpty(tmplBodySrc.getLocation())) {
@@ -328,23 +328,23 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             return "[id: " + getId() + "]";
         }
     }
-    
+
     public CmsScriptTemplateAssoc getAssoc() {
         return assoc;
     }
-    
+
     public Long getInputPosition() {
         return getAssoc().getInputPosition();
     }
-    
+
     public String getInvokeName() {
         return getAssoc().getInvokeName();
     }
-    
+
     public String getAssocId() {
         return getAssoc().getAssocId();
     }
-    
+
     public static abstract class CmsScriptTemplateAssoc extends CmsDataObject {
 
         private static final long serialVersionUID = -4166919325339588209L;
@@ -365,7 +365,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             // NOTE: don't bother clearing out the ID fields here, caller should handle
         }
 
-        @Override    
+        @Override
         public void update(Map<String, ?> fields, boolean setIfEmpty) {
             // here, must ignore scriptTemplateId - set at creation and should never change
             if (fields.containsKey("scriptTemplateId") && UtilValidate.isNotEmpty(getScriptTemplateId())) {
@@ -374,14 +374,14 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             }
             super.update(fields, setIfEmpty);
         }
-        
+
         @Override
         public abstract CmsScriptTemplateAssoc copy(Map<String, Object> copyArgs);
-        
+
         /**
          * 2016: Loads ALL this object's content into the current instance.
          * <p>
-         * WARN: IMPORTANT: AFTER THIS CALL, 
+         * WARN: IMPORTANT: AFTER THIS CALL,
          * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
          * Essential for thread safety!!!
          */
@@ -414,15 +414,15 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         public String getAssocId() {
             return getId();
         }
-        
+
         public String getScriptTemplateId() {
             return entity.getString("scriptTemplateId");
         }
-        
+
         private void setScriptTemplateId(String scriptTemplateId) {
             entity.setString("scriptTemplateId", scriptTemplateId);
         }
-        
+
         public CmsScriptTemplate getScriptTemplate() {
             CmsScriptTemplate scriptTemplate = this.scriptTemplate;
             final CmsScriptTemplateAssoc assoc = this;
@@ -443,17 +443,17 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             }
             return scriptTemplate;
         }
-        
+
         /**
          * Temporary clearing method during copy operations, SHOULD be
          * overridden by child classes to clear the other IDs.
          */
         protected abstract void clearTemplate();
-        
+
         protected abstract void setTemplate(CmsDataObject template);
-        
+
         protected abstract boolean hasTemplate();
-        
+
         public Long getInputPosition() {
             Long inputPosition = entity.getLong("inputPosition");
             return inputPosition != null ? inputPosition : 0L;
@@ -462,14 +462,14 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         public String getInvokeName() {
             return entity.getString("invokeName");
         }
-        
+
         public static abstract class ScriptTemplateAssocWorker<T extends CmsScriptTemplateAssoc> extends DataObjectWorker<T> {
             protected ScriptTemplateAssocWorker(Class<T> dataObjectClass) {
                 super(dataObjectClass);
             }
         }
     }
-    
+
     public enum ScriptLang {
         // NOTE: Not all supported languages are listed here; just the ones we handle explicit
         GROOVY("groovy"),
@@ -477,7 +477,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         SIMPLE_METHOD("simple-method"),
         AUTO("auto"),
         NONE("none");
-        
+
         private static final Set<String> nameSet;
         private static final Map<String, ScriptLang> nameMap;
         static {
@@ -488,7 +488,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             nameMap = map;
             nameSet = Collections.unmodifiableSet(new HashSet<>(map.keySet()));
         }
-        
+
         private final String name;
 
         private ScriptLang(String name) {
@@ -502,7 +502,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         public static ScriptLang fromName(String name) {
             return nameMap.get(name);
         }
-        
+
         public static ScriptLang fromLocation(String fullLocation) throws CmsException {
             if (fullLocation != null) {
                 String location = WidgetWorker.getScriptLocation(fullLocation);
@@ -518,17 +518,17 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             }
             return null;
         }
-        
+
         public static Set<String> getNames() {
             return nameSet;
         }
     }
-    
+
     @SuppressWarnings("serial")
     public static abstract class ScriptExecutor implements Serializable {
-        
+
         private static final DummyScriptExecutor dummyExecutor = new DummyScriptExecutor();
-        
+
         protected final String id;
         protected final String invokeName;
 
@@ -536,9 +536,9 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             this.id = id;
             this.invokeName = invokeName;
         }
-        
+
         // Factory methods
-        
+
         /**
          * NOTE: Explicit script type always has priority. If null, can usually be inferred from location,
          * but currently cannot infer from body alone.
@@ -554,7 +554,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                     throw new CmsException("Script '" + id + "' has no location or body to execute");
                 }
             }
-            
+
             ScriptLang knownLang;
             if (UtilValidate.isNotEmpty(langStr)) {
                 knownLang = ScriptLang.fromName(langStr);
@@ -577,7 +577,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                     }
                 }
             }
-            
+
             if (knownLang == ScriptLang.GROOVY) {
                 if (isLocation) {
                     return new GroovyLocationScriptExecutor(id, bodyOrLocation, invokeName);
@@ -606,20 +606,20 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                 }
             }
         }
-        
+
         public static ScriptExecutor getExecutor(String id, TemplateBodySource tmplBodySrc, String invokeName) {
             return getExecutor(ScriptLang.AUTO.getName(), id, tmplBodySrc, invokeName);
         }
-        
+
         public static ScriptExecutor getDummyExecutor() {
             return dummyExecutor;
         }
-        
-        
+
+
         // Public methods
-        
+
         public abstract Object execute(Map<String, Object> context) throws Exception;
-        
+
         public Object executeSafe(Map<String, Object> context) {
             try {
                 return execute(context);
@@ -628,49 +628,49 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                 return null;
             }
         }
-        
+
         public abstract ScriptLang getScriptLang();
 
         public abstract String getScriptLogRepr();
 
-        
+
         // Internal implementation methods
-        
+
         protected abstract Object run(Map<String, Object> context) throws Exception;
-        
+
         protected String getReqLogIdDelimStr(Map<String, Object> context) {
             return CmsControlUtil.getReqLogIdDelimStr((HttpServletRequest) context.get("request"));
         }
-        
-        
+
+
         // Location and Body abstract classes
-        
+
         public static abstract class LocationScriptExecutor extends ScriptExecutor {
             protected final String location;
-            
+
             protected LocationScriptExecutor(String id, String location, String invokeName) {
                 super(id, invokeName);
                 this.location = location;
             }
-            
+
             @Override
             public Object execute(Map<String, Object> context) throws Exception {
                 if (CmsUtil.verboseOn()) {
-                    Debug.logInfo("Cms: Running script from location: " + location + (invokeName != null ? "#" + invokeName : "") 
+                    Debug.logInfo("Cms: Running script from location: " + location + (invokeName != null ? "#" + invokeName : "")
                             + (id != null ? " (id: " + id + ")" : "") + getReqLogIdDelimStr(context), module);
                 }
                 return run(context);
             }
-            
+
             @Override
             public String getScriptLogRepr() {
                 return "[id: " + id + ", location: " + location + (invokeName != null ? "#" + invokeName : "") + "]";
             }
         }
-        
+
         public static abstract class BodyScriptExecutor extends ScriptExecutor {
             protected final String body;
- 
+
             public BodyScriptExecutor(String id, String body, String invokeName) {
                 super(id, invokeName);
                 this.body = body;
@@ -683,16 +683,16 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                 }
                 return run(context);
             }
-            
+
             @Override
             public String getScriptLogRepr() {
                 return "[id: " + id + "]";
             }
         }
-        
+
 
         // Language implementations
- 
+
         public static class GroovyLocationScriptExecutor extends LocationScriptExecutor {
             protected GroovyLocationScriptExecutor(String id, String location, String invokeName) {
                 super(id, location, invokeName);
@@ -702,26 +702,26 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             protected Object run(Map<String, Object> context) throws Exception {
                 return GroovyUtil.runScriptAtLocation(location, invokeName, context);
             }
-            
+
             @Override
             public ScriptLang getScriptLang() {
                 return ScriptLang.GROOVY;
             }
         }
-        
+
         public static class GroovyBodyScriptExecutor extends AutoBodyScriptExecutor {
-     
+
             protected GroovyBodyScriptExecutor(String id, String body, String invokeName) {
                 super(id, body, invokeName, "groovy");
             }
-            
+
             @Override
             public ScriptLang getScriptLang() {
                 return ScriptLang.GROOVY;
             }
         }
- 
-        
+
+
         public static class SimpleMethodLocationScriptExecutor extends LocationScriptExecutor {
 
             protected SimpleMethodLocationScriptExecutor(String id, String location, String invokeName) {
@@ -741,14 +741,14 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                 context.putAll(methodContext.getResults());
                 return result;
             }
-            
+
             @Override
             public ScriptLang getScriptLang() {
                 return ScriptLang.SIMPLE_METHOD;
             }
         }
 
-        
+
         public static class ScreenActionsLocationScriptExecutor extends LocationScriptExecutor {
 
             protected ScreenActionsLocationScriptExecutor(String id, String location, String invokeName) {
@@ -761,17 +761,17 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                 AbstractModelAction.runSubActions(widget.getSection().getActions(), context); // NOTE: wraps in RunTimeExceptions
                 return null;
             }
-            
+
             @Override
             public ScriptLang getScriptLang() {
                 return ScriptLang.SCREEN_ACTIONS;
             }
         }
-        
+
         public static class AutoLocationScriptExecutor extends LocationScriptExecutor {
             // NOTE: we are simply ignoring the explicit lang here, ofbiz helpers won't let us override
-            //protected final String lang; 
-            
+            //protected final String lang;
+
             protected AutoLocationScriptExecutor(String id, String location, String invokeName, String lang) {
                 super(id, location, invokeName);
                 // this.lang = lang;  // NOTE: ignoring for now
@@ -787,15 +787,15 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                 return ScriptLang.AUTO;
             }
         }
-        
+
         public static class AutoBodyScriptExecutor extends BodyScriptExecutor {
             protected final Scriptlet scriptlet;
-            
+
             public AutoBodyScriptExecutor(String id, String body, String invokeName, String lang) {
                 super(id, body, invokeName);
                 this.scriptlet = new Scriptlet(lang + ":" + body);
             }
-            
+
             @Override
             protected Object run(Map<String, Object> context) throws Exception {
                 return scriptlet.executeScript(context);
@@ -833,20 +833,20 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             }
         }
     }
-    
-    
+
+
     @Override
     public ScriptTemplateWorker getWorkerInst() {
         return ScriptTemplateWorker.worker;
     }
-    
+
     public static ScriptTemplateWorker getWorker() {
         return ScriptTemplateWorker.worker;
     }
 
     public static class ScriptTemplateWorker extends DataObjectWorker<CmsScriptTemplate> {
         private static final ScriptTemplateWorker worker = new ScriptTemplateWorker();
-        
+
         protected ScriptTemplateWorker() {
             super(CmsScriptTemplate.class);
         }
@@ -860,23 +860,23 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         public CmsScriptTemplate makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
             return new CmsScriptTemplate(delegator, fields);
         }
-        
+
         @Override
         public CmsScriptTemplate findById(Delegator delegator, String id, boolean useCache) throws CmsException {
             return findById(delegator, id, useCache, null);
         }
-        
+
         public CmsScriptTemplate findById(Delegator delegator, String id, boolean useCache, HttpServletRequest request) throws CmsException {
             boolean useGlobalCache = isUseGlobalObjCacheStatic(useCache);
             CmsObjectCache<CmsScriptTemplate> cache = null;
             if (useGlobalCache) {
                 cache = idCache;
             }
-            
+
             String key = delegator.getDelegatorName() + "::" + id;
             CmsScriptTemplate script = null;
             CacheEntry<CmsScriptTemplate> scriptEntry = null;
-            
+
             if (useGlobalCache) {
                 scriptEntry = cache.getEntry(key);
             }
@@ -885,7 +885,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                 if (CmsUtil.verboseOn()) {
                     Debug.logInfo("Cms: Retrieving script template from database: id: " + id + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
-                script = findOne(delegator, UtilMisc.toMap("scriptTemplateId", id), 
+                script = findOne(delegator, UtilMisc.toMap("scriptTemplateId", id),
                         isUseDbCacheStatic(useCache));
 
                 if (useGlobalCache) {
@@ -902,13 +902,13 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
 
             return script;
         }
-        
+
         public CmsScriptTemplate findByName(Delegator delegator, String name, String webSiteId, boolean webSiteIdOptional, boolean useCache) throws CmsException {
             return findByName(delegator, name, webSiteId, webSiteIdOptional, useCache, null);
         }
-        
+
         /**
-         * Finds by name and optional webSiteId. 
+         * Finds by name and optional webSiteId.
          * NOTE: if no webSiteId passed, it preferentially returns the records having no webSiteId.
          * NOTE: 2017-03-24: webSiteId IS CURRENTLY IGNORED.
          */
@@ -924,7 +924,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             String key = delegator.getDelegatorName() + "::" + name + "::" + (webSiteId != null ? webSiteId : (webSiteIdOptional ? "_OPT_" : ""));
             CmsScriptTemplate script = null;
             CacheEntry<CmsScriptTemplate> scriptEntry = null;
-            
+
             if (useGlobalCache) {
                 scriptEntry = cache.getEntry(key);
             }
@@ -952,7 +952,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
 //                        Debug.logWarning("Cms: Multiple asset templates with name '" + name + "' and having a webSiteId found; using first found (id: " + asset.getId() + ", webSiteId: " + asset.getWebSiteId() + ")", module);
 //                    }
                 }
-                
+
                 if (useGlobalCache) {
                     cache.put(key, script);
                 }
@@ -968,12 +968,12 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             return script;
         }
     }
-    
+
     @Override
     public void acceptEntityDepsVisitor(CmsEntityVisitor visitor, GenericValue relValue, VisitRelation relValueRelation, CmsMajorObject majorDataObj) throws Exception {
         CmsEntityVisit.acceptRelatedEntityDepsVisitor(visitor, VisitRelPlan.visitRelations, this.getEntity(), relValueRelation, relValue, this);
     }
-    
+
     public static class VisitRelPlan extends VisitRelations.BuildPlan {
         public static final VisitRelPlan INSTANCE = new VisitRelPlan("CmsScriptTemplate");
         static final VisitRelations visitRelations = INSTANCE.buildSafe();
@@ -984,5 +984,5 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                     .self();
         }
     }
-    
+
 }

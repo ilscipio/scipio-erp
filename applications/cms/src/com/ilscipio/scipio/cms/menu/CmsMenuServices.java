@@ -25,12 +25,12 @@ public abstract class CmsMenuServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     static final String logPrefix = "Cms: Menu: ";
-    private static final ServiceErrorFormatter errorFmt = 
+    private static final ServiceErrorFormatter errorFmt =
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Menu Error").build();
-    
+
     protected CmsMenuServices() {
     }
-    
+
     /**
      * Returns a single Menu as a JSON object
      */
@@ -40,7 +40,7 @@ public abstract class CmsMenuServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         String menuId = (String) context.get("menuId");
         //String websiteId = (String) context.get("websiteId");
-        
+
         try {
             GenericValue value = delegator.findOne("CmsMenu", false, UtilMisc.toMap("menuId", menuId));
             result.put("menuJson", value.getString("menuJson"));
@@ -52,7 +52,7 @@ public abstract class CmsMenuServices {
         }
         return result;
     }
-    
+
     /**
      * Generates a list of all available menus. Can be filtered by
      * WebsiteId (TODO).
@@ -62,7 +62,7 @@ public abstract class CmsMenuServices {
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> result = ServiceUtil.returnSuccess();
         String websiteId = (String) context.get("websiteId");
-        
+
         try {
             EntityFindOptions efo = new EntityFindOptions();
             List<GenericValue> values;
@@ -81,13 +81,13 @@ public abstract class CmsMenuServices {
                                 UtilMisc.toList("createdStamp DESC"), efo,
                                 true);
             }
-            
+
             /*
             List<String> resultValues = new ArrayList<String>();
             for(GenericValue menu : values){
                 resultValues.add(menu.getString("menuJson"));
             }*/
-            
+
             String resultJson = JSON.from(values).toString();
             result.put("menuJson", resultJson);
 
@@ -102,7 +102,7 @@ public abstract class CmsMenuServices {
 
     /**
      * Creates or updates a menu
-     * 
+     *
      * @param dctx
      * @param context
      * @return
@@ -113,13 +113,13 @@ public abstract class CmsMenuServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         String menuId = (String) context.get("menuId");
         //String websiteId = (String) context.get("websiteId");
-        
+
         try {
             GenericValue userLogin = CmsServiceUtil.getUserLoginOrSystem(dctx, context);
             // Create empty template
-            Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreateUpdateMenu", 
+            Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreateUpdateMenu",
                     UtilGenerics.<String, Object> checkMap(context), userLogin, null, null);
-            
+
             CmsMenu menuTmp = null;
             if (UtilValidate.isNotEmpty(menuId)) {
                 fields.put("createdBy", userLogin.getString("userLoginId"));
@@ -129,11 +129,11 @@ public abstract class CmsMenuServices {
                 fields.put("lastUpdatedBy", (String) userLogin.get("userLoginId"));
                 menuTmp = new CmsMenu(delegator, fields);
             }
-            
+
             menuTmp.store();
             result.put("menuId", menuTmp.getId());
             result.put("menuJson", menuTmp.getMenuJson());
-            
+
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error creating or updating menu", context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
@@ -141,7 +141,7 @@ public abstract class CmsMenuServices {
         }
         return result;
     }
-    
+
     /**
      * Deletes a menu
      */
@@ -153,16 +153,16 @@ public abstract class CmsMenuServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
 
         String menuId = (String) context.get("menuId");
-           
+
         try {
-            
+
             CmsMenu menuTmp = null;
             if (UtilValidate.isNotEmpty(menuId)) {
                 GenericValue value = delegator.findOne("CmsMenu", false, UtilMisc.toMap("menuId", menuId));
                 menuTmp = new CmsMenu(value);
                 menuTmp.remove();
             }
-          
+
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error removing menu", context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);

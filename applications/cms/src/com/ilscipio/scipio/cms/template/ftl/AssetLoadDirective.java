@@ -35,20 +35,20 @@ import freemarker.template.TemplateModel;
  * directive is called with the import name of the asset. The asset is
  * evaluated as FreeMarker template with the content of the respective
  * variable as template model.
- * 
- * The method is called as follows: 
+ *
+ * The method is called as follows:
  * <pre>
  * {@code
- * <@asset name="assetImportName" /> 
+ * <@asset name="assetImportName" />
  * <@asset id="10000" />
  * }
  * </pre>
  * These imply <code>def="import"</code> by default.
- * 
+ *
  * 2017-02-08: also now supports rendering arbitrary asset even if not linked to template.
  * <pre>
  * {@code
- * <@asset name="assetName" def="global"/> 
+ * <@asset name="assetName" def="global"/>
  * <@asset name="assetName" webSiteId="webSiteId" def="global"/>
  * <@asset id="10000" def="global"/>
  * }
@@ -83,7 +83,7 @@ import freemarker.template.TemplateModel;
  * Note that in the resulting context, ovrdCtxVars overrides attribs, and attribs override ctxVars.
  * The attribs make the render context slightly more complicated than a call using the scipio utility <code>@render</code> macro.
  * Here the ctxVars are the same as on <code>@render</code>, but with assets, the attributes crush
- * the incoming context vars. In turn, a second set of overriding vars, here ovrdCtxVars, may sometimes be 
+ * the incoming context vars. In turn, a second set of overriding vars, here ovrdCtxVars, may sometimes be
  * useful or needed to bypass some of the behaviors and type handling inherent in the attribute processing,
  * which may otherwise affect results.
  * <p>
@@ -94,30 +94,30 @@ import freemarker.template.TemplateModel;
 public class AssetLoadDirective implements TemplateDirectiveModel, Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final long serialVersionUID = -2664394439313786601L;
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final AssetLoadDirective instance = new AssetLoadDirective();
 
-    static final RenderExceptionMode assetLiveExceptionMode = CmsRenderUtil.getDirectiveLiveRenderExceptionMode(RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms", 
-            "render.live.exception.directive.asset.mode"))); 
-    
+    static final RenderExceptionMode assetLiveExceptionMode = CmsRenderUtil.getDirectiveLiveRenderExceptionMode(RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms",
+            "render.live.exception.directive.asset.mode")));
+
     static final RenderExceptionMode nestedLiveExceptionMode;
-    
+
     static {
-        RenderExceptionMode nested = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms", 
+        RenderExceptionMode nested = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms",
                 "render.live.exception.directive.nested.mode"));
         if (nested == null) nested = assetLiveExceptionMode;
         nestedLiveExceptionMode = nested;
     }
-    
+
     public enum Mode {
         STANDALONE("standalone"),
         INCLUDE("include"),
         IMPORT("import");
-        
+
         private static final Map<String, Mode> nameMap;
         static {
             Map<String, Mode> map = new HashMap<>();
@@ -126,7 +126,7 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
             }
             nameMap = map;
         }
-        
+
         private final String name;
 
         private Mode(String name) {
@@ -136,12 +136,12 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
         public String getName() {
             return name;
         }
-        
+
         public static Mode fromName(String name) {
             return nameMap.get(name);
         }
     }
-    
+
     public AssetLoadDirective() {
         super();
     }
@@ -149,7 +149,7 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
     public static AssetLoadDirective getInstance() {
         return instance;
     }
-    
+
     /* (non-Javadoc)
      * @see freemarker.template.TemplateDirectiveModel#execute(freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)
      */
@@ -158,12 +158,12 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
     public void execute(Environment env, Map paramsUntyped, TemplateModel[] loopVars, TemplateDirectiveBody body)
             throws TemplateException, IOException {
         Writer out = env.getOut();
-        
+
         MapStack<String> context = CmsRenderUtil.getRenderContextAlways(env);
         CmsPageContext pageContext = CmsRenderUtil.getPageContext(context);
         CmsPageContent pageContent = CmsRenderUtil.getTopPageContent(context);
         CmsPageTemplate pageTemplate = CmsRenderUtil.getPageTemplate(context);
-        
+
         boolean newCmsCtx = false;
         if (pageContext == null) {
             newCmsCtx = true;
@@ -172,7 +172,7 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
                 pageContent = new CmsPageContent((CmsPage) null);
             }
         }
-        
+
         Map<String, TemplateModel> params = UtilGenerics.checkMap(paramsUntyped);
         // extract the asset name from freemarker template model
         String assetName = TransformUtil.getStringArg(params, "name");
@@ -183,16 +183,16 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
         if (UtilValidate.isEmpty(assetId)) {
             assetId = null;
         }
-        
+
         Map<String, Object> ctxVars = TransformUtil.getMapArg(params, "ctxVars", null, false, true);
         Map<String, Object> attribs = TransformUtil.getMapArg(params, "attribs", null, false, true);
         Map<String, Object> ovrdCtxVars = TransformUtil.getMapArg(params, "ovrdCtxVars", null, false, true);
 
         boolean globalDef = "global".equals(TransformUtil.getStringNonEscapingArg(params, "def"));
-        
-        String webSiteId = TransformUtil.getStringNonEscapingArg(params, "webSiteId"); 
-        boolean webSiteOptional = TransformUtil.getBooleanArg(params, "webSiteOptional", true); 
-        
+
+        String webSiteId = TransformUtil.getStringNonEscapingArg(params, "webSiteId");
+        boolean webSiteOptional = TransformUtil.getBooleanArg(params, "webSiteOptional", true);
+
         String modeStr = TransformUtil.getStringNonEscapingArg(params, "mode");
         Mode mode;
         if (UtilValidate.isNotEmpty(modeStr)) {
@@ -222,14 +222,14 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
             try {
                 Delegator delegator = pageContext.getDelegator();
                 boolean useCache = !pageContext.isPreview();
-                
+
                 if (globalDef) {
                     if (assetName != null) {
                         assetTemplate = CmsAssetTemplate.getWorker().findByName(delegator, assetName, webSiteId, webSiteOptional, useCache, pageContext.getRequest());
                     } else {
                         assetTemplate = CmsAssetTemplate.getWorker().findById(delegator, assetId, useCache, pageContext.getRequest());
                     }
-                    
+
                     if (mode == Mode.STANDALONE) {
                         assetContent = new CmsPageContent(pageContent.getPage());
                         // Set any content with attribs supplied to macro
@@ -242,16 +242,16 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
                         throw new IllegalStateException("Current rendering context has no existing cmsPageContext or cmsPageTemplate"
                             + " - assets cannot be rendered in non-CMS context in non-global mode (did you mean to use def=\"global\"?)");
                     }
-                    
+
                     // prepare content for asset
                     //Map<String, CmsAssetTemplate> assetTemplates = pageTemplate.getActiveAssetTemplates();
-                    
+
                     if (assetName != null) {
                         assetTemplate = pageTemplate.getAssetTemplateByImportName(assetName);
                     } else {
                         assetTemplate = pageTemplate.getAssetTemplateById(assetId);
                     }
-                    
+
                     if (mode == Mode.STANDALONE) {
                         // NOTE: this creates a shallow copy of the lower map level - important!
                         assetContent = pageContent.getAssetContent(assetName);
@@ -263,12 +263,12 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
                 }
             } catch (Exception e) {
                 // DEV NOTE: I don't think this ever gets triggered, it's just here for safety;
-                handleError(env, e, "Please check asset reference (" 
+                handleError(env, e, "Please check asset reference ("
                         + (assetName != null ? "name: '" + assetName + "'" : "id: '" + assetId + "'")
                         + ") and/or validity of asset template. Please check with your supervisor if all variables have been set correctly");
                 return;
             }
-                
+
             if (assetTemplate != null) {
                 try {
                     // render asset
@@ -284,7 +284,7 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
                         throw new CmsException("error determining asset mode");
                     }
                 } catch (Exception e) {
-                    handleNestedError(env, e, "Please check asset reference (" 
+                    handleNestedError(env, e, "Please check asset reference ("
                             + (assetName != null ? "name: '" + assetName + "'" : "id: '" + assetId + "'")
                             + ") and/or validity of asset template. Please check with your supervisor if all variables have been set correctly");
                     return;
@@ -302,19 +302,19 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
             }
         }
     }
-    
+
     /**
      * Handles a directive error.
      */
     public static boolean handleError(Environment env, Throwable t, String errorMsg) throws CmsException, TemplateException {
         return CmsRenderUtil.handleDirectiveError(env, "Asset rendering failed", t, errorMsg, assetLiveExceptionMode, module);
     }
-    
+
     /**
      * Handles nested errors.
      */
     public static boolean handleNestedError(Environment env, Throwable t, String errorMsg) throws CmsException, TemplateException {
         return CmsRenderUtil.handleDirectiveError(env, "Asset rendering failed", t, errorMsg, nestedLiveExceptionMode, module);
     }
-        
+
 }

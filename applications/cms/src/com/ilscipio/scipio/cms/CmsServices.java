@@ -38,12 +38,12 @@ public abstract class CmsServices {
     public static Map<String, Object> getDescriptors(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
-        
+
         String webSiteId = WebSiteWorker.getWebSiteId((ServletRequest) context.get("request"));
-        List<CmsPageTemplate> pageTemplates = CmsPageTemplate.getWorker().findAll(delegator, UtilMisc.toMap("webSiteId", webSiteId), 
+        List<CmsPageTemplate> pageTemplates = CmsPageTemplate.getWorker().findAll(delegator, UtilMisc.toMap("webSiteId", webSiteId),
                 UtilMisc.toList("templateName ASC"), false);
         result.put("pageTemplates", pageTemplates);
-        List<CmsAssetTemplate> assetTemplates = CmsAssetTemplate.getWorker().findAll(delegator, UtilMisc.toMap("webSiteId", webSiteId), 
+        List<CmsAssetTemplate> assetTemplates = CmsAssetTemplate.getWorker().findAll(delegator, UtilMisc.toMap("webSiteId", webSiteId),
                 UtilMisc.toList("templateName ASC"), false);
         result.put("assetTemplates", assetTemplates);
         List<CmsPage> pages = CmsPage.getWorker().findAll(delegator, UtilMisc.toMap("webSiteId", webSiteId), UtilMisc.toList("pageName ASC"), false);
@@ -51,11 +51,11 @@ public abstract class CmsServices {
 
         return result;
     }
-    
+
     public static Map<String, Object> getCmsWebSites(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
+
         Set<String> webSiteIdSet = CmsWebSiteInfo.getAllCmsRegWebSitesInfo().keySet();
         List<GenericValue> webSiteList;
         try {
@@ -64,7 +64,7 @@ public abstract class CmsServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        
+
         result.put("webSiteIdSet", webSiteIdSet);
         result.put("webSiteList", webSiteList);
         return result;

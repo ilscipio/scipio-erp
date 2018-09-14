@@ -33,9 +33,9 @@ import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
  */
 public abstract class CmsEntityVisit {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static final String LOG_PREFIX = "Cms: Data Visit: ";
-    
+
     protected CmsEntityVisit() { }
 
     /**
@@ -51,7 +51,7 @@ public abstract class CmsEntityVisit {
     public interface CmsEntityVisitor {
 
         VisitContext getVisitContext();
-        
+
         /**
          * Pre-lookup filter: Acts as a filter so visitor can decide whether to enter a value and its related values or not.
          * This is basically called as often as possible but will be best-effort.
@@ -60,7 +60,7 @@ public abstract class CmsEntityVisit {
          * NOTE: this is never called for the "self" relation.
          */
         boolean shouldEnter(VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj);
-        
+
         /**
          * Post-lookup filter: Acts as a filter so visitor can decide whether to enter a value and its related values or not.
          * This is basically called as often as possible but will be best-effort.
@@ -72,53 +72,53 @@ public abstract class CmsEntityVisit {
          * case the SelfRelation is passed, which can be assumed to be a Major object.
          */
         boolean shouldEnter(GenericValue value, VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj);
-        
+
         /**
          * Entity value visit callback. Performs both {@link #visitRecordStateOnly} and {@link #visitStateless} in one call.
          */
         public void visit(GenericValue value, VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) throws Exception;
-        
+
         /**
          * Entity value visit callback that should record the value as visited WITHOUT printing it out.
          * This is used for split/delayed visit operations.
          */
         public void visitRecordOnly(GenericValue value, VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) throws Exception;
-        
+
         /**
          * Entity value visit callback that should NOT modify any state, but should simply print out the data without counting it.
          * This is used for split/delayed visit operations.
          */
         public void visitWriteOnly(GenericValue value, VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) throws Exception;
-        
-        
+
+
         public interface VisitContext {
             Delegator getDelegator();
-            
+
             /**
              * Maps an arbitrary name (usually derived from major entity name) to a VisitRelations to use.
-             * This is a cache. 
+             * This is a cache.
              * Used to support dynamic visit relation plans and easier debugging.
              * TODO?: not yet used.
              */
             Map<String, VisitRelations> getVisitRelationsDefs();
-            
+
             /**
              * TODO: REVIEW: this belongs (?) in the visitor itself but I'm doing external to simplify code.
              */
             boolean isExportFilesAsTextData();
-            
+
             VisitValueStash getVisitValueStash();
         }
     }
 
-    
+
     /**
      * Base abstract visitor, provides delegator and takes care of looking up the values
      * that weren't already looked up (subclass should override this behavior to optimize).
      */
     public static abstract class AbstractCmsEntityVisitor implements CmsEntityVisitor {
         //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-        
+
         protected final Delegator delegator;
         protected final CmsEntityInfo cmsEntityInfo; // fast access
         protected boolean enterMajor = true;
@@ -132,28 +132,28 @@ public abstract class CmsEntityVisit {
         }
 
         public abstract AbstractVisitContext getVisitContext(); // subclass must implement
-        
+
         public boolean isEnterMajor() { return enterMajor; }
         public void setEnterMajor(boolean enterMajor) { this.enterMajor = enterMajor; }
-        public boolean isEnterContent() { return enterContent; }        
-        public void setEnterContent(boolean enterContent) { this.enterContent = enterContent; }        
-        public Set<String> getEnterEntityNames() { return enterEntityNames; }        
+        public boolean isEnterContent() { return enterContent; }
+        public void setEnterContent(boolean enterContent) { this.enterContent = enterContent; }
+        public Set<String> getEnterEntityNames() { return enterEntityNames; }
         public void setEnterEntityNames(Set<String> enterEntityNames) { this.enterEntityNames = enterEntityNames != null ? enterEntityNames : null; }
         public Set<String> getEnterMajorEntityNames() { return enterMajorEntityNames; }
         public void setEnterMajorEntityNames(Set<String> enterMajorEntityNames) { this.enterMajorEntityNames = enterMajorEntityNames; }
 
         // PRE-LOOKUP FILTERS
-        
+
         @Override
         public boolean shouldEnter(VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) {
             if (relation.isFilterAsMajor()) {
-                if (!isEnterMajor()) { 
+                if (!isEnterMajor()) {
                     return false;
                 } else {
                     return isEnterMajorEntity(relation) && shouldEnterMajor(relation, relValue, majorDataObj);
                 }
             } else if (relation.isFilterAsContent()) {
-                if (!isEnterContent()) { 
+                if (!isEnterContent()) {
                     return false;
                 } else {
                     return shouldEnterContent(relation, relValue, majorDataObj);
@@ -168,7 +168,7 @@ public abstract class CmsEntityVisit {
         protected boolean isEnterMajorEntity(VisitRelation relation) {
             return enterMajorEntityNames == null || enterMajorEntityNames.contains(relation.getRelEntityName());
         }
-        
+
         // methods available to subclasses to override
         protected boolean shouldEnterGeneric(VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) {
             return true;
@@ -179,10 +179,10 @@ public abstract class CmsEntityVisit {
         protected boolean shouldEnterContent(VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) {
             return true; // subclass should record visited IDs for this...
         }
-        
+
         // POST-LOOKUP FILTERS, with looked-up value
         // NOTE: theoretically this should do the same as pre-lookup filter, but we're not really using them the same way
-        
+
         @Override
         public boolean shouldEnter(GenericValue value, VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) {
             return true;
@@ -196,7 +196,7 @@ public abstract class CmsEntityVisit {
             @Override public VisitValueStash getVisitValueStash() { return visitValueStash; }
         }
     }
-    
+
     public static class VisitValueStash implements Map<String, Object> {
         private Map<String, Object> stashMap;
         private List<Map<String, Object>> stashStack;
@@ -207,24 +207,24 @@ public abstract class CmsEntityVisit {
         public void reset() {
             if (CmsUtil.debugOn()) {
                 if (stashMap.size() > 0) {
-                    Debug.logError(LOG_PREFIX+"Reset VisitValueStash while current map still had " 
+                    Debug.logError(LOG_PREFIX+"Reset VisitValueStash while current map still had "
                             + stashMap.size() + " entries; entity values may have been lost", module);
                 } else if (stashStack.size() > 0) {
-                    Debug.logError(LOG_PREFIX+"Reset VisitValueStash while current stack still had " 
+                    Debug.logError(LOG_PREFIX+"Reset VisitValueStash while current stack still had "
                             + stashStack.size() + " entries; entity values may have been lost", module);
                 }
             }
             this.stashMap = new HashMap<>();
             stashStack = new ArrayList<>();
         }
-        
+
         public void pushStashStack() {
             stashStack.add(stashMap);
             stashMap = new HashMap<>();
         }
         public void popStashStack() {
             if (CmsUtil.debugOn() && (stashMap.size() > 0)) {
-                Debug.logError(LOG_PREFIX+"Popped VisitValueStash while current map still had " 
+                Debug.logError(LOG_PREFIX+"Popped VisitValueStash while current map still had "
                         + stashMap.size() + " entries; entity values may have been lost", module);
             }
             stashMap = stashStack.remove(stashStack.size() - 1);
@@ -232,7 +232,7 @@ public abstract class CmsEntityVisit {
 
         public interface StashEntry {
         }
-        
+
         /**
          * Entry that supports many values as long as they came from the same relation.
          * Will work for many relations.
@@ -242,7 +242,7 @@ public abstract class CmsEntityVisit {
             final VisitRelation relation;
             final GenericValue relValue;
             final CmsMajorObject majorDataObj;
-            
+
             public MultiValueEntry(GenericValue value, VisitRelation relation, GenericValue relValue,
                     CmsMajorObject majorDataObj) {
                 this.values = new ArrayList<>();
@@ -256,7 +256,7 @@ public abstract class CmsEntityVisit {
             public VisitRelation getRelation() { return relation; }
             public GenericValue getRelValue() { return relValue; }
             public CmsMajorObject getMajorDataObj() { return majorDataObj; }
-            
+
             public void addValue(GenericValue value) { this.values.add(value); }
         }
 
@@ -278,22 +278,22 @@ public abstract class CmsEntityVisit {
             }
             return entry;
         }
-        
+
         @Override public Object get(Object key) {
-            return stashMap.get(key); 
+            return stashMap.get(key);
         }
         @Override public Object put(String key, Object value) {
             if (CmsUtil.debugOn() && containsKey(key)) {
                 Debug.logError(LOG_PREFIX+"Tried to insert into VisitValueStash "
                         + "with key that already had a value: " + key + "; entity values may have been lost", module);
             }
-            return stashMap.put(key, value); 
+            return stashMap.put(key, value);
         }
         @Override public Object remove(Object key) {
 //            if (CmsUtil.debugOn() && !containsKey(key)) {
 //                Debug.logError(LOG_PREFIX+"Tried to remove from VisitValueStash using key that has no value: " + key, module);
 //            }
-            return stashMap.remove(key); 
+            return stashMap.remove(key);
         }
 
         @Override public int size() { return stashMap.size(); }
@@ -306,11 +306,11 @@ public abstract class CmsEntityVisit {
         @Override public Collection<Object> values() { return stashMap.values(); }
         @Override public Set<java.util.Map.Entry<String, Object>> entrySet() { return stashMap.entrySet(); }
     }
-    
+
     public interface CmsEntityVisitee {
-        
+
         /**
-         * Allows a visitor (Visitor pattern) to go through the entities immediately associated 
+         * Allows a visitor (Visitor pattern) to go through the entities immediately associated
          * to the major entities in the order of dependencies of entity relations.
          * <p>
          * This generic pattern will ensure a consist visiting order for
@@ -323,21 +323,21 @@ public abstract class CmsEntityVisit {
          * @param majorDataObj the last major data object, changes only across boundaries
          */
         public void acceptEntityDepsVisitor(CmsEntityVisitor visitor, GenericValue relValue, VisitRelation relValueRelation, CmsMajorObject majorDataObj) throws Exception;
-        
+
     }
 
     /**
      * MAIN Generic entity relations visiting algorithm - uses the passed visitRelations visit plan
      * to go through the minor relations to the majorDataObj as well as traverse into nearby major entities.
      */
-    public static void acceptRelatedEntityDepsVisitor(CmsEntityVisitor visitor, 
+    public static void acceptRelatedEntityDepsVisitor(CmsEntityVisitor visitor,
             VisitRelations visitRelations, GenericValue value, VisitRelation relValueRelation, GenericValue relValue, CmsMajorObject majorDataObj) throws Exception {
         if (CmsUtil.verboseOn()) {
             if (!visitRelations.hasSelfEntityRelation(value.getEntityName())) {
                 Debug.logInfo(LOG_PREFIX+"Note: There is no 'self' entry for (not necessarily an error): " + value.getEntityName(), module);
             }
         }
-        
+
         // special top check needed for brand new queries...
         if (relValueRelation == null) {
             VisitRelation topSelfRelation = visitRelations.getSelfEntityRelation(value.getEntityName());
@@ -351,7 +351,7 @@ public abstract class CmsEntityVisit {
                 return;
             }
         }
-        
+
         // TODO: REVIEW: not great place to push/pop stack, because severely limits scope, but just enough for now.
         visitor.getVisitContext().getVisitValueStash().pushStashStack();
         try {
@@ -360,20 +360,20 @@ public abstract class CmsEntityVisit {
             visitor.getVisitContext().getVisitValueStash().popStashStack();
         }
     }
-    
-    private static void acceptRelatedEntityDepsVisitorDeep(CmsEntityVisitor visitor, 
+
+    private static void acceptRelatedEntityDepsVisitorDeep(CmsEntityVisitor visitor,
             VisitRelations visitRelations, GenericValue value, VisitRelation relValueRelation, GenericValue relValue, CmsMajorObject majorDataObj) throws Exception {
 
         for(VisitRelation relation : visitRelations.getEntityRelations(value.getEntityName())) {
             VisitRelation.DataRelType relType = relation.getDataRelType();
             String relationName = relation.getRelationName();
-            
+
             if (!relation.isSelf() && !relation.isRecall()) { // NOTE: can't use self with pre-lookup filter
                 if (!visitor.shouldEnter(relation, value, majorDataObj)) { // PRE-LOOKUP FILTER
                     continue;
                 }
             }
-            
+
             if (relation.isContent()) {
                 acceptContentRelationEntityDepsVisitor(visitor, value, relation, majorDataObj);
             } else if (relation.isSelf()) {
@@ -386,7 +386,7 @@ public abstract class CmsEntityVisit {
                     if (relation.isStash()) {
                         visitor.visitRecordOnly(value, selfRelation, relValue, majorDataObj);
                         // save the whole value in stash
-                        visitor.getVisitContext().getVisitValueStash().addMultiValueEntry(relation.getStashKey(), 
+                        visitor.getVisitContext().getVisitValueStash().addMultiValueEntry(relation.getStashKey(),
                                 value, selfRelation, relValue, majorDataObj);
                     } else {
                         visitor.visit(value, selfRelation, relValue, majorDataObj);
@@ -434,14 +434,14 @@ public abstract class CmsEntityVisit {
             }
         }
     }
-    
+
     /**
      * Handles a single Content relation visit; assumes shouldEnter was already called for the Content relation.
      * NOTE: shouldEnter is not called on the records related to Content entity (we'll never need this).
      * <p>
      * FIXME: this is duplicated in {@link com.ilscipio.scipio.cms.data.importexport.CmsDataExportWorker#getContentAndRelatedValues}; both are in use.
      */
-    public static void acceptContentRelationEntityDepsVisitor(CmsEntityVisitor visitor, 
+    public static void acceptContentRelationEntityDepsVisitor(CmsEntityVisitor visitor,
             GenericValue relValue, VisitRelation contentRelation, CmsMajorObject majorDataObj) throws Exception {
         Delegator delegator = visitor.getVisitContext().getDelegator();
         String contentId = contentRelation.extractRelOneEntitySingleFieldPk(relValue);
@@ -461,11 +461,11 @@ public abstract class CmsEntityVisit {
                     } else if (visitor.getVisitContext().isExportFilesAsTextData()) {
                         try {
                             TemplateBodySource tmplBodySrc = com.ilscipio.scipio.cms.template.CmsTemplate.getTemplateBodySourceFromContent(delegator, contentId, false);
-                            
+
                             dataRes.put("dataResourceTypeId", "ELECTRONIC_TEXT"); // WARN: DO NOT COMMIT THIS VALUE!
                             visitor.visit(dataRes, ContentVisitRelPlan.dataResRelation, relValue, majorDataObj);
-                            
-                            GenericValue elecText = delegator.makeValue("ElectronicText", 
+
+                            GenericValue elecText = delegator.makeValue("ElectronicText",
                                 UtilMisc.toMap("dataResourceId",dataRes.getString("dataResourceId"), "textData",tmplBodySrc.getEffectiveBody()));
                             visitor.visit(elecText, ContentVisitRelPlan.elecTextRelation, relValue, majorDataObj);
                         } catch(Exception e) {
@@ -482,7 +482,7 @@ public abstract class CmsEntityVisit {
             }
         }
     }
-    
+
     /**
      * Visit plan for the Content entities.
      * TODO: not really used properly, hardcoded so we can dig out VisitRelation instances from it.
@@ -498,53 +498,53 @@ public abstract class CmsEntityVisit {
                 .entity("Content")
                     .relationContent("DataResource", false)
                     .self()
-                .entity("DataResource")  
+                .entity("DataResource")
                     .self()
                     .relationContent("ElectronicText", false);
         }
     }
-    
+
     /**
      * Describes the relations for a major entity.
      * Preserves builder call order.
      */
     public static class VisitRelations {
         public static final VisitRelations EMPTY = new VisitRelations(Collections.<String, Map<String, VisitRelation>>emptyMap());
-        
+
         final Map<String, Map<String, VisitRelation>> entityRelMap;
         VisitRelations(Map<String, Map<String, VisitRelation>> entityRelMap) { this.entityRelMap = entityRelMap; }
-        
-        public static Builder newBuilder(Delegator delegator) { 
-            return Builder.newInstance(delegator); 
+
+        public static Builder newBuilder(Delegator delegator) {
+            return Builder.newInstance(delegator);
         }
-        public Builder cloneWithNewBuilder(Delegator delegator) { 
-            return Builder.newInstance(delegator, entityRelMap); 
+        public Builder cloneWithNewBuilder(Delegator delegator) {
+            return Builder.newInstance(delegator, entityRelMap);
         }
-        
+
         public Collection<VisitRelation> getEntityRelations(String entityName) {
             Map<String, VisitRelation> relMap = entityRelMap.get(entityName);
             if (relMap == null) return Collections.emptyList();
             else return relMap.values();
         }
-        
+
         public VisitRelation getEntityRelation(String entityName, String relationName) {
             Map<String, VisitRelation> relMap = entityRelMap.get(entityName);
             if (relMap != null) return relMap.get(relationName);
             return null;
         }
-        
+
         public boolean hasEntityRelation(String entityName, String relationName) {
             return getEntityRelation(entityName, relationName) != null;
         }
-        
+
         public VisitRelation getSelfEntityRelation(String entityName) {
             return getEntityRelation(entityName, VisitRelation.SelfRelation.SELF_REL_TITLE + entityName);
         }
-        
+
         public boolean hasSelfEntityRelation(String entityName) {
             return getSelfEntityRelation(entityName) != null;
         }
-        
+
         /**
          * VisitRelations Builder - helps create and simplify visiting "plans" for the major entities.
          */
@@ -557,21 +557,21 @@ public abstract class CmsEntityVisit {
             boolean entityIsMajor = false;
             ModelEntity modelEntity = null;
             boolean autoContent = true;
-            
+
             Builder(Delegator delegator, Map<String, Map<String, VisitRelation>> entityRelMap) {
                 this.delegator = delegator;
                 this.modelReader = delegator.getModelReader();
                 this.entityInfo = CmsEntityInfo.getInst(delegator);
                 this.entityRelMap = entityRelMap;
             }
-            
-            static Builder newInstance(Delegator delegator) { 
+
+            static Builder newInstance(Delegator delegator) {
                 return new Builder(EntityInfoUtil.ensureDelegator(delegator), new LinkedHashMap<String, Map<String, VisitRelation>>());
             }
             static Builder newInstance(Delegator delegator, Map<String, Map<String, VisitRelation>> entityRelMap) {
-                return new Builder(EntityInfoUtil.ensureDelegator(delegator), deepCopyEntityRelMap(entityRelMap)); 
+                return new Builder(EntityInfoUtil.ensureDelegator(delegator), deepCopyEntityRelMap(entityRelMap));
             }
-            
+
             public static Map<String, Map<String, VisitRelation>> deepCopyEntityRelMap(Map<String, Map<String, VisitRelation>> entityRelMap) {
                 Map<String, Map<String, VisitRelation>> newMap = new LinkedHashMap<>();
                 if (entityRelMap != null) {
@@ -581,15 +581,15 @@ public abstract class CmsEntityVisit {
                 }
                 return newMap;
             }
-            
+
             public static Map<String, VisitRelation> copyRelMap(Map<String, VisitRelation> relMap) {
                 Map<String, VisitRelation> newMap = new LinkedHashMap<>(relMap);
                 return newMap;
             }
-            
-            
+
+
             public Builder setAutoContent(boolean autoContent) { this.autoContent = autoContent; return this; }
-            
+
             public Builder entity(String entityName, boolean entityIsMajor, Boolean autoContent) {
                 // we assume the very first entity is major, the rest not
                 this.entityIsMajor = entityIsMajor;
@@ -602,11 +602,11 @@ public abstract class CmsEntityVisit {
                 }
                 return this;
             }
-            
+
             public Builder entity(String entityName) { return entity(entityName, isFirstEntity(), null); }
-            
+
             public boolean isFirstEntity() { return (entityName == null && entityRelMap.isEmpty()); }
-            
+
             public Builder contentAuto() {
                 List<ModelRelation> relations = entityInfo.getCmsContentModelRelations(modelEntity);
                 for(ModelRelation relation : relations) {
@@ -616,7 +616,7 @@ public abstract class CmsEntityVisit {
                 }
                 return this;
             }
-            
+
             /**
              * Triggers a visit on the current entity (not a real relation).
              */
@@ -624,7 +624,7 @@ public abstract class CmsEntityVisit {
                 if (autoContent) contentAuto();
                 return relation(new VisitRelation.SelfRelation(modelEntity, entityIsMajor));
             }
-            
+
             /**
              * Triggers a record-only visit on the current entity without triggered a write
              * visit; instead of writing, the values are saved in a plan-scoped variable of the
@@ -634,14 +634,14 @@ public abstract class CmsEntityVisit {
                 if (autoContent) contentAuto();
                 return relation(new VisitRelation.SelfRelation(modelEntity, entityIsMajor, varName));
             }
-            
+
             /**
              * Triggers a write-only visit of the stashed value(s) referred to by the given varName.
              */
             public Builder recall(String varName) {
                 return relation(new VisitRelation.RecallRelation(modelEntity, varName));
             }
-            
+
             public Builder relation(String relationName) {
                 return relation(new VisitRelation.GenericRelation(getModelRelation(relationName)));
             }
@@ -658,7 +658,7 @@ public abstract class CmsEntityVisit {
                 getAddRelMap(relation.getEntityName()).put(relation.getRelationName(), relation);
                 return this;
             }
-            
+
             private Map<String, VisitRelation> getAddRelMap(String entityName) {
                 Map<String, VisitRelation> relMap = entityRelMap.get(entityName);
                 if (relMap == null) {
@@ -667,7 +667,7 @@ public abstract class CmsEntityVisit {
                 }
                 return relMap;
             }
-            
+
             private Set<String> findEntityNames(boolean includeMajor, boolean includeContent) {
                 Set<String> entityNames = new HashSet<>(entityRelMap.keySet());
                 for(Map<String, VisitRelation> relations : entityRelMap.values()) {
@@ -683,7 +683,7 @@ public abstract class CmsEntityVisit {
                 }
                 return entityNames;
             }
-            
+
             private Set<String> findGenericEntityNames() {
                 return findEntityNames(false, false);
             }
@@ -713,7 +713,7 @@ public abstract class CmsEntityVisit {
                 }
                 return this;
             }
-            
+
             private VisitRelation makeSelfRelation(String entityName, boolean major) {
                 try {
                     ModelEntity modelEntity = modelReader.getModelEntity(entityName);
@@ -722,7 +722,7 @@ public abstract class CmsEntityVisit {
                     throw new IllegalArgumentException(e);
                 }
             }
-            
+
             public Builder removeRelation(String entityName, String relationName) {
                 Map<String, VisitRelation> relMap = entityRelMap.get(entityName);
                 if (relMap != null) {
@@ -772,27 +772,27 @@ public abstract class CmsEntityVisit {
                 autoGenSelfEntries();
                 return new VisitRelations(entityRelMap);
             }
-            
+
             private ModelRelation getModelRelation(String relationName) {
                 ModelRelation modelRelation = modelEntity.getRelation(relationName);
                 if (modelRelation == null) throw new IllegalArgumentException("No relation with name '" + relationName + "' exists on entity '" + entityName + "'");
                 return modelRelation;
             }
         }
-        
+
         /**
          * Wraps a {@link VisitRelations#Builder} invocations to handle errors.
          */
         public static abstract class BuildPlan {
             private final String majorEntityName;
             private final BuildPlan fallbackPlan; // allows debug and other screens to keep working
-            
+
             public BuildPlan(String majorEntityName, BuildPlan fallbackPlan) { this.majorEntityName = majorEntityName; this.fallbackPlan = fallbackPlan; }
             public BuildPlan(String majorEntityName) { this(majorEntityName, new SelfOnlyBuildPlan(majorEntityName)); }
 
             public String getMajorEntityName() { return majorEntityName; }
             public BuildPlan getFallbackPlan() { return fallbackPlan; }
-            
+
             public final VisitRelations buildSafe() { return buildSafe(null); }
             public final VisitRelations buildSafe(Delegator delegator) {
                 VisitRelations visitRelations;
@@ -826,7 +826,7 @@ public abstract class CmsEntityVisit {
 
             @Override
             public String toString() { return "[(BuildPlan) major entity: " + getMajorEntityName() + "]"; }
-            
+
             public static class SelfOnlyBuildPlan extends BuildPlan {
                 public SelfOnlyBuildPlan(String majorEntityName) { super(majorEntityName, null); }
                 @Override
@@ -840,7 +840,7 @@ public abstract class CmsEntityVisit {
             }
         }
     }
-    
+
     /**
      * Visit relation entry, belonging to an entity. Part of {@link VisitRelations} structure.
      * NOTE: this has evolved and some subclasses are not really relations at all, though most are.
@@ -857,14 +857,14 @@ public abstract class CmsEntityVisit {
          * is the recall variable name followed by the entity name.
          */
         public static final String RECALL_REL_TITLE_PREFIX = "RECALL_";
-        
+
         protected final ModelRelation modelRelation;
         protected final String entityName;
         protected final String relationName;
         protected final DataRelType dataRelType;
         protected final Map<String, Object> andFields;
         protected final List<String> orderBy;
-        
+
         /**
          * Data relation type, superset of the ofbiz entity relation types.
          */
@@ -874,7 +874,7 @@ public abstract class CmsEntityVisit {
             ONE("one"),
             ONE_NOFK("one-nofk"),
             MANY("many");
-            
+
             private static final Map<String, DataRelType> typeStrMap;
             static {
                 Map<String, DataRelType> map = new HashMap<>();
@@ -883,7 +883,7 @@ public abstract class CmsEntityVisit {
                 }
                 typeStrMap = map;
             }
-            
+
             private final String typeStr;
 
             private DataRelType(String typeStr) {
@@ -896,18 +896,18 @@ public abstract class CmsEntityVisit {
             public boolean isOneAny() { return this == ONE || this == ONE_NOFK; }
             public boolean isMany() { return this == MANY; }
             public boolean isRecall() { return this == RECALL; }
-            
+
             public static DataRelType fromTypeStr(String typeStr) {
                 return typeStrMap.get(typeStr);
             }
-            
+
             public static DataRelType fromTypeStrAlways(String typeStr) throws IllegalArgumentException {
                 DataRelType type = typeStrMap.get(typeStr);
                 if (type == null) throw new IllegalArgumentException("Invalid or missing entity relation type: " + typeStr);
                 return type;
             }
         }
-        
+
         protected VisitRelation(ModelRelation modelRelation, String entityName, String relationName, DataRelType type,
                 Map<String, Object> andFields, List<String> orderBy) {
             this.entityName = entityName;
@@ -917,28 +917,28 @@ public abstract class CmsEntityVisit {
             this.andFields = andFields;
             this.orderBy = orderBy;
         }
-        
+
         protected VisitRelation() {
             this(null, null, null, null, null, null);
         }
-        
+
         protected VisitRelation(ModelRelation modelRelation, Map<String, Object> andFields, List<String> orderBy) {
-            this(modelRelation, modelRelation.getModelEntity().getEntityName(), 
+            this(modelRelation, modelRelation.getModelEntity().getEntityName(),
                     modelRelation.getCombinedName(), DataRelType.fromTypeStrAlways(modelRelation.getType()), andFields, orderBy);
         }
-        
+
         protected VisitRelation(ModelRelation modelRelation) {
             this(modelRelation, null, null);
         }
-        
+
         public String getEntityName() { return entityName; }
         public String getRelationName() { return relationName; }
-        public String getRelEntityName() { return modelRelation.getRelEntityName(); }        
+        public String getRelEntityName() { return modelRelation.getRelEntityName(); }
         public ModelRelation getModelRelation() { return modelRelation; }
         public DataRelType getDataRelType() { return dataRelType; }
         public Map<String, Object> getAndFields() { return andFields; }
-        public List<String> getOrderBy() { return orderBy; }   
-        
+        public List<String> getOrderBy() { return orderBy; }
+
         public boolean isSelf() { return false; }
         public boolean isMajor() { return false; }
         /**
@@ -954,7 +954,7 @@ public abstract class CmsEntityVisit {
         public boolean isStash() { return false; }
         public String getStashKey() { return null; }
         public boolean isRecall() { return false; }
-        
+
         public String getRelationPkSingleFieldName() { return modelRelation.getKeyMaps().get(0).getFieldName(); }
 
         public String extractRelOneEntitySingleFieldPk(GenericValue relValue) {
@@ -964,23 +964,23 @@ public abstract class CmsEntityVisit {
             }
             return relValue.getString(getRelationPkSingleFieldName());
         }
-        
-        @Override 
+
+        @Override
         public String toString() {
-            return "[(VisitRelation) entityName: " + getEntityName() 
-                + ", relationName: " + getRelationName() 
+            return "[(VisitRelation) entityName: " + getEntityName()
+                + ", relationName: " + getRelationName()
                 + ", dataRelType: " + getDataRelType().getTypeStr()
                 + ", major: " + isMajor()
                 + ", content: " + isContent()
                 + "]";
         }
-        
+
         // NOTE: this class hierarchy might be removed later, don't count on it being here...
-        
+
         static class GenericRelation extends VisitRelation {
             public GenericRelation(ModelRelation modelRelation) { super(modelRelation); }
         }
-        
+
         static class SelfRelation extends VisitRelation {
             protected final boolean major;
             protected final String stashVarName;
@@ -990,7 +990,7 @@ public abstract class CmsEntityVisit {
                 this.stashVarName = stashVarName;
             }
             public SelfRelation(ModelEntity modelEntity, boolean major) { this(modelEntity, major, null); }
-            
+
             @Override public boolean isSelf() { return true; }
             @Override public boolean isMajor() { return major; }
             @Override public String getRelEntityName() { return entityName; }
@@ -999,16 +999,16 @@ public abstract class CmsEntityVisit {
         }
         static ModelRelation createSelfModelRelation(ModelEntity modelEntity) {
             // WARN: type str not recognized by ofbiz classes
-            return ModelRelation.create(modelEntity, "Scipio special self-ref entity for entity visit", DataRelType.SELF.getTypeStr(), SELF_REL_TITLE, 
+            return ModelRelation.create(modelEntity, "Scipio special self-ref entity for entity visit", DataRelType.SELF.getTypeStr(), SELF_REL_TITLE,
                     modelEntity.getEntityName(), null, null, true);
         }
-        
+
         static class RecallRelation extends VisitRelation {
             protected final String varName;
-            public RecallRelation(ModelEntity modelEntity, String varName) { 
-                super(createSelfModelRelation(modelEntity), modelEntity.getEntityName(), 
+            public RecallRelation(ModelEntity modelEntity, String varName) {
+                super(createSelfModelRelation(modelEntity), modelEntity.getEntityName(),
                         makeRecallRelTitle(varName) + modelEntity.getEntityName(), DataRelType.RECALL, null, null);
-                this.varName = varName; 
+                this.varName = varName;
             }
             @Override public boolean isRecall() { return true; }
             @Override public String getStashKey() { return varName; }
@@ -1016,10 +1016,10 @@ public abstract class CmsEntityVisit {
         static String makeRecallRelTitle(String varName) { return RECALL_REL_TITLE_PREFIX + varName + "_"; }
         static ModelRelation createRecallModelRelation(ModelEntity modelEntity, String varName) {
             // WARN: type str not recognized by ofbiz classes
-            return ModelRelation.create(modelEntity, "Scipio special recall-ref entity for entity visit", DataRelType.RECALL.getTypeStr(), makeRecallRelTitle(varName), 
+            return ModelRelation.create(modelEntity, "Scipio special recall-ref entity for entity visit", DataRelType.RECALL.getTypeStr(), makeRecallRelTitle(varName),
                     modelEntity.getEntityName(), null, null, true);
         }
-        
+
         static class MajorRelation extends VisitRelation {
             protected final boolean filterAsMajor;
             public MajorRelation(ModelRelation modelRelation, boolean majorFilter) { super(modelRelation); this.filterAsMajor = majorFilter; }
@@ -1027,7 +1027,7 @@ public abstract class CmsEntityVisit {
             @Override public boolean isMajor() { return true; }
             @Override public boolean isFilterAsMajor() { return filterAsMajor; }
         }
-        
+
         static class ContentRelation extends VisitRelation {
             protected final boolean primary;
             public ContentRelation(ModelRelation modelRelation, boolean primary) { super(modelRelation); this.primary = primary;}
@@ -1035,7 +1035,7 @@ public abstract class CmsEntityVisit {
             @Override public boolean isContentPrimary() { return primary; }
         }
     }
-    
+
 
     @SuppressWarnings("serial")
     public static class VisitException extends CmsException {

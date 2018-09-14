@@ -29,14 +29,14 @@ import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
  *
  */
 public abstract class CmsPageTemplateServices {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final ServiceErrorFormatter errorFmt = 
+    private static final ServiceErrorFormatter errorFmt =
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Page Template Error").build();
 
     protected CmsPageTemplateServices() {
     }
-    
+
     /**
      * Creates a new template in the repository.
      */
@@ -48,7 +48,7 @@ public abstract class CmsPageTemplateServices {
             GenericValue userLogin = CmsServiceUtil.getUserLoginOrSystem(dctx, context);
 
             // Create empty template
-            Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreatePageTemplate", 
+            Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreatePageTemplate",
                     UtilGenerics.<String, Object> checkMap(context), userLogin, null, null);
             CmsPageTemplate pageTmp = new CmsPageTemplate(delegator, fields);
             pageTmp.store();
@@ -61,7 +61,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> copyPageTemplate(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> copyArgs = new HashMap<>();
@@ -74,9 +74,9 @@ public abstract class CmsPageTemplateServices {
             String srcPageTemplateId = (String) context.get("srcPageTemplateId");
             CmsPageTemplate srcPageTemplate = CmsPageTemplate.getWorker().findByIdAlways(delegator, srcPageTemplateId, false);
             CmsPageTemplate pageTemplate = srcPageTemplate.copy(copyArgs);
-            
+
             pageTemplate.update(UtilMisc.toHashMapWithKeys(context, "templateName", "description"));
-            
+
             // NOTE: store() now updates the version automatically using pageTemplate.lastVersion
             pageTemplate.store();
             Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -88,14 +88,14 @@ public abstract class CmsPageTemplateServices {
             return err.returnError();
         }
     }
-    
+
     /**
      * Updates basic page template info.
      */
     public static Map<String, Object> updatePageTemplateInfo(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
-        
+
         try {
             String pageTemplateId = (String) context.get("pageTemplateId");
             CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
@@ -108,7 +108,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Gets a page template.
      */
@@ -117,10 +117,10 @@ public abstract class CmsPageTemplateServices {
         Delegator delegator = dctx.getDelegator();
         try {
             String pageTemplateId = (String) context.get("pageTemplateId");
-            
+
             // TODO: Replace with a call that doesn't involve throwing exceptions if not found
             Map<String, Object> pageTemplate = CmsPageTemplate.getTemplateAsMap(delegator, pageTemplateId);
-            
+
             if (UtilValidate.isNotEmpty(pageTemplate)) {
                 result.put("pageTemplate", pageTemplate);
             } else {
@@ -141,7 +141,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Gets a page template version.
      */
@@ -152,9 +152,9 @@ public abstract class CmsPageTemplateServices {
             String pageTemplateId = (String) context.get("pageTemplateId");
             String versionId = (String) context.get("versionId");
             boolean minimalInfoOnly = UtilMisc.booleanValueIndicator((String) context.get("minimalInfoOnly"), false);
-            
+
             CmsPageTemplateVersion tmpVer = CmsPageTemplate.getVerComTemplateWorker().findSpecificTemplateVersion(delegator, pageTemplateId, versionId);
-            
+
             if (tmpVer != null) {
                 Map<String, Object> version = new HashMap<>();
                 tmpVer.putIntoMap(version, minimalInfoOnly, null);
@@ -170,7 +170,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Gets all page template versions. Currently returns in the order in which created.
      */
@@ -179,30 +179,30 @@ public abstract class CmsPageTemplateServices {
         Delegator delegator = dctx.getDelegator();
         try {
             List<Map<String, Object>> allVersionsList = new ArrayList<>();
-            
+
             String pageTemplateId = (String) context.get("pageTemplateId");
             boolean minimalInfoOnly = UtilMisc.booleanValueIndicator((String) context.get("minimalInfoOnly"), false);
-            
+
             CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
-            
+
             List<CmsPageTemplateVersion> versions = pageTmp.getAllVersions();
-            
+
             if (UtilValidate.isNotEmpty(versions)) {
                 CmsPageTemplateVersion.ExtendedInfo knownInfo = new CmsPageTemplateVersion.ExtendedInfo();
-                
+
                 // Optimization for loop (TODO: Move this to an abstracted iterator or other later)
                 knownInfo.setActiveVersion(pageTmp.getActiveVersion());
                 knownInfo.setLastVersion(versions.get(0));
                 knownInfo.setFirstVersion(versions.get(versions.size() - 1));
-                
+
                 for(CmsPageTemplateVersion version : versions) {
                     Map<String, Object> versionMap = new HashMap<>();
                     version.putIntoMap(versionMap, minimalInfoOnly, knownInfo);
                     allVersionsList.add(versionMap);
                 }
             }
-            
-            result.put("versions", allVersionsList);   
+
+            result.put("versions", allVersionsList);
         } catch(Exception e) {
             FormattedError err = errorFmt.format(e, context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
@@ -210,7 +210,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Returns a map of a page template and all its versions, as well as extra helpful fields.
      */
@@ -220,13 +220,13 @@ public abstract class CmsPageTemplateServices {
         Locale locale = (Locale) context.get("locale");
         try {
             String pageTemplateId = (String) context.get("pageTemplateId");
-            
+
             // The current template is almost a display-related concern, but is optional
             String currentVersionId = (String) context.get("currentVersionId");
             String useMarkedAsCurrent = (String) context.get("useMarkedAsCurrent");
-            
+
             Map<String, Object> pageTmpAndVersions = new HashMap<>();
-            
+
             CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
             CmsPageTemplateVersion version = null;
             CmsPageTemplate currPageTmp = pageTmp;
@@ -236,48 +236,48 @@ public abstract class CmsPageTemplateServices {
             } else {
                 version = currPageTmp.getActiveVersion();
             }
-            
+
             // FIXME: shouldn't be using entity values like this
             pageTmpAndVersions.putAll(currPageTmp.getEntity());
             // FIXME: shouldn't have to do this
             pageTmpAndVersions.put("description", currPageTmp.getDescription(locale));
-            
+
             TemplateBodySource tmplBodySrc = (version != null) ? version.getTemplateBodySource() : TemplateBodySource.getUndefined();
             tmplBodySrc.toFields(pageTmpAndVersions);
-                
+
             // note the version we just looked up
             pageTmpAndVersions.put("versionId", (version != null) ? version.getId() : null);
-            
+
             // Add asset assocs
             pageTmpAndVersions.put("assetTemplates", pageTmp.getSortedAssetTemplates());
-            
+
             // Add attributes assocs
             pageTmpAndVersions.put("attrTemplates", pageTmp.getLocallySortedAttributeTemplates());
-            
+
             // add script assocs
             pageTmpAndVersions.put("scriptTemplates", pageTmp.getSortedScriptTemplates());
-            
+
             CmsPageTemplateVersion currVer = null;
 
             if (UtilValidate.isNotEmpty(currentVersionId)) {
                 currVer = CmsPageTemplate.getVerComTemplateWorker().findSpecificTemplateVersion(delegator, pageTmp, currentVersionId);
-                
+
                 if (currVer == null) {
-                    final String errMsg = "Could not find specified current page template version ('" + 
+                    final String errMsg = "Could not find specified current page template version ('" +
                     currentVersionId + "') for specified page template ('" + pageTemplateId + "'); not ";
-                    Debug.logWarning(errMsg, module); // (Don't localize in this call)        
+                    Debug.logWarning(errMsg, module); // (Don't localize in this call)
                     // Don't fail - permit this since the 'current' version marking is provided only as convenience.
                     //result = ServiceUtil.returnFailure(errMsg); // TODO: Localize
                 }
             }
-            
+
             Map<String, Object> pageTmpVersions = new HashMap<>();
             List<Map<String, Object>> allVersions = new ArrayList<>();
-            
+
             CmsPageTemplateVersion.ExtendedInfo knownInfo = new CmsPageTemplateVersion.ExtendedInfo();
-            
+
             knownInfo.setActiveVersion(pageTmp.getActiveVersion());
-            
+
             List<CmsPageTemplateVersion> vers = pageTmp.getAllVersions();
             if (UtilValidate.isNotEmpty(vers)) {
                 knownInfo.setLastVersion(vers.get(0));
@@ -286,17 +286,17 @@ public abstract class CmsPageTemplateServices {
                 for(CmsPageTemplateVersion ver : vers) {
                     Map<String, Object> versionMap = new HashMap<>();
                     ver.putIntoMap(versionMap, false, knownInfo);
-                    
+
                     // Must do this one manually; not done by CmsPageTemplateVersion (because not relevant to it)
                     versionMap.put("isCurrent", ver.isSameVersion(currVer));
-                    
+
                     if (UtilValidate.isNotEmpty(useMarkedAsCurrent) && currVer == null) {
-                        // Override current 
+                        // Override current
                         if (isVersionBoolSet(versionMap, useMarkedAsCurrent)) {
                             versionMap.put("isCurrent", true);
                         }
                     }
-                    
+
                     checkVersionBoolPropertyAndRecord(versionMap, "isCurrent", pageTmpVersions, "current");
                     checkVersionBoolPropertyAndRecord(versionMap, "isActive", pageTmpVersions, "active");
                     checkVersionBoolPropertyAndRecord(versionMap, "isLast", pageTmpVersions, "last");
@@ -305,10 +305,10 @@ public abstract class CmsPageTemplateServices {
                     allVersions.add(versionMap);
                 }
             }
-            
+
             pageTmpVersions.put("all", allVersions);
             pageTmpAndVersions.put("pageTmpVersions", pageTmpVersions);
-            result.put("pageTmpAndVersions", pageTmpAndVersions); 
+            result.put("pageTmpAndVersions", pageTmpAndVersions);
         } catch(Exception e) {
             FormattedError err = errorFmt.format(e, context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
@@ -321,14 +321,14 @@ public abstract class CmsPageTemplateServices {
         Boolean val = (Boolean) version.get(propName);
         return (val != null && val == true);
     }
-    
-    private static void checkVersionBoolPropertyAndRecord(Map<String, Object> version, String propName, 
+
+    private static void checkVersionBoolPropertyAndRecord(Map<String, Object> version, String propName,
             Map<String, Object> resultMap, String resultKey) {
         if (isVersionBoolSet(version, propName)) {
             resultMap.put(resultKey, version);
         }
     }
-    
+
     /**
      * Gets all available page templates. Currently returns in the order in which created.
      */
@@ -342,7 +342,7 @@ public abstract class CmsPageTemplateServices {
             } else {
                 allTemplatesList = delegator.findAll("CmsPageTemplate", false);
             }
-            result.put("pageTemplates", allTemplatesList);   
+            result.put("pageTemplates", allTemplatesList);
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
@@ -350,7 +350,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Creates a new page template version in the repository.
      */
@@ -364,9 +364,9 @@ public abstract class CmsPageTemplateServices {
             String templateBody = (String) context.get("templateBody");
             String templateLocation = (String) context.get("templateLocation");
             String templateSource = (String) context.get("templateSource");
-            
+
             CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
-            
+
             Map<String, Object> versionFields = new HashMap<>();
             versionFields.put("pageTemplateId", pageTemplateId);
             versionFields.put("createdBy", partyId);
@@ -374,11 +374,11 @@ public abstract class CmsPageTemplateServices {
             versionFields.put("templateBody", templateBody);
             versionFields.put("templateLocation", templateLocation);
             versionFields.put("templateSource", templateSource);
-            
+
             CmsPageTemplateVersion tmpVer = pageTmp.createNewVersion(versionFields);
-            
+
             tmpVer.store();
-            
+
             result.put("versionId", tmpVer.getId());
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, context);
@@ -387,7 +387,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Sets a page template version as live version. The live version is the content that
      * will be displayed to regular page visitors.
@@ -396,16 +396,16 @@ public abstract class CmsPageTemplateServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
             Delegator delegator = dctx.getDelegator();
-            
+
             String pageTemplateId = (String) context.get("pageTemplateId");
             String versionId = (String) context.get("versionId");
-            
-            CmsPageTemplateVersion version = CmsPageTemplate.getVerComTemplateWorker().findSpecificTemplateVersion(delegator, 
+
+            CmsPageTemplateVersion version = CmsPageTemplate.getVerComTemplateWorker().findSpecificTemplateVersion(delegator,
                     pageTemplateId, versionId);
             if (version != null) {
                 version.setAsActiveVersion();
                 version.store();
-                
+
                 result.put("pageTemplateId", pageTemplateId);
                 result.put("versionId", version.getVersionId());
             } else {
@@ -435,7 +435,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     public static Map<String, Object> deletePageTemplate(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -450,7 +450,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Adds an available asset to a page template.
      */
@@ -469,7 +469,7 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
     /**
      * Creates or updates an attribute for a given template (page or asset).
      */
@@ -497,5 +497,5 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
-    
+
 }

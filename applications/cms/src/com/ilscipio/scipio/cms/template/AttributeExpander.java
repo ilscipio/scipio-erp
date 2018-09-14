@@ -39,11 +39,11 @@ import freemarker.template.TemplateException;
 public abstract class AttributeExpander {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final List<String> javaShortTypeList = Collections.unmodifiableList(Arrays.asList(new String[] {
             "String", "BigDecimal", "Double", "Float", "Long", "Integer", "Date", "Time", "Timestamp", "Boolean", "Object"
     }));
-    
+
     private static final List<String> javaTypeExampleList;
     static {
         ArrayList<String> all = new ArrayList<>(javaShortTypeList);
@@ -51,11 +51,11 @@ public abstract class AttributeExpander {
         all.trimToSize();
         javaTypeExampleList = Collections.unmodifiableList(all);
     }
-    
+
     /* ***************************************************************** */
     /* Enums */
     /* ***************************************************************** */
-    
+
     private static final AttributeExpander noneExpander = new NoneAttributeExpander();
     private static final Map<ExpandLang, AttributeExpander> langExpanders;
     static {
@@ -66,17 +66,17 @@ public abstract class AttributeExpander {
         map.put(ExpandLang.FTL, new FtlAttributeExpander());
         langExpanders = map;
     }
-    
+
     public enum ExpandLang {
         NONE(null, null),
         // NOTE: FTL is a special case; it could also have been implemented with CmsAttributeTemplate.Type, but this is more flexible?
-        FTL("CmsExpandLang.description.FTL", "${map1.field1!}, [#assign.../], [@pageUrl id='x'.../], ..."), 
+        FTL("CmsExpandLang.description.FTL", "${map1.field1!}, [#assign.../], [@pageUrl id='x'.../], ..."),
         FLEXIBLE("CmsExpandLang.description.FLEXIBLE", "${map1.field1}, ${groovy: [expr]}, ..."),
         SIMPLE("CmsExpandLang.description.SIMPLE", "{{map1.field1}}");
-        
-        private static final ExpandLang defaultExpandLang = ExpandLang.fromStringSafe(UtilProperties.getPropertyValue("cms", 
+
+        private static final ExpandLang defaultExpandLang = ExpandLang.fromStringSafe(UtilProperties.getPropertyValue("cms",
                 "render.attributes.expandLang.default"), ExpandLang.NONE);
-        
+
         private final String descriptionProperty;
         private final String codeHintDesc;
 
@@ -92,11 +92,11 @@ public abstract class AttributeExpander {
         public String getCodeHintDesc() {
             return codeHintDesc;
         }
-        
+
         public String getDescription(Locale locale) {
             return descriptionProperty != null ? UtilProperties.getMessage("CMSUiLabels", descriptionProperty, locale) : null;
         }
-        
+
         public String getDescription(Locale locale, String prefix) {
             return descriptionProperty != null ? prefix + getDescription(locale) : null;
         }
@@ -104,11 +104,11 @@ public abstract class AttributeExpander {
         public String getDescription() {
             return descriptionProperty != null ? UtilProperties.getMessage("CMSUiLabels", descriptionProperty, Locale.ENGLISH) : null;
         }
-        
+
         public String getDescriptionWithExample(Locale locale) {
             return descriptionProperty != null ? getDescription(locale) + " ( " + getCodeHintDesc() + " )" : null;
         }
-        
+
         public String getDescriptionWithExample(Locale locale, String prefix) {
             return descriptionProperty != null ? prefix + getDescriptionWithExample(locale) : null;
         }
@@ -117,29 +117,29 @@ public abstract class AttributeExpander {
             if (UtilValidate.isEmpty(str)) return defaultLang;
             return Enum.valueOf(ExpandLang.class, str);
         }
-        
+
         public static ExpandLang fromString(String str) throws IllegalArgumentException {
             return fromString(str, null);
         }
-        
+
         public static ExpandLang fromStringSafe(String str, ExpandLang defaultLang) {
             try {
                 return fromString(str, defaultLang);
             } catch(Exception e) {
-                Debug.logWarning("Cms: Invalid attribute expansion language (expandLang) value encountered: '" + str 
+                Debug.logWarning("Cms: Invalid attribute expansion language (expandLang) value encountered: '" + str
                         + "'; using default instead: '" + defaultLang + "'", AttributeExpander.module);
             }
             return defaultLang;
         }
-        
+
         public static ExpandLang fromStringSafe(String str) {
             return fromStringSafe(str, null);
         }
-        
+
         public static ExpandLang getDefaultExpandLang() {
             return defaultExpandLang;
         }
-        
+
         public static List<ExpandLang> getDisplayValues() {
             return Arrays.asList(ExpandLang.values());
         }
@@ -148,11 +148,11 @@ public abstract class AttributeExpander {
     /* ***************************************************************** */
     /* Construction */
     /* ***************************************************************** */
-    
+
     protected AttributeExpander() {
         //this.typeParsers = getBaseTypeParsers();
     }
-    
+
     /**
      * Base/common type parser implementation, which subclasses may override, but may
      * also omit completely (not forced by base abstract class).
@@ -168,7 +168,7 @@ public abstract class AttributeExpander {
                 //Type.DYNAMIC_LIST
                 );
     }
-    
+
     protected Map<Type, TypeParser> makeBaseDerivedTypeParserMap(Object... entries) {
         return makeTypeParserMapFromExisting(getBaseTypeParsers(), entries);
     }
@@ -180,7 +180,7 @@ public abstract class AttributeExpander {
         }
         return map;
     }
-    
+
     protected static Map<Type, TypeParser> makeTypeParserMap(Object... entries) {
         Map<Type, TypeParser> map = new EnumMap<Type, TypeParser>(Type.class);
         for(int i = 0; i < entries.length; i=i+2) {
@@ -188,15 +188,15 @@ public abstract class AttributeExpander {
         }
         return map;
     }
-    
+
     /* ***************************************************************** */
     /* Factory Methods */
     /* ***************************************************************** */
-    
+
     public static AttributeExpander getExpander(ExpandLang lang) {
         return langExpanders.get(lang);
     }
-    
+
     /**
      * Returns expander that does not do string interpolations, but
      * may still be used to interpret type coercions in generalized way.
@@ -208,28 +208,28 @@ public abstract class AttributeExpander {
     /* ***************************************************************** */
     /* Getters/Helpers */
     /* ***************************************************************** */
-    
+
     public abstract ExpandLang getExpandLang();
-    
+
     protected abstract Map<Type, TypeParser> getTypeParsers();
-    
+
     /* ***************************************************************** */
     /* Attribute Expander Main Processing Methods */
     /* ***************************************************************** */
-    
+
     /**
      * Returns a special generic string parser, if any.
      */
     protected abstract TypeParser getStringParser();
-    
+
     public TypeParser getParser(Type type) {
         return getTypeParsers().get(type);
     }
-    
+
     public TypeParser getParserAlways(Type type) throws IllegalArgumentException {
         TypeParser parser = getParser(type);
         if (parser == null) {
-            throw new IllegalArgumentException("CMS attribute type '" 
+            throw new IllegalArgumentException("CMS attribute type '"
                     + type + "' unsupported by string expansion language '" + getExpandLang() + "'");
         }
         return parser;
@@ -238,7 +238,7 @@ public abstract class AttributeExpander {
     public Object parse(Type type, String strValue, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
         return getParserAlways(type).parse(strValue, attrTmpl, sourceContext, pageContext);
     }
-    
+
     /* ***************************************************************** */
     /* Type Parsers */
     /* ***************************************************************** */
@@ -249,25 +249,25 @@ public abstract class AttributeExpander {
          * If it already parsed or doesn't need parsing, returns as-is or however fits best.
          * Throws exception if invalid.
          * <p>
-         * NOTE: does not do default value handling or other such extras 
+         * NOTE: does not do default value handling or other such extras
          * (CmsAttributeTemplate not passed, intentionally).
          */
         public Object validateParse(Object value, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext);
-        
+
         /**
          * (Always) Parses string representation of a {@link CmsAttributeTemplate.Type} value.
          * <p>
          * NOTE: the CmsAttributeTemplate instance should only be needed in special cases here.
          */
         public Object parse(String strValue, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext);
-        
+
         /**
          * Returns true if the value is already considered parsed and ready for the target
          * type (no processing required).
          */
         public boolean isParseNotRequired(Object value);
     }
-    
+
     protected abstract class AbstractTypeParser implements TypeParser {
         @Override
         public Object validateParse(Object value, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
@@ -278,11 +278,11 @@ public abstract class AttributeExpander {
             } else if (value instanceof String) {
                 return parse((String) value, attrTmpl, sourceContext, pageContext);
             } else {
-                throw new IllegalArgumentException("Cms Attribute expected String type for parsing or " 
+                throw new IllegalArgumentException("Cms Attribute expected String type for parsing or "
                         + getReqTypesStr() + " for parsing or bypass, but found unsupported type: " + value.getClass());
             }
         }
-        
+
         protected abstract String getReqTypesStr();
     }
 
@@ -291,16 +291,16 @@ public abstract class AttributeExpander {
      */
     protected class UnsupportedTypeParser extends AbstractTypeParser {
         private final Type type;
-        
+
         public UnsupportedTypeParser(Type type) {
             super();
             this.type = type;
         }
-        
+
         public Type getType() { return type; }
-        
+
         private RuntimeException getUnsupported() {
-            return new UnsupportedOperationException("CMS attribute type '" 
+            return new UnsupportedOperationException("CMS attribute type '"
                     + getType() + "' unsupported by string expansion language '" + getExpandLang() + "'");
         }
         @Override
@@ -316,7 +316,7 @@ public abstract class AttributeExpander {
             return "";
         }
     }
-    
+
     /**
      * NOTE: StringParser is a "virtual" type; no entry for it in CmsAttributeTemplate.Type.
      */
@@ -330,7 +330,7 @@ public abstract class AttributeExpander {
             return "RawScript";
         }
     }
-    
+
     protected static String makeStringResult(String res) {
         // 2017-03-17: FIXME?: if empty, return null, so that freemarker default operator is usable...
         // but this means there is no support for empty string value. this is a problem with the UI/json code...
@@ -340,13 +340,13 @@ public abstract class AttributeExpander {
             return null;
         }
     }
-    
+
     protected abstract class ShortTextParser extends StringParser {
     }
-    
+
     protected abstract class LongTextParser extends StringParser {
     }
-    
+
     protected abstract class BooleanParser extends AbstractTypeParser {
         @Override
         public boolean isParseNotRequired(Object value) {
@@ -357,7 +357,7 @@ public abstract class AttributeExpander {
             return "Boolean";
         }
     }
-    
+
     protected abstract class IntegerParser extends AbstractTypeParser {
         @Override
         public boolean isParseNotRequired(Object value) {
@@ -368,7 +368,7 @@ public abstract class AttributeExpander {
             return "Integer";
         }
     }
-    
+
     protected abstract class ComplexListParser extends AbstractTypeParser {
         @Override
         public boolean isParseNotRequired(Object value) {
@@ -379,7 +379,7 @@ public abstract class AttributeExpander {
             return "List";
         }
     }
-    
+
     protected abstract class ComplexMapParser extends AbstractTypeParser {
         @Override
         public boolean isParseNotRequired(Object value) {
@@ -405,13 +405,13 @@ public abstract class AttributeExpander {
             return getStringParser().parse(strValue, attrTmpl, sourceContext, pageContext);
         }
     }
- 
+
     protected class BaseBooleanParser extends BooleanParser {
         @Override
         public Boolean parse(String strValue, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
             // parse as string, and then coerce result to Boolean
             Object str = getParser(Type.SHORT_TEXT).parse(strValue, attrTmpl, sourceContext, pageContext);
-            
+
             if ("true".equals(str)) {
                 return Boolean.TRUE;
             } else if ("false".equals(str)) {
@@ -423,7 +423,7 @@ public abstract class AttributeExpander {
             }
         }
     }
-    
+
     protected class BaseIntegerParser extends IntegerParser {
         @Override
         public Integer parse(String strValue, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
@@ -446,7 +446,7 @@ public abstract class AttributeExpander {
             }
         }
     }
-    
+
     protected class BaseComplexListParser extends ComplexListParser {
         @Override
         public List<?> parse(String strValue, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
@@ -454,7 +454,7 @@ public abstract class AttributeExpander {
             return null;
         }
     }
-    
+
     protected class BaseComplexMapParser extends ComplexMapParser {
         @Override
         public Map<?, ?> parse(String strValue, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
@@ -466,17 +466,17 @@ public abstract class AttributeExpander {
     /* ***************************************************************** */
     /* Attribute Expanders (groups of parsers) */
     /* ***************************************************************** */
-    
+
     protected static class NoneAttributeExpander extends AttributeExpander {
         // DEV NOTE: each class gets a copy of these due to java inner class kludge
         protected final Map<Type, TypeParser> typeParsers;
         protected final TypeParser stringParser; // special
-        
+
         protected NoneAttributeExpander() {
             this.typeParsers = makeBaseDerivedTypeParserMap();
             this.stringParser = new NoneStringParser();
         }
-        
+
         protected class NoneStringParser extends StringParser {
             @Override
             public String parse(String strValue, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
@@ -491,7 +491,7 @@ public abstract class AttributeExpander {
         @Override
         public ExpandLang getExpandLang() { return ExpandLang.NONE; }
     }
-    
+
     /**
      * Expands strings using <code>{{map1.field1}}</code> syntax - legacy CMS language.
      * <p>
@@ -501,17 +501,17 @@ public abstract class AttributeExpander {
      * <code>{{aMap.keyRefenrencingAnotherMap.keyReferencingAString}}</code>
      */
     protected static class SimpleAttributeExpander extends AttributeExpander {
-            
+
         private static final Pattern variablePattern = Pattern.compile("\\{\\{([\\w\\.]+)\\}\\}");
-        
+
         protected final Map<Type, TypeParser> typeParsers;
         protected final TypeParser stringParser; // special
-        
+
         protected SimpleAttributeExpander() {
             this.typeParsers = makeBaseDerivedTypeParserMap();
             this.stringParser = new SimpleStringParser();
         }
-        
+
         protected class SimpleStringParser extends StringParser {
             @Override
             public String parse(String strValue, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
@@ -580,15 +580,15 @@ public abstract class AttributeExpander {
      * Expands strings using <code>${map1.field1}</code> syntax - using standard ofbiz FlexibleStringExpander.
      */
     protected static class FlexibleAttributeExpander extends AttributeExpander {
-        
+
         protected final Map<Type, TypeParser> typeParsers;
         protected final TypeParser stringParser; // special
-        
+
         protected FlexibleAttributeExpander() {
             this.typeParsers = makeBaseDerivedTypeParserMap();
             this.stringParser = new FlexibleStringParser();
         }
-        
+
         protected class FlexibleStringParser extends StringParser {
             @Override
             public String parse(String strValue, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
@@ -604,31 +604,31 @@ public abstract class AttributeExpander {
         @Override
         public ExpandLang getExpandLang() { return ExpandLang.FLEXIBLE; }
     }
-    
+
     /**
      * COMPILES strings as special Freemarker TemplateModel wrapping an actual Template,
      * but without evaluating them (must be left to moment of rendering).
      */
     protected static class FtlAttributeExpander extends AttributeExpander {
-        
+
         // NOTE: we currently don't get this involved in the ftl Configuration instance - no need?
         private static final boolean bracketSyntaxEnabled = UtilProperties.getPropertyAsBoolean("cms",
                 "render.attributes.expandLang.ftl.bracketSyntax", Boolean.TRUE);
-        
+
         protected final Map<Type, TypeParser> typeParsers;
         protected final TypeParser stringParser; // special
-        
+
         protected FtlAttributeExpander() {
             this.typeParsers = makeBaseDerivedTypeParserMap(
                     Type.BOOLEAN, new UnsupportedTypeParser(Type.BOOLEAN)
                     );
             this.stringParser = new FtlStringParser();
         }
-        
+
         public boolean isBracketSyntaxEnabled() {
             return bracketSyntaxEnabled;
         }
-        
+
         /**
          * trims and ensures bracket syntax is enabled using inline directive if appropriate.
          */
@@ -647,7 +647,7 @@ public abstract class AttributeExpander {
             }
             return tmplStr;
         }
-        
+
         /**
          * caller must have done a trim().
          * NOTE: we don't mess with Configuration for bracket, would just complicate needlessly.
@@ -655,7 +655,7 @@ public abstract class AttributeExpander {
          */
         protected String enableBracketMode(String tmplStr) {
             if (tmplStr.startsWith("<#ftl")) {
-                // if for some reason and somehow non-bracket syntax was already forced, 
+                // if for some reason and somehow non-bracket syntax was already forced,
                 // then and only then ignore it
                 ;
             } else if (!tmplStr.startsWith("[#ftl")) {
@@ -665,8 +665,8 @@ public abstract class AttributeExpander {
             }
             return tmplStr;
         }
-        
-        
+
+
         protected class FtlStringParser extends StringParser {
             @Override
             public Object parse(String tmplStr, CmsAttributeTemplate attrTmpl, Map<String, ?> sourceContext, CmsPageContext pageContext) {
@@ -674,7 +674,7 @@ public abstract class AttributeExpander {
                 if (tmplStr == null) {
                     return null;
                 }
-                
+
                 try {
                     return getStringTemplateInvokerForContent(tmplStr, null, pageContext);
                 } catch (Exception e) {
@@ -691,7 +691,7 @@ public abstract class AttributeExpander {
         protected TypeParser getStringParser() { return stringParser; }
         @Override
         public ExpandLang getExpandLang() { return ExpandLang.FTL; }
-        
+
         /**
          * Gets a (String)TemplateInvoker with compiled Freemarker template for the attribute
          * content inline template.
@@ -707,19 +707,19 @@ public abstract class AttributeExpander {
          */
         public static TemplateInvoker getStringTemplateInvokerForContent(String tmplStr, Map<String, Object> ctxVars, CmsPageContext pageContext) throws TemplateException, IOException {
             Configuration config = CmsRenderTemplate.TemplateRenderer.getDefaultCmsConfig();
-            
+
             // TODO: REVIEW: cache selection is a problem...
             // instead of by template body we could cache by some derivative unique name
             // derived from the CmsAttributeTemplate ID (maybe?)
             // would likely be much faster
-            
+
             UtilCache<String, Template> cache = TemplateSource.getTemplateInlineSelfCacheForConfig(config, null);
             if (cache == null) {
                 Debug.logWarning("Cms: could not determine"
                         + " an inline template cache to use; not using cache", module);
-            } 
+            }
             TemplateSource templateSource = TemplateSource.getForInlineSelfCache(tmplStr, cache, config);
-            
+
             // NOTE: must get StringInvoker so BeansWrapper's StringModel can invoke toString()
             // NOTE: context parameters could be passed to the template using InvokeOptions.ctxVars...
             // but not yet needed
@@ -727,12 +727,12 @@ public abstract class AttributeExpander {
             return invoker;
         }
     }
-    
+
     /* ***************************************************************** */
     /* Target type conversion */
     /* ***************************************************************** */
     /* NOTE: these are in this class to abstract attribute-specific typing logic, if needed */
-    
+
     public static Object convertToJavaType(Object value, String targetType, TimeZone timeZone, Locale locale) throws IllegalArgumentException {
         try {
             return ObjectType.simpleTypeConvert(value, targetType, null, timeZone, locale, true);
@@ -740,15 +740,15 @@ public abstract class AttributeExpander {
             throw new IllegalArgumentException(e);
         }
     }
-    
+
     public static void checkValidJavaType(String targetType) throws ClassNotFoundException {
         ObjectType.loadClass(targetType);
     }
-    
+
     public static List<String> getJavaShortTypeList() {
         return javaShortTypeList;
     }
-    
+
     public static List<String> getJavaTypeExampleList() {
         return javaTypeExampleList;
     }

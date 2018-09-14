@@ -29,7 +29,7 @@ import com.ilscipio.scipio.cms.template.RendererType;
  * be shown.
  * 2017-01-10: This is now also sometimes used to represent the rendering context for
  * non-CMS renderers, where this object simply contains all the variables that are
- * interesting to the CMS code. e.g., this has to be created and 
+ * interesting to the CMS code. e.g., this has to be created and
  * passed to make links with PageLinkDirective.makeLinkXxx methods (where it serves as
  * a struct).
  * <p>
@@ -52,7 +52,7 @@ public class CmsPageContext {
     private final ServletContext servletContext;
     private final String webSiteId;
     private final RendererType rendererType;
-    
+
     private GenericValue userLogin = null;
     private GenericValue party = null;
     private GenericValue person = null;
@@ -77,7 +77,7 @@ public class CmsPageContext {
         // for now, if this is a CMS render, there should already be a CmsPageContext created.
         // if it's missing and this is a CMS render, that would be an error, e.g. the template's actions
         // did something stupid and overwrote it.
-        // FIXME?: for now if missing must assume is non-cms render... so the generic fallback may actually 
+        // FIXME?: for now if missing must assume is non-cms render... so the generic fallback may actually
         // hide CMS renderer coding errors... nothing can do about this (?) because anything stored in context can be corrupted
         CmsPageContext pageContext = CmsRenderUtil.getPageContext(context);
         if (pageContext == null) {
@@ -85,7 +85,7 @@ public class CmsPageContext {
         }
         return pageContext;
     }
-    
+
     /**
      * Makes a CmsPageContext from a generic rendering context (non-CMS renderer, usually widget renderer).
      * Must be compatible with {@link org.ofbiz.widget.renderer.ScreenRenderer#populateContextForRequest(HttpServletRequest, HttpServletResponse, ServletContext)}.
@@ -96,7 +96,7 @@ public class CmsPageContext {
     public static CmsPageContext makeFromGenericRequestContext(Map<String, ?> context) {
         return makeFromRequestContext(context, RendererType.GENERIC);
     }
-    
+
     /**
      * This is a backwards method that creates a new CmsPageContext from a CMS renderer context,
      * here for completeness.
@@ -105,7 +105,7 @@ public class CmsPageContext {
     public static CmsPageContext makeFromCmsRequestContext(Map<String, ?> context) {
         return makeFromRequestContext(context, RendererType.CMS);
     }
-    
+
     /**
      * This is a backwards method that creates a new CmsPageContext from a CMS emulated renderer context,
      * here for completeness.
@@ -114,7 +114,7 @@ public class CmsPageContext {
     public static CmsPageContext makeFromCmsEditorRequestContext(Map<String, ?> context) {
         return makeFromRequestContext(context, RendererType.CMS_EDITOR);
     }
-    
+
     private static CmsPageContext makeFromRequestContext(Map<String, ?> context, RendererType rendererType) {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         HttpServletResponse response = (HttpServletResponse) context.get("response");
@@ -123,18 +123,18 @@ public class CmsPageContext {
         String webSiteId = WebSiteWorker.getWebSiteId(request);
         return new CmsPageContext(request, response, servletContext, webSiteId, preview, rendererType);
     }
-    
+
     public Delegator getDelegator() {
         if (delegator == null) {
             delegator = (Delegator) request.getAttribute("delegator");
         }
         return delegator;
     }
-    
+
     /**
      * Returns the request object belonging to the request which triggered the
      * current page.
-     * 
+     *
      * @return request object
      */
     public HttpServletRequest getRequest() {
@@ -143,16 +143,16 @@ public class CmsPageContext {
 
     /**
      * Returns the response object used to render the page.
-     * 
+     *
      * @return response object
      */
     public HttpServletResponse getResponse() {
         return response;
     }
-    
+
     /**
      * Returns whether the page should be displayed in preview mode.
-     * 
+     *
      * @return if preview mode is active
      */
     public boolean isPreview() {
@@ -163,7 +163,7 @@ public class CmsPageContext {
 //    /**
 //     * Returns the servlet config which can also be used to obtain the servlet
 //     * context.
-//     * 
+//     *
 //     * @return context of the CMS servlet
 //     */
 //    public ServletConfig getConfig() {
@@ -172,22 +172,22 @@ public class CmsPageContext {
 
     /**
      * Returns the servlet context.
-     * 
+     *
      * @return servlet context
      */
     public ServletContext getServletContext() {
         return servletContext;
     }
-    
+
     /**
      * Returns the website id used to identify pages and templates.
-     * 
+     *
      * @return website id
      */
     public String getWebSiteId() {
         return webSiteId;
     }
-    
+
     public RendererType getRendererType() {
         return rendererType;
     }
@@ -196,7 +196,7 @@ public class CmsPageContext {
      * Returns the UserLogin entity of the current user.
      * @deprecated 2016: should not be necessary: can be gotten from
      * regular context ({@link org.ofbiz.widget.renderer.ScreenRenderer#populateContextForRequest})
-     * 
+     *
      * @return userLogin entity
      */
     @Deprecated
@@ -208,10 +208,10 @@ public class CmsPageContext {
         } else if(request.getSession().getAttribute("userLogin") != null) {
             return (GenericValue) request.getSession().getAttribute("userLogin");
         }
-        
+
         try {
             Delegator delegator = (Delegator) request.getAttribute("delegator");
-            if (this.preview && request.getParameter("previewUser") != null) {                
+            if (this.preview && request.getParameter("previewUser") != null) {
                 userLogin = delegator.findOne("UserLogin", true, "userLoginId", request.getParameter("previewUser"));
             }
             if (userLogin == null) {
@@ -224,7 +224,7 @@ public class CmsPageContext {
         } catch (GenericEntityException e) {
               throw new CmsException("Could not retrieve user login entity from database.", e);
         }
-        
+
         return userLogin;
     }
 
@@ -232,11 +232,11 @@ public class CmsPageContext {
      * Returns the Person entity of the current user.
      * @deprecated 2016: should not be necessary: can be gotten from
      * regular context ({@link org.ofbiz.widget.renderer.ScreenRenderer#populateContextForRequest})
-     * 
+     *
      * @return person entity
      */
     @Deprecated
-    public GenericValue getPerson() {      
+    public GenericValue getPerson() {
         if (person != null) {
             return person;
         } else if(request.getAttribute("person") != null) {
@@ -247,7 +247,7 @@ public class CmsPageContext {
         try {
             if (getParty() != null) {
                 LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-                Map<String, Object> result = dispatcher.runSync("getPerson", 
+                Map<String, Object> result = dispatcher.runSync("getPerson",
                         UtilMisc.toMap("partyId", getParty().getString("partyId")));
                 if (ServiceUtil.isSuccess(result)) {
                     person = (GenericValue) result.get("lookupPerson");
@@ -263,24 +263,24 @@ public class CmsPageContext {
      * Returns the Party entity of the currently logged in user.
      * @deprecated 2016: should not be necessary: can be gotten from
      * regular context ({@link org.ofbiz.widget.renderer.ScreenRenderer#populateContextForRequest})
-     * 
+     *
      * @return party entity
      */
     @Deprecated
-    public GenericValue getParty() {        
+    public GenericValue getParty() {
         if (party != null) {
             return party;
         } else if(request.getAttribute("party") != null) {
             return (GenericValue) request.getAttribute("party");
         } else if(request.getSession().getAttribute("party") != null) {
             return (GenericValue) request.getSession().getAttribute("party");
-        }        
+        }
         try {
             if (getUserLogin() != null) {
                 LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-                Map<String, Object> results = dispatcher.runSync("getPartyFromUserLogin", 
+                Map<String, Object> results = dispatcher.runSync("getPartyFromUserLogin",
                         UtilMisc.toMap("userLoginId", getUserLogin().getString("userLoginId")));
-                
+
                 if (ServiceUtil.isSuccess(results) && results.get("parties") != null) {
                     for (Map<String, GenericValue> i : (UtilGenerics.<Map<String, GenericValue>> checkCollection(results.get("parties")))) {
                         party = i.get("party");

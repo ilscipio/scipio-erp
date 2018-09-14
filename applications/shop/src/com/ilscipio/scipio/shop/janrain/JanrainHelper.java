@@ -163,7 +163,7 @@ public class JanrainHelper {
                 conn.getOutputStream(), "UTF-8");
             osw.write(data);
             osw.close();
-            
+
             BufferedReader post = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             StringBuilder buf = new StringBuilder();
@@ -197,7 +197,7 @@ public class JanrainHelper {
             Element authInfo = JanrainHelper.authInfo(token); // SCIPIO: fixed static call through object
             Element profileElement = UtilXml.firstChildElement(authInfo, "profile");
             Element nameElement = UtilXml.firstChildElement(profileElement, "name");
-            
+
             // profile element
             String displayName = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "displayName"));
             String email = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "email"));
@@ -205,18 +205,18 @@ public class JanrainHelper {
             String preferredUsername = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "preferredUsername"));
             String providerName = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "providerName"));
             String url = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "url"));
-            
+
             // name element
             String givenName = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "givenName"));
             String familyName = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "familyName"));
             String formatted = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "formatted"));
-            
+
             if (UtilValidate.isEmpty("preferredUsername")) {
                 errMsg = UtilProperties.getMessage("SecurityextUiLabels", "loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            
+
             Map<String, String> result = new HashMap<String, String>();
             result.put("displayName", displayName);
             result.put("email", email);
@@ -228,7 +228,7 @@ public class JanrainHelper {
             result.put("familyName", familyName);
             result.put("formatted", formatted);
             request.setAttribute("userInfoMap", result);
-            
+
             try {
                 GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", preferredUsername).cache().queryOne();
                 if (userLogin != null) {

@@ -77,7 +77,7 @@
   <#if verbose>
     <#--
     <#if !paymentMethod?has_content>
-      <#local paymentMethod = creditCard.getRelatedOne("PaymentMethod")>
+      <#local paymentMethod = creditCard.getRelatedOne("PaymentMethod", false)>
     </#if>
     -->
     ${(delegator.findOne("Enumeration", {"enumId":creditCard.cardType!}, true).get("description", locale))!creditCard.cardType!}<#t>

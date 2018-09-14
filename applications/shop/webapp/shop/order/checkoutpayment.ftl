@@ -168,7 +168,7 @@ jQuery(document).ready(function(){
       <#return "">
     </#function>
     <#function getPayMethTypeDesc paymentMethodTypeId>
-      <#local desc = (productStorePaymentMethodSettingByTypeMap[paymentMethodTypeId].getRelatedOne("PaymentMethodType").get("description", locale))!false>
+      <#local desc = (productStorePaymentMethodSettingByTypeMap[paymentMethodTypeId].getRelatedOne("PaymentMethodType", true).get("description", locale))!false>
       <#if !desc?is_boolean>
         <#return desc>
       </#if>

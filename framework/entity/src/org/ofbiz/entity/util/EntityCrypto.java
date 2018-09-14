@@ -298,12 +298,16 @@ public final class EntityCrypto {
         }
     }
 
+    // SCIPIO: 2018-09: TODO: Remove DES encrypt calls
+    // The parts that still call DesCrypt.generateKey() and DesCrypt.encrypt()
+    // should eventually be simply removed and throw exceptions instead.
+    // At that point we can get rid of the warnings.
+    // It is extremely unlikely they are being called anymore but
+    // must guarantee they are not first.
+
     /**
      * LegacyStorageHandler, uses DES encryption.
-     * @deprecated SCIPIO: 2018-09-07: DES algorithm is insecure 
-     * and should not be used anymore, except to decrypt existing records.
      */
-    @Deprecated
     protected static abstract class LegacyStorageHandler extends StorageHandler {
         @Override
         protected Key generateNewKey() throws EntityCryptoException {
@@ -338,6 +342,9 @@ public final class EntityCrypto {
     protected static final StorageHandler OldFunnyHashStorageHandler = new LegacyStorageHandler() {
         @Override
         protected String getHashedKeyName(String originalKeyName) {
+            // SCIPIO: WARNING: USES SYSTEM CHARSET: For backward-compatibility reasons,
+            // this call must keep using no-arg String.getBytes() and the system charset (NOT explicit UTF-8),
+            // otherwise, existing clients on some platforms may be affected.
             return HashCrypt.digestHashOldFunnyHex(null, originalKeyName);
         }
 
@@ -350,7 +357,9 @@ public final class EntityCrypto {
     protected static final StorageHandler NormalHashStorageHandler = new LegacyStorageHandler() {
         @Override
         protected String getHashedKeyName(String originalKeyName) {
-            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
+            // SCIPIO: WARNING: USES SYSTEM CHARSET: For backward-compatibility reasons,
+            // this call must keep using no-arg String.getBytes() and the system charset (NOT explicit UTF-8),
+            // otherwise, existing clients on some platforms may be affected.
             return HashCrypt.digestHash("SHA", originalKeyName.getBytes());
         }
 
@@ -386,10 +395,9 @@ public final class EntityCrypto {
 
         @Override
         protected String getHashedKeyName(String originalKeyName) {
-            // SCIPIO: 2018-09-13: For consistency and legacy reasons, leave this to the legacy code,
-            // until this is better investigated.
-            //return HashCrypt.digestHash64("SHA", originalKeyName.getBytes(UtilIO.getUtf8()));
-            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
+            // SCIPIO: WARNING: USES SYSTEM CHARSET: For backward-compatibility reasons,
+            // this call must keep using no-arg String.getBytes() and the system charset (NOT explicit UTF-8),
+            // otherwise, existing clients on some platforms may be affected.
             return HashCrypt.digestHash64("SHA", originalKeyName.getBytes());
         }
 

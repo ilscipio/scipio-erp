@@ -136,14 +136,25 @@ public class HashCrypt {
         return value != null ? cryptBytes(hashType, salt, value.getBytes(UtilIO.getUtf8())) : null;
     }
 
+    /**
+     * @deprecated SCIPIO: 2018-09-13: Unused, DO NOT USE, uses system Charset
+     * (<code>value.getBytes()</code>); use {@link #cryptUTF8(String, String, String)} instead.
+     */
+    @Deprecated
     public static String cryptValue(String hashType, String salt, String value) {
         if (hashType.startsWith("PBKDF2")) {
             return value != null ? pbkdf2HashCrypt(hashType, salt, value) : null;
         }
-        // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
         return value != null ? cryptBytes(hashType, salt, value.getBytes()) : null;
     }
 
+    /**
+     * cryptBytes.
+     * <p>
+     * SCIPIO: WARN: FIXME?: This currently does not respond to PBKDF2 hashType,
+     * so you must use the {@link #cryptUTF8(String, String, String)} for PBKDF2
+     * support for the time being.
+     */
     public static String cryptBytes(String hashType, String salt, byte[] bytes) {
         if (hashType == null) {
             hashType = "SHA";
@@ -368,6 +379,13 @@ public class HashCrypt {
         return digestHashOldFunnyHex(hashType, str);
     }
 
+    /**
+     * digestHashOldFunnyHex.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> This uses the system charset and for that reasons,
+     * this method should not called by anything other than
+     * {@link org.ofbiz.entity.util.EntityCrypto#OldFunnyHashStorageHandler}.
+     */
     public static String digestHashOldFunnyHex(String hashType, String str) {
         if (UtilValidate.isEmpty(hashType)) {
             hashType = "SHA";
@@ -377,7 +395,9 @@ public class HashCrypt {
         }
         try {
             MessageDigest messagedigest = MessageDigest.getInstance(hashType);
-            // SCIPIO: TODO: REVIEW: String.getBytes() without Charset
+            // SCIPIO: WARNING: USES SYSTEM CHARSET: For backward-compatibility reasons,
+            // this call must keep using no-arg String.getBytes() and the system charset (NOT explicit UTF-8),
+            // otherwise, existing clients on some platforms may be affected.
             byte[] strBytes = str.getBytes();
 
             messagedigest.update(strBytes);

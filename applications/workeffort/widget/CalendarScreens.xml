@@ -235,17 +235,15 @@ under the License.
                 <entity-one entity-name="WorkEffort" value-field="workEffort" />
                 <set field="calEventIdNum" from-field="calEventIdNum" default-value="0" />
                 <set field="calEventFormPeriod" from-field="parameters.period" />
-            </actions>
-            <widgets>
-                <section>
+                <if><!-- SCIPIO: refactored conditions -->
                     <condition>
                         <not><if-empty field="workEffort" /></not>
                     </condition>
-                    <actions>
+                    <then>
                         <script location="component://workeffort/script/isCalOwner.groovy" />
-                    </actions>
-                </section>
-                <section>
+                    </then>
+                </if>
+                <if>
                     <condition>
                         <or>
                             <and>
@@ -257,10 +255,12 @@ under the License.
                             <if-has-permission permission="WORKEFFORTMGR" action="_ADMIN" />
                         </or>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="useEditForm" value="true" />
-                    </actions>
-                </section>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
                 <section>
                     <condition>
                         <if-compare field="useEditForm" operator="equals" value="true" />

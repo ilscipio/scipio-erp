@@ -495,7 +495,7 @@ under the License.
     <service name="marketingManagerPermission" engine="simple"
              location="component://common/script/org/ofbiz/common/permission/CommonPermissionServices.xml" invoke="genericBasePermissionCheck">
         <deprecated use-instead="marketingPermissionService">SCIPIO: 2018-09-10: This service is long deprecated and may have been missing/broken altogether</deprecated>
-        <implements service="marketingManagerPermission"/>
+        <implements service="marketingPermissionService"/>
     </service>
 
     <!-- lead services -->

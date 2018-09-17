@@ -419,6 +419,11 @@ public final class UtilXml {
         return readXmlDocument(is, true, docDescription, withPosition);
     }
 
+    public static Document readXmlDocument(InputStream is, boolean validate)
+            throws SAXException, ParserConfigurationException, java.io.IOException { // SCIPIO: 2018-09-17: Added missing overload
+        return readXmlDocument(is, validate, "Internal Content");
+    }
+
     public static Document readXmlDocument(InputStream is, boolean validate, String docDescription)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (is == null) {

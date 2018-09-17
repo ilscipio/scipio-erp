@@ -713,4 +713,31 @@ public class StringUtil {
             return this.theString;
         }
     }
+
+    /**
+     * SCIPIO: Ensures the string does not pass the given length and returns 
+     * the first lengthLimit characters if longer, with extra suffix to 
+     * add if passes the length (e.g., "...").
+     * <p>
+     * Added 2018-09-17.
+     */
+    public static String limitLength(String str, int lengthLimit, String suffixIfOver) {
+        if (str == null || str.length() <= lengthLimit) {
+            return str;
+        }
+        return str.substring(0, lengthLimit) + suffixIfOver;
+    }
+
+    /**
+     * SCIPIO: Ensures the string does not pass the given length and returns the 
+     * first lengthLimit characters if longer.
+     * <p>
+     * Added 2018-09-17.
+     */
+    public static String limitLength(String str, int lengthLimit) {
+        if (str == null || str.length() <= lengthLimit) {
+            return str;
+        }
+        return str.substring(0, lengthLimit);
+    }
 }

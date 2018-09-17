@@ -196,9 +196,9 @@ under the License.
         linkInfo="SEARCH_CATEGORY_ID1=CLOTH-100&amp;SEARCH_SUB_CATEGORIES1=Y&amp;SEARCH_FEAT1=7100&amp;sortOrder=SortKeywordRelevancy&amp;sortAscending=N"/>
     <ProductCategoryLink productCategoryId="MUSIC-101" linkSeqId="02" fromDate="2001-05-13 12:00:00.0"
         titleText="Go To Google" detailText="If you cannot find the music you're looking for here, try it on Google."
-        imageUrl="http://www.google.com/intl/en_ALL/images/logo.gif"
+        imageUrl="https://www.google.com/intl/en_ALL/images/logo.gif"
         sequenceNum="01" linkTypeEnumId="PCLT_ABS_URL"
-        linkInfo="http://www.google.com/"/>
+        linkInfo="https://www.google.com/"/>
     <ProductCategoryLink productCategoryId="MEDIA-100" linkSeqId="03" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="03" linkTypeEnumId="PCLT_CAT_ID" linkInfo="MUSIC-101"/>
             

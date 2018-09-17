@@ -106,6 +106,47 @@ public class WebToolsServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "WebtoolsUiLabels";
 
+    /**
+     * SCIPIO: Helper class for common entity import options.
+     * <p>
+     * NOTE: This is public because some callers may be implementing extensions to these entity import services.
+     * <p>
+     * Added 2018-09-17.
+     */
+    public static class CommonEntityImportOptions { // SCIPIO: 2018-09-17
+        private EntitySaxReader.EntityFilters entityFilters;
+
+        public CommonEntityImportOptions() {
+            entityFilters = new EntitySaxReader.EntityFilters();
+        }
+
+        private CommonEntityImportOptions(DispatchContext dctx, Map<String, ?> context) {
+            entityFilters = EntitySaxReader.EntityFilters.fromMap(context);
+        }
+
+        public static CommonEntityImportOptions fromContext(DispatchContext dctx, Map<String, ?> context) {
+            return new CommonEntityImportOptions(dctx, context);
+        }
+
+        public void toContext(Map<String, Object> context) {
+            if (entityFilters != null) {
+                entityFilters.toMap(context);
+            }
+        }
+
+        public void toReader(EntitySaxReader reader) {
+            reader.setEntityFilters(entityFilters);
+        }
+
+        public EntitySaxReader.EntityFilters getEntityFilters() {
+            return entityFilters;
+        }
+
+        public void setEntityFilters(EntitySaxReader.EntityFilters entityFilters) {
+            this.entityFilters = entityFilters;
+        }
+    }
+
     public static Map<String, Object> entityImport(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -127,7 +168,7 @@ public class WebToolsServices {
         String createDummyFks = (String)context.get("createDummyFks");
         String checkDataOnly = (String) context.get("checkDataOnly");
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
-        Set<String> allowedEntityNames = UtilGenerics.checkSet(context.get("allowedEntityNames")); // SCIPIO: new 2017-06-15
+        CommonEntityImportOptions commonOptions = CommonEntityImportOptions.fromContext(dctx, context); // SCIPIO
 
         Integer txTimeout = (Integer)context.get("txTimeout");
         if (txTimeout == null) {
@@ -218,8 +259,9 @@ public class WebToolsServices {
                                               "maintainTimeStamps", maintainTimeStamps,
                                               "txTimeout", txTimeout,
                                               "placeholderValues", placeholderValues,
-                                              "allowedEntityNames", allowedEntityNames, // SCIPIO
                                               "userLogin", userLogin);
+                commonOptions.toContext(inputMap); // SCIPIO
+
                 if (fulltext != null) {
                     inputMap.put("xmltext", fulltext);
                 } else {
@@ -259,6 +301,7 @@ public class WebToolsServices {
         boolean deleteFiles = (String) context.get("deleteFiles") != null;
         String checkDataOnly = (String) context.get("checkDataOnly");
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
+        CommonEntityImportOptions commonOptions = CommonEntityImportOptions.fromContext(dctx, context); // SCIPIO
 
         Integer txTimeout = (Integer)context.get("txTimeout");
         Long filePause = (Long)context.get("filePause");
@@ -299,6 +342,7 @@ public class WebToolsServices {
                                 "txTimeout", txTimeout,
                                 "placeholderValues", placeholderValues,
                                 "userLogin", userLogin);
+                        commonOptions.toContext(parseEntityXmlFileArgs); // SCIPIO
 
                         try {
                             URL furl = f.toURI().toURL();
@@ -474,7 +518,7 @@ public class WebToolsServices {
         boolean createDummyFks = (String) context.get("createDummyFks") != null;
         boolean checkDataOnly = (String) context.get("checkDataOnly") != null;
         Integer txTimeout = (Integer) context.get("txTimeout");
-        Set<String> allowedEntityNames = UtilGenerics.checkSet(context.get("allowedEntityNames")); // SCIPIO: 2017-06-15
+        CommonEntityImportOptions commonOptions = CommonEntityImportOptions.fromContext(dctx, context); // SCIPIO
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
 
         if (txTimeout == null) {
@@ -490,7 +534,7 @@ public class WebToolsServices {
             reader.setCreateDummyFks(createDummyFks);
             reader.setCheckDataOnly(checkDataOnly);
             reader.setPlaceholderValues(placeholderValues);
-            reader.setAllowedEntityNames(allowedEntityNames);
+            commonOptions.toReader(reader); // SCIPIO
 
             long numberRead = (url != null ? reader.parse(url) : reader.parse(xmltext));
             rowProcessed = numberRead;

@@ -41,6 +41,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -112,7 +113,7 @@ public class EntitySaxReader extends DefaultHandler {
     private Document documentForTemplate = null;
     private Map<String, Object> placeholderValues = null; //contains map of values for corresponding placeholders (eg. ${key}) in the entity xml data file.
 
-    private Set<String> allowedEntityNames = null; // SCIPIO: 2017-06-15: security filter to limit allowed names
+    private EntityFilters entityFilters = new EntityFilters(); // SCIPIO
 
     protected EntitySaxReader() {}
 
@@ -182,20 +183,202 @@ public class EntitySaxReader extends DefaultHandler {
     }
 
     /**
-     * SCIPIO: Specifies the entity names allowed to be parsed, or null to remove limit.
-     * If violation occurs, an exception is generated.
-     * Added 2017-06-15.
+     * SCIPIO: Entity filters for import.
+     * <p>
+     * Added 2018-09-17 (except for allowEntityNames, which was added 2017-06-15 as "allowedEntityNames", 
+     * that name now deprecated).
      */
-    public void setAllowedEntityNames(Set<String> allowedEntityNames) {
-        this.allowedEntityNames = allowedEntityNames;
+    public static class EntityFilters {
+        private Set<String> allowEntity;
+        private Set<String> disallowEntity;
+        private Set<String> allowEntityWarn;
+        private Set<String> disallowEntityWarn;
+        private Set<String> includeEntity;
+        private Set<String> excludeEntity;
+        private Boolean disallowUnsafeEntityWarn;
+
+        public EntityFilters() {
+        }
+
+        protected EntityFilters(Map<String, ?> map) {
+            setFromMap(map);
+        }
+
+        public static EntityFilters fromMap(Map<String, ?> map) {
+            return new EntityFilters(map);
+        }
+
+        public void setFromMap(Map<String, ?> map) {
+            if (map.containsKey("allowEntity")) {
+                allowEntity = UtilGenerics.checkSet(map.get("allowEntity"));
+            } else if (map.containsKey("allowedEntityNames")) {
+                allowEntity = UtilGenerics.checkSet(map.get("allowedEntityNames")); // SCIPIO: 2017-06-15 (old name)
+            }
+            if (map.containsKey("disallowEntity")) {
+                disallowEntity = UtilGenerics.checkSet(map.get("disallowEntity"));
+            }
+            if (map.containsKey("allowEntityWarn")) {
+                allowEntityWarn = UtilGenerics.checkSet(map.get("allowEntityWarn"));
+            }
+            if (map.containsKey("disallowEntityWarn")) {
+                disallowEntityWarn = UtilGenerics.checkSet(map.get("disallowEntityWarn"));
+            }
+            if (map.containsKey("includeEntity")) {
+                includeEntity = UtilGenerics.checkSet(map.get("includeEntity"));
+            }
+            if (map.containsKey("excludeEntity")) {
+                excludeEntity = UtilGenerics.checkSet(map.get("excludeEntity"));
+            }
+            if (map.containsKey("disallowUnsafeEntityWarn")) {
+                disallowUnsafeEntityWarn = (Boolean) map.get("disallowUnsafeEntityWarn");
+            }
+        }
+
+        public void toMap(Map<String, Object> map) {
+            map.put("allowEntity", allowEntity);
+            map.put("disallowEntity", disallowEntity);
+            map.put("allowEntityWarn", allowEntityWarn);
+            map.put("disallowEntityWarn", disallowEntityWarn);
+            map.put("includeEntity", includeEntity);
+            map.put("excludeEntity", excludeEntity);
+            map.put("disallowUnsafeEntityWarn", disallowUnsafeEntityWarn);
+        }
+
+        /**
+         * Specifies the entity names allowed to be parsed, or null to remove limit, exception on violations.
+         */
+        public void setAllowEntity(Set<String> allowEntity) {
+            this.allowEntity = allowEntity;
+        }
+
+        /**
+         * Returns the entity names allowed to be parsed, exception on violations.
+         */
+        public Set<String> getAllowEntity() {
+            return allowEntity;
+        }
+
+        /**
+         * Specifies the entity names not allowed to be parsed, or null to remove limit, exception on violations.
+         */
+        public void setDisallowEntity(Set<String> disallowEntity) {
+            this.disallowEntity = disallowEntity;
+        }
+
+        /**
+         * Returns the entity names allowed to be parsed, exception on violations.
+         */
+        public Set<String> getDisallowEntity() {
+            return disallowEntity;
+        }
+
+        /**
+         * Sets entity names allowed in parsing, or null to remove limit, violations warned.
+         */
+        public void setAllowEntityWarn(Set<String> allowEntityWarn) {
+            this.allowEntityWarn = allowEntityWarn;
+        }
+
+        /**
+         * Returns entity names allowed in parsing, violations warned.
+         */
+        public Set<String> getAllowEntityWarn() {
+            return allowEntityWarn;
+        }
+
+        /**
+         * Sets entity names disallowed from parsing, violations warned.
+         */
+        public void setDisallowEntityWarn(Set<String> disallowEntityWarn) {
+            this.disallowEntityWarn = disallowEntityWarn;
+        }
+
+        /**
+         * Sets entity names disallowed from parsing, violations warned.
+         */
+        public Set<String> getDisallowEntityWarn() {
+            return disallowEntityWarn;
+        }
+
+        /**
+         * Sets whether to disallow dangerous entity names, violations warned.
+         */
+        public void setDisallowUnsafeEntityWarn(Boolean disallowUnsafeEntityWarn) {
+            this.disallowUnsafeEntityWarn = disallowUnsafeEntityWarn;
+        }
+        
+        /**
+         * Returns whether to disallow dangerous entity names, violations warned.
+         */
+        public Boolean getDisallowDangerousEntitiesWarn() {
+            return disallowUnsafeEntityWarn;
+        }
+        
+        /**
+         * Sets entity names included in parsing, or null to remove limit, violations ignored.
+         */
+        public void setIncludeEntity(Set<String> includeEntity) {
+            this.includeEntity = includeEntity;
+        }
+
+        /**
+         * Returns entity names included in parsing, violations ignored.
+         */
+        public Set<String> getIncludeEntity() {
+            return includeEntity;
+        }
+
+        /**
+         * Sets entity names excluded from parsing, violations ignored.
+         */
+        public void setExcludeEntity(Set<String> excludeEntity) {
+            this.excludeEntity = excludeEntity;
+        }
+
+        /**
+         * Returns entity names excluded from parsing; violations ignored.
+         */
+        public Set<String> getExcludeEntity() {
+            return excludeEntity;
+        }
     }
 
     /**
-     * SCIPIO: Returns the entity names allowed to be parsed.
+     * SCIPIO: Set (replaces all) entity filters.
+     * Added 2018-09-17.
+     */
+    public void setEntityFilters(EntityFilters entityFilters) {
+        this.entityFilters = (entityFilters != null) ? entityFilters : new EntityFilters();
+    }
+
+    /**
+     * SCIPIO: Get entity filters.
+     * Added 2018-09-17.
+     */
+    public EntityFilters getEntityFilters() {
+        return entityFilters;
+    }
+
+    /**
+     * SCIPIO: Specifies the entity names allowed to be parsed, exception on violations.
+     * @deprecated 2018-09-17: Use {@link #getEntityFilters()} and its setters or {@link #setEntityFilters(EntityFilters)}.
+     * <p>
      * Added 2017-06-15.
      */
+    @Deprecated
+    public void setAllowedEntityNames(Set<String> allowedEntityNames) {
+        this.entityFilters.setAllowEntity(allowedEntityNames);
+    }
+
+    /**
+     * SCIPIO: Returns the entity names allowed to be parsed, exception on violations.
+     * @deprecated 2018-09-17: Use {@link #getEntityFilters()}
+     * <p>
+     * Added 2017-06-15.
+     */
+    @Deprecated
     public Set<String> getAllowedEntityNames() {
-        return allowedEntityNames;
+        return this.entityFilters.getAllowEntity();
     }
 
     public long parse(String content) throws SAXException, java.io.IOException {
@@ -571,8 +754,32 @@ public class EntitySaxReader extends DefaultHandler {
             }
 
             // SCIPIO: 2017-06-15: ensure entity name allowed
-            if (allowedEntityNames != null && !allowedEntityNames.contains(entityName)) {
-                throw new org.xml.sax.SAXParseException(null, locator, new IllegalArgumentException("Entity name not allowed for this reader: " + entityName));
+            if (entityFilters.allowEntity != null && !entityFilters.allowEntity.contains(entityName)) {
+                throw new org.xml.sax.SAXParseException(null, locator, new IllegalArgumentException("Entity not allowed for this reader: " + entityName));
+            }
+            // SCIPIO: 2018-09-17: new filters
+            if (entityFilters.disallowEntity != null && entityFilters.disallowEntity.contains(entityName)) {
+                throw new org.xml.sax.SAXParseException(null, locator, new IllegalArgumentException("Entity disallowed for this reader: " + entityName));
+            }
+            // SCIPIO: TODO: Should gather these as result stats somehow...
+            if (entityFilters.allowEntityWarn != null && !entityFilters.allowEntityWarn.contains(entityName)) {
+                Debug.logWarning("Entity not allowed for this reader, skipping: " + entityName, module);
+                return;
+            }
+            if (entityFilters.disallowEntityWarn != null && entityFilters.disallowEntityWarn.contains(entityName)) {
+                Debug.logWarning("Entity disallowed for this reader, skipping: " + entityName, module);
+                return;
+            }
+            if (Boolean.TRUE.equals(entityFilters.disallowUnsafeEntityWarn) && 
+                    EntityUtil.getUnsafeEntitiesForUpdate(delegator).contains(entityName)) {
+                Debug.logWarning("Unsafe entity disallowed for this reader, skipping: " + entityName, module);
+                return;
+            }
+            if (entityFilters.includeEntity != null && !entityFilters.includeEntity.contains(entityName)) {
+                return;
+            }
+            if (entityFilters.excludeEntity != null && entityFilters.excludeEntity.contains(entityName)) {
+                return;
             }
 
             try {

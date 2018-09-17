@@ -55,6 +55,16 @@ public final class EntityUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    /**
+     * SCIPIO: A list of entities names which are typically dangerous to update, remove or import.
+     * Includes:
+     * <ul>
+     *   <li>EntityKeyStore - Database-specific entity field encryption keys</li>
+     * </ul>
+     * First added 2018-09-17.
+     */
+    private static final Set<String> unsafeEntitiesForUpdate = UtilMisc.unmodifiableHashSet("EntityKeyStore");
+
     private EntityUtil() {}
 
     @SafeVarargs
@@ -625,6 +635,18 @@ public final class EntityUtil {
     public static boolean toBoolean(String indicator, boolean defaultVal) {
         Boolean result = toBoolean(indicator);
         return result != null ? result : defaultVal;
+    }
+
+    /**
+     * SCIPIO: A list of entities names which are typically dangerous to update, remove or import.
+     * Includes:
+     * <ul>
+     *   <li>EntityKeyStore - Database-specific entity field encryption keys</li>
+     * </ul>
+     * First added 2018-09-17.
+     */
+    public static Set<String> getUnsafeEntitiesForUpdate(Delegator delegator) {
+        return unsafeEntitiesForUpdate;
     }
 
     /*

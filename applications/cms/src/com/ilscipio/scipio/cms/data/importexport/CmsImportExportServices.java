@@ -132,15 +132,16 @@ public abstract class CmsImportExportServices {
 
         boolean hasEntityMaintPerm = security.hasPermission("ENTITY_MAINT", userLogin);
 
-        Set<String> allowedEntityNames = new HashSet<>();
-        allowedEntityNames.addAll(CmsEntityInfo.getInst(delegator).getCmsEntityNames());
-        allowedEntityNames.addAll(CmsEntityInfo.getInst(delegator).getExtCmsEntityNames());
-        Set<String> explAllowedEntityNames = UtilGenerics.checkSet(context.get("allowedEntityNames")); // SCIPIO: new 2017-06-15
-        if (UtilValidate.isNotEmpty(explAllowedEntityNames)) {
-            allowedEntityNames.retainAll(explAllowedEntityNames);
+        Set<String> allowEntity = new HashSet<>();
+        allowEntity.addAll(CmsEntityInfo.getInst(delegator).getCmsEntityNames());
+        allowEntity.addAll(CmsEntityInfo.getInst(delegator).getExtCmsEntityNames());
+        Set<String> explAllowEntity = WebToolsServices.CommonEntityImportOptions.fromContext(dctx, context)
+                .getEntityFilters().getAllowEntity();
+        if (UtilValidate.isNotEmpty(explAllowEntity)) {
+            allowEntity.retainAll(explAllowEntity);
         }
 
-        context.put("allowedEntityNames", allowedEntityNames);
+        context.put("allowEntity", allowEntity);
         context.put("allowLocations", hasEntityMaintPerm);
         return WebToolsServices.entityImport(dctx, context);
     }

@@ -18,11 +18,20 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
+import java.nio.charset.Charset;
+
 /**
  * Base64 implements Base64 encoding and Base 64 decoding.
- *
+ * <p>
+ * SCIPIO: NOTE: 2018-09-13: All methods in this class that perform
+ * String<->byte[] encoding conversions (using <code>String.getBytes<code> 
+ * and <code>String</code> byte[] constructors) use UTF-8 encoding.
+ * Old stock code in the past did not ensure this and may have been using
+ * system charset instead - which was an error. If you use this class,
+ * please make sure you do not need encoding using system or other charset,
+ * and that UTF-8 is appropriate. Methods that do not perform such conversions 
+ * (or where such conversions are not significant) are noted in comments.
  */
-
 public class Base64 {
 
     private static byte[] base64EncMap, base64DecMap;
@@ -156,21 +165,34 @@ public class Base64 {
      * @return the decoded str.
      */
     public final static String base64Decode(String str) {
+        return base64Decode(str, UtilIO.getUtf8());
+    }
+
+    /**
+     * SCIPIO: This method decodes the given string using the base64-encoding
+     * specified in RFC-2045 (Section 6.8), returning as a String in the given charset
+     * used for byte[]->String decoding.
+     * <p>
+     * Added 2018-09-13.
+     *
+     * @param  str the base64-encoded string.
+     * @param  charset the charset to use for byte[]->String decoding after the base64 decoding.
+     * @return the decoded str.
+     */
+    public final static String base64Decode(String str, Charset charset) {
         if (str == null) {
             return null;
         }
 
-        // SCIPIO: 2018-09-13: Make sure we're interpreting the decode result
-        // as UTF-8 in String constructor
-        //return new String(base64Decode(str.getBytes(UtilIO.getUtf8())));
-        return new String(base64Decode(str.getBytes(UtilIO.getUtf8())), UtilIO.getUtf8());
+        // SCIPIO: NOTE: The UTF-8 passed to getBytes is cosmetic only; str should be a simple base64 char range only.
+        return new String(base64Decode(str.getBytes(UtilIO.getUtf8())), charset);
     }
 
     /**
      * SCIPIO: This method decodes the given string using the base64-encoding
      * specified in RFC-2045 (Section 6.8).
      * <p>
-     * This method avoids handling charsets.
+     * NOTE: This method avoids handling charsets (or charset usage is non-significant).
      * <p>
      * Added 2018-09-13.
      *
@@ -182,7 +204,7 @@ public class Base64 {
             return null;
         }
 
-        // SCIPIO: NOTE: This UTF8 is just for show, the string should
+        // SCIPIO: NOTE: The UTF-8 passed to getBytes is cosmetic only; the string should
         // be a limited character range only.
         return base64Decode(str.getBytes(UtilIO.getUtf8()));
     }
@@ -241,22 +263,36 @@ public class Base64 {
      * @return the base64-encoded str
      */
     public final static String base64Encode(String str) {
+        return base64Encode(str, UtilIO.getUtf8()); // SCIPIO: now delegating
+    }
+
+    /**
+     * SCIPIO: This method encodes the given string using the base64-encoding
+     * specified in RFC-2045 (Section 6.8), with String->byte[] encoding done
+     * in the specific charset prior to base64 encoding.
+     * <p>
+     * Added 2018-09-13.
+     *
+     * @param  str the string
+     * @param  charset the charset for String->byte[] encoding prior to base64 encoding
+     * @return the base64-encoded str
+     */
+    public final static String base64Encode(String str, Charset charset) {
         if (str == null) {
             return null;
         }
 
         // SCIPIO: 2018-09-13: Add charset to String constructor
-        // NOTE: The UTF8 for String constructor is just for show; the string will
-        // be a limited base64 character range only.
-        //return new String(base64Encode(str.getBytes(UtilIO.getUtf8())));
-        return new String(base64Encode(str.getBytes(UtilIO.getUtf8())), UtilIO.getUtf8());
+        // NOTE: The UTF-8 for String constructor is cosmetic only; the string will
+        // be a limited base64 character range.
+        return new String(base64Encode(str.getBytes(charset)), UtilIO.getUtf8());
     }
 
     /**
      * SCIPIO: This method encodes the given byte array using the base64-encoding
      * specified in RFC-2045 (Section 6.8).
      * <p>
-     * This method avoids handling charsets.
+     * NOTE: This method avoids handling charsets (or charset usage is non-significant).
      * <p>
      * Added 2018-09-13.
      *
@@ -268,8 +304,8 @@ public class Base64 {
             return null;
         }
 
-        // NOTE: The UTF8 for String constructor is just for show; the string will
-        // be a limited base64 character range only.
+        // NOTE: The UTF-8 for String constructor is cosmetic only; the string will
+        // be a limited base64 character range.
         return new String(base64Encode(data), UtilIO.getUtf8());
     }
 }

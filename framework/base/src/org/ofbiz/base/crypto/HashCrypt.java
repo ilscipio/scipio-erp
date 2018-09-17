@@ -83,7 +83,7 @@ public class HashCrypt {
                 return false;
             } else {
                 // SCIPIO: Fallback on system charset - NOTE: this is the old stock code
-                return doCompareTypePrefix(crypted, defaultCrypt, password.getBytes());
+                return doCompareTypePrefix(crypted, defaultCrypt, password.getBytes()); // SCIPIO: DEV NOTE: DO NOT ADD UTF-8 HERE!
             }
         } else if (crypted.startsWith("$")) {
             return doComparePosix(crypted, defaultCrypt, password.getBytes(UtilIO.getUtf8()));
@@ -95,7 +95,7 @@ public class HashCrypt {
                 return false;
             } else {
                 // SCIPIO: Fallback on system charset - NOTE: this is the old stock code
-                return doCompareBare(crypted, defaultCrypt, password.getBytes());
+                return doCompareBare(crypted, defaultCrypt, password.getBytes()); // SCIPIO: DEV NOTE: DO NOT ADD UTF-8 HERE!
             }
         }
     }
@@ -156,7 +156,7 @@ public class HashCrypt {
             return password != null ? pbkdf2HashCrypt(hashType, salt, password) : null;
         }
         // FIXME: should have been getBytes("UTF-8") originally
-        return password != null ? cryptBytes(hashType, salt, password.getBytes()) : null;
+        return password != null ? cryptBytes(hashType, salt, password.getBytes()) : null; // SCIPIO: DEV NOTE: DO NOT ADD UTF-8 HERE!
     }
 
     public static String cryptUTF8(String hashType, String salt, String value) {
@@ -480,7 +480,7 @@ public class HashCrypt {
         try {
             MessageDigest messagedigest = MessageDigest.getInstance(hashType);
             // SCIPIO: 2018-09-13: use requested charset
-            byte[] strBytes = (code != null) ? str.getBytes(code) : str.getBytes();
+            byte[] strBytes = (code != null) ? str.getBytes(code) : str.getBytes(); // SCIPIO: DEV NOTE: DO NOT ADD UTF-8 HERE!
 
             messagedigest.update(strBytes);
             return oldFunnyHex(messagedigest.digest());

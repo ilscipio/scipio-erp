@@ -19,6 +19,7 @@
 package org.ofbiz.entity.util;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -38,6 +39,7 @@ import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -50,6 +52,8 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 public final class EntityCrypto {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private static Boolean systemCharsetUtf8 = null; // SCIPIO
 
     private final Delegator delegator;
     private final ConcurrentMap<String, byte[]> keyMap = new ConcurrentHashMap<String, byte[]>();
@@ -159,12 +163,39 @@ public final class EntityCrypto {
         }
     }
 
+    /**
+     * findKey.
+     * <p>
+     * SCIPIO: 2018-09-13: This now supports a fallback hash key name so that the old
+     * storage handlers can prioritize creating and reading UTF-8 records, but still
+     * be able to read old records that were encoded using system charset.
+     * See {@link StorageHandler#getFallbackHashedKeyName(String)}.
+     */
     protected byte[] findKey(String originalKeyName, StorageHandler handler) throws EntityCryptoException {
         String hashedKeyName = handler.getHashedKeyName(originalKeyName);
         String keyMapName = handler.getKeyMapPrefix(hashedKeyName) + hashedKeyName;
         if (keyMap.containsKey(keyMapName)) {
             return keyMap.get(keyMapName);
         }
+
+        // SCIPIO: 2018-09-13: Support for fallback key name
+        String fallbackHashedKeyName = handler.getFallbackHashedKeyName(originalKeyName);
+        String fallbackKeyMapName = null;
+        if (fallbackHashedKeyName != null) {
+            // NOTE: In many cases due to charset overlap, UTF-8 and other charsets may produce same
+            // hashed key name, so can avoid needless lookups by checking if equals.
+            // This may even happen in most cases becaues the originalKeyName is usually a simple ASCII
+            // entity name ("CreditCard", "FinAccount", etc.).
+            if (!fallbackHashedKeyName.equals(hashedKeyName)) {
+                fallbackKeyMapName = handler.getKeyMapPrefix(fallbackHashedKeyName) + fallbackHashedKeyName;
+                if (keyMap.containsKey(fallbackKeyMapName)) {
+                    return keyMap.get(fallbackKeyMapName);
+                }
+            } else {
+                fallbackHashedKeyName = null; // Don't compare again (below)
+            }
+        }
+
         // it's ok to run the bulk of this method unlocked or
         // unprotected; since the same result will occur even if
         // multiple threads request the same key, there is no
@@ -176,6 +207,20 @@ public final class EntityCrypto {
         } catch (GenericEntityException e) {
             throw new EntityCryptoException(e);
         }
+
+        // SCIPIO: 2018-09-13: Support for fallback key name
+        if (keyValue == null && fallbackHashedKeyName != null) {
+            try {
+                keyValue = EntityQuery.use(delegator).from("EntityKeyStore").where("keyName", fallbackHashedKeyName).queryOne();
+            } catch (GenericEntityException e) {
+                throw new EntityCryptoException(e);
+            }
+            if (keyValue != null) {
+                keyMapName = fallbackKeyMapName;
+                handler.notifyFallbackKeyLoaded(keyValue);
+            }
+        }
+
         if (keyValue == null || keyValue.get("keyText") == null) {
             return null;
         }
@@ -227,6 +272,39 @@ public final class EntityCrypto {
 
         protected abstract byte[] decryptValue(byte[] key, EncryptMethod encryptMethod, String encryptedString) throws GeneralException;
         protected abstract String encryptValue(EncryptMethod encryptMethod, byte[] key, byte[] objBytes) throws GeneralException;
+
+        /**
+         * SCIPIO: Optional fallback hash key, used for reading
+         * existing keys.
+         * <p>
+         * This should ONLY be used to read old/existing keys; new keys
+         * should only be created using {@link #getHashedKeyName(String)}.
+         * <p>
+         * This exists to handle legacy system charset-encoded bytes
+         * versus correct/explicit UTF-8 encoded bytes.
+         * It is completely handled within {@link EntityCrypto#findKey(String, StorageHandler)}.
+         * <p>
+         * Added 2018-09-13.
+         */
+        protected String getFallbackHashedKeyName(String originalKeyName) {
+            return null;
+        }
+
+        /**
+         * SCIPIO: A callback for logging purposes, called after EntityKeyStore is loaded using
+         * the fallback hash key name from {@link #getFallbackHashedKeyName(String)}.
+         * <p>
+         * Added 2018-09-13.
+         */
+        protected void notifyFallbackKeyLoaded(GenericValue keyValue) {
+        }
+
+        protected static void logNonUtf8FallbackKeyLoaded(GenericValue keyValue) { // SCIPIO
+            // Log as warning, because although it's technically normal, it will be a rare case due to charset overlap,
+            // so we want to know if/where this really happens (may be platform-dependent).
+            Debug.logWarning("Loaded EntityKeyStore key with non-UTF-8 keyName (note: these will be deprecated): "
+                + StringUtil.limitLength(keyValue.getString("keyName"), 25, "..."), module);
+        }
     }
 
     protected static final class ShiroStorageHandler extends StorageHandler {
@@ -342,10 +420,20 @@ public final class EntityCrypto {
     protected static final StorageHandler OldFunnyHashStorageHandler = new LegacyStorageHandler() {
         @Override
         protected String getHashedKeyName(String originalKeyName) {
-            // SCIPIO: WARNING: USES SYSTEM CHARSET: For backward-compatibility reasons,
-            // this call must keep using no-arg String.getBytes() and the system charset (NOT explicit UTF-8),
-            // otherwise, existing clients on some platforms may be affected.
-            return HashCrypt.digestHashOldFunnyHex(null, originalKeyName);
+            // SCIPIO: 2018-09-13: This now uses UTF-8 String->byte[] encoding for creating
+            // new EntityKeyStore records and primary readback, but supports fallback on system charset below
+            return HashCrypt.digestHashOldFunnyHex(null, UtilIO.getUtf8(), originalKeyName);
+        }
+
+        @Override
+        protected String getFallbackHashedKeyName(String originalKeyName) { // SCIPIO
+            // SCIPIO: 2018-09-13: Fallback key using system charset (only for reading back existing records)
+            return isSystemCharsetUtf8() ? null : HashCrypt.digestHashOldFunnyHex(null, null, originalKeyName); // SCIPIO: DEV NOTE: DO NOT ADD UTF-8 HERE!
+        }
+
+        @Override
+        protected void notifyFallbackKeyLoaded(GenericValue keyValue) { // SCIPIO
+            logNonUtf8FallbackKeyLoaded(keyValue);
         }
 
         @Override
@@ -357,10 +445,20 @@ public final class EntityCrypto {
     protected static final StorageHandler NormalHashStorageHandler = new LegacyStorageHandler() {
         @Override
         protected String getHashedKeyName(String originalKeyName) {
-            // SCIPIO: WARNING: USES SYSTEM CHARSET: For backward-compatibility reasons,
-            // this call must keep using no-arg String.getBytes() and the system charset (NOT explicit UTF-8),
-            // otherwise, existing clients on some platforms may be affected.
-            return HashCrypt.digestHash("SHA", originalKeyName.getBytes());
+            // SCIPIO: 2018-09-13: This now uses UTF-8 String->byte[] encoding for creating
+            // new EntityKeyStore records and primary readback, but supports fallback on system charset below
+            return HashCrypt.digestHash("SHA", originalKeyName.getBytes(UtilIO.getUtf8()));
+        }
+
+        @Override
+        protected String getFallbackHashedKeyName(String originalKeyName) { // SCIPIO
+            // SCIPIO: 2018-09-13: Fallback key using system charset (only for reading back existing records)
+            return isSystemCharsetUtf8() ? null : HashCrypt.digestHash("SHA", originalKeyName.getBytes()); // SCIPIO: DEV NOTE: DO NOT ADD UTF-8 HERE!
+        }
+
+        @Override
+        protected void notifyFallbackKeyLoaded(GenericValue keyValue) { // SCIPIO
+            logNonUtf8FallbackKeyLoaded(keyValue);
         }
 
         @Override
@@ -395,10 +493,20 @@ public final class EntityCrypto {
 
         @Override
         protected String getHashedKeyName(String originalKeyName) {
-            // SCIPIO: WARNING: USES SYSTEM CHARSET: For backward-compatibility reasons,
-            // this call must keep using no-arg String.getBytes() and the system charset (NOT explicit UTF-8),
-            // otherwise, existing clients on some platforms may be affected.
-            return HashCrypt.digestHash64("SHA", originalKeyName.getBytes());
+            // SCIPIO: 2018-09-13: This now uses UTF-8 String->byte[] encoding for creating
+            // new EntityKeyStore records and primary readback, but supports fallback on system charset below
+            return HashCrypt.digestHash64("SHA", originalKeyName.getBytes(UtilIO.getUtf8()));
+        }
+
+        @Override
+        protected String getFallbackHashedKeyName(String originalKeyName) { // SCIPIO
+            // SCIPIO: 2018-09-13: Fallback key using system charset (only for reading back existing records)
+            return isSystemCharsetUtf8() ? null : HashCrypt.digestHash64("SHA", originalKeyName.getBytes()); // SCIPIO: DEV NOTE: DO NOT ADD UTF-8 HERE!
+        }
+
+        @Override
+        protected void notifyFallbackKeyLoaded(GenericValue keyValue) { // SCIPIO
+            logNonUtf8FallbackKeyLoaded(keyValue);
         }
 
         @Override
@@ -454,4 +562,11 @@ public final class EntityCrypto {
             return result;
         }
     };
+
+    private static boolean isSystemCharsetUtf8() { // SCIPIO: avoid rechecking this more than once/twice in beginning
+        if (systemCharsetUtf8 == null) {
+            systemCharsetUtf8 = UtilIO.getUtf8().equals(Charset.defaultCharset());
+        }
+        return systemCharsetUtf8;
+    }
 }

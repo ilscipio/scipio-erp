@@ -871,6 +871,14 @@
         <value xml:lang="zh">全部</value>
         <value xml:lang="zh-TW">全部</value>
     </property>
+    <property key="WebtoolsAllowUnsafeEntitiesDesc">
+        <value xml:lang="de">Einige Entitäten wie EntityKeyStore können schwerwiegende Probleme wie permanenten Datenverlust verursachen, wenn sie nicht unter den richtigen Bedingungen importiert werden (z. B. das Überschreiben von EntityKeyStore-Schlüsseln kann dazu führen, dass verschlüsselte Datenbankfelder vorhandener Daten dauerhaft unlesbar werden). Warnung: Aktivieren Sie dieses Kontrollkästchen nur, wenn Sie genau wissen, was Sie tun!</value>
+        <value xml:lang="en">Some entities such as EntityKeyStore can cause serious issues such as permanent data loss if not imported under the right conditions (e.g., overwriting EntityKeyStore keys can cause encrypted database fields of existing data to become permanently unreadable). Warning: Only check this box if you know exactly what you are doing!</value>
+    </property>
+    <property key="WebtoolsAllowUnsafeEntitiesNamed">
+        <value xml:lang="de">Erlaube gefährliche Wesen (${unsafeEntityNames})</value>
+        <value xml:lang="en">Allow dangerous entities (${unsafeEntityNames})</value>
+    </property>
     <property key="WebtoolsArtifactInfo">
         <value xml:lang="de">SCIPIO Elemente-Info</value>
         <value xml:lang="en">Artifact Info</value>

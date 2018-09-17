@@ -16,9 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "component://webtools/webapp/webtools/entity/entitycommon.ftl">
+
 <#-- SCIPIO: 2017-06-15: extra template configuration -->
 <#assign eiActionUri = eiActionUri!"entityImport">
 <#assign eiAllowServerLocs = eiAllowServerLocs!true><#-- if false, no file locations allowed -->
+<#assign eiUnsafeFieldOpt = eiUnsafeFieldOpt!true>
 <#assign eiInfoMsg = eiInfoMsg!(uiLabelMap.WebtoolsXMLImportInfo)>
 <#assign eiShowMsgs = eiShowMsgs!true>
 
@@ -65,6 +68,9 @@ under the License.
       <#if eiAllowServerLocs>
         <#-- SCIPIO: NOTE: 2017-06-15: fmfilename can be combined with any data source -->
         <@field type="input" size="40" name="fmfilename" value=(fmfilename!) label=uiLabelMap.WebtoolsAbsoluteFTLFilename/>
+      </#if>
+      <#if eiUnsafeFieldOpt>
+        <@eiUnsafeEntityField values=parameters/>
       </#if>
         <#-- SCIPIO: NOTE: 2017-06-15: the common fields are now available to all source types (they were not in stock ofbiz) -->
         <@field type="checkbox" name="mostlyInserts" checked=mostlyInserts?? label=uiLabelMap.WebtoolsMostlyInserts/>

@@ -259,7 +259,7 @@ public class HttpRequestFileUpload {
                         i = waitingReadLine(in, line, 0, BUFFER_SIZE, requestLength);
                         requestLength -= i;
                         if ((i == boundaryLength + 2 || i == boundaryLength + 4) // + 4 is eof
-                            && (new String(line, 0, i).startsWith(boundary))) {
+                            && (new String(line, 0, i, UtilIO.getUtf8()).startsWith(boundary))) { // SCIPIO: UtilIO.getUtf8()
                             fieldValue.append(newLine.substring(0, newLine.length() - 2));
                         } else {
                             fieldValue.append(newLine);

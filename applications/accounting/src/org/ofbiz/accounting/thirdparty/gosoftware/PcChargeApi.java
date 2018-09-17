@@ -183,7 +183,7 @@ public class PcChargeApi {
             throw new GeneralException("TCP transaction not supported without valid host/port configuration");
         }
 
-        byte readBuffer[] = new byte[2250];
+        //byte readBuffer[] = new byte[2250]; // SCIPIO: 2018-09-17: stock patch
         if (mode == MODE_IN) {
             Socket sock = new Socket(host, port);
             PrintStream ps = new PrintStream(sock.getOutputStream());
@@ -192,14 +192,20 @@ public class PcChargeApi {
             ps.print(this.toString());
             ps.flush();
 
+            /* SCIPIO: 2018-09-17: stock patch: this code may corrupt the document,
+             * because by calling new String incrementally on a capped byte buffer, 
+             * UTF-8 or any other charset characters may get chopped in half.
             StringBuilder buf = new StringBuilder();
             int size;
             while ((size = dis.read(readBuffer)) > -1) {
-                buf.append(new String(readBuffer, 0, size));
+                buf.append(new String(readBuffer, 0, size, UtilIO.getUtf8()));
             }
+            */
             Document outDoc = null;
             try {
-                outDoc = UtilXml.readXmlDocument(buf.toString(), false);
+                // SCIPIO: 2018-09-17: stock patch: use InputStream overload
+                //outDoc = UtilXml.readXmlDocument(buf.toString(), false);
+                outDoc = UtilXml.readXmlDocument(dis, false);
             } catch (ParserConfigurationException e) {
                 throw new GeneralException(e);
             } catch (SAXException e) {

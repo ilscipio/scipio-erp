@@ -24,7 +24,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -217,13 +216,28 @@ public class HashCrypt {
         }
     }
 
+    /**
+     * pbkdf2HashCrypt.
+     * <p>
+     * SCIPIO: 2018-09-13: WARN: If you have salt already as byte array, call 
+     * {@link #pbkdf2HashCrypt(String, byte[], String)} instead.
+     */
     public static String pbkdf2HashCrypt(String hashType, String salt, String value){
+        return pbkdf2HashCrypt(hashType, (salt != null) ? salt.getBytes(UtilIO.getUtf8()) : (byte[]) null, value);
+    }
+
+    /**
+     * SCIPIO: pbkdf2HashCrypt overload that takes a byte array for the salt instead of string.
+     * <p>
+     * Added 2018-09-13.
+     */
+    public static String pbkdf2HashCrypt(String hashType, byte[] salt, String value){
         char[] chars = value.toCharArray();
-        if (UtilValidate.isEmpty(salt)) {
+        if (salt == null || salt.length == 0) {
             salt = getSalt();
         }
         try {
-            PBEKeySpec spec = new PBEKeySpec(chars, salt.getBytes(UtilIO.getUtf8()), PBKDF2_ITERATIONS, 64 * 4);
+            PBEKeySpec spec = new PBEKeySpec(chars, salt, PBKDF2_ITERATIONS, 64 * 4);
             SecretKeyFactory skf = SecretKeyFactory.getInstance(hashType);
             byte[] hash = Base64.encodeBase64(skf.generateSecret(spec).getEncoded());
             String pbkdf2Type = null;
@@ -246,8 +260,8 @@ public class HashCrypt {
             StringBuilder sb = new StringBuilder();
             sb.append("{").append(pbkdf2Type).append("}");
             sb.append(PBKDF2_ITERATIONS).append("$");
-            sb.append(org.ofbiz.base.util.Base64.base64Encode(salt)).append("$");
-            sb.append(new String(hash));
+            sb.append(org.ofbiz.base.util.Base64.base64EncodeToString(salt)).append("$"); // SCIPIO: base64EncodeToString
+            sb.append(new String(hash, UtilIO.getUtf8())); // SCIPIO: UtilIO.getUtf8() (cosmetic only - base64 char range)
             return sb.toString();
         } catch (InvalidKeySpecException e) {
             throw new GeneralRuntimeException("Error while creating SecretKey", e);
@@ -262,7 +276,9 @@ public class HashCrypt {
             String hashType = crypted.substring(1, typeEnd);
             String[] parts = crypted.split("\\$");
             int iterations = Integer.parseInt(parts[0].substring(typeEnd+1));
-            byte[] salt = org.ofbiz.base.util.Base64.base64Decode(parts[1]).getBytes(UtilIO.getUtf8());
+            // SCIPIO: 2018-09-13: This is ridiculous
+            //byte[] salt = org.ofbiz.base.util.Base64.base64Decode(parts[1]).getBytes(UtilIO.getUtf8());
+            byte[] salt = org.ofbiz.base.util.Base64.base64DecodeToBytes(parts[1]);
             byte[] hash = Base64.decodeBase64(parts[2].getBytes(UtilIO.getUtf8()));
 
             PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, hash.length * 8);
@@ -295,12 +311,19 @@ public class HashCrypt {
         }
     }
 
-    private static String getSalt() {
+    /**
+     * Creates a salt.
+     * <p>
+     * SCIPIO: 2018-09-13: Modified to return byte array to avoid intermediate string representation.
+     */
+    private static byte[] getSalt() {
         try {
             SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
             byte[] salt = new byte[16];
             sr.nextBytes(salt);
-            return Arrays.toString(salt);
+            // SCIPIO: 2019-09-13: This was invalid, avoid conversion
+            //return Arrays.toString(salt);
+            return salt;
         } catch (NoSuchAlgorithmException e) {
             throw new GeneralRuntimeException("Error while creating salt", e);
         }

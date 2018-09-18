@@ -147,6 +147,23 @@ public class WebToolsServices {
         }
     }
 
+    /**
+     * SCIPIO: Backward-compat attempt to make the boolean checks less bad.
+     * Any non-null value must be true for backward-compat, except we'll take 
+     * "false" to mean false.
+     * Also we won't accept empty string as true in case called outside event handler
+     * (event handler passes empty string as null).
+     * Added 2018-09-18.
+     */
+    private static boolean checkEntityImportBooleanArg(Object valueObj) {
+        Boolean value = UtilMisc.booleanValue(valueObj);
+        if (value != null) {
+            return value;
+        }
+        // Backward-compat check, replaces (valueObj != null) check used for all except entityImportReaders
+        return UtilValidate.isNotEmpty((String) valueObj);
+    }
+
     public static Map<String, Object> entityImport(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -163,10 +180,15 @@ public class WebToolsServices {
         // SCIPIO: 2017-06-15: fixup the isUrl handling: needs explicit values, and if not explicitly set, we automatically deduce.
         //boolean isUrl = (String)context.get("isUrl") != null;
         Boolean isUrl = UtilMisc.booleanValueVersatile(context.get("isUrl"));
-        String mostlyInserts = (String)context.get("mostlyInserts");
-        String maintainTimeStamps = (String)context.get("maintainTimeStamps");
-        String createDummyFks = (String)context.get("createDummyFks");
-        String checkDataOnly = (String) context.get("checkDataOnly");
+        // SCIPIO: silly casting
+        //String mostlyInserts = (String)context.get("mostlyInserts");
+        //String maintainTimeStamps = (String)context.get("maintainTimeStamps");
+        //String createDummyFks = (String)context.get("createDummyFks");
+        //String checkDataOnly = (String) context.get("checkDataOnly");
+        Object mostlyInserts = context.get("mostlyInserts");
+        Object maintainTimeStamps = context.get("maintainTimeStamps");
+        Object createDummyFks = context.get("createDummyFks");
+        Object checkDataOnly = context.get("checkDataOnly");
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
         CommonEntityImportOptions commonOptions = CommonEntityImportOptions.fromContext(dctx, context); // SCIPIO
 
@@ -295,11 +317,18 @@ public class WebToolsServices {
         List<String> messages = new LinkedList<String>();
 
         String path = (String) context.get("path");
-        String mostlyInserts = (String) context.get("mostlyInserts");
-        String maintainTimeStamps = (String) context.get("maintainTimeStamps");
-        String createDummyFks = (String) context.get("createDummyFks");
-        boolean deleteFiles = (String) context.get("deleteFiles") != null;
-        String checkDataOnly = (String) context.get("checkDataOnly");
+        // SCIPIO: silly casting and poor boolean checks
+        //String mostlyInserts = (String) context.get("mostlyInserts");
+        //String maintainTimeStamps = (String) context.get("maintainTimeStamps");
+        //String createDummyFks = (String) context.get("createDummyFks");
+        //boolean deleteFiles = (String) context.get("deleteFiles") != null;
+        //String checkDataOnly = (String) context.get("checkDataOnly");
+        Object mostlyInserts = context.get("mostlyInserts");
+        Object maintainTimeStamps = context.get("maintainTimeStamps");
+        Object createDummyFks = context.get("createDummyFks");
+        boolean deleteFiles = checkEntityImportBooleanArg(context.get("deleteFiles"));
+        Object checkDataOnly = context.get("checkDataOnly");
+
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
         CommonEntityImportOptions commonOptions = CommonEntityImportOptions.fromContext(dctx, context); // SCIPIO
 
@@ -397,10 +426,15 @@ public class WebToolsServices {
         String readers = (String) context.get("readers");
         String overrideDelegator = (String) context.get("overrideDelegator");
         String overrideGroup = (String) context.get("overrideGroup");
-        boolean useDummyFks = "true".equals(context.get("createDummyFks"));
-        boolean maintainTxs = "true".equals(context.get("maintainTimeStamps"));
-        boolean tryInserts = "true".equals(context.get("mostlyInserts"));
-        boolean checkDataOnly = "true".equals(context.get("checkDataOnly"));
+        // SCIPIO: inconsistent boolean checks (vs other services)
+        //boolean useDummyFks = "true".equals(context.get("createDummyFks"));
+        //boolean maintainTxs = "true".equals(context.get("maintainTimeStamps"));
+        //boolean tryInserts = "true".equals(context.get("mostlyInserts"));
+        //boolean checkDataOnly = "true".equals(context.get("checkDataOnly"));
+        boolean useDummyFks = checkEntityImportBooleanArg(context.get("createDummyFks"));
+        boolean maintainTxs = checkEntityImportBooleanArg(context.get("maintainTimeStamps"));
+        boolean tryInserts = checkEntityImportBooleanArg(context.get("mostlyInserts"));
+        boolean checkDataOnly = checkEntityImportBooleanArg(context.get("checkDataOnly"));
         Locale locale = (Locale) context.get("locale");
         Integer txTimeoutInt = (Integer) context.get("txTimeout");
         int txTimeout = txTimeoutInt != null ? txTimeoutInt : -1;
@@ -513,10 +547,15 @@ public class WebToolsServices {
         if (url == null && xmltext == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityImportNoXmlFileOrTextSpecified", locale));
         }
-        boolean mostlyInserts = (String) context.get("mostlyInserts") != null;
-        boolean maintainTimeStamps = (String) context.get("maintainTimeStamps") != null;
-        boolean createDummyFks = (String) context.get("createDummyFks") != null;
-        boolean checkDataOnly = (String) context.get("checkDataOnly") != null;
+        // SCIPIO: these break too easily
+        //boolean mostlyInserts = (String) context.get("mostlyInserts") != null;
+        //boolean maintainTimeStamps = (String) context.get("maintainTimeStamps") != null;
+        //boolean createDummyFks = (String) context.get("createDummyFks") != null;
+        //boolean checkDataOnly = (String) context.get("checkDataOnly") != null;
+        boolean mostlyInserts = checkEntityImportBooleanArg(context.get("mostlyInserts"));
+        boolean maintainTimeStamps = checkEntityImportBooleanArg(context.get("maintainTimeStamps"));
+        boolean createDummyFks = checkEntityImportBooleanArg(context.get("createDummyFks"));
+        boolean checkDataOnly = checkEntityImportBooleanArg(context.get("checkDataOnly"));
         Integer txTimeout = (Integer) context.get("txTimeout");
         CommonEntityImportOptions commonOptions = CommonEntityImportOptions.fromContext(dctx, context); // SCIPIO
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));

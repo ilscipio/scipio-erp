@@ -1218,7 +1218,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
 
                 List<CmsProcessMapping> mappings = CmsProcessMapping.getWorker().findAll(delegator,
                         EntityCondition.makeCondition(condList, EntityOperator.AND), null,
-                        isUseDbCacheStatic(useCache));
+                        isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
 
                 if (UtilValidate.isNotEmpty(mappings)) {
                     // Use the mapping which is the most specific, i.e. the longest

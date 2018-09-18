@@ -1999,7 +1999,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     Debug.logInfo("Cms: Retrieving page from database: id: " + pageId + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
                 page = findOne(delegator, UtilMisc.toMap("pageId", pageId),
-                        isUseDbCacheStatic(useCache));
+                        isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
 
                 if (useGlobalCache) {
                     cache.put(key, page);

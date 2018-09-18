@@ -886,7 +886,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                     Debug.logInfo("Cms: Retrieving script template from database: id: " + id + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
                 script = findOne(delegator, UtilMisc.toMap("scriptTemplateId", id),
-                        isUseDbCacheStatic(useCache));
+                        isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
 
                 if (useGlobalCache) {
                     cache.put(key, script);
@@ -939,7 +939,8 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
 //                }
                 // NOTE: always null webSiteIds first - this matters
 //                List<CmsScriptTemplate> scripts = findAll(delegator, fields, UtilMisc.toList("webSiteId"), isUseDbCacheStatic(useCache));
-                List<CmsScriptTemplate> scripts = findAll(delegator, fields, null, isUseDbCacheStatic(useCache));
+                List<CmsScriptTemplate> scripts = findAll(delegator, fields, null, 
+                        isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
                 if (scripts.size() > 0) {
                     script = scripts.get(0);
                 }

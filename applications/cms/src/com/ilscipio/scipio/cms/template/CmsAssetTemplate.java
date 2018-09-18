@@ -559,7 +559,7 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
                     Debug.logInfo("Cms: Retrieving asset template from database: id: " + id + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
                 asset = findOne(delegator, UtilMisc.toMap("assetTemplateId", id),
-                        isUseDbCacheStatic(useCache));
+                        isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
 
                 if (useGlobalCache) {
                     cache.put(key, asset);
@@ -610,7 +610,8 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
                     fields.put("webSiteId", webSiteId);
                 }
                 // NOTE: always null webSiteIds first - this matters
-                List<CmsAssetTemplate> assets = findAll(delegator, fields, UtilMisc.toList("webSiteId"), isUseDbCacheStatic(useCache));
+                List<CmsAssetTemplate> assets = findAll(delegator, fields, UtilMisc.toList("webSiteId"), 
+                        isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
                 if (assets.size() > 0) {
                     asset = assets.get(0);
                 }

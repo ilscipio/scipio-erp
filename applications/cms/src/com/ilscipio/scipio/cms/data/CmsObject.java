@@ -37,7 +37,8 @@ public abstract class CmsObject implements Serializable, Preloadable {
     // will only disable caching but never enable
     // NOTE: the
 
-    static final boolean ALLOW_DB_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.db.allow", true);
+    static final boolean ALLOW_DB_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.entity.allow", true);
+    static final boolean ALLOW_DB_CACHE_BEHINDOBJCACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.entity.behindobjcache.allow", false); // added 2018-09-18
     static final boolean ALLOW_LOCAL_OBJ_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.obj.local.allow", true);
     static final boolean ALLOW_GLOBAL_OBJ_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.obj.global.allow", true);
 
@@ -55,9 +56,29 @@ public abstract class CmsObject implements Serializable, Preloadable {
     /**
      * Logic to determine if the entity delegator cache should be enabled, based on passed generic
      * useCache bool.
+     * <p>
+     * 2018-09-18: This should not be used to determine entity caching if the result is going to
+     * be placed in a global object cache (UtilCache), use {@link #isUseDbCacheBehindObjCacheStatic} instead for that.
      */
     protected static boolean isUseDbCacheStatic(boolean useCache) {
         return useCache && ALLOW_DB_CACHE;
+    }
+
+    /**
+     * Same as isUseDbCacheStatic but used for cases where there's already a UtilCache.
+     * This should practically always return false.
+     * <p>
+     * Added 2018-09-18.
+     * @param useCache the general useCache flag passed to the worker method
+     * @param useObjCache the result returned from {@link #isUseGlobalObjCacheStatic(boolean)} 
+     *                    (that was passed <code>useCache</code>)
+     */
+    protected static boolean isUseDbCacheBehindObjCacheStatic(boolean useCache, boolean useObjCache) {
+        if (useObjCache) {
+            return ALLOW_DB_CACHE_BEHINDOBJCACHE;
+        } else {
+            return isUseDbCacheStatic(useCache);
+        }
     }
 
     protected boolean isUseLocalObjCache(boolean useCache) {

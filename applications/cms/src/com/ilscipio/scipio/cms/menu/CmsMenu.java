@@ -168,7 +168,7 @@ public class CmsMenu extends CmsDataObject implements CmsMajorObject {
                     Debug.logInfo("Cms: Retrieving menu from database: id: " + id + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
                 menu = findOne(delegator, UtilMisc.toMap("menuId", id),
-                        isUseDbCacheStatic(useCache));
+                        isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
 
                 if (useGlobalCache) {
                     cache.put(key, menu);
@@ -224,7 +224,7 @@ public class CmsMenu extends CmsDataObject implements CmsMajorObject {
 //                }
                 // NOTE: always null webSiteIds first - this matters
 //                List<CmsScriptTemplate> scripts = findAll(delegator, fields, UtilMisc.toList("webSiteId"), isUseDbCacheStatic(useCache));
-                List<CmsMenu> menus = findAll(delegator, fields, null, isUseDbCacheStatic(useCache));
+                List<CmsMenu> menus = findAll(delegator, fields, null, isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
                 if (menus.size() > 0) {
                     menu = menus.get(0);
                 }

@@ -285,7 +285,7 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
 
             List<CmsViewMapping> viewMappings = CmsViewMapping.getWorker().findAll(delegator,
                     EntityCondition.makeCondition(condList, EntityOperator.AND),
-                    null, isUseDbCacheStatic(useCache));
+                    null, isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
 
             // Iterate view mapping trying to get the most specialized matching using precedence.
             // 2016: this is very simple because we now only have to check precedence for

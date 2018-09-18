@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Debug;
@@ -308,6 +309,11 @@ public final class EntityConfig {
     /** Returns the <code>&lt;entity-data-reader&gt;</code> child elements. */
     public List<EntityDataReader> getEntityDataReaderList() {
         return this.entityDataReaderList;
+    }
+
+    /** SCIPIO: Returns the <code>&lt;entity-data-reader&gt;</code> names. Added 2018-09-18. */
+    public Set<String> getEntityDataReaderNames() {
+        return this.entityDataReaderMap.keySet();
     }
 
     /** Returns the specified <code>&lt;field-type&gt;</code> child element, or <code>null</code> if no child element was found. */

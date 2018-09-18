@@ -11,6 +11,7 @@ import com.ilscipio.scipio.cms.control.CmsProcessMapping;
 import com.ilscipio.scipio.cms.control.CmsProcessViewMapping;
 import com.ilscipio.scipio.cms.control.CmsViewMapping;
 import com.ilscipio.scipio.cms.data.CmsDataObject.DataObjectWorker;
+import com.ilscipio.scipio.cms.menu.CmsMenu;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplate;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplate.CmsAssetTemplateScriptAssoc;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplateVersion;
@@ -39,6 +40,7 @@ public final class CmsObjectRegistry {
         Map<String, DataObjectWorker<?>> map = new HashMap<>();
 
         // major types
+        map.put("CmsMenu", CmsMenu.getWorker());
         map.put("CmsScriptTemplate", CmsScriptTemplate.getWorker());
         map.put("CmsAssetTemplate", CmsAssetTemplate.getWorker());
         map.put("CmsPageTemplate", CmsPageTemplate.getWorker());

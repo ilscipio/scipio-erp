@@ -749,6 +749,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             b.newConfig("CmsPageTemplates").setAttribTmplAssocType("PAGE_TEMPLATE").setEntityNames(ei.copyCmsEntityNames(null, b.list("CmsPageTemplate", "CmsPageTemplateAssetAssoc", "CmsPageTemplateScriptAssoc", "CmsPageTemplateVersion", "CmsPageTemplateVersionState", "CmsAttributeTemplate"))).complete();
             b.newConfig("CmsAssetTemplates").setAttribTmplAssocType("ASSET_TEMPLATE").setEntityNames(ei.copyCmsEntityNames(null, b.list("CmsAssetTemplate", "CmsAssetTemplateScriptAssoc", "CmsAssetTemplateVersion", "CmsAssetTemplateVersionState", "CmsAttributeTemplate"))).complete();
             b.newConfig("CmsScriptTemplates").setEntityNames(ei.copyCmsEntityNames(null, b.list("CmsScriptTemplate"))).complete();
+            b.newConfig("CmsMenus").setEntityNames(ei.copyCmsEntityNames(null, b.list("CmsMenu"))).complete();
 
             // SPECIAL CASES
             b.newConfig("CmsMedia").setEntityNames(UtilMisc.toHashSet("CmsMedia")).complete();
@@ -757,7 +758,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             // Simplified (non-advanced) list of names to show in the UI...
             // this must be separate because internally we need access to all the presets
             b.setSimplePresetNames(new LinkedHashSet<>(Arrays.asList(new String[] {
-                    "CmsAllEntities", "CmsAllEntitiesNoMedia", "CmsPages", "CmsPagesMappings", "CmsTemplates", "CmsPageTemplates", "CmsAssetTemplates", "CmsScriptTemplates",
+                    "CmsAllEntities", "CmsAllEntitiesNoMedia", "CmsPages", "CmsPagesMappings", "CmsTemplates", "CmsPageTemplates", "CmsAssetTemplates", "CmsScriptTemplates", "CmsMenus",
                     // SPECIAL CASES
                     "CmsMedia", "CmsMediaWithVariants"
             })));

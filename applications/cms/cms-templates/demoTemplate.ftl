@@ -102,6 +102,10 @@
     ${demoLibAsset.runDemoLibAssetFunction2()}
   </@section>
   
+  <@section title="CMS Menu">
+    <@cmsmenu type="sidebar" menuId="9000" />
+  </@section>
+
 <#if cmsPageId?has_content><#-- cmsPageId is set to the current page rendering -->
   <@section title="Page links">
       <p><em>NOTE: both @pageUrl and @cmsPageUrl are valid names, but only @cmsPageUrl will

@@ -313,7 +313,7 @@ public abstract class CmsEntityVisit {
          * Allows a visitor (Visitor pattern) to go through the entities immediately associated
          * to the major entities in the order of dependencies of entity relations.
          * <p>
-         * This generic pattern will ensure a consist visiting order for
+         * This generic pattern will ensure a consistent visiting order for
          * all operations including export.
          * <p>
          * NOTE: the settings are all on the visitor itself.

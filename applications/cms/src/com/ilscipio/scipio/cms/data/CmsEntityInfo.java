@@ -48,9 +48,11 @@ public class CmsEntityInfo {
      * DEV NOTE: This list may become error-prone to maintain, so for this reason the code does a bunch of error
      * checks; enable debug mode and check logs to debug.
      * <p>
-     * Last updated: 2017-05-31, based on DependencyGraph results.
+     * Last updated: 2018-09-18, for CmsMenu; previous based on DependencyGraph results.
      */
     static final List<String> cmsEntityNamesPrefOrderDefault = UtilMisc.unmodifiableArrayList(
+            "CmsMenu",
+
             "CmsScriptTemplate",
 
             "CmsAssetTemplate", "CmsAssetTemplateScriptAssoc",
@@ -71,7 +73,7 @@ public class CmsEntityInfo {
      * Major entity names, see {@link #getMajorCmsEntityNames()} for info.
      */
     static final Set<String> majorCmsEntityNames = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(new String[] {
-            "CmsScriptTemplate", "CmsAssetTemplate", "CmsPageTemplate", "CmsPage",
+            "CmsMenu", "CmsScriptTemplate", "CmsAssetTemplate", "CmsPageTemplate", "CmsPage",
             "CmsProcessMapping", "CmsViewMapping"
     })));
 
@@ -608,6 +610,7 @@ public class CmsEntityInfo {
         for(SpecDataResEntityInfo entityInfo : SpecDataResEntityInfo.getEntityInfoList()) {
             map.put(entityInfo.getEntityName(), new HashSet<>(Arrays.asList(new String[] { entityInfo.getDataFieldName() })));
         }
+        map.put("CmsMenu", new HashSet<>(Arrays.asList(new String[] { "menuJson" })));
         return map;
     }
 

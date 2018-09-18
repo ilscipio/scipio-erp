@@ -741,6 +741,10 @@
         <value xml:lang="en">CMS Script Templates Only</value>
         <value xml:lang="de">CMS Script Templates Nur</value>
     </property>
+    <property key="CmsEntityPresetLabel_CmsMenus">
+        <value xml:lang="en">CMS Menus Only</value>
+        <value xml:lang="de">CMS Menüs Nur</value>
+    </property>
     <property key="CmsEntityPresetLabel_CmsMedia">
         <value xml:lang="en">CMS Media (no variants) (WARNING: Large)</value>
         <value xml:lang="de">CMS Media (Keine Varianten) (WARNUNG: Groß)</value>

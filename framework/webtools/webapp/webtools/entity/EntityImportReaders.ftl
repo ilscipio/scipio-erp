@@ -17,22 +17,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<p>${uiLabelMap.WebtoolsXMLImportInfo}</p>
-<hr />
+  <#assign availReadersStr = allReaderNames?sort?join(", ")>
+  <p>${uiLabelMap.WebtoolsXMLImportReadersInfo} ${uiLabelMap.WebtoolsAvailableReaders}: <em>${availReadersStr}</em></p>
+
   <form method="post" action="<@ofbizUrl>entityImportReaders</@ofbizUrl>">
-    Enter Readers (comma separated, no spaces; from entityengine.xml and ofbiz-component.xml files; common ones include seed,ext,demo):<br />
-    <input type="text" size="60" name="readers" value="${readers!"seed"}"/><br />
-    <input type="checkbox" name="mostlyInserts" <#if mostlyInserts??>checked="checked"</#if> value="true"/>${uiLabelMap.WebtoolsMostlyInserts}<br />
-    <input type="checkbox" name="maintainTimeStamps" <#if keepStamps??>checked="checked"</#if> value="true"/>${uiLabelMap.WebtoolsMaintainTimestamps}<br />
-    <input type="checkbox" name="createDummyFks" <#if createDummyFks??>checked="checked"</#if> value="true"/>${uiLabelMap.WebtoolsCreateDummyFks}<br />
-    <input type="checkbox" name="checkDataOnly" <#if checkDataOnly??>checked="checked"</#if> value="true"/>${uiLabelMap.WebtoolsCheckDataOnly}<br />
-    ${uiLabelMap.WebtoolsTimeoutSeconds}:<input type="text" size="6" value="${txTimeoutStr!"7200"}" name="txTimeout"/><br />
-    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImport}" class="${styles.link_run_sys!} ${styles.action_import!}"/></div>
+    <@field type="text" name="readers" value=(readers!"seed") label=uiLabelMap.WebtoolsReadersImportLabel size="60" 
+        tooltip=(rawLabel('WebtoolsReaderImportNotice')+" - "+rawLabel('WebtoolsAvailableReaders')+": "+availReadersStr)/>
+
+    <@field type="checkbox" name="mostlyInserts" value="true" checked=mostlyInserts?? label=uiLabelMap.WebtoolsMostlyInserts/>
+    <@field type="checkbox" name="maintainTimeStamps" value="true" checked=keepStamps?? label=uiLabelMap.WebtoolsMaintainTimestamps/>
+    <@field type="checkbox" name="createDummyFks" value="true" checked=createDummyFks?? label=uiLabelMap.WebtoolsCreateDummyFks/>
+    <@field type="checkbox" name="checkDataOnly" value="true" checked=checkDataOnly?? label=uiLabelMap.WebtoolsCheckDataOnly/>
+
+    <@field type="text" name="txTimeout" value=(txTimeoutStr!"7200") label=uiLabelMap.WebtoolsTimeoutSeconds size="6"/>
+    <@field type="submit" text=uiLabelMap.WebtoolsImport class="${styles.link_run_sys!} ${styles.action_import!}"/>
   </form>
+  
   <#if messages??>
-      <hr />
-      <@heading>${uiLabelMap.WebtoolsResults}:</@heading>
+    <@section title=uiLabelMap.WebtoolsResults>
+      <p>${uiLabelMap.WebtoolsReaders}: ${parameters.readers!}</p>
       <#list messages as message>
-          <p>${message}</p>
+        <p>${message}</p>
       </#list>
+    </@section>
   </#if>

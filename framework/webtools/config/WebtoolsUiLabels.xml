@@ -910,6 +910,10 @@
         <value xml:lang="zh">异步</value>
         <value xml:lang="zh-TW">非同步</value>
     </property>
+    <property key="WebtoolsAvailableReaders">
+        <value xml:lang="de">Verfügbare Leser</value>
+        <value xml:lang="en">Available readers</value>
+    </property>
     <property key="WebtoolsBackToCacheMaintenance">
         <value xml:lang="de">Zurück zur Cache-Wartung</value>
         <value xml:lang="en">Back to Cache Maintenance</value>
@@ -6188,10 +6192,14 @@
         <value xml:lang="zh">本页面用于导入导出的实体引擎XML文档。这些文档都有一个根标签 "&lt;entity-engine-xml&gt;".</value>
         <value xml:lang="zh-TW">本頁面用於匯入匯出的資料實體引擎XML檔.這些檔都有一個根標簽 "&lt;entity-engine-xml&gt;".&lt;/entity-engine-xml&gt;</value>
     </property>
+    <property key="WebtoolsXMLImportReadersInfo">
+        <value xml:lang="de">Diese Seite kann verwendet werden, um Entity Engine-Daten für bestimmte Leser (Datentypen) aus Komponentendateien im System zu laden (oder erneut zu laden).</value>
+        <value xml:lang="en">This page can be used to load (or reload) Entity Engine data for specific readers (data types) from component data files in the system.</value>
+    </property>
     <property key="WebtoolsYouMayCreateAnEntity">
         <value xml:lang="de">You may create an Entity ${entityName} by entering the values you want, and clicking Create.</value>
         <value xml:lang="en">You may create an Entity ${entityName} by entering the values you want, and clicking Create.</value>
-        <value xml:lang="fr">Vous pouvez créer une entité  ${entityName} En entrant les valeurs que vous voulez, et en cliquant sur Créez.</value>
+        <value xml:lang="fr">Vous pouvez créer une entité ${entityName} En entrant les valeurs que vous voulez, et en cliquant sur Créez.</value>
         <value xml:lang="it">Puoi creare una Entità ${entityName} inserendo i valori che vuoi, e cliccando il tasto Creare.</value>
         <value xml:lang="ja">必要な値を入力して作成ボタンを押すと、${entityName} エンティティが作成されます。</value>
         <value xml:lang="ro">Tu poti crea o Entitate ${entityName} si introducand valorile care le vrei, si click_and tasta Creare.</value>
@@ -6201,8 +6209,16 @@
         <value xml:lang="zh-TW">新建一個資料實體 ${entityName} :輸入值,然後點擊新建.</value>
     </property>
     <property key="WebtoolsReaderImportNotice">
-        <value xml:lang="de">Eingabe Readers (Komma getrennt,keine Leerzeichen; aus entityengine.xml und ofbiz-component.xml Dateien; common ones include seed,ext,demo)</value>
-        <value xml:lang="en">Enter Readers (comma separated, no spaces; from entityengine.xml and ofbiz-component.xml files; common ones include seed,ext,demo)</value>
+        <value xml:lang="de">Eingabe Readers (Komma getrennt,keine Leerzeichen; aus entityengine.xml und ofbiz-component.xml Dateien)</value>
+        <value xml:lang="en">Enter Readers (comma separated, no spaces; from entityengine.xml and ofbiz-component.xml files)</value>
+    </property>
+    <property key="WebtoolsReaders">
+        <value xml:lang="de">Readers</value>
+        <value xml:lang="en">Readers</value>
+    </property>
+    <property key="WebtoolsReadersImportLabel">
+        <value xml:lang="de">Readers (Komma getrennt,keine Leerzeichen)</value>
+        <value xml:lang="en">Readers (comma separated, no spaces)</value>
     </property>
     <property key="WebtoolsSearchLocName">
         <value xml:lang="de">Ort/Namen Suchen</value>

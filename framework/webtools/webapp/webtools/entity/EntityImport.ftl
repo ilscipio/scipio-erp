@@ -73,11 +73,11 @@ under the License.
         <@eiUnsafeEntityField values=parameters/>
       </#if>
         <#-- SCIPIO: NOTE: 2017-06-15: the common fields are now available to all source types (they were not in stock ofbiz) -->
-        <@field type="checkbox" name="mostlyInserts" checked=mostlyInserts?? label=uiLabelMap.WebtoolsMostlyInserts/>
-        <@field type="checkbox" name="maintainTimeStamps" checked=keepStamps?? label=uiLabelMap.WebtoolsMaintainTimestamps/>
-        <@field type="checkbox" name="createDummyFks" checked=createDummyFks?? label=uiLabelMap.WebtoolsCreateDummyFks/>
-        <@field type="checkbox" name="checkDataOnly" checked=checkDataOnly?? label=uiLabelMap.WebtoolsCheckDataOnly/>
-        <@field type="input" size="6" value=txTimeoutStr!'7200' name="txTimeout" label=uiLabelMap.WebtoolsTimeoutSeconds/>
+        <@field type="checkbox" name="mostlyInserts" value="true" checked=mostlyInserts?? label=uiLabelMap.WebtoolsMostlyInserts/>
+        <@field type="checkbox" name="maintainTimeStamps" value="true" checked=keepStamps?? label=uiLabelMap.WebtoolsMaintainTimestamps/>
+        <@field type="checkbox" name="createDummyFks" value="true" checked=createDummyFks?? label=uiLabelMap.WebtoolsCreateDummyFks/>
+        <@field type="checkbox" name="checkDataOnly" value="true" checked=checkDataOnly?? label=uiLabelMap.WebtoolsCheckDataOnly/>
+        <@field type="input" name="txTimeout" value=(txTimeoutStr!"7200") label=uiLabelMap.WebtoolsTimeoutSeconds size="6"/>
         <@field type="submit" text=submitText class="+${styles.link_run_sys!} ${styles.action_import!}"/>
       </form>
     </#if>

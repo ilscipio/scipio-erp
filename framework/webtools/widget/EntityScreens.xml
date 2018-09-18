@@ -141,11 +141,17 @@ under the License.
                 <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
 
                 <set field="messages" from-field="parameters.messages"/>
+                
+                <!-- SCIPIO -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.entity.config.model.EntityConfig;
+                    context.allReaderNames = EntityConfig.getInstance().getEntityDataReaderNames() as List;
+                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.WebtoolsImportToDataSource}">
+                        <screenlet><!-- title="${uiLabelMap.WebtoolsImportToDataSource}" -->
                             <platform-specific>
                                 <html><html-template location="component://webtools/webapp/webtools/entity/EntityImportReaders.ftl"/></html>
                             </platform-specific>

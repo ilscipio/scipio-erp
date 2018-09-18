@@ -605,6 +605,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     protected void populateBasicDescriptorFields(Map<String, Object> descriptor, String webSiteId, Locale locale) {
         preventIfImmutable(); // WARN: currently dangerous if called from rendering!
 
+        CmsPageTemplate pageTemplate = null;
+        try {
+            pageTemplate = getTemplate();
+        } catch(CmsException e) {
+            Debug.logWarning("Could not get a page template for page '" + getId() + "': " + e.getMessage(), module);
+        }
         descriptor.putAll(UtilMisc.toMap("id", getId(),
                 "name", getName(),
                 "primaryPath", getPrimaryPath(webSiteId),
@@ -614,7 +620,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 "path", getPrimaryPath(webSiteId), // TODO: DEPRECATED: REMOVE
                 "webSiteId", webSiteId,
                 "defaultWebSiteId", getWebSiteId(),
-                "pageTemplateId", getTemplate().getId(),
+                "pageTemplateId", (pageTemplate != null) ? pageTemplate.getId() : null,
                 "primaryMappingCount", getPrimaryProcessMappingsListCopy().size(),
                 "status", isActive(),
                 "description", getDescription(locale)));

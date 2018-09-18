@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="CmsPage.description.ADVSHOPINDEX">
-        <value xml:lang="en">Shop Index example demonstrating Advanced Template Shop (Frontend). To enable this page in live Shop, use the View Mappings tree on the page editor and tick the ScipioWebStore 'main' view to enable the live mapping (there is no need to change the primary WebSite).</value>
         <value xml:lang="de">Shop Index example demonstrating Advanced Template Shop (Frontend). Um diese Seite im Live-Shop zu aktivieren, verwenden Sie den View Mappings-Baum auf dem Seiteneditor und markieren Sie die ScipioWebStore-Hauptansicht, um die Live-Mapping zu aktivieren (es besteht keine Notwendigkeit, die primäre WebSite zu ändern).</value>
+        <value xml:lang="en">Shop Index example demonstrating Advanced Template Shop (Frontend). To enable this page in live Shop, use the View Mappings tree on the page editor and tick the ScipioWebStore 'main' view to enable the live mapping (there is no need to change the primary WebSite).</value>
     </property>
 </resource>

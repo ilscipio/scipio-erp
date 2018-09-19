@@ -414,21 +414,21 @@ under the License.
         <response name="error" type="view" value="EntityExportAll"/>
     </request-map>
     <request-map uri="EntityImportDir"><security https="true" auth="true"/><response name="success" type="view" value="EntityImportDir"/></request-map>
-    <request-map uri="entityImportDir">
+    <request-map uri="entityImportDir" method="post">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="entityImportDir"/>
         <response name="success" type="view" value="EntityImportDir"/>
         <response name="error" type="view" value="EntityImportDir"/>
     </request-map>
     <request-map uri="EntityImport"><security https="true" auth="true"/><response name="success" type="view" value="EntityImport"/></request-map>
-    <request-map uri="entityImport">
+    <request-map uri="entityImport" method="post">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="entityImport"/>
         <response name="success" type="view" value="EntityImport"/>
         <response name="error" type="view" value="EntityImport"/>
     </request-map>
     <request-map uri="EntityImportReaders"><security https="true" auth="true"/><response name="success" type="view" value="EntityImportReaders"/></request-map>
-    <request-map uri="entityImportReaders">
+    <request-map uri="entityImportReaders" method="post">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="entityImportReaders"/>
         <response name="success" type="view" value="EntityImportReaders"/>

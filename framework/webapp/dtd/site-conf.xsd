@@ -421,6 +421,34 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="method" use="optional" default="all">
+            <xs:annotation>
+                <xs:documentation>
+                    The HTTP method of this request. This will be the HTTP method used to access the request.
+
+                    SCIPIO: NOTE: This attribute does not currently influence request resolution; 
+                    it behaves more like the security checks done for attributes on the security element 
+                    (https, direct-request).
+                    
+                    Added 2018-09-19.
+
+                    Possible values (allows comma-separated; avoid space and uppercase): 
+                       all (default), get, post, head, put, delete, patch, options
+                </xs:documentation>
+            </xs:annotation>
+            <!--<xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="get"/>
+                    <xs:enumeration value="post"/>
+                    <xs:enumeration value="head"/>
+                    <xs:enumeration value="put"/>
+                    <xs:enumeration value="delete"/>
+                    <xs:enumeration value="patch"/>
+                    <xs:enumeration value="options"/>
+                    <xs:enumeration value="all"/>
+                </xs:restriction>
+            </xs:simpleType>-->
+        </xs:attribute>
         <xs:attribute type="xs:boolean" name="edit" default="true">
             <xs:annotation>
                 <xs:documentation>

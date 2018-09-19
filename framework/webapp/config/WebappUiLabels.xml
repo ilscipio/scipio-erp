@@ -340,7 +340,14 @@
         <value xml:lang="zh-TW">沒有完成事件</value>
     </property>
     <property key="RequestMethodNotMatchConfig">
+        <value xml:lang="de">[{0}] kann nicht mit der Methode [{1}] aufgerufen.</value>
         <value xml:lang="en">[{0}] cannot be called by [{1}] method.</value>
         <value xml:lang="zh">[{0}]不能用[{1}]方法请求。</value>
+    </property>
+    <property key="RequestMethodNotMatchConfigDesc">
+        <value xml:lang="de">Auf diese Anfrage kann nicht so zugegriffen werden, wie Ihr Browser versucht hat, darauf zuzugreifen. Bitte navigieren Sie zurück mit dem Site-Menü, Links oder Browser-Buttons, um es zu erreichen. Wenn das Problem weiterhin besteht, wenden Sie sich an den Support.</value>
+        <value xml:lang="en">This request cannot be accessed in the way your browser has tried to access it. Please navigate back using the site menu, links or browser buttons to reach it. If the problem persists, please contact support.</value>
+        <value xml:lang="es">No se puede acceder a esta solicitud en la forma en que su navegador ha intentado acceder a ella. Navegue hacia atrás utilizando el menú del sitio, los enlaces o los botones del navegador para acceder a él. Si el problema persiste, contáctese con el soporte.</value>
+        <value xml:lang="fr">Cette requête n'est pas accessible dans la manière dont votre navigateur a tenté d'y accéder. Veuillez revenir en arrière en utilisant le menu du site, les liens ou les boutons du navigateur pour y accéder. Si le problème persiste, contactez le support technique.</value>
     </property>
 </resource>

@@ -37,6 +37,7 @@ import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
@@ -227,6 +228,19 @@ public class ControlServlet extends HttpServlet {
         try {
             // the ServerHitBin call for the event is done inside the doRequest method
             requestHandler.doRequest(request, response, null, userLogin, delegator);
+        } catch (MethodNotAllowedException e) {
+            // SCIPIO: Use error page for this too; users can too easily trigger this
+            //response.setContentType("text/plain");
+            //response.setCharacterEncoding(request.getCharacterEncoding());
+            response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+            //response.getWriter().print(e.getMessage());
+            Debug.logError("Error in request handler: " + e.getMessage(), module);
+            // SCIPIO: Here it should be safe to show a friendly message, no real need to fallback to 
+            // generic one in high security, this is safe enough
+            //request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e));
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("WebappUiLabels", 
+                    "RequestMethodNotMatchConfigDesc", UtilHttp.getLocale(request)));
+            errorPage = requestHandler.getDefaultErrorPage(request);
         } catch (RequestHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
             if (throwable instanceof IOException) {
@@ -239,9 +253,9 @@ public class ControlServlet extends HttpServlet {
                 request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, throwable)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
                 errorPage = requestHandler.getDefaultErrorPage(request);
             }
-         } catch (RequestHandlerExceptionAllowExternalRequests e) {
-              errorPage = requestHandler.getDefaultErrorPage(request);
-              Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
+        } catch (RequestHandlerExceptionAllowExternalRequests e) {
+            errorPage = requestHandler.getDefaultErrorPage(request);
+            Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
         } catch (Exception e) {
             Debug.logError(e, "Error in request handler: ", module);
             request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)

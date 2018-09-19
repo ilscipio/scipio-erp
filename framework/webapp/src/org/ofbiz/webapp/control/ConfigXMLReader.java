@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -1412,7 +1413,12 @@ public class ConfigXMLReader {
     }
 
     public static class RequestMap {
+        // SCIPIO
+        private static final Set<String> allowedMethods = // NOTE: excludes "all"
+                UtilMisc.unmodifiableHashSet("get", "post", "head", "put", "delete", "patch", "options");
+
         public String uri;
+        public Set<String> methods = Collections.emptySet(); // SCIPIO: Allowed HTTP methods
         public boolean edit = true;
         public boolean trackVisit = true;
         public boolean trackServerHit = true;
@@ -1429,6 +1435,24 @@ public class ConfigXMLReader {
         public RequestMap(Element requestMapElement) {
             // Get the URI info
             this.uri = requestMapElement.getAttribute("uri");
+            // SCIPIO: HTTP methods
+            // NOTE: We will be permissive to uppercase for security reasons, but should be written with lowercase in files.
+            String methodStr = requestMapElement.getAttribute("method");
+            if (methodStr.isEmpty() || "all".equalsIgnoreCase(methodStr)) {
+                //this.methods = Collections.emptySet();
+            } else {
+                String[] methodList = methodStr.toLowerCase(Locale.getDefault()).split("\\s*,\\s*");
+                Set<String> methods = new HashSet<>();
+                for(String method : methodList) {
+                    if (!allowedMethods.contains(method)) {
+                        Debug.logError("request-map '" + this.uri + "' specifies invalid HTTP method: " 
+                                + method + " in value '" + methodStr + "' (allowed values: " + allowedMethods + ")", module);
+                    } else {
+                        methods.add(method);
+                    }
+                }
+                this.methods = methods;
+            }
             this.edit = !"false".equals(requestMapElement.getAttribute("edit"));
             this.trackServerHit = !"false".equals(requestMapElement.getAttribute("track-serverhit"));
             this.trackVisit = !"false".equals(requestMapElement.getAttribute("track-visit"));

@@ -63,6 +63,7 @@ import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
+import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
 import org.ofbiz.webapp.event.EventFactory;
 import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -145,6 +146,31 @@ public class RequestHandler {
         return null;
     }
 
+    /**
+     * SCIPIO: Check if the request satisfies the given HTTP method.
+     * Added 2018-09-19.
+     */
+    static boolean acceptsMethod(String method, RequestMap requestMap) {
+        return (requestMap.methods.isEmpty() || requestMap.methods.contains(method.toLowerCase()));
+    }
+
+    /**
+     * SCIPIO: Check if the request satisfies the given HTTP method, except if not.
+     * Added 2018-09-19.
+     */
+    static void checkMethod(HttpServletRequest request, RequestMap requestMap) throws MethodNotAllowedException {
+        String method = request.getMethod();
+        if (!acceptsMethod(method, requestMap)) {
+            String msg = UtilProperties.getMessage("WebappUiLabels", "RequestMethodNotMatchConfig",
+                    UtilMisc.toList(requestMap.getUri(), method),
+                    // SCIPIO: this is wrong, exception messages should be english (we show a better one from ControlServlet)
+                    //UtilHttp.getLocale(request)
+                    Locale.ENGLISH
+                    );
+            throw new MethodNotAllowedException(msg);
+        }
+    }
+    
     public void doRequest(HttpServletRequest request, HttpServletResponse response, String requestUri) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         HttpSession session = request.getSession();
         Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -236,7 +262,7 @@ public class RequestHandler {
         if (requestMap == null) {
             if (throwRequestHandlerExceptionOnMissingLocalRequest) throw new RequestHandlerException(requestMissingErrorMessage);
             else throw new RequestHandlerExceptionAllowExternalRequests();
-         }
+        }
 
         String eventReturn = null;
         if (requestMap.metrics != null && requestMap.metrics.getThreshold() != 0.0 && requestMap.metrics.getTotalEvents() > 3 && requestMap.metrics.getThreshold() < requestMap.metrics.getServiceRate()) {
@@ -295,7 +321,7 @@ public class RequestHandler {
             boolean isSecure = RequestLinkUtil.isEffectiveSecure(request); // SCIPIO: 2018: replace request.isSecure()
             if (!isSecure && requestMap.securityHttps) {
                 // If the request method was POST then return an error to avoid problems with XSRF where the request may have come from another machine/program and had the same session ID but was not encrypted as it should have been (we used to let it pass to not lose data since it was too late to protect that data anyway)
-                if (request.getMethod().equalsIgnoreCase("POST")) {
+                if ("POST".equalsIgnoreCase(request.getMethod())) {
                     // we can't redirect with the body parameters, and for better security from XSRF, just return an error message
                     Locale locale = UtilHttp.getLocale(request);
                     String errMsg = UtilProperties.getMessage("WebappUiLabels", "requestHandler.InsecureFormPostToSecureRequest", locale);
@@ -381,6 +407,9 @@ public class RequestHandler {
                     throw new RequestHandlerException(requestMissingErrorMessage);
                 }
             }
+
+            // SCIPIO: Check request HTTP method
+            checkMethod(request, requestMap);
 
             // If its the first visit run the first visit events.
             if (this.trackVisit(request) && session.getAttribute("_FIRST_VISIT_EVENTS_") == null) {

@@ -108,6 +108,38 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
         return false;
     }
 
+    /**
+     * SCIPIO: Returns <code>true</code> if <code>fse</code> is only a <code>String</code> constant,
+     * with no interpreted expressions or scripts (by this class).
+     * <p>
+     * Added 2018-09-19.
+     * @param fse The <code>FlexibleStringExpander</code> to test
+     * @return <code>true</code> if <code>fse</code> contains a <code>String</code> constant
+     */
+    public static boolean isConstant(FlexibleStringExpander fse) {
+        return (fse != null && fse.isConstant());
+    }
+
+    /**
+     * SCIPIO: Returns <code>true</code> if <code>this</code> is only a <code>String</code> constant,
+     * with no interpreted expressions or scripts (by this class).
+     * <p>
+     * NOTE: We make the assumption that if fse were parsed to Elements,
+     * one of them would always end up being a non-constant expression, so we can
+     * avoid checking Elements recursively.
+     * Basically this method is roughly the same as checking if the original contains an open bracket.
+     * <p>
+     * DEV NOTE: This is overridden to return true in the Const* subclasses below.
+     * The others don't need to do anything. This makes this check basically free.
+     * <p>
+     * Added 2018-09-19.
+     * @param fse The <code>FlexibleStringExpander</code> to test
+     * @return <code>true</code> if <code>fse</code> contains a <code>String</code> constant
+     */
+    public boolean isConstant() {
+        return false;
+    }
+
     /** Evaluate an expression and return the result as a <code>String</code>.
      * Null expressions return <code>null</code>.
      * A null <code>context</code> argument will return the original expression.
@@ -576,6 +608,11 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
         protected Object get(Map<String, ? extends Object> context, TimeZone timeZone, Locale locale) {
             return isEmpty() ? null : getOriginal();
         }
+
+        @Override
+        public boolean isConstant() { // SCIPIO: Added 2018-09-19
+            return true;
+        }
     }
 
     /** An object that represents a <code>String</code> constant portion of an expression. */
@@ -592,6 +629,11 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
         @Override
         public String expandString(Map<String, ? extends Object> context, TimeZone timeZone, Locale locale) {
             return new String(this.chars, this.offset, this.length);
+        }
+
+        @Override
+        public boolean isConstant() { // SCIPIO: Added 2018-09-19
+            return true;
         }
     }
 

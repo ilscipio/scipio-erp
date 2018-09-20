@@ -31,9 +31,10 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.BshUtil;
+import org.codehaus.groovy.control.CompilationFailedException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.GroovyUtil;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
@@ -64,7 +65,6 @@ import org.ofbiz.service.ServiceUtil;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import bsh.EvalError;
 import freemarker.ext.dom.NodeModel;
 
 /**
@@ -833,39 +833,52 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         }
     }
 
-    public static boolean checkWhen(Map<String, Object> context, String whenStr) {
-        boolean isWhen = true; //opposite default from checkReturnWhen
+    /** Returns a boolean, result of whenStr evaluation with context.
+     * If whenStr is empty return defaultReturn.
+     * @param context A <code>Map</code> containing initial variables
+     * @param whenStr A <code>String</code> condition expression
+     * @param defaultReturn A <code>boolean</code> default return value
+     * @return A <code>boolan</code> result of evaluation
+     */
+    public static boolean checkWhen(Map<String, Object> context, String whenStr, boolean defaultReturn) {
+        boolean isWhen = defaultReturn;
         if (UtilValidate.isNotEmpty(whenStr)) {
             FlexibleStringExpander fse = FlexibleStringExpander.getInstance(whenStr);
             String newWhen = fse.expandString(context);
-            //if (Debug.infoOn()) Debug.logInfo("newWhen:" + newWhen,null);
-            //if (Debug.infoOn()) Debug.logInfo("context:" + context,null);
             try {
-                Boolean isWhenObj = (Boolean) BshUtil.eval(newWhen, context);
-                isWhen = isWhenObj.booleanValue();
-            } catch (EvalError e) {
+                // SCIPIO: 2018-09-19: use Groovy
+                // FIXME?: NO SCRIPT CACHING: It is not currently possible to cache this condition script safely,
+                // because the method and transforms calling it are public so it is unknown who will call this from where,
+                // so we could be receiving parametrized input and exploding the cache.
+                //final boolean useCache = fse.isConstant();
+                final boolean useCache = false;
+                Object retVal = GroovyUtil.evalConditionExpr(newWhen, context, useCache);
+                // retVal should be a Boolean, if not something weird is up...
+                if (retVal instanceof Boolean) {
+                    Boolean boolVal = (Boolean) retVal;
+                    isWhen = boolVal;
+                } else {
+                    throw new IllegalArgumentException("Return value from use-when condition eval was not a Boolean: "
+                            + (retVal != null ? retVal.getClass().getName() : "null") + " [" + retVal + "]");
+                }
+            } catch (CompilationFailedException e) {
                 Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), module);
                 throw new RuntimeException(e.getMessage());
             }
         }
-        //if (Debug.infoOn()) Debug.logInfo("isWhen:" + isWhen,null);
         return isWhen;
+    }
+
+    // SCIPIO: 2018-09-19: these methods refactored for backward-compat and bsh->groovy
+    public static boolean checkWhen(Map<String, Object> context, String whenStr) {
+        boolean isWhen = true; //opposite default from checkReturnWhen
+        return checkWhen(context, whenStr, isWhen);
     }
 
     public static boolean checkReturnWhen(Map<String, Object> context, String whenStr) {
         boolean isWhen = false; //opposite default from checkWhen
-        if (UtilValidate.isNotEmpty(whenStr)) {
-            FlexibleStringExpander fse = FlexibleStringExpander.getInstance(whenStr);
-            String newWhen = fse.expandString(context);
-            try {
-                Boolean isWhenObj = (Boolean) BshUtil.eval(newWhen, context);
-                isWhen = isWhenObj.booleanValue();
-            } catch (EvalError e) {
-                Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), module);
-                throw new RuntimeException(e.getMessage());
-            }
-        }
-        return isWhen;
+        return checkWhen(context, whenStr, isWhen);
+
     }
 
     public static List<GenericValue> getAssociatedContent(GenericValue currentContent, String linkDir, List<String> assocTypes, List<String> contentTypes, String fromDate, String thruDate) throws GenericEntityException {

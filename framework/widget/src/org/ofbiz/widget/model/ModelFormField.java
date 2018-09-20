@@ -37,14 +37,14 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import org.codehaus.groovy.control.CompilationFailedException;
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.DateTimeConverters;
 import org.ofbiz.base.conversion.DateTimeConverters.StringToTimestamp;
-import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.GroovyUtil;
 import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -78,9 +78,6 @@ import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.w3c.dom.Element;
-
-import bsh.EvalError;
-import bsh.Interpreter;
 
 /**
  * Models the &lt;field&gt; element.
@@ -849,6 +846,10 @@ public class ModelFormField implements Serializable {
         return "";
     }
 
+    public FlexibleStringExpander getIgnoreWhen() { // SCIPIO
+        return ignoreWhen;
+    }
+
     public String getIgnoreWhen(Map<String, Object> context) {
         if (UtilValidate.isNotEmpty(this.ignoreWhen)) {
             return this.ignoreWhen.expandString(context);
@@ -1045,6 +1046,8 @@ public class ModelFormField implements Serializable {
             String fieldType = getFieldInfo().getFieldTypeName();
             if (UtilValidate.isNotEmpty(fieldType)) {
                 String formType = modelForm.getType();
+                // SCIPIO: WARN: DEV NOTE: the expand flag here MUST be false, otherwise
+                // it could jeopardize the caching logic below!
                 if (UtilValidate.isNotEmpty(formType)) {
                     useWhenStr = getWidgetDefDefault(context, "byType." + formType + ".field.byType." + fieldType + ".useWhen", false);
                 }
@@ -1057,16 +1060,12 @@ public class ModelFormField implements Serializable {
             }
         }
 
-        // SCIPIO: Optimization: Check for true/false from flexible expressions result to avoid second interpreter
-        if ("true".equals(useWhenStr)) {
-            return true;
-        } else if ("false".equals(useWhenStr)) {
-            return false;
-        }
-
         try {
-            Interpreter bsh = this.modelForm.getBshInterpreter(context);
-            Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhenStr));
+            // SCIPIO: 2018-09-19: Now using Groovy as second interpreter
+            // IMPORTANT: Only enable cache if the flexible expression was a constant, otherwise the cache could blow up!
+            // DEV NOTE: BEWARE: The getWidgetDefDefault calls above must be using expand=false, otherwise will violate this caching logic
+            final boolean useCache = this.getUseWhen().isConstant();
+            Object retVal = GroovyUtil.evalConditionExpr(useWhenStr, context, useCache);
             boolean condTrue = false;
             // retVal should be a Boolean, if not something weird is up...
             if (retVal instanceof Boolean) {
@@ -1079,8 +1078,8 @@ public class ModelFormField implements Serializable {
             }
 
             return condTrue;
-        } catch (EvalError e) {
-            String errMsg = "Error evaluating BeanShell use-when condition [" + useWhenStr + "] on the field " + this.name
+        } catch (CompilationFailedException e) {
+            String errMsg = "Error evaluating groovy use-when condition [" + useWhenStr + "] on the field " + this.name
                     + " of form " + this.modelForm.getName() + ": " + e.toString();
             Debug.logError(e, errMsg, module);
             throw new IllegalArgumentException(errMsg);
@@ -4078,15 +4077,11 @@ public class ModelFormField implements Serializable {
             boolean shouldUse = true;
             String useWhen = this.getUseWhen(context);
             if (UtilValidate.isNotEmpty(useWhen)) {
-                // SCIPIO: Optimization: Check for true/false from flexible expressions result to avoid second interpreter
-                if ("true".equals(useWhen)) {
-                    return true;
-                } else if ("false".equals(useWhen)) {
-                    return false;
-                }
                 try {
-                    Interpreter bsh = ModelForm.getBshInterpreterStatic(context); // SCIPIO: simplified with helper method
-                    Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhen));
+                    // SCIPIO: 2018-09-19: Now using Groovy as second interpreter
+                    // IMPORTANT: Only enable cache if the flexible expression was a constant, otherwise the cache could blow up!
+                    final boolean useCache = this.getUseWhen().isConstant();
+                    Object retVal = GroovyUtil.evalConditionExpr(useWhen, context, useCache);
 
                     // retVal should be a Boolean, if not something weird is up...
                     if (retVal instanceof Boolean) {
@@ -4096,8 +4091,8 @@ public class ModelFormField implements Serializable {
                         throw new IllegalArgumentException("Return value from target condition eval was not a Boolean: "
                                 + retVal.getClass().getName() + " [" + retVal + "]");
                     }
-                } catch (EvalError e) {
-                    String errmsg = "Error evaluating BeanShell target conditions";
+                } catch (CompilationFailedException e) {
+                    String errmsg = "Error evaluating groovy target conditions";
                     Debug.logError(e, errmsg, module);
                     throw new IllegalArgumentException(errmsg);
                 }
@@ -4113,22 +4108,11 @@ public class ModelFormField implements Serializable {
             return false;
         }
 
-        // SCIPIO: optimization/shortcut: check for pre-evaluated true and false values
-        if ("true".equals(ignoreWhen)) {
-            return true;
-        } else if ("false".equals(ignoreWhen)) {
-            return false;
-        }
-
         try {
-            // SCIPIO: 2018-09-04: reinstated Beanshell here for time being...
-            Interpreter bsh = (Interpreter) context.get("bshInterpreter");
-            if (bsh == null) {
-                bsh = BshUtil.makeInterpreter(context);
-                context.put("bshInterpreter", bsh);
-            }
-
-            Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(ignoreWhen));
+            // SCIPIO: 2018-09-19: Now using Groovy as second interpreter
+            // IMPORTANT: Only enable cache if the flexible expression was a constant, otherwise the cache could blow up!
+            final boolean useCache = this.getIgnoreWhen().isConstant();
+            Object retVal = GroovyUtil.evalConditionExpr(ignoreWhen, context, useCache);
 
             if (retVal instanceof Boolean) {
                 shouldIgnore =(Boolean) retVal;
@@ -4136,8 +4120,8 @@ public class ModelFormField implements Serializable {
                 throw new IllegalArgumentException("Return value from ignore-when condition eval was not a Boolean: "  + (retVal != null ? retVal.getClass().getName() : "null") + " [" + retVal + "] on the field " + this.name + " of form " + this.modelForm.getName());
             }
 
-        } catch (EvalError e) {
-            String errMsg = "Error evaluating BeanShell ignore-when condition [" + ignoreWhen + "] on the field " + this.name + " of form " + this.modelForm.getName() + ": " + e.toString();
+        } catch (CompilationFailedException e) {
+            String errMsg = "Error evaluating groovy ignore-when condition [" + ignoreWhen + "] on the field " + this.name + " of form " + this.modelForm.getName() + ": " + e.toString();
             Debug.logError(e, errMsg, module);
             throw new IllegalArgumentException(errMsg);
         }

@@ -33,9 +33,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.ofbiz.base.util.BshUtil;
+import org.codehaus.groovy.control.CompilationFailedException;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.GroovyUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -58,9 +58,6 @@ import org.ofbiz.widget.model.ModelFormField.SingleOption;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.w3c.dom.Element;
-
-import bsh.EvalError;
-import bsh.Interpreter;
 
 /**
  * Abstract base class for the &lt;form&gt; and &lt;grid&gt; elements.
@@ -1087,19 +1084,6 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         return autoFieldsServices;
     }
 
-    public Interpreter getBshInterpreter(Map<String, Object> context) throws EvalError {
-        return getBshInterpreterStatic(context);
-    }
-
-    public static Interpreter getBshInterpreterStatic(Map<String, Object> context) throws EvalError { // SCIPIO: static version
-        Interpreter bsh = (Interpreter) context.get("bshInterpreter");
-        if (bsh == null) {
-            bsh = BshUtil.makeInterpreter(context);
-            context.put("bshInterpreter", bsh);
-        }
-        return bsh;
-    }
-
     @Override
     public String getBoundaryCommentName() {
         return formLocation + "#" + getName();
@@ -1682,26 +1666,16 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public String getStyleAltRowStyle(Map<String, Object> context) {
         String styles = "";
         try {
-            // use the same Interpreter (ie with the same context setup) for all evals
-            Interpreter bsh = null; // SCIPIO: avoid creating bsh interpreter unless necessary
             for (AltRowStyle altRowStyle : this.altRowStyles) {
                 String useWhen = altRowStyle.useWhen.expandString(context); // SCIPIO: added FlexibleStringExpander support
-                Object retVal;
-                // SCIPIO: Optimization: Check for true/false from flexible expressions result to avoid second interpreter
-                if ("true".equals(useWhen)) {
-                    retVal = true;
-                } else if ("false".equals(useWhen)) {
-                    retVal = false;
-                } else {
-                    if (bsh == null) { // SCIPIO: Create interpreter only on demand, if necessary
-                        bsh = this.getBshInterpreter(context);
-                    }
-                    retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhen));
-                }
+                // SCIPIO: 2018-09-19: Now using Groovy as second interpreter
+                // IMPORTANT: Only enable cache if the flexible expression was a constant, otherwise the cache could blow up!
+                final boolean useCache = altRowStyle.useWhen.isConstant();
+                Object retVal = GroovyUtil.evalConditionExpr(useWhen, context, useCache);
                 // retVal should be a Boolean, if not something weird is up...
                 if (retVal instanceof Boolean) {
-                    Boolean boolVal = (Boolean) retVal;
-                    if (boolVal) {
+                    // SCIPIO: Slight refactor here
+                    if ((Boolean) retVal) {
                         styles += altRowStyle.style;
                     }
                 } else {
@@ -1709,8 +1683,8 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                             + retVal.getClass().getName() + " [" + retVal + "] of form " + getName());
                 }
             }
-        } catch (EvalError e) {
-            String errmsg = "Error evaluating BeanShell style conditions on form " + getName();
+        } catch (CompilationFailedException e) {
+            String errmsg = "Error evaluating groovy style conditions on form " + getName();
             Debug.logError(e, errmsg, module);
             throw new IllegalArgumentException(errmsg);
         }
@@ -1727,38 +1701,25 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public String getTarget(Map<String, Object> context, String targetType) {
         Map<String, Object> expanderContext = UtilCodec.EncodingMapWrapper.getEncodingMapWrapper(context, WidgetWorker.getEarlyEncoder(context)); // SCIPIO: simplified
         try {
-            // use the same Interpreter (ie with the same context setup) for all evals
-            Interpreter bsh = null; // SCIPIO: avoid creating bsh interpreter unless necessary
             for (AltTarget altTarget : this.altTargets) {
                 String useWhen = altTarget.useWhen.expandString(context); // SCIPIO: changed for useWhen as FlexibleStringExpander
-                boolean condTrue;
-                // SCIPIO: Optimization: Check for true/false from flexible expressions result to avoid second interpreter
-                if ("true".equals(useWhen)) {
-                    condTrue = true;
-                } else if ("false".equals(useWhen)) {
-                    condTrue = false;
+             // SCIPIO: 2018-09-19: Now using Groovy as second interpreter
+                // IMPORTANT: Only enable cache if the flexible expression was a constant, otherwise the cache could blow up!
+                final boolean useCache = altTarget.useWhen.isConstant();
+                Object retVal = GroovyUtil.evalConditionExpr(useWhen, context, useCache);
+                // retVal should be a Boolean, if not something weird is up...
+                if (retVal instanceof Boolean) {
+                    // SCIPIO: Slight refactor here
+                    if (((boolean) retVal) && !"inter-app".equals(targetType)) {
+                        return altTarget.targetExdr.expandString(expanderContext);
+                    }
                 } else {
-                    if (bsh == null) { // SCIPIO: Create interpreter only on demand, if necessary
-                        bsh = this.getBshInterpreter(context);
-                    }
-                    Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhen));
-                    condTrue = false;
-                    // retVal should be a Boolean, if not something weird is up...
-                    if (retVal instanceof Boolean) {
-                        Boolean boolVal = (Boolean) retVal;
-                        condTrue = boolVal;
-                    } else {
-                        throw new IllegalArgumentException("Return value from target condition eval was not a Boolean: "
-                                + retVal.getClass().getName() + " [" + retVal + "] of form " + getName());
-                    }
-                }
-
-                if (condTrue && !"inter-app".equals(targetType)) {
-                    return altTarget.targetExdr.expandString(expanderContext);
+                    throw new IllegalArgumentException("Return value from target condition eval was not a Boolean: "
+                            + retVal.getClass().getName() + " [" + retVal + "] of form " + getName());
                 }
             }
-        } catch (EvalError e) {
-            String errmsg = "Error evaluating BeanShell target conditions on form " + getName();
+        } catch (CompilationFailedException e) {
+            String errmsg = "Error evaluating groovy target conditions on form " + getName();
             Debug.logError(e, errmsg, module);
             throw new IllegalArgumentException(errmsg);
         }

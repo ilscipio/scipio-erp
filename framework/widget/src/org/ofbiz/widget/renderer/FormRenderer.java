@@ -1013,9 +1013,6 @@ public class FormRenderer {
 
                 listFormHandler.notifyHasDisplayResult(); // SCIPIO
 
-                // reset/remove the BshInterpreter now as well as later because chances are there is an interpreter at this level of the stack too
-                this.resetBshInterpreter(context);
-
                 Map<String, Object> itemMap = UtilGenerics.checkMap(item);
                 MapStack<String> localContext = MapStack.create(context);
                 if (UtilValidate.isNotEmpty(modelForm.getListEntryName())) {
@@ -1031,8 +1028,6 @@ public class FormRenderer {
                     }
                 }
 
-                // reset/remove the BshInterpreter now as well as later because chances are there is an interpreter at this level of the stack too
-                this.resetBshInterpreter(localContext);
                 localContext.push();
                 localContext.put("previousItem", previousItem);
                 previousItem = new HashMap<>();
@@ -1044,8 +1039,6 @@ public class FormRenderer {
                 if (UtilValidate.isNotEmpty(context.get("renderFormSeqNumber"))) {
                     localContext.put("formUniqueId", "_" + context.get("renderFormSeqNumber"));
                 }
-
-                this.resetBshInterpreter(localContext);
 
                 if (Debug.verboseOn()) {
                      Debug.logVerbose("In form got another row, context is: " + localContext, module);
@@ -1905,10 +1898,6 @@ public class FormRenderer {
                 }
             }
         }
-    }
-
-    private void resetBshInterpreter(Map<String, Object> context) {
-        context.remove("bshInterpreter");
     }
 
     private static <X> X safeNext(Iterator<X> iterator) { // SCIPIO: new. TODO: move to UtilMisc.

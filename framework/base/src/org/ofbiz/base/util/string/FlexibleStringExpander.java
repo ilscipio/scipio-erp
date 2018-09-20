@@ -238,6 +238,18 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
         return fse;
     }
 
+    /**
+     * SCIPIO: Returns an instance that produces null on {@link FlexibleStringExpander#get}
+     * and empty string on {@link FlexibleStringExpander#expandString}.
+     * <p>
+     * This is the same as <code>getInstance("")</code> but cleaner.
+     * <p>
+     * Added 2018-09-20.
+     */
+    public static FlexibleStringExpander getEmptyExpr() {
+        return nullExpr;
+    }
+
     private static abstract class Key {
         @Override
         public final boolean equals(Object o) {

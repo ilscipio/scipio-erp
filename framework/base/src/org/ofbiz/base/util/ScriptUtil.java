@@ -48,6 +48,7 @@ import javax.script.SimpleScriptContext;
 import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.ofbiz.base.location.FlexibleLocation;
+import org.ofbiz.base.util.GroovyUtil.GroovyLangVariant;
 import org.ofbiz.base.util.cache.UtilCache;
 
 /**
@@ -448,8 +449,10 @@ public final class ScriptUtil {
             try {
                 // SCIPIO: 2017-01-27: this now parses using the custom GroovyClassLoader,
                 // so that groovy snippets from FlexibleStringExpander support extra additions
+                // SCIPIO: TODO: in future this method should support the other GroovyLangVariants
                 //scriptClass = GroovyUtil.parseClass(script);
-                scriptClass = GroovyUtil.parseClass(script, GroovyUtil.getGroovyScriptClassLoader());
+                scriptClass = GroovyUtil.parseClass(script,
+                        GroovyLangVariant.STANDARD.getCommonGroovyClassLoader());
             } catch (IOException e) {
                 Debug.logError(e, module);
                 return null;
@@ -586,7 +589,8 @@ public final class ScriptUtil {
     private static ScriptEngine configureScriptEngine(ScriptEngine scriptEngine) {
         if (scriptEngine instanceof GroovyScriptEngineImpl) {
             GroovyScriptEngineImpl groovyScriptEngine = (GroovyScriptEngineImpl) scriptEngine;
-            groovyScriptEngine.setClassLoader(GroovyUtil.getGroovyScriptClassLoader());
+            // SCIPIO: TODO: in future this method should support the other GroovyLangVariants
+            groovyScriptEngine.setClassLoader(GroovyLangVariant.STANDARD.getCommonGroovyClassLoader());
         }
         return scriptEngine;
     }

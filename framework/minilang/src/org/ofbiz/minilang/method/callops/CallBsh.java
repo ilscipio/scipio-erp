@@ -24,11 +24,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 
+import org.codehaus.groovy.control.CompilationFailedException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GroovyUtil;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.GroovyUtil.GroovyLangVariant;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.MiniLangUtil;
 import org.ofbiz.minilang.MiniLangValidate;
@@ -37,14 +40,14 @@ import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
 import org.w3c.dom.Element;
 
-import bsh.EvalError;
-import bsh.Interpreter;
-
 /**
  * Implements the &lt;call-bsh&gt; element.
+ * @deprecated SCIPIO: 2018-09-19: The "script" element should be used instead of this
+ *  everywhere from now on; the class remains purely for backward-compatibility for very old code.
  *
  * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Ccallbsh%3E}}">Mini-language Reference</a>
  */
+@Deprecated
 public final class CallBsh extends MethodOperation {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -77,17 +80,20 @@ public final class CallBsh extends MethodOperation {
         }
         this.inline = StringUtil.convertOperatorSubstitutions(UtilXml.elementValue(element));
         this.resource = element.getAttribute("resource");
+        // SCIPIO: 2018-09-19: Print this even if validation not enabled, people need to remove this from their code
+        Debug.logWarning("Deprecated <call-bsh> element found in simple-method '" 
+                + simpleMethod.getLocationAndName() + "'; this is a compatibility mode only (runs Groovy)"
+                + "; please update code to use <script> with groovy", module);
     }
 
     @Override
     public boolean exec(MethodContext methodContext) throws MiniLangException {
-        Interpreter bsh = new Interpreter();
-        bsh.setClassLoader(methodContext.getLoader());
+        //bsh.setClassLoader(methodContext.getLoader());
         try {
-            // setup environment
-            for (Map.Entry<String, Object> entry : methodContext.getEnvMap().entrySet()) {
-                bsh.set(entry.getKey(), entry.getValue());
-            }
+            //// setup environment
+            //for (Map.Entry<String, Object> entry : methodContext.getEnvMap().entrySet()) {
+            //    bsh.set(entry.getKey(), entry.getValue());
+            //}
             // run external, from resource, first if resource specified
             if (UtilValidate.isNotEmpty(this.resource)) {
                 InputStream is = methodContext.getLoader().getResourceAsStream(this.resource);
@@ -103,7 +109,10 @@ public final class CallBsh extends MethodOperation {
                             outSb.append(tempStr);
                             outSb.append('\n');
                         }
-                        Object resourceResult = bsh.eval(outSb.toString());
+                        // SCIPIO: 2018-09-19: evaluate as a BSH-emulated groovy block
+                        //Object resourceResult = bsh.eval(outSb.toString());
+                        Object resourceResult = GroovyUtil.evalBlock(outSb.toString(), methodContext.getEnvMap(), 
+                                GroovyLangVariant.BSH, true);
                         // if map is returned, copy values into env
                         if ((resourceResult != null) && (resourceResult instanceof Map<?, ?>)) {
                             methodContext.putAllEnv(UtilGenerics.<String, Object> checkMap(resourceResult));
@@ -124,16 +133,19 @@ public final class CallBsh extends MethodOperation {
             if (Debug.verboseOn())
                 Debug.logVerbose("Running inline BSH script: " + inline, module);
             // run inlined second to it can override the one from the property
-            Object inlineResult = bsh.eval(inline);
+            // SCIPIO: 2018-09-19: evaluate as a BSH-emulated groovy block
+            //Object inlineResult = bsh.eval(inline);
+            Object inlineResult = GroovyUtil.evalBlock(inline, methodContext.getEnvMap(), 
+                    GroovyLangVariant.BSH, true);
             if (Debug.verboseOn())
                 Debug.logVerbose("Result of inline BSH script: " + inlineResult, module);
             // if map is returned, copy values into env
             if ((inlineResult != null) && (inlineResult instanceof Map<?, ?>)) {
                 methodContext.putAllEnv(UtilGenerics.<String, Object> checkMap(inlineResult));
             }
-        } catch (EvalError e) {
-            Debug.logWarning(e, "BeanShell execution caused an error", module);
-            this.simpleMethod.addErrorMessage(methodContext, "BeanShell execution caused an error: " + e.getMessage());
+        } catch (CompilationFailedException e) {
+            Debug.logWarning(e, "Groovy execution (through deprecated <call-bsh>) caused an error", module);
+            this.simpleMethod.addErrorMessage(methodContext, "Groovy execution caused an error: " + e.getMessage());
         }
         // always return true, error messages just go on the error list
         return true;

@@ -1254,8 +1254,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                     if (val != null) {
                         if (expand) {
                             return FlexibleStringExpander.expandString(val.trim(), context);
-                        }
-                        else {
+                        } else {
                             return val.trim();
                         }
                     }
@@ -1266,8 +1265,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         if (val != null) {
             if (expand) {
                 return FlexibleStringExpander.expandString(val.trim(), context);
-            }
-            else {
+            } else {
                 return val.trim();
             }
         }
@@ -1277,7 +1275,6 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     static String getWidgetDefDefault(Map<String, Object> context, String propName) { // SCIPIO
         return getWidgetDefDefault(context, propName, true);
     }
-
 
     private Boolean getBooleanExprResult(String val, String name) { // SCIPIO
         if (UtilValidate.isNotEmpty(val)) {

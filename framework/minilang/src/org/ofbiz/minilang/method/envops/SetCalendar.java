@@ -122,7 +122,9 @@ public final class SetCalendar extends MethodOperation {
         }
         this.fieldFma = FlexibleMapAccessor.getInstance(element.getAttribute("field"));
         String fromAttribute = element.getAttribute("from");
-        if (MiniLangUtil.containsScript(fromAttribute)) {
+        // SCIPIO: Use safer script check (see MiniLangUtil.containsScript(String) for details)
+        //if (MiniLangUtil.containsScript(fromAttribute)) {
+        if (MiniLangUtil.startsWithScriptPrefix(fromAttribute)) {
             this.scriptlet = new Scriptlet(StringUtil.convertOperatorSubstitutions(fromAttribute));
             this.fromFma = FlexibleMapAccessor.getInstance(null);
         } else {

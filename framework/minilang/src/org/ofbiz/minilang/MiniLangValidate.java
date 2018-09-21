@@ -141,7 +141,9 @@ public final class MiniLangValidate {
             if (!MiniLangUtil.isConstantPlusExpressionAttribute(attributeValue)) {
                 handleError("Constant+expr attribute \"" + name + "\" is missing a constant value (expression-only constants are not allowed).", method, element);
             }
-            if (MiniLangUtil.containsScript(attributeValue)) {
+            // SCIPIO: Use safer script check (see MiniLangUtil.containsScript(String) for details)
+            //if (MiniLangUtil.containsScript(attributeValue)) {
+            if (MiniLangUtil.startsWithScriptPrefix(attributeValue)) {
                 handleError("Constant+expr attribute \"" + name + "\" cannot contain a script (remove script).", method, element);
             }
         }
@@ -178,7 +180,9 @@ public final class MiniLangValidate {
                 if (attributeValue.startsWith("${") && attributeValue.endsWith("}")) {
                     attributeValue = attributeValue.substring(2, attributeValue.length() - 1);
                 }
-                if (MiniLangUtil.containsScript(attributeValue)) {
+                // SCIPIO: Use safer script check (see MiniLangUtil.containsScript(String) for details)
+                //if (MiniLangUtil.containsScript(attributeValue)) {
+                if (MiniLangUtil.startsWithScriptPrefix(attributeValue)) {
                     handleError("Expression attribute \"" + name + "\" cannot contain a script (remove script).", method, element);
                 }
             }

@@ -100,7 +100,7 @@ public final class CallScript extends MethodOperation {
         //if (inlineScript != null && MiniLangUtil.containsScript(inlineScript)) {
         if (UtilValidate.isNotEmpty(inlineScript)) {
             String scriptText = null;
-            if (MiniLangUtil.startsWithScriptPrefixIgnoreLeadingSpace(inlineScript)) {
+            if (MiniLangUtil.startsWithScriptPrefix(inlineScript)) {
                 scriptText = inlineScript;
             } else if (!lang.isEmpty()) {
                 scriptText = lang + ":" + inlineScript;

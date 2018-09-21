@@ -118,18 +118,6 @@ public final class MiniLangUtil {
     }
 
     /**
-     * SCIPIO: Returns <code>true</code> if <code>str</code> starts with a script prefix, ignoring leading space.
-     * <p>
-     * NOTE: this is an explicit (unabstracted) and safer version of {@link #containsScript}.
-     *
-     * @param str The string to test
-     * @return <code>true</code> if <code>str</code> starts with a script prefix
-     */
-    public static boolean startsWithScriptPrefixIgnoreLeadingSpace(String str) {
-        return startsWithScriptPrefix(str.trim());
-    }
-
-    /**
      * Returns <code>true</code> if the Mini-language script engine has been configured to
      * auto-correct version changes.
      * @return <code>true</code> if the Mini-language script engine has been configured to

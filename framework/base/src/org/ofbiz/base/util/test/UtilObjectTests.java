@@ -232,7 +232,7 @@ public class UtilObjectTests extends GenericTestCaseBase {
             assertNull("parse empty array", UtilObject.getObject(new byte[0]));
 
             // simulate a ClassNotFoundException
-            Object groovySerializable = GroovyUtil.eval("class foo implements java.io.Serializable { }; return new foo()", new HashMap<String, Object>());
+            Object groovySerializable = GroovyUtil.evalBlock("class foo implements java.io.Serializable { }; return new foo()", new HashMap<String, Object>(), false); // SCIPIO: 2018-09-21: switched method
             byte[] groovySerializableBytes = UtilObject.getBytes(groovySerializable);
             assertNotNull("groovySerializableBytes", groovySerializableBytes);
             assertNull("groovyDeserializable", UtilObject.getObject(groovySerializableBytes));

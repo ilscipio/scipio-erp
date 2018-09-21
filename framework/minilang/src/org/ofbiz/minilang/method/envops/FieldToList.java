@@ -42,7 +42,9 @@ public final class FieldToList extends MethodOperation {
     public FieldToList(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<field-to-list> element is deprecated (use <set>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<field-to-list> element is deprecated (use <set>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "list");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field", "list");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "field", "list");

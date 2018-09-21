@@ -105,8 +105,7 @@ public final class SetCalendar extends MethodOperation {
     public SetCalendar(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            // SCIPIO: These two are used everywhere, so this generates nothing but useless noise. Log if verbose only.
-            if (Debug.verboseOn()) {
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
                 MiniLangValidate.deprecatedAttribute(simpleMethod, element, "from-field", "replace with \"from\"");
                 MiniLangValidate.deprecatedAttribute(simpleMethod, element, "default-value", "replace with \"default\"");
             }

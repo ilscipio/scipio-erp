@@ -55,7 +55,9 @@ public final class CreateObject extends MethodOperation {
     public CreateObject(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<create-object> element is deprecated (use <script>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<create-object> element is deprecated (use <script>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "class-name", "field");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "field");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "class-name", "field");

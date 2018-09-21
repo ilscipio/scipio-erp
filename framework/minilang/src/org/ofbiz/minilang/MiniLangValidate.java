@@ -416,6 +416,21 @@ public final class MiniLangValidate {
         return !"none".equals(UtilProperties.getPropertyValue("minilang", "validation.level"));
     }
 
+    /**
+     * SCIPIO: Returns true if should show very common/popular deprecations.
+     */
+    public static boolean deprecatedCommonOn() {
+        // validation.deprecation.popular.level
+        String depCmnLevel = UtilProperties.getPropertyValue("minilang", "validation.deprecated.common.level");
+        if ("lenient".equals(depCmnLevel)) {
+            return Debug.verboseOn();
+        } else if ("none".equals(depCmnLevel)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
     public static Set<String> getScriptSupportedLanguages() { // SCIPIO
         return scriptSupportedLangs;
     }

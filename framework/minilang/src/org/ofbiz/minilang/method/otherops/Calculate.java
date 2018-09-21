@@ -64,7 +64,9 @@ public final class Calculate extends MethodOperation {
     public Calculate(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<calculate> element is deprecated (use <set>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<calculate> element is deprecated (use <set>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "decimal-scale", "decimal-format", "rounding-mode", "type");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "field");

@@ -42,7 +42,9 @@ public final class FirstFromList extends MethodOperation {
     public FirstFromList(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<first-from-list> element is deprecated (use <set>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<first-from-list> element is deprecated (use <set>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "entry", "list");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "entry", "list");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "entry", "list");

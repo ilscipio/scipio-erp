@@ -66,8 +66,10 @@ public final class Now extends MethodOperation {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
             String tagName = element.getTagName();
-            if ("now-date-to-env".equals(tagName) || "now-timestamp".equals(tagName)) {
-                MiniLangValidate.handleError("Deprecated - use <now>", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                if ("now-date-to-env".equals(tagName) || "now-timestamp".equals(tagName)) {
+                    MiniLangValidate.handleError("Deprecated - use <now>", simpleMethod, element);
+                }
             }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "type");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field");

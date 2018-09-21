@@ -69,7 +69,7 @@ public final class CallBsh extends MethodOperation {
     public CallBsh(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<call-bsh> element is deprecated (use <script>)", simpleMethod, element);
+            MiniLangValidate.handleError("<call-bsh> element is deprecated (use <script> with groovy)", simpleMethod, element); // SCIPIO: suggest groovy
             MiniLangValidate.attributeNames(simpleMethod, element, "resource");
             MiniLangValidate.constantAttributes(simpleMethod, element, "resource");
             MiniLangValidate.noChildElements(simpleMethod, element);

@@ -49,7 +49,9 @@ public final class StringToList extends MethodOperation {
     public StringToList(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<string-to-list> element is deprecated (use <set>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<string-to-list> element is deprecated (use <set>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "list", "arg-list", "string", "message-field");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "list", "string");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "list", "arg-list");

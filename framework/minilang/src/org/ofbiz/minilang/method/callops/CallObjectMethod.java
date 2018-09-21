@@ -53,7 +53,9 @@ public final class CallObjectMethod extends MethodOperation {
     public CallObjectMethod(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<call-object-method> element is deprecated (use <script>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<call-object-method> element is deprecated (use <script>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "obj-field", "method-name", "ret-field");
             MiniLangValidate.constantAttributes(simpleMethod, element, "method-name");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "obj-field", "method-name");

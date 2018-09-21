@@ -43,7 +43,9 @@ public final class ToString extends MethodOperation {
     public ToString(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<to-string> element is deprecated (use <set>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<to-string> element is deprecated (use <set>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "format", "numeric-padding");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field");
             MiniLangValidate.constantAttributes(simpleMethod, element, "format", "numeric-padding");

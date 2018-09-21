@@ -188,6 +188,11 @@ public final class ScriptUtil {
      * @throws ScriptException
      */
     public static CompiledScript compileScriptString(String language, String script) throws ScriptException {
+        if ("bsh".equals(language)) { // SCIPIO: 2018-09-19: Beanshell backward-compatibility mode
+            // FIXME?: currently unable to use a custom GroovyClassLoader in configureScriptEngineForInvoke so
+            // we cannot fully honor GroovyLangVariant(.BSH) config yet; thankfully right now it only needs a custom Binding...
+            language = "groovy";
+        }
         Assert.notNull("language", language, "script", script);
         String cacheKey = language.concat("://").concat(script);
         CompiledScript compiledScript = parsedScripts.get(cacheKey);
@@ -292,7 +297,17 @@ public final class ScriptUtil {
     public static Object evaluate(String language, String script, Class<?> scriptClass, Map<String, Object> context) throws Exception {
         Assert.notNull("context", context);
         if (scriptClass != null) {
+            if ("bsh".equals(language)) { // SCIPIO: 2018-09-19: Beanshell backward-compatibility mode (runs Groovy)
+                return InvokerHelper.createScript(scriptClass, GroovyUtil.getBinding(context, 
+                        GroovyLangVariant.BSH)).run();
+            }
             return InvokerHelper.createScript(scriptClass, GroovyUtil.getBinding(context)).run();
+        }
+        if ("bsh".equals(language)) { // SCIPIO: 2018-09-19: Beanshell backward-compatibility mode (runs Groovy)
+            // SPECIAL: we need our special Binding for Bsh compat, so reroute through GroovyUtil instead
+            // NOTE: For this we'll use cache false to be safe; callers who want speed should switch to Groovy,
+            // which gets cached by the GroovyScriptEngine through the code below this.
+            return GroovyUtil.eval(script, context, GroovyLangVariant.BSH, false, false, false);
         }
         try {
             CompiledScript compiledScript = compileScriptString(language, script);
@@ -453,6 +468,15 @@ public final class ScriptUtil {
                 //scriptClass = GroovyUtil.parseClass(script);
                 scriptClass = GroovyUtil.parseClass(script,
                         GroovyLangVariant.STANDARD.getCommonGroovyClassLoader());
+            } catch (IOException e) {
+                Debug.logError(e, module);
+                return null;
+            }
+        } else if ("bsh".equals(language)) {
+            // SCIPIO 2018-09-19: backward-compat mode
+            try {
+                scriptClass = GroovyUtil.parseClass(script,
+                        GroovyLangVariant.BSH.getCommonGroovyClassLoader());
             } catch (IOException e) {
                 Debug.logError(e, module);
                 return null;

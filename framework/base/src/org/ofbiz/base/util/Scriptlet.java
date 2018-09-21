@@ -31,6 +31,8 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public final class Scriptlet implements Serializable { // SCIPIO: serializable
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     private final String language;
     private final String script;
 
@@ -42,6 +44,13 @@ public final class Scriptlet implements Serializable { // SCIPIO: serializable
         }
         this.language = script.substring(0, colonPos);
         this.script = script.substring(colonPos + 1);
+
+        // SCIPIO: 2018-09-19: deprecated
+        if ("bsh".equals(this.language)) {
+            Debug.logWarning("Deprecated Beanshell script prefix (bsh:) detected in "
+                    + "Scriptlet (${bsh:...}, <script> or other); this is a compatibility mode only (runs Groovy); "
+                    + "please update code to use 'groovy:'", module);
+        }
     }
 
     /**

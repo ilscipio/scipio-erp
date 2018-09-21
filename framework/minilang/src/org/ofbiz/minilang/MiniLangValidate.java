@@ -18,12 +18,15 @@
  *******************************************************************************/
 package org.ofbiz.minilang;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -35,6 +38,19 @@ public final class MiniLangValidate {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    /**
+     * SCIPIO: script element available languages for explicit "lang" attribute.
+     * NOTE: may not same as XSD; this is more permissive.
+     */
+    public static final Set<String> scriptSupportedLangs;
+    static {
+        Set<String> langSet = new HashSet<>();
+        langSet.addAll(ScriptUtil.SCRIPT_NAMES);
+        langSet.add("simple-method");
+        langSet.add("simple-map-processor");
+        scriptSupportedLangs = Collections.unmodifiableSet(langSet);
+    }
+    
     /**
      * Tests <code>element</code> for invalid attribute names.
      *
@@ -311,32 +327,71 @@ public final class MiniLangValidate {
 
     /**
      * Tests if element attributes are script type.
+     * <p>
+     * SCIPIO: 2018-09-21: This now allows for an explicit "lang" attribute and body check.
      *
      * @param method The <code>&lt;simple-method&gt;</code> that contains <code>element</code>
      * @param element The <code>element</code> to test
      * @param attributeNames The attributes to test
      * @throws ValidationException If an invalid attribute is found and <code>validation.level=strict</code>
      */
-    public static void scriptAttributes(SimpleMethod method, Element element, String... attributeNames) throws ValidationException {
+    public static void scriptAttributes(SimpleMethod method, String explLang, Element element, String... attributeNames) throws ValidationException {
         for (String name : attributeNames) {
             String attributeValue = element.getAttribute(name).trim();
             if (attributeValue.length() > 0) {
                 if (attributeValue.startsWith("${") && attributeValue.endsWith("}")) {
                     handleError("Script attribute \"" + name + "\" enclosed in \"${}\" (remove enclosing ${}).", method, element);
                 }
-                boolean scriptFound = false;
-                for (String scriptName : ScriptUtil.SCRIPT_NAMES) {
-                    String scriptPrefix = scriptName.concat(":");
-                    if (attributeValue.contains(scriptPrefix)) {
-                        scriptFound = true;
-                        break;
-                    }
-                }
+                // SCIPIO: this entire part was replaced, the old check suffered
+                // from the same flawed check as containsScript
+                boolean scriptFound = (scriptStartsWithLangPrefix(attributeValue) || UtilValidate.isNotEmpty(explLang));
                 if (!scriptFound) {
-                    handleError("Script attribute \"" + name + "\" does not contain a script.", method, element);
+                    handleError("Script attribute \"" + name + "\" does not contain a valid script.", method, element);
                 }
             }
         }
+    }
+
+    /**
+     * Tests if element attributes are script type.
+     *
+     * @param method The <code>&lt;simple-method&gt;</code> that contains <code>element</code>
+     * @param element The <code>element</code> to test
+     * @param attributeNames The attributes to test
+     * @throws ValidationException If an invalid attribute is found and <code>validation.level=strict</code>
+     */
+    public static void scriptAttributes(SimpleMethod method, Element element, String... attributeNames) throws ValidationException { 
+        // SCIPIO: delegate
+        scriptAttributes(method, null, element, attributeNames);
+    }
+
+    public static void scriptBody(SimpleMethod method, String explLang, Element element) throws ValidationException { // SCIPIO
+        String bodyValue = UtilXml.elementValue(element);
+        if (bodyValue != null && bodyValue.length() > 0) {
+            if (bodyValue.startsWith("${") && bodyValue.endsWith("}")) {
+                handleError("Script body enclosed in \"${}\" (remove enclosing ${}).", method, element);
+            }
+            // SCIPIO: this entire part was replaced, the old check suffered
+            // from the same flawed check as containsScript
+            boolean scriptFound = (scriptStartsWithLangPrefix(bodyValue) || UtilValidate.isNotEmpty(explLang));
+            if (!scriptFound) {
+                handleError("Script body does not contain a valid script.", method, element);
+            }
+        }
+    }
+    
+    public static boolean scriptLangAttributes(SimpleMethod method, Element element, String... attributeNames) throws ValidationException { // SCIPIO
+        boolean success = true;
+        for (String name : attributeNames) {
+            String attributeValue = element.getAttribute(name).trim();
+            if (attributeValue.length() > 0) {
+                if (!getScriptSupportedLanguages().contains(attributeValue)) {
+                    handleError("Script attribute \"" + name + "\" contains an unrecognized language name.", method, element);
+                    success = false;
+                }
+            }
+        }
+        return success;
     }
 
     /**
@@ -357,6 +412,26 @@ public final class MiniLangValidate {
         return !"none".equals(UtilProperties.getPropertyValue("minilang", "validation.level"));
     }
 
+    public static Set<String> getScriptSupportedLanguages() { // SCIPIO
+        return scriptSupportedLangs;
+    }
+
+    /**
+     * SCIPIO: Returns <code>true</code> if <code>str</code> starts with a recognized lang prefix.
+     * @param str The string to test
+     * @return <code>true</code> if <code>str</code> starts with a recognized lang prefix
+     */
+    public static boolean scriptStartsWithLangPrefix(String str) {
+        if (str.length() > 0) {
+            for (String scriptPrefix : getScriptSupportedLanguages()) {
+                if (str.startsWith(scriptPrefix)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     private MiniLangValidate() {}
 
 }

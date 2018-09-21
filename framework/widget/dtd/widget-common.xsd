@@ -507,9 +507,9 @@ under the License.
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Script language, explicit.
                         Optional for scripts specified by location (extension is used instead; NOTE: 2016-11-11: lang attribute may be ignored for location).
-                        Required for scripts inlined as child CDATA text script body or script attribute, if the
-                        language name is not otherwise prefixed to the script body followed by colon (with no leading space).
-                        Unless succinctness has priority, it is preferable to specify this attribute rather than prefix 
+                        Required for scripts inlined as child CDATA text script body or script attribute
+                        IF the language name is not otherwise prefixed to the script body followed by colon (with no leading space, e.g. "groovy:...").
+                        Unless succinctness has priority, it is preferable to specify this attribute rather than prefix
                         as it is less error-prone (prefix is space-sensitive) and supports xml editor completion.
                         Default: (none)
                         RECOMMENDED: groovy</xs:documentation>
@@ -574,19 +574,13 @@ under the License.
                     ]]></xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="trim-lines" default="true">
+            <xs:attribute type="xs:boolean" name="trim-lines" default="true">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: If true, perform trim on every line of child CDATA text to remove excess whitespace from XML.
                         NOTE: This gets rid of indents, but flattens code.
                         NOTE: If set to false, may affect performance due to the script caching mechanism (keyed on script body).
                         Default: true (to optimize caching speed)</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>

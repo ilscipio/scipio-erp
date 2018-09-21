@@ -23,12 +23,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
@@ -58,6 +56,7 @@ import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.MiniLangUtil;
+import org.ofbiz.minilang.MiniLangValidate;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.service.DispatchContext;
@@ -648,19 +647,6 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * @see <code>widget-common.xsd</code>
      */
     public static class Script extends AbstractModelAction {
-
-        /**
-         * SCIPIO: available languages. NOTE: may not same as XSD; this is more permissive.
-         */
-        public static final Set<String> supportedLangs;
-        static {
-            Set<String> langSet = new HashSet<>();
-            langSet.addAll(ScriptUtil.SCRIPT_NAMES);
-            langSet.add("simple-method");
-            langSet.add("simple-map-processor");
-            supportedLangs = Collections.unmodifiableSet(langSet);
-        }
-
         // SCIPIO: these are patched for dynamic location support
         //private final String location;
         //private final String method;
@@ -677,7 +663,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             // SCIPIO: inline script preparation derived from (but no longer resembles):
             //   org.ofbiz.minilang.method.callops.CallScript.CallScript(Element, SimpleMethod)
             String lang = scriptElement.getAttribute("lang");
-            if (!lang.isEmpty() && !supportedLangs.contains(lang)) {
+            if (!lang.isEmpty() && !MiniLangValidate.getScriptSupportedLanguages().contains(lang)) {
                 Debug.logError("script element: lang attribute unrecognized language: lang=\"" + lang + "\"", module);
             }
 
@@ -727,14 +713,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
          * @return <code>true</code> if <code>str</code> starts with a recognized lang prefix
          */
         public static boolean startsWithLangPrefix(String str) {
-            if (str.length() > 0) {
-                for (String scriptPrefix : supportedLangs) {
-                    if (str.startsWith(scriptPrefix)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return MiniLangValidate.scriptStartsWithLangPrefix(str);
         }
 
         /**

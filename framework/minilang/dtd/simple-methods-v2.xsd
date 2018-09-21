@@ -2926,12 +2926,48 @@ under the License.
                 Runs an external script and/or a short inline script (scriptlet). The scriptlet can be
                 included in the script attribute or in the element body.
 
-                SCIPIO: TODO: Currently this does not yet recognize the "lang" attribute in simple-methods
-                the way that it's recognized in screen definitions; for inline scripts, simply
-                prefix the script element content with "groovy:" or appropriate language name.
+                SCIPIO: 2018-09-21: This now recognizes explicit "lang" attribute, which can also be
+                specified using a prefix such as "groovy:" in the body.
+
+                NOTE: 2018-09-21: This element has been patched for inline scripts:
+                When using the XML body to define inline script, old-style
+                operators such as @and, @or are NOT converted, to avoid interfering with the script.
+                Only the "script" attribute code receives this old-style operator conversion.
+                The old-style operators are practically useless today and only interfere with code.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType mixed="true">
+            <xs:attribute name="lang">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Script language, explicit.
+                        Optional for scripts specified by location (extension is used instead; NOTE: 2016-11-11: lang attribute may be ignored for location).
+                        Required for scripts inlined as child CDATA text script body or script attribute
+                        IF the language name is not otherwise prefixed to the script body followed by colon (with no leading space, e.g. "groovy:...").
+                        Unless succinctness has priority, it is preferable to specify this attribute rather than prefix
+                        as it is less error-prone (prefix is space-sensitive) and supports xml editor completion.
+                        Default: (none)
+                        RECOMMENDED: groovy</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="groovy" />
+                        <xs:enumeration value="simple-method" />
+                        <xs:enumeration value="simple-map-processor" />
+                        <!-- SCIPIO: 2018-09-19: Since this attribute was added for Scipio, likely nobody used this, so can let xml parser report as error
+                        <xs:enumeration value="bsh">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    SCIPIO: 2018-09-19: DEPRECATED: Please change your code to groovy instead.
+                                    Beanshell is no longer supported and this directive now runs Groovy in a compatibility mode.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>-->
+                        <!-- SCIPIO: 2018-09-19: This was never used, and it's certain it cannot work
+                            anymore; unclear if it ever had a chance of working or could in future
+                        <xs:enumeration value="java" />-->
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="location">
                 <xs:annotation>
                     <xs:documentation>
@@ -2951,6 +2987,14 @@ under the License.
                         
                         Required if the location attribute is empty. Attribute type: script.
                     </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:boolean" name="trim-lines" default="true">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If true, perform trim on every line of child CDATA text to remove excess whitespace from XML.
+                        NOTE: This gets rid of indents, but flattens code.
+                        NOTE: If set to false, may affect performance due to the script caching mechanism (keyed on script body).
+                        Default: true (to optimize caching speed)</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>

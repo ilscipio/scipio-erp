@@ -525,8 +525,14 @@ public class GroovyUtil {
          * <p>
          * Uses base script class defined in groovy.properties (NOTE: subject to change if issues found).
          * <p>
-         * Currently (2018-09-13), this does the same as {@link #SIMPLE}, but this
+         * Currently (2018-09-19), this does the same as {@link #SIMPLE}, but this
          * is subject to change.
+         * <p>
+         * WARNING: 2018-09-19: BACKWARD-COMPAT BSH BINDINGS DO NOT APPLY TO OLD FILESYSTEM
+         * BEANSHELL SCRIPTS (*.bsh), because Scipio did not ship with any.
+         * It is only supported to avoid breakage on legacy short expressions such as
+         * inline "${bsh:...}" expressions and some minilang elements (script, call-bsh).
+         * *.bsh files are simply evaluated as *.groovy files instead.
          */
         public static final GroovyLangVariant BSH = new BshVariantConfig();
 

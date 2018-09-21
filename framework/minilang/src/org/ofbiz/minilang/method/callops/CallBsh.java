@@ -82,7 +82,7 @@ public final class CallBsh extends MethodOperation {
         this.resource = element.getAttribute("resource");
         // SCIPIO: 2018-09-19: Print this even if validation not enabled, people need to remove this from their code
         Debug.logWarning("Deprecated <call-bsh> element found in simple-method '" 
-                + simpleMethod.getLocationAndName() + "'; this is a compatibility mode only (runs Groovy)"
+                + simpleMethod.getLocationAndName() + "'; this is a compatibility mode only (runs as Groovy)"
                 + "; please update code to use <script> with groovy", module);
     }
 

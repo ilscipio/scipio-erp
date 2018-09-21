@@ -18,23 +18,21 @@
  *******************************************************************************/
 package org.ofbiz.service.engine;
 
-import static org.ofbiz.base.util.UtilGenerics.cast;
-
 import java.util.Map;
 
-import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
-import org.ofbiz.service.ServiceUtil;
 
 /**
  * BeanShell Script Service Engine
+ * @deprecated SCIPIO: 2018-09-19: Beanshell is gone and this performs a best-effort
+ * attempt to invoke the *.bsh file as a groovy script instead. This cannot even use
+ * the GroovyLangVariants.BSH emulation so many scripts are highly likely to fail.
  */
-public final class BeanShellEngine extends GenericAsyncEngine {
+@Deprecated
+public final class BeanShellEngine extends GroovyEngine {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -42,22 +40,23 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         super(dispatcher);
     }
 
-    /**
-     * @see org.ofbiz.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.service.ModelService, java.util.Map)
-     */
     @Override
-    public void runSyncIgnore(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
-        runSync(localName, modelService, context);
+    public void runSyncIgnore(String localName, ModelService modelService, Map<String, Object> context)
+            throws GenericServiceException {
+        Debug.logWarning("Deprecated Beanshell (bsh) service invoked (" + modelService.name 
+                + "); this is a compatibility mode only (runs as Groovy); please convert to groovy service", module);
+        super.runSyncIgnore(localName, modelService, context);
     }
 
-    /**
-     * @see org.ofbiz.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map)
-     */
     @Override
-    public Map<String, Object> runSync(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
-        return serviceInvoker(localName, modelService, context);
+    public Map<String, Object> runSync(String localName, ModelService modelService, Map<String, Object> context)
+            throws GenericServiceException {
+        Debug.logWarning("Deprecated Beanshell (bsh) service invoked (" + modelService.name 
+                + "); this is a compatibility mode only (runs as Groovy); please convert to groovy service", module);
+        return super.runSync(localName, modelService, context);
     }
 
+    /* OLD CODE
     // Invoke the BeanShell Script.
     private Map<String, Object> serviceInvoker(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
         if (UtilValidate.isEmpty(modelService.location)) {
@@ -83,4 +82,5 @@ public final class BeanShellEngine extends GenericAsyncEngine {
 
         return ServiceUtil.returnSuccess();
     }
+    */
 }

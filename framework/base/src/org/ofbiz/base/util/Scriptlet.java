@@ -48,7 +48,7 @@ public final class Scriptlet implements Serializable { // SCIPIO: serializable
         // SCIPIO: 2018-09-19: deprecated
         if ("bsh".equals(this.language)) {
             Debug.logWarning("Deprecated Beanshell script prefix (bsh:) detected in "
-                    + "Scriptlet (${bsh:...}, <script> or other); this is a compatibility mode only (runs Groovy); "
+                    + "Scriptlet (${bsh:...}, <script> or other); this is a compatibility mode only (runs as Groovy); "
                     + "please update code to use 'groovy:'", module);
         }
     }

@@ -18,43 +18,29 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.ofbiz.base.location.FlexibleLocation;
-import org.ofbiz.base.util.cache.UtilCache;
-
-import bsh.BshClassManager;
-import bsh.EvalError;
-import bsh.Interpreter;
-import bsh.NameSpace;
-import bsh.ParseException;
 
 /**
  * BshUtil - BeanShell Utilities
- *
+ * @deprecated SCIPIO: 2018-09-19: This now simply delegates to GroovyUtil as best-effort compatibility and 
+ * will eventually be removed. WARN: Even the best-effort compatibility is incomplete from this file!
  */
+@Deprecated
 public final class BshUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    protected static ConcurrentHashMap<ClassLoader, BshClassManager> masterClassManagers = new ConcurrentHashMap<ClassLoader, BshClassManager>();
-    private static final UtilCache<String, Interpreter.ParsedScript> parsedScripts = UtilCache.createUtilCache("script.BshLocationParsedCache", 0, 0, false);
-
     /**
      * Evaluate a BSH condition or expression
+     * @deprecated SCIPIO: NOTE: this was always a poorly interfaced method, even its Groovy analog - do not use
      * @param expression The expression to evaluate
      * @param context The context to use in evaluation (re-written)
      * @return Object The result of the evaluation
-     * @throws EvalError
      */
-    public static final Object eval(String expression, Map<String, Object> context) throws EvalError {
+    @Deprecated
+    public static final Object eval(String expression, Map<String, Object> context) {
+        Debug.logWarning("Deprecated Beanshell expression eval called; "
+                + "this is a compatibility mode only (runs as Groovy); please convert to Groovy script", module); 
         Object o = null;
         if (expression == null || expression.equals("")) {
             Debug.logError("BSH Evaluation error. Empty expression", module);
@@ -67,107 +53,26 @@ public final class BshUtil {
             Debug.logVerbose("Using Context -- " + context, module);
 
         try {
-            Interpreter bsh = makeInterpreter(context);
-            // evaluate the expression
-            o = bsh.eval(expression);
-            if (Debug.verboseOn())
-                Debug.logVerbose("Evaluated to -- " + o, module);
-
-            // read back the context info
-            NameSpace ns = bsh.getNameSpace();
-            String[] varNames = ns.getVariableNames();
-            for (String varName: varNames) {
-                context.put(varName, bsh.get(varName));
-            }
-        } catch (EvalError e) {
+            // SCIPIO: WARN: this doesn't do full compatibility, but likely no one has used this at all
+            o = GroovyUtil.eval(expression, context);
+        } catch (Exception e) {
             Debug.logError(e, "BSH Evaluation error.", module);
-            throw e;
         }
         return o;
     }
 
-    public static Interpreter makeInterpreter(Map<String, ? extends Object> context) throws EvalError {
-        Interpreter bsh = getMasterInterpreter(null);
-        // Set the context for the condition
-        if (context != null) {
-            for (Map.Entry<String, ? extends Object> entry: context.entrySet()) {
-                bsh.set(entry.getKey(), entry.getValue());
-            }
-
-            // include the context itself in for easier access in the scripts
-            bsh.set("context", context);
-        }
-
-        return bsh;
+    public static Object makeInterpreter(Map<String, ? extends Object> context) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Beanshell is deprecated, cannot make an interpreter; please switch to Groovy");
     }
 
-    public static Interpreter getMasterInterpreter(ClassLoader classLoader) {
-        if (classLoader == null) {
-            classLoader = Thread.currentThread().getContextClassLoader();
-        }
-
-        //find the "master" BshClassManager for this classpath
-        BshClassManager master = BshUtil.masterClassManagers.get(classLoader);
-        if (master == null) {
-            master = BshClassManager.createClassManager(null); // SCIPIO: 2018-03-22: beanshell-xxx-scipio: pass null here to avoid extra bsh patches
-            master.setClassLoader(classLoader);
-            BshUtil.masterClassManagers.putIfAbsent(classLoader, master);
-            master = BshUtil.masterClassManagers.get(classLoader);
-        }
-
-        if (master != null) {
-            Interpreter interpreter = new Interpreter(new StringReader(""), System.out, System.err,
-                    false, new NameSpace(master, "global"), null, null);
-            return interpreter;
-        } else {
-            Interpreter interpreter = new Interpreter();
-            interpreter.setClassLoader(classLoader);
-            return interpreter;
-        }
+    public static Object getMasterInterpreter(ClassLoader classLoader) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Beanshell is deprecated, cannot make an interpreter; please switch to Groovy");
     }
 
     public static Object runBshAtLocation(String location, Map<String, ? extends Object> context) throws GeneralException {
-        try {
-            Interpreter interpreter = makeInterpreter(context);
-
-            Interpreter.ParsedScript script = null;
-            script = parsedScripts.get(location);
-            if (script == null) {
-                URL scriptUrl = FlexibleLocation.resolveLocation(location);
-                if (scriptUrl == null) {
-                    throw new GeneralException("Could not find bsh script at [" + location + "]");
-                }
-                Reader scriptReader = new InputStreamReader(scriptUrl.openStream());
-                script = interpreter.parseScript(location, scriptReader);
-                if (Debug.verboseOn()) Debug.logVerbose("Caching BSH script at: " + location, module);
-                script = parsedScripts.putIfAbsentAndGet(location, script);
-            }
-
-            return interpreter.evalParsedScript(script);
-        } catch (MalformedURLException e) {
-            String errMsg = "Error loading BSH script at [" + location + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            throw new GeneralException(errMsg, e);
-        } catch (ParseException e) {
-            String errMsg = "Error parsing BSH script at [" + location + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            throw new GeneralException(errMsg, e);
-        } catch (IOException e) {
-            String errMsg = "Error loading BSH script at [" + location + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            throw new GeneralException(errMsg, e);
-        } catch (EvalError ee) {
-            Throwable t = ee.getCause();
-            if (t == null) {
-                Debug.logWarning(ee, "No cause (from getCause) found for BSH EvalError: " + ee.toString(), module);
-                t = ee;
-            } else {
-                Debug.logError(t, "Got cause (from getCause) for BSH EvalError: " + ee.toString(), module);
-            }
-
-            String errMsg = "Error running BSH script at [" + location + "], line [" + ee.getErrorLineNumber() + "]: " + t.toString();
-            // don't log the full exception, just the main message; more detail logged later
-            throw new GeneralException(errMsg, t);
-        }
+        // SCIPIO: WARN: this doesn't do full compatibility, but likely no one has used this at all
+        Debug.logWarning("Deprecated Beanshell script file invoked (" + location + "); "
+                + "this is a compatibility mode only (runs as Groovy); please convert to Groovy script", module);
+        return GroovyUtil.runScriptAtLocation(location, UtilGenerics.cast(context));
     }
 }

@@ -45,7 +45,7 @@ import groovy.lang.Script;
 /**
  * Groovy Script Service Engine
  */
-public final class GroovyEngine extends GenericAsyncEngine {
+public class GroovyEngine extends GenericAsyncEngine { // SCIPIO: removed final for bsh backward-compat support
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Object[] EMPTY_ARGS = {};

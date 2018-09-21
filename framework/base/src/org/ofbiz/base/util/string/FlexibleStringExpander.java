@@ -360,7 +360,7 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
             if (expression.indexOf("bsh:", start + 2) == start + 2 && !escapedExpression) {
                 // SCIPIO: 2018-09-19: This should be avoided at all costs from now on
                 Debug.logWarning("Deprecated Beanshell script prefix (${bsh:...}) detected in "
-                        + "Flexible expression; this is a compatibility mode only (runs Groovy); "
+                        + "Flexible expression; this is a compatibility mode only (runs as Groovy); "
                         + "please update code to use ${groovy:...}", module);
                 // checks to see if this starts with a "bsh:", if so treat the rest of the expression as a bsh scriptlet
                 strElems.add(new ScriptElem(chars, start, Math.min(end + 1, start + length) - start, start + 6, end - start - 6));

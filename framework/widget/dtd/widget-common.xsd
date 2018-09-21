@@ -519,6 +519,7 @@ under the License.
                         <xs:enumeration value="groovy" />
                         <xs:enumeration value="simple-method" />
                         <xs:enumeration value="simple-map-processor" />
+                        <!-- SCIPIO: 2018-09-19: Since this attribute was added for Scipio, likely nobody used this, so can let xml parser report as error
                         <xs:enumeration value="bsh">
                             <xs:annotation>
                                 <xs:documentation>
@@ -526,7 +527,7 @@ under the License.
                                     Beanshell is no longer supported and this directive now runs Groovy in a compatibility mode.
                                 </xs:documentation>
                             </xs:annotation>
-                        </xs:enumeration>
+                        </xs:enumeration>-->
                         <!-- SCIPIO: 2018-09-19: This was never used, and it's certain it cannot work
                             anymore; unclear if it ever had a chance of working or could in future
                         <xs:enumeration value="java" />-->

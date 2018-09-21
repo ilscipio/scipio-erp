@@ -877,7 +877,7 @@ under the License.
                                             
                                             execTemplate = (execDefault || request.getMethod().toLowerCase() == "post"); // security
                                             if (execTemplate && scriptBody) {
-                                                GroovyUtil.evalNoCache(scriptBody, context);
+                                                GroovyUtil.evalBlock(scriptBody, context, false);
                                             }
                                             
                                             context.scriptBody = scriptBody;

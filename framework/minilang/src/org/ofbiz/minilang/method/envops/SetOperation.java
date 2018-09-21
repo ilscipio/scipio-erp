@@ -89,8 +89,11 @@ public final class SetOperation extends MethodOperation {
     public SetOperation(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.deprecatedAttribute(simpleMethod, element, "from-field", "replace with \"from\"");
-            MiniLangValidate.deprecatedAttribute(simpleMethod, element, "default-value", "replace with \"default\"");
+            // SCIPIO: These two are used everywhere, so this generates nothing but useless noise. Log if verbose only.
+            if (Debug.verboseOn()) {
+                MiniLangValidate.deprecatedAttribute(simpleMethod, element, "from-field", "replace with \"from\"");
+                MiniLangValidate.deprecatedAttribute(simpleMethod, element, "default-value", "replace with \"default\"");
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "from-field", "from", "value", "default-value", "default", "format", "type", "set-if-null", "set-if-empty");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field");
             MiniLangValidate.requireAnyAttribute(simpleMethod, element, "from-field", "from", "value");

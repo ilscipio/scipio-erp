@@ -851,120 +851,132 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Development" />
                 <set field="activeSubMenuItem" value="TemplateTest"/>
                 <include-screen-actions name="CodeEditorCommonIncludes" location="component://cms/widget/CommonScreens.xml"/>
+                <condition-to-field field="hasTmplTestPerm">
+                    <and>
+                        <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                        <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                    </and>
+                </condition-to-field>
+                <if>
+                    <condition>
+                        <if-true field="hasTmplTestPerm"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "TemplateTest.groovy";
+
+                            scriptBody = parameters.scriptBody as String;
+                            templateBody = parameters.templateBody as String;
+
+                            execDefault = (scriptBody == null && templateBody == null);
+                            if (scriptBody == null) {
+                                scriptBody = "import org.ofbiz.base.util.*;\n" +
+                                    "import org.ofbiz.entity.condition.*;\n" +
+                                    "import org.ofbiz.entity.util.*;\n" +
+                                    "\n" +
+                                    "final module = \"TemplateTest.groovy\";\n" +
+                                    "\n" +
+                                    "userParty = from(\"Party\").select(\"partyId\", \"partyTypeId\").where(\"partyId\", context.userLogin?.partyId).queryOne();\n" +
+                                    "\n" +
+                                    "Debug.logInfo(\"Hello from test script and user party: \" + userParty, module);\n" +
+                                    "\n" +
+                                    "context.testVar1 = \"This is a test string value from groovy from user party: \" + userParty;\n";
+                            }
+                            if (templateBody == null) {
+                                templateBody = "<#assign ftlTestVar1 = testVar1!>" +
+                                    "\n" +
+                                    "\n<p><strong>testVar1:</strong> <em>\${escapeVal(ftlTestVar1, 'htmlmarkup')}</em>";
+                            }
+
+                            execTemplate = (execDefault || request.getMethod().toLowerCase() == "post"); // security
+                            if (execTemplate && scriptBody) {
+                                try {
+                                    GroovyUtil.evalBlock(scriptBody, context, false);
+                                } catch(Exception e) {
+                                    Debug.logError(e, "Error evaluating Groovy script", module);
+                                    errorMessageList = context.errorMessageList ?: [];
+                                    errorMessageList.add("Error evaluating Groovy script: " + e.toString());
+                                    context.errorMessageList = errorMessageList;
+                                }
+                            }
+
+                            context.scriptBody = scriptBody;
+                            context.templateBody = templateBody;
+                            context.execDefault = execDefault;
+                            context.execTemplate = execTemplate;
+                        ]]></script>
+                    </then>
+                </if>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <and>
-                                    <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
-                                    <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
-                                </and>
+                                <if-true field="hasTmplTestPerm"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <actions>
-                                        <script lang="groovy"><![CDATA[
-                                            import org.ofbiz.base.util.*;
-                                            
-                                            scriptBody = parameters.scriptBody as String;
-                                            templateBody = parameters.templateBody as String;
-                                            
-                                            execDefault = (scriptBody == null && templateBody == null);
-                                            if (scriptBody == null) {
-                                                scriptBody = "import org.ofbiz.base.util.*;\n" +
-                                                    "import org.ofbiz.entity.condition.*;\n" +
-                                                    "import org.ofbiz.entity.util.*;\n" +
-                                                    "\n" +
-                                                    "final module = \"TemplateTest.groovy\";\n" +
-                                                    "\n" +
-                                                    "userParty = from(\"Party\").select(\"partyId\", \"partyTypeId\").where(\"partyId\", context.userLogin?.partyId).queryOne();\n" +
-                                                    "\n" +
-                                                    "Debug.logInfo(\"Hello from test script and user party: \" + userParty, module);\n" +
-                                                    "\n" +
-                                                    "context.testVar1 = \"This is a test string value from groovy from user party: \" + userParty;\n";
+                                <platform-specific><html><html-template><![CDATA[
+                                  <@script>
+                                    $(document).ready(function() {
+                                        CodeMirror.fromTextArea($('textarea#scriptBody')[0], {
+                                            lineNumbers: true,
+                                            matchBrackets: true,
+                                            mode: "groovy",
+                                            indentUnit: 4,
+                                            indentWithTabs: ${indentWithTabs?string},
+                                            foldGutter: true,
+                                            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                                            extraKeys: {"Ctrl-Space": "autocomplete"}
+                                            }).on('change', function(cMirror){
+                                                $('textarea#scriptBody')[0].value = cMirror.getValue();
                                             }
-                                            if (templateBody == null) {
-                                                templateBody = "<#assign ftlTestVar1 = testVar1!>" +
-                                                    "\n" +
-                                                    "\n<p><strong>testVar1:</strong> <em>\${escapeVal(ftlTestVar1, 'htmlmarkup')}</em>";
+                                        );
+                                        CodeMirror.fromTextArea($('textarea#templateBody')[0], {
+                                            lineNumbers: true,
+                                            matchBrackets: true,
+                                            mode: "freemarker",
+                                            indentUnit: 4,
+                                            indentWithTabs: ${indentWithTabs?string},
+                                            foldGutter: true,
+                                            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                                            extraKeys: {"Ctrl-Space": "autocomplete"}
+                                            }).on('change', function(cMirror){
+                                                $('textarea#templateBody')[0].value = cMirror.getValue();
                                             }
-                                            
-                                            execTemplate = (execDefault || request.getMethod().toLowerCase() == "post"); // security
-                                            if (execTemplate && scriptBody) {
-                                                GroovyUtil.evalBlock(scriptBody, context, false);
-                                            }
-                                            
-                                            context.scriptBody = scriptBody;
-                                            context.templateBody = templateBody;
-                                            context.execDefault = execDefault;
-                                            context.execTemplate = execTemplate;
-                                        ]]></script>
-                                    </actions>
-                                    <widgets>
-                                        <platform-specific><html><html-template><![CDATA[
-                                          <@script>
-                                            $(document).ready(function() {
-                                                CodeMirror.fromTextArea($('textarea#scriptBody')[0], {
-                                                    lineNumbers: true,
-                                                    matchBrackets: true,
-                                                    mode: "groovy",
-                                                    indentUnit: 4,
-                                                    indentWithTabs: ${indentWithTabs?string},
-                                                    foldGutter: true,
-                                                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                                                    extraKeys: {"Ctrl-Space": "autocomplete"}
-                                                    }).on('change', function(cMirror){
-                                                        $('textarea#scriptBody')[0].value = cMirror.getValue();
-                                                    }
-                                                );
-                                                CodeMirror.fromTextArea($('textarea#templateBody')[0], {
-                                                    lineNumbers: true,
-                                                    matchBrackets: true,
-                                                    mode: "freemarker",
-                                                    indentUnit: 4,
-                                                    indentWithTabs: ${indentWithTabs?string},
-                                                    foldGutter: true,
-                                                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                                                    extraKeys: {"Ctrl-Space": "autocomplete"}
-                                                    }).on('change', function(cMirror){
-                                                        $('textarea#templateBody')[0].value = cMirror.getValue();
-                                                    }
-                                                );
-                                            });
-                                          </@script>
-                                          <@section class="+cms-edit-elem cms-edit-template">
-                                            <@form method="post" id="editorForm" action=makeOfbizUrl("TemplateTest")>
-                                               <@section class="+editorContent">
-                                                  <@fields type="default-compact">
-                                                    <@field label=(rawLabel('CmsScriptBody')+" (Groovy)") type="textarea" class="+editor" 
-                                                        name="scriptBody" id="scriptBody" value=(scriptBody!"") rows=30/>
-                                                    <@field label=(rawLabel('CmsTemplateBody')+" (Freemarker)") type="textarea" class="+editor" 
-                                                        name="templateBody" id="templateBody" value=(templateBody!"") rows=30/>
-                                                  </@fields>
-                                                  <style type="text/css">
-                                                    .CodeMirror-hints {font-size:1em;}
-                                                  </style>
-                                               </@section>
-                                               <@field type="submit"/>
-                                            </@form>
-                                          </@section>
-                                           
-                                          <#-- FREEMARKER OUTPUT -->
-                                          <#if execTemplate>
-                                            <@section title=uiLabelMap.CmsOutput>
-                                              <#assign tmplBodyCode = rawString(templateBody!"")?interpret>
-                                              <#assign tmplBodyOut><@tmplBodyCode/></#assign>
-                                              ${tmplBodyOut}
-                                            </@section>
-                                            <@section title=uiLabelMap.CmsRawOutput>
-                                              ${tmplBodyOut?html}
-                                            </@section>
-                                          </#if>
-                                        ]]></html-template></html></platform-specific>
-                                    </widgets>
-                                </section>
+                                        );
+                                    });
+                                  </@script>
+                                  <@section class="+cms-edit-elem cms-edit-template">
+                                    <@form method="post" id="editorForm" action=makeOfbizUrl("TemplateTest")>
+                                       <@section class="+editorContent">
+                                          <@fields type="default-compact">
+                                            <@field label=(rawLabel('CmsScriptBody')+" (Groovy)") type="textarea" class="+editor" 
+                                                name="scriptBody" id="scriptBody" value=(scriptBody!"") rows=30/>
+                                            <@field label=(rawLabel('CmsTemplateBody')+" (Freemarker)") type="textarea" class="+editor" 
+                                                name="templateBody" id="templateBody" value=(templateBody!"") rows=30/>
+                                          </@fields>
+                                          <style type="text/css">
+                                            .CodeMirror-hints {font-size:1em;}
+                                          </style>
+                                       </@section>
+                                       <@field type="submit"/>
+                                    </@form>
+                                  </@section>
+                                   
+                                  <#-- FREEMARKER OUTPUT -->
+                                  <#if execTemplate>
+                                    <@section title=uiLabelMap.CmsOutput>
+                                      <#assign tmplBodyCode = rawString(templateBody!"")?interpret>
+                                      <#assign tmplBodyOut><@tmplBodyCode/></#assign>
+                                      ${tmplBodyOut}
+                                    </@section>
+                                    <@section title=uiLabelMap.CmsRawOutput>
+                                      ${tmplBodyOut?html}
+                                    </@section>
+                                  </#if>
+                                ]]></html-template></html></platform-specific>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>

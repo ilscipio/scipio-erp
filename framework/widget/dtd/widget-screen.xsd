@@ -863,8 +863,9 @@ under the License.
                     <xs:documentation>
                         SCIPIO: Minilang/EL/groovy-style condition string - only pass this section for rendering if the given condition 
                         evaluates to true; else the section will be absent from the "sections" context variable passed to the decorator.
-                        Expression must evaluation to a boolean, using ${...}, ${groovy: ...}, etc. 
-                        Despite name, not same as the old form widgets use-when attribute, which only uses straight bsh expressions.
+                        Expression must evaluate to a boolean, using flexible expression syntax: ${...}, ${groovy: ...}, etc. 
+                        NOTE: Unlike the attribute with same name on form widget fields, 
+                            this does NOT interpret as a script if you omit the flexible expression syntax (${...}, ${groovy: ...}, etc.).
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>

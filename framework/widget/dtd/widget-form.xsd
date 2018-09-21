@@ -355,19 +355,19 @@ under the License.
             -->
             <xs:attribute type="xs:string" name="hide-header-when">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implicit default is 'false', unless hide-header is true, but explicit 'false' overrides hide-header. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not groovy-only) that should evaluate to true or false. Implicit default is 'false', unless hide-header is true, but explicit 'false' overrides hide-header. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="hide-table-when">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not groovy-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="use-alternate-text-when">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, show an alternate text. Mainly useful for setting a no-result-text message when form has no results. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, show an alternate text. Mainly useful for setting a no-result-text message when form has no results. This is a context-expanded EL expression (not groovy-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
@@ -2390,7 +2390,7 @@ under the License.
                     </xs:annotation>
                 </xs:attribute>
                 <!-- SCIPIO: NOTE: This is now already defined on the base link.
-                    Note that this version supports Bsh conditions.
+                    Note that this version supports Groovy conditions (without ${}).
                 <xs:attribute type="xs:string" name="use-when" />
                 -->
                 <xs:attribute name="target-type" default="intra-app">

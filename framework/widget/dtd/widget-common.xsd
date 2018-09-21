@@ -522,8 +522,8 @@ under the License.
                         <xs:enumeration value="bsh">
                             <xs:annotation>
                                 <xs:documentation>
-                                    SCIPIO: 2018: DEPRECATED: Beanshell interpreter is slated for eventual removal; 
-                                    please use groovy instead.
+                                    SCIPIO: 2018-09-19: DEPRECATED: Please change your code to groovy instead.
+                                    Beanshell is no longer supported and this directive now runs Groovy in a compatibility mode.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:enumeration>
@@ -1032,10 +1032,10 @@ under the License.
         <xs:attribute type="xs:string" name="use-when">
             <xs:annotation>
                 <xs:documentation>SCIPIO: A condition whose result should evaluate to true/false to determine
-                    when the link should be applied. This can be EL (${}) or groovy (with ${groovy:}) anywhere, but 
-                    the common implementation is NOT a Bsh-style condition; Bsh is specific to some other elements that extend link,
-                    such as form widget sub-hyperlink.
-                    Default: undetermined (null) or true, depending on context
+                    when the link should be applied to the text. In gneeral, expressions should be specified using
+                    flexible expressions syntax: ${...}, ${groovy:...}, etc.
+                    NOTE: Some specific link sub-types may also fallback to plain Groovy expressions (without ${...} written),
+                        but this is currently inconsistent (e.g. form widget sub-hyperlink has it).
                     NOTE: Currently (2016-09-12), this is only used directly by menu widgets.</xs:documentation>
             </xs:annotation>
         </xs:attribute>

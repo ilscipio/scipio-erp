@@ -527,7 +527,9 @@ under the License.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:enumeration>
-                        <xs:enumeration value="java" />
+                        <!-- SCIPIO: 2018-09-19: This was never used, and it's certain it cannot work
+                            anymore; unclear if it ever had a chance of working or could in future
+                        <xs:enumeration value="java" />-->
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

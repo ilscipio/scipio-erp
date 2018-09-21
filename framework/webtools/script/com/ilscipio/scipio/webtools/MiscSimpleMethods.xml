@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+    <!-- TODO?: This test probably belong in another file or automated test -->
+    <simple-method method-name="testBshCompat" short-description="bsh backward-compatibility">
+        <script><![CDATA[groovy:
+            import org.ofbiz.base.util.*;
+            final module = "testSimpleMethod1.groovy";
+            x = null;
+            try {
+                x = somemissingpropertyname;
+                Debug.logError("testSimpleMethod1: Standard groovy: Missing property was improperly detected!", module);
+            } catch(groovy.lang.MissingPropertyException e) {
+                Debug.logInfo("testSimpleMethod1: Standard groovy: Missing property was triggered and caught successfully.", module);
+            }
+            context.testSmOutVar1 = "hello from groovy";
+        ]]></script>
+        <field-to-result field="testSmOutVar1"/>
+        <!-- backward-compatibility test, do not use this! -->
+        <call-bsh><![CDATA[
+            import org.ofbiz.base.util.*;
+            x = null;
+            try {
+                x = somemissingpropertyname;
+                Debug.logInfo("testSimpleMethod1: Beanshell emulation: Missing property was treated as null successfully.", "testSimpleMethod1.groovy");
+            } catch(groovy.lang.MissingPropertyException e) {
+                Debug.logError("testSimpleMethod1: Beanshell emulation: Missing property was triggered, should not happen!", "testSimpleMethod1.groovy");
+            }
+            // try OLD-STYLE return value, should get dumped into context the same
+            //context.testSmOutVar2 = "hello from beanshell-emulating-groovy";
+            return [testSmOutVar2: "hello from beanshell-emulating-groovy"];
+        ]]></call-bsh>
+        <field-to-result field="testSmOutVar2"/>
+        
+        <!-- Deprecated bsh, make sure it does not crash, for backward-compat (this actually runs groovy!)
+            NOTE: Due to convoluted Minilang "set" implementation, this may actually run through the Script class rather than FlexibleStringExpander, 
+                which is quite confusing! -->
+        <set field="testBshVar1" value="${bsh: org.ofbiz.base.util.Debug.logInfo('testSimpleMethod1: running from deprecated bsh scriptlet', 'testSimpleMethod1.groovy')}"/>
+        
+        <!-- Double deprecation! 
+            WARN: currently script element and Scriptlet class may fail to enable the full bsh emulation (compared to flexible expression),
+                but is still better than nothing -->
+        <script><![CDATA[bsh:
+            org.ofbiz.base.util.Debug.logInfo('testSimpleMethod1: running from deprecated bsh script block', 'testSimpleMethod1.groovy')
+            org.ofbiz.base.util.string.FlexibleStringExpander.getInstance(
+                "\${bsh: org.ofbiz.base.util.Debug.logInfo('testSimpleMethod1: running from deprecated bsh flexible expression', 'testSimpleMethod1.groovy')}"
+            ).expandString(context);
+        ]]></script>
+    </simple-method>
+ 
+</simple-methods>

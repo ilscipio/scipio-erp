@@ -283,6 +283,22 @@ under the License.
                 ]]></script>
                 <!-- NOTE: in the following, we cannot use the nice groovy collect() method with closure, because syntax doesn't support nested brackets... -->
                 <set field="dummy" value="${groovy: import org.ofbiz.base.util.*; Debug.logInfo('WebSite records in system (cached): ' + UtilMisc.collectMapValuesForKey(from('WebSite').orderBy('webSiteId').cache(true).queryList(), 'webSiteId'), 'InlineDemoAssignScript.groovy'); '';}"/>
+
+                <!-- simple-method test -->
+                <script><![CDATA[groovy:
+                    import org.ofbiz.base.util.*;
+                    final module = "InlineDemoScript.groovy";
+                    Debug.logInfo("--------------------------------------", module);
+                    Debug.logInfo("bsh warnings/compat test", module);
+                    Debug.logInfo("--------------------------------------", module);
+                ]]></script>
+                <script location="component://webtools/script/com/ilscipio/scipio/webtools/MiscSimpleMethods.xml#testBshCompat"/>
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    final module = "InlineDemoScript.groovy";
+                    Debug.logInfo("Some messages returns from testSimpleMethods1: " + testSmOutVar1 + " " + testSmOutVar2, module);
+                    Debug.logInfo("--------------------------------------", module);
+                ]]></script>
             </actions>
             <widgets>
                 <!-- 

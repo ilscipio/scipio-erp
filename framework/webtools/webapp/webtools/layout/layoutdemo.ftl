@@ -1221,6 +1221,10 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <@section title="Form widget tooltips">
       <@render type="form" resource="component://webtools/widget/MiscForms.xml#TooltipTestForm1"/>
     </@section>
+    
+    <@section title="Form actions and conditions">
+      <@render type="form" resource="component://webtools/widget/MiscForms.xml#ActionsTestForm1"/>
+    </@section>
   </@section>
   </#if>
 </@section>

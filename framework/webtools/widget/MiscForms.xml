@@ -123,5 +123,22 @@ under the License.
         <field name="submit1" tooltip="This is a tooltip!"><submit/></field>
         <field name="submit2" tooltip="This is a tooltip!"><submit button-type="text-link"/></field>
     </form>
-    
+
+    <form name="ActionsTestForm1" type="single">
+        <actions>
+            <script lang="groovy"><![CDATA[
+                context.myTestField1 = parameters.myTestField1;
+                context.myTestField3434 = "hello";
+                context.myTestField34 = "hello";
+            ]]></script>
+        </actions>
+        <field name="myTestField1" use-when="myTestField1==null"><display description="myTestField1 value was null"/></field>
+        <field name="myTestField1" use-when="myTestField1!=null"><display description="myTestField1 value was not null"/></field>
+        <field name="myTestField2" use-when="myTestField2==null"><display description="myTestField2 value was null"/></field>
+        <field name="myTestField2" use-when="myTestField2!=null"><display description="myTestField2 value was not null"/></field>
+        <!-- the following is awful, never do this -->
+        <field name="myTestField3" use-when="${myTestField3434 == 'hello'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isEmpty(myTestField1)}">
+            <display description="myTestField3434 was hello and myTestField1 was empty"/>
+        </field>
+    </form>
 </forms>

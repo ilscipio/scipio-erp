@@ -215,8 +215,7 @@
         <dependency org="oro" name="oro" rev="2.0.8" conf="base,scripting,sources"/>-->
 
         <!-- scripting jars - special and/or known to be missing/broken in central (2018-03-20) -->
-        <!-- modified bsh from localRepo; source under tools/extra/src/beanshell-2.0b6-scipio -->
-        <dependency org="org.apache-extras.beanshell" name="bsh" rev="2.0b6-scipio-1.0" conf="base,scripting"/>
+        <!-- (none) -->
 
         <!-- media jars -->
         <!-- SCIPIO: 2017-07-10: new image libs -->
@@ -450,7 +449,7 @@
         <exclude org="javax.servlet" module="servlet-api"/><!-- now org="javax.servlet" name="javax.servlet-api" -->
         <exclude org="org.hamcrest" module="hamcrest-core" /><!-- covered by org="org.hamcrest" name="hamcrest-all" (hamcrest-core is from junit) -->
         <exclude org="junit" module="junit-dep"/><!-- now org="junit" name="junit" -->
-        <exclude org="org.beanshell" module="bsh.*" matcher="regexp"/><!-- we provide the full bsh jar -->
+        <exclude org="org.beanshell" module="bsh.*" matcher="regexp"/><!-- 2018-09-19: Beanshell is removed; but keep excluded until true need is found -->
         <exclude org="jython" module="jython"/><!-- now org="org.python" -->
         <exclude org="bouncycastle"/><!-- now org="org.bouncycastle" (NOTE: these had poor version numbers, like "138") -->
         <exclude org="commons-beanutils" module="commons-beanutils-core"/><!-- now org="commons-beanutils" name="commons-beanutils" -->

@@ -536,12 +536,24 @@ public class GroovyUtil {
          */
         public static final GroovyLangVariant BSH = new BshVariantConfig();
 
+        /**
+         * Stock Groovy configuration.
+         * <p>
+         * IGNORES base script class defined in groovy.properties, and more
+         * generally uses a simple stock GroovyShell or equivalent to run the script,
+         * with default configuration.
+         * <p>
+         * This is mainly for tests.
+         */
+        public static final GroovyLangVariant STOCK = new StockVariantConfig();
+
         private static final Map<String, GroovyLangVariant> nameMap;
         static {
             Map<String, GroovyLangVariant> m = new HashMap<>();
             m.put(STANDARD.getName(), STANDARD);
             m.put(SIMPLE.getName(), SIMPLE);
             m.put(BSH.getName(), BSH);
+            m.put(STOCK.getName(), STOCK);
             nameMap = m;
         }
 
@@ -658,6 +670,42 @@ public class GroovyUtil {
             @Override
             public Binding createBareBinding(Map<String, Object> context) {
                 return new MissingVarsNullBinding(context); // Simplified binding
+            }
+        }
+
+        public static class StockVariantConfig extends GroovyLangVariant {
+            private static final CompilerConfiguration stockGroovyCompilerConfiguration;
+            private static final GroovyClassLoader stockGroovyClassLoader;
+            static {
+                stockGroovyCompilerConfiguration = CompilerConfiguration.DEFAULT;
+                stockGroovyClassLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), stockGroovyCompilerConfiguration);
+            }
+            
+            protected StockVariantConfig() {}
+
+            @Override
+            public String getName() {
+                return "stock";
+            }
+
+            @Override
+            public Binding createBareBinding(Map<String, Object> context) {
+                return new Binding(context);
+            }
+
+            @Override
+            public CompilerConfiguration getGroovyCompilerConfiguration() {
+                return stockGroovyCompilerConfiguration;
+            }
+
+            @Override
+            public GroovyClassLoader getCommonGroovyClassLoader() {
+                return stockGroovyClassLoader;
+            }
+
+            @Override
+            public GroovyClassLoader createGroovyClassLoader() {
+                return new GroovyClassLoader(GroovyUtil.class.getClassLoader(), stockGroovyCompilerConfiguration);
             }
         }
     }

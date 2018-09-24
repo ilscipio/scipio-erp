@@ -78,13 +78,13 @@ under the License.
     <screen name="EditBillingAccount">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditBillingAccount"/>
                 <set field="activeSubMenuItem" value="EditBillingAccount"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="roleTypeId" from-field="parameters.roleTypeId"/>
+                <set field="titleProperty" value="${groovy: context.billingAccount ? 'PageTitleEditBillingAccount' : 'AccountingNewBillingAccount'}"/><!-- SCIPIO -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.mainDecoratorLocation}">

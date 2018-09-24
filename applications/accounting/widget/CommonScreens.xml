@@ -167,7 +167,10 @@ under the License.
     <screen name="CommonBillingAccountDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#BillingAccountSideBar"/>
+                <!-- SCIPIO: This submenu is empty, this can't work... 
+                    so force activeSubMenuItem to the entry in the top menu.
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#BillingAccountSideBar"/>-->
+                <set field="activeSubMenuItem" value="billingaccount"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">

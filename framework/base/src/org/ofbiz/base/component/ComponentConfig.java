@@ -813,6 +813,11 @@ public final class ComponentConfig {
         return "file".equals(resourceLoaderInfo.type) || "component".equals(resourceLoaderInfo.type);
     }
 
+    @Override
+    public String toString() { // SCIPIO: Added 2018-09-25
+        return "[globalName=" + globalName + ", rootLocation=" + rootLocation + "]";
+    }
+
     /**
      * SCIPIO: Returns the component names for a list of configs.
      */
@@ -1367,6 +1372,15 @@ public final class ComponentConfig {
 
         public synchronized void setAppBarDisplay(boolean appBarDisplay) {
             this.appBarDisplay = appBarDisplay;
+        }
+
+        @Override
+        public String toString() { // SCIPIO: Added 2018-09-25
+            return "[webappName=" + name 
+                    + ", componentName=" + componentConfig.getGlobalName() 
+                    + ", contextRoot=" + contextRoot
+                    + ", server=" + server
+                    + "]";
         }
     }
 }

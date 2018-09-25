@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.WebXml;
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Debug;
@@ -28,6 +29,8 @@ import org.xml.sax.SAXException;
  * SCIPIO: Extended static webapp info class, which contains both component WebappInfo
  * and WebXml info in a single class linked to the webSiteId in a global cache.
  * Should only be used for webapps that have a defined webSiteId (in web.xml).
+ * In general, this represents a server webapp from the point of the view of 
+ * the webserver (instead of from of components' point of view - see note below).
  * <p>
  * It will cache several settings to avoid constantly re-traversing the WebXml
  * and preload a bunch of calls from {@link WebAppUtil}.
@@ -41,6 +44,15 @@ import org.xml.sax.SAXException;
  * If you need an instance in such times, call the {@link #fromWebSiteIdNew} method.
  * TODO?: We could code the webapp loader to invoke {@link #clearCaches()} at end of loading
  * to avoid issues.
+ * <p>
+ * NOTE: 2019-09-25: For the purposes of this class, a ExtWebappInfo is considered equal
+ * to another if it has the same {@link #getContextPath()} and {@link #getServerId()},
+ * in other words if {@link #isSameServerWebapp(ExtWebappInfo)} returns true,
+ * in other words they are the same webapp from the perspective of the webserver (not the components).
+ * This is slightly different from {@link org.ofbiz.base.component.ComponentConfig.WebappInfo}
+ * because of the webapp overriding that one has to deal with, meaning it is more concerned with
+ * the webapps from the components' perspective.
+ * In other words, ExtWebappInfo could have been better named "ServerWebappInfo".
  */
 @SuppressWarnings("serial")
 @ThreadSafe
@@ -54,12 +66,12 @@ public class ExtWebappInfo implements Serializable {
     private static Map<String, ExtWebappInfo> webSiteIdCache = Collections.emptyMap();
     private static Map<String, ExtWebappInfo> serverContextPathCache = Collections.emptyMap();
 
-    private final String webSiteId;
     // REQUIRED FIELDS (for this instance to exist)
     private final WebappInfo webappInfo;
     private final WebXml webXml;
 
-    // OPTIONAL FIELDS (instance may be created/cached even if lookup fails for these)
+    // OPTIONAL FIELDS (instance may be created/cached even if not set or lookup fails)
+    private final String webSiteId;
     private final String controlServletPath; // empty string for root
     private final String controlServletMapping; // single slash for root
     private final String fullControlPath; // with context root and trailing slash
@@ -244,6 +256,8 @@ public class ExtWebappInfo implements Serializable {
      * NOTE: This only works for paths starting from webapp contextPath;
      * if it contains extra prefix such as webappPathPrefix, this will throw exception
      * or return the root webapp (if any mapped to /).
+     * <p>
+     * WARN: Uses/may-use caching, do not call during system loading.
      */
     public static ExtWebappInfo fromPath(String serverName, String path, boolean stripQuery) throws IllegalArgumentException {
         WebappInfo webappInfo;
@@ -262,12 +276,57 @@ public class ExtWebappInfo implements Serializable {
         return fromPath(null, path, true);
     }
 
-    public static ExtWebappInfo fromWebappInfo(WebappInfo webappInfo) throws IllegalArgumentException {
+    /**
+     * Returns the server webapp for the current request.
+     */
+    public static ExtWebappInfo fromRequest(HttpServletRequest request) throws IllegalArgumentException {
+        return fromContextPath(WebAppUtil.getServerId(request), request.getContextPath());
+    }
+
+    /**
+     * Returns the <em>effectively server-viewable</em> webapp for the given component webapp.
+     * What this means is, if you request accounting/accounting webapp but it has been overridden
+     * by mount-point by the accountingde/accountingde webapp, the latter will be returned.
+     * <p>
+     * WARN: Uses/may-use caching, do not call during system loading.
+     */
+    public static ExtWebappInfo fromEffectiveComponentWebapp(WebappInfo webappInfo) throws IllegalArgumentException {
         return fromContextPath(webappInfo.getServer(), webappInfo.getContextRoot());
     }
 
-    public static ExtWebappInfo fromRequest(HttpServletRequest request) throws IllegalArgumentException {
-        return fromContextPath(WebAppUtil.getServerId(request), request.getContextPath());
+    /**
+     * Returns the <em>effectively server-viewable</em> webapp for the given component webapp.
+     * What this means is, if you request accounting/accounting webapp but it has been overridden
+     * by mount-point by the accountingde/accountingde webapp, the latter will be returned.
+     * <p>
+     * WARN: Uses/may-use caching, do not call during system loading.
+     */
+    public static ExtWebappInfo fromEffectiveComponentWebappName(String componentName, String webappName) throws IllegalArgumentException {
+        // TODO?: delegate and cache this somewhere, very inefficient, will see if/when this gets more usage...
+        WebappInfo webappInfo = null;
+        // get the last entry (should override previous ones)
+        for(ComponentConfig cc : ComponentConfig.getAllComponents()) {
+            for (WebappInfo wInfo : cc.getWebappInfos()) {
+                if (cc.getGlobalName().equals(componentName) && wInfo.getName().equals(webappName)) {
+                    webappInfo = wInfo; 
+                }
+            }
+        }
+        if (webappInfo == null) {
+            throw new IllegalArgumentException("Could not find webapp info for component '" 
+                    + componentName + "' and webapp name '" + webappName + "'");
+        }
+        return fromEffectiveComponentWebapp(webappInfo);
+    }
+
+    /**
+     * @deprecated 2018-09-25: This method was named ambiguously; use {@link #fromEffectiveComponentWebapp(WebappInfo)} instead;
+     * NOTE: This method always returned the <em>effectively server-viewable</em> webapp, which may
+     * be different from the passed webapp info; see new method for details.
+     */
+    @Deprecated
+    public static ExtWebappInfo fromWebappInfo(WebappInfo webappInfo) throws IllegalArgumentException {
+        return fromEffectiveComponentWebapp(webappInfo);
     }
 
     public String getWebSiteId() {
@@ -445,7 +504,18 @@ public class ExtWebappInfo implements Serializable {
     }
 
     public boolean isRequestWebapp(HttpServletRequest request) {
-        return getContextPath().equals(request.getContextPath());
+        return getContextPath().equals(request.getContextPath()) && getServerId().equals(WebAppUtil.getServerId(request));
+    }
+
+    /**
+     * Returns true if other and this refer to the same webapp.
+     */
+    public boolean isSameServerWebapp(ExtWebappInfo other) {
+        return (this == other) || (getContextPath().equals(other.getContextPath()) && getServerId().equals(other.getServerId()));
+    }
+
+    public boolean isSameWebSite(ExtWebappInfo other) {
+        return (this == other) || ((webSiteId != null) && webSiteId.equals(other.webSiteId));
     }
 
     private String getLogMsgPrefix() {
@@ -458,7 +528,26 @@ public class ExtWebappInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "[contextPath=" + getContextPath() + ", webSiteId=" + getWebSiteId() + "]";
+        return "[contextPath=" + getContextPath()
+                + ", server=" + getServerId()
+                + ", webSiteId=" + getWebSiteId() + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + getContextPath().hashCode();
+        result = prime * result + getServerId().hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        return isSameServerWebapp((ExtWebappInfo) obj);   
     }
 
     /**

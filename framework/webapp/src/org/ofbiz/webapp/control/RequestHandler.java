@@ -1881,7 +1881,7 @@ public class RequestHandler {
         FullWebappInfo targetWebappInfo = null;
         if (webappInfo != null) {
             try {
-                targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebappInfo(webappInfo), request);
+                targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromEffectiveComponentWebapp(webappInfo), request);
             } catch (Exception e) {
                 Debug.logError("makeLink: Could not get current webapp info for context path: " + (webappInfo != null ? webappInfo.getContextRoot() : "(missing input)"), module);
                 return null;

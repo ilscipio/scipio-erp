@@ -87,25 +87,61 @@ public final class WebSiteProperties {
         WebSiteProperties webSiteProps = (WebSiteProperties) request.getAttribute("_WEBSITE_PROPS_");
         if (webSiteProps == null) {
 
-            // SCIPIO: now delegates
+            // SCIPIO: 2018-09-25: Use ExtWebappInfo from the current request (by contextPath) in all cases,
+            // even when there is a webSiteId, to prevent this code giving issues with the
+            // poorly or (un-)suppported 1-to-many webapp->webSiteId mappings
+            ExtWebappInfo extWebappInfo = null;
+            try {
+                extWebappInfo = ExtWebappInfo.fromRequest(request);
+            } catch(Exception e) {
+                Debug.logError("Could not get webapp information (web.xml) for current request: " + e.toString(), module);
+            }
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            GenericValue webSiteValue = null;
             String webSiteId = WebSiteWorker.getWebSiteId(request);
             if (webSiteId != null) {
-                webSiteProps = newFrom(WebSiteWorker.getWebSiteId(request), request);
-            } else {
-                ExtWebappInfo extWebappInfo = null;
-                try {
-                    extWebappInfo = ExtWebappInfo.fromRequest(request);
-                } catch(Exception e) {
-                    Debug.logWarning("Could not get webapp information (web.xml) for current request: " + e.toString(), module);
+                delegator = (Delegator) request.getAttribute("delegator");
+                webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
+                if (webSiteValue == null) {
+                    throw new GenericEntityException("Scipio: Could not find WebSite for webSiteId '" + webSiteId + "'");
                 }
-                webSiteProps = newFrom(null, extWebappInfo, request, (Delegator) request.getAttribute("delegator"));
+                // 2018-09-25: emergency fallback case: this should not happen, but will help both debugging and emergency cases work
+                if (extWebappInfo == null) {
+                    Debug.logWarning("Looking up current request ExtWebappInfo using webSiteId '" 
+                            + webSiteId + "' as fallback; this should not normally be needed"
+                            + "; please ensure your ofbiz-component.xml webapp configurations are correct"
+                            + "; if they appear correct, please report this issue", module);
+                    try {
+                        extWebappInfo = ExtWebappInfo.fromWebSiteId(webSiteId);
+                    } catch(Exception e) {
+                        Debug.logError("Could not get webapp information (web.xml) for webSiteId: " + webSiteId, module);
+                    }
+                }
             }
+            // sanity check (this is cached so acceptable)
+            if (extWebappInfo != null) {
+                if ((webSiteId != null && !webSiteId.equals(extWebappInfo.getWebSiteId())) || 
+                    (webSiteId == null && extWebappInfo.getWebSiteId() != null)) {
+                    Debug.logError("Sanity check failed: current request webSiteId (" + webSiteId 
+                        + ") does not match detected current webapp info webSiteId (" + extWebappInfo.getWebSiteId()
+                        + ", webapp: " + extWebappInfo.toString() + "); please verify configuration and report this issue", module);
+                }
+            }
+            webSiteProps = newFrom(webSiteValue, extWebappInfo, request, delegator);
 
             request.setAttribute("_WEBSITE_PROPS_", webSiteProps);
         }
         return webSiteProps;
     }
 
+    /**
+     * SCIPIO: Shared factory for intra- and inter-webapp live request links.
+     * <p>
+     * DEV NOTE: WARN: Here, always get info from the target extWebappInfo (if non null) and not from request,
+     * except for server path settings.
+     * <p>
+     * DEV NOTE: WARN: Avoid lookups by webSiteId if contextPath is available.
+     */
     private static WebSiteProperties newFrom(String webSiteId, HttpServletRequest request) throws GenericEntityException {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         ExtWebappInfo extWebappInfo = null;

@@ -2053,6 +2053,7 @@
         <value xml:lang="vi">Triển vọng Mới được tạo thành công.</value>
     </property>
     <property key="CustomerCreatedSuccessfully">
+        <value xml:lang="de">Kunde erfolgreich erstellt.</value>
         <value xml:lang="en">Customer created successfully.</value>
     </property>
     <property key="PageTitleAddPartyContent">

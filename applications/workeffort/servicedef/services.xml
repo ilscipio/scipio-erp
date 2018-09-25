@@ -1519,7 +1519,7 @@ under the License.
                 <fail-property resource="WorkEffortUiLabels" property="WorkEffortRequiredFieldMissingWorkEffortId"/>
             </type-validate>
         </attribute>
-        <attribute name="contactMechTypeId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="contactMechTypeId" mode="IN" type="String" optional="true"/>
         <attribute name="infoString" mode="IN" type="String" optional="true"></attribute>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>

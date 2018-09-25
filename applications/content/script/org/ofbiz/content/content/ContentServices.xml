@@ -393,7 +393,7 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
-        <field-to-result result-name="contentTypeId" field="newEntity.contentTypeId"/>
+        <field-to-result field="newEntity.contentTypeId" result-name="contentTypeId"/>
     </simple-method>
     <simple-method method-name="updateContentType" short-description="Update Content Type">
         <make-value entity-name="ContentType" value-field="lookupKeyValue"/>
@@ -429,7 +429,7 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
-        <field-to-result result-name="contentAssocTypeId" field="newEntity.contentAssocTypeId"/>
+        <field-to-result field="newEntity.contentAssocTypeId" result-name="contentAssocTypeId"/>
     </simple-method>
     <simple-method method-name="updateContentAssocType" short-description="Update Content AssocType">
         <make-value entity-name="ContentAssocType" value-field="lookupKeyValue"/>
@@ -877,7 +877,7 @@
         -->
     <simple-method method-name="createCommEventContentAssoc" short-description="Create CommEventContentAssoc">
         <make-value entity-name="CommEventContentAssoc" value-field="commEventContentAssoc"/>
-        <set-pk-fields map="parameters" value-field="commEventContentAssoc"/>
+        <set-pk-fields value-field="commEventContentAssoc" map="parameters"/>
         <set-nonpk-fields map="parameters" value-field="commEventContentAssoc"/>
         <if-empty field="commEventContentAssoc.fromDate">
             <now-timestamp field="commEventContentAssoc.fromDate"/>
@@ -1186,7 +1186,7 @@
 
         <set field="filterByDate" from-field="parameters.filterByDate" default-value="true" type="Boolean"/>
         <set field="useCache" from-field="parameters.useCache" default-value="true" type="Boolean"/>
-        <entity-condition list="viewList" entity-name="ContentAssocViewTo" filter-by-date="${filterByDate}" use-cache="${useCache}">
+        <entity-condition entity-name="ContentAssocViewTo" list="viewList" filter-by-date="${filterByDate}" use-cache="${useCache}">
           <condition-list combine="and">
               <condition-expr field-name="contentIdStart" from-field="parameters.contentId"/>
               <condition-expr field-name="caContentAssocTypeId" from-field="parameters.contentAssocTypeId" ignore-if-empty="true"/>
@@ -1217,7 +1217,7 @@
                     </call-service>
                 </then>
             </if>
-            <if-compare operator="equals" field="hasPermission" value="true" type="Boolean">
+            <if-compare field="hasPermission" operator="equals" value="true" type="Boolean">
                 <set field="contentViewList[]" from-field="view"/>
             </if-compare>
         </iterate>
@@ -1313,7 +1313,7 @@
             <condition>
                 <or>
                     <if-empty field="parameters.contentId"/>
-                    <if-compare operator="equals" value="null" field="parameters.contentId"></if-compare>
+                    <if-compare operator="equals" value="null" field="parameters.contentId"/>
                 </or>
             </condition>
             <then>
@@ -1440,7 +1440,7 @@
 
             <iterate list="parameters.productCategories" entry="productCategoryList">
                 <!-- Create Content Alternative URLs for Product Category Content -->
-                <entity-condition list="productCategoryContentAndInfoList" entity-name="ProductCategoryContentAndInfo" filter-by-date="true" use-cache="true">
+                <entity-condition entity-name="ProductCategoryContentAndInfo" list="productCategoryContentAndInfoList" filter-by-date="true" use-cache="true">
                     <condition-list combine="and">
                         <condition-expr field-name="productCategoryId" from-field="productCategoryList.productCategoryId"/>
                         <condition-expr field-name="prodCatContentTypeId" operator="not-equals" value="ALTERNATIVE_URL"/>
@@ -1469,7 +1469,7 @@
                 </iterate>
 
                 <!-- Create Content Alternative URLs for Product Content -->
-                <entity-condition list="productCategoryMemberList" entity-name="ProductCategoryMember" filter-by-date="true" use-cache="true">
+                <entity-condition entity-name="ProductCategoryMember" list="productCategoryMemberList" filter-by-date="true" use-cache="true">
                     <condition-list combine="and">
                         <condition-expr field-name="productCategoryId" from-field="productCategoryList.productCategoryId"/>
                     </condition-list>
@@ -1477,7 +1477,7 @@
                 </entity-condition>
                 <iterate list="productCategoryMemberList" entry="productCategoryMember">
                     <set field="product.productId" from-field="productCategoryMember.productId"/>
-                    <entity-condition list="productContentAndInfoList" entity-name="ProductContentAndInfo" filter-by-date="true" use-cache="true">
+                    <entity-condition entity-name="ProductContentAndInfo" list="productContentAndInfoList" filter-by-date="true" use-cache="true">
                         <condition-list combine="and">
                             <condition-expr field-name="productId" from-field="product.productId"/>
                             <condition-expr field-name="productContentTypeId" operator="not-equals" value="ALTERNATIVE_URL"/>
@@ -1509,11 +1509,11 @@
         </if-not-empty>
 
         <!-- Create Content Alternative URLs for Website Content -->
-        <entity-and entity-name="WebSiteContent" list="webSiteContents" filter-by-date="true">
+        <entity-and list="webSiteContents" entity-name="WebSiteContent" filter-by-date="true">
             <field-map field-name="webSiteId" from-field="parameters.webSiteId"/>
         </entity-and>
         <iterate list="webSiteContents" entry="webSiteContent">
-            <entity-and entity-name="ContentAssoc" list="subContents" filter-by-date="true">
+            <entity-and list="subContents" entity-name="ContentAssoc" filter-by-date="true">
                 <field-map field-name="contentId" from-field="webSiteContent.contentId"/>
             </entity-and>
             <iterate list="subContents" entry="subContent">

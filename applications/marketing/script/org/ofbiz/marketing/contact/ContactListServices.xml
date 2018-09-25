@@ -160,7 +160,7 @@ under the License.
         <field-to-result field="parameters.contactListId" result-name="contactListId" />
     </simple-method>
     <simple-method method-name="updateContactListPartyNoUserLogin" short-description="Update Add Party To ContactList No User Login" login-required="false">
-        <entity-one entity-name="ContactList" value-field="contactList"/>
+        <entity-one value-field="contactList" entity-name="ContactList"/>
         <entity-and entity-name="ContactListPartyStatus" list="contactListPartyStatusList">
             <field-map field-name="contactListId" from-field="parameters.contactListId"/>
             <field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -402,7 +402,7 @@ under the License.
         </entity-and>
         <if-empty field="webSiteContactList">
             <make-value entity-name="WebSiteContactList" value-field="webSiteContactList"/>
-            <set-pk-fields map="parameters" value-field="webSiteContactList"/>
+            <set-pk-fields value-field="webSiteContactList" map="parameters"/>
             <set-nonpk-fields map="parameters" value-field="webSiteContactList"/>
             <create-value value-field="webSiteContactList"/>
             <return/>
@@ -417,7 +417,7 @@ under the License.
             <field-map field-name="fromDate" from-field="parameters.fromDate"/>
         </entity-and>
         <first-from-list list="webSiteContactList" entry="entryWebSiteContactList"/>
-        <set-pk-fields map="parameters" value-field="entryWebSiteContactList"/>
+        <set-pk-fields value-field="entryWebSiteContactList" map="parameters"/>
         <set-nonpk-fields map="parameters" value-field="entryWebSiteContactList"/>
         <store-value value-field="entryWebSiteContactList"/>
     </simple-method>
@@ -484,7 +484,7 @@ under the License.
                 <field-map field-name="contactMechId" from-field="commEvent.contactMechIdTo"/>
             </entity-and>
             <iterate list="clcs" entry="commStatus">
-                <set-service-fields service-name="updateContactListCommStatus" map="commStatus" to-map="updateStatusCtx"/>
+                <set-service-fields service-name="updateContactListCommStatus" to-map="updateStatusCtx" map="commStatus"/>
                 <set field="updateStatusCtx.statusId" from-field="parameters.statusId"/>
                 <call-service service-name="updateContactListCommStatus" in-map-name="updateStatusCtx"/>
             </iterate>

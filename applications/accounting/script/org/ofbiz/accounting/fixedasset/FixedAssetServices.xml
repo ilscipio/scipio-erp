@@ -292,7 +292,7 @@ under the License.
                         <set field="updateWorkEffortCtx.actualCompletionDate" from-field="nowTimestamp"/>
                         <call-service service-name="updateWorkEffort" in-map-name="updateWorkEffortCtx"/>
                         <check-errors/>
-                        <entity-condition list="wepas" entity-name="WorkEffortPartyAssignment" filter-by-date="true">
+                        <entity-condition entity-name="WorkEffortPartyAssignment" list="wepas" filter-by-date="true">
                             <condition-expr field-name="workEffortId" operator="equals" from-field="workEffortId"/>
                         </entity-condition>
                         <iterate list="wepas" entry="wepa">

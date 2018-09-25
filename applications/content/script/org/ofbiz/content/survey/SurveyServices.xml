@@ -30,7 +30,7 @@
         <sequenced-id sequence-name="Survey" field="newEntity.surveyId"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
-        <field-to-result result-name="surveyId" field="newEntity.surveyId"/>
+        <field-to-result field="newEntity.surveyId" result-name="surveyId"/>
     </simple-method>
     <simple-method method-name="updateSurvey" short-description="Update Survey">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -178,7 +178,6 @@
     <simple-method method-name="createSurveyQuestion" short-description="Create Survey Question">
         <if>
             <condition>
-
                 <and>
                     <if-compare field="surveyQuestionTypeId" value="ENUMERATION" operator="equals"/>
                     <if-empty field="enumTypeId"/>
@@ -213,7 +212,7 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="SurveyQuestion" field="newEntity.surveyQuestionId"/>
         <create-value value-field="newEntity"/>
-        <field-to-result result-name="surveyQuestionId" field="newEntity.surveyQuestionId"/>
+        <field-to-result field="newEntity.surveyQuestionId" result-name="surveyQuestionId"/>
     </simple-method>
     <simple-method method-name="updateSurveyQuestion" short-description="Update Survey Question">
         <if>
@@ -333,7 +332,7 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="SurveyQuestionCategory" field="newEntity.surveyQuestionCategoryId"/>
         <create-value value-field="newEntity"/>
-        <field-to-result result-name="surveyQuestionCategoryId" field="newEntity.surveyQuestionCategoryId"/>
+        <field-to-result field="newEntity.surveyQuestionCategoryId" result-name="surveyQuestionCategoryId"/>
     </simple-method>
     <simple-method method-name="updateSurveyQuestionCategory" short-description="Update Survey QuestionCategory">
         <check-permission action="_UPDATE" permission="CONTENTMGR">

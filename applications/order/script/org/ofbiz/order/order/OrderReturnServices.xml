@@ -1121,7 +1121,7 @@ under the License.
         <find-by-and entity-name="ReturnContactMech" map="createReturnContactMechMap" list="returnContactMechList"/>
         <!-- If returnContactMechList value is null then create new entry in ReturnContactMech entity-->
         <if-empty field="returnContactMechList">
-            <if-compare value="SHIPPING_LOCATION" field="parameters.contactMechPurposeTypeId" operator="equals">
+            <if-compare field="parameters.contactMechPurposeTypeId" operator="equals" value="SHIPPING_LOCATION">
                 <set field="returnHeader.originContactMechId" from-field="createReturnContactMechMap.contactMechId"/>
                 <store-value value-field="returnHeader"/>
             </if-compare>

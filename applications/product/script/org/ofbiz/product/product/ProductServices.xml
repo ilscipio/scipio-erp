@@ -1358,16 +1358,16 @@ under the License.
             <result-to-field result-name="productCategoryId" field="resultFields.productCategoryId"/>
         </call-service>
 
-        <field-to-result result-name="productId" field="resultFields.productId"/>
+        <field-to-result field="resultFields.productId" result-name="productId"/>
         <if-compare field="parameters.returnAssocFields" operator="equals" type="Boolean" value="true">
-            <field-to-result result-name="fromDate" field="resultFields.fromDate"/>
-            <field-to-result result-name="sequenceNum" field="resultFields.sequenceNum"/>
-            <field-to-result result-name="productCategoryId" field="resultFields.productCategoryId"/>
+            <field-to-result field="resultFields.fromDate" result-name="fromDate"/>
+            <field-to-result field="resultFields.sequenceNum" result-name="sequenceNum"/>
+            <field-to-result field="resultFields.productCategoryId" result-name="productCategoryId"/>
         </if-compare>
-        <field-to-result result-name="to_productId" field="resultFields.productId"/>
-        <field-to-result result-name="to_fromDate" field="resultFields.fromDate"/>
-        <field-to-result result-name="to_sequenceNum" field="resultFields.sequenceNum"/>
-        <field-to-result result-name="to_productCategoryId" field="resultFields.productCategoryId"/>
+        <field-to-result field="resultFields.productId" result-name="to_productId"/>
+        <field-to-result field="resultFields.fromDate" result-name="to_fromDate"/>
+        <field-to-result field="resultFields.sequenceNum" result-name="to_sequenceNum"/>
+        <field-to-result field="resultFields.productCategoryId" result-name="to_productCategoryId"/>
     </simple-method>
 
     <simple-method method-name="moveProductCatAssocVersatile">

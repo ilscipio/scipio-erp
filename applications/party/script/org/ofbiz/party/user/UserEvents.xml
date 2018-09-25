@@ -86,7 +86,7 @@ under the License.
                     <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPasswordMissing"/></not-empty></process>
                     <process field="CONFIRM_PASSWORD">
                         <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>
-                        <!-- This is checked below in the checkNewPassword method in the bsh block: <not-empty><fail-property resource="PartyUiLabels" property="PartyEnterPasswordTwice"/></not-empty> -->
+                        <!-- This is checked below in the checkNewPassword method in the block: <not-empty><fail-property resource="PartyUiLabels" property="PartyEnterPasswordTwice"/></not-empty> -->
                         <copy to-field="currentPasswordVerify"/>
                     </process>
                     <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
@@ -108,10 +108,10 @@ under the License.
 
             <!-- Check the password, etc for validity -->
             <script>groovy:
-                String password = (String) userLoginContext.get("currentPassword");
-                String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
-                String passwordHint = (String) userLoginContext.get("passwordHint");
-                org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
+                String password = (String) userLoginContext.get("currentPassword")
+                String confirmPassword = (String) userLoginContext.get("currentPasswordVerify")
+                String passwordHint = (String) userLoginContext.get("passwordHint")
+                org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale)
             </script>
         <else>
             <if-compare field="require_login" operator="equals" value="true">
@@ -316,7 +316,7 @@ under the License.
                 boolean useEncryption = "true".equals(org.ofbiz.entity.util.EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator))
                 if (useEncryption) {
                     String hashType = org.ofbiz.common.login.LoginServices.getHashType()
-                    newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.digestHash(hashType, null, (String) newUserLogin.get("currentPassword")))
+                    newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.digestHash(hashType, null, (String) newUserLogin.get("currentPassword"))) 
                 }
             </script>
 

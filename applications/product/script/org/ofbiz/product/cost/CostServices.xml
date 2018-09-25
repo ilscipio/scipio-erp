@@ -57,7 +57,7 @@ under the License.
 
     <!-- Services to get the product and tasks costs -->
     <simple-method method-name="getProductCost" short-description="Gets the product's costs (from CostComponent or ProductPrice)">
-        <entity-condition list="costComponents" entity-name="CostComponent" filter-by-date="true">
+        <entity-condition entity-name="CostComponent" list="costComponents" filter-by-date="true">
             <condition-list>
                 <condition-expr field-name="productId" operator="equals" from-field="parameters.productId"/>
                 <condition-expr field-name="costUomId" operator="equals" from-field="parameters.currencyUomId"/>
@@ -533,7 +533,7 @@ under the License.
         </entity-and>
         <first-from-list list="productAverageCostList" entry="productAverageCost"/>
 
-        <!-- <log level="info" message="In updateProductAverageCostOnReceiveInventory found productAverageCost: ${productAverageCost}"/> -->
+        <!-- <log level="always" message="In updateProductAverageCostOnReceiveInventory found productAverageCost: ${productAverageCost}"/> -->
 
         <set-service-fields service-name="createProductAverageCost" map="parameters" to-map="productAverageCostMap"/>
         <set field="productAverageCostMap.productAverageCostTypeId" value="SIMPLE_AVG_COST"/>

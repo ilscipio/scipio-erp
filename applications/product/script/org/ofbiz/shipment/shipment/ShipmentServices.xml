@@ -92,6 +92,7 @@ under the License.
             <create-value value-field="newStatusValue"/>
         </if-not-empty>
     </simple-method>
+    
     <simple-method method-name="updateShipment" short-description="Update Shipment">
         <set value="Update Shipment" field="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusDelivered"/>
@@ -620,19 +621,19 @@ under the License.
 
         <if-empty field="shipment.estimatedShipCost">
             <script>groovy:
-                    import java.math.BigDecimal;
-                    import org.ofbiz.order.order.OrderReadHelper;
+                    import java.math.BigDecimal
+                    import org.ofbiz.order.order.OrderReadHelper
 
-                    orderReadHelper = new OrderReadHelper(orderHeader);
-                    orderItems = orderReadHelper.getValidOrderItems();
-                    orderAdjustments = orderReadHelper.getAdjustments();
-                    orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
-                    orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
+                    orderReadHelper = new OrderReadHelper(orderHeader)
+                    orderItems = orderReadHelper.getValidOrderItems()
+                    orderAdjustments = orderReadHelper.getAdjustments()
+                    orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments()
+                    orderSubTotal = orderReadHelper.getOrderItemsSubTotal()
 
-                    shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
-                    shippingAmount = shippingAmount.add(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true));
-                    //org.ofbiz.base.util.Debug.log("shippingAmmount=" + shippingAmount);
-                    shipment.put("estimatedShipCost", shippingAmount);
+                    shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true)
+                    shippingAmount = shippingAmount.add(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true))
+                    //org.ofbiz.base.util.Debug.log("shippingAmmount=" + shippingAmount)
+                    shipment.put("estimatedShipCost", shippingAmount)
             </script>
         </if-empty>
 
@@ -681,8 +682,8 @@ under the License.
             <if-empty field="shipment.originContactMechId">
                 <script>groovy:
                     facilityContactMech = org.ofbiz.party.contact.ContactMechWorker.getFacilityContactMechByPurpose(
-                                delegator, shipment.get("originFacilityId"), org.ofbiz.base.util.UtilMisc.toList("SHIP_ORIG_LOCATION", "PRIMARY_LOCATION")
-                            );
+                                delegator, shipment.get("originFacilityId"), 
+                                org.ofbiz.base.util.UtilMisc.toList("SHIP_ORIG_LOCATION", "PRIMARY_LOCATION"))
                     if (facilityContactMech != null) {
                         shipment.put("originContactMechId", facilityContactMech.get("contactMechId"));
                     }
@@ -691,10 +692,10 @@ under the License.
             <if-empty field="shipment.originTelecomNumberId">
                 <script>groovy:
                     facilityContactMech = org.ofbiz.party.contact.ContactMechWorker.getFacilityContactMechByPurpose(
-                                delegator, shipment.get("originFacilityId"), org.ofbiz.base.util.UtilMisc.toList("PHONE_SHIP_ORIG", "PRIMARY_PHONE")
-                            );
+                                delegator, shipment.get("originFacilityId"), 
+                                org.ofbiz.base.util.UtilMisc.toList("PHONE_SHIP_ORIG", "PRIMARY_PHONE"))
                     if (facilityContactMech != null) {
-                        shipment.put("originTelecomNumberId", facilityContactMech.get("contactMechId"));
+                        shipment.put("originTelecomNumberId", facilityContactMech.get("contactMechId"))
                     }
                 </script>
             </if-empty>
@@ -703,20 +704,20 @@ under the License.
             <if-empty field="shipment.destinationContactMechId">
                 <script>groovy:
                     facilityContactMech = org.ofbiz.party.contact.ContactMechWorker.getFacilityContactMechByPurpose(
-                                delegator, shipment.get("destinationFacilityId"), org.ofbiz.base.util.UtilMisc.toList("SHIPPING_LOCATION", "PRIMARY_LOCATION")
-                            );
+                                delegator, shipment.get("destinationFacilityId"), 
+                                org.ofbiz.base.util.UtilMisc.toList("SHIPPING_LOCATION", "PRIMARY_LOCATION"))
                     if (facilityContactMech != null) {
-                        shipment.put("destinationContactMechId", facilityContactMech.get("contactMechId"));
+                        shipment.put("destinationContactMechId", facilityContactMech.get("contactMechId"))
                     }
                 </script>
             </if-empty>
             <if-empty field="shipment.destinationTelecomNumberId">
                 <script>groovy:
                     facilityContactMech = org.ofbiz.party.contact.ContactMechWorker.getFacilityContactMechByPurpose(
-                                delegator, shipment.get("destinationFacilityId"), org.ofbiz.base.util.UtilMisc.toList("PHONE_SHIPPING", "PRIMARY_PHONE")
-                            );
+                                delegator, shipment.get("destinationFacilityId"), 
+                                org.ofbiz.base.util.UtilMisc.toList("PHONE_SHIPPING", "PRIMARY_PHONE"))
                     if (facilityContactMech != null) {
-                        shipment.put("destinationTelecomNumberId", facilityContactMech.get("contactMechId"));
+                        shipment.put("destinationTelecomNumberId", facilityContactMech.get("contactMechId"))
                     }
                 </script>
             </if-empty>
@@ -843,7 +844,7 @@ under the License.
         <set value="Delete ShipmentItem" field="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
-        <!-- If there is any Shipment Package Content available for this Shipment Item then it cannot be deleted as it require
+        <!-- If there is any Shipment Package Content available for this Shipment Item then it cannot be deleted as it require 
                 Shipment Package content to be deleted first -->
         <entity-and entity-name="ShipmentPackageContent" list="shipmentPackageContents">
             <field-map field-name="shipmentId" from-field="parameters.shipmentId"/>
@@ -1676,7 +1677,7 @@ under the License.
         -->
         <if-not-empty field="parameters.serialNumber">
         <make-value entity-name="OrderItemShipGrpInvRes" value-field="orderItemShipGrpInvResLookupPk"/>
-        <set-pk-fields map="parameters" value-field="orderItemShipGrpInvResLookupPk"/>
+        <set-pk-fields value-field="orderItemShipGrpInvResLookupPk" map="parameters"/>
         <find-by-primary-key entity-name="OrderItemShipGrpInvRes" map="orderItemShipGrpInvResLookupPk" value-field="orderItemShipGrpInvRes"/>
         <get-related-one to-value-field="inventoryItem" relation-name="InventoryItem" value-field="orderItemShipGrpInvRes"/>
         <if-compare-field field="inventoryItem.serialNumber" operator="not-equals" to-field="parameters.serialNumber">
@@ -1711,7 +1712,7 @@ under the License.
         </if-empty>
         <log level="info" message="Package SeqID : ${shipItemContext.shipmentPackageSeqId}"/>
         <make-value entity-name="ShipmentPackage" value-field="shipmentPackageLookupPk"/>
-        <set-pk-fields map="parameters" value-field="shipmentPackageLookupPk"/>
+        <set-pk-fields value-field="shipmentPackageLookupPk" map="parameters"/>
         <find-by-primary-key entity-name="ShipmentPackage" map="shipmentPackageLookupPk" value-field="shipmentPackage"/>
         <if-empty field="shipmentPackage">
             <set from-field="itemIssuance.shipmentId" field="shipPackageContext.shipmentId"/>
@@ -1902,11 +1903,11 @@ under the License.
 
     <simple-method method-name="removeOrderShipmentFromShipment" short-description="Delete an OrderShipment and updates the ShipmentItem">
         <make-value entity-name="OrderShipment" value-field="lookupPk"/>
-        <set-pk-fields map="parameters" value-field="lookupPk"/>
+        <set-pk-fields value-field="lookupPk" map="parameters"/>
         <find-by-primary-key entity-name="OrderShipment" map="lookupPk" value-field="orderShipment"/>
         <clear-field field="lookupPk"/>
         <make-value entity-name="ShipmentItem" value-field="lookupPk"/>
-        <set-pk-fields map="parameters" value-field="lookupPk"/>
+        <set-pk-fields value-field="lookupPk" map="parameters"/>
         <find-by-primary-key entity-name="ShipmentItem" map="lookupPk" value-field="shipmentItem"/>
 
         <set from-field="parameters.userLogin" field="inMap.userLogin"/>
@@ -1946,17 +1947,17 @@ under the License.
 
             <!-- get orderHeader -->
             <make-value entity-name="OrderHeader" value-field="orderHeaderLookupPk"/>
-            <set-pk-fields map="parameters" value-field="orderHeaderLookupPk"/>
+            <set-pk-fields value-field="orderHeaderLookupPk" map="parameters"/>
             <find-by-primary-key map="orderHeaderLookupPk" value-field="orderHeader"/>
 
             <!-- get orderItem -->
             <make-value entity-name="OrderItem" value-field="orderItemLookupPk"/>
-            <set-pk-fields map="parameters" value-field="orderItemLookupPk"/>
+            <set-pk-fields value-field="orderItemLookupPk" map="parameters"/>
             <find-by-primary-key map="orderItemLookupPk" value-field="orderItem"/>
 
             <!-- make sure the orderItem is not already present in this shipment -->
             <make-value entity-name="OrderShipment" value-field="orderShipmentLookup"/>
-            <set-pk-fields map="parameters" value-field="orderShipmentLookup"/>
+            <set-pk-fields value-field="orderShipmentLookup" map="parameters"/>
             <find-by-and entity-name="OrderShipment" map="orderShipmentLookup" list="existingOrderShipments"/>
             <if-not-empty field="existingOrderShipments">
                 <string-to-list string="Not adding Order Item to plan for shipment [${parameters.shipmentId}] because the order item is already in the shipment (order [${parameters.orderId}], order item [${parameters.orderItemSeqId}])" list="error_list"/>
@@ -1994,7 +1995,7 @@ under the License.
     <simple-method method-name="getQuantityForShipment" short-description="get the order item quantity still not put in shipments">
         <!-- get orderItem -->
         <make-value entity-name="OrderItem" value-field="orderItemLookupPk"/>
-        <set-pk-fields map="parameters" value-field="orderItemLookupPk"/>
+        <set-pk-fields value-field="orderItemLookupPk" map="parameters"/>
         <find-by-primary-key map="orderItemLookupPk" value-field="orderItem"/>
 
         <set from-field="parameters.orderId" field="orderShipmentLookup.orderId"/>

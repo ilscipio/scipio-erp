@@ -152,7 +152,7 @@ under the License.
 
         <set from-field="parameters.facilityId" field="facilityId"/>
         <if-empty field="facilityId">
-            <if-compare value="Y" field="productStore.oneInventoryFacility" operator="equals">
+            <if-compare field="productStore.oneInventoryFacility" operator="equals" value="Y">
                 <if-empty field="productStore.inventoryFacilityId">
                     <add-error>
                         <fail-property resource="ProductUiLabels" property="ProductProductStoreNoSpecifiedInventoryFacility"/>
@@ -167,7 +167,7 @@ under the License.
                     <result-to-field result-name="quantityNotReserved"/>
                 </call-service>
 
-                <if-compare value="0" field="quantityNotReserved" operator="equals" type="BigDecimal">
+                <if-compare field="quantityNotReserved" operator="equals" value="0" type="BigDecimal">
                     <log level="info" message="Inventory IS reserved in facility with id [${productStore.inventoryFacilityId}] for product id [${parameters.productId}]; desired quantity was ${parameters.quantity}"/>
                 <else>
                     <log level="info" message="There is insufficient inventory available in facility with id [${productStore.inventoryFacilityId}] for product id [${parameters.productId}]; desired quantity is ${parameters.quantity}, amount could not reserve is ${quantityNotReserved}"/>
@@ -237,7 +237,7 @@ under the License.
             <call-service service-name="reserveProductInventoryByFacility" in-map-name="callServiceMap">
                 <result-to-field result-name="quantityNotReserved"/>
             </call-service>
-            <if-compare value="0" field="quantityNotReserved" operator="equals" type="BigDecimal">
+            <if-compare field="quantityNotReserved" operator="equals" value="0" type="BigDecimal">
                 <log level="info" message="Inventory IS reserved in facility with id [${facilityId}] for product id [${parameters.productId}]; desired quantity was ${parameters.quantity}"/>
             <else>
                 <log level="info" message="There is insufficient inventory available in facility with id [${facilityId}] for product id [${parameters.productId}]; desired quantity is ${parameters.quantity}, amount could not reserve is ${quantityNotReserved}"/>
@@ -308,7 +308,7 @@ under the License.
         <!-- TODO: what to do with ASSET_USAGE? Only done elsewhere? Would need date/time range info to check availability -->
 
         <!-- if prodCatalog is set to not check inventory break here -->
-        <if-compare value="N" field="productStore.checkInventory" operator="equals">
+        <if-compare field="productStore.checkInventory" operator="equals" value="N">
             <!-- note: if not set, defaults to yes, check inventory -->
             <log level="verbose" message="ProductStore with id ${productStore.productStoreId}, is set to NOT check inventory, returning true for inventory available check"/>
             <set value="Y" field="available"/>
@@ -354,7 +354,7 @@ under the License.
 
             <set value="N" field="available"/>
             <iterate list="productStoreFacilities" entry="productStoreFacility">
-                <if-compare value="N" field="available" operator="equals">
+                <if-compare field="available" operator="equals" value="N">
                     <!-- TODO: must entire quantity be available in one location? -->
                     <!-- Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order. -->
                     <set from-field="parameters.productId" field="callServiceMap.productId"/>

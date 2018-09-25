@@ -48,7 +48,7 @@
     <!-- Employment Group -->
     <simple-method method-name="createEmployment" short-description="Create Employment"><!--entity-auto-->
         <make-value entity-name="Employment" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields value-field="newEntity" map="parameters"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="newEntity.fromDate">
             <now-timestamp field="nowTimeStamp"/>
@@ -153,7 +153,7 @@
 
     <simple-method method-name="createEmplLeave" short-description="Create Employee Leave">
         <make-value entity-name="EmplLeave" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields value-field="newEntity" map="parameters"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
         <check-errors/>

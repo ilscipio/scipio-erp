@@ -82,7 +82,7 @@ under the License.
             <!-- check status of customer request if valid -->
             <entity-one entity-name="CustRequest" value-field="lookedUpValue"/>
             <set field="goodStatusId" value="CRQ_ACCEPTED"/>
-            <if-compare-field field="lookedUpValue.statusId" operator="not-equals" to-field="goodStatusId">
+            <if-compare-field operator="not-equals" field="lookedUpValue.statusId" to-field="goodStatusId">
                 <set field="entity" value="Customer request"/>
                 <add-error>
                     <fail-property resource="CommonUiLabels" property="CommonErrorStatusNotValid"/>
@@ -267,8 +267,8 @@ under the License.
                         <iterate list="relationValues" entry="relatedValue">
                             <clone-value value-field="relatedValue" new-value-field="newRelatedValue" />
                             <set field="newRelatedValue[relatedIdFieldName]" from-field="targetWorkEffortId" />
-                            <make-value entity-name="${relatedEntityName}" value-field="newRelatedPks"/>
-                            <set-pk-fields map="newRelatedValue" value-field="newRelatedPks"/>
+                            <make-value entity-name="${relatedEntityName}" value-field="newRelatedPks" />
+                            <set-pk-fields value-field="newRelatedPks" map="newRelatedValue" />
                             <find-by-primary-key entity-name="${relatedEntityName}" map="newRelatedPks" value-field="duplicateCheck" />
                             <if-empty field="duplicateCheck">
                                 <create-value value-field="newRelatedValue" />
@@ -303,7 +303,7 @@ under the License.
     <simple-method method-name="updateCommunicationEventWorkEff" short-description="Update a CommunicationEventWorkEff">
         <!-- Find old value -->
         <make-value entity-name="CommunicationEventWorkEff" value-field="communicationEventWorkEff"/>
-        <set-pk-fields map="parameters" value-field="communicationEventWorkEff"/>
+        <set-pk-fields value-field="communicationEventWorkEff" map="parameters"/>
         <find-by-primary-key entity-name="CommunicationEventWorkEff" map="communicationEventWorkEff" value-field="communicationEventWorkEff"/>
         <if-empty field="communicationEventWorkEff">
             <add-error>
@@ -318,7 +318,7 @@ under the License.
     <simple-method method-name="deleteCommunicationEventWorkEff" short-description="Delete a CommunicationEventWorkEff">
         <!-- Find old value -->
         <make-value entity-name="CommunicationEventWorkEff" value-field="communicationEventWorkEff"/>
-        <set-pk-fields map="parameters" value-field="communicationEventWorkEff"/>
+        <set-pk-fields value-field="communicationEventWorkEff" map="parameters"/>
         <find-by-primary-key entity-name="CommunicationEventWorkEff" map="communicationEventWorkEff" value-field="communicationEventWorkEff"/>
         <if-empty field="communicationEventWorkEff">
             <add-error>
@@ -740,10 +740,10 @@ under the License.
         </else>
         </if-not-empty>
         <!-- SCIPIO: 2018-05-02: here, output the PK because we may generate fromDate -->
-        <field-to-result result-name="workEffortIdFrom" field="newEntity.workEffortIdFrom"/>
-        <field-to-result result-name="workEffortIdTo" field="newEntity.workEffortIdTo"/>
-        <field-to-result result-name="workEffortAssocTypeId" field="newEntity.workEffortAssocTypeId"/>
-        <field-to-result result-name="fromDate" field="newEntity.fromDate"/>
+        <field-to-result field="newEntity.workEffortIdFrom" result-name="workEffortIdFrom"/>
+        <field-to-result field="newEntity.workEffortIdTo" result-name="workEffortIdTo"/>
+        <field-to-result field="newEntity.workEffortAssocTypeId" result-name="workEffortAssocTypeId"/>
+        <field-to-result field="newEntity.fromDate" result-name="fromDate"/>
     </simple-method>
     <simple-method method-name="updateWorkEffortAssoc" short-description="Update a WorkEffort association">
         <entity-one entity-name="WorkEffortAssoc" value-field="lookedUpValue"/>
@@ -1609,7 +1609,7 @@ under the License.
     <simple-method method-name="getICalWorkEfforts" short-description="Get All Work Efforts Related To An iCalendar Publish Point" login-required="false">
         <!-- Servlet already confirmed workEffortId is a valid publish point -->
         <set field="workEffortId" from-field="parameters.workEffortId"/>
-        <entity-condition list="assignedParties" entity-name="WorkEffortPartyAssignment" filter-by-date="true">
+        <entity-condition entity-name="WorkEffortPartyAssignment" list="assignedParties" filter-by-date="true">
             <condition-list combine="and">
                 <condition-expr field-name="workEffortId" from-field="workEffortId"/>
                 <condition-expr field-name="roleTypeId" value="ICAL_MEMBER"/>
@@ -1640,7 +1640,7 @@ under the License.
             </entity-condition>
             <list-to-list list="resultList" to-list="workEfforts"/>
         </iterate>
-        <entity-condition list="resultList" entity-name="WorkEffortAssocToView" filter-by-date="true">
+        <entity-condition entity-name="WorkEffortAssocToView" list="resultList" filter-by-date="true">
             <condition-list combine="and">
                 <condition-expr field-name="workEffortIdFrom" operator="equals" from-field="workEffortId"/>
                 <condition-expr field-name="workEffortTypeId" operator="equals" from-field="parameters.workEffortTypeId" ignore-if-empty="true"/>

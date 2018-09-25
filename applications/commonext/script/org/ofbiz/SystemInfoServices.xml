@@ -65,7 +65,6 @@ under the License.
         <remove-by-and entity-name="NoteData" map="removeData"/>
     </simple-method>
 
-
     <simple-method method-name="getSystemInfoStatus" short-description="">
         <!-- communication events -->
         <entity-count entity-name="CommunicationEventRole" count-field="comCount">

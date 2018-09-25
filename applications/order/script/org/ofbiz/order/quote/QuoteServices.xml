@@ -143,7 +143,7 @@ under the License.
             <set from-field="newEntity.quoteId" field="takerMap.quoteId"/>
             <set from-field="userLogin.partyId" field="takerMap.partyId"/>
             <set value="REQ_TAKER" field="takerMap.roleTypeId"/>
-            <call-service service-name="createQuoteRole" in-map-name="takerMap"/>
+            <call-service service-name="createQuoteRole" in-map-name="takerMap" />
         </if-compare-field>
 
         <check-errors/>

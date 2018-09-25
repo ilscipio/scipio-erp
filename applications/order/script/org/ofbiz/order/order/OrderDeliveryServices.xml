@@ -80,7 +80,7 @@ under the License.
         </if-empty>
 
         <make-value entity-name="OrderDeliverySchedule" value-field="orderDeliverySchedule"/>
-        <set-pk-fields map="parameters" value-field="orderDeliverySchedule"/>
+        <set-pk-fields value-field="orderDeliverySchedule" map="parameters"/>
         <find-by-primary-key map="orderDeliverySchedule" value-field="orderDeliverySchedule"/>
 
         <!-- find email address for currently logged in user, set as sendFrom -->

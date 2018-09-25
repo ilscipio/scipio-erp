@@ -138,9 +138,9 @@ under the License.
         <create-value value-field="newEntity"/>
 
         <!-- SCIPIO: 2017-10-25: now output the full PK including fromDate so caller can get exact value-->
-        <field-to-result result-name="productId" field="newEntity.productId"/>
-        <field-to-result result-name="productCategoryId" field="newEntity.productCategoryId"/>
-        <field-to-result result-name="fromDate" field="newEntity.fromDate"/>
+        <field-to-result field="newEntity.productId" result-name="productId"/>
+        <field-to-result field="newEntity.productCategoryId" result-name="productCategoryId"/>
+        <field-to-result field="newEntity.fromDate" result-name="fromDate"/>
     </simple-method>
 
     <simple-method method-name="addProductToCategories" short-description="Add Product to Multiple Categories">
@@ -197,7 +197,7 @@ under the License.
         </if-instance-of>
 
         <!-- SCIPIO: 2017-10-25: output fromDate as it may have been empty and caller can't get exact PK otherwise -->
-        <field-to-result result-name="fromDate" field="parameters.fromDate"/>
+        <field-to-result field="parameters.fromDate" result-name="fromDate"/>
     </simple-method>
 
     <simple-method method-name="updateProductToCategory" short-description="Update Product to Category Application">
@@ -858,7 +858,7 @@ under the License.
         <set field="callingMethodName" from-field="resourceDescription"/>
         <set field="checkAction" from-field="parameters.mainAction" default-value="UPDATE"/>
 
-        <entity-condition list="prodCatalogCategoryList" entity-name="ProdCatalogCategory" filter-by-date="true">
+        <entity-condition entity-name="ProdCatalogCategory" list="prodCatalogCategoryList" filter-by-date="true">
             <condition-list combine="and">
                 <condition-expr field-name="productCategoryId" from-field="parameters.productCategoryId"/>
                 <condition-list combine="or">
@@ -1429,20 +1429,20 @@ under the License.
             <result-to-field result-name="parentProductCategoryId" field="resultFields.parentProductCategoryId"/>
         </call-service>
 
-        <field-to-result result-name="productCategoryId" field="resultFields.productCategoryId"/>
+        <field-to-result field="resultFields.productCategoryId" result-name="productCategoryId"/>
         <if-compare field="parameters.returnAssocFields" operator="equals" type="Boolean" value="true">
-            <field-to-result result-name="fromDate" field="resultFields.fromDate"/>
-            <field-to-result result-name="sequenceNum" field="resultFields.sequenceNum"/>
-            <field-to-result result-name="prodCatalogId" field="resultFields.prodCatalogId"/>
-            <field-to-result result-name="prodCatalogCategoryTypeId" field="resultFields.prodCatalogCategoryTypeId"/>
-            <field-to-result result-name="parentProductCategoryId" field="resultFields.parentProductCategoryId"/>
+            <field-to-result field="resultFields.fromDate" result-name="fromDate"/>
+            <field-to-result field="resultFields.sequenceNum" result-name="sequenceNum"/>
+            <field-to-result field="resultFields.prodCatalogId" result-name="prodCatalogId"/>
+            <field-to-result field="resultFields.prodCatalogCategoryTypeId" result-name="prodCatalogCategoryTypeId"/>
+            <field-to-result field="resultFields.parentProductCategoryId" result-name="parentProductCategoryId"/>
         </if-compare>
-        <field-to-result result-name="to_productCategoryId" field="resultFields.productCategoryId"/>
-        <field-to-result result-name="to_fromDate" field="resultFields.fromDate"/>
-        <field-to-result result-name="to_sequenceNum" field="resultFields.sequenceNum"/>
-        <field-to-result result-name="to_prodCatalogId" field="resultFields.prodCatalogId"/>
-        <field-to-result result-name="to_prodCatalogCategoryTypeId" field="resultFields.prodCatalogCategoryTypeId"/>
-        <field-to-result result-name="to_parentProductCategoryId" field="resultFields.parentProductCategoryId"/>
+        <field-to-result field="resultFields.productCategoryId" result-name="to_productCategoryId"/>
+        <field-to-result field="resultFields.fromDate" result-name="to_fromDate"/>
+        <field-to-result field="resultFields.sequenceNum" result-name="to_sequenceNum"/>
+        <field-to-result field="resultFields.prodCatalogId" result-name="to_prodCatalogId"/>
+        <field-to-result field="resultFields.prodCatalogCategoryTypeId" result-name="to_prodCatalogCategoryTypeId"/>
+        <field-to-result field="resultFields.parentProductCategoryId" result-name="to_parentProductCategoryId"/>
     </simple-method>
 
     <simple-method method-name="moveProductCategoryCatAssocVersatile">

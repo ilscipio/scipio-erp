@@ -75,7 +75,7 @@ under the License.
             <result-to-result result-name="contentId" /><!-- SCIPIO -->
         </call-service>
         <set-service-fields service-name="updateSimpleTextContent" map="parameters" to-map="updateSimpleText"/>
-        <call-service service-name="updateSimpleTextContent" in-map-name="updateSimpleText" />
+        <call-service service-name="updateSimpleTextContent" in-map-name="updateSimpleText"/>
     </simple-method>
 
     <simple-method method-name="updateContentSEOForCategory" short-description="Update SEO Content For Product Category">
@@ -85,7 +85,7 @@ under the License.
                 <field-map field-name="prodCatContentTypeId" value="PAGE_TITLE"/>
             </entity-and>
             <if-not-empty field="productCategoryContents">
-                <first-from-list list="productCategoryContents" entry="productCategoryContent"/>
+                <first-from-list entry="productCategoryContent" list="productCategoryContents"/>
                 <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productCategoryContent.dataResourceId"/>
                 </entity-one>
@@ -110,7 +110,7 @@ under the License.
                 <field-map field-name="prodCatContentTypeId" value="META_KEYWORD"/>
             </entity-and>
             <if-not-empty field="productCategoryContents">
-                <first-from-list list="productCategoryContents" entry="productCategoryContent"/>
+                <first-from-list entry="productCategoryContent" list="productCategoryContents"/>
                 <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productCategoryContent.dataResourceId"/>
                 </entity-one>
@@ -135,7 +135,7 @@ under the License.
                 <field-map field-name="prodCatContentTypeId" value="META_DESCRIPTION"/>
             </entity-and>
             <if-not-empty field="productCategoryContents">
-                <first-from-list list="productCategoryContents" entry="productCategoryContent"/>
+                <first-from-list entry="productCategoryContent" list="productCategoryContents"/>
                 <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productCategoryContent.dataResourceId"/>
                 </entity-one>

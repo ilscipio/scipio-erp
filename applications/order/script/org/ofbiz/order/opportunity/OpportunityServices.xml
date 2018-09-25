@@ -44,7 +44,7 @@ This file contains basic services for SalesOpportunity and SalesForecast.
         <call-simple-method method-name="saveSalesForecastHistory"/>
 
         <!-- return the ID -->
-        <field-to-result result-name="salesForecastId" field="salesForecastId"/>
+        <field-to-result field="salesForecastId" result-name="salesForecastId"/>
     </simple-method>
 
     <simple-method method-name="updateSalesForecast" short-description="Updates a sales forecast and stores a copy in sales forecast history.">
@@ -136,7 +136,7 @@ This file contains basic services for SalesOpportunity and SalesForecast.
             <field-map field-name="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
             <field-map field-name="roleTypeId" value="ACCOUNT"/>
         </entity-and>
-        <first-from-list list="salesOpportunityRoles" entry="lookedUpValue"/>
+        <first-from-list entry="lookedUpValue" list="salesOpportunityRoles"/>
         <if-compare-field field="lookedUpValue.partyId" operator="not-equals" to-field="parameters.accountPartyId">
             <if-not-empty field="lookedUpValue">
                 <remove-value value-field="lookedUpValue"/>
@@ -156,7 +156,7 @@ This file contains basic services for SalesOpportunity and SalesForecast.
             <field-map field-name="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
             <field-map field-name="roleTypeId" value="LEAD"/>
         </entity-and>
-        <first-from-list list="salesOpportunityRoles" entry="lookedUpValue"/>
+        <first-from-list entry="lookedUpValue" list="salesOpportunityRoles"/>
         <if-compare-field field="lookedUpValue.partyId" operator="not-equals" to-field="parameters.leadPartyId">
             <if-not-empty field="lookedUpValue">
                 <remove-value value-field="lookedUpValue"/>
@@ -177,5 +177,4 @@ This file contains basic services for SalesOpportunity and SalesForecast.
         <first-from-list list="salesOpportunityRoles" entry="lookedUpValue"/>
         <field-to-result field="lookedUpValue.partyId" result-name="partyId"/>
     </simple-method>
-
 </simple-methods>

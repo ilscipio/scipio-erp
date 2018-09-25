@@ -96,7 +96,7 @@ under the License.
             </else>
         </if-empty>
 
-        <set-nonpk-fields value-field="newFacilityContactMech" map="parameters" set-if-null="false"/>
+        <set-nonpk-fields map="parameters" value-field="newFacilityContactMech" set-if-null="false"/>
 
         <now-timestamp field="newFacilityContactMech.fromDate"/>
         <now-timestamp field="facilityContactMech.thruDate"/>
@@ -137,7 +137,7 @@ under the License.
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
 
         <make-value entity-name="FacilityContactMech" value-field="facilityContactMechMap"/>
-        <set-pk-fields map="parameters" value-field="facilityContactMechMap"/>
+        <set-pk-fields value-field="facilityContactMechMap" map="parameters"/>
         <find-by-and entity-name="FacilityContactMech" list="facilityContactMechs" map="facilityContactMechMap"/>
         <filter-list-by-date list="facilityContactMechs" to-list="validFacilityContactMechs"/>
 
@@ -150,7 +150,6 @@ under the License.
         </if-empty>
         <now-timestamp field="facilityContactMech.thruDate"/>
         <store-value value-field="facilityContactMech"/>
-
     </simple-method>
 
     <simple-method method-name="createFacilityPostalAddress" short-description="Create a PostalAddress for facility">
@@ -231,7 +230,6 @@ under the License.
         <log level="info" message="Setting result id: ${newFacilityContactMech.contactMechId}"/>
         <field-to-request field="newFacilityContactMech.contactMechId" request-name="contactMechId"/>
         <field-to-result field="newFacilityContactMech.contactMechId" result-name="contactMechId"/>
-
     </simple-method>
 
     <simple-method method-name="createFacilityEmailAddress" short-description="Create an email address for facility">

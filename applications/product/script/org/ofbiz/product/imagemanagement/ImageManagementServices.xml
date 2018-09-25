@@ -471,7 +471,7 @@ under the License.
             </condition-list>
         </entity-condition>
         <iterate list="productContentAndInfos" entry="productContentAndInfo">
-            <entity-and entity-name="ContentAssoc" list="contentAssocs">
+            <entity-and list="contentAssocs" entity-name="ContentAssoc">
                 <field-map field-name="contentId" from-field="productContentAndInfo.contentId"/>
                 <field-map field-name="contentAssocTypeId" value="IMAGE_THUMBNAIL"/>
                 <field-map field-name="mapKey" from-field="parameters.mapKey"/>

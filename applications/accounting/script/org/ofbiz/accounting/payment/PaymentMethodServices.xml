@@ -109,7 +109,7 @@ under the License.
 
     <simple-method method-name="createPayPalPaymentMethod" short-description="Create a PayPal Payment Method">
         <make-value entity-name="PaymentMethod" value-field="newPaymentMethod"/>
-        <set-pk-fields map="parameters" value-field="newPaymentMethod"/>
+        <set-pk-fields value-field="newPaymentMethod" map="parameters"/>
         <if-empty field="newPaymentMethod.paymentMethodId">
             <sequenced-id sequence-name="PaymentMethod" field="newPaymentMethod.paymentMethodId"/>
         </if-empty>
@@ -121,14 +121,14 @@ under the License.
         <set field="newPayPalPaymentMethod.paymentMethodId" from-field="newPaymentMethod.paymentMethodId"/>
         <set-nonpk-fields map="parameters" value-field="newPayPalPaymentMethod"/>
         <create-value value-field="newPayPalPaymentMethod"/>
-        <field-to-result result-name="paymentMethodId" field="newPaymentMethod.paymentMethodId"/>
+        <field-to-result field="newPaymentMethod.paymentMethodId" result-name="paymentMethodId"/>
     </simple-method>
 
     <simple-method method-name="updatePayPalPaymentMethod" short-description="Update a PayPal Payment Method">
         <entity-one entity-name="PayPalPaymentMethod" value-field="payPalPaymentMethod"/>
         <set-nonpk-fields map="parameters" value-field="payPalPaymentMethod"/>
         <store-value value-field="payPalPaymentMethod"/>
-        <field-to-result result-name="paymentMethodId" field="payPalPaymentMethod.paymentMethodId"/>
+        <field-to-result field="payPalPaymentMethod.paymentMethodId" result-name="paymentMethodId"/>
     </simple-method>
 
     <simple-method method-name="createPaymentGroupMember" short-description="Check For Outgoing/Incoming Payment And Create Payment Group Member">

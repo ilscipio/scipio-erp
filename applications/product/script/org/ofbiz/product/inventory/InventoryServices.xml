@@ -113,7 +113,7 @@ under the License.
     <simple-method method-name="createInventoryItem" short-description="Create an InventoryItem">
 
         <!-- Create a lot before -->
-        <entity-one entity-name="Product" value-field="product">
+        <entity-one value-field="product" entity-name="Product">
             <field-map field-name="productId" from-field="parameters.productId"/>
         </entity-one>
 
@@ -282,7 +282,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateInventoryItem" short-description="Update an InventoryItem">
-
         <make-value entity-name="InventoryItem" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>

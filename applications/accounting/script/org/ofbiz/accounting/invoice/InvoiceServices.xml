@@ -691,7 +691,7 @@ under the License.
             <set field="removePaymentApplicationCtx.paymentApplicationId" from-field="paymentApplication.paymentApplicationId"/>
             <call-service service-name="removePaymentApplication" in-map-name="removePaymentApplicationCtx"/>
         </iterate>
-        <field-to-result result-name="invoiceTypeId" field="invoice.invoiceTypeId"/>
+        <field-to-result field="invoice.invoiceTypeId" result-name="invoiceTypeId"/>
     </simple-method>
 
     <simple-method method-name="getInvoiceRunningTotal" short-description="calculate running total for Invoices">
@@ -957,12 +957,12 @@ under the License.
                     <result-to-field result-name="invoiceId" field="invoiceId"/>
                 </call-service>
             <else>
-                <entity-and entity-name="OrderItem" list="orderItems">
+                <entity-and list="orderItems" entity-name="OrderItem">
                     <field-map field-name="orderId" from-field="parameters.orderId"/>
                     <order-by field-name="orderItemSeqId"/>
                 </entity-and>
                 <iterate list="orderItems" entry="orderItem">
-                    <entity-and entity-name="OrderItemBilling" list="checkOrderItem">
+                    <entity-and list="checkOrderItem" entity-name="OrderItemBilling">
                         <field-map field-name="orderId" from-field="parameters.orderId"/>
                         <field-map field-name="orderItemSeqId" from-field="orderItem.orderItemSeqId"/>
                     </entity-and>
@@ -1052,7 +1052,7 @@ under the License.
         <call-service service-name="getPartyAccountingPreferences" in-map-name="pref">
             <result-to-field result-name="partyAccountingPreference"/>
         </call-service>
-        <if-compare-field to-field="partyAccountingPreference.baseCurrencyUomId" operator="equals" field="invoice.currencyUomId">
+        <if-compare-field field="invoice.currencyUomId" operator="equals" to-field="partyAccountingPreference.baseCurrencyUomId">
             <set field="isForeign" value="false" type="Boolean"/>
             <else>
                 <set field="isForeign" value="true" type="Boolean"/>
@@ -1060,5 +1060,4 @@ under the License.
         </if-compare-field>
         <field-to-result field="isForeign"/>
     </simple-method>
-
 </simple-methods>

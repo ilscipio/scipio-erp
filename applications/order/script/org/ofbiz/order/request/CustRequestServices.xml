@@ -176,11 +176,11 @@ under the License.
             </entity-and>
             <if-not-empty field="custRequestItems">
                 <first-from-list list="custRequestItems" entry="custRequestItem"/>
-                <set-service-fields service-name="updateCustRequestItem" map="custRequestItem" to-map="updateItem"/>
+                <set-service-fields service-name="updateCustRequestItem" to-map="updateItem" map="custRequestItem"/>
                 <set field="updateItem.story" from-field="parameters.story"/>
                 <call-service service-name="updateCustRequestItem" in-map-name="updateItem"/>
                 <else>
-                    <set-service-fields service-name="createCustRequestItem" map="custRequest" to-map="createItem"/>
+                    <set-service-fields service-name="createCustRequestItem" to-map="createItem" map="custRequest"/>
                     <set field="createItem.story" from-field="parameters.story"/>
                     <call-service service-name="createCustRequestItem" in-map-name="createItem"/>
                 </else>

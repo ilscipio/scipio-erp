@@ -2221,7 +2221,7 @@ under the License.
 
     <simple-method method-name="createAcctgTransForSalesInvoice" short-description="Create an accounting transaction for a sales invoice">
         <!-- retrieve ledger rounding properties -->
-        <call-simple-method method-name="getGlArithmeticSettingsInline"  xml-resource="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml"/>
+        <call-simple-method method-name="getGlArithmeticSettingsInline"/>
         <set field="totalOrigAmount" type="BigDecimal" value="0"/>
 
         <entity-one entity-name="Invoice" value-field="invoice"/>

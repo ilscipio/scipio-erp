@@ -453,7 +453,7 @@
         <if>
             <condition>
                 <and>
-                    <if-compare value="CONTENT_CREATE" field="contentOperationId" operator="equals"/>
+                    <if-compare field="contentOperationId" operator="equals" value="CONTENT_CREATE"/>
                     <not>
                         <if-empty field="contentPurposeTypeId"/>
                     </not>

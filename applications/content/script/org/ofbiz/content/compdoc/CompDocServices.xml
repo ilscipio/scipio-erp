@@ -78,7 +78,7 @@ under the License.
         <create-value value-field="rootInstanceContent"/>
 
         <log message="genCompDocInstance 3> rootInstanceContent: ${rootInstanceContent}" level="info"/>
-        <field-to-result result-name="contentId" field="rootInstanceContent.contentId"/>
+        <field-to-result field="rootInstanceContent.contentId" result-name="contentId"/>
         <set from-field="parameters.instanceOfContentId" field="parentTemplateContentId"/>
         <set from-field="rootInstanceContent.contentId" field="parentInstanceContentId"/>
         <log message="genCompDocInstance 4> parentTemplateContentId: ${parentTemplateContentId}" level="info"/>
@@ -495,7 +495,7 @@ under the License.
         </if-empty>
         <create-value value-field="newEntity"/>
         <check-errors/>
-        <field-to-result result-name="contentApprovalId" field="newEntity.contentApprovalId"/>
+        <field-to-result field="newEntity.contentApprovalId" result-name="contentApprovalId"/>
     </simple-method>
     <simple-method method-name="updateContentApproval" short-description="Update ContentApproval">
         <log level="always" message="got into updateContentApproval(4)"/>
@@ -546,8 +546,8 @@ under the License.
                 <condition-list>
                     <condition-expr field-name="contentId" operator="equals" from-field="maxContentApproval.contentId"/>
                     <condition-expr field-name="contentRevisionSeqId" operator="equals" from-field="maxContentApproval.maxContentRevisionSeqId"/>
-                    <condition-expr field-name="partyId" from-field="maxContentApproval.partyId" operator="equals" ignore-if-empty="true"/>
-                    <condition-expr field-name="roleTypeId" from-field="maxContentApproval.roleTypeId" operator="equals" ignore-if-empty="true"/>
+                    <condition-expr field-name="partyId" operator="equals" from-field="maxContentApproval.partyId" ignore-if-empty="true"/>
+                    <condition-expr field-name="roleTypeId" operator="equals" from-field="maxContentApproval.roleTypeId" ignore-if-empty="true"/>
                 </condition-list>
                 <order-by field-name="-sequenceNum"/>
             </entity-condition>
@@ -769,7 +769,7 @@ under the License.
         <if-compare field="contentApproval.partyId" value="${partyId}" operator="equals">
             <set field="approvalPermExists" value="true"/>
             <log level="info" message="approvalPermExists: ${approvalPermExists}"/>
-            <field-to-result result-name="approvalPermExists" field="approvalPermExists"/>
+            <field-to-result field="approvalPermExists" result-name="approvalPermExists"/>
             <return/>
         </if-compare>
         <if-not-empty field="contentApproval.roleTypeId">
@@ -880,7 +880,7 @@ under the License.
         <!-- find approvals belonging to roles that the user has or to the user -->
         <entity-condition entity-name="MaxContentApprovalView" list="compdocApprovalList" use-cache="false">
             <condition-list>
-                <condition-expr field-name="contentRevisionSeqId" from-field="parameters.contentRevisionSeqId" operator="less-equals" ignore-if-empty="true"/>
+                <condition-expr field-name="contentRevisionSeqId" operator="less-equals" from-field="parameters.contentRevisionSeqId" ignore-if-empty="true"/>
                 <condition-expr field-name="contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/>
                 <condition-list combine="or">
                     <condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
@@ -901,8 +901,8 @@ under the License.
                 <condition-list>
                     <condition-expr field-name="contentId" operator="equals" from-field="maxContentApproval.contentId"/>
                     <condition-expr field-name="contentRevisionSeqId" operator="equals" from-field="maxContentApproval.maxContentRevisionSeqId"/>
-                    <condition-expr field-name="partyId" from-field="maxContentApproval.partyId" operator="equals" ignore-if-empty="true"/>
-                    <condition-expr field-name="roleTypeId" from-field="maxContentApproval.roleTypeId" operator="equals" ignore-if-empty="true"/>
+                    <condition-expr field-name="partyId" operator="equals" from-field="maxContentApproval.partyId" ignore-if-empty="true"/>
+                    <condition-expr field-name="roleTypeId" operator="equals" from-field="maxContentApproval.roleTypeId" ignore-if-empty="true"/>
                 </condition-list>
                 <order-by field-name="-sequenceNum"/>
             </entity-condition>

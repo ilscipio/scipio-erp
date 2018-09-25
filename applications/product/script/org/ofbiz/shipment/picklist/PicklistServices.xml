@@ -966,7 +966,7 @@ under the License.
         <check-errors />
 
            <!-- Retreive the informations about the OrderItemShipGrpInvRes of the edited PicklistItem -->
-           <entity-one entity-name="OrderItemShipGrpInvRes" value-field="oisgir">
+           <entity-one value-field="oisgir" entity-name="OrderItemShipGrpInvRes">
                <field-map field-name="orderId" from-field="parameters.orderId"/>
                <field-map field-name="shipGroupSeqId" from-field="parameters.shipGroupSeqId"/>
                <field-map field-name="orderItemSeqId" from-field="parameters.orderItemSeqId"/>
@@ -1064,7 +1064,7 @@ under the License.
                    </else>
                </if-not-empty>
 
-               <iterate list="picklistItemList" entry="pli">
+               <iterate entry="pli" list="picklistItemList">
                    <if-compare-field field="pli.inventoryItemId" operator="equals" to-field="oisgir.inventoryItemId">
                        <if-compare-field field="pli.quantity" operator="equals" to-field="quantity">
                            <set field="actionOnPli" value="none" />

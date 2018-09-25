@@ -281,7 +281,7 @@ under the License.
 
         <create-value value-field="newEntity"/>
         <!-- SCIPIO: 2017-04-24: this service must output the fromDate when it's omitted so it can be re-queried -->
-        <field-to-result result-name="fromDate" field="newEntity.fromDate"/>
+        <field-to-result field="newEntity.fromDate" result-name="fromDate"/>
     </simple-method>
     <simple-method method-name="updatePartyTaxAuthInfo" short-description="update a PartyTaxAuthInfo">
         <set value="_UPDATE" field="securityAction"/>

@@ -251,7 +251,7 @@ under the License.
     <simple-method method-name="updateCommunicationEvent"
         short-description="Update a CommunicationEvent">
         <entity-one entity-name="CommunicationEvent" value-field="event"/>
-        <if-compare-field to-field="parameters.statusId" operator="not-equals" field="event.statusId">
+        <if-compare-field field="event.statusId" operator="not-equals" to-field="parameters.statusId">
             <set field="newStatusId" from-field="parameters.statusId"/>
             <set field="parameters.statusId" from-field="event.statusId"/>
         </if-compare-field>
@@ -460,7 +460,6 @@ under the License.
                     <set field="newEntity.contactMechId" from-field="contactMech.contactMechId"/>
                 </if-not-empty>
             </if-empty>
-
             <create-value value-field="newEntity"/>
         </if-empty>
     </simple-method>
@@ -486,7 +485,6 @@ under the License.
             </if-compare>
         </if-not-empty>
     </simple-method>
-
 
     <simple-method method-name="sendEmailDated"
         short-description="Checks for email communication events with the status COM_IN_PROGRESS and a startdate which is expired, then send the email">
@@ -565,7 +563,7 @@ under the License.
                             <!-- if the status of the communicationevent is set to complete, all roles need to be set to complete,
                                 which means the commevent was dealt with and no further action is required by any of the other participants/addressees -->
                             <get-related relation-name="CommunicationEventRole" list="roles" value-field="communicationEvent"/>
-                            <iterate list="roles" entry="role">
+                            <iterate entry="role" list="roles">
                                 <if-compare-field field="role.statusId" operator="not-equals" to-field="COM_ROLE_COMPLETED">
                                     <set field="role.statusId" value="COM_ROLE_COMPLETED"/>
                                     <store-value value-field="role"/>

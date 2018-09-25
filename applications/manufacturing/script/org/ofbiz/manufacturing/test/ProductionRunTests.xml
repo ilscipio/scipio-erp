@@ -405,17 +405,17 @@ under the License.
         <entity-and entity-name="WorkEffort" list="productionRunTasks">
             <field-map field-name="workEffortParentId" from-field="productionRunId"/>
         </entity-and>
-        <first-from-list list="productionRunTasks" entry="productionRunTask"/>
+        <first-from-list entry="productionRunTask" list="productionRunTasks"/>
         <entity-and entity-name="WorkEffortGoodStandard" list="productionRunMaterials">
             <field-map field-name="workEffortId" from-field="productionRunTask.workEffortId"/>
             <field-map field-name="productId" value="MAT_A_COST"/>
         </entity-and>
-        <first-from-list list="productionRunMaterials" entry="productionRunMaterialA"/>
+        <first-from-list entry="productionRunMaterialA" list="productionRunMaterials"/>
         <entity-and entity-name="WorkEffortGoodStandard" list="productionRunMaterials">
             <field-map field-name="workEffortId" from-field="productionRunTask.workEffortId"/>
             <field-map field-name="productId" value="MAT_B_COST"/>
         </entity-and>
-        <first-from-list list="productionRunMaterials" entry="productionRunMaterialB"/>
+        <first-from-list entry="productionRunMaterialB" list="productionRunMaterials"/>
 
         <clear-field field="serviceCtx"/>
         <set field="serviceCtx.userLogin" from-field="userLogin"/>
@@ -951,13 +951,13 @@ under the License.
         <entity-and entity-name="WorkEffortAndInventoryProduced" list="producedMaterials">
             <field-map field-name="workEffortId" from-field="productionRunHeader.workEffortId"/>
         </entity-and>
-        <first-from-list list="producedMaterials" entry="producedMaterial"/>
+        <first-from-list entry="producedMaterial" list="producedMaterials"/>
 
         <entity-and entity-name="OrderItemShipGrpInvRes" list="orderItemShipGrpInvRess">
             <field-map field-name="orderId" from-field="orderId"/>
             <field-map field-name="orderItemSeqId" from-field="orderItem.orderItemSeqId"/>
         </entity-and>
-        <first-from-list list="orderItemShipGrpInvRess" entry="newOrderItemShipGrpInvRes"/>
+        <first-from-list entry="newOrderItemShipGrpInvRes" list="orderItemShipGrpInvRess"/>
         <assert>
             <not><if-empty field="newOrderItemShipGrpInvRes"/></not>
             <not><if-compare-field field="newOrderItemShipGrpInvRes.inventoryItemId" operator="equals" to-field="originalOrderItemShipGrpInvRes.inventoryItemId"/></not>
@@ -996,11 +996,11 @@ under the License.
                 <condition-expr field-name="workEffortTypeId" value="PROD_ORDER_HEADER"/>
             </condition-list>
         </entity-condition>
-        <first-from-list list="workEfforts" entry="productionRunHeader"/>
+        <first-from-list entry="productionRunHeader" list="workEfforts"/>
         <entity-and entity-name="WorkEffort" list="productionRunTasks">
             <field-map field-name="workEffortParentId" from-field="productionRunHeader.workEffortId"/>
         </entity-and>
-        <first-from-list list="productionRunTasks" entry="productionRunTask"/>
+        <first-from-list entry="productionRunTask" list="productionRunTasks"/>
 
         <assert>
             <if-compare field="productionRunHeader.workEffortTypeId" operator="equals" value="PROD_ORDER_HEADER"/>

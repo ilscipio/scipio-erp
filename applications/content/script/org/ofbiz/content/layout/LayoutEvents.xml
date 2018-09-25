@@ -23,13 +23,11 @@ under the License.
 
     <simple-method login-required="true" method-name="createLayout" short-description="Create Layout">
         <log level="info" message="in createLayout."/>
-        <log level="info" message="parameters: ${parameters}"/>
 
         <make-value entity-name="Content" value-field="currentContent"/>
         <set-pk-fields map="parameters" value-field="currentContent"/>
         <set-nonpk-fields map="parameters" value-field="currentContent"/>
         <map-to-map map="currentContent" to-map="context"/>
-        <log level="info" message="context: ${context}"/>
         <set field="context.contentPurposeTypeId" from-field="parameters.contentPurposeTypeId"/>
         <string-to-list list="targetOperationList" string="CONTENT_CREATE"/>
         <set field="context.targetOperationList" from-field="targetOperationList"/>
@@ -53,7 +51,6 @@ under the License.
 
     <simple-method login-required="true" method-name="updateLayout" short-description="Update Layout">
         <log level="info" message="in updateLayout."/>
-        <log level="info" message="parameters: ${parameters}"/>
 
         <make-value entity-name="Content" value-field="currentContent"/>
         <set-pk-fields map="parameters" value-field="currentContent"/>
@@ -90,7 +87,6 @@ under the License.
 
     <simple-method login-required="true" method-name="createLayoutText" short-description="Create Layout Text">
         <log level="info" message="in createLayoutText."/>
-        <log level="info" message="parameters: ${parameters}"/>
 
         <call-map-processor xml-resource="component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml"
                             processor-name="contentIn" in-map-name="parameters" out-map-name="context"/>
@@ -99,7 +95,6 @@ under the License.
         <call-map-processor xml-resource="component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml"
                             processor-name="contentAssocIn" in-map-name="parameters" out-map-name="context"/>
 
-        <log level="info" message="context: ${context}"/>
         <set field="context.dataResourceName" from-field="context.contentName"/>
         <set field="context.contentPurposeTypeId" from-field="parameters.contentPurposeTypeId"/>
         <set field="context.contentIdTo" from-field="parameters.contentIdTo"/>
@@ -149,7 +144,6 @@ under the License.
 
     <simple-method login-required="true" method-name="updateLayoutText" short-description="Update Layout Text">
         <log level="info" message="in updateLayoutText."/>
-        <log level="info" message="parameters: ${parameters}"/>
 
         <call-map-processor xml-resource="component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml"
                             processor-name="contentIn" in-map-name="parameters" out-map-name="context"/>
@@ -158,7 +152,6 @@ under the License.
         <call-map-processor xml-resource="component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml"
                             processor-name="contentAssocIn" in-map-name="parameters" out-map-name="context"/>
 
-        <log level="info" message="context: ${context}"/>
         <set field="context.dataResourceName" from-field="context.contentName"/>
         <set field="context.contentPurposeTypeId" from-field="parameters.contentPurposeTypeId"/>
         <set field="context.contentIdTo" from-field="parameters.contentIdTo"/>
@@ -196,7 +189,6 @@ under the License.
         <call-map-processor xml-resource="component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml"
                             processor-name="contentAssocIn" in-map-name="formInput" out-map-name="context"/>
 
-        <log level="info" message="context: ${context}"/>
         <set field="context.dataResourceName" from-field="context.contentName"/>
         <set field="context.contentPurposeTypeId" from-field="formInput.contentPurposeTypeId"/>
         <set field="context.contentIdTo" from-field="formInput.contentIdTo"/>
@@ -245,7 +237,6 @@ under the License.
 
     <simple-method login-required="true" method-name="createLayoutUrl" short-description="Create Layout URL">
         <log level="info" message="in createLayoutUrl"/>
-        <log level="info" message="parameters: ${parameters}"/>
 
         <call-map-processor xml-resource="component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml"
                             processor-name="contentIn" in-map-name="parameters" out-map-name="context"/>
@@ -254,7 +245,6 @@ under the License.
         <call-map-processor xml-resource="component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml"
                             processor-name="contentAssocIn" in-map-name="parameters" out-map-name="context"/>
 
-        <log level="info" message="context: ${context}"/>
         <set field="context.dataResourceName" from-field="context.contentName"/>
         <set field="context.contentPurposeTypeId" from-field="parameters.contentPurposeTypeId"/>
         <set field="context.contentIdTo" from-field="parameters.contentIdTo"/>
@@ -303,7 +293,6 @@ under the License.
 
     <simple-method method-name="updateLayoutUrl" short-description="Update Layout URL" login-required="true">
         <log level="info" message="in updateLayoutUrl."/>
-        <log level="info" message="parameters: ${parameters}"/>
 
         <call-map-processor xml-resource="component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml"
                             processor-name="contentIn" in-map-name="parameters" out-map-name="context"/>
@@ -312,7 +301,6 @@ under the License.
         <call-map-processor xml-resource="component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml"
                             processor-name="contentAssocIn" in-map-name="parameters" out-map-name="context"/>
 
-        <log level="info" message="context: ${context}"/>
         <set field="context.dataResourceName" from-field="context.contentName"/>
         <set field="context.contentPurposeTypeId" from-field="parameters.contentPurposeTypeId"/>
         <set field="context.contentIdTo" from-field="parameters.contentIdTo"/>

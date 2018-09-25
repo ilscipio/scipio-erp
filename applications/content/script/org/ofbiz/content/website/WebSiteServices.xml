@@ -152,7 +152,6 @@ under the License.
             <field-map field-name="webSiteId" from-field="parameters.webSiteId"/>
         </entity-one>
         <now-timestamp field="now"/>
-        <log level="info" message="Parameters: ${parameters}"/>
 
         <if-instance-of field="parameters.webSiteContentTypeId" class="String">
             <!-- just one checked -->
@@ -350,6 +349,7 @@ under the License.
         </else>
         </if-compare>
 
+        <!-- SCIPIO: TODO: Localize -->
         <set field="generateMissingSeoUrlMessage" value="Generated missing SEO urls successfully"/>
         <field-to-list list="successMessageList" field="generateMissingSeoUrlMessage"/>
         <iterate list="parameters.typeGenerate" entry="typeGenerate">

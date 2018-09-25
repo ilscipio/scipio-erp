@@ -208,7 +208,7 @@ under the License.
                 <field-map field-name="productContentTypeId" value="PAGE_TITLE"/>
             </entity-and>
             <if-not-empty field="productContents">
-                <first-from-list list="productContents" entry="productContent"/>
+                <first-from-list entry="productContent" list="productContents"/>
                 <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productContent.dataResourceId"/>
                 </entity-one>
@@ -230,7 +230,7 @@ under the License.
                 <field-map field-name="productContentTypeId" value="META_KEYWORD"/>
             </entity-and>
             <if-not-empty field="productContents">
-                <first-from-list list="productContents" entry="productContent"/>
+                <first-from-list entry="productContent" list="productContents"/>
                 <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productContent.dataResourceId"/>
                 </entity-one>
@@ -252,7 +252,7 @@ under the License.
                 <field-map field-name="productContentTypeId" value="META_DESCRIPTION"/>
             </entity-and>
             <if-not-empty field="productContents">
-                <first-from-list list="productContents" entry="productContent"/>
+                <first-from-list entry="productContent" list="productContents"/>
                 <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productContent.dataResourceId"/>
                 </entity-one>

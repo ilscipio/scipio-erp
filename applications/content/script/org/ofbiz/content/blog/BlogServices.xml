@@ -55,7 +55,6 @@
         <set field="contentAssocTypeId" value="SUB_CONTENT"/>
         <set field="contentIdFrom" from-field="contentId"/>
 
-
         <if-not-empty field="parameters._uploadedFile_fileName">
             <!-- upload a picture -->
             <set field="createImage.dataResourceTypeId" value="LOCAL_FILE"/>
@@ -257,14 +256,14 @@
             <call-service service-name="genericContentPermission" in-map-name="mapIn">
                 <result-to-field result-name="hasPermission" field="hasPermission"/>
             </call-service>
-            <if-compare operator="equals" field="hasPermission" value="true" type="Boolean">
+            <if-compare field="hasPermission" operator="equals" value="true" type="Boolean">
                 <set field="blogList[]" from-field="blogItem"/>
                 <else>
                     <set field="mapIn.mainAction" value="UPDATE"/>
                     <call-service service-name="genericContentPermission" in-map-name="mapIn">
                         <result-to-field result-name="hasPermission" field="hasPermission"/>
                     </call-service>
-                    <if-compare operator="equals" field="hasPermission" value="true" type="Boolean">
+                    <if-compare field="hasPermission" operator="equals" value="true" type="Boolean">
                         <set field="blogList[]" from-field="blogItem"/>
                     </if-compare>
                 </else>

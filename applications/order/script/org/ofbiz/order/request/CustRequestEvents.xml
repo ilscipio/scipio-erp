@@ -28,8 +28,6 @@
             <string value="dataResourceName"/>
         </call-class-method>
 
-        <log level="always" message="UPLOADING REQUEST CONTENT" />
-
         <!-- Check input parameters -->
         <if>
             <condition>
@@ -47,15 +45,13 @@
         <check-errors/>
         <!-- Create new content form upload file / set content from Existing content -->
         <if-empty field="formInput.formInput.contentId">
-            <log level="always" message="CONTENT_ID EMPTY" />
-            <log level="always" message="UPLOADMIMETYPE ====> ${formInput.uploadMimeType}" />
-            <log level="always" message="MIMETYPEID     ====> ${formInput.formInput.mimeTypeId}" />
                 <if>
                     <condition>
                         <or>
                             <!-- Compaire MimeType between upload file and selected MimeType -->
                             <if-compare-field field="formInput.uploadMimeType" operator="equals" to-field="formInput.formInput.mimeTypeId"/>
-                            <!-- <if-compare field="formInput.formInput.mimeTypeId" operator="equals"  value="application/octet-stream"/> -->
+                            <!-- SCIPIO: this was removed by us (TODO: REVIEW)
+                            <if-compare field="formInput.formInput.mimeTypeId" operator="equals"  value="application/octet-stream"/> -->
                             <if-compare field="formInput.formInput.mimeTypeId" operator="equals"  value=""/>
                         </or>
                     </condition>
@@ -115,7 +111,6 @@
             </simple-map-processor>
         </call-map-processor>
 
-        <log level="always" message="CREATING CUST REQUEST CONTENT" />
         <!-- Create CustRequestContent -->
         <call-service service-name="createCustRequestContent" in-map-name="custRequestContext">
             <result-to-field result-name="contentId" field="contentId"/>

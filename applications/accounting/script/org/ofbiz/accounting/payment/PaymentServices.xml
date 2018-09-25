@@ -85,7 +85,7 @@ under the License.
     </simple-method>
     <simple-method method-name="updatePayment" short-description="Update a Payment">
         <make-value entity-name="Payment" value-field="lookupPayment"/>
-        <set-pk-fields map="parameters" value-field="lookupPayment"/>
+        <set-pk-fields value-field="lookupPayment" map="parameters"/>
 
         <find-by-primary-key entity-name="Payment" map="lookupPayment" value-field="payment"/>
         <if>
@@ -914,12 +914,12 @@ under the License.
             <field-map field-name="orderId" from-field="orderHeader.orderId"/>
             <field-map field-name="roleTypeId" value="BILL_FROM_VENDOR"/>
         </entity-and>
-        <first-from-list list="orderRoleToList" entry="orderRoleTo"/>
+        <first-from-list entry="orderRoleTo" list="orderRoleToList"/>
         <entity-and entity-name="OrderRole" list="orderRoleFromList">
             <field-map field-name="orderId" from-field="orderHeader.orderId"/>
             <field-map field-name="roleTypeId" value="BILL_TO_CUSTOMER"/>
         </entity-and>
-        <first-from-list list="orderRoleFromList" entry="orderRoleFrom"/>
+        <first-from-list entry="orderRoleFrom" list="orderRoleFromList"/>
         <if-compare operator="equals" value="PURCHASE_ORDER" field="orderHeader.orderTypeId">
             <entity-and entity-name="Agreement" list="agreementList" filter-by-date="true">
                 <field-map field-name="partyIdFrom" from-field="orderRoleFrom.partyId"/>
@@ -938,13 +938,13 @@ under the License.
                 <set field="organizationPartyId" from-field="orderRoleTo.partyId"/>
             </else>
         </if-compare>
-        <first-from-list list="agreementList" entry="agreement"/>
+        <first-from-list entry="agreement" list="agreementList"/>
         <if-not-empty field="agreement">
             <entity-and entity-name="OrderTerm" list="orderTermList">
                 <field-map field-name="orderId" from-field="orderHeader.orderId"/>
                 <field-map field-name="termTypeId" value="FIN_PAYMENT_TERM"/>
             </entity-and>
-            <first-from-list list="orderTermList" entry="orderTerm"/>
+            <first-from-list entry="orderTerm" list="orderTermList"/>
             <if-not-empty field="orderTerm.termDays">
                 <set field="days" from-field="orderTerm.termDays" type="Integer"/>
                 <now-timestamp field="start"/>
@@ -1159,7 +1159,6 @@ under the License.
                 </if-not-empty>
             </if-not-empty>
         </if-not-empty>
-
 
         <if-not-empty field="createAppl.paymentId">
             <if-not-empty field="createAppl.invoiceId">

@@ -30,7 +30,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <call-simple-method method-name="inlineHandlePriceWithTaxIncuded"/>
+        <call-simple-method method-name="inlineHandlePriceWithTaxIncluded"/>
 
         <make-value entity-name="ProductPrice" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -59,7 +59,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <call-simple-method method-name="inlineHandlePriceWithTaxIncuded"/>
+        <call-simple-method method-name="inlineHandlePriceWithTaxIncluded"/>
 
         <entity-one entity-name="ProductPrice" value-field="lookedUpValue"/>
 
@@ -92,7 +92,7 @@ under the License.
 
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="inlineHandlePriceWithTaxIncuded" short-description="Inline Handle Price with Tax Included">
+    <simple-method method-name="inlineHandlePriceWithTaxIncluded" short-description="Inline Handle Price with Tax Included">
         <if-not-empty field="parameters.taxAuthCombinedId">
             <set field="taxAuthCombinedId" from-field="parameters.taxAuthCombinedId"/>
             <!-- if passed in value will be split based on: "${taxAuthGeoId}::${taxAuthPartyId}" -->
@@ -173,6 +173,7 @@ under the License.
         </if>
     </simple-method>
 
+    <!-- TODO NMA convert to entity auto when changed fileds are managed -->
     <simple-method method-name="saveProductPriceChange" short-description="Save History of ProductPrice Change">
         <check-permission permission="CATALOG" action="_UPDATE">
             <alt-permission permission="CATALOG" action="_CREATE"/>

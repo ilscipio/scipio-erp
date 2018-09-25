@@ -3362,6 +3362,7 @@
         <value xml:lang="zh-TW">線索</value>
     </property>
     <property key="SfaLeadCreatedSuccessfully">
+        <value xml:lang="de">Lead wurde erfolgreich erstellt</value>
         <value xml:lang="en">Lead created successfully</value>
     </property>
     <property key="SfaLeadSource">

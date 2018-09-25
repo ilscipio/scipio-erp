@@ -71,7 +71,7 @@
     </simple-method>
     <simple-method method-name="removeContentAndRelated" short-description="Remove a Content Record, related resource(s) and assocs.">
         <!-- SCIPIO: NOTE: Please refer to the class org.ofbiz.content.content.ContentTraverser for extensions of this logic -->
-        <entity-one entity-name="Content" value-field="content"/> 
+        <entity-one entity-name="Content" value-field="content"/>
         <remove-related value-field="content" relation-name="ContentAttribute"/>
         <remove-related value-field="content" relation-name="ContentRole"/>
         <remove-related value-field="content" relation-name="ContentKeyword"/>
@@ -125,7 +125,7 @@
             <remove-value value-field="dataResource"/>
         </if-not-empty>
     </simple-method>
-    
+
     <!-- SCIPIO: Recursive version of removeContentAndRelated which removes the "To" ("child") associated content records -->
     <simple-method method-name="removeContentAndRelatedRecursiveTo" short-description="Remove a Content Record, related resource(s) and assocs, and To content records recursively (SCIPIO)">
         <if-compare field="parameters.recursiveTarget" operator="equals" value="all">
@@ -1266,25 +1266,25 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateContentKeyword" short-description="update a ContentKeyword">
         <entity-one entity-name="ContentKeyword" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteContentKeyword" short-description="delete a ContentKeyword">
         <entity-one entity-name="ContentKeyword" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="forceIndexContentKeywords" short-description="induce all the keywords of a content">
         <entity-one entity-name="Content" value-field="content"/>
         <call-class-method class-name="org.ofbiz.content.content.ContentKeywordIndex" method-name="forceIndexKeywords">
             <field field="content" type="org.ofbiz.entity.GenericValue"/>
         </call-class-method>
     </simple-method>
-    
+
     <simple-method method-name="deleteContentKeywords" short-description="delete all the keywords of a content">
         <entity-one entity-name="Content" value-field="content"/>
         <remove-related value-field="content" relation-name="ContentKeyword"/>
@@ -1426,7 +1426,7 @@
             <entity-and entity-name="ProdCatalogCategory" list="prodCatalogCategoryList" filter-by-date="false">
                 <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
             </entity-and>
-            
+
             <!-- Get all categories -->
             <set field="parameters.productCategories" value="${groovy: [];}" type="List"/>
             <iterate list="prodCatalogCategoryList" entry="prodCatalogCategory">
@@ -1437,7 +1437,7 @@
                 <set field="parameters.parentProductCategoryId" from-field="rootProductCategoryId"/>
                 <call-simple-method method-name="createMissingCategoryContentAltUrlInline"/>
             </iterate>
-            
+
             <iterate list="parameters.productCategories" entry="productCategoryList">
                 <!-- Create Content Alternative URLs for Product Category Content -->
                 <entity-condition list="productCategoryContentAndInfoList" entity-name="ProductCategoryContentAndInfo" filter-by-date="true" use-cache="true">
@@ -1467,7 +1467,7 @@
                         </calculate>
                     </if-compare>
                 </iterate>
-                
+
                 <!-- Create Content Alternative URLs for Product Content -->
                 <entity-condition list="productCategoryMemberList" entity-name="ProductCategoryMember" filter-by-date="true" use-cache="true">
                     <condition-list combine="and">
@@ -1507,7 +1507,7 @@
                 </iterate>
             </iterate>
         </if-not-empty>
-        
+
         <!-- Create Content Alternative URLs for Website Content -->
         <entity-and entity-name="WebSiteContent" list="webSiteContents" filter-by-date="true">
             <field-map field-name="webSiteId" from-field="parameters.webSiteId"/>
@@ -1574,7 +1574,7 @@
                 <field-map field-name="productCategoryId" from-field="productCategoryRollup.productCategoryId"/>
             </entity-one>
             <field-to-list list="parameters.productCategories" field="productCategory"/>
-            
+
             <!-- find rollup product categories -->
             <set field="parameters.parentProductCategoryId" from-field="productCategoryRollup.productCategoryId"/>
             <call-simple-method method-name="createMissingCategoryContentAltUrlInline"/>

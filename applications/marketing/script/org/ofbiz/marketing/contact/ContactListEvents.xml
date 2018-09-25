@@ -38,13 +38,13 @@ under the License.
             <set field="isSelected" value="${groovy:parameterMap.containsKey(&quot;_rowSubmit&quot; + suffix) &amp;&amp; &quot;Y&quot;.equalsIgnoreCase(parameterMap.get(&quot;_rowSubmit&quot; + suffix))}" type="Boolean"/>
             <if-compare field="isSelected" operator="equals" value="true">
                 <set field="partyId" value="${groovy:parameterMap[&quot;partyId&quot; + suffix]}"/>
-                
+
                 <!-- get exist contact list party -->
                 <entity-and entity-name="ContactListParty" list="existContactListParties" filter-by-date="true">
                     <field-map field-name="partyId" from-field="partyId"/>
                     <field-map field-name="contactListId" from-field="parameters.contactListId"/>
                 </entity-and>
-                
+
                 <!-- if there is not exist party in the contact list then create contact list party -->
                 <if-empty field="existContactListParties">
                     <set field="createContactListPartyInMap.contactListId" from-field="parameters.contactListId"/>

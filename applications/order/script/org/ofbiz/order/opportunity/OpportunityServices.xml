@@ -100,7 +100,7 @@ This file contains basic services for SalesOpportunity and SalesForecast.
         <entity-one entity-name="SalesForecastDetail" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="createSalesOpportunity" short-description="Create Sales Opportunity">
         <make-value entity-name="SalesOpportunity" value-field="newEntity"/>
         <if-empty field="parameters.salesOpportunityId">
@@ -177,5 +177,5 @@ This file contains basic services for SalesOpportunity and SalesForecast.
         <first-from-list list="salesOpportunityRoles" entry="lookedUpValue"/>
         <field-to-result field="lookedUpValue.partyId" result-name="partyId"/>
     </simple-method>
-    
+
 </simple-methods>

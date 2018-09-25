@@ -18,38 +18,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <simple-method method-name="updateShipmentGatewayConfig" short-description="Update Shipment Gateway Config">
         <entity-one entity-name="ShipmentGatewayConfig" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="updateShipmentGatewayConfigDhl" short-description="Update Shipment Gateway Config DHL">
         <entity-one entity-name="ShipmentGatewayDhl" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="updateShipmentGatewayConfigFedex" short-description="Update Shipment Gateway Config FedEx">
         <entity-one entity-name="ShipmentGatewayFedex" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="updateShipmentGatewayConfigUps" short-description="Update Shipment Gateway Config UPS">
         <entity-one entity-name="ShipmentGatewayUps" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="updateShipmentGatewayConfigUsps" short-description="Update Shipment Gateway Config USPS">
         <entity-one entity-name="ShipmentGatewayUsps" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="updateShipmentGatewayConfigType" short-description="Update Shipment Gateway Config Type">
         <entity-one entity-name="ShipmentGatewayConfigType" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>

@@ -78,7 +78,7 @@ under the License.
         <entity-one entity-name="DataResource" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="createDataResourceAndAssocToContent" short-description="Create a Data Resource and return the data resource type">
        <entity-one entity-name="Content" value-field="content"/>
        <if-empty field="content">
@@ -87,7 +87,7 @@ under the License.
            </add-error>
            <check-errors/>
        </if-empty>
-   
+
        <set-service-fields service-name="createDataResource" map="parameters" to-map="dataResourceCtx"/>
        <call-service service-name="createDataResource" in-map-name="dataResourceCtx">
            <result-to-field result-name="dataResource"/>
@@ -101,10 +101,10 @@ under the License.
        </if-compare>
        <set field="contentCtx.contentId" from-field="parameters.contentId"/>
        <call-service service-name="updateContent" in-map-name="contentCtx"/>
-       
-       <field-to-result field="parameters.contentId" result-name="contentId"/>       
+
+       <field-to-result field="parameters.contentId" result-name="contentId"/>
        <if-compare field="dataResource.dataResourceTypeId" operator="equals" value="ELECTRONIC_TEXT"><return response-code="${dataResource.dataResourceTypeId}"/></if-compare>
-       <if-compare field="dataResource.dataResourceTypeId" operator="equals" value="IMAGE_OBJECT"><return response-code="${dataResource.dataResourceTypeId}"/></if-compare>       
+       <if-compare field="dataResource.dataResourceTypeId" operator="equals" value="IMAGE_OBJECT"><return response-code="${dataResource.dataResourceTypeId}"/></if-compare>
     </simple-method>
 
   <!-- Methods for DataResourceMetaData -->
@@ -146,7 +146,7 @@ under the License.
   <!-- Methods for DataResourcePurpose -->
     <simple-method method-name="createDataResourcePurpose" short-description="Create Data Resource Purpose">
         <check-permission permission="CONTENTMGR" action="_CREATE">
-            <fail-property resource="ContentUiLabels" property="ContentSecurityCreatePermission"/>        
+            <fail-property resource="ContentUiLabels" property="ContentSecurityCreatePermission"/>
         </check-permission>
         <check-errors/>
 
@@ -169,7 +169,7 @@ under the License.
     </simple-method>
     <simple-method method-name="removeDataResourcePurpose" short-description="Remove Data Resource Purpose">
         <check-permission permission="CONTENTMGR" action="_DELETE">
-            <fail-property resource="ContentUiLabels" property="ContentSecurityDeletePermission"/>    
+            <fail-property resource="ContentUiLabels" property="ContentSecurityDeletePermission"/>
         </check-permission>
         <check-errors/>
 

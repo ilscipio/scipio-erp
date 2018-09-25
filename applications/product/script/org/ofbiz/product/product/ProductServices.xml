@@ -445,7 +445,7 @@ under the License.
             <call-service service-name="countProductView" in-map-name="callSubMap"></call-service>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="createProductReview" short-description="Create a ProductReview" login-required="false">
         <make-value entity-name="ProductReview" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -839,7 +839,7 @@ under the License.
         <entity-one entity-name="ProductGroupOrder" value-field="productGroupOrder"/>
         <set-nonpk-fields map="parameters" value-field="productGroupOrder"/>
         <store-value value-field="productGroupOrder"/>
-        
+
         <if-compare field="productGroupOrder.statusId" operator="equals" value="GO_CREATED">
             <entity-one entity-name="JobSandbox" value-field="jobSandbox">
                 <field-map field-name="jobId" from-field="productGroupOrder.jobId"/>
@@ -858,22 +858,22 @@ under the License.
         <iterate list="orderItemGroupOrders" entry="orderItemGroupOrder">
             <remove-value value-field="orderItemGroupOrder"/>
         </iterate>
-        
+
         <entity-one entity-name="ProductGroupOrder" value-field="productGroupOrder"/>
         <remove-value value-field="productGroupOrder"/>
-        
+
         <entity-one entity-name="JobSandbox" value-field="jobSandbox">
             <field-map field-name="jobId" from-field="productGroupOrder.jobId"/>
         </entity-one>
         <remove-value value-field="jobSandbox"/>
-        
+
         <entity-and entity-name="JobSandbox" list="jobSandboxList">
             <field-map field-name="runtimeDataId" from-field="jobSandbox.runtimeDataId"/>
         </entity-and>
         <iterate list="jobSandboxList" entry="jobSandboxRelatedRuntimeData">
             <remove-value value-field="jobSandboxRelatedRuntimeData"/>
         </iterate>
-        
+
         <entity-one entity-name="RuntimeData" value-field="runtimeData">
             <field-map field-name="runtimeDataId" from-field="jobSandbox.runtimeDataId"/>
         </entity-one>
@@ -942,7 +942,7 @@ under the License.
                     </calcop>
                 </calculate>
                 <store-value value-field="productGroupOrder"/>
-                
+
                 <set field="createOrderItemGroupOrderMap.orderId" from-field="orderItem.orderId"/>
                 <set field="createOrderItemGroupOrderMap.orderItemSeqId" from-field="orderItem.orderItemSeqId"/>
                 <set field="createOrderItemGroupOrderMap.groupOrderId" from-field="productGroupOrder.groupOrderId"/>
@@ -950,7 +950,7 @@ under the License.
             </if-not-empty>
         </iterate>
     </simple-method>
-    
+
     <simple-method method-name="cancleOrderItemGroupOrder" short-description="Cancle OrderItemGroupOrder">
         <if-not-empty field="parameters.orderItemSeqId">
             <entity-and entity-name="OrderItem" list="orderItems">
@@ -995,7 +995,7 @@ under the License.
             </if-not-empty>
         </iterate>
     </simple-method>
-    
+
     <simple-method method-name="checkProductGroupOrderExpired" short-description="Check ProductGroupOrder Expired">
         <entity-one entity-name="ProductGroupOrder" value-field="productGroupOrder"/>
         <if-not-empty field="productGroupOrder">
@@ -1007,11 +1007,11 @@ under the License.
                 <set field="groupOrderStatusId" value="GO_CANCELLED"/>
             </else>
             </if-compare>
-            
+
             <set field="updateProductGroupOrderMap.groupOrderId" from-field="productGroupOrder.groupOrderId"/>
             <set field="updateProductGroupOrderMap.statusId" from-field="groupOrderStatusId"/>
             <call-service service-name="updateProductGroupOrder" in-map-name="updateProductGroupOrderMap"/>
-            
+
             <entity-and entity-name="OrderItemGroupOrder" list="orderItemGroupOrders">
                 <field-map field-name="groupOrderId" from-field="productGroupOrder.groupOrderId"/>
             </entity-and>
@@ -1023,13 +1023,13 @@ under the License.
             </iterate>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="setProductReviewStatus" short-description="change the product review Status">
         <set value="setProductReviewStatus" field="callingMethodName"/>
         <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
-        
+
         <entity-one entity-name="ProductReview" value-field="productReview"/>
         <if-not-empty field="productReview">
             <if-compare-field field="productReview.statusId" to-field="parameters.statusId" operator="not-equals">
@@ -1047,48 +1047,48 @@ under the License.
             </if-compare-field>
         </if-not-empty>
         <check-errors/>
-        
+
         <set field="productReview.statusId" from-field="parameters.statusId"/>
         <store-value value-field="productReview"/>
         <field-to-result field="productReview.productReviewId" result-name="productReviewId"/>
     </simple-method>
-    
+
     <!-- ================================================================ -->
     <!-- SCIPIO: NEW Versatile Services (with stock-like functionality) -->
     <!-- ================================================================ -->
-    
+
     <simple-method method-name="createProductAndCatAssocVersatile">
         <set-service-fields service-name="createProduct" map="parameters" to-map="createRecordCtx"/>
         <call-service service-name="createProduct" in-map-name="createRecordCtx">
             <result-to-field result-name="productId" field="parameters.productId"/>
             <result-to-result result-name="productId"/>
         </call-service>
-        
+
         <set-service-fields service-name="addProductToCategory" map="parameters" to-map="createAssocCtx"/>
         <call-service service-name="addProductToCategory" in-map-name="createAssocCtx">
             <result-to-result result-name="productCategoryId"/>
             <result-to-result result-name="fromDate"/>
         </call-service>
-        
+
         <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
             <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" map="parameters" to-map="updateLocTextCtx"/>
             <call-service service-name="replaceProductContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
         </if-compare>
     </simple-method>
-    
+
     <simple-method method-name="updateProductAndCatAssocVersatile">
         <set-service-fields service-name="updateProduct" map="parameters" to-map="updateRecordCtx"/>
         <call-service service-name="updateProduct" in-map-name="updateRecordCtx"/>
-        
+
         <set-service-fields service-name="updateProductToCategory" map="parameters" to-map="updateAssocCtx"/>
         <call-service service-name="updateProductToCategory" in-map-name="updateAssocCtx"/>
-        
+
         <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
             <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" map="parameters" to-map="updateLocTextCtx"/>
             <call-service service-name="replaceProductContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
         </if-compare>
     </simple-method>
-    
+
     <simple-method method-name="deleteProductCatAssocVersatile">
         <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
             <!-- FIXME?: check if already expired?? -->
@@ -1101,28 +1101,28 @@ under the License.
             </else>
         </if-compare>
     </simple-method>
-    
+
     <simple-method method-name="deleteProductAndRelatedVersatile">
         <set field="callingMethodName" value="deleteProductAndRelatedVersatile"/>
         <set field="checkAction" value="DELETE"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
-        
+
         <entity-one entity-name="Product" value-field="product"/>
         <if-empty field="product">
             <property-to-field resource="ProductUiLabels" property="ProductProductNotFound" field="errMsgStr" />
             <add-error><fail-message message="${errMsgStr}: ${parameters.productId}"/></add-error>
             <check-errors/>
         </if-empty>
-        
+
         <set field="prodIdMap.productId" from-field="parameters.productId"/>
-        
-        <!-- 
+
+        <!--
             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             SCIPIO: 2017-10-31: WARN: This service is WIP and may be dangerous - currently best-effort only
             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         -->
-        
+
         <!-- remove "to"/"child" associated products recursively + associations -->
         <set field="assocProdFilterByDate" set-if-null="true" value=""/>
         <if-compare field="parameters.deleteAssocProductRecursive" operator="equals" value="all">
@@ -1155,7 +1155,7 @@ under the License.
 
         <!-- remove all "to"/"child" assoc -->
         <remove-by-and entity-name="ProductAssoc" map="prodIdMap"/>
-        
+
         <!-- remove "from"/"parent" assoc to this product -->
         <set field="prodIdToMap.productIdTo" from-field="parameters.productId"/>
         <remove-by-and entity-name="ProductAssoc" map="prodIdToMap"/>
@@ -1167,14 +1167,14 @@ under the License.
         <remove-by-and entity-name="ProductGeo" map="prodIdMap"/>
         <remove-by-and entity-name="ProductPriceChange" map="prodIdMap"/>
         <remove-by-and entity-name="ProductPrice" map="prodIdMap"/>
-        
+
         <remove-by-and entity-name="ProductConfig" map="prodIdMap"/>
         <remove-by-and entity-name="ProductConfigProduct" map="prodIdMap"/>
         <remove-by-and entity-name="ProductConfigStats" map="prodIdMap"/>
         <remove-by-and entity-name="ConfigOptionProductOption" map="prodIdMap"/>
-        
+
         <remove-by-and entity-name="GoodIdentification" map="prodIdMap"/>
-        
+
         <!-- According to Ofbiz schema, it is illegal to remove this, so...
         <entity-and entity-name="InventoryItem" list="inventoryItemList">
             <field-map field-name="productId" from-field="prodIdMap.productId"/>
@@ -1185,20 +1185,20 @@ under the License.
         </iterate>
         <remove-by-and entity-name="InventoryItemTempRes" map="prodIdMap"/>
         -->
-         
+
         <remove-by-and entity-name="ProductPaymentMethodType" map="prodIdMap"/>
 
-        <!-- TODO: REVIEW: 
+        <!-- TODO: REVIEW:
             FixedAsset -> instanceOfProductId
             FixedAssetProduct
             InvoiceItem
             ProductAverageCost
-            
+
             ProductManufacturingRule
             MrpEvent
-            
+
             SalesForecastDetail
-            
+
             // NOT deleting these - destroy order history!
             OrderItem
             OrderSummaryEntry
@@ -1209,16 +1209,16 @@ under the License.
             ReturnItem
             CartAbandonedLine
             ShoppingListItem
-            
+
             Agreement
             AgreementProductAppl
             CommunicationEventProduct
             PartyNeed
-            
+
             ShipmentReceipt
             ShipmentItem
             ShipmentPackageContent
-            
+
             CostComponent
             ProductCostComponentCalc
             ProductFacility
@@ -1239,7 +1239,7 @@ under the License.
             ReorderGuideline
             SupplierProduct
             ProductGroupOrder
-            
+
             WorkEffortGoodStandard
         -->
 
@@ -1283,13 +1283,13 @@ under the License.
         <if-compare field="parameters.deleteParentAssocSelect" operator="equals" value="all">
             <remove-by-and entity-name="ProductCategoryMember" map="prodIdMap"/>
         </if-compare>
-        
+
         <if-compare field="parameters.deleteChildrenSelect" operator="equals" value="recursive">
             <!-- TODO?: This will be very destructive... remove related:
                 Product
             -->
         </if-compare>
-        
+
         <if-compare field="parameters.deleteChildAssocSelect" operator="equals" value="expired">
             <!-- TODO -->
         </if-compare>
@@ -1310,11 +1310,11 @@ under the License.
         <call-service service-name="deleteProduct" in-map-name="deleteRecordCtx"/>-->
         <remove-value value-field="product"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteProductAndCatAssocVersatile">
         <set-service-fields service-name="deleteProductCatAssocVersatile" map="parameters" to-map="deleteAssocCtx"/>
         <call-service service-name="deleteProductCatAssocVersatile" in-map-name="deleteAssocCtx"/>
-        
+
         <if-compare field="parameters.deleteRecordAndRelated" operator="not-equals" type="Boolean" value="false">
             <set-service-fields service-name="deleteProductAndRelatedVersatile" map="parameters" to-map="deleteRecordCtx"/>
             <call-service service-name="deleteProductAndRelatedVersatile" in-map-name="deleteRecordCtx"/>
@@ -1331,7 +1331,7 @@ under the License.
             <add-error><fail-property resource="ProductErrorUiLabels" property="productservices.could_not_create_product_category_assoc_association_exists"/></add-error>
             <check-errors/>
         </if-not-empty>
-        
+
         <set-service-fields service-name="addProductToCategory" map="parameters" to-map="createAssocCtx"/>
         <call-service service-name="addProductToCategory" in-map-name="createAssocCtx">
             <result-to-result result-name="productCategoryId"/>
@@ -1363,16 +1363,16 @@ under the License.
         <field-to-result result-name="to_sequenceNum" field="resultFields.sequenceNum"/>
         <field-to-result result-name="to_productCategoryId" field="resultFields.productCategoryId"/>
     </simple-method>
-    
+
     <simple-method method-name="moveProductCatAssocVersatile">
         <set-service-fields service-name="deleteProductCatAssocVersatile" map="parameters" to-map="deleteAssocCtx"/>
         <call-service service-name="deleteProductCatAssocVersatile" in-map-name="deleteAssocCtx"/>
-            
+
         <!-- move is simply delete + copy for us -->
         <call-simple-method method-name="copyProductCatAssocVersatile"/>
         <check-errors/>
     </simple-method>
-    
+
     <simple-method method-name="getProductExtendedDataVersatile">
         <entity-one entity-name="Product" value-field="product"/>
         <field-to-result field="product"/>
@@ -1381,7 +1381,7 @@ under the License.
             <add-error><fail-message message="${errMsgStr}: ${parameters.productId}"/></add-error>
             <check-errors/>
         </if-empty>
-        
+
         <set-service-fields service-name="getProductContentLocalizedSimpleTextViews" map="parameters" to-map="locTextCtx"/>
         <call-service service-name="getProductContentLocalizedSimpleTextViews" in-map-name="locTextCtx">
             <result-to-result result-name="viewsByType"/>

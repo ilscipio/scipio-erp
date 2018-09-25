@@ -22,7 +22,7 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <!-- SCIPIO: 2017-12-06: New services file dedicated to localization services -->
-    
+
     <!-- SCIPIO: 2017-12-06: MOVED here from component://product/script/org/ofbiz/product/product/ProductContentServices.xml,
         because it did not belong there at all (DEV NOTE: this is a rare exception! and is very short) -->
     <simple-method method-name="createSimpleTextContentForAlternateLocale" short-description="Create Simple Text Content For Alternate Locale">
@@ -34,33 +34,33 @@
         <set field="createContentAssocMap.contentAssocTypeId" value="ALTERNATE_LOCALE"/>
         <call-service service-name="createContentAssoc" in-map-name="createContentAssocMap"/>
     </simple-method>
-    
+
     <!-- SCIPIO: 2017-10-26: new update service to match the create -->
     <simple-method method-name="updateSimpleTextContentForAlternateLocale" short-description="Update Simple Text Content For Alternate Locale (SCIPIO)">
         <call-simple-method method-name="checkSimpleTextContentAssoc"/>
         <check-errors/>
- 
+
         <!-- NOTE: this update is only to keep compat with createSimpleTextContentForAlternateLocale -->
         <entity-one entity-name="Content" value-field="content" auto-field-map="false">
             <field-map field-name="contentId" from-field="parameters.contentId"/>
         </entity-one>
         <set-nonpk-fields map="parameters" value-field="content"/>
         <store-value value-field="content"/>
- 
+
         <set-service-fields service-name="updateSimpleTextContent" map="parameters" to-map="updateCtx"/>
         <set field="updateCtx.textDataResourceId" from-field="content.dataResourceId"/>
         <call-service service-name="updateSimpleTextContent" in-map-name="updateCtx"/>
     </simple-method>
-    
+
     <!-- SCIPIO: 2017-10-26: new delete service to match the create -->
     <simple-method method-name="deleteSimpleTextContentForAlternateLocale" short-description="Delete Simple Text Content For Alternate Locale (SCIPIO)">
         <call-simple-method method-name="checkSimpleTextContentAssoc"/>
         <check-errors/>
-        
+
         <set-service-fields service-name="removeContentAndRelated" map="parameters" to-map="removeCtx"/>
         <call-service service-name="removeContentAndRelated" in-map-name="removeCtx"/>
     </simple-method>
-    
+
     <simple-method method-name="checkSimpleTextContentAssoc">
         <entity-and entity-name="ContentAssoc" list="assocList" filter-by-date="true">
             <field-map field-name="contentId" from-field="parameters.mainContentId"/>
@@ -75,7 +75,7 @@
             <check-errors/>
         </if-empty>
     </simple-method>
-    
+
     <!-- SCIPIO: 2017-10-26: new service to create OR update the alt-locale content intelligently -->
     <simple-method method-name="createUpdateSimpleTextContentForAlternateLocale" short-description="Create/Update Simple Text Content For Alternate Locale (SCIPIO)">
         <if-not-empty field="parameters.contentId">
@@ -90,7 +90,7 @@
                     <add-error><fail-property resource="ContentUiLabels" property="ContentNoContentFound"/></add-error>
                     <check-errors/>
                 </if-empty>
-                
+
                 <if-compare-field field="mainContent.localeString" operator="equals" to-field="parameters.localeString">
                     <set field="updateCtx.textDataResourceId" from-field="mainContent.dataResourceId"/>
                     <set field="updateCtx.text" from-field="parameters.text"/>
@@ -105,7 +105,7 @@
                             <get-related-one value-field="contentAssoc" relation-name="ToContent" to-value-field="content" />
                             <if-compare-field field="content.localeString" operator="equals" to-field="parameters.localeString">
                                 <set field="localeFound" type="Boolean" value="true"/>
-                                
+
                                 <set field="updateCtx.textDataResourceId" from-field="content.dataResourceId"/>
                                 <set field="updateCtx.text" from-field="parameters.text"/>
                                 <call-service service-name="updateSimpleTextContent" in-map-name="updateCtx"/>

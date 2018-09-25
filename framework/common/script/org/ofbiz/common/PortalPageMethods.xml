@@ -38,7 +38,7 @@ under the License.
                         <set-service-fields service-name="createPortletAttribute" map="parameters" to-map="attributeEntityMap"/>
                         <set field="attributeEntityMap.attrName"  from-field="attributeKey"/>
                         <set field="attributeEntityMap.attrValue" from-field="attributeValue"/>
-                        
+
                         <entity-one entity-name="PortletAttribute" value-field="attributeItem">
                             <field-map field-name="attrName" from-field="attributeEntityMap.attrName"/>
                         </entity-one>
@@ -49,9 +49,9 @@ under the License.
                         <!-- remove all attributes which were not provided -->
                         <entity-condition entity-name="PortletAttribute" list="attributeList">
                             <condition-list combine="and">
-                                <condition-expr field-name="portalPageId" operator="equals" from-field="parameters.portalPageId"/>                
-                                <condition-expr field-name="portalPortletId" operator="equals" from-field="parameters.portalPortletId"/>                
-                                <condition-expr field-name="portletSeqId" operator="equals" from-field="parameters.portletSeqId" ignore-if-null="true"/>                
+                                <condition-expr field-name="portalPageId" operator="equals" from-field="parameters.portalPageId"/>
+                                <condition-expr field-name="portalPortletId" operator="equals" from-field="parameters.portalPortletId"/>
+                                <condition-expr field-name="portletSeqId" operator="equals" from-field="parameters.portletSeqId" ignore-if-null="true"/>
                             </condition-list>
                         </entity-condition>
                         <!-- remove all not supplied attributes -->
@@ -59,7 +59,7 @@ under the License.
                             <if-empty field="parameters.${attribute.attrName}">
                                 <remove-value value-field="attribute"/>
                             </if-empty>
-                        </iterate>                        
+                        </iterate>
                     </then>
                 </if>
             </iterate-map>

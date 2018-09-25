@@ -49,7 +49,7 @@ under the License.
         <!-- the tests -->
         <assert><not><if-empty field="productionRunId"/></not></assert>
         <check-errors/>
-        
+
         <entity-one entity-name="WorkEffort" value-field="productionRunHeader">
             <field-map field-name="workEffortId" from-field="productionRunId"/>
         </entity-one>
@@ -98,7 +98,7 @@ under the License.
             <field-map field-name="workEffortId" from-field="productionRunTask.workEffortId" />
         </entity-and>
         <first-from-list list="costCalcs" entry="costCalc"/>
-        
+
         <assert>
             <not><if-empty field="costCalc" /></not>
             <if-compare field="costCalc.costComponentTypeId" operator="equals" value="OTHER_COST" />
@@ -777,7 +777,7 @@ under the License.
         <assert>
             <if-compare field="totalCost" operator="equals" value="84.00" type="BigDecimal"/>
         </assert>
-        
+
         <entity-one entity-name="WorkEffort" value-field="productionRunHeader">
             <field-map field-name="workEffortId" from-field="productionRunId"/>
         </entity-one>

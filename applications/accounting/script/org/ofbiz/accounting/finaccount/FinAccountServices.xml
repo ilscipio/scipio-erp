@@ -180,7 +180,7 @@ under the License.
             <set from-field="nowTimestamp" field="newEntity.entryDate"/>
         </if-empty>
         <if-empty field="newEntity.statusId">
-            <set field="newEntity.statusId" value="FINACT_TRNS_APPROVED"/>    
+            <set field="newEntity.statusId" value="FINACT_TRNS_APPROVED"/>
         </if-empty>
         <set field="newEntity.performedByPartyId" from-field="userLogin.partyId"/>
 
@@ -506,7 +506,7 @@ under the License.
             </if-empty>
         </if-compare-field>
     </simple-method>
-    
+
     <simple-method method-name="updatePaymentOnFinAccTransStatusSetToCancel" short-description="remove field finAccountTransId from Payment entity.">
         <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
         <if-empty field="finAccountTrans.paymentId">
@@ -680,7 +680,7 @@ under the License.
         <field-to-result field="finAccountTransRunningTotal"/>
         <field-to-result field="endingBalance"/>
     </simple-method>
-    
+
     <simple-method method-name="reconcileFinAccountTrans" short-description="Reconcile Financial Accounting Transaction">
         <now-timestamp field="nowTimestamp"/>
         <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans" auto-field-map="true"/>
@@ -711,7 +711,7 @@ under the License.
             <!-- Update GlReconciliation record -->
             <get-related-one relation-name="GlReconciliation" value-field="finAccountTrans" to-value-field="glReconciliation"/>
             <set-service-fields service-name="updateGlReconciliation" map="glReconciliation" to-map="updateGlReconciliationMap"/>
-            <set field="isAdjustmentOrDeposit" value="${finAccountTrans.finAccountTransTypeId == 'ADJUSTMENT' @or finAccountTrans.finAccountTransTypeId == 'DEPOSIT'}" type="Boolean"/> 
+            <set field="isAdjustmentOrDeposit" value="${finAccountTrans.finAccountTransTypeId == 'ADJUSTMENT' @or finAccountTrans.finAccountTransTypeId == 'DEPOSIT'}" type="Boolean"/>
             <if-compare field="isAdjustmentOrDeposit" operator="equals" value="true" type="Boolean">
                 <set field="updateGlReconciliationMap.reconciledBalance" value="${glReconciliation.reconciledBalance + finAccountTrans.amount}" type="BigDecimal"/>
             <else>
@@ -736,7 +736,7 @@ under the License.
         </else>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="reconcileAdjustmentFinAcctgTrans" short-description="Reconcile financial accounting transaction of type adjustment">
         <set field="finAccountTrans" from-field="parameters.finAccountTrans"/>
         <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="ADJUSTMENT">
@@ -766,7 +766,7 @@ under the License.
         </else>
         </if-compare>
     </simple-method>
-    
+
     <simple-method method-name="reconcileDepositFinAcctgTrans" short-description="Reconcile financial accounting transaction of type deposit">
         <now-timestamp field="nowTimestamp"/>
         <set field="finAccountTrans" from-field="parameters.finAccountTrans"/>
@@ -800,7 +800,7 @@ under the License.
                 <iterate list="acctgTransList" entry="acctgTrans">
                     <if-compare field="acctgTrans.acctgTransTypeId" operator="not-equals" value="PAYMENT_APPL">
                         <get-related relation-name="AcctgTransEntry" list="acctgTransEntries" value-field="acctgTrans"/>
-                    </if-compare> 
+                    </if-compare>
                     <iterate list="acctgTransEntries" entry="oldAcctgTransEntry">
                         <if-compare field="oldAcctgTransEntry.debitCreditFlag" operator="equals" value="D">
                             <make-value entity-name="AcctgTransEntry" value-field="newAcctgTransEntry"/>
@@ -883,7 +883,7 @@ under the License.
                 <iterate list="acctgTransList" entry="acctgTrans">
                     <if-compare field="acctgTrans.acctgTransTypeId" operator="not-equals" value="PAYMENT_APPL">
                         <get-related relation-name="AcctgTransEntry" list="acctgTransEntries" value-field="acctgTrans"/>
-                    </if-compare> 
+                    </if-compare>
                     <iterate list="acctgTransEntries" entry="oldAcctgTransEntry">
                         <if-compare field="oldAcctgTransEntry.debitCreditFlag" operator="equals" value="C">
                             <make-value entity-name="AcctgTransEntry" value-field="newAcctgTransEntry"/>
@@ -1085,7 +1085,7 @@ under the License.
             </iterate>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="getAssociatedAcctgTransEntriesWithFinAccountTrans" short-description="Get associated acctgTransEntries with finAccountTrans">
         <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
         <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
@@ -1108,7 +1108,7 @@ under the License.
         </entity-condition>
         <field-to-result field="acctgTransAndEntries"/>
     </simple-method>
-    
+
     <simple-method method-name="getReconciliationClosingBalance" short-description="Get Reconciliation Closing Balance.">
         <entity-one entity-name="GlReconciliation" value-field="glReconciliation"/>
         <set field="reconciledBalance" from-field="glReconciliation.reconciledBalance" default-value="0" type="BigDecimal"/>
@@ -1116,7 +1116,7 @@ under the License.
         <set field="closingBalance" value="${reconciledBalance + openingBalance}" type="BigDecimal"/>
         <field-to-result field="closingBalance"/>
     </simple-method>
-    
+
     <simple-method method-name="autoFinAccountReconciliation" short-description="Auto Reconcile Financial(bank) Account Transactions">
         <now-timestamp field="nowTimestamp"/>
         <set field="reconciliationDayStart" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}" type="Timestamp"/>

@@ -33,7 +33,7 @@ under the License.
         </entity-one>
         <set field="serviceCtx.userLogin" from-field="userLogin"/>
         <call-service service-name="createFixedAssetRegistration" in-map-name="serviceCtx"/>
- 
+
         <entity-one entity-name="FixedAssetRegistration" value-field="fixedAssetRegistration">
             <field-map field-name="fixedAssetId" from-field="serviceCtx.fixedAssetId"/>
             <field-map field-name="fromDate" from-field="serviceCtx.fromDate"/>

@@ -326,7 +326,7 @@ under the License.
             <!--
             <if-empty field="acctgTransEntry.currencyUomId">
                 <add-error>
-                    
+
                 </add-error>
             </if-empty>
             -->
@@ -414,7 +414,7 @@ under the License.
         <field-to-result field="debitTotal"/>
         <field-to-result field="creditTotal"/>
         <field-to-result field="debitCreditDifference"/>
-        
+
     </simple-method>
 
     <!-- GlAccount Trial Balance based on isPosted flag -->
@@ -423,7 +423,7 @@ under the License.
         <set field="openingBalanceDebit" type="BigDecimal" value="0"/>
         <set field="openingBalanceCredit" type="BigDecimal" value="0"/>
         <set field="debitCreditDifference" type="BigDecimal" value="0"/>
-        
+
         <!-- iterate through all GlAccOrgAndAcctgTransAndEntry in this account and that are filter based on posted and unposted, and get totals of all debits and of all credits -->
         <entity-condition entity-name="GlAccOrgAndAcctgTransAndEntry" list="glAccOrgAndAcctgTransAndEntries" use-cache="true">
             <condition-list combine="and">
@@ -469,7 +469,7 @@ under the License.
             <set field="copyAcctgTransCtx.revert" value="Y"/>
             <call-service service-name="copyAcctgTransAndEntries" in-map-name="copyAcctgTransCtx"/>
             <clear-field field="copyAcctgTransCtx"/>
-        </iterate>        
+        </iterate>
     </simple-method>
 
     <simple-method method-name="revertAcctgTransOnCancelInvoice" short-description="Reverting Accounting Transaction And Entries on Canceling an Invoice">

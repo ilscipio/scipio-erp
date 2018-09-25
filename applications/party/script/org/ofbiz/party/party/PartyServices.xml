@@ -175,7 +175,7 @@ under the License.
         </iterate>
         <field-to-result field="geos"/>
     </simple-method>
-    
+
     <!-- PartyIdentification methods -->
     <simple-method method-name="createPartyIdentifications" short-description="create mass party identification with association between value and type">
         <set field="partyIdentCtx.partyId" from-field="parameters.partyId"/>
@@ -189,7 +189,7 @@ under the License.
                     <set field="partyIdentCtx.partyIdentificationTypeId" from-field="identificationType.partyIdentificationTypeId"/>
                     <set field="partyIdentCtx.idValue" from-field="idValue"/>
                     <call-service service-name="createPartyIdentification" in-map-name="partyIdentCtx"/>
-                </if-not-empty> 
+                </if-not-empty>
             </if-not-empty>
         </iterate-map>
     </simple-method>
@@ -610,7 +610,7 @@ under the License.
                 <field-map field-name="partyId" from-field="parameters.partyId"/>
                 <field-map field-name="contactMechTypeId" value="EMAIL_ADDRESS"/>
             </entity-and>
-        </if-empty> 
+        </if-empty>
         <!-- any other electronic address -->
         <if-empty field="emailAddresses">
             <entity-and entity-name="PartyAndContactMech" list="emailAddresses" filter-by-date="true">
@@ -776,10 +776,10 @@ under the License.
         </if-not-empty>
     </simple-method>
 
-    <!-- address match map 
-    
+    <!-- address match map
+
         SCIPIO: DEPRECATED
-        Has never been implemented as discussed here 
+        Has never been implemented as discussed here
         http://ofbiz.135035.n4.nabble.com/Address-match-map-is-used-for-td157597.html
     -->
     <simple-method method-name="createAddressMatchMap" short-description="create a AddressMatchMap">
@@ -867,7 +867,7 @@ under the License.
         <set field="relMap.partyIdTo" from-field="parameters.contactPartyId"/>
         <set field="relMap.roleTypeIdTo" value="CONTACT"/>
         <set field="relMap.partyRelationshipTypeId" value="EMPLOYMENT"/>
-        <set field="relMap.comments" from-field="parameters.comments"/> 
+        <set field="relMap.comments" from-field="parameters.comments"/>
         <call-service service-name="createPartyRelationship" in-map-name="relMap"/>
     </simple-method>
 
@@ -983,7 +983,7 @@ under the License.
         <call-map-processor xml-resource="component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml"
                 processor-name="emailAddress" in-map-name="parameters" out-map-name="emailAddressInMap"/>
         <check-errors/>
-        
+
         <!-- create person  -->
         <call-service service-name="createPerson" in-map-name="personInMap">
             <result-to-field result-name="partyId"/>
@@ -1040,7 +1040,7 @@ under the License.
             <field-to-result result-name="description" field="roleType.description" />
         </if-not-empty>
     </simple-method>
-    
+
     <!-- send account activated email notification -->
     <simple-method method-name="sendAccountActivatedEmailNotification" short-description="Notification email on account activated" login-required="false">
         <map-to-map map="parameters" to-map="bodyParameters"/>

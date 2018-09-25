@@ -64,20 +64,20 @@ under the License.
         <set field="removeData.noteName" value="SYSTEMNOTE"/>
         <remove-by-and entity-name="NoteData" map="removeData"/>
     </simple-method>
-    
-    
+
+
     <simple-method method-name="getSystemInfoStatus" short-description="">
         <!-- communication events -->
         <entity-count entity-name="CommunicationEventRole" count-field="comCount">
             <condition-list combine="and">
                 <condition-expr field-name="partyId" from-field="userLogin.partyId"/>
-                <condition-expr field-name="statusId" operator="not-equals" value="COM_ROLE_COMPLETED"/>    
+                <condition-expr field-name="statusId" operator="not-equals" value="COM_ROLE_COMPLETED"/>
             </condition-list>
         </entity-count>
         <entity-condition entity-name="CommunicationEventAndRole" list="comms">
             <condition-list combine="and">
                 <condition-expr field-name="partyId" from-field="userLogin.partyId"/>
-                <condition-expr field-name="statusId" operator="not-equals" value="COM_ROLE_COMPLETED"/>    
+                <condition-expr field-name="statusId" operator="not-equals" value="COM_ROLE_COMPLETED"/>
             </condition-list>
             <order-by field-name="-entryDate"/>
         </entity-condition>
@@ -101,21 +101,21 @@ under the License.
                 <condition-expr field-name="statusId" operator="equals" value="PAS_ASSIGNED"/>
                 <condition-expr field-name="workEffortTypeId" operator="equals" value="TASK"/>
             </condition-list>
-        </entity-count>            
+        </entity-count>
         <if-compare field="assignCount" value="0" operator="greater">
             <set field="status.noteInfo" value="Assigned and not completed tasks: ${assignCount}"/>
             <first-from-list list="assigns" entry="assign"/>
             <set field="status.noteDateTime" from-field="assign.fromDate"/>
             <field-to-list field="status" list="systemInfoStatus"/>
         </if-compare>
-        
+
         <!-- return result -->
         <if-not-empty field="systemInfoStatus">
             <field-to-result field="systemInfoStatus"/>
         </if-not-empty>
-        
+
     </simple-method>
-    
+
     <!-- SCIPIO: Modified previous implementation  -->
     <simple-method method-name="getSystemInfoNotes" short-description="">
         <set field="viewSize" from-field="parameters.viewSize" type="Integer" default-value="10"/>
@@ -127,16 +127,16 @@ under the License.
                 <order-by field-name="-noteDateTime"/>
                 <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
             </entity-and>
-            
+
             <else>
                 <entity-and entity-name="NoteData" list="systemInfoNotes">
                     <field-map field-name="noteParty" from-field="parameters.userLogin.partyId"/>
                     <field-map field-name="noteName" value="SYSTEMNOTE"/>
-                    <order-by field-name="-noteDateTime"/>                    
+                    <order-by field-name="-noteDateTime"/>
                 </entity-and>
             </else>
         </if-compare>
-        
+
         <if-not-empty field="systemInfoNotes">
             <field-to-result field="systemInfoNotes"/>
         </if-not-empty>
@@ -173,7 +173,7 @@ under the License.
                 <field-to-result field="lastSystemInfoNote3"/>
             </if-not-empty>
         </if-not-empty>
-    </simple-method> 
+    </simple-method>
 
     <!-- SCIPIO-->
     <simple-method method-name="getSystemMessages" short-description="Fetches System notifications/messages from the database">
@@ -181,11 +181,11 @@ under the License.
         <set field="viewIndex" from-field="parameters.viewIndex" type="Integer" default-value="0"/>
         <set field="showAll" from-field="parameters.showAll" type="Boolean" default-value="false"/>
         <set field="toPartyId" from-field="parameters.toPartyId" type="String" default-value="${parameters.userLogin.partyId}"/>
-        
+
         <entity-count entity-name="SystemMessages" count-field="count">
             <condition-list combine="and">
                 <condition-expr field-name="toPartyId" from-field="toPartyId"/>
-                <condition-expr field-name="isRead" operator="not-equals" value="Y"/>    
+                <condition-expr field-name="isRead" operator="not-equals" value="Y"/>
             </condition-list>
         </entity-count>
         <if-compare operator="equals" value="false" field="showAll">
@@ -196,16 +196,16 @@ under the License.
                 <order-by field-name="-createdStamp"/>
                 <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
             </entity-and>
-            
+
             <else>
                 <entity-and entity-name="SystemMessages" list="messages">
                     <field-map field-name="toPartyId" from-field="toPartyId"/>
                     <order-by field-name="isRead"/>
-                    <order-by field-name="-createdStamp"/>                   
+                    <order-by field-name="-createdStamp"/>
                 </entity-and>
             </else>
         </if-compare>
-        
+
         <if-not-empty field="messages">
             <field-to-result field="messages"/>
             <field-to-result field="count"/>
@@ -222,7 +222,7 @@ under the License.
         <if-not-empty field="parameters.moreInfoUrl">
             <set field="systemMessage.url" from-field="parameters.moreInfoUrl"/>
             <if-not-empty field="parameters.moreInfoItemName">
-                <set field="systemMessage.url" value="${systemMessage.url}?${parameters.moreInfoItemName}=${parameters.moreInfoItemId}"/>                    
+                <set field="systemMessage.url" value="${systemMessage.url}?${parameters.moreInfoItemName}=${parameters.moreInfoItemId}"/>
             </if-not-empty>
         </if-not-empty>
         <set field="systemMessage.createdStamp" from-field="parameters.noteDateTime"/>

@@ -38,7 +38,7 @@
             <set-service-fields service-name="deleteEmplPositionFulfillment" map="parameters" to-map="delFullfillCtx"/>
             <call-service service-name="deleteEmplPositionFulfillment" in-map-name="delFullfillCtx"></call-service>
         </if-not-empty>
-        
+
         <set-service-fields service-name="deleteEmplPosition" map="parameters" to-map="delEmlpCtx"/>
         <call-service service-name="deleteEmplPosition" in-map-name="delEmlpCtx"></call-service>
     </simple-method>
@@ -52,15 +52,15 @@
         </if-not-empty>
         <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationship"></call-service>
     </simple-method>
-    
+
     <!-- Public Holiday -->
     <simple-method method-name="createPublicHoliday" short-description="Create Public Holiday">
-        <if-empty field="parameters.workEffortName">            
+        <if-empty field="parameters.workEffortName">
             <add-error>
                 <fail-message message="The Holiday Name is missing."/>
             </add-error>
             <check-errors/>
-        </if-empty>     
+        </if-empty>
         <if-empty field="parameters.estimatedStartDate">
             <add-error>
                 <fail-message message="The FromDate is missing"/>

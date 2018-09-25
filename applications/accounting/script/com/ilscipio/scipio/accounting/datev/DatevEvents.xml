@@ -21,25 +21,25 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-    <simple-method method-name="importDatevDataCategory" short-description="Import Datev Data Category" login-required="true">    
+    <simple-method method-name="importDatevDataCategory" short-description="Import Datev Data Category" login-required="true">
         <script location="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevCSVUpload.groovy"></script>
-        
+
         <set field="dataCategoryId" from-field="multiPartMap.dataCategoryId" />
         <set field="importDatevCtx" from-field="multiPartMap" />
-        
+
         <entity-one entity-name="DatevDataCategory" value-field="dataCategory">
             <field-map field-name="dataCategoryId"/>
-        </entity-one>                        
-                
+        </entity-one>
+
         <if-not-empty field="dataCategory">
             <set field="importDatevCtx.dataCategory" from-field="dataCategory" />
-            <if-compare value="BUCHUNGSSTAPEL" operator="equals" field="dataCategoryId">                           
+            <if-compare value="BUCHUNGSSTAPEL" operator="equals" field="dataCategoryId">
                 <call-service service-name="importDatevTransactionEntries" in-map-name="importDatevCtx" break-on-error="false" >
                     <result-to-request result-name="operationResults" />
                     <result-to-field result-name="operationStats" />
                 </call-service>
                 <else>
-                    <if-compare value="DEBITOREN_KREDITOREN_STAMMDATEN" operator="equals" field="dataCategoryId">            
+                    <if-compare value="DEBITOREN_KREDITOREN_STAMMDATEN" operator="equals" field="dataCategoryId">
                         <call-service service-name="importDatevContacts" in-map-name="importDatevCtx" break-on-error="false" >
                             <result-to-request result-name="operationResults" />
                             <result-to-field result-name="operationStats" />
@@ -49,9 +49,9 @@ under the License.
                         </else>
                     </if-compare>
                 </else>
-            </if-compare>            
+            </if-compare>
             <if-not-empty field="operationStats">
-                <field-to-request field="operationStats"/>               
+                <field-to-request field="operationStats"/>
                 <else>
                     <add-error><fail-message message="Result not found."/></add-error>
                 </else>
@@ -60,16 +60,16 @@ under the License.
                 <add-error><fail-message message="Invalid DATEV data category."/></add-error>
             </else>
         </if-not-empty>
-        
+
         <field-to-request field="multiPartMap.orgPartyId" request-name="orgPartyId" />
-        <field-to-request field="multiPartMap.topGlAccountId" request-name="topGlAccountId" />        
-        
-        <field-to-request field="dataCategoryId" />        
+        <field-to-request field="multiPartMap.topGlAccountId" request-name="topGlAccountId" />
+
+        <field-to-request field="dataCategoryId" />
     </simple-method>
-    
-    
+
+
     <simple-method method-name="exportDatevTransactionEntries" short-description="Export Datev Transaction Entries" login-required="true">
-        
+
     </simple-method>
-    
+
 </simple-methods>

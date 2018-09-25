@@ -175,7 +175,7 @@ under the License.
                             <calculate field="createDetailMap.availableToPromiseDiff" decimal-scale="6">
                                 <calcop operator="negative" field="parameters.quantityNotReserved"/>
                             </calculate>
-                            
+
                             <if-not-empty field="parameters.reserveReasonEnumId"><set from-field="parameters.reserveReasonEnumId" field="createDetailMap.reasonEnumId"/></if-not-empty>
                             <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
                             <clear-field field="createDetailMap"/>

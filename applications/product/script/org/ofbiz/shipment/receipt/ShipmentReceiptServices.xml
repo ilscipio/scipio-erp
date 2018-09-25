@@ -46,7 +46,7 @@ under the License.
             <store-value value-field="invDet"/>
         </if-not-empty>
         <set field="affectAccounting" type="Boolean" value="true"/>
-        
+
         <entity-one entity-name="Product" value-field="product"/>
         <if>
             <condition>
@@ -304,7 +304,7 @@ under the License.
                                 <condition-expr field-name="facilityId" operator="equals" from-field="returnHeader.destinationFacilityId"/>
                                 <condition-expr field-name="inventoryItemTypeId" operator="equals" value="SERIALIZED_INV_ITEM"/>
                             </condition-list>
-                        </entity-count>                        
+                        </entity-count>
                         <set field="setNonSerial" value="false"/>
                         <if-compare field="parameters.inventoryItemTypeId" value="NON_SERIAL_INV_ITEM" operator="equals">
                             <if-compare field="serializedItemCount" value="0" operator="equals">
@@ -359,7 +359,7 @@ under the License.
             </if-compare>
         </if-compare>
     </simple-method>
-    
+
     <simple-method method-name="issueOrderItemToShipmentAndReceiveAgainstPO" short-description="Issues order item quantity specified to the shipment, then receives inventory for that item and quantity">
         <set value="Issue OrderItem to Shipment and Receive against PO" field="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
@@ -371,7 +371,7 @@ under the License.
         <entity-one entity-name="OrderItemShipGroupAssoc" value-field="orderItemShipGroupAssoc" auto-field-map="true"/>
         <!-- get shipment -->
         <entity-one entity-name="Shipment" value-field="shipment" auto-field-map="true"/>
-        
+
         <!-- try to find an existing shipmentItem and attach to it, if none found create a new shipmentItem -->
         <!-- if there is NO productId on the orderItem, ALWAYS create a new shipmentItem -->
         <if-not-empty field="orderItem.productId">
@@ -395,14 +395,14 @@ under the License.
             </call-service>
             <set from-field="parameters.shipmentId" field="shipmentItemLookupPk.shipmentId"/>
             <find-by-primary-key entity-name="ShipmentItem" map="shipmentItemLookupPk" value-field="shipmentItem"/>
-            
+
             <!-- Create OrderShipment for this ShipmentItem -->
             <set from-field="parameters.quantity" field="orderShipmentCreate.quantity"/>
             <set from-field="shipmentItem.shipmentId" field="orderShipmentCreate.shipmentId"/>
             <set from-field="shipmentItem.shipmentItemSeqId" field="orderShipmentCreate.shipmentItemSeqId"/>
             <set from-field="orderItem.orderId" field="orderShipmentCreate.orderId"/>
             <set from-field="orderItem.orderItemSeqId" field="orderShipmentCreate.orderItemSeqId"/>
-            
+
             <if-not-empty field="orderItemShipGroupAssoc">
                 <!-- If we have a ShipGroup Assoc for this Item to focus on, set that; this is mostly the case for purchase orders and such -->
                 <set from-field="orderItemShipGroupAssoc.shipGroupSeqId" field="orderShipmentCreate.shipGroupSeqId"/>
@@ -425,7 +425,7 @@ under the License.
                 <set field="shipmentItem.quantity" value="${shipmentItem.quantity$bigDecimal + quantityToAdd$bigDecimal}" type="BigDecimal"/>
                 <store-value value-field="shipmentItem"/>
                 <set field="shipmentItemSeqId" from-field="shipmentItem.shipmentItemSeqId"/>
-                
+
                 <set field="orderShipment.quantity" value="${orderShipment.quantity$bigDecimal + quantityToAdd$bigDecimal}" type="BigDecimal"/>
                 <store-value value-field="orderShipment"/>
             </if-compare-field>
@@ -442,7 +442,7 @@ under the License.
             <result-to-result result-name="inventoryItemId"/>
         </call-service>
     </simple-method>
-    
+
     <simple-method method-name="getReceivedQuantityForOrderItem" short-description="Computes the till now received quantity from all ShipmentReceipts">
         <set field="receivedQuantity" type="BigDecimal" value="0"/>
         <entity-and entity-name="ShipmentReceipt" list="shipmentReceipts">
@@ -508,7 +508,7 @@ under the License.
                     <first-from-list list="shipmentItems" entry="shipmentItem"/>
                     <set field="shipmentItem.quantity" value="${shipmentItem.quantity$bigDecimal + quantityToAdd$bigDecimal}" type="BigDecimal"/>
                     <store-value value-field="shipmentItem"/>
-                    
+
                     <entity-and entity-name="OrderShipment" list="orderShipments">
                         <field-map field-name="orderId" from-field="parameters.orderId"/>
                         <field-map field-name="orderItemSeqId" from-field="parameters.orderItemSeqId"/>
@@ -529,12 +529,12 @@ under the License.
     </simple-method>
 
     <simple-method method-name="cancelReceivedItems" short-description="Cancel Received Items against a purchase order if received something incorrectly">
-        <!-- TODO: When items are received against a Purchase Order, service listed below changes certain things in the system. Changes done by these 
+        <!-- TODO: When items are received against a Purchase Order, service listed below changes certain things in the system. Changes done by these
                    services also need to be reverted and missing logic can be added later.
-            1. addProductsBackToCategory 
-            2. setUnitPriceAsLastPrice 
+            1. addProductsBackToCategory
+            2. setUnitPriceAsLastPrice
             3. createAcctgTransForShipmentReceipt
-            4. updateProductIfAvailableFromShipment 
+            4. updateProductIfAvailableFromShipment
          -->
         <!-- update the accepted and received quantity to zero in ShipmentReceipt entity -->
         <entity-one entity-name="ShipmentReceipt" value-field="shipmentReceipt"/>
@@ -554,9 +554,9 @@ under the License.
             <calcop operator="multiply" field="inventoryItem.availableToPromiseTotal">
                 <number value="-1"/>
             </calcop>
-        </calculate>        
+        </calculate>
         <call-service service-name="createInventoryItemDetail" in-map-name="inventoryItemDetailMap"/>
-        
+
         <!-- Balance the inventory item -->
         <set field="balanceInventoryItemMap.inventoryItemId" from-field="inventoryItem.inventoryItemId"/>
         <set field="balanceInventoryItemMap.priorityOrderId" from-field="shipmentReceipt.orderId"/>
@@ -570,7 +570,7 @@ under the License.
             <set field="shipmentStatusMap.statusId" value="PURCH_SHIP_SHIPPED"/>
             <call-service service-name="updateShipment" in-map-name="shipmentStatusMap"/>
         </if-compare>
-        
+
         <!-- change order item and order status -->
         <get-related-one value-field="shipmentReceipt" relation-name="OrderItem" to-value-field="orderItem"/>
         <if-compare field="orderItem.statusId" operator="equals" value="ITEM_COMPLETED">

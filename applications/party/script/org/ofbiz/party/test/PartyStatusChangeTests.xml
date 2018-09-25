@@ -26,31 +26,31 @@ under the License.
         <set field="serviceCtx.locale" value="en"/>
         <set field="serviceCtx.partyId" value="PARTY_ENABLED"/>
         <set field="serviceCtx.statusId" value="PARTY_DISABLED"/>
-        <set field="serviceCtx.statusDate" from-field="nowTimestamp"/>      
+        <set field="serviceCtx.statusDate" from-field="nowTimestamp"/>
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
         <set field="serviceCtx.userLogin" from-field="userLogin"/>
         <call-service service-name="setPartyStatus" in-map-name="serviceCtx">
             <results-to-map map-name="results"/>
-        </call-service>      
+        </call-service>
         <entity-one entity-name="Party" value-field="party">
             <field-map field-name="partyId" value="PARTY_ENABLED"/>
         </entity-one>
         <assert>
             <not><if-empty field="results"/></not>
             <if-compare field="party.statusId" operator="equals" value="PARTY_DISABLED"/>
-            <if-compare field="results.oldStatusId" operator="equals" value="PARTY_ENABLED"/>             
+            <if-compare field="results.oldStatusId" operator="equals" value="PARTY_ENABLED"/>
         </assert>
-        <check-errors/> 
-    </simple-method>      
-    
+        <check-errors/>
+    </simple-method>
+
     <simple-method method-name="testSetPartyStatusToEnabled" short-description="Test case for changing party status to PARTY_DISABLED." login-required="false">
         <now-timestamp field="nowTimestamp"/>
         <set field="serviceCtx.locale" value="en"/>
         <set field="serviceCtx.partyId" value="PARTY_DISABLED"/>
         <set field="serviceCtx.statusId" value="PARTY_ENABLED"/>
-        <set field="serviceCtx.statusDate" from-field="nowTimestamp"/>      
+        <set field="serviceCtx.statusDate" from-field="nowTimestamp"/>
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
@@ -62,11 +62,11 @@ under the License.
             <field-map field-name="partyId" value="PARTY_DISABLED"/>
         </entity-one>
         <assert>
-            <not><if-empty field="results"/></not>        
+            <not><if-empty field="results"/></not>
             <if-compare field="party.statusId" operator="equals" value="PARTY_ENABLED"/>
-            <if-compare field="results.oldStatusId" operator="equals" value="PARTY_DISABLED"/>             
+            <if-compare field="results.oldStatusId" operator="equals" value="PARTY_DISABLED"/>
         </assert>
-        <check-errors/> 
+        <check-errors/>
     </simple-method>
 
 </simple-methods>

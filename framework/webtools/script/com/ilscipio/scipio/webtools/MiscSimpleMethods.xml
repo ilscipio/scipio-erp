@@ -33,13 +33,13 @@
             return [testSmOutVar2: "hello from beanshell-emulating-groovy"];
         ]]></call-bsh>
         <field-to-result field="testSmOutVar2"/>
-        
+
         <!-- Deprecated bsh, make sure it does not crash, for backward-compat (this actually runs groovy!)
-            NOTE: Due to convoluted Minilang "set" implementation, this may actually run through the Script class rather than FlexibleStringExpander, 
+            NOTE: Due to convoluted Minilang "set" implementation, this may actually run through the Script class rather than FlexibleStringExpander,
                 which is quite confusing! -->
         <set field="testBshVar1" value="${bsh: org.ofbiz.base.util.Debug.logInfo('testSimpleMethod1: running from deprecated bsh scriptlet', 'testSimpleMethod1.groovy')}"/>
-        
-        <!-- Double deprecation! 
+
+        <!-- Double deprecation!
             WARN: currently script element and Scriptlet class may fail to enable the full bsh emulation (compared to flexible expression),
                 but is still better than nothing -->
         <script><![CDATA[bsh:
@@ -49,5 +49,5 @@
             ).expandString(context);
         ]]></script>
     </simple-method>
- 
+
 </simple-methods>

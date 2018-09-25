@@ -268,7 +268,7 @@ under the License.
         </iterate>
         <field-to-result field="countryList"/>
     </simple-method>
-    
+
     <simple-method method-name="getAssociatedStateList" short-description="set the state options for selected country" login-required="false">
         <set field="countryGeoId" from-field="parameters.countryGeoId"/>
         <set field="listOrderBy" from-field="parameters.listOrderBy"/>
@@ -295,15 +295,15 @@ under the License.
         </entity-and>
         <set field="oldGeoIds" value="${groovy:org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(geoAssocs, 'geoIdTo', true);}"/>
         <!-- Old list contains current values -->
-        <iterate list="parameters.geoIds" entry="geoIdTo">            
+        <iterate list="parameters.geoIds" entry="geoIdTo">
             <if-compare-field field="oldGeoIds" operator="contains" to-field="geoIdTo">
                 <!-- Yes, nothing to do, it already exists and we keep it -->
-                <else> 
+                <else>
                     <entity-one entity-name="GeoAssoc" value-field="oldGeoAssoc">
                         <field-map field-name="geoId" from-field="parameters.geoId"/>
                         <field-map field-name="geoIdTo" from-field="geoIdTo"/>
                     </entity-one>
-                    <if-empty field="oldGeoAssoc">                    
+                    <if-empty field="oldGeoAssoc">
                         <!-- Add as it does not exist -->
                         <make-value entity-name="GeoAssoc" value-field="newGeoAssoc"/>
                         <set field="newGeoAssoc.geoId" from-field="parameters.geoId"/>
@@ -317,7 +317,7 @@ under the License.
         <check-errors/>
     </simple-method>
 
-    <simple-method method-name="getRelatedGeos" short-description="get related geos to a geo through a geoAssoc" login-required="false">      
+    <simple-method method-name="getRelatedGeos" short-description="get related geos to a geo through a geoAssoc" login-required="false">
         <entity-and entity-name="GeoAssoc" list="geoAssoc">
             <field-map field-name="geoId" from-field="parameters.geoId"/>
             <field-map field-name="geoAssocTypeId" from-field="parameters.geoAssocTypeId"/>
@@ -332,8 +332,8 @@ under the License.
             </else>
         </if-empty>
         <field-to-result field="geoList"/>
-    </simple-method>    
-    
+    </simple-method>
+
     <simple-method method-name="checkUomConversion" short-description="Returns true if an UomConversion record exists">
         <entity-one entity-name="UomConversion" value-field="uomConversion">
             <field-map field-name="uomId" from-field="parameters.uomId"/>
@@ -347,7 +347,7 @@ under the License.
         </if-not-empty>
         <field-to-result field="exist"/>
     </simple-method>
-    
+
     <simple-method method-name="checkUomConversionDated" short-description="Returns true if an UomConversionDated record exists">
          <entity-condition entity-name="UomConversionDated" list="uomConversions" filter-by-date="true">
             <condition-list>
@@ -363,18 +363,18 @@ under the License.
             </else>
         </if-not-empty>
         <field-to-result field="exist"/>
-    </simple-method>    
+    </simple-method>
 
     <simple-method method-name="getServerTimestamp" login-required="false">
         <now field="serverTimestamp" type="java.sql.Timestamp"/>
         <field-to-result field="serverTimestamp"/>
     </simple-method>
-    
+
     <simple-method method-name="getServerTimeZone" login-required="false">
         <set field="serverTimeZone" value="${util:defaultTimeZone()}" type="String"/>
         <field-to-result field="serverTimeZone"/>
     </simple-method>
-    
+
     <simple-method method-name="getServerTimestampAsLong" login-required="false">
         <now field="serverTimestamp" type="java.lang.Long"/>
         <field-to-result field="serverTimestamp"/>

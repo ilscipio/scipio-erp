@@ -109,7 +109,7 @@ under the License.
                    shipment to the packed status (precondition 4).  Additionally it doesn't seem to be necessary to set the invoice status
                    to ready because the invoice is created in that state.
         -->
-        
+
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
@@ -192,7 +192,7 @@ under the License.
         -->
 
         <!-- Creating a payment from scratch rather than using the demo data -->
-        
+
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>

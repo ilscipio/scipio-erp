@@ -27,7 +27,7 @@
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
             <string value="dataResourceName"/>
         </call-class-method>
-    
+
         <log level="always" message="UPLOADING REQUEST CONTENT" />
 
         <!-- Check input parameters -->
@@ -59,7 +59,7 @@
                             <if-compare field="formInput.formInput.mimeTypeId" operator="equals"  value=""/>
                         </or>
                     </condition>
-                    <then>                        
+                    <then>
                         <!-- Create new content from upload file -->
                         <set-service-fields service-name="createContentFromUploadedFile"
                             map="formInput.formInput" to-map="inMap"/>
@@ -82,7 +82,7 @@
                 <set field="context.contentId" from-field="formInput.formInput.contentId"/>
             </else>
         </if-empty>
-        
+
         <!-- create ContentAssoc-->
         <set-service-fields service-name="createContentAssoc" map="formInput.formInput" to-map="contentMap"/>
         <if-not-empty field="formInput.formInput.contentIdFrom">
@@ -96,10 +96,10 @@
                 <field-map field-name="contentIdTo" from-field="contentMap.contentIdTo"/>
             </entity-and>
             <if-empty field="contentAssonList">
-                <call-service service-name="createContentAssoc" in-map-name="contentMap"/>           
+                <call-service service-name="createContentAssoc" in-map-name="contentMap"/>
             </if-empty>
         </if-not-empty>
-        
+
         <set field="context.custRequestId" from-field="formInput.formInput.custRequestId"/>
         <call-map-processor in-map-name="context" out-map-name="custRequestContext">
             <simple-map-processor name="newCustRequestContent">

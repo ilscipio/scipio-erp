@@ -221,7 +221,7 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
-    <simple-method method-name="createFacilityContent" short-description="Create Facility Content"> 
+    <simple-method method-name="createFacilityContent" short-description="Create Facility Content">
         <make-value entity-name="FacilityContent" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>

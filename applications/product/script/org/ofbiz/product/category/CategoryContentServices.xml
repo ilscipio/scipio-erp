@@ -50,7 +50,7 @@ under the License.
         <set-service-fields service-name="updateContent" map="parameters" to-map="updateContent"/>
         <call-service service-name="updateContent" in-map-name="updateContent">
              <result-to-result result-name="contentId"/><!-- SCIPIO -->
-        </call-service>      
+        </call-service>
     </simple-method>
     <simple-method method-name="removeCategoryContent" short-description="Remove Content From Category">
         <make-value entity-name="ProductCategoryContent" value-field="lookupPKMap"/>
@@ -67,7 +67,7 @@ under the License.
         <call-service service-name="createCategoryContent" in-map-name="createCategoryContentMap">
             <result-to-result result-name="contentId" /><!-- SCIPIO -->
         </call-service>
-        
+
     </simple-method>
     <simple-method method-name="updateSimpleTextContentForCategory" short-description="Update Simple Text Content For Product Category">
         <set-service-fields service-name="updateCategoryContent" map="parameters" to-map="updateCategoryContent"/>
@@ -160,7 +160,7 @@ under the License.
         <set field="dataResource.dataResourceName" from-field="parameters.title"/>
         <set field="dataResource.dataResourceTypeId" value="URL_RESOURCE"/>
         <set field="dataResource.mimeTypeId" value="text/plain"/>
-        <set field="url" value="${groovy: temp = parameters.url; 
+        <set field="url" value="${groovy: temp = parameters.url;
             temp = temp.trim();
             if(temp.indexOf(&quot;http://&quot;) == 0) return temp;
             if(temp.indexOf(&quot;https://&quot;) == 0) return temp;
@@ -171,7 +171,7 @@ under the License.
         <call-service service-name="createDataResource" in-map-name="dataResource">
             <result-to-field result-name="dataResourceId" field="parameters.dataResourceId"/>
         </call-service>
-        
+
         <set field="content.contentTypeId" value="DOCUMENT"/>
         <set field="content.dataResourceId" from-field="parameters.dataResourceId"/>
         <set field="content.contentName" from-field="parameters.title"/>
@@ -181,7 +181,7 @@ under the License.
         <call-service service-name="createContent" in-map-name="content">
             <result-to-field result-name="contentId" field="parameters.contentId"/>
         </call-service>
-        
+
         <set-service-fields service-name="createCategoryContent" map="parameters" to-map="createCategoryContentMap"/>
         <call-service service-name="createCategoryContent" in-map-name="createCategoryContentMap">
             <result-to-result result-name="contentId" /><!-- SCIPIO -->
@@ -190,13 +190,13 @@ under the License.
     <simple-method method-name="updateRelatedUrlContentForCategory" short-description="Update Related URL Content For Product Category">
         <set-service-fields service-name="updateCategoryContent" map="parameters" to-map="updateCategoryContent"/>
         <call-service service-name="updateCategoryContent" in-map-name="updateCategoryContent"/>
-        
+
         <set field="dataResource.dataResourceId" from-field="parameters.dataResourceId"/>
         <set field="dataResource.dataResourceName" from-field="parameters.title"/>
         <set field="dataResource.objectInfo" from-field="parameters.url"/>
         <set field="dataResource.localeString" from-field="parameters.localeString"/>
         <call-service service-name="updateDataResource" in-map-name="dataResource"/>
-        
+
         <set field="updateContent.contentId" from-field="parameters.contentId"/>
         <set field="updateContent.contentName" from-field="parameters.title"/>
         <set field="updateContent.description" from-field="parameters.description"/>
@@ -205,7 +205,7 @@ under the License.
             <result-to-result result-name="contentId" /><!-- SCIPIO -->
         </call-service>
     </simple-method>
-    
+
     <simple-method method-name="createDownloadContentForCategory" short-description="Create Download Content For Category">
         <set-service-fields service-name="createCategoryContent" map="parameters" to-map="createCategoryContent"/>
         <!-- Create Data Resource -->
@@ -234,7 +234,7 @@ under the License.
             <result-to-result result-name="contentId" /><!-- SCIPIO -->
         </call-service>
     </simple-method>
-    
+
     <simple-method method-name="updateDownloadContentForCategory" short-description="Update Download Content For Category">
         <set field="attachMap.uploadedFile" from-field="parameters.imageData"/>
         <set field="attachMap._uploadedFile_fileName" from-field="parameters._imageData_fileName"/>
@@ -242,7 +242,7 @@ under the License.
         <set field="attachMap.mimeTypeId" from-field="parameters._imageData_contentType"/>
         <set field="attachMap.dataResourceId" from-field="parameters.fileDataResourceId"/>
         <call-service service-name="attachUploadToDataResource" in-map-name="attachMap"/>
-        
+
         <set-service-fields service-name="updateCategoryContent" map="parameters" to-map="updateCategoryContent"/>
         <call-service service-name="updateCategoryContent" in-map-name="updateCategoryContent">
             <result-to-result result-name="contentId" /><!-- SCIPIO -->

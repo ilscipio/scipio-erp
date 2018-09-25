@@ -44,7 +44,7 @@ under the License.
                 <log level="info" message="${AccountingUiLabels.AccountingFixedAssetIdAlreadyExists}"/>
                 <else>
                     <check-id field="parameters.fixedAssetId"/>
-                </else>                
+                </else>
             </if-not-empty>
             <check-errors/>
             <set from-field="parameters.fixedAssetId" field="newEntity.fixedAssetId"/>

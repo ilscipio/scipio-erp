@@ -381,7 +381,7 @@ under the License.
                 <set field="context.contentId" from-field="formInput.formInput.contentId"/>
             </else>
         </if-empty>
-        
+
         <!-- create ContentAssoc-->
         <set-service-fields service-name="createContentAssoc" map="formInput.formInput" to-map="contentMap"/>
         <if-not-empty field="formInput.formInput.contentIdFrom">
@@ -395,8 +395,8 @@ under the License.
                 <field-map field-name="contentIdTo" from-field="contentMap.contentIdTo"/>
             </entity-and>
             <if-empty field="contentAssonList">
-                <call-service service-name="createContentAssoc" in-map-name="contentMap"/>           
+                <call-service service-name="createContentAssoc" in-map-name="contentMap"/>
             </if-empty>
-        </if-not-empty>   
-    </simple-method>        
+        </if-not-empty>
+    </simple-method>
 </simple-methods>

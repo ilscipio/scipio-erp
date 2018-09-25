@@ -35,7 +35,7 @@ under the License.
            <else>
                <log level="warning" message="Acctg preference not defined for partyId [${parameters.partyId}]"/>
            </else>
-           
+
         </if-not-empty>
 
         <if-not-empty field="customMethod">
@@ -75,7 +75,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="quoteSequenceEnforced" short-description="Enforced Sequence (no gaps, per organization)">
-        <log level="info" message="In getNextQuoteId sequence enum Enforced"/> 
+        <log level="info" message="In getNextQuoteId sequence enum Enforced"/>
         <set field="partyAcctgPreference" from-field="parameters.partyAcctgPreference"/>
         <!-- this is sequential sequencing, we can't skip a number, also it must be a unique sequence per partyIdFrom -->
 
@@ -92,7 +92,7 @@ under the License.
         <store-value value-field="partyAcctgPreference"/>
         <set from-field="partyAcctgPreference.lastQuoteNumber" field="quoteId"/>
         <field-to-result field="quoteId" result-name="quoteId"/>
-   </simple-method> 
+   </simple-method>
 
     <!-- create a new Quote -->
     <simple-method method-name="createQuote" short-description="Create a Quote">
@@ -772,16 +772,16 @@ under the License.
         <check-errors/>
         <call-object-method obj-field="parameters.cart" method-name="getCurrency" ret-field="createQuoteInMap.currencyUomId"/>
         <call-object-method obj-field="parameters.cart" method-name="getChannelType" ret-field="createQuoteInMap.salesChannelEnumId"/>
-        
+
         <call-object-method obj-field="parameters.cart" method-name="getOrderType" ret-field="orderType"/>
-         <if-compare field="orderType" operator="equals" value="SALES_ORDER"> 
+         <if-compare field="orderType" operator="equals" value="SALES_ORDER">
             <call-object-method obj-field="parameters.cart" method-name="getProductStoreId" ret-field="createQuoteInMap.productStoreId"/>
-            <set field="createQuoteInMap.quoteTypeId" value="PRODUCT_QUOTE"/>     
+            <set field="createQuoteInMap.quoteTypeId" value="PRODUCT_QUOTE"/>
          </if-compare>
-         <if-compare field="orderType" operator="equals" value="PURCHASE_ORDER"> 
-             <set field="createQuoteInMap.quoteTypeId" value="PURCHASE_QUOTE" />                          
+         <if-compare field="orderType" operator="equals" value="PURCHASE_ORDER">
+             <set field="createQuoteInMap.quoteTypeId" value="PURCHASE_QUOTE" />
          </if-compare>
-        
+
         <set value="QUO_CREATED" field="createQuoteInMap.statusId"/>
         <call-service service-name="createQuote" in-map-name="createQuoteInMap">
             <result-to-field result-name="quoteId" field="quoteId"/>

@@ -479,7 +479,7 @@ under the License.
         <!-- try to find PartyAcctgPreference for parameters.partyId, see if we need any special order number sequencing -->
         <entity-one entity-name="PartyAcctgPreference" value-field="partyAcctgPreference"/>
         <log level="info" message="In getNextOrderId partyId is [${parameters.partyId}], partyAcctgPreference: ${partyAcctgPreference}"/>
- 
+
         <if-not-empty field="partyAcctgPreference">
            <get-related-one relation-name="OrderCustomMethod" value-field="partyAcctgPreference" to-value-field="customMethod"/>
            <else>
@@ -516,7 +516,7 @@ under the License.
                 </if-empty>
             </else>
         </if-not-empty>
-        
+
         <if-not-empty field="parameters.productStoreId">
             <entity-one entity-name="ProductStore" value-field="productStore"/>
         </if-not-empty>
@@ -527,7 +527,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="orderSequence_enforced" short-description="Enforced Sequence (no gaps, per organization)">
-        <log level="info" message="In getNextOrderId sequence enum Enforced"/> 
+        <log level="info" message="In getNextOrderId sequence enum Enforced"/>
         <set field="partyAcctgPreference" from-field="parameters.partyAcctgPreference"/>
         <!-- this is sequential sequencing, we can't skip a number, also it must be a unique sequence per partyIdFrom -->
 
@@ -544,7 +544,7 @@ under the License.
         <store-value value-field="partyAcctgPreference"/>
         <set from-field="partyAcctgPreference.lastOrderNumber" field="orderId"/>
         <field-to-result field="orderId" result-name="orderId"/>
-    </simple-method> 
+    </simple-method>
 
     <simple-method method-name="createOrderHeader" short-description="Create OrderHeader">
         <now-timestamp field="nowTimestamp"/>
@@ -556,7 +556,7 @@ under the License.
         <check-errors/>
 
         <make-value entity-name="OrderHeader" value-field="newEntity"/>
-        
+
         <if-not-empty field="parameters.orderId">
             <set field="newEntity.orderId" from-field="parameters.orderId"/>
         <else>
@@ -564,7 +564,7 @@ under the License.
         </else>
         </if-not-empty>
         <field-to-result field="newEntity.orderId" result-name="orderId"/>
-        
+
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
         <if-empty field="newEntity.statusId">
@@ -576,7 +576,7 @@ under the License.
         <if-empty field="newEntity.entryDate">
             <set field="newEntity.entryDate" from-field="nowTimestamp"/>
         </if-empty>
-        
+
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="updateOrderHeader" short-description="Update OrderHeader">
@@ -1379,7 +1379,7 @@ under the License.
             </iterate>
         </iterate>
     </simple-method>
-    
+
     <simple-method  method-name="updateShippingMethodAndCharges" short-description="Updates shipping method and shipping charges from Order View page when Shipment is in picked status and items of Order are packed">
          <!-- splitting shipmentMethodAndAmount request parameter value that contains "*" symbol
              into "shipmentMethod" and "newAmount".
@@ -1387,7 +1387,7 @@ under the License.
          <!-- shipmentMethod request parameter value contains "@" symbol
              between "shipmentMethodTypeId" and "carrierPartyId".This will be splitted in updateOrderItemShipGroup method
         -->
-        
+
         <script>groovy:
             shipmentMethodAndAmount = parameters.get("shipmentMethodAndAmount");
             if (shipmentMethodAndAmount != null) {
@@ -1448,7 +1448,7 @@ under the License.
         </iterate>
         <field-to-result field="availabalityList"/>
     </simple-method>
-    
+
     <simple-method method-name="createOrderPaymentApplication" short-description="Create Order Payment Application">
         <entity-one entity-name="Payment" value-field="paymentMap"/>
         <set field="createCtx.amountApplied" from-field="paymentMap.amount" type="BigDecimal"/>
@@ -1465,7 +1465,7 @@ under the License.
             <call-service service-name="createPaymentApplication" in-map-name="createCtx"/>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="MoveItemBetweenShipGroups" short-description="Move order items between ship groups">
         <entity-one entity-name="OrderItemShipGroupAssoc" value-field="orderItemShipGroupAssoc">
             <field-map field-name="orderId" from-field="parameters.orderId"/>
@@ -1489,7 +1489,7 @@ under the License.
         <set field="map.shipGroupSeqId" from-field="parameters.toGroupIndex"/>
         <set field="map.quantity" value="${orderItemShipGroupAssoc.quantity + parameters.quantity}" type="BigDecimal"/>
         <call-service service-name="updateOrderItemShipGroupAssoc" in-map-name="map"/>
-        
+
         <entity-one entity-name="OrderItemShipGroupAssoc" value-field="orderItemShipGroupAssoc">
             <field-map field-name="orderId" from-field="parameters.orderId"/>
             <field-map field-name="orderItemSeqId" from-field="parameters.orderItemSeqId"/>
@@ -1501,7 +1501,7 @@ under the License.
             </add-error>
         </if-empty>
         <check-errors/>
-        
+
         <clear-field field="map"/>
         <set field="map.orderId" from-field="parameters.orderId"/>
         <set field="map.orderItemSeqId" from-field="parameters.orderItemSeqId"/>
@@ -1509,5 +1509,5 @@ under the License.
         <set field="map.quantity" value="${orderItemShipGroupAssoc.quantity - parameters.quantity}" type="BigDecimal"/>
         <call-service service-name="updateOrderItemShipGroupAssoc" in-map-name="map"/>
     </simple-method>
-    
+
 </simple-methods>

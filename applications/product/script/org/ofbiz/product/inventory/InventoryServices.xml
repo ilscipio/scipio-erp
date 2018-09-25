@@ -111,12 +111,12 @@ under the License.
 
     <!-- InventoryItem methods -->
     <simple-method method-name="createInventoryItem" short-description="Create an InventoryItem">
-        
+
         <!-- Create a lot before -->
         <entity-one entity-name="Product" value-field="product">
             <field-map field-name="productId" from-field="parameters.productId"/>
         </entity-one>
-        
+
         <!-- Check if this product can or not have a lotId -->
         <if>
             <condition>
@@ -131,7 +131,7 @@ under the License.
                 </add-error>
             </then>
         </if>
-        
+
         <if>
             <condition>
                 <and>
@@ -147,9 +147,9 @@ under the License.
                 </add-error>
             </then>
         </if>
-        
+
         <check-errors />
-        
+
         <!-- If this InventoryItem is returned by a manufacturing task, don't create a lot -->
         <if-compare operator="equals" value="N" field="parameters.isReturned">
             <if-not-empty field="parameters.lotId">
@@ -164,7 +164,7 @@ under the License.
                   </if-empty>
               </if-not-empty>
           </if-compare>
-          
+
         <make-value entity-name="InventoryItem" value-field="inventoryItem"/>
         <!-- TODO: make sure availableToPromiseTotal and quantityOnHandTotal are not changed -->
         <set-nonpk-fields map="parameters" value-field="inventoryItem"/>
@@ -489,7 +489,7 @@ under the License.
                             <set field="product.salesDiscWhenNotAvail" from-field="virtProduct.salesDiscWhenNotAvail"/>
                         </if-empty>
                     </if-not-empty>
-                </if-not-empty>    
+                </if-not-empty>
             </if-compare>
         </if-not-empty>
 
@@ -784,15 +784,15 @@ under the License.
         <field-to-result field="quantityOnHandTotal"/>
     </simple-method>
 
-     <!-- 
-         Code in balanceInventoryItems service was doing same job which reassignInventoryReservations service is doing. Purpose of both the services are same. In fact reassignInventoryReservations service does better job of 
-         reserving items for an order. 1) It takes into account the order priority, currentPromisedDate, reservedDateTime and sequenceId. where as  balanceInventoryItems was prioritizing orders 
-         based on reservedDatetime and sequenceId. 2) reassignInventoryReservations excludes items with sufficient inventory, where as balanceInventoryItems also pulls up order items which have sufficient inventory. 
-         
-         Calling reassignInventoryReservations from balanceInventoryItems. balanceInventoryItems can be deleted, but not deleting it because its used in many places in OFBiz. 
-         To DO: We can delete balanceInventoryItems in future and replace it with reassignInventoryReservations every where. 
+     <!--
+         Code in balanceInventoryItems service was doing same job which reassignInventoryReservations service is doing. Purpose of both the services are same. In fact reassignInventoryReservations service does better job of
+         reserving items for an order. 1) It takes into account the order priority, currentPromisedDate, reservedDateTime and sequenceId. where as  balanceInventoryItems was prioritizing orders
+         based on reservedDatetime and sequenceId. 2) reassignInventoryReservations excludes items with sufficient inventory, where as balanceInventoryItems also pulls up order items which have sufficient inventory.
+
+         Calling reassignInventoryReservations from balanceInventoryItems. balanceInventoryItems can be deleted, but not deleting it because its used in many places in OFBiz.
+         To DO: We can delete balanceInventoryItems in future and replace it with reassignInventoryReservations every where.
      -->
-         
+
     <simple-method method-name="balanceInventoryItems" short-description="Balances available-to-promise on inventory items">
         <entity-one entity-name="InventoryItem" value-field="inventoryItem"/>
         <set field="reassignInventoryReservationsCtx.productId" from-field="inventoryItem.productId"/>

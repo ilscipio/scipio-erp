@@ -45,9 +45,9 @@ under the License.
         <now-timestamp field="newValue.fromDate"/>
 
         <create-value value-field="newValue"/>
-        
+
         <!-- now create the FacilityContactMechPurpose record -->
-        <if-not-empty field="parameters.contactMechPurposeTypeId">        
+        <if-not-empty field="parameters.contactMechPurposeTypeId">
             <make-value entity-name="FacilityContactMechPurpose" value-field="facilityContactMechPurpose"/>
             <set-pk-fields map="newValue" value-field="facilityContactMechPurpose"/>
             <set field="facilityContactMechPurpose.contactMechPurposeTypeId" from-field="parameters.contactMechPurposeTypeId"/>

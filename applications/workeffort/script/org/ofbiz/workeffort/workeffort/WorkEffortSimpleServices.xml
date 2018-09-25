@@ -45,7 +45,7 @@ under the License.
             <sequenced-id sequence-name="WorkEffort" field="newEntity.workEffortId"/>
             <else>
                 <check-id field="parameters.workEffortId"/>
-                <check-errors/>            
+                <check-errors/>
                 <set field="newEntity.workEffortId" from-field="parameters.workEffortId"/>
             </else>
         </if-empty>
@@ -1570,7 +1570,7 @@ under the License.
             </iterate>
         </if-not-empty>
     </simple-method>
-    
+
     <!-- Work Effort Survey Services -->
     <simple-method method-name="createWorkEffortSurveyAppl" short-description="Create WorkEffortSurvey">
         <make-value entity-name="WorkEffortSurveyAppl" value-field="newEntity"/>
@@ -1579,7 +1579,7 @@ under the License.
         <if-empty field="newEntity.fromDate">
             <now-timestamp field="nowTimeStamp"/>
             <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
-        </if-empty>        
+        </if-empty>
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="updateWorkEffortSurveyAppl" short-description="Update WorkEffortSurvey">
@@ -1640,7 +1640,7 @@ under the License.
         <set field="workEfforts" from-field="groovy:org.ofbiz.workeffort.workeffort.WorkEffortWorker.removeDuplicateWorkEfforts(workEfforts);" type="List"/>
         <field-to-result field="workEfforts"/>
     </simple-method>
-    
+
     <simple-method method-name="getPartyICalUrl" short-description="Get The Party iCalendar URL" login-required="false">
         <!-- RFC 2445 4.8.4.1 and 4.8.4.3 Value must be a URI (4.3.3) -->
         <set field="partyId" from-field="parameters.partyId"/>

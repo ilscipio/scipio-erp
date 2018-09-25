@@ -94,7 +94,7 @@ under the License.
                 <if-compare field="checkProductKeyword1.statusId" operator="equals" value="KW_PENDING"/>
             </and>
         </assert>
-        
+
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeyword2">
             <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="t-shirt"/>
@@ -106,7 +106,7 @@ under the License.
                 <if-compare field="checkProductKeyword2.statusId" operator="equals" value="KW_PENDING"/>
             </and>
         </assert>
-        
+
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeyword3">
             <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="red"/>
@@ -141,7 +141,7 @@ under the License.
         <assert>
             <if-compare field="checkProductKeywordApprove1.statusId" operator="equals" value="KW_APPROVED"/>
         </assert>
-        
+
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeywordApprove2">
             <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="t-shirt"/>
@@ -150,7 +150,7 @@ under the License.
         <assert>
             <if-compare field="checkProductKeywordApprove2.statusId" operator="equals" value="KW_APPROVED"/>
         </assert>
-        
+
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeywordApprove3">
             <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="red"/>
@@ -159,7 +159,7 @@ under the License.
         <assert>
             <if-compare field="checkProductKeywordApprove3.statusId" operator="equals" value="KW_APPROVED"/>
         </assert>
-        
+
         <check-errors/>
     </simple-method>
 </simple-methods>

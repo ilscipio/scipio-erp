@@ -324,7 +324,7 @@ under the License.
             <set field="newUserLogin.partyId" from-field="tempMap.partyId"/>
             <create-value value-field="newUserLogin"/>
             <set-current-user-login value-field="newUserLogin"/>
-            
+
             <!-- On successful user creation, create password history record if configured -->
             <call-class-method method-name="getPropertyValue" class-name="org.ofbiz.base.util.UtilProperties" ret-field="autoPasswordChangeEnabled">
                 <string value="security"/>
@@ -414,14 +414,14 @@ under the License.
         <!-- Associated to Product Store -->
         <!-- SCIPIO: A user may not be associated to a store. (ie: organization owner) -->
         <if-not-empty field="parameters.PRODUCT_STORE_ID">
-	        <entity-one entity-name="UserLogin" value-field="userLogin">
-	            <field-map field-name="userLoginId" value="system"/>
-	        </entity-one>
-	        <set field="createProductStoreRoleMap.userLogin" from-field="userLogin"/>
-	        <set field="createProductStoreRoleMap.partyId" from-field="tempMap.partyId"/>
-	        <set field="createProductStoreRoleMap.roleTypeId" from-field="parameters.roleTypeId"/>
-	        <set field="createProductStoreRoleMap.productStoreId" from-field="parameters.PRODUCT_STORE_ID"/>
-	        <call-service service-name="createProductStoreRole" in-map-name="createProductStoreRoleMap"/>
+            <entity-one entity-name="UserLogin" value-field="userLogin">
+                <field-map field-name="userLoginId" value="system"/>
+            </entity-one>
+            <set field="createProductStoreRoleMap.userLogin" from-field="userLogin"/>
+            <set field="createProductStoreRoleMap.partyId" from-field="tempMap.partyId"/>
+            <set field="createProductStoreRoleMap.roleTypeId" from-field="parameters.roleTypeId"/>
+            <set field="createProductStoreRoleMap.productStoreId" from-field="parameters.PRODUCT_STORE_ID"/>
+            <call-service service-name="createProductStoreRole" in-map-name="createProductStoreRoleMap"/>
         </if-not-empty>
 
         <!--send New User Email Notification-->

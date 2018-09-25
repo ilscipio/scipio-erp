@@ -123,7 +123,7 @@ under the License.
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="uploadProductAdditionalViewImages" short-description="Method to upload multiple Additional View images for product">
         <set-service-fields service-name="addAdditionalViewForProduct" map="parameters" to-map="addAdditionalViewForProductMap"/>
         <if-not-empty field="parameters.additionalImageOne">

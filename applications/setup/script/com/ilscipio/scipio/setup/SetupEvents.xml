@@ -7,9 +7,9 @@
     to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance
     with the License.  You may obtain a copy of the License at
-    
+
     http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,7 +24,7 @@
     <!-- SCIPIO: New Setup Component Events
         NOTE: the original ofbizsetup methods are found (and still referenced) in:
           component://commonext/script/org/ofbiz/setup/SetupEvents.xml -->
-          
+
     <simple-method method-name="updateOrganization" short-description="Update Organization" login-required="true">
         <!-- verify fields -->
         <call-simple-method method-name="verifyOrganizationFields" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
@@ -33,7 +33,7 @@
         <set-service-fields service-name="updatePartyGroup" map="parameters" to-map="updatePartyGroupCtx"/>
         <call-service service-name="updatePartyGroup" in-map-name="updatePartyGroupCtx"/>
         <check-errors/>
-        
+
         <!-- SCIPIO: DEV NOTE: ALL ORG CODE BELOW WILL ONLY UPDATE IF A CONTACTMECHID WAS PASSED
             This is non-ideal because it means confusing error if user modified contact mechs using
             a different screen while he left ours open.
@@ -41,9 +41,9 @@
             we could instead cause the user to silently update the wrong contact mechs, which
             ends up being even more confusing or even corrupt a profile.
          -->
-        
+
         <set field="partyId" from-field="parameters.partyId"/>
-        
+
         <!-- billing address -->
         <if-compare field="parameters.USE_ADDRESS" operator="equals" value="false">
             <!-- address not used, do nothing -->
@@ -59,7 +59,7 @@
                 <check-errors/>
             </else>
         </if-compare>
-        
+
         <!-- home phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_HOME_CONTACTMECHID"/>
@@ -67,7 +67,7 @@
         <set field="cutn.contactCtx" from-field="homePhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- work phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_WORK_CONTACTMECHID"/>
@@ -75,7 +75,7 @@
         <set field="cutn.contactCtx" from-field="workPhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- fax phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_FAX_CONTACTMECHID"/>
@@ -83,7 +83,7 @@
         <set field="cutn.contactCtx" from-field="faxPhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- mobile phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_MOBILE_CONTACTMECHID"/>
@@ -91,7 +91,7 @@
         <set field="cutn.contactCtx" from-field="mobilePhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- email address -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_EMAIL_CONTACTMECHID"/>
@@ -169,7 +169,7 @@
                         <check-errors/>
                     </if-not-empty>
                 </iterate>
-                
+
                 <!-- Create -->
                 <set field="purposeCtx" value="" set-if-null="true"/>
                 <set field="cutn.contactCtx.partyId" from-field="partyId"/>
@@ -186,7 +186,7 @@
     </simple-method>
     <simple-method method-name="createUpdatePartyTelecomNumber">
         <!-- REQUIRES:
-            cutn.contactMechPurposeTypeId 
+            cutn.contactMechPurposeTypeId
             cutn.contactCtx
             cutn.contactMechId
             partyId
@@ -231,7 +231,7 @@
                         <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
                         <check-errors/>
                     </if-not-empty>
-                
+
                     <!-- Create -->
                     <set field="purposeCtx" value="" set-if-null="true"/>
                     <set field="cutn.contactCtx.partyId" from-field="partyId"/>
@@ -250,7 +250,7 @@
     </simple-method>
     <simple-method method-name="createUpdatePartyEmailAddress">
         <!-- REQUIRES:
-            cutn.contactMechPurposeTypeId 
+            cutn.contactMechPurposeTypeId
             cutn.contactCtx
             cutn.contactMechId
             partyId
@@ -292,7 +292,7 @@
                         <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
                         <check-errors/>
                     </if-not-empty>
-                
+
                     <!-- Create -->
                     <set field="purposeCtx" value="" set-if-null="true"/>
                     <set field="cutn.contactCtx.partyId" from-field="partyId"/>
@@ -329,46 +329,46 @@
                 </and>
             </condition>
             <then>
-	            <field-to-request request-name="userPartyId" field="tempMap.partyId" />	
-	            <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>
-	            <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
-	            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-	            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
-	            <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
-	            <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="tempMap.partyId" /> 
-	            <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
-	            <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />   
-            </then>         
+                <field-to-request request-name="userPartyId" field="tempMap.partyId" />
+                <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>
+                <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
+                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
+                <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
+                <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="tempMap.partyId" />
+                <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
+                <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />
+            </then>
          </if>
     </simple-method>
-    
+
     <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">
         <call-simple-method method-name="validateUser"/>
         <!-- see if we should continue now... -->
         <check-errors/>
-        
+
         <if>
             <condition>
-	            <and>
-	                <not><if-empty field="parameters.PASSWORD" /></not>
-	                <not><if-empty field="parameters.CONFIRM_PASSWORD" /></not>
-	            </and>
+                <and>
+                    <not><if-empty field="parameters.PASSWORD" /></not>
+                    <not><if-empty field="parameters.CONFIRM_PASSWORD" /></not>
+                </and>
             </condition>
             <then>
-		        <entity-one entity-name="UserLogin" value-field="userUserLogin">
-		            <field-map field-name="userLoginId" from-field="parameters.USERNAME"/>
-		        </entity-one>
-		        
-		        <set field="updatePasswordCtx.currentPassword" from-field="userUserLogin.currentPassword"/>
-		        <set field="updatePasswordCtx.userLoginId" from-field="userUserLogin.userLoginId"/>
-		        <set field="updatePasswordCtx.newPassword" from-field="parameters.PASSWORD"/>
-		        <set field="updatePasswordCtx.newPasswordVerify" from-field="parameters.CONFIRM_PASSWORD"/>
-		        <call-service service-name="updatePassword" in-map-name="updatePasswordCtx"></call-service>
-		        <check-errors/>
+                <entity-one entity-name="UserLogin" value-field="userUserLogin">
+                    <field-map field-name="userLoginId" from-field="parameters.USERNAME"/>
+                </entity-one>
+
+                <set field="updatePasswordCtx.currentPassword" from-field="userUserLogin.currentPassword"/>
+                <set field="updatePasswordCtx.userLoginId" from-field="userUserLogin.userLoginId"/>
+                <set field="updatePasswordCtx.newPassword" from-field="parameters.PASSWORD"/>
+                <set field="updatePasswordCtx.newPasswordVerify" from-field="parameters.CONFIRM_PASSWORD"/>
+                <call-service service-name="updatePassword" in-map-name="updatePasswordCtx"></call-service>
+                <check-errors/>
            </then>
         </if>
-        
-        
+
+
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <if>
             <condition>
@@ -378,46 +378,46 @@
                 </and>
             </condition>
             <then>
-                <!-- DEV NOTE: We only allow one role to be set in the setup User step. 
+                <!-- DEV NOTE: We only allow one role to be set in the setup User step.
                 Too much implication in UI if we want to allow more than one -->
-                <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>                
+                <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>
                 <set field="createNewPartyRelationShipAndRole" value="false" type="Boolean" />
                 <if-compare-field to-field="parameters.partyRelationshipTypeId" operator="not-equals" field="parameters.oldUserPartyRelationshipTypeId">
                     <set field="createNewPartyRelationShipAndRole" value="true" type="Boolean" />
                 </if-compare-field>
                 <if-compare-field to-field="parameters.roleTypeId" operator="not-equals" field="parameters.oldUserPartyRoleId">
-                    <set field="createNewPartyRelationShipAndRole" value="true" type="Boolean" />                          
-                </if-compare-field>                
-                <if-compare operator="equals" value="true" field="createNewPartyRelationShipAndRole" type="Boolean">                    
+                    <set field="createNewPartyRelationShipAndRole" value="true" type="Boolean" />
+                </if-compare-field>
+                <if-compare operator="equals" value="true" field="createNewPartyRelationShipAndRole" type="Boolean">
                     <set field="deletePartyRelationshipCtx.partyIdFrom" from-field="organizationPartyId" />
-                    <set field="deletePartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />                    
+                    <set field="deletePartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />
                     <set field="deletePartyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
                     <set field="deletePartyRelationshipCtx.roleTypeIdTo" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
-                    <set field="deletePartyRelationshipCtx.fromDate" from-field="parameters.oldUserPartyRelationshipFromDate" />                    
+                    <set field="deletePartyRelationshipCtx.fromDate" from-field="parameters.oldUserPartyRelationshipFromDate" />
                     <set field="deletePartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
-                    <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />                
-                    
+                    <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />
+
                     <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
                     <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
                     <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
-                    <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx" />        
-                    
+                    <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx" />
+
                     <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
-	                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-	                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
-	                <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
-	                <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="parameters.userPartyId" />	                 
-	                <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
-	                <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" /> 
-	                <check-errors/>
-                </if-compare> 
-            </then>         
+                    <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                    <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
+                    <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
+                    <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="parameters.userPartyId" />
+                    <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
+                    <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />
+                    <check-errors/>
+                </if-compare>
+            </then>
          </if>
-                    
+
         <set field="personMap.partyId" from-field="parameters.userPartyId" />
         <call-service service-name="updatePerson" in-map-name="personMap" />
         <check-errors/>
-        
+
         <set field="partyId" from-field="parameters.userPartyId"/>
         <!-- billing address -->
         <if-compare field="parameters.USE_ADDRESS" operator="equals" value="false">
@@ -434,7 +434,7 @@
                 <check-errors/>
             </else>
         </if-compare>
-        
+
         <!-- mobile phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_MOBILE_CONTACTMECHID"/>
@@ -442,7 +442,7 @@
         <set field="cutn.contactCtx" from-field="mobileMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- work phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_WORK_CONTACTMECHID"/>
@@ -450,7 +450,7 @@
         <set field="cutn.contactCtx" from-field="workPhoneMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- fax phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_FAX_CONTACTMECHID"/>
@@ -458,7 +458,7 @@
         <set field="cutn.contactCtx" from-field="faxMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- email address -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_EMAIL_CONTACTMECHID"/>
@@ -467,7 +467,7 @@
         <call-simple-method method-name="createUpdatePartyEmailAddress"/>
         <check-errors/>
     </simple-method>
-    
+
     <simple-method method-name="updateFacilityAndContactMech" short-description="update Facility and ContactMech">
         <set field="facilityId" from-field="parameters.facilityId"/>
         <call-simple-method method-name="verifyFacilityFields" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
@@ -476,7 +476,7 @@
         <set-service-fields service-name="updateFacility" map="parameters" to-map="updateFacilityCtx"/>
         <call-service service-name="updateFacility" in-map-name="updateFacilityCtx"/>
         <check-errors/>
-        
+
         <if-compare field="parameters.useFacilityAddr" operator="not-equals" value="false">
             <if-compare field="parameters.useInputFacilityAddr" operator="equals" value="true">
                 <set field="cutn" value="" set-if-null="true"/>
@@ -557,7 +557,7 @@
                         <check-errors/>
                     </if-not-empty>
                 </iterate>
-                
+
                 <!-- Create -->
                 <set field="purposeCtx" value="" set-if-null="true"/>
                 <set field="cutn.contactCtx.facilityId" from-field="facilityId"/>
@@ -576,13 +576,13 @@
     <simple-method method-name="createProductStoreWithDefaultSettingAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
         <call-simple-method method-name="createProductStoreWithDefaultSetting" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
         <check-errors/>
-        
+
         <request-to-field field="productStoreId" request-name="productStoreId"/>
         <set field="parameters.productStoreId" from-field="productStoreId"/>
-        
+
         <!-- SPECIAL: name conflict on visualThemeId field -->
         <set field="parameters.visualThemeId" from-field="parameters.webSite_visualThemeId"/>
-        
+
         <if-compare field="parameters.isCreateWebsite" operator="equals" value="Y">
             <call-simple-method method-name="createWebSite"/>
             <check-errors/>
@@ -591,15 +591,15 @@
             </else>
         </if-compare>
     </simple-method>
-    
+
     <simple-method method-name="updateProductStoreAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
         <set-service-fields service-name="updateProductStore" map="parameters" to-map="updateProductStoreCtx"/>
         <call-service service-name="updateProductStore" in-map-name="updateProductStoreCtx"/>
         <check-errors/>
-        
+
         <!-- SPECIAL: name conflict on visualThemeId field -->
         <set field="parameters.visualThemeId" from-field="parameters.webSite_visualThemeId"/>
-        
+
         <!-- TODO: REVIEW: isCreateWebsite switch delegates the create-vs-update decision to the form;
             although it's better to handle server-side, for setup it might be better to be explicit
             so the behavior is exactly what the user sees and we can't accidentally update the wrong record
@@ -619,7 +619,7 @@
             </else>
         </if-compare>
     </simple-method>
-    
+
     <!-- SCIPIO: based on component://commonext/script/org/ofbiz/setup/SetupEvents.xml#createDefaultWebsite -->
     <simple-method method-name="createWebSite" short-description="Create a WebSite, default webSiteId is ScipioWebStore.">
         <!-- SCIPIO: new check needed to make sure productStoreId was passed -->
@@ -629,7 +629,7 @@
             </add-error>
             <check-errors/>
         </if-empty>
-        
+
         <if-empty field="parameters.webSiteId">
             <property-to-field resource="scipiosetup" property="website.defaultInitialWebSiteId" field="defaultInitialWebSiteId"/>
             <if-not-empty field="defaultInitialWebSiteId">
@@ -667,25 +667,25 @@
         <!-- setup the party/person -->
         <call-map-processor in-map-name="parameters" out-map-name="personMap">
             <simple-map-processor name="person">
-                <process field="USER_TITLE">                    
+                <process field="USER_TITLE">
                     <copy to-field="personalTitle"/>
                 </process>
-                <process field="USER_FIRST_NAME">                    
+                <process field="USER_FIRST_NAME">
                     <copy to-field="firstName"/>
                     <not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty>
                 </process>
                 <process field="USER_LAST_NAME">
-                    
+
                     <copy to-field="lastName"/>
                     <not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty>
                 </process>
             </simple-map-processor>
-        </call-map-processor>        
+        </call-map-processor>
 
         <!-- setup the email -->
         <call-map-processor in-map-name="parameters" out-map-name="emailMap">
             <simple-map-processor name="email">
-                <process field="USER_EMAIL">                    
+                <process field="USER_EMAIL">
                     <copy to-field="emailAddress"/>
                     <validate-method method="isEmail"><fail-property resource="PartyUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/></validate-method>
                 </process>
@@ -694,13 +694,13 @@
         </call-map-processor>
 
         <!-- setup the Postal Address -->
-        <call-map-processor in-map-name="parameters" out-map-name="addressMap">        
+        <call-map-processor in-map-name="parameters" out-map-name="addressMap">
             <simple-map-processor name="address">
                 <process field="USER_ADDRESS1">
-                    <copy to-field="address1"/>                    
+                    <copy to-field="address1"/>
                     <not-empty><fail-property resource="PartyUiLabels" property="PartyAddressLine1MissingError"/></not-empty>
                 </process>
-                <process field="USER_ADDRESS2">                    
+                <process field="USER_ADDRESS2">
                     <copy to-field="address2" />
                 </process>
                 <process field="USER_CITY">
@@ -721,7 +721,7 @@
                 <process field="USER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
         </call-map-processor>
-       
+
         <!-- Setup the Work Phone -->
         <call-map-processor in-map-name="parameters" out-map-name="workPhoneMap">
             <simple-map-processor name="workPhone">
@@ -749,31 +749,31 @@
                 <process field="USER_MOBILE_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
         </call-map-processor>
-        
+
         <!-- Setup the Mobile Phone -->
         <call-map-processor in-map-name="parameters" out-map-name="faxMap">
             <simple-map-processor name="fax">
                 <process field="USER_FAX_COUNTRY"><copy to-field="countryCode"/></process>
                 <process field="USER_FAX_AREA"><copy to-field="areaCode"/></process>
                 <process field="USER_FAX_CONTACT">
-                    <copy to-field="contactNumber"/>                    
+                    <copy to-field="contactNumber"/>
                     <!-- <not-empty><fail-property resource="PartyUiLabels" property="PartyFaxPhoneContactNumberMissing"/></not-empty> -->
                 </process>
                 <process field="USER_FAX_EXT"><copy to-field="extension"/></process>
                 <process field="USER_FAX_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
-        </call-map-processor>        
+        </call-map-processor>
     </simple-method>
-    
+
     <simple-method method-name="importGlAccounts" short-description="Import GL Accounts from xls" login-required="true">
-    	<!-- TODO -->
+        <!-- TODO -->
     </simple-method>
-    
+
     <simple-method method-name="importDefaultGL" short-description="Import default GL Accounts" login-required="true">
         <!-- TODO -->
         <request-to-field field="predefinedGLAccountId" request-name="importPredefinedGL" />
         <log level="always" message="predefinedGLAccountId =======> ${predefinedGLAccountId}" />
-        
+
     </simple-method>
 
 </simple-methods>

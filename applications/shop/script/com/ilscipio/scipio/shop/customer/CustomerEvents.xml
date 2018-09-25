@@ -66,7 +66,7 @@ under the License.
                 <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-property resource="PartyUiLabels" property="PartyUserLoginMissingError"/></not-empty></process>
                 <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPasswordMissing"/></not-empty></process>
                 <process field="CONFIRM_PASSWORD">
-                    <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>                    
+                    <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>
                     <copy to-field="currentPasswordVerify"/>
                 </process>
                 <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
@@ -435,7 +435,7 @@ under the License.
                 <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams" include-user-login="true"/>
             </if-not-empty>
         </if-not-empty>
-        
+
         <!-- security for manage profile  -->
         <set field="securityParams.userLoginId" from-field="createdUserLogin.userLoginId"/>
         <set field="securityParams.groupId" value="ECOMMERCE_CUSTOMER"/>
@@ -451,7 +451,7 @@ under the License.
     <!-- ======== Anonymous Checkout Events ======== -->
     <!-- =========================================== -->
 
-    <!-- SCIPIO: This is currently a simple wrapper around processCustomerSettings. 
+    <!-- SCIPIO: This is currently a simple wrapper around processCustomerSettings.
         It will enable if the form contained an input createUpdateAnonUser with value "Y".
         It should work as long as there are no field name conflicts with the form being submitted
         (whose real target may be another event). -->
@@ -745,7 +745,7 @@ under the License.
             <!-- call create userLogin -->
             <!-- call reset password (to email a password) -->
         </if-not-empty>
-        
+
     </simple-method>
 
     <simple-method method-name="processShipSettings" short-description="Process Ship Settings; to be called as a Request Event" login-required="false">
@@ -1332,9 +1332,9 @@ under the License.
             <default-message property="ThankYouForContactingUs" resource="EcommerceUiLabels"></default-message>
         </call-service>
     </simple-method>
-    <simple-method method-name="fromSetSessionLocale" 
+    <simple-method method-name="fromSetSessionLocale"
       short-description="Add field to request for redirection after SetSessionLocale" login-required="false">
         <set field="fromSetSessionLocale" value="true"/>
         <field-to-request field="fromSetSessionLocale" request-name="fromSetSessionLocale"/>
-    </simple-method>    
+    </simple-method>
 </simple-methods>

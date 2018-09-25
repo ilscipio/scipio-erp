@@ -7,9 +7,9 @@
     to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance
     with the License.  You may obtain a copy of the License at
-    
+
     http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,7 +18,7 @@
     under the License.
 -->
 
-<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <simple-method method-name="getOrder" short-description="Get Orders" login-required="false">
@@ -56,7 +56,7 @@
                 </entity-condition>
             </if-not-empty>
         </if-compare>
-        
+
         <if-compare operator="equals" value="week" field="reportBy">
             <if-not-empty field="thruWeek">
                 <if-compare field="thruWeek" operator="less-equals" value="3" type="Integer">
@@ -127,7 +127,7 @@
                 </if-compare>
             </if-not-empty>
         </if-compare>
-        
+
         <if-compare operator="equals" value="month" field="reportBy">
             <if-not-empty field="thruMonth">
                 <if-compare field="thruMonth" operator="less-equals" value="3" type="Integer">
@@ -136,7 +136,7 @@
                             <number value="1"/>
                         </calcop>
                     </calculate>
-                    
+
                     <if-compare field="thruMonth" operator="equals" value="3" type="Integer">
                         <entity-condition entity-name="SalesOrderItemStarSchema" list="starschemas">
                             <condition-list combine="or">
@@ -171,7 +171,7 @@
                             <select-field field-name="countOrder"/>
                         </entity-condition>
                     </if-compare>
-                    
+
                     <if-compare field="thruMonth" operator="equals" value="2" type="Integer">
                         <entity-condition entity-name="SalesOrderItemStarSchema" list="starschemas">
                             <condition-list combine="or">
@@ -207,7 +207,7 @@
                             <select-field field-name="countOrder"/>
                         </entity-condition>
                     </if-compare>
-                    
+
                     <if-compare field="thruMonth" operator="equals" value="1" type="Integer">
                         <entity-condition entity-name="SalesOrderItemStarSchema" list="starschemas">
                             <condition-list combine="or">

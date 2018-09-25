@@ -773,32 +773,32 @@
                     <set value="DOCUMENT" field="partyContent.contentTypeId"/>
                     <set value="PERSONAL" field="partyContent.dataCategoryId"/>
                     <set value="CTNT_PUBLISHED" field="partyContent.statusId"/-->
-                    
+
                     <!--  First create the Content record -->
                     <make-value entity-name="Content" value-field="content"/>
                     <sequenced-id field="content.contentId" sequence-name="Content"/>
                     <set field="content.contentTypeId" value="DOCUMENT"/>
                     <set field="content.statusId" value="CTNT_PUBLISHED" />
                     <create-value value-field="content"/>
-                    
+
                     <!-- Create the DataResource record -->
                     <set field="dataResource.dataResourceTypeId" value="IMAGE_OBJECT"/>
                     <set field="dataResource.mimeTypeId" from-field="answers._${surveyQuestionAndAppl.surveyQuestionId}_contentType"/>
                     <set field="dataResource.objectInfo" from-field="answers._${surveyQuestionAndAppl.surveyQuestionId}_fileName"/>
-                    
+
                     <call-service service-name="createDataResource" in-map-name="dataResource">
                         <result-to-field result-name="dataResourceId"/>
                     </call-service>
-                    
+
                     <!-- Create the ImageDataResource record -->
                     <set field="imageDataResource.dataResourceId" from-field="dataResourceId"/>
                     <set field="imageDataResource.imageData" from-field="answers[&quot;${currentFieldName}&quot;]"/>
-                    <call-service service-name="createImageDataResource" in-map-name="imageDataResource"/>                    
-                    
+                    <call-service service-name="createImageDataResource" in-map-name="imageDataResource"/>
+
                     <!-- Associate the DataResource with the Content record -->
                     <set field="content.dataResourceId" from-field="dataResourceId"/>
                     <store-value value-field="content"/>
-                    
+
                     <set field="partyContent.partyId" from-field="parameters.partyId"/>
                     <set field="partyContent.contentId" from-field="content.contentId"/>
                     <set field="partyContent.partyContentTypeId" value="INTERNAL"/>

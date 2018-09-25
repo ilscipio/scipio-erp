@@ -32,7 +32,7 @@ under the License.
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
-        
+
         <set field="serviceInMap.userLogin" from-field="userLogin"/>
         <call-service service-name="createPaymentApplication" in-map-name="serviceInMap" include-user-login="false">
             <result-to-field result-name="amountApplied"/>
@@ -62,8 +62,8 @@ under the License.
         </call-class-method>
         <set field="zero" value="0" type="BigDecimal"/>
         <assert>
-            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>                        
-            <if-compare-field operator="equals" field="notAppliedInvoice" to-field="zero"/>                        
+            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>
+            <if-compare-field operator="equals" field="notAppliedInvoice" to-field="zero"/>
         </assert>
         <check-errors/>
         <remove-value value-field="paymentApplication"/>
@@ -78,7 +78,7 @@ under the License.
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
-        
+
         <set field="serviceInMap.userLogin" from-field="userLogin"/>
         <call-service service-name="createPaymentApplication" in-map-name="serviceInMap" include-user-login="false">
             <result-to-field result-name="amountApplied"/>
@@ -114,8 +114,8 @@ under the License.
         </call-class-method>
         <set field="zero" value="0" type="BigDecimal"/>
         <assert>
-            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>                        
-            <if-compare-field operator="equals" field="appliedBilling" to-field="paymentAmount"/>                        
+            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>
+            <if-compare-field operator="equals" field="appliedBilling" to-field="paymentAmount"/>
         </assert>
         <check-errors/>
         <remove-value value-field="paymentApplication"/>
@@ -129,7 +129,7 @@ under the License.
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
-        
+
         <set field="serviceInMap.userLogin" from-field="userLogin"/>
         <call-service service-name="createPaymentApplication" in-map-name="serviceInMap" include-user-login="false">
             <result-to-field result-name="amountApplied"/>
@@ -163,8 +163,8 @@ under the License.
         </call-class-method>
         <set field="zero" value="0" type="BigDecimal"/>
         <assert>
-            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>                        
-            <if-compare-field operator="equals" field="notAppliedToPayment" to-field="zero"/>                        
+            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>
+            <if-compare-field operator="equals" field="notAppliedToPayment" to-field="zero"/>
         </assert>
         <check-errors/>
         <remove-value value-field="paymentApplication"/>
@@ -177,7 +177,7 @@ under the License.
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
-        
+
         <set field="serviceInMap.userLogin" from-field="userLogin"/>
         <call-service service-name="createPaymentApplication" in-map-name="serviceInMap" include-user-login="false">
             <result-to-field result-name="amountApplied"/>
@@ -203,7 +203,7 @@ under the License.
         </call-class-method>
         <set field="zero" value="0" type="BigDecimal"/>
         <assert>
-            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>                        
+            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>
         </assert>
         <check-errors/>
         <remove-value value-field="paymentApplication"/>

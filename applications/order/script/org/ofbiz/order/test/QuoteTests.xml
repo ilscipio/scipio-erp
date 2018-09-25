@@ -47,8 +47,8 @@ under the License.
         <assert><not><if-empty field="quoteWorkEffort"/></not></assert>
         <check-errors/>
     </simple-method>
-    
-    <simple-method method-name="testCreateQuoteWorkEffortFail" 
+
+    <simple-method method-name="testCreateQuoteWorkEffortFail"
         short-description="Test case for unsuccessfully creating a QuoteWorkEffort record by attempting to use a quoteId and workEffortId that has already been used in an existing QuoteWorkEffortRecord." login-required="false">
 
         <!-- Use to confirm nothing has changed at the end of the test -->
@@ -61,9 +61,9 @@ under the License.
         <set field="serviceCtx.quoteId" value="9000"/>
         <set field="serviceCtx.workEffortId" value="9007"/>
 
-        <!-- Execute the service, note break-on-error is false so that the test itself doesn't 
+        <!-- Execute the service, note break-on-error is false so that the test itself doesn't
              fail and we also need a separate transaction so our lookup below doesn't fail due to the rollback -->
-        <call-service service-name="createQuoteWorkEffort" in-map-name="serviceCtx" 
+        <call-service service-name="createQuoteWorkEffort" in-map-name="serviceCtx"
             break-on-error="false" require-new-transaction="true">
             <results-to-map map-name="serviceResult"/>
         </call-service>

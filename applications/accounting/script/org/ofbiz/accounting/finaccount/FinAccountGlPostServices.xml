@@ -49,7 +49,7 @@ under the License.
         <set field="quickCreateAcctgTransAndEntries.glFiscalTypeId" value="ACTUAL"/>
         <set field="quickCreateAcctgTransAndEntries.partyId" from-field="finAccountTrans.partyId"/>
         <set field="quickCreateAcctgTransAndEntries.isPosted" value="N"/>
-        
+
         <!-- set values for AcctgTransEntry -->
         <set field="quickCreateAcctgTransAndEntries.organizationPartyId" from-field="finAccount.organizationPartyId"/>
         <set field="quickCreateAcctgTransAndEntries.amount" from-field="finAccountTrans.amount"/>

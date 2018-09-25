@@ -145,7 +145,7 @@ under the License.
         <assert>
             <if-empty field="invoices"/>
         </assert>
-        
+
         <check-errors/>
     </simple-method>
     <simple-method method-name="testInvoicePerShipmentSetTrue" short-description="Test Invoice Per Shipment Set True" login-required="false">

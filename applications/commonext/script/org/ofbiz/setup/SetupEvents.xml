@@ -7,9 +7,9 @@
     to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance
     with the License.  You may obtain a copy of the License at
-    
+
     http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -66,12 +66,12 @@
         <set field="faxPhoneContext.partyId" from-field="tempMap.partyId"/>
         <set field="mobilePhoneContext.partyId" from-field="tempMap.partyId"/>
         <set field="emailContext.partyId" from-field="tempMap.partyId"/>
-        
+
         <call-service service-name="createPartyRole" in-map-name="partyRoleContext"/>
         <!-- add Carrier roletype  -->
         <set field="partyRoleContext.roleTypeId" value="CARRIER"/>
         <call-service service-name="createPartyRole" in-map-name="partyRoleContext"/>
-        
+
         <!-- billing address -->
         <if-compare field="parameters.USE_ADDRESS" operator="equals" value="false">
             <!-- address not used, do nothing -->
@@ -139,7 +139,7 @@
 
         <!-- General Ledger Setup for the new organization -->
         <!--<call-simple-method method-name="setupDefaultGeneralLedger"/>-->
-        
+
         <!-- create CustomTimePeriod within one years -->
         <now-timestamp field="nowTimestamp"/>
         <set field="endMonth" value="12"/>
@@ -172,7 +172,7 @@
                 <set field="newPerson.partyId" from-field="userLoginCtx.userLoginId"/>
                 <create-value value-field="newPerson"/>
                 <clear-field field="newPerson"/>
-                
+
                 <set field="userLoginCtx.partyId" from-field="userLoginCtx.userLoginId"/>
                 <store-value value-field="userLoginCtx"/>
             </if-empty>
@@ -358,11 +358,11 @@
         <!-- SCIPIO: delegated for reuse -->
         <call-simple-method method-name="verifyFacilityFields"/>
         <check-errors/>
-        
+
         <make-value entity-name="Facility" value-field="newEntity"/>
         <set field="defaultDaysToShip" from-field="parameters.defaultDaysToShip" type="Long"/>
         <clear-field field="parameters.defaultDaysToShip"/>
-        
+
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set field="newEntity.defaultDaysToShip" from-field="defaultDaysToShip" type="Long"/>
 
@@ -405,7 +405,7 @@
                 </else>
             </if-compare>
         </if-compare>
-        
+
         <sequenced-id sequence-name="ContactMech" field="addressContext.contactMechId"/>
         <call-service service-name="createPostalAddress" in-map-name="addressContext">
             <result-to-field result-name="contactMechId" field="contactMechId"/>
@@ -424,7 +424,7 @@
         <set field="addressPurposeContext.contactMechPurposeTypeId" value="SHIP_ORIG_LOCATION"/>
         <call-service service-name="createFacilityContactMechPurpose" in-map-name="addressPurposeContext"/>
     </simple-method>
-    
+
     <!-- SCIPIO: new -->
     <simple-method method-name="verifyFacilityFields" short-description="SCIPIO: verify facility fields">
         <if-empty field="parameters.facilityName">
@@ -432,7 +432,7 @@
                 <fail-property resource="SetupUiLabels" property="SetupFacilityNameIsMissing"/>
             </add-error>
         </if-empty>
-    
+
         <if-compare field="parameters.useFacilityAddr" operator="not-equals" value="false">
             <if-compare field="parameters.useInputFacilityAddr" operator="equals" value="true">
                 <!-- NOTE: logic copied and modified from createOrganization -->
@@ -523,7 +523,7 @@
 
         <field-to-request field="parameters.partyId" request-name="partyId"/>
         <set field="organizationPartyId" from-field="parameters.partyId"/>
- 
+
         <!-- Create default data of ProductStoreShipmentMeth, ShipmentMethodType , CarrierShipmentMethod, and ShipmentCostEstimate. -->
         <entity-condition entity-name="ShipmentMethodType" list="shipmentMethodTypeList"/>
         <if-empty field="shipmentMethodTypeList">
@@ -554,7 +554,7 @@
         <call-service service-name="entityImport" in-map-name="importFileCtx"/>
         <check-errors/>
     </simple-method>
-    
+
     <!-- SCIPIO: 2017-10-05: new productStoreShipMethIdList reservation handling for ProductStoreData.xml -->
     <simple-method method-name="createProductStoreShipMethIdRange" short-description="creates a ProductStoreShipmentMeth ID range list in productStoreShipMethIdList">
         <!-- SCIPIO: 2017-10-05: NEW WORKAROUND for productStoreShipMethId uniqueness issue;
@@ -566,10 +566,10 @@
             is risky, see warning below.
             If there are no ProductStoreShipmentMeth in the system yet, then we use 9000 instead
             of generating, for simplicity for simple setups. -->
-        
+
         <property-to-field resource="scipiosetup" property="store.productStoreData.productStoreShipMethId.bankSize" field="pssmBankSize" default="100"/>
         <set field="pssmBankSize" type="Integer" from-field="pssmBankSize"/>
-        
+
         <set field="productStoreShipMethIdBase" type="Long" value=""/>
         <if-not-empty field="parameters.productStoreShipMethIdBase">
             <set field="productStoreShipMethIdBase" type="Long" from-field="parameters.productStoreShipMethIdBase"/>
@@ -588,7 +588,7 @@
         <check-errors/>
         <if-not-empty field="productStoreShipMethIdBase">
             <log level="info" message="ProductStoreData.xml: Using fixed productStoreShipMethId range starting from: ${groovy:productStoreShipMethIdBase+''}"/>
-            <create-object class-name="org.ofbiz.entity.util.EntitySeqIdList$FixedEntitySeqIdStringList" 
+            <create-object class-name="org.ofbiz.entity.util.EntitySeqIdList$FixedEntitySeqIdStringList"
                 field="productStoreShipMethIdList">
                 <field field="productStoreShipMethIdBase" type="Object"/>
                 <field field="pssmBankSize" type="int"/>
@@ -619,7 +619,7 @@
         <set field="newProductStoreCatalog.sequenceNum" from-field="parameters.sequenceNum"/><!-- SCIPIO: 2017-09-28: support create with sequence num -->
         <call-service service-name="createProductStoreCatalog" in-map-name="newProductStoreCatalog"/>
     </simple-method>
-    
+
     <simple-method method-name="createProductCategoryAndAddToProdCatalog" short-description="addProductCategoryToProdCatalog">
         <!-- Create Parent ProductCategory -->
         <set field="createPrimaryProductCategoryCtx.productCategoryId" value="${parameters.prodCatalogId}_ROOT"/>
@@ -651,7 +651,7 @@
         <set field="addPromoCatToProdCatalogCtx.prodCatalogCategoryTypeId" value="PCCT_PROMOTIONS"/>
         <set field="addPromoCatToProdCatalogCtx.sequenceNum" value="2" type="Long"/>
         <call-service service-name="addProductCategoryToProdCatalog" in-map-name="addPromoCatToProdCatalogCtx"/>
-        
+
         <!-- Create ProductCategory & ProductCategoryRollup -->
         <set-service-fields service-name="createProductCategory" map="parameters" to-map="createProductCategoryCtx"/>
         <call-service service-name="createProductCategory" in-map-name="createProductCategoryCtx">
@@ -669,7 +669,7 @@
         </if-empty>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="createUpdateProductInCategory" short-description="Create/Update a Product in a Category along with special information such as features">
         <set value="createUpdateProductInCategory" field="callingMethodName"/>
         <if-compare field="parameters.productId" operator="equals" value="${parameters.productCategoryId}">
@@ -682,12 +682,12 @@
         </if-empty>
         <call-simple-method method-name="checkCategoryRelatedPermission" xml-resource="component://product/script/org/ofbiz/product/category/CategoryServices.xml"/>
         <check-errors/>
-        
+
         <if-empty field="parameters.currencyUomId">
             <!-- default to USD for lack of a better alternative, for now anyway... -->
             <set field="parameters.currencyUomId" value="USD"/>
         </if-empty>
-        
+
         <if-empty field="product">
             <!-- create Product -->
             <set-service-fields service-name="createProduct" map="parameters" to-map="callCreateProductMap"/>
@@ -697,16 +697,16 @@
             <call-service service-name="createProduct" in-map-name="callCreateProductMap">
                 <result-to-field result-name="productId"/>
             </call-service>
-            
+
             <!-- create ProductCategoryMember -->
             <set field="callCreateProductCategoryMemberMap.productId" from-field="productId"/>
             <set field="callCreateProductCategoryMemberMap.productCategoryId" from-field="parameters.productCategoryId"/>
             <call-service service-name="addProductToCategory" in-map-name="callCreateProductCategoryMemberMap"/>
-            
+
             <set field="callCreateProductCategoryMemberMap.productId" from-field="productId"/>
             <set field="callCreateProductCategoryMemberMap.productCategoryId" from-field="parameters.promoCat"/>
             <call-service service-name="addProductToCategory" in-map-name="callCreateProductCategoryMemberMap"/>
-            
+
             <!-- create ProductFeatureAppl(s) -->
             <set field="hasSelectableFeatures" value="N"/>
             <iterate-map map="parameters.productFeatureIdByType" key="productFeatureTypeId" value="productFeatureId">
@@ -723,7 +723,7 @@
                 <call-service service-name="applyFeatureToProduct" in-map-name="createPfaMap"/>
                 <clear-field field="createPfaMap"/>
             </iterate-map>
-            
+
             <!-- set isVirtual based on hasSelectableFeatures -->
             <if-compare field="hasSelectableFeatures" operator="equals" value="Y">
                 <entity-one entity-name="Product" value-field="newProduct"/>
@@ -738,7 +738,7 @@
             </else>
         </if-empty>
         <field-to-result field="productId"/>
-        
+
         <!-- create/update defaultPrice and averageCost ProductPrice -->
         <if-not-empty field="parameters.defaultPrice">
             <entity-condition entity-name="ProductPrice" list="defaultPriceValues" filter-by-date="true">
@@ -756,7 +756,7 @@
                 <set field="createDefaultPriceMap.productPriceTypeId" value="DEFAULT_PRICE"/>
                 <set field="createDefaultPriceMap.productPricePurposeId" value="PURCHASE"/>
                 <call-service service-name="createProductPrice" in-map-name="createDefaultPriceMap"/>
-                
+
                 <else>
                     <first-from-list list="defaultPriceValues" entry="defaultPrice"/>
                     <set field="updateDefaultPriceMap.productId" from-field="productId"/>
@@ -769,9 +769,9 @@
                     <call-service service-name="updateProductPrice" in-map-name="updateDefaultPriceMap"/>
                 </else>
             </if-empty>
-            
+
         </if-not-empty>
-        
+
         <if-not-empty field="parameters.averageCost">
             <entity-condition entity-name="ProductPrice" list="averageCostValues" filter-by-date="true">
                 <condition-list>
@@ -788,7 +788,7 @@
                 <set field="createAverageCostMap.productPriceTypeId" value="AVERAGE_COST"/>
                 <set field="createAverageCostMap.productPricePurposeId" value="PURCHASE"/>
                 <call-service service-name="createProductPrice" in-map-name="createAverageCostMap"/>
-                
+
                 <else>
                     <first-from-list list="averageCostValues" entry="averageCost"/>
                     <set field="updateAverageCostMap.productId" from-field="productId"/>

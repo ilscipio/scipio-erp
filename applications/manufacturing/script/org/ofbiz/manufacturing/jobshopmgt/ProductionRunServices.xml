@@ -21,23 +21,23 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-    
-    <simple-method method-name="createProductionRunPartyAssign" 
+
+    <simple-method method-name="createProductionRunPartyAssign"
         short-description="Assign the selected party to the production run or task">
-        
+
         <set field="parameters.statusId" value="PRTYASGN_ASSIGNED"/>
-        
+
         <if-empty field="parameters.workEffortId">
             <set field="parameters.workEffortId" from-field="parameters.productionRunId"/>
         </if-empty>
-        
+
         <field-to-result field="parameters.productionRunId" result-name="productionRunId" />
         <call-simple-method method-name="assignPartyToWorkEffort"
             xml-resource="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" />
-        
+
     </simple-method>
     <simple-method method-name="createProductionRunAssoc" short-description="Associate the production run to another production run">
-        
+
         <if-compare field="parameters.workFlowSequenceTypeId" operator="equals" value="WF_PREDECESSOR">
             <set field="ctx.workEffortIdFrom" from-field="parameters.productionRunIdTo"/>
             <set field="ctx.workEffortIdTo" from-field="parameters.productionRunId"/>
@@ -46,11 +46,11 @@ under the License.
             <set field="ctx.workEffortIdFrom" from-field="parameters.productionRunId"/>
             <set field="ctx.workEffortIdTo" from-field="parameters.productionRunIdTo"/>
         </if-compare>
-        
+
         <set field="ctx.workEffortAssocTypeId" value="WORK_EFF_PRECEDENCY"/>
         <call-service service-name="createWorkEffortAssoc" in-map-name="ctx"/>
     </simple-method>
-    
+
     <!-- Warehouse -->
     <simple-method method-name="issueProductionRunTask" short-description="Issues the Inventory for a Production Run Task" login-required="false">
         <entity-one entity-name="WorkEffort" value-field="workEffort"/>
@@ -134,13 +134,13 @@ under the License.
             <field-to-list field="orderByString" list="orderByList"/>
             <set from-field="productId" field="lookupFieldMap.productId"/>
             <set from-field="workEffort.facilityId" field="lookupFieldMap.facilityId"/>
-            
+
             <!-- if lotId is passed, failIfItemsAreNotAvailable is set to automatically set to "Y" -->
             <if-not-empty field="parameters.lotId">
                 <set field="parameters.failIfItemsAreNotAvailable" value="Y"/>
                 <set field="lookupFieldMap.lotId" from-field="parameters.lotId"/>
             </if-not-empty>
-            
+
             <!-- if locationSeqId is passed, then only the inventory items in the location are considered -->
             <if-not-empty field="parameters.locationSeqId">
                 <set from-field="parameters.locationSeqId" field="lookupFieldMap.locationSeqId"/>

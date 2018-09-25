@@ -91,7 +91,7 @@ under the License.
             </iterate>
         </if-has-permission>
     </simple-method>
-    <simple-method method-name="updateProduct" short-description="Update an Product">
+    <simple-method method-name="updateProduct" short-description="Update a Product">
         <set value="updateProduct" field="callingMethodName"/>
         <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
@@ -167,6 +167,12 @@ under the License.
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
+        <entity-one entity-name="Product" value-field="dummyProduct">
+            <field-map field-name="productId" from-field="parameters.productId"/>
+        </entity-one>
+        <if-not-empty field="dummyProduct">
+            <add-error ><fail-property resource="CommonErrorUiLabels" property="CommonErrorDuplicateKey" /></add-error>
+        </if-not-empty>
         <check-errors/>
 
         <!-- look up the old product and clone it -->
@@ -642,7 +648,7 @@ under the License.
         call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
     <simple-method method-name="checkProductRelatedPermission" short-description="Check Product Related Permission">
         <if-empty field="callingMethodName">
-            <set value="this operation" field="callingMethodName"/>
+            <property-to-field resource="CommonUiLabels" property="CommonPermissionThisOperation" field="callingMethodName"/>
         </if-empty>
         <if-empty field="checkAction">
             <set value="UPDATE" field="checkAction"/>
@@ -793,7 +799,7 @@ under the License.
     </simple-method>
 
     <!-- ProductCategoryGlAccount methods -->
-    <simple-method method-name="createProductCategoryGlAccount" short-description="Create an ProductCategoryGlAccount">
+    <simple-method method-name="createProductCategoryGlAccount" short-description="Create a ProductCategoryGlAccount">
         <set value="createProductCategoryGlAccount" field="callingMethodName"/>
         <set value="CREATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
@@ -805,7 +811,7 @@ under the License.
         <create-value value-field="newEntity"/>
     </simple-method>
 
-    <simple-method method-name="updateProductCategoryGlAccount" short-description="Update an ProductCategoryGlAccount">
+    <simple-method method-name="updateProductCategoryGlAccount" short-description="Update a ProductCategoryGlAccount">
         <set value="updateProductCategoryGlAccount" field="callingMethodName"/>
         <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
@@ -816,7 +822,7 @@ under the License.
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
-    <simple-method method-name="deleteProductCategoryGlAccount" short-description="Delete an ProductCategoryGlAccount">
+    <simple-method method-name="deleteProductCategoryGlAccount" short-description="Delete a ProductCategoryGlAccount">
         <set value="deleteProductCategoryGlAccount" field="callingMethodName"/>
         <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>

@@ -60,7 +60,7 @@ public class LocalServletContainer {
             Map<String, Object> reqAttribs, Map<String, String[]> headers, Map<String, String[]> reqParams) throws MalformedURLException {
         this.webappInfo = webappInfo;
 
-        Map<String, String> scInitParams = new HashMap<>(webappInfo.getWebXml().getContextParams());
+        Map<String, String> scInitParams = new HashMap<>(webappInfo.getContextParams());
         LocalServletContext servletContext = new LocalServletContext(this, null, scInitParams);
         this.servletContext = servletContext;
 

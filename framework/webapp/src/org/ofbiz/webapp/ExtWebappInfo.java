@@ -86,6 +86,8 @@ public class ExtWebappInfo implements Serializable {
 
     private final boolean urlManualInterWebappFilter;
 
+    private final Map<String, String> contextParams; // Added 2018-09-25
+
     /**
      * Main constructor.
      */
@@ -97,6 +99,8 @@ public class ExtWebappInfo implements Serializable {
         this.webSiteId = webSiteId;
         this.webappInfo = webappInfo;
         this.webXml = webXml;
+        // 2018-09-25: we need to cache the results; note that the returned map is already unmodifiable
+        this.contextParams = WebAppUtil.getWebappContextParams(this.webappInfo, this.webXml);
         try {
             this.fullControlPath = WebAppUtil.getControlServletPath(webappInfo, true);
             if (this.fullControlPath == null) {
@@ -337,6 +341,16 @@ public class ExtWebappInfo implements Serializable {
         return webappInfo;
     }
 
+    /**
+     * Gets the Tomcat WebXml descriptor for the webapp.
+     * WARN: Avoid using WebXml directly; use helper methods on this class
+     * and in other classes that accept a WebXml instead!
+     * <p>
+     * WARN: 2018-09-25: If you need to get the context params statically,
+     * <strong>always</strong> use {@link #getContextParams()} on this class instead!
+     * This descriptor may not include context-params added from other
+     * sources such as ofbiz-component.xml.
+     */
     public WebXml getWebXml() {
         return webXml;
     }
@@ -424,8 +438,12 @@ public class ExtWebappInfo implements Serializable {
         }
     }
 
+    /**
+     * Returns the static context-params defined in web.xml plus those injected from ofbiz-component.xml
+     * webapp element init-param definitions.
+     */
     public Map<String, String> getContextParams() {
-        return webXml.getContextParams();
+        return contextParams;
     }
 
     /**

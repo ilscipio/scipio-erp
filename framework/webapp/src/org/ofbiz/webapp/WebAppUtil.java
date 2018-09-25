@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -372,7 +373,11 @@ public final class WebAppUtil {
 
     /**
      * Returns a <code>WebXml</code> instance that models the web application's <code>web.xml</code> file.
-     *
+     * <p>
+     * SCIPIO: WARN: 2018-09-25: If you intended to use the WebXml to read the context-params, you should
+     * use {@link #getWebappContextParams(WebappInfo)} instead of this method, because the raw WebXml
+     * descriptor may miss extra context-params from other sources. In fact, for superior caching,
+     * you should like go through {@link ExtWebappInfo#getContextParams()}.
      * @param webAppInfo
      * @throws IOException
      * @throws SAXException
@@ -433,54 +438,79 @@ public final class WebAppUtil {
     }
 
     /**
+     * SCIPIO: Returns the web.xml context-params for webappInfo, and tries to include
+     * the init-params defined in ofbiz-component.xml as well. This is a best-effort operation,
+     * because it is technically possible for custom code to add context-params from other sources unexpectedly.
+     * <p>
+     * NOTE: 2018-09-25: It is recommended to use {@link ExtWebappInfo#getContextParams()} instead of this, for caching reasons.
+     * <p>
+     * Added 2018-09-25 (refactored).
+     *
+     * @return the combined webapp context-params, unmodifiable
+     */
+    public static Map<String, String> getWebappContextParams(WebappInfo webappInfo, WebXml webXml) { // SCIPIO
+        Map<String, String> contextParams = webXml.getContextParams();
+        if (contextParams != null && !contextParams.isEmpty()) {
+            if (webappInfo.getInitParameters().isEmpty()) {
+                return Collections.unmodifiableMap(contextParams);
+            }
+            contextParams = new HashMap<>(contextParams);
+            contextParams.putAll(webappInfo.getInitParameters());
+            return Collections.unmodifiableMap(contextParams);
+        }
+        return webappInfo.getInitParameters(); // never empty, already unmodifiable
+    }
+
+    /**
      * SCIPIO: Returns the web.xml context-params for webappInfo.
+     * <p>
+     * NOTE: 2018-09-25: It is recommended to use {@link ExtWebappInfo#getContextParams()} instead of this, for caching reasons.
      */
     public static Map<String, String> getWebappContextParams(WebappInfo webappInfo) {
-        WebXml webXml;
         try {
-            webXml = WebAppUtil.getWebXml(webappInfo);
-            Map<String, String> contextParams = webXml.getContextParams();
-            return contextParams != null ? contextParams : Collections.<String, String> emptyMap();
+            return getWebappContextParams(webappInfo, WebAppUtil.getWebXml(webappInfo));
         } catch (Exception e) {
-            throw new IllegalArgumentException("Web app xml definition for webapp with context root '" + webappInfo.contextRoot + "' not found.", e);
+            throw new IllegalArgumentException("Could not get webapp context-params: Web app xml definition for webapp " + webappInfo + " not found.", e);
         }
     }
 
     /**
      * SCIPIO: Returns the web.xml context-params for webappInfo, with no exceptions thrown if anything missing.
+     * <p>
+     * NOTE: 2018-09-25: It is recommended to use {@link ExtWebappInfo#getContextParams()} instead of this, for caching reasons.
      */
     public static Map<String, String> getWebappContextParamsSafe(WebappInfo webappInfo) {
         try {
             return getWebappContextParams(webappInfo);
         } catch (Exception e) {
-            return Collections.<String, String> emptyMap();
+            return Collections.<String, String>emptyMap();
         }
     }
 
     /**
      * SCIPIO: Returns the web.xml context-params for webSiteId.
+     * <p>
+     * NOTE: 2018-09-25: It is recommended to use {@link ExtWebappInfo#getContextParams()} instead of this, for caching reasons.
      */
     public static Map<String, String> getWebappContextParams(String webSiteId) {
-        WebappInfo webappInfo;
-        WebXml webXml;
         try {
-            webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-            webXml = WebAppUtil.getWebXml(webappInfo);
-            Map<String, String> contextParams = webXml.getContextParams();
-            return contextParams != null ? contextParams : Collections.<String, String> emptyMap();
+            WebappInfo webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+            return getWebappContextParams(webappInfo, WebAppUtil.getWebXml(webappInfo));
         } catch (Exception e) {
-            throw new IllegalArgumentException("Web app xml definition for webSiteId '" + webSiteId + "' not found.", e);
+            throw new IllegalArgumentException("Could not get webapp context-params: Web app xml definition for webSiteId '" + webSiteId + "' not found.", e);
         }
     }
 
     /**
      * SCIPIO: Returns the web.xml context-params for webSiteId, with no exceptions thrown if anything missing.
+     * <p>
+     * NOTE: 2018-09-25: It is recommended to use {@link ExtWebappInfo#getContextParams()} instead of this, for caching reasons.
      */
     public static Map<String, String> getWebappContextParamsSafe(String webSiteId) {
         try {
             return getWebappContextParams(webSiteId);
         } catch (Exception e) {
-            return Collections.<String, String> emptyMap();
+            return Collections.<String, String>emptyMap();
         }
     }
 

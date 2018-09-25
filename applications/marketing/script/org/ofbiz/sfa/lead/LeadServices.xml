@@ -185,7 +185,7 @@
 
         <set field="partyRoleCtx.partyId" from-field="partyGroupId"/>
         <set field="partyRoleCtx.roleTypeId" value="ACCOUNT"/>
-        <call-service service-name="createPartyRole" in-map-name="partyRoleCtx"/>
+        <call-service service-name="ensurePartyRole" in-map-name="partyRoleCtx"/>
 
         <set field="partyRelationshipCtx.partyIdFrom" from-field="userLogin.partyId"/>
         <set field="partyRelationshipCtx.partyIdTo" from-field="partyGroupId"/>

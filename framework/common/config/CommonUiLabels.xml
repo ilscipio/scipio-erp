@@ -5802,6 +5802,7 @@
     </property>
     <property key="CommonIdGeneratedIfEmpty">
         <value xml:lang="ar">يتم خلق دليل تسلسلي اذا ترك فارغا</value>
+        <value xml:lang="de">ID-Sequenz wird generiert, wenn leer</value>
         <value xml:lang="en">ID sequence will be generated if empty</value>
         <value xml:lang="zh">如果空着，会自动生成序号</value>
     </property>

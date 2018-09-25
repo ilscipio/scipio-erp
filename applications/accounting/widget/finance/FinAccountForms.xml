@@ -150,7 +150,7 @@ under the License.
             </entity-condition>
         </actions>
         <row-actions>
-            <entity-one value-field="party" entity-name="PartyNameView"/>
+            <entity-one entity-name="PartyNameView" value-field="party"/>
         </row-actions>
         <field name="finAccountId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">

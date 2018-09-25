@@ -221,7 +221,7 @@ under the License.
         <set field="parameters.mainAction" value="UPDATE"/>
         <call-simple-method method-name="workEffortGenericPermission"/>
         <check-errors/>
-        <if-compare-field operator="not-equals" field="parameters.partyId" to-field="userLogin.partyId">
+        <if-compare-field field="parameters.partyId" operator="not-equals" to-field="userLogin.partyId">
             <property-to-field resource="WorkEffortUiLabels" property="WorkEffortTimesheetNotInRolePermissionError" field="failMessage"/>
             <set field="hasPermission" type="Boolean" value="false"/>
             <field-to-result field="hasPermission"/>
@@ -268,7 +268,7 @@ under the License.
                 <filter-list-by-date list="rolePartyGroups"/>
                 <if-not-empty field="rolePartyGroups">
                     <!-- Check to see if User is member of any of these Party groups -->
-                    <iterate entry="rolePartyGroup" list="rolePartyGroups">
+                    <iterate list="rolePartyGroups" entry="rolePartyGroup">
                         <!-- check current party is the member of party group-->
                         <!-- PartyGroup partyId-->
                         <set from-field="rolePartyGroup.partyId" field="lookupPartyRoleMap.partyIdFrom"/>
@@ -319,7 +319,7 @@ under the License.
             <then>
                 <set field="hasPermission" value="false" type="Boolean"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
-                <entity-one value-field="workEffort" entity-name="WorkEffort"/>
+                <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <if-not-empty field="workEffort">
                     <entity-condition list="partyAssignments" entity-name="WorkEffortPartyAssignment" filter-by-date="true">
                         <condition-list combine="and">

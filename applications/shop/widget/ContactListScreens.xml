@@ -41,8 +41,8 @@ under the License.
         <section>
             <actions>
                 <service service-name="optOutOfListFromCommEvent" result-map="optOutResult"/>                
-                <entity-one value-field="contactList" entity-name="ContactList">
-                    <field-map from-field="optOutResult.contactListId" field-name="contactListId"/>                    
+                <entity-one entity-name="ContactList" value-field="contactList">
+                    <field-map field-name="contactListId" from-field="optOutResult.contactListId"/>                    
                 </entity-one>
                 <set field="contactListId" from-field="contactList.contactListId"/>
                 <set field="screenName" from-field="contactList.optOutScreen" default-value="component://shop/widget/ContactListScreens.xml#DefaultOptOutScreen"/>

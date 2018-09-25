@@ -291,7 +291,7 @@ under the License.
 
         <!-- destination Portlet -->
         <if-compare field="parameters.mode" operator="contains" value="DRAGDROPBEFORE">
-            <entity-one value-field="destiPp" entity-name="PortalPagePortlet">
+            <entity-one entity-name="PortalPagePortlet" value-field="destiPp">
                 <field-map field-name="portalPageId" from-field="parameters.d_portalPageId"/>
                 <field-map field-name="portalPortletId" from-field="parameters.d_portalPortletId"/>
                 <field-map field-name="portletSeqId" from-field="parameters.d_portletSeqId"/>
@@ -311,7 +311,7 @@ under the License.
         </if-compare>
 
         <if-compare field="parameters.mode" operator="equals" value="DRAGDROPAFTER">
-            <entity-one value-field="destiPp" entity-name="PortalPagePortlet">
+            <entity-one entity-name="PortalPagePortlet" value-field="destiPp">
                 <field-map field-name="portalPageId" from-field="parameters.d_portalPageId"/>
                 <field-map field-name="portalPortletId" from-field="parameters.d_portalPortletId"/>
                 <field-map field-name="portletSeqId" from-field="parameters.d_portletSeqId"/>

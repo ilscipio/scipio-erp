@@ -30,7 +30,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductConfig"/>
+        <make-value entity-name="ProductConfig" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
 

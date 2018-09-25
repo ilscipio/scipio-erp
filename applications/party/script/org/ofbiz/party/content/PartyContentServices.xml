@@ -22,9 +22,9 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <simple-method method-name="createPartyContent" short-description="Create Party Content Entity">
-        <make-value value-field="partyContent" entity-name="PartyContent"/>
-        <set-pk-fields value-field="partyContent" map="parameters"/>
-        <set-nonpk-fields value-field="partyContent" map="parameters"/>
+        <make-value entity-name="PartyContent" value-field="partyContent"/>
+        <set-pk-fields map="parameters" value-field="partyContent"/>
+        <set-nonpk-fields map="parameters" value-field="partyContent"/>
 
         <if-empty field="partyContent.fromDate">
             <now-timestamp field="nowTimestamp"/>
@@ -35,17 +35,17 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updatePartyContent" short-description="Update Party Content Entity">
-        <make-value value-field="lookupPkMap" entity-name="PartyContent"/>
-        <set-pk-fields value-field="lookupPkMap" map="parameters"/>
+        <make-value entity-name="PartyContent" value-field="lookupPkMap"/>
+        <set-pk-fields map="parameters" value-field="lookupPkMap"/>
 
         <find-by-primary-key map="lookupPkMap" value-field="partyContent"/>
-        <set-nonpk-fields value-field="partyContent" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="partyContent"/>
         <store-value value-field="partyContent"/>
     </simple-method>
 
     <simple-method method-name="removePartyContent" short-description="Update Party Content Entity">
-        <make-value value-field="lookupPkMap" entity-name="PartyContent"/>
-        <set-pk-fields value-field="lookupPkMap" map="parameters"/>
+        <make-value entity-name="PartyContent" value-field="lookupPkMap"/>
+        <set-pk-fields map="parameters" value-field="lookupPkMap"/>
 
         <find-by-primary-key map="lookupPkMap" value-field="partyContent"/>
         <remove-value value-field="partyContent"/>

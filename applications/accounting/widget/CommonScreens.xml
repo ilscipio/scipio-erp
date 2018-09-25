@@ -318,7 +318,7 @@ under the License.
                 <set field="activeSubMenuItem" value="ListBudgets"/>
                 <set field="budgetId" from-field="budget.budgetId" default-value="${parameters.budgetId}"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
-                <entity-and list="budgetStatus" entity-name="BudgetStatus">
+                <entity-and entity-name="BudgetStatus" list="budgetStatus">
                     <field-map field-name="budgetId" from-field="budgetId"/>
                     <order-by field-name="-statusDate"/>
                 </entity-and>
@@ -355,7 +355,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FinAccount" />
-                <entity-one value-field="finAccount" entity-name="FinAccount"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 
                 <!-- sidebar additional condition -->
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.finAccountId}"/>

@@ -23,7 +23,7 @@ under the License.
 
     <!-- WebSite Services -->
     <simple-method method-name="createWebSite" short-description="Create a WebSite">
-        <make-value value-field="newEntity" entity-name="WebSite"/>
+        <make-value entity-name="WebSite" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
 
@@ -35,7 +35,7 @@ under the License.
         <store-value value-field="webSite"/>
     </simple-method>
     <simple-method method-name="removeWebSite" short-description="Remove a WebSite">
-        <make-value value-field="lookupKeyValue" entity-name="WebSite"/>
+        <make-value entity-name="WebSite" value-field="lookupKeyValue"/>
         <set-pk-fields map="parameters" value-field="lookupKeyValue"/>
         <find-by-primary-key entity-name="WebSite" map="lookupKeyValue" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -44,9 +44,9 @@ under the License.
 
     <!-- WebSite Content -->
     <simple-method method-name="createWebSiteContent" short-description="Create WebSite Content">
-        <make-value value-field="newEntity" entity-name="WebSiteContent"/>
-        <set-pk-fields value-field="newEntity" map="parameters"/>
-        <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <make-value entity-name="WebSiteContent" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="newEntity.fromDate">
             <now-timestamp field="nowTimestamp"/>
             <set field="newEntity.fromDate" from-field="nowTimestamp"/>
@@ -54,14 +54,14 @@ under the License.
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="updateWebSiteContent" short-description="Update WebSite Content">
-        <make-value value-field="lookupPKMap" entity-name="WebSiteContent"/>
+        <make-value entity-name="WebSiteContent" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSiteContent" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="removeWebSiteContent" short-description="Remove WebSite Content">
-        <make-value value-field="lookupPKMap" entity-name="WebSiteContent"/>
+        <make-value entity-name="WebSiteContent" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSiteContent" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -69,9 +69,9 @@ under the License.
 
     <!-- WebSite Content Type Services -->
     <simple-method method-name="createWebSiteContentType" short-description="Create WebSite Content Type">
-        <make-value value-field="newEntity" entity-name="WebSiteContentType"/>
-        <set-pk-fields value-field="newEntity" map="parameters"/>
-        <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <make-value entity-name="WebSiteContentType" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="newEntity.webSiteContentTypeId">
             <sequenced-id sequence-name="WebSiteContentTypeId" field="webSiteContentTypeId"/>
             <set field="newEntity.webSiteContentTypeId" from-field="webSiteContentTypeId"/>
@@ -79,14 +79,14 @@ under the License.
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="updateWebSiteContentType" short-description="Update WebSite Content Type">
-        <make-value value-field="lookupPKMap" entity-name="WebSiteContentType"/>
+        <make-value entity-name="WebSiteContentType" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSiteContentType" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="removeWebSiteContentType" short-description="Remove WebSite Content Type">
-        <make-value value-field="lookupPKMap" entity-name="WebSiteContentType"/>
+        <make-value entity-name="WebSiteContentType" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSiteContentType" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -94,26 +94,26 @@ under the License.
 
     <!-- WebSite Path Alias -->
     <simple-method method-name="createWebSitePathAlias" short-description="Create WebSite Path Alias">
-        <make-value value-field="newEntity" entity-name="WebSitePathAlias"/>
-        <set-pk-fields value-field="newEntity" map="parameters"/>
-        <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <make-value entity-name="WebSitePathAlias" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="updateWebSitePathAlias" short-description="Update WebSite Path Alias">
-        <make-value value-field="lookupPKMap" entity-name="WebSitePathAlias"/>
+        <make-value entity-name="WebSitePathAlias" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSitePathAlias" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="removeWebSitePathAlias" short-description="Remove WebSite Path Alias">
-        <make-value value-field="lookupPKMap" entity-name="WebSitePathAlias"/>
+        <make-value entity-name="WebSitePathAlias" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSitePathAlias" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="getWebSitePathAlias" short-description="Returns a WebSite Path Alias">
-        <make-value value-field="lookupPKMap" entity-name="WebSitePathAlias"/>
+        <make-value entity-name="WebSitePathAlias" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSitePathAlias" map="lookupPKMap" value-field="alias" use-cache="true"/>
         <field-to-result field="alias.pathTo" result-name="pathTo"/>
@@ -121,7 +121,7 @@ under the License.
 
     <!-- WebSite Role Services -->
     <simple-method method-name="createWebSiteRole" short-description="Create WebSite Role">
-        <make-value value-field="newEntity" entity-name="WebSiteRole"/>
+        <make-value entity-name="WebSiteRole" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
@@ -133,14 +133,14 @@ under the License.
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="updateWebSiteRole" short-description="Update WebSite Role">
-        <make-value value-field="lookupPKMap" entity-name="WebSiteRole"/>
+        <make-value entity-name="WebSiteRole" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSiteRole" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="removeWebSiteRole" short-description="Remove WebSite Role">
-        <make-value value-field="lookupPKMap" entity-name="WebSiteRole"/>
+        <make-value entity-name="WebSiteRole" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSiteRole" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -173,7 +173,7 @@ under the License.
 
             <else>
                 <!-- multi-checked -->
-                <iterate entry="thisType" list="parameters.webSiteContentTypeId">
+                <iterate list="parameters.webSiteContentTypeId" entry="thisType">
                     <entity-one entity-name="WebSiteContentType" value-field="wct">
                         <field-map field-name="webSiteContentTypeId" from-field="thisType"/>
                     </entity-one>
@@ -206,12 +206,12 @@ under the License.
         </entity-one>
         <!-- Create Missing Category and Product Alternative URL's -->
         <if-compare operator="equals" value="all" field="parameters.prodCatalogId">
-            <entity-and list="productStoreCatalogs" entity-name="ProductStoreCatalog" filter-by-date="true">
+            <entity-and entity-name="ProductStoreCatalog" list="productStoreCatalogs" filter-by-date="true">
                 <field-map field-name="productStoreId" from-field="webSite.productStoreId"/>
             </entity-and>
             <if-not-empty field="productStoreCatalogs">
-                <iterate entry="productStoreCatalog" list="productStoreCatalogs">
-                    <iterate entry="typeGenerate" list="parameters.typeGenerate">
+                <iterate list="productStoreCatalogs" entry="productStoreCatalog">
+                    <iterate list="parameters.typeGenerate" entry="typeGenerate">
                         <if-compare operator="equals" value="category" field="typeGenerate">
                             <set field="createMissingCategoryAltUrlsMap.prodCatalogId" from-field="productStoreCatalog.prodCatalogId"/>
                             <set field="createMissingCategoryAltUrlsMap.category" value="category"/>
@@ -269,7 +269,7 @@ under the License.
                     </iterate>
                 </iterate>
             <else>
-                <iterate entry="typeGenerate" list="parameters.typeGenerate">
+                <iterate list="parameters.typeGenerate" entry="typeGenerate">
                     <if-compare operator="equals" value="content" field="typeGenerate">
                         <set field="createMissingContentAltUrlsMap.webSiteId" from-field="parameters.webSiteId"/>
                         <call-service service-name="createMissingContentAltUrls" in-map-name="createMissingContentAltUrlsMap">
@@ -291,7 +291,7 @@ under the License.
             </else>
             </if-not-empty>
         <else>
-            <iterate entry="typeGenerate" list="parameters.typeGenerate">
+            <iterate list="parameters.typeGenerate" entry="typeGenerate">
                 <if-compare operator="equals" value="category" field="typeGenerate">
                     <set field="createMissingCategoryAltUrlsMap.prodCatalogId" from-field="parameters.prodCatalogId"/>
                     <set field="createMissingCategoryAltUrlsMap.category" value="category"/>
@@ -352,7 +352,7 @@ under the License.
 
         <set field="generateMissingSeoUrlMessage" value="Generated missing SEO urls successfully"/>
         <field-to-list list="successMessageList" field="generateMissingSeoUrlMessage"/>
-        <iterate entry="typeGenerate" list="parameters.typeGenerate">
+        <iterate list="parameters.typeGenerate" entry="typeGenerate">
             <if-compare operator="equals" value="category" field="typeGenerate">
                 <set field="categoriesMessage" value="Categories already having SEO urls: ${totalCategoriesNotUpdated}, Categories with url added: ${totalCategoriesUpdated}"/>
                 <field-to-list list="successMessageList" field="categoriesMessage"/>

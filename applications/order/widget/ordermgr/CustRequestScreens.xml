@@ -79,16 +79,16 @@ under the License.
                 <get-related-one value-field="custRequest" relation-name="CurrencyUom" to-value-field="currency"/>
                 <get-related-one value-field="custRequest" relation-name="ProductStore" to-value-field="store"/>
                 <get-related-one value-field="custRequest" relation-name="FulfillContactMech" to-value-field="fulfillContactMech"/>
-                <entity-and list="requestWorkEfforts" entity-name="CustRequestAndWorkEffort">
+                <entity-and entity-name="CustRequestAndWorkEffort" list="requestWorkEfforts">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-and>
                 <get-related value-field="custRequest" relation-name="CustRequestParty" list="requestParties"/>
                 <set field="orderBy[]" value="sequenceNum"/>
                 <get-related value-field="custRequest" relation-name="CustRequestItem" list="custRequestItems" order-by-list="orderBy"/>
-                <entity-and list="commEvents" entity-name="CommunicationEventAndCustRequest">
+                <entity-and entity-name="CommunicationEventAndCustRequest" list="commEvents">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-and>
-                <entity-and list="notes" entity-name="CustRequestItemNoteView">
+                <entity-and entity-name="CustRequestItemNoteView" list="notes">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                     <order-by  field-name="custRequestItemSeqId"/>
                 </entity-and>
@@ -225,7 +225,7 @@ under the License.
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <entity-and entity-name="CustRequestParty" list="custRequestParties">
-                    <field-map from-field="custRequestId" field-name="custRequestId"/>
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
                 </entity-and>
             </actions>
             <widgets>
@@ -251,7 +251,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <entity-and entity-name="CustRequestItem" list="custRequestItems">
-                    <field-map from-field="custRequestId" field-name="custRequestId"/>
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
                     <order-by field-name="sequenceNum"/>
                     <order-by field-name="custRequestItemSeqId"/>
                 </entity-and>
@@ -347,8 +347,8 @@ under the License.
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <entity-one entity-name="CustRequestItem" value-field="custRequestItem"/>
                 <entity-and entity-name="RequirementCustRequestView" list="custRequestRequirements">
-                    <field-map from-field="custRequestItem.custRequestId" field-name="custRequestId"/>
-                    <field-map from-field="custRequestItem.custRequestItemSeqId" field-name="custRequestItemSeqId"/>
+                    <field-map field-name="custRequestId" from-field="custRequestItem.custRequestId"/>
+                    <field-map field-name="custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
                 </entity-and>
             </actions>
             <widgets>
@@ -380,8 +380,8 @@ under the License.
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <entity-one entity-name="CustRequestItem" value-field="custRequestItem"/>
                 <entity-and entity-name="QuoteItem" list="quotes">
-                    <field-map from-field="custRequestItem.custRequestId" field-name="custRequestId"/>
-                    <field-map from-field="custRequestItem.custRequestItemSeqId" field-name="custRequestItemSeqId"/>
+                    <field-map field-name="custRequestId" from-field="custRequestItem.custRequestId"/>
+                    <field-map field-name="custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
                 </entity-and>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/request/SetRequestQuote.groovy"/>
             </actions>
@@ -520,11 +520,11 @@ under the License.
                     <order-by field-name="fromDate"/>
                 </entity-condition>
                 
-                <entity-condition list="statusItems" entity-name="StatusItem">                    
+                <entity-condition entity-name="StatusItem" list="statusItems">                    
                     <condition-expr field-name="statusTypeId" value="CONTENT_STATUS"/>
                     <order-by field-name="sequenceId"/>
                 </entity-condition>
-                <entity-condition list="contentTypes" entity-name="ContentType"><order-by field-name="description"/></entity-condition>
+                <entity-condition entity-name="ContentType" list="contentTypes"><order-by field-name="description"/></entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
@@ -547,7 +547,7 @@ under the License.
             <actions>
                 <set field="custRequestSortField" from-field="parameters.custRequestSortField" default-value="-custRequestDate"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <entity-condition list="custRequests" entity-name="CustReqAndTypeAndPartyRel">
+                <entity-condition entity-name="CustReqAndTypeAndPartyRel" list="custRequests">
                     <condition-list combine="and">
                         <condition-expr field-name="statusId" operator="equals" value="CRQ_SUBMITTED"/>
                         <condition-list combine="and">
@@ -598,7 +598,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="screenletTitle" from-field="uiLabelMap.OrderOpenMyCustomerRequests"/>
-                        <entity-condition list="custRequests" entity-name="CustRequestInfoAndWorkEffortAndPartyRel">
+                        <entity-condition entity-name="CustRequestInfoAndWorkEffortAndPartyRel" list="custRequests">
                             <condition-list combine="and">
                                 <condition-expr field-name="partyIdFrom" operator="equals" from-field="myCompanyId" ignore-if-empty="true"/>
                                 <condition-expr field-name="fromPartyId" operator="equals" from-field="fromPartyId" ignore-if-empty="true"/>
@@ -620,7 +620,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="screenletTitle" from-field="uiLabelMap.OrderCompletedMyCustomerRequests"/>
-                        <entity-condition list="custRequests" entity-name="CustRequestInfoAndWorkEffortAndPartyRel">
+                        <entity-condition entity-name="CustRequestInfoAndWorkEffortAndPartyRel" list="custRequests">
                             <condition-list combine="and">
                                 <condition-expr field-name="partyIdFrom" operator="equals" from-field="myCompanyId" ignore-if-empty="true"/>
                                 <condition-expr field-name="fromPartyId" operator="equals" from-field="fromPartyId" ignore-if-empty="true"/>
@@ -637,7 +637,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="screenletTitle" from-field="uiLabelMap.OrderCancelledMyCustomerRequests"/>
-                        <entity-condition list="custRequests" entity-name="CustRequestInfoAndWorkEffortAndPartyRel">
+                        <entity-condition entity-name="CustRequestInfoAndWorkEffortAndPartyRel" list="custRequests">
                             <condition-list combine="and">
                                 <condition-expr field-name="partyIdFrom" operator="equals" from-field="myCompanyId" ignore-if-null="true"/>
                                 <condition-expr field-name="fromPartyId" operator="equals" from-field="fromPartyId" ignore-if-empty="true"/>

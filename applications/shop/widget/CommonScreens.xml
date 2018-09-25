@@ -96,7 +96,7 @@ under the License.
             <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
             -->
 
-            <entity-and list="webAnalyticsConfigs" entity-name="WebAnalyticsConfig">
+            <entity-and entity-name="WebAnalyticsConfig" list="webAnalyticsConfigs">
                 <field-map field-name="webSiteId"/>
             </entity-and>
            

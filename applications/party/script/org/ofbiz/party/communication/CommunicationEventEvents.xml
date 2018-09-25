@@ -134,7 +134,7 @@ under the License.
         <call-service service-name="updateCommunicationEvent" in-map-name="updateMap"/>
 
         <!-- add role -->
-        <set-service-fields service-name="createCommunicationEventRole" to-map="createRole" map="parameters"/>
+        <set-service-fields service-name="createCommunicationEventRole" map="parameters" to-map="createRole"/>
         <call-service service-name="createCommunicationEventRole" in-map-name="createRole"/>
 
         <!-- Return to request -->

@@ -55,9 +55,9 @@
         </if-not-empty>
         
         <set field="count1" value="-1"/>
-        <iterate entry="saleschannel" list="saleschannels">
+        <iterate list="saleschannels" entry="saleschannel">
             <calculate field="count1">
-                <calcop field="count1" operator="add">
+                <calcop operator="add" field="count1">
                     <number value="1"/>
                 </calcop>
             </calculate>
@@ -66,7 +66,7 @@
         </iterate>
         
         <set field="count2" value="0"/>
-        <iterate entry="countdate" list="countdates">
+        <iterate list="countdates" entry="countdate">
             <set field="checksalesChannel1" from-field="salesChannelMap.salesChannelList[count2]"/>
             <if-compare-field field="countdate.salesChannelEnumId" to-field="checksalesChannel1" operator="equals"> 
                 <calculate field="countdateMap.countsalesChannel[count2]">
@@ -77,7 +77,7 @@
             </if-compare-field> 
             <if-compare-field field="countdate.salesChannelEnumId" to-field="checksalesChannel1" operator="not-equals"> 
                 <calculate field="count2">
-                    <calcop field="count2" operator="add">
+                    <calcop operator="add" field="count2">
                         <number value="1"/>
                     </calcop>
                 </calculate>
@@ -91,14 +91,14 @@
 
         <set field="count3" value="-1"/>
         <set field="count4" value="0"/>
-        <iterate entry="starschema" list="starschemas">
+        <iterate list="starschemas" entry="starschema">
             <calculate field="count3">
-                <calcop field="count3" operator="add">
+                <calcop operator="add" field="count3">
                     <number value="1"/>
                 </calcop>
             </calculate>
             <calculate field="count4">
-                <calcop field="count4" operator="add">
+                <calcop operator="add" field="count4">
                     <number value="1"/>
                 </calcop>
             </calculate>

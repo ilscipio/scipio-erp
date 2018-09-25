@@ -442,9 +442,9 @@ under the License.
     <simple-method method-name="getRevisionDataResource" short-description="Get version of DataResource that fits overall revision">
         <entity-condition entity-name="ContentRevisionItem" list="contentRevisionItems" use-cache="true">
             <condition-list combine="and">
-                <condition-expr field-name="contentId" from-field="parameters.contentId" operator="equals"/>
-                <condition-expr field-name="itemContentId" from-field="parameters.itemContentId" operator="equals"/>
-                <condition-expr field-name="contentRevisionSeqId" from-field="parameters.contentRevisionSeqId" operator="less-equals"/>
+                <condition-expr field-name="contentId" operator="equals" from-field="parameters.contentId"/>
+                <condition-expr field-name="itemContentId" operator="equals" from-field="parameters.itemContentId"/>
+                <condition-expr field-name="contentRevisionSeqId" operator="less-equals" from-field="parameters.contentRevisionSeqId"/>
             </condition-list>
             <order-by field-name="-contentRevisionSeqId"/>
         </entity-condition>
@@ -527,8 +527,8 @@ under the License.
           -->
         <entity-condition entity-name="MaxContentApprovalView" list="instanceApprovalList" use-cache="false">
             <condition-list>
-                <condition-expr field-name="contentId" from-field="parameters.rootContentId" operator="equals"/>
-                <condition-expr field-name="contentRevisionSeqId" from-field="parameters.contentRevisionSeqId" operator="less-equals"/>
+                <condition-expr field-name="contentId" operator="equals" from-field="parameters.rootContentId"/>
+                <condition-expr field-name="contentRevisionSeqId" operator="less-equals" from-field="parameters.contentRevisionSeqId"/>
             </condition-list>
             <select-field field-name="contentId"/>
             <select-field field-name="partyId"/>
@@ -544,8 +544,8 @@ under the License.
             <log level="info" message="maxContentApproval: ${maxContentApproval}"/>
             <entity-condition entity-name="ContentApproval" list="contentApprovalList2" use-cache="false">
                 <condition-list>
-                    <condition-expr field-name="contentId" from-field="maxContentApproval.contentId" operator="equals"/>
-                    <condition-expr field-name="contentRevisionSeqId" from-field="maxContentApproval.maxContentRevisionSeqId" operator="equals"/>
+                    <condition-expr field-name="contentId" operator="equals" from-field="maxContentApproval.contentId"/>
+                    <condition-expr field-name="contentRevisionSeqId" operator="equals" from-field="maxContentApproval.maxContentRevisionSeqId"/>
                     <condition-expr field-name="partyId" from-field="maxContentApproval.partyId" operator="equals" ignore-if-empty="true"/>
                     <condition-expr field-name="roleTypeId" from-field="maxContentApproval.roleTypeId" operator="equals" ignore-if-empty="true"/>
                 </condition-list>
@@ -632,7 +632,7 @@ under the License.
                 <log level="info" message="rootTemplateContentId 0aa: ${rootTemplateContentId}"/>
                 <entity-condition entity-name="ContentRevision" list="templateContentRevisionList" use-cache="true">
                     <condition-list>
-                        <condition-expr field-name="contentId" from-field="rootTemplateContentId" operator="equals"/>
+                        <condition-expr field-name="contentId" operator="equals" from-field="rootTemplateContentId"/>
                     </condition-list>
                     <order-by field-name="-contentRevisionSeqId"/>
                 </entity-condition>
@@ -659,8 +659,8 @@ under the License.
                 <set from-field="thisContentId" field="map.contentId"/>
                 <set from-field="thisContentRevisionSeqId" field="map.contentRevisionSeqId"/>
                 <call-service service-name="getFinalApprovalStatus" in-map-name="map">
-                    <result-to-field field="finalApprovalStatusId" result-name="approvalStatusId"/>
-                    <result-to-field field="contentApprovalList" result-name="contentApprovalList"/>
+                    <result-to-field result-name="approvalStatusId" field="finalApprovalStatusId"/>
+                    <result-to-field result-name="contentApprovalList" field="contentApprovalList"/>
                 </call-service>
                 <!--  determine status of previous approvals --><!-- finalApprovalStatusId is the applicable status from previous approvals -->
                 <log level="info" message="cloneContentApprovals(2)- finalApprovalStatusId : ${finalApprovalStatusId} "/>
@@ -724,7 +724,7 @@ under the License.
                 <log level="info" message="rootTemplateContentId 0aa: ${rootTemplateContentId}"/>
                 <entity-condition entity-name="ContentRevision" list="templateContentRevisionList" use-cache="true">
                     <condition-list>
-                        <condition-expr field-name="contentId" from-field="rootTemplateContentId" operator="equals"/>
+                        <condition-expr field-name="contentId" operator="equals" from-field="rootTemplateContentId"/>
                     </condition-list>
                     <order-by field-name="-contentRevisionSeqId"/>
                 </entity-condition>
@@ -776,11 +776,11 @@ under the License.
             <now-timestamp field="nowTimestamp"/>
             <entity-condition entity-name="ContentRole" list="contentRoleList">
                 <condition-list combine="and">
-                    <condition-expr field-name="contentId" from-field="contentId" operator="equals"/>
-                    <condition-expr field-name="partyId" from-field="partyId" operator="equals"/>
-                    <condition-expr field-name="fromDate" from-field="nowTimestamp" operator="less-equals"/>
+                    <condition-expr field-name="contentId" operator="equals" from-field="contentId"/>
+                    <condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+                    <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>
                     <condition-list combine="or">
-                        <condition-expr field-name="thruDate" from-field="nowTimestamp" operator="greater"/>
+                        <condition-expr field-name="thruDate" operator="greater" from-field="nowTimestamp"/>
                         <condition-expr field-name="thruDate" value="" operator="equals"/>
                     </condition-list>
                 </condition-list>
@@ -899,8 +899,8 @@ under the License.
             <log level="info" message="maxContentApproval: ${maxContentApproval}"/>
             <entity-condition entity-name="ContentApproval" list="contentApprovalList2" use-cache="false">
                 <condition-list>
-                    <condition-expr field-name="contentId" from-field="maxContentApproval.contentId" operator="equals"/>
-                    <condition-expr field-name="contentRevisionSeqId" from-field="maxContentApproval.maxContentRevisionSeqId" operator="equals"/>
+                    <condition-expr field-name="contentId" operator="equals" from-field="maxContentApproval.contentId"/>
+                    <condition-expr field-name="contentRevisionSeqId" operator="equals" from-field="maxContentApproval.maxContentRevisionSeqId"/>
                     <condition-expr field-name="partyId" from-field="maxContentApproval.partyId" operator="equals" ignore-if-empty="true"/>
                     <condition-expr field-name="roleTypeId" from-field="maxContentApproval.roleTypeId" operator="equals" ignore-if-empty="true"/>
                 </condition-list>
@@ -927,7 +927,7 @@ under the License.
     <simple-method method-name="getMostRecentRevision" short-description="Look for most recent revision for contentId">
         <entity-condition entity-name="ContentRevision" list="contentRevisions" use-cache="true">
             <condition-list combine="and">
-                <condition-expr field-name="contentId" from-field="parameters.contentId" operator="equals"/>
+                <condition-expr field-name="contentId" operator="equals" from-field="parameters.contentId"/>
             </condition-list>
             <order-by field-name="-contentRevisionSeqId"/>
         </entity-condition>

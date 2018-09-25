@@ -128,7 +128,7 @@ under the License.
                 <set field="currentMenuItemName" value="approval"/>
 
                 <entity-one entity-name="ContentApproval" value-field="contentApproval" use-cache="true">
-                    <field-map from-field="parameters.contentApprovalId" field-name="contentApprovalId"/>
+                    <field-map field-name="contentApprovalId" from-field="parameters.contentApprovalId"/>
                 </entity-one>
                 <set from-field="contentApproval.contentId" field="rootContentId"/>
                 <set from-field="contentApproval.contentRevisionSeqId" field="rootContentRevisionSeqId"/>
@@ -170,7 +170,7 @@ under the License.
                 </entity-one>
                 <set from-field="content.contentTypeId" field="contentTypeId"/>
                 <entity-and entity-name="ContentRevision" list="contentRevisionList" use-cache="true">
-                    <field-map from-field="contentId" field-name="contentId"/>
+                    <field-map field-name="contentId" from-field="contentId"/>
                 </entity-and>
 
                 <set field="title" value="${uiLabelMap.ContentCompDocRevisionListPageForContent} ${rootContentId} ${uiLabelMap.ContentCompDocRev} ${rootContentRevisionSeqId}"/>
@@ -415,7 +415,7 @@ under the License.
                 <set from-field="content.contentTypeId" field="contentTypeId"/>
                 <entity-condition entity-name="ContentRevision" list="contentRevisions" use-cache="true">
                     <condition-list combine="and">
-                        <condition-expr field-name="contentId" from-field="rootContentId" operator="equals"/>
+                        <condition-expr field-name="contentId" operator="equals" from-field="rootContentId"/>
                     </condition-list>
                     <order-by field-name="-contentRevisionSeqId"/>
                 </entity-condition>
@@ -863,7 +863,7 @@ under the License.
                 <set value="COMPDOC_INSTANCE" field="contentTypeId"/>
                 <entity-condition entity-name="ContentRevision" list="contentRevisions" use-cache="true">
                     <condition-list combine="and">
-                        <condition-expr field-name="contentId" from-field="rootContentId" operator="equals"/>
+                        <condition-expr field-name="contentId" operator="equals" from-field="rootContentId"/>
                     </condition-list>
                     <order-by field-name="-contentRevisionSeqId"/>
                 </entity-condition>
@@ -1032,7 +1032,7 @@ under the License.
                 <set from-field="instanceContent.instanceOfContentId" field="templateContentId"/>
                 <entity-condition entity-name="ContentRevision" list="contentTemplateRevisions" use-cache="true">
                     <condition-list combine="and">
-                        <condition-expr field-name="contentId" from-field="templateContentId" operator="equals"/>
+                        <condition-expr field-name="contentId" operator="equals" from-field="templateContentId"/>
                     </condition-list>
                     <order-by field-name="-contentRevisionSeqId"/>
                 </entity-condition>
@@ -1231,8 +1231,8 @@ under the License.
                 <set field="contentRevisionSeqId" from-field="parameters.contentRevisionSeqId" to-scope="screen" default-value="${defaultContentRevisionSeqId}"/>
 
                 <entity-and entity-name="ContentRevisionItemAndContentApprovalView" use-cache="true" list-name="ContentRevAppList">
-                        <field-map from-field="contentId" field-name="contentId"/>
-                        <field-map from-field="contentRevisionSeqId" field-name="contentRevisionSeqId"/>
+                        <field-map field-name="contentId" from-field="contentId"/>
+                        <field-map field-name="contentRevisionSeqId" from-field="contentRevisionSeqId"/>
                 </entity-and>
             </actions>
             <widgets>

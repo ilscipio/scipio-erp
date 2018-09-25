@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <!-- ProductContent -->
     <simple-method method-name="createProductContent" short-description="Create Content For Product">
-        <make-value value-field="newEntity" entity-name="ProductContent"/>
+        <make-value entity-name="ProductContent" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
@@ -41,7 +41,7 @@ under the License.
         <field-to-result field="newEntity.productContentTypeId" result-name="productContentTypeId"/>
     </simple-method>
     <simple-method method-name="updateProductContent" short-description="Update Content For Product">
-        <make-value value-field="lookupPKMap" entity-name="ProductContent"/>
+        <make-value entity-name="ProductContent" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -51,7 +51,7 @@ under the License.
         <call-service service-name="updateContent" in-map-name="updateContent"/>
     </simple-method>
     <simple-method method-name="removeProductContent" short-description="Remove Content From Product">
-        <make-value value-field="lookupPKMap" entity-name="ProductContent"/>
+        <make-value entity-name="ProductContent" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -113,12 +113,12 @@ under the License.
 
     <!-- ProductFeatureDataResource -->
     <simple-method method-name="createProductFeatureDataResource" short-description="Create ProductFeature-DataResource">
-        <make-value value-field="newEntity" entity-name="ProductFeatureDataResource"/>
+        <make-value entity-name="ProductFeatureDataResource" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="removeProductFeatureDataResource" short-description="Remove ProductFeature-DataResource">
-        <make-value value-field="lookupPKMap" entity-name="ProductFeatureDataResource"/>
+        <make-value entity-name="ProductFeatureDataResource" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -167,7 +167,7 @@ under the License.
 
     <!-- ProductPromoContent -->
     <simple-method method-name="createProductPromoContent" short-description="Create Content For Product Promo">
-        <make-value value-field="newEntity" entity-name="ProductPromoContent"/>
+        <make-value entity-name="ProductPromoContent" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="newEntity.fromDate">
@@ -181,7 +181,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateProductPromoContent" short-description="Update Content For Product Promo">
-        <make-value value-field="lookupPKMap" entity-name="ProductPromoContent"/>
+        <make-value entity-name="ProductPromoContent" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -189,7 +189,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="removeProductPromoContent" short-description="Remove Content From Product Promo">
-        <make-value value-field="lookupPKMap" entity-name="ProductPromoContent"/>
+        <make-value entity-name="ProductPromoContent" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -203,13 +203,13 @@ under the License.
     <!-- Product Content SEO -->
     <simple-method method-name="updateContentSEOForProduct" short-description="Update Product SEO">
         <if-not-empty field="parameters.title">
-            <entity-and list="productContents" entity-name="ProductContentAndInfo">
+            <entity-and entity-name="ProductContentAndInfo" list="productContents">
                 <field-map field-name="productId" from-field="parameters.productId"/>
                 <field-map field-name="productContentTypeId" value="PAGE_TITLE"/>
             </entity-and>
             <if-not-empty field="productContents">
-                <first-from-list entry="productContent" list="productContents"/>
-                <entity-one value-field="electronicText" entity-name="ElectronicText">
+                <first-from-list list="productContents" entry="productContent"/>
+                <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productContent.dataResourceId"/>
                 </entity-one>
                 <if-not-empty field="electronicText">
@@ -225,13 +225,13 @@ under the License.
             </if-not-empty>
         </if-not-empty>
         <if-not-empty field="parameters.metaKeyword">
-            <entity-and list="productContents" entity-name="ProductContentAndInfo">
+            <entity-and entity-name="ProductContentAndInfo" list="productContents">
                 <field-map field-name="productId" from-field="parameters.productId"/>
                 <field-map field-name="productContentTypeId" value="META_KEYWORD"/>
             </entity-and>
             <if-not-empty field="productContents">
-                <first-from-list entry="productContent" list="productContents"/>
-                <entity-one value-field="electronicText" entity-name="ElectronicText">
+                <first-from-list list="productContents" entry="productContent"/>
+                <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productContent.dataResourceId"/>
                 </entity-one>
                 <if-not-empty field="electronicText">
@@ -247,13 +247,13 @@ under the License.
             </if-not-empty>
         </if-not-empty>
         <if-not-empty field="parameters.metaDescription">
-            <entity-and list="productContents" entity-name="ProductContentAndInfo">
+            <entity-and entity-name="ProductContentAndInfo" list="productContents">
                 <field-map field-name="productId" from-field="parameters.productId"/>
                 <field-map field-name="productContentTypeId" value="META_DESCRIPTION"/>
             </entity-and>
             <if-not-empty field="productContents">
-                <first-from-list entry="productContent" list="productContents"/>
-                <entity-one value-field="electronicText" entity-name="ElectronicText">
+                <first-from-list list="productContents" entry="productContent"/>
+                <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productContent.dataResourceId"/>
                 </entity-one>
                 <if-not-empty field="electronicText">

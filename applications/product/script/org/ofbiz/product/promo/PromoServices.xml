@@ -30,7 +30,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductPromo"/>
+        <make-value entity-name="ProductPromo" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="ProductPromo" field="newEntity.productPromoId"/>
         <field-to-result field="newEntity.productPromoId" result-name="productPromoId"/>
@@ -96,7 +96,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductPromoAction"/>
+        <make-value entity-name="ProductPromoAction" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <make-next-seq-id value-field="newEntity" seq-field-name="productPromoActionSeqId" numeric-padding="2"/>
@@ -144,7 +144,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductPromoCategory"/>
+        <make-value entity-name="ProductPromoCategory" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
 
@@ -190,7 +190,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductPromoCode"/>
+        <make-value entity-name="ProductPromoCode" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="newEntity.productPromoCodeId">
@@ -255,7 +255,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductPromoCodeEmail"/>
+        <make-value entity-name="ProductPromoCodeEmail" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
 
@@ -286,7 +286,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductPromoCodeParty"/>
+        <make-value entity-name="ProductPromoCodeParty" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
 
@@ -317,7 +317,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductPromoCond"/>
+        <make-value entity-name="ProductPromoCond" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <if-not-empty field="parameters.carrierShipmentMethod">
             <set field="newEntity.otherValue" from-field="parameters.carrierShipmentMethod"/>
@@ -371,7 +371,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductPromoProduct"/>
+        <make-value entity-name="ProductPromoProduct" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
 
@@ -417,7 +417,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductPromoRule"/>
+        <make-value entity-name="ProductPromoRule" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <make-next-seq-id value-field="newEntity" seq-field-name="productPromoRuleId" numeric-padding="2"/>
@@ -465,7 +465,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductStorePromoAppl"/>
+        <make-value entity-name="ProductStorePromoAppl" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 

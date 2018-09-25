@@ -130,7 +130,7 @@ under the License.
     <form name="UpdateCategoryCatalogs" type="list" target="category_updateProductCategoryToProdCatalog" list-name="prodCatalogCategories"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
-            <entity-one value-field="categoryCatalog" entity-name="ProdCatalog"></entity-one>
+            <entity-one entity-name="ProdCatalog" value-field="categoryCatalog"></entity-one>
         </row-actions>
         <field name="productCategoryId"><hidden/></field>
         <field name="prodCatalogId" title="${uiLabelMap.ProductCatalog}">
@@ -162,7 +162,7 @@ under the License.
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
             <set field="productCategoryId" from-field="productCategoryId"/>
-            <entity-one value-field="category" entity-name="ProductCategory"/>
+            <entity-one entity-name="ProductCategory" value-field="category"/>
         </row-actions>
         <field name="showProductCategoryId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
@@ -191,7 +191,7 @@ under the License.
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
             <set field="productCategoryId" from-field="parentProductCategoryId"/>
-            <entity-one value-field="category" entity-name="ProductCategory"/>
+            <entity-one entity-name="ProductCategory" value-field="category"/>
         </row-actions>
         <field name="showProductCategoryId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
@@ -218,7 +218,7 @@ under the License.
     <form name="UpdateCategoryParties" type="list" target="updatePartyToCategory" list-name="productCategoryRoles"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
-            <entity-one value-field="categoryParty" entity-name="PartyNameView"></entity-one>
+            <entity-one entity-name="PartyNameView" value-field="categoryParty"></entity-one>
         </row-actions>
         <field name="productCategoryId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}">

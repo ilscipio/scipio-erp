@@ -215,7 +215,7 @@
                     <field-map field-name="contentIdTo" from-field="imageContent.contentId"/>
                     <field-map field-name="mapKey" value="IMAGE"/>
                 </entity-and>
-                <first-from-list entry="oldAssoc" list="oldAssocs"/>
+                <first-from-list list="oldAssocs" entry="oldAssoc"/>
                 <now-timestamp field="oldAssoc.thruDate"/>
                 <store-value value-field="oldAssoc"/>
             </if-not-empty>
@@ -250,7 +250,7 @@
         </entity-condition>
         <filter-list-by-date list="unfilteredList" to-list="blogItems"/>
         <set field="blogList[]"/>
-        <iterate entry="blogItem" list="blogItems">
+        <iterate list="blogItems" entry="blogItem">
             <set-service-fields service-name="genericContentPermission" map="blogItem" to-map="mapIn"/>
             <set field="mapIn.ownerContentId" from-field="parameters.contentId"/>
             <set field="mapIn.mainAction" value="VIEW"/>
@@ -282,7 +282,7 @@
         <entity-one entity-name="Content" value-field="content"/>
         <get-related value-field="content" relation-name="FromContentAssoc" list="rawAssocs"/>
         <filter-list-by-date list="rawAssocs" to-list="assocs"/>
-        <iterate entry="assoc" list="assocs">
+        <iterate list="assocs" entry="assoc">
             <if-compare field="assoc.mapKey" value="ARTICLE" operator="equals">
                 <get-related-one value-field="assoc" relation-name="ToContent" to-value-field="mainContent"/>
                 <get-related-one value-field="mainContent" relation-name="DataResource" to-value-field="dataResource"/>

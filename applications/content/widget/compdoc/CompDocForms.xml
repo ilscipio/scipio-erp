@@ -537,8 +537,8 @@ under the License.
         odd-row-style="alternate-row"> <!- orig: default-table-style=-style="basic-table hover-bar" ->
         <actions>
             <entity-and entity-name="ContentRevisionItemAndContentApprovalView" use-cache="true">
-                <field-map from-field="contentId" field-name="contentId"/>
-                <field-map from-field="contentRevisionSeqId" field-name="contentRevisionSeqId"/>
+                <field-map field-name="contentId" from-field="contentId"/>
+                <field-map field-name="contentRevisionSeqId" from-field="contentRevisionSeqId"/>
             </entity-and>
         </actions>
         <field name="contentId"><display/></field>

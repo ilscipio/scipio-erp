@@ -33,7 +33,7 @@ under the License.
         <check-errors/>
 
         <now-timestamp field="nowTimestamp"/>
-        <make-value value-field="newEntity" entity-name="ProductCategory"/>
+        <make-value entity-name="ProductCategory" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
         <if-empty field="parameters.productCategoryId">
@@ -65,9 +65,9 @@ under the License.
                 <field-map field-name="partyId" from-field="userLogin.partyId"/>
                 <field-map field-name="roleTypeId" value="LTD_ADMIN"/>
             </entity-and>
-            <iterate entry="productCategoryRole" list="productCategoryRoles">
+            <iterate list="productCategoryRoles" entry="productCategoryRole">
                 <!-- add this new product to the category -->
-                <make-value value-field="newLimitRollup" entity-name="ProductCategoryRollup"/>
+                <make-value entity-name="ProductCategoryRollup" value-field="newLimitRollup"/>
                 <set field="newLimitRollup.productCategoryId" from-field="newEntity.productCategoryId"/>
                 <set field="newLimitRollup.parentProductCategoryId" from-field="productCategoryRole.productCategoryId"/>
                 <set field="newLimitRollup.fromDate" from-field="nowTimestamp"/>
@@ -127,7 +127,7 @@ under the License.
         <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
         -->
-        <make-value value-field="newEntity" entity-name="ProductCategoryMember"/>
+        <make-value entity-name="ProductCategoryMember" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
@@ -150,7 +150,7 @@ under the License.
         </if-empty>
         
         <if-instance-of field="parameters.categories" class="java.util.List">
-            <iterate entry="category" list="parameters.categories">
+            <iterate list="parameters.categories" entry="category">
                 <!-- note that the security semantics require the user to have the general admin permission,
                     or the role limited permission and association with the category, not the product -->
                 <!--
@@ -161,7 +161,7 @@ under the License.
                 <check-errors/>
                  -->
 
-                <make-value value-field="newEntity" entity-name="ProductCategoryMember"/>
+                <make-value entity-name="ProductCategoryMember" value-field="newEntity"/>
                 <set field="newEntity.productCategoryId" from-field="category"/>
                 <set-pk-fields map="parameters" value-field="newEntity"/>
                 <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -182,7 +182,7 @@ under the License.
                 <call-simple-method method-name="checkCategoryRelatedPermission"/>
                 <check-errors/>
 
-                <make-value value-field="newEntity" entity-name="ProductCategoryMember"/>
+                <make-value entity-name="ProductCategoryMember" value-field="newEntity"/>
                 <set field="newEntity.productCategoryId" from-field="parameters.categories"/>
                 <set-pk-fields map="parameters" value-field="newEntity"/>
                 <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -210,7 +210,7 @@ under the License.
         <check-errors/>
          -->
 
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryMember"/>
+        <make-value entity-name="ProductCategoryMember" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryMember" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -233,7 +233,7 @@ under the License.
             <store-value value-field="product"/>
         </if-compare-field>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryMember"/>
+        <make-value entity-name="ProductCategoryMember" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryMember" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -249,7 +249,7 @@ under the License.
         <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductCategoryRole"/>
+        <make-value entity-name="ProductCategoryRole" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
@@ -265,7 +265,7 @@ under the License.
         <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryRole"/>
+        <make-value entity-name="ProductCategoryRole" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryRole" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -277,7 +277,7 @@ under the License.
         <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryRole"/>
+        <make-value entity-name="ProductCategoryRole" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryRole" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -295,7 +295,7 @@ under the License.
         <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductCategoryRollup"/>
+        <make-value entity-name="ProductCategoryRollup" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
@@ -316,7 +316,7 @@ under the License.
             <now-timestamp field="parameters.fromDate"/>
         </if-empty>
         <if-instance-of field="parameters.categories" class="java.util.List">
-            <iterate entry="category" list="parameters.categories">
+            <iterate list="parameters.categories" entry="category">
                 <set field="callingMethodName" value="addProductCategoryToCategories"/>
                 <set field="checkAction" value="CREATE"/>
                 <!-- note the the user must be associated with the parent category with the role limited permission -->
@@ -324,7 +324,7 @@ under the License.
                 <call-simple-method method-name="checkCategoryRelatedPermission"/>
                 <check-errors/>
 
-                <make-value value-field="newEntity" entity-name="ProductCategoryRollup"/>
+                <make-value entity-name="ProductCategoryRollup" value-field="newEntity"/>
                 <set field="newEntity.parentProductCategoryId" from-field="category"/>
                 <set-pk-fields map="parameters" value-field="newEntity"/>
                 <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -346,7 +346,7 @@ under the License.
                 <call-simple-method method-name="checkCategoryRelatedPermission"/>
                 <check-errors/>
 
-                <make-value value-field="newEntity" entity-name="ProductCategoryRollup"/>
+                <make-value entity-name="ProductCategoryRollup" value-field="newEntity"/>
                 <set field="newEntity.parentProductCategoryId" from-field="parameters.categories"/>
                 <set-pk-fields map="parameters" value-field="newEntity"/>
                 <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -371,7 +371,7 @@ under the License.
         <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryRollup"/>
+        <make-value entity-name="ProductCategoryRollup" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryRollup" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -391,7 +391,7 @@ under the License.
         <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryRollup"/>
+        <make-value entity-name="ProductCategoryRollup" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryRollup" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -425,7 +425,7 @@ under the License.
         </if-not-empty>
 
         <!-- add each to a list to store and then store all and let the entity engine do inserts or updates as needed; much more reliable/useful -->
-        <iterate entry="productCategoryMember" list="productCategoryMembers">
+        <iterate list="productCategoryMembers" entry="productCategoryMember">
             <clone-value value-field="productCategoryMember" new-value-field="newProductCategoryMember"/>
             <set field="newProductCategoryMember.productCategoryId" from-field="parameters.productCategoryIdTo"/>
             <field-to-list field="newProductCategoryMember" list="pcmsToStore"/>
@@ -441,7 +441,7 @@ under the License.
                 <filter-list-by-date list="productCategoryRollups" valid-date="validDate"/>
             </if-not-empty>
 
-            <iterate entry="productCategoryRollup" list="productCategoryRollups">
+            <iterate list="productCategoryRollups" entry="productCategoryRollup">
                 <set field="callServiceMap.productCategoryId" from-field="productCategoryRollup.productCategoryId"/>
                 <set field="callServiceMap.productCategoryIdTo" from-field="parameters.productCategoryIdTo"/>
                 <set field="callServiceMap.validDate" from-field="parameters.validDate"/>
@@ -477,7 +477,7 @@ under the License.
         </if-not-empty>
 
         <!-- add each to a list to store and then store all and let the entity engine do inserts or updates as needed; much more reliable/useful -->
-        <iterate entry="categoryEntity" list="categoryEntities">
+        <iterate list="categoryEntities" entry="categoryEntity">
             <clone-value value-field="categoryEntity" new-value-field="newCategoryEntity"/>
             <set field="newCategoryEntity.productCategoryId" from-field="productCategoryIdTo"/>
             <field-to-list field="newCategoryEntity" list="entitiesToStore"/>
@@ -502,7 +502,7 @@ under the License.
             <field-map field-name="productCategoryId" from-field="parameters.productCategoryId"/>
         </entity-and>
 
-        <iterate entry="productCategoryMember" list="productCategoryMembers">
+        <iterate list="productCategoryMembers" entry="productCategoryMember">
             <set field="productCategoryMember.thruDate" from-field="expireTimestamp"/>
             <store-value value-field="productCategoryMember"/>
         </iterate>
@@ -524,7 +524,7 @@ under the License.
             <field-map field-name="productCategoryId" from-field="parameters.productCategoryId"/>
         </entity-and>
 
-        <iterate entry="productCategoryMember" list="productCategoryMembers">
+        <iterate list="productCategoryMembers" entry="productCategoryMember">
             <if-compare-field field="productCategoryMember.thruDate" to-field="expireTimestamp" operator="less" type="Timestamp">
                 <remove-value value-field="productCategoryMember"/>
             </if-compare-field>
@@ -659,7 +659,7 @@ under the License.
             <entity-and entity-name="ProductCategoryRollup" list="foundValues">
                 <field-map field-name="productCategoryId" from-field="parameters.oldProductCategoryId"/>
             </entity-and>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set field="newTempValue.productCategoryId" from-field="parameters.productCategoryId"/>
                 <create-value value-field="newTempValue"/>
@@ -669,7 +669,7 @@ under the License.
             <entity-and entity-name="ProductCategoryRollup" list="foundValues">
                 <field-map field-name="parentProductCategoryId" from-field="parameters.oldProductCategoryId"/>
             </entity-and>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set field="newTempValue.parentProductCategoryId" from-field="parameters.productCategoryId"/>
                 <create-value value-field="newTempValue"/>
@@ -688,7 +688,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductCategoryAttribute"/>
+        <make-value entity-name="ProductCategoryAttribute" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
 
@@ -701,7 +701,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryAttribute"/>
+        <make-value entity-name="ProductCategoryAttribute" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryAttribute" map="lookupPKMap" value-field="ProductCategoryAttributeInstance"/>
         <set-nonpk-fields map="parameters" value-field="ProductCategoryAttributeInstance"/>
@@ -714,7 +714,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryAttribute"/>
+        <make-value entity-name="ProductCategoryAttribute" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryAttribute" map="lookupPKMap" value-field="ProductCategoryAttributeInstance"/>
         <remove-value value-field="ProductCategoryAttributeInstance"/>
@@ -733,7 +733,7 @@ under the License.
         </if-empty>
 
         <!-- now set the rest of the PK fields (should just be fromDate now; unless linkSeqId is not empty -->
-        <set-pk-fields value-field="newEntity" map="parameters"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="newEntity.fromDate">
             <now-timestamp field="newEntity.fromDate"/>
         </if-empty>
@@ -744,7 +744,7 @@ under the License.
 
     <simple-method method-name="updateProductCategoryLink" short-description="update a ProductCategoryLink">
         <entity-one entity-name="ProductCategoryLink" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
@@ -863,7 +863,7 @@ under the License.
                 </condition-list>
             </condition-list>
         </entity-condition>
-        <iterate entry="prodCatalogCategory" list="prodCatalogCategoryList">
+        <iterate list="prodCatalogCategoryList" entry="prodCatalogCategory">
             <!-- Do not do a permission check unless the ProdCatalog requires it -->
             <entity-one entity-name="ProdCatalog" value-field="prodCatalog" auto-field-map="false">
                 <field-map field-name="prodCatalogId" from-field="prodCatalogCategory.prodCatalogId"/>
@@ -940,13 +940,13 @@ under the License.
             <set field="week" value="52"/>
         <else>
             <calculate field="week">
-                <calcop field="week" operator="subtract">
+                <calcop operator="subtract" field="week">
                     <number value="1"/>
                 </calcop>
             </calculate>
             <if-compare field="week" operator="equals" value="1">
                 <calculate field="year">
-                    <calcop field="year" operator="subtract">
+                    <calcop operator="subtract" field="year">
                         <number value="1"/>
                     </calcop>
                 </calculate>
@@ -1086,13 +1086,13 @@ under the License.
     </simple-method>
     
     <simple-method method-name="createProductCategoryAndCatalogAssoc">
-        <set-service-fields service-name="createProductCategory" to-map="createRecordCtx" map="parameters"/>
+        <set-service-fields service-name="createProductCategory" map="parameters" to-map="createRecordCtx"/>
         <call-service service-name="createProductCategory" in-map-name="createRecordCtx">
             <result-to-field result-name="productCategoryId" field="parameters.productCategoryId"/>
             <result-to-result result-name="productCategoryId"/>
         </call-service>
         
-        <set-service-fields service-name="addProductCategoryToProdCatalog" to-map="createAssocCtx" map="parameters"/>
+        <set-service-fields service-name="addProductCategoryToProdCatalog" map="parameters" to-map="createAssocCtx"/>
         <call-service service-name="addProductCategoryToProdCatalog" in-map-name="createAssocCtx">
             <result-to-result result-name="prodCatalogId"/>
             <result-to-result result-name="prodCatalogCategoryTypeId"/>
@@ -1101,13 +1101,13 @@ under the License.
     </simple-method>
     
     <simple-method method-name="createProductCategoryAndCategoryAssoc">
-        <set-service-fields service-name="createProductCategory" to-map="createRecordCtx" map="parameters"/>
+        <set-service-fields service-name="createProductCategory" map="parameters" to-map="createRecordCtx"/>
         <call-service service-name="createProductCategory" in-map-name="createRecordCtx">
             <result-to-field result-name="productCategoryId" field="parameters.productCategoryId"/>
             <result-to-result result-name="productCategoryId"/>
         </call-service>
         
-        <set-service-fields service-name="addProductCategoryToCategory" to-map="createAssocCtx" map="parameters"/>
+        <set-service-fields service-name="addProductCategoryToCategory" map="parameters" to-map="createAssocCtx"/>
         <call-service service-name="addProductCategoryToCategory" in-map-name="createAssocCtx">
             <result-to-result result-name="parentProductCategoryId"/>
             <result-to-result result-name="fromDate"/>
@@ -1115,18 +1115,18 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateProductCategoryAndCatalogAssoc">
-        <set-service-fields service-name="updateProductCategory" to-map="updateRecordCtx" map="parameters"/>
+        <set-service-fields service-name="updateProductCategory" map="parameters" to-map="updateRecordCtx"/>
         <call-service service-name="updateProductCategory" in-map-name="updateRecordCtx"/>
         
-        <set-service-fields service-name="updateProductCategoryToProdCatalog" to-map="updateAssocCtx" map="parameters"/>
+        <set-service-fields service-name="updateProductCategoryToProdCatalog" map="parameters" to-map="updateAssocCtx"/>
         <call-service service-name="updateProductCategoryToProdCatalog" in-map-name="updateAssocCtx"/>
     </simple-method>
     
     <simple-method method-name="updateProductCategoryAndCategoryAssoc">
-        <set-service-fields service-name="updateProductCategory" to-map="updateRecordCtx" map="parameters"/>
+        <set-service-fields service-name="updateProductCategory" map="parameters" to-map="updateRecordCtx"/>
         <call-service service-name="updateProductCategory" in-map-name="updateRecordCtx"/>
         
-        <set-service-fields service-name="updateProductCategoryToCategory" to-map="updateAssocCtx" map="parameters"/>
+        <set-service-fields service-name="updateProductCategoryToCategory" map="parameters" to-map="updateAssocCtx"/>
         <call-service service-name="updateProductCategoryToCategory" in-map-name="updateAssocCtx"/>
     </simple-method>
     
@@ -1137,7 +1137,7 @@ under the License.
     
     <simple-method method-name="createProductCategoryAndCatAssocVersatile">
         <if-empty field="parameters.parentProductCategoryId">
-            <set-service-fields service-name="createProductCategoryAndCatalogAssoc" to-map="createCtx" map="parameters"/>
+            <set-service-fields service-name="createProductCategoryAndCatalogAssoc" map="parameters" to-map="createCtx"/>
             <call-service service-name="createProductCategoryAndCatalogAssoc" in-map-name="createCtx">
                 <result-to-result result-name="productCategoryId"/>
                 <result-to-result result-name="prodCatalogId"/>
@@ -1146,7 +1146,7 @@ under the License.
                 <result-to-field result-name="productCategoryId" field="parameters.productCategoryId"/>
             </call-service>
             <else>
-                <set-service-fields service-name="createProductCategoryAndCategoryAssoc" to-map="createCtx" map="parameters"/>
+                <set-service-fields service-name="createProductCategoryAndCategoryAssoc" map="parameters" to-map="createCtx"/>
                 <call-service service-name="createProductCategoryAndCategoryAssoc" in-map-name="createCtx">
                     <result-to-result result-name="productCategoryId"/>
                     <result-to-result result-name="parentProductCategoryId"/>
@@ -1156,22 +1156,22 @@ under the License.
             </else>
         </if-empty>
         <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
-            <set-service-fields service-name="replaceProductCategoryContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <set-service-fields service-name="replaceProductCategoryContentLocalizedSimpleTexts" map="parameters" to-map="updateLocTextCtx"/>
             <call-service service-name="replaceProductCategoryContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
         </if-compare>
     </simple-method>
     
     <simple-method method-name="updateProductCategoryAndCatAssocVersatile">
         <if-empty field="parameters.parentProductCategoryId">
-            <set-service-fields service-name="updateProductCategoryAndCatalogAssoc" to-map="updateCtx" map="parameters"/>
+            <set-service-fields service-name="updateProductCategoryAndCatalogAssoc" map="parameters" to-map="updateCtx"/>
             <call-service service-name="updateProductCategoryAndCatalogAssoc" in-map-name="updateCtx"/>
             <else>
-                <set-service-fields service-name="updateProductCategoryAndCategoryAssoc" to-map="updateCtx" map="parameters"/>
+                <set-service-fields service-name="updateProductCategoryAndCategoryAssoc" map="parameters" to-map="updateCtx"/>
                 <call-service service-name="updateProductCategoryAndCategoryAssoc" in-map-name="updateCtx"/>
             </else>
         </if-empty>
         <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
-            <set-service-fields service-name="replaceProductCategoryContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <set-service-fields service-name="replaceProductCategoryContentLocalizedSimpleTexts" map="parameters" to-map="updateLocTextCtx"/>
             <call-service service-name="replaceProductCategoryContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
         </if-compare>
     </simple-method>
@@ -1180,22 +1180,22 @@ under the License.
         <if-empty field="parameters.parentProductCategoryId">
             <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
                 <!-- FIXME?: check if already expired?? -->
-                <set-service-fields service-name="updateProductCategoryToProdCatalog" to-map="updateCtx" map="parameters"/>
+                <set-service-fields service-name="updateProductCategoryToProdCatalog" map="parameters" to-map="updateCtx"/>
                 <now-timestamp field="updateCtx.thruDate"/>
                 <call-service service-name="updateProductCategoryToProdCatalog" in-map-name="updateCtx"/>
                 <else>
-                    <set-service-fields service-name="removeProductCategoryFromProdCatalog" to-map="removeCtx" map="parameters"/>
+                    <set-service-fields service-name="removeProductCategoryFromProdCatalog" map="parameters" to-map="removeCtx"/>
                     <call-service service-name="removeProductCategoryFromProdCatalog" in-map-name="removeCtx"/>
                 </else>
             </if-compare>
             <else>
                 <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
                     <!-- FIXME?: check if already expired?? -->
-                    <set-service-fields service-name="updateProductCategoryToCategory" to-map="updateCtx" map="parameters"/>
+                    <set-service-fields service-name="updateProductCategoryToCategory" map="parameters" to-map="updateCtx"/>
                     <now-timestamp field="updateCtx.thruDate"/>
                     <call-service service-name="updateProductCategoryToCategory" in-map-name="updateCtx"/>
                     <else>
-                        <set-service-fields service-name="removeProductCategoryFromCategory" to-map="removeCtx" map="parameters"/>
+                        <set-service-fields service-name="removeProductCategoryFromCategory" map="parameters" to-map="removeCtx"/>
                         <call-service service-name="removeProductCategoryFromCategory" in-map-name="removeCtx"/>
                     </else>
                 </if-compare>
@@ -1251,7 +1251,7 @@ under the License.
                      -->
                 </condition-list>
             </entity-condition>
-            <iterate entry="prodCatContent" list="recursiveContentList">
+            <iterate list="recursiveContentList" entry="prodCatContent">
                 <set field="contentRemoveCtx" set-if-null="true" value=""/>
                 <set field="contentRemoveCtx.contentId" from-field="prodCatContent.contentId"/>
                 <set field="contentRemoveCtx.recursiveTarget" from-field="parameters.deleteContentRecursive"/>
@@ -1343,17 +1343,17 @@ under the License.
         </if-compare>
 
         <!-- we wrote this so we know what it does
-        <set-service-fields service-name="deleteProductCategory" to-map="deleteRecordCtx" map="parameters"/>
+        <set-service-fields service-name="deleteProductCategory" map="parameters" to-map="deleteRecordCtx"/>
         <call-service service-name="deleteProductCategory" in-map-name="deleteRecordCtx"/>-->
         <remove-value value-field="productCategory"/>
     </simple-method>
     
     <simple-method method-name="deleteProductCategoryAndCatAssocVersatile">
-        <set-service-fields service-name="deleteProductCategoryCatAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
+        <set-service-fields service-name="deleteProductCategoryCatAssocVersatile" map="parameters" to-map="deleteAssocCtx"/>
         <call-service service-name="deleteProductCategoryCatAssocVersatile" in-map-name="deleteAssocCtx"/>
         
         <if-compare field="parameters.deleteRecordAndRelated" operator="not-equals" type="Boolean" value="false">
-            <set-service-fields service-name="deleteProductCategoryAndRelatedVersatile" to-map="deleteRecordCtx" map="parameters"/>
+            <set-service-fields service-name="deleteProductCategoryAndRelatedVersatile" map="parameters" to-map="deleteRecordCtx"/>
             <call-service service-name="deleteProductCategoryAndRelatedVersatile" in-map-name="deleteRecordCtx"/>
         </if-compare>
     </simple-method>
@@ -1378,7 +1378,7 @@ under the License.
                 <check-errors/>
             </if-not-empty>
             
-            <set-service-fields service-name="addProductCategoryToProdCatalog" to-map="createAssocCtx" map="parameters"/>
+            <set-service-fields service-name="addProductCategoryToProdCatalog" map="parameters" to-map="createAssocCtx"/>
             <call-service service-name="addProductCategoryToProdCatalog" in-map-name="createAssocCtx">
                 <result-to-result result-name="productCategoryId"/>
                 <result-to-result result-name="prodCatalogId"/>
@@ -1396,7 +1396,7 @@ under the License.
                     <check-errors/>
                 </if-not-empty>
                 
-                <set-service-fields service-name="addProductCategoryToCategory" to-map="createAssocCtx" map="parameters"/>
+                <set-service-fields service-name="addProductCategoryToCategory" map="parameters" to-map="createAssocCtx"/>
                 <call-service service-name="addProductCategoryToCategory" in-map-name="createAssocCtx">
                     <result-to-result result-name="productCategoryId"/>
                     <result-to-result result-name="parentProductCategoryId"/>
@@ -1442,7 +1442,7 @@ under the License.
     </simple-method>
     
     <simple-method method-name="moveProductCategoryCatAssocVersatile">
-        <set-service-fields service-name="deleteProductCategoryCatAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
+        <set-service-fields service-name="deleteProductCategoryCatAssocVersatile" map="parameters" to-map="deleteAssocCtx"/>
         <call-service service-name="deleteProductCategoryCatAssocVersatile" in-map-name="deleteAssocCtx"/>
             
         <!-- move is simply delete + copy for us -->
@@ -1459,7 +1459,7 @@ under the License.
             <check-errors/>
         </if-empty>
         
-        <set-service-fields service-name="getProductCategoryContentLocalizedSimpleTextViews" to-map="locTextCtx" map="parameters"/>
+        <set-service-fields service-name="getProductCategoryContentLocalizedSimpleTextViews" map="parameters" to-map="locTextCtx"/>
         <call-service service-name="getProductCategoryContentLocalizedSimpleTextViews" in-map-name="locTextCtx">
             <result-to-result result-name="viewsByType"/>
             <result-to-result result-name="viewsByTypeAndLocale"/>

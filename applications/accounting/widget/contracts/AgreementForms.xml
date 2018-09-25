@@ -331,7 +331,7 @@ under the License.
     <form name="ListAgreementItemFacilities" list-name="agreementFacilities" target="" title="" type="list" paginate-target="ListAgreementItemFacilities"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
-            <entity-one value-field="facility" entity-name="Facility"></entity-one>
+            <entity-one entity-name="Facility" value-field="facility"></entity-one>
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
@@ -386,7 +386,7 @@ under the License.
     <form name="ListAgreementItemParties" list-name="agreementParties" target="" title="" type="list" paginate-target="ListAgreementItemParties"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
-            <entity-one value-field="party" entity-name="PartyNameView"/>
+            <entity-one entity-name="PartyNameView" value-field="party"/>
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
@@ -424,7 +424,7 @@ under the License.
     <form name="ListAgreementItemProducts" list-name="agreementProducts" target="" title="" type="list" paginate-target="ListAgreementItemProducts"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
-            <entity-one value-field="product" entity-name="Product"/>
+            <entity-one entity-name="Product" value-field="product"/>
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
@@ -483,7 +483,7 @@ under the License.
     <form name="ListAgreementPromoAppls" list-name="agreementPromoAppls" target="" title="" type="list" paginate-target="ListAgreementPromoAppls"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
-            <entity-one value-field="productPromo" entity-name="ProductPromo"></entity-one>
+            <entity-one entity-name="ProductPromo" value-field="productPromo"></entity-one>
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
@@ -686,11 +686,11 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="AgreementWorkEffortApplic" use-cache="true" list="agreementWorkEffortApplics">
-                <field-map from-field="agreementId" field-name="agreementId"/>
+                <field-map field-name="agreementId" from-field="agreementId"/>
             </entity-and>
         </actions>
         <row-actions>
-            <entity-one value-field="workEffort" entity-name="WorkEffort">
+            <entity-one entity-name="WorkEffort" value-field="workEffort">
                 <field-map field-name="workEffortId"/>
             </entity-one>
             <set field="statusId" from-field="workEffort.currentStatusId"/>

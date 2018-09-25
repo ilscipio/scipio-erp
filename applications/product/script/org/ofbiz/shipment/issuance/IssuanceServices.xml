@@ -26,7 +26,7 @@ under the License.
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ItemIssuance"/>
+        <make-value entity-name="ItemIssuance" value-field="newEntity"/>
         <sequenced-id sequence-name="ItemIssuance" field="newEntity.itemIssuanceId"/>
         <field-to-result field="newEntity.itemIssuanceId" result-name="itemIssuanceId"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -45,7 +45,7 @@ under the License.
                 <set field="updateContext.statusId" value="INV_DELIVERED"/>
                 <call-service service-name="updateInventoryItem" in-map-name="updateContext"/>
                 
-                <entity-one value-field="product" entity-name="Product">
+                <entity-one entity-name="Product" value-field="product">
                     <field-map field-name="productId" from-field="inventoryItem.productId"/>
                 </entity-one>
                 <if>
@@ -87,7 +87,7 @@ under the License.
         <set value="Create ItemIssuanceRole" field="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
-        <make-value value-field="newEntity" entity-name="ItemIssuanceRole"/>
+        <make-value entity-name="ItemIssuanceRole" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
@@ -138,13 +138,13 @@ under the License.
 
         <!-- get orderItemShipGrpInvRes -->
         <make-value entity-name="OrderItemShipGrpInvRes" value-field="OrderItemShipGrpInvResLookupPk"/>
-        <set-pk-fields value-field="OrderItemShipGrpInvResLookupPk" map="parameters"/>
+        <set-pk-fields map="parameters" value-field="OrderItemShipGrpInvResLookupPk"/>
         <find-by-primary-key map="OrderItemShipGrpInvResLookupPk" value-field="orderItemShipGrpInvRes"/>
         <log level="info" message="order item ship grp inv res info: ${orderItemShipGrpInvRes}"/>
 
         <!-- get orderHeader -->
         <make-value entity-name="OrderHeader" value-field="orderHeaderLookupPk"/>
-        <set-pk-fields value-field="orderHeaderLookupPk" map="parameters"/>
+        <set-pk-fields map="parameters" value-field="orderHeaderLookupPk"/>
         <find-by-primary-key map="orderHeaderLookupPk" value-field="orderHeader"/>
 
         <!-- make sure the order is of orderTypeId: SALES_ORDER -->
@@ -185,9 +185,9 @@ under the License.
         <entity-one entity-name="Shipment" value-field="shipment"/>
         <!-- get orderShipment -->
         <make-value entity-name="OrderShipment" value-field="orderShipmentLookupPk"/>
-        <set-pk-fields value-field="orderShipmentLookupPk" map="parameters"/>
+        <set-pk-fields map="parameters" value-field="orderShipmentLookupPk"/>
         <find-by-and entity-name="OrderShipment" map="orderShipmentLookupPk" list="orderShipments"/>
-        <first-from-list entry="orderShipment" list="orderShipments"/>
+        <first-from-list list="orderShipments" entry="orderShipment"/>
 
         <!-- will create qtyForShipmentItem -->
         <call-simple-method method-name="calcQtyForShipmentItemInline"/>
@@ -197,7 +197,7 @@ under the License.
             <if-not-empty field="orderShipment">
                 <field-to-result field="orderShipment.shipmentItemSeqId" result-name="shipmentItemSeqId"/>
                 <make-value entity-name="ShipmentItem" value-field="shipmentItemLookupPk"/>
-                <set-pk-fields value-field="shipmentItemLookupPk" map="parameters"/>
+                <set-pk-fields map="parameters" value-field="shipmentItemLookupPk"/>
                 <set from-field="orderShipment.shipmentItemSeqId" field="shipmentItemLookupPk.shipmentItemSeqId"/>
                 <find-by-primary-key map="shipmentItemLookupPk" value-field="shipmentItem"/>
             </if-not-empty>
@@ -211,14 +211,14 @@ under the License.
         <else>
             <!-- A reduction in the quantity, so OrderShipment must exist. -->
             <calculate field="orderShipment.quantity">
-                <calcop field="orderShipment.quantity" operator="subtract">
+                <calcop operator="subtract" field="orderShipment.quantity">
                     <calcop operator="get" field="parameters.quantity"/>
                 </calcop>
             </calculate>
             <store-value value-field="orderShipment"/>
             <field-to-result field="orderShipment.shipmentItemSeqId" result-name="shipmentItemSeqId"/>
             <make-value entity-name="ShipmentItem" value-field="shipmentItemLookupPk"/>
-            <set-pk-fields value-field="shipmentItemLookupPk" map="parameters"/>
+            <set-pk-fields map="parameters" value-field="shipmentItemLookupPk"/>
             <set from-field="orderShipment.shipmentItemSeqId" field="shipmentItemLookupPk.shipmentItemSeqId"/>
             <find-by-primary-key map="shipmentItemLookupPk" value-field="shipmentItem"/>
         </else>
@@ -268,11 +268,11 @@ under the License.
         <set from-field="shipmentItem.shipmentItemSeqId" field="createDetailMap.shipmentItemSeqId"/>
         <set from-field="itemIssuanceId" field="createDetailMap.itemIssuanceId"/>
         <calculate field="createDetailMap.quantityOnHandDiff" decimal-scale="6">
-            <calcop field="parameters.quantity" operator="negative"/>
+            <calcop operator="negative" field="parameters.quantity"/>
         </calculate>
         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
         <clear-field field="createDetailMap"/>
-        <entity-and list="oisgirs" entity-name="OrderItemShipGrpInvRes">
+        <entity-and entity-name="OrderItemShipGrpInvRes" list="oisgirs">
             <field-map field-name="orderId" from-field="orderItemShipGrpInvRes.orderId"/>
             <field-map field-name="orderItemSeqId" from-field="orderItemShipGrpInvRes.orderItemSeqId"/>
             <field-map field-name="inventoryItemId" from-field="orderItemShipGrpInvRes.inventoryItemId"/>
@@ -287,7 +287,7 @@ under the License.
             should not contribute to the adjustment calculation here
         -->
         <if-not-empty field="parameters.inventoryItemId">
-            <entity-and list="itemIssuances" entity-name="ItemIssuance">
+            <entity-and entity-name="ItemIssuance" list="itemIssuances">
                 <field-map field-name="orderId" from-field="parameters.orderId"/>
                 <field-map field-name="orderItemSeqId" from-field="parameters.orderItemSeqId"/>
                 <field-map field-name="shipGroupSeqId" from-field="parameters.shipGroupSeqId"/>
@@ -299,7 +299,7 @@ under the License.
             <iterate list="itemIssuances" entry="itemIssuance">
                 <if-compare-field field="itemIssuance.inventoryItemId" operator="not-equals" to-field="parameters.inventoryItemId">
                     <calculate field="otherInventoryItemQuantity">
-                       <calcop field="otherInventoryItemQuantity" operator="add">
+                       <calcop operator="add" field="otherInventoryItemQuantity">
                            <calcop operator="get" field="itemIssuance.quantity"/>
                        </calcop>
                     </calculate>
@@ -311,14 +311,14 @@ under the License.
             from the current one should be ignored as we calculate the adjustment to make.
         -->
         <calculate field="orderShipmentAmount">
-           <calcop field="orderShipment.quantity" operator="subtract">
+           <calcop operator="subtract" field="orderShipment.quantity">
                <calcop operator="get" field="otherInventoryItemQuantity"/>
            </calcop>
         </calculate>
         
         <!-- qtyForShipmentItem is the quantity we will add to the ShipmentItem -->
         <calculate field="qtyForShipmentItem">
-           <calcop field="parameters.quantity" operator="subtract">
+           <calcop operator="subtract" field="parameters.quantity">
                <calcop operator="get" field="orderShipmentAmount"/>
            </calcop>
         </calculate>
@@ -337,7 +337,7 @@ under the License.
                 </condition-list>
                 <order-by field-name="shipmentItemSeqId"/>
             </entity-condition>
-            <first-from-list entry="shipmentItem" list="shipmentItems"/>
+            <first-from-list list="shipmentItems" entry="shipmentItem"/>
         </if-not-empty>
 
         <if-empty field="shipmentItem">
@@ -379,16 +379,16 @@ under the License.
                 
 
         <make-value entity-name="OrderShipment" value-field="orderShipmentLookupPk"/>
-        <set-pk-fields value-field="orderShipmentLookupPk" map="orderShipmentCreate"/>
+        <set-pk-fields map="orderShipmentCreate" value-field="orderShipmentLookupPk"/>
         <find-by-and entity-name="OrderShipment" map="orderShipmentLookupPk" list="orderShipments"/>
-        <first-from-list entry="orderShipment" list="orderShipments"/>
+        <first-from-list list="orderShipments" entry="orderShipment"/>
 
         <if-empty field="orderShipment">
             <set from-field="parameters.quantity" field="orderShipmentCreate.quantity"/>
             <call-service service-name="createOrderShipment" in-map-name="orderShipmentCreate"/>
         <else>
             <calculate field="orderShipment.quantity">
-                <calcop field="orderShipment.quantity" operator="add">
+                <calcop operator="add" field="orderShipment.quantity">
                     <calcop operator="get" field="parameters.quantity"/>
                 </calcop>
             </calculate>
@@ -400,7 +400,7 @@ under the License.
     <simple-method method-name="findCreateItemIssuance" short-description="Find Create ItemIssuance - meant to be called in-line">
         <!-- If a non-sales order find ItemIssuance for orderItemSeqId-shimentItemSeqId-shipGroupSeqId pair, update it and return -->
         <if-compare field="orderHeader.orderTypeId" operator="not-equals" value="SALES_ORDER">
-            <entity-and list="itemIssuances" entity-name="ItemIssuance">
+            <entity-and entity-name="ItemIssuance" list="itemIssuances">
                 <field-map field-name="orderId" from-field="orderItem.orderId"/>
                 <field-map field-name="orderItemSeqId" from-field="orderItem.orderItemSeqId"/>
                 <field-map field-name="shipmentId" from-field="shipmentItem.shipmentId"/>
@@ -409,7 +409,7 @@ under the License.
                 <order-by field-name="-issuedDateTime"/>
             </entity-and>
             <if-not-empty field="itemIssuances">
-                <first-from-list entry="itemIssuance" list="itemIssuances"/>
+                <first-from-list list="itemIssuances" entry="itemIssuance"/>
                 <set field="itemIssuance.quantity" value="${itemIssuance.quantity$bigDecimal + parameters.quantity$bigDecimal}" type="BigDecimal"/>
                 <store-value value-field="itemIssuance"/>
                 <set field="itemIssuanceId" from-field="itemIssuance.itemIssuanceId"/>
@@ -453,7 +453,7 @@ under the License.
         </if-empty>
 
         <!-- Add ItemIssuanceRole for party that issues this... -->
-        <entity-one value-field="itemIssuanceRole" entity-name="ItemIssuanceRole">
+        <entity-one entity-name="ItemIssuanceRole" value-field="itemIssuanceRole">
             <field-map field-name="itemIssuanceId" from-field="itemIssuanceId"/>
             <field-map field-name="partyId" from-field="userLogin.partyId"/>
             <field-map field-name="roleTypeId" value="PACKER"/>
@@ -504,10 +504,10 @@ under the License.
         <set from-field="fixedAssetMaint.maintHistSeqId" field="createDetailMap.maintHistSeqId"/>
         <set from-field="itemIssuanceId" field="createDetailMap.itemIssuanceId"/>
         <calculate field="createDetailMap.quantityOnHandDiff" decimal-scale="6">
-            <calcop field="parameters.quantity" operator="negative"/>
+            <calcop operator="negative" field="parameters.quantity"/>
         </calculate>
         <calculate field="createDetailMap.availableToPromiseDiff" decimal-scale="6">
-            <calcop field="parameters.quantity" operator="negative"/>
+            <calcop operator="negative" field="parameters.quantity"/>
         </calculate>
         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
     </simple-method>
@@ -526,10 +526,10 @@ under the License.
         <set from-field="itemIssuance.maintHistSeqId" field="createDetailMap.maintHistSeqId"/>
         <set from-field="itemIssuance.itemIssuanceId" field="createDetailMap.itemIssuanceId"/>
         <calculate field="createDetailMap.quantityOnHandDiff" decimal-scale="6">
-            <calcop field="oldQuantity" operator="add"/>
+            <calcop operator="add" field="oldQuantity"/>
         </calculate>
         <calculate field="createDetailMap.availableToPromiseDiff" decimal-scale="6">
-            <calcop field="oldQuantity" operator="add"/>
+            <calcop operator="add" field="oldQuantity"/>
         </calculate>
         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
     </simple-method>
@@ -558,7 +558,7 @@ under the License.
 
         <!-- get the quantity that can be cancelled ItemIssuance -->
         <calculate field="qtyIssuedLeft">
-            <calcop field="itemIssuance.quantity" operator="subtract">
+            <calcop operator="subtract" field="itemIssuance.quantity">
                 <calcop operator="get" field="itemIssuance.cancelQuantity"/>
             </calcop>
         </calculate>
@@ -680,30 +680,30 @@ under the License.
         <set field="createDetailMap.shipmentId" from-field="shipmentId"/>
         <set field="createDetailMap.shipmentItemSeqId" from-field="shipmentItemSeqId"/>
         <calculate field="createDetailMap.quantityOnHandDiff" decimal-scale="6">
-            <calcop field="parameters.quantity" operator="negative"/>
+            <calcop operator="negative" field="parameters.quantity"/>
         </calculate>
         <calculate field="createDetailMap.availableToPromiseDiff" decimal-scale="6">
-            <calcop field="parameters.quantity" operator="negative"/>
+            <calcop operator="negative" field="parameters.quantity"/>
         </calculate>
         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
     </simple-method>
     <simple-method method-name="getTotalIssuedQuantityForOrderItem" short-description="Computes the total quantity assigned to shipment for a purchase order item">
         <set field="totalIssuedQuantity" type="BigDecimal" value="0"/>
-        <entity-and list="orderShipments" entity-name="OrderShipment">
+        <entity-and entity-name="OrderShipment" list="orderShipments">
             <field-map field-name="orderId" from-field="orderItem.orderId"/>
             <field-map field-name="orderItemSeqId" from-field="orderItem.orderItemSeqId"/>
         </entity-and>
         <if-not-empty field="orderShipments">
-                <iterate entry="orderShipment" list="orderShipments">
+                <iterate list="orderShipments" entry="orderShipment">
                     <set field="totalIssuedQuantity" value="${totalIssuedQuantity$bigDecimal + orderShipment.quantity$bigDecimal}" type="BigDecimal"/>
                 </iterate>
             <else>
                 <!-- This is here for backward compatibility only: ItemIssuances are no more created for purchase orders -->
-                <entity-and list="allItemIssuances" entity-name="ItemIssuance">
+                <entity-and entity-name="ItemIssuance" list="allItemIssuances">
                     <field-map field-name="orderId" from-field="orderItem.orderId"/>
                     <field-map field-name="orderItemSeqId" from-field="orderItem.orderItemSeqId"/>
                 </entity-and>
-                <iterate entry="itemIssuance" list="allItemIssuances">
+                <iterate list="allItemIssuances" entry="itemIssuance">
                     <set field="totalIssuedQuantity" value="${totalIssuedQuantity$bigDecimal + itemIssuance.quantity$bigDecimal}" type="BigDecimal"/>
                 </iterate>
             </else>

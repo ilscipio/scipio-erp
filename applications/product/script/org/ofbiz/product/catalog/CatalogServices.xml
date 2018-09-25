@@ -100,7 +100,7 @@ under the License.
 
     <simple-method method-name="checkImageUrlForAllCategories" short-description="Check for image url exists or not for All categories" login-required="false">
         <!-- Get all the categories from top category -->
-        <set-service-fields to-map="categoryFindContext" service-name="getAllCategories" map="parameters"/>
+        <set-service-fields service-name="getAllCategories" map="parameters" to-map="categoryFindContext"/>
         <call-service service-name="getAllCategories" in-map-name="categoryFindContext">
             <result-to-field result-name="categories" field="categories"/>
         </call-service>
@@ -121,7 +121,7 @@ under the License.
 
     <simple-method method-name="checkImageUrlForCategoryAndProduct" short-description="Check for image url exists or not for category and product " login-required="false">
         <!--set from-field="parameters.categoryId" field="productCategoryContext.categoryId"/ -->
-        <set-service-fields to-map="productCategoryContext" service-name="getProductCategoryMembers" map="parameters"/>
+        <set-service-fields service-name="getProductCategoryMembers" map="parameters" to-map="productCategoryContext"/>
         <call-service service-name="getProductCategoryMembers" in-map-name="productCategoryContext" >
             <result-to-field result-name="categoryMembers" field="categoryMembers"/>
             <result-to-field result-name="category" field="category"/>
@@ -204,14 +204,14 @@ under the License.
                 <!--  Case For virtual Product -->
                 <!--  get related assoc product -->
                 <get-related-one relation-name="Product" value-field="productCategoryMember" to-value-field="product"/>
-                <if-compare operator="equals" field="product.isVirtual" value="Y">
+                <if-compare field="product.isVirtual" operator="equals" value="Y">
                     <!-- log level="info" message = "Virtual product =====${productCategoryMember.productId}"/ -->
                     <set field="virtualProductContext.productId" from-field="product.productId"/>
                     <set field="virtualProductContext.productAssocTypeId" value="PRODUCT_VARIANT"/>
                     <find-by-and entity-name="ProductAssoc" map="virtualProductContext" list="variantProducts"/>
                     <filter-list-by-date list="variantProducts"/>
                     <if-not-empty field="variantProducts">
-                        <iterate entry="variantProduct" list="variantProducts">
+                        <iterate list="variantProducts" entry="variantProduct">
                             <!-- log level="info" message = "Variant product =====${variantProduct.productIdTo}"/ -->
                             <set field="variantProductContext.productId" from-field="variantProduct.productIdTo"/>
                             <call-service service-name="checkImageUrlForProduct" in-map-name="variantProductContext">
@@ -444,22 +444,22 @@ under the License.
         <set field="categoriesUpdated" value="0" type="Integer"/>
         <set field="productsNotUpdated" value="0" type="Integer"/>
         <set field="productsUpdated" value="0" type="Integer"/>
-        <entity-and list="prodCatalogCategoryList" entity-name="ProdCatalogCategory" filter-by-date="false">
+        <entity-and entity-name="ProdCatalogCategory" list="prodCatalogCategoryList" filter-by-date="false">
             <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
         </entity-and>
 
         <!-- Get all categories -->
         <set field="parameters.productCategories" value="${groovy: []}" type="List"/>
-        <iterate entry="prodCatalogCategory" list="prodCatalogCategoryList">
+        <iterate list="prodCatalogCategoryList" entry="prodCatalogCategory">
             <set field="rootProductCategoryId" from-field="prodCatalogCategory.productCategoryId"/>
-            <entity-and list="productCategoryRollupList" entity-name="ProductCategoryRollup" filter-by-date="true">
+            <entity-and entity-name="ProductCategoryRollup" list="productCategoryRollupList" filter-by-date="true">
                 <field-map field-name="parentProductCategoryId" from-field="rootProductCategoryId"/>
             </entity-and>
             <set field="parameters.parentProductCategoryId" from-field="rootProductCategoryId"/>
             <call-simple-method method-name="createMissingCategoryAltUrlInline"/>
         </iterate>
 
-        <iterate entry="productCategoryList" list="parameters.productCategories">
+        <iterate list="parameters.productCategories" entry="productCategoryList">
             <!-- Create Product Category Alternative URLs -->
             <if-empty field="category">
                 <entity-condition list="productCategoryContentAndInfoList" entity-name="ProductCategoryContentAndInfo" filter-by-date="true" use-cache="true">
@@ -483,7 +483,7 @@ under the License.
                             <order-by field-name="-fromDate"/>
                         </entity-condition>
                         <if-not-empty field="productCategoryContentList">
-                            <first-from-list entry="productCategoryContent" list="productCategoryContentList"/>
+                            <first-from-list list="productCategoryContentList" entry="productCategoryContent"/>
                             <set field="getContentAndDataResourceCtx.contentId" from-field="productCategoryContent.contentId"/>
                             <call-service service-name="getContentAndDataResource" in-map-name="getContentAndDataResourceCtx">
                                 <result-to-field result-name="resultData" field="resultMap"/>
@@ -523,7 +523,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="-fromDate"/>
                 </entity-condition>
-                <iterate entry="productCategoryMember" list="productCategoryMemberList">
+                <iterate list="productCategoryMemberList" entry="productCategoryMember">
                     <set field="product.productId" from-field="productCategoryMember.productId"/>
                     <entity-condition list="ProductContentAndInfoList" entity-name="ProductContentAndInfo" filter-by-date="true" use-cache="true">
                         <condition-list combine="and">
@@ -533,7 +533,7 @@ under the License.
                         <order-by field-name="-fromDate"/>
                     </entity-condition>
                     <if-empty field="ProductContentAndInfoList">
-                        <entity-one value-field="productMap" entity-name="Product">
+                        <entity-one entity-name="Product" value-field="productMap">
                             <field-map field-name="productId" from-field="product.productId"/>
                         </entity-one>
                         <set field="createSimpleTextContentForProductCtx.fromDate" from-field="now"/>
@@ -577,12 +577,12 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createMissingCategoryAltUrlInline" short-description="create missing category alternative inline">
-        <entity-and list="productCategoryRollups" entity-name="ProductCategoryRollup" filter-by-date="true">
+        <entity-and entity-name="ProductCategoryRollup" list="productCategoryRollups" filter-by-date="true">
             <field-map field-name="parentProductCategoryId" from-field="parameters.parentProductCategoryId"/>
         </entity-and>
-        <iterate entry="productCategoryRollup" list="productCategoryRollups">
+        <iterate list="productCategoryRollups" entry="productCategoryRollup">
             <!-- append product category to list -->
-            <entity-one value-field="productCategory" entity-name="ProductCategory">
+            <entity-one entity-name="ProductCategory" value-field="productCategory">
                 <field-map field-name="productCategoryId" from-field="productCategoryRollup.productCategoryId"/>
             </entity-one>
             <field-to-list list="parameters.productCategories" field="productCategory"/>
@@ -615,7 +615,7 @@ under the License.
     <simple-method method-name="deleteProdCatalogStoreAssocVersatile">
         <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
             <!-- FIXME?: check if already expired?? -->
-            <set-service-fields service-name="updateProductStoreCatalog" to-map="updateCtx" map="parameters"/>
+            <set-service-fields service-name="updateProductStoreCatalog" map="parameters" to-map="updateCtx"/>
             <now-timestamp field="updateCtx.thruDate"/>
             <call-service service-name="updateProductStoreCatalog" in-map-name="updateCtx"/>
             <else>
@@ -672,17 +672,17 @@ under the License.
         </if-compare>
 
         <!-- we wrote this so we know what it does
-        <set-service-fields service-name="deleteProductCategory" to-map="deleteRecordCtx" map="parameters"/>
+        <set-service-fields service-name="deleteProductCategory" map="parameters" to-map="deleteRecordCtx"/>
         <call-service service-name="deleteProductCategory" in-map-name="deleteRecordCtx"/>-->
         <remove-value value-field="prodCatalog"/>
     </simple-method>
     
     <simple-method method-name="deleteProdCatalogAndStoreAssocVersatile">
-        <set-service-fields service-name="deleteProdCatalogStoreAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
+        <set-service-fields service-name="deleteProdCatalogStoreAssocVersatile" map="parameters" to-map="deleteAssocCtx"/>
         <call-service service-name="deleteProdCatalogStoreAssocVersatile" in-map-name="deleteAssocCtx"/>
         
         <if-compare field="parameters.deleteRecordAndRelated" operator="not-equals" type="Boolean" value="false">
-            <set-service-fields service-name="deleteProdCatalogAndRelatedVersatile" to-map="deleteRecordCtx" map="parameters"/>
+            <set-service-fields service-name="deleteProdCatalogAndRelatedVersatile" map="parameters" to-map="deleteRecordCtx"/>
             <call-service service-name="deleteProdCatalogAndRelatedVersatile" in-map-name="deleteRecordCtx"/>
         </if-compare>
     </simple-method>

@@ -27,7 +27,7 @@ under the License.
         <set field="dataCategoryId" from-field="multiPartMap.dataCategoryId" />
         <set field="importDatevCtx" from-field="multiPartMap" />
         
-        <entity-one value-field="dataCategory" entity-name="DatevDataCategory">
+        <entity-one entity-name="DatevDataCategory" value-field="dataCategory">
             <field-map field-name="dataCategoryId"/>
         </entity-one>                        
                 

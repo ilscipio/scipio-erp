@@ -102,7 +102,7 @@ under the License.
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
         <row-actions>
-            <entity-one value-field="party" entity-name="PartyNameView"/>
+            <entity-one entity-name="PartyNameView" value-field="party"/>
         </row-actions>
         <field name="invoiceId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
@@ -398,7 +398,7 @@ under the License.
     <form name="ListInvoiceRoles" type="list" use-row-submit="true" title="" list-name="invoiceRoles" paginate-target="invoiceRoles"
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
-            <entity-one value-field="party" entity-name="PartyNameView"/>
+            <entity-one entity-name="PartyNameView" value-field="party"/>
         </row-actions>
         <field name="invoiceId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">

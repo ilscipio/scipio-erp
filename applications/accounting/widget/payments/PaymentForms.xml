@@ -62,10 +62,10 @@ under the License.
         </actions>
         <row-actions>
             <set field="amountToApply" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>
-            <entity-one value-field="partyFrom" entity-name="PartyNameView">
+            <entity-one entity-name="PartyNameView" value-field="partyFrom">
                 <field-map field-name="partyId" value="${partyIdFrom}" />
             </entity-one>
-            <entity-one value-field="partyTo" entity-name="PartyNameView">
+            <entity-one entity-name="PartyNameView" value-field="partyTo">
                 <field-map field-name="partyId" value="${partyIdTo}" />
             </entity-one>
         </row-actions>

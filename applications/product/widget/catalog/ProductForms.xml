@@ -1608,7 +1608,7 @@
     <form name="ListProductAssocs" type="list" use-row-submit="true" title="" list-name="assocFromProducts" odd-row-style="alternate-row"
         paginate-target="EditProductAssoc"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
-            <entity-one value-field="productAssoc" entity-name="Product">
+            <entity-one entity-name="Product" value-field="productAssoc">
                 <field-map field-name="productId" value="${productIdTo}" />
             </entity-one>
         </row-actions>
@@ -2578,7 +2578,7 @@
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-and entity-name="WorkEffortGoodStandard" use-cache="true" list="productWorkEfforts">
-                <field-map from-field="productId" field-name="productId" />
+                <field-map field-name="productId" from-field="productId"/>
             </entity-and>
         </actions>
         <field name="productId">

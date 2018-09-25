@@ -138,7 +138,7 @@
                 <result-to-field result-name="contactMechId" field="cutn.contactMechId"/>
             </call-service>
             <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
                     <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
                         <field-map field-name="partyId" from-field="partyId"/>
                         <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
@@ -158,7 +158,7 @@
                 <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
                     in that case fail and tell user to resubmit because we're creating a duplicate
                     and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
                     <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
                         <field-map field-name="partyId" from-field="partyId"/>
                         <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
@@ -176,7 +176,7 @@
                 <call-service service-name="createPartyPostalAddress" in-map-name="cutn.contactCtx">
                     <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                 </call-service>
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
                     <set field="purposeCtx.partyId" from-field="partyId"/>
                     <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
                     <call-service service-name="createPartyContactMechPurpose" in-map-name="purposeCtx"/>
@@ -355,7 +355,7 @@
 	            </and>
             </condition>
             <then>
-		        <entity-one value-field="userUserLogin" entity-name="UserLogin">
+		        <entity-one entity-name="UserLogin" value-field="userUserLogin">
 		            <field-map field-name="userLoginId" from-field="parameters.USERNAME"/>
 		        </entity-one>
 		        
@@ -526,7 +526,7 @@
                 <result-to-field result-name="contactMechId" field="cutn.contactMechId"/>
             </call-service>
             <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
                     <entity-and entity-name="FacilityContactMechPurpose" list="purposes" filter-by-date="true">
                         <field-map field-name="facilityId" from-field="facilityId"/>
                         <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
@@ -546,7 +546,7 @@
                 <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
                     in that case fail and tell user to resubmit because we're creating a duplicate
                     and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
                     <entity-and entity-name="FacilityContactMechPurpose" list="purposes" filter-by-date="true">
                         <field-map field-name="facilityId" from-field="facilityId"/>
                         <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
@@ -564,7 +564,7 @@
                 <call-service service-name="createFacilityPostalAddress" in-map-name="cutn.contactCtx">
                     <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                 </call-service>
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
                     <set field="purposeCtx.facilityId" from-field="facilityId"/>
                     <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
                     <call-service service-name="createFacilityContactMechPurpose" in-map-name="purposeCtx"/>

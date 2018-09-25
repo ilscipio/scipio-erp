@@ -89,7 +89,7 @@ under the License.
                     <condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
                     <order-by field-name="-entryDate"/>
                 </entity-condition>
-                <entity-and list="contacts" entity-name="PartyRelationship" filter-by-date="true">
+                <entity-and entity-name="PartyRelationship" list="contacts" filter-by-date="true">
                     <field-map field-name="partyIdFrom" from-field="partyId"/>
                     <field-map field-name="roleTypeIdFrom" value="ACCOUNT"/>
                     <field-map field-name="roleTypeIdTo" value="CONTACT"/>
@@ -150,7 +150,7 @@ under the License.
                                             <condition-expr field-name="partyId" operator="equals" from-field="partyIdFrom"/>
                                             <order-by field-name="-entryDate"/>
                                         </entity-condition>
-                                        <entity-and list="contacts" entity-name="PartyRelationship" filter-by-date="true">
+                                        <entity-and entity-name="PartyRelationship" list="contacts" filter-by-date="true">
                                             <field-map field-name="partyIdFrom" from-field="partyIdFrom"/>
                                             <field-map field-name="roleTypeIdFrom" value="ACCOUNT"/>
                                             <field-map field-name="roleTypeIdTo" value="CONTACT"/>
@@ -360,7 +360,7 @@ under the License.
                         </screenlet>
                         <section>
                             <actions>
-                                <entity-and list="commEvents" entity-name="CommunicationEvent">
+                                <entity-and entity-name="CommunicationEvent" list="commEvents">
                                     <field-map field-name="parentCommEventId" from-field="parameters.communicationEventId"/>
                                 </entity-and>
                             </actions>

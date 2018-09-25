@@ -44,7 +44,7 @@
         <entity-one entity-name="Content" value-field="content" auto-field-map="false">
             <field-map field-name="contentId" from-field="parameters.contentId"/>
         </entity-one>
-        <set-nonpk-fields value-field="content" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="content"/>
         <store-value value-field="content"/>
  
         <set-service-fields service-name="updateSimpleTextContent" map="parameters" to-map="updateCtx"/>

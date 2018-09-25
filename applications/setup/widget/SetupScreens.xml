@@ -702,7 +702,7 @@
         <section>
             <actions>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAccountingTransactions.groovy"/>
-                <!-- <entity-and list="datevDataCategories" entity-name="DatevDataCategory"></entity-and> -->
+                <!-- <entity-and entity-name="DatevDataCategory" list="datevDataCategories"></entity-and> -->
             </actions>
             <widgets>
             	<section>

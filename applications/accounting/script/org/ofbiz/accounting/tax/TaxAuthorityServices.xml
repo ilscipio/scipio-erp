@@ -42,7 +42,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="TaxAuthority" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthority" short-description="delete a TaxAuthority">
@@ -100,7 +100,7 @@ under the License.
         -->
 
         <entity-one entity-name="TaxAuthorityAssoc" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthorityAssoc" short-description="delete a TaxAuthorityAssoc">
@@ -135,7 +135,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="TaxAuthorityCategory" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthorityCategory" short-description="delete a TaxAuthorityCategory">
@@ -200,7 +200,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="TaxAuthorityGlAccount" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthorityGlAccount" short-description="delete a TaxAuthorityGlAccount">
@@ -240,7 +240,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="TaxAuthorityRateProduct" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthorityRateProduct" short-description="delete a TaxAuthorityRateProduct">
@@ -264,7 +264,7 @@ under the License.
 
         <call-simple-method method-name="validatePartyTaxIdInline"/>
 
-        <entity-one value-field="taxAuth" entity-name="TaxAuthority"/>
+        <entity-one entity-name="TaxAuthority" value-field="taxAuth"/>
         <if-empty field="taxAuth">
             <add-error>
                 <fail-property resource="PartyUiLabels" property="PartyTaxAuthPartyAndGeoNotAvailable"/>
@@ -295,7 +295,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="PartyTaxAuthInfo" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="validatePartyTaxIdInline" short-description="validatePartyTaxIdInline">

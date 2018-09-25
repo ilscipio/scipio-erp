@@ -29,21 +29,21 @@
         <call-service service-name="createPartyRelationship" in-map-name="internalCtx"></call-service>
     </simple-method>
     <simple-method method-name="removeEmlpPosition" short-description="">
-        <entity-and list="emplPositionFulfillment" entity-name="EmplPositionFulfillment">
+        <entity-and entity-name="EmplPositionFulfillment" list="emplPositionFulfillment">
             <field-map field-name="emplPositionId" from-field="parameters.emplPositionId"/>
             <field-map field-name="partyId" from-field="parameters.partyId"/>
         </entity-and>
         <if-not-empty field="emplPositionFulfillment">
             <set field="parameters.fromDate" from-field="emplPositionFulfillment[0].fromDate"/>
-            <set-service-fields service-name="deleteEmplPositionFulfillment" to-map="delFullfillCtx" map="parameters"/>
+            <set-service-fields service-name="deleteEmplPositionFulfillment" map="parameters" to-map="delFullfillCtx"/>
             <call-service service-name="deleteEmplPositionFulfillment" in-map-name="delFullfillCtx"></call-service>
         </if-not-empty>
         
-        <set-service-fields service-name="deleteEmplPosition" to-map="delEmlpCtx" map="parameters"/>
+        <set-service-fields service-name="deleteEmplPosition" map="parameters" to-map="delEmlpCtx"/>
         <call-service service-name="deleteEmplPosition" in-map-name="delEmlpCtx"></call-service>
     </simple-method>
     <simple-method method-name="removeInternalOrg" short-description="">
-        <entity-and list="partyRelationship" entity-name="PartyRelationship">
+        <entity-and entity-name="PartyRelationship" list="partyRelationship">
             <field-map field-name="partyIdTo" from-field="parameters.partyId"/>
             <field-map field-name="partyIdFrom" from-field="parameters.parentpartyId"/>
         </entity-and>
@@ -74,7 +74,7 @@
         <if-empty field="parameters.estimatedCompletionDate"><!-- SCIPIO: added ability to pass completion date -->
             <set field="parameters.estimatedCompletionDate" from-field="dateEnd"/>
         </if-empty>
-        <entity-and list="workEffortList" entity-name="WorkEffort">
+        <entity-and entity-name="WorkEffort" list="workEffortList">
             <field-map field-name="workEffortTypeId" value="PUBLIC_HOLIDAY"/>
             <field-map field-name="estimatedStartDate" from-field="parameters.estimatedStartDate"/>
         </entity-and>

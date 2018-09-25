@@ -208,7 +208,7 @@ under the License.
                 <set field="activeSubMenuItem" value="EditCategoryContent"/>
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                <entity-condition list="productCategoryContentTypeList" entity-name="ProductCategoryContentType">
+                <entity-condition entity-name="ProductCategoryContentType" list="productCategoryContentTypeList">
                      <order-by field-name="description"/>
                  </entity-condition>
                 

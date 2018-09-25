@@ -138,7 +138,7 @@ under the License.
                  </condition-list>
                  <order-by field-name="-statusDate"/>
              </entity-condition>
-             <first-from-list entry="lastRecord" list="lookupList"/> 
+             <first-from-list list="lookupList" entry="lastRecord"/> 
              <set field="parameters.fromDate" from-field="lastRecord.fromDate"/>             
         </if-empty>
         
@@ -160,8 +160,8 @@ under the License.
         <field-to-result field="parameters.contactListId" result-name="contactListId" />
     </simple-method>
     <simple-method method-name="updateContactListPartyNoUserLogin" short-description="Update Add Party To ContactList No User Login" login-required="false">
-        <entity-one value-field="contactList" entity-name="ContactList"/>
-        <entity-and list="contactListPartyStatusList" entity-name="ContactListPartyStatus">
+        <entity-one entity-name="ContactList" value-field="contactList"/>
+        <entity-and entity-name="ContactListPartyStatus" list="contactListPartyStatusList">
             <field-map field-name="contactListId" from-field="parameters.contactListId"/>
             <field-map field-name="partyId" from-field="parameters.partyId"/>
             <field-map field-name="optInVerifyCode" from-field="parameters.optInVerifyCode"/>
@@ -169,7 +169,7 @@ under the License.
         </entity-and>
         <if-not-empty field="contactListPartyStatusList">
             <set-service-fields service-name="updateContactListParty" map="parameters" to-map="updateContactListPartyMap"/>
-            <entity-one value-field="systemUserLogin" entity-name="UserLogin">
+            <entity-one entity-name="UserLogin" value-field="systemUserLogin">
                 <field-map field-name="userLoginId" value="system"/>
             </entity-one>
             <set field="updateContactListPartyMap.userLogin" from-field="systemUserLogin"/>
@@ -191,13 +191,13 @@ under the License.
             <check-errors/>
         </if-compare>
         
-        <entity-one value-field="userLogin" entity-name="UserLogin">
+        <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
         <if-empty field="parameters.partyId">
             <set field="parameters.partyId" value="_NA_"/>
         </if-empty>
-        <entity-and list="partyContactWithPurposes" entity-name="PartyContactWithPurpose">
+        <entity-and entity-name="PartyContactWithPurpose" list="partyContactWithPurposes">
             <field-map field-name="partyId" from-field="parameters.partyId"/>
             <field-map field-name="infoString" from-field="parameters.email"/>
             <field-map field-name="contactMechTypeId" value="EMAIL_ADDRESS"/>
@@ -215,7 +215,7 @@ under the License.
             <set field="updateContactListPartyMap.baseLocation" from-field="parameters.baseLocation"/>
             <call-service service-name="updateContactListParty" in-map-name="updateContactListPartyMap"/>
             <else>
-                <entity-and list="partyContactWithPurposes" entity-name="PartyContactWithPurpose">
+                <entity-and entity-name="PartyContactWithPurpose" list="partyContactWithPurposes">
                     <field-map field-name="infoString" from-field="parameters.email"/>
                     <field-map field-name="contactMechTypeId" value="EMAIL_ADDRESS"/>
                 </entity-and>
@@ -238,21 +238,21 @@ under the License.
         </if-not-empty>
     </simple-method>
     <simple-method method-name="unsubscribeContactListPartyContachMech" short-description="Find email by contactMechId then call unsubscribeContactListParty service">
-        <entity-and list="partyContactWithPurposes" entity-name="PartyContactWithPurpose">
+        <entity-and entity-name="PartyContactWithPurpose" list="partyContactWithPurposes">
             <field-map field-name="contactMechId" from-field="parameters.preferredContactMechId"/>
             <field-map field-name="partyId" from-field="parameters.partyId"/>
             <field-map field-name="contactMechTypeId" value="EMAIL_ADDRESS"/>
         </entity-and>
-        <first-from-list entry="partyContactWithPurpose" list="partyContactWithPurposes"/>
+        <first-from-list list="partyContactWithPurposes" entry="partyContactWithPurpose"/>
         <set field="email" from-field="partyContactWithPurpose.infoString"/>
-        <set-service-fields service-name="unsubscribeContactListParty" to-map="unsubscribeContactListPartyCtx" map="parameters"/>
+        <set-service-fields service-name="unsubscribeContactListParty" map="parameters" to-map="unsubscribeContactListPartyCtx"/>
         <set field="unsubscribeContactListPartyCtx.email" from-field="email"/>
         <call-service service-name="unsubscribeContactListParty" in-map-name="unsubscribeContactListPartyCtx"/>
     </simple-method>
     <simple-method method-name="updatePartyEmailContactListParty" short-description="Update ContactList Party Contact Mech">
         <set field="lookupMap.preferredContactMechId" from-field="parameters.oldContactMechId"/>
         <find-by-and entity-name="ContactListParty" map="lookupMap" list="ContactListParties"/>
-        <iterate entry="contactlistparty" list="ContactListParties">
+        <iterate list="ContactListParties" entry="contactlistparty">
         <set field="contactlistparty.preferredContactMechId" from-field="parameters.contactMechId"/>
         <log level="info" message="Replacing preferredContactMechId: ${parameters.oldContactMechId} of the ContactList: ${contactlistparty.contactListId} with new preferredContactMechId: ${parameters.contactMechId}"/>
         <store-value value-field="contactlistparty"/>
@@ -302,7 +302,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="-statusDate"/>
                 </entity-condition>
-                <first-from-list entry="lastContactListPartyStatus" list="lastContactListPartyStatusList"/>
+                <first-from-list list="lastContactListPartyStatusList" entry="lastContactListPartyStatus"/>
 
                 <!-- only require an optInVerifyCode if there was one in place -->
                 <if-not-empty field="lastContactListPartyStatus.optInVerifyCode">
@@ -369,7 +369,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="-statusDate"/>
                 </entity-condition>
-                <first-from-list entry="contactListPartyStatus" list="lastContactListPartyStatusList"/>
+                <first-from-list list="lastContactListPartyStatusList" entry="contactListPartyStatus"/>
 
                 <!-- TODO: if preferredContactMech.contactMechTypeId != EMAIL_ADDRESS, return an error -->
                 <!-- TODO: if preferredContactMech is empty, should we try to find the ContactMech we want based on the Party? -->
@@ -395,15 +395,15 @@ under the License.
         </if>
     </simple-method>
     <simple-method method-name="createWebSiteContactList" short-description="Add WebSite ContactList">
-        <entity-and list="webSiteContactList" entity-name="WebSiteContactList">
+        <entity-and entity-name="WebSiteContactList" list="webSiteContactList">
             <field-map field-name="webSiteId" from-field="parameters.webSiteId"/>
             <field-map field-name="contactListId" from-field="parameters.contactListId"/>
             <field-map field-name="fromDate" from-field="parameters.fromDate"/>
         </entity-and>
         <if-empty field="webSiteContactList">
-            <make-value value-field="webSiteContactList" entity-name="WebSiteContactList"/>
-            <set-pk-fields value-field="webSiteContactList" map="parameters"/>
-            <set-nonpk-fields value-field="webSiteContactList" map="parameters"/>
+            <make-value entity-name="WebSiteContactList" value-field="webSiteContactList"/>
+            <set-pk-fields map="parameters" value-field="webSiteContactList"/>
+            <set-nonpk-fields map="parameters" value-field="webSiteContactList"/>
             <create-value value-field="webSiteContactList"/>
             <return/>
         </if-empty>
@@ -411,18 +411,18 @@ under the License.
         <field-to-result field="message" result-name="errorMessage"></field-to-result>
     </simple-method>
     <simple-method method-name="updateWebSiteContactList" short-description="Update WebSite ContactList">
-        <entity-and list="webSiteContactList" entity-name="WebSiteContactList">
+        <entity-and entity-name="WebSiteContactList" list="webSiteContactList">
             <field-map field-name="webSiteId" from-field="parameters.webSiteId"/>
             <field-map field-name="contactListId" from-field="parameters.contactListId"/>
             <field-map field-name="fromDate" from-field="parameters.fromDate"/>
         </entity-and>
-        <first-from-list entry="entryWebSiteContactList" list="webSiteContactList"/>
-        <set-pk-fields value-field="entryWebSiteContactList" map="parameters"/>
-        <set-nonpk-fields value-field="entryWebSiteContactList" map="parameters"/>
+        <first-from-list list="webSiteContactList" entry="entryWebSiteContactList"/>
+        <set-pk-fields map="parameters" value-field="entryWebSiteContactList"/>
+        <set-nonpk-fields map="parameters" value-field="entryWebSiteContactList"/>
         <store-value value-field="entryWebSiteContactList"/>
     </simple-method>
     <simple-method method-name="deleteWebSiteContactList" short-description="Delete WebSite ContactList">
-        <entity-and list="webSiteContactList" entity-name="WebSiteContactList">
+        <entity-and entity-name="WebSiteContactList" list="webSiteContactList">
             <field-map field-name="webSiteId" from-field="parameters.webSiteId"/>
             <field-map field-name="contactListId" from-field="parameters.contactListId"/>
             <field-map field-name="fromDate" from-field="parameters.fromDate"/>
@@ -432,7 +432,7 @@ under the License.
     
     <!-- service to use in contact list communications to handle opt-out links based on the communication event sent -->
     <simple-method method-name="optOutOfListFromCommEvent" short-description="Contact List Opt Out From Communication Event" login-required="false">
-        <entity-one value-field="commEvent" entity-name="CommunicationEvent"/>
+        <entity-one entity-name="CommunicationEvent" value-field="commEvent"/>
         <if>
             <condition>
                 <and>                    
@@ -444,13 +444,13 @@ under the License.
             </condition>
             <then>
                 <now-timestamp field="nowTimestamp"/>
-                <entity-and list="contactListPartyList" entity-name="ContactListParty">
+                <entity-and entity-name="ContactListParty" list="contactListPartyList">
                     <field-map field-name="contactListId" from-field="commEvent.contactListId"/>
                     <field-map field-name="preferredContactMechId" from-field="commEvent.contactMechIdTo"/>
                     <field-map field-name="partyId" from-field="commEvent.partyIdTo"/>                    
                 </entity-and>
                 <filter-list-by-date list="contactListPartyList"/>
-                <iterate entry="contactListParty" list="contactListPartyList">
+                <iterate list="contactListPartyList" entry="contactListParty">
                     <set field="contactListParty.thruDate" from-field="nowTimestamp"/>
                     <store-value value-field="contactListParty"/>
                 </iterate>                                
@@ -478,13 +478,13 @@ under the License.
     <simple-method method-name="updateCommStatusFromCommEvent" short-description="Update ContactList Comm Status from CommunicationEvent">
         <entity-one entity-name="CommunicationEvent" value-field="commEvent"/> 
         <if-not-empty field="commEvent">
-            <entity-and list="clcs" entity-name="ContactListCommStatus">
+            <entity-and entity-name="ContactListCommStatus" list="clcs">
                 <field-map field-name="communicationEventId" from-field="commEvent.parentCommEventId"/>
                 <field-map field-name="partyId" from-field="commEvent.partyIdTo"/>
                 <field-map field-name="contactMechId" from-field="commEvent.contactMechIdTo"/>
             </entity-and>
-            <iterate entry="commStatus" list="clcs">
-                <set-service-fields service-name="updateContactListCommStatus" to-map="updateStatusCtx" map="commStatus"/>
+            <iterate list="clcs" entry="commStatus">
+                <set-service-fields service-name="updateContactListCommStatus" map="commStatus" to-map="updateStatusCtx"/>
                 <set field="updateStatusCtx.statusId" from-field="parameters.statusId"/>
                 <call-service service-name="updateContactListCommStatus" in-map-name="updateStatusCtx"/>
             </iterate>
@@ -493,8 +493,8 @@ under the License.
     
     <simple-method method-name="sendContactListPartySubscribeEmail" short-description="Send contact list party subscribe email" login-required="true">
         <set field="productStoreId" type="String" from-field="parameters.productStoreId"/>
-        <entity-one value-field="contactList" entity-name="ContactList"/>
-        <entity-one value-field="contactListParty" entity-name="ContactListParty"/>
+        <entity-one entity-name="ContactList" value-field="contactList"/>
+        <entity-one entity-name="ContactListParty" value-field="contactListParty"/>
         <!-- get the latest accepted status -->
         <!-- look up the last ContactListPartyStatus with statusId=CLPT_ACCEPTED -->
         <entity-condition entity-name="ContactListPartyStatus" list="lastContactListPartyStatusList">
@@ -506,10 +506,10 @@ under the License.
             </condition-list>
             <order-by field-name="-statusDate"/>
         </entity-condition>
-        <first-from-list entry="contactListPartyStatus" list="lastContactListPartyStatusList"/>
+        <first-from-list list="lastContactListPartyStatusList" entry="contactListPartyStatus"/>
                 
         <if-empty field="productStoreId">
-            <entity-one value-field="webSite" entity-name="WebSite">
+            <entity-one entity-name="WebSite" value-field="webSite">
                 <field-map field-name="webSiteId" from-field="contactList.verifyEmailWebSiteId"/>
             </entity-one>
             <set field="productStoreId" from-field="webSite.productStoreId"/>
@@ -568,12 +568,12 @@ under the License.
             </condition-list>
             <order-by field-name="-statusDate"/>
         </entity-condition>
-        <first-from-list entry="contactListPartyStatus" list="lastContactListPartyStatusList"/>
+        <first-from-list list="lastContactListPartyStatusList" entry="contactListPartyStatus"/>
         
         <set field="productStoreId" type="String" from-field="parameters.productStoreId"/>
-        <entity-one value-field="contactList" entity-name="ContactList"/>
+        <entity-one entity-name="ContactList" value-field="contactList"/>
         <if-empty field="productStoreId">
-            <entity-one value-field="webSite" entity-name="WebSite">
+            <entity-one entity-name="WebSite" value-field="webSite">
                 <field-map field-name="webSiteId" from-field="contactList.verifyEmailWebSiteId"/>
             </entity-one>
             <set field="productStoreId" from-field="webSite.productStoreId"/>
@@ -620,9 +620,9 @@ under the License.
     </simple-method>
     <simple-method method-name="sendContactListPartyUnSubscribeEmail" short-description="Send contact list party unsubscribe email" login-required="true">
         <set field="productStoreId" type="String" from-field="parameters.productStoreId"/>
-        <entity-one value-field="contactList" entity-name="ContactList"/>
+        <entity-one entity-name="ContactList" value-field="contactList"/>
         <if-empty field="productStoreId">
-            <entity-one value-field="webSite" entity-name="WebSite">
+            <entity-one entity-name="WebSite" value-field="webSite">
                 <field-map field-name="webSiteId" from-field="contactList.verifyEmailWebSiteId"/>
             </entity-one>
             <set field="productStoreId" from-field="webSite.productStoreId"/>

@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <simple-method method-name="setPaymentMethodAddress" short-description="Set the initial payment method address">
-        <make-value value-field="lookupPKMap" entity-name="PaymentMethod"/>
+        <make-value entity-name="PaymentMethod" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="PaymentMethod" map="lookupPKMap" value-field="lookedUpValue"/>
         <if-compare field="lookedUpValue.paymentMethodTypeId" operator="equals" value="CREDIT_CARD">
@@ -50,7 +50,7 @@ under the License.
         <set field="lookupMap.contactMechId" from-field="parameters.oldContactMechId"/>
 
         <find-by-and entity-name="CreditCard" map="lookupMap" list="creditCards"/>
-        <iterate entry="creditCard" list="creditCards">
+        <iterate list="creditCards" entry="creditCard">
             <call-class-method class-name="org.ofbiz.base.util.UtilValidate" method-name="isDateAfterToday" ret-field="isNotExpired">
                 <field field="creditCard.expireDate"/>
             </call-class-method>
@@ -64,7 +64,7 @@ under the License.
         </iterate>
 
         <find-by-and entity-name="EftAccount" map="lookupMap" list="eftAccounts"/>
-        <iterate entry="eftAccount" list="eftAccounts">
+        <iterate list="eftAccounts" entry="eftAccount">
             <get-related-one relation-name="PaymentMethod" to-value-field="paymentMethod" value-field="eftAccount"/>
             <if-empty field="paymentMethod.thruDate">
                 <set-service-fields service-name="updateEftAccount" map="eftAccount" to-map="ueaMap"/>
@@ -85,7 +85,7 @@ under the License.
 
     <simple-method method-name="updateCreditCardTypeGlAccount" short-description="Update a Credit Card Gl Account">
         <entity-one entity-name="CreditCardTypeGlAccount" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
@@ -97,7 +97,7 @@ under the License.
     <!-- Updates a Payment Method Type default glAccountId -->
     <simple-method method-name="updatePaymentMethodType" short-description="Updates a Payment Method Type default glAccountId">
         <entity-one entity-name="PaymentMethodType" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="expirePaymentGroupMember" short-description="expire a Payment Group Member">
@@ -108,25 +108,25 @@ under the License.
     </simple-method>
     
     <simple-method method-name="createPayPalPaymentMethod" short-description="Create a PayPal Payment Method">
-        <make-value value-field="newPaymentMethod" entity-name="PaymentMethod"/>
-        <set-pk-fields value-field="newPaymentMethod" map="parameters"/>
+        <make-value entity-name="PaymentMethod" value-field="newPaymentMethod"/>
+        <set-pk-fields map="parameters" value-field="newPaymentMethod"/>
         <if-empty field="newPaymentMethod.paymentMethodId">
             <sequenced-id sequence-name="PaymentMethod" field="newPaymentMethod.paymentMethodId"/>
         </if-empty>
-        <set-nonpk-fields value-field="newPaymentMethod" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newPaymentMethod"/>
         <set field="newPaymentMethod.paymentMethodTypeId" value="EXT_PAYPAL"/>
         <create-value value-field="newPaymentMethod"/>
 
-        <make-value value-field="newPayPalPaymentMethod" entity-name="PayPalPaymentMethod"/>
+        <make-value entity-name="PayPalPaymentMethod" value-field="newPayPalPaymentMethod"/>
         <set field="newPayPalPaymentMethod.paymentMethodId" from-field="newPaymentMethod.paymentMethodId"/>
-        <set-nonpk-fields value-field="newPayPalPaymentMethod" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newPayPalPaymentMethod"/>
         <create-value value-field="newPayPalPaymentMethod"/>
         <field-to-result result-name="paymentMethodId" field="newPaymentMethod.paymentMethodId"/>
     </simple-method>
 
     <simple-method method-name="updatePayPalPaymentMethod" short-description="Update a PayPal Payment Method">
-        <entity-one value-field="payPalPaymentMethod" entity-name="PayPalPaymentMethod"/>
-        <set-nonpk-fields value-field="payPalPaymentMethod" map="parameters"/>
+        <entity-one entity-name="PayPalPaymentMethod" value-field="payPalPaymentMethod"/>
+        <set-nonpk-fields map="parameters" value-field="payPalPaymentMethod"/>
         <store-value value-field="payPalPaymentMethod"/>
         <field-to-result result-name="paymentMethodId" field="payPalPaymentMethod.paymentMethodId"/>
     </simple-method>

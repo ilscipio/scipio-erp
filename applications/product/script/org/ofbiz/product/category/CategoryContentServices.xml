@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <!-- ProductCategoryContent -->
     <simple-method method-name="createCategoryContent" short-description="Create Content For Product Category">
-        <make-value value-field="newEntity" entity-name="ProductCategoryContent"/>
+        <make-value entity-name="ProductCategoryContent" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
@@ -41,7 +41,7 @@ under the License.
         <field-to-result field="newEntity.prodCatContentTypeId" result-name="prodCatContentTypeId"/>
     </simple-method>
     <simple-method method-name="updateCategoryContent" short-description="Update Content For Category">
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryContent"/>
+        <make-value entity-name="ProductCategoryContent" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryContent" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -53,7 +53,7 @@ under the License.
         </call-service>      
     </simple-method>
     <simple-method method-name="removeCategoryContent" short-description="Remove Content From Category">
-        <make-value value-field="lookupPKMap" entity-name="ProductCategoryContent"/>
+        <make-value entity-name="ProductCategoryContent" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryContent" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -80,13 +80,13 @@ under the License.
 
     <simple-method method-name="updateContentSEOForCategory" short-description="Update SEO Content For Product Category">
         <if-not-empty field="parameters.title">
-            <entity-and list="productCategoryContents" entity-name="ProductCategoryContentAndInfo">
+            <entity-and entity-name="ProductCategoryContentAndInfo" list="productCategoryContents">
                 <field-map field-name="productCategoryId" from-field="parameters.productCategoryId"/>
                 <field-map field-name="prodCatContentTypeId" value="PAGE_TITLE"/>
             </entity-and>
             <if-not-empty field="productCategoryContents">
-                <first-from-list entry="productCategoryContent" list="productCategoryContents"/>
-                <entity-one value-field="electronicText" entity-name="ElectronicText">
+                <first-from-list list="productCategoryContents" entry="productCategoryContent"/>
+                <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productCategoryContent.dataResourceId"/>
                 </entity-one>
                 <if-not-empty field="electronicText">
@@ -105,13 +105,13 @@ under the License.
             </if-not-empty>
         </if-not-empty>
         <if-not-empty field="parameters.metaKeyword">
-            <entity-and list="productCategoryContents" entity-name="ProductCategoryContentAndInfo">
+            <entity-and entity-name="ProductCategoryContentAndInfo" list="productCategoryContents">
                 <field-map field-name="productCategoryId" from-field="parameters.productCategoryId"/>
                 <field-map field-name="prodCatContentTypeId" value="META_KEYWORD"/>
             </entity-and>
             <if-not-empty field="productCategoryContents">
-                <first-from-list entry="productCategoryContent" list="productCategoryContents"/>
-                <entity-one value-field="electronicText" entity-name="ElectronicText">
+                <first-from-list list="productCategoryContents" entry="productCategoryContent"/>
+                <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productCategoryContent.dataResourceId"/>
                 </entity-one>
                 <if-not-empty field="electronicText">
@@ -130,13 +130,13 @@ under the License.
             </if-not-empty>
         </if-not-empty>
         <if-not-empty field="parameters.metaDescription">
-            <entity-and list="productCategoryContents" entity-name="ProductCategoryContentAndInfo">
+            <entity-and entity-name="ProductCategoryContentAndInfo" list="productCategoryContents">
                 <field-map field-name="productCategoryId" from-field="parameters.productCategoryId"/>
                 <field-map field-name="prodCatContentTypeId" value="META_DESCRIPTION"/>
             </entity-and>
             <if-not-empty field="productCategoryContents">
-                <first-from-list entry="productCategoryContent" list="productCategoryContents"/>
-                <entity-one value-field="electronicText" entity-name="ElectronicText">
+                <first-from-list list="productCategoryContents" entry="productCategoryContent"/>
+                <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="productCategoryContent.dataResourceId"/>
                 </entity-one>
                 <if-not-empty field="electronicText">

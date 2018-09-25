@@ -198,7 +198,7 @@ under the License.
                 </entity-one>
                 
                 <set field="parameters.fromDate" type="Timestamp" from-field="parameters.fromDate"/>
-                <entity-condition list="assocs" entity-name="ContentAssoc">
+                <entity-condition entity-name="ContentAssoc" list="assocs">
                     <condition-list>
                         <condition-expr field-name="contentId" from-field="parameters.contentIdFrom"/>
                         <condition-expr field-name="contentIdTo" from-field="parameters.contentId"/>
@@ -395,7 +395,7 @@ under the License.
                 <set field="labelTitleProperty" value="ContentWebSiteContactList"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
-                <entity-and list="webSiteContactLists" entity-name="WebSiteContactList">
+                <entity-and entity-name="WebSiteContactList" list="webSiteContactLists">
                     <field-map field-name="webSiteId" from-field="webSiteId"/>
                     <order-by field-name="-fromDate"/>
                 </entity-and>

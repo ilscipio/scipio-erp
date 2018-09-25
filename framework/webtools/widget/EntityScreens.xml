@@ -450,7 +450,7 @@ under the License.
                 <set field="entityFrom" from-field="parameters.entityFrom" type="Timestamp"/>
                 <set field="entityThru" from-field="parameters.entityThru" type="Timestamp"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/XmlDsDump.groovy"/>
-                <entity-condition list="exportList" entity-name="EntityExport">
+                <entity-condition entity-name="EntityExport" list="exportList">
                     <order-by field-name="-createdStamp"/>
                 </entity-condition>
             </actions>

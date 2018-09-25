@@ -81,8 +81,8 @@ under the License.
             </service>
         </actions>
         <row-actions>
-            <entity-one value-field="product" entity-name="Product"/>
-            <entity-one value-field="uom" entity-name="Uom">
+            <entity-one entity-name="Product" value-field="product"/>
+            <entity-one entity-name="Uom" value-field="uom">
                 <field-map field-name="uomId" from-field="product.quantityUomId"/>
             </entity-one>
         </row-actions>

@@ -97,7 +97,7 @@ under the License.
         </actions>
         <row-actions>
             <set field="partyId" from-field="taxAuthPartyId"/>
-            <entity-one value-field="party" entity-name="PartyNameView"/>
+            <entity-one entity-name="PartyNameView" value-field="party"/>
         </row-actions>
         
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
@@ -524,7 +524,7 @@ under the License.
             </service>
         </actions>
         <row-actions>
-            <entity-one value-field="party" entity-name="PartyNameView"/>
+            <entity-one entity-name="PartyNameView" value-field="party"/>
             <entity-one entity-name="Party" value-field="taxAuthParty" auto-field-map="false">
                 <field-map field-name="partyId" from-field="taxAuthPartyId"/>
             </entity-one>

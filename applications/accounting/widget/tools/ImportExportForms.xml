@@ -126,8 +126,8 @@ under the License.
                     <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromDate" ignore-if-empty="true"/>
                     <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate" ignore-if-empty="true"/>
                     <condition-list combine="or">
-                        <condition-expr field-name="organizationPartyId" from-field="organizationPartyId" operator="equals"/>
-                        <condition-expr field-name="partyId" from-field="organizationPartyId" operator="equals"/>
+                        <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
+                        <condition-expr field-name="partyId" operator="equals" from-field="organizationPartyId"/>
                     </condition-list>
                 </condition-list>              
                 <order-by field-name="-transactionDate"/>

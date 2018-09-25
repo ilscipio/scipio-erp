@@ -166,7 +166,7 @@ under the License.
                 <set field="activeSubMenuItem" value="FindFacilityTransfers"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
-                <entity-condition list="statusItems" entity-name="StatusItem" >
+                <entity-condition entity-name="StatusItem" list="statusItems">
                     <condition-expr field-name="statusTypeId" value="INVENTORY_XFER_STTS" />
                     <order-by field-name="description"/>
                 </entity-condition>
@@ -1297,7 +1297,7 @@ under the License.
                 <!-- get the default facility Uom -->
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <entity-one entity-name="Uom" value-field="defaultWeightUom" use-cache="true" auto-field-map="false">
-                    <field-map from-field="facility.defaultWeightUomId" field-name="uomId"/>
+                    <field-map field-name="uomId" from-field="facility.defaultWeightUomId"/>
                 </entity-one>
             </actions>
             <widgets>

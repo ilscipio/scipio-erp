@@ -512,8 +512,8 @@ under the License.
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
-                <field-map from-field="parameters" field-name="inputFields"/>
-                <field-map from-field="entityName" field-name="entityName"/>
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" from-field="entityName"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -650,8 +650,8 @@ under the License.
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
-                <field-map from-field="requestParameters" field-name="inputFields"/>
-                <field-map from-field="entityName" field-name="entityName"/>
+                <field-map field-name="inputFields" from-field="requestParameters"/>
+                <field-map field-name="entityName" from-field="entityName"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -734,8 +734,8 @@ under the License.
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
-                <field-map from-field="parameters" field-name="inputFields"/>
-                <field-map from-field="entityName" field-name="entityName"/>
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" from-field="entityName"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -982,7 +982,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortContent" use-cache="true" list="workEffortContents">
-                <field-map from-field="workEffortId" field-name="workEffortId"/>
+                <field-map field-name="workEffortId" from-field="workEffortId"/>
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateWorkEffortContent" default-field-type="edit"/>
@@ -1036,7 +1036,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortGoodStandard" use-cache="true" list="workEffortGoodStandards">
-                <field-map from-field="workEffortId" field-name="workEffortId"/>
+                <field-map field-name="workEffortId" from-field="workEffortId"/>
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateWorkEffortGoodStandard" default-field-type="edit"/>
@@ -1093,7 +1093,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortReview" use-cache="true" list="workEffortReviews">
-                <field-map from-field="workEffortId" field-name="workEffortId"/>
+                <field-map field-name="workEffortId" from-field="workEffortId"/>
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateWorkEffortReview" default-field-type="edit"/>
@@ -1136,7 +1136,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortKeyword" use-cache="true" list="workEffortkeywords">
-                <field-map from-field="workEffortId" field-name="workEffortId"/>
+                <field-map field-name="workEffortId" from-field="workEffortId"/>
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
@@ -1162,7 +1162,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortContactMech" list="workEffortContactMechs">
-                <field-map from-field="workEffortId" field-name="workEffortId"/>
+                <field-map field-name="workEffortId" from-field="workEffortId"/>
             </entity-and>
         </actions>
         <row-actions>
@@ -1200,7 +1200,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="AgreementWorkEffortApplic" use-cache="true" list="agreementWorkEffortApplics">
-                <field-map from-field="workEffortId" field-name="workEffortId"/>
+                <field-map field-name="workEffortId" from-field="workEffortId"/>
             </entity-and>
         </actions>
         <field name="agreementId">
@@ -1394,7 +1394,7 @@ under the License.
             <set field="parameters.fromDate" value=""/>
             <set field="parameters.thruDate" value=""/>
             <set field="parameters.comments" value=""/>
-            <entity-condition list="roleList" entity-name="RoleType">
+            <entity-condition entity-name="RoleType" list="roleList">
                 <condition-list combine="or">
                     <condition-expr field-name="roleTypeId" operator="equals" value="CAL_DELEGATE"/>
                     <condition-expr field-name="roleTypeId" operator="equals" value="ICAL_MEMBER"/>

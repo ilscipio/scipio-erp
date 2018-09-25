@@ -28,7 +28,7 @@ This file contains basic services for SalesOpportunity and SalesForecast.
     <simple-method method-name="createSalesForecast" short-description="Creates a sales forecast and stores a copy in sales forecast history.">
 
         <!-- make the value and set the fields from the parameters -->
-        <make-value value-field="salesForecast" entity-name="SalesForecast"/>
+        <make-value entity-name="SalesForecast" value-field="salesForecast"/>
         <sequenced-id sequence-name="SalesForecast" field="salesForecastId"/>
         <set field="salesForecast.salesForecastId" from-field="salesForecastId"/>
         <set-nonpk-fields map="parameters" value-field="salesForecast"/>
@@ -65,10 +65,10 @@ This file contains basic services for SalesOpportunity and SalesForecast.
     <simple-method method-name="saveSalesForecastHistory" short-description="Given a salesForecast map, saves the data in the history.">
 
         <!-- make the value and set the fields from the salesForecast map -->
-        <make-value value-field="salesForecastHistory" entity-name="SalesForecastHistory"/>
+        <make-value entity-name="SalesForecastHistory" value-field="salesForecastHistory"/>
         <sequenced-id sequence-name="SalesForecastHistory" field="salesForecastHistoryId"/>
         <set field="salesForecastHistory.salesForecastHistoryId" from-field="salesForecastHistoryId"/>
-        <set-nonpk-fields value-field="salesForecastHistory" map="salesForecast"/>
+        <set-nonpk-fields map="salesForecast" value-field="salesForecastHistory"/>
 
         <!-- get the change note from the parameters -->
         <set field="salesForecastHistory.changeNote" from-field="parameters.changeNote"/>
@@ -93,7 +93,7 @@ This file contains basic services for SalesOpportunity and SalesForecast.
     </simple-method>
     <simple-method method-name="updateSalesForecastDetail" short-description="Updates a sales forecast detail">
         <entity-one entity-name="SalesForecastDetail" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteSalesForecastDetail" short-description="Delete a Sales Forecast Detail">
@@ -122,22 +122,22 @@ This file contains basic services for SalesOpportunity and SalesForecast.
                 </call-class-method>
             </if-empty>
         </if-compare>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="createSalesOpportunityRole" short-description="Create Sales Opportunity Role">
-        <make-value value-field="newEntity" entity-name="SalesOpportunityRole"/>
+        <make-value entity-name="SalesOpportunityRole" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="createSalesOpportunityAccountRole" short-description="Create Sales Opportunity Account Role">
-        <entity-and list="salesOpportunityRoles" entity-name="SalesOpportunityRole">
+        <entity-and entity-name="SalesOpportunityRole" list="salesOpportunityRoles">
             <field-map field-name="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
             <field-map field-name="roleTypeId" value="ACCOUNT"/>
         </entity-and>
-        <first-from-list entry="lookedUpValue" list="salesOpportunityRoles"/>
-        <if-compare-field operator="not-equals" field="lookedUpValue.partyId" to-field="parameters.accountPartyId">
+        <first-from-list list="salesOpportunityRoles" entry="lookedUpValue"/>
+        <if-compare-field field="lookedUpValue.partyId" operator="not-equals" to-field="parameters.accountPartyId">
             <if-not-empty field="lookedUpValue">
                 <remove-value value-field="lookedUpValue"/>
             </if-not-empty>
@@ -152,12 +152,12 @@ This file contains basic services for SalesOpportunity and SalesForecast.
         </if-compare-field>
     </simple-method>
     <simple-method method-name="createSalesOpportunityLeadRole" short-description="Create Sales Opportunity Lead Role">
-        <entity-and list="salesOpportunityRoles" entity-name="SalesOpportunityRole">
+        <entity-and entity-name="SalesOpportunityRole" list="salesOpportunityRoles">
             <field-map field-name="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
             <field-map field-name="roleTypeId" value="LEAD"/>
         </entity-and>
-        <first-from-list entry="lookedUpValue" list="salesOpportunityRoles"/>
-        <if-compare-field operator="not-equals" field="lookedUpValue.partyId" to-field="parameters.leadPartyId">
+        <first-from-list list="salesOpportunityRoles" entry="lookedUpValue"/>
+        <if-compare-field field="lookedUpValue.partyId" operator="not-equals" to-field="parameters.leadPartyId">
             <if-not-empty field="lookedUpValue">
                 <remove-value value-field="lookedUpValue"/>
             </if-not-empty>
@@ -170,11 +170,11 @@ This file contains basic services for SalesOpportunity and SalesForecast.
         </if-compare-field>
     </simple-method>
     <simple-method method-name="findPartyInSalesOpportunityRole" short-description="find party in role specified by in parameter">
-        <entity-and list="salesOpportunityRoles" entity-name="SalesOpportunityRole">
+        <entity-and entity-name="SalesOpportunityRole" list="salesOpportunityRoles">
             <field-map field-name="roleTypeId" from-field="parameters.roleTypeId"/>
             <field-map field-name="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
         </entity-and>
-        <first-from-list entry="lookedUpValue" list="salesOpportunityRoles"/>
+        <first-from-list list="salesOpportunityRoles" entry="lookedUpValue"/>
         <field-to-result field="lookedUpValue.partyId" result-name="partyId"/>
     </simple-method>
     

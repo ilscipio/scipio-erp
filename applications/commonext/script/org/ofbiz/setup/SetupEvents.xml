@@ -163,12 +163,12 @@
         <if-compare field="parameters.update_current_userlogin_party" operator="not-equals" value="false">
             <session-to-field field="userLoginCtx" session-name="userLogin"/>
             <if-empty field="userLoginCtx.partyId">
-                <make-value value-field="newEntity" entity-name="Party"/>
+                <make-value entity-name="Party" value-field="newEntity"/>
                 <set field="newEntity.partyId" from-field="userLoginCtx.userLoginId"/>
                 <set field="newEntity.partyTypeId" value="PERSON"/>
                 <create-value value-field="newEntity"/>
                 <clear-field field="newEntity"/>
-                <make-value value-field="newPerson" entity-name="Person"/>
+                <make-value entity-name="Person" value-field="newPerson"/>
                 <set field="newPerson.partyId" from-field="userLoginCtx.userLoginId"/>
                 <create-value value-field="newPerson"/>
                 <clear-field field="newPerson"/>
@@ -359,11 +359,11 @@
         <call-simple-method method-name="verifyFacilityFields"/>
         <check-errors/>
         
-        <make-value value-field="newEntity" entity-name="Facility"/>
+        <make-value entity-name="Facility" value-field="newEntity"/>
         <set field="defaultDaysToShip" from-field="parameters.defaultDaysToShip" type="Long"/>
         <clear-field field="parameters.defaultDaysToShip"/>
         
-        <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set field="newEntity.defaultDaysToShip" from-field="defaultDaysToShip" type="Long"/>
 
         <if-empty field="parameters.facilityId">
@@ -391,14 +391,14 @@
                                 <field-map field-name="partyId" from-field="parameters.partyId"/>
                                 <field-map field-name="contactMechId" from-field="parameters.postalAddressContactMechId"/>
                             </entity-and>
-                            <first-from-list entry="partyPostalAddress" list="listPartyPostalAddress"/>
+                            <first-from-list list="listPartyPostalAddress" entry="partyPostalAddress"/>
                         </then>
                         <else>
                             <!-- stock ofbiz -->
                             <entity-and entity-name="PartyAndPostalAddress" list="listPartyPostalAddress" filter-by-date="true">
                                 <field-map field-name="partyId" from-field="parameters.partyId"/>
                             </entity-and>
-                            <first-from-list entry="partyPostalAddress" list="listPartyPostalAddress"/>
+                            <first-from-list list="listPartyPostalAddress" entry="partyPostalAddress"/>
                         </else>
                     </if>
                     <set-service-fields service-name="createPostalAddress" map="partyPostalAddress" to-map="addressContext"/>
@@ -473,10 +473,10 @@
         </if-empty>
         <if-compare field="parameters.showPricesWithVatTax" operator="equals" value="Y">
             <if-empty field="parameters.vatTaxAuthGeoId">
-                <add-error><fail-property property="ProductVatTaxAuthGeoNotSet" resource="ProductUiLabels"/></add-error>
+                <add-error><fail-property resource="ProductUiLabels" property="ProductVatTaxAuthGeoNotSet"/></add-error>
             </if-empty>
             <if-empty field="parameters.vatTaxAuthPartyId">
-                <add-error><fail-property property="ProductVatTaxAuthPartyNotSet" resource="ProductUiLabels"/></add-error>
+                <add-error><fail-property resource="ProductUiLabels" property="ProductVatTaxAuthPartyNotSet"/></add-error>
             </if-empty>
         </if-compare>
         <check-errors/>
@@ -488,14 +488,14 @@
             </entity-one>
             <if-not-empty field="existingProductStore">
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
-                <add-error><fail-property property="productevents.productstore_already_exists_for_id" resource="ProductErrorUiLabels"/></add-error>
+                <add-error><fail-property resource="ProductErrorUiLabels" property="productevents.productstore_already_exists_for_id"/></add-error>
                 <check-errors/>
             </if-not-empty>
         </if-not-empty>
 
         <!-- Create ProductStore -->
-        <make-value value-field="newEntity" entity-name="ProductStore"/>
-        <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <make-value entity-name="ProductStore" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set field="newEntity.storeCreditValidDays" value="90" type="Long"/>
         <set field="newEntity.daysToCancelNonPay"  value="30" type="Long"/>
 
@@ -514,7 +514,7 @@
         <!-- create the ProductStoreFacility record -->
         <now-timestamp field="nowTimestamp"/>
         <if-not-empty field="newEntity.inventoryFacilityId">
-            <make-value value-field="storeFacility" entity-name="ProductStoreFacility"/>
+            <make-value entity-name="ProductStoreFacility" value-field="storeFacility"/>
             <set from-field="newEntity.inventoryFacilityId" field="storeFacility.facilityId"/>
             <set from-field="newEntity.productStoreId" field="storeFacility.productStoreId"/>
             <set from-field="nowTimestamp" field="storeFacility.fromDate"/>
@@ -659,7 +659,7 @@
             <result-to-request result-name="productCategoryId" request-name="productCategoryId"/>
         </call-service>
 
-        <make-value value-field="newEntity" entity-name="ProductCategoryRollup"/>
+        <make-value entity-name="ProductCategoryRollup" value-field="newEntity"/>
         <set field="newEntity.parentProductCategoryId" from-field="parameters.primaryParentCategoryId"/>
         <set field="newEntity.productCategoryId" from-field="productCategoryId"/>
         <set field="newEntity.sequenceNum" value="1" type="Long"/>
@@ -758,7 +758,7 @@
                 <call-service service-name="createProductPrice" in-map-name="createDefaultPriceMap"/>
                 
                 <else>
-                    <first-from-list entry="defaultPrice" list="defaultPriceValues"/>
+                    <first-from-list list="defaultPriceValues" entry="defaultPrice"/>
                     <set field="updateDefaultPriceMap.productId" from-field="productId"/>
                     <set field="updateDefaultPriceMap.price" from-field="parameters.defaultPrice" type="BigDecimal"/>
                     <set field="updateDefaultPriceMap.productPricePurposeId" from-field="defaultPrice.productPricePurposeId"/>
@@ -790,7 +790,7 @@
                 <call-service service-name="createProductPrice" in-map-name="createAverageCostMap"/>
                 
                 <else>
-                    <first-from-list entry="averageCost" list="averageCostValues"/>
+                    <first-from-list list="averageCostValues" entry="averageCost"/>
                     <set field="updateAverageCostMap.productId" from-field="productId"/>
                     <set field="updateAverageCostMap.productPricePurposeId" from-field="averageCost.productPricePurposeId"/>
                     <set field="updateAverageCostMap.productPriceTypeId" from-field="averageCost.productPriceTypeId"/>

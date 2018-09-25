@@ -236,7 +236,7 @@ under the License.
             <condition>          
                 <and>      
                     <not><if-empty field="shipment"/></not>                
-                    <if-compare operator="equals" field="shipment.shipmentTypeId" value="PURCHASE_RETURN" />
+                    <if-compare field="shipment.shipmentTypeId" operator="equals" value="PURCHASE_RETURN"/>
                 </and>
             </condition>
             <link target="AddItemsFromInventory">
@@ -247,7 +247,7 @@ under the License.
             <condition>
                 <and>
                     <not><if-empty field="shipment"/></not>
-                    <if-compare operator="equals" field="shipment.shipmentTypeId" value="SALES_SHIPMENT" />
+                    <if-compare field="shipment.shipmentTypeId" operator="equals" value="SALES_SHIPMENT"/>
                 </and>
             </condition>
             <link target="AddItemsFromOrder">
@@ -259,8 +259,8 @@ under the License.
                 <and>
                     <not><if-empty field="shipment"/></not>
                     <or>
-                        <if-compare operator="equals" field="shipment.shipmentTypeId" value="PURCHASE_SHIPMENT" />
-                        <if-compare operator="equals" field="shipment.shipmentTypeId" value="SALES_SHIPMENT" />
+                        <if-compare field="shipment.shipmentTypeId" operator="equals" value="PURCHASE_SHIPMENT"/>
+                        <if-compare field="shipment.shipmentTypeId" operator="equals" value="SALES_SHIPMENT"/>
                     </or>
                 </and>
             </condition>
@@ -272,7 +272,7 @@ under the License.
             <condition>
                 <and>
                     <not><if-empty field="shipment"/></not>
-                    <or><if-compare operator="equals" field="shipment.shipmentTypeId" value="SALES_SHIPMENT" /></or>
+                    <or><if-compare field="shipment.shipmentTypeId" operator="equals" value="SALES_SHIPMENT"/></or>
                 </and>
             </condition>
             <link target="EditShipmentItems">
@@ -283,7 +283,7 @@ under the License.
             <condition>
                 <and>
                     <not><if-empty field="shipment"/></not>
-                    <or><if-compare operator="equals" field="shipment.shipmentTypeId" value="SALES_SHIPMENT" /></or>
+                    <or><if-compare field="shipment.shipmentTypeId" operator="equals" value="SALES_SHIPMENT"/></or>
                 </and>
             </condition>
             <link target="EditShipmentPackages">
@@ -294,7 +294,7 @@ under the License.
             <condition>
                 <and>
                     <not><if-empty field="shipment"/></not>
-                    <or><if-compare operator="equals" field="shipment.shipmentTypeId" value="SALES_SHIPMENT" /></or>
+                    <or><if-compare field="shipment.shipmentTypeId" operator="equals" value="SALES_SHIPMENT"/></or>
                 </and>
             </condition>
             <link target="EditShipmentRouteSegments">
@@ -305,7 +305,7 @@ under the License.
             <condition>
                 <and>
                     <not><if-empty field="shipment"/></not>
-                    <or><if-compare operator="equals" field="shipment.shipmentTypeId" value="PURCHASE_SHIPMENT" /></or>
+                    <or><if-compare field="shipment.shipmentTypeId" operator="equals" value="PURCHASE_SHIPMENT"/></or>
                 </and>
             </condition>
             <link target="ViewShipmentReceipts">

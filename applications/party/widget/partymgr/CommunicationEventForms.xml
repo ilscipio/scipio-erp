@@ -571,7 +571,7 @@ under the License.
            target="deleteCommunicationEvents" header-row-style="header-row-2">
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="-entryDate"/>
-            <entity-and  list="commEvents" entity-name="CommunicationEventAndRole">
+            <entity-and  entity-name="CommunicationEventAndRole" list="commEvents">
                 <field-map field-name="statusId" value="COM_UNKNOWN_PARTY"/>
                 <order-by field-name="${parameters.sortField}"/>
             </entity-and>

@@ -318,7 +318,7 @@ under the License.
     <screen name="ScipioViewCatalogTree">
         <section>
             <actions>
-                <entity-one value-field="productStore" entity-name="ProductStore"/>
+                <entity-one entity-name="ProductStore" value-field="productStore"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/tree/ViewCatalogTree.groovy"/>
             </actions>
             <widgets>

@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <!-- DataSourceType methods -->
     <simple-method method-name="createDataSourceType" short-description="Create an DataSourceType">
-        <make-value value-field="newEntity" entity-name="DataSourceType"/>
+        <make-value entity-name="DataSourceType" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>

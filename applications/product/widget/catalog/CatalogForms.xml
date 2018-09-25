@@ -143,7 +143,7 @@
     <form name="UpdateProdCatalogToParty" type="list" target="updateProdCatalogToParty" title="" list-name="prodCatalogRoleList"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
-            <entity-one value-field="catalogParty" entity-name="PartyNameView" />
+            <entity-one entity-name="PartyNameView" value-field="catalogParty"/>
         </row-actions>
         <auto-fields-service service-name="updateProdCatalogToParty" />
         <field name="prodCatalogId">
@@ -211,7 +211,7 @@
     <form name="UpdateProductStoreCatalog" type="list" target="updateProdCatalogStore" title="" list-name="productStoreCatalogList"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
-            <entity-one value-field="catalogStore" entity-name="ProductStore" />
+            <entity-one entity-name="ProductStore" value-field="catalogStore"/>
         </row-actions>
         <field name="prodCatalogId">
             <hidden />
@@ -246,7 +246,7 @@
     <form name="EditProdCatalogCategories" type="list" target="updateProductCategoryToProdCatalog" title=""
         list-name="prodCatalogCategories" odd-row-style="alternate-row" paginate-target="EditProdCatalogCategories"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
-            <entity-one value-field="productCategory" entity-name="ProductCategory" />
+            <entity-one entity-name="ProductCategory" value-field="productCategory"/>
         </row-actions>
         <auto-fields-service service-name="updateProductCategoryToProdCatalog" />
         <field name="prodCatalogId">

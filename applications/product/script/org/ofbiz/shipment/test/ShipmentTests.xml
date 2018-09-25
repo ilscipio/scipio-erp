@@ -176,7 +176,7 @@ under the License.
         <set field="serviceCtx.inventoryItemTypeId" value="NON_SERIAL_INV_ITEM"/>
         <set field="serviceCtx.datetimeReceived" from-field="nowTimeStamp"/>
         <call-service service-name="receiveInventoryProduct" in-map-name="serviceCtx">
-            <result-to-field  field="inventoryItemId" result-name="inventoryItemId"/>
+            <result-to-field  result-name="inventoryItemId" field="inventoryItemId"/>
         </call-service>
 
         <entity-one entity-name="InventoryItem" value-field="inventoryItem"/>
@@ -202,11 +202,11 @@ under the License.
 
     <simple-method method-name="testCreateShipmentRouteSegment" short-description="Test to create Shipment Route Segment" login-required="false">
         <log level="info" message="====================Create a Shipment Route Segment test case=========================================="/>
-        <entity-and list="shipments" entity-name="Shipment">
+        <entity-and entity-name="Shipment" list="shipments">
             <field-map field-name="primaryOrderId" value="DEMO10090"/>
             <field-map field-name="shipmentId" value="9998"/>
         </entity-and>
-        <first-from-list entry="shipment" list="shipments"/>
+        <first-from-list list="shipments" entry="shipment"/>
         <set field="shipRouteSegMap.shipmentId" from-field="shipment.shipmentId"/>
         <entity-one entity-name="UserLogin" value-field="shipRouteSegMap.userLogin">
             <field-map field-name="userLoginId" value="system"/>

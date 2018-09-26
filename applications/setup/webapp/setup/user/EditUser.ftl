@@ -123,14 +123,24 @@ under the License.
             <#-- SCIPIO: FIXME: this roleTypeId is very confounded, it is
                 used for both ProductStoreRole creation AND the PartyRelationship to orgPartyId,
                 AND ends up in a ContactMech preventing delete later... -->
-
             <@field type="select" name="roleTypeId" id="roleTypeId"
                 required=true><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG, service just crash without it... -->
                 <#--<option value="" selected="selected">--</option>-->
+              <#assign roleTypeFound = false>
+              <#assign roleTypeMarkup>
                 <#list userPartyRoles as partyRole>
                     <#assign selected = (userPartyRole?? && rawString(userPartyRole.roleTypeId) == rawString(partyRole.roleTypeId!))>
-                    <option value="${partyRole.roleTypeId}"<#if selected> selected="selected"</#if>>${partyRole.description}</option>
+                    <#if selected>
+                      <#assign roleTypeFound = true>
+                    </#if>
+                    <option value="${partyRole.roleTypeId}"<#if selected> selected="selected"</#if>>${partyRole.get('description', locale)!partyRole.roleTypeId}</option>
                 </#list>
+              </#assign>
+              <#if userPartyRole?? && !roleTypeFound>
+                <#-- emergency case: might be unlisted type from existing data -->
+                <option value="${userPartyRole.roleTypeId!}" selected="selected">${userPartyRole.getRelatedOne("RoleType", true).get('description', locale)!userPartyRole.roleTypeId}</option>
+              </#if>
+                ${roleTypeMarkup}
             </@field>
             
             <@field type="display" value=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(orgPartyId!)}) />
@@ -138,10 +148,22 @@ under the License.
             <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId"
                 required=true><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG, without a relationship to the company the party will not appear in the list after creation! -->
                 <#--<option value="" selected="selected">--</option>-->
+              <#assign relTypeFound = false>
+              <#assign relTypeMarkup>
                 <#list userPartyRelationshipTypes as userPartyRelationshipType>
-                    <#assign selected = (userPartyRelationship?? && rawString(userPartyRelationship.partyRelationshipTypeId) == rawString(userPartyRelationshipType.partyRelationshipTypeId!))>
-                    <option value="${userPartyRelationshipType.partyRelationshipTypeId}"<#if selected> selected="selected"</#if>>${userPartyRelationshipType.partyRelationshipName}</option>
+                    <#assign selected = (userPartyRelationship?? && rawString(userPartyRelationship.partyRelationshipTypeId!) == rawString(userPartyRelationshipType.partyRelationshipTypeId!))>
+                    <#if selected>
+                      <#assign relTypeFound = true>
+                    </#if>
+                    <option value="${userPartyRelationshipType.partyRelationshipTypeId}"<#if selected> selected="selected"</#if>>${userPartyRelationshipType.get('partyRelationshipName', locale)!userPartyRelationshipType.partyRelationshipTypeId}</option>
                 </#list>
+              </#assign>
+              <#if userPartyRelationship?? && !relTypeFound>
+                <#-- emergency case: might be unlisted or missing type from existing data -->
+                <option value="${userPartyRelationship.partyRelationshipTypeId!}" selected="selected"><#if userPartyRelationship.partyRelationshipTypeId??>${userPartyRelationship.getRelatedOne('PartyRelationshipType', true)
+                    .get('partyRelationshipName', locale)!userPartyRelationship.partyRelationshipTypeId}</#if></option>
+              </#if>
+                ${relTypeMarkup}
             </@field>
             <#if userPartyRelationship??>
                 <@field type="hidden" name="oldUserPartyRelationshipTypeId" value=userPartyRelationship.partyRelationshipTypeId />

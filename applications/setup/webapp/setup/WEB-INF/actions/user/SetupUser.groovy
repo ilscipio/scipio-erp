@@ -174,6 +174,7 @@ context.userSelected = userSelected;
 
 context.contactMechsCompleted = userData.contactMechsCompleted;
 
+// FIXME: this omits important roles such as EMPLOYEE
 List<GenericValue> userPartyRoles = EntityQuery.use(delegator).from("RoleType").where(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null)).orderBy(["description"]).query();
 context.userPartyRoles = userPartyRoles;
 List<GenericValue> userPartyRelationshipTypes = EntityQuery.use(delegator).from("PartyRelationshipType").orderBy(["partyRelationshipName"]).query();

@@ -21,6 +21,7 @@ package org.ofbiz.accounting.thirdparty.paypal;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -226,25 +227,29 @@ public class PayPalEvents {
         parametersMap.put("cmd", "_notify-validate");
 
         // send off the confirm request
-        String confirmResp = null;
-
         try {
+            String confirmResp = null;
             String str = UtilHttp.urlEncodeArgs(parametersMap);
             URL u = new URL(redirectUrl);
             URLConnection uc = u.openConnection();
             uc.setDoOutput(true);
             uc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            PrintWriter pw = new PrintWriter(uc.getOutputStream());
-            pw.println(str);
-            pw.close();
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
+                    PrintWriter pw = new PrintWriter(new OutputStreamWriter(uc.getOutputStream(), "UTF-8"))) {
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-            confirmResp = in.readLine();
-            in.close();
-            Debug.logError("PayPal Verification Response: " + confirmResp, module);
-        } catch (IOException e) {
-            Debug.logError(e, "Problems sending verification message", module);
+                pw.println(str);
+                confirmResp = in.readLine();
+                Debug.logError("PayPal Verification Response: " + confirmResp, module);
+            } catch (IOException e) {
+                Debug.logError(e, "Problems sending verification message.", module);
+            }
+        } catch(IOException e) {
+            // SCIPIO: 2018-09-26: upstream modified this event to throw IOException instead of this block;
+            // but this breaks interface compatibility; so here we'll return a clean event error instead.
+            Debug.logError(e, "PayPal connection error (URL: " + redirectUrl + ")", module);
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resourceErr, "payPalEvents.problemsConnectingWithPayPal", locale));
+            return "error";
         }
 
         Debug.logInfo("Got verification from PayPal, processing..", module);

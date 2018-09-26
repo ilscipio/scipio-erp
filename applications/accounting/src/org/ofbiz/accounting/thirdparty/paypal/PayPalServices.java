@@ -25,6 +25,8 @@ import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -274,10 +276,8 @@ public class PayPalServices {
                 Debug.logError(e, module);
             }
 
-            try {
-                Writer writer = response.getWriter();
+            try (Writer writer = response.getWriter()) {
                 writer.write(responseMsg);
-                writer.close();
             } catch (IOException e) {
                 Debug.logError(e, module);
             }

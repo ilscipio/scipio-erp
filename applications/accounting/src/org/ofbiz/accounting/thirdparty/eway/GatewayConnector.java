@@ -48,6 +48,7 @@ public class GatewayConnector {
 
     /**
      * Get the timeout value set in the corresponding setter.
+     *
      * @return timeout value in seconds, 0 for infinite
      */
     public int getTimeout() {
@@ -58,6 +59,7 @@ public class GatewayConnector {
      * Set the timout value. Note that setting the timeout for an HttpURLConnection
      * is possible only since Java 1.5. This method has no effect on earlier
      * versions.
+     *
      * @param time timeout value in seconds, 0 for infinite
      */
     public void setTimeout(int time) {
@@ -92,25 +94,29 @@ public class GatewayConnector {
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(timeout*1000);
 
-            OutputStream out = connection.getOutputStream();
-            Writer wout = new OutputStreamWriter(out);
-            wout.write(request.toXml());
-            wout.flush();
-            wout.close();
+            try (OutputStream out = connection.getOutputStream();
+                 Writer wout = new OutputStreamWriter(out, "UTF-8")) {
 
-            in = connection.getInputStream();
-            response = new GatewayResponse(in, request);
-            return response;
+                wout.write(request.toXml());
+                wout.flush();
+
+                in = connection.getInputStream();
+                response = new GatewayResponse(in, request);
+                return response;
+            }
         }
         catch (Exception e) {
-            // rethrow exception so that the caller learns what went wrong
+            // re-throws exception so that the caller knows what went wrong
             Debug.logError(e, e.getMessage(), module);
             throw e;
-        }
-        finally {
+        } finally {
             // close resources
-            if (in != null) in.close();
-            if (connection != null) connection.disconnect();
+            if (in != null) {
+                in.close();
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
     }
 }

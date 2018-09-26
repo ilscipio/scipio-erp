@@ -20,6 +20,7 @@
 package org.ofbiz.accounting.thirdparty.authorizedotnet;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import org.ofbiz.base.util.UtilValidate;
 
@@ -114,8 +115,9 @@ public class AuthorizeResponse {
 
     private String getResponseField(String field) {
         int position = pos.getPosition(field);
-        if (position == -1)
+        if (position == -1) {
             return null;
+        }
         return getResponseField(position);
     }
 
@@ -130,7 +132,7 @@ public class AuthorizeResponse {
 
     @Override
     public String toString() {
-        return response.toString();
+        return Arrays.toString(response);
     }
 
     public static abstract class RespPositions {

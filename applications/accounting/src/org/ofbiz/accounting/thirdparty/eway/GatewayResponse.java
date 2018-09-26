@@ -21,6 +21,7 @@ package org.ofbiz.accounting.thirdparty.eway;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -103,8 +104,8 @@ public class GatewayResponse {
     }
 
     /**
-     * Gets the beagle score. Defaults to -1 in case of non-Beagle payment
-     * methods or if the response does not contain this field.
+     * Gets the beagle score. Defaults to -1 in case of non-Beagle payment methods
+     * or if the response does not contain this field.
      *
      * @return The beagle score or -1 if it was not defined in the response
      */
@@ -113,15 +114,15 @@ public class GatewayResponse {
     }
 
     /**
-     * Creates the GatewayResponse object by parsing an xml from a stream. Fills
-     * in the fields of the object that are available through getters after this
-     * method returns.
+     * Creates the GatewayResponse object by parsing an xml from a stream. Fills in
+     * the fields of the object that are available through getters after this method
+     * returns.
      *
      * @param xmlstream
      *            the stream to parse the response from
      * @throws Exception
-     *             if the xml contains a root element with a bad name or an
-     *             unknown element, or if the xml is badly formatted
+     *             if the xml contains a root element with a bad name or an unknown
+     *             element, or if the xml is badly formatted
      */
     public GatewayResponse(InputStream xmlstream, GatewayRequest req) throws Exception {
 
@@ -140,46 +141,58 @@ public class GatewayResponse {
 
         // get all elements
         NodeList list = doc.getElementsByTagName("*");
-        for (int i = 0; i < list.getLength(); i++) {
+        int length = list.getLength();
+        for (int i = 0; i < length; i++) {
             Node node = list.item(i);
             String name = node.getNodeName();
-            if (name == "ewayResponse")
+            if (name == "ewayResponse") {
                 continue;
+            }
             Text textnode = (Text) node.getFirstChild();
             String value = "";
-            if (textnode != null)
+            if (textnode != null) {
                 value = textnode.getNodeValue();
+            }
 
-            if (name == "ewayTrxnError")
+            // SCIPIO: 2018-09-26: Added break statements missing from upstream
+            switch(name) {
+            case "ewayTrxnError":
                 txTrxnError = value;
-            else if (name == "ewayTrxnStatus") {
-                if (value.toLowerCase().trim().equals("true")) {
+                break;
+            case "ewayTrxnStatus":
+                if ("true".equals(value.toLowerCase(Locale.getDefault()).trim())) {
                     txTrxnStatus = true;
                 }
-            }
-            else if (name == "ewayTrxnNumber")
+                break;
+            case "ewayTrxnNumber":
                 txTrxnNumber = value;
-            else if (name == "ewayTrxnOption1")
+                break;
+            case "ewayTrxnOption1":
                 txTrxnOption1 = value;
-            else if (name == "ewayTrxnOption2")
+                break;
+            case "ewayTrxnOption2":
                 txTrxnOption2 = value;
-            else if (name == "ewayTrxnOption3")
+                break;
+            case "ewayTrxnOption3":
                 txTrxnOption3 = value;
-            else if (name == "ewayReturnAmount") {
+                break;
+            case "ewayReturnAmount":
                 if (!value.equals("")) {
                     txReturnAmount = Integer.parseInt(value);
                 }
-            }
-            else if (name == "ewayAuthCode")
+                break;
+            case "ewayAuthCode":
                 txAuthCode = value;
-            else if (name == "ewayTrxnReference")
+                break;
+            case "ewayTrxnReference":
                 txTrxnReference = value;
-            else if (name == "ewayBeagleScore") {
+                break;
+            case "ewayBeagleScore": 
                 if (!value.equals("")) {
                     txBeagleScore = Double.parseDouble(value);
                 }
-            }
-            else {
+                break;
+            default:
                 throw new Exception("Unknown field in response: " + name);
             }
         }

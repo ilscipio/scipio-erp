@@ -64,10 +64,10 @@ public class GatewayRequest {
     public static final int REQUEST_METHOD_REFUND = 4;
 
     /**
-     * The request method used in the transaction, set in the constructor.
-     * This value is the boolean
-     * combination of the values REQUEST_METHOD_CVN and REQUEST_METHOD_BEAGLE.
-     * Defaults to 0, meaning that Real-time payment method is used.
+     * The request method used in the transaction, set in the constructor. This
+     * value is the boolean combination of the values REQUEST_METHOD_CVN and
+     * REQUEST_METHOD_BEAGLE. Defaults to 0, meaning that Real-time payment method
+     * is used.
      */
 
     private BigDecimal txTotalAmount = BigDecimal.ZERO;
@@ -95,10 +95,9 @@ public class GatewayRequest {
     private String txCustomerBillingCountry = "";
     private String txRefundPassword = "";
 
-
     /**
-     * Default constructor to be used with the Real-Time payment method. The
-     * same as calling <code>GatewayRequest(0)</code>;
+     * Default constructor to be used with the Real-Time payment method. The same as
+     * calling <code>GatewayRequest(0)</code>;
      */
     public GatewayRequest() {
         requestMethod = 0;
@@ -106,8 +105,10 @@ public class GatewayRequest {
 
     /**
      * Constructor to be used with the CVN and Beagle payment methods.
-     * @param method Logical combination of the REQUEST_METHOD_CVN and
-     * REQUEST_METHOD_BEAGLE constants.
+     *
+     * @param method
+     *            Logical combination of the REQUEST_METHOD_CVN and
+     *            REQUEST_METHOD_BEAGLE constants.
      */
     public GatewayRequest(int method) {
         requestMethod = method;
@@ -115,8 +116,9 @@ public class GatewayRequest {
 
     /**
      * Gets the request method given when constructing the object.
-     * @return the request method as a logical combination of the
-     * REQUEST_METHOD_CVN and REQUEST_METHOD_BEAGLE constants.
+     *
+     * @return the request method as a logical combination of the REQUEST_METHOD_CVN
+     *         and REQUEST_METHOD_BEAGLE constants.
      */
     public int getRequestMethod() {
         return requestMethod;
@@ -129,27 +131,23 @@ public class GatewayRequest {
         if ((requestMethod & REQUEST_METHOD_REFUND) != 0) {
             if (isTestMode()) {
                 return null;
-            } else {
-                return REQUEST_URL_REFUND;
             }
+            return REQUEST_URL_REFUND;
         } else if ((requestMethod & REQUEST_METHOD_BEAGLE) != 0) {
             if (isTestMode()) {
                 return REQUEST_URL_BEAGLE_TEST;
-            } else {
-                return REQUEST_URL_BEAGLE;
             }
+            return REQUEST_URL_BEAGLE;
         } else if ((requestMethod & REQUEST_METHOD_CVN) != 0) {
             if (isTestMode()) {
                 return REQUEST_URL_CVN_TEST;
-            } else {
-                return REQUEST_URL_CVN;
             }
+            return REQUEST_URL_CVN;
         } else {
             if (isTestMode()) {
                 return REQUEST_URL_RT_TEST;
-            } else {
-                return REQUEST_URL_RT;
             }
+            return REQUEST_URL_RT;
         }
     }
 
@@ -334,11 +332,12 @@ public class GatewayRequest {
     }
 
     /**
-     * Gives the xml representation of this object. This xml will be sent to
-     * the gateway. This method is public only for debugging purposes, you
-     * might wish to examine the xml content. The special fields of the CVN
-     * and Beagle requests are added only if the request belongs to the CVN or
-     * Beagle types, respectively.
+     * Gives the xml representation of this object. This xml will be sent to the
+     * gateway. This method is public only for debugging purposes, you might wish to
+     * examine the xml content. The special fields of the CVN and Beagle requests
+     * are added only if the request belongs to the CVN or Beagle types,
+     * respectively.
+     *
      * @return The GatewayRequest object as an xml string.
      */
     public String toXml() {
@@ -380,7 +379,7 @@ public class GatewayRequest {
         if (requestMethod == REQUEST_METHOD_BEAGLE) {
             xml.append(createNode("ewayCustomerIPAddress", txCustomerIPAddress));
             xml.append(createNode("ewayCustomerBillingCountry",
-                                   txCustomerBillingCountry));
+                    txCustomerBillingCountry));
         }
 
         // fill in the refund password if REFUND type

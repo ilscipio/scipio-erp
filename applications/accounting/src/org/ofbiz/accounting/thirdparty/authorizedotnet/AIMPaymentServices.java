@@ -51,6 +51,7 @@ public class AIMPaymentServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
+    public final static String resourceError = "AccountingErrorUiLabels"; // SCIPIO: 2018-09-26: added missing
 
     // The list of refund failure response codes that would cause the ccRefund service
     // to attempt to void the refund's associated authorization transaction.  This list
@@ -93,7 +94,8 @@ public class AIMPaymentServices {
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         Map<String, Object> reply = processCard(request, props, locale);
@@ -132,13 +134,13 @@ public class AIMPaymentServices {
         // PRIOR_AUTH_CAPTURE is the right one to use, since we already have an authorization from the authTransaction.
         // CAPTURE_ONLY is a "force" transaction to be used if there is no prior authorization
         props.put("transType", "PRIOR_AUTH_CAPTURE");
-        //props.put("transType","CAPTURE_ONLY");
         props.put("cardtype", creditCard.get("cardType"));
         buildCaptureTransaction(context,props,request);
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         Map<String, Object> reply = processCard(request, props, locale);
@@ -183,7 +185,8 @@ public class AIMPaymentServices {
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         Map<String, Object> reply = processCard(request, props, locale);
@@ -271,16 +274,18 @@ public class AIMPaymentServices {
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         return processCard(request, props, locale);
     }
 
     public static Map<String, Object> ccCredit(DispatchContext ctx, Map<String, Object> context) {
+        Locale locale = (Locale) context.get("locale");
         Map<String, Object> results = new HashMap<String, Object>();
         results.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-        results.put(ModelService.ERROR_MESSAGE, "Authorize.net ccCredit unsupported with version 3.1");
+        results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource, "AccountingAuthorizeNetccCreditUnsupported", locale));
         return results;
     }
 
@@ -300,7 +305,8 @@ public class AIMPaymentServices {
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         Map<String, Object> reply = processCard(request, props, locale);

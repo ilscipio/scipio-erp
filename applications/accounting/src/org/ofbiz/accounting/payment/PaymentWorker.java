@@ -46,11 +46,13 @@ import org.ofbiz.entity.util.EntityUtil;
 /**
  * Worker methods for Payments
  */
-public class PaymentWorker {
+public final class PaymentWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-    private static RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
+    private static final int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+    private static final RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
+
+    private PaymentWorker() {}
 
     // to be able to use in minilanguage where Boolean cannot be used
     public static List<Map<String, GenericValue>> getPartyPaymentMethodValueMaps(Delegator delegator, String partyId) {
@@ -58,26 +60,34 @@ public class PaymentWorker {
     }
 
     public static List<Map<String, GenericValue>> getPartyPaymentMethodValueMaps(Delegator delegator, String partyId, Boolean showOld) {
-        List<Map<String, GenericValue>> paymentMethodValueMaps = new LinkedList<Map<String, GenericValue>>();
+        List<Map<String, GenericValue>> paymentMethodValueMaps = new LinkedList<>();
         try {
             List<GenericValue> paymentMethods = EntityQuery.use(delegator).from("PaymentMethod").where("partyId", partyId).queryList();
 
-            if (!showOld) paymentMethods = EntityUtil.filterByDate(paymentMethods, true);
+            if (!showOld) {
+                paymentMethods = EntityUtil.filterByDate(paymentMethods, true);
+            }
 
             for (GenericValue paymentMethod : paymentMethods) {
-                Map<String, GenericValue> valueMap = new HashMap<String, GenericValue>();
+                Map<String, GenericValue> valueMap = new HashMap<>();
 
                 paymentMethodValueMaps.add(valueMap);
                 valueMap.put("paymentMethod", paymentMethod);
                 if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
                     GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard", false);
-                    if (creditCard != null) valueMap.put("creditCard", creditCard);
+                    if (creditCard != null) {
+                        valueMap.put("creditCard", creditCard);
+                    }
                 } else if ("GIFT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
                     GenericValue giftCard = paymentMethod.getRelatedOne("GiftCard", false);
-                    if (giftCard != null) valueMap.put("giftCard", giftCard);
+                    if (giftCard != null) {
+                        valueMap.put("giftCard", giftCard);
+                    }
                 } else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
                     GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount", false);
-                    if (eftAccount != null) valueMap.put("eftAccount", eftAccount);
+                    if (eftAccount != null) {
+                        valueMap.put("eftAccount", eftAccount);
+                    }
                 }
             }
         } catch (GenericEntityException e) {
@@ -88,14 +98,17 @@ public class PaymentWorker {
 
     public static Map<String, Object> getPaymentMethodAndRelated(ServletRequest request, String partyId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String, Object> results = new HashMap<String, Object>();
+        Map<String, Object> results = new HashMap<>();
 
         Boolean tryEntity = true;
-        if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
+        if (request.getAttribute("_ERROR_MESSAGE_") != null) {
+            tryEntity = false;
+        }
 
         String donePage = request.getParameter("DONE_PAGE");
-        if (UtilValidate.isEmpty(donePage))
+        if (UtilValidate.isEmpty(donePage)) {
             donePage = "viewprofile";
+        }
         results.put("donePage", donePage);
 
         String paymentMethodId = request.getParameter("paymentMethodId");
@@ -308,7 +321,7 @@ public class PaymentWorker {
         if (actual.equals(Boolean.TRUE) && UtilValidate.isNotEmpty(payment.getBigDecimal("actualCurrencyAmount"))) {
             return payment.getBigDecimal("actualCurrencyAmount").subtract(getPaymentApplied(payment, actual)).setScale(decimals,rounding);
         }
-            return payment.getBigDecimal("amount").subtract(getPaymentApplied(payment)).setScale(decimals,rounding);
+        return payment.getBigDecimal("amount").subtract(getPaymentApplied(payment)).setScale(decimals,rounding);
     }
 
     public static BigDecimal getPaymentNotApplied(Delegator delegator, String paymentId) {

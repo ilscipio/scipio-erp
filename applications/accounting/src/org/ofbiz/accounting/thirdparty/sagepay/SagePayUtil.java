@@ -44,6 +44,7 @@ import org.ofbiz.base.util.Debug;
 
 
 public final class SagePayUtil {
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private SagePayUtil() {}
 

@@ -46,16 +46,10 @@ public class AgreementServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // set some BigDecimal properties
-    private static BigDecimal ZERO = BigDecimal.ZERO;
-    private static int decimals = -1;
-    private static RoundingMode rounding;
-    static {
-        decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-        rounding = UtilNumber.getRoundingMode("invoice.rounding");
-
-        // set zero to the proper scale
-        if (decimals != -1) ZERO = ZERO.setScale(decimals, rounding);
-    }
+    // SCIPIO: 2018-09-26: TODO: REVIEW: upstream changed these to "finaccount.xxx", not sure why... makes little difference for now
+    public static final int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+    public static final RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
+    public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(decimals, rounding);
     public static final String resource = "AccountingUiLabels";
 
     /**
@@ -128,14 +122,14 @@ public class AgreementServices {
                         String termTypeId = term.getString("termTypeId");
                         BigDecimal termValue = term.getBigDecimal("termValue");
                         if (termValue != null) {
-                            if (termTypeId.equals("FIN_COMM_FIXED")) {
+                            if ("FIN_COMM_FIXED".equals(termTypeId)) {
                                 commission = commission.add(termValue);
-                            } else if (termTypeId.equals("FIN_COMM_VARIABLE")) {
+                            } else if ("FIN_COMM_VARIABLE".equals(termTypeId)) {
                                 // if variable percentage commission, need to divide by 100, because 5% is stored as termValue of 5.0
                                 commission = commission.add(termValue.multiply(amount).divide(new BigDecimal("100"), 12, rounding));
-                            } else if (termTypeId.equals("FIN_COMM_MIN")) {
+                            } else if ("FIN_COMM_MIN".equals(termTypeId)) {
                                 min = termValue;
-                            } else if (termTypeId.equals("FIN_COMM_MAX")) {
+                            } else if ("FIN_COMM_MAX".equals(termTypeId)) {
                                 max = termValue;
                             }
                             // TODO: Add other type of terms and handling here

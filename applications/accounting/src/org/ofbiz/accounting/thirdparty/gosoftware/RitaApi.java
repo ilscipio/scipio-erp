@@ -28,7 +28,6 @@ import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.ObjectType;
 
-
 public class RitaApi {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -77,14 +76,14 @@ public class RitaApi {
     public static final String ORIG_TRANS_AMOUNT = "ORIG_TRANS_AMOUNT";
 
     // IN/OUT validation array
-    protected static final String[] validOut = { TERMINATION_STATUS, INTRN_SEQ_NUM, RESULT, RESULT_CODE, RESPONSE_TEXT,
-                                                 AUTH_CODE, AVS_CODE, CVV2_CODE, REFERENCE, TRANS_DATE, TRANS_TIME,
-                                                 ORIG_TRANS_AMOUNT };
+    private static final String[] validOut = { TERMINATION_STATUS, INTRN_SEQ_NUM, RESULT, RESULT_CODE, RESPONSE_TEXT,
+            AUTH_CODE, AVS_CODE, CVV2_CODE, REFERENCE, TRANS_DATE, TRANS_TIME,
+            ORIG_TRANS_AMOUNT };
 
-    protected static final String[] validIn = { FUNCTION_TYPE, PAYMENT_TYPE, USER_ID, USER_PW, COMMAND, CLIENT_ID,
-                                                ACCT_NUM, EXP_MONTH, EXP_YEAR, TRANS_AMOUNT, CARDHOLDER, TRACK_DATA,
-                                                INVOICE, PRESENT_FLAG, CUSTOMER_STREET, CUSTOMER_ZIP, CVV2, TAX_AMOUNT,
-                                                PURCHASE_ID, FORCE_FLAG, ORIG_TRANS_AMOUNT, ORIG_SEQ_NUM };
+    private static final String[] validIn = { FUNCTION_TYPE, PAYMENT_TYPE, USER_ID, USER_PW, COMMAND, CLIENT_ID,
+            ACCT_NUM, EXP_MONTH, EXP_YEAR, TRANS_AMOUNT, CARDHOLDER, TRACK_DATA,
+            INVOICE, PRESENT_FLAG, CUSTOMER_STREET, CUSTOMER_ZIP, CVV2, TAX_AMOUNT,
+            PURCHASE_ID, FORCE_FLAG, ORIG_TRANS_AMOUNT, ORIG_SEQ_NUM };
 
     // mode definition
     protected static final int MODE_OUT = 20;
@@ -98,13 +97,13 @@ public class RitaApi {
     protected int mode = 0;
 
     public RitaApi(Map<String, String> document) {
-        this.document = new LinkedHashMap<String, String>();
+        this.document = new LinkedHashMap<>();
         this.document.putAll(document);
         this.mode = MODE_OUT;
     }
 
     public RitaApi() {
-        this.document = new LinkedHashMap<String, String>();
+        this.document = new LinkedHashMap<>();
         this.mode = MODE_IN;
     }
 
@@ -123,10 +122,7 @@ public class RitaApi {
         String objString = null;
         try {
             objString = (String) ObjectType.simpleTypeConvert(value, "java.lang.String", null, null);
-        } catch (GeneralException e) {
-            Debug.logError(e, module);
-            throw new IllegalArgumentException("Unable to convert value to String");
-        } catch (ClassCastException e) {
+        } catch (GeneralException | ClassCastException e) {
             Debug.logError(e, module);
             throw new IllegalArgumentException("Unable to convert value to String");
         }
@@ -179,53 +175,7 @@ public class RitaApi {
             HttpClient http = new HttpClient(urlString);
             http.setDebug(true);
 
-            /*
-            SocketFactory sf = null;
-            if (ssl) {
-                sf = SSLSocketFactory.getDefault();
-            } else {
-                sf = SocketFactory.getDefault();
-            }
-            Socket sock = sf.createSocket(host, port);
-
-            // get the streams
-            BufferedReader br = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-            PrintStream ps = new PrintStream(sock.getOutputStream());
-
-            // send the request
-            ps.print(this.toString());
-            ps.flush();
-
-            // the output map
-            LinkedHashMap docMap = new LinkedHashMap();
-            String line;
-
-            // read the response
-            while ((line = br.readLine()) != null) {
-                Debug.logInfo(line, module);
-                if (!line.trim().equals(".")) {
-                    String[] lineSplit = line.trim().split(" ");
-                    if (lineSplit != null && lineSplit.length == 2) {
-                        docMap.put(lineSplit[0], lineSplit[1]);
-                    } else {
-                        Debug.logWarning("Line split error - " + line, module);
-                    }
-                } else {
-                    break;
-                }
-            }
-            Debug.logInfo("Reading finished.", module);
-
-            // send session finished signal
-            ps.print("..\r\n");
-            ps.flush();
-
-            // close the streams
-            ps.close();
-            br.close();
-            */
-
-            Map<String, String> docMap = new LinkedHashMap<String, String>();
+            Map<String, String> docMap = new LinkedHashMap<>();
             String resp = null;
             try {
                 resp = http.post(stream);
@@ -237,7 +187,7 @@ public class RitaApi {
             String[] lines = resp.split("\n");
             for (int i = 0; i < lines.length; i++) {
                 Debug.logInfo(lines[i], module);
-                if (!lines[i].trim().equals(".")) {
+                if (!".".equals(lines[i].trim())) {
                     String[] lineSplit = lines[i].trim().split(" ", 2);
                     if (lineSplit != null && lineSplit.length == 2) {
                         docMap.put(lineSplit[0], lineSplit[1]);
@@ -250,14 +200,13 @@ public class RitaApi {
             }
             RitaApi out = new RitaApi(docMap);
             return out;
-        } else {
-            throw new IllegalStateException("Cannot send output object");
         }
+        throw new IllegalStateException("Cannot send output object");
     }
 
     private boolean checkIn(String name) {
-        for (int i = 0; i < validOut.length; i++) {
-            if (name.equals(validOut[i])) {
+        for (String element : validOut) {
+            if (name.equals(element)) {
                 return false;
             }
         }
@@ -265,8 +214,8 @@ public class RitaApi {
     }
 
     private boolean checkOut(String name) {
-        for (int i = 0; i < validIn.length; i++) {
-            if (name.equals(validIn[i])) {
+        for (String element : validIn) {
+            if (name.equals(element)) {
                 return false;
             }
         }

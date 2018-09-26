@@ -45,7 +45,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 /**
- * FinAccountProductServices - Financial Accounts created from product purchases (i.e. gift certificates)
+ * FinAccountProductServices - Financial Accounts created from product purchases
+ * (i.e. gift certificates)
  */
 public class FinAccountProductServices {
 
@@ -108,10 +109,7 @@ public class FinAccountProductServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-
-        String replenishEnumId = null;
-
-        if(finAccountType.getString("replenishEnumId") != null) replenishEnumId = finAccountType.getString("replenishEnumId");
+        String replenishEnumId = finAccountType.getString("replenishEnumId");
 
         // get the order read helper
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
@@ -177,7 +175,7 @@ public class FinAccountProductServices {
         }
 
         // create the context for FSE
-        Map<String, Object> expContext = new HashMap<String, Object>();
+        Map<String, Object> expContext = new HashMap<>();
         expContext.put("orderHeader", orderHeader);
         expContext.put("orderItem", orderItem);
         expContext.put("party", party);
@@ -194,7 +192,7 @@ public class FinAccountProductServices {
         BigDecimal deposit = price.multiply(quantity).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding);
 
         // create the financial account
-        Map<String, Object> createCtx = new HashMap<String, Object>();
+        Map<String, Object> createCtx = new HashMap<>();
         String finAccountId;
 
         createCtx.put("finAccountTypeId", finAccountTypeId);
@@ -226,7 +224,7 @@ public class FinAccountProductServices {
         finAccountId = (String) createResp.get("finAccountId");
 
         // create the owner role
-        Map<String, Object> roleCtx = new HashMap<String, Object>();
+        Map<String, Object> roleCtx = new HashMap<>();
         roleCtx.put("partyId", partyId);
         roleCtx.put("roleTypeId", "OWNER");
         roleCtx.put("finAccountId", finAccountId);
@@ -245,7 +243,7 @@ public class FinAccountProductServices {
         }
 
         // create the initial deposit
-        Map<String, Object> depositCtx = new HashMap<String, Object>();
+        Map<String, Object> depositCtx = new HashMap<>();
         depositCtx.put("finAccountId", finAccountId);
         depositCtx.put("productStoreId", productStoreId);
         depositCtx.put("currency", currency);

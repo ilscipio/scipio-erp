@@ -62,7 +62,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> deletePaymentMethod(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -112,7 +112,7 @@ public class PaymentMethodServices {
     }
 
     public static Map<String, Object> makeExpireDate(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         String expMonth = (String) context.get("expMonth");
         String expYear = (String) context.get("expYear");
 
@@ -133,7 +133,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createCreditCard(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -143,10 +143,12 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE", "ACCOUNTING", "_CREATE");
 
-        if (result.size() > 0) return result;
+        if (result.size() > 0) {
+            return result;
+        }
 
         // do some more complicated/critical validation...
-        List<String> messages = new LinkedList<String>();
+        List<String> messages = new LinkedList<>();
 
         // first remove all spaces from the credit card number
         context.put("cardNumber", StringUtil.removeSpaces((String) context.get("cardNumber")));
@@ -167,7 +169,7 @@ public class PaymentMethodServices {
             return ServiceUtil.returnError(messages);
         }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
 
         toBeStored.add(newPm);
@@ -206,7 +208,7 @@ public class PaymentMethodServices {
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
 
-        if (UtilValidate.isNotEmpty(contactMechId) && !contactMechId.equals("_NEW_")) {
+        if (UtilValidate.isNotEmpty(contactMechId) && !"_NEW_".equals(contactMechId)) {
             // set the contactMechId on the credit card
             newCc.set("contactMechId", context.get("contactMechId"));
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
@@ -216,7 +218,9 @@ public class PaymentMethodServices {
             newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
-        if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
+        if (newPartyContactMechPurpose != null) {
+            toBeStored.add(newPartyContactMechPurpose);
+        }
 
         try {
             delegator.storeAll(toBeStored);
@@ -239,7 +243,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateCreditCard(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -249,9 +253,11 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE", "ACCOUNTING", "_UPDATE");
 
-        if (result.size() > 0) return result;
+        if (result.size() > 0) {
+            return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -280,19 +286,21 @@ public class PaymentMethodServices {
         }
 
         // do some more complicated/critical validation...
-        List<String> messages = new LinkedList<String>();
+        List<String> messages = new LinkedList<>();
 
         // first remove all spaces from the credit card number
         String updatedCardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
         if (updatedCardNumber.startsWith("*")) {
             // get the masked card number from the db
             String origCardNumber = creditCard.getString("cardNumber");
-            String origMaskedNumber = "";
             int cardLength = origCardNumber.length() - 4;
+
+            // use builder for better performance
+            StringBuilder builder = new StringBuilder();
             for (int i = 0; i < cardLength; i++) {
-                origMaskedNumber = origMaskedNumber + "*";
+                builder.append("*");
             }
-            origMaskedNumber = origMaskedNumber + origCardNumber.substring(cardLength);
+            String origMaskedNumber = builder.append(origCardNumber.substring(cardLength)).toString();
 
             // compare the two masked numbers
             if (updatedCardNumber.equals(origMaskedNumber)) {
@@ -353,7 +361,7 @@ public class PaymentMethodServices {
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
 
-        if (UtilValidate.isNotEmpty(contactMechId) && !contactMechId.equals("_NEW_")) {
+        if (UtilValidate.isNotEmpty(contactMechId) && !"_NEW_".equals(contactMechId)) {
             // set the contactMechId on the credit card
             newCc.set("contactMechId", contactMechId);
         }
@@ -366,7 +374,7 @@ public class PaymentMethodServices {
             isModified = true;
         }
 
-        if (UtilValidate.isNotEmpty(contactMechId) && !contactMechId.equals("_NEW_")) {
+        if (UtilValidate.isNotEmpty(contactMechId) && !"_NEW_".equals(contactMechId)) {
 
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
@@ -376,8 +384,9 @@ public class PaymentMethodServices {
         }
 
         if (isModified) {
-            // Debug.logInfo("yes, is modified", module);
-            if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
+            if (newPartyContactMechPurpose != null) {
+                toBeStored.add(newPartyContactMechPurpose);
+            }
 
             // set thru date on old paymentMethod
             paymentMethod.set("thruDate", now);
@@ -394,7 +403,7 @@ public class PaymentMethodServices {
             result.put("paymentMethodId", paymentMethodId);
             result.put("oldPaymentMethodId", paymentMethodId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-            if (contactMechId == null || !contactMechId.equals("_NEW_")) {
+            if (contactMechId == null || !"_NEW_".equals(contactMechId)) {
                 result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource,
                         "AccountingNoChangesMadeNotUpdatingCreditCard", locale));
             }
@@ -452,7 +461,7 @@ public class PaymentMethodServices {
     }
 
     public static Map<String, Object> createGiftCard(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -462,10 +471,11 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE", "ACCOUNTING", "_CREATE");
 
-        if (result.size() > 0)
+        if (result.size() > 0) {
             return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
         toBeStored.add(newPm);
         GenericValue newGc = delegator.makeValue("GiftCard");
@@ -509,7 +519,7 @@ public class PaymentMethodServices {
     }
 
     public static Map<String, Object> updateGiftCard(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -519,10 +529,11 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE", "ACCOUNTING", "_UPDATE");
 
-        if (result.size() > 0)
+        if (result.size() > 0) {
             return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -643,7 +654,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createEftAccount(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -653,9 +664,11 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE", "ACCOUNTING", "_CREATE");
 
-        if (result.size() > 0) return result;
+        if (result.size() > 0) {
+            return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
 
         toBeStored.add(newPm);
@@ -706,8 +719,9 @@ public class PaymentMethodServices {
             newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
-        if (newPartyContactMechPurpose != null)
+        if (newPartyContactMechPurpose != null) {
             toBeStored.add(newPartyContactMechPurpose);
+        }
 
         try {
             delegator.storeAll(toBeStored);
@@ -731,7 +745,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateEftAccount(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -741,9 +755,11 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE", "ACCOUNTING", "_UPDATE");
 
-        if (result.size() > 0) return result;
+        if (result.size() > 0) {
+            return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -819,8 +835,9 @@ public class PaymentMethodServices {
 
         if (isModified) {
             // Debug.logInfo("yes, is modified", module);
-            if (newPartyContactMechPurpose != null)
+            if (newPartyContactMechPurpose != null) {
                 toBeStored.add(newPartyContactMechPurpose);
+            }
 
             // set thru date on old paymentMethod
             paymentMethod.set("thruDate", now);

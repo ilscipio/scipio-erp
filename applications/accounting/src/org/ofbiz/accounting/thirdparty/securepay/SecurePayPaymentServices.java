@@ -68,13 +68,13 @@ public class SecurePayPaymentServices {
         BigDecimal newAmount = null;
         int amont;
 
-        if (enableamountround.equals("Y")) {
+        if ("Y".equals(enableamountround)) {
             newAmount = new BigDecimal(processAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = processAmount;
         }
 
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();
@@ -163,13 +163,13 @@ public class SecurePayPaymentServices {
         BigDecimal newAmount = null;
         int amont;
 
-        if (enableamountround.equals("Y")) {
+        if ("Y".equals(enableamountround)) {
             newAmount = new BigDecimal(captureAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = captureAmount;
         }
 
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();
@@ -242,13 +242,13 @@ public class SecurePayPaymentServices {
         BigDecimal newAmount = null;
         int amont;
 
-        if (enableamountround.equals("Y")) {
+        if ("Y".equals(enableamountround)) {
             newAmount = new BigDecimal(releaseAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = releaseAmount;
         }
 
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();
@@ -309,7 +309,7 @@ public class SecurePayPaymentServices {
                     .queryFirst();
             referenceNum = paymentGatewayResponse != null ? paymentGatewayResponse.get("referenceNum") : authTransaction.getString("referenceNum");
         } catch (GenericEntityException e) {
-            Debug.logError(nfe, module); // SCIPIO: 2018-08-13: remove printStackTrace
+            Debug.logError(e, module);
         }
 
         Properties props = buildScProperties(context, delegator);
@@ -328,14 +328,14 @@ public class SecurePayPaymentServices {
         BigDecimal multiplyAmount = new BigDecimal(100);
         BigDecimal newAmount = null;
 
-        if (enableamountround.equals("Y")) {
+        if ("Y".equals(enableamountround)) {
             newAmount = new BigDecimal(refundAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = refundAmount;
         }
 
         int amont;
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();
@@ -401,13 +401,13 @@ public class SecurePayPaymentServices {
         BigDecimal newAmount = null;
         int amont;
 
-        if (enableamountround.equals("Y")) {
+        if ("Y".equals(enableamountround)) {
             newAmount = new BigDecimal(creditAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = creditAmount;
         }
 
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();

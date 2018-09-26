@@ -169,33 +169,27 @@ public class ValueLinkServices {
         Debug.logInfo("Response : " + response, module);
 
         // on success update the database / reload the cached api
-        if (response != null) {
-            String responseCode = (String) response.get("responsecode");
-            if (responseCode.equals("00")) {
-                GenericValue vlKeys = GenericValue.create(vl.getGenericValue());
-                vlKeys.set("lastWorkingKey", vlKeys.get("workingKey"));
-                vlKeys.set("workingKey", StringUtil.toHexString(mwk));
-                vlKeys.set("workingKeyIndex", request.get("EncryptID"));
-                vlKeys.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-                vlKeys.set("lastModifiedByUserLogin", userLogin != null ? userLogin.get("userLoginId") : null);
-                try {
-                    vlKeys.store();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Unable to store updated keys; the keys were changed with ValueLink : " + vlKeys, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                            "AccountingValueLinkCannotStoreWorkingKey", locale));
-                }
-                vl.reload();
-                return ServiceUtil.returnSuccess();
-            } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                        "AccountingValueLinkTransactionFailed",
-                        UtilMisc.toMap("responseCode", responseCode), locale));
-            }
-        } else {
+        String responseCode = (String) response.get("responsecode");
+        if (!"00".equals(responseCode)) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkReceivedEmptyResponse", locale));
+                    "AccountingValueLinkTransactionFailed",
+                    UtilMisc.toMap("responseCode", responseCode), locale));
         }
+        GenericValue vlKeys = GenericValue.create(vl.getGenericValue());
+        vlKeys.set("lastWorkingKey", vlKeys.get("workingKey"));
+        vlKeys.set("workingKey", StringUtil.toHexString(mwk));
+        vlKeys.set("workingKeyIndex", request.get("EncryptID"));
+        vlKeys.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+        vlKeys.set("lastModifiedByUserLogin", userLogin != null ? userLogin.get("userLoginId") : null);
+        try {
+            vlKeys.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to store updated keys; the keys were changed with ValueLink : " + vlKeys, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingValueLinkCannotStoreWorkingKey", locale));
+        }
+        vl.reload();
+        return ServiceUtil.returnSuccess();
     }
 
     public static Map<String, Object> activate(DispatchContext dctx, Map<String, Object> context) {
@@ -253,29 +247,25 @@ public class ValueLinkServices {
                     "AccountingValueLinkUnableToActivateGiftCard", locale));
         }
 
-        if (response != null) {
-            String responseCode = (String) response.get("responsecode");
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            if (responseCode.equals("00")) {
-                result.put("processResult", Boolean.TRUE);
-                result.put("pin", vl.decryptPin((String) response.get("pin")));
-            } else {
-                result.put("processResult", Boolean.FALSE);
-                result.put("pin", response.get("PIN"));
-            }
-            result.put("responseCode", responseCode);
-            result.put("authCode", response.get("authcode"));
-            result.put("cardNumber", response.get("cardno"));
-            result.put("amount", vl.getAmount((String) response.get("currbal")));
-            result.put("expireDate", response.get("expiredate"));
-            result.put("cardClass", response.get("cardclass"));
-            result.put("referenceNum", response.get("traceno"));
-            Debug.logInfo("Activate Result : " + result, module);
-            return result;
+        String responseCode = (String) response.get("responsecode");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        if ("00".equals(responseCode)) {
+            result.put("processResult", Boolean.TRUE);
+            result.put("pin", vl.decryptPin((String) response.get("pin")));
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkReceivedEmptyResponse", locale));
+            result.put("processResult", Boolean.FALSE);
+            result.put("pin", response.get("PIN"));
         }
+        result.put("responseCode", responseCode);
+        result.put("authCode", response.get("authcode"));
+        result.put("cardNumber", response.get("cardno"));
+        result.put("amount", vl.getAmount((String) response.get("currbal")));
+        result.put("expireDate", response.get("expiredate"));
+        result.put("cardClass", response.get("cardclass"));
+        result.put("referenceNum", response.get("traceno"));
+        Debug.logInfo("Activate Result : " + result, module);
+        return result;
+
     }
 
     public static Map<String, Object> linkPhysicalCard(DispatchContext dctx, Map<String, Object> context) {
@@ -312,29 +302,19 @@ public class ValueLinkServices {
                     "AccountingValueLinkUnableToLinkGiftCard", locale));
         }
 
-        if (response != null) {
-            String responseCode = (String) response.get("responsecode");
-            Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkGiftCardActivated", locale));
+        String responseCode = (String) response.get("responsecode");
+        Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
+                "AccountingValueLinkGiftCardActivated", locale));
 
-            if (responseCode.equals("00")) {
-
-                result.put("processResult", Boolean.TRUE);
-            } else {
-                result.put("processResult", Boolean.FALSE);
-            }
-            result.put("responseCode", responseCode);
-            result.put("authCode", response.get("authcode"));
-            result.put("amount", vl.getAmount((String) response.get("newbal")));
-            result.put("expireDate", response.get("expiredate"));
-            result.put("cardClass", response.get("cardclass"));
-            result.put("referenceNum", response.get("traceno"));
-            Debug.logInfo("Link Result : " + result, module);
-            return result;
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkReceivedEmptyResponse", locale));
-        }
+        result.put("processResult", "00".equals(responseCode));
+        result.put("responseCode", responseCode);
+        result.put("authCode", response.get("authcode"));
+        result.put("amount", vl.getAmount((String) response.get("newbal")));
+        result.put("expireDate", response.get("expiredate"));
+        result.put("cardClass", response.get("cardclass"));
+        result.put("referenceNum", response.get("traceno"));
+        Debug.logInfo("Link Result : " + result, module);
+        return result;
     }
 
     public static Map<String, Object> disablePin(DispatchContext dctx, Map<String, Object> context) {
@@ -375,26 +355,18 @@ public class ValueLinkServices {
                     "AccountingValueLinkUnableToDisablePin", locale));
         }
 
-        if (response != null) {
-            String responseCode = (String) response.get("responsecode");
-            Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkPinDisabled", locale));
-            if (responseCode.equals("00")) {
-                result.put("processResult", Boolean.TRUE);
-            } else {
-                result.put("processResult", Boolean.FALSE);
-            }
-            result.put("responseCode", responseCode);
-            result.put("balance", vl.getAmount((String) response.get("currbal")));
-            result.put("expireDate", response.get("expiredate"));
-            result.put("cardClass", response.get("cardclass"));
-            result.put("referenceNum", response.get("traceno"));
-            Debug.logInfo("Disable Result : " + result, module);
-            return result;
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkReceivedEmptyResponse", locale));
-        }
+        String responseCode = (String) response.get("responsecode");
+        Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
+                "AccountingValueLinkPinDisabled", locale));
+
+        result.put("processResult","00".equals(responseCode));
+        result.put("responseCode", responseCode);
+        result.put("balance", vl.getAmount((String) response.get("currbal")));
+        result.put("expireDate", response.get("expiredate"));
+        result.put("cardClass", response.get("cardclass"));
+        result.put("referenceNum", response.get("traceno"));
+        Debug.logInfo("Disable Result : " + result, module);
+        return result;
     }
 
     public static Map<String, Object> redeem(DispatchContext dctx, Map<String, Object> context) {
@@ -443,28 +415,21 @@ public class ValueLinkServices {
                     "AccountingValueLinkUnableToRedeemGiftCard", locale));
         }
 
-        if (response != null) {
-            String responseCode = (String) response.get("responsecode");
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            if (responseCode.equals("00")) {
-                result.put("processResult", Boolean.TRUE);
-            } else {
-                result.put("processResult", Boolean.FALSE);
-            }
-            result.put("responseCode", responseCode);
-            result.put("authCode", response.get("authcode"));
-            result.put("previousAmount", vl.getAmount((String) response.get("prevbal")));
-            result.put("amount", vl.getAmount((String) response.get("newbal")));
-            result.put("expireDate", response.get("expiredate"));
-            result.put("cardClass", response.get("cardclass"));
-            result.put("cashBack", vl.getAmount((String) response.get("cashback")));
-            result.put("referenceNum", response.get("traceno"));
-            Debug.logInfo("Redeem Result : " + result, module);
-            return result;
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkReceivedEmptyResponse", locale));
-        }
+        String responseCode = (String) response.get("responsecode");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        result.put("processResult","00".equals(responseCode));
+        result.put("responseCode", responseCode);
+        result.put("authCode", response.get("authcode"));
+        result.put("previousAmount", vl.getAmount((String) response.get("prevbal")));
+        result.put("amount", vl.getAmount((String) response.get("newbal")));
+        result.put("expireDate", response.get("expiredate"));
+        result.put("cardClass", response.get("cardclass"));
+        result.put("cashBack", vl.getAmount((String) response.get("cashback")));
+        result.put("referenceNum", response.get("traceno"));
+        Debug.logInfo("Redeem Result : " + result, module);
+        return result;
+
     }
 
     public static Map<String, Object> reload(DispatchContext dctx, Map<String, Object> context) {
@@ -513,27 +478,20 @@ public class ValueLinkServices {
                     "AccountingValueLinkUnableToReloadGiftCard", locale));
         }
 
-        if (response != null) {
-            String responseCode = (String) response.get("responsecode");
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            if (responseCode.equals("00")) {
-                result.put("processResult", Boolean.TRUE);
-            } else {
-                result.put("processResult", Boolean.FALSE);
-            }
-            result.put("responseCode", responseCode);
-            result.put("authCode", response.get("authcode"));
-            result.put("previousAmount", vl.getAmount((String) response.get("prevbal")));
-            result.put("amount", vl.getAmount((String) response.get("newbal")));
-            result.put("expireDate", response.get("expiredate"));
-            result.put("cardClass", response.get("cardclass"));
-            result.put("referenceNum", response.get("traceno"));
-            Debug.logInfo("Reload Result : " + result, module);
-            return result;
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkReceivedEmptyResponse", locale));
-        }
+        String responseCode = (String) response.get("responsecode");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        result.put("processResult","00".equals(responseCode));
+        result.put("responseCode", responseCode);
+        result.put("authCode", response.get("authcode"));
+        result.put("previousAmount", vl.getAmount((String) response.get("prevbal")));
+        result.put("amount", vl.getAmount((String) response.get("newbal")));
+        result.put("expireDate", response.get("expiredate"));
+        result.put("cardClass", response.get("cardclass"));
+        result.put("referenceNum", response.get("traceno"));
+        Debug.logInfo("Reload Result : " + result, module);
+        return result;
+
     }
 
     public static Map<String, Object> balanceInquire(DispatchContext dctx, Map<String, Object> context) {
@@ -574,25 +532,18 @@ public class ValueLinkServices {
                     "AccountingValueLinkUnableToCallBalanceInquiry", locale));
         }
 
-        if (response != null) {
-            String responseCode = (String) response.get("responsecode");
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            if (responseCode.equals("00")) {
-                result.put("processResult", Boolean.TRUE);
-            } else {
-                result.put("processResult", Boolean.FALSE);
-            }
-            result.put("responseCode", responseCode);
-            result.put("balance", vl.getAmount((String) response.get("currbal")));
-            result.put("expireDate", response.get("expiredate"));
-            result.put("cardClass", response.get("cardclass"));
-            result.put("referenceNum", response.get("traceno"));
-            Debug.logInfo("Balance Result : " + result, module);
-            return result;
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkReceivedEmptyResponse", locale));
-        }
+        String responseCode = (String) response.get("responsecode");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        result.put("processResult","00".equals(responseCode));
+        result.put("responseCode", responseCode);
+        result.put("balance", vl.getAmount((String) response.get("currbal")));
+        result.put("expireDate", response.get("expiredate"));
+        result.put("cardClass", response.get("cardclass"));
+        result.put("referenceNum", response.get("traceno"));
+        Debug.logInfo("Balance Result : " + result, module);
+        return result;
+
     }
 
     public static Map<String, Object> transactionHistory(DispatchContext dctx, Map<String, Object> context) {
@@ -631,26 +582,19 @@ public class ValueLinkServices {
                     "AccountingValueLinkUnableToCallHistoryInquiry", locale));
         }
 
-        if (response != null) {
-            String responseCode = (String) response.get("responsecode");
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            if (responseCode.equals("00")) {
-                result.put("processResult", Boolean.TRUE);
-            } else {
-                result.put("processResult", Boolean.FALSE);
-            }
-            result.put("responseCode", responseCode);
-            result.put("balance", vl.getAmount((String) response.get("currbal")));
-            result.put("history", response.get("history"));
-            result.put("expireDate", response.get("expiredate"));
-            result.put("cardClass", response.get("cardclass"));
-            result.put("referenceNum", response.get("traceno"));
-            Debug.logInfo("History Result : " + result, module);
-            return result;
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkReceivedEmptyResponse", locale));
-        }
+        String responseCode = (String) response.get("responsecode");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        result.put("processResult", "00".equals(responseCode));
+        result.put("responseCode", responseCode);
+        result.put("balance", vl.getAmount((String) response.get("currbal")));
+        result.put("history", response.get("history"));
+        result.put("expireDate", response.get("expiredate"));
+        result.put("cardClass", response.get("cardclass"));
+        result.put("referenceNum", response.get("traceno"));
+        Debug.logInfo("History Result : " + result, module);
+        return result;
+
     }
 
     public static Map<String, Object> refund(DispatchContext dctx, Map<String, Object> context) {
@@ -699,27 +643,20 @@ public class ValueLinkServices {
                     "AccountingValueLinkUnableToRefundGiftCard", locale));
         }
 
-        if (response != null) {
-            String responseCode = (String) response.get("responsecode");
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            if (responseCode.equals("00")) {
-                result.put("processResult", Boolean.TRUE);
-            } else {
-                result.put("processResult", Boolean.FALSE);
-            }
-            result.put("responseCode", responseCode);
-            result.put("authCode", response.get("authcode"));
-            result.put("previousAmount", vl.getAmount((String) response.get("prevbal")));
-            result.put("amount", vl.getAmount((String) response.get("newbal")));
-            result.put("expireDate", response.get("expiredate"));
-            result.put("cardClass", response.get("cardclass"));
-            result.put("referenceNum", response.get("traceno"));
-            Debug.logInfo("Refund Result : " + result, module);
-            return result;
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingValueLinkReceivedEmptyResponse", locale));
-        }
+        String responseCode = (String) response.get("responsecode");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        result.put("processResult","00".equals(responseCode));
+        result.put("responseCode", responseCode);
+        result.put("authCode", response.get("authcode"));
+        result.put("previousAmount", vl.getAmount((String) response.get("prevbal")));
+        result.put("amount", vl.getAmount((String) response.get("newbal")));
+        result.put("expireDate", response.get("expiredate"));
+        result.put("cardClass", response.get("cardclass"));
+        result.put("referenceNum", response.get("traceno"));
+        Debug.logInfo("Refund Result : " + result, module);
+        return result;
+
     }
 
     public static Map<String, Object> voidRedeem(DispatchContext dctx, Map<String, Object> context) {
@@ -748,7 +685,7 @@ public class ValueLinkServices {
         Debug.logInfo("704 Interface : " + vlInterface, module);
         if (vlInterface != null) {
             if (vlInterface.startsWith("Activate")) {
-                if (vlInterface.equals("Activate/Rollback")) {
+                if ("Activate/Rollback".equals(vlInterface)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                             "AccountingValueLinkThisTransactionIsNotSupported", locale));
                 }
@@ -786,7 +723,7 @@ public class ValueLinkServices {
         context.put("TermTxnNo", request.get("TermTxnNo"));
 
         // Activate/Rollback is not supported by valuelink
-        if (!vlInterface.equals("Activate")) {
+        if (!"Activate".equals(vlInterface)) {
             // create the listener
             Debug.logInfo("Set 704 context : " + context, module);
             try {
@@ -1135,7 +1072,7 @@ public class ValueLinkServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingGiftCerticateNumberCannotFulfill", locale));
+                    "AccountingGiftCerticateNumberCannotFulfillFromSurvey", locale));
         }
 
         // get the response answers
@@ -1201,7 +1138,7 @@ public class ValueLinkServices {
             }
 
             Boolean processResult = (Boolean) activateResult.get("processResult");
-            if (activateResult == null || activateResult.containsKey(ModelService.ERROR_MESSAGE) || !processResult) {
+            if (activateResult.containsKey(ModelService.ERROR_MESSAGE) || !processResult) {
                 failure = true;
             }
 
@@ -1380,7 +1317,7 @@ public class ValueLinkServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingGiftCerticateNumberCannotFulfill", locale));
+                    "AccountingGiftCerticateNumberCannotFulfillFromSurvey", locale));
         }
 
         // get the response answers
@@ -1462,7 +1399,7 @@ public class ValueLinkServices {
         }
 
         Boolean processResult = (Boolean) reloadResult.get("processResult");
-        if (reloadResult == null || reloadResult.containsKey(ModelService.ERROR_MESSAGE) || !processResult) {
+        if (reloadResult.containsKey(ModelService.ERROR_MESSAGE) || !processResult) {
             Debug.logError("Reload Failed Need to Refund : " + reloadResult, module);
 
             // process the return

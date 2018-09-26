@@ -40,7 +40,6 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
-
 public class PcChargeServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -51,6 +50,7 @@ public class PcChargeServices {
     public static Map<String, Object> ccAuth(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
         Delegator delegator = dctx.getDelegator();
+        // setup the PCCharge Interface
         Properties props = buildPccProperties(context, delegator);
         PcChargeApi api = getApi(props);
         if (api == null) {
@@ -83,66 +83,58 @@ public class PcChargeServices {
         PcChargeApi out = null;
         try {
             out = api.send();
-        } catch (IOException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GeneralException e) {
+        } catch (IOException | GeneralException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
 
-        if (out != null) {
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            String resultCode = out.get(PcChargeApi.RESULT);
-            boolean passed = false;
-            if ("CAPTURED".equals(resultCode)) {
-                result.put("authResult", Boolean.TRUE);
-                result.put("captureResult", Boolean.TRUE);
-                passed = true;
-            } else if ("APPROVED".equals(resultCode)) {
-                result.put("authCode", out.get(PcChargeApi.AUTH_CODE));
-                result.put("authResult", Boolean.TRUE);
-                passed = true;
-            } else if ("PROCESSED".equals(resultCode)) {
-                result.put("authResult", Boolean.TRUE);
-            } else {
-                result.put("authResult", Boolean.FALSE);
-            }
-
-            result.put("authRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
-            result.put("processAmount", context.get("processAmount"));
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        String resultCode = out.get(PcChargeApi.RESULT);
+        boolean passed = false;
+        if ("CAPTURED".equals(resultCode)) {
+            result.put("authResult", Boolean.TRUE);
+            result.put("captureResult", Boolean.TRUE);
+            passed = true;
+        } else if ("APPROVED".equals(resultCode)) {
             result.put("authCode", out.get(PcChargeApi.AUTH_CODE));
-            result.put("authFlag", out.get(PcChargeApi.REFERENCE));
-            result.put("authMessage", out.get(PcChargeApi.RESULT));
-            result.put("cvCode", out.get(PcChargeApi.CVV2_CODE));
-            result.put("avsCode", out.get(PcChargeApi.AVS_CODE));
-
-            if (!passed) {
-                String respMsg = out.get(PcChargeApi.RESULT) + " / " + out.get(PcChargeApi.AUTH_CODE);
-                String refNum = out.get(PcChargeApi.TROUTD);
-                result.put("customerRespMsgs", UtilMisc.toList(respMsg, refNum));
-            }
-
-            if (result.get("captureResult") != null) {
-                result.put("captureCode", out.get(PcChargeApi.AUTH_CODE));
-                result.put("captureFlag", out.get(PcChargeApi.REFERENCE));
-                result.put("captureRefNum", out.get(PcChargeApi.TROUTD));
-                result.put("captureMessage", out.get(PcChargeApi.RESULT));
-            }
-
-            return result;
-
+            result.put("authResult", Boolean.TRUE);
+            passed = true;
+        } else if ("PROCESSED".equals(resultCode)) {
+            result.put("authResult", Boolean.TRUE);
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingPcChargeResultIsNull", locale));
+            result.put("authResult", Boolean.FALSE);
         }
+
+        result.put("authRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
+        result.put("processAmount", context.get("processAmount"));
+        result.put("authCode", out.get(PcChargeApi.AUTH_CODE));
+        result.put("authFlag", out.get(PcChargeApi.REFERENCE));
+        result.put("authMessage", out.get(PcChargeApi.RESULT));
+        result.put("cvCode", out.get(PcChargeApi.CVV2_CODE));
+        result.put("avsCode", out.get(PcChargeApi.AVS_CODE));
+
+        if (!passed) {
+            String respMsg = out.get(PcChargeApi.RESULT) + " / " + out.get(PcChargeApi.AUTH_CODE);
+            String refNum = out.get(PcChargeApi.TROUTD);
+            result.put("customerRespMsgs", UtilMisc.toList(respMsg, refNum));
+        }
+
+        if (result.get("captureResult") != null) {
+            result.put("captureCode", out.get(PcChargeApi.AUTH_CODE));
+            result.put("captureFlag", out.get(PcChargeApi.REFERENCE));
+            result.put("captureRefNum", out.get(PcChargeApi.TROUTD));
+            result.put("captureMessage", out.get(PcChargeApi.RESULT));
+        }
+
+        return result;
+
     }
 
     public static Map<String, Object> ccCapture(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         Locale locale = (Locale) context.get("locale");
         Delegator delegator = dctx.getDelegator();
-        //lets see if there is a auth transaction already in context
+        // lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
 
         if (authTransaction == null) {
@@ -169,39 +161,31 @@ public class PcChargeServices {
         PcChargeApi out = null;
         try {
             out = api.send();
-        } catch (IOException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GeneralException e) {
+        } catch (IOException | GeneralException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
 
-        if (out != null) {
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            String resultCode = out.get(PcChargeApi.RESULT);
-            if ("CAPTURED".equals(resultCode)) {
-                result.put("captureResult", Boolean.TRUE);
-            } else {
-                result.put("captureResult", Boolean.FALSE);
-            }
-            result.put("captureAmount", context.get("captureAmount"));
-            result.put("captureRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
-            result.put("captureCode", out.get(PcChargeApi.AUTH_CODE));
-            result.put("captureFlag", out.get(PcChargeApi.REFERENCE));
-            result.put("captureMessage", out.get(PcChargeApi.RESULT));
-
-            return result;
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        String resultCode = out.get(PcChargeApi.RESULT);
+        if ("CAPTURED".equals(resultCode)) {
+            result.put("captureResult", Boolean.TRUE);
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingPcChargeResultIsNull", locale));
+            result.put("captureResult", Boolean.FALSE);
         }
+        result.put("captureAmount", context.get("captureAmount"));
+        result.put("captureRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
+        result.put("captureCode", out.get(PcChargeApi.AUTH_CODE));
+        result.put("captureFlag", out.get(PcChargeApi.REFERENCE));
+        result.put("captureMessage", out.get(PcChargeApi.RESULT));
+
+        return result;
     }
 
     public static Map<String, Object> ccRelease(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         Delegator delegator = dctx.getDelegator();
-        //lets see if there is a auth transaction already in context
+        // lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
         Locale locale = (Locale) context.get("locale");
 
@@ -235,39 +219,31 @@ public class PcChargeServices {
         PcChargeApi out = null;
         try {
             out = api.send();
-        } catch (IOException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GeneralException e) {
+        } catch (IOException | GeneralException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
 
-        if (out != null) {
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            String resultCode = out.get(PcChargeApi.RESULT);
-            if ("VOIDED".equals(resultCode)) {
-                result.put("releaseResult", Boolean.TRUE);
-            } else {
-                result.put("releaseResult", Boolean.FALSE);
-            }
-            result.put("releaseAmount", context.get("releaseAmount"));
-            result.put("releaseRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
-            result.put("releaseCode", out.get(PcChargeApi.AUTH_CODE));
-            result.put("releaseFlag", out.get(PcChargeApi.REFERENCE));
-            result.put("releaseMessage", out.get(PcChargeApi.RESULT));
-
-            return result;
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        String resultCode = out.get(PcChargeApi.RESULT);
+        if ("VOIDED".equals(resultCode)) {
+            result.put("releaseResult", Boolean.TRUE);
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                "AccountingPcChargeResultIsNull", locale));
+            result.put("releaseResult", Boolean.FALSE);
         }
+        result.put("releaseAmount", context.get("releaseAmount"));
+        result.put("releaseRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
+        result.put("releaseCode", out.get(PcChargeApi.AUTH_CODE));
+        result.put("releaseFlag", out.get(PcChargeApi.REFERENCE));
+        result.put("releaseMessage", out.get(PcChargeApi.RESULT));
+
+        return result;
     }
 
     public static Map<String, Object> ccRefund(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         Delegator delegator = dctx.getDelegator();
-        //lets see if there is a auth transaction already in context
+        // lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
         Locale locale = (Locale) context.get("locale");
 
@@ -295,33 +271,25 @@ public class PcChargeServices {
         PcChargeApi out = null;
         try {
             out = api.send();
-        } catch (IOException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GeneralException e) {
+        } catch (IOException | GeneralException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
 
-        if (out != null) {
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            String resultCode = out.get(PcChargeApi.RESULT);
-            if ("CAPTURED".equals(resultCode)) {
-                result.put("refundResult", Boolean.TRUE);
-            } else {
-                result.put("refundResult", Boolean.FALSE);
-            }
-            result.put("refundAmount", context.get("releaseAmount"));
-            result.put("refundRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
-            result.put("refundCode", out.get(PcChargeApi.AUTH_CODE));
-            result.put("refundFlag", out.get(PcChargeApi.REFERENCE));
-            result.put("refundMessage", out.get(PcChargeApi.RESULT));
-
-            return result;
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        String resultCode = out.get(PcChargeApi.RESULT);
+        if ("CAPTURED".equals(resultCode)) {
+            result.put("refundResult", Boolean.TRUE);
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "AccountingPcChargeResultIsNull", locale));
+            result.put("refundResult", Boolean.FALSE);
         }
+        result.put("refundAmount", context.get("releaseAmount"));
+        result.put("refundRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
+        result.put("refundCode", out.get(PcChargeApi.AUTH_CODE));
+        result.put("refundFlag", out.get(PcChargeApi.REFERENCE));
+        result.put("refundMessage", out.get(PcChargeApi.RESULT));
+
+        return result;
     }
 
     private static void setCreditCardInfo(PcChargeApi api, Map<String, ? extends Object> context) throws GeneralException {
@@ -391,7 +359,7 @@ public class PcChargeServices {
         int port = 0;
         try {
             port = Integer.parseInt(props.getProperty("port"));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             Debug.logError(e, module);
         }
         PcChargeApi api = null;

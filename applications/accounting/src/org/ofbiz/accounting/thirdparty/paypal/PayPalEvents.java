@@ -55,6 +55,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 
 public class PayPalEvents {
@@ -146,7 +147,7 @@ public class PayPalEvents {
         }
 
         // create the redirect string
-        Map <String, Object> parameters = new LinkedHashMap <String, Object>();
+        Map<String, Object> parameters = new LinkedHashMap<>();
         parameters.put("cmd", "_xclick");
         parameters.put("business", payPalAccount);
         parameters.put("item_name", itemName);
@@ -233,6 +234,7 @@ public class PayPalEvents {
             URLConnection uc = u.openConnection();
             uc.setDoOutput(true);
             uc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
             PrintWriter pw = new PrintWriter(uc.getOutputStream());
             pw.println(str);
             pw.close();
@@ -294,13 +296,6 @@ public class PayPalEvents {
             return "error";
         }
 
-        /*  get payment data
-        String paymentCurrency = request.getParameter("mc_currency");
-        String paymentAmount = request.getParameter("mc_gross");
-        String paymentFee = request.getParameter("mc_fee");
-        String transactionId = request.getParameter("txn_id");
-        */
-
         // get the transaction status
         String paymentStatus = request.getParameter("payment_status");
 
@@ -310,9 +305,9 @@ public class PayPalEvents {
         try {
             beganTransaction = TransactionUtil.begin();
 
-            if (paymentStatus.equals("Completed")) {
+            if ("Completed".equals(paymentStatus)) {
                 okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-            } else if (paymentStatus.equals("Failed") || paymentStatus.equals("Denied")) {
+            } else if ("Failed".equals(paymentStatus) || "Denied".equals(paymentStatus)) {
                 okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
             }
 
@@ -347,6 +342,7 @@ public class PayPalEvents {
 
         if (okay) {
             // attempt to release the offline hold on the order (workflow)
+            // SCIPIO: 2018-09-26: TODO: REVIEW: this release call was removed upstream...
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
 
             // call the email confirm service
@@ -396,6 +392,7 @@ public class PayPalEvents {
         }
 
         // attempt to release the offline hold on the order (workflow)
+        // SCIPIO: 2018-09-26: TODO: REVIEW: this release call was removed upstream...
         if (okay)
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
 
@@ -430,7 +427,7 @@ public class PayPalEvents {
         String paymentStatus = request.getParameter("payment_status");
         String transactionId = request.getParameter("txn_id");
 
-        List <GenericValue> toStore = new LinkedList <GenericValue> ();
+        List<GenericValue> toStore = new LinkedList<>();
 
         // PayPal returns the timestamp in the format 'hh:mm:ss Jan 1, 2000 PST'
         // Parse this into a valid Timestamp Object
@@ -447,9 +444,9 @@ public class PayPalEvents {
         }
 
         paymentPreference.set("maxAmount", new BigDecimal(paymentAmount));
-        if (paymentStatus.equals("Completed")) {
+        if ("Completed".equals(paymentStatus)) {
             paymentPreference.set("statusId", "PAYMENT_RECEIVED");
-        } else if (paymentStatus.equals("Pending")) {
+        } else if ("Pending".equals(paymentStatus)) {
             paymentPreference.set("statusId", "PAYMENT_NOT_RECEIVED");
         } else {
             paymentPreference.set("statusId", "PAYMENT_CANCELLED");
@@ -496,7 +493,7 @@ public class PayPalEvents {
             return false;
         }
 
-        if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
+        if (ServiceUtil.isError(results)) {
             Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module);
             request.setAttribute("_ERROR_MESSAGE_", results.get(ModelService.ERROR_MESSAGE));
             return false;

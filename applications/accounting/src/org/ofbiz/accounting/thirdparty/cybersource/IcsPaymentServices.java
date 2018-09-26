@@ -20,6 +20,7 @@ package org.ofbiz.accounting.thirdparty.cybersource;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -332,8 +333,6 @@ public class IcsPaymentServices {
         request.put("purchaseTotals_currency", currency);
 
         // TODO: add support for verbal authorizations
-        //request.put("ccCaptureService_authType", null);   -- should be 'verbal'
-        //request.put("ccCaptureService_verbalAuthCode", null); -- code from verbal auth
         if (merchantDesc != null) {
             request.put("invoiceHeader_merchantDescriptor", merchantDesc);        // merchant description
         }

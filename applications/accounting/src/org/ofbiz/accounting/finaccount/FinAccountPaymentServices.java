@@ -93,11 +93,11 @@ public class FinAccountPaymentServices {
         OrderReadHelper orh = new OrderReadHelper(delegator, orderId);
 
         // NOTE DEJ20070808: this means that we want store related settings for where the item is being purchased,
-        //NOT where the account was setup; should this be changed to use settings from the store where the account was setup?
+        // NOT where the account was setup; should this be changed to use settings from the store where the account was setup?
         String productStoreId = orh.getProductStoreId();
 
         // TODO, NOTE DEJ20070808: why is this setup this way anyway? for the allowAuthToNegative wouldn't that be better setup
-        //on the FinAccount and not on the ProductStoreFinActSetting? maybe an override on the FinAccount would be good...
+        // on the FinAccount and not on the ProductStoreFinActSetting? maybe an override on the FinAccount would be good...
 
         // get the financial account
         GenericValue finAccount;
@@ -139,7 +139,9 @@ public class FinAccountPaymentServices {
             if (finAccountSettings == null) {
                 Debug.logWarning("In finAccountPreAuth could not find ProductStoreFinActSetting record, values searched by: " + findProductStoreFinActSettingMap, module);
             }
-            if (Debug.verboseOn()) Debug.logVerbose("In finAccountPreAuth finAccountSettings=" + finAccountSettings, module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("In finAccountPreAuth finAccountSettings=" + finAccountSettings, module);
+            }
 
             BigDecimal minBalance = FinAccountHelper.ZERO;
             String allowAuthToNegative = "N";
@@ -223,7 +225,6 @@ public class FinAccountPaymentServices {
                 }
             }
 
-
             Map<String, Object> result = ServiceUtil.returnSuccess();
             String authMessage = null;
             Boolean processResult;
@@ -272,14 +273,9 @@ public class FinAccountPaymentServices {
             Debug.logInfo("FinAccont Auth: " + result, module);
 
             return result;
-        } catch (GenericEntityException ex) {
+        } catch (GenericEntityException | GenericServiceException ex) {
             Debug.logError(ex, "Cannot authorize financial account", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingFinAccountCannotBeAuthorized",
-                    UtilMisc.toMap("errorString", ex.getMessage()), locale));
-        } catch (GenericServiceException ex) {
-            Debug.logError(ex, "Cannot authorize financial account", module);
-         return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountCannotBeAuthorized",
                     UtilMisc.toMap("errorString", ex.getMessage()), locale));
         }
@@ -408,7 +404,7 @@ public class FinAccountPaymentServices {
         }
 
         // build the withdraw context
-        Map<String, Object> withdrawCtx = new HashMap<String, Object>();
+        Map<String, Object> withdrawCtx = new HashMap<>();
         withdrawCtx.put("finAccountId", finAccountId);
         withdrawCtx.put("productStoreId", productStoreId);
         withdrawCtx.put("currency", currency);
@@ -482,7 +478,7 @@ public class FinAccountPaymentServices {
         }
 
         // call the deposit service
-        Map<String, Object> depositCtx = new HashMap<String, Object>();
+        Map<String, Object> depositCtx = new HashMap<>();
         depositCtx.put("finAccountId", finAccountId);
         depositCtx.put("productStoreId", productStoreId);
         depositCtx.put("isRefund", Boolean.TRUE);
@@ -532,7 +528,9 @@ public class FinAccountPaymentServices {
         String orderId = (String) context.get("orderId");
         Boolean requireBalance = (Boolean) context.get("requireBalance");
         BigDecimal amount = (BigDecimal) context.get("amount");
-        if (requireBalance == null) requireBalance = Boolean.TRUE;
+        if (requireBalance == null) {
+            requireBalance = Boolean.TRUE;
+        }
 
         final String WITHDRAWAL = "WITHDRAWAL";
 
@@ -805,10 +803,10 @@ public class FinAccountPaymentServices {
         String replenishMethod = finAccountSettings.getString("replenishMethodEnumId");
         BigDecimal depositAmount;
         if (replenishMethod == null || "FARP_TOP_OFF".equals(replenishMethod)) {
-            //the deposit is level - balance (500 - (-10) = 510 || 500 - (10) = 490)
+            // the deposit is level - balance (500 - (-10) = 510 || 500 - (10) = 490)
             depositAmount = replenishLevel.subtract(balance);
         } else if ("FARP_REPLENISH_LEVEL".equals(replenishMethod)) {
-            //the deposit is replenish-level itself
+            // the deposit is replenish-level itself
             depositAmount = replenishLevel;
         } else {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
@@ -847,7 +845,7 @@ public class FinAccountPaymentServices {
 
         // hit the payment method for the amount to replenish
         Map<String, BigDecimal> orderItemMap = UtilMisc.toMap("Auto-Replenishment FA #" + finAccountId, depositAmount);
-        Map<String, Object> replOrderCtx = new HashMap<String, Object>();
+        Map<String, Object> replOrderCtx = new HashMap<>();
         replOrderCtx.put("productStoreId", productStoreId);
         replOrderCtx.put("paymentMethodId", paymentMethod.getString("paymentMethodId"));
         replOrderCtx.put("currency", currency);
@@ -867,14 +865,14 @@ public class FinAccountPaymentServices {
         String orderId = (String) replResp.get("orderId");
 
         // create the deposit
-        Map<String, Object> depositCtx = new HashMap<String, Object>();
+        Map<String, Object> depositCtx = new HashMap<>();
         depositCtx.put("productStoreId", productStoreId);
         depositCtx.put("finAccountId", finAccountId);
         depositCtx.put("currency", currency);
         depositCtx.put("partyId", ownerPartyId);
         depositCtx.put("orderId", orderId);
         depositCtx.put("orderItemSeqId", "00001"); // always one item on a replish order
-        depositCtx.put("amount",  depositAmount);
+        depositCtx.put("amount", depositAmount);
         depositCtx.put("reasonEnumId", "FATR_REPLENISH");
         depositCtx.put("userLogin", userLogin);
         try {
@@ -925,8 +923,9 @@ public class FinAccountPaymentServices {
         // none found; pick one from our set stores
         try {
             GenericValue store = EntityQuery.use(delegator).from("ProductStore").orderBy("productStoreId").queryFirst();
-            if (store != null)
+            if (store != null) {
                 return store.getString("productStoreId");
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }

@@ -30,13 +30,16 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.util.EntityQuery;
 
 
-public class UtilAccounting {
+public final class UtilAccounting {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private UtilAccounting() {}
 
     /**
      * Get the GL Account for a product or the default account type based on input. This replaces the simple-method service
@@ -295,7 +298,7 @@ public class UtilAccounting {
     public static BigDecimal getGlExchangeRateOfPurchaseInvoice(GenericValue paymentApplication) throws GenericEntityException {
         BigDecimal exchangeRate = BigDecimal.ONE;
         Delegator delegator = paymentApplication.getDelegator();
-        List<EntityCondition> andConditions = UtilMisc.toList(
+        List<EntityExpr> andConditions = UtilMisc.toList(
                 EntityCondition.makeCondition("glAccountTypeId", "ACCOUNTS_PAYABLE"),
                 EntityCondition.makeCondition("debitCreditFlag", "C"),
                 EntityCondition.makeCondition("acctgTransTypeId", "PURCHASE_INVOICE"),
@@ -316,7 +319,7 @@ public class UtilAccounting {
     public static BigDecimal getGlExchangeRateOfOutgoingPayment(GenericValue paymentApplication) throws GenericEntityException {
         BigDecimal exchangeRate = BigDecimal.ONE;
         Delegator delegator = paymentApplication.getDelegator();
-        List<EntityCondition> andConditions = UtilMisc.toList(
+        List<EntityExpr> andConditions = UtilMisc.toList(
                 EntityCondition.makeCondition("glAccountTypeId", "CURRENT_ASSET"),
                 EntityCondition.makeCondition("debitCreditFlag", "C"),
                 EntityCondition.makeCondition("acctgTransTypeId", "OUTGOING_PAYMENT"),

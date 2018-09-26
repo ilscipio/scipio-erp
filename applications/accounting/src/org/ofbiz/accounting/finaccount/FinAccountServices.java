@@ -127,7 +127,7 @@ public class FinAccountServices {
                         creditAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", creditAccountId).queryOne();
 
                         // create the owner role
-                        Map<String, Object> roleCtx = new HashMap<String, Object>();
+                        Map<String, Object> roleCtx = new HashMap<>();
                         roleCtx.put("partyId", partyId);
                         roleCtx.put("roleTypeId", "OWNER");
                         roleCtx.put("finAccountId", creditAccountId);
@@ -152,7 +152,7 @@ public class FinAccountServices {
             }
 
             // create the credit transaction
-            Map<String, Object> transactionMap = new HashMap<String, Object>();
+            Map<String, Object> transactionMap = new HashMap<>();
             transactionMap.put("finAccountTransTypeId", "ADJUSTMENT");
             transactionMap.put("finAccountId", creditAccount.getString("finAccountId"));
             transactionMap.put("partyId", partyId);
@@ -165,10 +165,8 @@ public class FinAccountServices {
             if (ServiceUtil.isError(creditTransResult) || ServiceUtil.isFailure(creditTransResult)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(creditTransResult));
             }
-        } catch (GenericEntityException gee) {
-            return ServiceUtil.returnError(gee.getMessage());
-        } catch (GenericServiceException gse) {
-            return ServiceUtil.returnError(gse.getMessage());
+        } catch (GenericEntityException | GenericServiceException ge) {
+            return ServiceUtil.returnError(ge.getMessage());
         }
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -206,8 +204,11 @@ public class FinAccountServices {
             Timestamp now = UtilDateTime.nowTimestamp();
 
             // now use our values
-            String finAccountCode = FinAccountHelper.getNewFinAccountCode(accountCodeLength.intValue(), delegator);
-            inContext.put("finAccountCode", finAccountCode);
+            String finAccountCode = null;
+            if (UtilValidate.isNotEmpty(accountCodeLength)) {
+                finAccountCode = FinAccountHelper.getNewFinAccountCode(accountCodeLength.intValue(), delegator);
+                inContext.put("finAccountCode", finAccountCode);
+            }
 
             // with pin codes, the account code becomes the ID and the pin becomes the code
             if ("Y".equalsIgnoreCase(requirePinCode)) {
@@ -216,7 +217,7 @@ public class FinAccountServices {
             }
 
             // set the dates/userlogin
-            if (UtilValidate.isNotEmpty(accountValidDays)){
+            if (UtilValidate.isNotEmpty(accountValidDays)) {
                 inContext.put("thruDate", UtilDateTime.getDayEnd(now, accountValidDays));
             }
             inContext.put("fromDate", now);
@@ -235,9 +236,7 @@ public class FinAccountServices {
             result.put("finAccountId", createResult.get("finAccountId"));
             result.put("finAccountCode", finAccountCode);
             return result;
-        } catch (GenericEntityException ex) {
-            return ServiceUtil.returnError(ex.getMessage());
-        } catch (GenericServiceException ex) {
+        } catch (GenericEntityException | GenericServiceException ex) {
             return ServiceUtil.returnError(ex.getMessage());
         }
     }
@@ -308,7 +307,9 @@ public class FinAccountServices {
 
         if (finAccount != null) {
             String statusId = finAccount.getString("statusId");
-            if (statusId == null) statusId = "FNACT_ACTIVE";
+            if (statusId == null) {
+                statusId = "FNACT_ACTIVE";
+            }
 
             BigDecimal balance = finAccount.getBigDecimal("actualBalance");
             if (balance == null) {
@@ -375,7 +376,7 @@ public class FinAccountServices {
                         EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
                 EntityCondition condition = EntityCondition.makeCondition(exprs, EntityOperator.AND);
 
-                try (EntityListIterator eli  = EntityQuery.use(delegator).from("FinAccountTrans").where(condition).orderBy("-transactionDate").queryIterator()) {
+                try (EntityListIterator eli = EntityQuery.use(delegator).from("FinAccountTrans").where(condition).orderBy("-transactionDate").queryIterator()) {
                     GenericValue trans;
                     while (remainingBalance.compareTo(FinAccountHelper.ZERO) < 0 && (trans = eli.next()) != null) {
                         String orderId = trans.getString("orderId");
@@ -408,7 +409,7 @@ public class FinAccountServices {
                                     String returnId = (String) rhResp.get("returnId");
 
                                     // create the return item
-                                    Map<String, Object> returnItemCtx = new HashMap<String, Object>();
+                                    Map<String, Object> returnItemCtx = new HashMap<>();
                                     returnItemCtx.put("returnId", returnId);
                                     returnItemCtx.put("orderId", orderId);
                                     returnItemCtx.put("description", orderItem.getString("itemDescription"));
@@ -450,7 +451,7 @@ public class FinAccountServices {
                                     String paymentId = response.getString("paymentId");
 
                                     // create the adjustment transaction
-                                    Map<String, Object> txCtx = new HashMap<String, Object>();
+                                    Map<String, Object> txCtx = new HashMap<>();
                                     txCtx.put("finAccountTransTypeId", "ADJUSTMENT");
                                     txCtx.put("finAccountId", finAccountId);
                                     txCtx.put("orderId", orderId);

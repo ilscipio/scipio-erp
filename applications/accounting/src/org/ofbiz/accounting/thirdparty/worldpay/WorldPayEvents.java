@@ -48,6 +48,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * WorldPay Select Junior Integration Events/Services
@@ -228,7 +229,7 @@ public class WorldPayEvents {
         String description = UtilProperties.getMessage(resource, "AccountingOrderNr", locale) + orderId + " " +
                                  (company != null ? UtilProperties.getMessage(commonResource, "CommonFrom", locale) + " "+ company : "");
         // check the instId - very important
-        if (instId == null || instId.equals("NONE")) {
+        if (instId == null || "NONE".equals(instId)) {
             Debug.logError("Worldpay InstId not found, cannot continue", module);
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resourceErr, "worldPayEvents.problemsGettingInstId", locale));
             return "error";
@@ -249,7 +250,7 @@ public class WorldPayEvents {
             }
         }
         // create the redirect string
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("instId", instId);
         parameters.put("cartId", orderId);
         parameters.put("currency", defCur);
@@ -389,6 +390,7 @@ public class WorldPayEvents {
         }
         if (okay) {
             // attempt to release the offline hold on the order (workflow)
+            // SCIPIO: TODO: REVIEW: 2018-09-26: this release call was removed upstream...
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
             // call the email confirm service
             Map<String, Object> emailContext = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);
@@ -426,11 +428,11 @@ public class WorldPayEvents {
         Locale locale = UtilHttp.getLocale(request);
         String paymentStatus = request.getParameter("transStatus");
         String paymentAmount = request.getParameter("authAmount");
-        Long paymentDate = new Long(request.getParameter("transTime"));
+        Long paymentDate = Long.valueOf(request.getParameter("transTime"));
         String transactionId = request.getParameter("transId");
         String gatewayFlag = request.getParameter("rawAuthCode");
         String avs = request.getParameter("AVS");
-        List<GenericValue> toStore = new LinkedList<GenericValue>();
+        List<GenericValue> toStore = new LinkedList<>();
         java.sql.Timestamp authDate = null;
         try {
             authDate = new java.sql.Timestamp(paymentDate);
@@ -483,7 +485,8 @@ public class WorldPayEvents {
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resourceErr, "worldPayEvents.failedToExecuteServiceCreatePaymentFromPreference", locale));
             return false;
         }
-        if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
+
+        if (ServiceUtil.isError(results)) {
             Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module);
             request.setAttribute("_ERROR_MESSAGE_", (String) results.get(ModelService.ERROR_MESSAGE));
             return false;

@@ -65,6 +65,10 @@ public class IdealEvents {
 
     public static final String resource = "AccountingUiLabels";
     public static final String resourceErr = "AccountingErrorUiLabels";
+    /**
+     * @deprecated SCIPIO: 2018-09-26: Here for backward-compat only; do not use.
+     */
+    @Deprecated
     public static final String commonResource = "CommonUiLabels";
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
@@ -295,6 +299,7 @@ public class IdealEvents {
         if (okay) {
             request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resource, "IdealSuccessful", locale));
             // attempt to release the offline hold on the order (workflow)
+            // SCIPIO: 2018-09-26: TODO: REVIEW: this release call removed upstream...
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
             // call the email confirm service
             Map<String, String> emailContext = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);

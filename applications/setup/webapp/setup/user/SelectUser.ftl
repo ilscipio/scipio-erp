@@ -46,7 +46,7 @@
     <@field type="generic" label=uiLabelMap.SetupSelectUserForSetup>
         <#-- FIXME: submit doesn't align -->
         <@field type="select" name="userPartyId" id="setupUser-selectUser-select" class="+setupUser-selectUser-select" inline=true style="display:inline-block;">
-            <option value="">[${uiLabelMap.SetupCreateNewUser}]</option>
+            <option value="">[${uiLabelMap.PageTitleCreateNewParty}]</option>
             <option value="" disabled="disabled"></option>
             <#if parties?has_content>
               <#list parties as partyEntry>

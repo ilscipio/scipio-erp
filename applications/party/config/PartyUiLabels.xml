@@ -2204,6 +2204,12 @@
         <value xml:lang="en">Create Address Match Map</value>
         <value xml:lang="fr">Créer couples clefs-valeurs d'addresses comparables</value>
     </property>
+    <property key="PageTitleCreateNewParty">
+        <value xml:lang="de">Neuen Nutzer erstellen</value>
+        <value xml:lang="en">Create New User</value>
+        <value xml:lang="es">Crear nuevo participante</value>
+        <value xml:lang="fr">Création nouv. acteur</value>
+    </property>
     <property key="PageTitleCreateNewPartyDetail">
         <value xml:lang="ar">إضافة تفصيل جديد للطرف</value>
         <value xml:lang="de">Neuen Nutzer erstellen</value>

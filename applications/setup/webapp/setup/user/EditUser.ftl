@@ -85,7 +85,9 @@ under the License.
     <@field type="hidden" name="isCreateUser" value=(user??)?string("N","Y")/>    
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>    
     <#if userParty??>
-        <@field type="display" name="userPartyId" value=(userParty.partyId!) label=uiLabelMap.PartyPartyId />
+        <@field type="display" name="userPartyId" label=uiLabelMap.PartyPartyId>
+            <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(userParty.partyId!)}" text=(userParty.partyId!)/><#t/>
+        </@field>
     </#if>	
     	
     <#assign fieldsRequired = true>
@@ -117,8 +119,14 @@ under the License.
     <@field type="generic" label=uiLabelMap.PartyRelationships>
         <@fields args={"type":"default-nolabelarea", "ignoreParentField":true}>
             <@field type="display" value=getLabel('PartyPartyCurrentInTheRoleOf') />
-            <@field type="select" name="roleTypeId" id="roleTypeId">
-                <option value="" selected="selected">--</option>
+            
+            <#-- SCIPIO: FIXME: this roleTypeId is very confounded, it is
+                used for both ProductStoreRole creation AND the PartyRelationship to orgPartyId,
+                AND ends up in a ContactMech preventing delete later... -->
+
+            <@field type="select" name="roleTypeId" id="roleTypeId"
+                required=true><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG, service just crash without it... -->
+                <#--<option value="" selected="selected">--</option>-->
                 <#list userPartyRoles as partyRole>
                     <#assign selected = (userPartyRole?? && rawString(userPartyRole.roleTypeId) == rawString(partyRole.roleTypeId!))>
                     <option value="${partyRole.roleTypeId}"<#if selected> selected="selected"</#if>>${partyRole.description}</option>
@@ -127,8 +135,9 @@ under the License.
             
             <@field type="display" value=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(orgPartyId!)}) />
             
-            <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId">
-                <option value="" selected="selected">--</option>
+            <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId"
+                required=true><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG, without a relationship to the company the party will not appear in the list after creation! -->
+                <#--<option value="" selected="selected">--</option>-->
                 <#list userPartyRelationshipTypes as userPartyRelationshipType>
                     <#assign selected = (userPartyRelationship?? && rawString(userPartyRelationship.partyRelationshipTypeId) == rawString(userPartyRelationshipType.partyRelationshipTypeId!))>
                     <option value="${userPartyRelationshipType.partyRelationshipTypeId}"<#if selected> selected="selected"</#if>>${userPartyRelationshipType.partyRelationshipName}</option>
@@ -246,7 +255,8 @@ under the License.
     <#if userInfo?? && params.USER_EMAIL_CONTACTMECHID?has_content>
       <@field type="hidden" name="USER_EMAIL_CONTACTMECHID" value=(params.USER_EMAIL_CONTACTMECHID!)/>
     </#if>
-    <@field type="input" name="USER_EMAIL" id="USER_EMAIL" value=(params.USER_EMAIL!) onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress />            
+    <@field type="input" name="USER_EMAIL" id="USER_EMAIL" value=(params.USER_EMAIL!) onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress 
+        required=true/><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG unless you edit the server-side service to make this optional, otherwise you mislead the admin! -->            
     <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>    
 </@form>
 

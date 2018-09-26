@@ -29,19 +29,33 @@ userParty = userData.userParty;
 context.userParty = userParty;
 userPartyId = userData.userPartyId;
 context.userPartyId = userPartyId;
+orgPartyId = context.orgPartyId;
 
 if (context.userParty) {
     userInfo = [:];
     userInfo.putAll(context.userParty);    
-    if (userData.userUserLogin)
+    if (userData.userUserLogin) {
         userInfo.putAll(userData.userUserLogin);
-    if (userData.userPerson)    
+        context.userUserLogin = userData.userUserLogin;
+    }
+    if (userData.userPerson) {
         userInfo.putAll(userData.userPerson);
+    }
 
-    partyRole = EntityUtil.getFirst(delegator.findByAnd("PartyRole", ["partyId" : userParty.partyId], null, false));
-    context.userPartyRole = partyRole;
-    if (partyRole)
-        context.userPartyRelationship = EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("PartyRelationship", ["partyIdTo" : userParty.partyId, "roleTypeIdTo" : partyRole.roleTypeId], null, false)));
+    // this can't possibly work properly
+    //partyRole = EntityUtil.getFirst(delegator.findByAnd("PartyRole", ["partyId" : userParty.partyId], null, false));
+    //context.userPartyRole = partyRole;
+    //if (partyRole) {
+    //    context.userPartyRelationship = EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("PartyRelationship", ["partyIdTo" : userParty.partyId, "roleTypeIdTo" : partyRole.roleTypeId], null, false)));
+    //}
+    if (orgPartyId) {
+        userPartyRelationship = EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("PartyRelationship", 
+            ["partyIdFrom" : orgPartyId, "partyIdTo" : userParty.partyId], null, false)));
+        if (userPartyRelationship) {
+            context.userPartyRelationship = userPartyRelationship;
+            context.userPartyRole = userPartyRelationship.getRelatedOne("ToPartyRole", false);
+        } 
+    }
 }
 
 generalAddressContactMech = userData.generalAddressContactMech;

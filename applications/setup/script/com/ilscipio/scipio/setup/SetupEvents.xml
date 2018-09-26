@@ -319,7 +319,7 @@
         <!-- <set field="parameters.roleTypeId" from-field="parameters.roleT"/> -->
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <!-- <set field="personContext.partyId" from-field="parameters.customerPartyId"/> -->
-        <call-simple-method  method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+        <call-simple-method method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
         <if>
             <condition>
                 <and>

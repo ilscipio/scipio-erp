@@ -611,7 +611,9 @@ public class SurveyWrapper {
                         case 2:
                             Double c = value.getDouble("currencyResponse");
                             if (UtilValidate.isNotEmpty(c)) {
-                                result[1] += (((double) Math.round((c - c) * 100)) / 100);
+                                // SCIPIO: 2018-09-26: this gave always zero
+                                //result[1] += (((double) Math.round((c - c) * 100)) / 100);
+                                result[1] += (((double) Math.round(c * 100)) / 100);
                             }
                             break;
                         case 3:

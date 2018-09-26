@@ -69,7 +69,7 @@ public class CategoryWorker {
      * <p>
      * SCIPIO: NOTE (2017-08-15): This stock method relies entirely on the session attribute and request parameter
      * <code>CATALOG_TOP_CATEGORY</code>; in stock ofbiz, it was intended to be used in backend.
-     * For store implementations, the method that you most likely want 
+     * For store implementations, the method that you most likely want
      * is {@link org.ofbiz.product.catalog.CatalogWorker#getCatalogTopCategoryId}.
      */
     public static String getCatalogTopCategory(ServletRequest request, String defaultTopCategory) {
@@ -386,7 +386,7 @@ public class CategoryWorker {
         }
         return crumb;
     }
-    
+
     /**
      * SCIPIO: Version that returns a copy of the trail without the TOP category.
      */
@@ -404,13 +404,13 @@ public class CategoryWorker {
             }
         }
         return res;
-    }    
+    }
 
     /**
      * Sets breadcrumbs trail to the exact given value.
      * <p>
      * SCIPIO: This is modified to accept a onlyIfNewInRequest boolean that will check to see
-     * if a breadcrumb was already set in the request. Default is false. 
+     * if a breadcrumb was already set in the request. Default is false.
      * This is needed in some places to prevent squashing breadcrumbs set in servlets and filters.
      */
     public static List<String> setTrail(ServletRequest request, List<String> crumb, boolean onlyIfNewInRequest) {
@@ -431,20 +431,20 @@ public class CategoryWorker {
         }
         return crumb;
     }
-    
+
     /**
      * Sets breadcrumbs trail to the exact given value.
      */
     public static List<String> setTrail(ServletRequest request, List<String> crumb) {
         return setTrail(request, crumb, false);
     }
-    
+
     /**
      * SCIPIO: Sets breadcrumbs trail to the exact given value but only if not yet set during request.
      */
     public static List<String> setTrailIfFirstInRequest(ServletRequest request, List<String> crumb) {
         return setTrail(request, crumb, true);
-    } 
+    }
 
     public static boolean checkTrailItem(ServletRequest request, String category) {
         List<String> crumb = getTrail(request);
@@ -547,11 +547,11 @@ public class CategoryWorker {
      * bread-crumbs, for building a faceted index tree, or to export a category
      * tree for migration to another system. Will create the tree from root
      * point to categoryId.
-     * 
+     *
      * This method is not meant to be run on every request. Its best use is to
      * generate the trail every so often and store somewhere (a lucene/solr
      * tree, entities, cache or so).
-     * 
+     *
      * @param dctx
      *            The DispatchContext that this service is operating in
      * @param context
@@ -616,17 +616,17 @@ public class CategoryWorker {
         }
         return false;
     }
-    
+
     /**
      * SCIPIO: Returns true only if the category ID is child of the given parent category ID.
      * <p>
      * NOTE: is caching
      */
     public static boolean isCategoryChildOf(ServletRequest request, String parentProductCategoryId, String productCategoryId) {
-        return isCategoryChildOf((Delegator) request.getAttribute("delegator"), (LocalDispatcher) request.getAttribute("dispatcher"), 
+        return isCategoryChildOf((Delegator) request.getAttribute("delegator"), (LocalDispatcher) request.getAttribute("dispatcher"),
                 parentProductCategoryId, productCategoryId);
-    }    
-    
+    }
+
     /**
      * SCIPIO: Returns true only if the category ID is a top category.
      * <p>
@@ -646,17 +646,17 @@ public class CategoryWorker {
         }
         return false; // can't tell, return false to play it safe
     }
-    
+
     /**
      * SCIPIO: Returns true only if the category ID is a top category.
      * <p>
      * NOTE: is caching
      */
     public static boolean isCategoryTop(ServletRequest request, String productCategoryId) {
-        return isCategoryTop((Delegator) request.getAttribute("delegator"), 
+        return isCategoryTop((Delegator) request.getAttribute("delegator"),
                 (LocalDispatcher) request.getAttribute("dispatcher"), productCategoryId);
     }
-    
+
     /**
      * SCIPIO: Returns true only if the category ID is a top category.
      * <p>
@@ -678,23 +678,23 @@ public class CategoryWorker {
         }
         return false; // can't tell, return false to play it safe
     }
-    
+
     /**
      * SCIPIO: Returns true only if the category contains the product, NON-recursive.
      * <p>
      * NOTE: is caching
      */
     public static boolean isCategoryContainsProduct(ServletRequest request, String productCategoryId, String productId) {
-        return isCategoryContainsProduct((Delegator) request.getAttribute("delegator"), 
+        return isCategoryContainsProduct((Delegator) request.getAttribute("delegator"),
                 (LocalDispatcher) request.getAttribute("dispatcher"), productCategoryId, productId);
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * SCIPIO: Returns a valid category path/trail (as parts) from the given trail,
-     * starting with the top category (but without the fake "TOP" category). 
+     * starting with the top category (but without the fake "TOP" category).
      * If none could be determined, returns null.
      * <p>
      * In some circumstances, getTrailNoTop alone could work, but we need a method that guarantees
@@ -723,20 +723,20 @@ public class CategoryWorker {
         }
         /* TODO: should validate the path here
         if (path != null) {
-            
+
         }*/
         return path;
     }
-    
+
     /**
      * SCIPIO: Returns a valid category path/trail (as parts) from the current request trail in session,
-     * starting with the top category (but without the fake "TOP" category). 
+     * starting with the top category (but without the fake "TOP" category).
      * If none could be determined, returns null.
      */
     public static List<String> getCategoryPathFromTrailAsList(ServletRequest request) {
         return getCategoryPathFromTrailAsList(request, getTrail(request));
     }
-    
+
     /**
      * SCIPIO: Checks the given trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
@@ -758,17 +758,17 @@ public class CategoryWorker {
         }
         return null;
     }
-    
-    
+
+
     /**
      * SCIPIO: Checks the given trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
      */
     public static String getTopCategoryFromTrail(ServletRequest request, List<String> trail) {
-        return getTopCategoryFromTrail((Delegator) request.getAttribute("delegator"), 
+        return getTopCategoryFromTrail((Delegator) request.getAttribute("delegator"),
                 (LocalDispatcher) request.getAttribute("dispatcher"), trail);
     }
-    
+
     /**
      * SCIPIO: Checks the current trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
@@ -776,8 +776,8 @@ public class CategoryWorker {
     public static String getTopCategoryFromTrail(ServletRequest request) {
         return getTopCategoryFromTrail(request, getTrail(request));
     }
-    
-    
+
+
     /**
      * SCIPIO: Attempts to determine a suitable category for the given product from given trail.
      */
@@ -793,15 +793,15 @@ public class CategoryWorker {
             }
         }
         return null;
-    }   
-    
+    }
+
     /**
      * SCIPIO: Attempts to determine a suitable category for the given product from the trail in session.
      */
     public static String getCategoryForProductFromTrail(ServletRequest request, String productId) {
         return getCategoryForProductFromTrail(request, productId, CategoryWorker.getTrail(request));
     }
-    
+
     /**
      * SCIPIO: For each simple-text-compatible prodCatContentTypeId, returns a list of complex record views,
      * where the first entry is ProductCategoryContentAndElectronicText and the following entries (if any)
@@ -816,7 +816,7 @@ public class CategoryWorker {
     public static Map<String, List<GenericValue>> getProductCategoryContentLocalizedSimpleTextViews(Delegator delegator, LocalDispatcher dispatcher,
             String productCategoryId, Collection<String> prodCatContentTypeIdList, java.sql.Timestamp filterByDate, boolean useCache) throws GenericEntityException {
         Map<String, List<GenericValue>> fieldMap = new HashMap<>();
-        
+
         List<EntityCondition> typeIdCondList = new ArrayList<>(prodCatContentTypeIdList.size());
         if (prodCatContentTypeIdList != null) {
             for(String prodCatContentTypeId : prodCatContentTypeIdList) {
@@ -829,7 +829,7 @@ public class CategoryWorker {
             condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
         }
         condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
-        
+
         EntityQuery query = EntityQuery.use(delegator).from("ProductCategoryContentAndElectronicText")
                 .where(condList).orderBy("-fromDate").cache(useCache);
         if (filterByDate != null) {
@@ -845,7 +845,7 @@ public class CategoryWorker {
                 continue;
             }
             String contentIdStart = prodCatContent.getString("contentId");
-            
+
             condList = new ArrayList<>();
             condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
             condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
@@ -861,11 +861,11 @@ public class CategoryWorker {
             valueList.addAll(contentAssocList);
             fieldMap.put(prodCatContentTypeId, valueList);
         }
-        
+
         return fieldMap;
     }
 
-    
+
     /**
      * SCIPIO: Returns all rollups for a category.
      * Imported from SolrCategoryUtil, 2017-11-09.
@@ -898,7 +898,7 @@ public class CategoryWorker {
         }
         return trailElements;
     }
-    
+
     /**
      * SCIPIO: Returns all rollups for a category that have the given top categories.
      * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?

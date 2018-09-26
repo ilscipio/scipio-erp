@@ -11,7 +11,7 @@ public class BaseOperationStats {
     }
     /**
      * Available modes to operate with
-     * 
+     *
      * @author jsoto
      *
      */
@@ -21,18 +21,18 @@ public class BaseOperationStats {
 
     /**
      * Defines the type of the notification message:
-     * 
+     *
      * FATAL: Ends the CSV parse process and the cause is stored for further
      * report.
-     * 
+     *
      * ERROR: Stops the current parse sub process but continue with the pending
      * ones. Stores the casue for further report.
-     * 
+     *
      * WARNING: Continues the CSV parse process but saves the notification
      * message for further report.
-     * 
+     *
      * IGNORE: Continues the CSV parse and ignores whatever caused it.
-     * 
+     *
      * @author jsoto
      *
      */

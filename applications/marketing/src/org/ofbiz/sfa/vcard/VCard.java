@@ -73,7 +73,7 @@ public class VCard {
      * @param dctx
      * @param context
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     public static Map<String, Object> importVCard(DispatchContext dctx, Map<String, ? extends Object> context) throws IOException {
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -244,7 +244,7 @@ public class VCard {
         }
         result.put("partiesCreated", partiesCreated);
         result.put("partiesExist", partiesExist);
-        
+
         // SCIPIO: 2018-09-12: backward-compat: We return the first party created for backward-compat,
         // otherwise existing one
         if (partiesCreated.size() > 0) {
@@ -254,9 +254,9 @@ public class VCard {
         }
         // SCIPIO: log the results in case screen fails
         final int maxPartiesToList = 10;
-        Debug.logInfo("importVCard: " + partiesCreated.size() + " parties created (" 
-                + (partiesCreated.size() > maxPartiesToList ? partiesCreated.subList(0, maxPartiesToList) + "..." : partiesCreated) 
-                + "), " + partiesExist.size() + " parties already existed (" 
+        Debug.logInfo("importVCard: " + partiesCreated.size() + " parties created ("
+                + (partiesCreated.size() > maxPartiesToList ? partiesCreated.subList(0, maxPartiesToList) + "..." : partiesCreated)
+                + "), " + partiesExist.size() + " parties already existed ("
                 + (partiesExist.size() > maxPartiesToList ? partiesExist.subList(0, maxPartiesToList) + "..." : partiesExist)  + ")", module);
 
         return result;
@@ -324,14 +324,14 @@ public class VCard {
             Ezvcard.write(vcard).go(file);
         } catch (FileNotFoundException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "SfaExportVCardErrorOpeningFile", UtilMisc.toMap("errorString", file.getAbsolutePath()), locale));
         } catch (IOException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "SfaExportVCardErrorWritingFile", UtilMisc.toMap("errorString", file.getAbsolutePath()), locale));
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "SfaExportVCardError", UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
         return ServiceUtil.returnSuccess();

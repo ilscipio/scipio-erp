@@ -97,7 +97,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         final GenericValue userLogin = FreeMarkerWorker.getWrappedObject("userLogin", env);
         GenericValue subContentDataResourceViewTemp = FreeMarkerWorker.getWrappedObject("subContentDataResourceView", env);
         //final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
-        
+
         ctx.put("mapKey", mapKey);
         ctx.put("subDataResourceTypeIdTemp", subDataResourceTypeIdTemp);
         ctx.put("contentId", contentId);

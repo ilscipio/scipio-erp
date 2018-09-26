@@ -99,7 +99,7 @@ public class ProposedOrder {
      *   <li>For the bought product, the first ProductFacility.daysToShip is used to calculated the startDate</li>
      * </ul>
      * @return
-     * <ul> 
+     * <ul>
      * <li>if ProposedOrder.isBuild a Map with all the routingTaskId as keys and estimatedStartDate as value.</li>
      * <li>else null.</li>
      * </ul>
@@ -113,7 +113,7 @@ public class ProposedOrder {
             List<GenericValue> listRoutingTaskAssoc = null;
             if (routing == null) {
                 try {
-                    Map<String, Object> routingInMap = UtilMisc.<String, Object>toMap("productId", product.getString("productId"), 
+                    Map<String, Object> routingInMap = UtilMisc.<String, Object>toMap("productId", product.getString("productId"),
                             "ignoreDefaultRouting", "Y", "userLogin", userLogin);
                     Map<String, Object> routingOutMap = dispatcher.runSync("getProductRouting", routingInMap);
                     routing = (GenericValue)routingOutMap.get("routing");

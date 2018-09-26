@@ -40,7 +40,7 @@ import org.ofbiz.workeffort.workeffort.WorkEffortSearch.WorkEffortSearchConstrai
 public class WorkEffortSearchSession {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     @SuppressWarnings("serial")
     public static class WorkEffortSearchOptions implements java.io.Serializable {
         protected List<WorkEffortSearchConstraint> constraintList = null;

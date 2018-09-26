@@ -98,7 +98,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
     public static String getProductContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getProductPromoContentAsText(productPromo, productPromoContentTypeId, locale, null, null, null, null, dispatcher, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -113,7 +113,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
     public static String getProductPromoContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
         return getProductPromoContentAsText(productPromo, productPromoContentTypeId, locale, mimeTypeId, partyId, roleTypeId, delegator, dispatcher, true, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -200,7 +200,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
             ContentWorker.renderContentAsText(dispatcher, delegator, productPromoContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, partyId, roleTypeId, cache);
             return;
         }
-        
+
         String candidateFieldName = ModelUtil.dbNameToVarName(productPromoContentTypeId);
         ModelEntity productModel = delegator.getModelEntity("ProductPromo");
         if (productModel.isField(candidateFieldName)) {
@@ -212,7 +212,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
                 if (UtilValidate.isNotEmpty(candidateValue)) {
                     outWriter.write(candidateValue);
                     return;
-                } 
+                }
             }
         }
     }

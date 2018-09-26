@@ -910,7 +910,7 @@ public class CommunicationEventServices {
                 String msgHeaderValue = wrapper.getHeader(spamHeaderName)[0];
                 if (msgHeaderValue != null && msgHeaderValue.startsWith(configHeaderValue)) {
                     Debug.logInfo("Incoming Email message ignored, was detected by external spam checker", module);
-                    return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
                             "PartyCommEventMessageIgnoredDetectedByExternalSpamChecker", locale));
                 }
             }
@@ -918,7 +918,7 @@ public class CommunicationEventServices {
             // if no 'from' addresses specified ignore the message
             if (addressesFrom == null) {
                 Debug.logInfo("Incoming Email message ignored, had not 'from' email address", module);
-                return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
                         "PartyCommEventMessageIgnoredNoFromAddressSpecified", locale));
             }
 
@@ -932,7 +932,7 @@ public class CommunicationEventServices {
             }
             if (!commEvents.isEmpty()) {
                 Debug.logInfo("Ignoring Duplicate Email: " + aboutThisEmail, module);
-                return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
                         "PartyCommEventMessageIgnoredDuplicateMessageId", locale));
             }
 

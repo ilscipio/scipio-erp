@@ -31,7 +31,7 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 public abstract class CategoryWorker {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected CategoryWorker() {
     }
 
@@ -40,7 +40,7 @@ public abstract class CategoryWorker {
         public static final Set<String> ENTITY_DATA_NAMES = UtilMisc.unmodifiableHashSet(
                 "prodCatalog", "productStoreCatalog", "productCategory", "productCategoryRollup", "prodCatalogCategory", "product", "productCategoryMember"
         );
-        
+
         public String library = null;
         public Map<String, Map<String, Object>> categoryStates = null;
         public Map<String, EntityDataSpec> includeEntityData = null;
@@ -58,15 +58,15 @@ public abstract class CategoryWorker {
             this.useCategoryCache = Boolean.TRUE.equals(context.get("useCategoryCache"));
             this.useProductCache = Boolean.TRUE.equals(context.get("useProductCache"));
         }
-        
+
         public TreeBuildOptions() {
             this.includeEntityData = makeEntityDataMap(false, null);
         }
-        
+
         public String getEntityDataTreeFieldName(String name) {
             return name + "Entity";
         }
-        
+
         Map<String, Object> checkPutEntityDataField(Map<String, Object> treeItem, String name, GenericValue value) {
             Map<String, Object> entityData = checkGetEntityData(name, value);
             if (entityData != null) {
@@ -74,14 +74,14 @@ public abstract class CategoryWorker {
             }
             return entityData;
         }
-        
+
         Map<String, Object> checkGetEntityData(String name, GenericValue value) {
             if (includeEntityData == null) return null;
             EntityDataSpec spec = includeEntityData.get(name);
             if (spec == null) return null;
             else return spec.extractFields(value);
         }
-        
+
         public static Map<String, EntityDataSpec> makeEntityDataMap(boolean includeAllDefault, Map<String, ?> customSpecs) {
             Map<String, EntityDataSpec> map = new HashMap<>();
             if (customSpecs != null) {
@@ -96,7 +96,7 @@ public abstract class CategoryWorker {
             }
             return map;
         }
-        
+
         public static class EntityDataSpec implements Serializable {
             public static final EntityDataSpec ALL = new EntityDataSpec(true, null, null);
             public static final EntityDataSpec NONE = new EntityDataSpec(false, null, null);
@@ -104,19 +104,19 @@ public abstract class CategoryWorker {
             public final boolean use;
             public final Collection<String> inclFields;
             public final Collection<String> exclFields;
-            
+
             protected EntityDataSpec(boolean use, Collection<String> inclFields, Collection<String> exclFields) {
                 this.use = use;
                 this.inclFields = inclFields;
                 this.exclFields = exclFields;
             }
-            
+
             protected EntityDataSpec(Collection<String> includeFields, Collection<String> exclFields) {
                 this.inclFields = includeFields;
                 this.exclFields = exclFields;
                 this.use = (includeFields != null || exclFields != null);
             }
-            
+
             @SuppressWarnings("unchecked")
             protected EntityDataSpec(Map<String, ?> map) {
                 this.inclFields = (Collection<String>) map.get("inclFields");
@@ -135,11 +135,11 @@ public abstract class CategoryWorker {
                 else if (spec instanceof Collection) return new EntityDataSpec(true, (Collection<String>) spec, null);
                 else return NONE;
             }
-            
+
             public static EntityDataSpec fromBoolean(Boolean spec) {
                 return Boolean.TRUE.equals(spec) ? ALL : NONE;
             }
-            
+
             /**
              * NOTE: result not always a copy.
              */
@@ -151,7 +151,7 @@ public abstract class CategoryWorker {
             }
         }
     }
-    
+
     /**
      * SCIPIO: Retrieves categories based on either a list of
      * ProductCategoryRollup or ProdCatalogCategory and returns a list of
@@ -175,11 +175,11 @@ public abstract class CategoryWorker {
             if (category != null) {
                 String categoryId = category.getString("productCategoryId");
                 String nodeId = "category_" + categoryId;
-                
+
                 if (categoryOutMap != null) {
                     categoryOutMap.put(categoryId, category);
                 }
-                
+
                 Boolean isParent = null;
                 List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
                         .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().orderBy("sequenceNum").cache(options.useCategoryCache).queryList();
@@ -188,9 +188,9 @@ public abstract class CategoryWorker {
                             getTreeCategories(delegator, dispatcher, locale, childProductCategoryRollups, nodeId, options, categoryOutMap));
                     isParent = true;
                 }
-                
+
                 // NOTE: we may need do the query even if maxProductsPerCat is zero to determine isParent flag
-                if (options.maxProductsPerCat != 0 || isParent == null) { 
+                if (options.maxProductsPerCat != 0 || isParent == null) {
                     // SCIPIO: 2017-10-13: NOTE: now doing our own query here, service call was too limited
                     //Map<String, Object> productCategoryMembers = dispatcher.runSync("getProductCategoryMembers",
                     //        UtilMisc.toMap("categoryId", productCategory.getString("productCategoryId")));
@@ -212,7 +212,7 @@ public abstract class CategoryWorker {
                         }
                     }
                 }
-    
+
                 String categoryName = null;
                 CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null, options.useCategoryCache);
                 categoryName = wrapper.get("CATEGORY_NAME");
@@ -223,14 +223,14 @@ public abstract class CategoryWorker {
                         categoryName = category.getString("productCategoryId");
                     }
                 }
-    
+
                 if ("jsTree".equals(options.library)) {
                     JsTreeDataItem dataItem = null;
                     Map<String, Object> effState = UtilMisc.toMap("opened", false, "selected", false);
                     if (options.categoryStates != null && options.categoryStates.get(categoryId) != null) {
                         effState.putAll(options.categoryStates.get(categoryId));
                     }
-                    dataItem = new JsTreeDataItem(nodeId, categoryId, categoryName + " [" + categoryId + "]", 
+                    dataItem = new JsTreeDataItem(nodeId, categoryId, categoryName + " [" + categoryId + "]",
                             "jstree-folder", new JsTreeDataItemState(effState), parentId);
                     dataItem.setType("category");
                     if (UtilValidate.isNotEmpty(dataItem))
@@ -244,11 +244,11 @@ public abstract class CategoryWorker {
         }
         return treeDataItemList;
     }
-    
+
     // TODO
-//    public static Map<String, Map<String, Object>> getLocalizedCategoryContentTextFields(Delegator delegator, LocalDispatcher dispatcher, 
+//    public static Map<String, Map<String, Object>> getLocalizedCategoryContentTextFields(Delegator delegator, LocalDispatcher dispatcher,
 //            String productCategoryId, Collection<String> dataResourceTypeIdList, boolean useCache) {
-//        
+//
 //    }
 
     /**
@@ -262,7 +262,7 @@ public abstract class CategoryWorker {
         if (UtilValidate.isNotEmpty(productCategoryMembers)) {
             for (GenericValue productCategoryMember : productCategoryMembers) {
                 GenericValue product = productCategoryMember.getRelatedOne("Product", options.useProductCache);
-    
+
                 String productId = product.getString("productId");
                 String productName = product.getString("productName");
                 if (UtilValidate.isEmpty(productName)) {
@@ -271,9 +271,9 @@ public abstract class CategoryWorker {
                     if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME")))
                         productName = wrapper.get("PRODUCT_NAME");
                 }
-    
+
                 if ("jsTree".equals(options.library)) {
-                    JsTreeDataItem dataItem = new JsTreeDataItem("product_" + productId, productId, productName + " [" + productId + "]", 
+                    JsTreeDataItem dataItem = new JsTreeDataItem("product_" + productId, productId, productName + " [" + productId + "]",
                             "jstree-file", new JsTreeDataItemState(false, false), parentId);
                     dataItem.setType("product");
                     products.add(dataItem);
@@ -292,7 +292,7 @@ public abstract class CategoryWorker {
         extractAllProductCategoryFromTreeItems(treeItems, outList);
         return outList;
     }
-    
+
     public static void extractAllProductCategoryFromTreeItems(List<? extends Map<String, Object>> treeItems, List<GenericValue> outList) {
         if (treeItems == null) return;
         for(Map<String, Object> item : treeItems) {
@@ -305,5 +305,5 @@ public abstract class CategoryWorker {
             }
         }
     }
-    
+
 }

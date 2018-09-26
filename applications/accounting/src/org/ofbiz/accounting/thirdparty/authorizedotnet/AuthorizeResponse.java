@@ -28,16 +28,16 @@ public class AuthorizeResponse {
     private String[] response;
     private RespPositions pos;
     private String rawResp;
-     
+
     // response types
     public static final int AIM_RESPONSE = 1;
     public static final int CP_RESPONSE = 2;
-    
+
     // status constants
     public static final String APPROVED = "Approved";
     public static final String DECLINED = "Declined";
     public static final String ERROR    = "Error";
-    
+
     // positions of the result
     public static final String RESPONSE_CODE = "RESPONSE_CODE";
     public static final String REASON_CODE = "REASON_CODE";
@@ -46,12 +46,12 @@ public class AuthorizeResponse {
     public static final String AVS_RESULT_CODE = "AVS_RESULT_CODE";
     public static final String CVV_RESULT_CODE = "CVV_RESULT_CODE";
     public static final String TRANSACTION_ID = "TRANSACTION_ID";
-    public static final String AMOUNT = "AMOUNT";    
-    
+    public static final String AMOUNT = "AMOUNT";
+
     // singletons
     private static final AIMRespPositions aimPos = new AIMRespPositions();
     private static final CPRespPositions cpPos = new CPRespPositions();
-    
+
     public AuthorizeResponse(String resp, int responseType) {
         this(resp, "\\|", responseType);
     }
@@ -59,26 +59,26 @@ public class AuthorizeResponse {
     public AuthorizeResponse(String resp, String delim, int responseType) {
         this.rawResp = resp;
         this.response = resp.split(delim);
-                
+
         if (responseType == CP_RESPONSE) {
             pos = cpPos;
         } else {
             pos = aimPos;
         }
     }
-        
+
     public boolean isApproved() {
         return pos.getApprovalString().equals(getResponseCode());
     }
-    
+
     public String getTransactionId() {
         return getResponseField(TRANSACTION_ID);
     }
-    
+
     public String getAuthorizationCode() {
         return getResponseField(AUTHORIZATION_CODE);
     }
-    
+
     public String getResponseCode() {
         return getResponseField(RESPONSE_CODE);
     }
@@ -90,15 +90,15 @@ public class AuthorizeResponse {
     public String getReasonText() {
         return getResponseField(REASON_TEXT);
     }
-    
+
     public String getAvsResult() {
         return getResponseField(AVS_RESULT_CODE);
     }
-    
+
     public String getCvResult() {
         return getResponseField(CVV_RESULT_CODE);
     }
-    
+
     public BigDecimal getAmount() {
         BigDecimal amount = BigDecimal.ZERO;
         String amtStr = getResponseField(AMOUNT);
@@ -107,18 +107,18 @@ public class AuthorizeResponse {
         }
         return amount;
     }
-            
+
     public String getRawResponse() {
         return this.rawResp;
     }
 
     private String getResponseField(String field) {
         int position = pos.getPosition(field);
-        if (position == -1) 
+        if (position == -1)
             return null;
         return getResponseField(position);
     }
-    
+
     private String getResponseField(int position) {
         if (response.length < position) {
             return null;
@@ -127,13 +127,13 @@ public class AuthorizeResponse {
             return response[position-1];
         }
     }
-       
+
     @Override
     public String toString() {
         return response.toString();
     }
-    
-    public static abstract class RespPositions {        
+
+    public static abstract class RespPositions {
         public abstract int getPosition(String name);
         public abstract String getApprovalString();
     }

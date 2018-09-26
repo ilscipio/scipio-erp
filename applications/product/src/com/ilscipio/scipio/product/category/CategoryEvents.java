@@ -26,12 +26,12 @@ import org.ofbiz.product.category.CategoryWorker;
 public abstract class CategoryEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected CategoryEvents() {
     }
 
     /**
-     * @deprecated SCIPIO: Use the new buildCatalogJsTree service instead which is compliant with jsTree latest version. 
+     * @deprecated SCIPIO: Use the new buildCatalogJsTree service instead which is compliant with jsTree latest version.
      * TODO: Implement the required events so they can be used to populate a jsTree via ajax too.
      * <p>
      * Please note : the structure of map in this function is according to the
@@ -50,7 +50,7 @@ public abstract class CategoryEvents {
         String hrefString2 = request.getParameter("hrefString2");
         String entityName = null;
         String primaryKeyName = null;
-    
+
         if (isCatalog.equals("true")) {
             entityName = "ProdCatalog";
             primaryKeyName = "prodCatalogId";
@@ -58,18 +58,18 @@ public abstract class CategoryEvents {
             entityName = "ProductCategory";
             primaryKeyName = "productCategoryId";
         }
-    
+
         List<Map<Object, Object>> categoryList = new ArrayList<>();
         List<GenericValue> childOfCats;
         List<String> sortList = UtilMisc.toList("sequenceNum", "title");
-    
+
         try {
             GenericValue category = EntityQuery.use(delegator).from(entityName).where(primaryKeyName, productCategoryId).queryOne();
             if (UtilValidate.isNotEmpty(category)) {
                 if (isCatalog.equals("true") && isCategoryType.equals("false")) {
                     CategoryWorker.getRelatedCategories(request, "ChildCatalogList", CatalogWorker.getCatalogTopCategoryId(request, productCategoryId), true);
                     childOfCats = EntityUtil.filterByDate((List<GenericValue>) request.getAttribute("ChildCatalogList"));
-    
+
                 } else if (isCatalog.equals("false") && isCategoryType.equals("false")) {
                     childOfCats = EntityQuery.use(delegator).from("ProductCategoryRollupAndChild").where("parentProductCategoryId", productCategoryId)
                             .filterByDate().queryList();
@@ -77,25 +77,25 @@ public abstract class CategoryEvents {
                     childOfCats = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", productCategoryId).filterByDate().queryList();
                 }
                 if (UtilValidate.isNotEmpty(childOfCats)) {
-    
+
                     for (GenericValue childOfCat : childOfCats) {
-    
+
                         Object catId = null;
                         String catNameField = null;
-    
+
                         catId = childOfCat.get("productCategoryId");
                         catNameField = "CATEGORY_NAME";
-    
+
                         Map<Object, Object> josonMap = new HashMap<>();
                         List<GenericValue> childList = null;
-    
+
                         // Get the child list of chosen category
                         childList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", catId).filterByDate().queryList();
-    
+
                         // Get the chosen category information for the
                         // categoryContentWrapper
                         GenericValue cate = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", catId).queryOne();
-    
+
                         // If chosen category's child exists, then put the arrow
                         // before category icon
                         if (UtilValidate.isNotEmpty(childList)) {
@@ -104,7 +104,7 @@ public abstract class CategoryEvents {
                         Map<String, Object> dataMap = new HashMap<>();
                         Map<String, Object> dataAttrMap = new HashMap<>();
                         CategoryContentWrapper categoryContentWrapper = new CategoryContentWrapper(cate, request);
-    
+
                         String title = null;
                         // SCIPIO: Do NOT HTML-escape this here
                         if (UtilValidate.isNotEmpty(categoryContentWrapper.get(catNameField))) {
@@ -116,13 +116,13 @@ public abstract class CategoryEvents {
                             dataMap.put("title", catId);
                         }
                         dataAttrMap.put("onClick", onclickFunction + "('" + catId + additionParam + "')");
-    
+
                         String hrefStr = hrefString + catId;
                         if (UtilValidate.isNotEmpty(hrefString2)) {
                             hrefStr = hrefStr + hrefString2;
                         }
                         dataAttrMap.put("href", hrefStr);
-    
+
                         dataMap.put("attr", dataAttrMap);
                         josonMap.put("data", dataMap);
                         Map<String, Object> attrMap = new HashMap<>();
@@ -132,7 +132,7 @@ public abstract class CategoryEvents {
                         josonMap.put("attr", attrMap);
                         josonMap.put("sequenceNum", childOfCat.get("sequenceNum"));
                         josonMap.put("title", title);
-    
+
                         categoryList.add(josonMap);
                     }
                     List<Map<Object, Object>> sortedCategoryList = UtilMisc.sortMaps(categoryList, sortList);

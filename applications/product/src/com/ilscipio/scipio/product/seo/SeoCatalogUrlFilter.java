@@ -80,7 +80,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
     // NOTE: this must not be static anymore (2017-11-18)
     protected SeoCatalogUrlWorker urlWorker = null;
-    
+
     protected boolean rewriteOutboundUrls = false;
 
     @Override
@@ -95,7 +95,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
             urlWorker = SeoCatalogUrlWorker.getInstance(null, config.getServletContext().getInitParameter("webSiteId"));
         }
-        
+
         rewriteOutboundUrls = Boolean.TRUE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("rewriteOutboundUrls")));
     }
 
@@ -103,12 +103,12 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
-        
+
         // TODO: REVIEW:
         //UrlServletHelper.setRequestAttributes(request, delegator, request.getServletContext());
 
         if (seoUrlEnabled) {
-            
+
             Delegator delegator = WebAppUtil.getDelegatorFilterSafe(request);
 
             if (SeoConfig.DEBUG_FORCERELOAD) { // force reload the worker and config
@@ -120,9 +120,9 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
             if (!Boolean.TRUE.equals(request.getAttribute(FORWARDED_ATTR))) {
 
                 CatalogUrlFilter.prepareRequestAlways(request, response, delegator);
-                
-                String path = getMatchablePath(request); 
-                
+
+                String path = getMatchablePath(request);
+
                 if (UtilValidate.isNotEmpty(path)) {
                     if (urlWorker.getConfig().isSeoUrlEnabledForContextPath(request.getContextPath())) {
                         getCatalogTopCategory(request); // TODO: REVIEW
@@ -133,12 +133,12 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
                         getCatalogTopCategory(request);
                         UrlServletHelper.setViewQueryParameters(request, new StringBuilder());
                     }
-        
+
                     //Check path alias (from CatalogUrlFilter)
                     // TODO/FIXME: REVIEW: control flow makes no sense for this (no boolean result to check)
                     //UrlServletHelper.checkPathAlias(request, response, delegator, pathInfo);
                 }
-            
+
                 // must do at every forward - see below
 //                if (!Boolean.TRUE.equals(request.getAttribute(REQWRAPPED_ATTR))) {
 //                    request.setAttribute(REQWRAPPED_ATTR, Boolean.TRUE);
@@ -158,7 +158,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
             super.doFilter(request, response, chain);
         }
     }
-    
+
     public boolean matchSeoCatalogUrlAndForward(HttpServletRequest request, HttpServletResponse response, Delegator delegator, String matchablePath) throws ServletException, IOException {
         SeoCatalogUrlInfo urlInfo = matchInboundSeoCatalogUrl(request, delegator, matchablePath);
         if (urlInfo != null) {
@@ -174,7 +174,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     }
 
     public SeoCatalogUrlInfo matchInboundSeoCatalogUrl(HttpServletRequest request, Delegator delegator, String matchablePath) {
-        return urlWorker.matchInboundSeoCatalogUrl(delegator, matchablePath, request.getContextPath(), 
+        return urlWorker.matchInboundSeoCatalogUrl(delegator, matchablePath, request.getContextPath(),
                 WebSiteWorker.getWebSiteId(request), CatalogWorker.getCurrentCatalogId(request));
     }
 
@@ -192,7 +192,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         } else { // if (CatalogUrlServlet.CATEGORY_REQUEST.equals(targetRequest)) {
             request.setAttribute("productCategoryId", urlInfo.getCategoryId()); // EVEN IF NULL!
         }
-        
+
         String rootCategoryId = null;
         if (urlInfo.getPathCategoryIds() != null && urlInfo.getPathCategoryIds().size() >= 1) {
             rootCategoryId = urlInfo.getPathCategoryIds().get(0);
@@ -204,7 +204,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 //        List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(request, "trailCategories", topCategoryId, false, false, true);
 //        List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
 //        updateRequestTrail(request, delegator, urlInfo.getProductId(), urlInfo.getCategoryId(), trailCategoryIds, topCategoryId);
-        
+
         // FOR NOW, just replace the whole trail with what we got for time being
         List<String> newTrail = new ArrayList<>();
         newTrail.add("TOP");
@@ -213,9 +213,9 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
             newTrail.add(urlInfo.getCategoryId());
         }
         CategoryWorker.setTrail(request, newTrail);
-        
+
         request.setAttribute("categoryTrailUpdated", Boolean.TRUE); // SCIPIO: This is new
-        
+
         return true;
     }
 
@@ -251,13 +251,13 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         fwdUrl.append(targetRequest);
 
         // TODO: REVIEW: this is from CatalogUrlFilter.
-        // adding parameters may cause unexpected behavior, but it is 
+        // adding parameters may cause unexpected behavior, but it is
         // what CatalogUrlFilter is still doing, so until it's reviewed there, it stays here after all...
         UrlServletHelper.setViewQueryParameters(request, fwdUrl);
         // TODO: REVIEW: this is from CatalogUrlFilter.
         // This is done later by ContextFilter so I don't know why this is here...
         ContextFilter.setAttributesFromRequestBody(request);
-        
+
         if (debug || Debug.verboseOn()) { // TODO?: verbose or debug flag?
             if (urlInfo.isProductRequest()) {
                 Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getOrigPath()
@@ -312,7 +312,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         @Override
         public String encodeURL(String url) {
-            String rewrittenUrl = urlWorker.matchReplaceOutboundSeoTranslatableUrl(request, delegator, url, 
+            String rewrittenUrl = urlWorker.matchReplaceOutboundSeoTranslatableUrl(request, delegator, url,
                     productReqPath, categoryReqPath, request.getContextPath());
             if (rewrittenUrl != null) {
                 return super.encodeURL(rewrittenUrl);
@@ -323,7 +323,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         @Override
         public String encodeRedirectURL(String url) {
-            String rewrittenUrl = urlWorker.matchReplaceOutboundSeoTranslatableUrl(request, delegator, url, 
+            String rewrittenUrl = urlWorker.matchReplaceOutboundSeoTranslatableUrl(request, delegator, url,
                     productReqPath, categoryReqPath, request.getContextPath());
             if (rewrittenUrl != null) {
                 return super.encodeRedirectURL(rewrittenUrl);
@@ -334,7 +334,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         @Override
         public void sendRedirect(String location) throws IOException {
-            String rewrittenLocation = urlWorker.matchReplaceOutboundSeoTranslatableUrl(request, delegator, location, 
+            String rewrittenLocation = urlWorker.matchReplaceOutboundSeoTranslatableUrl(request, delegator, location,
                     productReqPath, categoryReqPath, request.getContextPath());
             if (rewrittenLocation != null) {
                 super.sendRedirect(rewrittenLocation);

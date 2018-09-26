@@ -46,14 +46,14 @@ public class ProductionRunHelper {
     /**
      * Get a Production Run.
      * Check if routing - product link exists.
-     * 
+     *
      * @param delegator the delegator
      * @param productionRunId the production run id
      * @return Map with the result of the service, the output parameters are
      */
     public static Map<String, Object> getProductionRun(Delegator delegator, String productionRunId) {
         Map<String, Object> result = new HashMap<String, Object>();
-        
+
         try {
             if (productionRunId != null) {
                 GenericValue productionRun = EntityQuery.use(delegator).from("WorkEffort").where("workEffortId", productionRunId).queryOne();
@@ -87,7 +87,7 @@ public class ProductionRunHelper {
     public static void getLinkedProductionRuns(Delegator delegator, LocalDispatcher dispatcher, String productionRunId, List<ProductionRun> productionRuns)  throws GenericEntityException {
         productionRuns.add(new ProductionRun(productionRunId, delegator, dispatcher));
         List<GenericValue> linkedWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAssoc")
-                .where("workEffortIdTo", productionRunId, 
+                .where("workEffortIdTo", productionRunId,
                         "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY")
                 .filterByDate().queryList();
         for (int i = 0; i < linkedWorkEfforts.size(); i++) {

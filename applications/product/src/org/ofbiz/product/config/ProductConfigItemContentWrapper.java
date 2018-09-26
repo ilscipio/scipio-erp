@@ -90,7 +90,7 @@ public class ProductConfigItemContentWrapper extends CommonContentWrapper {
     public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, null, null, dispatcher, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -105,7 +105,7 @@ public class ProductConfigItemContentWrapper extends CommonContentWrapper {
     public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
         return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, delegator, dispatcher, true, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -174,7 +174,7 @@ public class ProductConfigItemContentWrapper extends CommonContentWrapper {
             ContentWorker.renderContentAsText(dispatcher, delegator, productConfigItemContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, cache);
             return;
         }
-        
+
         String candidateFieldName = ModelUtil.dbNameToVarName(confItemContentTypeId);
         ModelEntity productConfigItemModel = delegator.getModelEntity("ProductConfigItem");
         if (productConfigItemModel.isField(candidateFieldName)) {

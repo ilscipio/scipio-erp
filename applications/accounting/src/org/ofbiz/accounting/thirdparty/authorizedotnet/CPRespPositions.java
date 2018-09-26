@@ -23,7 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CPRespPositions extends AuthorizeResponse.RespPositions {
-    
+
     // Card-Present v1.0 response positions
     private static Map<String, Integer> positions = new LinkedHashMap<>();
     static {
@@ -34,9 +34,9 @@ public class CPRespPositions extends AuthorizeResponse.RespPositions {
         positions.put(AuthorizeResponse.AVS_RESULT_CODE, 6);
         positions.put(AuthorizeResponse.CVV_RESULT_CODE, 7);
         positions.put(AuthorizeResponse.TRANSACTION_ID, 8);
-        positions.put(AuthorizeResponse.AMOUNT, 25);                
+        positions.put(AuthorizeResponse.AMOUNT, 25);
     }
-    
+
     @Override
     public int getPosition(String name) {
         if (positions.containsKey(name)) {
@@ -45,7 +45,7 @@ public class CPRespPositions extends AuthorizeResponse.RespPositions {
             return -1;
         }
     }
-    
+
     @Override
     public String getApprovalString() {
         return "1";

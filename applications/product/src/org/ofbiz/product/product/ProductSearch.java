@@ -285,20 +285,20 @@ public class ProductSearch {
 
                     dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
                     dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
-                    
+
                     // keyword type filter
                     if (UtilValidate.isNotEmpty(keywordTypeIds)) {
                         dynamicViewEntity.addAlias(entityAlias, "keywordTypeId");
                     }
-                    
+
                     // keyword status filter
                     if (UtilValidate.isNotEmpty(statusId)) {
                         dynamicViewEntity.addAlias(entityAlias, "statusId");
                     }
-                    
+
                     dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
                     entityConditionList.add(EntityCondition.makeCondition(prefix + "Keyword", EntityOperator.LIKE, keyword));
-                    
+
                     // keyword type filter
                     if (UtilValidate.isNotEmpty(keywordTypeIds)) {
                         List<EntityCondition> keywordTypeCons = new LinkedList<EntityCondition>();
@@ -307,12 +307,12 @@ public class ProductSearch {
                         }
                         entityConditionList.add(EntityCondition.makeCondition(keywordTypeCons, EntityOperator.OR));
                     }
-                    
+
                     // keyword status filter
                     if (UtilValidate.isNotEmpty(statusId)) {
                         entityConditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
                     }
-                    
+
                     //don't add an alias for this, will be part of a complex alias: dynamicViewEntity.addAlias(entityAlias, prefix + "RelevancyWeight", "relevancyWeight", null, null, null, null);
                     //needed when doingBothAndOr or will get an SQL error
                     if (doingBothAndOr) {
@@ -828,7 +828,7 @@ public class ProductSearch {
     // Search Constraint Classes
     // ======================================================================
     // SCIPIO: 2017-08-18: added getters to most ProductSearchConstraint subclasses
-    
+
     @SuppressWarnings("serial")
     public static abstract class ProductSearchConstraint implements java.io.Serializable {
         public ProductSearchConstraint() { }

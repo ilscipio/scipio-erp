@@ -274,7 +274,7 @@ public class OrderListState implements Serializable {
 
         if (fromDate != null) {
             List<EntityCondition> andExprs = new LinkedList<EntityCondition>();
-            if (intervalPeriod != null) {                
+            if (intervalPeriod != null) {
                 TimeInterval intervalDates = UtilDateTime.getPeriodInterval(intervalPeriod, fromDate, locale, timeZone);
                 context.put("intervalDates", intervalDates);
                 andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, intervalDates.getDateBegin()));

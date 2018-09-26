@@ -194,7 +194,7 @@ public class BOMNode {
         return oneChildNode;
     }
 
-    private BOMNode configurator(GenericValue node, List<GenericValue> productFeatures, 
+    private BOMNode configurator(GenericValue node, List<GenericValue> productFeatures,
             String productIdForRules, Date inDate) throws GenericEntityException {
         BOMNode oneChildNode = new BOMNode((String)node.get("productIdTo"), delegator, dispatcher, userLogin);
         oneChildNode.setTree(tree);
@@ -645,7 +645,7 @@ public class BOMNode {
     /**
      * A part is considered manufactured if it has child nodes AND unless ignoreSupplierProducts is set, if it also has no unexpired SupplierProducts defined
      * @param ignoreSupplierProducts
-     * @return return if a part is considered manufactured 
+     * @return return if a part is considered manufactured
      */
     public boolean isManufactured(boolean ignoreSupplierProducts) {
         List<GenericValue> supplierProducts = null;

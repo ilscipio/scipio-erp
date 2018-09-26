@@ -18,12 +18,12 @@ import com.ilscipio.scipio.product.seo.UrlGenStats;
 public abstract class SitemapServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final String logPrefix = SitemapGenerator.logPrefix;
-    
+
     protected SitemapServices() {
     }
-    
+
     public static Map<String, Object> generateWebsiteAlternativeUrlSitemapFiles(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -34,11 +34,11 @@ public abstract class SitemapServices {
         SitemapGenerator generator = null;
         try {
             // TODO: LOCALIZE
-            
+
             generator = SitemapGenerator.getWorkerForWebsite(delegator, dispatcher, webSiteId, context, useCache);
             generator.buildSitemapDeepForWebsite();
             generator.commitSitemapsAndIndex();
-            
+
             UrlGenStats stats = generator.getStats();
             String dirMsg = "";
             if (generator != null) {
@@ -70,7 +70,7 @@ public abstract class SitemapServices {
             return ServiceUtil.returnError(message);
         }
     }
-    
+
     public static Map<String, Object> generateAllAlternativeUrlSitemapFiles(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -92,7 +92,7 @@ public abstract class SitemapServices {
                 fail++;
             }
         }
-        
+
         if (fail > 0) {
             // TODO: LOCALIZE
             return ServiceUtil.returnFailure(success + " website sitemaps updated; " + fail + " failed");
@@ -101,5 +101,5 @@ public abstract class SitemapServices {
             return ServiceUtil.returnSuccess(success + " website sitemaps updated");
         }
     }
-    
+
 }

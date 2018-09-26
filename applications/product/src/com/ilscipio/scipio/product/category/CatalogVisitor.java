@@ -17,9 +17,9 @@ import com.ilscipio.scipio.product.category.CatalogTraverser.TraversalState;
 public interface CatalogVisitor {
 
     void pushCategory(GenericValue productCategory, TraversalState state) throws GeneralException;
-    
+
     void popCategory(GenericValue productCategory, TraversalState state) throws GeneralException;
-    
+
     void visitCategory(GenericValue productCategory, TraversalState state) throws GeneralException;
 
     void visitProduct(GenericValue product, TraversalState state) throws GeneralException;
@@ -33,29 +33,29 @@ public interface CatalogVisitor {
 
     public static class LoggingCatalogVisitor extends AbstractCatalogVisitor {
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-                
+
         protected List<String> trailIds = new ArrayList<>();
         protected String lastId = null;
-        
+
 
         @Override
         public void pushCategory(GenericValue productCategory, TraversalState state) {
             trailIds.add(productCategory.getString("productCategoryId"));
         }
-        
+
         @Override
         public void popCategory(GenericValue productCategory, TraversalState state) {
             trailIds.remove(trailIds.size() - 1);
         }
-        
+
         @Override
         public void visitCategory(GenericValue productCategory, TraversalState state) {
-            Debug.logInfo(getTrailPrefix() + productCategory.get("productCategoryId") + " [category]", module); 
+            Debug.logInfo(getTrailPrefix() + productCategory.get("productCategoryId") + " [category]", module);
         }
 
         @Override
         public void visitProduct(GenericValue product, TraversalState state) {
-            Debug.logInfo(getTrailPrefix() + product.get("productId") + " [product]", module); 
+            Debug.logInfo(getTrailPrefix() + product.get("productId") + " [product]", module);
         }
 
         protected String getTrailPrefix() {

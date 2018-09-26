@@ -119,7 +119,7 @@ public class UspsServicesTests extends OFBizTestCase {
 
         // run the service
         Map<String, Object> result = dispatcher.runSync("uspsCityStateLookup", UtilMisc.toMap("zip5", "90210", "shipmentGatewayConfigId", "USPS_CONFIG", "configProps", "shipment"));
-        
+
         // verify the results
         String responseMessage = (String) result.get(ModelService.RESPONSE_MESSAGE);
         Debug.logInfo("[testUspsCityStateLookup] responseMessage: " + responseMessage, module);

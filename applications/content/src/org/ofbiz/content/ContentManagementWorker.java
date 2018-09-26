@@ -194,7 +194,7 @@ public class ContentManagementWorker {
         GenericPK cachedPK = null;
         if (UtilValidate.isNotEmpty(entityName)) {
             cachedPK = currentEntityMap.get(entityName);
-        } 
+        }
         getCurrentValueWithCachedPK(request, delegator, cachedPK, entityName);
         GenericPK currentPK = (GenericPK)request.getAttribute("currentPK");
         currentEntityMap.put(entityName, currentPK);
@@ -422,7 +422,7 @@ public class ContentManagementWorker {
         }
         return webSitePublishPoint;
     }
-    
+
     private static GenericValue readWebSitePublishPoint(Delegator delegator, String contentId) throws GenericEntityException { // SCIPIO
         GenericValue webSitePublishPoint = EntityQuery.use(delegator).from("WebSitePublishPoint").where("contentId", contentId).queryOne();
         // If no webSitePublishPoint exists, still try to look for parent by making a dummy value

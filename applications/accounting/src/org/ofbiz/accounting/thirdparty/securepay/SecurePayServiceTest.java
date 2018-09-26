@@ -38,7 +38,7 @@ public class SecurePayServiceTest extends OFBizTestCase{
     public SecurePayServiceTest(String name) {
         super(name);
     }
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // test data
@@ -84,12 +84,12 @@ public class SecurePayServiceTest extends OFBizTestCase{
                 "stateProvinceGeoId", "NLD",
                 "postalCode","12345"));
         orderItemMap = UtilMisc.<String, Object>toMap(
-                "orderId", "Demo1002", 
-                "orderItemSeqId", "00001", 
-                "orderItemTypeId", "PRODUCT_ORDER_ITEM", 
+                "orderId", "Demo1002",
+                "orderItemSeqId", "00001",
+                "orderItemTypeId", "PRODUCT_ORDER_ITEM",
                 "productId", "PH-1000",
-                "prodCatalogId", "DemoCatalog", 
-                "quantity" , new BigDecimal("2.000000"), 
+                "prodCatalogId", "DemoCatalog",
+                "quantity" , new BigDecimal("2.000000"),
                 "unitPrice", new BigDecimal("59.00"),
                 "statusId" ,"ITEM_COMPLETED"
                 );
@@ -98,12 +98,12 @@ public class SecurePayServiceTest extends OFBizTestCase{
         paymentGatewayConfigId = "SECUREPAY_CONFIG";
         refundAmount = new BigDecimal("100.08");
         orderPaymentPreference = delegator.makeValue("OrderPaymentPreference", UtilMisc.toMap(
-            "orderPaymentPreferenceId", "testOrder1000_01", 
-            "orderId", "Demo1002", 
-            "paymentMethodTypeId", "CREDIT_CARD", 
-            "maxAmount", new BigDecimal("200.00"), 
+            "orderPaymentPreferenceId", "testOrder1000_01",
+            "orderId", "Demo1002",
+            "paymentMethodTypeId", "CREDIT_CARD",
+            "maxAmount", new BigDecimal("200.00"),
             "statusId", "PAYMENT_AUTHORIZED"));
-        
+
         GenericValue checkOrderPaymentPreference = EntityQuery.use(delegator).from("OrderPaymentPreference").where("orderPaymentPreferenceId", "testOrder1000_01").queryOne();
         if (UtilValidate.isEmpty(checkOrderPaymentPreference)) {
             orderPaymentPreference.create();
@@ -190,7 +190,7 @@ public class SecurePayServiceTest extends OFBizTestCase{
                 checkPaymentGatewayResponse.store();
                 Debug.logInfo("[testdoCapture] Result from SecurePay: " + result, module);
             }
-            
+
         } catch (GenericServiceException ex) {
             TestCase.fail(ex.getMessage());
         }

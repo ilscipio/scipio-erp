@@ -539,7 +539,7 @@ public class PdfSurveyServices {
                 GenericValue surveyQuestion = EntityQuery.use(delegator).from("SurveyQuestion").where("surveyQuestionId", surveyQuestionId).cache().queryOne();
 
                 GenericValue surveyQuestionAppl = EntityQuery.use(delegator).from("SurveyQuestionAppl")
-                        .where("surveyId", surveyId, 
+                        .where("surveyId", surveyId,
                                 "surveyQuestionId", surveyQuestionId)
                         .orderBy("-fromDate")
                         .filterByDate().cache().queryFirst();

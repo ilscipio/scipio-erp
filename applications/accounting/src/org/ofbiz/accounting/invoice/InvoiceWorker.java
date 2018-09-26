@@ -62,7 +62,7 @@ public class InvoiceWorker {
      * Return the total amount of the invoice (including tax) using the the invoiceId as input.
      * @param delegator the delegator
      * @param invoiceId the invoice id
-     * @return Return the total amount of the invoice 
+     * @return Return the total amount of the invoice
      */
     public static BigDecimal getInvoiceTotal(Delegator delegator, String invoiceId) {
         return getInvoiceTotal(delegator, invoiceId, Boolean.TRUE);
@@ -732,7 +732,7 @@ public class InvoiceWorker {
             List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
                     .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX"
                             , "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId)).queryList();
-            taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);          
+            taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
         } catch (GenericEntityException e) {
             Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
@@ -785,7 +785,7 @@ public class InvoiceWorker {
         }
         return taxTotal.setScale(decimals, rounding);
     }
-    
+
     /**
      * SCIPIO: Get the order id for a specific invoice
      *
@@ -925,7 +925,7 @@ public class InvoiceWorker {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
-        }        
+        }
         return result;
     }
 
@@ -1007,7 +1007,7 @@ public class InvoiceWorker {
             taxAlreadyIncluded = taxAlreadyIncluded.add(getTaxAmountIncluded(orderAdjustmentsTaxItemsToProcess));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error while getting", module);
-        }      
+        }
         BigDecimal taxForInvoiceItems = InvoiceWorker.getTaxTotalForInvoiceItems(invoiceTaxItems);
         BigDecimal taxTotal = taxForInvoiceItems.add(taxAlreadyIncluded);
        return taxTotal;
@@ -1035,7 +1035,7 @@ public class InvoiceWorker {
 
     /**
      * SCIPIO: Method to return the amount of tax included of an orderItem
-     * 
+     *
      * @param orderItem
      *            GenericValue object of the order item
      * @return tax amount included as BigDecimal

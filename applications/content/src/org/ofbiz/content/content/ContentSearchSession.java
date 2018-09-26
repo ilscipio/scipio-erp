@@ -40,7 +40,7 @@ import org.ofbiz.entity.Delegator;
 public class ContentSearchSession {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     @SuppressWarnings("serial")
     public static class ContentSearchOptions implements java.io.Serializable {
         protected List<ContentSearchConstraint> constraintList = null;

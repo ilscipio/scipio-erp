@@ -44,27 +44,27 @@ import com.ilscipio.scipio.content.content.ContentTraverser.ContentTraverserConf
 public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static final String DATAFILECONFIGS_RESOURCE = "seo-urls";
-    
+
     static final String logPrefix = "Seo: Alt URL Export: ";
 
     // FIXME: copy-pasted this from CMS
     protected static final Map<String, Set<String>> entityCdataFields = Collections.unmodifiableMap(makeEntityCdataFieldsMap());
-    
+
     public static final List<String> EXPORT_ENTITY_NAMES;
-    
+
     static {
         ArrayList<String> names = new ArrayList<>(100);
-        names.addAll(UtilMisc.unmodifiableArrayList("DataResource", "DataResourceAttribute", 
+        names.addAll(UtilMisc.unmodifiableArrayList("DataResource", "DataResourceAttribute",
                 "DataResourceRole", "ElectronicText"));
         names.addAll(SpecDataResEntityInfo.getEntityNameList());
-        names.addAll(UtilMisc.unmodifiableArrayList("Content", "ContentAttribute", "ContentRole", 
+        names.addAll(UtilMisc.unmodifiableArrayList("Content", "ContentAttribute", "ContentRole",
                 "ContentAssoc", "ContentKeyword", "ProductContent",  "ProductCategoryContent"));
         names.trimToSize();
         EXPORT_ENTITY_NAMES = Collections.unmodifiableList(names);
     }
-    
+
     /**
      * The original output, e.g. StringWriter.
      */
@@ -74,11 +74,11 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
      * NOTE: caller can pass this pre-wrapped, but caller himself might run into problems converting back.
      */
     protected PrintWriter outPrintWriter;
-    
+
     protected final SeoContentExporter contentExporter;
-    
+
     protected Map<String, List<GenericValue>> entityTypeValues = null;
-    
+
     public SeoCatalogUrlExporter(Delegator delegator, LocalDispatcher dispatcher, ExportTraversalConfig travConfig,
             Writer outWriter) throws GeneralException {
         super(delegator, dispatcher, travConfig);
@@ -101,7 +101,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         NONE,
         ENTITY_TYPE,
         MAJOR_OBJECT;
-        
+
         public static final RecordGrouping DEFAULT = NONE;
         public static RecordGrouping fromString(String str) { return UtilValidate.isNotEmpty(str) ? RecordGrouping.valueOf(str) : null; }
         public static RecordGrouping fromStringSafe(String str) {
@@ -117,7 +117,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         }
         public static RecordGrouping getDefault() { return DEFAULT; }
     }
-    
+
     public static class ExportTraversalConfig extends SeoTraversalConfig {
         protected Map<String, ?> servCtxOpts;
         protected boolean doChildProducts = true;
@@ -125,7 +125,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         protected RecordGrouping recordGrouping = RecordGrouping.DEFAULT;
         protected List<String> exportEntityNames = EXPORT_ENTITY_NAMES;
         private boolean includeVariant = true;
-        
+
         public Map<String, ?> getServCtxOpts() {
             return servCtxOpts;
         }
@@ -135,7 +135,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             this.includeVariant = !Boolean.FALSE.equals(servCtxOpts.get("includeVariant"));
             return this;
         }
-        
+
         public boolean isDoChildProducts() {
             return doChildProducts;
         }
@@ -148,7 +148,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         public boolean isIncludeVariant() {
             return includeVariant;
         }
-        
+
         public String getLinePrefix() {
             return linePrefix;
         }
@@ -166,7 +166,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             this.recordGrouping = (recordGrouping != null) ? recordGrouping : RecordGrouping.DEFAULT;
             return this;
         }
-        
+
         public ExportTraversalConfig setRecordGrouping(String recordGrouping) {
             this.recordGrouping = RecordGrouping.fromStringOrDefault(recordGrouping);
             return this;
@@ -182,7 +182,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             return this;
         }
     }
-    
+
     @Override
     public ExportTraversalConfig newTravConfig() {
         return new ExportTraversalConfig();
@@ -192,7 +192,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
     public ExportTraversalConfig getTravConfig() {
         return (ExportTraversalConfig) travConfig;
     }
-    
+
     @Override
     public void reset() throws GeneralException {
         super.reset();
@@ -208,11 +208,11 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
     public Writer getOutWriter() {
         return outWriter;
     }
-    
+
     public PrintWriter getOutPrintWriter() {
         return outPrintWriter;
     }
-    
+
     public void setOutWriter(Writer outWriter) {
         this.outWriter = outWriter;
         if (outWriter instanceof PrintWriter) {
@@ -221,7 +221,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             this.outPrintWriter = new PrintWriter(outWriter);
         }
     }
-    
+
     public void flush(boolean flushWriter) throws GeneralException {
         if (isEntityTypeGrouping()) {
             for(List<GenericValue> list : entityTypeValues.values()) {
@@ -248,7 +248,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
     protected String getLogErrorPrefix() {
         return getLogMsgPrefix()+"Error exporting alternative links: ";
     }
-    
+
     @Override
     public void visitCategory(GenericValue productCategory, TraversalState state)
             throws GeneralException {
@@ -260,7 +260,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             throws GeneralException {
         exportProductAltUrls(product);
     }
-    
+
     public void exportCategoryAltUrls(GenericValue productCategory) throws GeneralException {
         String productCategoryId = productCategory.getString("productCategoryId");
         List<GenericValue> productCategoryContentList = EntityQuery.use(getDelegator()).from("ProductCategoryContent")
@@ -275,14 +275,14 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             getStats().categorySuccess++;
         }
     }
-    
+
     public void exportProductAltUrls(GenericValue product) throws GeneralException {
         // NOTE: must check product itself here first
         boolean includeVariant = getTravConfig().isIncludeVariant();
         if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
             return;
         }
-        
+
         String productId = product.getString("productId");
         List<GenericValue> productContentList = EntityQuery.use(getDelegator()).from("ProductContent")
                 .where("productId", productId, "productContentTypeId", "ALTERNATIVE_URL")
@@ -295,7 +295,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             }
             getStats().productSuccess++;
         }
-        
+
         if (getTravConfig().isDoChildProducts()) {
             if (includeVariant && "Y".equals(product.getString("isVirtual"))) {
                 List<GenericValue> variantAssocList = EntityQuery.use(getDelegator()).from("ProductAssoc")
@@ -307,11 +307,11 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             }
         }
     }
-    
+
     protected boolean isEntityTypeGrouping() {
         return getTravConfig().getRecordGrouping() == RecordGrouping.ENTITY_TYPE;
     }
-    
+
     public void registerEntityValue(GenericValue entityValue) {
         if (isEntityTypeGrouping()) {
             List<GenericValue> entityList = entityTypeValues.get(entityValue.getEntityName());
@@ -324,9 +324,9 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             writeEntityValue(entityValue);
         }
     }
-    
+
     public void writeEntityValue(GenericValue entityValue) {
-        entityValue.writeXmlText(getOutPrintWriter(), getTravConfig().getLinePrefix(), 
+        entityValue.writeXmlText(getOutPrintWriter(), getTravConfig().getLinePrefix(),
                 entityCdataFields.get(entityValue.getEntityName())); // NOTE: 3rd parameter is a SCIPIO patch
     }
 
@@ -345,7 +345,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             registerEntityValue(entityValue);
         }
     }
-    
+
     /**
      * Makes a map of sets of all the entity field names we want to always print out as CDATA blocks in XML output.
      * FIXME: copy-pasted this from CMS.
@@ -358,7 +358,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         }
         return map;
     }
-    
+
     /**
      * Loader for the <code>seo-urls.properties</code> "seourl.datafile.[configName].*" datafile configurations
      * and corresponding *Data.xml datafile writing helpers.
@@ -366,16 +366,16 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
     @SuppressWarnings("serial")
     public static class ExportDataFileConfig extends HashMap<String, Object> {
         private static final Map<String, ExportDataFileConfig> staticConfigs = Collections.unmodifiableMap(readDataFileConfigsFromProperties());
-        
+
         private static final String configPropPrefix = "seourl.datafile.";
-        
+
         private static final String DEFAULT_EXPORT_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + lineSep() + "<entity-engine-xml>" + lineSep();
         private static final String DEFAULT_EXPORT_FOOTER = lineSep() + "</entity-engine-xml>" + lineSep();
         private static final Charset charset = Charset.forName("UTF-8");
-        
+
         private final String configName;
         private final boolean configEnabled;
-        
+
         public ExportDataFileConfig(String configName, Map<String, Object> map) {
             super(map);
             this.configName = configName;
@@ -389,7 +389,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         public boolean isConfigEnabled() { // NOTE: those with true are excluded from staticConfigs for now
             return configEnabled;
         }
-  
+
         public static ExportDataFileConfig getConfigByName(String configName) {
             return ExportDataFileConfig.staticConfigs.get(configName);
         }
@@ -397,19 +397,19 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         public static Collection<ExportDataFileConfig> getAllConfigs(String configName) {
             return ExportDataFileConfig.staticConfigs.values();
         }
-        
+
         public static Collection<String> getAllConfigNames() {
             return ExportDataFileConfig.staticConfigs.keySet();
         }
-        
+
         public static String getDefaultHeader() {
             return DEFAULT_EXPORT_HEADER;
         }
-        
+
         public static String getDefaultFooter() {
             return DEFAULT_EXPORT_FOOTER;
         }
-        
+
         /**
          * NOTE: This must be the same as PrintWriter uses, which is line.separator property,
          * due to GenericEntity.writeXmlText using it.
@@ -417,15 +417,15 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         public static String lineSep() {
             return System.lineSeparator();
         }
-        
+
         /**
          * FIXME: this should be forced to UTF-8 always, but PrintWriter may not currently
          * guarantee...
          */
         public static Charset getCharset() {
             return charset;
-        } 
-        
+        }
+
         /**
          * NOTE: this uses line.separator as we are forced by GenericValue.writeXmlText to use
          * that anyway.
@@ -434,27 +434,27 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             StringBuilder header = new StringBuilder();
             String lineSep = ExportDataFileConfig.lineSep();
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(
-                    new File(FlexibleLocation.resolveLocation(templateFile).toURI())), ExportDataFileConfig.getCharset()));  
+                    new File(FlexibleLocation.resolveLocation(templateFile).toURI())), ExportDataFileConfig.getCharset()));
             try {
-                String line = null;  
-                while ((line = br.readLine()) != null) {  
+                String line = null;
+                while ((line = br.readLine()) != null) {
                     header.append(line);
                     header.append(lineSep);
                     if (line.contains(dataBeginMarker)) {
                         return header;
                     }
-                } 
+                }
             } finally {
                 br.close();
             }
             return null;
         }
-        
+
         public static final Writer getOutFileWriter(String outFile) throws MalformedURLException, IOException, URISyntaxException {
             boolean append = false;
-            return new OutputStreamWriter(new FileOutputStream(new File(FlexibleLocation.resolveLocation(outFile).toURI()), append), ExportDataFileConfig.getCharset());  
+            return new OutputStreamWriter(new FileOutputStream(new File(FlexibleLocation.resolveLocation(outFile).toURI()), append), ExportDataFileConfig.getCharset());
         }
-        
+
         private static Map<String, ExportDataFileConfig> readDataFileConfigsFromProperties() {
             Map<String, ExportDataFileConfig> configs = new HashMap<>();
             try {
@@ -493,5 +493,5 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             return configs;
         }
     }
-    
+
 }

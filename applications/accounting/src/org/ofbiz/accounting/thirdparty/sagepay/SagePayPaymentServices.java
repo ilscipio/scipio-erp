@@ -158,7 +158,7 @@ public class SagePayPaymentServices {
         String orderId = (String) context.get("orderId");
         Locale locale = (Locale) context.get("locale");
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
-        
+
         if (orderPaymentPreference == null) {
             response = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayOrderPaymenPreferenceIsNull", UtilMisc.toMap("orderId", orderId, "orderPaymentPreference", null), locale));
         } else {

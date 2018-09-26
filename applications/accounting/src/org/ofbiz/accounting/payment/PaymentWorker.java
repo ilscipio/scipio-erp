@@ -298,9 +298,9 @@ public class PaymentWorker {
     }
 
     public static BigDecimal getPaymentNotApplied(GenericValue payment) {
-        if (payment != null) { 
+        if (payment != null) {
             return payment.getBigDecimal("amount").subtract(getPaymentApplied(payment)).setScale(decimals,rounding);
-        } 
+        }
         return BigDecimal.ZERO;
     }
 

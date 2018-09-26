@@ -32,7 +32,7 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
             return this;
         }
     }
-    
+
     @Override
     public SeoTraversalConfig newTravConfig() {
         return new SeoTraversalConfig();
@@ -57,7 +57,7 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
             return new SeoTraversalState(this, deepCopy);
         }
     }
-    
+
     @Override
     protected TraversalState newTraversalState(List<GenericValue> trailCategories, int physicalDepth) {
         return new SeoTraversalState(trailCategories, physicalDepth);
@@ -67,7 +67,7 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
         super.reset();
         resetStats();
     }
-    
+
     protected void resetStats() {
         this.stats = createStats();
     }
@@ -75,11 +75,11 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
     protected UrlGenStats createStats() {
         return new UrlGenStats(getTravConfig().isDoProduct(), getTravConfig().isDoCategory(), getTravConfig().isDoContent());
     }
-    
+
     public UrlGenStats getStats() {
         return stats;
     }
-    
+
     // TODO: REVIEW: this is unreliable, does not account for products with child products,
     // so just forget these stats for the time being.
 //    // specialized override needed to update the stats
@@ -92,7 +92,7 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
 //            return false;
 //        }
 //    }
-//    
+//
 //    // specialized override needed to update the stats
 //    protected boolean checkUpdateProductDuplicates(String productId) {
 //        if (this.seenProductIds.contains(productId)) {

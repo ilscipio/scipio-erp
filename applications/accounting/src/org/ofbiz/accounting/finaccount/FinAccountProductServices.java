@@ -52,7 +52,7 @@ public class FinAccountProductServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceOrderError = "OrderErrorUiLabels";
     public static final String resourceError = "AccountingErrorUiLabels";
-    
+
     public static Map<String, Object> createPartyFinAccountFromPurchase(DispatchContext dctx, Map<String, Object> context) {
         // this service should always be called via FULFILLMENT_EXTASYNC
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -71,7 +71,7 @@ public class FinAccountProductServices {
             orderHeader = orderItem.getRelatedOne("OrderHeader", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get OrderHeader from OrderItem", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                     "OrderCannotGetOrderHeader", UtilMisc.toMap("orderId", orderId), locale));
         }
 
@@ -108,9 +108,9 @@ public class FinAccountProductServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        
+
         String replenishEnumId = null;
-        
+
         if(finAccountType.getString("replenishEnumId") != null) replenishEnumId = finAccountType.getString("replenishEnumId");
 
         // get the order read helper
@@ -131,8 +131,8 @@ public class FinAccountProductServices {
         }
         if (productStoreId == null) {
             Debug.logFatal("Unable to create financial accout; no productStoreId on OrderHeader : " + orderId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountCannotCreate", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingFinAccountCannotCreate",
                     UtilMisc.toMap("orderId", orderId), locale));
         }
 

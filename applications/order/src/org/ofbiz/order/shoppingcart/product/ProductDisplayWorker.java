@@ -163,7 +163,7 @@ public class ProductDisplayWorker {
                 productQuantities = new HashMap<String, BigDecimal>();
                 // keep track of how many times a product occurs in order to find averages and rank by purchase amount
                 productOccurances = new HashMap<String, Integer>();
-                
+
                 // get all order role entities for user by customer role type : PLACING_CUSTOMER
                 List<GenericValue> orderRoles = EntityQuery.use(delegator).from("OrderRole").where("partyId", userLogin.get("partyId"), "roleTypeId", "PLACING_CUSTOMER").queryList();
                 Iterator<GenericValue> ordersIter = UtilMisc.toIterator(orderRoles);
@@ -211,7 +211,7 @@ public class ProductDisplayWorker {
                     if (nqint.compareTo(BigDecimal.ONE) < 0) nqint = BigDecimal.ONE;
                     productQuantities.put(prodId, nqint);
                 }
-                
+
                 httpRequest.getSession().setAttribute("_QUICK_REORDER_PRODUCTS_", new HashMap<String, GenericValue>(products));
                 httpRequest.getSession().setAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_", new HashMap<String, BigDecimal>(productQuantities));
                 httpRequest.getSession().setAttribute("_QUICK_REORDER_PRODUCT_OCCURANCES_", new HashMap<String, Integer>(productOccurances));

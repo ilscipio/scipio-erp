@@ -89,7 +89,7 @@ public class ICalWorker {
      *
      * @param statusMessage Optional status message - usually <code>null</code>
      * for security reasons
-     * @return Create an HTTP Forbidden response 
+     * @return Create an HTTP Forbidden response
      */
     public static ResponseProperties createForbiddenResponse(String statusMessage) {
         return new ResponseProperties(HttpServletResponse.SC_FORBIDDEN, statusMessage);

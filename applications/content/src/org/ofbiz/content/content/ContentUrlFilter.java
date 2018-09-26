@@ -46,7 +46,7 @@ import org.ofbiz.webapp.control.WebAppConfigurationException;
 
 public class ContentUrlFilter extends ContextFilter {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(HttpServletRequest)}.
      */
@@ -60,11 +60,11 @@ public class ContentUrlFilter extends ContextFilter {
     // SCIPIO: 2018-07-31: local vars
     private String viewRequest;
     private String urlSuffix;
-    
+
     @Override
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
-        
+
         // SCIPIO: 2018-07-31: put the config viewRequest in a servlet context attrib
         String viewRequest = config.getInitParameter("viewRequest");
         if (UtilValidate.isEmpty(viewRequest)) {
@@ -72,7 +72,7 @@ public class ContentUrlFilter extends ContextFilter {
         }
         config.getServletContext().setAttribute("scpCufViewRequest", viewRequest);
         this.viewRequest = viewRequest;
-        
+
         // SCIPIO: 2018-07-31: NEW configurable URL suffix
         String urlSuffix = config.getInitParameter("urlSuffix");
         if (UtilValidate.isEmpty(urlSuffix)) {
@@ -87,7 +87,7 @@ public class ContentUrlFilter extends ContextFilter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         Delegator delegator = (Delegator) httpRequest.getServletContext().getAttribute("delegator"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
-        
+
         //Get ServletContext
         ServletContext servletContext = config.getServletContext();
 
@@ -110,7 +110,7 @@ public class ContentUrlFilter extends ContextFilter {
                             .orderBy("createdDate DESC").queryFirst();
                     if (contentDataResourceView != null) {
                         GenericValue content = EntityQuery.use(delegator).from("ContentAssoc")
-                                .where("contentAssocTypeId", "ALTERNATIVE_URL", 
+                                .where("contentAssocTypeId", "ALTERNATIVE_URL",
                                         "contentIdTo", contentDataResourceView.get("contentId"))
                                 .filterByDate().queryFirst();
                         if (content != null) {
@@ -125,15 +125,15 @@ public class ContentUrlFilter extends ContextFilter {
                 StringBuilder urlBuilder = new StringBuilder();
                 urlBuilder.append(RequestHandler.getControlServletPath(request)); // SCIPIO
                 urlBuilder.append("/" + viewRequest + "?contentId=" + urlContentId); // SCIPIO: local var for viewRequest
-                // SCIPIO: 2018-07-31: fix lost extra parameters 
-                // NOTE: this will include the viewIndex, viewSize, etc. parameters that are processed again below, 
+                // SCIPIO: 2018-07-31: fix lost extra parameters
+                // NOTE: this will include the viewIndex, viewSize, etc. parameters that are processed again below,
                 // but this is unlikely to cause an issue...
                 String queryString = httpRequest.getQueryString();
                 if (queryString != null) {
                     urlBuilder.append("&");
                     urlBuilder.append(queryString);
                 }
-                
+
                 ContextFilter.setAttributesFromRequestBody(request);
                 //Set view query parameters
                 UrlServletHelper.setViewQueryParameters(request, urlBuilder);
@@ -142,14 +142,14 @@ public class ContentUrlFilter extends ContextFilter {
                 dispatch.forward(request, response);
                 return;
             }
-            
+
             //Check path alias
             UrlServletHelper.checkPathAlias(request, httpResponse, delegator, pathInfo);
         }
         // we're done checking; continue on
         chain.doFilter(request, response);
     }
-    
+
     /**
      * Builds an alt content URL.
      * <p>
@@ -173,7 +173,7 @@ public class ContentUrlFilter extends ContextFilter {
                     .queryFirst();
             if (contentAssocDataResource != null) {
                 url = contentAssocDataResource.getString("drObjectInfo");
-                
+
                 // SCIPIO: by default, don't url-decode here anymore.
                 if (Boolean.TRUE.equals(urlDecode)) {
                     url = UtilCodec.getUrlDecoder().decode(url);
@@ -199,7 +199,7 @@ public class ContentUrlFilter extends ContextFilter {
         } catch (Exception e) {
             Debug.logWarning("[Exception] : " + e.getMessage(), module);
         }
-         
+
         if (UtilValidate.isEmpty(url)) {
             // SCIPIO: 2018-07-31: useless, already contains a fallback
             //if (UtilValidate.isEmpty(viewContent)) {
@@ -209,11 +209,11 @@ public class ContentUrlFilter extends ContextFilter {
         }
         return url;
     }
-    
+
     public static String makeContentAltUrl(HttpServletRequest request, HttpServletResponse response, String contentId, String viewContent) {
         return makeContentAltUrl(request, response, contentId, viewContent, null);
     }
-    
+
     public static String makeContentUrl(HttpServletRequest request, HttpServletResponse response, String contentId, String viewContent) {
         if (UtilValidate.isEmpty(contentId)) {
             return null;
@@ -241,7 +241,7 @@ public class ContentUrlFilter extends ContextFilter {
         urlBuilder.append("?contentId=" + contentId);
         return urlBuilder.toString();
     }
-    
+
     /**
      * SCIPIO: High-level alt content link-building method, including request encoding.
      * Added 2018-07-30.
@@ -253,7 +253,7 @@ public class ContentUrlFilter extends ContextFilter {
         url = appendLinkParams(url, params);
         return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, locale, null, url, fullPath, secure, encode, true);
     }
-    
+
     /**
      * SCIPIO: Appends params for catalog URLs.
      * TODO: refactor

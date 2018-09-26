@@ -29,23 +29,23 @@ import org.ofbiz.base.util.Debug;
 
 /**
  * Handles connections to the eWay servers.
- * 
+ *
  * Based on public domain sample code provided by eWay.com.au
  */
 public class GatewayConnector {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private int timeout = 0;
 
     public GatewayConnector(int timeout) {
         this.timeout = timeout;
     }
-    
+
     public GatewayConnector() {
         this(60);
     }
-    
+
     /**
      * Get the timeout value set in the corresponding setter.
      * @return timeout value in seconds, 0 for infinite
@@ -71,15 +71,15 @@ public class GatewayConnector {
      * @param request the request object, can be any of the 3 supported payment
      * methods. Its data have to be filled in by its setter methods before
      * calling sendRequest().
-     * @return the response object, containing the gateway's response to the 
+     * @return the response object, containing the gateway's response to the
      * request
-     * @throws Exception in case of networking and xml parsing errors 
+     * @throws Exception in case of networking and xml parsing errors
      */
     public GatewayResponse sendRequest(GatewayRequest request) throws Exception {
-        
+
         // determine the gateway url to be used, based on the request type
-        String serverurl = request.getUrl();        
-        
+        String serverurl = request.getUrl();
+
         GatewayResponse response = null;
         InputStream in = null;
         HttpURLConnection connection = null;
@@ -89,9 +89,9 @@ public class GatewayConnector {
             connection = (HttpURLConnection)(u.openConnection());
             connection.setDoOutput(true);
             connection.setDoInput(true);
-            connection.setRequestMethod("POST");            
-            connection.setConnectTimeout(timeout*1000);            
-            
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(timeout*1000);
+
             OutputStream out = connection.getOutputStream();
             Writer wout = new OutputStreamWriter(out);
             wout.write(request.toXml());
@@ -101,7 +101,7 @@ public class GatewayConnector {
             in = connection.getInputStream();
             response = new GatewayResponse(in, request);
             return response;
-        } 
+        }
         catch (Exception e) {
             // rethrow exception so that the caller learns what went wrong
             Debug.logError(e, e.getMessage(), module);

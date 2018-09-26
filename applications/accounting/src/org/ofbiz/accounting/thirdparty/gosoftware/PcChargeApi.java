@@ -193,7 +193,7 @@ public class PcChargeApi {
             ps.flush();
 
             /* SCIPIO: 2018-09-17: stock patch: this code may corrupt the document,
-             * because by calling new String incrementally on a capped byte buffer, 
+             * because by calling new String incrementally on a capped byte buffer,
              * UTF-8 or any other charset characters may get chopped in half.
             StringBuilder buf = new StringBuilder();
             int size;

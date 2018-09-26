@@ -47,7 +47,7 @@ public class ImportProductServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
-    
+
     /**
      * This method is responsible to import spreadsheet data into "Product" and
      * "InventoryItem" entities into database. The method uses the
@@ -60,7 +60,7 @@ public class ImportProductServices {
      * @param dctx the dispatch context
      * @param context the context
      * @return the result of the service execution
-     * @throws IOException 
+     * @throws IOException
      */
     public static Map<String, Object> productImportFromSpreadsheet(DispatchContext dctx, Map<String, ? extends Object> context) throws IOException {
         Delegator delegator = dctx.getDelegator();
@@ -82,16 +82,16 @@ public class ImportProductServices {
                     }
                 }
             } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductProductImportDirectoryNotFound", locale));
             }
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductProductImportPathNotSpecified", locale));
         }
 
         if (fileItems.size() < 1) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductProductImportPathNoSpreadsheetExists", locale) + path);
         }
 
@@ -106,7 +106,7 @@ public class ImportProductServices {
                 wb = new HSSFWorkbook(fs);
             } catch (IOException e) {
                 Debug.logError("Unable to read or create workbook from file", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductProductImportCannotCreateWorkbookFromFile", locale));
             }
 
@@ -158,7 +158,7 @@ public class ImportProductServices {
                         delegator.create(inventoryItemGV);
                     } catch (GenericEntityException e) {
                         Debug.logError("Cannot store product", module);
-                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                                 "ProductProductImportCannotStoreProduct", locale));
                     }
                 }

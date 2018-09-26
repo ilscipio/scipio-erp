@@ -176,7 +176,7 @@ public class BillingAccountWorker {
      * Returns the amount of the billing account which could be captured, which is BillingAccount.accountLimit - net balance
      * @param billingAccount GenericValue object of the billing account
      * @return the amount of the billing account which could be captured
-     * @throws GenericEntityException 
+     * @throws GenericEntityException
      */
     public static BigDecimal availableToCapture(GenericValue billingAccount) throws GenericEntityException {
         BigDecimal netBalance = getBillingAccountNetBalance(billingAccount.getDelegator(), billingAccount.getString("billingAccountId"));
@@ -194,7 +194,7 @@ public class BillingAccountWorker {
         try {
             GenericValue billingAccount = EntityQuery.use(delegator).from("BillingAccount").where("billingAccountId", billingAccountId).queryOne();
             if (billingAccount == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingBillingAccountNotFound",
                         UtilMisc.toMap("billingAccountId", billingAccountId), locale));
             }
@@ -208,7 +208,7 @@ public class BillingAccountWorker {
             return result;
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingBillingAccountNotFound",
                     UtilMisc.toMap("billingAccountId", billingAccountId), locale));
         }

@@ -69,12 +69,12 @@ public class ProductConfigWrapper implements Serializable {
     /**
      * SCIPIO: If the product had an original list price, this will be non-null.
      * This will be null if the product does not have an explicit list price.
-     * Required because the listPrice member above is always initialized to ZERO, 
+     * Required because the listPrice member above is always initialized to ZERO,
      * so it can't be used to check this.
      * Added 2017-08-22.
      */
-    protected BigDecimal originalListPrice = null; 
-    
+    protected BigDecimal originalListPrice = null;
+
     /** Creates a new instance of ProductConfigWrapper */
     public ProductConfigWrapper() {
     }
@@ -198,7 +198,7 @@ public class ProductConfigWrapper implements Serializable {
             }
         }
     }
-    
+
     /**
      * SCIPIO: Resets all selections including standard items and comments,
      * virtual component options, or otherwise any selections that may be set
@@ -379,7 +379,7 @@ public class ProductConfigWrapper implements Serializable {
     public BigDecimal getDefaultPrice() {
         return defaultPrice;
     }
-    
+
     /**
      * SCIPIO: Returns the original list price for the product from initialization.
      * If the product had no list price, this will be null.
@@ -388,7 +388,7 @@ public class ProductConfigWrapper implements Serializable {
     public BigDecimal getOriginalListPrice() {
         return originalListPrice;
     }
-    
+
     /**
      * SCIPIO: Returns true if the product had a list price on initialization.
      * NOTE: this is sometimes needed as extra check because {@link #getTotalListPrice} always
@@ -720,7 +720,7 @@ public class ProductConfigWrapper implements Serializable {
         }
 
         public String getOptionName(Locale locale) {
-            
+
             return (configOption.getString("configOptionName") != null? (String) configOption.get("configOptionName", locale): "no option name");
         }
 

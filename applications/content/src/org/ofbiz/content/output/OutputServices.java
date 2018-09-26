@@ -75,10 +75,10 @@ import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
  * so they can only be used to render screens implemented with freemarker *.fo.ftl files.
  * <p>
  * SCIPIO: TODO: Re-add support for form widget renderer once possible.
- * This service originally supported xsl-fo form widgets in distant past, but FoFormRenderer was long obsolete, and 
+ * This service originally supported xsl-fo form widgets in distant past, but FoFormRenderer was long obsolete, and
  * MacroFormRenderer currently requires HttpServletRequest/Response, which is not available from these services (NOTE: and we could NOT use caller's request!).
  * When MacroFormRenderer finally supports running from non-webapp context, it should be added here.
- * For now, the most common screen used with these is OrderPrintScreens.xml#OrderPDF, which in Scipio 
+ * For now, the most common screen used with these is OrderPrintScreens.xml#OrderPDF, which in Scipio
  * should contain no form widgets. See {@link #sendPrintFromScreen} and {@link #createFileFromScreen}.
  */
 public class OutputServices {
@@ -116,7 +116,7 @@ public class OutputServices {
                             EntityUtilProperties.getPropertyValue("widget", "screenfop.screenrenderer", dctx.getDelegator()));
 
             // SCIPIO: TODO: form widget renderer support
-            //FormStringRenderer foFormRenderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screenfop.name", dctx.getDelegator()), 
+            //FormStringRenderer foFormRenderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screenfop.name", dctx.getDelegator()),
             //        EntityUtilProperties.getPropertyValue("widget", "screenfop.formrenderer", dctx.getDelegator()), request, response);
 
             ScreenRenderer screensAtt = ScreenRenderer.makeWithEnvAwareFetching(writer, screenContextTmp, foScreenStringRenderer);
@@ -234,7 +234,7 @@ public class OutputServices {
                     EntityUtilProperties.getPropertyValue("widget", "screenfop.screenrenderer", dctx.getDelegator()));
 
             // SCIPIO: TODO: form widget renderer support
-            //FormStringRenderer foFormRenderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screenfop.name", dctx.getDelegator()), 
+            //FormStringRenderer foFormRenderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screenfop.name", dctx.getDelegator()),
             //        EntityUtilProperties.getPropertyValue("widget", "screenfop.formrenderer", dctx.getDelegator()), request, response);
 
             ScreenRenderer screensAtt = ScreenRenderer.makeWithEnvAwareFetching(writer, screenContextTmp, foScreenStringRenderer);

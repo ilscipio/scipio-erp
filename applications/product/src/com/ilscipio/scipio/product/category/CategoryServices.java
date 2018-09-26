@@ -27,13 +27,13 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
  * SCIPIO: Category services for novel/extra functionality.
  * <p>
  * Added 2017-10-12; some methods moved here from {@link org.ofbiz.product.category.CategoryServices}.
- * DEV NOTE: jsTree-related methods moved under a dedicated scipio package because they were 
+ * DEV NOTE: jsTree-related methods moved under a dedicated scipio package because they were
  * too specific functionality.
  */
 public abstract class CategoryServices {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected CategoryServices() {
     }
 
@@ -48,24 +48,24 @@ public abstract class CategoryServices {
         String library = (String) context.get("library");
         String mode = (String) context.get("mode");
         String prodCatalogId = (String) context.get("prodCatalogId");
-        
+
         Map<String, Object> state = UtilGenerics.checkMap(context.get("state"));
         boolean includeEmptyTop = Boolean.TRUE.equals(context.get("includeEmptyTop"));
-        
+
         TreeBuildOptions treeBuildOpts = new TreeBuildOptions(context);
         Map<String, ? super GenericValue> categoryEntityOutMap = UtilGenerics.checkMap(context.get("categoryEntityOutMap"));
-        
+
         List<TreeDataItem> resultList = new ArrayList<>();
         if (mode.equals("full")) {
             try {
                 GenericValue productStoreCatalog = (GenericValue) context.get("productStoreCatalog");
-                
+
                 GenericValue catalog = EntityQuery.use(delegator).from("ProdCatalog").where("prodCatalogId", prodCatalogId).queryOne();
                 List<GenericValue> prodCatalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", prodCatalogId)
                         .filterByDate().queryList();
                 boolean hasCategories = UtilValidate.isNotEmpty(prodCatalogCategories);
                 if (includeEmptyTop || hasCategories) {
-    
+
                     JsTreeDataItem dataItem = null;
                     if (library.equals("jsTree")) {
                         String nodeId = "catalog_" + prodCatalogId;
@@ -83,11 +83,11 @@ public abstract class CategoryServices {
                         treeBuildOpts.checkPutEntityDataField(dataItem, "productStoreCatalog", productStoreCatalog);
                         dataItem.put("isParent", hasCategories);
                     }
-    
+
                     if (UtilValidate.isNotEmpty(dataItem))
                         resultList.add(dataItem);
                 }
-    
+
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
             } catch (GenericServiceException e) {
@@ -102,7 +102,7 @@ public abstract class CategoryServices {
              * TODO: Complete for other modes
              */
         }
-    
+
         result.put("treeList", resultList);
         result.put("categoryEntityOutMap", categoryEntityOutMap);
         return result;

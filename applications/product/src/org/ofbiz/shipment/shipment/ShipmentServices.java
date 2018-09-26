@@ -75,9 +75,9 @@ public class ShipmentServices {
         try {
             productStoreShipMeth = EntityQuery.use(delegator).from("ProductStoreShipmentMeth").where("productStoreShipMethId", productStoreShipMethId).queryOne();
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "ProductStoreShipmentMethodCannotRetrieve", 
-                    UtilMisc.toMap("productStoreShipMethId", productStoreShipMethId, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "ProductStoreShipmentMethodCannotRetrieve",
+                    UtilMisc.toMap("productStoreShipMethId", productStoreShipMethId,
                             "errorString", e.toString()), locale));
         }
 
@@ -151,8 +151,8 @@ public class ShipmentServices {
             estimate.remove();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "ProductShipmentCostEstimateRemoveError", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "ProductShipmentCostEstimateRemoveError",
                     UtilMisc.toMap("errorString", e.toString()), locale));
         }
         /* Commented out this code because QuantityBreak may be used by other records
@@ -277,7 +277,7 @@ public class ShipmentServices {
                             .queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductShipmentCostEstimateCannotRetrieve", locale));
         }
         if (estimates == null || estimates.size() < 1) {
@@ -297,7 +297,7 @@ public class ShipmentServices {
                 shipAddress = EntityQuery.use(delegator).from("PostalAddress").where("contactMechId", shippingContactMechId).queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductShipmentCostEstimateCannotGetShippingAddress", locale));
             }
         } else if (shippingPostalCode != null) {
@@ -418,9 +418,9 @@ public class ShipmentServices {
         }
 
         if (estimateList.size() < 1) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
                     "ProductShipmentCostEstimateCannotFoundForCarrier",
-                    UtilMisc.toMap("carrierPartyId", carrierPartyId, 
+                    UtilMisc.toMap("carrierPartyId", carrierPartyId,
                             "shipmentMethodTypeId", shipmentMethodTypeId), locale));
         }
 
@@ -634,7 +634,7 @@ public class ShipmentServices {
             }
         }
         if (shipment == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductShipmentNotFoundId", locale));
         }
 
@@ -648,7 +648,7 @@ public class ShipmentServices {
                 return ServiceUtil.returnError(e.getMessage());
             }
             if (address == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductShipmentNoAddressFound", locale));
             }
 
@@ -661,7 +661,7 @@ public class ShipmentServices {
             }
 
             if (UtilValidate.isEmpty(packages)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductShipmentNoPackagesAvailable", locale));
             }
 
@@ -737,7 +737,7 @@ public class ShipmentServices {
                 .from("OdbcPackageIn")
                 .orderBy("shipmentId", "shipmentPackageSeqId", "voidIndicator")
                 .queryIterator()) {
-            
+
             GenericValue pkgInfo;
             while ((pkgInfo = eli.next()) != null) {
                 String packageSeqId = pkgInfo.getString("shipmentPackageSeqId");
@@ -795,9 +795,9 @@ public class ShipmentServices {
                     }
 
                     if (pkg == null) {
-                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                                "ProductShipmentPackageNotFound", 
-                                UtilMisc.toMap("shipmentPackageSeqId", packageSeqId, 
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                                "ProductShipmentPackageNotFound",
+                                UtilMisc.toMap("shipmentPackageSeqId", packageSeqId,
                                 "shipmentId",shipmentId), locale));
                     }
 
@@ -978,8 +978,8 @@ public class ShipmentServices {
         try {
             GenericValue shipmentRouteSeg = EntityQuery.use(delegator).from("ShipmentRouteSegment").where("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId).queryOne();
             if (shipmentRouteSeg == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                        "ProductShipmentRouteSegmentNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "ProductShipmentRouteSegmentNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId,
                                 "shipmentRouteSegmentId", shipmentRouteSegmentId), locale));
             }
@@ -1140,7 +1140,7 @@ public class ShipmentServices {
         String sendTo = (String) context.get("sendTo");
         String screenUri = (String) context.get("screenUri");
         Locale localePar = (Locale) context.get("locale");
-        
+
         // prepare the shipment information
         Map<String, Object> sendMap = new HashMap<String, Object>();
         GenericValue shipment = null ;
@@ -1158,9 +1158,9 @@ public class ShipmentServices {
             Debug.logError(e, "Problem getting the ProductStoreEmailSetting for productStoreId =" + orderHeader.get("productStoreId") + " and emailType = PRDS_ODR_SHIP_COMPLT", module);
         }
         if (productStoreEmail == null) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, 
-                    "ProductProductStoreEmailSettingsNotValid", 
-                    UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"), 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
+                    "ProductProductStoreEmailSettingsNotValid",
+                    UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"),
                             "emailType", "PRDS_ODR_SHIP_COMPLT"), localePar));
         }
         // the override screenUri
@@ -1180,7 +1180,7 @@ public class ShipmentServices {
             emailString = email.getString("infoString");
         }
         if (UtilValidate.isEmpty(emailString)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductProductStoreEmailSettingsNoSendToFound", localePar));
         }
 
@@ -1198,7 +1198,7 @@ public class ShipmentServices {
         sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
         sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
         sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
-        
+
         if ((sendTo != null) && UtilValidate.isEmail(sendTo)) {
             sendMap.put("sendTo", sendTo);
         } else {
@@ -1222,31 +1222,31 @@ public class ShipmentServices {
         }
         return sendResp;
     }
-    
+
     public static Map<String, Object> getShipmentGatewayConfigFromShipment(Delegator delegator, String shipmentId, Locale locale) {
         Map<String, Object> shipmentGatewayConfig = ServiceUtil.returnSuccess();
         try {
             GenericValue shipment = EntityQuery.use(delegator).from("Shipment").where("shipmentId", shipmentId).queryOne();
             if (shipment == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductShipmentNotFoundId", locale) + shipmentId);
             }
             GenericValue primaryOrderHeader = shipment.getRelatedOne("PrimaryOrderHeader", false);
             if (primaryOrderHeader == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                        "ProductShipmentPrimaryOrderHeaderNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "ProductShipmentPrimaryOrderHeaderNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId), locale));
             }
             String productStoreId = primaryOrderHeader.getString("productStoreId");
             if (UtilValidate.isEmpty(productStoreId)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                        "ProductShipmentPrimaryOrderHeaderProductStoreNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "ProductShipmentPrimaryOrderHeaderProductStoreNotFound",
                         UtilMisc.toMap("productStoreId", productStoreId, "shipmentId", shipmentId), locale));
             }
             GenericValue primaryOrderItemShipGroup = shipment.getRelatedOne("PrimaryOrderItemShipGroup", false);
             if (primaryOrderItemShipGroup == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                        "ProductShipmentPrimaryOrderHeaderItemShipGroupNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "ProductShipmentPrimaryOrderHeaderItemShipGroupNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId), locale));
             }
             String shipmentMethodTypeId = primaryOrderItemShipGroup.getString("shipmentMethodTypeId");
@@ -1260,17 +1260,17 @@ public class ShipmentServices {
                 shipmentGatewayConfig.put("shipmentGatewayConfigId", productStoreShipmentMeth.getString("shipmentGatewayConfigId"));
                 shipmentGatewayConfig.put("configProps", productStoreShipmentMeth.getString("configProps"));
             } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                        "ProductStoreShipmentMethodNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "ProductStoreShipmentMethodNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId), locale));
             }
         } catch (GenericEntityException gee) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "FacilityShipmentGatewayConfigFromShipmentError", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "FacilityShipmentGatewayConfigFromShipmentError",
                     UtilMisc.toMap("errorString", gee.getMessage()), locale));
         } catch (Exception e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "FacilityShipmentGatewayConfigFromShipmentError", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "FacilityShipmentGatewayConfigFromShipmentError",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
         return shipmentGatewayConfig;

@@ -42,9 +42,9 @@ import org.ofbiz.service.ServiceUtil;
 public abstract class LocalizedContentWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final int MAX_ID_FIELD_LENGTH = 20;
-    
+
     protected LocalizedContentWorker() {
     }
 
@@ -55,7 +55,7 @@ public abstract class LocalizedContentWorker {
      */
     public static Map<String, Map<String, GenericValue>> splitContentLocalizedSimpleTextContentAssocViewsByLocale(Map<String, List<GenericValue>> viewsByType) {
         Map<String, Map<String, GenericValue>> viewsByTypeAndLocale = new HashMap<>();
-        
+
         for(Map.Entry<String, List<GenericValue>> entry : viewsByType.entrySet()) {
             Map<String, GenericValue> viewsByLocale = new HashMap<>();
             for(GenericValue view : entry.getValue()) {
@@ -70,10 +70,10 @@ public abstract class LocalizedContentWorker {
             }
             viewsByTypeAndLocale.put(entry.getKey(), viewsByLocale);
         }
-        
+
         return viewsByTypeAndLocale;
     }
-    
+
     /**
      * SCIPIO: rearranges a viewsByType map into textByTypeAndLocale map.
      * Logs warnings if multiple records for same locales.
@@ -81,7 +81,7 @@ public abstract class LocalizedContentWorker {
      */
     public static Map<String, Map<String, String>> extractContentLocalizedSimpleTextDataByLocale(Map<String, List<GenericValue>> viewsByType) {
         Map<String, Map<String, String>> textDataByTypeAndLocale = new HashMap<>();
-        
+
         for(Map.Entry<String, List<GenericValue>> entry : viewsByType.entrySet()) {
             Map<String, String> textDataByLocale = new HashMap<>();
             for(GenericValue view : entry.getValue()) {
@@ -96,10 +96,10 @@ public abstract class LocalizedContentWorker {
             }
             textDataByTypeAndLocale.put(entry.getKey(), textDataByLocale);
         }
-        
+
         return textDataByTypeAndLocale;
     }
-    
+
     /**
      * SCIPIO: Makes a request parameter name prefix for special simple-text content field handling services.
      * (used by catalog tree)
@@ -107,7 +107,7 @@ public abstract class LocalizedContentWorker {
     public static String makeLocalizedSimpleTextContentFieldStringParamPrefix(String basePrefix, String typeId, int index) {
         return basePrefix + typeId + "." + index + ".";
     }
-    
+
     /**
      * SCIPIO: Parses request parameters whose names follow {@link #makeLocalizedSimpleTextContentFieldStringParamPrefix},
      * notably for use with services that implement replaceEntityContentLocalizedSimpleTextsInterface service.
@@ -116,7 +116,7 @@ public abstract class LocalizedContentWorker {
      * If allowPreparsed true any non-param entries are found their lists crush the params with same type keys.
      * <p>
      * TODO: the algorithm could be optimized (non-trivial) - hard to parse all the parameters involved.
-     * 
+     *
      * @return map of type IDs to lists of maps
      */
     public static Map<String, List<Map<String, Object>>> parseLocalizedSimpleTextContentFieldParams(Map<String, Object> entries, String basePrefix, boolean allowPreparsed) {
@@ -125,26 +125,26 @@ public abstract class LocalizedContentWorker {
             Map<String, List<Map<String, Object>>> preparsedTypeMap = new HashMap<>();
             // indexes will be out of order, so we have to use ugly map of integer and sort after
             Map<String, Map<Integer, Map<String, Object>>> typeIndexMap = new HashMap<>();
-            
+
             if (basePrefix != null && basePrefix.isEmpty()) basePrefix = null;
-            
+
             for(Map.Entry<String, Object> entry : entries.entrySet()) {
                 String name = entry.getKey();
-                
+
                 if (basePrefix != null) {
                     if (name.startsWith(basePrefix)) name = name.substring(basePrefix.length());
                     else continue;
                 }
-                
+
                 Object value = entry.getValue();
                 if (name.contains(".")) {
                     String[] parts = StringUtils.split(name, ".", 3);
                     if (parts.length < 3 || parts[0].isEmpty() || parts[2].isEmpty()) throw new IllegalArgumentException("invalid composed content field key: " + name);
-                    
+
                     String typeId = parts[0];
                     int index = Integer.parseInt(parts[1]);
                     String mapKey = parts[2];
-                    
+
                     Map<Integer, Map<String, Object>> indexMap = typeIndexMap.get(typeId);
                     if (indexMap == null) {
                         indexMap = new HashMap<>();
@@ -157,36 +157,36 @@ public abstract class LocalizedContentWorker {
                         if (entryData == null) {
                             entryData = new HashMap<>();
                             indexMap.put(index, entryData);
-                        } 
+                        }
                         entryData.put(mapKey, value);
                     }
                 } else if (allowPreparsed) {
                     preparsedTypeMap.put(name, UtilGenerics.<Map<String, Object>>checkList(value));
                 }
             }
-            
+
             // get as sorted lists
             // TODO: optimize better
             for(Map.Entry<String, Map<Integer, Map<String, Object>>> entry : typeIndexMap.entrySet()) {
                 List<Integer> indexes = new ArrayList<>(entry.getValue().keySet());
                 Collections.sort(indexes);
-                
+
                 List<Map<String, Object>> entryDataList = new ArrayList<>(indexes.size());
                 for(int index : indexes) {
                     entryDataList.add(entry.getValue().get(index));
                 }
-                
+
                 typeMap.put(entry.getKey(), entryDataList);
             }
-            
+
             typeMap.putAll(preparsedTypeMap);
         }
         return typeMap;
     }
-    
+
     @SuppressWarnings("serial")
     public static class LocalizedSimpleTextInfo implements Serializable {
-        
+
         protected final List<Map<String, Object>> entries;
         protected final boolean hasTextData;
         protected final Map<String, Object> mainEntry;
@@ -198,7 +198,7 @@ public abstract class LocalizedContentWorker {
             this.mainEntry = null;
             this.localeEntryMap = Collections.emptyMap();
         }
-        
+
         private LocalizedSimpleTextInfo(List<Map<String, Object>> entries, boolean hasTextData,
                 Map<String, Object> mainEntry, Map<String, Map<String, Object>> localeEntryMap) {
             this.entries = entries;
@@ -214,19 +214,19 @@ public abstract class LocalizedContentWorker {
         public boolean isHasTextData() {
             return hasTextData;
         }
-        
+
         public Map<String, Object> getMainEntry() {
             return mainEntry;
         }
-        
+
         public String getMainLocaleString() {
             return (mainEntry != null) ? (String) mainEntry.get("localeString") : null;
         }
-        
+
         public String getMainTextData() {
             return (mainEntry != null) ? (String) mainEntry.get("textData") : null;
         }
-        
+
         /**
          * Maps localeString to record entry, excluding the main record (first records in entries).
          */
@@ -247,7 +247,7 @@ public abstract class LocalizedContentWorker {
             String mainLocaleString = (String) mainEntry.get("localeString");
 
             Map<String, Map<String, Object>> localeEntryMap = new LinkedHashMap<>();
-            
+
             Iterator<Map<String, Object>> entryIt = entries.iterator();
             entryIt.next(); // skip first
             while(entryIt.hasNext()) {
@@ -261,7 +261,7 @@ public abstract class LocalizedContentWorker {
                     if (UtilValidate.isEmpty(localeString)) {
                         throw new GeneralException(PropertyMessage.make("ContentErrorUiLabels", "contentservices.localized_field_entry_missing_locale"));
                     }
-                    
+
                     hasTextData = true;
                     if (localeEntryMap.containsKey(localeString) || localeString.equals(mainLocaleString)) {
                         throw new GeneralException(PropertyMessage.make("ContentErrorUiLabels", "contentservices.localized_field_entry_duplicate_locale", null, ": " + localeString));
@@ -271,7 +271,7 @@ public abstract class LocalizedContentWorker {
             }
             return new LocalizedSimpleTextInfo(entries, hasTextData, mainEntry, localeEntryMap);
         }
-        
+
         public static boolean entryHasTextData(Map<String, ?> entry) {
             String textData = (String) entry.get("textData");
             if (textData == null) return false;
@@ -292,13 +292,13 @@ public abstract class LocalizedContentWorker {
             else throw new IllegalArgumentException("internal error: replaceLocalizedContent: localeEntryMap has invalid entry: " + localeEntryMapEntry);
         }
     }
-    
+
     public static Map<String, String> getSimpleTextsByLocaleString(Delegator delegator, LocalDispatcher dispatcher,
             GenericValue mainContent, Timestamp moment, boolean useCache) throws GenericEntityException {
         Map<String, String> localeTextMap = new HashMap<>();
-        
+
         List<GenericValue> assocViewList = EntityQuery.use(delegator).from("ContentAssocToElectronicText")
-                .where("contentIdStart", mainContent.getString("contentId"), 
+                .where("contentIdStart", mainContent.getString("contentId"),
                         "contentAssocTypeId", "ALTERNATE_LOCALE").filterByDate(moment).cache(useCache).queryList();
         for(GenericValue assocView : assocViewList) {
             String assocLocaleString = assocView.getString("localeString");
@@ -306,7 +306,7 @@ public abstract class LocalizedContentWorker {
                 localeTextMap.put(assocLocaleString, assocView.getString("textData"));
             }
         }
-        
+
         String mainLocaleString = mainContent.getString("localeString");
         if (UtilValidate.isNotEmpty(mainLocaleString)) {
             GenericValue elecText = getSimpleTextContentElectronicText(delegator, dispatcher, mainContent);
@@ -315,11 +315,11 @@ public abstract class LocalizedContentWorker {
                 localeTextMap.put(mainLocaleString, mainTextData);
             }
         }
-        
+
         return localeTextMap;
     }
-    
-    public static GenericValue createSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData, 
+
+    public static GenericValue createSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData,
             Map<String, Object> contentFields, Map<String, Object> dataResourceFields, String newContentId, String newDataResourceId) throws GenericEntityException {
         // create dataResource
         GenericValue dataResource = delegator.makeValue("DataResource");
@@ -329,7 +329,7 @@ public abstract class LocalizedContentWorker {
         dataResource.setNonPKFields(dataResourceFields);
         String dataResourceId;
         if (newDataResourceId == null) {
-            newDataResourceId = (String) dataResourceFields.get("dataResourceId"); 
+            newDataResourceId = (String) dataResourceFields.get("dataResourceId");
         }
         if (newDataResourceId != null) {
             dataResource.put("dataResourceId", newDataResourceId);
@@ -363,12 +363,12 @@ public abstract class LocalizedContentWorker {
         }
         return content;
     }
-    
-    public static GenericValue createSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData, 
+
+    public static GenericValue createSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData,
             Map<String, Object> contentFields, Map<String, Object> dataResourceFields) throws GenericEntityException {
         return createSimpleTextContent(delegator, dispatcher, localeString, textData, contentFields, dataResourceFields, null, null);
     }
-    
+
     public static void updateSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String localeString, String textData) throws GenericEntityException {
         updateSimpleTextContent(delegator, dispatcher, content, textData);
         if (!sameLocale(localeString, content.getString("localeString"))) {
@@ -392,7 +392,7 @@ public abstract class LocalizedContentWorker {
         elecText.put("textData", textData);
         elecText.store();
     }
-    
+
     private static boolean sameLocale(String first, String second) {
         if (UtilValidate.isNotEmpty(first)) {
             return first.equals(second);
@@ -400,7 +400,7 @@ public abstract class LocalizedContentWorker {
             return UtilValidate.isEmpty(second);
         }
     }
-    
+
     public static GenericValue getSimpleTextContentElectronicText(Delegator delegator, LocalDispatcher dispatcher, GenericValue content) throws GenericEntityException {
         GenericValue elecText = EntityQuery.use(delegator).from("ElectronicText")
                 .where("dataResourceId", content.getString("dataResourceId"))
@@ -419,11 +419,11 @@ public abstract class LocalizedContentWorker {
             removeContentAndRelated(delegator, dispatcher, context, contentAssoc.getString("contentIdTo"));
         }
     }
-    
+
     public static void removeContentAndRelated(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context, GenericValue content) throws GeneralException {
         removeContentAndRelated(delegator, dispatcher, context, content.getString("contentId"));
     }
-    
+
     public static void removeContentAndRelated(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context, String contentId) throws GeneralException {
         Map<String, Object> servCtx = new HashMap<>();
         servCtx.put("userLogin", context.get("userLogin"));
@@ -431,14 +431,14 @@ public abstract class LocalizedContentWorker {
         servCtx.put("contentId", contentId);
         Map<String, Object> servResult = dispatcher.runSync("removeContentAndRelated", servCtx);
         if (ServiceUtil.isError(servResult)) {
-            throw new GeneralException("Cannot remove ALTERNATE_LOCALE record contentId '" 
+            throw new GeneralException("Cannot remove ALTERNATE_LOCALE record contentId '"
                     + contentId + "': " + ServiceUtil.getErrorMessage(servResult));
         }
     }
-    
+
     /**
      * Replaces the textData of the Content and its associated ALTERNATE_LOCALE Contents.
-     * NOTE: The first entry 
+     * NOTE: The first entry
      * <p>
      * TODO?: move elsewhere, may need to reuse...
      * @param localeEntryMap can be either a map of localeString to textData strings,
@@ -453,7 +453,7 @@ public abstract class LocalizedContentWorker {
         // the prior code was setting them all to the exact same value, so in other words,
         // having removeDupLocales false was completely pointless...
         final boolean removeDupLocales = removeOldLocales;
-        
+
         Set<String> remainingLocales = new HashSet<>(localeEntryMap.keySet());
 
         // update main content
@@ -466,7 +466,7 @@ public abstract class LocalizedContentWorker {
         } else {
             LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainTextData);
         }
-        
+
         // SPECIAL: 2017-11-28: we must remove the mainLocaleString from remainingLocales because
         // 1) when creating brand new records, don't want the second loop to create new ALTERNATE_LOCALEs
         //    for locale already covered in the main record, and
@@ -475,11 +475,11 @@ public abstract class LocalizedContentWorker {
         if (UtilValidate.isNotEmpty(mainLocaleString)) {
             remainingLocales.remove(mainLocaleString);
         }
-        
+
         List<GenericValue> contentAssocList = EntityQuery.use(delegator).from("ContentAssoc")
                 .where("contentId", mainContent.getString("contentId"), "contentAssocTypeId", "ALTERNATE_LOCALE")
                 .filterByDate(moment).cache(false).queryList();
-        
+
         // update in-place or remove existing assoc records
         for(GenericValue contentAssoc : contentAssocList) {
             GenericValue content = contentAssoc.getRelatedOne("ToContent", false);
@@ -489,7 +489,7 @@ public abstract class LocalizedContentWorker {
             // * The localeString was "old" if it's not in localeUrlMap at all.
             //   * We also "treat" localeString also as "old" if it's in localeUrlMap but empty value.
             // * The localeString was a "duplicate" if it's in localeUrlMap but was removed from remainingLocales.
-            
+
             String textData = LocalizedSimpleTextInfo.getLocaleMapTextData(localeEntryMap.get(localeString));
             if (UtilValidate.isNotEmpty(textData)) {
                 if (!removeDupLocales || remainingLocales.contains(localeString)) {
@@ -504,12 +504,12 @@ public abstract class LocalizedContentWorker {
                 }
             }
         }
-        
+
         // see above comment - could have done this code here, but think it works better if earlier
         //if (UtilValidate.isNotEmpty(mainLocaleString)) {
         //    remainingLocales.remove(mainLocaleString);
         //}
-        
+
         // create new assoc records
         for(String localeString : remainingLocales) {
             String textData = LocalizedSimpleTextInfo.getLocaleMapTextData(localeEntryMap.get(localeString));
@@ -530,14 +530,14 @@ public abstract class LocalizedContentWorker {
 
         return mainContent;
     }
-    
+
     private static String expandIdPat(FlexibleStringExpander newIdPat, Map<String, Object> newIdPatCtx, String localeString) {
         newIdPatCtx.put("localeStr", localeString != null ? localeString : "");
         newIdPatCtx.put("localeStrUp", (localeString != null ? localeString.toUpperCase() : ""));
         String idTrim = (String) newIdPatCtx.get("id");
         newIdPatCtx.put("idTrim", idTrim);
         String res = newIdPat.expandString(newIdPatCtx);
-        if (res.length() > MAX_ID_FIELD_LENGTH) { 
+        if (res.length() > MAX_ID_FIELD_LENGTH) {
             // too long, try again (NOTE: if caller used id instead of idTrim, this is redundant for nothing, but performance not a serious concern here)
             newIdPatCtx.put("idTrim", idTrim.substring(0, idTrim.length() - (res.length() - MAX_ID_FIELD_LENGTH)));
             res = newIdPat.expandString(newIdPatCtx);

@@ -240,7 +240,7 @@ public class PackingServices {
         if (line != null) {
             session.clearLine(line);
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPackLineNotFound", locale));
         }
 
@@ -278,7 +278,7 @@ public class PackingServices {
     public static Map<String, Object> completePack(DispatchContext dctx, Map<String, ? extends Object> context) {
         PackingSession session = (PackingSession) context.get("packingSession");
         Locale locale = (Locale) context.get("locale");
-        
+
         // set the instructions -- will clear out previous if now null
         String instructions = (String) context.get("handlingInstructions");
         String pickerPartyId = (String) context.get("pickerPartyId");
@@ -308,10 +308,10 @@ public class PackingServices {
 
         Map<String, Object> resp;
         if ("EMPTY".equals(shipmentId)) {
-            resp = ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            resp = ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPackCompleteNoItems", locale));
         } else {
-            resp = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, 
+            resp = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
                     "ProductPackComplete", UtilMisc.toMap("shipmentId", shipmentId), locale));
         }
 

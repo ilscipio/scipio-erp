@@ -57,22 +57,22 @@ import com.ilscipio.scipio.product.seo.UrlProcessors.UrlProcessor;
  * to remove the completely needless sync code.
  */
 public class SeoConfig {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static final String SEO_CONFIG_FILENAME = "SeoConfig.xml";
     public static final String ALLOWED_CONTEXT_PATHS_SEPERATOR = ":";
-    
+
     /**
      * DEV NOTE: compile with this true to force the SeoConfigs to reload constantly.
      */
     static final boolean DEBUG_FORCERELOAD = false;
-    
+
     static {
         // TODO?: unhardcode via properties?
         SeoCatalogUrlWorker.registerUrlBuilder();
     }
-    
+
     /**
      * SCIPIO: default/common configs holder - eliminates the need for synchronized/volatile/etc. - faster.
      */
@@ -80,7 +80,7 @@ public class SeoConfig {
         private static final SeoConfig INSTANCE = readDefaultCommonConfig();
         private static final SeoConfig EMPTY = new SeoConfig();
     }
-    
+
     private final String webSiteId; // NOTE: null for common/default instance
     private final boolean isInitialed;
     private final boolean seoUrlEnabled;
@@ -98,7 +98,7 @@ public class SeoConfig {
     private final List<Pattern> userExceptionPatterns;
     private final Set<String> allowedContextPaths;
     private final Map<String, String> specialProductIds;
-   
+
     // SCIPIO: new additions
     private final Integer categoryNameMaxLength;
     private final Integer productNameMaxLength;
@@ -109,7 +109,7 @@ public class SeoConfig {
     private final boolean productNameAppendId; // SCIPIO: new 2017
     private final boolean handleImplicitRequests;
     private final boolean implicitRequestNameMatchesOnly;
-    private final boolean generateImplicitCategoryUrl; 
+    private final boolean generateImplicitCategoryUrl;
     private final boolean generateImplicitProductUrl;
     private final boolean generateImplicitProductUrlNoCat;
     private final boolean allowTargetOutsideCatalog;
@@ -120,7 +120,7 @@ public class SeoConfig {
     private final String productAltUrlSuffix;
     private final String categoryAltUrlSuffix;
     private final ClosestTrailResolver.ResolverType newUrlTrailResolver;
-    
+
     private final int defaultResponseCode;
     private final int defaultRedirectResponseCode;
 
@@ -131,15 +131,15 @@ public class SeoConfig {
         if (DEBUG_FORCERELOAD) return readDefaultCommonConfig();
         else return CommonSeoConfigs.INSTANCE;
     }
-    
+
     /**
-     * SCIPIO: Returns default empty constructor config, in other words static/hardcoded defaults; 
+     * SCIPIO: Returns default empty constructor config, in other words static/hardcoded defaults;
      * no file is read.
      */
     public static SeoConfig getDefaultEmptyConfig() {
         return CommonSeoConfigs.EMPTY;
     }
-    
+
     /**
      * SCIPIO: Returns config for website.
      * TODO: currently this always returns default config.
@@ -148,7 +148,7 @@ public class SeoConfig {
         // TODO?: possible website-specific stuff in future
         return getCommonConfig();
     }
-    
+
     /**
      * SCIPIO: Force create config - for debugging only!
      */
@@ -157,22 +157,22 @@ public class SeoConfig {
         return readDefaultCommonConfig();
     }
 
-    protected SeoConfig() {        
+    protected SeoConfig() {
         this(null, null, null, null, true);
     }
-    
-    protected SeoConfig(String webSiteId, boolean isInitialed) {        
+
+    protected SeoConfig(String webSiteId, boolean isInitialed) {
         this(webSiteId, null, null, null, isInitialed);
     }
-    
+
     public SeoConfig(String webSiteId, Element rootElement, Document configDoc) {
         this(webSiteId, rootElement, configDoc, "document", true);
     }
-    
+
     public SeoConfig(String webSiteId, Element rootElement, Document configDoc, String srcInfo) {
         this(webSiteId, rootElement, configDoc, srcInfo, true);
     }
-    
+
     /**
      * Complete XML core constructor.
      * <p>
@@ -181,7 +181,7 @@ public class SeoConfig {
      */
     protected SeoConfig(String webSiteId, Element rootElem, Document configDoc, String srcInfo, boolean isInitialed) {
         this.webSiteId = webSiteId; // may be null for common/default
-        
+
         // DEFAULT VALUES
         boolean seoUrlEnabled = true;
         boolean categoryNameEnabled = false;
@@ -198,22 +198,22 @@ public class SeoConfig {
         List<Pattern> userExceptionPatterns = new ArrayList<>();
         Set<String> allowedContextPaths = null;
         Map<String, String> specialProductIds = new HashMap<>();
-       
+
         // SCIPIO: new additions
         Integer categoryNameMaxLength = null;
         Integer productNameMaxLength = null;
         Locale namesLocaleOverride = null;
-        
+
         boolean categoryNameSeparatePathElem = false;
         boolean categoryNameAppendId = false;
         boolean categoryNameAppendIdLast = false;
         boolean productNameAppendId = false; // SCIPIO: new 2017
         boolean handleImplicitRequests = false;
         boolean implicitRequestNameMatchesOnly = true; // default true => safer
-        boolean generateImplicitCategoryUrl = false; 
+        boolean generateImplicitCategoryUrl = false;
         boolean generateImplicitProductUrl = false;
         boolean generateImplicitProductUrlNoCat = false;
-        
+
         boolean allowTargetOutsideCatalog = true;
         boolean allowInvalidCategoryPathElements = true;
         boolean generateProductAltUrlSuffix = false;
@@ -222,12 +222,12 @@ public class SeoConfig {
         String productAltUrlSuffix = "-p";
         String categoryAltUrlSuffix = "-c";
         ClosestTrailResolver.ResolverType newUrlTrailResolver = ClosestTrailResolver.ResolverType.NONCONSEC_ANYPART;
-        
+
         int defaultResponseCode = HttpServletResponse.SC_MOVED_PERMANENTLY;
         int defaultRedirectResponseCode = HttpServletResponse.SC_MOVED_PERMANENTLY;
-                
+
         if (rootElem != null && isInitialed) {
-        
+
             String regexIfMatch = UtilXml.childElementValue(rootElem, "regexpifmatch", "^.*/.*$");
             Debug.logInfo("Parsing regexpifmatch: " + regexIfMatch, module);
             try {
@@ -235,7 +235,7 @@ public class SeoConfig {
             } catch (Exception e) {
                 Debug.logWarning(e, "Error while parsing: " + regexIfMatch, module);
             }
-    
+
             // parse category-url element
             try {
                 Element catUrlElem = UtilXml.firstChildElement(rootElem, "seo-url");
@@ -261,9 +261,9 @@ public class SeoConfig {
                                 }
                             }
                         }
-                        
+
                         categoryNameEnabled = booleanSetting(catUrlElem, "category-name", categoryNameEnabled);
-    
+
                         seoUrlSuffix = UtilXml.childElementValue(catUrlElem, "category-url-suffix", null);
                         if (UtilValidate.isNotEmpty(seoUrlSuffix)) {
                             seoUrlSuffix = seoUrlSuffix.trim();
@@ -272,11 +272,11 @@ public class SeoConfig {
                             }
                         }
                         Debug.logInfo("  category-url-suffix: " + seoUrlSuffix, module);
-                        
+
                         categoryNameMaxLength = integerSetting(catUrlElem, "category-name-max-length", null, false);
                         productNameMaxLength = integerSetting(catUrlElem, "product-name-max-length", null, false);
                         namesLocaleOverride = localeSetting(catUrlElem, "names-locale-override", null);
-                        
+
                         categoryNameSeparatePathElem = booleanSetting(catUrlElem, "category-name-separate-path-elem", categoryNameSeparatePathElem);
                         categoryNameAppendId = booleanSetting(catUrlElem, "category-name-append-id", categoryNameAppendId);
                         categoryNameAppendIdLast = booleanSetting(catUrlElem, "category-name-append-id-last", categoryNameAppendIdLast);
@@ -286,7 +286,7 @@ public class SeoConfig {
                         generateImplicitCategoryUrl = booleanSetting(catUrlElem, "generate-implicit-category-url", generateImplicitCategoryUrl);
                         generateImplicitProductUrl = booleanSetting(catUrlElem, "generate-implicit-product-url", generateImplicitProductUrl);
                         generateImplicitProductUrlNoCat = booleanSetting(catUrlElem, "generate-implicit-product-url-nocat", generateImplicitProductUrlNoCat);
-                                
+
                         allowTargetOutsideCatalog = booleanSetting(catUrlElem, "allow-target-outside-catalog", allowTargetOutsideCatalog);
                         allowInvalidCategoryPathElements = booleanSetting(catUrlElem, "allow-invalid-category-path-elems", allowInvalidCategoryPathElements);
                         generateProductAltUrlSuffix = booleanSetting(catUrlElem, "generate-product-alt-url-suffix", generateProductAltUrlSuffix);
@@ -294,7 +294,7 @@ public class SeoConfig {
                         handleAltUrlSuffix = booleanSetting(catUrlElem, "handle-alt-url-suffix", handleAltUrlSuffix);
                         productAltUrlSuffix = stringSetting(catUrlElem, "product-alt-url-suffix", productAltUrlSuffix, falseBooleanSettingValues());
                         categoryAltUrlSuffix = stringSetting(catUrlElem, "category-alt-url-suffix", categoryAltUrlSuffix, falseBooleanSettingValues());
-                        
+
                         String newUrlTrailResolverName = stringSetting(catUrlElem, "new-url-trail-resolver", newUrlTrailResolver.getName());
                         newUrlTrailResolver = ClosestTrailResolver.ResolverType.fromNameOrDefault(newUrlTrailResolverName, newUrlTrailResolver);
                     }
@@ -303,14 +303,14 @@ public class SeoConfig {
                 // no "category-url" element
                 Debug.logWarning("No category-url element found in " + srcInfo, module);
             }
-            
+
             // parse url-config(s) elements
             try {
                 NodeList urlConfigsElems = rootElem.getElementsByTagName("url-configs");
                 Debug.logInfo("Parsing url-configs", module);
                 for (int k = 0; k < urlConfigsElems.getLength(); k++) {
                     Element urlConfigsElem = (Element) urlConfigsElems.item(k);
-                
+
                     if (k == 0) {
                         defaultResponseCode = integerSetting(urlConfigsElem, "default-response-code", defaultResponseCode, false);
                         defaultRedirectResponseCode = integerSetting(urlConfigsElem, "default-redirect-response-code", defaultRedirectResponseCode, false);
@@ -333,7 +333,7 @@ public class SeoConfig {
                             Debug.logWarning("Error while creating parttern for seo url-pattern: " + urlpattern, module);
                             continue;
                         }
-                        
+
                         // construct seo patterns
                         Element seo = UtilXml.firstChildElement(config, "seo");
                         if (UtilValidate.isNotEmpty(seo)) {
@@ -343,7 +343,7 @@ public class SeoConfig {
                                 Debug.logInfo("    seo replacement: " + replacement, module);
                             }
                         }
-        
+
                         // construct forward patterns
                         Element forward = UtilXml.firstChildElement(config, "forward");
                         if (UtilValidate.isNotEmpty(forward)) {
@@ -370,7 +370,7 @@ public class SeoConfig {
             } catch (NullPointerException e) {
                 Debug.logWarning("No url-config(s) element found in " + srcInfo, module);
             }
-    
+
             // parse char-filters elements
             try {
                 NodeList charFiltersNodes = rootElem.getElementsByTagName("char-filters");
@@ -378,9 +378,9 @@ public class SeoConfig {
                     Element parentNode = (Element) charFiltersNodes.item(j);
                     String charFiltersName = parentNode.getAttribute("name");
                     Debug.logInfo("Parsing " + "char-filters" + " set '" + charFiltersName + "': ", module);
-                    
+
                     List<CharFilter> charFilters = new ArrayList<>();
-                    
+
                     NodeList nameFilterNodes = parentNode.getElementsByTagName("char-filter");
                     for (int i = 0; i < nameFilterNodes.getLength(); i++) {
                         Element element = (Element) nameFilterNodes.item(i);
@@ -404,23 +404,23 @@ public class SeoConfig {
             } catch (NullPointerException e) {
                 Debug.logInfo("No char-filter element found in " + srcInfo, module);
             }
-            
+
             try {
                 NodeList urlProcessorsNodes = rootElem.getElementsByTagName("url-processors");
                 for (int j = 0; j < urlProcessorsNodes.getLength(); j++) {
                     Element parentNode = (Element) urlProcessorsNodes.item(j);
                     String urlProcessorsType = parentNode.getAttribute("type");
                     Debug.logInfo("Parsing url-processors set '" + urlProcessorsType + "': ", module);
-                    
+
                     List<UrlProcessor> processorList = new ArrayList<>();
-                    
+
                     NodeList processorNodes = parentNode.getElementsByTagName("processor");
                     for (int i = 0; i < processorNodes.getLength(); i++) {
                         Element element = (Element) processorNodes.item(i);
-                        
+
                         String type = element.getAttribute("type");
                         String value = UtilXml.elementValue(element);
-                        
+
                         if (UtilValidate.isNotEmpty(type) && UtilValidate.isNotEmpty(value)) {
                             Debug.logInfo("  processor type '" + type + "': " + value, module);
                             try {
@@ -451,21 +451,21 @@ public class SeoConfig {
             } catch (NullPointerException e) {
                 Debug.logWarning("No url-processors element found in " + srcInfo, module);
             }
-            
+
             // required
             altUrlGenProcessors = urlProcessors.get("alt-url-gen");
             if (altUrlGenProcessors == null) {
                 altUrlGenProcessors = UrlProcessors.getDummyProcessors();
                 urlProcessors.put("alt-url-gen", altUrlGenProcessors);
             }
-            
+
             if (seoReplacements.keySet().isEmpty()) {
                 useUrlRegexp = false;
             } else {
                 useUrlRegexp = true;
             }
         }
-        
+
         this.seoUrlEnabled = seoUrlEnabled;
         this.categoryNameEnabled = categoryNameEnabled;
         this.seoUrlSuffix = seoUrlSuffix;
@@ -494,7 +494,7 @@ public class SeoConfig {
         this.generateImplicitCategoryUrl = generateImplicitCategoryUrl;
         this.generateImplicitProductUrl = generateImplicitProductUrl;
         this.generateImplicitProductUrlNoCat = generateImplicitProductUrlNoCat;
-        
+
         this.allowTargetOutsideCatalog = allowTargetOutsideCatalog;
         this.allowInvalidCategoryPathElements = allowInvalidCategoryPathElements;
         this.generateProductAltUrlSuffix = generateProductAltUrlSuffix;
@@ -503,13 +503,13 @@ public class SeoConfig {
         this.productAltUrlSuffix = productAltUrlSuffix;
         this.categoryAltUrlSuffix = categoryAltUrlSuffix;
         this.newUrlTrailResolver = newUrlTrailResolver;
-        
+
         this.defaultResponseCode = defaultResponseCode;
         this.defaultRedirectResponseCode = defaultRedirectResponseCode;
-        
+
         this.isInitialed = isInitialed;
     }
-    
+
     private static SeoConfig readDefaultCommonConfig() {
         FileInputStream configFileIS = null;
         SeoConfig config = null;
@@ -543,19 +543,19 @@ public class SeoConfig {
     public String getWebSiteId() {
         return webSiteId;
     }
-    
+
     /**
      * Check whether the configuration file has been read successfully.
-     * 
+     *
      * @return a boolean value to indicate whether the configuration file has been read.
      */
     public boolean isInitialed() {
         return isInitialed;
     }
-    
+
     /**
      * Check whether url regexp should be used.
-     * 
+     *
      * @return a boolean value to indicate whether url regexp should be used.
      */
     public boolean checkUseUrlRegexp() {
@@ -564,13 +564,13 @@ public class SeoConfig {
 
     /**
      * Get the general regexp pattern.
-     * 
+     *
      * @return the general regexp pattern.
      */
     public Pattern getGeneralRegexpPattern() {
         return regexpIfMatch;
     }
-    
+
     /**
      * Check whether category url is enabled.
      */
@@ -582,25 +582,25 @@ public class SeoConfig {
      * SCIPIO: 2017: check if category URL enabled for context path and webSiteId.
      */
     public boolean isSeoUrlEnabled(String contextPath, String webSiteId) {
-        return seoUrlEnabled && 
-            (WebsiteSeoConfig.isSeoEnabled(webSiteId)) && 
+        return seoUrlEnabled &&
+            (WebsiteSeoConfig.isSeoEnabled(webSiteId)) &&
             (allowedContextPaths == null || allowedContextPaths.contains(normContextPath(contextPath)));
     }
-    
+
     /**
      * SCIPIO: 2017: check if category URL enabled for webSiteId.
      */
     public boolean isSeoUrlEnabledForWebsite(String webSiteId) {
         return seoUrlEnabled && WebsiteSeoConfig.isSeoEnabled(webSiteId);
     }
-    
+
     /**
      * Check whether the context path is enabled.
      */
     public boolean isSeoUrlEnabledForContextPath(String contextPath) {
         return seoUrlEnabled && (allowedContextPaths == null || allowedContextPaths.contains(normContextPath(contextPath)));
     }
-    
+
     private String normContextPath(String contextPath) {
         if (contextPath == null) return null;
         if (UtilValidate.isEmpty(contextPath)) {
@@ -611,7 +611,7 @@ public class SeoConfig {
 
     /**
      * Check whether category name/trail is enabled for products.
-     * 
+     *
      * @return a boolean value to indicate whether category name is enabled.
      */
     public boolean isCategoryNameEnabled() {
@@ -620,7 +620,7 @@ public class SeoConfig {
 
     /**
      * Get category url suffix.
-     * 
+     *
      * @return String category url suffix.
      */
     public String getSeoUrlSuffix() {
@@ -643,7 +643,7 @@ public class SeoConfig {
     public UrlProcessors getUrlProcessors(String type) {
         return urlProcessors.get(type);
     }
-    
+
     /**
      * Returns the processors for "alt-url-gen" type, in other
      * words the processors for the generation of SEO alternative
@@ -655,13 +655,13 @@ public class SeoConfig {
 
     /**
      * Get the named set of char filters, as list.
-     * 
+     *
      * @return char filters
      */
     public List<CharFilter> getCharFilters(String charFiltersSetName) {
         return charFiltersMap.get(charFiltersSetName);
     }
-    
+
     /**
      * Get seo url pattern configures.
      * @deprecated 2017-11-18: TODO: REVIEW: any further use for this? (un-deprecate if one found)
@@ -706,7 +706,7 @@ public class SeoConfig {
      * Check whether a product id is in the special list. If we cannot get a product from a lower cased
      * or upper cased product id, then it's special.
      * @deprecated 2017: always returns false
-     * 
+     *
      * @return boolean to indicate whether the product id is special.
      */
     @Deprecated
@@ -718,7 +718,7 @@ public class SeoConfig {
      * Add a special product id to the special list.
      * @deprecated SCIPIO: 2017: now throws UnsupportedOperationException - the config should not be modifiable publicly
      * anymore at this time.
-     * 
+     *
      * @param productId a product id get from database.
      * @return true to indicate it has been added to special product id; false to indicate it's not special.
      * @throws Exception to indicate there's already same lower cased product id in the list but value is a different product id.
@@ -739,7 +739,7 @@ public class SeoConfig {
 //        specialProductIds.put(productId.toLowerCase(), productId);
 //        return true;
     }
-    
+
     /**
      * Get a product id is in the special list.
      * @deprecated 2017: always returns false
@@ -749,34 +749,34 @@ public class SeoConfig {
     public String getSpecialProductId(String productId) {
         return specialProductIds.get(productId);
     }
-    
+
     public Integer getCategoryNameMaxLength() {
         return categoryNameMaxLength;
     }
-    
+
     public String limitCategoryNameLength(String categoryName) {
-        if (categoryNameMaxLength != null && categoryName != null && 
+        if (categoryNameMaxLength != null && categoryName != null &&
                 categoryName.length() > categoryNameMaxLength) {
             return categoryName.substring(0, categoryNameMaxLength);
         }
         return categoryName;
     }
-    
+
     public Integer getProductNameMaxLength() {
         return productNameMaxLength;
     }
-    
+
     public String limitProductNameLength(String productName) {
-        if (productNameMaxLength != null && productName != null && 
+        if (productNameMaxLength != null && productName != null &&
                 productName.length() > productNameMaxLength) {
             return productName.substring(0, productNameMaxLength);
         }
         return productName;
     }
-    
+
     /**
      * @deprecated should not be needed anymore (2017-11-18); the generated
-     * ALTERNATIVE_URL locales simply copy over the locales from the PRODUCT_NAME 
+     * ALTERNATIVE_URL locales simply copy over the locales from the PRODUCT_NAME
      * and CATEGORY_NAME localized simple text content.
      * <p>
      * NOTE: sitemaps.properties has its own locale override.
@@ -785,15 +785,15 @@ public class SeoConfig {
     public Locale getNamesLocaleOverride() {
         return namesLocaleOverride;
     }
-    
+
     public boolean isCategoryNameSeparatePathElem() {
         return categoryNameSeparatePathElem;
     }
-    
+
     public boolean isCategoryNameAppendId() {
         return categoryNameAppendId;
     }
-    
+
     public boolean isCategoryNameAppendIdLast() {
         return categoryNameAppendIdLast;
     }
@@ -805,7 +805,7 @@ public class SeoConfig {
     public boolean isHandleImplicitRequests() {
         return handleImplicitRequests;
     }
-    
+
     public boolean isImplicitRequestNameMatchesOnly() {
         return implicitRequestNameMatchesOnly;
     }
@@ -817,11 +817,11 @@ public class SeoConfig {
     public boolean isGenerateImplicitProductUrl() {
         return generateImplicitProductUrl;
     }
-    
+
     public boolean isGenerateImplicitProductUrlNoCat() {
         return generateImplicitProductUrlNoCat;
     }
-       
+
     /**
      * If true, the target product/category will set the productId/productCategoryId
      * in request even if it's outside the catalog.
@@ -830,7 +830,7 @@ public class SeoConfig {
     public boolean isAllowTargetOutsideCatalog() {
         return allowTargetOutsideCatalog;
     }
-    
+
     /**
      * If false, a valid target product/category but with an invalid category path
      * will not register as a valid link; if true it will be mapped using a default
@@ -840,15 +840,15 @@ public class SeoConfig {
     public boolean isAllowInvalidCategoryPathElements() {
         return allowInvalidCategoryPathElements;
     }
-    
+
     public boolean isGenerateProductAltUrlSuffix() {
         return generateProductAltUrlSuffix && productAltUrlSuffix != null;
     }
-    
+
     public boolean isGenerateCategoryAltUrlSuffix() {
         return generateCategoryAltUrlSuffix && categoryAltUrlSuffix != null;
     }
-    
+
     /**
      * If true, the filter will accept suffixed alt-url generated links;
      * implemented for backward compatibility, but can be used for other reasons.
@@ -856,7 +856,7 @@ public class SeoConfig {
     public boolean isHandleAltUrlSuffix() {
         return handleAltUrlSuffix;
     }
-    
+
     public boolean isHandleProductAltUrlSuffix() {
         return handleAltUrlSuffix && productAltUrlSuffix != null;
     }
@@ -885,7 +885,7 @@ public class SeoConfig {
     public ClosestTrailResolver.ResolverType getNewUrlTrailResolver() {
         return newUrlTrailResolver;
     }
-    
+
     /**
      * Default preferred response code for url-configs and things that resemble url-configs.
      * NOTE: avoid this from external - ambiguous - probably want {@link #getDefaultRedirectResponseCode()} instead.
@@ -900,9 +900,9 @@ public class SeoConfig {
     public int getDefaultRedirectResponseCode() {
         return defaultRedirectResponseCode;
     }
-    
+
     // HELPERS
-    
+
     static String stringSetting(Element parentElement, String settingName, String defaultValue, Set<String> specialNullValues) {
         String value = UtilXml.childElementValue(parentElement, settingName, defaultValue);
         if (value == null || value.isEmpty()) value = defaultValue;
@@ -910,19 +910,19 @@ public class SeoConfig {
         if (specialNullValues.contains(value)) return null;
         return value;
     }
-    
+
     static String stringSetting(Element parentElement, String settingName, String defaultValue) {
         return stringSetting(parentElement, settingName, defaultValue, Collections.<String>emptySet());
     }
-    
+
     private static final Set<String> falseBooleanSettingValues = UtilMisc.unmodifiableHashSet(
             "false", "N", "disable", "disabled"
     );
-    
+
     static Set<String> falseBooleanSettingValues() {
         return falseBooleanSettingValues;
     }
-    
+
     /**
      * SCIPIO: Boolean check for enable/disable features, supports old and new standard values.
      */
@@ -935,11 +935,11 @@ public class SeoConfig {
             return defaultValue;
         }
     }
-    
+
     static Boolean booleanSetting(String value) {
         return booleanSetting(value, (Boolean) null);
     }
-    
+
     static Boolean booleanSetting(Element parentElement, String settingName, Boolean defaultValue) {
         String strValue = UtilXml.childElementValue(parentElement, settingName, (defaultValue != null) ? defaultValue.toString() : null);
         Boolean value = booleanSetting(strValue);
@@ -951,7 +951,7 @@ public class SeoConfig {
         return value;
     }
 
-    
+
     static Integer integerSetting(Element parentElement, String settingName, Integer defaultValue, boolean allowNegative) {
         Integer value = null;
         String strValue = UtilXml.childElementValue(parentElement, settingName, defaultValue != null ? defaultValue.toString() : null);
@@ -968,7 +968,7 @@ public class SeoConfig {
         Debug.logInfo("  " + settingName + ": " + value, module);
         return value;
     }
-    
+
     static Locale localeSetting(Element parentElement, String settingName, String defaultValue) {
         Locale value = null;
         String strValue = UtilXml.childElementValue(parentElement, settingName, defaultValue);

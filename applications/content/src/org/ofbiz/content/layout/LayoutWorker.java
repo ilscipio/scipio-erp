@@ -61,12 +61,12 @@ public class LayoutWorker {
         Map<String, String> formInput = new LinkedHashMap<String, String>();
         results.put("formInput", formInput);
         ServletFileUpload fu = new ServletFileUpload(new DiskFileItemFactory(10240, new File(new File("runtime"), "tmp")));
-        
+
         // SCIPIO: patch - from ServiceEventHandler: create the progress listener and add it to the session
         FileUploadProgressListener listener = new FileUploadProgressListener();
         fu.setProgressListener(listener);
         request.getSession().setAttribute("uploadProgressListener", listener);
-        
+
         List<FileItem> lst = null;
         try {
            lst = UtilGenerics.checkList(fu.parseRequest(request));
@@ -104,7 +104,7 @@ public class LayoutWorker {
         }
 
         if (imageFi == null) {
-            String errMsg = UtilProperties.getMessage(err_resource, 
+            String errMsg = UtilProperties.getMessage(err_resource,
                     "layoutEvents.image_null", UtilMisc.toMap("imageFi", imageFi), locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             //Debug.logWarning("[DataEvents.uploadImage] imageFi(" + imageFi + ") is null", module);

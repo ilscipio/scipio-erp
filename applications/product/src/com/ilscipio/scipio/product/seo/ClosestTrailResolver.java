@@ -12,16 +12,16 @@ import java.util.Map;
  * MAINLY for new URL generation - currently not used for the filter incoming URL matching
  * (which is stricter - see {@link SeoCatalogUrlWorker#findBestTrailForUrlPathElems}.
  * <p>
- * This is the core algo that makes browsing complex category rollups (with multiple paths to root) 
+ * This is the core algo that makes browsing complex category rollups (with multiple paths to root)
  * in the frontend possible (e.g. top cat vs best-sell browsing).
  */
 @SuppressWarnings("serial")
 public abstract class ClosestTrailResolver implements Serializable {
-    
+
     public enum ResolverType {
         NONCONSEC_ENDSWITH("nonconsec-endswith", new NonConsecutiveEndsWithResolver()),
         NONCONSEC_ANYPART("nonconsec-anypart", new NonConsecutiveAnyPartResolver());
-        
+
         private static final Map<String, ResolverType> nameMap;
         static {
             Map<String, ResolverType> map = new HashMap<>();
@@ -30,7 +30,7 @@ public abstract class ClosestTrailResolver implements Serializable {
             }
             nameMap = map;
         }
-        
+
         private final String name;
         private final ClosestTrailResolver resolver;
 
@@ -46,17 +46,17 @@ public abstract class ClosestTrailResolver implements Serializable {
         public ClosestTrailResolver getResolver() {
             return resolver;
         }
-        
+
         public static ResolverType fromName(String name) {
             return nameMap.get(name);
         }
-        
+
         public static ResolverType fromNameOrDefault(String name, ResolverType defaultValue) {
             ResolverType resolver = nameMap.get(name);
             return (resolver != null) ? resolver : defaultValue;
         }
     }
-    
+
     /**
      * Selects the trail that closest-matches the hintTrail (from the session).
      * Returns null if nothing good enough to make a selection.
@@ -72,19 +72,19 @@ public abstract class ClosestTrailResolver implements Serializable {
      * <p>
      * DEV NOTE: I'm leaving two versions here with strictHint param, because it's hard to say
      * which will be better or worse in most applications.
-     * 
+     *
      * @param topCategoryIds used to break ties
      */
     public List<String> findClosestTrail(List<List<String>> trails, List<String> hintTrail, Collection<String> topCategoryIds) {
         List<String> bestTrail = null;
-        
+
         if (hintTrail != null && !hintTrail.isEmpty()) {
             if ("TOP".equals(hintTrail.get(0))) hintTrail = hintTrail.subList(1, hintTrail.size());
             if (!hintTrail.isEmpty()) {
                 int bestScore = -1;
-                for(List<String> trail : trails) {            
+                for(List<String> trail : trails) {
                     int score = scoreTrail(trail, hintTrail);
-                    
+
                     if (score > bestScore || (score == bestScore && isFirstTrailBetterThanSecondScoreless(trail, bestTrail, topCategoryIds))) {
                         bestScore = score;
                         bestTrail = trail;
@@ -92,37 +92,37 @@ public abstract class ClosestTrailResolver implements Serializable {
                 }
             }
         }
-        
+
         if (bestTrail == null) {
             bestTrail = getFallbackBestTrail(trails, topCategoryIds);
         }
         return bestTrail;
     }
-    
+
     protected abstract int scoreTrail(List<String> trail, List<String> hintTrail);
-    
+
     /**
      * Breaks score ties.
      * Currently this returns the trail which is the first in the top category IDs.
-     * If both same top category, returns smallest trail. 
+     * If both same top category, returns smallest trail.
      */
     protected boolean isFirstTrailBetterThanSecondScoreless(List<String> first, List<String> second, Collection<String> topCategoryIds) {
         String firstTopCatId = first.get(0);
         String secondTopCatId = second.get(0);
         if (firstTopCatId.equals(secondTopCatId)) return (first.size() < second.size());
-        
+
         for(String topCatId : topCategoryIds) {
             if (topCatId.equals(firstTopCatId)) return true;
-            else if (topCatId.equals(secondTopCatId)) return false; 
+            else if (topCatId.equals(secondTopCatId)) return false;
         }
-        
+
         return (first.size() < second.size());
     }
-    
+
     protected List<String> getFallbackBestTrail(List<List<String>> trails, Collection<String> topCategoryIds) {
         return SeoCatalogUrlWorker.getFirstTopTrail(trails, topCategoryIds);
     }
-    
+
     /**
      * Stops as soon as a hint trail element (from the end) is not found in the trail.
      * HOWEVER, the matches don't need to be consecutive (so not as strict as the inbound trail match).
@@ -147,9 +147,9 @@ public abstract class ClosestTrailResolver implements Serializable {
             }
             return score;
         }
-        
+
     }
-    
+
     /**
      * This allows to "skip" hint trail elements (from the end) if not found in the trail.
      * Always iterates the entire hint trail.

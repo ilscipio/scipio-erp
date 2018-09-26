@@ -38,7 +38,7 @@ import org.ofbiz.entity.util.EntityQuery;
 public class HumanResEvents {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "ProductErrorUiLabels";
-    
+
     // Please note : the structure of map in this function is according to the JSON data map of the jsTree
     public static String getChildHRCategoryTree(HttpServletRequest request, HttpServletResponse response){
         Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -47,7 +47,7 @@ public class HumanResEvents {
         String additionParam = request.getParameter("additionParam");
         String hrefString = request.getParameter("hrefString");
         String hrefString2 = request.getParameter("hrefString2");
-        
+
         List<Map<String,Object>> categoryList = new ArrayList<Map<String,Object>>();
         List<GenericValue> childOfComs;
         //check employee position
@@ -79,14 +79,14 @@ public class HumanResEvents {
                         if (memGroupCtx != null) {
                             title = memGroupCtx.getString("groupName");
                         }
-                        
+
                         Map<String, Object> josonMap = new HashMap<String, Object>();
                         Map<String, Object> dataMap = new HashMap<String, Object>();
                         Map<String, Object> dataAttrMap = new HashMap<String, Object>();
                         Map<String, Object> attrMap = new HashMap<String, Object>();
-                        
+
                         dataAttrMap.put("onClick", onclickFunction + "('" + memberId + additionParam + "')");
-                        
+
                         String hrefStr = hrefString + memberId;
                         if (UtilValidate.isNotEmpty(hrefString2)) {
                             hrefStr = hrefStr + hrefString2;
@@ -98,7 +98,7 @@ public class HumanResEvents {
                         josonMap.put("attr",attrMap);
                         dataMap.put("title", title);
                         josonMap.put("data", dataMap);
-                        
+
                         categoryList.add(josonMap);
                     }
                 }
@@ -107,39 +107,39 @@ public class HumanResEvents {
             Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             return "error";
         }
-        
+
         try {
             GenericValue partyGroup = EntityQuery.use(delegator).from("PartyGroup").where("partyId", partyId).queryOne();
             if (UtilValidate.isNotEmpty(partyGroup)) {
                 childOfComs = EntityQuery.use(delegator).from("PartyRelationship")
-                        .where("partyIdFrom", partyGroup.get("partyId"), 
+                        .where("partyIdFrom", partyGroup.get("partyId"),
                                 "partyRelationshipTypeId", "GROUP_ROLLUP")
                         .filterByDate().queryList();
                 if (UtilValidate.isNotEmpty(childOfComs)) {
-                    
+
                     for (GenericValue childOfCom : childOfComs ) {
                         Object catId = null;
                         String catNameField = null;
                         String title = null;
-                        
+
                         Map<String, Object> josonMap = new HashMap<String, Object>();
                         Map<String, Object> dataMap = new HashMap<String, Object>();
                         Map<String, Object> dataAttrMap = new HashMap<String, Object>();
                         Map<String, Object> attrMap = new HashMap<String, Object>();
-                        
+
                         catId = childOfCom.get("partyIdTo");
-                        
+
                         //Department or Sub department
                         GenericValue childContext = EntityQuery.use(delegator).from("PartyGroup").where("partyId", catId).queryOne();
                         if (UtilValidate.isNotEmpty(childContext)) {
                             catNameField = (String) childContext.get("groupName");
                             title = catNameField;
                             josonMap.put("title",title);
-                            
+
                         }
                         //Check child existing
                         List<GenericValue> childOfSubComs = EntityQuery.use(delegator).from("PartyRelationship")
-                                .where("partyIdFrom", catId, 
+                                .where("partyIdFrom", catId,
                                         "partyRelationshipTypeId", "GROUP_ROLLUP")
                                 .filterByDate().queryList();
                         //check employee position
@@ -147,7 +147,7 @@ public class HumanResEvents {
                         if (UtilValidate.isNotEmpty(childOfSubComs) || UtilValidate.isNotEmpty(isPosition)) {
                             josonMap.put("state", "closed");
                         }
-                        
+
                         //Employee
                         GenericValue emContext = EntityQuery.use(delegator).from("Person").where("partyId", catId).queryOne();
                         if (UtilValidate.isNotEmpty(emContext)) {
@@ -161,26 +161,26 @@ public class HumanResEvents {
                             }
                             title = firstname +" "+ lastname;
                         }
-                        
+
                         dataAttrMap.put("onClick", onclickFunction + "('" + catId + additionParam + "')");
-                        
+
                         String hrefStr = hrefString + catId;
                         if (UtilValidate.isNotEmpty(hrefString2)) {
                             hrefStr = hrefStr + hrefString2;
                         }
                         dataAttrMap.put("href", hrefStr);
-                        
+
                         dataMap.put("attr", dataAttrMap);
-                        
+
                         attrMap.put("rel", "Y");
                         attrMap.put("id", catId);
                         josonMap.put("attr",attrMap);
                         dataMap.put("title", title);
                         josonMap.put("data", dataMap);
-                        
+
                         categoryList.add(josonMap);
                 }
-                    
+
                 }
 
                 List<GenericValue> isEmpls = null;
@@ -200,7 +200,7 @@ public class HumanResEvents {
                         Map<String, Object> emplAttrMap = new HashMap<String, Object>();
                         Map<String, Object> empldataMap = new HashMap<String, Object>();
                         Map<String, Object> emplDataAttrMap = new HashMap<String, Object>();
-                        
+
                         String emplId = (String) childOfEmpl.get("emplPositionId");
                         String typeId = (String) childOfEmpl.get("emplPositionTypeId");
                         //check child
@@ -210,7 +210,7 @@ public class HumanResEvents {
                         if (UtilValidate.isNotEmpty(emlpfCtxs)) {
                             emplMap.put("state", "closed");
                         }
-                        
+
                         GenericValue emplContext = EntityQuery.use(delegator).from("EmplPositionType").where("emplPositionTypeId", typeId).queryOne();
                         String title = null;
                         if (UtilValidate.isNotEmpty(emplContext)) {

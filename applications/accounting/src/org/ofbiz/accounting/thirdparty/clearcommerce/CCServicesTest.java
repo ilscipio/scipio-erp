@@ -149,7 +149,7 @@ public class CCServicesTest extends OFBizTestCase {
                     "billToEmail", emailAddr,
                     "creditCard", creditCard,
                     "pbOrder", pbOrder);  // if supplied, the crediting is for a subscription and credit by period is managed by ClearCommerce
-                       
+
             serviceMap.put("creditAmount", new BigDecimal("200.00"));
 
             // run the service

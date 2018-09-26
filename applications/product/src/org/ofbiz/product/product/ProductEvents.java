@@ -1170,7 +1170,7 @@ public class ProductEvents {
         }
         return new BigDecimal(bigDecimalString);
     }
-    
+
     /** Event add product tags */
     public static String addProductTags (HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -1185,7 +1185,7 @@ public class ProductEvents {
             while (regexMatcher.find()) {
                 matchList.add(regexMatcher.group().replace("'", ""));
             }
-            
+
             GenericValue userLogin = null;
             try {
                 userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").cache().queryOne();
@@ -1193,11 +1193,11 @@ public class ProductEvents {
                 request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
                 return "error";
             }
-            
+
             if(UtilValidate.isEmpty(statusId)) {
                 statusId = "KW_PENDING";
             }
-            
+
             if(UtilValidate.isNotEmpty(matchList)) {
                 for (String keywordStr : matchList) {
                     try {

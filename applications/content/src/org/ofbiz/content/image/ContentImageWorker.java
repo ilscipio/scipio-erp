@@ -46,7 +46,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 public abstract class ContentImageWorker {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * Special image size type name designating the original (unscaled/unmodified) image.
      * <p>
@@ -54,18 +54,18 @@ public abstract class ContentImageWorker {
      * which is used in the <code>@ofbizContentUrl</code> macro.
      */
     public static final String ORIGINAL_SIZETYPE = "original";
-    
+
     public static final String CONTENT_IMAGEPROP_FILEPATH = "/applications/content/config/ImageProperties.xml";
-    
+
     public static final String CONTENTATTR_VARIANTCFG = "scpVariantCfg";
-    
+
     /**
      * Keeps from overloading log with giant filenames.
      */
     public static final int LOG_INFO_MAXPATH = UtilProperties.getPropertyAsInteger("content", "image.log.info.maxpath", 80);
-    
+
     public static final FlexibleStringExpander IMGSZ_CNTASSTYPEID_EXPR = FlexibleStringExpander.getInstance("IMGSZ_${sizetype}");
-    
+
     /**
      * Default Content field expressions for contentImageDbScaleInAllSizeCore and such services.
      */
@@ -78,16 +78,16 @@ public abstract class ContentImageWorker {
         Map<String, FlexibleStringExpander> coExprMap = new HashMap<>();
         coExprMap.put("contentName", FlexibleStringExpander.getInstance("${fields.contentName}_${sizetype}"));
         RESIZEIMG_CONTENT_FIELDEXPR = Collections.unmodifiableMap(coExprMap);
-        
+
         Map<String, FlexibleStringExpander> drExprMap = new HashMap<>();
         drExprMap.put("dataResourceName", FlexibleStringExpander.getInstance("${fields.dataResourceName}_${sizetype}"));
         drExprMap.put("objectInfo", FlexibleStringExpander.getInstance("${origfn}_${sizetype}.${ext}"));
-        RESIZEIMG_DATARESOURCE_FIELDEXPR = Collections.unmodifiableMap(drExprMap);  
+        RESIZEIMG_DATARESOURCE_FIELDEXPR = Collections.unmodifiableMap(drExprMap);
     }
-    
+
     protected ContentImageWorker() {
     }
-    
+
     /**
      * SCIPIO: Returns the full path to the ImageProperties.xml file to use for generic image size definitions.
      * 2017-08-08: This can now be defined either under content or common components.
@@ -101,7 +101,7 @@ public abstract class ContentImageWorker {
             return ImageVariantConfig.getCommonImagePropertiesFullPath();
         }
     }
-    
+
     public static String getContentImagePropertiesPath() throws IOException {
         String path = ImageVariantConfig.getImagePropertiesFullPath(CONTENT_IMAGEPROP_FILEPATH);
         if (new java.io.File(path).exists()) {
@@ -110,10 +110,10 @@ public abstract class ContentImageWorker {
             return ImageVariantConfig.getCommonImagePropertiesPath();
         }
     }
-    
+
     public static String formatLogInfoPath(String filename) {
         if (filename == null || filename.isEmpty()) return "[none]";
-        else return "'" 
+        else return "'"
                 + (filename.length() > LOG_INFO_MAXPATH ? "..." + filename.substring(filename.length() - LOG_INFO_MAXPATH) : filename)
                 + "'";
     }
@@ -146,15 +146,15 @@ public abstract class ContentImageWorker {
 //        result.put("bufferedImage", bufImg);
 //        return result;
 //    }
-    
+
     public static List<GenericValue> getResizedImageContentAssocRecords(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
         List<EntityCondition> condList = new ArrayList<>();
         condList.add(EntityCondition.makeCondition("contentId", contentId));
         condList.add(EntityCondition.makeCondition("contentAssocTypeId", EntityOperator.LIKE, "IMGSZ_%"));
-        return delegator.findList("ContentAssoc", 
+        return delegator.findList("ContentAssoc",
                 EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, useCache);
     }
-    
+
     public static Set<String> getResizedImageContentAssocContentIdTo(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
         Set<String> contentIdListToRemove = new LinkedHashSet<>();
         List<GenericValue> contentAssocToRemove = getResizedImageContentAssocRecords(delegator, contentId, useCache);

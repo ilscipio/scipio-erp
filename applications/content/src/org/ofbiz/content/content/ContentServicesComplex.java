@@ -252,7 +252,7 @@ public class ContentServicesComplex {
         try{
         for (GenericValue contentAssocView : contentAssocsTypeFiltered) {
             GenericValue contentAssoc = EntityQuery.use(delegator).from("ContentAssoc").where(UtilMisc.toMap("contentId", contentAssocView.getString("contentId"),
-                    "contentIdTo", contentAssocView.getString(contentFieldName), "contentAssocTypeId", contentAssocView.getString("caContentAssocTypeId"), 
+                    "contentIdTo", contentAssocView.getString(contentFieldName), "contentAssocTypeId", contentAssocView.getString("caContentAssocTypeId"),
                     "fromDate", contentAssocView.getTimestamp("caFromDate"))).queryOne();
             content = contentAssoc.getRelatedOne(assocRelationName, true);
             if (UtilValidate.isNotEmpty(contentTypes)) {
@@ -278,7 +278,7 @@ public class ContentServicesComplex {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        
+
         if (UtilValidate.isNotEmpty(orderBy)) {
             List<String> orderByList = StringUtil.split(orderBy, "|");
            contentAssocDataResourceList = EntityUtil.orderBy(contentAssocDataResourceList, orderByList);

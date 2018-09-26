@@ -83,7 +83,7 @@ public class PayPalServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingErrorUiLabels";
-    
+
     // Used to maintain a weak reference to the ShoppingCart for customers who have gone to PayPal to checkout
     // so that we can quickly grab the cart, perform shipment estimates and send the info back to PayPal.
     // The weak key is a simple wrapper for the checkout token String and is stored as a cart attribute. The value
@@ -95,13 +95,13 @@ public class PayPalServices {
         ShoppingCart cart = (ShoppingCart) context.get("cart");
         Locale locale = cart.getLocale();
         if (cart == null || cart.items().size() <= 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalShoppingCartIsEmpty", locale));
         }
 
         GenericValue payPalConfig = getPaymentMethodGatewayPayPal(dctx, context, null);
         if (payPalConfig == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalPaymentGatewayConfigCannotFind", locale));
         }
 
@@ -139,7 +139,7 @@ public class PayPalServices {
             addCartDetails(encoder, cart);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalErrorDuringRetrievingCartDetails", locale));
         }
 
@@ -354,7 +354,7 @@ public class PayPalServices {
         ShoppingCart cart = (ShoppingCart) context.get("cart");
         GenericValue payPalConfig = getPaymentMethodGatewayPayPal(dctx, context, null);
         if (payPalConfig == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalPaymentGatewayConfigCannotFind", locale));
         }
 
@@ -364,7 +364,7 @@ public class PayPalServices {
         if (UtilValidate.isNotEmpty(token)) {
             encoder.add("TOKEN", token);
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalTokenNotFound", locale));
         }
 
@@ -459,8 +459,8 @@ public class PayPalServices {
                     // No email found so we'll need to create one but first check if it should be PRIMARY or just BILLING
                     long primaryEmails = EntityQuery.use(delegator)
                             .from("PartyContactWithPurpose")
-                            .where("partyId", partyId, 
-                                    "contactMechTypeId", "EMAIL_ADDRESS", 
+                            .where("partyId", partyId,
+                                    "contactMechTypeId", "EMAIL_ADDRESS",
                                     "contactMechPurposeTypeId", "PRIMARY_EMAIL")
                             .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate")
                             .queryCount();
@@ -601,9 +601,9 @@ public class PayPalServices {
             try {
                 GenericValue shipmentMethod = EntityQuery.use(delegator)
                         .from("ProductStoreShipmentMethView")
-                        .where("productStoreId", cart.getProductStoreId(), 
-                                "partyId", shipMethodSplit[0], 
-                                "roleTypeId", "CARRIER", 
+                        .where("productStoreId", cart.getProductStoreId(),
+                                "partyId", shipMethodSplit[0],
+                                "roleTypeId", "CARRIER",
                                 "description", shippingMethodTypeDesc)
                         .queryFirst();
                 cart.setAllShipmentMethodTypeId(shipmentMethod.getString("shipmentMethodTypeId"));
@@ -711,7 +711,7 @@ public class PayPalServices {
             return ServiceUtil.returnError(e.getMessage());
         }
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -777,7 +777,7 @@ public class PayPalServices {
         }
 
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -830,7 +830,7 @@ public class PayPalServices {
         }
 
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -861,7 +861,7 @@ public class PayPalServices {
         GenericValue payPalConfig = getPaymentMethodGatewayPayPal(dctx, context, null);
         Locale locale = (Locale) context.get("locale");
         if (payPalConfig == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalPaymentGatewayConfigCannotFind", locale));
         }
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
@@ -878,7 +878,7 @@ public class PayPalServices {
         }
 
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -910,7 +910,7 @@ public class PayPalServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue payPalConfig = getPaymentMethodGatewayPayPal(dctx, context, null);
         if (payPalConfig == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalPaymentGatewayConfigCannotFind", locale));
         }
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
@@ -932,7 +932,7 @@ public class PayPalServices {
         }
 
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -1047,7 +1047,7 @@ public class PayPalServices {
         GenericValue geoAssocAndGeoTo = null;
         try {
             geoAssocAndGeoTo = EntityQuery.use(delegator).from("GeoAssocAndGeoTo").where(cond).cache().queryFirst();
-            
+
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }

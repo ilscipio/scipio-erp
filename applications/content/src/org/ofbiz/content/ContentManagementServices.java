@@ -172,21 +172,21 @@ public class ContentManagementServices {
             context.put("contentPurposeList", contentPurposeList);
             context.put("contentPurposeString", null);
         }
-        
+
         if (Debug.infoOn()) {
             Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, module);
             Debug.logInfo("in persist... textData(0):" + context.get("textData"), module);
         }
 
         GenericValue content = delegator.makeValue("Content");
-        
+
         content.setPKFields(context);
         content.setNonPKFields(context);
         String contentId = (String) content.get("contentId");
         String contentTypeId = (String) content.get("contentTypeId");
         String origContentId = (String) content.get("contentId");
         String origDataResourceId = (String) content.get("dataResourceId");
-        
+
         if (Debug.infoOn()) {
             Debug.logInfo("in persist... contentId(0):" + contentId, module);
         }
@@ -511,7 +511,7 @@ public class ContentManagementServices {
                       String errMsg = ServiceUtil.getErrorMessage(permResults);
                       if (UtilValidate.isNotEmpty(errMsg)) {
                           return ServiceUtil.returnError(errMsg);
-                      } 
+                      }
                       //addRoleToUser(delegator, dispatcher, serviceContext);
                   } catch (GenericServiceException e) {
                       Debug.logError(e, e.toString(), module);

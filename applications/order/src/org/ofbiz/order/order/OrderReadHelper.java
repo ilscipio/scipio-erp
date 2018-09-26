@@ -69,14 +69,14 @@ public class OrderReadHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    // scales and rounding modes for BigDecimal math    
+    // scales and rounding modes for BigDecimal math
     public static final int scale = UtilNumber.getBigDecimalScale("order.decimals");
     public static final RoundingMode rounding = UtilNumber.getRoundingMode("order.rounding");
     public static final int taxCalcScale = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
     public static final int taxFinalScale = UtilNumber.getBigDecimalScale("salestax.final.decimals");
     public static final RoundingMode taxRounding = UtilNumber.getRoundingMode("salestax.rounding");
     public static final BigDecimal ZERO = (BigDecimal.ZERO).setScale(scale, rounding);
-    public static final BigDecimal percentage = (new BigDecimal("0.01")).setScale(scale, rounding);    
+    public static final BigDecimal percentage = (new BigDecimal("0.01")).setScale(scale, rounding);
     /**
      * SCIPIO: Custom flag used to determine whether only one subscription is allowed per order or not.
      */
@@ -341,7 +341,7 @@ public class OrderReadHelper {
 
     /**
      * Return the number of days from termDays of first FIN_PAYMENT_TERM
-     * 
+     *
      * @return number of days from termDays of first FIN_PAYMENT_TERM
      */
     public Long getOrderTermNetDays() {
@@ -2290,7 +2290,7 @@ public class OrderReadHelper {
 
     /**
      * Checks to see if this user has read permission on this order
-     * 
+     *
      * @param userLogin
      *            The UserLogin value object to check
      * @return boolean True if we have read permission
@@ -2301,7 +2301,7 @@ public class OrderReadHelper {
 
     /**
      * Getter for property orderHeader.
-     * 
+     *
      * @return Value of property orderHeader.
      */
     public GenericValue getOrderHeader() {
@@ -2841,7 +2841,7 @@ public class OrderReadHelper {
 
     /**
      * Checks to see if this user has read permission on the specified order
-     * 
+     *
      * @param userLogin
      *            The UserLogin value object to check
      * @param orderHeader
@@ -2877,7 +2877,7 @@ public class OrderReadHelper {
 
     /**
      * Get orderAdjustments that have no corresponding returnAdjustment
-     * 
+     *
      * @return return the order adjustments that have no corresponding with
      *         return adjustment
      */
@@ -3110,7 +3110,7 @@ public class OrderReadHelper {
      * balance minus amount of pending (not cancelled, rejected, or received)
      * order payments. When looking at using a billing account for a new order,
      * you should use this method.
-     * 
+     *
      * @param billingAccount
      *            the billing account record
      * @return return the "available" balance of a billing account
@@ -3154,7 +3154,7 @@ public class OrderReadHelper {
     /**
      * Returns the accountLimit of the BillingAccount or BigDecimal ZERO if it
      * is null
-     * 
+     *
      * @param billingAccount
      * @throws GenericEntityException
      */
@@ -3208,7 +3208,7 @@ public class OrderReadHelper {
 
     /**
      * SCIPIO: Retrieve all subscription of the entire order
-     * 
+     *
      * @return Map<GenericValue, List<GenericValue>>
      * @throws GenericEntityException
      */
@@ -3230,7 +3230,7 @@ public class OrderReadHelper {
 
     /**
      * SCIPIO: Retrieve all subscriptions associated to an orderItem
-     * 
+     *
      * @return List<GenericValue>
      * @throws GenericEntityException
      */
@@ -3249,7 +3249,7 @@ public class OrderReadHelper {
     /**
      * SCIPIO: Checks if any order item has an underlying subscription/s bound
      * to it
-     * 
+     *
      * @return boolean
      * @throws GenericEntityException
      */
@@ -3260,7 +3260,7 @@ public class OrderReadHelper {
     /**
      * SCIPIO: Checks if an order item has an underlying subscription/s bound to
      * it
-     * 
+     *
      * @return boolean
      * @throws GenericEntityException
      */
@@ -3270,7 +3270,7 @@ public class OrderReadHelper {
 
     /**
      * SCIPIO: Check if the order contains only subscription items
-     * 
+     *
      * @return boolean
      */
     public boolean orderContainsSubscriptionItemsOnly() {
@@ -3284,36 +3284,36 @@ public class OrderReadHelper {
         }
         return true;
     }
-    
+
     public BigDecimal getSubscriptionItemsSubTotal() {
-	BigDecimal subscriptionItemsSubTotal = BigDecimal.ZERO;
-	if (UtilValidate.isNotEmpty(orderSubscriptionItems)) {
-	    List<GenericValue> subscriptionItems = new ArrayList<GenericValue>(orderSubscriptionItems.keySet());
-	    subscriptionItemsSubTotal = getOrderItemsSubTotal(subscriptionItems, getAdjustments());
-	}
-	return subscriptionItemsSubTotal;
+    BigDecimal subscriptionItemsSubTotal = BigDecimal.ZERO;
+    if (UtilValidate.isNotEmpty(orderSubscriptionItems)) {
+        List<GenericValue> subscriptionItems = new ArrayList<GenericValue>(orderSubscriptionItems.keySet());
+        subscriptionItemsSubTotal = getOrderItemsSubTotal(subscriptionItems, getAdjustments());
+    }
+    return subscriptionItemsSubTotal;
     }
 
     public BigDecimal getSubscriptionItemSubTotal(GenericValue orderItem) {
-	return getOrderItemSubTotal(orderItem, getAdjustments());
+    return getOrderItemSubTotal(orderItem, getAdjustments());
     }
 
     public BigDecimal getSubscriptionItemsTotal() {
 
-	BigDecimal subscriptionItemsTotal = BigDecimal.ZERO;
-	if (UtilValidate.isNotEmpty(orderSubscriptionItems)) {
-	    List<GenericValue> subscriptionItems = new ArrayList<GenericValue>(orderSubscriptionItems.keySet());
-	    subscriptionItemsTotal = getOrderItemsTotal(subscriptionItems, getAdjustments());
-	}
-	return subscriptionItemsTotal;
+    BigDecimal subscriptionItemsTotal = BigDecimal.ZERO;
+    if (UtilValidate.isNotEmpty(orderSubscriptionItems)) {
+        List<GenericValue> subscriptionItems = new ArrayList<GenericValue>(orderSubscriptionItems.keySet());
+        subscriptionItemsTotal = getOrderItemsTotal(subscriptionItems, getAdjustments());
+    }
+    return subscriptionItemsTotal;
     }
 
     public BigDecimal getSubscriptionItemTotal(GenericValue orderItem) {
-	return getOrderItemTotal(orderItem, getAdjustments());
+    return getOrderItemTotal(orderItem, getAdjustments());
     }
 
     public BigDecimal getSubscriptionItemTax(GenericValue orderItem) {
-	return getOrderItemAdjustmentsTotal(orderItem, false, true, false);
+    return getOrderItemAdjustmentsTotal(orderItem, false, true, false);
     }
 
 }

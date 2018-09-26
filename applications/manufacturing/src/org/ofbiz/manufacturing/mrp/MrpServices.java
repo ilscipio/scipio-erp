@@ -716,8 +716,8 @@ public class MrpServices {
                         stockTmp = findProductMrpQoh(mrpId, product, facilityId, dispatcher, delegator);
                         try {
                             InventoryEventPlannedServices.createOrUpdateMrpEvent(UtilMisc.<String, Object>toMap("mrpId", mrpId,
-                                    "productId", product.getString("productId"), 
-                                    "mrpEventTypeId", "INITIAL_QOH", "eventDate", now), 
+                                    "productId", product.getString("productId"),
+                                    "mrpEventTypeId", "INITIAL_QOH", "eventDate", now),
                                     stockTmp, facilityId, null, false, delegator);
                         } catch (GenericEntityException e) {
                             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingMrpCreateOrUpdateEvent", UtilMisc.toMap("parameters", parameters), locale));

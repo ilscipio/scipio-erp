@@ -38,7 +38,7 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
     public IdealPaymentServiceTest(String name) {
         super(name);
     }
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // test data
@@ -58,7 +58,7 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
         // SCIPIO: default now points to shop
         merchantReturnURL = "https://localhost:8443/shop";
     }
-    
+
     public void testDirectoryRequest() throws Exception{
         try {
             IdealConnector connector = new IdealConnector(configFile);
@@ -67,19 +67,19 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
             TestCase.fail(ex.getMessage());
         }
     }
-    
+
     public void testOrderSuccuess() throws Exception{
         try {
             IdealConnector connector = new IdealConnector(configFile);
             int amount = 1;
             int amountFormat = amount * 100;
-            
+
             Transaction transaction = new Transaction();
             transaction.setIssuerID(issuerId);
             transaction.setAmount(Integer.toString(amountFormat));
             transaction.setPurchaseID(orderId);
             transaction.setDescription(orderDiscription);
-            
+
             Random random = new Random();
             String EntranceCode = Long.toString(Math.abs(random.nextLong()), 36);
             transaction.setEntranceCode(EntranceCode);
@@ -100,13 +100,13 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
             IdealConnector connector = new IdealConnector(configFile);
             int amount = 2;
             int amountFormat = amount * 100;
-            
+
             Transaction transaction = new Transaction();
             transaction.setIssuerID(issuerId);
             transaction.setAmount(Integer.toString(amountFormat));
             transaction.setPurchaseID(orderId);
             transaction.setDescription(orderDiscription);
-            
+
             Random random = new Random();
             String EntranceCode = Long.toString(Math.abs(random.nextLong()), 36);
             transaction.setEntranceCode(EntranceCode);
@@ -127,13 +127,13 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
             IdealConnector connector = new IdealConnector(configFile);
             int amount = 3;
             int amountFormat = amount * 100;
-            
+
             Transaction transaction = new Transaction();
             transaction.setIssuerID(issuerId);
             transaction.setAmount(Integer.toString(amountFormat));
             transaction.setPurchaseID(orderId);
             transaction.setDescription(orderDiscription);
-            
+
             Random random = new Random();
             String EntranceCode = Long.toString(Math.abs(random.nextLong()), 36);
             transaction.setEntranceCode(EntranceCode);
@@ -154,13 +154,13 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
             IdealConnector connector = new IdealConnector(configFile);
             int amount = 4;
             int amountFormat = amount * 100;
-            
+
             Transaction transaction = new Transaction();
             transaction.setIssuerID(issuerId);
             transaction.setAmount(Integer.toString(amountFormat));
             transaction.setPurchaseID(orderId);
             transaction.setDescription(orderDiscription);
-            
+
             Random random = new Random();
             String EntranceCode = Long.toString(Math.abs(random.nextLong()), 36);
             transaction.setEntranceCode(EntranceCode);
@@ -181,13 +181,13 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
             IdealConnector connector = new IdealConnector(configFile);
             int amount = 5;
             int amountFormat = amount * 100;
-            
+
             Transaction transaction = new Transaction();
             transaction.setIssuerID(issuerId);
             transaction.setAmount(Integer.toString(amountFormat));
             transaction.setPurchaseID(orderId);
             transaction.setDescription(orderDiscription);
-            
+
             Random random = new Random();
             String EntranceCode = Long.toString(Math.abs(random.nextLong()), 36);
             transaction.setEntranceCode(EntranceCode);
@@ -202,19 +202,19 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
             TestCase.fail(ex.getMessage());
         }
     }
-    
+
     public void testOrderError() throws Exception{
         try {
             IdealConnector connector = new IdealConnector(configFile);
             int amount = 7;
             int amountFormat = amount * 100;
-            
+
             Transaction transaction = new Transaction();
             transaction.setIssuerID(issuerId);
             transaction.setAmount(Integer.toString(amountFormat));
             transaction.setPurchaseID(orderId);
             transaction.setDescription(orderDiscription);
-            
+
             Random random = new Random();
             String EntranceCode = Long.toString(Math.abs(random.nextLong()), 36);
             transaction.setEntranceCode(EntranceCode);

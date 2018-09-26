@@ -192,12 +192,12 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
 
         //String idFieldValue = null;
         ServletFileUpload fu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
-        
+
         // SCIPIO: patch - from ServiceEventHandler: create the progress listener and add it to the session
         FileUploadProgressListener listener = new FileUploadProgressListener();
         fu.setProgressListener(listener);
         request.getSession().setAttribute("uploadProgressListener", listener);
-        
+
         List<FileItem> lst = null;
         Locale locale = UtilHttp.getLocale(request);
 
@@ -299,7 +299,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         String skipPermissionCheck = (String) context.get("skipPermissionCheck");
             if (Debug.infoOn()) Debug.logInfo("in callDataResourcePermissionCheckResult, skipPermissionCheck:" + skipPermissionCheck,"");
 
-        if (UtilValidate.isEmpty(skipPermissionCheck) 
+        if (UtilValidate.isEmpty(skipPermissionCheck)
                 || (!"true".equalsIgnoreCase(skipPermissionCheck) && !"granted".equalsIgnoreCase(skipPermissionCheck))) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             Map<String, Object> serviceInMap = new HashMap<String, Object>();
@@ -1084,7 +1084,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
     }
 
     public static ByteBuffer getContentAsByteBuffer(Delegator delegator, String dataResourceId, String https, String webSiteId, Locale locale, String rootDir) throws IOException, GeneralException {
-        GenericValue dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", dataResourceId).queryOne(); 
+        GenericValue dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", dataResourceId).queryOne();
         Map<String, Object> resourceData = DataResourceWorker.getDataResourceStream(dataResource, https, webSiteId, locale, rootDir, false);
         ByteArrayInputStream stream = (ByteArrayInputStream) resourceData.get("stream");
         ByteBuffer byteBuffer = ByteBuffer.wrap(IOUtils.toByteArray(stream));
@@ -1100,7 +1100,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             Locale locale, String targetMimeTypeId, boolean cache) throws GeneralException, IOException {
         renderDataResourceAsText(delegator, dataResourceId, out, templateContext, locale, targetMimeTypeId, cache);
     }
-    
+
     /**
      * SCIPIO: Gets ImageDataResource, VideoDataResource, etc. media resource for the DataResource value,
      * or null if none.

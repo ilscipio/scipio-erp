@@ -273,7 +273,7 @@ public class ContentSearch {
 
         /**
          *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE
-         *      DONE WITH IT (preferably in a finally block), 
+         *      DONE WITH IT (preferably in a finally block),
          *      AND DON'T LEAVE IT OPEN TOO LONG BECAUSE IT WILL MAINTAIN A DATABASE CONNECTION.
          */
         public EntityListIterator doQuery(Delegator delegator) {

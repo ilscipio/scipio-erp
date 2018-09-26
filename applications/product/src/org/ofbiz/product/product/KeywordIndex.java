@@ -73,7 +73,7 @@ public class KeywordIndex {
                 return;
             }
         }
-        
+
         if (delegator == null) return;
         String productId = product.getString("productId");
 

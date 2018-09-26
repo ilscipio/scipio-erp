@@ -104,7 +104,7 @@ public class PriceServices {
         String findAllQuantityPricesStr = (String) context.get("findAllQuantityPrices");
         boolean findAllQuantityPrices = "Y".equals(findAllQuantityPricesStr);
         boolean optimizeForLargeRuleSet = "Y".equals(context.get("optimizeForLargeRuleSet"));
-        
+
         boolean getMinimumVariantPrice = (Boolean) context.get("getMinimumVariantPrice");
 
         String agreementId = (String) context.get("agreementId");
@@ -112,17 +112,17 @@ public class PriceServices {
         String productStoreId = (String) context.get("productStoreId");
         String productStoreGroupId = (String) context.get("productStoreGroupId");
         Locale locale = (Locale) context.get("locale");
-        
+
         // SCIPIO: 2017-12-19: service now supports useCache=false (stock default is true), important for ECAs
         boolean useCache = !Boolean.FALSE.equals(context.get("useCache"));
-        
+
         GenericValue productStore = null;
         try {
             // we have a productStoreId, if the corresponding ProductStore.primaryStoreGroupId is not empty, use that
             productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).cache(useCache).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error getting product store info from the database while calculating price" + e.toString(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPriceCannotRetrieveProductStore", UtilMisc.toMap("errorString", e.toString()) , locale));
         }
         if (UtilValidate.isEmpty(productStoreGroupId)) {
@@ -141,7 +141,7 @@ public class PriceServices {
                     }
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Error getting product store info from the database while calculating price" + e.toString(), module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                             "ProductPriceCannotRetrieveProductStore", UtilMisc.toMap("errorString", e.toString()) , locale));
                 }
             }
@@ -154,7 +154,7 @@ public class PriceServices {
 
         // if currencyUomId is null get from properties file, if nothing there assume USD (USD: American Dollar) for now
         String currencyDefaultUomId = (String) context.get("currencyUomId");
-        String currencyUomIdTo = (String) context.get("currencyUomIdTo"); 
+        String currencyUomIdTo = (String) context.get("currencyUomIdTo");
         if (UtilValidate.isEmpty(currencyDefaultUomId)) {
             if (productStore != null && UtilValidate.isNotEmpty(productStore.getString("defaultCurrencyUomId"))) {
                 currencyDefaultUomId = productStore.getString("defaultCurrencyUomId");
@@ -180,7 +180,7 @@ public class PriceServices {
                 virtualProductId = ProductWorker.getVariantVirtualId(product, useCache);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting virtual product id from the database while calculating price" + e.toString(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductPriceCannotRetrieveVirtualProductId", UtilMisc.toMap("errorString", e.toString()) , locale));
             }
         }
@@ -258,7 +258,7 @@ public class PriceServices {
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting agreement info from the database while calculating price" + e.toString(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductPriceCannotRetrieveAgreementInfo", UtilMisc.toMap("errorString", e.toString()) , locale));
             }
         }
@@ -532,7 +532,7 @@ public class PriceServices {
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting rules from the database while calculating price", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductPriceCannotRetrievePriceRules", UtilMisc.toMap("errorString", e.toString()) , locale));
             }
         }
@@ -560,7 +560,7 @@ public class PriceServices {
                             tempPrice = (BigDecimal) entry.getValue();
                         else if (entry.getKey() == "listPrice")
                             tempPrice = (BigDecimal) entry.getValue();
-                        
+
                         if (tempPrice != null && tempPrice != BigDecimal.ZERO) {
                             Map<String, Object> priceResults = new HashMap<String, Object>();
                             try {
@@ -584,12 +584,12 @@ public class PriceServices {
                 }
             }
         }
-        
+
         // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
         return result;
     }
 
-    private static GenericValue getPriceValueForType(String productPriceTypeId, List<GenericValue> productPriceList, List<GenericValue> secondaryPriceList, Boolean getMinimumVariantPrice) {        
+    private static GenericValue getPriceValueForType(String productPriceTypeId, List<GenericValue> productPriceList, List<GenericValue> secondaryPriceList, Boolean getMinimumVariantPrice) {
         List<GenericValue> filteredPrices = EntityUtil.filterByAnd(productPriceList, UtilMisc.toMap("productPriceTypeId", productPriceTypeId));
         GenericValue priceValue = EntityUtil.getFirst(filteredPrices);
         // SCIPIO: Introduced getMinimumVariantPrice, a way to get the minimum
@@ -617,7 +617,7 @@ public class PriceServices {
             String checkIncludeVat, String currencyUomId, String productId, BigDecimal quantity, String partyId, LocalDispatcher dispatcher, Locale locale) {
         return addGeneralResults(result, competitivePriceValue, specialPromoPriceValue, productStore, checkIncludeVat, currencyUomId, productId, quantity, partyId, dispatcher, locale, true);
     }
-    
+
     // SCIPIO: 2017-12-19: added useCache flag
     public static Map<String, Object> addGeneralResults(Map<String, Object> result, GenericValue competitivePriceValue, GenericValue specialPromoPriceValue, GenericValue productStore,
         String checkIncludeVat, String currencyUomId, String productId, BigDecimal quantity, String partyId, LocalDispatcher dispatcher, Locale locale, boolean useCache) {
@@ -637,7 +637,7 @@ public class PriceServices {
             try {
                 Map<String, Object> calcTaxForDisplayResult = dispatcher.runSync("calcTaxForDisplay", calcTaxForDisplayContext);
                 if (ServiceUtil.isError(calcTaxForDisplayResult)) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                             "ProductPriceCannotCalculateVatTax", locale), null, null, calcTaxForDisplayResult);
                 }
                 // taxTotal, taxPercentage, priceWithTax
@@ -663,7 +663,7 @@ public class PriceServices {
                 }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Error calculating VAT tax (with calcTaxForDisplay service): " + e.toString(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductPriceCannotCalculateVatTax", locale));
             }
         }
@@ -830,11 +830,11 @@ public class PriceServices {
             GenericValue averageCostValue, String productId, String virtualProductId, String prodCatalogId, String productStoreGroupId,
             String webSiteId, String partyId, BigDecimal quantity, String currencyUomId, Delegator delegator, Timestamp nowTimestamp,
             Locale locale) throws GenericEntityException {
-        return calcPriceResultFromRules(productPriceRules, listPrice, defaultPrice, promoPrice, wholesalePrice, maximumPriceValue, minimumPriceValue, validPriceFound, 
-                averageCostValue, productId, virtualProductId, prodCatalogId, productStoreGroupId, webSiteId, partyId, quantity, 
+        return calcPriceResultFromRules(productPriceRules, listPrice, defaultPrice, promoPrice, wholesalePrice, maximumPriceValue, minimumPriceValue, validPriceFound,
+                averageCostValue, productId, virtualProductId, prodCatalogId, productStoreGroupId, webSiteId, partyId, quantity,
                 currencyUomId, delegator, nowTimestamp, locale, true);
     }
-    
+
     // SCIPIO: 2017-12-19: added useCache
     public static Map<String, Object> calcPriceResultFromRules(List<GenericValue> productPriceRules, BigDecimal listPrice, BigDecimal defaultPrice, BigDecimal promoPrice,
         BigDecimal wholesalePrice, GenericValue maximumPriceValue, GenericValue minimumPriceValue, boolean validPriceFound,
@@ -1009,7 +1009,7 @@ public class PriceServices {
                     // add a orderItemPriceInfo element too, without orderId or orderItemId
                     StringBuilder priceInfoDescription = new StringBuilder();
 
-                    
+
                     priceInfoDescription.append(condsDescription.toString());
                     priceInfoDescription.append("[");
                     priceInfoDescription.append(UtilProperties.getMessage(resource, "ProductPriceConditionType", locale));
@@ -1093,10 +1093,10 @@ public class PriceServices {
     public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String virtualProductId, String prodCatalogId,
             String productStoreGroupId, String webSiteId, String partyId, BigDecimal quantity, BigDecimal listPrice,
             String currencyUomId, Delegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
-        return checkPriceCondition(productPriceCond, productId, virtualProductId, prodCatalogId, productStoreGroupId, 
+        return checkPriceCondition(productPriceCond, productId, virtualProductId, prodCatalogId, productStoreGroupId,
                 webSiteId, partyId, quantity, listPrice, currencyUomId, delegator, nowTimestamp, true);
     }
-    
+
     // SCIPIO: 2017-12-19: added useCache
     public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String virtualProductId, String prodCatalogId,
             String productStoreGroupId, String webSiteId, String partyId, BigDecimal quantity, BigDecimal listPrice,
@@ -1278,7 +1278,7 @@ public class PriceServices {
                 return 0;
             }
         }
-        
+
         return 1;
     }
 
@@ -1303,7 +1303,7 @@ public class PriceServices {
 
         // SCIPIO: 2017-12-19: service now supports useCache=false (stock default is true), important for ECAs
         boolean useCache = !Boolean.FALSE.equals(context.get("useCache"));
-        
+
         // a) Get the Price from the Agreement* data model
         // TODO: Implement this
 

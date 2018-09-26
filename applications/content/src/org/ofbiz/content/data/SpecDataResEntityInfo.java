@@ -14,7 +14,7 @@ import org.ofbiz.entity.GenericValue;
  * TODO?: use config files in future
  */
 public class SpecDataResEntityInfo {
-    
+
     public static List<SpecDataResEntityInfo> populateEntityInfoList(List<SpecDataResEntityInfo> list) {
         list.add(new SpecDataResEntityInfo("IMAGE_OBJECT", "ImageDataResource", "imageData"));
         list.add(new SpecDataResEntityInfo("VIDEO_OBJECT", "VideoDataResource", "videoData"));
@@ -23,7 +23,7 @@ public class SpecDataResEntityInfo {
         list.add(new SpecDataResEntityInfo("OTHER_OBJECT", "OtherDataResource", "dataResourceContent"));
         return list;
     }
-    
+
     private static final List<SpecDataResEntityInfo> entityInfoList = Collections.unmodifiableList(populateEntityInfoList(new ArrayList<SpecDataResEntityInfo>()));
     private static final List<String> entityNameList;
     static {
@@ -42,29 +42,29 @@ public class SpecDataResEntityInfo {
     private final String entityName;
     private final String dataFieldName;
     private final Map<String, Object> mapRepr;
-    
+
     protected SpecDataResEntityInfo(String dataResourceTypeId, String entityName, String dataFieldName, Map<String, Object> mapRepr) {
         this.dataResourceTypeId = dataResourceTypeId;
         this.entityName = entityName;
         this.dataFieldName = dataFieldName;
         this.mapRepr = mapRepr;
     }
-    
+
     public SpecDataResEntityInfo(String dataResourceTypeId, String entityName, String dataFieldName) {
         this.dataResourceTypeId = dataResourceTypeId;
         this.entityName = entityName;
         this.dataFieldName = dataFieldName;
         this.mapRepr = Collections.unmodifiableMap(toMap());
     }
-    
+
     public static SpecDataResEntityInfo fromDataResource(GenericValue dataResource) {
         return getDataResourceTypeIdMap().get(dataResource.getString("dataResourceTypeId"));
     }
-    
+
     public static List<SpecDataResEntityInfo> getEntityInfoList() {
         return entityInfoList;
     }
-    
+
     public static List<String> getEntityNameList() {
         return entityNameList;
     }
@@ -85,20 +85,20 @@ public class SpecDataResEntityInfo {
     public String getEntityName() { return entityName; }
     public String getDataFieldName() { return dataFieldName; }
     public Map<String, Object> asMap() { return mapRepr; }
-    
+
     public Map<String, ? super String> toMap(Map<String, ? super String> map) {
         map.put("dataResourceTypeId", getDataResourceTypeId());
         map.put("entityName", getEntityName());
         map.put("dataFieldName", getDataFieldName());
         return map;
     }
-    
-    public Map<String, Object> toMap() { 
+
+    public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         toMap(map);
         return map;
     }
-    
+
     /**
      * @deprecated too confusing; use {@link #getMediaResourceValuefromDataResource} instead.
      */
@@ -106,11 +106,11 @@ public class SpecDataResEntityInfo {
     public GenericValue getSpecValuefromDataResource(GenericValue dataResource, boolean useCache) throws GenericEntityException {
         return dataResource.getRelatedOne(getEntityName(), useCache);
     }
-    
+
     public GenericValue getMediaDataResourceFromDataResource(GenericValue dataResource, boolean useCache) throws GenericEntityException {
         return dataResource.getRelatedOne(getEntityName(), useCache);
     }
-    
+
     public static GenericValue getMediaDataResourceFromDataResourceStatic(GenericValue dataResource, boolean useCache) throws GenericEntityException {
         SpecDataResEntityInfo specDataResInfo = SpecDataResEntityInfo.fromDataResource(dataResource);
         if (specDataResInfo != null) {
@@ -118,7 +118,7 @@ public class SpecDataResEntityInfo {
         }
         return null;
     }
-    
+
     public static Map<String, SpecDataResEntityInfo> populateEntityInfoMap(Map<String, SpecDataResEntityInfo> map, String key, List<SpecDataResEntityInfo> list) {
         if (list != null) {
             for(SpecDataResEntityInfo entityInfo : list) {

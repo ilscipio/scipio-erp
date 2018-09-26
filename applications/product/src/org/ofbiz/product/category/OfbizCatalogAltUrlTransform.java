@@ -90,33 +90,33 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
         final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
 
         return new Writer(out) {
-            
+
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
                 buf.append(cbuf, off, len);
             }
-            
+
             @Override
             public void flush() throws IOException {
                 out.flush();
             }
-            
+
             @Override
             public void close() throws IOException {
                 try {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     HttpServletRequest request = ContextFtlUtil.getRequest(env); // SCIPIO
                     RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
-                    
+
                     final Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
                     final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: changed from boolean to Boolean
                     final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: new flag
-                    
+
                     String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
                     String productCategoryId = TransformUtil.getStringArg(args, "productCategoryId", rawParams);
                     String productId = TransformUtil.getStringArg(args, "productId", rawParams);
                     String url = "";
-                    
+
                     String viewSize = TransformUtil.getStringArg(args, "viewSize", rawParams);
                     String viewIndex = TransformUtil.getStringArg(args, "viewIndex", rawParams);
                     String viewSort = TransformUtil.getStringArg(args, "viewSort", rawParams);
@@ -129,12 +129,12 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
 
                     if (request != null) {
-                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams), 
-                                request, 
+                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams),
+                                request,
                                 null);
                         // SCIPIO: now delegated to our new reusable method
                         HttpServletResponse response = ContextFtlUtil.getResponse(env);
-                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, urlParams, targetWebappInfo, 
+                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, urlParams, targetWebappInfo,
                                 fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
                         if (url != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
@@ -143,11 +143,11 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         Map<String, Object> context = ContextFtlUtil.getContext(env);
                         Delegator delegator = ContextFtlUtil.getDelegator(request, env);
                         LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
-                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams), 
-                                null, 
+                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams),
+                                null,
                                 context);
                         // SCIPIO: now delegated to our new reusable method
-                        url = CatalogUrlFilter.makeCatalogAltLink(context, delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, 
+                        url = CatalogUrlFilter.makeCatalogAltLink(context, delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId,
                                 urlParams, targetWebappInfo, fullPath, secure, viewSize, viewIndex, viewSort, searchString);
                         if (url != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));

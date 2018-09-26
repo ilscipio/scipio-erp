@@ -53,7 +53,7 @@ public class CatalogWorker {
 
     private CatalogWorker () {}
 
-    
+
     /**
      * @deprecated - Use WebSiteWorker.getWebSiteId(ServletRequest) instead
      */
@@ -182,7 +182,7 @@ public class CatalogWorker {
             if (Debug.verboseOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId, module);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             if (saveTrail) {
-                // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
+                // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request,
                 // otherwise may lose work done by servlets and filters
                 //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
                 CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());
@@ -190,7 +190,7 @@ public class CatalogWorker {
         }
         return prodCatalogId;
     }
-    
+
     /**
      * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
      * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
@@ -202,7 +202,7 @@ public class CatalogWorker {
     public static String getCurrentCatalogId(ServletRequest request, boolean save) {
         return getCurrentCatalogId(request, save, save);
     }
-    
+
     /**
      * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
      * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
@@ -214,13 +214,13 @@ public class CatalogWorker {
     public static String getCurrentCatalogId(ServletRequest request) {
         return getCurrentCatalogId(request, true, true);
     }
-    
+
     /**
      * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
      * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
      * get the first catalog from the database as specified in getCatalogIdsAvailable().
      * If this behavior is undesired, give the user a selectable list of catalogs.
-     * SCIPIO: This variant only reads and does not store the catalogId (or anything else) 
+     * SCIPIO: This variant only reads and does not store the catalogId (or anything else)
      * back in session; intended for special purposes.
      * Added 2017-08-15.
      */
@@ -326,7 +326,7 @@ public class CatalogWorker {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: new overload that works with delegator instead of request.
      * Added 2017-11-09.
@@ -477,8 +477,8 @@ public class CatalogWorker {
             return null;
         }
     }
-    
-    
+
+
     /**
      * SCIPIO: Returns the first root best-sell category for the current catalog.
      */
@@ -492,8 +492,8 @@ public class CatalogWorker {
     public static String getCatalogBestSellCategoryId(ServletRequest request, String prodCatalogId) {
         return getCatalogFirstCategoryId(request, "PCCT_BEST_SELL", prodCatalogId);
     }
-    
-    
+
+
     /**
      * SCIPIO: Returns the first root best-sell category for the current catalog.
      */
@@ -517,7 +517,7 @@ public class CatalogWorker {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Imported from SolrCategoryUtil.
      * Added 2017-11-09.

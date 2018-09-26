@@ -284,7 +284,7 @@ public class ContentPermissionServices {
         }
         if (contentTo == null || contentFrom == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "ContentContentToOrFromIsNull", 
+                    "ContentContentToOrFromIsNull",
                     UtilMisc.toMap("contentTo", contentTo, "contentFrom", contentFrom), locale));
         }
         // boolean isMatch = false;

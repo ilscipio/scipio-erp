@@ -117,8 +117,8 @@ public class BOMServices {
      * It also updates the llc of all the product's descendants.
      * For the llc only the manufacturing bom ("MANUF_COMPONENT") is considered.
      * @param dctx the distach context
-     * @param context the context 
-     * @return the results of the updates the product's low level code 
+     * @param context the context
+     * @return the results of the updates the product's low level code
     */
     public static Map<String, Object> updateLowLevelCode(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -138,7 +138,7 @@ public class BOMServices {
         Long llc = null;
         try {
             GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
-            Map<String, Object> depthResult = dispatcher.runSync("getMaxDepth", 
+            Map<String, Object> depthResult = dispatcher.runSync("getMaxDepth",
                     UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
             llc = (Long)depthResult.get("depth");
             // If the product is a variant of a virtual, then the billOfMaterialLevel cannot be
@@ -185,7 +185,7 @@ public class BOMServices {
             }
             if (alsoVariants) {
                 List<GenericValue> variantProducts = EntityQuery.use(delegator).from("ProductAssoc")
-                        .where("productId", productId, 
+                        .where("productId", productId,
                                 "productAssocTypeId", "PRODUCT_VARIANT")
                         .filterByDate().queryList();
                 for (GenericValue oneVariantProductAssoc : variantProducts) {
@@ -208,8 +208,8 @@ public class BOMServices {
     /** Updates the product's low level code (llc) for all the products in the Product entity.
      * For the llc only the manufacturing bom ("MANUF_COMPONENT") is considered.
      * @param dctx the distach context
-     * @param context the context 
-     * @return the results of the updates the product's low level code 
+     * @param context the context
+     * @return the results of the updates the product's low level code
     */
     public static Map<String, Object> initLowLevelCode(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -250,8 +250,8 @@ public class BOMServices {
      * Useful to avoid loops when adding new assocs (components)
      * to a bill of materials.
      * @param dctx the distach context
-     * @param context the context 
-     * @return returns the ProductAssoc generic value for a duplicate productIdKey ancestor if present 
+     * @param context the context
+     * @return returns the ProductAssoc generic value for a duplicate productIdKey ancestor if present
      */
     public static Map<String, Object> searchDuplicatedAncestor(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -283,7 +283,7 @@ public class BOMServices {
      * configured bill of material tree.
      * Useful for tree traversal (breakdown, explosion, implosion).
      * @param dctx the distach context
-     * @param context the context 
+     * @param context the context
      * @return return the bill of material tree
      */
     public static Map<String, Object> getBOMTree(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -334,7 +334,7 @@ public class BOMServices {
      * if necessary configures it, and it returns its (possibly configured) components in
      * a List of {@link BOMNode}).
      * @param dctx the distach context
-     * @param context the context 
+     * @param context the context
      * @return return the list of manufacturing components
      */
     public static Map<String, Object> getManufacturingComponents(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -503,7 +503,7 @@ public class BOMServices {
             GenericValue orderShipment = null;
             try {
                 orderShipment = EntityQuery.use(delegator).from("OrderShipment")
-                        .where("shipmentId", shipmentId, 
+                        .where("shipmentId", shipmentId,
                                 "shipmentItemSeqId", shipmentItem.get("shipmentItemSeqId"))
                         .queryFirst();
             } catch (GenericEntityException e) {
@@ -736,7 +736,7 @@ public class BOMServices {
      * if necessary configures it, and it returns its (possibly configured) components in
      * a List of {@link BOMNode}).
      * @param dctx the distach context
-     * @param context the context 
+     * @param context the context
      * @return returns the list of products in packages
      */
     public static Map<String, Object> getProductsInPackages(DispatchContext dctx, Map<String, ? extends Object> context) {

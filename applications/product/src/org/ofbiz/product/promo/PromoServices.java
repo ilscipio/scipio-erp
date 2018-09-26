@@ -150,7 +150,7 @@ public class PromoServices {
             eli.close();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error removing expired ProductStorePromo records: " + e.toString(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPromoCodeCannotBeRemoved", UtilMisc.toMap("errorString", e.toString()), locale));
         }
 
@@ -164,7 +164,7 @@ public class PromoServices {
         // check the uploaded file
         ByteBuffer fileBytes = (ByteBuffer) context.get("uploadedFile");
         if (fileBytes == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPromoCodeImportUploadedFileNotValid", locale));
         }
 
@@ -227,7 +227,7 @@ public class PromoServices {
         if (errors.size() > 0) {
             return ServiceUtil.returnError(errors);
         } else if (lines == 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPromoCodeImportEmptyFile", locale));
         }
 
@@ -247,7 +247,7 @@ public class PromoServices {
         }
 
         byte[] wrapper = bytebufferwrapper.array();
-       
+
       // read the bytes into a reader
         BufferedReader reader = new BufferedReader(new StringReader(new String(wrapper, UtilIO.getUtf8())));
         List<Object> errors = new LinkedList<Object>();
@@ -290,7 +290,7 @@ public class PromoServices {
         if (errors.size() > 0) {
             return ServiceUtil.returnError(errors);
         } else if (lines == 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPromoCodeImportEmptyFile", locale));
         }
 

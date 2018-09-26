@@ -185,7 +185,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 Boolean isReturnBeforePickBool = (Boolean)node.get("isReturnBeforePick");
                 if (isReturnBeforePickBool != null && isReturnBeforePickBool) {
                     return TransformControl.SKIP_BODY;
-                }   
+                }
 
                 // GenericValue content = null;
                 ContentWorker.selectKids(node, traverseContext);

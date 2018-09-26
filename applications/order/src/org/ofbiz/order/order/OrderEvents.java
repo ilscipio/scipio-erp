@@ -113,9 +113,9 @@ public class OrderEvents {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         String  orderId = request.getParameter("orderId");
         String[] selectedItems = request.getParameterValues("selectedItem");
-        
-        
-        
+
+
+
         if (selectedItems != null) {
             for (String selectedItem : selectedItems) {
                 String [] orderItemSeqIdAndOrderItemShipGrpId = selectedItem.split(":");

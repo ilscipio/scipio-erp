@@ -70,7 +70,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
     public ProductContentWrapper(GenericValue entityValue, HttpServletRequest request) {
         super(entityValue, request);
     }
-    
+
     public ProductContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale, String mimeTypeId,
             boolean useCache) {
         super(dispatcher, entityValue, locale, mimeTypeId, useCache);
@@ -94,7 +94,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getProductContentAsText(product, productContentTypeId, locale, null, null, null, null, dispatcher, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -106,15 +106,15 @@ public class ProductContentWrapper extends CommonContentWrapper {
      * Gets content as text, with wrapper cache enabled.
      * SCIPIO: delegating.
      */
-    public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId, 
+    public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId,
             String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
         return getProductContentAsText(product, productContentTypeId, locale, mimeTypeId, partyId, roleTypeId, delegator, dispatcher, true, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
-    public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId, 
+    public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId,
             String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         if (product == null) {
             return null;
@@ -160,7 +160,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
     public static void getProductContentAsText(String productId, GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter) throws GeneralException, IOException {
         getProductContentAsText(productId, product, productContentTypeId, locale, mimeTypeId, partyId, roleTypeId, delegator, dispatcher, outWriter, true);
     }
-    
+
     public static void getProductContentAsText(String productId, GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter, boolean cache) throws GeneralException, IOException {
         if (productId == null && product != null) {
             productId = product.getString("productId");
@@ -194,7 +194,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
             ContentWorker.renderContentAsText(dispatcher, delegator, productContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, partyId, roleTypeId, cache);
             return;
         }
-        
+
         String candidateFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
         ModelEntity productModel = delegator.getModelEntity("Product");
         if (product == null) {
@@ -204,7 +204,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
             Debug.logWarning("No Product entity found for productId: " + productId, module);
             return;
         }
-        
+
         if (productModel.isField(candidateFieldName)) {
                 String candidateValue = product.getString(candidateFieldName);
                 if (UtilValidate.isNotEmpty(candidateValue)) {
@@ -244,7 +244,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
 
         String candidateFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
         ModelEntity productModel = delegator.getModelEntity("Product");
-        
+
         if (productModel.isField(candidateFieldName)) {
                 String candidateValue = product.getString(candidateFieldName);
                 if (UtilValidate.isNotEmpty(candidateValue)) {

@@ -185,7 +185,7 @@ In order ta make this service active add the following to the service definition
                                             rootContent = "HOME_DUCUMENT";
                                         }
                                         contentAssocs = EntityQuery.use(delegator).from("ContentAssoc")
-                                                .where("contentId", contentId, 
+                                                .where("contentId", contentId,
                                                         "contentIdTo", rootContent,
                                                         "contentAssocTypeId", "TREE_CHILD")
                                                 .queryList();

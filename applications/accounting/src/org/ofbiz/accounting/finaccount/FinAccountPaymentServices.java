@@ -114,16 +114,16 @@ public class FinAccountPaymentServices {
                     finAccount = FinAccountHelper.getFinAccountFromCode(finAccountCode, delegator);
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                             "AccountingFinAccountCannotLocateItFromAccountCode", locale));
                 }
             } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingFinAccountIdAndFinAccountCodeAreNull", locale));
             }
         }
         if (finAccount == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountIdInvalid", locale));
         }
 
@@ -155,7 +155,7 @@ public class FinAccountPaymentServices {
                 if ("Y".equals(finAccountSettings.getString("requirePinCode"))) {
                     if (!FinAccountHelper.validatePin(delegator, finAccountCode, finAccountPin)) {
                         Map<String, Object> result = ServiceUtil.returnSuccess();
-                        result.put("authMessage", UtilProperties.getMessage(resourceError, 
+                        result.put("authMessage", UtilProperties.getMessage(resourceError,
                                 "AccountingFinAccountPinCodeCombinatorNotFound", locale));
                         result.put("authResult", Boolean.FALSE);
                         result.put("processAmount", amount);
@@ -171,8 +171,8 @@ public class FinAccountPaymentServices {
             // check for expiration date
             if ((finAccount.getTimestamp("thruDate") != null) && (finAccount.getTimestamp("thruDate").before(UtilDateTime.nowTimestamp()))) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
-                result.put("authMessage", UtilProperties.getMessage(resourceError, 
-                        "AccountingFinAccountExpired", 
+                result.put("authMessage", UtilProperties.getMessage(resourceError,
+                        "AccountingFinAccountExpired",
                         UtilMisc.toMap("thruDate", finAccount.getTimestamp("thruDate")), locale));
                 result.put("authResult", Boolean.FALSE);
                 result.put("processAmount", amount);
@@ -192,13 +192,13 @@ public class FinAccountPaymentServices {
                 if ("FNACT_NEGPENDREPL".equals(statusId) || "FNACT_MANFROZEN".equals(statusId) || "FNACT_CANCELLED".equals(statusId)) {
                     Map<String, Object> result = ServiceUtil.returnSuccess();
                     if ("FNACT_NEGPENDREPL".equals(statusId)) {
-                        result.put("authMessage", UtilProperties.getMessage(resourceError, 
+                        result.put("authMessage", UtilProperties.getMessage(resourceError,
                                 "AccountingFinAccountNegative", locale));
                     } else if ("FNACT_MANFROZEN".equals(statusId)) {
-                        result.put("authMessage", UtilProperties.getMessage(resourceError, 
+                        result.put("authMessage", UtilProperties.getMessage(resourceError,
                                 "AccountingFinAccountFrozen", locale));
                     } else if ("FNACT_CANCELLED".equals(statusId)) {
-                        result.put("authMessage", UtilProperties.getMessage(resourceError, 
+                        result.put("authMessage", UtilProperties.getMessage(resourceError,
                                 "AccountingFinAccountCancelled", locale));
                     }
                     result.put("authResult", Boolean.FALSE);
@@ -274,13 +274,13 @@ public class FinAccountPaymentServices {
             return result;
         } catch (GenericEntityException ex) {
             Debug.logError(ex, "Cannot authorize financial account", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountCannotBeAuthorized", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingFinAccountCannotBeAuthorized",
                     UtilMisc.toMap("errorString", ex.getMessage()), locale));
         } catch (GenericServiceException ex) {
             Debug.logError(ex, "Cannot authorize financial account", module);
-         return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountCannotBeAuthorized", 
+         return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingFinAccountCannotBeAuthorized",
                     UtilMisc.toMap("errorString", ex.getMessage()), locale));
         }
     }
@@ -297,7 +297,7 @@ public class FinAccountPaymentServices {
             // expire the related financial authorization transaction
             GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(paymentPref);
             if (authTransaction == null) {
-                return ServiceUtil.returnError(err + UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(err + UtilProperties.getMessage(resourceError,
                         "AccountingFinAccountCannotFindAuthorization", locale));
             }
 
@@ -336,7 +336,7 @@ public class FinAccountPaymentServices {
             authTrans = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
         if (authTrans == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountCannotCapture", locale));
         }
 
@@ -364,16 +364,16 @@ public class FinAccountPaymentServices {
         // make sure authorization has not expired
         Timestamp authExpiration = finAccountAuth.getTimestamp("thruDate");
         if ((authExpiration != null) && (authExpiration.before(UtilDateTime.nowTimestamp()))) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountAuthorizationExpired", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingFinAccountAuthorizationExpired",
                     UtilMisc.toMap("paymentGatewayResponseId", authTrans.getString("paymentGatewayResponseId"),
                             "authExpiration", authExpiration), locale));
         }
 
         // make sure the fin account itself has not expired
         if ((finAccount.getTimestamp("thruDate") != null) && (finAccount.getTimestamp("thruDate").before(UtilDateTime.nowTimestamp()))) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountExpired", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingFinAccountExpired",
                     UtilMisc.toMap("thruDate", finAccount.getTimestamp("thruDate")), locale));
         }
         String finAccountId = finAccount.getString("finAccountId");
@@ -477,7 +477,7 @@ public class FinAccountPaymentServices {
         }
 
         if (finAccountId == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", ""), locale));
         }
 
@@ -547,7 +547,7 @@ public class FinAccountPaymentServices {
 
         // validate the amount
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountMustBePositive", locale));
         }
 
@@ -561,14 +561,14 @@ public class FinAccountPaymentServices {
 
         // verify we have a financial account
         if (finAccount == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", ""), locale));
         }
 
         // make sure the fin account itself has not expired
         if ((finAccount.getTimestamp("thruDate") != null) && (finAccount.getTimestamp("thruDate").before(UtilDateTime.nowTimestamp()))) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountExpired", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingFinAccountExpired",
                     UtilMisc.toMap("thruDate", finAccount.getTimestamp("thruDate")), locale));
         }
 
@@ -643,20 +643,20 @@ public class FinAccountPaymentServices {
             finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", finAccountId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", finAccountId), locale));
         }
 
         // verify we have a financial account
         if (finAccount == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", ""), locale));
         }
 
         // make sure the fin account itself has not expired
         if ((finAccount.getTimestamp("thruDate") != null) && (finAccount.getTimestamp("thruDate").before(UtilDateTime.nowTimestamp()))) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountExpired", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingFinAccountExpired",
                     UtilMisc.toMap("thruDate", finAccount.getTimestamp("thruDate")), locale));
         }
         Debug.logInfo("Deposit into financial account #" + finAccountId + " [" + amount + "]", module);
@@ -724,7 +724,7 @@ public class FinAccountPaymentServices {
             return ServiceUtil.returnError(e.getMessage());
         }
         if (finAccount == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", finAccountId), locale));
         }
         String currency = finAccount.getString("currencyUomId");
@@ -748,7 +748,7 @@ public class FinAccountPaymentServices {
         if (productStoreId == null) {
             productStoreId = getLastProductStoreId(delegator, finAccountId);
             if (productStoreId == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingFinAccountCannotBeReplenish", locale));
             }
         }
@@ -811,7 +811,7 @@ public class FinAccountPaymentServices {
             //the deposit is replenish-level itself
             depositAmount = replenishLevel;
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountUnknownReplenishMethod", locale));
         }
 
@@ -827,7 +827,7 @@ public class FinAccountPaymentServices {
         String paymentMethodId = finAccount.getString("replenishPaymentId");
         if (paymentMethodId == null) {
             Debug.logWarning("finAccountReplenish Warning: No payment method (replenishPaymentId) attached to financial account [" + finAccountId + "] cannot auto-replenish", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNoPaymentMethodAssociatedWithReplenishAccount", locale));
         }
 
@@ -841,7 +841,7 @@ public class FinAccountPaymentServices {
         if (paymentMethod == null) {
             // no payment methods on file; cannot replenish
             Debug.logWarning("finAccountReplenish Warning: No payment method found for ID [" + paymentMethodId + "] for party [" + ownerPartyId + "] cannot auto-replenish", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNoPaymentMethodAssociatedWithReplenishAccount", locale));
         }
 

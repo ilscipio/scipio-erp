@@ -108,7 +108,7 @@ public class OrderServices {
         m.put("shipToCustomerPartyId", "SHIP_TO_CUSTOMER");
         m.put("endUserCustomerPartyId", "END_USER_CUSTOMER");
         salesAttributeRoleMap = m;
-        
+
         m = new HashMap<>();
         m.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
         m.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
@@ -1644,7 +1644,7 @@ public class OrderServices {
 
                     if (resetResult != null && ServiceUtil.isError(resetResult)) {
                         Debug.logWarning(UtilProperties.getMessage(resource_error,
-                                "OrderErrorCannotResetOrderTotals", 
+                                "OrderErrorCannotResetOrderTotals",
                                 UtilMisc.toMap("orderId", orderId, "resetResult", ServiceUtil.getErrorMessage(resetResult)), locale), module);
                     } else {
                         Debug.logInfo("No orders found for reset processing", module);
@@ -2874,7 +2874,7 @@ public class OrderServices {
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
                     "OrderServiceExceptionSeeLogs",locale));
         }
 
@@ -4900,7 +4900,7 @@ public class OrderServices {
 
     /**
      * Service to create a payment using an order payment preference.
-     * 
+     *
      * @return Map
      */
     public static Map<String, Object> createPaymentFromPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -5411,7 +5411,7 @@ public class OrderServices {
     /**
      * Generates a product requirement for the total cancelled quantity over all
      * order items for each product
-     * 
+     *
      * @param dctx
      *            the dispatch context
      * @param context
@@ -5492,7 +5492,7 @@ public class OrderServices {
     /**
      * Cancels remaining (unreceived) quantities for items of an order. Does not
      * consider received-but-rejected quantities.
-     * 
+     *
      * @param dctx
      *            the dispatch context
      * @param context
@@ -5727,7 +5727,7 @@ public class OrderServices {
      * percentage of the items total that the item represents to the order-level
      * adjustments total (also via OrderAdjustmentBilling). Also returns the
      * quantity invoiced for the item over all invoices, to aid in prorating.
-     * 
+     *
      * @param dctx
      *            DispatchContext
      * @param context
@@ -5946,7 +5946,7 @@ public class OrderServices {
         } catch (GenericTransactionException e1) {
             Debug.logError(e1, "[Delegator] Could not begin transaction: " + e1.toString(), module);
         }
-        
+
         try (EntityListIterator eli = EntityQuery.use(delegator).from("Subscription").where(exprs).queryIterator()) {
 
             if (eli != null) {
@@ -6162,7 +6162,7 @@ public class OrderServices {
 
     /**
      * Remove an OrderItemShipGroup record
-     * 
+     *
      * @param ctx
      * @param context:
      *            a map containing in paramaters
@@ -6195,7 +6195,7 @@ public class OrderServices {
 
     /**
      * Create orderItem and shipGroup association
-     * 
+     *
      * @param dctx
      * @param context
      * @return
@@ -6468,7 +6468,7 @@ public class OrderServices {
      * OrderItemShipGroupAssocs quantities if not then get the last
      * orderItemShipgroupAssoc estimated shipDate and add quantity to this
      * OrderItemShipGroupAssoc
-     * 
+     *
      * @param ctx
      * @param context
      * @return
@@ -6623,7 +6623,7 @@ public class OrderServices {
                             .where(cond)
                             .orderBy("entryDate ASC")
                             .queryIterator()){
-                        
+
                         GenericValue orderHeader;
                         while ((orderHeader = eli.next()) != null) {
                             orderIds.add(orderHeader.getString("orderId"));

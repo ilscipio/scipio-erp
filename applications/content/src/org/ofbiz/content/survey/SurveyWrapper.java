@@ -193,7 +193,7 @@ public class SurveyWrapper {
         if (this.templateContext == null) {
             this.templateContext = new HashMap<String, Object>();
         }
-        
+
         // SCIPIO: create local context that includes parent context.
         Map<String, Object> templateContext = new HashMap<String, Object>();
         if (parentContext != null) {

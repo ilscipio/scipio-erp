@@ -120,7 +120,7 @@ public class ProductSearchSession {
                 productSearchOptions.changed = true;
             }
         }
-        
+
         /**
          * SCIPIO: Removes constraints by class type.
          * Added 2017-09-14.
@@ -313,7 +313,7 @@ public class ProductSearchSession {
             }
             return constraintStrings;
         }
-        
+
         /**
          * SCIPIO: Returns (only) the keyword constraints.
          * Added 2017-08-24.
@@ -321,7 +321,7 @@ public class ProductSearchSession {
         public List<KeywordConstraint> getKeywordConstraints() {
             return getConstraintsByType(KeywordConstraint.class);
         }
-        
+
         /**
          * SCIPIO: Returns (only) the constraints of the given class.
          * Added 2017-08-24.
@@ -329,14 +329,14 @@ public class ProductSearchSession {
         public <T extends ProductSearchConstraint> List<T> getConstraintsByType(Class<T> constraintCls) {
             return Collections.unmodifiableList(extractConstraints(getConstraintList(), constraintCls));
         }
-        
+
         /**
          * SCIPIO: Returns (only) the constraints of specified class.
          * Added 2017-08-24.
          */
         @SuppressWarnings("unchecked")
         protected static <T> List<T> extractConstraints(List<? extends ProductSearchConstraint> contraintList, Class<T> constraintCls) {
-            List<T> kwcList = new ArrayList<>(); 
+            List<T> kwcList = new ArrayList<>();
             if (contraintList != null) {
                 for(ProductSearchConstraint constraint : contraintList) {
                     if (constraintCls.isAssignableFrom(constraint.getClass())) kwcList.add((T) constraint);
@@ -591,8 +591,8 @@ public class ProductSearchSession {
                     Debug.logError(e, "Error removing constraint [" + removeConstraint + "]", module);
                 }
             }
-            
-            // SCIPIO: partial functionality to replace in-place, added 2017-09-14 
+
+            // SCIPIO: partial functionality to replace in-place, added 2017-09-14
             // TODO: INCOMPLETE: only a few parameters below support this!
             replaceConstraints = UtilMisc.booleanValueIndicator(parameters.get("replaceConstraints"), false);
         }
@@ -669,7 +669,7 @@ public class ProductSearchSession {
             if (replaceConstraints) {
                 ProductSearchOptions.removeConstraintsByType(ProductSearch.KeywordConstraint.class, session);
             }
-            
+
             String keywordString = (String) parameters.get("SEARCH_STRING");
             String searchOperator = (String) parameters.get("SEARCH_OPERATOR");
             // defaults to true/Y, ie anything but N is true/Y
@@ -1007,7 +1007,7 @@ public class ProductSearchSession {
                             .cursorScrollInsensitive()
                             .distinct()
                         .maxRows(highIndex);
-                
+
                 try (EntityListIterator pli = eq.queryIterator()) {
                     addOnTopProductCategoryMembers = pli.getPartialList(lowIndex, viewSize);
                     addOnTopListSize = addOnTopProductCategoryMembers.size();
@@ -1039,17 +1039,17 @@ public class ProductSearchSession {
             productSearchContext.setResultSortOrder(resultSortOrder);
             productSearchContext.setResultOffset(resultOffset);
             productSearchContext.setMaxResults(maxResults);
-            
+
             if (UtilValidate.isNotEmpty(keywordTypeIds)) {
                 productSearchContext.keywordTypeIds = keywordTypeIds;
             } else {
                  productSearchContext.keywordTypeIds = UtilMisc.toList("KWT_KEYWORD");
             }
-            
+
             if (UtilValidate.isNotEmpty(statusId)) {
                 productSearchContext.statusId = statusId;
             }
-            
+
             List<String> foundProductIds = productSearchContext.doSearch();
             if (maxResultsInt > 0) {
                 productIds.addAll(foundProductIds);

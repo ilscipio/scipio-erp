@@ -540,7 +540,7 @@ public class ContactMechWorker {
         }
         return null;
     }
-    
+
     /** Returns the first valid FacilityContactMech found based on the given facilityId and a prioritized list of purposes, using entity cache.
      * SCIPIO: 2017-12-19: now delegating with useCache=true.
      * @param delegator the delegator
@@ -551,17 +551,17 @@ public class ContactMechWorker {
     public static GenericValue getFacilityContactMechByPurpose(Delegator delegator, String facilityId, List<String> purposeTypes) {
         return getFacilityContactMechByPurpose(delegator, facilityId, purposeTypes, true);
     }
-    
+
     /**
      * SCIPIO: Finds the latest FacilityContactMech for each given purpose or for all purposes if not specified.
      * Added 2018-02-01.
-     * @throws GenericEntityException 
+     * @throws GenericEntityException
      */
     public static Map<String, GenericValue> getFacilityContactMechsByPurpose(Delegator delegator, String facilityId, Collection<String> purposeTypes, boolean useCache) throws GenericEntityException {
         if (UtilValidate.isEmpty(facilityId)) return null;
 
         java.sql.Timestamp moment = UtilDateTime.nowTimestamp();
-        
+
         // Simply lookup all active FacilityContactMechPurpose and filter after, will tend to be faster this way
         List<GenericValue> facilityContactMechPurposes = EntityQuery.use(delegator).from("FacilityContactMechPurpose")
                 .where("facilityId", facilityId)
@@ -569,7 +569,7 @@ public class ContactMechWorker {
                 .cache(useCache)
                 .filterByDate(moment)
                 .queryList();
-        
+
         Map<String, GenericValue> results = new HashMap<>();
         for(GenericValue facilityContactMechPurpose: facilityContactMechPurposes) {
             String contactMechPurposeTypeId = facilityContactMechPurpose.getString("contactMechPurposeTypeId");
@@ -580,7 +580,7 @@ public class ContactMechWorker {
                 //Debug.logWarning("Facility '" + facilityId + "' has two or more active contact mechs with same purpose: " + contactMechPurposeTypeId, module);
                 continue;
             }
-            
+
             String contactMechId = facilityContactMechPurpose.getString("contactMechId");
             // NOTE: this appears redundant, but must validate fromDate/thruDate on this too
             GenericValue facilityContactMech = EntityQuery.use(delegator).from("FacilityContactMech")
@@ -595,12 +595,12 @@ public class ContactMechWorker {
         }
         return results;
     }
-    
+
     /**
      * SCIPIO: Finds the latest Facility PostalAddress for each given purpose or for all purposes if not specified.
      * NOTE: This uses some optimizations, so not guaranteed to check the full validity of each record (common operations).
      * Added 2018-02-01.
-     * @throws GenericEntityException 
+     * @throws GenericEntityException
      */
     public static Map<String, GenericValue> getFacilityPostalAddressesByPurpose(Delegator delegator, String facilityId, Collection<String> purposeTypes, boolean useCache) throws GenericEntityException {
         if (UtilValidate.isEmpty(facilityId)) return null;
@@ -624,7 +624,7 @@ public class ContactMechWorker {
         }
         return results;
     }
-    
+
     public static void getFacilityContactMechAndRelated(ServletRequest request, String facilityId, Map<String, Object> target) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
@@ -1071,7 +1071,7 @@ public class ContactMechWorker {
 
     /**
      * Returns a <b>PostalAddress</b> <code>GenericValue</code> as a URL encoded <code>String</code>.
-     * 
+     *
      * @param postalAddress A <b>PostalAddress</b> <code>GenericValue</code>.
      * @return A URL encoded <code>String</code>.
      * @throws GenericEntityException

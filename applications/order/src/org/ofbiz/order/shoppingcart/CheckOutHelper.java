@@ -362,7 +362,7 @@ public class CheckOutHelper {
                     inf.securityCode = securityCode;
                 }
             }
-        } else { // if (cart.getGrandTotal().compareTo(BigDecimal.ZERO) != 0) 
+        } else { // if (cart.getGrandTotal().compareTo(BigDecimal.ZERO) != 0)
             // SCIPIO: 2016-04-21: This is patched so that storefront and backend processes can be tweaked
             // and also will have same behavior. The default here is changed to Y so that the backend
             // functions the same as the frontend, and default Y is chosen because it is the most "safe" default
@@ -905,7 +905,7 @@ public class CheckOutHelper {
         if (shipAddress == null) {
             Debug.logWarning("Not calculating tax for new order because there is no shipping address, no billing address, and no address on the origin facility [" + originFacilityId + "]", module);
         }
-        
+
         Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("productStoreId", cart.getProductStoreId());
         serviceContext.put("payToPartyId", cart.getBillFromVendorPartyId());
         serviceContext.put("billToPartyId", cart.getBillToCustomerPartyId());
@@ -1431,7 +1431,7 @@ public class CheckOutHelper {
     }
     public Map<String, Object> finalizeOrderEntryOptions(int shipGroupIndex, String shippingMethod, String shippingInstructions, String maySplit,
             String giftMessage, String isGift, String internalCode, String shipBeforeDate, String shipAfterDate, String internalOrderNotes, String shippingNotes) {
-        
+
         Map<String, Object> result = ServiceUtil.returnSuccess();
 
         String errMsg=null;
@@ -1573,12 +1573,12 @@ public class CheckOutHelper {
 
         // payment by billing account only requires more checking
         List<String> paymentMethods = cart.getPaymentMethodIds();
-        
+
         // SCIPIO: Patched: We want to consider the pay meths that have no paymentMethodIds!
         // WARN: we are changing the definition of paymentMethods by doing this; some code may need to use paymentMethodsWithPaymentMethodId instead
         //List<String> paymentMethodsWithPaymentMethodId = cart.getPaymentMethodIds();
         paymentMethods.addAll(cart.getPaymentMethodTypeIdsNoPaymentMethodIds()); // add offline, cod, etc, so they can auto calculate totals
-        
+
         List<String> paymentTypes = cart.getPaymentMethodTypeIds();
         if (paymentTypes.contains("EXT_BILLACT") && paymentTypes.size() == 1 && (paymentMethods.size() == 0 || (paymentMethods.size() == 1 && paymentMethods.contains("EXT_BILLACT")))) { // SCIPIO: length 1 check added
             if (cart.getGrandTotal().compareTo(availableAmount) > 0) {
@@ -1629,7 +1629,7 @@ public class CheckOutHelper {
 
         BigDecimal selectedPaymentTotal = selectedPmnt.setScale(scale, rounding);
         BigDecimal requiredAmount = reqAmtPreParse.setScale(scale, rounding);
-        
+
         if (UtilValidate.isNotEmpty(paymentMethods) && requiredAmount.compareTo(selectedPaymentTotal) > 0) {
             Debug.logError("Required Amount : " + requiredAmount + " / Selected Amount : " + selectedPaymentTotal, module);
             errMsg = UtilProperties.getMessage(resource_error, "checkevents.payment_not_cover_this_order", (cart != null ? cart.getLocale() : Locale.getDefault()));
@@ -1658,7 +1658,7 @@ public class CheckOutHelper {
         }
         return ServiceUtil.returnSuccess();
     }
-    
+
     /**
      * SCIPIO: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
      * other words the cart payments in current state can effectively be used to pay for the order.
@@ -1667,7 +1667,7 @@ public class CheckOutHelper {
      * total equals exactly the grand total. Due to stock code function, this is only true after a successful
      * call to {@link CheckOutHelper#validatePaymentMethods} (WARN: it is NOT necessarily true after a call to
      * {@link CheckOutHelper#setCheckOutPayment}!).
-     * 
+     *
      * @see CheckOutHelper#validatePaymentMethods()
      */
     public static boolean isPaymentsAdequate(ShoppingCart cart) {
@@ -1676,10 +1676,10 @@ public class CheckOutHelper {
 
         BigDecimal selectedPaymentTotal = selectedPmnt.setScale(scale, rounding);
         BigDecimal requiredAmount = reqAmtPreParse.setScale(scale, rounding);
-        
+
         return (requiredAmount.compareTo(selectedPaymentTotal) == 0);
     }
-    
+
     /**
      * SCIPIO: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
      * other words the cart payments in current state can effectively be used to pay for the order.
@@ -1739,7 +1739,7 @@ public class CheckOutHelper {
             }
         }
     }
-    
+
     public String cleanVerifyEmailListToString(String emailListString, List<String> errorMessages) {
         List<String> emailList = cleanVerifyEmailList(emailListString, errorMessages);
         if (emailList != null) {
@@ -1748,7 +1748,7 @@ public class CheckOutHelper {
             return null;
         }
     }
-    
+
     public List<String> cleanVerifyEmailList(String emailListString, List<String> errorMessages) {
         List<String> res = null;
         if (emailListString != null) {

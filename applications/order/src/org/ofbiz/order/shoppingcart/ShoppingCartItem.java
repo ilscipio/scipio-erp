@@ -154,7 +154,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private List<GenericValue> featuresForSupplier = new LinkedList<GenericValue>();
 
     /**
-     * SCIPIO: A parameter structure to help manage new options to the extremely 
+     * SCIPIO: A parameter structure to help manage new options to the extremely
      * overloaded factory methods below.
      * <p>
      * DEV NOTE: Add arguments to this instead of making more insane overloads.
@@ -162,7 +162,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      */
     public static class ExtraPurchaseOrderInitArgs {
         public static final ExtraPurchaseOrderInitArgs DEFAULT = new ExtraPurchaseOrderInitArgs();
-        
+
         /**
          * If set, initializes the orderItemAttributes in the item early in creation
          * to give better access to code during construction.
@@ -185,7 +185,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             return this;
         }
     }
-    
+
     /**
      * Makes a ShoppingCartItem for a purchase order item and adds it to the cart.
      * NOTE: This method will get the product entity and check to make sure it can be purchased.
@@ -302,12 +302,12 @@ public class ShoppingCartItem implements java.io.Serializable {
             Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup,
             LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate, Timestamp cancelBackOrderDate)
                 throws CartItemModifyException, ItemNotFoundException {
-        return makePurchaseOrderItem(cartLocation, productId, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, supplierProduct, 
+        return makePurchaseOrderItem(cartLocation, productId, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, supplierProduct,
                 shipBeforeDate, shipAfterDate, cancelBackOrderDate, null);
     }
 
     /**
-     * SCIPIO: A parameter structure to help manage new options to the extremely 
+     * SCIPIO: A parameter structure to help manage new options to the extremely
      * overloaded factory methods below.
      * <p>
      * DEV NOTE: Add arguments to this instead of making more insane overloads.
@@ -315,7 +315,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      */
     public static class ExtraInitArgs {
         public static final ExtraInitArgs DEFAULT = new ExtraInitArgs();
-        
+
         /**
          * If set, initializes the orderItemAttributes in the item early in creation
          * to give better access to code during construction.
@@ -385,7 +385,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * Makes a ShoppingCartItem and adds it to the cart.
      * <p>
      * SCIPIO: 2018-07-17: Now accepts {@link ExtraInitArgs} and initializes orderItemAttributes early.
-     * 
+     *
      * @param accommodationMapId Optional. reservations add into workeffort
      * @param accommodationSpotId Optional. reservations add into workeffort
      */
@@ -421,7 +421,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper,
             String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, String parentProductId, Boolean skipInventoryChecks, Boolean skipProductChecks)
             throws CartItemModifyException, ItemNotFoundException {
-        return makeItem(cartLocation, productId, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, attributes, prodCatalogId, 
+        return makeItem(cartLocation, productId, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, attributes, prodCatalogId,
                 configWrapper, itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool, triggerPriceRulesBool, parentProductId, skipInventoryChecks, skipProductChecks, null);
     }
 
@@ -464,7 +464,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                quantity,unitPrice,reservStart,reservLength,reservPersons,
                null,null,shipBeforeDate,shipAfterDate,additionalProductFeatureAndAppls,attributes,
                prodCatalogId,configWrapper,itemType,itemGroup,dispatcher,cart,
-               triggerExternalOpsBool,triggerPriceRulesBool,parentProduct,skipInventoryChecks,skipProductChecks, 
+               triggerExternalOpsBool,triggerPriceRulesBool,parentProduct,skipInventoryChecks,skipProductChecks,
                null); // SCIPIO: 2018-07-17: point to new overload
     }
 
@@ -472,7 +472,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * Makes a ShoppingCartItem and adds it to the cart.
      * <p>
      * SCIPIO: 2018-07-17: Now accepts {@link ExtraInitArgs} and initializes orderItemAttributes early.
-     * 
+     *
      * @param accommodationMapId Optional. reservations add into workeffort
      * @param accommodationSpotId Optional. reservations add into workeffort
     */
@@ -488,7 +488,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // SCIPIO: 2018-07-17: now setting orderItemAttributes as early as possible
         newItem.setOrderItemAttributes(extraInitArgs != null ? extraInitArgs.getOrderItemAttributes() : null);
-        
+
         selectedAmount = selectedAmount == null ? BigDecimal.ZERO : selectedAmount;
         unitPrice = unitPrice == null ? BigDecimal.ZERO : unitPrice;
         reservLength = reservLength == null ? BigDecimal.ZERO : reservLength;
@@ -607,7 +607,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             Timestamp shipBeforeDate, Timestamp shipAfterDate, Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes,
             String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher,
             ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, GenericValue parentProduct, Boolean skipInventoryChecks, Boolean skipProductChecks) throws CartItemModifyException {
-        return makeItem(cartLocation, product, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, 
+        return makeItem(cartLocation, product, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls,
                 attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool, triggerPriceRulesBool, parentProduct, skipInventoryChecks, skipProductChecks,
                 null);
     }
@@ -1189,10 +1189,10 @@ public class ShoppingCartItem implements java.io.Serializable {
                 }else{
                     priceContext.put("product", this.getProduct());
                 }
-                
+
                 priceContext.put("quantity", this.getQuantity());
                 priceContext.put("amount", this.getSelectedAmount());
-                
+
                 if ("PURCHASE_ORDER".equals(cart.getOrderType())) {
                     priceContext.put("currencyUomId", cart.getCurrency());
                     Map<String, Object> priceResult = dispatcher.runSync("calculatePurchasePrice", priceContext);
@@ -1203,13 +1203,13 @@ public class ShoppingCartItem implements java.io.Serializable {
                     if (!validPriceFound) {
                         throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "] and supplier with ID [" + partyId + "], not adding to cart.");
                     }
-                    
+
                     if(isAlternativePacking){
                         this.setBasePrice(((BigDecimal) priceResult.get("price")).divide(pieces, RoundingMode.HALF_UP));
                     }else{
                         this.setBasePrice(((BigDecimal) priceResult.get("price")));
                     }
-                    
+
                     this.setDisplayPrice(this.basePrice);
                     this.orderItemPriceInfos = UtilGenerics.checkList(priceResult.get("orderItemPriceInfos"));
                 } else {
@@ -1264,7 +1264,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                     if (Boolean.FALSE.equals(validPriceFound)) {
                         throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "], not adding to cart.");
                     }
-                    
+
                     //set alternative product price
                     if(isAlternativePacking){
                         int decimals = 2;
@@ -1295,10 +1295,10 @@ public class ShoppingCartItem implements java.io.Serializable {
                         if (priceResult.get("price") != null) {
                             this.setDisplayPrice(((BigDecimal) priceResult.get("price")));
                         }
-                        
+
                         this.setSpecialPromoPrice((BigDecimal) priceResult.get("specialPromoPrice"));
                     }
-                    
+
                     this.orderItemPriceInfos = UtilGenerics.checkList(priceResult.get("orderItemPriceInfos"));
 
                     // If product is configurable, the price is taken from the configWrapper.
@@ -2294,7 +2294,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.orderItemAttributes.put(name, value);
     }
 
-    /** 
+    /**
      * SCIPIO: Creates an OrderItemAttribute entry for each one in the given map.
      * Code originally from ShoppingCart.addOrIncreaseItem.
      * Added 2018-07-17.

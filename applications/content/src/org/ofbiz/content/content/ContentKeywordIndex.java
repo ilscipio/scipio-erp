@@ -54,7 +54,7 @@ public class ContentKeywordIndex {
 
     public static void indexKeywords(GenericValue content, boolean doAll) throws GenericEntityException {
         if (content == null) return;
-        
+
         Delegator delegator = content.getDelegator();
         if (delegator == null) return;
         String contentId = content.getString("contentId");

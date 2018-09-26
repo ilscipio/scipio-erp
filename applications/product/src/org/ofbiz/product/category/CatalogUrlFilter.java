@@ -64,7 +64,7 @@ import org.ofbiz.webapp.control.RequestLinkUtil;
 public class CatalogUrlFilter extends ContextFilter {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(HttpServletRequest)}.
      */
@@ -72,10 +72,10 @@ public class CatalogUrlFilter extends ContextFilter {
     public static final String CONTROL_MOUNT_POINT = "control";
     public static final String PRODUCT_REQUEST = "product";
     public static final String CATEGORY_REQUEST = "category";
-    
+
     protected static String defaultLocaleString = null;
     protected static String redirectUrl = null;
-    
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -90,12 +90,12 @@ public class CatalogUrlFilter extends ContextFilter {
         String initRedirectUrl = config.getInitParameter("redirectUrl");
         defaultLocaleString = UtilValidate.isNotEmpty(initDefaultLocalesString) ? initDefaultLocalesString : "";
         redirectUrl = UtilValidate.isNotEmpty(initRedirectUrl) ? initRedirectUrl : "";
-        
+
         String pathInfo = httpRequest.getServletPath();
         if (UtilValidate.isNotEmpty(pathInfo)) {
             List<String> pathElements = StringUtil.split(pathInfo, "/");
             String alternativeUrl = pathElements.get(0);
-            
+
             String productId = null;
             String productCategoryId = null;
             String urlContentId = null;
@@ -108,33 +108,33 @@ public class CatalogUrlFilter extends ContextFilter {
             } catch (GenericEntityException e) {
                 Debug.logWarning("Cannot look for product and product category: " + e.getMessage(), module);
             }
-            
+
             // SCIPIO: 2017-11-07: this ID check was previously much further below, but has been moved here to lower the needless overhead
             if (UtilValidate.isNotEmpty(productId) || UtilValidate.isNotEmpty(productCategoryId) || UtilValidate.isNotEmpty(urlContentId)) {
-            
-                // SCIPIO: FIXME?: The code below also is only equivalent to makeDefaultCategoryTrailElements, 
+
+                // SCIPIO: FIXME?: The code below also is only equivalent to makeDefaultCategoryTrailElements,
                 // which is it will only look up a default path under the top category, which is generally
                 // not desirable but accepted for simple shops.
-                
+
                 // SCIPIO: get default category for product
                 if (UtilValidate.isNotEmpty(productId) && UtilValidate.isEmpty(productCategoryId)) {
                     // SCIPIO: factored out
                     productCategoryId = getProductDefaultCategoryId(delegator, productId);
                 }
-    
-                // SCIPIO: 2016-03-22: FIXME?: the getCatalogTopCategory call below 
+
+                // SCIPIO: 2016-03-22: FIXME?: the getCatalogTopCategory call below
                 // is currently left unchanged, but note that because of it,
                 // currently CatalogUrlFilter/ofbizCatalogAltUrl force browsing toward only the main top catalog category.
                 // It does not allow browsing any other top categories (best-selling, promotions, etc.).
                 // In some cases this is desirable, in others not.
-                
+
                 // generate trail belong to a top category
                 // SCIPIO: 2017-08-15: this call is inappropriate; see method for details
                 //String topCategoryId = CategoryWorker.getCatalogTopCategory(httpRequest, null);
                 String topCategoryId = getCatalogTopCategory(httpRequest);
                 List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(httpRequest, "trailCategories", topCategoryId, false, false, true);
                 List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
-                
+
                 // look for productCategoryId from productId
                 if (UtilValidate.isNotEmpty(productId)) {
                     // SCIPIO: factored out
@@ -143,28 +143,28 @@ public class CatalogUrlFilter extends ContextFilter {
                         productCategoryId = catId;
                     }
                 }
-    
+
                 // SCIPIO: 2016-03-22: FIXME?: The loop below was found to cause invalid category paths in SOLR addToSolr
                 // (was very similar code) and had to be fixed there. I think there is a chance there may be bugs here as well,
                 // but I'm not certain.
-                
+
                 // generate trail elements from productCategoryId
                 if (UtilValidate.isNotEmpty(productCategoryId)) {
                     // SCIPIO: 2017-11-07: factored out.
                     getTrailElementsAndUpdateRequestAndTrail(httpRequest, delegator, productId, productCategoryId, trailCategoryIds, topCategoryId);
                 }
-                
-                // SCIPIO: bumped this lower to simplify all code 
+
+                // SCIPIO: bumped this lower to simplify all code
                 // generate forward URL
                 StringBuilder urlBuilder = new StringBuilder();
                 urlBuilder.append(getControlServletPath(httpRequest));
-                
+
                 if (UtilValidate.isNotEmpty(productId)) {
                     urlBuilder.append("/" + PRODUCT_REQUEST);
                 } else {
                     urlBuilder.append("/" + CATEGORY_REQUEST);
                 }
-                
+
                 //Set view query parameters
                 UrlServletHelper.setViewQueryParameters(request, urlBuilder);
                 // SCIPIO: 2017-11-07: moved this check earlier to avoid large overhead on non-catalog calls
@@ -175,7 +175,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 dispatch.forward(request, response);
                 return;
                 //}
-                
+
             } else {
                 // SCIPIO: TODO/FIXME?: REVIEW: these calls were previously running even on non-alt-url requests;
                 // as result, we can't remove them without testing to make sure no negative impacts
@@ -183,15 +183,15 @@ public class CatalogUrlFilter extends ContextFilter {
                 getCatalogTopCategory(httpRequest);
                 UrlServletHelper.setViewQueryParameters(request, new StringBuilder());
             }
-            
+
             //Check path alias
             UrlServletHelper.checkPathAlias(request, httpResponse, delegator, pathInfo);
         }
-        
+
         // we're done checking; continue on
         chain.doFilter(request, response);
     }
-    
+
     /**
      * SCIPIO: Actions that must run at every single request, whether handled or not.
      * Factored out from doFilter.
@@ -210,7 +210,7 @@ public class CatalogUrlFilter extends ContextFilter {
         return RequestHandler.getControlServletPath(request);
         //return "/" + CONTROL_MOUNT_POINT;
     }
-    
+
     /**
      * SCIPIO: Tries to match an alt URL path element to a product.
      * Factored out code from doFilter.
@@ -269,7 +269,7 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         return productId;
     }
-    
+
     /**
      * SCIPIO: Tries to match an alt URL path element to a category.
      * Factored out code from doFilter.
@@ -330,8 +330,8 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         return productCategoryId;
     }
-    
-    
+
+
     /**
      * SCIPIO: Returns appropriate trail elements for a category or ID (abstraction method), checked against current trail,
      * for passing to {@link #updateRequestAndTrail} method.
@@ -355,7 +355,7 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         return trailElements;
     }
-    
+
     /**
      * SCIPIO: Tries to see if the passed product or category can be integrated in the current/given trail.
      * If it can, returns a list of TrailElements that can be passed to #updateRequestAndTrail which will merge
@@ -369,7 +369,7 @@ public class CatalogUrlFilter extends ContextFilter {
     public static List<String> makeBestTrailElementsForTrail(HttpServletRequest request, Delegator delegator, String categoryId, String productId) {
         List<String> trail = CategoryWorker.getTrail(request);
         List<String> trailElements = null;
-        
+
         if (categoryId != null) {
             if (trail == null || trail.size() < 1) {
                 ;
@@ -415,31 +415,31 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         return trailElements;
     }
-    
+
     /**
      * SCIPIO: Makes a fresh trail based on the default category for a product or category under the top catalog category.
-     * Ignores the current trail. 
+     * Ignores the current trail.
      * Based on original {@link #doFilter} code.
      * May return null.
      */
     public static List<String> makeDefaultCategoryTrailElements(HttpServletRequest request, Delegator delegator, String categoryId, String productId) {
-        
+
         String productCategoryId = categoryId;
-        
+
         if (UtilValidate.isNotEmpty(productId)) {
             String catId = getProductDefaultCategoryId(delegator, productId);
             if (catId != null) {
                 productCategoryId = catId;
             }
         }
-        
+
         // generate trail belong to a top category
         // SCIPIO: 2017-08-15: this call is inappropriate; see method for details
         //String topCategoryId = CategoryWorker.getCatalogTopCategory(httpRequest, null);
         String topCategoryId = getCatalogTopCategory(request);
         List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(request, "trailCategories", topCategoryId, false, false, true);
         List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
-        
+
         // look for productCategoryId from productId
         if (UtilValidate.isNotEmpty(productId)) {
             String catId = getProductMatchingCategoryId(delegator, productId, trailCategoryIds);
@@ -447,14 +447,14 @@ public class CatalogUrlFilter extends ContextFilter {
                 productCategoryId = catId;
             }
         }
-        
+
         if (UtilValidate.isNotEmpty(productCategoryId)) {
             List<String> trailElements = getTrailElements(delegator, productCategoryId, trailCategoryIds);
-    
+
             // SCIPIO: NOTE: CatalogUrlFilter#doGet does another adjustment to trail
-            // here before we add topCategoryId, but I don't know why, and I think it will 
+            // here before we add topCategoryId, but I don't know why, and I think it will
             // make no difference because we add topCategoryId now.
-            
+
             if (trailElements.size() > 0) {
                 trailElements.add(0, topCategoryId);
                 return trailElements;
@@ -462,24 +462,24 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         return null;
     }
-    
+
     /**
      * SCIPIO: Dedicated helper to get top category, from early filter call.
      * NOTE: This is MODIFIED from stock ofbiz behavior for several issues, see code below.
      * Added 2017-08-15.
      */
     public static String getCatalogTopCategory(ServletRequest request) {
-        // SCIPIO: BUGFIX: 2017-08-15: in stock ofbiz, this filter was calling 
+        // SCIPIO: BUGFIX: 2017-08-15: in stock ofbiz, this filter was calling
         // CategoryWorker.getCatalogTopCategory to get the top category; but this does not
         // work for stores and was probably an error; we need the one from CatalogWorker
         //return CategoryWorker.getCatalogTopCategory(request, null);
-        
+
         // TODO: REVIEW: originally switched to calling read-only here to avoid interfering with
         // any store initialization code; however by doing that we risk becoming out of sync
-        // with the rest of the request; so now switched to calling the regular 
+        // with the rest of the request; so now switched to calling the regular
         // catalogId/empty-trail save in session overload.
         //String catalogId = CatalogWorker.getCurrentCatalogIdReadOnly(request);
-        String catalogId = CatalogWorker.getCurrentCatalogId(request); 
+        String catalogId = CatalogWorker.getCurrentCatalogId(request);
         return CatalogWorker.getCatalogTopCategoryId(request, catalogId);
     }
 
@@ -500,7 +500,7 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         return productCategoryId;
     }
-    
+
     /**
      * SCIPIO: Stock code factored out from doGet.
      */
@@ -520,8 +520,8 @@ public class CatalogUrlFilter extends ContextFilter {
             Debug.logError(e, "Cannot generate trail from product category", module);
         }
         return productCategoryId;
-    }    
-    
+    }
+
     /**
      * SCIPIO: Stock code factored out from doGet.
      */
@@ -553,8 +553,8 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         Collections.reverse(trailElements);
         return trailElements;
-    }    
-    
+    }
+
     /**
      * SCIPIO: Returns true if the given category or any of the path elements is a top-level category.
      */
@@ -571,22 +571,22 @@ public class CatalogUrlFilter extends ContextFilter {
         if (topCategoryId == null) {
             return true;
         }
-        return false;   
+        return false;
     }
 
-    
+
     /**
      * SCIPIO: Combines the getTrailElements, some extra fixups and updateRequestAndTrail.
      * Factored out from doFilter.
      * Added 2017-11-07.
      */
-    public static void getTrailElementsAndUpdateRequestAndTrail(HttpServletRequest request, Delegator delegator, String productId, 
+    public static void getTrailElementsAndUpdateRequestAndTrail(HttpServletRequest request, Delegator delegator, String productId,
             String productCategoryId, List<String> trailCategoryIds, String topCategoryId) {
         List<String> trailElements = getTrailElements(delegator, productCategoryId, trailCategoryIds);
-        
+
         // SCIPIO: NOTE: Parts of this could reuse updateRequestAndTrail but there are minor difference,
         // not risking it for now.
-        
+
         List<String> trail = CategoryWorker.getTrail(request);
         if (trail == null) {
             trail = new LinkedList<String>();
@@ -598,10 +598,10 @@ public class CatalogUrlFilter extends ContextFilter {
             previousCategoryId = trail.get(trail.size() - 1);
         }
         trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
-        
+
         // SCIPIO: 2016-03-23: There is a high risk here that the trail does not contain the top
         // category.
-        // If top category is not in trail, we'll prepend it to trailElements. 
+        // If top category is not in trail, we'll prepend it to trailElements.
         // This will cause the trailElements to replace the whole trail in the code that follows
         // because of the way setTrail with ID works.
         // I'm not sure what the intention of stock code was in these cases, but I think
@@ -623,7 +623,7 @@ public class CatalogUrlFilter extends ContextFilter {
         // SCIPIO: this is now delegated
         updateRequestAndTrail(request, productCategoryId, productId, trailElements, trail);
     }
-    
+
     /**
      * SCIPIO: Updates the trail elements using logic originally found in {@link CatalogUrlServlet#doGet}.
      * <p>
@@ -638,9 +638,9 @@ public class CatalogUrlFilter extends ContextFilter {
         if (UtilValidate.isEmpty(productId)) {
             productId = null;
         }
-        
+
         if (pathElements != null) {
-        
+
             // get category info going with the IDs that remain
             if (pathElements.size() == 1) {
                 CategoryWorker.setTrail(request, pathElements.get(0), null);
@@ -655,7 +655,7 @@ public class CatalogUrlFilter extends ContextFilter {
                         trail = new LinkedList<String>();
                     }
                 }
-    
+
                 if (trail.contains(pathElements.get(0))) {
                     // first category is in the trail, so remove it everything after that and fill it in with the list from the pathInfo
                     int firstElementIndex = trail.indexOf(pathElements.get(0));
@@ -672,7 +672,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 //categoryId = pathElements.get(pathElements.size() - 1);  // SCIPIO: Assume caller did this
             }
         }
-        
+
         // SCIPIO: Make sure we always reset this
         //if (categoryId != null) {
         request.setAttribute("productCategoryId", categoryId);
@@ -691,32 +691,32 @@ public class CatalogUrlFilter extends ContextFilter {
             request.setAttribute("product_id", productId);
             request.setAttribute("productId", productId);
         }
-        
+
         request.setAttribute("categoryTrailUpdated", Boolean.TRUE); // SCIPIO: This is new
     }
-    
+
     /**
      * SCIPIO: Checks if the current category and product was already processed for this request,
      * and if not, adjusts them in request and session (including trail).
      * Returns the categoryId.
-     * 
+     *
      * @see #getAdjustCurrentCategoryAndProduct(HttpServletRequest, String, String)
      */
     public static String getAdjustCurrentCategoryAndProduct(HttpServletRequest request, String productId) {
         return getAdjustCurrentCategoryAndProduct(request, productId, null);
     }
-    
+
     /**
      * SCIPIO: Checks if the current category was already processed for this request,
      * and if not, adjusts them in request and session (including trail).
      * Returns the categoryId.
-     * 
+     *
      * @see #getAdjustCurrentCategoryAndProduct(HttpServletRequest, String, String)
      */
     public static String getAdjustCurrentCategory(HttpServletRequest request, String categoryId) {
         return getAdjustCurrentCategoryAndProduct(request, null, categoryId);
     }
-    
+
     /**
      * SCIPIO: Checks if the current category and product was already processed for this request,
      * and if not, adjusts them in request and session (including trail).
@@ -732,17 +732,17 @@ public class CatalogUrlFilter extends ContextFilter {
      * NOTE: This is an amalgamation of logic in {@link CatalogUrlFilter#doFilter} and {@link CatalogUrlServlet#doGet}.
      * <p>
      * FIXME?: Currently, like original CatalogUrlFilter, when trail was not already set or the existing one
-     * is not quite valid, this will always produce 
-     * a trail based on product or category's default category under the catalog top category. 
+     * is not quite valid, this will always produce
+     * a trail based on product or category's default category under the catalog top category.
      * This is generally not desirable, but okay for simple shops. It may be better to produce a trail closer
      * to the current one (heuristically).
      */
     public static String getAdjustCurrentCategoryAndProduct(HttpServletRequest request, String productId, String categoryId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        
+
         String currentProductId = (String) request.getAttribute("productId");
         String currentCategoryId = (String) request.getAttribute("productCategoryId");
-        
+
         if (UtilValidate.isEmpty(productId)) {
             productId = null;
         }
@@ -755,10 +755,10 @@ public class CatalogUrlFilter extends ContextFilter {
         if (UtilValidate.isEmpty(currentCategoryId)) {
             currentCategoryId = null;
         }
-        
+
         // Just use a dedicated flag instead of this. Much less likely to conflict with other code.
         //// Generally, we want to enter this if the current category is not set. If it's set it means we already did this call (or an equivalent one) somewhere.
-        //if (currentCategoryId == null || 
+        //if (currentCategoryId == null ||
         //    (!currentCategoryId.equals(categoryId)) || // This shouldn't really happen, but can deal with it for free
         //    (productId != null && !productId.equals(currentProductId))) {
         if (!Boolean.TRUE.equals(request.getAttribute("categoryTrailUpdated"))) {
@@ -771,11 +771,11 @@ public class CatalogUrlFilter extends ContextFilter {
                 }
 
                 List<String> trailElements = CatalogUrlFilter.makeTrailElements(request, delegator, categoryId, productId);
-        
+
                 if (trailElements != null && trailElements.size() >= 1) {
                     categoryId = trailElements.get(trailElements.size() - 1);
                 }
-                
+
                 updateRequestAndTrail(request, categoryId, productId, trailElements, null);
                 currentCategoryId = categoryId;
                 currentProductId = productId;
@@ -785,8 +785,8 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         return currentCategoryId;
     }
-    
-    
+
+
     public static String makeCategoryUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         try {
@@ -803,7 +803,7 @@ public class CatalogUrlFilter extends ContextFilter {
     public static String makeCategoryUrl(Delegator delegator, CategoryContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
         String url = "";
         String alternativeUrl = wrapper.get("ALTERNATIVE_URL", "url"); // SCIPIO: now returns regular String
-        
+
         if (UtilValidate.isNotEmpty(alternativeUrl)) {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append(contextPath);
@@ -849,7 +849,7 @@ public class CatalogUrlFilter extends ContextFilter {
             if (urlBuilder.toString().endsWith("&")) {
                 return urlBuilder.toString().substring(0, urlBuilder.toString().length()-1);
             }
-            
+
             url = urlBuilder.toString();
         } else {
             if (UtilValidate.isEmpty(trail)) {
@@ -857,10 +857,10 @@ public class CatalogUrlFilter extends ContextFilter {
             }
             url = CatalogUrlServlet.makeCatalogUrl(contextPath, trail, productId, productCategoryId, previousCategoryId);
         }
-        
+
         return url;
     }
-    
+
     public static String makeProductUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId, String productId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String url = null;
@@ -902,7 +902,7 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         return url;
     }
-    
+
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
      * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
@@ -937,12 +937,12 @@ public class CatalogUrlFilter extends ContextFilter {
      * <p>
      * This version assumes the current webapp is the target webapp and may use session information.
      */
-    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, Locale locale, String productCategoryId, String productId, String previousCategoryId, 
+    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, Locale locale, String productCategoryId, String productId, String previousCategoryId,
             Object params, Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) {
         return makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, params, null, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
     }
-    
+
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
      * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
@@ -951,13 +951,13 @@ public class CatalogUrlFilter extends ContextFilter {
      * <p>
      * NOTE: if contextPath is omitted (null), it will be determined automatically.
      */
-    public static String makeCatalogAltLink(Map<String, Object> context, Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId, 
+    public static String makeCatalogAltLink(Map<String, Object> context, Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId,
             String previousCategoryId, Object params, FullWebappInfo targetWebappInfo, Boolean fullPath, Boolean secure,
             String viewSize, String viewIndex, String viewSort, String searchString) {
-        return makeCatalogAltLink(context, delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, targetWebappInfo, fullPath, secure, null, 
+        return makeCatalogAltLink(context, delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, targetWebappInfo, fullPath, secure, null,
                 viewSize, viewIndex, viewSort, searchString);
     }
-    
+
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
      * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
@@ -969,7 +969,7 @@ public class CatalogUrlFilter extends ContextFilter {
      * <p>
      * 2017-11: This method will now automatically implement the alternative SEO link building.
      */
-    public static String makeCatalogAltLink(Map<String, Object> context, Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId, 
+    public static String makeCatalogAltLink(Map<String, Object> context, Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId,
             String previousCategoryId, Object params, FullWebappInfo targetWebappInfo, Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) {
         FullWebappInfo currentWebappInfo;
@@ -983,19 +983,19 @@ public class CatalogUrlFilter extends ContextFilter {
         return builder.makeCatalogAltLink(context, delegator, dispatcher, locale, null, productCategoryId, productId, previousCategoryId, params,
                 targetWebappInfo, null, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, currentWebappInfo);
     }
-    
+
     /**
      * SCIPIO: 2017: Wraps all the category URL method calls so they can be switched out without
      * ruining the code.
      */
     public static abstract class CatalogAltUrlBuilder {
-        
+
         /**
          * SCIPIO: 2017: allows plugging in custom low-level URL builders.
          * FIXME: poor initialization logic
          */
         private static List<CatalogAltUrlBuilder.Factory> urlBuilderFactories = Collections.emptyList();
-        
+
         public static CatalogAltUrlBuilder getDefaultBuilder() {
             return OfbizCatalogAltUrlBuilder.getInstance();
         }
@@ -1007,7 +1007,7 @@ public class CatalogUrlFilter extends ContextFilter {
             }
             return getDefaultBuilder();
         }
-        
+
         /**
          * @deprecated FIXME: this may need be redesigned with property config due to possible synchronization/ordering issues.
          */
@@ -1018,32 +1018,32 @@ public class CatalogUrlFilter extends ContextFilter {
             newList.add(builderFactory);
             urlBuilderFactories = Collections.unmodifiableList(newList);
         }
-        
+
         public interface Factory {
             /**
              * Returns builder or null if not applicable to request.
              */
             CatalogAltUrlBuilder getCatalogAltUrlBuilder(Delegator delegator, FullWebappInfo targetWebappInfo);
         }
-        
+
         // low-level building methods (named after legacy ofbiz methods)
         public abstract String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId);
         public abstract String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, FullWebappInfo targetWebappInfo, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId);
         public abstract String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString);
         public abstract String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, FullWebappInfo targetWebappInfo, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString);
-        
+
         /**
          * Common/default high-level makeCatalogAltLink implementation (new Scipio method).
          */
         public String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, Locale locale, String productCategoryId, String productId,
-                String previousCategoryId, Object params, FullWebappInfo targetWebappInfo, 
+                String previousCategoryId, Object params, FullWebappInfo targetWebappInfo,
                 Boolean fullPath, Boolean secure, Boolean encode,
                 String viewSize, String viewIndex, String viewSort, String searchString) {
             // SCIPIO: 2017-11-06: NOT doing this here - caller or other overloads should do.
             //if (locale == null) {
             //    locale = UtilHttp.getLocale(request);
             //}
-            
+
             String url;
             if (targetWebappInfo != null) {
                 // SPECIAL CASE: if there is a specific target webapp, we must NOT use the current session stuff,
@@ -1070,12 +1070,12 @@ public class CatalogUrlFilter extends ContextFilter {
             url = appendLinkParams(url, params);
             return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, locale, targetWebappInfo, url, fullPath, secure, encode, true);
         }
-        
+
         /**
          * Common/default high-level makeCatalogAltLink implementation (new Scipio method).
          */
         public String makeCatalogAltLink(Map<String, Object> context, Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
-                String productCategoryId, String productId, String previousCategoryId, Object params, 
+                String productCategoryId, String productId, String previousCategoryId, Object params,
                 FullWebappInfo targetWebappInfo, String currentCatalogId, Boolean fullPath, Boolean secure, Boolean encode,
                 String viewSize, String viewIndex, String viewSort, String searchString,
                 FullWebappInfo currentWebappInfo) {
@@ -1099,15 +1099,15 @@ public class CatalogUrlFilter extends ContextFilter {
             url = appendLinkParams(url, params);
             return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, locale, targetWebappInfo, url, fullPath, secure, encode, true, currentWebappInfo, context);
         }
-        
+
         /**
          * Implements the stock ofbiz catalog alt URLs.
          */
         public static class OfbizCatalogAltUrlBuilder extends CatalogAltUrlBuilder {
             private static final OfbizCatalogAltUrlBuilder INSTANCE = new OfbizCatalogAltUrlBuilder();
-            
+
             public static final OfbizCatalogAltUrlBuilder getInstance() { return INSTANCE; }
-            
+
             @Override
             public String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId,
                     String productId) {
@@ -1116,18 +1116,18 @@ public class CatalogUrlFilter extends ContextFilter {
             @Override
             public String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
                     FullWebappInfo targetWebappInfo, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) {
-                
+
                 GenericValue product;
                 try {
                     product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                 } catch (GenericEntityException e) {
                     throw new RuntimeException(e);
                 }
-                // SCIPIO: 2017-11-07: CHANGED MIME-TYPE: 
+                // SCIPIO: 2017-11-07: CHANGED MIME-TYPE:
                 // this should not be text/html. this should also be unrelated to escaping. there's no html here.
                 //ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/html");
                 ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/plain");
-                
+
                 return CatalogUrlFilter.makeProductUrl(delegator, wrapper, trail, targetWebappInfo.getContextPath(), previousCategoryId, productCategoryId, productId);
             }
             @Override
@@ -1140,22 +1140,22 @@ public class CatalogUrlFilter extends ContextFilter {
             public String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
                     FullWebappInfo targetWebappInfo, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId,
                     String viewSize, String viewIndex, String viewSort, String searchString) {
-                
+
                 GenericValue productCategory;
                 try {
                     productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).queryOne();
                 } catch (GenericEntityException e) {
                     throw new RuntimeException(e);
                 }
-                // SCIPIO: 2017-11-07: CHANGED MIME-TYPE: 
+                // SCIPIO: 2017-11-07: CHANGED MIME-TYPE:
                 // this should not be text/html. this should also be unrelated to escaping. there's no html here.
                 //CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/html");
                 CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/plain");
-                
+
                 return CatalogUrlFilter.makeCategoryUrl(delegator, wrapper, trail, targetWebappInfo.getContextPath(), previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             }
         }
-        
+
         /**
          * Appends params for catalog URLs.
          * <p>

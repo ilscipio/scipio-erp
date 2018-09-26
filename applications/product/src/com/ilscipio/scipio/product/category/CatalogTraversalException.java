@@ -14,7 +14,7 @@ public class CatalogTraversalException extends GeneralException {
     public CatalogTraversalException(String msg, Throwable nested) { super(msg, nested); }
     public CatalogTraversalException(String msg) { super(msg); }
     public CatalogTraversalException(Throwable nested) { super(nested); }
-    
+
     /**
      * CLEAN STOP - Visitor or Traverser may call this to request a clean stop to traversal; not an error; not logged.
      */
@@ -24,5 +24,5 @@ public class CatalogTraversalException extends GeneralException {
         public StopCatalogTraversalException(String msg, List<?> messages) { super(msg, messages); }
         public StopCatalogTraversalException(String msg) { super(msg); }
     }
-    
+
 }

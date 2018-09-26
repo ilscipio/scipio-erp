@@ -116,7 +116,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     // -------------------------------------
     // Content rendering methods
     // -------------------------------------
-    
+
     /**
      * Finds best content for rendering for the given locale.
      * <p>
@@ -139,12 +139,12 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         if (content == null) {
             throw new GeneralException("No content found for content ID [" + contentId + "]");
         }
-        
+
         // SCIPIO: TODO: REVIEW: changing this to value of cache has too large implications at current time;
         // stock behavior was to use deepCache=true always; this could have led to bad calling code in turn...
         //if (deepCache == null) deepCache = cache;
-        if (deepCache == null) deepCache = Boolean.TRUE; 
-        
+        if (deepCache == null) deepCache = Boolean.TRUE;
+
         // if the content is a PUBLISH_POINT and the data resource is not defined; get the related content
         if ("WEB_SITE_PUB_PT".equals(content.get("contentTypeId")) && content.get("dataResourceId") == null) {
             GenericValue relContent = EntityQuery.use(delegator)
@@ -214,7 +214,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     public static GenericValue findContentForRendering(Delegator delegator, String contentId, Locale locale, String partyId, String roleTypeId, boolean cache) throws GeneralException, IOException {
         return findContentForRendering(delegator, contentId, locale, partyId, roleTypeId, null, cache, null);
     }
-    
+
     /**
      * Renders context as text (core).
      * <p>
@@ -311,7 +311,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                     Debug.logError("No content ID found.", module);
                     return;
                 }
-                
+
                 if (UtilValidate.isNotEmpty(webAnalytics)) {
                     DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, templateContext, locale, mimeTypeId, cache, webAnalytics);
                 } else {
@@ -373,7 +373,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         // SCIPIO: now delegating
         renderContentAsText(dispatcher, delegator, content, out, templateContext, locale, mimeTypeId, null, cache, null, webAnalytics);
     }
-    
+
     public static String renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, String contentId, Map<String, Object> templateContext,
             Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException {
         Writer writer = new StringWriter();
@@ -392,7 +392,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 || rendered.contains("<a"))) {
             rendered = encoder.sanitize(rendered);
         }
-        return rendered; 
+        return rendered;
     }
 
     public static String renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, String contentId, Appendable out,
@@ -407,7 +407,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         GenericValue content = ContentWorker.findContentForRendering(delegator, contentId, locale, partyId, roleTypeId, cache);
         ContentWorker.renderContentAsText(dispatcher, delegator, content, out, templateContext, locale, mimeTypeId, cache, null);
     }
-    
+
     /**
      * Renders content as text.
      * <p>
@@ -456,7 +456,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
      * <p>
      * SCIPIO: Modified for cache=true and OPTIONAL useFallbackLocale flag, and currently uses PARTIAL ofbiz 16 patch to make sure the original
      * view's locale is included in the checks.
-     * TODO: REVIEW: unlike ofbiz 16, useFallbackLocale (fallback on properties fallback locale) is currently left DISABLED BY DEFAULT, 
+     * TODO: REVIEW: unlike ofbiz 16, useFallbackLocale (fallback on properties fallback locale) is currently left DISABLED BY DEFAULT,
      * because changing this here could drastically affect existing code (such as solr) and not clear even
      * wanted in most cases.
      * WARN: If you need to guarantee a specific behavior, simply pass explicit true or false to useFallbackLocale.
@@ -551,7 +551,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     public static GenericValue findAlternateLocaleContent(Delegator delegator, GenericValue view, Locale locale) {
         return findAlternateLocaleContent(delegator, view, locale, null, true);
     }
-    
+
     public static void traverse(Delegator delegator, GenericValue content, Timestamp fromDate, Timestamp thruDate, Map<String, Object> whenMap, int depthIdx, Map<String, Object> masterNode, String contentAssocTypeId, List<GenericValue> pickList, String direction) {
         //String startContentAssocTypeId = null;
         String contentTypeId = null;
@@ -1007,7 +1007,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             EntityExpr thruExpr2 = EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null);
             exprList.add(thruExpr2);
         }
-        
+
         return EntityQuery.use(delegator).from("ContentAssoc").where(exprList).orderBy("-fromDate").queryList();
     }
 
@@ -1158,7 +1158,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         Map<String, Object> permResults = new HashMap<String, Object>();
         String skipPermissionCheck = (String) context.get("skipPermissionCheck");
 
-        if (UtilValidate.isEmpty(skipPermissionCheck) 
+        if (UtilValidate.isEmpty(skipPermissionCheck)
                 || (!"true".equalsIgnoreCase(skipPermissionCheck) && !"granted".equalsIgnoreCase(skipPermissionCheck))) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             Map<String, Object> serviceInMap = new HashMap<String, Object>();

@@ -54,7 +54,7 @@ public class PcChargeServices {
         Properties props = buildPccProperties(context, delegator);
         PcChargeApi api = getApi(props);
         if (api == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPcChargeErrorGettingPaymentGatewayConfig", locale));
         }
 
@@ -133,7 +133,7 @@ public class PcChargeServices {
             return result;
 
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPcChargeResultIsNull", locale));
         }
     }
@@ -150,7 +150,7 @@ public class PcChargeServices {
         }
 
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotCapture", locale));
         }
 
@@ -158,7 +158,7 @@ public class PcChargeServices {
         Properties props = buildPccProperties(context, delegator);
         PcChargeApi api = getApi(props);
         if (api == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPcChargeErrorGettingPaymentGatewayConfig", locale));
         }
 
@@ -193,7 +193,7 @@ public class PcChargeServices {
 
             return result;
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPcChargeResultIsNull", locale));
         }
     }
@@ -210,7 +210,7 @@ public class PcChargeServices {
         }
 
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRelease", locale));
         }
 
@@ -218,7 +218,7 @@ public class PcChargeServices {
         Properties props = buildPccProperties(context, delegator);
         PcChargeApi api = getApi(props);
         if (api == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPcChargeErrorGettingPaymentGatewayConfig", locale));
         }
 
@@ -227,7 +227,7 @@ public class PcChargeServices {
 
         // check to make sure we are configured for SALE mode
         if (!"true".equalsIgnoreCase(props.getProperty("autoBill"))) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPcChargeCannotSupportReleasingPreAuth", locale));
         }
 
@@ -259,7 +259,7 @@ public class PcChargeServices {
 
             return result;
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                 "AccountingPcChargeResultIsNull", locale));
         }
     }
@@ -276,7 +276,7 @@ public class PcChargeServices {
         }
 
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRefund", locale));
         }
 
@@ -284,7 +284,7 @@ public class PcChargeServices {
         Properties props = buildPccProperties(context, delegator);
         PcChargeApi api = getApi(props);
         if (api == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPcChargeErrorGettingPaymentGatewayConfig", locale));
         }
 
@@ -319,7 +319,7 @@ public class PcChargeServices {
 
             return result;
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPcChargeResultIsNull", locale));
         }
     }

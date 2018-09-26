@@ -99,7 +99,7 @@ public class TechDataServices {
         result.put("lookupResult", listRoutingTask);
         return result;
     }
-    
+
     /**
      *
      * Used to check if there is not two routing task with the same SeqId valid at the same period

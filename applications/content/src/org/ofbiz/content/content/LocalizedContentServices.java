@@ -24,7 +24,7 @@ import org.ofbiz.service.ServiceUtil;
 public abstract class LocalizedContentServices {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected LocalizedContentServices() {
     }
 
@@ -39,7 +39,7 @@ public abstract class LocalizedContentServices {
         // TODO?: if needed; always false for now (ignores contentIds)
         // I don't yet see a case where want to honor contentIds
         //boolean strictContent = Boolean.TRUE.equals(context.get("strictContent"));
-        
+
         try {
             LocalizedSimpleTextInfo entriesInfo = LocalizedSimpleTextInfo.fromEntries(entries);
 
@@ -47,13 +47,13 @@ public abstract class LocalizedContentServices {
             if (UtilValidate.isNotEmpty(mainContentId)) {
                 mainContent = delegator.findOne("Content", UtilMisc.toMap("contentId", mainContentId), false);
                 if (mainContent == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage("ContentUiLabels", 
+                    return ServiceUtil.returnError(UtilProperties.getMessage("ContentUiLabels",
                             "ContentNoContentFound", UtilMisc.toMap("contentId", mainContentId), locale));
                 }
             }
             String mainLocaleString = entriesInfo.getMainLocaleString();
             String mainTextData = entriesInfo.getMainTextData();
-            
+
             if (!entriesInfo.isHasTextData()) {
                 if (mainContent != null) {
                     // simple case: delete all the ALTERNATE_LOCALE associations, and set
@@ -69,8 +69,8 @@ public abstract class LocalizedContentServices {
                 result.put("mainContentId", mainContentId);
                 return result;
             } else {
-                mainContent = LocalizedContentWorker.replaceLocalizedContent(delegator, dispatcher, context, mainContent, 
-                        mainLocaleString, mainTextData, entriesInfo.getLocaleEntryMap(), true, UtilDateTime.nowTimestamp(), 
+                mainContent = LocalizedContentWorker.replaceLocalizedContent(delegator, dispatcher, context, mainContent,
+                        mainLocaleString, mainTextData, entriesInfo.getLocaleEntryMap(), true, UtilDateTime.nowTimestamp(),
                         newContentFields, newDataResourceFields, null, null);
                 mainContentId = mainContent.getString("contentId");
 
@@ -84,7 +84,7 @@ public abstract class LocalizedContentServices {
             return ServiceUtil.returnError(PropertyMessageExUtil.getExceptionMessage(e, locale));
         }
     }
-    
+
     private static final Map<String, Object> newContentFields = UtilMisc.toMap("description", null);
     private static final Map<String, Object> newDataResourceFields = UtilMisc.toMap("statusId", "CTNT_PUBLISHED");
 

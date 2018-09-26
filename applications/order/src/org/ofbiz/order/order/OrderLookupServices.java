@@ -80,7 +80,7 @@ public class OrderLookupServices {
             return this;
         }
     }
-    
+
     // SCIPIO: this is now a shared implementation
     static Map<String, Object> findOrders(DispatchContext dctx, Map<String, ? extends Object> context, FindOrdersLocalOptions findOptions) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -92,7 +92,7 @@ public class OrderLookupServices {
         if (errorAsFailure == null) {
             errorAsFailure = Boolean.FALSE;
         }
-        
+
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Integer viewIndex = (Integer) context.get("viewIndex");
         Integer viewSize = (Integer) context.get("viewSize");
@@ -281,7 +281,7 @@ public class OrderLookupServices {
 
         // SCIPIO: must track where partyId came from
         boolean partyIdFromUserLogin = false;
-        
+
         if (UtilValidate.isNotEmpty(userLoginId) && UtilValidate.isEmpty(partyId)) {
             GenericValue ul = null;
             try {
@@ -360,7 +360,7 @@ public class OrderLookupServices {
             fieldsToSelect.add("partyId");
             conditions.add(makeExpr("partyId", partyId));
         }
-        
+
         // SCIPIO: append userLoginId to paramList
         if (UtilValidate.isNotEmpty(userLoginId)) {
             paramList.add("userLoginId=" + userLoginId);
@@ -630,7 +630,7 @@ public class OrderLookupServices {
             lowIndex = 0;
             highIndex = 0;
         }
-        
+
         if (cond != null) {
             EntityListIterator eli = null;
             try {
@@ -642,12 +642,12 @@ public class OrderLookupServices {
                         .where(cond)
                         .orderBy(orderBy)
                         .distinct(); // set distinct on so we only get one row per order
-                        
+
                 // SCIPIO: only max rows if not limited
                 if (!findOptions.isFullQuery()) {
                     eqy = eqy.maxRows(highIndex);
                 }
-                
+
                 eli = eqy.cursorScrollInsensitive().queryIterator();
 
                 orderCount = eli.getResultsSizeAfterPartialList();
@@ -663,7 +663,7 @@ public class OrderLookupServices {
                     } else if (orderCount > 0) {
                         orderList = eli.getCompleteList();
                     }
-                    
+
                     if (highIndex > orderCount) {
                         highIndex = orderCount;
                     }
@@ -712,14 +712,14 @@ public class OrderLookupServices {
 
         return result;
     }
-    
+
     /**
      * SCIPIO: stock findOrders service.
      */
     public static Map<String, Object> findOrders(DispatchContext dctx, Map<String, ? extends Object> context) {
         return findOrders(dctx, context, findOrdersOptions);
     }
-    
+
     /**
      * SCIPIO: stock findOrders service with additions for internal calls.
      */

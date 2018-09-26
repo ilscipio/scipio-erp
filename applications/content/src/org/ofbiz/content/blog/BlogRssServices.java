@@ -80,7 +80,7 @@ public class BlogRssServices {
 
         if (content == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "ContentCannotGenerateBlogRssFeed", 
+                    "ContentCannotGenerateBlogRssFeed",
                     UtilMisc.toMap("contentId", contentId), locale));
         }
 

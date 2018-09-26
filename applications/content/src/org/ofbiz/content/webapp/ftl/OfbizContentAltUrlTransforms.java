@@ -51,23 +51,23 @@ import freemarker.template.TemplateTransformModel;
  */
 public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     @Override
     public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") final Map args)
             throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
         return new Writer(out) {
-            
+
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
                 buf.append(cbuf, off, len);
             }
-            
+
             @Override
             public void flush() throws IOException {
                 out.flush();
             }
-            
+
             @Override
             public void close() throws IOException {
                 try {
@@ -76,13 +76,13 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                     HttpServletResponse response = ContextFtlUtil.getResponse(env);
                     RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
                     //FullWebappInfo.Cache webappInfoCache = ContextFtlUtil.getWebappInfoCacheAndCurrent(env, request, renderEnvType);
-                    
+
                     final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
                     boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
                     boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
                     boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
                     final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
-                    
+
                     Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env); // SCIPIO: changed from boolean to Boolean
                     Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: changed from boolean to Boolean
                     Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: new flag
@@ -91,7 +91,7 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                     String contentId = TransformUtil.getStringArg(args, "contentId", rawParams);
                     String viewContent = TransformUtil.getStringArg(args, "viewContent", rawParams);
                     Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode");
-     
+
                     String url = "";
                     if (UtilValidate.isNotEmpty(contentId)) {
                         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env); // SCIPIO

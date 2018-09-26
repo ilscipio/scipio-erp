@@ -128,12 +128,12 @@ public class OrbitalPaymentServices {
             creditCard = orderPaymentPreference.getRelatedOne("CreditCard", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentUnableToGetCCInfo", locale));
         }
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotCapture", locale));
         }
         context.put("creditCard", creditCard);
@@ -173,12 +173,12 @@ public class OrbitalPaymentServices {
             creditCard = orderPaymentPreference.getRelatedOne("CreditCard", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentUnableToGetCCInfo", locale));
         }
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRefund", locale));
         }
         context.put("creditCard", creditCard);
@@ -217,12 +217,12 @@ public class OrbitalPaymentServices {
             orderPaymentPreference.getRelatedOne("CreditCard", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentUnableToGetCCInfo", locale));
         }
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRelease", locale));
         }
         context.put("authTransaction", authTransaction);

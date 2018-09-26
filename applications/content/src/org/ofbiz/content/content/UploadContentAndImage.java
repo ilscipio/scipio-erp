@@ -78,12 +78,12 @@ public class UploadContentAndImage {
             GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
 
             ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
-            
+
             // SCIPIO: patch - from ServiceEventHandler: create the progress listener and add it to the session
             FileUploadProgressListener listener = new FileUploadProgressListener();
             dfu.setProgressListener(listener);
             request.getSession().setAttribute("uploadProgressListener", listener);
-            
+
             List<FileItem> lst = null;
             try {
                 lst = UtilGenerics.checkList(dfu.parseRequest(request));
@@ -128,7 +128,7 @@ public class UploadContentAndImage {
             String passedContentId = (String)passedParams.get("ftlContentId");
             List<String> targetOperationList = ContentWorker.prepTargetOperationList(passedParams, entityOperation);
             passedParams.put("targetOperationList", targetOperationList);
-            
+
             // Create or update FTL template
             Map<String, Object> ftlContext = new HashMap<String, Object>();
             ftlContext.put("userLogin", userLogin);
@@ -196,7 +196,7 @@ public class UploadContentAndImage {
 
             if (UtilValidate.isEmpty(ftlContentId)) {
                 ftlContentId = passedContentId;
-            }   
+            }
 
             String ftlDataResourceId = drid;
 
@@ -351,12 +351,12 @@ public class UploadContentAndImage {
             GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
 
             ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
-            
+
             // SCIPIO: patch - from ServiceEventHandler: create the progress listener and add it to the session
             FileUploadProgressListener listener = new FileUploadProgressListener();
             dfu.setProgressListener(listener);
             request.getSession().setAttribute("uploadProgressListener", listener);
-            
+
             //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]DiskFileUpload " + dfu, module);
             List<FileItem> lst = null;
             try {

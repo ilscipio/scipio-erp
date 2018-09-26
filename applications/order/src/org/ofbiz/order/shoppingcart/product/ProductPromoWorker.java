@@ -190,7 +190,7 @@ public class ProductPromoWorker {
                     GenericValue productPromoCode = productPromoCodesIter.next();
                     promoCodes.add(productPromoCode.getString("productPromoCodeId"));
                 }
-            } 
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -1097,7 +1097,7 @@ public class ProductPromoWorker {
                         return false;
                     } else {
                         BigDecimal orderSubTotal = (BigDecimal) result.get("totalSubRemainingAmount");
-                        BigDecimal orderSubTotalAndCartSubTotal = orderSubTotal.add(cart.getSubTotal()); 
+                        BigDecimal orderSubTotalAndCartSubTotal = orderSubTotal.add(cart.getSubTotal());
                         if (Debug.verboseOn()) Debug.logVerbose("Doing order history sub-total compare: orderSubTotal=" + orderSubTotal + ", for the last " + monthsToInclude + " months.", module);
                         compareBase = Integer.valueOf(orderSubTotalAndCartSubTotal.compareTo(new BigDecimal(condValue)));
                     }

@@ -141,7 +141,7 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
         // String strNullThruDatesOnly = (String) templateRoot.get("nullThruDatesOnly");
         // Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? Boolean.TRUE : Boolean.FALSE;
         String orderBy = (String) templateRoot.get("orderBy");
-        
+
         // NOTE this was looking for subContentId, but that doesn't make ANY sense, so changed to contentId
         String contentId = (String) templateRoot.get("contentId");
 

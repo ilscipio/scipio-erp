@@ -292,7 +292,7 @@ public class TrackingCodeEvents {
         String prodCatalogId = trackingCode.getString("prodCatalogId");
         if (UtilValidate.isNotEmpty(prodCatalogId)) {
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
-            // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
+            // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request,
             // otherwise may lose work done by servlets and filters
             //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
             CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());

@@ -137,19 +137,19 @@ public class IdealEvents {
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resourceErr, "idealEvents.problemsGettingMerchantConfiguration", locale));
             return "error";
         }
-        
+
         List<String> descriptionList = new LinkedList<String>();
         for (GenericValue orderItem : orderItemList) {
             if (UtilValidate.isNotEmpty(orderItem.get("itemDescription"))){
                 descriptionList.add((String) orderItem.get("itemDescription"));
             }
         }
-        
+
         String orderDescription = StringUtil.join(descriptionList, ",");
         String amount = orderTotal.setScale(decimals, rounding).movePointRight(2).toPlainString();
-        
+
         String redirectString = null;
-        
+
         try {
             IdealConnector connector = new IdealConnector("payment");
             Transaction transaction = new Transaction();
@@ -172,7 +172,7 @@ public class IdealEvents {
             request.setAttribute("_ERROR_MESSAGE_", ex.getConsumerMessage());
             return "error";
         }
-        
+
         // redirect to iDEAL
         try {
             response.sendRedirect(redirectString);
@@ -197,7 +197,7 @@ public class IdealEvents {
             String value = request.getParameter(name);
             Debug.logError("### Param: " + name + " => " + value, module);
         }
-        
+
         String orderId = null;
         String paymentStatus = null;
         try {

@@ -116,7 +116,7 @@ public class SalesOrderTest extends OFBizTestCase {
         orderItem.set("unitListPrice", new BigDecimal("48.0"));
         orderItem.set("statusId", "ITEM_CREATED");
         orderItems.add(orderItem);
-        
+
         orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00002", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "SW-1006-1", "quantity", BigDecimal.ONE, "selectedAmount", BigDecimal.ZERO));
         orderItem.set("isPromo", "N");
         orderItem.set("isModifiedPrice", "N");
@@ -124,7 +124,7 @@ public class SalesOrderTest extends OFBizTestCase {
         orderItem.set("unitListPrice", new BigDecimal("5.99"));
         orderItem.set("statusId", "ITEM_CREATED");
         orderItems.add(orderItem);
-        
+
         ctx.put("orderItems", orderItems);
 
         List<GenericValue> orderTerms = new LinkedList<GenericValue>();

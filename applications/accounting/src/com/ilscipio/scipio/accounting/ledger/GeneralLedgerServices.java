@@ -154,18 +154,18 @@ public class GeneralLedgerServices {
                         parentGlAccountDesc.append(" " + parentGlAccount.getString("accountName"));
                     } else if (UtilValidate.isNotEmpty(parentGlAccount.getString("accountCode"))) {
                         parentGlAccountDesc.append(" " + parentGlAccount.getString("accountCode"));
-                    }                    
+                    }
                 } else {
                     parentGlAccountDesc.append("_Not Applicable_");
                 }
                 glAccountMap.put("parentGlAccountDesc", parentGlAccountDesc.toString());
             }
-            
+
         } catch (GenericEntityException e) {
             Debug.logError("GlAccount [ " + glAccountId + "] couldn't be found. " + e.getMessage(), module);
         }
-        
-        
+
+
         result.put("glAccount", glAccountMap);
 
         return result;

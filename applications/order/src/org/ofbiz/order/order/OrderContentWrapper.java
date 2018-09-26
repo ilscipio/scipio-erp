@@ -65,7 +65,7 @@ public class OrderContentWrapper extends CommonContentWrapper {
     public OrderContentWrapper(GenericValue entityValue, HttpServletRequest request) {
         super(entityValue, request);
     }
-    
+
     public OrderContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale, String mimeTypeId,
             boolean useCache) {
         super(dispatcher, entityValue, locale, mimeTypeId, useCache);
@@ -88,7 +88,7 @@ public class OrderContentWrapper extends CommonContentWrapper {
     public static String getOrderContentAsText(GenericValue order, String orderContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getOrderContentAsText(order, orderContentTypeId, locale, null, null, dispatcher, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */

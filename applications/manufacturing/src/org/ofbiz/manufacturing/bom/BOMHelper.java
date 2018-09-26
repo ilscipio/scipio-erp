@@ -66,7 +66,7 @@ public class BOMHelper {
         if (inDate == null) inDate = new Date();
         int maxDepth = 0;
         List<GenericValue> productNodesList = EntityQuery.use(delegator).from("ProductAssoc")
-                .where("productIdTo", productId, 
+                .where("productIdTo", productId,
                         "productAssocTypeId", bomType)
                 .cache().filterByDate(inDate).queryList();
         int depth = 0;
@@ -110,7 +110,7 @@ public class BOMHelper {
             productIdKeys.add(productIdKey);
         }
         List<GenericValue> productNodesList = EntityQuery.use(delegator).from("ProductAssoc")
-                .where("productIdTo", productId, 
+                .where("productIdTo", productId,
                         "productAssocTypeId", bomType)
                 .cache().filterByDate(inDate).queryList();
         GenericValue duplicatedNode = null;

@@ -54,7 +54,7 @@ public class SecurePayPaymentServices {
         // generate the request/properties
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -107,7 +107,7 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1) {
@@ -124,7 +124,7 @@ public class SecurePayPaymentServices {
                 }
                 result.put("authCode", resp.getResponseCode());
                 result.put("authMessage", resp.getResponseText());
-            } 
+            }
         }
         return result;
     }
@@ -142,13 +142,13 @@ public class SecurePayPaymentServices {
             authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotCapture", locale));
         }
 
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -189,7 +189,7 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1){
@@ -221,13 +221,13 @@ public class SecurePayPaymentServices {
             authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRelease", locale));
         }
 
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -268,7 +268,7 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1){
@@ -297,7 +297,7 @@ public class SecurePayPaymentServices {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRefund", locale));
         }
 
@@ -314,7 +314,7 @@ public class SecurePayPaymentServices {
 
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -355,7 +355,7 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1){
@@ -384,7 +384,7 @@ public class SecurePayPaymentServices {
         // generate the request/properties
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -434,7 +434,7 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1) {

@@ -64,10 +64,10 @@ public class SupplierProductServices {
         String currencyUomId = (String) context.get("currencyUomId");
         BigDecimal quantity =(BigDecimal) context.get("quantity");
         String canDropShip = (String) context.get("canDropShip");
-        
+
         // SCIPIO: 2017-12-19: service now supports useCache=false (stock default is true), important for ECAs
         boolean useCache = !Boolean.FALSE.equals(context.get("useCache"));
-        
+
         try {
             product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(useCache).queryOne();
             if (product == null) {

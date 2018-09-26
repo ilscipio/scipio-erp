@@ -220,7 +220,7 @@ public class OrderReturnServices {
                     .queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
                     "OrderErrorUnableToGetReturnItemRecordsFromReturnHeader", locale));
         }
 
@@ -297,9 +297,9 @@ public class OrderReturnServices {
             }
         }
 
-        return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceProduct, 
-                "ProductProductStoreEmailSettingsNotValid", 
-                    UtilMisc.toMap("productStoreId", productStoreId, 
+        return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceProduct,
+                "ProductProductStoreEmailSettingsNotValid",
+                    UtilMisc.toMap("productStoreId", productStoreId,
                             "emailType", emailType), locale));
     }
 
@@ -440,8 +440,8 @@ public class OrderReturnServices {
                     String returnStatus = returnHeader.getString("statusId");
                     if (!"RETURN_CANCELLED".equals(returnStatus)) {
                         if(UtilValidate.isNotEmpty(returnItem.getBigDecimal("returnQuantity"))){
-                            returnedQty = returnedQty.add(returnItem.getBigDecimal("returnQuantity"));   
-                        } 
+                            returnedQty = returnedQty.add(returnItem.getBigDecimal("returnQuantity"));
+                        }
                     }
                 }
                 if (returnedQty.compareTo(orderQty) < 0) {
@@ -1502,7 +1502,7 @@ public class OrderReturnServices {
             orderHeader = paymentPref.getRelatedOne("OrderHeader", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get OrderHeader from OrderPaymentPreference", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "OrderOrderPaymentCannotBeCreatedWithRelatedOrderHeader", locale) + e.toString());
         }
 
@@ -1552,13 +1552,13 @@ public class OrderReturnServices {
                 paymentId = (String) paymentCreationResult.get("paymentId");
             }
         } catch (GenericServiceException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "OrderOrderPaymentFailed", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "OrderOrderPaymentFailed",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
 
         if (paymentId == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "OrderOrderPaymentFailed", UtilMisc.toMap("errorString", ""), locale));
         }
 
@@ -1574,8 +1574,8 @@ public class OrderReturnServices {
                         return paymentApplResult;
                     }
                 } catch (GenericServiceException e) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                            "OrderOrderPaymentApplicationFailed", 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                            "OrderOrderPaymentApplicationFailed",
                             UtilMisc.toMap("errorString", e.getMessage()), locale));
                 }
             }
@@ -2087,7 +2087,7 @@ public class OrderReturnServices {
                         Map<String, Object> createReturnItemResponseResult = dispatcher.runSync("createReturnItemResponse", itemResponse);
                         if (ServiceUtil.isError(createReturnItemResponseResult)) {
                             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-                                    "OrderProblemCreatingReturnItemResponseRecord", locale), 
+                                    "OrderProblemCreatingReturnItemResponseRecord", locale),
                                     null, null, createReturnItemResponseResult);
                         }
                         returnItemResponseId = (String) createReturnItemResponseResult.get("returnItemResponseId");
@@ -2304,7 +2304,7 @@ public class OrderReturnServices {
             serviceResult = dispatcher.runSync("getReturnAmountByOrder", UtilMisc.toMap("returnId", returnId));
         } catch (GenericServiceException e) {
             Debug.logError(e, "Problem running the getReturnAmountByOrder service", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
                     "OrderProblemsWithGetReturnAmountByOrder", locale));
         }
         if (ServiceUtil.isError(serviceResult)) {
@@ -2358,8 +2358,8 @@ public class OrderReturnServices {
             try {
                 orderAdjustment = EntityQuery.use(delegator).from("OrderAdjustment").where("orderAdjustmentId", orderAdjustmentId).queryOne();
                 if (orderAdjustment == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                            "OrderCreateReturnAdjustmentNotFoundOrderAdjustment", 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                            "OrderCreateReturnAdjustmentNotFoundOrderAdjustment",
                             UtilMisc.toMap("orderAdjustmentId", orderAdjustmentId), locale));
                 }
                 // get returnHeaderTypeId from ReturnHeader and then use it to figure out return item type mapping
@@ -2484,7 +2484,7 @@ public class OrderReturnServices {
                 delegator.store(returnAdjustment);
                 Debug.logInfo("Update ReturnAdjustment with Id:" + context.get("returnAdjustmentId") + " to amount " + amount +" successfully.", module);
                 result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
-                        "OrderUpdateReturnAdjustment", 
+                        "OrderUpdateReturnAdjustment",
                         UtilMisc.toMap("returnAdjustmentId", context.get("returnAdjustmentId"), "amount", amount), locale));
             } else {
                 result = ServiceUtil.returnSuccess();
@@ -2581,7 +2581,7 @@ public class OrderReturnServices {
      * @param context   context before clean up
      * @return filtered context
      * @throws GenericServiceException
-     * 
+     *
      * @deprecated - Use DispatchContext.makeValidContext(String, String, Map) instead
      */
     @Deprecated

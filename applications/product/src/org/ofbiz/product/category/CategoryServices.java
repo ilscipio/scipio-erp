@@ -449,9 +449,9 @@ public class CategoryServices {
         if (productCategoryMembers != null) result.put("productCategoryMembers", productCategoryMembers);
         return result;
     }
-    
+
     /**
-     * @deprecated SCIPIO: To be removed in future (TODO) - use 
+     * @deprecated SCIPIO: To be removed in future (TODO) - use
      * {@link com.ilscipio.scipio.product.category.CategoryEvents#getChildCategoryTree(HttpServletRequest, HttpServletResponse)}
      * or buildCategoryTree service instead.
      */
@@ -459,7 +459,7 @@ public class CategoryServices {
     public static String getChildCategoryTree(HttpServletRequest request, HttpServletResponse response) {
         return com.ilscipio.scipio.product.category.CategoryEvents.getChildCategoryTree(request, response);
     }
-    
+
     /**
      * SCIPIO: getProductCategoryContentLocalizedSimpleTextViews.
      * Added 2017-10-27.
@@ -468,29 +468,29 @@ public class CategoryServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-        
+
         String productCategoryId = (String) context.get("productCategoryId");
         Collection<String> prodCatContentTypeIdList = UtilGenerics.checkCollection(context.get("prodCatContentTypeIdList"));
         boolean filterByDate = !Boolean.FALSE.equals(context.get("filterByDate"));
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
-        
-        Map<String, List<GenericValue>> viewsByType = null; 
+
+        Map<String, List<GenericValue>> viewsByType = null;
         try {
-            viewsByType = CategoryWorker.getProductCategoryContentLocalizedSimpleTextViews(delegator, dispatcher, 
+            viewsByType = CategoryWorker.getProductCategoryContentLocalizedSimpleTextViews(delegator, dispatcher,
                     productCategoryId, prodCatContentTypeIdList, filterByDate ? UtilDateTime.nowTimestamp() : null, useCache);
             Map<String, Object> result = ServiceUtil.returnSuccess();
             postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(dctx, context, viewsByType, result);
             return result;
         } catch (Exception e) {
-            PropertyMessage msgIntro = PropertyMessage.makeWithVars("ProductErrorUiLabels", 
+            PropertyMessage msgIntro = PropertyMessage.makeWithVars("ProductErrorUiLabels",
                     "productservices.error_reading_ProductCategoryContent_simple_texts_for_alternate_locale_for_category",
                     "productCategoryId", productCategoryId);
             Debug.logError(e, PropertyMessageExUtil.makeLogMessage(msgIntro, e), module);
             return ServiceUtil.returnFailure(msgIntro, e, locale);
         }
     }
-    
-    public static void postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ?> context, 
+
+    public static void postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ?> context,
             Map<String, List<GenericValue>> viewsByType, Map<String, Object> result) {
         if (!Boolean.FALSE.equals(context.get("getViewsByType"))) {
             result.put("viewsByType", viewsByType);
@@ -502,7 +502,7 @@ public class CategoryServices {
             result.put("textByTypeAndLocale", LocalizedContentWorker.extractContentLocalizedSimpleTextDataByLocale(viewsByType));
         }
     }
-    
+
     /**
      * SCIPIO: replaceProductCategoryContentLocalizedSimpleTexts.
      * Added 2017-12-06.
@@ -512,20 +512,20 @@ public class CategoryServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         String productCategoryId = (String) context.get("productCategoryId");
-        
+
         try {
             GenericValue productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), false);
             if (productCategory == null) {
                 throw new IllegalArgumentException(UtilProperties.getMessage("ProductUiLabels", "ProductCategoryNotFoundForCategoryID", locale) + ": " + productCategoryId);
             }
-            
+
             Map<String, Object> contentFieldsUnparsed = UtilGenerics.checkMap(context.get("contentFields"));
             Map<String, List<Map<String, Object>>> contentFields = LocalizedContentWorker.parseLocalizedSimpleTextContentFieldParams(contentFieldsUnparsed, null, true);
-        
+
             for(Map.Entry<String, List<Map<String, Object>>> entry : contentFields.entrySet()) {
                 String prodCatContentTypeId = entry.getKey();
                 List<Map<String, Object>> entries = entry.getValue();
-            
+
                 List<GenericValue> productCategoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent")
                         .where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId).filterByDate()
                         .orderBy("-fromDate").queryList();
@@ -534,7 +534,7 @@ public class CategoryServices {
                     Debug.logWarning("replaceProductCategoryContentLocalizedSimpleTexts: Multiple active ProductCategoryContent found for prodCatContentTypeId '"
                             + prodCatContentTypeId + "' for category '" + productCategoryId + "'; updating only latest (contentId: '" + productCategoryContent.getString("contentId") + "')", module);
                 }
-                
+
                 String mainContentId = null;
                 if (productCategoryContent != null) {
                     mainContentId = productCategoryContent.getString("contentId");
@@ -550,7 +550,7 @@ public class CategoryServices {
                 if (mainContentId == null && servResult.get("mainContentId") != null) {
                     // must create a new ProductContent record
                     mainContentId = (String) servResult.get("mainContentId");
-                    
+
                     productCategoryContent = delegator.makeValue("ProductCategoryContent");
                     productCategoryContent.put("productCategoryId", productCategoryId);
                     productCategoryContent.put("contentId", mainContentId);
@@ -572,8 +572,8 @@ public class CategoryServices {
         }
     }
     private static String getReplStcAltLocErrorPrefix(Map<String, ?> context, Locale locale) {
-        return UtilProperties.getMessage("ProductErrorUiLabels", "productservices.error_updating_ProductCategoryContent_simple_texts_for_alternate_locale_for_category", 
+        return UtilProperties.getMessage("ProductErrorUiLabels", "productservices.error_updating_ProductCategoryContent_simple_texts_for_alternate_locale_for_category",
                 context, locale);
     }
-    
+
 }

@@ -49,7 +49,7 @@ public class PeriodServices {
 
     /**
      * SCIPIO: Builds a custom period tree
-     * 
+     *
      * @param dctx
      * @param context
      * @return

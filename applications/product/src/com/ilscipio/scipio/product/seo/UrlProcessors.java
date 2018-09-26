@@ -15,20 +15,20 @@ import org.ofbiz.base.util.Debug;
 public class UrlProcessors implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final UrlProcessors DUMMY = new UrlProcessors(Collections.<UrlProcessor>emptyList());
-    
-    
+
+
     protected final List<UrlProcessor> processorList;
-  
+
     protected UrlProcessors(Collection<UrlProcessor> processorList) {
         this.processorList = new ArrayList<>(processorList);
     }
-    
+
     public static UrlProcessors createProcessors(Collection<UrlProcessor> processorList) {
         return new UrlProcessors(processorList);
     }
-    
+
     public static UrlProcessors getDummyProcessors() {
         return DUMMY;
     }
@@ -48,13 +48,13 @@ public class UrlProcessors implements Serializable {
     public static abstract class UrlProcessor implements Serializable {
         protected UrlProcessor() {
         }
-        
+
         public abstract String processUrl(String url);
     }
-    
+
     public static class StaticMethodUrlProcessor extends UrlProcessor {
         private final Method method;
-        
+
         public StaticMethodUrlProcessor(Method method) {
             this.method = method;
         }
@@ -66,7 +66,7 @@ public class UrlProcessors implements Serializable {
             }
             String classLocation = methodLocation.substring(0, sep);
             String methodName = methodLocation.substring(sep + 1);
-            
+
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             Class<?> cls = loader.loadClass(classLocation);
             Method method = cls.getMethod(methodName, String.class);
@@ -89,7 +89,7 @@ public class UrlProcessors implements Serializable {
             return url;
         }
     }
-    
+
     /**
      * Replaces the Map<String, String> which did not preserve order and other concerns.
      */
@@ -99,7 +99,7 @@ public class UrlProcessors implements Serializable {
         public CharFilterUrlProcessor(Collection<CharFilter> charFilters) {
             this.charFilters = new ArrayList<>(charFilters);
         }
-        
+
         public static CharFilterUrlProcessor getProcessor(Collection<CharFilter> charFilters) {
             return new CharFilterUrlProcessor(charFilters);
         }
@@ -109,20 +109,20 @@ public class UrlProcessors implements Serializable {
             return CharFilter.applyCharFilters(url, charFilters);
         }
     }
-    
+
     public static class DummyUrlProcessor extends UrlProcessor {
         private static final DummyUrlProcessor INSTANCE = new DummyUrlProcessor();
-        
-        public static DummyUrlProcessor getProcessor() { 
+
+        public static DummyUrlProcessor getProcessor() {
             return INSTANCE;
         }
-        
+
         @Override
         public String processUrl(String url) {
             return url;
         }
     }
-    
+
     public static class CharFilter implements Serializable {
         private final Pattern from; // pre-compiled = faster
         private final String to;
@@ -131,18 +131,18 @@ public class UrlProcessors implements Serializable {
             this.from = from;
             this.to = to;
         }
-        
+
         public static CharFilter compile(String from, String to) {
             return new CharFilter(Pattern.compile(from), to);
         }
-        
+
         public Pattern getFrom() {
             return from;
         }
         public String getTo() {
             return to;
         }
-        
+
         public String apply(String url) {
             return from.matcher(url).replaceAll(to);
         }

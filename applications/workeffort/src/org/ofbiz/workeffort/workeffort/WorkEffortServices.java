@@ -93,10 +93,10 @@ public class WorkEffortServices {
                 if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                     TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                     conditionList.add(EntityCondition.makeCondition(
-                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                             EntityOperator.AND,
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateEnd())
-                    ));                    
+                    ));
                 }
                 EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
                 validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("estimatedStartDate", "priority").filterByDate().queryList();
@@ -133,10 +133,10 @@ public class WorkEffortServices {
             if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                 TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                 conditionList.add(EntityCondition.makeCondition(
-                        EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                        EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                         EntityOperator.AND,
                         EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateEnd())
-                ));                    
+                ));
             }
 
             EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -163,7 +163,7 @@ public class WorkEffortServices {
         List<GenericValue> validWorkEfforts = null;
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
-                List<EntityExpr> conditionList = new LinkedList<EntityExpr>();                
+                List<EntityExpr> conditionList = new LinkedList<EntityExpr>();
                 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "TASK"));
                 conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
@@ -174,15 +174,15 @@ public class WorkEffortServices {
                 if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                     TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                     conditionList.add(EntityCondition.makeCondition(
-                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                             EntityOperator.AND,
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateEnd())
-                    ));                    
-                }            
+                    ));
+                }
                 EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
                 validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("priority").filterByDate().queryList();
-                
-                conditionList = new LinkedList<EntityExpr>();                
+
+                conditionList = new LinkedList<EntityExpr>();
                 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"));
                 conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CANCELLED"));
@@ -191,10 +191,10 @@ public class WorkEffortServices {
                 if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                     TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                     conditionList.add(EntityCondition.makeCondition(
-                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                             EntityOperator.AND,
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateEnd())
-                    ));                    
+                    ));
                 }
                 ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
                 validWorkEfforts.addAll(EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("createdDate DESC").filterByDate().queryList());
@@ -215,7 +215,7 @@ public class WorkEffortServices {
 
     /**
     * SCIPIO:
-    * 
+    *
     * @param ctx
     * @param context
     * @return
@@ -237,14 +237,14 @@ public class WorkEffortServices {
                 if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                     TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                     conditionList.add(EntityCondition.makeCondition(
-                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                             EntityOperator.AND,
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateBegin())
-                    ));                    
+                    ));
                 }
                 EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
                 validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("priority").filterByDate().queryList();
-                
+
                 conditionList = new LinkedList<EntityExpr>();
                 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"));
@@ -255,10 +255,10 @@ public class WorkEffortServices {
                 if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                     TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                     conditionList.add(EntityCondition.makeCondition(
-                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                             EntityOperator.AND,
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateEnd())
-                    ));                    
+                    ));
                 }
                 ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
                 validWorkEfforts.addAll(EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("createdDate DESC").filterByDate().queryList());
@@ -279,7 +279,7 @@ public class WorkEffortServices {
 
     /**
     * SCIPIO:
-    * 
+    *
     * @param ctx
     * @param context
     * @return
@@ -301,10 +301,10 @@ public class WorkEffortServices {
                 if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                     TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                     constraints.add(EntityCondition.makeCondition(
-                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                             EntityOperator.AND,
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateEnd())
-                    ));                    
+                    ));
                 }
                 // constraints.add(EntityCondition.makeCondition("statusId",
                 // EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
@@ -346,10 +346,10 @@ public class WorkEffortServices {
                 if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                     TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                     constraints.add(EntityCondition.makeCondition(
-                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                             EntityOperator.AND,
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateEnd())
-                    ));                    
+                    ));
                 }
                 // SCIPIO: I don't think those are really used anywhere..
                 // commenting them out
@@ -398,10 +398,10 @@ public class WorkEffortServices {
                 if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                     TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                     constraints.add(EntityCondition.makeCondition(
-                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                             EntityOperator.AND,
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateEnd())
-                    ));                    
+                    ));
                 }
                 // SCIPIO: I don't think those are really used anywhere..
                 // commenting them out
@@ -451,10 +451,10 @@ public class WorkEffortServices {
                 if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
                     TimeInterval createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
                     constraints.add(EntityCondition.makeCondition(
-                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()), 
+                            EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.getDateBegin()),
                             EntityOperator.AND,
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.getDateEnd())
-                    ));                    
+                    ));
                 }
                 // SCIPIO: I don't think those are really used anywhere..
                 // commenting them out
@@ -672,18 +672,18 @@ public class WorkEffortServices {
 
         /*
         * To create testdata for this function for fixedasset/facility
-        * 
+        *
         * 1) go to Manufacturing -> JobShop, then click on
         * "create new Production run":
         * https://localhost:8443/manufacturing/control/CreateProductionRun 2)
         * enter as productId "PROD_MANUF", quantity 1, start date tomorrow and
         * press the submit button ` 3) in the next screen, click on the
         * "Confirm" link (top part of the sccreen)
-        * 
+        *
         * Now you have a confirmed production run (starting tomorrow) happening
         * in facility "ScipioShopWarehouse", with a task happening in fixed asset
         * "WORKCENTER_COST"
-        * 
+        *
         * In the calendars screen, selecting the proper facility you should see
         * the work effort associated to the production run; if you select the
         * proper fixed asset you should see the task.
@@ -1118,7 +1118,7 @@ public class WorkEffortServices {
     /**
     * Process work effort event reminders. This service is used by the job
     * scheduler.
-    * 
+    *
     * @param ctx
     *            the dispatch context
     * @param context
@@ -1345,7 +1345,7 @@ public class WorkEffortServices {
 
     /**
     * Migrate work effort event reminders.
-    * 
+    *
     * @param ctx
     *            the dispatch context
     * @param context

@@ -208,7 +208,7 @@ public class PayflowPro {
         }
 
         if (authTrans == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotCapture", locale));
         }
 
@@ -279,7 +279,7 @@ public class PayflowPro {
         }
 
         if (authTrans == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRelease", locale));
         }
 
@@ -354,7 +354,7 @@ public class PayflowPro {
         GenericValue captureTrans = PaymentGatewayServices.getCaptureTransaction(paymentPref);
 
         if (captureTrans == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRefund", locale));
         }
 
@@ -427,7 +427,7 @@ public class PayflowPro {
         String configString = "payment.properties";
 
         if (cart == null || cart.items().size() <= 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels", 
+            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels",
                     "AccountingPayPalShoppingCartIsEmpty", locale));
         }
 
@@ -447,7 +447,7 @@ public class PayflowPro {
             addCartDetails(data, cart);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayflowErrorRetreivingCartDetails", locale));
         }
 
@@ -475,7 +475,7 @@ public class PayflowPro {
         if (!"0".equals(result)) {
             String respMsg = responseMap.get("RESPMSG");
             Debug.logError("A problem occurred while requesting an express checkout token from paypal: Result = " + result + ", Message = " + respMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels", 
+            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels",
                     "AccountingPayPalCommunicationError", locale));
         }
         token = responseMap.get("TOKEN");
@@ -570,7 +570,7 @@ public class PayflowPro {
         Map<String, String> responseMap = parseResponse(resp);
         if (!"0".equals(responseMap.get("RESULT"))) {
             Debug.logError("A problem occurred while requesting the checkout details from paypal: Result = " + responseMap.get("RESULT") + ", Message = " + responseMap.get("RESPMSG"), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels", 
+            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels",
                     "AccountingPayPalCommunicationError", locale));
         }
 

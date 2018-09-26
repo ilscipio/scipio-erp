@@ -144,7 +144,7 @@ public class SagePayServices
         if(errorRequiredParameters.length() > 0){
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayPaymentAuthorisationException", UtilMisc.toMap("errorString", errorRequiredParameters), locale));
         }
-        
+
         parameters.put("VPSProtocol", vpsProtocol);
         parameters.put("TxType", txType);
         parameters.put("Vendor", vendor);

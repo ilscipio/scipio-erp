@@ -740,7 +740,7 @@ public class ProductStoreWorker {
     public static String getDefaultProductStoreEmailScreenLocation(String emailType) {
         return defaultProductStoreEmailScreenLocation.get(emailType);
     }
-    
+
     /**
      * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or null if none.
      */
@@ -753,7 +753,7 @@ public class ProductStoreWorker {
         }
         return null;
     }
-    
+
     /**
      * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
      * Prints warning if no content reference and multiple stores with different defaultLocaleString.
@@ -767,14 +767,14 @@ public class ProductStoreWorker {
         }
         GenericValue productStore = productStores.get(0);
         if (productStores.size() > 1 && multiWarningInfo != null) {
-            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify isContentReference=\"Y\"" 
-                    + "; defaultLocaleString and other content settings may be ambiguous; selecting first store (" 
+            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify isContentReference=\"Y\""
+                    + "; defaultLocaleString and other content settings may be ambiguous; selecting first store ("
                     + productStore.getString("productStoreId") + ", defaultLocaleString: " + productStore.getString("defaultLocaleString")
                     + ") as content reference", module);
         }
         return productStore;
     }
-    
+
     /**
      * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
      * Does not show warning if no content reference and multiple stores.

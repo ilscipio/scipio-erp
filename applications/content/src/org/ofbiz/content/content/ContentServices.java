@@ -82,7 +82,7 @@ public class ContentServices {
         List<String> targetOperations = UtilGenerics.checkList(context.get("targetOperationList"));
         List<String> contentTypes = UtilGenerics.checkList(context.get("contentTypeList"));
         List<GenericValue> contentList = null;
-        
+
         try {
             contentList = ContentWorker.getAssociatedContent(currentContent, toFrom, assocTypes, contentTypes, fromDate, thruDate);
         } catch (GenericEntityException e) {
@@ -525,7 +525,7 @@ public class ContentServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> result = new HashMap<String, Object>();
-        
+
         context.put("entityOperation", "_UPDATE");
         List<String> targetOperationList = ContentWorker.prepTargetOperationList(context, "_UPDATE");
 
@@ -1044,7 +1044,7 @@ public class ContentServices {
     public static Map<String, Object> publishContent(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException{
         Map<String, Object> result = new HashMap<String, Object>();
         GenericValue content = (GenericValue)context.get("content");
-        
+
         try {
             content.put("statusId", "CTNT_PUBLISHED");
             content.store();

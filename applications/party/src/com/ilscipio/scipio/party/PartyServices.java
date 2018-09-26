@@ -14,28 +14,28 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 public class PartyServices {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * Checks if an a UserLogin exists.
-     * 
+     *
      * @param dctx
      * @param context
      * @return
      */
-    public static Map<String,Object> findUserLogin(DispatchContext dctx, Map<String, ? extends Object> context) {        
+    public static Map<String,Object> findUserLogin(DispatchContext dctx, Map<String, ? extends Object> context) {
 
         Delegator delegator = dctx.getDelegator();
-        
+
         GenericValue userLogin = null;
         try {
-            userLogin = delegator.findOne("UserLogin", 
+            userLogin = delegator.findOne("UserLogin",
                     UtilMisc.toMap("userLoginId", context.get("userLoginId")),false);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Error trying to get UserLogin: " + e.getMessage());
-        }        
-        
+        }
+
         // to avoid that error messages are always printed out we return success, if no technical error occured
         Map<String,Object> result = ServiceUtil.returnSuccess();
         if (userLogin != null) {
@@ -48,10 +48,10 @@ public class PartyServices {
         }
         return result;
     }
-    
+
     /**
-     * Creates a Person and UserLogin and adds the new user to provided security groups. 
-     * 
+     * Creates a Person and UserLogin and adds the new user to provided security groups.
+     *
      * @param dctx
      * @param context
      * @return
@@ -60,7 +60,7 @@ public class PartyServices {
         Map<String,Object> result = null;
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
-        
+
         try {
             Map<String, Object> subContext = dctx.getModelService("createPersonAndUserLogin").makeValid(context,
                     ModelService.IN_PARAM);
@@ -68,27 +68,27 @@ public class PartyServices {
         } catch (GenericServiceException e) {
 
         }
-        
+
         if (!ServiceUtil.isError(result)) {
             GenericValue system;
             try {
                 system = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", "system"),false);
-                
+
                 Map<String, Object> subContext = dctx.getModelService("addUserLoginToSecurityGroup").makeValid(context,
                         ModelService.IN_PARAM);
                 subContext.put("userLogin", system);
 
                 Map<String,Object> resultGroups = dispatcher.runSync("addUserLoginToSecurityGroup", subContext);
-                
+
                 result.putAll(resultGroups);
-                
+
             } catch (GenericEntityException e) {
-               
+
             } catch (GenericServiceException e) {
 
             }
         }
-        
+
         return result;
     }
 

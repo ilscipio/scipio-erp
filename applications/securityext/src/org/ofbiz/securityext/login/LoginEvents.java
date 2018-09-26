@@ -307,12 +307,12 @@ public class LoginEvents {
             if (emailTemplateSetting != null) {
                 String subject = emailTemplateSetting.getString("subject");
                 subject = FlexibleStringExpander.expandString(subject, UtilMisc.toMap("userLoginId", userLoginId));
-                serviceContext.put("subject", subject);                
+                serviceContext.put("subject", subject);
                 serviceContext.put("sendFrom", emailTemplateSetting.get("fromAddress"));
             } else {
                 serviceContext.put("subject", UtilProperties.getMessage(resource, "loginservices.password_reminder_subject", UtilMisc.toMap("userLoginId", userLoginId), UtilHttp.getLocale(request)));
                 serviceContext.put("sendFrom", EntityUtilProperties.getPropertyValue("general", "defaultFromEmailAddress", delegator));
-            }            
+            }
         }
         serviceContext.put("sendTo", emails.toString());
         serviceContext.put("partyId", party.getString("partyId"));

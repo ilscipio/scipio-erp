@@ -128,7 +128,7 @@ public class CheckOutEvents {
                 request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
                 return "error";
             }
-            
+
             String taxAuthPartyGeoIds = request.getParameter("taxAuthPartyGeoIds");
             String partyTaxId = request.getParameter("partyTaxId");
             String isExempt = request.getParameter("isExempt");
@@ -220,7 +220,7 @@ public class CheckOutEvents {
 
             // SCIPIO: Support single-use for arbitrary pay methods
             addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
-            
+
             // check for gift card not on file
             Map<String, Object> params = UtilHttp.getParameterMap(request);
             Map<String, Object> gcResult = checkOutHelper.checkGiftCard(params, selectedPaymentMethods);
@@ -235,7 +235,7 @@ public class CheckOutEvents {
                     if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
                         singleUsePayments.add(gcPaymentMethodId);
                     }
-                    
+
                     // SCIPIO: Save the info of which paymentMethodId was just created for the new card
                     saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
                 }
@@ -254,7 +254,7 @@ public class CheckOutEvents {
                     return "error";
                 }
             }
-            
+
             Map<String, Object> callResult = checkOutHelper.setCheckOutPayment(selectedPaymentMethods, singleUsePayments, billingAccountId);
             ServiceUtil.getMessages(request, callResult, null);
 
@@ -282,8 +282,8 @@ public class CheckOutEvents {
             }
         }
     }
-    
-    
+
+
     private static final String DEFAULT_INIT_CHECKOUT_PAGE = "shippingaddress";
 
     /**
@@ -330,7 +330,7 @@ public class CheckOutEvents {
         // SCIPIO: We currently *may* run into additional problems if try to create new records during partial saves.
         // Also, note the fixme below is a stock fixme, not by us; it shouldn't be changed with current implementation (which is a "best-effort")...
         request.setAttribute("checkoutUseNewRecords", Boolean.FALSE);
-        
+
         // FIXME response need to be checked ?
         setCheckOutOptions(request, response);
         request.setAttribute("_ERROR_MESSAGE_", null);
@@ -357,7 +357,7 @@ public class CheckOutEvents {
         }
         return "success";
     }
-    
+
     /**
      * SCIPIO: Alternative event to {@link #checkPaymentMethods} that may be run <i>before</i> payment method
      * selection.
@@ -388,7 +388,7 @@ public class CheckOutEvents {
     public static Map<String, Map<String, Object>> getSelectedPaymentMethods(HttpServletRequest request) throws ServiceErrorException, GeneralException {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         Map<String, Map<String, Object>> selectedPaymentMethods = new HashMap<String, Map<String, Object>>();
-        
+
         // SCIPIO: Allow override via request attribs
         String[] paymentMethods;
         if (request.getAttribute("checkOutPaymentId") != null) {
@@ -405,7 +405,7 @@ public class CheckOutEvents {
         } else {
             paymentMethods = request.getParameterValues("checkOutPaymentId");
         }
-        
+
         if (UtilValidate.isNotEmpty(request.getParameter("issuerId"))) {
             request.setAttribute("issuerId", request.getParameter("issuerId"));
         }
@@ -430,7 +430,7 @@ public class CheckOutEvents {
                 } else {
                     throw new ServiceErrorException("Could not get pay method: " + ServiceUtil.getErrorMessage(payMethResult), payMethResult);
                 }
-                
+
                 String securityCode = request.getParameter("securityCode_" + origPaymentMethodId);
                 if (UtilValidate.isNotEmpty(securityCode)) {
                     paymentMethodInfo.put("securityCode", securityCode);
@@ -451,7 +451,7 @@ public class CheckOutEvents {
                     }
                 }
                 paymentMethodInfo.put("amount", amount);
-                
+
                 // SCIPIO: Get single-use flag
                 Boolean singleUseBool = null;
                 String singleUseFlag = request.getParameter("singleUsePayment_" + origPaymentMethodId);
@@ -461,7 +461,7 @@ public class CheckOutEvents {
                     singleUseBool = Boolean.FALSE;
                 }
                 paymentMethodInfo.put("singleUsePayment", singleUseBool);
-                
+
                 selectedPaymentMethods.put(paymentMethodId, paymentMethodInfo); // SCIPIO: edited
             }
         }
@@ -489,7 +489,7 @@ public class CheckOutEvents {
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
             return "error";
         }
-        
+
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
         // get the billing account and amount
@@ -509,7 +509,7 @@ public class CheckOutEvents {
         }
 
         String shippingMethod = request.getParameter("shipping_method");
-        
+
         // SCIPIO: Allow inlined address creation
         //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
         String shippingContactMechId;
@@ -545,7 +545,7 @@ public class CheckOutEvents {
 
         // SCIPIO: Support single-use for arbitrary pay methods
         addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
-        
+
         // get a request map of parameters
         Map<String, Object> params = UtilHttp.getParameterMap(request);
 
@@ -579,7 +579,7 @@ public class CheckOutEvents {
             if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
                 singleUsePayments.add(gcPaymentMethodId);
             }
-            
+
             // SCIPIO: Save the info of which paymentMethodId was just created for the new card
             saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
         }
@@ -636,12 +636,12 @@ public class CheckOutEvents {
                 request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
             }
         }
-        
+
         String issuerId = request.getParameter("issuerId");
         if (UtilValidate.isNotEmpty(issuerId)) {
             request.setAttribute("issuerId", issuerId);
         }
-        
+
 
         return cart.getOrderType().toLowerCase();
     }
@@ -865,7 +865,7 @@ public class CheckOutEvents {
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
         String shippingContactMechId = null;
         String shippingMethod = null;
-        BigDecimal shipEstimate = null; 
+        BigDecimal shipEstimate = null;
         String shippingInstructions = null;
         String maySplit = null;
         String giftMessage = null;
@@ -972,7 +972,7 @@ public class CheckOutEvents {
                         String[] shipInfo = shippingContactMechId.split("_@_");
                         if(shipInfo.length > 1){
                             shippingContactMechId = shipInfo[0];
-                            facilityId = shipInfo[1];   
+                            facilityId = shipInfo[1];
                         }
                     }
                     String supplierPartyId = request.getParameter(shipGroupIndex + "_supplierPartyId");
@@ -1101,12 +1101,12 @@ public class CheckOutEvents {
             if (errorMessages.size() == 0 && errorMaps.size() == 0) {
                 String gcPaymentMethodId = (String) callResult.get("paymentMethodId");
                 BigDecimal giftCardAmount = (BigDecimal) callResult.get("amount");
-                
+
                 // SCIPIO: Save the info of which paymentMethodId was just created for the new card
                 if (gcPaymentMethodId != null) {
                     saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
                 }
-                
+
                 // WARNING: if gcPaymentMethodId is not empty, all the previously set payment methods will be removed
                 Map<String, Object> gcCallRes = checkOutHelper.finalizeOrderEntryPayment(gcPaymentMethodId, giftCardAmount, true, true);
                 ServiceUtil.addErrors(errorMessages, errorMaps, gcCallRes);
@@ -1370,7 +1370,7 @@ public class CheckOutEvents {
             return "success";
         }
     }
-    
+
     /**
      * SCIPIO: Checks a ship contact meth ID; if it has the special value _NEW_, it will check other
      * params and try to create a new address before returning the new contact mech ID. This allows inlining
@@ -1386,7 +1386,7 @@ public class CheckOutEvents {
         String origContactMechId = contactMechId;
         if ("_NEW_".equals(contactMechId)) {
             // We need extra validation here because createPostalAddressAndPurposes is too generic and fails to do it and this is faster than making extra service
-            
+
             Collection<MapProcessor> paramValidators = null;
             String serviceName;
             String setShippingPurpose = getRequestAttribOrParam(request, paramPrefix + "setShippingPurpose");
@@ -1400,7 +1400,7 @@ public class CheckOutEvents {
                 overrideParams.put("setShippingPurpose", null);
                 overrideParams.put("contactMechPurposeTypeId", "SHIPPING_LOCATION");
             }
-            
+
             // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
             if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -1408,19 +1408,19 @@ public class CheckOutEvents {
                 result.put("origContactMechId", origContactMechId);
                 return result;
             }
-            
+
             paramValidators = UtilMisc.<MapProcessor>toList(getPostalAddressValidator(request));
             serviceName = "createPostalAddressAndPurposes";
-            
+
             Map<String, Object> servResult = runServiceFromParams(request, paramPrefix, serviceName, overrideParams, paramValidators);
-            
+
             if (!ServiceUtil.isSuccess(servResult)) {
                 Debug.logInfo("Could not create new ship contact mech during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
                 return servResult;
             } else {
                 contactMechId = (String) servResult.get("contactMechId");
             }
-            
+
             Map<String, Object> newShipContactMechInfoMap = UtilGenerics.checkMap(request.getAttribute("newShipContactMechInfoMap"));
             if (newShipContactMechInfoMap == null) {
                 newShipContactMechInfoMap = new HashMap<String, Object>();
@@ -1429,7 +1429,7 @@ public class CheckOutEvents {
             info.put("contactMechId", contactMechId);
             newShipContactMechInfoMap.put(origContactMechId, info);
             request.setAttribute("newShipContactMechInfoMap", newShipContactMechInfoMap);
-            
+
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("contactMechId", contactMechId);
             result.put("origContactMechId", origContactMechId);
@@ -1442,7 +1442,7 @@ public class CheckOutEvents {
             return result;
         }
     }
-    
+
     /**
      * SCIPIO: Checks a pay method contact meth ID; if it has the special value _NEW_CREDIT_CARD_ or _NEW_EFT_ACCOUNT_ as prefix, it will check other
      * params and try to create new records before returning the new contact mech ID. This allows inlining
@@ -1454,16 +1454,16 @@ public class CheckOutEvents {
      * <p>
      * NOTE: This also sets a newPaymentMethodInfoMap map in request attributes that screens may need.
      */
-    public static Map<String, Object> checkPaymentMethodIdForNew(HttpServletRequest request, String paymentMethodId, 
+    public static Map<String, Object> checkPaymentMethodIdForNew(HttpServletRequest request, String paymentMethodId,
             String ccParamPrefix, String eftParamPrefix) throws GeneralException {
-        
+
         String origPaymentMethodId = paymentMethodId;
         Collection<MapProcessor> paramValidators = null;
         String serviceName;
         Map<String, Object> overrideParams = new HashMap<String, Object>();
         String paramPrefix;
 
-        if (paymentMethodId != null && paymentMethodId.startsWith("_NEW_CREDIT_CARD_")) {  
+        if (paymentMethodId != null && paymentMethodId.startsWith("_NEW_CREDIT_CARD_")) {
             // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
             if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -1471,7 +1471,7 @@ public class CheckOutEvents {
                 result.put("origPaymentMethodId", origPaymentMethodId);
                 return result;
             }
-            
+
             paramPrefix = ccParamPrefix + paymentMethodId.substring("_NEW_CREDIT_CARD_".length());
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
             if (UtilValidate.isNotEmpty(addrContactMechId)) {
@@ -1480,7 +1480,7 @@ public class CheckOutEvents {
                     // other inline stuff already (not delayed to another screen)
                     serviceName = "createCreditCardAndAddress";
                     paramValidators = UtilMisc.<MapProcessor>toList(
-                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml",
                                     "createCreditCard"),
                             getPostalAddressValidator(request)
                             );
@@ -1488,7 +1488,7 @@ public class CheckOutEvents {
                 } else {
                     serviceName = "createCreditCard";
                     paramValidators = UtilMisc.<MapProcessor>toList(
-                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml",
                             "createCreditCard")
                             );
                 }
@@ -1505,14 +1505,14 @@ public class CheckOutEvents {
                 result.put("origPaymentMethodId", origPaymentMethodId);
                 return result;
             }
-            
+
             paramPrefix = eftParamPrefix + paymentMethodId.substring("_NEW_EFT_ACCOUNT_".length());
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
             if (UtilValidate.isNotEmpty(addrContactMechId)) {
                 if ("_NEW_".equals(addrContactMechId)) {
                     serviceName = "createEftAccountAndAddress";
                     paramValidators = UtilMisc.<MapProcessor>toList(
-                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml",
                                     "createEftAccount"),
                             getPostalAddressValidator(request)
                             );
@@ -1520,7 +1520,7 @@ public class CheckOutEvents {
                 } else {
                     serviceName = "createEftAccount";
                     paramValidators = UtilMisc.<MapProcessor>toList(
-                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml",
                             "createEftAccount")
                             );
                 }
@@ -1535,27 +1535,27 @@ public class CheckOutEvents {
             result.put("origPaymentMethodId", origPaymentMethodId);
             return result;
         }
-        
+
         Map<String, Object> servResult = runServiceFromParams(request, paramPrefix, serviceName, overrideParams, paramValidators);
-        
+
         if (!ServiceUtil.isSuccess(servResult)) {
             Debug.logInfo("Could not create new pay method during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
             return servResult;
         } else {
             paymentMethodId = (String) servResult.get("paymentMethodId");
         }
-        
+
         // UPDATED: If we successfully created a pay method during this request, set a map in request attributes
         // that maps the _NEW_xxxx to the new ID. Screens may need this to work around lack of global event transactions and param preselection issues.
         saveToNewPaymentMethodIdMap(request, origPaymentMethodId, paymentMethodId);
-        
+
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("paymentMethodId", paymentMethodId);
         result.put("origPaymentMethodId", origPaymentMethodId);
         result.put("paramPrefix", paramPrefix);
         return result;
     }
-    
+
     static void saveToNewPaymentMethodIdMap(HttpServletRequest request, String origId, String paymentMethodId)  {
         Map<String, Object> newPaymentMethodInfoMap = UtilGenerics.checkMap(request.getAttribute("newPaymentMethodIdMap"));
         if (newPaymentMethodInfoMap == null) {
@@ -1565,25 +1565,25 @@ public class CheckOutEvents {
         info.put("paymentMethodId", paymentMethodId);
         newPaymentMethodInfoMap.put(origId, info);
         request.setAttribute("newPaymentMethodInfoMap", newPaymentMethodInfoMap);
-        
+
     }
 
     public static MapProcessor getPostalAddressValidator(HttpServletRequest request) {
-        return SimpleMapProcessorProcessor.getInstance(request, "component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml", 
+        return SimpleMapProcessorProcessor.getInstance(request, "component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml",
                 "postalAddress");
     }
-    
-    
+
+
     /**
      * SCIPIO: Service invocation helper; uses combine req attribs + params.
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
      */
-    public static Map<String, Object> runServiceFromParams(HttpServletRequest request, String paramPrefix, 
+    public static Map<String, Object> runServiceFromParams(HttpServletRequest request, String paramPrefix,
             String serviceName, Map<String, Object> overrideParams, Collection<MapProcessor> paramValidators) throws GeneralException {
-        
+
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        
+
         Map<String, Object> combinedMap = UtilHttp.getCombinedMap(request);
         Map<String, Object> context;
         if (paramPrefix.isEmpty()) {
@@ -1608,7 +1608,7 @@ public class CheckOutEvents {
         servCtx.put("locale", combinedMap.get("locale"));
         return dispatcher.runSync(serviceName, servCtx);
     }
-    
+
     /**
      * SCIPIO: Local util to get request attrib or param of same name. If request attrib is null, falls back
      * to params.
@@ -1624,7 +1624,7 @@ public class CheckOutEvents {
                 res = (String) resObj;
             } else {
                 res = resObj.toString();
-                Debug.logWarning("Scipio: WARNING: Reading non-string request attribute '" + name + 
+                Debug.logWarning("Scipio: WARNING: Reading non-string request attribute '" + name +
                         "' as string (value: '" + res + "')", module);
             }
         } else {
@@ -1632,7 +1632,7 @@ public class CheckOutEvents {
         }
         return res;
     }
-    
+
     static String getRequestAttribOrParamPrefix(HttpServletRequest request, String name) {
         if (name == null || name.isEmpty()) {
             return "";
@@ -1643,17 +1643,17 @@ public class CheckOutEvents {
         }
         return res;
     }
-    
+
     // SCIPIO: Alternative pattern meant for integration with setCheckoutError; not yet needed.
 //    /**
-//     * SCIPIO: This creates a note in the request of the type of error we ran into. 
+//     * SCIPIO: This creates a note in the request of the type of error we ran into.
 //     */
 //    static void registerCheckoutError(HttpServletRequest request, String errorType) {
 //        List<String> errors = getCheckoutErrors(request);
 //        errors.add(errorType);
 //        request.setAttribute("checkoutErrors", errors);
 //    }
-//    
+//
 //    /**
 //     * SCIPIO: Gets a list of checkout error types recorded during the request so far.
 //     */
@@ -1664,5 +1664,5 @@ public class CheckOutEvents {
 //        }
 //        return errors;
 //    }
-    
+
 }

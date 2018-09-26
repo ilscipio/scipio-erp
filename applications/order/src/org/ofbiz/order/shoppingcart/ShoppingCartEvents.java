@@ -76,7 +76,7 @@ public class ShoppingCartEvents {
     public static final String resource_error = "OrderErrorUiLabels";
 
     public static final String product_resource_error = "ProductErrorUiLabels"; // SCIPIO: new
-    
+
     private static final String NO_ERROR = "noerror";
     private static final String NON_CRITICAL_ERROR = "noncritical";
     private static final String ERROR = "error";
@@ -208,7 +208,7 @@ public class ShoppingCartEvents {
         // not used right now: Map attributes = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         Locale locale = UtilHttp.getLocale(request);
-       
+
         // Get the parameters as a MAP, remove the productId and quantity params.
         Map<String, Object> paramMap = UtilHttp.getCombinedMap(request);
 
@@ -361,7 +361,7 @@ public class ShoppingCartEvents {
         if (priceStr == null) {
             priceStr = "0";  // default price is 0
         }
-        
+
         if ("ASSET_USAGE_OUT_IN".equals(ProductWorker.getProductTypeId(delegator, productId))) {
             if (paramMap.containsKey("numberOfDay")) {
                 numberOfDay = (String) paramMap.remove("numberOfDay");
@@ -369,7 +369,7 @@ public class ShoppingCartEvents {
                 reservEnd = UtilDateTime.addDaysToTimestamp(reservStart, Integer.valueOf(numberOfDay));
             }
         }
-        
+
         // get the renting data
         if ("ASSET_USAGE".equals(ProductWorker.getProductTypeId(delegator, productId)) || "ASSET_USAGE_OUT_IN".equals(ProductWorker.getProductTypeId(delegator, productId))) {
             if (paramMap.containsKey("reservStart")) {
@@ -471,7 +471,7 @@ public class ShoppingCartEvents {
         // parse the quantity
         try {
             quantity = (BigDecimal) ObjectType.simpleTypeConvert(quantityStr, "BigDecimal", null, locale);
-            //For quantity we should test if we allow to add decimal quantity for this product an productStore : 
+            //For quantity we should test if we allow to add decimal quantity for this product an productStore :
             // if not and if quantity is in decimal format then return error.
             if(! ProductWorker.isDecimalQuantityOrderAllowed(delegator, productId, cart.getProductStoreId())){
                 BigDecimal remainder = quantity.remainder(BigDecimal.ONE);
@@ -627,7 +627,7 @@ public class ShoppingCartEvents {
                 Debug.logError(e.getMessage(), module);
             }
         }
-        
+
         // check for alternative packing
         if(ProductWorker.isAlternativePacking(delegator, productId , parentProductId)){
             GenericValue parentProduct = null;
@@ -736,7 +736,7 @@ public class ShoppingCartEvents {
         HttpSession session = request.getSession();
         Locale locale = UtilHttp.getLocale(request);
         String supplierPartyId = request.getParameter("supplierPartyId_o_0");
-        
+
         // check the preferred currency of the supplier, if set, use that for the cart, otherwise use system defaults.
         ShoppingCart cart = null;
         try {
@@ -749,7 +749,7 @@ public class ShoppingCartEvents {
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
         }
-        
+
         // TODO: the code below here needs some cleanups
         String billToCustomerPartyId = request.getParameter("billToCustomerPartyId_o_0");
         if (UtilValidate.isEmpty(billToCustomerPartyId) && UtilValidate.isEmpty(supplierPartyId)) {
@@ -917,7 +917,7 @@ public class ShoppingCartEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         if (userLogin != null && "anonymous".equals(userLogin.get("userLoginId"))) {
             Locale locale = UtilHttp.getLocale(session);
-            
+
             // here we want to do a full logout, but not using the normal logout stuff because it saves things in the UserLogin record that we don't want changed for the anonymous user
             session.invalidate();
             session = request.getSession(true);
@@ -929,7 +929,7 @@ public class ShoppingCartEvents {
             request.setAttribute("temporaryAnonymousUserLogin", userLogin);
 
             // SCIPIO: Changing this behavior to PRESERVE the previous anon user login (especially the temporary userLogin.partyId).
-            // This is to allow the anon user to view additional order documents after the next immediate request. 
+            // This is to allow the anon user to view additional order documents after the next immediate request.
             // If we don't do this, the anon user only gets to see one page and any refresh
             // causes him to lose access to all information not mailed to him.
             // Keeping the anon userLogin also allows keeping the previous temporary partyId which
@@ -945,7 +945,7 @@ public class ShoppingCartEvents {
 
         return "success";
     }
-    
+
     /**
      * SCIPIO: Clears the cart, and if it gets destroyed in the process, make sure another is created.
      * <p>
@@ -953,7 +953,7 @@ public class ShoppingCartEvents {
      */
     public static String clearEnsureCart(HttpServletRequest request, HttpServletResponse response) {
         String result;
-        
+
         result = clearCart(request, response);
         if (!"success".equals(result)) {
             return "error";
@@ -962,10 +962,10 @@ public class ShoppingCartEvents {
         if (cart == null) {
             return "error";
         }
-        
+
         return "success";
     }
-    
+
     /**
      * SCIPIO: Checks if cart empty and valid. If missing or empty, returns cartEmpty. If broken some other way,
      * returns "error". Otherwise, returns "success".
@@ -1873,7 +1873,7 @@ public class ShoppingCartEvents {
                 }
 
                 try {
-                    //For quantity we should test if we allow to add decimal quantity for this product an productStore : 
+                    //For quantity we should test if we allow to add decimal quantity for this product an productStore :
                     // if not and if quantity is in decimal format then return error.
                     if(! ProductWorker.isDecimalQuantityOrderAllowed(delegator, productId, cart.getProductStoreId())){
                         BigDecimal remainder = quantity.remainder(BigDecimal.ONE);
@@ -1966,7 +1966,7 @@ public class ShoppingCartEvents {
         // set the agreement if specified otherwise set the currency
         if (UtilValidate.isNotEmpty(agreementId)) {
             result = cartHelper.selectAgreement(agreementId);
-        } 
+        }
         if (UtilValidate.isNotEmpty(cart.getCurrency()) && UtilValidate.isNotEmpty(currencyUomId)) {
             result = cartHelper.setCurrency(currencyUomId);
         }

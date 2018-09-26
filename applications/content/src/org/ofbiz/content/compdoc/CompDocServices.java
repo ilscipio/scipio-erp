@@ -60,7 +60,7 @@ import com.lowagie.text.pdf.PdfReader;
 public class CompDocServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ContentUiLabels";
-    
+
     /**
      *
      * Creates the topmost Content entity of a Composite Document tree.
@@ -329,7 +329,7 @@ public class CompDocServices {
             } else if (inputMimeType != null && inputMimeType.equals("text/html")) {
                 ByteBuffer byteBuffer = DataResourceWorker.getContentAsByteBuffer(delegator, dataResourceId, https, webSiteId, locale, rootDir);
                 inputByteArray = byteBuffer.array();
-                String s = new String(inputByteArray, UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8() 
+                String s = new String(inputByteArray, UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8()
                 Debug.logInfo("text/html string:" + s, module);
             } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
                 String surveyResponseId = dataResource.getString("relatedDetailId");

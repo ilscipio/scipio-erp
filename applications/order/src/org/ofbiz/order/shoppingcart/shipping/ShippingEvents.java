@@ -269,7 +269,7 @@ public class ShippingEvents {
         }
         return genericShipAmt;
     }
-    
+
     public static String getShipmentCustomMethod(Delegator delegator, String shipmentCustomMethodId) {
         String serviceName = null;
         GenericValue customMethod = null;
@@ -316,7 +316,7 @@ public class ShippingEvents {
                 context.put("serviceConfigProps", configProps);
                 context.put("shipmentCustomMethodId", shipmentCustomMethodId);
                 context.put("shipmentGatewayConfigId", shipmentGatewayConfigId);
-                
+
                 // invoke the service
                 Map<String, Object> serviceResp = null;
                 try {

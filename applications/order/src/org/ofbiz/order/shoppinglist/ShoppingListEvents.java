@@ -100,7 +100,7 @@ public class ShoppingListEvents {
             errMsg = UtilProperties.getMessage(resource_error, "shoppinglistevents.select_items_to_add_to_list", cart.getLocale());
             throw new IllegalArgumentException(errMsg);
         }
-       
+
         if (UtilValidate.isEmpty(shoppingListId)) {
             // create a new shopping list
             Map<String, Object> newListResult = null;
@@ -370,7 +370,7 @@ public class ShoppingListEvents {
             Map<String, Object> findMap = UtilMisc.<String, Object>toMap("partyId", partyId, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
             List<GenericValue> existingLists = EntityQuery.use(delegator).from("ShoppingList").where(findMap).queryList();
             Debug.logInfo("Finding existing auto-save shopping list with:  \nfindMap: " + findMap + "\nlists: " + existingLists, module);
-    
+
             if (UtilValidate.isNotEmpty(existingLists)) {
                 list = EntityUtil.getFirst(existingLists);
                 autoSaveListId = list.getString("shoppingListId");
@@ -615,7 +615,7 @@ public class ShoppingListEvents {
         }
         return arr;
     }
-    
+
     /**
      * Create the guest cookies for a shopping list
      */
@@ -631,7 +631,7 @@ public class ShoppingListEvents {
         int cookieAge = (60 * 60 * 24 * 30);
         String autoSaveListId = null;
         Cookie[] cookies = request.getCookies();
-        
+
         // check userLogin
         if (userLogin != null) {
             String partyId = userLogin.getString("partyId");
@@ -639,7 +639,7 @@ public class ShoppingListEvents {
                 return "success";
             }
         }
-        
+
         // find shopping list ID
         if (cookies != null) {
             for (Cookie cookie: cookies) {
@@ -649,7 +649,7 @@ public class ShoppingListEvents {
                 }
             }
         }
-        
+
         // clear the auto-save info
         if (ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
             if (UtilValidate.isEmpty(autoSaveListId)) {
@@ -668,7 +668,7 @@ public class ShoppingListEvents {
                 guestShoppingListCookie.setSecure(true);
                 guestShoppingListCookie.setHttpOnly(true);
                 response.addCookie(guestShoppingListCookie);
-            } 
+            }
         }
         if (UtilValidate.isNotEmpty(autoSaveListId)) {
             if (UtilValidate.isNotEmpty(cart)) {
@@ -680,7 +680,7 @@ public class ShoppingListEvents {
         }
         return "success";
     }
-    
+
     /**
      * Clear the guest cookies for a shopping list
      */

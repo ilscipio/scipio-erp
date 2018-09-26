@@ -13,9 +13,9 @@ public class AccountingPayMethPlugins {
     private static final AccountingPayMethPlugins INSTANCE = new AccountingPayMethPlugins(
             PayMethPlugins.getPayMethPluginHandlersOfType(AccountingPayMethPluginHandler.class)
             );
-    
+
     protected final List<AccountingPayMethPluginHandler> handlers;
-    
+
     protected AccountingPayMethPlugins(List<AccountingPayMethPluginHandler> handlers) {
         this.handlers = handlers;
     }
@@ -27,8 +27,8 @@ public class AccountingPayMethPlugins {
     public List<AccountingPayMethPluginHandler> getHandlers() {
         return handlers;
     }
-    
-    /* 
+
+    /*
      * ********************************************************************
      * Main processing methods, for insertion into stock ofbiz code
      * ********************************************************************
@@ -40,7 +40,7 @@ public class AccountingPayMethPlugins {
         // TODO
         return null;
     }
-    
+
     public Object processForCart(String paymentMethodTypeId, Object... obj) {
         // TODO
         return null;

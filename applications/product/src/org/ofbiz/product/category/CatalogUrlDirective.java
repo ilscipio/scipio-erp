@@ -88,7 +88,7 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
         boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
         final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
-        
+
         String productId = TransformUtil.getStringArg(args, "productId", rawParams);
         String currentCategoryId = TransformUtil.getStringArg(args, "currentCategoryId", rawParams);
         String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
@@ -104,15 +104,15 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
 
         // SCIPIO: 2018-08-02: get proper locale
         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
-        
+
         if (request != null) {
-            FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams), 
-                    request, 
+            FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams),
+                    request,
                     null);
             // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
             HttpServletResponse response = ContextFtlUtil.getResponse(env);
             //String url = CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
-            String url = CatalogUrlServlet.makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, urlParams,  
+            String url = CatalogUrlServlet.makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, urlParams,
                     targetWebappInfo, fullPath, secure, encode);
             if (url != null) {
                 env.getOut().write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
@@ -121,11 +121,11 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
             Map<String, Object> context = ContextFtlUtil.getContext(env);
             Delegator delegator = ContextFtlUtil.getDelegator(request, env);
             LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
-            FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams), 
-                    null, 
+            FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams),
+                    null,
                     context);
             // SCIPIO: New: Handle non-request cases
-            String url = CatalogUrlServlet.makeCatalogLink(context, delegator, dispatcher, locale, productId, 
+            String url = CatalogUrlServlet.makeCatalogLink(context, delegator, dispatcher, locale, productId,
                     currentCategoryId, previousCategoryId, urlParams, targetWebappInfo, fullPath, secure, encode);
             if (url != null) {
                 env.getOut().write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));

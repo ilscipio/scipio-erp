@@ -40,17 +40,17 @@ public class SitemapConfig implements Serializable {
 
     public static final String SITEMAPCONFIGS_RESOURCE = "sitemaps"; // .properties
     public static final String SITEMAPCOMMON_RESOURCE = "sitemapcommon"; // .properties
-    
+
     public static final int DEFAULT_SITEMAP_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.sitemapsize", 50000);
     public static final int DEFAULT_INDEX_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.indexsize", 50000);
-    
+
     private static final String logPrefix = SitemapGenerator.logPrefix;
-    
+
     private static class StaticConfigHolder {
         // TODO?: in future could have DB config
         private static final Map<String, SitemapConfig> staticConfigs = Collections.unmodifiableMap(readStaticConfigsFromProperties());
     }
-    
+
     private static final Map<String, W3CDateFormat.Pattern> dateFormatTypeMap;
     static {
         Map<String, W3CDateFormat.Pattern> map = new HashMap<>();
@@ -59,9 +59,9 @@ public class SitemapConfig implements Serializable {
         }
         dateFormatTypeMap = Collections.unmodifiableMap(map);
     }
-    
+
     private final String webSiteId;
-    
+
     private final String urlConfPath;
     private final String baseUrl;
     private final boolean baseUrlSecure;
@@ -84,20 +84,20 @@ public class SitemapConfig implements Serializable {
     // TODO?: REVIEW: I don't see a reason to implement this for sitemaps yet...
     // see SitemapWorker#buildSitemapProduct
     private final boolean doChildProduct = false;
-    
+
     private final boolean useProductLastModDate;
     // TODO: REVIEW: did not see guarantee that this class is thread-safe
     private final W3CDateFormat dateFormat;
-    
+
     private final String compress;
-    
+
     private final List<Locale> locales;
-    
+
     private final Set<String> prodCatalogIds;
     private final Set<String> prodCatalogCategoryTypeIds;
-    
+
     private final boolean includeVariant;
-    
+
     public SitemapConfig(Map<String, Object> map, String webSiteId) {
         this.webSiteId = webSiteId;
         this.urlConfPath = asNormString(map.get("urlConfPath"));
@@ -125,7 +125,7 @@ public class SitemapConfig implements Serializable {
         this.doProduct = asBoolean(map.get("doProduct"), true);
         this.doCategory = asBoolean(map.get("doCategory"), true);
         this.doCmsPage = asBoolean(map.get("doCmsPage"), true);
-        
+
         this.useProductLastModDate = asBoolean(map.get("useProductLastModDate"), false);
         String dateFormatStr = asNormString(map.get("dateFormat"));
         W3CDateFormat.Pattern pattern = null;
@@ -133,7 +133,7 @@ public class SitemapConfig implements Serializable {
             try {
                 pattern = W3CDateFormat.Pattern.valueOf(dateFormatStr);
             } catch(Exception e) {
-                Debug.logError(logPrefix+"website '" + webSiteId + "' sitemaps.properties configuration error: invalid dateFormat value (" + dateFormatStr + "): " 
+                Debug.logError(logPrefix+"website '" + webSiteId + "' sitemaps.properties configuration error: invalid dateFormat value (" + dateFormatStr + "): "
                         + e.getMessage() + " (supported values: " + dateFormatTypeMap.keySet().toString() + ")", module);
             }
         }
@@ -147,24 +147,24 @@ public class SitemapConfig implements Serializable {
             }
         }
         this.dateFormat = dateFormat;
-        
+
         this.compress = asNormString(map.get("compress"), "gzip");
-        
+
         this.locales = Collections.unmodifiableList(parseLocales(asNormString(map.get("locales"))));
-        
+
         this.prodCatalogIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("prodCatalogIds")));
         this.prodCatalogCategoryTypeIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("prodCatalogCategoryTypeIds")));
         this.includeVariant = asBoolean(map.get("includeVariant"), false);
     }
-    
+
     public static SitemapConfig getSitemapConfigForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId) {
         return StaticConfigHolder.staticConfigs.get(webSiteId);
     }
-    
+
     public static Map<String, SitemapConfig> getAllSitemapConfigs(Delegator delegator, LocalDispatcher dispatcher) {
         return StaticConfigHolder.staticConfigs;
     }
-    
+
     protected static Map<String, SitemapConfig> readStaticConfigsFromProperties() {
         Map<String, SitemapConfig> configs = new HashMap<>();
         try {
@@ -197,21 +197,21 @@ public class SitemapConfig implements Serializable {
         }
         return configs;
     }
-    
+
     private static String asNormString(Object obj, String defaultValue) {
         if (obj == null) return defaultValue;
         String str = obj.toString().trim();
         return str.isEmpty() ? defaultValue : str;
     }
-    
+
     private static String asNormString(Object obj) {
         return asNormString(obj, null);
     }
-    
+
     private static Boolean asBoolean(Object obj, Boolean defaultValue) {
         return UtilMisc.booleanValueVersatile(obj, defaultValue);
     }
-    
+
     private static Integer asInteger(Object obj, Integer defaultValue) {
         if (obj == null) return defaultValue;
         else if (obj instanceof Integer) return (Integer) obj;
@@ -232,7 +232,7 @@ public class SitemapConfig implements Serializable {
     }
 
     // SIMPLE GETTERS
-    
+
     public String getWebSiteId() {
         return webSiteId;
     }
@@ -248,7 +248,7 @@ public class SitemapConfig implements Serializable {
     public String getBaseUrl() {
         return baseUrl;
     }
-    
+
     public boolean isBaseUrlSecure() {
         return baseUrlSecure;
     }
@@ -268,7 +268,7 @@ public class SitemapConfig implements Serializable {
     public String getWebappPathPrefix() {
         return webappPathPrefix;
     }
-    
+
     public String getContextPath() {
         return contextPath;
     }
@@ -312,11 +312,11 @@ public class SitemapConfig implements Serializable {
     public boolean isDoCategory() {
         return doCategory;
     }
-    
+
     public boolean isDoContent() {
         return isDoCmsPage(); // only one for now
     }
-    
+
     public boolean isDoCmsPage() {
         return doCmsPage;
     }
@@ -340,15 +340,15 @@ public class SitemapConfig implements Serializable {
     public boolean isGzip() {
         return "gzip".equals(getCompress());
     }
-    
+
     public List<Locale> getLocales() {
         return locales;
     }
-    
+
     public List<Locale> getLocalesOrDefault(GenericValue webSite, GenericValue productStore) {
         return locales.isEmpty() ? UtilMisc.toList(getDefaultLocale(webSite, productStore)) : locales;
     }
-    
+
     public Locale getDefaultLocale(GenericValue webSite, GenericValue productStore) {
         if (locales.size() > 0) return locales.get(0);
         else if (productStore != null) {
@@ -362,7 +362,7 @@ public class SitemapConfig implements Serializable {
             return Locale.getDefault();
         }
     }
-    
+
     /**
      * Allowed prodCatalogIds or null if no filter.
      */
@@ -384,7 +384,7 @@ public class SitemapConfig implements Serializable {
     public boolean isIncludeVariant() {
         return includeVariant;
     }
-    
+
     // ADVANCED GETTERS
 
     public String getSitemapDirUrlLocation(String webappDir) {
@@ -405,7 +405,7 @@ public class SitemapConfig implements Serializable {
         urlBuilder.buildHostPart(sb, secure);
         return sb.toString();
     }
-    
+
     /**
      * Abstraction method, for Sitemap use only.
      */
@@ -415,7 +415,7 @@ public class SitemapConfig implements Serializable {
         PathUtil.removeTrailDelim(sb);
         return sb.toString();
     }
-    
+
     /**
      * Abstraction method, for Sitemap use only.
      */
@@ -452,7 +452,7 @@ public class SitemapConfig implements Serializable {
         }
         return sb.toString();
     }
-    
+
     /**
      * TODO: util instead
      */
@@ -473,7 +473,7 @@ public class SitemapConfig implements Serializable {
         locales.trimToSize();
         return locales;
     }
-    
+
     static Set<String> splitTokensToSet(String str) {
         Set<String> set = new LinkedHashSet<>();
         if (str != null) {
@@ -483,10 +483,10 @@ public class SitemapConfig implements Serializable {
         }
         return set;
     }
-    
+
     static Set<String> splitTokensToUnmodifiableSetOrNull(String str) {
         Set<String> set = splitTokensToSet(str);
         return set.isEmpty() ? null : Collections.unmodifiableSet(set);
     }
-    
+
 }

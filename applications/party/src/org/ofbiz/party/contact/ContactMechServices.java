@@ -89,7 +89,7 @@ public class ContactMechServices {
         try {
             newCmId = delegator.getNextSeqId("ContactMech");
         } catch (IllegalArgumentException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "contactmechservices.could_not_create_contact_info_id_generation_failure", locale));
         }
 
@@ -143,7 +143,7 @@ public class ContactMechServices {
         boolean isModified = false;
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_UPDATE");
-        
+
         if (result.size() > 0)
             return result;
 
@@ -170,7 +170,7 @@ public class ContactMechServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "contactmechservices.could_not_find_specified_contact_info_read", locale));
         }
-        
+
         if (!partyId.equals("_NA_")) {
             // try to find a PartyContactMech with a valid date range
             try {
@@ -251,7 +251,7 @@ public class ContactMechServices {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                        "contactmechservices.could_not_change_contact_info_write", 
+                        "contactmechservices.could_not_change_contact_info_write",
                         UtilMisc.toMap("errMessage", e.getMessage()), locale));
             }
         } else {
@@ -280,9 +280,9 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
-        
+
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_DELETE");
-        
+
         if (result.size() > 0)
             return result;
 
@@ -342,7 +342,7 @@ public class ContactMechServices {
         List<GenericValue> toBeStored = new LinkedList<GenericValue>();
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_CREATE");
-        
+
         if (result.size() > 0)
             return result;
 
@@ -415,7 +415,7 @@ public class ContactMechServices {
         boolean isModified = false;
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_UPDATE");
-        
+
         if (result.size() > 0) {
             return result;
         }
@@ -443,7 +443,7 @@ public class ContactMechServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "contactmechservices.could_not_find_specified_contact_info_read", locale));
         }
-        
+
         if (!partyId.equals("_NA_")) {
             // try to find a PartyContactMech with a valid date range
             try {
@@ -506,7 +506,7 @@ public class ContactMechServices {
             relatedEntityToSet.set("contactMechId", newCmId);
         } else {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "contactmechservices.could_not_update_contact_as_POSTAL_ADDRESS_specified", 
+                    "contactmechservices.could_not_update_contact_as_POSTAL_ADDRESS_specified",
                     UtilMisc.toMap("contactMechTypeId", contactMech.getString("contactMechTypeId")), locale));
         }
 
@@ -543,7 +543,7 @@ public class ContactMechServices {
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e.toString(), module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                            "contactmechservices.could_not_change_contact_info_read", 
+                            "contactmechservices.could_not_change_contact_info_read",
                             UtilMisc.toMap("errMessage", e.getMessage()), locale));
                 }
 
@@ -555,7 +555,7 @@ public class ContactMechServices {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                        "contactmechservices.could_not_change_contact_info_write", 
+                        "contactmechservices.could_not_change_contact_info_write",
                         UtilMisc.toMap("errMessage", e.getMessage()), locale));
             }
         } else {
@@ -591,7 +591,7 @@ public class ContactMechServices {
         List<GenericValue> toBeStored = new LinkedList<GenericValue>();
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_CREATE");
-        
+
         if (result.size() > 0)
             return result;
 
@@ -646,7 +646,7 @@ public class ContactMechServices {
         boolean isModified = false;
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_UPDATE");
-        
+
         if (result.size() > 0)
             return result;
 
@@ -721,7 +721,7 @@ public class ContactMechServices {
             newPartyContactMech.set("extension", context.get("extension"));
         } else {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "contactmechservices.could_not_update_contact_as_TELECOM_NUMBER_specified", 
+                    "contactmechservices.could_not_update_contact_as_TELECOM_NUMBER_specified",
                     UtilMisc.toMap("contactMechTypeId", contactMech.getString("contactMechTypeId")), locale));
         }
 
@@ -754,7 +754,7 @@ public class ContactMechServices {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                        "contactmechservices.could_not_change_contact_info_read", 
+                        "contactmechservices.could_not_change_contact_info_read",
                         UtilMisc.toMap("errMessage", e.getMessage()), locale));
             }
 
@@ -764,7 +764,7 @@ public class ContactMechServices {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                        "contactmechservices.could_not_change_contact_info_write", 
+                        "contactmechservices.could_not_change_contact_info_write",
                         UtilMisc.toMap("errMessage", e.getMessage()), locale));
             }
         } else {
@@ -877,7 +877,7 @@ public class ContactMechServices {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                        "contactmechservices.could_not_add_purpose_write", 
+                        "contactmechservices.could_not_add_purpose_write",
                         UtilMisc.toMap("errMessage", e.getMessage()), locale));
             }
         }
@@ -896,7 +896,7 @@ public class ContactMechServices {
         Locale locale = (Locale) context.get("locale");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_DELETE");
-        
+
         if (result.size() > 0) {
             return result;
         }
@@ -929,7 +929,7 @@ public class ContactMechServices {
             } catch (GenericServiceException e) {
                 Debug.logWarning(e.getMessage(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                        "contactmechservices.could_not_delete_purpose_from_contact_mechanism_read", 
+                        "contactmechservices.could_not_delete_purpose_from_contact_mechanism_read",
                         UtilMisc.toMap("errMessage", e.getMessage()), locale));
             }
         }
@@ -952,7 +952,7 @@ public class ContactMechServices {
         Locale locale = (Locale) context.get("locale");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_DELETE");
-        
+
         if (result.size() > 0)
             return result;
 
@@ -1065,7 +1065,7 @@ public class ContactMechServices {
         } catch (GenericServiceException e) {
             Debug.logError(e, e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "PartyCannotCopyPartyContactMech", 
+                    "PartyCannotCopyPartyContactMech",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
         return ServiceUtil.returnSuccess();

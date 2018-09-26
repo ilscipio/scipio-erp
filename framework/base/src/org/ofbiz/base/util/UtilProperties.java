@@ -188,7 +188,7 @@ public final class UtilProperties implements Serializable {
         }
         try {
             return (Number)(ObjectType.simpleTypeConvert(str, type, null, null));
-        } catch (GeneralException e) {
+        } catch (Exception e) { // SCIPIO: 2018-09-26: use Exception here, because there may be unexpected RuntimeExceptions thrown here
             Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
         }
         return defaultNumber;
@@ -1675,7 +1675,7 @@ public final class UtilProperties implements Serializable {
         } else {
             try {
                 return (N)(ObjectType.simpleTypeConvert(value, type.getSimpleName(), null, null));
-            } catch (GeneralException e) {
+            } catch (Exception e) { // SCIPIO: 2018-09-26: use Exception here, because there may be unexpected RuntimeExceptions thrown here
                 Debug.logWarning("Error converting String \"" + value + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
             }
             return defaultNumber;

@@ -116,7 +116,7 @@ under the License.
     <WebAnalyticsConfig webSiteId="ScipioWebStore" webAnalyticsTypeId="GOOGLE_ANALYTICS" webAnalyticsCode="//--  enter here your analytic script code --"/>
     <WebAnalyticsConfig webSiteId="ScipioWebStore" webAnalyticsTypeId="BING_ANALYTICS" webAnalyticsCode="//--  enter here your analytic script code --"/>
 
-    <WebSite webSiteId="ScipioWebStore" siteName="SCIPIO Shop Web Site" productStoreId="ScipioShop" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" />
+    <WebSite webSiteId="ScipioWebStore" siteName="SCIPIO Shop Web Site" productStoreId="ScipioShop" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" isStoreDefault="Y"/>
 
     <ProductStoreFacility productStoreId="ScipioShop" facilityId="ScipioShopWarehouse" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="ScipioShop" fromDate="2001-05-13 12:00:00.0"/>

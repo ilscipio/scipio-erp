@@ -1770,6 +1770,7 @@
         <value xml:lang="zh-TW">不能執行一個作廢金額的交易:授權金額 ${authAmount} 不同于作廢金額 ${refundAmount}</value>
     </property>
     <property key="AccountingAuthorizeNetccCreditUnsupported">
+        <value xml:lang="de">Authorize.net ccCredit wird mit Version 3.1 nicht unterstützt</value>
         <value xml:lang="en">Authorize.net ccCredit unsupported with version 3.1</value>
     </property>
     <property key="AccountingAuthorizeNetCpDevice">
@@ -10036,6 +10037,7 @@
         <value xml:lang="zh-TW">新建標準費用</value>
     </property>
     <property key="AccountingNewInvoicesCreated">
+        <value xml:lang="de">${invoicesCreated} neue Rechnung (en) erstellt</value>
         <value xml:lang="en">${invoicesCreated} new invoice(s) created</value>
     </property>
     <property key="AccountingNewPayment">
@@ -12782,6 +12784,7 @@
         <value xml:lang="zh-TW">狀態變為"未付"</value>
     </property>
     <property key="AccountingPaymentRefundedSuccessfully">
+        <value xml:lang="de">Zahlung #${paymentId} wird erfolgreich mit Betrag ${refundAmount} für die manuelle Transaktion zurückerstattet.</value>
         <value xml:lang="en">Payment #${paymentId} is refunded successfully with amount ${refundAmount} for manual transaction.</value>
     </property>
     <property key="AccountingPaymentTabApplications">

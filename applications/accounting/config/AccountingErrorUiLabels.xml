@@ -94,6 +94,7 @@
         <value xml:lang="zh-TW">團體標識 ${partyId} 不是支付方法 ${paymentMethodId} 的擁有者,無權修改它.</value>
     </property>
     <property key="AccountingFailedToProcessCaptureResult">
+        <value xml:lang="de">Capture-Ergebnis konnte nicht verarbeitet werden: Die Rechnung ${invoiceId} wurde aufgrund eines Entitätsfehlers nicht gefunden: ${errorString}</value>
         <value xml:lang="en">Failed to process capture result: Could not find invoice ${invoiceId} due to entity error: ${errorString}</value>
     </property>
     <property key="AccountingFinAccountAuthorizationExpired">
@@ -462,6 +463,7 @@
         <value xml:lang="zh-TW">沒有產品與訂單細項結合,無法使用禮物卡</value>
     </property>
     <property key="AccountingGiftCerticateNumberCannotFulfillFromSurvey">
+        <value xml:lang="de">Die Umfrageantwort konnte nicht abgerufen werden. Geschenkkarte kann nicht neu geladen werden</value>
         <value xml:lang="en">Unable to get survey response; cannot fulfill gift card reload</value>
     </property>
     <property key="AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers">
@@ -746,6 +748,7 @@
         <value xml:lang="zh-TW">與PayPal聯絡時發生了一個未知的錯誤</value>
     </property>
     <property key="AccountingReturnTypeCannotBeNull">
+        <value xml:lang="de">Der Rückgabetyp darf nicht null sein</value>
         <value xml:lang="en">Return type cannot be null</value>
     </property>
     <property key="AccountingTaxIdInvalidFormat">
@@ -767,13 +770,16 @@
         <value xml:lang="zh-TW">獲取稅務設定時資料錯誤:${errorString}</value>
     </property>
     <property key="AccountingUpdateRateAmountAlreadyExist">
+        <value xml:lang="de">Der Ratenbetrag ist bereits vorhanden</value>
         <value xml:lang="en">The Rate amount already exist</value>
         <value xml:lang="fr">Le taux est déjà existant</value>
     </property>
     <property key="AccountingUploadedFileDataNotFound">
+        <value xml:lang="de">Hochgeladene Dateidaten wurden nicht gefunden</value>
         <value xml:lang="en">Uploaded file data not found</value>
     </property>
     <property key="AccountingValidationFailedInvalidValues">
+        <value xml:lang="de">Validierung fehlgeschlagen - ungültige Werte</value>
         <value xml:lang="en">Validation Failed - invalid values</value>
     </property>
     <property key="AccountingProcessingAuthResultEmpty">

@@ -4578,6 +4578,7 @@ under the License.
         <field name="productStoreId" type="id"></field>
         <field name="allowProductStoreChange" type="indicator"><description>Allow change of ProductStore for this WebSite (webapp). Defaults to N (no).</description></field>
         <field name="isDefault" type="indicator"><description>If Y then it is default WebSite</description></field>
+        <field name="isStoreDefault" type="indicator"><description>SCIPIO: If Y then it is default WebSite for its ProductStore (added 2018-09-26)</description></field>
         <relation type="one" fk-name="WEB_SITE_PRDS" rel-entity-name="ProductStore">
             <key-map field-name="productStoreId"/>
         </relation>

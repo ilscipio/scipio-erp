@@ -5144,6 +5144,10 @@
         <value xml:lang="zh">匿名</value>
         <value xml:lang="zh-TW">匿名</value>
     </property>
+    <property key="FormFieldTitle_isStoreDefault">
+        <value xml:lang="de">Ist Standard für Store</value>
+        <value xml:lang="en">Is Default for Store</value>
+    </property>
     <property key="FormFieldTitle_itemContentId">
         <value xml:lang="ar">تعريف محتوى البند</value>
         <value xml:lang="da">Punkt indholds ID</value>

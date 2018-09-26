@@ -1698,9 +1698,13 @@ public final class UtilProperties implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <N extends Number> N asNumber(Class<N> type, Object value, N defaultNumber) {
-        if (value == null) return defaultNumber;
-        else if (type.isAssignableFrom(value.getClass())) return (N) value;
-        else return asNumber(type, (String) value, defaultNumber);
+        if (value == null) {
+            return defaultNumber;
+        } else if (type.isAssignableFrom(value.getClass())) {
+            return (N) value;
+        } else {
+            return asNumber(type, (String) value, defaultNumber);
+        }
     }
 
     /**
@@ -1710,8 +1714,11 @@ public final class UtilProperties implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <N extends Number> N asNumber(Class<N> type, Object value) {
-        if (value == null || type.isAssignableFrom(value.getClass())) return (N) value;
-        else return asNumber(type, (String) value, null);
+        if (value == null || type.isAssignableFrom(value.getClass())) {
+            return (N) value;
+        } else {
+            return asNumber(type, (String) value, null);
+        }
     }
 
     /**
@@ -1720,9 +1727,13 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Boolean asBoolean(String value, Boolean defaultValue) {
-        if ("true".equalsIgnoreCase(value)) return Boolean.TRUE;
-        else if ("false".equalsIgnoreCase(value)) return Boolean.FALSE;
-        else return defaultValue;
+        if ("true".equalsIgnoreCase(value)) {
+            return Boolean.TRUE;
+        } else if ("false".equalsIgnoreCase(value)) {
+            return Boolean.FALSE;
+        } else {
+            return defaultValue;
+        }
     }
 
     /**
@@ -1740,9 +1751,13 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Boolean asBoolean(Object value, Boolean defaultValue) {
-        if (value == null) return defaultValue;
-        else if (value instanceof Boolean) return (Boolean) value;
-        else return asBoolean((String) value, defaultValue);
+        if (value == null) {
+            return defaultValue;
+        } else if (value instanceof Boolean) {
+            return (Boolean) value;
+        } else {
+            return asBoolean((String) value, defaultValue);
+        }
     }
 
     /**
@@ -1751,8 +1766,11 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Boolean asBoolean(Object value) {
-        if (value == null || value instanceof Boolean) return (Boolean) value;
-        else return asBoolean((String) value);
+        if (value == null || value instanceof Boolean) {
+            return (Boolean) value;
+        } else {
+            return asBoolean((String) value);
+        }
     }
 
     /**
@@ -1779,9 +1797,13 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Integer asInteger(Object value, Integer defaultValue) {
-        if (value == null) return defaultValue;
-        else if (value instanceof Integer) return (Integer) value;
-        else return asInteger((String) value, defaultValue);
+        if (value == null) {
+            return defaultValue;
+        }  else if (value instanceof Integer) {
+            return (Integer) value;
+        } else {
+            return asInteger((String) value, defaultValue);
+        }
     }
 
     /**
@@ -1790,8 +1812,11 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Integer asInteger(Object value) {
-        if (value == null || value instanceof Integer) return (Integer) value;
-        else return asInteger((String) value, null);
+        if (value == null || value instanceof Integer) {
+            return (Integer) value;
+        } else {
+            return asInteger((String) value, null);
+        }
     }
 
     /**
@@ -1818,9 +1843,13 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Long asLong(Object value, Long defaultValue) {
-        if (value == null) return defaultValue;
-        else if (value instanceof Long) return (Long) value;
-        else return asLong((String) value, defaultValue);
+        if (value == null) {
+            return defaultValue;
+        } else if (value instanceof Long) {
+            return (Long) value;
+        } else {
+            return asLong((String) value, defaultValue);
+        }
     }
 
     /**
@@ -1829,8 +1858,11 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Long asLong(Object value) {
-        if (value == null || value instanceof Long) return (Long) value;
-        else return asLong((String) value, null);
+        if (value == null || value instanceof Long) {
+            return (Long) value;
+        } else {
+            return asLong((String) value, null);
+        }
     }
 
     /**
@@ -1857,9 +1889,13 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Float asFloat(Object value, Float defaultValue) {
-        if (value == null) return defaultValue;
-        else if (value instanceof Float) return (Float) value;
-        else return asFloat((String) value, defaultValue);
+        if (value == null) {
+            return defaultValue;
+        } else if (value instanceof Float) {
+            return (Float) value;
+        } else {
+            return asFloat((String) value, defaultValue);
+        }
     }
 
     /**
@@ -1868,8 +1904,11 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Float asFloat(Object value) {
-        if (value == null || value instanceof Float) return (Float) value;
-        else return asFloat((String) value, null);
+        if (value == null || value instanceof Float) {
+            return (Float) value;
+        } else {
+            return asFloat((String) value, null);
+        }
     }
 
     /**
@@ -1896,9 +1935,13 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Double asDouble(Object value, Double defaultValue) {
-        if (value == null) return defaultValue;
-        else if (value instanceof Double) return (Double) value;
-        else return asDouble((String) value, defaultValue);
+        if (value == null) {
+            return defaultValue;
+        } else if (value instanceof Double) {
+            return (Double) value;
+        } else {
+            return asDouble((String) value, defaultValue);
+        }
     }
 
     /**
@@ -1907,8 +1950,11 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Double asDouble(Object value) {
-        if (value == null || value instanceof Double) return (Double) value;
-        else return asDouble((String) value, null);
+        if (value == null || value instanceof Double) {
+            return (Double) value;
+        } else {
+            return asDouble((String) value, null);
+        }
     }
 
     /**
@@ -1941,9 +1987,13 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static BigInteger asBigInteger(Object value, BigInteger defaultValue) {
-        if (value == null) return defaultValue;
-        else if (value instanceof BigInteger) return (BigInteger) value;
-        else return asBigInteger((String) value, defaultValue);
+        if (value == null) {
+            return defaultValue;
+        } else if (value instanceof BigInteger) {
+            return (BigInteger) value;
+        } else {
+            return asBigInteger((String) value, defaultValue);
+        }
     }
 
     /**
@@ -1952,8 +2002,11 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static BigInteger asBigInteger(Object value) {
-        if (value == null || value instanceof BigInteger) return (BigInteger) value;
-        else return asBigInteger((String) value, null);
+        if (value == null || value instanceof BigInteger) {
+            return (BigInteger) value;
+        } else {
+            return asBigInteger((String) value, null);
+        }
     }
 
     /**
@@ -1986,9 +2039,13 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static BigDecimal asBigDecimal(Object value, BigDecimal defaultValue) {
-        if (value == null) return defaultValue;
-        else if (value instanceof BigDecimal) return (BigDecimal) value;
-        else return asBigDecimal((String) value, defaultValue);
+        if (value == null) {
+            return defaultValue;
+        } else if (value instanceof BigDecimal) {
+            return (BigDecimal) value;
+        } else {
+            return asBigDecimal((String) value, defaultValue);
+        }
     }
 
     /**
@@ -1997,8 +2054,11 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static BigDecimal asBigDecimal(Object value) {
-        if (value == null || value instanceof BigDecimal) return (BigDecimal) value;
-        else return asBigDecimal((String) value, null);
+        if (value == null || value instanceof BigDecimal) {
+            return (BigDecimal) value;
+        } else {
+            return asBigDecimal((String) value, null);
+        }
     }
 
     /** Custom ResourceBundle class. This class extends ResourceBundle

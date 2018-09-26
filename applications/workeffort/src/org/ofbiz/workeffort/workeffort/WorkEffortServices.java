@@ -526,7 +526,7 @@ public class WorkEffortServices {
                 }
             }
             canView = (UtilValidate.isNotEmpty(workEffortPartyAssignments)) ? Boolean.TRUE : Boolean.FALSE;
-            if (!canView.booleanValue() && security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", userLogin)) {
+            if (!canView && security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", userLogin)) {
                 canView = Boolean.TRUE;
             }
 
@@ -724,12 +724,12 @@ public class WorkEffortServices {
         Integer periodTypeObject = (Integer) context.get("periodType");
         int periodType = 0;
         if (periodTypeObject != null) {
-            periodType = periodTypeObject.intValue();
+            periodType = periodTypeObject;
         }
 
         int numPeriods = 0;
         if (numPeriodsInteger != null) {
-            numPeriods = numPeriodsInteger.intValue();
+            numPeriods = numPeriodsInteger;
         }
 
         // get a timestamp (date) for the beginning of today and for beginning
@@ -938,7 +938,7 @@ public class WorkEffortServices {
                         if (length % periodLen == 0 && startDate.getTime() > periodRange.start().getTime()) {
                             periodSpan++;
                         }
-                        calEntry.put("periodSpan", Integer.valueOf(periodSpan));
+                        calEntry.put("periodSpan", periodSpan);
                         DateRange calEntryRange = new DateRange((weRange.start().before(startStamp) ? startStamp : weRange.start()), (weRange.end().after(
                                 endStamp) ? endStamp : weRange.end()));
                         calEntry.put("calEntryRange", calEntryRange);
@@ -949,7 +949,7 @@ public class WorkEffortServices {
                             firstEntry = false;
                         } else {
                             boolean startOfPeriod = ((weRange.start().getTime() - periodRange.start().getTime()) >= 0);
-                            calEntry.put("startOfPeriod", Boolean.valueOf(startOfPeriod));
+                            calEntry.put("startOfPeriod", startOfPeriod);
                         }
                         curWorkEfforts.add(calEntry);
                     }
@@ -967,7 +967,7 @@ public class WorkEffortServices {
         }
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("periods", periods);
-        result.put("maxConcurrentEntries", Integer.valueOf(maxConcurrentEntries));
+        result.put("maxConcurrentEntries", maxConcurrentEntries);
         return result;
     }
 
@@ -1012,13 +1012,13 @@ public class WorkEffortServices {
                                 .where("inventoryItemId", inventoryItem.getString("inventoryItemId")).orderBy("inventoryItemDetailSeqId").queryFirst();
                         if (inventoryItemDetail != null && inventoryItemDetail.get("quantityOnHandDiff") != null) {
                             Double inventoryItemQty = inventoryItemDetail.getDouble("quantityOnHandDiff");
-                            producedQtyTot = producedQtyTot + inventoryItemQty.doubleValue();
+                            producedQtyTot = producedQtyTot + inventoryItemQty;
                         }
                     }
                 }
                 double estimatedQuantity = 0.0;
                 if (incomingProductionRun.get("estimatedQuantity") != null) {
-                    estimatedQuantity = incomingProductionRun.getDouble("estimatedQuantity").doubleValue();
+                    estimatedQuantity = incomingProductionRun.getDouble("estimatedQuantity");
                 }
                 double remainingQuantity = estimatedQuantity - producedQtyTot; // the
                                                                                 // qty
@@ -1029,7 +1029,7 @@ public class WorkEffortServices {
                                                                                 // be
                                                                                 // produced
                 if (remainingQuantity > 0) {
-                    incomingProductionRun.set("estimatedQuantity", Double.valueOf(remainingQuantity));
+                    incomingProductionRun.set("estimatedQuantity", remainingQuantity);
                 } else {
                     continue;
                 }
@@ -1043,9 +1043,9 @@ public class WorkEffortServices {
                 }
                 Double remainingQuantityTot = (Double) quantitySummary.get("estimatedQuantityTotal");
                 if (remainingQuantityTot == null) {
-                    quantitySummary.put("estimatedQuantityTotal", Double.valueOf(remainingQuantity));
+                    quantitySummary.put("estimatedQuantityTotal", remainingQuantity);
                 } else {
-                    quantitySummary.put("estimatedQuantityTotal", Double.valueOf(remainingQuantity + remainingQuantityTot.doubleValue()));
+                    quantitySummary.put("estimatedQuantityTotal", remainingQuantity + remainingQuantityTot);
                 }
 
                 List<GenericValue> incomingProductionRunList = UtilGenerics.checkList(quantitySummary.get("incomingProductionRunList"));
@@ -1081,7 +1081,7 @@ public class WorkEffortServices {
                 String weFacilityId = outgoingProductionRun.getString("facilityId");
                 Double neededQuantity = outgoingProductionRun.getDouble("estimatedQuantity");
                 if (neededQuantity == null) {
-                    neededQuantity = Double.valueOf(0);
+                    neededQuantity = (double) 0;
                 }
 
                 Map<String, Object> quantitySummary = UtilGenerics.checkMap(summaryOutByFacility.get(weFacilityId));
@@ -1094,7 +1094,7 @@ public class WorkEffortServices {
                 if (remainingQuantityTot == null) {
                     quantitySummary.put("estimatedQuantityTotal", neededQuantity);
                 } else {
-                    quantitySummary.put("estimatedQuantityTotal", Double.valueOf(neededQuantity.doubleValue() + remainingQuantityTot.doubleValue()));
+                    quantitySummary.put("estimatedQuantityTotal", neededQuantity + remainingQuantityTot);
                 }
 
                 List<GenericValue> outgoingProductionRunList = UtilGenerics.checkList(quantitySummary.get("outgoingProductionRunList"));
@@ -1182,7 +1182,7 @@ public class WorkEffortServices {
                 if (temporalExpression != null) {
                     eventDateTime = temporalExpression.first(cal).getTime();
                     Date reminderDateTime = null;
-                    long reminderOffset = reminder.get("reminderOffset") == null ? 0 : reminder.getLong("reminderOffset").longValue();
+                    long reminderOffset = reminder.get("reminderOffset") == null ? 0 : reminder.getLong("reminderOffset");
                     if (reminderStamp == null) {
                         if (reminderOffset != 0) {
                             cal.setTime(eventDateTime);
@@ -1215,7 +1215,7 @@ public class WorkEffortServices {
                                 } else {
                                     newReminderDateTime = temporalExpression.next(cal).getTime();
                                 }
-                                reminder.set("currentCount", Long.valueOf(currentCount + 1));
+                                reminder.set("currentCount", (long) (currentCount + 1));
                                 reminder.set("reminderDateTime", new Timestamp(newReminderDateTime.getTime()));
                                 reminder.store();
                             }
@@ -1248,7 +1248,7 @@ public class WorkEffortServices {
                             cal.setTime(now);
                             duration.addToCalendar(cal);
                             reminderDateTime = cal.getTime();
-                            reminder.set("currentCount", Long.valueOf(currentCount + 1));
+                            reminder.set("currentCount", (long) (currentCount + 1));
                             reminder.set("reminderDateTime", new Timestamp(reminderDateTime.getTime()));
                             reminder.store();
                         }

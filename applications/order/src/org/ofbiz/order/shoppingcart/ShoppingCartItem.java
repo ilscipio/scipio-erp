@@ -261,7 +261,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (cartLocation == null) {
             cart.addItemToEnd(newItem);
         } else {
-            cart.addItem(cartLocation.intValue(), newItem);
+            cart.addItem(cartLocation, newItem);
         }
 
         if (selectedAmount != null) {
@@ -396,7 +396,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             ExtraInitArgs extraInitArgs)
             throws CartItemModifyException, ItemNotFoundException {
         Delegator delegator = cart.getDelegator();
-        GenericValue product = findProduct(delegator, skipProductChecks.booleanValue(), prodCatalogId, productId, cart.getLocale());
+        GenericValue product = findProduct(delegator, skipProductChecks, prodCatalogId, productId, cart.getLocale());
         GenericValue parentProduct = null;
 
         if (parentProductId != null)
@@ -493,8 +493,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         unitPrice = unitPrice == null ? BigDecimal.ZERO : unitPrice;
         reservLength = reservLength == null ? BigDecimal.ZERO : reservLength;
         reservPersons = reservPersons == null ? BigDecimal.ZERO : reservPersons;
-        boolean triggerPriceRules = triggerPriceRulesBool == null ? true : triggerPriceRulesBool.booleanValue();
-        boolean triggerExternalOps = triggerExternalOpsBool == null ? true : triggerExternalOpsBool.booleanValue();
+        boolean triggerPriceRules = triggerPriceRulesBool == null ? true : triggerPriceRulesBool;
+        boolean triggerExternalOps = triggerExternalOpsBool == null ? true : triggerExternalOpsBool;
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -508,7 +508,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
-        if (!skipProductChecks.booleanValue()) {
+        if (!skipProductChecks) {
             isValidCartProduct(configWrapper, product, nowTimestamp, cart.getLocale());
         }
 
@@ -576,7 +576,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (cartLocation == null) {
             cart.addItemToEnd(newItem);
         } else {
-            cart.addItem(cartLocation.intValue(), newItem);
+            cart.addItem(cartLocation, newItem);
         }
 
         // We have to set the selectedAmount before calling setQuantity because
@@ -587,7 +587,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
 
         try {
-            newItem.setQuantity(quantity, dispatcher, cart, triggerExternalOps, true, triggerPriceRules, skipInventoryChecks.booleanValue());
+            newItem.setQuantity(quantity, dispatcher, cart, triggerExternalOps, true, triggerPriceRules, skipInventoryChecks);
         } catch (CartItemModifyException e) {
             Debug.logWarning(e.getMessage(), module);
             // SCIPIO: patched to pass triggerExternalOps
@@ -710,10 +710,10 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (cartLocation == null) {
             cart.addItemToEnd(newItem);
         } else {
-            cart.addItem(cartLocation.intValue(), newItem);
+            cart.addItem(cartLocation, newItem);
         }
 
-        boolean triggerExternalOps = triggerExternalOpsBool == null ? true : triggerExternalOpsBool.booleanValue();
+        boolean triggerExternalOps = triggerExternalOpsBool == null ? true : triggerExternalOpsBool;
 
         try {
             newItem.setQuantity(quantity, dispatcher, cart, triggerExternalOps);
@@ -1200,7 +1200,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                         throw new CartItemModifyException("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));
                     }
                     Boolean validPriceFound = (Boolean) priceResult.get("validPriceFound");
-                    if (!validPriceFound.booleanValue()) {
+                    if (!validPriceFound) {
                         throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "] and supplier with ID [" + partyId + "], not adding to cart.");
                     }
                     
@@ -1891,13 +1891,11 @@ public class ShoppingCartItem implements java.io.Serializable {
 
             if (pieces == null) {
                 return 1;
-            } else {
-                return pieces.longValue();
             }
-        } else {
-            // non-product item assumed 1 piece
-            return 1;
+            return pieces;
         }
+        // non-product item assumed 1 piece
+        return 1;
     }
 
     /** Returns a Set of the item's features */
@@ -1996,7 +1994,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         itemInfo.put("weight", this.getWeight());
         itemInfo.put("weightUomId", this.getProduct().getString("weightUomId"));
         itemInfo.put("size", this.getSize());
-        itemInfo.put("piecesIncluded", Long.valueOf(this.getPiecesIncluded()));
+        itemInfo.put("piecesIncluded", this.getPiecesIncluded());
         itemInfo.put("featureSet", this.getFeatureSet());
         GenericValue product = getProduct();
         if (product != null) {

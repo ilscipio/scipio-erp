@@ -200,7 +200,7 @@ public class HtmlFormWrapper {
      */
     @Deprecated
     public void setIsError(boolean isError) {
-        this.userContext.put("isError", Boolean.valueOf(isError)); // SCIPIO: callContext
+        this.userContext.put("isError", isError); // SCIPIO: callContext
     }
 
     /**
@@ -212,7 +212,7 @@ public class HtmlFormWrapper {
         if (isErrorBoolean == null) {
             return false;
         } else {
-            return isErrorBoolean.booleanValue();
+            return isErrorBoolean;
         }
     }
 

@@ -699,8 +699,8 @@ public class OrderLookupServices {
 
         // SCIPIO: only if not full query
         if (!findOptions.isFullQuery()) {
-            result.put("highIndex", Integer.valueOf(highIndex));
-            result.put("lowIndex", Integer.valueOf(lowIndex));
+            result.put("highIndex", highIndex);
+            result.put("lowIndex", lowIndex);
             result.put("viewIndex", viewIndex);
             result.put("viewSize", viewSize);
         }
@@ -708,7 +708,7 @@ public class OrderLookupServices {
 
         result.put("paramList", (paramString != null? paramString: ""));
         result.put("orderList", orderList);
-        result.put("orderListSize", Integer.valueOf(orderCount));
+        result.put("orderListSize", orderCount);
 
         return result;
     }

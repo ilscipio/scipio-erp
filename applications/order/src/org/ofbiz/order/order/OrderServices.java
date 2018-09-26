@@ -1618,7 +1618,7 @@ public class OrderServices {
         }
 
         EntityCondition cond = null;
-        if (!forceAll.booleanValue()) {
+        if (!forceAll) {
             List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("grandTotal", EntityOperator.EQUALS, null),
                     EntityCondition.makeCondition("remainingSubTotal", EntityOperator.EQUALS, null));
             cond = EntityCondition.makeCondition(exprs, EntityOperator.OR);
@@ -2637,7 +2637,7 @@ public class OrderServices {
         String roleTypeId = (String) context.get("roleTypeId");
         Boolean removeOld = (Boolean) context.get("removeOld");
 
-        if (removeOld != null && removeOld.booleanValue()) {
+        if (removeOld != null && removeOld) {
             try {
                 delegator.removeByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", roleTypeId));
             } catch (GenericEntityException e) {
@@ -5696,7 +5696,7 @@ public class OrderServices {
                 // process payment
                 Map<String, Object> payResp;
                 try {
-                    payResp = coh.processPayment(productStore, userLogin, false, manualHold.booleanValue());
+                    payResp = coh.processPayment(productStore, userLogin, false, manualHold);
                 } catch (GeneralException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(e.getMessage());
@@ -6321,7 +6321,7 @@ public class OrderServices {
         if (rowNumber == null) {
             Long count = EntityQuery.use(delegator).from("OrderItemShipGroupAssoc").where("orderId", orderId, "orderItemSeqId", orderItemSeqId).queryCount();
             if (count != null) {
-                rowNumber = new Integer(count.intValue());
+                rowNumber = count.intValue();
                 result.put("rowNumber", rowNumber);
             }
         }
@@ -6351,7 +6351,7 @@ public class OrderServices {
             // several oisgaoc
             if (ZERO.compareTo(quantity) == 0) {
                 // test if there is only one oisgaoc then display errror
-                if (rowNumber.intValue() == 1) {
+                if (rowNumber == 1) {
                     String errMsg = mainErrorMessage + UtilProperties.getMessage(resource_error, "OrderQuantityAssociatedCannotBeNullOrNegative", locale);
                     Debug.logError(errMsg, module);
                     return ServiceUtil.returnError(errMsg);
@@ -6368,11 +6368,10 @@ public class OrderServices {
                 } catch (GenericServiceException e) {
                     return ServiceUtil.returnError(e.toString());
                 }
-                // Only for multi service calling and the last row : test if
-                // orderItem quantity equals OrderItemShipGroupAssocs quantitys
+                //Only for multi service calling and the last row : test if orderItem quantity equals OrderItemShipGroupAssocs quantitys
                 if (rowCount != null && rowNumber != null) {
-                    int rowCountInt = rowCount.intValue();
-                    int rowNumberInt = rowNumber.intValue();
+                    int rowCountInt = rowCount;
+                    int rowNumberInt = rowNumber;
                     if (rowCountInt == rowNumberInt - 1) {
                         try {
                             message = validateOrderItemShipGroupAssoc(delegator, dispatcher, orderItem, totalQuantity, oisga, userLogin, locale);
@@ -6439,8 +6438,8 @@ public class OrderServices {
             // Only for multi service calling and the last row : test if
             // orderItem quantity equals OrderItemShipGroupAssocs quantitys
             if (rowCount != null && rowNumber != null) {
-                int rowCountInt = rowCount.intValue();
-                int rowNumberInt = rowNumber.intValue();
+                int rowCountInt = rowCount;
+                int rowNumberInt = rowNumber;
                 if (rowCountInt == rowNumberInt - 1) {
                     try {
                         message = validateOrderItemShipGroupAssoc(delegator, dispatcher, orderItem, totalQuantity, oisga, userLogin, locale);

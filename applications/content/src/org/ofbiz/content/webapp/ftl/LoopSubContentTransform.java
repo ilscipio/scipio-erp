@@ -84,8 +84,10 @@ public class LoopSubContentTransform implements TemplateTransformModel {
     public static boolean prepCtx(Delegator delegator, Map<String, Object> ctx) {
         List<GenericValue> lst = UtilGenerics.checkList(ctx.get("entityList"));
         Integer idx = (Integer) ctx.get("entityIndex");
-        if (idx == null) idx = Integer.valueOf(0);
-        int i = idx.intValue();
+        if (idx == null) {
+            idx = 0;
+        }
+        int i = idx;
         if (UtilValidate.isEmpty(lst)) {
             return false;
         } else  if (i >= lst.size()) {
@@ -137,7 +139,7 @@ public class LoopSubContentTransform implements TemplateTransformModel {
             ctx.put("textData", null);
         }
         ctx.put("content", subContentDataResourceView);
-        ctx.put("entityIndex", Integer.valueOf(i + 1));
+        ctx.put("entityIndex", i + 1);
         ctx.put("subContentId", subContentIdSub);
         ctx.put("drDataResourceId", dataResourceId);
         ctx.put("mimeTypeId", mimeTypeId);
@@ -203,7 +205,7 @@ public class LoopSubContentTransform implements TemplateTransformModel {
 
             @Override
             public int onStart() throws TemplateModelException, IOException {
-                templateCtx.put("entityIndex", Integer.valueOf(0));
+                templateCtx.put("entityIndex", 0);
                 boolean inProgress = prepCtx(delegator, templateCtx);
                 if (inProgress) {
                     return TransformControl.EVALUATE_BODY;

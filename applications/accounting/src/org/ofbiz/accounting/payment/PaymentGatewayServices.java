@@ -146,11 +146,11 @@ public class PaymentGatewayServices {
         // get the process attempts so far
         Long procAttempt = orderPaymentPreference.getLong("processAttempt");
         if (procAttempt == null) {
-            procAttempt = Long.valueOf(0);
+            procAttempt = 0L;
         }
 
         // update the process attempt count
-        orderPaymentPreference.set("processAttempt", Long.valueOf(procAttempt.longValue() + 1));
+        orderPaymentPreference.set("processAttempt", procAttempt + 1);
         try {
             orderPaymentPreference.store();
             orderPaymentPreference.refresh();
@@ -325,7 +325,7 @@ public class PaymentGatewayServices {
         Map<String, Object> result = new HashMap<String, Object>();
         boolean reAuth = false;
         if (context.get("reAuth") != null) {
-            reAuth = ((Boolean)context.get("reAuth")).booleanValue();
+            reAuth = (Boolean) context.get("reAuth");
         }
         // get the order header and payment preferences
         GenericValue orderHeader = null;
@@ -407,10 +407,10 @@ public class PaymentGatewayServices {
                 messages.add("Could not authorize OrderPaymentPreference [" + paymentPref.getString("orderPaymentPreferenceId") + "] for order [" + orderId + "]: " + results.get(ModelService.ERROR_MESSAGE));
                 continue;
             }
-            if (((Boolean) results.get("finished")).booleanValue()) {
+            if ((Boolean) results.get("finished")) {
                 finished += 1;
             }
-            if (((Boolean) results.get("errors")).booleanValue()) {
+            if ((Boolean) results.get("errors")) {
                 hadError += 1;
             }
             if (results.get("messages") != null) {
@@ -847,7 +847,7 @@ public class PaymentGatewayServices {
         // save the response and respective messages
         savePgrAndMsgs(dctx, pgCredit, messageEntities);
 
-        if (creditResponse != null && creditResponse.booleanValue()) {
+        if (creditResponse != null && creditResponse) {
             paymentPref.set("statusId", "PAYMENT_CANCELLED");
             try {
                 paymentPref.store();
@@ -1052,7 +1052,7 @@ public class PaymentGatewayServices {
             }
         }
 
-        if (releaseResponse != null && releaseResponse.booleanValue()) {
+        if (releaseResponse != null && releaseResponse) {
             paymentPref.set("statusId", "PAYMENT_CANCELLED");
             try {
                 paymentPref.store();
@@ -1869,13 +1869,14 @@ public class PaymentGatewayServices {
 
         if (authResult != null) {
             processAuthResult(dctx, result, userLogin, paymentPreference);
-            resultPassed = authResult.booleanValue();
+            resultPassed = authResult;
             authServiceType = ("PAYMENT_NOT_AUTH".equals(initialStatus)) ? AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
         }
         if (captureResult != null) {
             processCaptureResult(dctx, result, userLogin, paymentPreference, authServiceType, locale);
-            if (!resultPassed)
-                resultPassed = captureResult.booleanValue();
+            if (!resultPassed) {
+                resultPassed = captureResult;
+            }
         }
         return resultPassed;
     }
@@ -1988,12 +1989,12 @@ public class PaymentGatewayServices {
             }
 
             // set the status of the OrderPaymentPreference
-            if (authResult.booleanValue()) {
+            boolean authResultOk = authResult;
+            
+            if (authResultOk) {
                 orderPaymentPreference.set("statusId", "PAYMENT_AUTHORIZED");
-            } else if (!authResult.booleanValue()) {
-                orderPaymentPreference.set("statusId", "PAYMENT_DECLINED");
             } else {
-                orderPaymentPreference.set("statusId", "PAYMENT_ERROR");
+                orderPaymentPreference.set("statusId", "PAYMENT_DECLINED");
             }
 
             // remove sensitive credit card data regardless of outcome
@@ -2010,22 +2011,22 @@ public class PaymentGatewayServices {
             orderPaymentPreference.store();
 
             // if the payment was declined and this is a CreditCard, save that information on the CreditCard entity
-            if (!authResult.booleanValue()) {
+            if (!authResultOk) {
                 if (creditCard != null) {
                     Long consecutiveFailedAuths = creditCard.getLong("consecutiveFailedAuths");
                     if (consecutiveFailedAuths == null) {
-                        creditCard.set("consecutiveFailedAuths", Long.valueOf(1));
+                        creditCard.set("consecutiveFailedAuths", 1L);
                     } else {
-                        creditCard.set("consecutiveFailedAuths", Long.valueOf(consecutiveFailedAuths.longValue() + 1));
+                        creditCard.set("consecutiveFailedAuths", consecutiveFailedAuths + 1);
                     }
                     creditCard.set("lastFailedAuthDate", nowTimestamp);
 
                     if (Boolean.TRUE.equals(context.get("resultNsf"))) {
                         Long consecutiveFailedNsf = creditCard.getLong("consecutiveFailedNsf");
                         if (consecutiveFailedNsf == null) {
-                            creditCard.set("consecutiveFailedNsf", Long.valueOf(1));
+                            creditCard.set("consecutiveFailedNsf", 1L);
                         } else {
-                            creditCard.set("consecutiveFailedNsf", Long.valueOf(consecutiveFailedNsf.longValue() + 1));
+                            creditCard.set("consecutiveFailedNsf", consecutiveFailedNsf + 1);
                         }
                         creditCard.set("lastFailedNsfDate", nowTimestamp);
                     }
@@ -2034,11 +2035,11 @@ public class PaymentGatewayServices {
             }
 
             // auth was successful, to clear out any failed auth or nsf info
-            if (authResult.booleanValue()) {
+            if (authResultOk) {
                 if ((creditCard != null) && (creditCard.get("lastFailedAuthDate") != null)) {
-                    creditCard.set("consecutiveFailedAuths", Long.valueOf(0));
+                    creditCard.set("consecutiveFailedAuths", 0L);
                     creditCard.set("lastFailedAuthDate", null);
-                    creditCard.set("consecutiveFailedNsf", Long.valueOf(0));
+                    creditCard.set("consecutiveFailedNsf", 0L);
                     creditCard.set("lastFailedNsfDate", null);
                     creditCard.store();
                 }
@@ -2069,7 +2070,7 @@ public class PaymentGatewayServices {
                                     "paymentMethodId", orderPaymentPreference.get("paymentMethodId"),
                                     "resultNsf", "Y")
                             .queryCount();
-                        if (failedTries < autoOrderCcTryLaterMax.longValue()) {
+                        if (failedTries < autoOrderCcTryLaterMax) {
                             needsNsfRetry = true;
                         }
                     } else {
@@ -2130,7 +2131,7 @@ public class PaymentGatewayServices {
         if (capRes != null && ServiceUtil.isError(capRes)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(capRes));
         }
-        if (!captureResult.booleanValue()) {
+        if (!captureResult) {
             // capture returned false (error)
             try {
                 processReAuthFromCaptureFailure(dctx, result, amount, userLogin, paymentPreference, locale);
@@ -2182,7 +2183,7 @@ public class PaymentGatewayServices {
         if (authResp != null && Boolean.TRUE.equals(authResp)) {
             GenericValue authTrans = processAuthRetryResult(dctx, authPayRes, userLogin, paymentPreference);
             // check if auto-capture was enabled; process if so
-            if (capResp != null && capResp.booleanValue()) {
+            if (capResp != null && capResp) {
                 processCaptureResult(dctx, result, userLogin, paymentPreference, locale);
             } else {
                 // no auto-capture; do manual capture now
@@ -2193,7 +2194,7 @@ public class PaymentGatewayServices {
 
                 // process the capture result
                 Boolean capPayResp = (Boolean) capPayRes.get("captureResult");
-                if (capPayResp != null && capPayResp.booleanValue()) {
+                if (capPayResp != null && capPayResp) {
                     // process the capture result
                     processCaptureResult(dctx, capPayRes, userLogin, paymentPreference, locale);
                 } else {
@@ -2216,7 +2217,7 @@ public class PaymentGatewayServices {
         BigDecimal amount = (BigDecimal) context.get("captureAmount");
         String serviceType = (String) context.get("serviceTypeEnum");
         String currencyUomId = (String) context.get("currencyUomId");
-        boolean captureSuccessful = ((Boolean) context.get("captureResult")).booleanValue();
+        boolean captureSuccessful = (Boolean) context.get("captureResult");
 
         String paymentMethodTypeId = paymentPreference.getString("paymentMethodTypeId");
 
@@ -2595,7 +2596,7 @@ public class PaymentGatewayServices {
         }
 
         Boolean refundResult = (Boolean) context.get("refundResult");
-        if (refundResult != null && refundResult.booleanValue()) {
+        if (refundResult != null && refundResult) {
 
             // mark the preference as refunded
             paymentPref.set("statusId", "PAYMENT_REFUNDED");

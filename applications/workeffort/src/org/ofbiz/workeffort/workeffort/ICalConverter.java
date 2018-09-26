@@ -228,7 +228,7 @@ public class ICalConverter {
         }
         Dur dur = iCalObj.getDuration();
         TimeDuration td = new TimeDuration(0, 0, (dur.getWeeks() * 7) + dur.getDays(), dur.getHours(), dur.getMinutes(), dur.getSeconds(), 0);
-        return new Double(TimeDuration.toLong(td));
+        return (double) TimeDuration.toLong(td);
     }
 
     protected static Timestamp fromLastModified(PropertyList<Property> propertyList) {
@@ -260,7 +260,7 @@ public class ICalConverter {
         if (iCalObj == null) {
             return null;
         }
-        return new Long(iCalObj.getPercentage());
+        return (long) iCalObj.getPercentage();
     }
 
     protected static Double fromPriority(PropertyList<Property> propertyList) {
@@ -268,7 +268,7 @@ public class ICalConverter {
         if (iCalObj == null) {
             return null;
         }
-        return new Double(iCalObj.getLevel());
+        return (double) iCalObj.getLevel();
     }
 
     protected static String fromStatus(PropertyList<Property> propertyList) {
@@ -456,10 +456,9 @@ public class ICalConverter {
         Map<String, Object> serviceResult = invokeService("workEffortICalendarPermission", serviceMap, context);
         Boolean hasPermission = (Boolean) serviceResult.get("hasPermission");
         if (hasPermission != null) {
-            return hasPermission.booleanValue();
-        } else {
-            return false;
+            return hasPermission;
         }
+        return false;
     }
 
     protected static Map<String, Object> invokeService(String serviceName, Map<String, ? extends Object> serviceMap, Map<String, Object> context) {

@@ -269,13 +269,13 @@ public class ShoppingCartHelper {
         // Indicate there were no critical errors
         result = ServiceUtil.returnSuccess();
         if (itemId != -1) {
-            result.put("itemId", new Integer(itemId));
+            result.put("itemId", itemId);
         }
         return result;
     }
 
     public Map<String, Object> addToCartFromOrder(String catalogId, String orderId, String[] itemIds, boolean addAll, String itemGroupNumber) {
-        List<String> errorMsgs = new ArrayList<String>();
+        List<String> errorMsgs = new ArrayList<>();
         Map<String, Object> result;
         String errMsg = null;
 

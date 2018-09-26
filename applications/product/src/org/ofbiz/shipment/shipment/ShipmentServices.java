@@ -492,7 +492,7 @@ public class ShipmentServices {
                 }
 
                 // there will be only one of each priority; latest will replace
-                estimatePriority.put(Integer.valueOf(prioritySum), currentEstimate);
+                estimatePriority.put(prioritySum, currentEstimate);
             }
 
             // locate the highest priority estimate; or the latest entered
@@ -697,7 +697,7 @@ public class ShipmentServices {
             stageShip.set("postalCodeExt", address.get("postalCodeExt"));
             stageShip.set("countryGeoId", address.get("countryGeoId"));
             stageShip.set("stateProvinceGeoId", address.get("stateProvinceGeoId"));
-            stageShip.set("numberOfPackages", Long.valueOf(packages.size()));
+            stageShip.set("numberOfPackages", (long) packages.size());
             stageShip.set("handlingInstructions", shipment.get("handlingInstructions"));
             toStore.add(stageShip);
 

@@ -116,17 +116,18 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         List<GenericValue> categoryValues = EntityQuery.use(delegator).from("DataCategory")
                 .where("parentCategoryId", parentCategoryId)
                 .cache().queryList();
-        categoryNode.put("count", Integer.valueOf(categoryValues.size()));
-        List<Map<String, Object>> subCategoryIds = new LinkedList<Map<String, Object>>();
+        categoryNode.put("count", categoryValues.size());
+        List<Map<String, Object>> subCategoryIds = new LinkedList<>();
         for (GenericValue category : categoryValues) {
             String id = (String) category.get("dataCategoryId");
             String categoryName = (String) category.get("categoryName");
-            Map<String, Object> newNode = new HashMap<String, Object>();
+            Map<String, Object> newNode = new HashMap<>();
             newNode.put("id", id);
             newNode.put("name", categoryName);
             errorMsg = getDataCategoryMap(delegator, depth + 1, newNode, categoryTypeIds, getAll);
-            if (errorMsg != null)
+            if (errorMsg != null) {
                 break;
+            }
             subCategoryIds.add(newNode);
         }
 
@@ -515,9 +516,9 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         // descending comparator
         Comparator<Object> desc = new Comparator<Object>() {
             public int compare(Object o1, Object o2) {
-                if (((Long) o1).longValue() > ((Long) o2).longValue()) {
+                if ((Long) o1 > (Long) o2) {
                     return -1;
-                } else if (((Long) o1).longValue() < ((Long) o2).longValue()) {
+                } else if ((Long) o1 < (Long) o2) {
                     return 1;
                 }
                 return 0;
@@ -532,7 +533,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             File[] subs = parent.listFiles();
             for (int i = 0; i < subs.length; i++) {
                 if (subs[i].isDirectory()) {
-                    dirMap.put(Long.valueOf(subs[i].lastModified()), subs[i]);
+                        dirMap.put(subs[i].lastModified(), subs[i]);
                 }
             }
         } else {
@@ -1010,7 +1011,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             }
 
             byte[] bytes = text.getBytes(UtilIO.getUtf8());
-            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
+            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", (long) bytes.length, "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
 
         // object (binary) data
         } else if (dataResourceTypeId.endsWith("_OBJECT")) {
@@ -1046,7 +1047,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 throw new GeneralException("Unsupported OBJECT type [" + dataResourceTypeId + "]; cannot stream");
             }
 
-            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
+            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", (long) bytes.length, "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
 
         // file data
         } else if (dataResourceTypeId.endsWith("_FILE") || dataResourceTypeId.endsWith("_FILE_BIN")) {
@@ -1054,10 +1055,9 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             if (UtilValidate.isNotEmpty(objectInfo)) {
                 File file = DataResourceWorker.getContentFile(dataResourceTypeId, objectInfo, contextRoot);
                 byte[] bytes = FileUtils.readFileToByteArray(file); // SCIPIO: 2017-08-01: factored out here
-                return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(file.length()), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
-            } else {
-                throw new GeneralException("No objectInfo found for FILE type [" + dataResourceTypeId + "]; cannot stream");
+                return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", (long) file.length(), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
             }
+            throw new GeneralException("No objectInfo found for FILE type [" + dataResourceTypeId + "]; cannot stream");
 
         // URL resource data
         } else if ("URL_RESOURCE".equals(dataResourceTypeId)) {
@@ -1074,10 +1074,9 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 }
 
                 URLConnection con = url.openConnection();
-                return UtilMisc.toMap("stream", con.getInputStream(), "length", Long.valueOf(con.getContentLength()));
-            } else {
-                throw new GeneralException("No objectInfo found for URL_RESOURCE type; cannot stream");
+                return UtilMisc.toMap("stream", con.getInputStream(), "length", (long) con.getContentLength());
             }
+            throw new GeneralException("No objectInfo found for URL_RESOURCE type; cannot stream");
         }
 
         // unsupported type

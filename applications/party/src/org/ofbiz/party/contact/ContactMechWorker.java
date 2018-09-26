@@ -470,8 +470,10 @@ public class ContactMechWorker {
             if (telecomNumber != null) target.put("telecomNumber", telecomNumber);
         }
 
-        if ("true".equals(request.getParameter("useValues"))) tryEntity = true;
-        target.put("tryEntity", Boolean.valueOf(tryEntity));
+        if ("true".equals(request.getParameter("useValues"))) {
+            tryEntity = true;
+        }
+        target.put("tryEntity", tryEntity);
 
         try {
             Collection<GenericValue> contactMechTypes = EntityQuery.use(delegator).from("ContactMechType").cache(true).queryList();
@@ -781,8 +783,10 @@ public class ContactMechWorker {
             if (telecomNumber != null) target.put("telecomNumber", telecomNumber);
         }
 
-        if ("true".equals(request.getParameter("useValues"))) tryEntity = true;
-        target.put("tryEntity", Boolean.valueOf(tryEntity));
+        if ("true".equals(request.getParameter("useValues"))) {
+            tryEntity = true;
+        }
+        target.put("tryEntity", tryEntity);
 
         try {
             Collection<GenericValue> contactMechTypes = EntityQuery.use(delegator).from("ContactMechType").cache(true).queryList();

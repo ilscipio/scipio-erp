@@ -83,8 +83,8 @@ public class ShoppingCartServices {
             return ServiceUtil.returnSuccess();
         }
 
-        cart.positionItemToGroup(itemIndex.intValue(), quantity,
-                fromGroupIndex.intValue(), toGroupIndex.intValue(), clearEmptyGroups.booleanValue());
+        cart.positionItemToGroup(itemIndex, quantity,
+                fromGroupIndex, toGroupIndex, clearEmptyGroups);
         Debug.logInfo("Called cart.positionItemToGroup()", module);
 
         return ServiceUtil.returnSuccess();
@@ -101,9 +101,9 @@ public class ShoppingCartServices {
         Boolean isGift = (Boolean) context.get("isGift");
         Locale locale = (Locale) context.get("locale");
 
-        ShoppingCart.CartShipInfo csi = cart.getShipInfo(groupIndex.intValue());
+        ShoppingCart.CartShipInfo csi = cart.getShipInfo(groupIndex);
         if (csi != null) {
-            int idx = groupIndex.intValue();
+            int idx = groupIndex;
 
             if (UtilValidate.isNotEmpty(shipmentMethodString)) {
                 int delimiterPos = shipmentMethodString.indexOf('@');
@@ -865,7 +865,7 @@ public class ShoppingCartServices {
                         configWrapper = ProductConfigWorker.loadProductConfigWrapper(delegator, dispatcher, quoteItem.getString("configId"), productId, productStoreId, null, null, currency, locale, userLogin);
                     }
                     try {
-                            itemIndex = cart.addItemToEnd(productId, amount, quantity, quoteUnitPrice, reservStart, reservLength, reservPersons,null,null, null, null, null, configWrapper, null, dispatcher, new Boolean(!applyQuoteAdjustments), new Boolean(quoteUnitPrice.compareTo(BigDecimal.ZERO) == 0), Boolean.FALSE, Boolean.FALSE);
+                            itemIndex = cart.addItemToEnd(productId, amount, quantity, quoteUnitPrice, reservStart, reservLength, reservPersons,null,null, null, null, null, configWrapper, null, dispatcher, !applyQuoteAdjustments, quoteUnitPrice.compareTo(BigDecimal.ZERO) == 0, Boolean.FALSE, Boolean.FALSE);
 
                     } catch (ItemNotFoundException e) {
                         Debug.logError(e, module);
@@ -1176,7 +1176,7 @@ public class ShoppingCartServices {
 
             if (UtilValidate.isEmpty(vendorProduct)) {
                 if (vendorMap.containsKey("_NA_")) {
-                    index = ((Integer) vendorMap.get("_NA_")).intValue();
+                    index = (Integer) vendorMap.get("_NA_");
                     cart.positionItemToGroup(item, item.getQuantity(), 0, index, true);
                 } else {
                     index = cart.addShipInfo();
@@ -1191,7 +1191,7 @@ public class ShoppingCartServices {
             if (vendorProduct != null) {
                 String vendorPartyId = vendorProduct.getString("vendorPartyId");
                 if (vendorMap.containsKey(vendorPartyId)) {
-                    index = ((Integer) vendorMap.get(vendorPartyId)).intValue();
+                    index = (Integer) vendorMap.get(vendorPartyId);
                     cart.positionItemToGroup(item, item.getQuantity(), 0, index, true);
                 } else {
                     index = cart.addShipInfo();

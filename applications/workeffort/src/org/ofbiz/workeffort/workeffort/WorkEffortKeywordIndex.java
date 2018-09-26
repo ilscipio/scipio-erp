@@ -22,6 +22,7 @@ package org.ofbiz.workeffort.workeffort;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -53,15 +54,15 @@ public class WorkEffortKeywordIndex {
         boolean removeStems = KeywordSearchUtil.getRemoveStems();
         Set<String> stemSet = KeywordSearchUtil.getStemSet();
 
-        Map<String, Long> keywords = new TreeMap<String, Long>();
-        List<String> strings = new LinkedList<String>();
+        Map<String, Long> keywords = new TreeMap<>();
+        List<String> strings = new LinkedList<>();
         int widWeight = 1;
         try {
-            widWeight = Integer.parseInt(EntityUtilProperties.getPropertyValue("workeffortsearch", "index.weight.WorkEffort.workEffortId", "1", delegator));
+            widWeight = EntityUtilProperties.getPropertyAsInteger("workeffortsearch", "index.weight.WorkEffort.workEffortId", 1);
         } catch (Exception e) {
             Debug.logWarning("Could not parse weight number: " + e.toString(), module);
         }
-        keywords.put(workEffort.getString("workEffortId").toLowerCase(), Long.valueOf(widWeight));
+        keywords.put(workEffort.getString("workEffortId").toLowerCase(Locale.getDefault()), (long) widWeight);
 
         addWeightedKeywordSourceString(workEffort, "workEffortName", strings);
         addWeightedKeywordSourceString(workEffort, "workEffortTypeId", strings);
@@ -87,7 +88,7 @@ public class WorkEffortKeywordIndex {
         for (String workEffortContentTypeId: workEffortContentTypes.split(",")) {
             int weight = 1;
             try {
-                weight = Integer.parseInt(EntityUtilProperties.getPropertyValue("workeffortsearch", "index.weight.WorkEffortContent." + workEffortContentTypeId, "1", delegator));
+                weight = EntityUtilProperties.getPropertyAsInteger("workeffortsearch", "index.weight.WorkEffortContent." + workEffortContentTypeId, 1);
             } catch (Exception e) {
                 Debug.logWarning("Could not parse weight number: " + e.toString(), module);
             }
@@ -107,7 +108,7 @@ public class WorkEffortKeywordIndex {
             KeywordSearchUtil.processKeywordsForIndex(str, keywords, separators, stopWordBagAnd, stopWordBagOr, removeStems, stemSet);
         }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         for (Map.Entry<String, Long> entry: keywords.entrySet()) {
             if (entry.getKey().length() < 60) { // ignore very long strings, cannot be stored anyway
                 GenericValue workEffortKeyword = delegator.makeValue("WorkEffortKeyword", UtilMisc.toMap("workEffortId", workEffort.getString("workEffortId"), "keyword", entry.getKey(), "relevancyWeight", entry.getValue()));
@@ -135,12 +136,11 @@ public class WorkEffortKeywordIndex {
         }
     }
     public static void addWeightedKeywordSourceString(GenericValue value, String fieldName, List<String> strings) {
-        Delegator delegator = value.getDelegator();
         if (value.getString(fieldName) != null) {
             int weight = 1;
 
             try {
-                weight = Integer.parseInt(EntityUtilProperties.getPropertyValue("workeffortsearch", "index.weight." + value.getEntityName() + "." + fieldName, "1", delegator));
+                weight = EntityUtilProperties.getPropertyAsInteger("workeffortsearch", "index.weight." + value.getEntityName() + "." + fieldName, 1);
             } catch (Exception e) {
                 Debug.logWarning("Could not parse weight number: " + e.toString(), module);
             }

@@ -455,7 +455,7 @@ public class ProductPromoWorker {
                                 Iterator<GenericValue> productPromoCodeIter = productPromoCodeList.iterator();
                                 // support multiple promo codes for a single promo, ie if we run into a use limit for one code see if we can find another for this promo
                                 // check the use limit before each pass so if the promo use limit has been hit we don't keep on trying for the promo code use limit, if there is one of course
-                                while ((useLimit == null || useLimit.longValue() > cart.getProductPromoUseCount(productPromoId)) && productPromoCodeIter.hasNext()) {
+                                while ((useLimit == null || useLimit > cart.getProductPromoUseCount(productPromoId)) && productPromoCodeIter.hasNext()) {
                                     GenericValue productPromoCode = productPromoCodeIter.next();
                                     String productPromoCodeId = productPromoCode.getString("productPromoCodeId");
                                     Long codeUseLimit = getProductPromoCodeUseLimit(productPromoCode, partyId, delegator);
@@ -523,9 +523,9 @@ public class ProductPromoWorker {
                         EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
                 productPromoCustomerUseSize = EntityQuery.use(delegator).from("ProductPromoUseCheck").where(checkCondition).queryCount();
             }
-            long perCustomerThisOrder = useLimitPerCustomer.longValue() - productPromoCustomerUseSize;
-            if (candidateUseLimit == null || candidateUseLimit.longValue() > perCustomerThisOrder) {
-                candidateUseLimit = Long.valueOf(perCustomerThisOrder);
+            long perCustomerThisOrder = useLimitPerCustomer - productPromoCustomerUseSize;
+            if (candidateUseLimit == null || candidateUseLimit > perCustomerThisOrder) {
+                candidateUseLimit = perCustomerThisOrder;
             }
         }
 
@@ -537,9 +537,9 @@ public class ProductPromoWorker {
                     EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
                     EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
             long productPromoUseSize = EntityQuery.use(delegator).from("ProductPromoUseCheck").where(checkCondition).queryCount();
-            long perPromotionThisOrder = useLimitPerPromotion.longValue() - productPromoUseSize;
-            if (candidateUseLimit == null || candidateUseLimit.longValue() > perPromotionThisOrder) {
-                candidateUseLimit = Long.valueOf(perPromotionThisOrder);
+            long perPromotionThisOrder = useLimitPerPromotion - productPromoUseSize;
+            if (candidateUseLimit == null || candidateUseLimit > perPromotionThisOrder) {
+                candidateUseLimit = perPromotionThisOrder;
             }
         }
 
@@ -563,9 +563,9 @@ public class ProductPromoWorker {
                         EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
                 productPromoCustomerUseSize = EntityQuery.use(delegator).from("ProductPromoUseCheck").where(checkCondition).queryCount();
             }
-            long perCustomerThisOrder = codeUseLimitPerCustomer.longValue() - productPromoCustomerUseSize;
-            if (codeUseLimit == null || codeUseLimit.longValue() > perCustomerThisOrder) {
-                codeUseLimit = Long.valueOf(perCustomerThisOrder);
+            long perCustomerThisOrder = codeUseLimitPerCustomer - productPromoCustomerUseSize;
+            if (codeUseLimit == null || codeUseLimit > perCustomerThisOrder) {
+                codeUseLimit = perCustomerThisOrder;
             }
         }
 
@@ -577,9 +577,9 @@ public class ProductPromoWorker {
                     EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
                     EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
             long productPromoCodeUseSize = EntityQuery.use(delegator).from("ProductPromoUseCheck").where(checkCondition).queryCount();
-            long perCodeThisOrder = codeUseLimitPerCode.longValue() - productPromoCodeUseSize;
-            if (codeUseLimit == null || codeUseLimit.longValue() > perCodeThisOrder) {
-                codeUseLimit = Long.valueOf(perCodeThisOrder);
+            long perCodeThisOrder = codeUseLimitPerCode - productPromoCodeUseSize;
+            if (codeUseLimit == null || codeUseLimit > perCodeThisOrder) {
+                codeUseLimit = perCodeThisOrder;
             }
         }
 
@@ -647,7 +647,7 @@ public class ProductPromoWorker {
 
             // check per customer and per promotion code use limits
             Long useLimit = getProductPromoCodeUseLimit(productPromoCode, partyId, delegator);
-            if (useLimit != null && useLimit.longValue() <= 0) {
+            if (useLimit != null && useLimit <= 0) {
                 return UtilProperties.getMessage(resource_error, "productpromoworker.promotion_code_maximum_limit", UtilMisc.toMap("productPromoCodeId", productPromoCodeId), locale);
             }
 
@@ -757,9 +757,9 @@ public class ProductPromoWorker {
         boolean cartChanged = false;
         Map<ShoppingCartItem,BigDecimal> usageInfoMap = prepareProductUsageInfoMap(cart);
         String productPromoId = productPromo.getString("productPromoId");
-        while ((useLimit == null || useLimit.longValue() > cart.getProductPromoUseCount(productPromoId)) &&
+        while ((useLimit == null || useLimit > cart.getProductPromoUseCount(productPromoId)) &&
                 (!requireCode || UtilValidate.isNotEmpty(productPromoCodeId)) &&
-                (codeUseLimit == null || codeUseLimit.longValue() > cart.getProductPromoCodeUse(productPromoCodeId))) {
+                (codeUseLimit == null || codeUseLimit > cart.getProductPromoCodeUse(productPromoCodeId))) {
             boolean promoUsed = false;
             BigDecimal totalDiscountAmount = BigDecimal.ZERO;
             BigDecimal quantityLeftInActions = BigDecimal.ZERO;
@@ -1248,6 +1248,7 @@ public class ProductPromoWorker {
         return true;
     }
 
+    @SuppressWarnings("unused") // SCIPIO: dead code, don't care
     protected static boolean checkConditionForItem(GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, Delegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp) throws GenericEntityException {
         String condValue = productPromoCond.getString("condValue");
         String inputParamEnumId = productPromoCond.getString("inputParamEnumId");
@@ -1276,11 +1277,11 @@ public class ProductPromoWorker {
         if ("PPIP_LPMUP_AMT".equals(inputParamEnumId)) {
             // NOTE: only check this after we know it's this type of cond, otherwise condValue may not be a number
             BigDecimal condValueBigDecimal = new BigDecimal(condValue);
-            compareBase = Integer.valueOf(amountOff.compareTo(condValueBigDecimal));
+            compareBase = amountOff.compareTo(condValueBigDecimal);
         } else if ("PPIP_LPMUP_PER".equals(inputParamEnumId)) {
             // NOTE: only check this after we know it's this type of cond, otherwise condValue may not be a number
             BigDecimal condValueBigDecimal = new BigDecimal(condValue);
-            compareBase = Integer.valueOf(percentOff.compareTo(condValueBigDecimal));
+            compareBase = percentOff.compareTo(condValueBigDecimal);
         } else {
             // condition doesn't apply to individual item, always passes
             return true;
@@ -1289,19 +1290,31 @@ public class ProductPromoWorker {
         Debug.logInfo("Checking condition for item productId=" + cartItem.getProductId() + ", listPrice=" + listPrice + ", basePrice=" + basePrice + ", amountOff=" + amountOff + ", percentOff=" + percentOff + ", condValue=" + condValue + ", compareBase=" + compareBase + ", productPromoCond=" + productPromoCond, module);
 
         if (compareBase != null) {
-            int compare = compareBase.intValue();
+            int compare = compareBase;
             if ("PPC_EQ".equals(operatorEnumId)) {
-                if (compare == 0) return true;
+                if (compare == 0) {
+                    return true;
+                }
             } else if ("PPC_NEQ".equals(operatorEnumId)) {
-                if (compare != 0) return true;
+                if (compare != 0) {
+                    return true;
+                }
             } else if ("PPC_LT".equals(operatorEnumId)) {
-                if (compare < 0) return true;
+                if (compare < 0) {
+                    return true;
+                }
             } else if ("PPC_LTE".equals(operatorEnumId)) {
-                if (compare <= 0) return true;
+                if (compare <= 0) {
+                    return true;
+                }
             } else if ("PPC_GT".equals(operatorEnumId)) {
-                if (compare > 0) return true;
+                if (compare > 0) {
+                    return true;
+                }
             } else if ("PPC_GTE".equals(operatorEnumId)) {
-                if (compare >= 0) return true;
+                if (compare >= 0) {
+                    return true;
+                }
             } else {
                 Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondCondition", UtilMisc.toMap("operatorEnumId",operatorEnumId) , cart.getLocale()), module);
                 return false;
@@ -1818,7 +1831,7 @@ public class ProductPromoWorker {
                     if (productPromoAction.getString("productPromoId").equals(checkOrderAdjustment.get("productPromoId")) &&
                         productPromoAction.getString("productPromoRuleId").equals(checkOrderAdjustment.get("productPromoRuleId")) &&
                         productPromoAction.getString("productPromoActionSeqId").equals(checkOrderAdjustment.get("productPromoActionSeqId"))) {
-                        return Integer.valueOf(i);
+                        return i;
                     }
                 }
             }

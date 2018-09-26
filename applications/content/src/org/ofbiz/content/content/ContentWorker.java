@@ -657,7 +657,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
 
         Map<String, Object> currentNode = nodeTrail.get(sz - 1);
         Boolean isReturnAfter = (Boolean)currentNode.get("isReturnAfter");
-        if (isReturnAfter != null && isReturnAfter.booleanValue()) {
+        if (isReturnAfter != null && isReturnAfter) {
             return false;
         }
 
@@ -669,7 +669,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 ContentWorker.traceNodeTrail("12",nodeTrail);
                 Boolean isPick = (Boolean)currentNode.get("isPick");
 
-                if (isPick != null && isPick.booleanValue()) {
+                if (isPick != null && isPick) {
                     nodeTrail.add(currentNode);
                     inProgress = true;
                     selectKids(currentNode, ctx);
@@ -677,7 +677,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                     break;
                 } else {
                     Boolean isFollow = (Boolean)currentNode.get("isFollow");
-                    if (isFollow != null && isFollow.booleanValue()) {
+                    if (isFollow != null && isFollow) {
                         nodeTrail.add(currentNode);
                         boolean foundPick = traverseSubContent(ctx);
                         if (foundPick) {
@@ -705,7 +705,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 while (idx < (kids.size() - 1)) {
                     currentNode = kids.get(idx + 1);
                     Boolean isFollow = (Boolean)currentNode.get("isFollow");
-                    if (isFollow == null || !isFollow.booleanValue()) {
+                    if (isFollow == null || !isFollow) {
                         idx++;
                         continue;
                     }
@@ -713,7 +713,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                     nodeTrail.add(currentNode);
                     ContentWorker.traceNodeTrail("16",nodeTrail);
                     Boolean isPick = (Boolean)currentNode.get("isPick");
-                    if (isPick == null || !isPick.booleanValue()) {
+                    if (isPick == null || !isPick) {
                         // If not a "pick" node, look at kids
                         inProgress = traverseSubContent(ctx);
                         ContentWorker.traceNodeTrail("17",nodeTrail);
@@ -824,9 +824,9 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             if (isPick) {
                     Integer count = (Integer) currentNode.get("count");
                     if (count == null) {
-                        count = Integer.valueOf(1);
+                        count = 1;
                     } else {
-                        count = Integer.valueOf(count.intValue() + 1);
+                        count = count + 1;
                     }
                     currentNode.put("count", count);
             }
@@ -1305,8 +1305,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             }
         }
         ctx.put("globalNodeTrail", passedGlobalNodeTrail);
-        ctx.put("indent", Integer.valueOf(sz));
-        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, currentContent:" + currentContent, "");
+        ctx.put("indent", sz);
         return currentContent;
     }
 
@@ -1385,26 +1384,26 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         List<Object> topics = getTopics(content);
         context.put("topics", topics);
         String contentTypeId = (String)content.get("contentTypeId");
-        List<String> contentTypeAncestry = new LinkedList<String>();
+        List<String> contentTypeAncestry = new LinkedList<>();
         try {
             getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
         } catch (GenericEntityException e) {
         }
         context.put("typeAncestry", contentTypeAncestry);
         boolean isReturnBefore = checkReturnWhen(context, (String)whenMap.get("returnBeforePickWhen"));
-        trailNode.put("isReturnBefore", Boolean.valueOf(isReturnBefore));
+        trailNode.put("isReturnBefore", isReturnBefore);
         boolean isPick = checkWhen(context, (String)whenMap.get("pickWhen"));
-        trailNode.put("isPick", Boolean.valueOf(isPick));
+        trailNode.put("isPick", isPick);
         boolean isFollow = checkWhen(context, (String)whenMap.get("followWhen"));
-        trailNode.put("isFollow", Boolean.valueOf(isFollow));
+        trailNode.put("isFollow", isFollow);
         boolean isReturnAfter = checkReturnWhen(context, (String)whenMap.get("returnAfterPickWhen"));
-        trailNode.put("isReturnAfter", Boolean.valueOf(isReturnAfter));
+        trailNode.put("isReturnAfter", isReturnAfter);
         trailNode.put("checked", Boolean.TRUE);
     }
 
     public static boolean booleanDataType(Object boolObj) {
         boolean bool = false;
-        if (boolObj != null && ((Boolean)boolObj).booleanValue()) {
+        if (boolObj != null && (Boolean) boolObj) {
             bool = true;
         }
         return bool;

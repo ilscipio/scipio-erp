@@ -193,8 +193,10 @@ public class ProductDisplayWorker {
 
                             Integer curOcc = productOccurances.get(product.get("productId"));
 
-                            if (curOcc == null) curOcc = Integer.valueOf(0);
-                            productOccurances.put(product.getString("productId"), Integer.valueOf(curOcc.intValue() + 1));
+                            if (curOcc == null) {
+                                curOcc = 0;
+                            }
+                            productOccurances.put(product.getString("productId"), curOcc.intValue() + 1);
                         }
                     }
                 }

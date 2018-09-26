@@ -1823,7 +1823,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (itemIndex != null) {
             altRowStyles = modelForm.getStyleAltRowStyle(context);
             // SCIPIO: this is silly, pass both and let FTL make the check so it has more info
-            //if (itemIndex.intValue() % 2 == 0) {
+            //if (itemIndex % 2 == 0) {
             //    evenRowStyle = modelForm.getEvenRowStyle();
             //} else {
             //    oddRowStyle = FlexibleStringExpander.expandString(modelForm.getOddRowStyle(), context);

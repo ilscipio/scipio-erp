@@ -107,7 +107,7 @@ public class BOMServices {
         } catch (GenericEntityException gee) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingBomErrorRunningMaxDethAlgorithm", UtilMisc.toMap("errorString", gee.getMessage()), locale));
         }
-        result.put("depth", Long.valueOf(maxDepth));
+        result.put("depth", (long) maxDepth);
 
         return result;
     }
@@ -161,11 +161,11 @@ public class BOMServices {
                 }
             }
             if (virtualMaxDepth > llc.intValue()) {
-                llc = Long.valueOf(virtualMaxDepth);
+                llc = (long) virtualMaxDepth;
             }
             product.set("billOfMaterialLevel", llc);
             product.store();
-            if (alsoComponents.booleanValue()) {
+            if (alsoComponents) {
                 Map<String, Object> treeResult = dispatcher.runSync("getBOMTree", UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
                 BOMTree tree = (BOMTree)treeResult.get("tree");
                 List<BOMNode> products = new LinkedList<BOMNode>();
@@ -178,12 +178,12 @@ public class BOMServices {
                         lev = oneProduct.getLong("billOfMaterialLevel").intValue();
                     }
                     if (lev < oneNode.getDepth()) {
-                        oneProduct.set("billOfMaterialLevel", Long.valueOf(oneNode.getDepth()));
+                        oneProduct.set("billOfMaterialLevel", (long) oneNode.getDepth());
                         oneProduct.store();
                     }
                 }
             }
-            if (alsoVariants.booleanValue()) {
+            if (alsoVariants) {
                 List<GenericValue> variantProducts = EntityQuery.use(delegator).from("ProductAssoc")
                         .where("productId", productId, 
                                 "productAssocTypeId", "PRODUCT_VARIANT")
@@ -219,7 +219,7 @@ public class BOMServices {
 
         try {
             List<GenericValue> products = EntityQuery.use(delegator).from("Product").orderBy("isVirtual DESC").queryList();
-            Long zero = Long.valueOf(0);
+            Long zero = 0L;
             List<GenericValue> allProducts = new LinkedList<GenericValue>();
             for (GenericValue product : products) {
                 product.set("billOfMaterialLevel", zero);
@@ -230,7 +230,7 @@ public class BOMServices {
 
             for (GenericValue product : products) {
                 try {
-                    Map<String, Object> depthResult = dispatcher.runSync("updateLowLevelCode", UtilMisc.<String, Object>toMap("productIdTo", product.getString("productId"), "alsoComponents", Boolean.valueOf(false), "alsoVariants", Boolean.valueOf(false)));
+                    Map<String, Object> depthResult = dispatcher.runSync("updateLowLevelCode", UtilMisc.<String, Object>toMap("productIdTo", product.getString("productId"), "alsoComponents", Boolean.FALSE, "alsoVariants", Boolean.FALSE));
                     Debug.logInfo("Product [" + product.getString("productId") + "] Low Level Code [" + depthResult.get("lowLevelCode") + "]", module);
                 } catch (Exception exc) {
                     Debug.logWarning(exc.getMessage(), module);
@@ -299,7 +299,7 @@ public class BOMServices {
         BigDecimal amount = (BigDecimal) context.get("amount");
         Locale locale = (Locale) context.get("locale");
         if (type == null) {
-            type = Integer.valueOf(0);
+            type = 0;
         }
 
         Date fromDate = null;
@@ -315,7 +315,7 @@ public class BOMServices {
 
         BOMTree tree = null;
         try {
-            tree = new BOMTree(productId, bomType, fromDate, type.intValue(), delegator, dispatcher, userLogin);
+            tree = new BOMTree(productId, bomType, fromDate, type, delegator, dispatcher, userLogin);
         } catch (GenericEntityException gee) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingBomErrorCreatingBillOfMaterialsTree", UtilMisc.toMap("errorString", gee.getMessage()), locale));
         }
@@ -379,7 +379,7 @@ public class BOMServices {
             tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher, userLogin);
             tree.setRootQuantity(quantity);
             tree.setRootAmount(amount);
-            tree.print(components, excludeWIPs.booleanValue());
+            tree.print(components, excludeWIPs);
             if (components.size() > 0) components.remove(0);
         } catch (GenericEntityException gee) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingBomErrorCreatingBillOfMaterialsTree", UtilMisc.toMap("errorString", gee.getMessage()), locale));
@@ -579,7 +579,7 @@ public class BOMServices {
                         BOMNode component = productsInPackages.get(j);
                         Map<String, Object> boxTypeContentMap = new HashMap<String, Object>();
                         boxTypeContentMap.put("content", orderShipmentReadMap);
-                        boxTypeContentMap.put("componentIndex", Integer.valueOf(j));
+                        boxTypeContentMap.put("componentIndex", j);
                         GenericValue product = component.getProduct();
                         String boxTypeId = product.getString("shipmentBoxTypeId");
                         if (boxTypeId != null) {
@@ -653,7 +653,7 @@ public class BOMServices {
                     if (subProduct) {
                         // multi package
                         Integer index = (Integer)contentMap.get("componentIndex");
-                        BOMNode component = productsInPackages.get(index.intValue());
+                        BOMNode component = productsInPackages.get(index);
                         product = component.getProduct();
                         quantity = component.getQuantity();
                     } else {

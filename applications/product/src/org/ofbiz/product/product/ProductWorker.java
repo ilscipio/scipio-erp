@@ -78,12 +78,10 @@ public class ProductWorker {
 
             if (chargeShipping == null) {
                 return true;
-            } else {
-                return chargeShipping.booleanValue();
             }
-        } else {
-            throw new IllegalArgumentException(errMsg);
+            return chargeShipping;
         }
+        throw new IllegalArgumentException(errMsg);
     }
 
     public static boolean isBillableToAddress(GenericValue product, GenericValue postalAddress) {
@@ -154,12 +152,10 @@ public class ProductWorker {
 
             if (taxable == null) {
                 return true;
-            } else {
-                return taxable.booleanValue();
             }
-        } else {
-            throw new IllegalArgumentException(errMsg);
+            return taxable;
         }
+        throw new IllegalArgumentException(errMsg);
     }
 
     public static String getInstanceAggregatedId(Delegator delegator, String instanceProductId) throws GenericEntityException {

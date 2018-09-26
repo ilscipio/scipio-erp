@@ -472,13 +472,13 @@ public class TaxAuthorityServices {
                 BigDecimal taxRate = taxAuthorityRateProduct.get("taxPercentage") != null ? taxAuthorityRateProduct.getBigDecimal("taxPercentage") : ZERO_BASE;
                 BigDecimal taxable = ZERO_BASE;
 
-                if (product != null && (product.get("taxable") == null || (product.get("taxable") != null && product.getBoolean("taxable").booleanValue()))) {
+                if (product != null && (product.get("taxable") == null || (product.get("taxable") != null && product.getBoolean("taxable")))) {
                     taxable = taxable.add(itemAmount);
                 }
-                if (shippingAmount != null && taxAuthorityRateProduct != null && (taxAuthorityRateProduct.get("taxShipping") == null || (taxAuthorityRateProduct.get("taxShipping") != null && taxAuthorityRateProduct.getBoolean("taxShipping").booleanValue()))) {
+                if (shippingAmount != null && taxAuthorityRateProduct != null && (taxAuthorityRateProduct.get("taxShipping") == null || (taxAuthorityRateProduct.get("taxShipping") != null && taxAuthorityRateProduct.getBoolean("taxShipping")))) {
                     taxable = taxable.add(shippingAmount);
                 }
-                if (orderPromotionsAmount != null && taxAuthorityRateProduct != null && (taxAuthorityRateProduct.get("taxPromotions") == null || (taxAuthorityRateProduct.get("taxPromotions") != null && taxAuthorityRateProduct.getBoolean("taxPromotions").booleanValue()))) {
+                if (orderPromotionsAmount != null && taxAuthorityRateProduct != null && (taxAuthorityRateProduct.get("taxPromotions") == null || (taxAuthorityRateProduct.get("taxPromotions") != null && taxAuthorityRateProduct.getBoolean("taxPromotions")))) {
                     taxable = taxable.add(orderPromotionsAmount);
                 }
 

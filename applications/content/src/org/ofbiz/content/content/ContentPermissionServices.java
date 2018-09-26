@@ -104,13 +104,13 @@ public class ContentPermissionServices {
         GenericValue content = (GenericValue) context.get("currentContent");
         Boolean bDisplayFailCond = (Boolean)context.get("displayFailCond");
         boolean displayFailCond = false;
-        if (bDisplayFailCond != null && bDisplayFailCond.booleanValue()) {
+        if (bDisplayFailCond != null && bDisplayFailCond) {
              displayFailCond = true;
         }
                 Debug.logInfo("displayFailCond(0):" + displayFailCond, "");
         Boolean bDisplayPassCond = (Boolean)context.get("displayPassCond");
         boolean displayPassCond = false;
-        if (bDisplayPassCond != null && bDisplayPassCond.booleanValue()) {
+        if (bDisplayPassCond != null && bDisplayPassCond) {
              displayPassCond = true;
         }
         Debug.logInfo("displayPassCond(0):" + displayPassCond, "");
@@ -309,7 +309,7 @@ public class ContentPermissionServices {
         }
         permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus == null || !permissionStatus.equals("granted")) {
-            if (bDisplayFailCond != null && bDisplayFailCond.booleanValue()) {
+            if (bDisplayFailCond != null && bDisplayFailCond) {
                 String errMsg = (String)permResults.get(ModelService.ERROR_MESSAGE);
                 results.put(ModelService.ERROR_MESSAGE, errMsg);
             }
@@ -327,7 +327,7 @@ public class ContentPermissionServices {
         if (permissionStatus != null && permissionStatus.equals("granted")) {
             results.put("permissionStatus", "granted");
         } else {
-            if (bDisplayFailCond != null && bDisplayFailCond.booleanValue()) {
+            if (bDisplayFailCond != null && bDisplayFailCond) {
                 String errMsg = (String)permResults.get(ModelService.ERROR_MESSAGE);
                 results.put(ModelService.ERROR_MESSAGE, errMsg);
             }

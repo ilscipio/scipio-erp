@@ -65,9 +65,9 @@ public class ValueLinkServices {
 
         Boolean kekOnly = context.get("kekOnly") != null ? (Boolean) context.get("kekOnly") : Boolean.FALSE;
         String kekTest = (String) context.get("kekTest");
-        Debug.logInfo("KEK Only : " + kekOnly.booleanValue(), module);
+        Debug.logInfo("KEK Only : " + kekOnly, module);
 
-        StringBuffer buf = vl.outputKeyCreation(kekOnly.booleanValue(), kekTest);
+        StringBuffer buf = vl.outputKeyCreation(kekOnly, kekTest);
         String output = buf.toString();
         Debug.logInfo(":: Key Generation Output ::\n\n" + output, module);
 
@@ -94,7 +94,7 @@ public class ValueLinkServices {
         byte[] testEncryption = null;
         String desc = "";
 
-        if (mode.intValue() == 1) {
+        if (mode == 1) {
             // encrypt the test bytes
             testEncryption = vl.encryptViaKek(testBytes);
             desc = "Encrypted";
@@ -155,7 +155,7 @@ public class ValueLinkServices {
         Map<String, Object> request = vl.getInitialRequestMap(context);
         request.put("Interface", "Encrypt");
         request.put("EncryptKey", mwkHex);
-        request.put("EncryptID", Long.valueOf(vl.getWorkingKeyIndex().longValue() + 1));
+        request.put("EncryptID", vl.getWorkingKeyIndex() + 1);
 
         // send the request
         Map<String, Object> response = null;
@@ -850,7 +850,7 @@ public class ValueLinkServices {
         if (redeemResult != null) {
             Boolean processResult = (Boolean) redeemResult.get("processResult");
             // confirm the amount redeemed; since VL does not error in insufficient funds
-            if (processResult.booleanValue()) {
+            if (processResult) {
                 BigDecimal previous = (BigDecimal) redeemResult.get("previousAmount");
                 if (previous == null) previous = BigDecimal.ZERO;
                 BigDecimal current = (BigDecimal) redeemResult.get("amount");
@@ -1201,7 +1201,7 @@ public class ValueLinkServices {
             }
 
             Boolean processResult = (Boolean) activateResult.get("processResult");
-            if (activateResult == null || activateResult.containsKey(ModelService.ERROR_MESSAGE) || !processResult.booleanValue()) {
+            if (activateResult == null || activateResult.containsKey(ModelService.ERROR_MESSAGE) || !processResult) {
                 failure = true;
             }
 
@@ -1462,7 +1462,7 @@ public class ValueLinkServices {
         }
 
         Boolean processResult = (Boolean) reloadResult.get("processResult");
-        if (reloadResult == null || reloadResult.containsKey(ModelService.ERROR_MESSAGE) || !processResult.booleanValue()) {
+        if (reloadResult == null || reloadResult.containsKey(ModelService.ERROR_MESSAGE) || !processResult) {
             Debug.logError("Reload Failed Need to Refund : " + reloadResult, module);
 
             // process the return

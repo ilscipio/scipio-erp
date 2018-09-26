@@ -1098,7 +1098,7 @@ public class PartyServices {
         } catch (Exception e) {
             viewIndex = 0;
         }
-        result.put("viewIndex", Integer.valueOf(viewIndex));
+        result.put("viewIndex", viewIndex);
 
         // SCIPIO: unhardcode default
         //int viewSize = 20;
@@ -1109,7 +1109,7 @@ public class PartyServices {
             //viewSize = 20;
             viewSize = UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
         }
-        result.put("viewSize", Integer.valueOf(viewSize));
+        result.put("viewSize", viewSize);
 
         // get the lookup flag
         String lookupFlag = (String) context.get("lookupFlag");
@@ -1506,10 +1506,10 @@ public class PartyServices {
 
         if (partyList == null) partyList = new LinkedList<GenericValue>();
         result.put("partyList", partyList);
-        result.put("partyListSize", Integer.valueOf(partyListSize));
+        result.put("partyListSize", partyListSize);
         result.put("paramList", paramList);
-        result.put("highIndex", Integer.valueOf(highIndex));
-        result.put("lowIndex", Integer.valueOf(lowIndex));
+        result.put("highIndex", highIndex);
+        result.put("lowIndex", lowIndex);
 
         return result;
     }
@@ -2196,7 +2196,7 @@ public class PartyServices {
                         }
                     }
 
-                    addrMap.put("sequenceNum", Long.valueOf(seq));
+                    addrMap.put("sequenceNum", (long) seq);
                     Debug.logInfo("Creating map entry: " + addrMap, module);
                     try {
                         delegator.create(addrMap);

@@ -844,7 +844,7 @@ public class ProductionRunServices {
         // this should be called only when the last task is completed
         if (currentStatusId.equals("PRUN_RUNNING") && (statusId == null || statusId.equals("PRUN_COMPLETED"))) {
             Map<String, Object> serviceContext = new HashMap<String, Object>();
-            if (issueAllComponents.booleanValue()) {
+            if (issueAllComponents) {
                 // Issue all the components, if this task needs components and they still need to be issued
                 try {
                     List<GenericValue> inventoryAssigned = EntityQuery.use(delegator).from("WorkEffortInventoryAssign")
@@ -893,7 +893,7 @@ public class ProductionRunServices {
             if (theTask.get("actualMilliSeconds") == null) {
                 Double autoMillis = null;
                 if (theTask.get("estimatedMilliSeconds") != null) {
-                    autoMillis = Double.valueOf(quantityProduced.doubleValue() * theTask.getDouble("estimatedMilliSeconds"));
+                    autoMillis = quantityProduced.doubleValue() * theTask.getDouble("estimatedMilliSeconds");
                 }
                 serviceContext.put("actualMilliSeconds", autoMillis);
             }
@@ -1075,13 +1075,13 @@ public class ProductionRunServices {
             Double actualSetupMillis = workEffort.getDouble("actualSetupMillis");
             Double actualMilliSeconds = workEffort.getDouble("actualMilliSeconds");
             if (actualSetupMillis == null) {
-                actualSetupMillis = new Double(0.0);
+                actualSetupMillis = 0.0;
             }
             if (actualMilliSeconds == null) {
-                actualMilliSeconds = new Double(0.0);
+                actualMilliSeconds = 0.0;
             }
-            actualTotalMilliSeconds += actualSetupMillis.doubleValue();
-            actualTotalMilliSeconds += actualMilliSeconds.doubleValue();
+            actualTotalMilliSeconds += actualSetupMillis;
+            actualTotalMilliSeconds += actualMilliSeconds;
             // Get the template (aka routing task) of the work effort
             GenericValue routingTaskAssoc = EntityQuery.use(delegator).from("WorkEffortAssoc")
                     .where("workEffortIdTo", productionRunTaskId,
@@ -1104,7 +1104,7 @@ public class ProductionRunServices {
                     // compute the total time
                     double totalTime = actualTotalMilliSeconds;
                     if (costComponentCalc.get("perMilliSecond") != null) {
-                        long perMilliSecond = costComponentCalc.getLong("perMilliSecond").longValue();
+                        long perMilliSecond = costComponentCalc.getLong("perMilliSecond");
                         if (perMilliSecond != 0) {
                             totalTime = totalTime / perMilliSecond;
                         }
@@ -1150,11 +1150,11 @@ public class ProductionRunServices {
                     String currencyUomId = (setupCost != null? setupCost.getString("amountUomId"): usageCost.getString("amountUomId"));
                     BigDecimal setupCostAmount = ZERO;
                     if (setupCost != null) {
-                        setupCostAmount = setupCost.getBigDecimal("amount").multiply(BigDecimal.valueOf(actualSetupMillis.doubleValue()));
+                        setupCostAmount = setupCost.getBigDecimal("amount").multiply(BigDecimal.valueOf(actualSetupMillis));
                     }
                     BigDecimal usageCostAmount = ZERO;
                     if (usageCost != null) {
-                        usageCostAmount = usageCost.getBigDecimal("amount").multiply(BigDecimal.valueOf(actualMilliSeconds.doubleValue()));
+                        usageCostAmount = usageCost.getBigDecimal("amount").multiply(BigDecimal.valueOf(actualMilliSeconds));
                     }
                     BigDecimal fixedAssetCost = setupCostAmount.add(usageCostAmount).setScale(decimals, rounding);
                     fixedAssetCost = fixedAssetCost.divide(BigDecimal.valueOf(3600000), decimals, rounding);
@@ -1652,7 +1652,7 @@ public class ProductionRunServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunProductProducedNotStillAvailable", locale));
         }
 
-        if (lotId == null && autoCreateLot.booleanValue()) {
+        if (lotId == null && autoCreateLot) {
             lotId = delegator.getNextSeqId("Lot");
             createLotIfNeeded = Boolean.TRUE;
         }
@@ -1661,7 +1661,7 @@ public class ProductionRunServices {
                 // Find the lot
                 GenericValue lot = EntityQuery.use(delegator).from("Lot").where("lotId", lotId).queryOne();
                 if (lot == null) {
-                    if (createLotIfNeeded.booleanValue()) {
+                    if (createLotIfNeeded) {
                         lot = delegator.makeValue("Lot", UtilMisc.toMap("lotId", lotId, "creationDate", UtilDateTime.nowTimestamp()));
                         lot.create();
                     } else {
@@ -2147,7 +2147,7 @@ public class ProductionRunServices {
         BigDecimal totalQuantityProduced = quantityProduced.add(addQuantityProduced);
         BigDecimal totalQuantityRejected = quantityRejected.add(addQuantityRejected);
 
-        if (issueRequiredComponents.booleanValue() && addQuantityProduced.compareTo(ZERO) > 0) {
+        if (issueRequiredComponents && addQuantityProduced.compareTo(ZERO) > 0) {
             BigDecimal quantityToProduce = theTask.getBigDecimal("quantityToProduce");
             if (quantityToProduce == null) {
                 quantityToProduce = BigDecimal.ZERO;
@@ -2225,16 +2225,16 @@ public class ProductionRunServices {
             if (addTaskTime != null) {
                 Double actualMilliSeconds = theTask.getDouble("actualMilliSeconds");
                 if (actualMilliSeconds == null) {
-                    actualMilliSeconds = Double.valueOf(0);
+                    actualMilliSeconds = (double) 0;
                 }
-                serviceContext.put("actualMilliSeconds", Double.valueOf(actualMilliSeconds.doubleValue() + addTaskTime.doubleValue()));
+                serviceContext.put("actualMilliSeconds", actualMilliSeconds + addTaskTime.doubleValue());
             }
             if (addSetupTime != null) {
                 Double actualSetupMillis = theTask.getDouble("actualSetupMillis");
                 if (actualSetupMillis == null) {
-                    actualSetupMillis = Double.valueOf(0);
+                    actualSetupMillis = (double) 0;
                 }
-                serviceContext.put("actualSetupMillis", Double.valueOf(actualSetupMillis.doubleValue() + addSetupTime.doubleValue()));
+                serviceContext.put("actualSetupMillis", actualSetupMillis + addSetupTime.doubleValue());
             }
             serviceContext.put("quantityProduced", totalQuantityProduced);
             serviceContext.put("quantityRejected", totalQuantityRejected);

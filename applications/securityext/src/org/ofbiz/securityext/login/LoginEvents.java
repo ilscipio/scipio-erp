@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -214,9 +215,9 @@ public class LoginEvents {
             }
             if (useEncryption) {
                 // password encrypted, can't send, generate new password and email to user
-                passwordToSend = RandomStringUtils.randomAlphanumeric(Integer.parseInt(EntityUtilProperties.getPropertyValue("security", "password.length.min", "5", delegator)));
+                passwordToSend = RandomStringUtils.randomAlphanumeric(EntityUtilProperties.getPropertyAsInteger("security", "password.length.min", 5));
                 if ("true".equals(EntityUtilProperties.getPropertyValue("security", "password.lowercase", delegator))){
-                    passwordToSend=passwordToSend.toLowerCase();
+                    passwordToSend=passwordToSend.toLowerCase(Locale.getDefault());
                 }
                 supposedUserLogin.set("currentPassword", HashCrypt.cryptUTF8(LoginServices.getHashType(), null, passwordToSend));
                 supposedUserLogin.set("passwordHint", "Auto-Generated Password");
@@ -280,14 +281,14 @@ public class LoginEvents {
         }
 
         // set the needed variables in new context
-        Map<String, Object> bodyParameters = new HashMap<String, Object>();
-        bodyParameters.put("useEncryption", Boolean.valueOf(useEncryption));
+        Map<String, Object> bodyParameters = new HashMap<>();
+        bodyParameters.put("useEncryption", useEncryption);
         bodyParameters.put("password", UtilFormatOut.checkNull(passwordToSend));
         bodyParameters.put("locale", UtilHttp.getLocale(request));
         bodyParameters.put("userLogin", supposedUserLogin);
         bodyParameters.put("productStoreId", productStoreId);
 
-        Map<String, Object> serviceContext = new HashMap<String, Object>();
+        Map<String, Object> serviceContext = new HashMap<>();
         serviceContext.put("bodyScreenUri", bodyScreenLocation);
         serviceContext.put("bodyParameters", bodyParameters);
         if (productStoreEmail != null) {

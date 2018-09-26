@@ -175,8 +175,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                     //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, node(1):" + node , module);
                     Boolean checkedObj = (Boolean)node.get("checked");
                     Map<String, Object> whenMap = UtilGenerics.checkMap(templateRoot.get("whenMap"));
-                    //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, whenMap(2):" + whenMap , module);
-                    if (checkedObj == null || !checkedObj.booleanValue()) {
+                    if (checkedObj == null || !checkedObj) {
                         ContentWorker.checkConditions(delegator, node, null, whenMap);
                     }
                 } else {
@@ -184,7 +183,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 }
 
                 Boolean isReturnBeforePickBool = (Boolean)node.get("isReturnBeforePick");
-                if (isReturnBeforePickBool != null && isReturnBeforePickBool.booleanValue()) {
+                if (isReturnBeforePickBool != null && isReturnBeforePickBool) {
                     return TransformControl.SKIP_BODY;
                 }   
 
@@ -197,8 +196,8 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 Boolean isFollowBool = (Boolean)node.get("isFollow");
                 //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, isPickBool(1):" + isPickBool + " isFollowBool:" + isFollowBool, module);
                 boolean isPick = true;
-                if ((isPickBool == null || !isPickBool.booleanValue())
-                   && (isFollowBool != null && isFollowBool.booleanValue())) {
+                if ((isPickBool == null || !isPickBool)
+                   && (isFollowBool != null && isFollowBool)) {
                     isPick = ContentWorker.traverseSubContent(traverseContext);
                     //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, isPick(2):" + isPick, module);
                 }
@@ -280,7 +279,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 }
                 // if (Debug.infoOn()) Debug.logInfo("populateContext, globalNodeTrail(1b):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
                 int indentSz = globalNodeTrail.size();
-                envWrap("indent", Integer.valueOf(indentSz));
+                envWrap("indent", indentSz);
                 String trailCsv = ContentWorker.nodeTrailToCsv(globalNodeTrail);
                 //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, populateCtx, trailCsv(2):" + trailCsv , module);
                 envWrap("nodeTrailCsv", trailCsv);

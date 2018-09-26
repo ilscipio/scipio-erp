@@ -221,8 +221,8 @@ public class LoginServices {
 
                             // reset failed login count if necessry
                             Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
-                            if (currentFailedLogins != null && currentFailedLogins.longValue() > 0) {
-                                userLogin.set("successiveFailedLogins", Long.valueOf(0));
+                            if (currentFailedLogins != null && currentFailedLogins > 0) {
+                                userLogin.set("successiveFailedLogins", 0L);
                             } else if (!hasLoggedOut) {
                                 // successful login & no loggout flag, no need to change anything, so don't do the store
                                 doStore = false;

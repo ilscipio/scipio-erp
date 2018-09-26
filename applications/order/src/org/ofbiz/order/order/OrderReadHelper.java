@@ -1235,7 +1235,7 @@ public class OrderReadHelper {
                 }
 
                 if (pieces != null) {
-                    piecesIncluded = pieces.longValue();
+                    piecesIncluded = pieces;
                 }
             }
         }
@@ -1262,7 +1262,7 @@ public class OrderReadHelper {
         itemInfo.put("quantity", getOrderItemQuantity(item));
         itemInfo.put("weight", this.getItemWeight(item));
         itemInfo.put("size", this.getItemSize(item));
-        itemInfo.put("piecesIncluded", Long.valueOf(this.getItemPiecesIncluded(item)));
+        itemInfo.put("piecesIncluded", this.getItemPiecesIncluded(item));
         itemInfo.put("featureSet", this.getItemFeatureSet(item));
         return itemInfo;
     }

@@ -674,7 +674,7 @@ public class CheckOutEvents {
         if (productStore == null || productStore.get("explodeOrderItems") == null) {
             return false;
         }
-        return productStore.getBoolean("explodeOrderItems").booleanValue();
+        return productStore.getBoolean("explodeOrderItems");
     }
 
     public static String checkShipmentNeeded(HttpServletRequest request, HttpServletResponse response) {

@@ -67,7 +67,10 @@ under the License.
         <field name="isDefault">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        
+        <field name="isStoreDefault">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListWebSites" target="" title="" type="list" list-name="webSites" paginate-target="FindWebSite" paginate="true"
@@ -84,7 +87,9 @@ under the License.
             </hyperlink>
         </field>
         <field name="siteName" title="${uiLabelMap.CommonName}" sort-field="true"><display/></field>
-        <field name="httpHost" sort-field="true"><display/></field>
+        <!-- SCIPIO: sort by HTTPS, not HTTP -->
+        <field name="httpsHost" sort-field="true"><display/></field>
+        <field name="httpsPort"><display/></field>
     </form>
 
     <form name="FindWebSitePathAlias" target="WebSiteAliases" type="single" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->

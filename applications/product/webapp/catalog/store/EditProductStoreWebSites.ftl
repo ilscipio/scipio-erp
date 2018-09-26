@@ -30,6 +30,7 @@ under the License.
               <@th>${uiLabelMap.ProductWebSiteId}</@th>
               <@th>${uiLabelMap.ProductHost}</@th>
               <@th>${uiLabelMap.ProductPort}</@th>
+              <@th>${uiLabelMap.FormFieldTitle_isStoreDefault}</@th>
               <@th>&nbsp;</@th>
             </@tr>
            </@thead>
@@ -39,8 +40,10 @@ under the License.
                 <@tr valign="middle">
                   <#-- SCIPIO: This is now accessible internally from product app: <@ofbizInterWebappUrl>/content/control/EditWebSite...&amp;externalLoginKey=${requestAttributes.externalLoginKey} -->
                   <@td><a href="<@ofbizUrl>EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
-                  <@td>${webSite.httpHost?default('&nbsp;')}</@td>
-                  <@td>${webSite.httpPort?default('&nbsp;')}</@td>
+                  <#-- SCIPIO: sort by HTTPS first, not HTTP -->
+                  <@td>${webSite.httpsHost!webSite.httpHost!'&nbsp;'}</@td>
+                  <@td>${webSite.httpsPort!webSite.httpPort!'&nbsp;'}</@td>
+                  <@td>${webSite.isStoreDefault!}</@td><#-- SCIPIO -->
                   <@td align="center">
                     <a href="javascript:document.storeUpdateWebSite_${webSite_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                     <form name="storeUpdateWebSite_${webSite_index}" method="post" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>">

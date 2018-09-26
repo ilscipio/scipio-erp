@@ -155,16 +155,29 @@ public final class UtilProperties implements Serializable {
         return value;
     }
 
+    /**
+     * getPropertyNumber, as double.
+     * <p>
+     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, double)} instead.
+     */
     public static double getPropertyNumber(String resource, String name, double defaultValue) {
         String str = getPropertyValue(resource, name);
-
+        if (UtilValidate.isEmpty(str)) { // SCIPIO: 2018-09-26: don't try/warn if empty
+            return defaultValue;
+        }
         try {
             return Double.parseDouble(str);
         } catch (NumberFormatException nfe) {
+            Debug.logWarning("Error converting String \"" + str + "\" to double; using defaultNumber: " + defaultValue + ".", module); // SCIPIO: 2018-09-26: don't swallow
             return defaultValue;
         }
     }
 
+    /**
+     * getPropertyNumber, as double, with default value 0.00000.
+     * <p>
+     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, double)} instead.
+     */
     public static double getPropertyNumber(String resource, String name) {
         return getPropertyNumber(resource, name, 0.00000);
     }

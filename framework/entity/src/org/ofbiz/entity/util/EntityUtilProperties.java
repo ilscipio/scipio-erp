@@ -149,10 +149,20 @@ public final class EntityUtilProperties implements Serializable {
         }
     }
 
+    /**
+     * getPropertyNumber, as double.
+     * <p>
+     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, double)} instead.
+     */
     public static double getPropertyNumber(String resource, String name, double defaultValue) {
         return UtilProperties.getPropertyNumber(resource, name, defaultValue);
     }
 
+    /**
+     * getPropertyNumber, as double, with default value 0.00000.
+     * <p>
+     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, double)} instead.
+     */
     public static double getPropertyNumber(String resource, String name) {
         return UtilProperties.getPropertyNumber(resource, name);
     }

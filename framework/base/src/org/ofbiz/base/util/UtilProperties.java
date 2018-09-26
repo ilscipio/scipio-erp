@@ -379,6 +379,9 @@ public final class UtilProperties implements Serializable {
      */
     public static BigInteger getPropertyAsBigInteger(String resource, String name, BigInteger defaultNumber) {
         String strValue = getPropertyValue(resource, name);
+        if (UtilValidate.isEmpty(strValue)) { // SCIPIO: 2018-09-26: don't warn if empty
+            return defaultNumber;
+        }
         BigInteger result = defaultNumber;
         try {
             result = new BigInteger(strValue);
@@ -398,6 +401,9 @@ public final class UtilProperties implements Serializable {
      */
     public static BigDecimal getPropertyAsBigDecimal(String resource, String name, BigDecimal defaultNumber) {
         String strValue = getPropertyValue(resource, name);
+        if (UtilValidate.isEmpty(strValue)) { // SCIPIO: 2018-09-26: don't warn if empty
+            return defaultNumber;
+        }
         BigDecimal result = defaultNumber;
         try {
             result = new BigDecimal(strValue);
@@ -1976,6 +1982,9 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static BigInteger asBigInteger(String value, BigInteger defaultValue) {
+        if (UtilValidate.isEmpty(value)) { // SCIPIO: 2018-09-26: don't warn if empty
+            return defaultValue;
+        }
         BigInteger result = defaultValue;
         try {
             result = new BigInteger(value);
@@ -2028,6 +2037,9 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static BigDecimal asBigDecimal(String value, BigDecimal defaultValue) {
+        if (UtilValidate.isEmpty(value)) { // SCIPIO: 2018-09-26: don't warn if empty
+            return defaultValue;
+        }
         BigDecimal result = defaultValue;
         try {
             result = new BigDecimal(value);

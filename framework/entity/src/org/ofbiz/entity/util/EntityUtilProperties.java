@@ -149,6 +149,25 @@ public final class EntityUtilProperties implements Serializable {
         }
     }
 
+
+    /**
+     * getPropertyNumber, as double.
+     * <p>
+     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, double, Delegator)} instead.
+     */
+    public static double getPropertyNumber(String resource, String name, double defaultValue, Delegator delegator) { // SCIPIO: added 2018-09-26
+        String str = getPropertyValue(resource, name, delegator);
+        if (UtilValidate.isEmpty(str)) { // SCIPIO: 2018-09-26: don't try/warn if empty
+            return defaultValue;
+        }
+        try {
+            return Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            Debug.logWarning("Error converting String \"" + str + "\" to double; using defaultNumber: " + defaultValue + ".", module); // SCIPIO: 2018-09-26: don't swallow
+            return defaultValue;
+        }
+    }
+
     /**
      * getPropertyNumber, as double.
      * <p>
@@ -167,28 +186,56 @@ public final class EntityUtilProperties implements Serializable {
         return UtilProperties.getPropertyNumber(resource, name);
     }
 
+    public static Boolean getPropertyAsBoolean(String resource, String name, boolean defaultValue, Delegator delegator) { // SCIPIO: added 2018-09-26
+        return UtilProperties.asBoolean(getPropertyValue(resource, name, delegator), defaultValue);
+    }
+
     public static Boolean getPropertyAsBoolean(String resource, String name, boolean defaultValue) {
         return UtilProperties.getPropertyAsBoolean(resource, name, defaultValue);
+    }
+
+    public static Integer getPropertyAsInteger(String resource, String name, int defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+        return UtilProperties.asInteger(getPropertyValue(resource, name, delegator), defaultNumber);
     }
 
     public static Integer getPropertyAsInteger(String resource, String name, int defaultNumber) {
         return UtilProperties.getPropertyAsInteger(resource, name, defaultNumber);
     }
 
+    public static Long getPropertyAsLong(String resource, String name, long defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+        return UtilProperties.asLong(getPropertyValue(resource, name, delegator), defaultNumber);
+    }
+
     public static Long getPropertyAsLong(String resource, String name, long defaultNumber) {
         return UtilProperties.getPropertyAsLong(resource, name, defaultNumber);
+    }
+
+    public static Float getPropertyAsFloat(String resource, String name, float defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+        return UtilProperties.asFloat(getPropertyValue(resource, name, delegator), defaultNumber);
     }
 
     public static Float getPropertyAsFloat(String resource, String name, float defaultNumber) {
         return UtilProperties.getPropertyAsFloat(resource, name, defaultNumber);
     }
 
+    public static Double getPropertyAsDouble(String resource, String name, double defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+        return UtilProperties.asDouble(getPropertyValue(resource, name, delegator), defaultNumber);
+    }
+
     public static Double getPropertyAsDouble(String resource, String name, double defaultNumber) {
         return UtilProperties.getPropertyAsDouble(resource, name, defaultNumber);
     }
 
+    public static BigInteger getPropertyAsBigInteger(String resource, String name, BigInteger defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+        return UtilProperties.asBigInteger(getPropertyValue(resource, name, delegator), defaultNumber);
+    }
+
     public static BigInteger getPropertyAsBigInteger(String resource, String name, BigInteger defaultNumber) {
         return UtilProperties.getPropertyAsBigInteger(resource, name, defaultNumber);
+    }
+
+    public static BigDecimal getPropertyAsBigDecimal(String resource, String name, BigDecimal defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+        return UtilProperties.asBigDecimal(getPropertyValue(resource, name, delegator), defaultNumber);
     }
 
     public static BigDecimal getPropertyAsBigDecimal(String resource, String name, BigDecimal defaultNumber) {

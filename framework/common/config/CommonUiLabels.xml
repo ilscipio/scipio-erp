@@ -11281,6 +11281,24 @@
         <value xml:lang="zh">设置列宽度...</value>
         <value xml:lang="zh-TW">設定欄寬度...</value>
     </property>
+    <property key="CommonSetDefault">
+        <value xml:lang="da">Vælg standard</value>
+        <value xml:lang="de">Vorauswählen</value>
+        <value xml:lang="en">Set Default</value>
+        <value xml:lang="es">por Defecto</value>
+        <value xml:lang="fr">Choisir comme valeur par défaut</value>
+        <value xml:lang="hi-IN">सामान्य स्थापित किजीये</value>
+        <value xml:lang="it">Imposta come predefinito</value>
+        <value xml:lang="ja">通常に設定</value>
+        <value xml:lang="nl">Zet op de standaardwaarde</value>
+        <value xml:lang="pt-BR">Escolher como padrão</value>
+        <value xml:lang="ro">Setare de Default</value>
+        <value xml:lang="ru">Установить по умолчанию</value>
+        <value xml:lang="th">กำหนดค่าที่เลือก</value>
+        <value xml:lang="vi">Đặt mặc định</value>
+        <value xml:lang="zh">设为缺省值</value>
+        <value xml:lang="zh-TW">設為預設值</value>
+    </property>
     <property key="CommonSetNowEmpty">
         <value xml:lang="ar">(سيوضع اليوم إذا كان فارغا)</value>
         <value xml:lang="cs">(Nastaví na teď pokud je prázdné)</value>

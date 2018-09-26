@@ -1,5 +1,6 @@
 <#include "component://common/webcommon/includes/listLocalesMacros.ftl">
 <#include "component://setup/webapp/setup/common/common.ftl">
+<#include "component://product/webapp/catalog/store/storecommon.ftl">
 
 <@section>
     <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
@@ -253,7 +254,8 @@
     <#assign defaultParams = {
         "visualThemeSetId": defaultVisualThemeSetId!,
         "visualThemeSelectorScript": defaultVisualThemeSelectorScript!,
-        "webSiteId": defaultWebSiteId!
+        "webSiteId": defaultWebSiteId!,
+        "isStoreDefault": "Y"
     }>
     <#assign paramMaps = getWizardFormFieldValueMaps({
         "record":webSite!true, <#-- NOTE: must fallback with boolean true -->
@@ -307,6 +309,7 @@
             <#if webSiteCount?? && (webSiteCount >= 2)>
               <@alert type="warning">${uiLabelMap.SetupMultipleWebSitesForProductStore}</@alert>
             </#if>
+            <@webSiteWarnings webSiteList=(webSiteList!)/>
     
             <@field type="hidden" name="isCreateWebsite" value=(webSite??)?string("N", "Y")/>
     
@@ -324,6 +327,13 @@
           </#if>
             
             <@field type="input" name="siteName" label=uiLabelMap.FormFieldTitle_siteName value=(params.siteName!"${uiLabelMap.ProductProductStore} - ${uiLabelMap.ContentWebSite}") required=true size="30" maxlength="60"/>
+ 
+            <@field type="select" name="isStoreDefault" label=uiLabelMap.FormFieldTitle_isStoreDefault>
+                <@field type="option" value=""></@field>
+                <@field type="option" value="Y" selected=("Y" == params.isStoreDefault!)>Y</@field>
+                <@field type="option" value="N" selected=("N" == params.isStoreDefault!)>N</@field>
+            </@field>
+            
             <@field type="hidden" name="visualThemeSetId" value=(fixedParams.visualThemeSetId!)/>
     
             <#--<@field type="hidden" name="partyId" value=(partyId!)/> // already set above -->

@@ -371,6 +371,12 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupStore"/>
     </request-map>
+    <request-map uri="setProductStoreDefaultWebSite">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setProductStoreDefaultWebSite"/>
+        <response name="success" type="request" value="setupStore"/>
+        <response name="error" type="request" value="setupStore"/>
+    </request-map>
     <!-- merged into store step
     <request-map uri="setupWebsite">
         <security https="true" auth="true"/>

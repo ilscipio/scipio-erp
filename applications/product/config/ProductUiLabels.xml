@@ -22280,6 +22280,10 @@
         <value xml:lang="zh">对于这个产品有多个订单明细</value>
         <value xml:lang="zh-TW">對于這個產品有多個訂單細項</value>
     </property>
+    <property key="ProductMultipleDefaultWebSitesForStore">
+        <value xml:lang="de">Mehrere WebSites sind als Standard für diesen Shop markiert. Bitte legen Sie nur eine WebSite als Standard pro Geschäft fest (isStoreDefault).</value>
+        <value xml:lang="en">Multiple WebSites are marked as default for this store; please only set one WebSite as default per store (isStoreDefault).</value>
+    </property>
     <property key="ProductMustBeAssociatedWithSupplier">
         <value xml:lang="de">Kann dieses Produkt nicht aktualisieren: Sie sind mit ihm nicht als Lieferant verknüpft</value>
         <value xml:lang="en">Cannot update this Product: you are not associated with it as the Supplier</value>
@@ -22843,6 +22847,10 @@
         <value xml:lang="ja">条件製品はありません</value>
         <value xml:lang="zh">没有条件的产品</value>
         <value xml:lang="zh-TW">沒有條件的產品</value>
+    </property>
+    <property key="ProductNoDefaultWebSiteForStore">
+        <value xml:lang="de">Keine WebSite ist als Standard für diesen Shop markiert; Bitte legen Sie pro Shop genau eine WebSite als Standard fest (isStoreDefault).</value>
+        <value xml:lang="en">No WebSite is marked as default for this store; please set exactly one WebSite as default per store (isStoreDefault).</value>
     </property>
     <property key="ProductNoDescription">
         <value xml:lang="de">Keine Beschreibung</value>
@@ -32930,6 +32938,10 @@
         <value xml:lang="vi">ID Trang thông tin</value>
         <value xml:lang="zh">网站 [标识]</value>
         <value xml:lang="zh-TW">網站 [識別]</value>
+    </property>
+    <property key="ProductWebSiteNotFoundForStore">
+        <value xml:lang="de">WebSite '${webSiteId}' wurde nicht für das Geschäft '${productStoreId}' gefunden.</value>
+        <value xml:lang="en">WebSite '${webSiteId}' not found for store '${productStoreId}'.</value>
     </property>
     <property key="ProductWebSites">
         <value xml:lang="de">Webseiten</value>

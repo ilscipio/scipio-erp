@@ -387,4 +387,12 @@ under the License.
         <description>Delete a ProductStoreGroupType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    
+    <service name="setProductStoreDefaultWebSite" engine="java"
+            location="org.ofbiz.product.store.ProductStoreServices" invoke="setProductStoreDefaultWebSite" auth="true">
+        <description>SCIPIO: Change the default WebSite for the given ProductStore</description>
+        <permission-service service-name="productStoreGenericPermission" main-action="UPDATE"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

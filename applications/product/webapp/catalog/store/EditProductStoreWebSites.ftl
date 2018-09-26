@@ -16,6 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "component://product/webapp/catalog/store/storecommon.ftl">
+
 <#if productStoreId?has_content>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
@@ -24,6 +26,7 @@ under the License.
   </@menu>
 </#macro>
 <@section title=uiLabelMap.PageTitleEditProductStoreWebSites menuContent=menuContent>
+    <@webSiteWarnings webSiteList=(storeWebSites!)/>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
             <@tr class="header-row">
@@ -49,6 +52,12 @@ under the License.
                     <form name="storeUpdateWebSite_${webSite_index}" method="post" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>">
                         <input type="hidden" name="viewProductStoreId" value="${productStoreId}"/>
                         <input type="hidden" name="productStoreId" value=""/>
+                        <input type="hidden" name="webSiteId" value="${webSite.webSiteId}"/>
+                    </form>
+                    
+                    <a href="javascript:document.setProductStoreDefaultWebSite_${webSite_index}.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSetDefault}</a>
+                    <form name="setProductStoreDefaultWebSite_${webSite_index}" method="post" action="<@ofbizUrl>setProductStoreDefaultWebSite</@ofbizUrl>">
+                        <input type="hidden" name="productStoreId" value="${productStoreId}"/>
                         <input type="hidden" name="webSiteId" value="${webSite.webSiteId}"/>
                     </form>                      
                   </@td>

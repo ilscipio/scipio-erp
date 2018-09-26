@@ -2082,6 +2082,12 @@ under the License.
         <response name="success" type="view" value="EditProductStoreWebSites"/>
         <response name="error" type="view" value="EditProductStoreWebSites"/>
     </request-map>
+    <request-map uri="setProductStoreDefaultWebSite">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setProductStoreDefaultWebSite"/>
+        <response name="success" type="view" value="EditProductStoreWebSites"/>
+        <response name="error" type="view" value="EditProductStoreWebSites"/>
+    </request-map>
 
     <!-- ================ ProductStore Role Requests ================= -->
     <request-map uri="FindProductStoreRoles">

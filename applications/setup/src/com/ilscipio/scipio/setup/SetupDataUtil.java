@@ -673,15 +673,37 @@ public abstract class SetupDataUtil {
                 }
             }
         }
+
+        List<GenericValue> defaultWebSiteList = EntityUtil.filterByAnd(webSiteList, UtilMisc.toMap("isStoreDefault", "Y"));
+        GenericValue defaultWebSite = EntityUtil.getFirst(defaultWebSiteList);
+        if (defaultWebSiteList.size() > 1) {
+            Debug.logError("Multiple (" + defaultWebSiteList.size() + ") default WebSite records found for ProductStore '" + productStoreId 
+                    + "'; you must only assign one WebSite the isStoreDefault Y flag per ProductStore;"
+                    + " (using first found as default: " + defaultWebSite.getString("webSiteId") + ")", module);
+        }
+
         // NOTE: this isn't fully accurate (for the bad webSiteId param case), but won't matter for now
-        if (webSite == null) webSite = getFirstMaxOneExpected(webSiteList, fields);
+        if (webSite == null) {
+            if (defaultWebSite != null) {
+                webSite = defaultWebSite;
+            } else {
+                webSite = EntityUtil.getFirst(webSiteList);
+                if (webSiteList != null && webSiteList.size() >= 2) {
+                    Debug.logWarning("Setup: Found multiple (" + webSiteList.size() + ") WebSite records"
+                            + " for ProductStore '" + productStoreId + "', but none of them is set as default (isStoreDefault Y)"
+                            + "; some code may have issues with this configuration; try setting isStoreDefault Y for one of them"
+                            + " (using first found as default: " + webSite.getString("webSiteId") + ")", module);
+                }
+            }
+        }
 
         // will need this always
         //if (!isNewOrFailedCreate) {
         result.put("webSiteList", webSiteList);
         //}
         result.put("webSiteCount", webSiteList.size());
-
+        result.put("defaultWebSite", defaultWebSite);
+        
         if (webSite != null) {
             if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
                 result.put("webSiteId", webSite.getString("webSiteId"));
@@ -697,17 +719,6 @@ public abstract class SetupDataUtil {
      * Generic helpers
      * *******************************************
      */
-
-    private static GenericValue getFirstMaxOneExpected(List<GenericValue> values, Object query) {
-        GenericValue value = EntityUtil.getFirst(values);
-        if (values != null && values.size() >= 2) {
-            // essential for debugging
-            Debug.logWarning("Setup: Expected one " + value.getEntityName()
-                + " record at most, but found " + values.size() + " records matching for query: "
-                + query + "; using first only (" + value.getPkShortValueString() + ")", module);
-        }
-        return value;
-    }
 
     // TODO: REVIEW: unclear which code should order fromDate by ASC or DESC, so in the meantime,
     // use this to centralize any fix needed (for setup code only!)

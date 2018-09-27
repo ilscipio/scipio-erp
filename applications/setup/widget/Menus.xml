@@ -21,6 +21,7 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     
     <menu name="SetupAppBar" title="${uiLabelMap.SetupApp}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item-alias name="entityExportAll" for="export"/>
         <!-- SCIPIO: not wanted?
         <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}" sort-mode="off">
             <!- - SCIPIO: link to wizard with no parameters for now so goes to create new org

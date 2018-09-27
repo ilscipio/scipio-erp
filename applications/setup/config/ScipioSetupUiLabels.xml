@@ -233,4 +233,8 @@
         <value xml:lang="de">Mindestens ein Warenlager muss angelegt werden. Die Adresse kann mit dem Firmensitz identisch sein.</value>
         <value xml:lang="en">At least one warehouse must be created. The address may be identical to the registered company address.</value>
     </property>
+    <property key="SetupExportAdvancedInfo">
+        <value xml:lang="de">Verwenden Sie für erweiterte Exportfunktionen die Exportbildschirme für die Anwendungsanwendung.</value>
+        <value xml:lang="en">For advanced export functionality, please use the Admin application entity export screens.</value>
+    </property>
 </resource>

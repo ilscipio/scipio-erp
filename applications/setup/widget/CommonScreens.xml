@@ -376,6 +376,10 @@
                 <decorator-screen name="CommonSetupAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <platform-specific><html><html-template><![CDATA[
+                                <@alert type="info"><a href="<@ofbizInterWebappUrl uri="/admin/control/xmldsdump" extLoginKey=true/>"><#rt/>
+                                    <#lt/>${uiLabelMap.SetupExportAdvancedInfo}</a></@alert>
+                            ]]></html-template></html></platform-specific>
                             <platform-specific>
                                 <html><html-template location="component://webtools/webapp/webtools/entity/EntityExportAll.ftl"/></html>
                             </platform-specific>

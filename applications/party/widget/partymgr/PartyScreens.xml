@@ -445,7 +445,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactMech"/>
-                <set field="activeSubMenuItem" value="editcontactmech"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="editcontactmech"/>
 
                 <set field="labelTitleProperty" value="PageTitleEditContactMech"/>
 

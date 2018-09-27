@@ -19,7 +19,7 @@ under the License.
 <#if !mechMap.contactMech??>
   <#-- When creating a new contact mech, first select the type, then actually create -->
   <#if !preContactMechTypeId?has_content>
-    <@section title=uiLabelMap.PartyCreateNewContact>
+    <@section title=(rawLabel('PartyCreateNewContact')+rawString(ecmSecTitleSuffix!))>
       <form method="post" action="<@ofbizUrl>editcontactmech</@ofbizUrl>" name="createcontactmechform">
         <input type="hidden" name="partyId" value="${partyId}" />
         <@field type="select" label=uiLabelMap.PartySelectContactType name="preContactMechTypeId">
@@ -35,9 +35,9 @@ under the License.
 <#if mechMap.contactMechTypeId?has_content>
 
   <#if !mechMap.contactMech?has_content>
-    <#assign sectionTitle = uiLabelMap.PartyCreateNewContact />
+    <#assign sectionTitle = (rawLabel('PartyCreateNewContact')+rawString(ecmSecTitleSuffix!))/>
   <#else>
-    <#assign sectionTitle = uiLabelMap.PartyEditContactInformation />
+    <#assign sectionTitle = (rawLabel('PartyEditContactInformation')+rawString(ecmSecTitleSuffix!))/>
   </#if>
   <@section title=sectionTitle>
   

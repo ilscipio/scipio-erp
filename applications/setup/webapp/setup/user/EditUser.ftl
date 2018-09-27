@@ -86,7 +86,7 @@ under the License.
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>    
     <#if userParty??>
         <@field type="display" name="userPartyId" label=uiLabelMap.PartyPartyId>
-            <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(userParty.partyId!)}" text=(userParty.partyId!)/><#t/>
+            <@setupExtAppLink uri=("/partymgr/control/viewprofile?partyId="+rawString(userParty.partyId!)) text=(userParty.partyId!)/><#t/>
         </@field>
     </#if>	
     	
@@ -117,9 +117,11 @@ under the License.
     
     
     <@field type="generic" label=uiLabelMap.PartyRelationships>
-        <@fields args={"type":"default-nolabelarea", "ignoreParentField":true}>
+        <@fields args={"type":"default-nolabelarea", "ignoreParentField":true}>            
+          <@row>
+            <@cell large=6>
             <@field type="display" value=getLabel('PartyPartyCurrentInTheRoleOf') />
-            
+
             <#-- SCIPIO: FIXME: this roleTypeId is very confounded, it is
                 used for both ProductStoreRole creation AND the PartyRelationship to orgPartyId,
                 AND ends up in a ContactMech preventing delete later... -->
@@ -142,7 +144,20 @@ under the License.
               </#if>
                 ${roleTypeMarkup}
             </@field>
-            
+            </@cell>
+            <@cell large=6>
+              <#if userParty?? && userPartyRole??>
+                  <#-- DEV NOTE: Cannot delete old PartyRole automatically because the PartyRole may be reused by more than
+                    one related entity/function, included being manually depended upon by the client.
+                    Even if could check the 78 database relations to PartyRole, it could still be needed
+                    in a secondary purpose by the client for manual use. -->
+                  <@alert type="warning">${uiLabelMap.SetupCannotAutoRemovePartyRoleNotice}
+                    <@setupExtAppLink uri=("/partymgr/control/viewroles?partyId="+rawString(userParty.partyId!)) text=uiLabelMap.PageTitleViewPartyRole class="${styles.link_nav!} ${styles.action_view!}"/></@alert>
+              </#if>
+            </@cell>
+          </@row>
+          <@row>
+            <@cell large=6 last=true>
             <@field type="display" value=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(orgPartyId!)}) />
             
             <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId"
@@ -165,6 +180,8 @@ under the License.
               </#if>
                 ${relTypeMarkup}
             </@field>
+            </@cell>
+          </@row>
             <#if userPartyRelationship??>
                 <@field type="hidden" name="oldUserPartyRelationshipTypeId" value=userPartyRelationship.partyRelationshipTypeId />
                 <@field type="hidden" name="oldUserPartyRelationshipRoleTypeIdTo" value=userPartyRelationship.roleTypeIdTo />

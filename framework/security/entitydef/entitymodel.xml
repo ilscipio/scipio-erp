@@ -65,9 +65,7 @@ under the License.
       <!-- SCIPIO: NOTE: 2018-09-27: UserLogin/UserLoginPasswordHistory currentPassword field was changed from short-varchar
           to long-varchar type in Scipio master on 2018-09-27. Pre-existing databases will need to execute an upgrade 
           to obtain the longer hash column size support IF needed (existing DB columns are not automatically resized from this change). 
-          See framework/security/config/security.properties#password.encrypt.hash.type for details.
-          If you require very long hash size support, you may need to further change "long-varchar" here to something bigger
-          prior to upgrade. For effective VARCHAR sizes, see your appropriate framework/entity/fieldtype/fieldtype*.xml file. -->
+          See framework/security/config/security.properties#password.encrypt.hash.type for details. -->
       <field name="currentPassword" type="long-varchar"></field>
       <field name="passwordHint" type="description"></field>
       <field name="isSystem" type="indicator"></field>
@@ -98,9 +96,7 @@ under the License.
       <!-- SCIPIO: NOTE: 2018-09-27: UserLogin/UserLoginPasswordHistory currentPassword field was changed from short-varchar
           to long-varchar type in Scipio master on 2018-09-27. Pre-existing databases will need to execute an upgrade 
           to obtain the longer hash column size support IF needed (existing DB columns are not automatically resized from this change). 
-          See framework/security/config/security.properties#password.encrypt.hash.type for details.
-          If you require very long hash size support, you may need to further change "long-varchar" here to something bigger
-          prior to upgrade. For effective VARCHAR sizes, see your appropriate framework/entity/fieldtype/fieldtype*.xml file. -->
+          See framework/security/config/security.properties#password.encrypt.hash.type for details. -->
       <field name="currentPassword" type="long-varchar"></field>
       <prim-key field="userLoginId"/>
       <prim-key field="fromDate"/>

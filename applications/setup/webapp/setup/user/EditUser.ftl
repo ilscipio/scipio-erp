@@ -82,14 +82,14 @@ under the License.
     
 <@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
     <@defaultWizardFormFields exclude=[] />
-    <@field type="hidden" name="isCreateUser" value=(user??)?string("N","Y")/>    
+    <@field type="hidden" name="isCreateUser" value=(userParty??)?string("N","Y")/>    
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>    
     <#if userParty??>
         <@field type="display" name="userPartyId" label=uiLabelMap.PartyPartyId>
             <@setupExtAppLink uri=("/partymgr/control/viewprofile?partyId="+rawString(userParty.partyId!)) text=(userParty.partyId!)/><#t/>
         </@field>
     </#if>	
-    	
+
     <#assign fieldsRequired = true>
     	
     <#if !getUsername?has_content || (getUsername?has_content && getUsername)>    	      

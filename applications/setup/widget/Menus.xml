@@ -45,7 +45,7 @@
             <sub-menu name="SetupSteps" include="SetupStepsSideBar"/>
         </menu-item>
     </menu>
-    
+
     <menu name="SetupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="organization" title="${uiLabelMap.SetupOrganization}">
             <condition>
@@ -92,11 +92,11 @@
             </link>
         </menu-item>
     </menu>
-    
+
     <menu name="SetupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="SetupTabBar" recursive="includes-only" />
     </menu>
-    
+
     <menu name="FirstProductTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="productcatalog">
         <menu-item name="productcatalog" title="${uiLabelMap.SetupProductCatalog}">
@@ -115,7 +115,7 @@
             </link>
         </menu-item>
     </menu>
-    
+
     <menu name="personUpdate">
         <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
             <link target="editperson">
@@ -132,7 +132,7 @@
             </link>
         </menu-item>
     </menu>
-    
+
     <!-- SCIPIO: menu entries for wizard -->
     <menu name="SetupStepsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         items-sort-mode="off">
@@ -180,12 +180,5 @@
                 <parameter-map from-field="setupStepStates.user.stepParams"/>
             </link>
         </menu-item>
-        <!-- 
-        <menu-item name="website" title="${uiLabelMap[setupStepTitlePropMap['website']]}" disabled="${context.setupStepDisabledMap.website == true}" widget-style="+${context.stepStyles.website}">
-            <link target="setupWebsite" link-type="anchor">
-                <parameter-map from-field="setupStepStates.website.stepParams"/>
-            </link>
-        </menu-item>
-        -->
     </menu>
 </menus>

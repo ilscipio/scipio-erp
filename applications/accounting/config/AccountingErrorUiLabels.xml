@@ -751,6 +751,10 @@
         <value xml:lang="de">Der Rückgabetyp darf nicht null sein</value>
         <value xml:lang="en">Return type cannot be null</value>
     </property>
+    <property key="AccountingTaxAuthGlAccountAlreadyExists">
+        <value xml:lang="de">Ein GL-Konto (${glAccountId}) existiert bereits für die Steuerbehörde '${taxAuthPartyId}/${taxAuthGeoId}' und die Organisation '${organizationPartyId}'. Höchstens ein GL-Konto kann pro Organisation und Steuerbehörde eingestellt werden.</value>
+        <value xml:lang="en">A GL Account (${glAccountId}) already exists for Tax Authority '${taxAuthPartyId}/${taxAuthGeoId}' and Organization '${organizationPartyId}'. At most one GL Account can be set per Organization and Tax Authority.</value>
+    </property>
     <property key="AccountingTaxIdInvalidFormat">
         <value xml:lang="ar">دليل الضريبة ${parameters.partyTaxId} لم يدخل بطريقة صحيحة للمصلحة الضريبية المختارة ${taxAuthority.taxIdFormatPattern}</value>
         <value xml:lang="de">Die Steuer ID ${parameters.partyTaxId} war in einem ungültigen Format für die gewählte Steuerbehörde ${taxAuthority.taxIdFormatPattern}</value>
@@ -777,6 +781,10 @@
     <property key="AccountingUploadedFileDataNotFound">
         <value xml:lang="de">Hochgeladene Dateidaten wurden nicht gefunden</value>
         <value xml:lang="en">Uploaded file data not found</value>
+    </property>
+    <property key="AccountingUserGeoInvalidTaxAuthority">
+        <value xml:lang="de">Der angegebene Benutzer- und Geo-Standort ist kein gültiger Tax Authority</value>
+        <value xml:lang="en">The specified user and geo location is not a valid Tax Authority</value>
     </property>
     <property key="AccountingValidationFailedInvalidValues">
         <value xml:lang="de">Validierung fehlgeschlagen - ungültige Werte</value>
@@ -1033,14 +1041,5 @@
         <value xml:lang="pt">Problemas Obtendo OrderHeader</value>
         <value xml:lang="zh">获取订单头时出错</value>
         <value xml:lang="zh-TW">獲取訂單頭時出錯</value>
-    </property>
-    <!-- SCIPIO: NEW LABELS -->
-    <property key="AccountingTaxAuthGlAccountAlreadyExists">
-        <value xml:lang="de">Ein GL-Konto (${glAccountId}) existiert bereits für die Steuerbehörde '${taxAuthPartyId}/${taxAuthGeoId}' und die Organisation '${organizationPartyId}'. Höchstens ein GL-Konto kann pro Organisation und Steuerbehörde eingestellt werden.</value>
-        <value xml:lang="en">A GL Account (${glAccountId}) already exists for Tax Authority '${taxAuthPartyId}/${taxAuthGeoId}' and Organization '${organizationPartyId}'. At most one GL Account can be set per Organization and Tax Authority.</value>
-    </property>
-    <property key="AccountingUserGeoInvalidTaxAuthority">
-        <value xml:lang="de">Der angegebene Benutzer- und Geo-Standort ist kein gültiger Tax Authority</value>
-        <value xml:lang="en">The specified user and geo location is not a valid Tax Authority</value>
     </property>
 </resource>

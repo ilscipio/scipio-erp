@@ -193,9 +193,10 @@ public abstract class SetupDataUtil {
                     List<GenericValue> partyRelationshipList = orgParty.getRelated("FromPartyRelationship",
                             UtilMisc.toMap("partyIdFrom", orgPartyId, "roleTypeIdFrom", "INTERNAL_ORGANIZATIO"), UtilMisc.toList("fromDate DESC"), false);
                     if (UtilValidate.isNotEmpty(partyRelationshipList)) {
-                        if (partyRelationshipList.size() > 1) {
-                            Debug.logWarning("Setup: User " + userPartyId + "' got multiple relationships with organization '" + orgPartyId + "'", module);
-                        }
+                        // makes no sense here
+                        //if (partyRelationshipList.size() > 1) {
+                        //    Debug.logWarning("Setup: User '" + userPartyId + "' has multiple relationships with organization '" + orgPartyId + "'", module);
+                        //}
                         GenericValue partyRelationshipOwner = EntityUtil.getFirst(partyRelationshipList);
                         party = partyRelationshipOwner.getRelatedOne("ToParty", false);
                     }

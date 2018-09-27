@@ -8,9 +8,9 @@
     to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance
     with the License.  You may obtain a copy of the License at
-    
+
     http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,7 +19,7 @@
     under the License.
 -->
 <!-- SCIPIO: NOTE: This file contains labels for the new setup component only; does not include the shared/legacy Setup* labels; see
-      component://commonext/config/SetupUiLabels.xml 
+      component://commonext/config/SetupUiLabels.xml
     for the shared/legacy labels (which other applications, client projects and maintenance strategies may already depend on).
     WARN: both files share the same Setup* prefix for label names; beware overriding. (same issue occurred with filename) -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">

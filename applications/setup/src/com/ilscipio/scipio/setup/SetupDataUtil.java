@@ -35,7 +35,7 @@ import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeI
  * USE {@link SetupWorker} TO INVOKE THESE DURING REAL SETUP.
  * This is for general reuse and to keep the core logic clear/separate.
  */
-public abstract class SetupDataUtil {
+public final class SetupDataUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -51,7 +51,7 @@ public abstract class SetupDataUtil {
             "GENERAL_LOCATION", "SHIPPING_LOCATION"
     );
 
-    protected SetupDataUtil() {
+    private SetupDataUtil() {
     }
 
     /*
@@ -80,8 +80,7 @@ public abstract class SetupDataUtil {
 
     public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
             throws GeneralException {
-        // NOTE: coreCompleted is required for cases where need to recognized half-completed
-        // it means just the core entities
+        // NOTE: coreCompleted is required for cases where need to recognized half-completed; it means just the core entities
         Map<String, Object> result = UtilMisc.toMap("completed", false, "coreCompleted", false);
 
         String orgPartyId = (String) params.get("orgPartyId");
@@ -134,11 +133,6 @@ public abstract class SetupDataUtil {
                         result.put("workPhoneContactMech", workPhoneContactMech);
                         result.put("faxPhoneContactMech", faxPhoneContactMech);
                         result.put("primaryEmailContactMech", primaryEmailContactMech);
-                        // not required anymore
-//                        boolean simpleContactMechsCompleted = (workPhoneContactMech != null) &&
-//                                (faxPhoneContactMech != null) &&
-//                                (primaryEmailContactMech != null);
-//                        result.put("simpleContactMechsCompleted", simpleContactMechsCompleted);
 
                         boolean contactMechsCompleted = locationAddressesCompleted; // && simpleContactMechsCompleted
                         result.put("contactMechsCompleted", contactMechsCompleted);
@@ -381,10 +375,8 @@ public abstract class SetupDataUtil {
 
                 result.put("topGlAccountId", topGlAccountId);
                 result.put("topGlAccount", topGlAccount);
-
             }
         }
-
         return result;
     }
 
@@ -406,9 +398,7 @@ public abstract class SetupDataUtil {
                 // filter by owner to prevent editing other companies's facilities
                 facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), useCache);
                 if (facility != null) {
-                    if (orgPartyId.equals(facility.getString("ownerPartyId"))) {
-                        ; // ok
-                    } else {
+                    if (!orgPartyId.equals(facility.getString("ownerPartyId"))) {
                         Debug.logError("Setup: Facility '" + facilityId + "' does not belong to organization '" + orgPartyId + "'; ignoring", module);
                         facility = null;
                     }
@@ -678,7 +668,7 @@ public abstract class SetupDataUtil {
         List<GenericValue> defaultWebSiteList = EntityUtil.filterByAnd(webSiteList, UtilMisc.toMap("isStoreDefault", "Y"));
         GenericValue defaultWebSite = EntityUtil.getFirst(defaultWebSiteList);
         if (defaultWebSiteList.size() > 1) {
-            Debug.logError("Multiple (" + defaultWebSiteList.size() + ") default WebSite records found for ProductStore '" + productStoreId 
+            Debug.logError("Multiple (" + defaultWebSiteList.size() + ") default WebSite records found for ProductStore '" + productStoreId
                     + "'; you must only assign one WebSite the isStoreDefault Y flag per ProductStore;"
                     + " (using first found as default: " + defaultWebSite.getString("webSiteId") + ")", module);
         }
@@ -701,7 +691,7 @@ public abstract class SetupDataUtil {
         result.put("webSiteList", webSiteList);
         result.put("webSiteCount", webSiteList.size());
         result.put("defaultWebSite", defaultWebSite);
-        
+
         if (webSite != null) {
             if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
                 result.put("webSiteId", webSite.getString("webSiteId"));

@@ -29,13 +29,11 @@ import org.ofbiz.service.LocalDispatcher;
 abstract class ContactMechPurposeInfo {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    //private final List<GenericValue> contactMechAndPurposeList;
     protected final Map<String, Set<String>> contactMechPurposes;
     protected final Map<String, Set<String>> purposeContactMechs;
     protected final String logPrefix;
 
     protected ContactMechPurposeInfo(Map<String, Set<String>> contactMechPurposes, Map<String, Set<String>> purposeContactMechs, String logPrefix) {
-        //this.contactMechAndPurposeList = contactMechAndPurposeList;
         this.contactMechPurposes = contactMechPurposes;
         this.purposeContactMechs = purposeContactMechs;
         this.logPrefix = logPrefix != null ? logPrefix : "";
@@ -53,12 +51,12 @@ abstract class ContactMechPurposeInfo {
 
     public Set<String> getContactMechPurposes(String contactMechId) {
         Set<String> purposes = contactMechPurposes.get(contactMechId);
-        return purposes != null ? purposes : Collections.<String>emptySet();
+        return (purposes != null) ? purposes : Collections.<String>emptySet();
     }
 
     public Set<String> getPurposeContactMechs(String purpose) {
         Set<String> contactMechIds = purposeContactMechs.get(purpose);
-        return contactMechIds != null ? contactMechIds : Collections.<String>emptySet();
+        return (contactMechIds != null) ? contactMechIds : Collections.<String>emptySet();
     }
 
     protected static void populateIdMaps(List<? extends Map<String, Object>> contactMechAndPurposeList, String contactMechIdField, String purposeTypeIdField,
@@ -118,6 +116,7 @@ abstract class ContactMechPurposeInfo {
     }
 
     /**
+     * getClosestContactMechIdForPurposes.
      * BEST-EFFORT! Returns closest match only. May be incomplete.
      */
     public String getClosestContactMechIdForPurposes(Set<String> purposes) {
@@ -209,7 +208,9 @@ abstract class ContactMechPurposeInfo {
      */
     static Set<String> getClosestValuesByCount(Map<String, Integer> counts, int targetCount) {
         Map<Integer, Set<String>> countMechs = makeCountValueMap(counts);
-        if (countMechs.isEmpty()) return Collections.emptySet();
+        if (countMechs.isEmpty()) {
+            return Collections.emptySet();
+        }
         List<Integer> highToLowCounts = new ArrayList<>(countMechs.keySet());
         Collections.sort(highToLowCounts, Collections.reverseOrder());
 
@@ -218,11 +219,15 @@ abstract class ContactMechPurposeInfo {
         while(it.hasNext() && (count = it.next()) >= targetCount) {
             ;
         }
-        if (count >= targetCount) return countMechs.get(count);
-        else {
+        if (count >= targetCount) {
+            return countMechs.get(count);
+        } else {
             it.previous(); // discard to go back one
-            if (it.hasPrevious()) return countMechs.get(it.previous());
-            else return countMechs.get(count);
+            if (it.hasPrevious()) {
+                return countMechs.get(it.previous());
+            } else {
+                return countMechs.get(count);
+            }
         }
     }
 

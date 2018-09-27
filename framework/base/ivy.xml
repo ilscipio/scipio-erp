@@ -298,7 +298,7 @@
         <dependency org="org.bouncycastle" name="bctsp-jdk14" rev="1.38" conf="base,sources"/><!-- itext 2 dep; conflict with version "138"; remove in future -->
         <dependency org="org.bouncycastle" name="bcmail-jdk14" rev="1.38" conf="base,sources"/><!-- itext 2 dep; conflict with version "138"; remove in future -->
         <dependency org="org.bouncycastle" name="bcprov-jdk14" rev="1.38" conf="base,sources"/><!-- itext 2 dep; conflict with version "138"; remove in future -->
-        <dependency org="com.rometools" name="rome" rev="1.9.0" conf="base,sources"/>
+        <dependency org="com.rometools" name="rome" rev="1.11.0" conf="base,sources"/>
         <dependency org="org.tuckey" name="urlrewritefilter" rev="4.0.4" conf="base,sources"/>
 
         <!--

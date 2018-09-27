@@ -1,2 +1,1 @@
-# SCIPIO: Uncomment to prevent from committing the stopword/synonym schema analysis files to your repo.
-#/_schema_analysis_*.json
+/_schema_analysis_*.json

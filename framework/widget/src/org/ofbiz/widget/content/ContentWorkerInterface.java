@@ -40,10 +40,28 @@ public interface ContentWorkerInterface {
     public String getMimeTypeIdExt(Delegator delegator, GenericValue view, Map<String, Object> ctx);
 
     // new rendering methods
-    // SCIPIO: NOTE: 2018-09-04: upstream code removed Delegator from these methods; we will keep it for backward compat for now (trivial detail, why bother?)
     public void renderContentAsTextExt(LocalDispatcher dispatcher, Delegator delegator, String contentId, Appendable out, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException;
     public String renderContentAsTextExt(LocalDispatcher dispatcher, Delegator delegator, String contentId, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException;
 
     public void renderSubContentAsTextExt(LocalDispatcher dispatcher, Delegator delegator, String contentId, Appendable out, String mapKey, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException;
     public String renderSubContentAsTextExt(LocalDispatcher dispatcher, Delegator delegator, String contentId, String mapKey, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException;
+
+    // SCIPIO: 2018-09-26: Below default methods are forward-compatibility implementations for recent upstream changes where delegator param was removed from these interfaces.
+    // TODO?: REVIEW: might be tempted to flip the delegation logic around later on...
+
+    default void renderContentAsTextExt(LocalDispatcher dispatcher, String contentId, Appendable out, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException {
+        renderContentAsTextExt(dispatcher, dispatcher.getDelegator(), contentId, out, templateContext, locale, mimeTypeId, cache);
+    }
+
+    default String renderContentAsTextExt(LocalDispatcher dispatcher, String contentId, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException {
+        return renderContentAsTextExt(dispatcher, dispatcher.getDelegator(), contentId, templateContext, locale, mimeTypeId, cache);
+    }
+
+    default void renderSubContentAsTextExt(LocalDispatcher dispatcher, String contentId, Appendable out, String mapKey, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException {
+        renderSubContentAsTextExt(dispatcher, dispatcher.getDelegator(), contentId, out, mapKey, templateContext, locale, mimeTypeId, cache);
+    }
+
+    default String renderSubContentAsTextExt(LocalDispatcher dispatcher, String contentId, String mapKey, Map<String, Object> templateContext, Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException {
+        return renderSubContentAsTextExt(dispatcher, dispatcher.getDelegator(), contentId, mapKey, templateContext, locale, mimeTypeId, cache);
+    }
 }

@@ -83,7 +83,6 @@ public abstract class SetupWorker implements Serializable {
      */
     private static final List<String> stepsList = UtilMisc.unmodifiableArrayList(
             "organization", "accounting", "facility", "store", "catalog", "user"
-            // "website" // merged into store step
     );
     /**
      * Unordered set of the visible steps.
@@ -272,27 +271,6 @@ public abstract class SetupWorker implements Serializable {
         public abstract boolean isSkippableEffective();
 
         public abstract String getNextAccessibleStep();
-
-        // does not work out due to lack of encoding
-//        /**
-//         * Makes a RAW unescaped query string.
-//         */
-//        public String getStepQueryString() {
-//            StringBuilder sb = new StringBuilder(); // FIXME: there's an API somewhere...
-//            Map<String, Object> params = getStepParams();
-//            if (params != null) {
-//                for(Map.Entry<String, Object> entry : params.entrySet()) {
-//                    sb.append("&");
-//                    sb.append(entry.getKey());
-//                    sb.append("=");
-//                    Object value = entry.getValue();
-//                    if (value != null) {
-//                        sb.append(value.toString());
-//                    }
-//                }
-//            }
-//            return (sb.length() > 0) ? sb.substring(1) : "";
-//        }
 
         public void toMap(Map<String, Object> map) {
             map.put("name", getName());
@@ -640,59 +618,59 @@ public abstract class SetupWorker implements Serializable {
         }
         @Override
         public GenericValue getOrgParty() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public GenericValue getOrgPartyGroup() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public GenericValue getProductStore() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public String getSubmittedStep() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public String getRequestedStep() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public String getEffectiveStep() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public void setEffectiveStep(String effectiveStep) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public String determineStepAndUpdate(Boolean useRequested, Boolean useSubmitted, Boolean updateEffective) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public String determineStepAndUpdate() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public String determineStep(Boolean useRequested, Boolean useSubmitted) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public String determineStepAuto(boolean useCache) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
 //        @Override
 //        public void markStepSkipped(String step) throws IllegalArgumentException {
-//            throw new UnsupportedOperationException(); // TODO?
+//            throw new UnsupportedOperationException();
 //        }
         @Override
         public boolean isStepAllowed(String requestedStep) throws IllegalArgumentException {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isStepEffectiveAllowedSafe(String step) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public StepState getStepState(String step) throws IllegalArgumentException {
@@ -712,63 +690,63 @@ public abstract class SetupWorker implements Serializable {
         }
         @Override
         public boolean isAllStepsCompleted() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public List<String> getIncompleteSteps() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isSetupEventError() {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isNewRecordRequest(String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isActionRecordRequest(String actionName, String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isActionRecordSuccessRequest(String actionName, String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isActionRecordFailedRequest(String actionName, String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isCreateRecordRequest(String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isCreateRecordSuccessRequest(String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isCreateRecordFailedRequest(String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isDeleteRecordRequest(String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isDeleteRecordSuccessRequest(String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isDeleteRecordFailedRequest(String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isUnspecificRecordRequest(String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isEffectiveNewRecordRequest(String recordType) {
-            throw new UnsupportedOperationException(); // TODO?
+            throw new UnsupportedOperationException();
         }
         protected static class StaticStepState extends StepState { // WARN: this one MUST be static
             protected String name;
@@ -834,17 +812,17 @@ public abstract class SetupWorker implements Serializable {
 
             @Override
             public StepParamInfo getStepParamInfo() {
-                throw new UnsupportedOperationException(); // TODO? if needed only
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public boolean isSkippableEffective() {
-                throw new UnsupportedOperationException(); // impossible
+                throw new UnsupportedOperationException("Cannot determine from static state");
             }
 
             @Override
             public String getNextAccessibleStep() {
-                throw new UnsupportedOperationException(); // impossible
+                throw new UnsupportedOperationException("Cannot determine from static state");
             }
         }
     }
@@ -1259,7 +1237,6 @@ public abstract class SetupWorker implements Serializable {
             m.put("facility", FacilityStepState.class);
             m.put("catalog", CatalogStepState.class);
             m.put("store", StoreStepState.class);
-            //m.put("website", WebsiteStepState.class); // merged into store step
 
             // pseudo-steps
             m.put(FINISHED_STEP, FinishedStepState.class);
@@ -1575,22 +1552,6 @@ public abstract class SetupWorker implements Serializable {
             }
         }
 
-        // merged into store step
-//        private static final StepParamInfo websiteStepParamInfo =
-//                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId", "productStoreId"), nameSet());
-//        protected class WebsiteStepState extends CommonStepState {
-//            public WebsiteStepState(StaticStepState partial) { super(partial); }
-//
-//            @Override public String getName() { return "website"; }
-//            @Override protected boolean isSkippableImpl() { return true; }
-//            @Override public StepParamInfo getStepParamInfo() { return websiteStepParamInfo; }
-//
-//            @Override
-//            protected Map<String, Object> getStepDataImpl() throws GeneralException {
-//                return SetupDataUtil.getWebsiteStepStateData(getDelegator(), getDispatcher(), getStepDataParamsArg(), isUseEntityCache());
-//            }
-//        }
-
         // NOTE: this is a "pseudo" step; it typically doesn't get listed as part of the main steps.
         private static final StepParamInfo finishedStepParamInfo =
                 StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId", "productStoreId"), nameSet());
@@ -1665,7 +1626,6 @@ public abstract class SetupWorker implements Serializable {
          */
         protected Map<String, Object> getCombinedParamsWithEnsureValid(Collection<String> validParamNames) {
             ensureParamsValidated(validParamNames);
-            // TODO?: optimize? (large map copies)
             Map<String, Object> combinedParams = new HashMap<>(getParams());
             combinedParams.putAll(getValidParams());
             return combinedParams;

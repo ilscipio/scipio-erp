@@ -698,10 +698,7 @@ public abstract class SetupDataUtil {
             }
         }
 
-        // will need this always
-        //if (!isNewOrFailedCreate) {
         result.put("webSiteList", webSiteList);
-        //}
         result.put("webSiteCount", webSiteList.size());
         result.put("defaultWebSite", defaultWebSite);
         
@@ -834,7 +831,6 @@ public abstract class SetupDataUtil {
                 isCreateRecordFailedRequest(params, recordTypeCamel);
     }
 
-
     private static <T> boolean setContainsAll(Set<T> set, Iterable<T> values) {
         if (set == null) return false;
         for(T value : values) {
@@ -842,5 +838,4 @@ public abstract class SetupDataUtil {
         }
         return true;
     }
-
 }

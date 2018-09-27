@@ -989,60 +989,7 @@
             </widgets>
         </section>
     </screen>
-    
-    <!-- merging into store page
-    <screen name="SetupWebsite">
-        <section>
-            <actions>
-                <set field="setupStep" value="website"/>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                <set field="websiteData" from-field="setupStepStates[setupStep].stepData"/><!- - result from StepDataUtil.java - ->
 
-                <!- - turns out we can skip this and instead get everything from the worker
-                <set field="gpsawQueryWebSite" type="Boolean" value="true"/>
-                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
-                - ->
-                <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
-                
-                <set field="isCreateForm" type="Boolean" value="${context.webSite == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
-                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
-                <set field="submitFormId" value="EditWebsite"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>
-                                <screenlet>
-                                    <!- -<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>- ->
-                                    <!- -<include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>- ->
-                                    <platform-specific>
-                                        <html><html-template location="component://setup/webapp/setup/website/EditWebsite.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <section>
-                                    <actions>
-                                        <set field="resourceDescription" value=""/>
-                                    </actions>
-                                    <widgets>
-                                        <label style="common-msg-error-perm">${uiLabelMap.ContentSecurityCreatePermission}</label>
-                                    </widgets>
-                                </section>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    -->
-    
     <screen name="SetupFinished">
         <section>
             <actions>

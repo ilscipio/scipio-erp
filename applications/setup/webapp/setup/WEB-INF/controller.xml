@@ -377,26 +377,6 @@
         <response name="success" type="request" value="setupStore"/>
         <response name="error" type="request" value="setupStore"/>
     </request-map>
-    <!-- merged into store step
-    <request-map uri="setupWebsite">
-        <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
-        <response name="success" type="view" value="SetupWebsite"/>
-        <response name="error" type="view" value="SetupError"/>
-    </request-map>
-    <request-map uri="setupCreateWebsite">
-        <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createWebSite"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="request" value="setupWebsite"/>
-    </request-map>
-    <request-map uri="setupUpdateWebsite">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateWebSite"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="request" value="setupWebsite"/>
-    </request-map>
-    -->
     <request-map uri="setupFinished">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>

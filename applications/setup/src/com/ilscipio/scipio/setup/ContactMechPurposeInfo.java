@@ -41,10 +41,6 @@ abstract class ContactMechPurposeInfo {
         this.logPrefix = logPrefix != null ? logPrefix : "";
     }
 
-//    public List<GenericValue> getContactMechAndPurposeList() {
-//        return contactMechAndPurposeList;
-//    }
-
     public Map<String, Set<String>> getContactMechPurposes() {
         return contactMechPurposes;
     }
@@ -88,8 +84,6 @@ abstract class ContactMechPurposeInfo {
     }
 
     public void resultsToMap(Map<String, Object> map) {
-        //map.put("ownerId", ownerId); // not for us
-        //map.put("contactMechAndPurposeList", contactMechAndPurposeList);
         map.put("contactMechPurposes", contactMechPurposes);
         map.put("purposeContactMechs", purposeContactMechs);
     }
@@ -122,9 +116,6 @@ abstract class ContactMechPurposeInfo {
         String contactMechId = getContactMechIdForPurpose(purpose);
         return getContactMechById(delegator, contactMechId, useCache);
     }
-
-
-
 
     /**
      * BEST-EFFORT! Returns closest match only. May be incomplete.
@@ -317,7 +308,6 @@ abstract class ContactMechPurposeInfo {
         protected String getOwnerLogPrefix() {
             return logPrefix + "party '" + partyId + "'";
         }
-
     }
 
     public static class FacilityContactMechPurposeInfo extends ContactMechPurposeInfo {
@@ -396,5 +386,4 @@ abstract class ContactMechPurposeInfo {
             return logPrefix + "facility '" + facilityId + "'";
         }
     }
-
 }

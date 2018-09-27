@@ -130,6 +130,10 @@
         <value xml:lang="de">Verwenden Sie für erweiterte Exportfunktionen die Exportbildschirme für die Anwendungsanwendung.</value>
         <value xml:lang="en">For advanced export functionality, please use the Admin application entity export screens.</value>
     </property>
+    <property key="SetupForceRemovePreviousPartyRole">
+        <value xml:lang="de">Versuch erzwingen vorherige Benutzerrolle entfernen</value>
+        <value xml:lang="en">Force attempt remove previous user role</value>
+    </property>
     <property key="SetupIncompleteMsgEnd">
         <value xml:lang="de">Einige Funktionalitäten können beeinträchtigt werden, wenn diese Schritte nicht abgeschlossen sind.</value>
         <value xml:lang="en">Some functionality may be impaired until these steps are completed.</value>

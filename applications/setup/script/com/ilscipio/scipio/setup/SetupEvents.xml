@@ -399,16 +399,16 @@
                     <set field="deletePartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
                     <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />
 
-                    <!-- UNSAFE: Cannot delete old PartyRole automatically because the PartyRole may be reused by more than
+                    <!-- UNSAFE: Cannot delete old PartyRole automatically by default because the PartyRole may be reused by more than
                         one related entity/function, included being manually depended upon by the client.
                         Even if could check the 78 database relations to PartyRole, it could still be needed
                         in a secondary purpose by the client for manual use. -->
-                    <!--  
-                    <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
-                    <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
-                    <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
-                    <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx" />
-                    -->    
+                    <if-compare field="parameters.deleteOldRelRole" operator="equals" value="true" type="Boolean">
+                        <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
+                        <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
+                        <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
+                        <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx" /> 
+                    </if-compare>
 
                     <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
                     <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />

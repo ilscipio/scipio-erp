@@ -147,12 +147,16 @@ under the License.
             </@cell>
             <@cell large=6>
               <#if userParty?? && userPartyRole??>
-                  <#-- DEV NOTE: Cannot delete old PartyRole automatically because the PartyRole may be reused by more than
+                  <#-- DEV NOTE: Cannot delete old PartyRole automatically by default because the PartyRole may be reused by more than
                     one related entity/function, included being manually depended upon by the client.
                     Even if could check the 78 database relations to PartyRole, it could still be needed
                     in a secondary purpose by the client for manual use. -->
                   <@alert type="warning">${uiLabelMap.SetupCannotAutoRemovePartyRoleNotice}
-                    <@setupExtAppLink uri=("/partymgr/control/viewroles?partyId="+rawString(userParty.partyId!)) text=uiLabelMap.PageTitleViewPartyRole class="${styles.link_nav!} ${styles.action_view!}"/></@alert>
+                    <@setupExtAppLink uri=("/partymgr/control/viewroles?partyId="+rawString(userParty.partyId!)) text=uiLabelMap.PageTitleViewPartyRole class="${styles.link_nav!} ${styles.action_view!}"/>
+                    <@fields type="default-compact">
+                      <@field type="checkbox" name="deleteOldRelRole" value="true" label=uiLabelMap.SetupForceRemovePreviousPartyRole/>
+                    </@fields>
+                  </@alert>
               </#if>
             </@cell>
           </@row>

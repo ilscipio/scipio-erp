@@ -468,6 +468,9 @@
         <set field="cutn.contactCtx" from-field="emailMap"/>
         <call-simple-method method-name="createUpdatePartyEmailAddress"/>
         <check-errors/>
+
+        <property-to-field field="successMessage" resource="PartyUiLabels" property="PartyPartyUpdatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
 
     <simple-method method-name="updateFacilityAndContactMech" short-description="update Facility and ContactMech">

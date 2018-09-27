@@ -10599,6 +10599,10 @@
         <value xml:lang="zh">无法找到指定的会员类型标识（partyTypeId）${partyTypeId}，或者它不是会员组（PARTY_GROUP）的子类型</value>
         <value xml:lang="zh-TW">無法找到指定的團體類型識別(partyTypeId)${partyTypeId},或者它不是團體群組(PARTY_GROUP)的子類型</value>
     </property>
+    <property key="PartyPartyUpdatedSuccessfully">
+        <value xml:lang="de">Benutzer wurde erfolgreich aktualisiert.</value>
+        <value xml:lang="en">User updated successfully.</value>
+    </property>
     <property key="PartyPartyWithId">
         <value xml:lang="ar">للطرف الذي دليله</value>
         <value xml:lang="de">des Nutzers mit der ID</value>

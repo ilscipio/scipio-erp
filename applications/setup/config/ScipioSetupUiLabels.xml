@@ -108,8 +108,8 @@
         <value xml:lang="en">Add Transaction Type</value>
     </property>
     <property key="SetupCannotAutoRemovePartyRoleNotice">
-        <value xml:lang="de">Warnung: Durch das Ändern der Rolle für diese Beziehung wird die vorherige Rolle nicht vom Benutzer selbst entfernt. Wenn die vorherige Rolle nicht mehr für den Benutzer geeignet ist, müssen Sie sie im Benutzer-Manager entfernen.</value>
-        <value xml:lang="en">Warning: Changing the role for this relationship will not remove the previous role from the user themselves. If the previous role is no longer appropriate for the user, you must remove it in the User Manager.</value>
+        <value xml:lang="de">Warnung: Durch das Ändern der Rolle für diese Beziehung wird die vorherige Rolle nicht vom Benutzer selbst entfernt. Wenn die vorherige Rolle nicht mehr für den Benutzer geeignet ist, können Sie sie im Benutzer-Manager entfernen.</value>
+        <value xml:lang="en">Warning: Changing the role for this relationship will not remove the previous role from the user themselves. If the previous role is no longer appropriate for the user, you can remove it in the User Manager.</value>
     </property>
     <property key="SetupCompleteMsg">
         <value xml:lang="de">Alle Setup-Schritte wurden abgeschlossen. Setup abgeschlossen!</value>

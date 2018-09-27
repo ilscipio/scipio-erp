@@ -398,26 +398,54 @@
                     <set field="deletePartyRelationshipCtx.fromDate" from-field="parameters.oldUserPartyRelationshipFromDate" />
                     <set field="deletePartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
                     <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />
-
-                    <!-- UNSAFE: Cannot delete old PartyRole automatically by default because the PartyRole may be reused by more than
-                        one related entity/function, included being manually depended upon by the client.
-                        Even if could check the 78 database relations to PartyRole, it could still be needed
-                        in a secondary purpose by the client for manual use. -->
-                    <if-compare field="parameters.deleteOldRelRole" operator="equals" value="true" type="Boolean">
-                        <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
-                        <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
-                        <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
-                        <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx" /> 
-                    </if-compare>
-
-                    <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
-                    <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-                    <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
-                    <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
-                    <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="parameters.userPartyId" />
-                    <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
-                    <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />
-                    <check-errors/>
+                    <if>
+                        <condition>
+                            <and>
+                                <not><if-empty field="parameters.roleTypeId"/></not>
+                                <!-- Do not try to delete+create the PartyRole if we're not changing it! Can fail for no reason! -->
+                                <if-compare-field field="parameters.oldUserPartyRelationshipRoleTypeIdTo" operator="equals" to-field="parameters.roleTypeId"/>
+                            </and>
+                        </condition>
+                        <then>
+                            <log level="info" message="Creating new ${parameters.partyRelationshipTypeId} PartyRelationship from organization ${organizationPartyId} to party ${parameters.userPartyId} using same roleTypeId (${parameters.roleTypeId})"/>
+                            <set field="createPartyRelationship.partyIdFrom" from-field="organizationPartyId" />
+                            <set field="createPartyRelationship.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                            <set field="createPartyRelationship.roleTypeIdTo" from-field="parameters.roleTypeId" />
+                            <set field="createPartyRelationship.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
+                            <set field="createPartyRelationship.partyIdTo" from-field="parameters.userPartyId" />
+                            <set field="createPartyRelationship.userLogin" from-field="systemUserLogin" />
+                            <call-service service-name="createPartyRelationship" in-map-name="createPartyRelationship" />
+                            <check-errors/>
+                        </then>
+                        <else>
+                            <log level="info" message="Creating new ${parameters.partyRelationshipTypeId} PartyRelationship from organization ${organizationPartyId} to party ${parameters.userPartyId} using new roleTypeId (${parameters.roleTypeId})"/>
+                            <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
+                            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
+                            <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
+                            <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="parameters.userPartyId" />
+                            <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
+                            <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />
+                            <check-errors/>
+        
+                            <if-not-empty field="parameters.oldUserPartyRelationshipRoleTypeIdTo">
+                                <!-- UNSAFE: Cannot delete old PartyRole automatically by default because the PartyRole may be reused by more than
+                                    one related entity/function, included being manually depended upon by the client.
+                                    Even if could check the 78 database relations to PartyRole, it could still be needed
+                                    in a secondary purpose by the client for manual use. -->
+                                <if-compare field="parameters.deleteOldRelRole" operator="equals" value="true" type="Boolean">
+                                    <log level="info" message="Attempting to delete party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo}"/>
+                                    <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
+                                    <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
+                                    <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
+                                    <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx" />
+                                    <else>
+                                        <log level="info" message="Not deleting party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} (not requested)"/>
+                                    </else>
+                                </if-compare>
+                            </if-not-empty>
+                        </else>
+                    </if>
                 </if-compare>
             </then>
          </if>

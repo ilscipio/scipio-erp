@@ -20,10 +20,6 @@
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
-    <!--
-    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
-    <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
-    <include location="component://party/webapp/partymgr/WEB-INF/controller.xml"/>-->
     <include location="component://commonext/webapp/ofbizsetup/WEB-INF/controller.xml"/>
     <description>SCIPIO ERP Setup component controller</description>
     
@@ -396,7 +392,6 @@
         <response name="facility" type="view" value="SetupFacility"/>
         <response name="catalog" type="view" value="SetupCatalog"/>
         <response name="store" type="view" value="SetupStore"/>
-        <response name="website" type="view" value="SetupWebsite"/>
         
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -487,6 +482,9 @@
     <view-map name="EditCategory" type="screen" page="component://setup/widget/SetupScreens.xml#EditCategory"/>
     <view-map name="EditProduct" type="screen" page="component://setup/widget/SetupScreens.xml#EditProduct"/>
     
+    <!-- SCIPIO: Extra Party overrides -->
+    <view-map name="editcontactmech" type="screen" page="component://setup/widget/PartyScreens.xml#editcontactmech"/>
+
     <!-- SCIPIO: new setup step definitions (NOTE: the screens themselves will perform the reuse/includes, as needed) -->
     <view-map name="SetupOrganization" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganization"/>
     <view-map name="SetupUser" type="screen" page="component://setup/widget/SetupScreens.xml#SetupUser"/>
@@ -494,7 +492,6 @@
     <view-map name="SetupFacility" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFacility"/>
     <view-map name="SetupCatalog" type="screen" page="component://setup/widget/SetupScreens.xml#SetupCatalog"/>
     <view-map name="SetupStore" type="screen" page="component://setup/widget/SetupScreens.xml#SetupStore"/>
-    <view-map name="SetupWebsite" type="screen" page="component://setup/widget/SetupScreens.xml#SetupWebsite"/>
     <view-map name="SetupFinished" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFinished"/>
     <view-map name="SetupError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupError"/>
 

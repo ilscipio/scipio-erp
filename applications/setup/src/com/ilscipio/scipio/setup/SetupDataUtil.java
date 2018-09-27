@@ -15,6 +15,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -819,5 +820,46 @@ public final class SetupDataUtil {
     static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String recordTypeCamel) {
         return isNewRecordRequest(params, recordTypeCamel) ||
                 isCreateRecordFailedRequest(params, recordTypeCamel);
+    }
+    
+    /**
+     * Tries to find an organization related to the given party, mainly for display purposes,
+     * and returns the PartyRelationship, with the organization party ID as partyIdFrom.
+     * <p>
+     * For now, does NOT strictly require roleTypeIdFrom "INTERNAL_ORGANIZATIO", though it is prioritized;
+     * however the organization does need to have "INTERNAL_ORGANIZATIO" as PartyRole.
+     * <p>
+     * Priority: INTERNAL_ORGANIZATIO > _NA_ > *
+     * <p>
+     * This logic works around demo data variations.
+     * <p>
+     * TODO?: could delegate, or move this impl, but for now
+     * this may be somewhat setup-specific heuristic (see SetupPreparePartyEdit.groovy).
+     */
+    public static GenericValue findBestDisplayOrganizationRelationForParty(Delegator delegator, String partyId, boolean useCache) throws GenericEntityException {
+        List<GenericValue> relList = EntityQuery.use(delegator).from("PartyRelationship")
+                .where("partyIdTo", partyId).filterByDate().orderBy("-fromDate").cache(useCache).queryList();
+        GenericValue bestRel = null;
+        for(GenericValue rel : relList) {
+            String roleTypeIdFrom = rel.getString("roleTypeIdFrom");
+            if ("INTERNAL_ORGANIZATIO".equals(roleTypeIdFrom)) {
+                bestRel = rel;
+                break;
+            } else if (EntityQuery.use(delegator).from("PartyRole")
+                    .where("partyId", rel.getString("partyIdFrom"), "roleTypeId", "INTERNAL_ORGANIZATIO").cache(useCache)
+                    .queryOne().size() > 0) {
+                if ("_NA_".equals(roleTypeIdFrom)) {
+                    // _NA_ has priority over 
+                    if (bestRel == null || !"_NA_".equals(bestRel.getString("roleTypeIdFrom"))) {
+                        bestRel = rel;
+                    }
+                } else {
+                    if (bestRel == null) {
+                        bestRel = rel;
+                    }
+                }
+            }
+        }
+        return bestRel;
     }
 }

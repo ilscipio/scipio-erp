@@ -143,7 +143,17 @@
     <screen name="CommonPartyDecorator">
         <section>
             <widgets>
-                <decorator-screen name="CommonSetupDecorator"/>
+                <section>
+                    <condition>
+                        <if-true field="useSetupWizardDec"/>
+                    </condition>
+                    <widgets>
+                        <decorator-screen name="CommonSetupWizardDecorator"/>
+                    </widgets>
+                    <fail-widgets>
+                        <decorator-screen name="CommonSetupDecorator"/>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -161,7 +171,7 @@
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <and>
                         <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-                        <not><if-empty field="taxAuthority"/></not>
+                        <not><if-empty field="taxAuthority"/></not><!-- SCIPIO: TODO: REVIEW: WHY was this needed? -->
                     </and>
                 </condition-to-field>
             </actions>
@@ -227,7 +237,14 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/><!-- fallback only; screens should set it themselves -->
                 <script lang="groovy"><![CDATA[
                     import org.ofbiz.base.util.*;
-                    context.setupStepAllowed = UtilMisc.booleanValueVersatile(parameters.setupForce, false) || context.setupWorker?.isStepEffectiveAllowedSafe(context.setupStep);
+                    context.setupStepAllowed = UtilMisc.booleanValueVersatile(parameters.setupForce, false) ||
+                        UtilMisc.booleanValue(context.setupForce, false) ||
+                        context.setupWorker?.isStepEffectiveAllowedSafe(context.setupStep);
+                    // SPECIAL: record the "current" orgPartyId in session, ONLY so stock-like
+                    // screens such as editcontactmech can access it (do not use if from scipio-code step screens!)
+                    if (context.setupSessionOrgSet != false) {
+                        session.setAttribute("scpSetupOrgPartyId", context.orgPartyId);
+                    }
                 ]]></script>
                 
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${setupStep}"/>
@@ -259,6 +276,7 @@
                                 <if-compare field="setupStepAllowed" type="Boolean" operator="equals" value="true"/>
                             </condition>
                             <widgets>
+                                <decorator-section-include name="setup-pre-body"/>
                                 <decorator-section-include name="body"/>
                                 <section>
                                     <condition>

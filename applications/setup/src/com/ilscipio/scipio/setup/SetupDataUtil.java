@@ -119,7 +119,7 @@ public abstract class SetupDataUtil {
                         }
                         result.put("generalAddressContactMech", generalAddressContactMech);
                         result.put("generalAddressContactMechPurposes", generalAddressContactMechPurposes);
-                        boolean generalAddressStandaloneCompleted = (generalAddressContactMech != null) && setContainsAll(generalAddressContactMechPurposes, ORGANIZATION_MAINADDR_PURPOSES);
+                        boolean generalAddressStandaloneCompleted = (generalAddressContactMech != null) && UtilMisc.containsAll(generalAddressContactMechPurposes, ORGANIZATION_MAINADDR_PURPOSES);
                         result.put("generalAddressStandaloneCompleted", generalAddressStandaloneCompleted);
 
                         result.put("locationPurposes", ORGANIZATION_MAINADDR_PURPOSES);
@@ -231,7 +231,7 @@ public abstract class SetupDataUtil {
             result.put("generalAddressContactMech", generalAddressContactMech);
             result.put("generalAddressContactMechPurposes", generalAddressContactMechPurposes);
             boolean generalAddressStandaloneCompleted = (generalAddressContactMech != null)
-                    && setContainsAll(generalAddressContactMechPurposes, USER_MAINADDR_PURPOSES);
+                    && UtilMisc.containsAll(generalAddressContactMechPurposes, USER_MAINADDR_PURPOSES);
             result.put("generalAddressStandaloneCompleted", generalAddressStandaloneCompleted);
 
             result.put("locationPurposes", USER_MAINADDR_PURPOSES);
@@ -499,7 +499,7 @@ public abstract class SetupDataUtil {
                 result.put("shipAddressContactMech", shipAddressContactMech);
                 result.put("shipAddressContactMechPurposes", shipAddressContactMechPurposes);
             }
-            boolean shipAddressStandaloneCompleted = (shipAddressContactMech != null) && setContainsAll(shipAddressContactMechPurposes, FACILITY_MAINADDR_PURPOSES);
+            boolean shipAddressStandaloneCompleted = (shipAddressContactMech != null) && UtilMisc.containsAll(shipAddressContactMechPurposes, FACILITY_MAINADDR_PURPOSES);
             result.put("shipAddressStandaloneCompleted", shipAddressStandaloneCompleted);
 
             if (!isNewOrFailedCreate) {
@@ -829,13 +829,5 @@ public abstract class SetupDataUtil {
     static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String recordTypeCamel) {
         return isNewRecordRequest(params, recordTypeCamel) ||
                 isCreateRecordFailedRequest(params, recordTypeCamel);
-    }
-
-    private static <T> boolean setContainsAll(Set<T> set, Iterable<T> values) {
-        if (set == null) return false;
-        for(T value : values) {
-            if (!set.contains(value)) return false;
-        }
-        return true;
     }
 }

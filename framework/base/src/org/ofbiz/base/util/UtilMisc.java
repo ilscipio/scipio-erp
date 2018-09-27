@@ -1350,4 +1350,20 @@ public final class UtilMisc {
         }
         return outValueMap;
     }
+    
+    /**
+     * SCIPIO: Returns true if and only if all of the test values are in the given collection.
+     * Added 2018-09-26.
+     */
+    public static <T> boolean containsAll(Collection<T> collection, Iterable<? extends T> testValues) {
+        if (collection == null) {
+            return false;
+        }
+        for(T value : testValues) {
+            if (!collection.contains(value)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

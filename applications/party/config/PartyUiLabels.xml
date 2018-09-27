@@ -10248,6 +10248,10 @@
         <value xml:lang="zh">会员</value>
         <value xml:lang="zh-TW">團體</value>
     </property>
+    <property key="PartyPartyCreatedSuccessfully">
+        <value xml:lang="de">Benutzer wurde erfolgreich erstellt.</value>
+        <value xml:lang="en">User created successfully.</value>
+    </property>
     <property key="PartyPartyCurrentInTheRoleOf">
         <value xml:lang="ar">الطرف الحالي بدور</value>
         <value xml:lang="de">Der aktuelle Nutzer in der Rolle als</value>

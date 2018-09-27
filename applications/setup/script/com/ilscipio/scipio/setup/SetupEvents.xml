@@ -340,6 +340,8 @@
                 <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />
             </then>
          </if>
+        <property-to-field field="successMessage" resource="PartyUiLabels" property="PartyPartyCreatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
 
     <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">

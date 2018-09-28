@@ -721,6 +721,7 @@
     </property>
     <property key="Enumeration.description.FAC_PULLER">
         <value xml:lang="cs">Stahovák</value>
+        <value xml:lang="de">Fabrikabzieher</value>
         <value xml:lang="en">Puller</value>
         <value xml:lang="es">Extractor</value>
         <value xml:lang="fr">Extracteur</value>
@@ -738,6 +739,7 @@
     </property>
     <property key="Enumeration.description.FAC_REEL_STAND">
         <value xml:lang="cs">Naviják</value>
+        <value xml:lang="de">Rollenständer</value>
         <value xml:lang="en">Reel Stand</value>
         <value xml:lang="es">Bobina</value>
         <value xml:lang="fr">Dérouleur</value>
@@ -754,6 +756,7 @@
     </property>
     <property key="Enumeration.description.FAC_SERVICE_BODY">
         <value xml:lang="cs">Servisní zařízení</value>
+        <value xml:lang="de">Werkservice-Stelle</value>
         <value xml:lang="en">Service Body</value>
         <value xml:lang="es">Cuerpo de servicio</value>
         <value xml:lang="fr">Organisme de services</value>
@@ -880,7 +883,8 @@
     </property>
     <property key="Enumeration.description.GC_ACTIVATE">
         <value xml:lang="cs">Aktivovat</value>
-        <value xml:lang="en">GC_ACTIVATE</value>
+        <value xml:lang="de">Aktivieren</value>
+        <value xml:lang="en">Activate</value>
         <value xml:lang="es">Activar</value>
         <value xml:lang="fr">Activer</value>
         <value xml:lang="it">Attiva</value>
@@ -894,7 +898,8 @@
     </property>
     <property key="Enumeration.description.GC_RELOAD">
         <value xml:lang="cs">Aktualizovat</value>
-        <value xml:lang="en">GC_RELOAD</value>
+        <value xml:lang="de">Neuladen</value>
+        <value xml:lang="en">Reload</value>
         <value xml:lang="es">Recargar</value>
         <value xml:lang="fr">Recharger</value>
         <value xml:lang="it">Ricaricata</value>
@@ -908,7 +913,8 @@
     </property>
     <property key="Enumeration.description.IND_AEROSPACE">
         <value xml:lang="cs">Letectví</value>
-        <value xml:lang="en">IND_AEROSPACE</value>
+        <value xml:lang="de">Luft- und Raumfahrt</value>
+        <value xml:lang="en">Aerospace</value>
         <value xml:lang="es">Indutria aeroespacial</value>
         <value xml:lang="fr">AEROSPACIATIALE</value>
         <value xml:lang="it">Spazio aereo</value>
@@ -923,7 +929,8 @@
     </property>
     <property key="Enumeration.description.IND_DISTRIBUTION">
         <value xml:lang="cs">Distribuce</value>
-        <value xml:lang="en">IND_DISTRIBUTION</value>
+        <value xml:lang="de">Vertrieb</value>
+        <value xml:lang="en">Distribution</value>
         <value xml:lang="es">Distribución</value>
         <value xml:lang="fr">DISTRIBUTION</value>
         <value xml:lang="it">In distribuzione</value>
@@ -938,7 +945,8 @@
     </property>
     <property key="Enumeration.description.IND_FINANCE">
         <value xml:lang="cs">Finance</value>
-        <value xml:lang="en">IND_FINANCE</value>
+        <value xml:lang="de">Finanz</value>
+        <value xml:lang="en">Finance</value>
         <value xml:lang="es">Finanzas</value>
         <value xml:lang="fr">FINANCE</value>
         <value xml:lang="it">Finanza</value>
@@ -953,7 +961,8 @@
     </property>
     <property key="Enumeration.description.IND_GEN_SERVICES">
         <value xml:lang="cs">Služby</value>
-        <value xml:lang="en">IND_GEN_SERVICES</value>
+        <value xml:lang="de">Allgemeine Dienstleistungen</value>
+        <value xml:lang="en">General Services</value>
         <value xml:lang="es">Servicios generales</value>
         <value xml:lang="fr">SERVICES GENERAUX</value>
         <value xml:lang="it">Servizi generale</value>
@@ -968,7 +977,8 @@
     </property>
     <property key="Enumeration.description.IND_HARDWARE">
         <value xml:lang="cs">Hardware</value>
-        <value xml:lang="en">IND_HARDWARE</value>
+        <value xml:lang="de">Materialwirtschaft</value>
+        <value xml:lang="en">Hardware</value>
         <value xml:lang="es">Material</value>
         <value xml:lang="fr">MATERIEL</value>
         <value xml:lang="it">Hardware</value>
@@ -983,7 +993,8 @@
     </property>
     <property key="Enumeration.description.IND_HEALTH_CARE">
         <value xml:lang="cs">Zdravotnictví</value>
-        <value xml:lang="en">IND_HEALTH_CARE</value>
+        <value xml:lang="de">Healthcare</value>
+        <value xml:lang="en">Healthcare</value>
         <value xml:lang="es">Salud</value>
         <value xml:lang="fr">SANTE</value>
         <value xml:lang="it">Sicurezza sulla salutea</value>
@@ -998,7 +1009,8 @@
     </property>
     <property key="Enumeration.description.IND_INSURANCE">
         <value xml:lang="cs">Pojišťovnictví</value>
-        <value xml:lang="en">IND_INSURANCE</value>
+        <value xml:lang="de">Versicherung</value>
+        <value xml:lang="en">Insurance</value>
         <value xml:lang="es">Seguros</value>
         <value xml:lang="fr">ASSURANCE</value>
         <value xml:lang="it">Assicurazione</value>
@@ -1013,7 +1025,8 @@
     </property>
     <property key="Enumeration.description.IND_MANUFACTURING">
         <value xml:lang="cs">Výroba</value>
-        <value xml:lang="en">IND_MANUFACTURING</value>
+        <value xml:lang="de">Produktion</value>
+        <value xml:lang="en">Manufacturing</value>
         <value xml:lang="es">Manufactura</value>
         <value xml:lang="fr">FABRICATION</value>
         <value xml:lang="it">Produzione</value>
@@ -1028,7 +1041,8 @@
     </property>
     <property key="Enumeration.description.IND_MEDIA">
         <value xml:lang="cs">Média</value>
-        <value xml:lang="en">IND_MEDIA</value>
+        <value xml:lang="de">Media</value>
+        <value xml:lang="en">Media</value>
         <value xml:lang="es">Media</value>
         <value xml:lang="fr">MEDIA</value>
         <value xml:lang="it">Media</value>
@@ -1042,7 +1056,8 @@
     </property>
     <property key="Enumeration.description.IND_NON_PROFIT">
         <value xml:lang="cs">Neziskový sektor</value>
-        <value xml:lang="en">IND_NON_PROFIT</value>
+        <value xml:lang="de">Non-profit</value>
+        <value xml:lang="en">Non-profit</value>
         <value xml:lang="es">Sin ánimo de lucro</value>
         <value xml:lang="fr">NON LUCRATIF</value>
         <value xml:lang="it">Senza profitto</value>
@@ -1057,7 +1072,8 @@
     </property>
     <property key="Enumeration.description.IND_REAL_ESTATE">
         <value xml:lang="cs">Nemovitosti</value>
-        <value xml:lang="en">IND_REAL_ESTATE</value>
+        <value xml:lang="de">Immobilien</value>
+        <value xml:lang="en">Real estate</value>
         <value xml:lang="es">Inmobiliaria</value>
         <value xml:lang="fr">IMMOBILIER</value>
         <value xml:lang="it">Immobili</value>
@@ -1072,7 +1088,8 @@
     </property>
     <property key="Enumeration.description.IND_RETAIL">
         <value xml:lang="cs">Prodej</value>
-        <value xml:lang="en">IND_RETAIL</value>
+        <value xml:lang="de">Retail</value>
+        <value xml:lang="en">Retail</value>
         <value xml:lang="es">Venta al por menor</value>
         <value xml:lang="fr">VENTE AU DETAIL</value>
         <value xml:lang="it">Al dettaglio</value>
@@ -1087,7 +1104,8 @@
     </property>
     <property key="Enumeration.description.IND_SOFTWARE">
         <value xml:lang="cs">Software</value>
-        <value xml:lang="en">IND_SOFTWARE</value>
+        <value xml:lang="de">Software</value>
+        <value xml:lang="en">Software</value>
         <value xml:lang="es">Software</value>
         <value xml:lang="fr">LOGICIEL</value>
         <value xml:lang="it">Software</value>
@@ -1102,7 +1120,8 @@
     </property>
     <property key="Enumeration.description.IND_TELECOM">
         <value xml:lang="cs">Telekomunikace</value>
-        <value xml:lang="en">IND_TELECOM</value>
+        <value xml:lang="de">Telekommunikation</value>
+        <value xml:lang="en">Telecom</value>
         <value xml:lang="es">Telecomunicaciones</value>
         <value xml:lang="fr">TELECOM</value>
         <value xml:lang="it">Telefono</value>
@@ -1286,6 +1305,7 @@
         <value xml:lang="zh-TW">絕對網址</value>
     </property>
     <property key="Enumeration.description.KOTT_OFBURL">
+        <value xml:lang="de">OFBiz URL</value>
         <value xml:lang="en">OFBiz URL</value>
         <value xml:lang="es">URL OFBiz</value>
         <value xml:lang="fr">URL (lien internet) au sein d'OFBiz</value>
@@ -1519,6 +1539,7 @@
         <value xml:lang="zh-TW">替代辭匯</value>
     </property>
     <property key="Enumeration.description.KW_THES_REL">
+        <value xml:lang="de">Sprache: Französisch</value>
         <value xml:lang="en">Lang: FR</value>
         <value xml:lang="es">Idioma: francés</value>
         <value xml:lang="fr">Langue : français</value>
@@ -1830,6 +1851,7 @@
     </property>
     <property key="Enumeration.description.POTT_DEST">
         <value xml:lang="ar">مكان الوصول</value>
+        <value xml:lang="de">Ziel</value>
         <value xml:lang="en">Destination</value>
         <value xml:lang="es">Destino</value>
         <value xml:lang="fr">Destination</value>

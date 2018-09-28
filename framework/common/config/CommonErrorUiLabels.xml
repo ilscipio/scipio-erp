@@ -57,6 +57,7 @@
     </property>
     <property key="ImageTransform.error_occurs_during_reading">
         <value xml:lang="da">Der opstår en fejl under læsning</value>
+        <value xml:lang="de">Beim Lesen ist ein Fehler aufgetreten</value>
         <value xml:lang="en">An error occurs during reading</value>
         <value xml:lang="es">Ocurrió un error durante la lectura</value>
         <value xml:lang="fr">Une erreur est survenue lors de la lecture</value>
@@ -72,6 +73,7 @@
     </property>
     <property key="ImageTransform.error_prevents_the document_from_being_fully_parsed">
         <value xml:lang="da">Fejl forhinder dokumentet i at blive fuldt ud oversat</value>
+        <value xml:lang="de">Ein Fehler verhindert, dass das Dokument vollständig ausgewertet werden kann</value>
         <value xml:lang="en">Error prevents the document from being fully parsed</value>
         <value xml:lang="es">Un error evita que el documento sea completamente analizado</value>
         <value xml:lang="fr">Une erreur empêche que le document soit entièrement analysé</value>
@@ -87,6 +89,7 @@
     </property>
     <property key="ImageTransform.errors_occurred_during_parsing">
         <value xml:lang="da">Der opstod fejl under oversættelse</value>
+        <value xml:lang="de">Beim Parsen sind Fehler aufgetreten</value>
         <value xml:lang="en">Errors occurred during parsing</value>
         <value xml:lang="es">Se produjeron errores durante el análisis</value>
         <value xml:lang="fr">Des erreurs sont survenues lors de l'analyse</value>
@@ -102,6 +105,7 @@
     </property>
     <property key="ImageTransform.final_scale_factor_is_null">
         <value xml:lang="da">Endelig skala faktor er null</value>
+        <value xml:lang="de">Der letzte Skalierungsfaktor fehlt</value>
         <value xml:lang="en">Final scale factor is null</value>
         <value xml:lang="es">El factor de escala final es nulo</value>
         <value xml:lang="fr">Le facteur final de redimensionnement est nul</value>
@@ -117,6 +121,7 @@
     </property>
     <property key="ImageTransform.height_scale_factor_is_null">
         <value xml:lang="da">Høj skala faktor er null</value>
+        <value xml:lang="de">Der Höhenrundungsfaktor ist leer</value>
         <value xml:lang="en">Height scale factor is null</value>
         <value xml:lang="es">El factor de escala de altura es nulo</value>
         <value xml:lang="fr">Le ratio 'hauteur' de redimensionnement est nul</value>
@@ -132,6 +137,7 @@
     </property>
     <property key="ImageTransform.input_is_null">
         <value xml:lang="da">Input er null</value>
+        <value xml:lang="de">Input nicht gesetzt</value>
         <value xml:lang="en">Input is null</value>
         <value xml:lang="es">La entrada es nula</value>
         <value xml:lang="fr">La valeur saisie est nulle</value>
@@ -147,6 +153,7 @@
     </property>
     <property key="ImageTransform.one_default_dimension_is_null">
         <value xml:lang="da">En standard dimension er null</value>
+        <value xml:lang="de">Eine Standarddimension ist nicht gesetzt</value>
         <value xml:lang="en">One default dimension is null</value>
         <value xml:lang="es">Una dimensión por defecto es nula</value>
         <value xml:lang="fr">Une des dimensions par défaut est nulle</value>
@@ -162,6 +169,7 @@
     </property>
     <property key="ImageTransform.root_element_has_not_been_set">
         <value xml:lang="da">Rod element er ikke sat</value>
+        <value xml:lang="de">Ein Root-Element wurde nicht gesetzt</value>
         <value xml:lang="en">Root element has not been set</value>
         <value xml:lang="es">No se ha establecido el elemento raíz</value>
         <value xml:lang="fr">L'élement racine n'a pas pu être chargé</value>
@@ -177,6 +185,7 @@
     </property>
     <property key="ImageTransform.unknown_buffered_image_type">
         <value xml:lang="da">Ukendt buffered billedtype</value>
+        <value xml:lang="de">Unbekannter Bildtyp</value>
         <value xml:lang="en">Unknown buffered image type</value>
         <value xml:lang="es">Tipo de imagen en buffer desconocido</value>
         <value xml:lang="fr">Le type d'image bufferisée est inconnu</value>
@@ -192,6 +201,7 @@
     </property>
     <property key="ImageTransform.width_scale_factor_is_null">
         <value xml:lang="da">Bredde skala faktor er null</value>
+        <value xml:lang="de">Der Breitenskalierungsfaktor ist nicht gesetzt</value>
         <value xml:lang="en">Width scale factor is null</value>
         <value xml:lang="es">El factor de escala de anchura es nulo</value>
         <value xml:lang="fr">Le ratio 'largeur' de redimensionnement est nul</value>

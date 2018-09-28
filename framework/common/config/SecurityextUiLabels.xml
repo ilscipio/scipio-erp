@@ -168,6 +168,7 @@
         <value xml:lang="zh-TW">無電子郵件, 請與客服聯絡.</value>
     </property>
     <property key="loginevents.password_expiration_alert">
+        <value xml:lang="de">Achtung: Ihr Passwort läuft am ${passwordExpirationDate} ab. Aktualisieren Sie Ihr Passwort, bevor es seine Gültigkeit verliert.</value>
         <value xml:lang="en">Alert: Your password will expire on ${passwordExpirationDate}. Update password before it expired.</value>
         <value xml:lang="fr">Votre mot de passe va expirer le ${passwordExpirationDate}, modifiez le avant.</value>
         <value xml:lang="ru">Уведомление: Твой пароль будет действителен на ${passwordExpirationDate}. Поменяйте пароль перед тем как его срок годности пройдет. </value>
@@ -176,6 +177,7 @@
         <value xml:lang="zh-TW">注意:您的密碼將在${passwordExpirationDate}過期,請在這之前更改密碼.</value>
     </property>
     <property key="loginevents.password_expired_message">
+        <value xml:lang="de">Achtung: Ihr Passwort ist am ${passwordExpirationDate} abgelaufen. Bitte aktualisieren Sie Ihr Passwort.</value>
         <value xml:lang="en">Alert: Your password expired on ${passwordExpirationDate}. Update your password.</value>
         <value xml:lang="fr">Votre mot de passe a expiré le  ${passwordExpirationDate}, modifiez le.</value>
         <value xml:lang="ru">Уведомление: Твой пароль истек на ${passwordExpirationDate}. </value>
@@ -242,10 +244,12 @@
         <value xml:lang="zh-TW">設定有問題: 請聯絡客服.</value>
     </property>
     <property key="loginevents.problem_getting_security_question_record">
+        <value xml:lang="de">Ihre Sicherheitsabfrage konnte nicht gefunden werden.</value>
         <value xml:lang="en">Problem getting User Login Security Question record.</value>
         <value xml:lang="fr">Problème durant la lecture de votre question de sécurité</value>
     </property>
     <property key="loginevents.unable_to_login_tenant">
+        <value xml:lang="de">Die Anmeldung am Tenant ist fehlgeschlagen.</value>
         <value xml:lang="en">You cannot login to this tenant</value>
         <value xml:lang="es">No puede conectarse con esta organización</value>
         <value xml:lang="fr">Vous ne pouvez pas vous connecter avec cet identifiant sur cette instance</value>
@@ -511,6 +515,7 @@
         <value xml:lang="zh-TW">無法停用舊有使用者(寫入錯誤): ${errorMessage}.</value>
     </property>
     <property key="loginservices.error_setting_security_question">
+        <value xml:lang="de">Ein Fehler ist beim Setzen der Sicherheitsabfrage aufgetreten:</value>
         <value xml:lang="en">Exception thrown while setting security question for the UserLogin:</value>
         <value xml:lang="fr">Problème durant l'écriture de votre question de sécurité</value>
     </property>
@@ -781,6 +786,7 @@
         <value xml:lang="zh-TW">缺少密碼或驗證密碼.</value>
     </property>
     <property key="loginservices.password_reminder_subject">
+        <value xml:lang="de">Passwort Erinnerung für ${userLoginId}".</value>
         <value xml:lang="en">Password Reminder (${userLoginId})".</value>
         <value xml:lang="fr">Rappel du mot de passe (${userLoginId})".</value>
         <value xml:lang="ru">Напоминатель о пароле (${userLoginId})".</value>
@@ -789,6 +795,7 @@
     </property>
     <property key="loginservices.password.pattern.errmsg">
         <value xml:lang="ar">كلمة السر ليست مطابقة للنمط، يرجى الرجوع النمط التالي: ${passwordPatternMessage}</value>
+        <value xml:lang="de">as Passwort stimmt nicht mit dem Muster überein: ${passwordPatternMessage}</value>
         <value xml:lang="en">The password does not match the pattern: ${passwordPatternMessage} </value>
         <value xml:lang="fr">Le mot de passe ne correspond pas au modèle: ${passwordPatternMessage}.</value>
         <value xml:lang="hi-IN">पासवर्ड पैटर्न मिलान नहीं है, कृपया निम्नलिखित पैटर्न देखें: ${passwordPatternMessage}</value>
@@ -798,10 +805,12 @@
         <value xml:lang="zh-TW">密碼不符合格式:${passwordPatternMessage} </value>
     </property>
     <property key="loginservices.security_answer_empty">
+        <value xml:lang="de">Die Sicherheitsantwort fehlt</value>
         <value xml:lang="en">The security answer is missing</value>
         <value xml:lang="fr">La question de sécurité manque</value>
     </property>
     <property key="loginservices.security_answer_not_match">
+        <value xml:lang="de">Die Antwort stimmt nicht mit den Datensätzen überein. Bitte versuchen Sie es erneut.</value>
         <value xml:lang="en">The answer does not match records, re-enter</value>
         <value xml:lang="fr">Votre réponse à la question de sécurité ne correspond, essayez à nouveau.</value>
     </property>

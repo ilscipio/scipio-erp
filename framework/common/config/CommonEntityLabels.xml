@@ -73,6 +73,7 @@
     <property key="CustomMethod.description.DBL_DECL_DEP_FORMULA">
         <value xml:lang="ar">الإهلاك المزدوج التراجع للأصول الثابنة (صافي القيمة الدفترية - قيمة الخردة) * 2 / الحياة المتبقية بالسنوات</value>
         <value xml:lang="cs">Metoda zrychlených odpisů DDB (Double Declined Balanced) pro majetek ((NetBookValue - salvageCost)*2/remainingLifeInYears)</value>
+        <value xml:lang="de">Abschreibungsformel nach doppelter Wertminderung für Anlagevermögen ((Netto Buchwert - Restkosten)*2/ Verbleibende Haltbarkeit in Jahren)</value>
         <value xml:lang="en">Double decline depreciation algorithm for fixed asset((NetBookValue - salvageCost)*2/remainingLifeInYears)</value>
         <value xml:lang="fr">Algorithme de dépréciation d'immobilisation ((valeur - coût déjà déprécié)*2/ années restantes)</value>
         <value xml:lang="it">Declina algoritmo doppio svalutazione per cespiti((NetBookValue - salvageCost)*2/remainingLifeInYears)</value>
@@ -86,7 +87,8 @@
     <property key="CustomMethod.description.STR_LINE_DEP_FORMULA">
         <value xml:lang="ar">الإهلاك الخطي التراجع للأصول الثابنة (تكلفة الشراء - قيمة الخردة) / الحياة المتبقية بالسنوات</value>
         <value xml:lang="cs">Lineární odpisová metoda majetku ((purchaseCost - salvageCost)/expectedLifeInYears)</value>
-        <value xml:lang="en">Straight Line depreciatiion algorithm for fixed asset((purchaseCost - salvageCost)/expectedLifeInYears)</value>
+        <value xml:lang="de">Abschreibungsformel nach linearer Wertminderung ((Anschaffungskosten - Abschreibungskosten)/Haltbarkeit in Jahren)</value>
+        <value xml:lang="en">Straight Line depreciatiion algorithm for fixed asset((purchaseCost - Restkosten)/expectedLifeInYears)</value>
         <value xml:lang="fr">Dépréciation linéaire d'immmobilisation (valeur d'achat - coût déjà déprécié) / années d'utilisation)</value>
         <value xml:lang="it">Riga semplice algoritmo svalutazione per cespiti((purchaseCost - salvageCost)/expectedLifeInYears)</value>
         <value xml:lang="ja">固定資産減価償却 定額法((購入価額 - 残存価額)/耐用年数)</value>
@@ -98,7 +100,8 @@
     </property>
     <property key="DataSource.description.ECOMMERCE_SITE">
         <value xml:lang="cs">eShop</value>
-        <value xml:lang="en">ECOMMERCE_SITE</value>
+        <value xml:lang="de">Ecommerce</value>
+        <value xml:lang="en">Ecommerce</value>
         <value xml:lang="es">Tienda online</value>
         <value xml:lang="fr">Site de commerce électronique</value>
         <value xml:lang="it">Sito ecommerce</value>
@@ -112,7 +115,8 @@
     </property>
     <property key="DataSource.description.GENERAL_MAILING">
         <value xml:lang="cs">Pošta (obecně)</value>
-        <value xml:lang="en">GENERAL_MAILING</value>
+        <value xml:lang="de">Allgemeine Postsendung</value>
+        <value xml:lang="en">General mailing</value>
         <value xml:lang="es">Mailing</value>
         <value xml:lang="fr">Mailing</value>
         <value xml:lang="it">Posta generale</value>
@@ -126,7 +130,8 @@
     </property>
     <property key="DataSource.description.LEAD_COLDCALL">
         <value xml:lang="cs">Telemarketing</value>
-        <value xml:lang="en">LEAD_COLDCALL</value>
+        <value xml:lang="de">Telemarketing</value>
+        <value xml:lang="en">Telemarketing</value>
         <value xml:lang="es">Telemárketing</value>
         <value xml:lang="fr">Télémarketing</value>
         <value xml:lang="it">Telefonata leader</value>
@@ -140,7 +145,8 @@
     </property>
     <property key="DataSource.description.LEAD_CONFERENCE">
         <value xml:lang="cs">Konference</value>
-        <value xml:lang="en">LEAD_CONFERENCE</value>
+        <value xml:lang="de">Konferenz</value>
+        <value xml:lang="en">Conference</value>
         <value xml:lang="es">Conferencia</value>
         <value xml:lang="fr">Conférence</value>
         <value xml:lang="it">Conferenza leader</value>
@@ -154,7 +160,8 @@
     </property>
     <property key="DataSource.description.LEAD_DIRECTMAIL">
         <value xml:lang="cs">Direct marketing</value>
-        <value xml:lang="en">LEAD_DIRECTMAIL</value>
+        <value xml:lang="de">Direktmarketing</value>
+        <value xml:lang="en">Direct marketing</value>
         <value xml:lang="es">Correo directo</value>
         <value xml:lang="fr">Courriel</value>
         <value xml:lang="it">Email diretta al leader</value>
@@ -168,7 +175,8 @@
     </property>
     <property key="DataSource.description.LEAD_EMPLOYEE">
         <value xml:lang="cs">Zaměstnanec</value>
-        <value xml:lang="en">LEAD_EMPLOYEE</value>
+        <value xml:lang="de">Mitarbeiter</value>
+        <value xml:lang="en">Employee</value>
         <value xml:lang="es">Empleado</value>
         <value xml:lang="fr">Employé</value>
         <value xml:lang="it">Impiegato del leader</value>
@@ -182,7 +190,8 @@
     </property>
     <property key="DataSource.description.LEAD_EXISTCUST">
         <value xml:lang="cs">Stávající zákazník</value>
-        <value xml:lang="en">LEAD_EXISTCUST</value>
+        <value xml:lang="de">Bestandskunde</value>
+        <value xml:lang="en">Existing customer</value>
         <value xml:lang="es">Cliente existente</value>
         <value xml:lang="fr">Client existant</value>
         <value xml:lang="it">Leader cliente esistente</value>
@@ -196,7 +205,8 @@
     </property>
     <property key="DataSource.description.LEAD_OTHER">
         <value xml:lang="cs">Jiný</value>
-        <value xml:lang="en">LEAD_OTHER</value>
+        <value xml:lang="de">Andere</value>
+        <value xml:lang="en">Other</value>
         <value xml:lang="es">Otro</value>
         <value xml:lang="fr">Autre</value>
         <value xml:lang="it">Altro leader</value>
@@ -210,7 +220,8 @@
     </property>
     <property key="DataSource.description.LEAD_PARTNER">
         <value xml:lang="cs">Partner</value>
-        <value xml:lang="en">LEAD_PARTNER</value>
+        <value xml:lang="de">Partner</value>
+        <value xml:lang="en">Partner</value>
         <value xml:lang="es">Partner</value>
         <value xml:lang="fr">Partenaire</value>
         <value xml:lang="it">Leader del socio</value>
@@ -224,7 +235,8 @@
     </property>
     <property key="DataSource.description.LEAD_PR">
         <value xml:lang="cs">Reklama</value>
-        <value xml:lang="en">LEAD_PR</value>
+        <value xml:lang="de">Öffentlichkeitsarbeit</value>
+        <value xml:lang="en">Public Relations</value>
         <value xml:lang="es">Relaciones públicas</value>
         <value xml:lang="fr">Relations publiques</value>
         <value xml:lang="it">Pubbliche relazioni leader</value>
@@ -238,7 +250,8 @@
     </property>
     <property key="DataSource.description.LEAD_SELFGEN">
         <value xml:lang="cs">Interní</value>
-        <value xml:lang="en">LEAD_SELFGEN</value>
+        <value xml:lang="de"></value>
+        <value xml:lang="en">Eigen generiert</value>
         <value xml:lang="es">Interno</value>
         <value xml:lang="fr">Généré en interne</value>
         <value xml:lang="it">Generato internamente</value>
@@ -252,7 +265,8 @@
     </property>
     <property key="DataSource.description.LEAD_TRADESHOW">
         <value xml:lang="cs">Předváděcí akce</value>
-        <value xml:lang="en">LEAD_TRADESHOW</value>
+        <value xml:lang="de">Messe</value>
+        <value xml:lang="en">Tradeshow</value>
         <value xml:lang="es">Demostración</value>
         <value xml:lang="fr">Démo commerciale</value>
         <value xml:lang="it">Dimostrazione commerciale</value>
@@ -266,7 +280,8 @@
     </property>
     <property key="DataSource.description.LEAD_WEBSITE">
         <value xml:lang="cs">Webové stránky</value>
-        <value xml:lang="en">LEAD_WEBSITE</value>
+        <value xml:lang="de">Website</value>
+        <value xml:lang="en">Website</value>
         <value xml:lang="es">Página web</value>
         <value xml:lang="fr">Site Web</value>
         <value xml:lang="it">Sito web leader</value>
@@ -280,7 +295,8 @@
     </property>
     <property key="DataSource.description.LEAD_WORDOFMOUTH">
         <value xml:lang="cs">Slovní reference</value>
-        <value xml:lang="en">LEAD_WORDOFMOUTH</value>
+        <value xml:lang="de">Word of Mouth</value>
+        <value xml:lang="en">Word of Mouth</value>
         <value xml:lang="es">Boca a oreja</value>
         <value xml:lang="fr">Bouche à oreille</value>
         <value xml:lang="it">Parola del mese leader</value>
@@ -312,6 +328,7 @@
     <property key="Enumeration.description.BANKING_IN_REASON">
         <value xml:lang="ar">مصرفية خلال اليوم</value>
         <value xml:lang="cs">Motivace v bance</value>
+        <value xml:lang="de">Bankeingangszahlung</value>
         <value xml:lang="en">Banking during the day</value>
         <value xml:lang="es">Cobro por banco</value>
         <value xml:lang="fr">Opération banquaire</value>
@@ -325,6 +342,7 @@
     </property>
     <property key="Enumeration.description.BANKING_OUT_REASON">
         <value xml:lang="ar">مصرفية خلال اليوم</value>
+        <value xml:lang="de">Bankausgangszahlung</value>
         <value xml:lang="en">Banking during the day</value>
         <value xml:lang="es">Pago por banco</value>
         <value xml:lang="fr">Opération banquaire</value>
@@ -339,6 +357,7 @@
     <property key="Enumeration.description.CASH_IN_REASON">
         <value xml:lang="ar">مبلغ نقدي صغير مستلم للصندوق</value>
         <value xml:lang="cs">Vložení drobné hotovosti</value>
+        <value xml:lang="de">Bargeldeinzahlung</value>
         <value xml:lang="en">Petty Cash Paid into Till</value>
         <value xml:lang="es">Cobro por caja</value>
         <value xml:lang="fr">Entrée d'espèces dans la caisse</value>
@@ -354,6 +373,7 @@
     <property key="Enumeration.description.CASH_OUT_REASON">
         <value xml:lang="ar">مبلغ نقدي صغير مدفوع</value>
         <value xml:lang="cs">Výběr drobné hotovosti</value>
+        <value xml:lang="de">Bargeldauszahlung</value>
         <value xml:lang="en">Petty Cash out</value>
         <value xml:lang="es">Pago por caja</value>
         <value xml:lang="fr">Sortie d'espèces de la caisse</value>
@@ -367,6 +387,7 @@
         <value xml:lang="zh-TW">零用金取出</value>
     </property>
     <property key="Enumeration.description.CHANGE_IN_REASON">
+        <value xml:lang="de">Änderungsgrund</value>
         <value xml:lang="en">Change added to Till's float</value>
         <value xml:lang="es">Cambio</value>
         <value xml:lang="fr">Monnaie ajoutée à l'encours de caisse</value>
@@ -381,7 +402,8 @@
     </property>
     <property key="Enumeration.description.CNT_PRV_BRONZE">
         <value xml:lang="cs">Bronzová úroveň</value>
-        <value xml:lang="en">CNT_PRV_BRONZE</value>
+        <value xml:lang="de">Bronze</value>
+        <value xml:lang="en">Bronze</value>
         <value xml:lang="es">Bronce</value>
         <value xml:lang="fr">Niveau Bronze</value>
         <value xml:lang="it">Bronzo</value>
@@ -396,7 +418,8 @@
     </property>
     <property key="Enumeration.description.CNT_PRV_GOLD">
         <value xml:lang="cs">Zlatá úroveň</value>
-        <value xml:lang="en">CNT_PRV_GOLD</value>
+        <value xml:lang="de">Gold</value>
+        <value xml:lang="en">Gold</value>
         <value xml:lang="es">Oro</value>
         <value xml:lang="fr">Niveau Or</value>
         <value xml:lang="it">Oro</value>
@@ -411,7 +434,8 @@
     </property>
     <property key="Enumeration.description.CNT_PRV_NA_">
         <value xml:lang="cs">Neuplatní se</value>
-        <value xml:lang="en">CNT_PRV_NA_</value>
+        <value xml:lang="de">Nicht anwendbar</value>
+        <value xml:lang="en">Not applicable</value>
         <value xml:lang="es">No aplica</value>
         <value xml:lang="fr">Non applicable</value>
         <value xml:lang="it">Non applicabile</value>
@@ -426,7 +450,8 @@
     </property>
     <property key="Enumeration.description.CNT_PRV_SILVER">
         <value xml:lang="cs">Stříbrná úroveň</value>
-        <value xml:lang="en">CNT_PRV_SILVER</value>
+        <value xml:lang="de">Silber</value>
+        <value xml:lang="en">Silver</value>
         <value xml:lang="es">Plata</value>
         <value xml:lang="fr">Niveau argent</value>
         <value xml:lang="it">Argento</value>
@@ -528,7 +553,8 @@
     </property>
     <property key="Enumeration.description.ESIA_ALWAYS">
         <value xml:lang="cs">Vždy je</value>
-        <value xml:lang="en">ESIA_ALWAYS</value>
+        <value xml:lang="de">Immer</value>
+        <value xml:lang="en">Always</value>
         <value xml:lang="es">Incluir siempre</value>
         <value xml:lang="fr">Toujours inclure</value>
         <value xml:lang="it">Sempre</value>
@@ -542,7 +568,8 @@
     </property>
     <property key="Enumeration.description.ESIA_EXCLUDE">
         <value xml:lang="cs">Vyjma</value>
-        <value xml:lang="en">ESIA_EXCLUDE</value>
+        <value xml:lang="de">Ausschließen</value>
+        <value xml:lang="en">Exclude</value>
         <value xml:lang="es">Excluir</value>
         <value xml:lang="fr">Exclure</value>
         <value xml:lang="it">Escluso</value>
@@ -556,7 +583,8 @@
     </property>
     <property key="Enumeration.description.ESIA_INCLUDE">
         <value xml:lang="cs">Včetně</value>
-        <value xml:lang="en">ESIA_INCLUDE</value>
+        <value xml:lang="de">Einbeziehen</value>
+        <value xml:lang="en">Include</value>
         <value xml:lang="es">Incluido</value>
         <value xml:lang="fr">Inclure</value>
         <value xml:lang="it">Incluso</value>

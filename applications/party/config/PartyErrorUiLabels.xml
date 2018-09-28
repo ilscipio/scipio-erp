@@ -1335,23 +1335,23 @@
         <value xml:lang="en">Required Field Missing : WorkEffort Name.</value>
     </property>
     <property key="PartyRequiredFieldMissingWorkEffortTypeId">
-        <value xml:lang="en">Pflichtfeld fehlt: Workeffort Type Id.</value>
+        <value xml:lang="de">Pflichtfeld fehlt: Workeffort Type Id.</value>
         <value xml:lang="en">Required Field Missing : WorkEffort Type Id.</value>
     </property>
     <property key="PartyRequiredFieldMissingPartyIdTo">
-        <value xml:lang="en">Pflichtfeld fehlt: Party Id To.</value>
+        <value xml:lang="de">Pflichtfeld fehlt: Party Id To.</value>
         <value xml:lang="en">Required Field Missing : Party Id To.</value>
     </property>
     <property key="PartyRequiredFieldMissingAddress1">
-        <value xml:lang="en">Pflichtfeld fehlt: Adresse 1.</value>
+        <value xml:lang="de">Pflichtfeld fehlt: Adresse 1.</value>
         <value xml:lang="en">Required Field Missing : Address1.</value>
     </property>
     <property key="PartyRequiredFieldMissingCity">
-        <value xml:lang="en">Pflichtfeld fehlt: Stadt.</value>
+        <value xml:lang="de">Pflichtfeld fehlt: Stadt.</value>
         <value xml:lang="en">Required Field Missing : City.</value>
     </property>
     <property key="PartyRequiredFieldMissingPostalCode">
-        <value xml:lang="en">Pflichtfeld fehlt: PLZ.</value>
+        <value xml:lang="de">Pflichtfeld fehlt: PLZ.</value>
         <value xml:lang="en">Required Field Missing : Postal Code.</value>
     </property>
 </resource>

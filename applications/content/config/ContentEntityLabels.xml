@@ -1936,10 +1936,12 @@
         <value xml:lang="zh-TW">畫面器件</value>
     </property>
     <property key="DataTemplateType.description.WM">
+        <value xml:lang="de">WebMacro</value>
         <value xml:lang="en">WebMacro</value>
         <value xml:lang="th">เว็บ Macro</value>
     </property>
     <property key="DataTemplateType.description.XSLT">
+        <value xml:lang="de">XSLT</value>
         <value xml:lang="en">XSLT</value>
     </property>
     <property key="DocumentType.description.BILL_OF_LADING">
@@ -2116,6 +2118,7 @@
         <value xml:lang="zh-TW">主題事件中牽涉到的人員姓名.</value>
     </property>
     <property key="MimeType.description.application/msword">
+        <value xml:lang="de">Microsoft Word</value>
         <value xml:lang="en">Microsoft Word</value>
         <value xml:lang="zh">微软Word</value>
         <value xml:lang="zh-TW">微軟Word</value>
@@ -2135,6 +2138,7 @@
         <value xml:lang="zh-TW">二進制資料</value>
     </property>
     <property key="MimeType.description.application/pdf">
+        <value xml:lang="de">Adobe Portable Document Format (PDF)</value>
         <value xml:lang="en">Adobe Portable Document Format (PDF)</value>
         <value xml:lang="fr">Format de document portable Adobe (PDF)</value>
         <value xml:lang="it">Formato Adobe Portable Document (PDF)</value>
@@ -2158,17 +2162,20 @@
         <value xml:lang="zh-TW">Postsctipt應用/腳本</value>
     </property>
     <property key="MimeType.description.application/vnd.ms-excel">
+        <value xml:lang="de">Microsoft Excel</value>
         <value xml:lang="en">Microsoft Excel</value>
         <value xml:lang="zh">微软Excel</value>
         <value xml:lang="zh-TW">微軟Excel</value>
     </property>
     <property key="MimeType.description.application/vnd.ms-powerpoint">
+        <value xml:lang="de">Microsoft PowerPoint</value>
         <value xml:lang="en">Microsoft PowerPoint</value>
         <value xml:lang="zh">微软PowerPoint</value>
         <value xml:lang="zh-TW">微軟PowerPoint</value>
     </property>
     <property key="MimeType.description.application/vnd.oasis.opendocument.spreadsheet">
         <value xml:lang="da">OpenOffice OpenDocument regneark</value>
+        <value xml:lang="de">OpenOffice OpenDocument Spreadsheet</value>
         <value xml:lang="en">OpenOffice OpenDocument Spreadsheet</value>
         <value xml:lang="it">Foglio di lavoro OpenOffice OpenDocument</value>
         <value xml:lang="ja">OpenOffice OpenDocument スプレッドシート</value>
@@ -2219,6 +2226,7 @@
     </property>
     <property key="MimeType.description.application/x-shockwave-flash">
         <value xml:lang="da">Shockwave Flash Movie</value>
+        <value xml:lang="de">Shockwave Flash Movie</value>
         <value xml:lang="en">Shockwave Flash Movie</value>
         <value xml:lang="it">Filem Shockwave flash</value>
         <value xml:lang="ja">Shockwave Flash ムービー</value>
@@ -2228,6 +2236,7 @@
     </property>
     <property key="MimeType.description.application/x-tgz">
         <value xml:lang="da">Gzip'et Tar arkiv fil</value>
+        <value xml:lang="de">Gzipped Tar Archiv</value>
         <value xml:lang="en">Gzipped Tar archive file</value>
         <value xml:lang="it">File archivio Gzipped Tar</value>
         <value xml:lang="ja">Gzip Tar アーカイブファイル</value>
@@ -2289,6 +2298,7 @@
     </property>
     <property key="MimeType.description.audio/x-ms-wax">
         <value xml:lang="da">WAX Audio</value>
+        <value xml:lang="de">WAX Audio</value>
         <value xml:lang="en">WAX Audio</value>
         <value xml:lang="it">WAX Audio</value>
         <value xml:lang="ja">WAX オーディオ</value>
@@ -2298,6 +2308,7 @@
     </property>
     <property key="MimeType.description.audio/x-ms-wma">
         <value xml:lang="da">WMA Audio</value>
+        <value xml:lang="de">WMA Audio</value>
         <value xml:lang="en">WMA Audio</value>
         <value xml:lang="it">WMA Audio</value>
         <value xml:lang="ja">WMA オーディオ</value>

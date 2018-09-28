@@ -268,18 +268,23 @@
         <value xml:lang="zh-TW">銷售預測識別</value>
     </property>
     <property key="MarketingAnalytics">
+        <value xml:lang="de">Marketing Analyse</value>
         <value xml:lang="en">Marketing Analytics</value>
     </property>
     <property key="MarketingAnalyticsForecast">
+        <value xml:lang="de">Forecast Analyse</value>
         <value xml:lang="en">Forecast Analytics</value>
     </property>
     <property key="MarketingAnalyticsLeads">
+        <value xml:lang="de">Lead Analyse</value>
         <value xml:lang="en">Lead Analytics</value>
     </property>
     <property key="MarketingAnalyticsSales">
+        <value xml:lang="de">Sales Analyse</value>
         <value xml:lang="en">Sales Analytics</value>
     </property>
     <property key="MarketingAnalyticsSegments">
+        <value xml:lang="de">Segment Analyse</value>
         <value xml:lang="en">Segment Analytics</value>
     </property>
     <property key="MarketingCampaign">
@@ -405,9 +410,11 @@
         <value xml:lang="zh-TW">活動摘要</value>
     </property>
     <property key="MarketingCommunicationRoleStatusId">
+        <value xml:lang="de">Communication Role Status ID</value>
         <value xml:lang="en">Communication Role Status ID</value>
     </property>
     <property key="MarketingCommunicationStatusId">
+        <value xml:lang="de">Communication Status ID</value>
         <value xml:lang="en">Communication Status ID</value>
     </property>
     <property key="MarketingCompanyName">
@@ -892,6 +899,7 @@
         <value xml:lang="zh-TW">安全錯誤:要執行${resourceDescription},你必須有 MARKETING_DELETE 或 MARKETING_ADMIN 許可權</value>
     </property>
     <property key="MarketingEmailFormatError">
+        <value xml:lang="de">${firstName} ${lastName} hat ${emailFormatErrMsg}</value>
         <value xml:lang="en">${firstName} ${lastName} has ${emailFormatErrMsg}</value>
     </property>
     <property key="MarketingEmailStatusReport">

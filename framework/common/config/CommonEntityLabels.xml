@@ -3041,6 +3041,7 @@
         <value xml:lang="zh-TW">網站</value>
     </property>
     <property key="Enumeration.description.PRODRQM_ATP">
+        <value xml:lang="de">Anforderung an eine Bestellung, wenn die Produktverfügbarkeit den Mindestbestand des Warenlagers erreicht</value>
         <value xml:lang="en">Requirement for order when ATP Reaches Minimum Stock for Product-Facility</value>
         <value xml:lang="es">Solicitud de pedido cuando la cantidad disponible (ATP) alcanza el mínimo del producto por almacén</value>
         <value xml:lang="fr">Besoin créé quand la quantité disponible (ATP) atteint le stock minimum fixé</value>
@@ -3072,6 +3073,7 @@
         <value xml:lang="zh-TW">對每個銷售訂單自動</value>
     </property>
     <property key="Enumeration.description.PRODRQM_DS">
+        <value xml:lang="de">Nur Drop-shipping (Direktlieferung)</value>
         <value xml:lang="en">Drop-ship only</value>
         <value xml:lang="es">Solo envío directo</value>
         <value xml:lang="fr">Expédition par un tiers seulement</value>
@@ -3085,6 +3087,7 @@
         <value xml:lang="zh-TW">僅直接送貨</value>
     </property>
     <property key="Enumeration.description.PRODRQM_DSATP">
+        <value xml:lang="de">Automatische Direktlieferung bei niedriger Verfügbarkeit</value>
         <value xml:lang="en">Auto drop-ship on low quantity</value>
         <value xml:lang="es">Envío directo automático para pequeñas cantidades</value>
         <value xml:lang="fr">Expédition par un tiers automatique sur faible quantité</value>
@@ -3333,7 +3336,8 @@
         <value xml:lang="zh-TW">郵寄通路</value>
     </property>
     <property key="Enumeration.description.SUBSCRIBE_BRONZE">
-        <value xml:lang="en">SUBSCRIBE_BRONZE</value>
+        <value xml:lang="de">Bronze Abonnement</value>
+        <value xml:lang="en">Bronze subscription</value>
         <value xml:lang="es">Suscripción bronce</value>
         <value xml:lang="fr">Niveau Bronze</value>
         <value xml:lang="it">Sottoscrizione bronzo</value>
@@ -3347,7 +3351,8 @@
         <value xml:lang="zh-TW">銅牌</value>
     </property>
     <property key="Enumeration.description.SUBSCRIBE_GOLD">
-        <value xml:lang="en">SUBSCRIBE_GOLD</value>
+        <value xml:lang="de">Gold Abonnement</value>
+        <value xml:lang="en">Gold subscription</value>
         <value xml:lang="es">Suscripción oro</value>
         <value xml:lang="fr">Niveau or</value>
         <value xml:lang="it">Sottoscrizione oro</value>
@@ -3361,7 +3366,8 @@
         <value xml:lang="zh-TW">金牌</value>
     </property>
     <property key="Enumeration.description.SUBSCRIBE_SILVER">
-        <value xml:lang="en">SUBSCRIBE_SILVER</value>
+        <value xml:lang="de">Silber Abonnement</value>
+        <value xml:lang="en">Silver subscription</value>
         <value xml:lang="es">Suscripción plata</value>
         <value xml:lang="fr">Niveau argent</value>
         <value xml:lang="it">Sottoscrizione argento</value>
@@ -3422,7 +3428,8 @@
         <value xml:lang="zh-TW">未知通路</value>
     </property>
     <property key="Enumeration.description.WAM_AUTOMATIC">
-        <value xml:lang="en">WAM_AUTOMATIC</value>
+        <value xml:lang="de">Automatisch</value>
+        <value xml:lang="en">Automatisch</value>
         <value xml:lang="es">Automático</value>
         <value xml:lang="fr">Mode automatique</value>
         <value xml:lang="it">Automatico</value>
@@ -3436,7 +3443,8 @@
         <value xml:lang="zh-TW">自動</value>
     </property>
     <property key="Enumeration.description.WAM_MANUAL">
-        <value xml:lang="en">WAM_MANUAL</value>
+        <value xml:lang="de">Manuell</value>
+        <value xml:lang="en">Manuel</value>
         <value xml:lang="es">Manual</value>
         <value xml:lang="fr">Mode manuel</value>
         <value xml:lang="it">Manuale</value>
@@ -3449,7 +3457,8 @@
         <value xml:lang="zh-TW">手動</value>
     </property>
     <property key="Enumeration.description.WAT_LOOP">
-        <value xml:lang="en">WAT_LOOP</value>
+        <value xml:lang="de">Schleife</value>
+        <value xml:lang="en">Loop</value>
         <value xml:lang="es">Bucle</value>
         <value xml:lang="fr">Implémentation de boucle</value>
         <value xml:lang="it">Loop</value>
@@ -3463,7 +3472,8 @@
         <value xml:lang="zh-TW">迴圈</value>
     </property>
     <property key="Enumeration.description.WAT_NO">
-        <value xml:lang="en">WAT_NO</value>
+        <value xml:lang="de">Nr.</value>
+        <value xml:lang="en">No.</value>
         <value xml:lang="es">Ninguno</value>
         <value xml:lang="fr">Pas d'implémentation</value>
         <value xml:lang="it">Nessuno</value>
@@ -3477,7 +3487,8 @@
         <value xml:lang="zh-TW">不執行</value>
     </property>
     <property key="Enumeration.description.WAT_ROUTE">
-        <value xml:lang="en">WAT_ROUTE</value>
+        <value xml:lang="de">Route</value>
+        <value xml:lang="en">Route</value>
         <value xml:lang="es">Ruta</value>
         <value xml:lang="fr">Route</value>
         <value xml:lang="it">Percorso</value>
@@ -3491,7 +3502,8 @@
         <value xml:lang="zh-TW">路徑</value>
     </property>
     <property key="Enumeration.description.WAT_SUBFLOW">
-        <value xml:lang="en">WAT_SUBFLOW</value>
+        <value xml:lang="de">Teilstrom</value>
+        <value xml:lang="en">Subflow</value>
         <value xml:lang="es">Subflujo</value>
         <value xml:lang="fr">Implémentation de flux secondaire</value>
         <value xml:lang="it">Flusso secondario</value>
@@ -3505,7 +3517,8 @@
         <value xml:lang="zh-TW">子流程</value>
     </property>
     <property key="Enumeration.description.WAT_TOOL">
-        <value xml:lang="en">WAT_TOOL</value>
+        <value xml:lang="de">Werkzeug</value>
+        <value xml:lang="en">Tool</value>
         <value xml:lang="es">Herramienta</value>
         <value xml:lang="fr">Implémentation d'outils</value>
         <value xml:lang="it">Strumento</value>
@@ -3518,7 +3531,8 @@
         <value xml:lang="zh-TW">工具</value>
     </property>
     <property key="Enumeration.description.WDT_ARRAY">
-        <value xml:lang="en">ARRAY</value>
+        <value xml:lang="de">Array</value>
+        <value xml:lang="en">Array</value>
         <value xml:lang="es">Tabla</value>
         <value xml:lang="fr">Tableau - type complexe</value>
         <value xml:lang="it">Tabella</value>
@@ -3531,7 +3545,8 @@
         <value xml:lang="zh-TW">陣列</value>
     </property>
     <property key="Enumeration.description.WDT_BOOLEAN">
-        <value xml:lang="en">BOOLEAN</value>
+        <value xml:lang="de">Boolean</value>
+        <value xml:lang="en">Boolean</value>
         <value xml:lang="es">Booleano</value>
         <value xml:lang="fr">Booléen - type simple</value>
         <value xml:lang="it">Booleano</value>
@@ -3545,7 +3560,8 @@
         <value xml:lang="zh-TW">布林值</value>
     </property>
     <property key="Enumeration.description.WDT_DATETIME">
-        <value xml:lang="en">DATETIME</value>
+        <value xml:lang="de">Datetime</value>
+        <value xml:lang="en">Datetime</value>
         <value xml:lang="es">Fecha-hora</value>
         <value xml:lang="fr">Date-Heure - type de base</value>
         <value xml:lang="it">Data ora</value>
@@ -3559,7 +3575,8 @@
         <value xml:lang="zh-TW">日期時間</value>
     </property>
     <property key="Enumeration.description.WDT_DECLARED">
-        <value xml:lang="en">DECLARED</value>
+        <value xml:lang="de">Definiert</value>
+        <value xml:lang="en">Declared</value>
         <value xml:lang="es">Declarado</value>
         <value xml:lang="fr">Déclaré</value>
         <value xml:lang="it">Dichiarato</value>
@@ -3573,7 +3590,8 @@
         <value xml:lang="zh-TW">已聲明</value>
     </property>
     <property key="Enumeration.description.WDT_ENUMERATION">
-        <value xml:lang="en">ENUMERATION</value>
+        <value xml:lang="de">Enumeration</value>
+        <value xml:lang="en">Enumeration</value>
         <value xml:lang="es">Enumeración</value>
         <value xml:lang="fr">Enumération - type complexe</value>
         <value xml:lang="it">Enumerazione</value>
@@ -3587,7 +3605,8 @@
         <value xml:lang="zh-TW">列舉</value>
     </property>
     <property key="Enumeration.description.WDT_FLOAT">
-        <value xml:lang="en">FLOAT</value>
+        <value xml:lang="de">Float</value>
+        <value xml:lang="en">Float</value>
         <value xml:lang="es">Punto flotante</value>
         <value xml:lang="fr">Flottant - type de base</value>
         <value xml:lang="it">A virgola mobile</value>
@@ -3600,7 +3619,8 @@
         <value xml:lang="zh-TW">浮點</value>
     </property>
     <property key="Enumeration.description.WDT_INTEGER">
-        <value xml:lang="en">INTEGER</value>
+        <value xml:lang="de">Integer</value>
+        <value xml:lang="en">Integer</value>
         <value xml:lang="es">Entero</value>
         <value xml:lang="fr">Entier - type de base</value>
         <value xml:lang="it">Intero</value>
@@ -3613,7 +3633,8 @@
         <value xml:lang="zh-TW">整數</value>
     </property>
     <property key="Enumeration.description.WDT_LIST">
-        <value xml:lang="en">LIST</value>
+        <value xml:lang="de">Liste</value>
+        <value xml:lang="en">List</value>
         <value xml:lang="es">Lista</value>
         <value xml:lang="fr">Liste - type complexe</value>
         <value xml:lang="it">Lista</value>
@@ -3626,7 +3647,8 @@
         <value xml:lang="zh-TW">清單</value>
     </property>
     <property key="Enumeration.description.WDT_PERFORMER">
-        <value xml:lang="en">PERFORMER</value>
+        <value xml:lang="de">Interpret</value>
+        <value xml:lang="en">Performer</value>
         <value xml:lang="es">Intérprete</value>
         <value xml:lang="fr">Interprète - type simple</value>
         <value xml:lang="it">Interpretato</value>
@@ -3639,7 +3661,8 @@
         <value xml:lang="zh-TW">執行者</value>
     </property>
     <property key="Enumeration.description.WDT_RECORD">
-        <value xml:lang="en">RECORD</value>
+        <value xml:lang="de">Record</value>
+        <value xml:lang="en">Record</value>
         <value xml:lang="es">Entrada</value>
         <value xml:lang="fr">Enregistrement - type complexe</value>
         <value xml:lang="it">Registrato</value>
@@ -3652,7 +3675,8 @@
         <value xml:lang="zh-TW">記錄</value>
     </property>
     <property key="Enumeration.description.WDT_REFERENCE">
-        <value xml:lang="en">REFERENCE</value>
+        <value xml:lang="de">Referenz</value>
+        <value xml:lang="en">Reference</value>
         <value xml:lang="es">Referencia</value>
         <value xml:lang="fr">Référence - type de base</value>
         <value xml:lang="it">Riferimento</value>
@@ -3665,7 +3689,8 @@
         <value xml:lang="zh-TW">參考</value>
     </property>
     <property key="Enumeration.description.WDT_STRING">
-        <value xml:lang="en">STRING</value>
+        <value xml:lang="de">String</value>
+        <value xml:lang="en">String</value>
         <value xml:lang="es">Cadena</value>
         <value xml:lang="fr">Chaînes de caractères - type de base</value>
         <value xml:lang="it">Stringa</value>
@@ -3678,7 +3703,8 @@
         <value xml:lang="zh-TW">字串</value>
     </property>
     <property key="Enumeration.description.WDT_UNION">
-        <value xml:lang="en">UNION</value>
+        <value xml:lang="de">Verbindung</value>
+        <value xml:lang="en">Union</value>
         <value xml:lang="es">Unión</value>
         <value xml:lang="fr">Union - type complexe</value>
         <value xml:lang="it">Unione</value>
@@ -3691,7 +3717,8 @@
         <value xml:lang="zh-TW">聯合</value>
     </property>
     <property key="Enumeration.description.WDT_UNIT">
-        <value xml:lang="en">UNIT</value>
+        <value xml:lang="de">Einheit</value>
+        <value xml:lang="en">Unit</value>
         <value xml:lang="es">Unidad</value>
         <value xml:lang="fr">Unité - type simple</value>
         <value xml:lang="it">Unità</value>
@@ -3837,17 +3864,20 @@
         <value xml:lang="zh-TW">通用,公共訪問</value>
     </property>
     <property key="Enumeration.description.WF_PREDECESSOR">
+        <value xml:lang="de">Vorläufer</value>
         <value xml:lang="en">Preceding</value>
         <value xml:lang="nl">Voorafgaand</value>
         <value xml:lang="zh">预处理</value>
     </property>
     <property key="Enumeration.description.WF_SUCCESSOR">
+        <value xml:lang="de">Nachfolger</value>
         <value xml:lang="en">Succeeding</value>
         <value xml:lang="nl">Opvolgend</value>
         <value xml:lang="zh">后处理</value>
     </property>
     <property key="Enumeration.description.WFI_MULTIPLE">
-        <value xml:lang="en">WFI_MULTIPLE</value>
+        <value xml:lang="de">Mehrere</value>
+        <value xml:lang="en">Multiple</value>
         <value xml:lang="es">Múltiples</value>
         <value xml:lang="fr">L'activité peut être instanciée plusieurs fois</value>
         <value xml:lang="it">Multiplo</value>
@@ -3860,7 +3890,8 @@
         <value xml:lang="zh-TW">多次</value>
     </property>
     <property key="Enumeration.description.WFI_ONCE">
-        <value xml:lang="en">WFI_ONCE</value>
+        <value xml:lang="de">Einmal</value>
+        <value xml:lang="en">Once</value>
         <value xml:lang="es">Una vez</value>
         <value xml:lang="fr">L'activité ne peut être instanciée qu'une seule fois (valeur par défaut)</value>
         <value xml:lang="it">Una volta</value>
@@ -3873,7 +3904,8 @@
         <value xml:lang="zh-TW">一次</value>
     </property>
     <property key="Enumeration.description.WGC_FULL_BLOCKED">
-        <value xml:lang="en">WGC_FULL_BLOCKED</value>
+        <value xml:lang="de">Voll blockiert</value>
+        <value xml:lang="en">Full blocked</value>
         <value xml:lang="es">Completamente bloqueado</value>
         <value xml:lang="fr">Structure de réseau limitée à l'emboîtement approprié de SPLIT/JOIN et de boucle (LOOP)</value>
         <value xml:lang="it">Completamente bloccato</value>
@@ -3886,7 +3918,8 @@
         <value xml:lang="zh-TW">完全禁止</value>
     </property>
     <property key="Enumeration.description.WGC_LOOP_BLOCKED">
-        <value xml:lang="en">WGC_LOOP_BLOCKED</value>
+        <value xml:lang="en">Schleife blockiert</value>
+        <value xml:lang="en">Loop blocked</value>
         <value xml:lang="es">Bucle bloqueado</value>
         <value xml:lang="fr">Structure de réseau limitée à l'emboîtement approprié de boucle (LOOP)</value>
         <value xml:lang="it">Loop bloccato</value>
@@ -3899,7 +3932,8 @@
         <value xml:lang="zh-TW">禁止迴圈</value>
     </property>
     <property key="Enumeration.description.WGC_NON_BLOCKED">
-        <value xml:lang="en">WGC_NON_BLOCKED</value>
+        <value xml:lang="en">Nicht blockiert</value>
+        <value xml:lang="en">Non blocked</value>
         <value xml:lang="es">No bloqueado</value>
         <value xml:lang="fr">Pas de restriction sur la structure de réseau (valeur par défaut)</value>
         <value xml:lang="it">Non bloccato</value>
@@ -3912,7 +3946,8 @@
         <value xml:lang="zh-TW">不禁止</value>
     </property>
     <property key="Enumeration.description.WJT_AND">
-        <value xml:lang="en">WJT_AND</value>
+        <value xml:lang="en">Und</value>
+        <value xml:lang="en">And</value>
         <value xml:lang="es">Y</value>
         <value xml:lang="fr">Synchronisez toutes les transitions entrantes (les attendre toutes)</value>
         <value xml:lang="it">E</value>
@@ -3925,7 +3960,8 @@
         <value xml:lang="zh-TW">且</value>
     </property>
     <property key="Enumeration.description.WJT_XOR">
-        <value xml:lang="en">WJT_XOR</value>
+        <value xml:lang="de">XOR</value>
+        <value xml:lang="en">XOR</value>
         <value xml:lang="es">O exclusivo</value>
         <value xml:lang="fr">Aucune synchronisation entrante exigée (départ à la première)</value>
         <value xml:lang="it">X-or</value>
@@ -3938,7 +3974,8 @@
         <value xml:lang="zh-TW">互斥或</value>
     </property>
     <property key="Enumeration.description.WLK_REPEAT_UNTIL">
-        <value xml:lang="en">WLK_REPEAT_UNTIL</value>
+        <value xml:lang="de">Wiederhole bis</value>
+        <value xml:lang="en">Repeat until</value>
         <value xml:lang="es">Repetir hasta</value>
         <value xml:lang="fr">Boucle de répétition "jusqu'à ce que" : continuer jusqu'à ce que la condition d'évaluation soit vérifiée</value>
         <value xml:lang="it">Ripeti fino a</value>
@@ -3951,7 +3988,8 @@
         <value xml:lang="zh-TW">重複直至</value>
     </property>
     <property key="Enumeration.description.WLK_WHILE">
-        <value xml:lang="en">WLK_WHILE</value>
+        <value xml:lang="de">While</value>
+        <value xml:lang="en">While</value>
         <value xml:lang="es">Mientras</value>
         <value xml:lang="fr">Boucle de répétition "tant que" : continuer tant que la condition d'évaluation n'est pas vérifiée</value>
         <value xml:lang="it">Mentre</value>
@@ -3964,7 +4002,8 @@
         <value xml:lang="zh-TW">迴圈</value>
     </property>
     <property key="Enumeration.description.WPM_IN">
-        <value xml:lang="en">WPM_IN</value>
+        <value xml:lang="de">IN</value>
+        <value xml:lang="en">IN</value>
         <value xml:lang="es">Parámetro de entrada</value>
         <value xml:lang="fr">Paramètre d'entrée</value>
         <value xml:lang="it">Parametro in ingresso</value>
@@ -3977,7 +4016,8 @@
         <value xml:lang="zh-TW">輸入</value>
     </property>
     <property key="Enumeration.description.WPM_INOUT">
-        <value xml:lang="en">WPM_INOUT</value>
+        <value xml:lang="de">INOUT</value>
+        <value xml:lang="en">INOUT</value>
         <value xml:lang="es">Parámetro de entrada-salida</value>
         <value xml:lang="fr">Paramètre utilisé pour l'entrée et la sortie</value>
         <value xml:lang="it">Parametro in entrata e uscita</value>
@@ -3990,7 +4030,8 @@
         <value xml:lang="zh-TW">輸入輸出</value>
     </property>
     <property key="Enumeration.description.WPM_OUT">
-        <value xml:lang="en">WPM_OUT</value>
+        <value xml:lang="de">OUT</value>
+        <value xml:lang="en">OUT</value>
         <value xml:lang="es">Parámetro de salida</value>
         <value xml:lang="fr">Paramètre de sortie</value>
         <value xml:lang="it">Parametro in uscita</value>
@@ -4003,7 +4044,8 @@
         <value xml:lang="zh-TW">輸出</value>
     </property>
     <property key="Enumeration.description.WSE_ASYNCHR">
-        <value xml:lang="en">WSE_ASYNCHR</value>
+        <value xml:lang="en">Asynchron</value>
+        <value xml:lang="en">Asynchronous</value>
         <value xml:lang="es">Asíncrono</value>
         <value xml:lang="fr">Exécution synchrone</value>
         <value xml:lang="it">Esecuzione asincrona</value>
@@ -4016,7 +4058,8 @@
         <value xml:lang="zh-TW">非同步</value>
     </property>
     <property key="Enumeration.description.WSE_SYNCHR">
-        <value xml:lang="en">WSE_SYNCHR</value>
+        <value xml:lang="en">Synchron</value>
+        <value xml:lang="en">Synchronous</value>
         <value xml:lang="es">Síncrono</value>
         <value xml:lang="fr">Exécution synchrone</value>
         <value xml:lang="it">Esecuzione sincrona</value>
@@ -4029,7 +4072,8 @@
         <value xml:lang="zh-TW">同步</value>
     </property>
     <property key="Enumeration.description.WST_AND">
-        <value xml:lang="en">WST_AND</value>
+        <value xml:lang="en">UND</value>
+        <value xml:lang="en">AND</value>
         <value xml:lang="es">Y</value>
         <value xml:lang="fr">Autorise les transitions sortantes convergentes</value>
         <value xml:lang="it">E</value>
@@ -4042,7 +4086,8 @@
         <value xml:lang="zh-TW">且</value>
     </property>
     <property key="Enumeration.description.WST_XOR">
-        <value xml:lang="en">WST_XOR</value>
+        <value xml:lang="de">XOR</value>
+        <value xml:lang="en">XOR</value>
         <value xml:lang="es">O exclusivo</value>
         <value xml:lang="fr">Autorise une seule transition sortante</value>
         <value xml:lang="it">X-Or</value>
@@ -4055,7 +4100,8 @@
         <value xml:lang="zh-TW">互斥或</value>
     </property>
     <property key="Enumeration.description.WTC_CONDITION">
-        <value xml:lang="en">WTC_CONDITION</value>
+        <value xml:lang="de">Bedingung</value>
+        <value xml:lang="en">Condition</value>
         <value xml:lang="es">Condición</value>
         <value xml:lang="fr">Condition</value>
         <value xml:lang="it">Condizione</value>

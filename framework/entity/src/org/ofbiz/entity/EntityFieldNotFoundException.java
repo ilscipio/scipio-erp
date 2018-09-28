@@ -10,19 +10,19 @@ package org.ofbiz.entity;
  */
 @SuppressWarnings("serial")
 public class EntityFieldNotFoundException extends IllegalArgumentException {
-    protected EntityFieldNotFoundException() {
+    public EntityFieldNotFoundException() {
         super();
     }
 
-    protected EntityFieldNotFoundException(String message, Throwable cause) {
+    public EntityFieldNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    protected EntityFieldNotFoundException(String s) {
+    public EntityFieldNotFoundException(String s) {
         super(s);
     }
 
-    protected EntityFieldNotFoundException(Throwable cause) {
+    public EntityFieldNotFoundException(Throwable cause) {
         super(cause);
     }
 }

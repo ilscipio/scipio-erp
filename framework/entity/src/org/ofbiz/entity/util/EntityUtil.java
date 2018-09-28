@@ -40,6 +40,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.PagedList;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.EntityFieldNotFoundException;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -147,7 +148,12 @@ public final class EntityUtil {
     }
 
     /**
-     *returns the values that are currently active.
+     * Returns the values that are currently active.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@return List of GenericValue's that are currently active
@@ -157,7 +163,12 @@ public final class EntityUtil {
     }
 
     /**
-     *returns the values that are currently active.
+     * Returns the values that are currently active.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@param allAreSame Specifies whether all values in the List are of the same entity; this can help speed things up a fair amount since we only have to see if the from and thru date fields are valid once
@@ -168,7 +179,12 @@ public final class EntityUtil {
     }
 
     /**
-     *returns the values that are active at the moment.
+     * Returns the values that are active at the moment.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@param moment the moment in question
@@ -179,7 +195,12 @@ public final class EntityUtil {
     }
 
     /**
-     *returns the values that are active at the moment.
+     * Returns the values that are active at the moment.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@param moment the moment in question
@@ -190,7 +211,12 @@ public final class EntityUtil {
     }
 
     /**
-     *returns the values that are active at the moment.
+     * Returns the values that are active at the moment.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@param moment the moment in question
@@ -213,10 +239,30 @@ public final class EntityUtil {
             if (iter.hasNext()) {
                 T datedValue = iter.next();
 
+                /**
+                 * SCIPIO: 2018-09-29: When filterByDate is used on an entity without fromDate/thruDate, we will
+                 * log as an error instead of throwing exception and crashing the system.
+                 * This is because due to entitymodel changes it's extremely common to accidentally add
+                 * a .filterByDate() call, so at least this way this error will not cause significant damage.
+                 * Since in 90% of cases the bugfix is simply to remove the call, this is a fairly safe way to
+                 * address the issue.
+                 */
                 fromDateField = datedValue.getModelEntity().getField(fromDateName);
-                if (fromDateField == null) throw new IllegalArgumentException("\"" + fromDateName + "\" is not a field of " + datedValue.getEntityName());
+                // SCIPIO: EntityFieldNotFoundException
+                //if (fromDateField == null) throw new EntityFieldNotFoundException("\"" + fromDateName + "\" is not a field of " + datedValue.getEntityName());
+                if (fromDateField == null) { // SCIPIO: 2018-09-29
+                    Exception e = new EntityFieldNotFoundException("\"" + fromDateName + "\" is not a field of " + datedValue.getEntityName());
+                    Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module);
+                    return new ArrayList<>(datedValues);
+                }
                 thruDateField = datedValue.getModelEntity().getField(thruDateName);
-                if (thruDateField == null) throw new IllegalArgumentException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
+                // SCIPIO: EntityFieldNotFoundException
+                //if (thruDateField == null) throw new EntityFieldNotFoundException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
+                if (thruDateField == null) { // SCIPIO: 2018-09-29
+                    Exception e = new EntityFieldNotFoundException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
+                    Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module);
+                    return new ArrayList<>(datedValues);
+                }
 
                 java.sql.Timestamp fromDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(fromDateField);
                 java.sql.Timestamp thruDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(thruDateField);
@@ -238,12 +284,17 @@ public final class EntityUtil {
             // if not all values are known to be of the same entity, must check each one...
             while (iter.hasNext()) {
                 T datedValue = iter.next();
-                java.sql.Timestamp fromDate = datedValue.getTimestamp(fromDateName);
-                java.sql.Timestamp thruDate = datedValue.getTimestamp(thruDateName);
+                try {
+                    java.sql.Timestamp fromDate = datedValue.getTimestamp(fromDateName);
+                    java.sql.Timestamp thruDate = datedValue.getTimestamp(thruDateName);
 
-                if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment) || fromDate.equals(moment))) {
+                    if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment) || fromDate.equals(moment))) {
+                        result.add(datedValue);
+                    }// else not active at moment
+                } catch(EntityFieldNotFoundException e) { // SCIPIO: 2018-09-29
+                    Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module);
                     result.add(datedValue);
-                }// else not active at moment
+                }
             }
         }
 

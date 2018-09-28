@@ -34,12 +34,14 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.PagedList;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.EntityFieldNotFoundException;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelEntity;
 
 /**
  * Used to setup various options for and subsequently execute entity queries.
@@ -324,6 +326,11 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are currently active using from/thruDate fields.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      * @return this EntityQuery object, to enable chaining
      */
@@ -335,6 +342,11 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
@@ -354,6 +366,11 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      * @param moment - Date representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
@@ -364,6 +381,11 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are currently active using the specified from/thru field name pairs.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      * @param filterByFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
@@ -373,6 +395,11 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are active during the specified moment using the specified from/thru field name pairs.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @param filterByFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
@@ -392,6 +419,11 @@ public class EntityQuery {
      * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
@@ -407,6 +439,11 @@ public class EntityQuery {
      * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      * @param moment - Date representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
@@ -419,6 +456,11 @@ public class EntityQuery {
      * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
@@ -431,6 +473,11 @@ public class EntityQuery {
      * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
@@ -530,7 +577,11 @@ public class EntityQuery {
             }
         }
         if (filterByDate && useCache) {
-            return EntityUtil.filterByCondition(result, this.makeDateCondition());
+            try {
+                return EntityUtil.filterByCondition(result, this.makeDateCondition());
+            } catch(EntityFieldNotFoundException e) { // SCIPIO
+                //Debug.logError(e, "Query error: " + e.getMessage(), module); // already logged
+            }
         }
         return result;
     }
@@ -568,17 +619,21 @@ public class EntityQuery {
         }
         // we don't use the useCache field here because not all queries will actually use the cache, e.g. findCountByCondition never uses the cache
         if (filterByDate && !usingCache) {
-            if (whereEntityCondition != null) {
-                return EntityCondition.makeCondition(whereEntityCondition, this.makeDateCondition());
-            } else {
-                return this.makeDateCondition();
+            try {
+                if (whereEntityCondition != null) {
+                    return EntityCondition.makeCondition(whereEntityCondition, this.makeDateCondition());
+                } else {
+                    return this.makeDateCondition();
+                }
+            } catch(EntityFieldNotFoundException e) { // SCIPIO
+                //Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module); // already logged
             }
         }
         return whereEntityCondition;
     }
 
     private EntityCondition makeDateCondition() {
-        List<EntityCondition> conditions = new ArrayList<EntityCondition>();
+        List<EntityCondition> conditions = new ArrayList<>();
         if (UtilValidate.isEmpty(this.filterByFieldNames)) {
             this.filterByDate(filterByDateMoment, "fromDate", "thruDate");
         }
@@ -586,13 +641,48 @@ public class EntityQuery {
         for (int i = 0; i < this.filterByFieldNames.size();) {
             String fromDateFieldName = this.filterByFieldNames.get(i++);
             String thruDateFieldName = this.filterByFieldNames.get(i++);
+
+            try { // SCIPIO
+                checkEntityDateFields(delegator, entityName, fromDateFieldName, thruDateFieldName);
+            } catch(EntityFieldNotFoundException e) {
+                Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module);
+                continue;
+            }
+
             if (filterByDateMoment == null) {
                 conditions.add(EntityUtil.getFilterByDateExpr(fromDateFieldName, thruDateFieldName));
             } else {
                 conditions.add(EntityUtil.getFilterByDateExpr(this.filterByDateMoment, fromDateFieldName, thruDateFieldName));
             }
         }
+
+        if (conditions.isEmpty()) { // SCIPIO
+            throw new EntityFieldNotFoundException("No date filters could be produced for entity '"
+                    + entityName + " using field names: " + filterByFieldNames);
+        }
+
         return EntityCondition.makeCondition(conditions);
+    }
+
+    /**
+     * SCIPIO: 2018-09-29: When filterByDate is used on an entity without fromDate/thruDate, we will
+     * log as an error instead of throwing exception and crashing the system.
+     * This is because due to entitymodel changes it's extremely common to accidentally add
+     * a .filterByDate() call, so at least this way this error will not cause significant damage.
+     * Since in 90% of cases the bugfix is simply to remove the call, this is a fairly safe way to
+     * address the issue.
+     */
+    private static void checkEntityDateFields(Delegator delegator, String entityName, String fromDateFieldName, String thruDateFieldName) throws EntityFieldNotFoundException {
+        ModelEntity entityModel = delegator.getModelEntity(entityName);
+        if (entityModel != null) { // If null, let regular call crash itself
+            if (!entityModel.isField(fromDateFieldName)) {
+                throw new EntityFieldNotFoundException("\"" + fromDateFieldName + "\" is not a field of "
+                        + entityName);
+            } else if (!entityModel.isField(thruDateFieldName)) {
+                throw new EntityFieldNotFoundException("\"" + thruDateFieldName + "\" is not a field of "
+                        + entityName);
+            }
+        }
     }
 
     public <T> List<T> getFieldList(final String fieldName) throws GenericEntityException {select(fieldName);

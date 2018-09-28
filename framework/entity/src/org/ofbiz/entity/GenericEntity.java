@@ -378,7 +378,9 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
 
     public Object get(String name) {
         if (getModelEntity().getField(name) == null) {
-            throw new IllegalArgumentException("The field name (or key) [" + name + "] is not valid for entity [" + this.getEntityName() + "].");
+            // SCIPIO: 2018-09-29: Throw more helpful EntityFieldNotFoundException instead
+            //throw new IllegalArgumentException("The field name (or key) [" + name + "] is not valid for entity [" + this.getEntityName() + "].");
+            throw new EntityFieldNotFoundException("The field name (or key) [" + name + "] is not valid for entity [" + this.getEntityName() + "].");
         }
         return fields.get(name);
     }
@@ -460,7 +462,9 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         assertIsMutable();
         ModelField modelField = getModelEntity().getField(name);
         if (modelField == null) {
-            throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", must be one of: " + getModelEntity().fieldNameString());
+            // SCIPIO: 2018-09-29: Throw more helpful EntityFieldNotFoundException instead
+            //throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", must be one of: " + getModelEntity().fieldNameString());
+            throw new EntityFieldNotFoundException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", must be one of: " + getModelEntity().fieldNameString());
         }
         if (value != null || setIfNull) {
             ModelFieldType type = null;
@@ -1608,7 +1612,9 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
 
     public Object getOriginalDbValue(String name) {
         if (getModelEntity().getField(name) == null) {
-            throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + getEntityName());
+            // SCIPIO: 2018-09-29: Throw more helpful EntityFieldNotFoundException instead
+            //throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + getEntityName());
+            throw new EntityFieldNotFoundException("[GenericEntity.get] \"" + name + "\" is not a field of " + getEntityName());
         }
         if (originalDbValues == null) {
             return null;

@@ -1200,6 +1200,7 @@
         <value xml:lang="zh">系统错误：要运行${resourceDescription}，你必须有 PARTYMGR_CREATE 或 PARTYMGR_UPDATE 权限</value>
     </property>
     <property key="PartyUploadedFileDataNotFound">
+        <value xml:lang="de">Die raufgeladene Datei konnte nicht gefunden werden</value>
         <value xml:lang="en">Uploaded file data not found</value>
     </property>
     <property key="person.create.db_error">
@@ -1322,27 +1323,35 @@
         <value xml:lang="zh-TW">無法更新人員資訊 (寫失敗):${0}</value>
     </property>
     <property key="PartyRequiredFieldMissingContactMechTypeId">
+        <value xml:lang="de">Pflichtfeld fehlt: ContactMech Type Id.</value>
         <value xml:lang="en">Required Field Missing : ContactMech Type Id.</value>
     </property>
     <property key="PartyRequiredFieldMissingCurrentStatusId">
+        <value xml:lang="de">Pflichtfeld fehlt: Current Status Id.</value>
         <value xml:lang="en">Required Field Missing : Current Status Id.</value>
     </property>
     <property key="PartyRequiredFieldMissingWorkEffortName">
+        <value xml:lang="de">Pflichtfeld fehlt: Workeffort Name.</value>
         <value xml:lang="en">Required Field Missing : WorkEffort Name.</value>
     </property>
     <property key="PartyRequiredFieldMissingWorkEffortTypeId">
+        <value xml:lang="en">Pflichtfeld fehlt: Workeffort Type Id.</value>
         <value xml:lang="en">Required Field Missing : WorkEffort Type Id.</value>
     </property>
     <property key="PartyRequiredFieldMissingPartyIdTo">
+        <value xml:lang="en">Pflichtfeld fehlt: Party Id To.</value>
         <value xml:lang="en">Required Field Missing : Party Id To.</value>
     </property>
     <property key="PartyRequiredFieldMissingAddress1">
+        <value xml:lang="en">Pflichtfeld fehlt: Adresse 1.</value>
         <value xml:lang="en">Required Field Missing : Address1.</value>
     </property>
     <property key="PartyRequiredFieldMissingCity">
+        <value xml:lang="en">Pflichtfeld fehlt: Stadt.</value>
         <value xml:lang="en">Required Field Missing : City.</value>
     </property>
     <property key="PartyRequiredFieldMissingPostalCode">
+        <value xml:lang="en">Pflichtfeld fehlt: PLZ.</value>
         <value xml:lang="en">Required Field Missing : Postal Code.</value>
     </property>
 </resource>

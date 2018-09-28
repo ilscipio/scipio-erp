@@ -19,57 +19,72 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="CharacterSet.description.ISO-8859-1">
+        <value xml:lang="de">ISO-8859-1</value>
         <value xml:lang="en">ISO-8859-1</value>
         <value xml:lang="es">ISO-8859-1 Inglés</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-10">
+        <value xml:lang="de">ISO-8859-10</value>
         <value xml:lang="en">ISO-8859-10</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-2">
+        <value xml:lang="de">ISO-8859-2</value>
         <value xml:lang="en">ISO-8859-2</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-3">
+        <value xml:lang="de">ISO-8859-3</value>
         <value xml:lang="en">ISO-8859-3</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-4">
+        <value xml:lang="de">ISO-8859-4</value>
         <value xml:lang="en">ISO-8859-4</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-5">
+        <value xml:lang="de">ISO-8859-5</value>
         <value xml:lang="en">ISO-8859-5</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-6">
+        <value xml:lang="de">ISO-8859-6</value>
         <value xml:lang="en">ISO-8859-6</value>
         <value xml:lang="es">ISO-8859-6 Latino/árabe</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-7">
+        <value xml:lang="de">ISO-8859-7</value>
         <value xml:lang="en">ISO-8859-7</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-8">
+        <value xml:lang="de">ISO-8859-8</value>
         <value xml:lang="en">ISO-8859-8</value>
         <value xml:lang="es">ISO-8859-8 Latino/Hebreo</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-9">
+        <value xml:lang="de">ISO-8859-9</value>
         <value xml:lang="en">ISO-8859-9</value>
         <value xml:lang="es">ISO-8859-9 ?</value>
     </property>
     <property key="CharacterSet.description.US-ASCII">
+        <value xml:lang="de">US-ASCII</value>
         <value xml:lang="en">US-ASCII</value>
     </property>
     <property key="CharacterSet.description.UTF-16">
+        <value xml:lang="de">UTF-16</value>
         <value xml:lang="en">UTF-16</value>
         <value xml:lang="es">Unicode 16 bit</value>
         <value xml:lang="fr">Unicode 16 bit</value>
     </property>
     <property key="CharacterSet.description.UTF-8">
+        <value xml:lang="de">UTF-8</value>
         <value xml:lang="en">UTF-8</value>
         <value xml:lang="es">Unicode 8 bit</value>
         <value xml:lang="fr">Unicode 8 bit</value>
     </property>
     <property key="Content.description.CTNT_MASTER_EXAMPLE">
+        <value xml:lang="de">Beispiel</value>
         <value xml:lang="en">Example</value>
         <value xml:lang="fr">Exemple</value>
     </property>
     <property key="Content.description.CTNT_MASTER_TURNOVER">
+        <value xml:lang="de">Umsatz (Produkt)</value>
         <value xml:lang="en">Turnover (product)</value>
         <value xml:lang="fr">Rotation (des stocks)</value>
     </property>
@@ -986,6 +1001,7 @@
     </property>
     <property key="ContentPurposeType.description.PROJECT_INFO">
         <value xml:lang="da">Projektinformation</value>
+        <value xml:lang="de">Projektinformation</value>
         <value xml:lang="en">Project Info</value>
         <value xml:lang="it">Informazione progetto</value>
         <value xml:lang="ja">プロジェクト情報</value>
@@ -1122,6 +1138,7 @@
     </property>
     <property key="ContentType.description.BLOG_ROOT">
         <value xml:lang="da">Blog rod</value>
+        <value xml:lang="de">Blog rod</value>
         <value xml:lang="en">Blog Root</value>
         <value xml:lang="it">Blog principal</value>
         <value xml:lang="ja">ブログルート</value>
@@ -1174,6 +1191,7 @@
     </property>
     <property key="ContentType.description.DECORATOR">
         <value xml:lang="da">Dekoratør</value>
+        <value xml:lang="de">Decorator</value>
         <value xml:lang="en">Decorator</value>
         <value xml:lang="it">Decoratore</value>
         <value xml:lang="ja">デコレータ</value>
@@ -1212,6 +1230,7 @@
     </property>
     <property key="ContentType.description.FAQ_ROOT">
         <value xml:lang="da">FAQ rod</value>
+        <value xml:lang="de">FAQ Root</value>
         <value xml:lang="en">FAQ Root</value>
         <value xml:lang="it">FAQ principale</value>
         <value xml:lang="ja">よくある質問(FAQ)ルート</value>
@@ -1250,6 +1269,7 @@
     </property>
     <property key="ContentType.description.MENU_CONTAINER">
         <value xml:lang="da">Menu container</value>
+        <value xml:lang="de">Menü container</value>
         <value xml:lang="en">Menu Container</value>
         <value xml:lang="it">Contenitore menu</value>
         <value xml:lang="ja">メニューコンテナ</value>
@@ -1636,14 +1656,17 @@
         <value xml:lang="zh-TW">軟體</value>
     </property>
     <property key="DataCategory.categoryName.TECH_SOFT_JAVA">
+        <value xml:lang="de">Java</value>
         <value xml:lang="en">Java</value>
         <value xml:lang="th">ภาษาจาวา</value>
     </property>
     <property key="DataCategory.categoryName.TECH_SOFT_LINUX">
+        <value xml:lang="de">Linux</value>
         <value xml:lang="en">Linux</value>
         <value xml:lang="th">ระบบปฏิบัติการลีนุกซ์</value>
     </property>
     <property key="DataCategory.categoryName.TECH_SOFT_OFBIZ">
+        <value xml:lang="de">Apache OFBiz</value>
         <value xml:lang="en">Apache OFBiz</value>
         <value xml:lang="ja">OFBiz</value>
         <value xml:lang="th">เปิดสำหรับทางธุรกิจ</value>
@@ -1652,6 +1675,7 @@
     </property>
     <property key="DataCategory.categoryName.TEMPLATE">
         <value xml:lang="da">Skabelon</value>
+        <value xml:lang="de">Template</value>
         <value xml:lang="en">Template</value>
         <value xml:lang="it">Template</value>
         <value xml:lang="ja">テンプレート</value>
@@ -1662,6 +1686,7 @@
     </property>
     <property key="DataResourceType.description.AUDIO_OBJECT">
         <value xml:lang="da">Audio</value>
+        <value xml:lang="de">Audio</value>
         <value xml:lang="en">Audio</value>
         <value xml:lang="it">Audio</value>
         <value xml:lang="ja">オーディオ</value>
@@ -1868,6 +1893,7 @@
     </property>
     <property key="DataResourceType.description.VIDEO_OBJECT">
         <value xml:lang="da">Video</value>
+        <value xml:lang="de">Video</value>
         <value xml:lang="en">Video</value>
         <value xml:lang="it">Video</value>
         <value xml:lang="ja">ビデオ</value>
@@ -1877,6 +1903,7 @@
         <value xml:lang="zh-TW">視頻</value>
     </property>
     <property key="DataTemplateType.description.FTL">
+        <value xml:lang="de">FreeMarker</value>
         <value xml:lang="en">FreeMarker</value>
         <value xml:lang="zh-TW">FreeMarker</value>
     </property>

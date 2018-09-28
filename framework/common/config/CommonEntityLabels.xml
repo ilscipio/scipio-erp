@@ -1929,6 +1929,7 @@
         <value xml:lang="zh-TW">裝運港船上交貨</value>
     </property>
     <property key="Enumeration.description.POTT_INTR">
+        <value xml:lang="de">In Transit</value>
         <value xml:lang="en">In Transit</value>
         <value xml:lang="es">En tránsito</value>
         <value xml:lang="fr">En transit</value>
@@ -1945,6 +1946,7 @@
     </property>
     <property key="Enumeration.description.POTT_ORIG">
         <value xml:lang="ar">المصدر</value>
+        <value xml:lang="de">Herkunft</value>
         <value xml:lang="en">Origin</value>
         <value xml:lang="es">Origen</value>
         <value xml:lang="fr">Origine</value>
@@ -2111,6 +2113,7 @@
         <value xml:lang="zh-TW">訂單小計 X 在過去 Y 個月裡</value>
     </property>
     <property key="Enumeration.description.PPIP_ORST_LAST_YEAR">
+        <value xml:lang="de">Zwischensumme X an Anzahl Bestellungen im vergangenen Jahr</value>
         <value xml:lang="en">Order sub-total X last year</value>
         <value xml:lang="es">Subtotal X de los pedidos del año pasado</value>
         <value xml:lang="fr">Sous-total X commandé l'année dernière</value>
@@ -2123,6 +2126,7 @@
         <value xml:lang="zh-TW">去年訂單小計X</value>
     </property>
     <property key="Enumeration.description.PPIP_ORST_YEAR">
+        <value xml:lang="de">Zwischensumme X an Anzahl Bestellungen seit Jahresbeginn</value>
         <value xml:lang="en">Order sub-total X since beginning of current year</value>
         <value xml:lang="es">Subtotal X de los pedidos desde inicio de año</value>
         <value xml:lang="fr">Sous-total X commandé depuis le début de l'année</value>
@@ -2576,6 +2580,7 @@
     </property>
     <property key="Enumeration.description.PRDS_ODR_SHIP_COMPLT">
         <value xml:lang="ar">إكتمال الشحن</value>
+        <value xml:lang="de">Zustellung Abgeschlossen</value>
         <value xml:lang="en">Shipment Complete</value>
         <value xml:lang="es">Envío completo</value>
         <value xml:lang="fr">Expédition terminée</value>
@@ -2750,6 +2755,7 @@
     </property>
     <property key="Enumeration.description.PRDS_QUO_CREATED">
         <value xml:lang="ar">عرض السعر مخلق</value>
+        <value xml:lang="de">Angebot erstellt</value>
         <value xml:lang="en">Quote Created</value>
         <value xml:lang="es">Presupuesto creado</value>
         <value xml:lang="fr">Devis créé</value>
@@ -2816,6 +2822,7 @@
         <value xml:lang="zh-TW">已完成的退貨</value>
     </property>
     <property key="Enumeration.description.PRDS_TELL_FRIEND">
+        <value xml:lang="de">Weiterempfehlen</value>
         <value xml:lang="en">Tell-A-Friend</value>
         <value xml:lang="es">Díselo a un amigo</value>
         <value xml:lang="fr">Le dire à un ami</value>

@@ -62,6 +62,7 @@
         <value xml:lang="zh-TW">無法得到使用者偏好:無效的參數</value>
     </property>
     <property key="getPreference.permissionError">
+        <value xml:lang="de">Berechtigungsfehler beim Abrufen von Benutzereinstellungen</value>
         <value xml:lang="en">Permissions error while getting user preferences</value>
         <value xml:lang="es">Error de permisos al obtener las preferencias del usuario</value>
         <value xml:lang="fr">Erreur de permissions tout en obtenant des préférences d'utilisateur</value>

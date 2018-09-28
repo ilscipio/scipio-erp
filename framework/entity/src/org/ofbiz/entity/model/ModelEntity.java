@@ -307,7 +307,15 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         return true;
     }
 
-
+    /**
+     * addExtendEntity.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-09-29: DO NOT CALL THIS METHOD FROM CLIENT CODE
+     * OR CLIENT FRAMEWORK PATCHES!
+     * This stock method should never have existed as a public method and if called prior
+     * to entity engine loading will causing unpredictable results!
+     * This method may be removed entirely in Scipio soon.
+     */
     public void addExtendEntity(ModelReader reader, Element extendEntityElement) {
         if (extendEntityElement.hasAttribute("enable-lock")) {
             this.doLock = UtilXml.checkBoolean(extendEntityElement.getAttribute("enable-lock"), false);
@@ -626,6 +634,15 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         }
     }
 
+    /**
+     * addField.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-09-29: DO NOT CALL THIS METHOD FROM CLIENT CODE
+     * OR CLIENT FRAMEWORK PATCHES!
+     * This stock method should never have existed as a public method and if called prior
+     * to entity engine loading will causing unpredictable results!
+     * This method may be removed entirely in Scipio soon.
+     */
     public void addField(ModelField field) {
         if (field == null)
             return;
@@ -643,6 +660,15 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         }
     }
 
+    /**
+     * removeField.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-09-29: DO NOT CALL THIS METHOD FROM CLIENT CODE
+     * OR CLIENT FRAMEWORK PATCHES!
+     * This stock method should never have existed as a public method and if called prior
+     * to entity engine loading will causing unpredictable results!
+     * This method may be removed entirely in Scipio soon.
+     */
     public ModelField removeField(String fieldName) {
         if (fieldName == null)
             return null;

@@ -7509,6 +7509,7 @@
     </property>
     <property key="Geo.geoName.NS">
         <value xml:lang="ar">نوفا سكوتيا</value>
+        <value xml:lang="de">Neuschottland</value>
         <value xml:lang="en">Nova Scotia</value>
         <value xml:lang="fr">Nouvelle-Ecosse</value>
         <value xml:lang="it">NS</value>
@@ -7522,6 +7523,7 @@
     </property>
     <property key="Geo.geoName.NT">
         <value xml:lang="ar">الأقاليم الشمالية الغربية</value>
+        <value xml:lang="de">Nordwestliche Territorien</value>
         <value xml:lang="en">Northwest Territories</value>
         <value xml:lang="fr">Territoires du Nord-Ouest</value>
         <value xml:lang="it">NT</value>
@@ -7534,6 +7536,7 @@
     </property>
     <property key="Geo.geoName.NU">
         <value xml:lang="ar">نونافوت</value>
+        <value xml:lang="de">Nunavut</value>
         <value xml:lang="en">Nunavut</value>
         <value xml:lang="fr">Nunavut</value>
         <value xml:lang="it">NU</value>
@@ -7579,6 +7582,7 @@
     </property>
     <property key="Geo.geoName.ON">
         <value xml:lang="ar">اونتاريو</value>
+        <value xml:lang="de">Ontario</value>
         <value xml:lang="en">Ontario</value>
         <value xml:lang="fr">Ontario</value>
         <value xml:lang="it">Ontario</value>

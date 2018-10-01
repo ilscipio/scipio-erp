@@ -1985,7 +1985,7 @@
         <value xml:lang="zh-TW">為輸入的識別建立索引</value>
     </property>
     <property key="ContentIndexingTreeError">
-        <value xml:lang="en">Fehler bei der Indexierung: ${errorString}</value>
+        <value xml:lang="de">Fehler bei der Indexierung: ${errorString}</value>
         <value xml:lang="en">Error indexing tree: ${errorString}</value>
         <value xml:lang="fr">Erreur dans l'indexation de l'arbre : ${errorString}</value>
         <value xml:lang="it">Errore di indicizzazione albero: ${errorString}</value>
@@ -2079,6 +2079,7 @@
         <value xml:lang="zh-TW">關鍵字</value>
     </property>
     <property key="ContentLastModifiedDateInvalidFormat">
+        <value xml:lang="de">Letztes Änderungsdatum ist kein gültiges Zeitstempel-Eingabeformat.</value>
         <value xml:lang="en">Last Modified Date is not a valid Timestamp input format.</value>
         <value xml:lang="fr">La date de dernière modification n'est pas dans un format valide.</value>
         <value xml:lang="it">Data modifica non è nel formato valido.</value>
@@ -2089,6 +2090,7 @@
         <value xml:lang="zh-TW">最後修改日期不是有效的Timestamp格式.</value>
     </property>
     <property key="ContentLastUpdatedDateFilter">
+        <value xml:lang="de">Datumsfilter - letzte Aktualisierung</value>
         <value xml:lang="en">Last Updated Date Filter</value>
         <value xml:lang="fr">Dernière mise à jour du filtre de donnée</value>
         <value xml:lang="ja">最終更新日フィルタ</value>
@@ -2137,6 +2139,7 @@
         <value xml:lang="zh-TW">表列自建模板</value>
     </property>
     <property key="ContentLocalFileDoesNotPointToAbsoluteLocation">
+        <value xml:lang="de">DataResource LOCAL_FILE zeigt nicht auf einen absoluten Speicherort</value>
         <value xml:lang="en">DataResource LOCAL_FILE does not point to an absolute location</value>
         <value xml:lang="fr">La ressource LOCAL_FILE ne doit pas indiquer un emplacement absolu</value>
         <value xml:lang="it">La risorda dati LOCAL_FILE non punta ad una posizione assoluta</value>
@@ -2148,6 +2151,7 @@
     </property>
     <property key="ContentMSWord">
         <value xml:lang="da">MS Word</value>
+        <value xml:lang="de">MS Word</value>
         <value xml:lang="en">MS Word</value>
         <value xml:lang="fr">MS Word</value>
         <value xml:lang="it">MS Word</value>
@@ -2262,6 +2266,7 @@
         <value xml:lang="zh-TW">Mime類型模板</value>
     </property>
     <property key="ContentMimeTypeNotSupported">
+        <value xml:lang="de">Mime Type nicht unterstützt</value>
         <value xml:lang="en">Mime Type not supported</value>
     </property>
     <property key="ContentNavigate">

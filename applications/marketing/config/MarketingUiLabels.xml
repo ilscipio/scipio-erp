@@ -1444,6 +1444,7 @@
         <value xml:lang="zh-TW">追蹤碼</value>
     </property>
     <property key="MarketingTrackingCodeBillableLifetime">
+        <value xml:lang="de">Abrechenbare Lebensdauer</value>
         <value xml:lang="en">Billable Lifetime</value>
         <value xml:lang="es">Tiempo de facturación</value>
         <value xml:lang="fr">Durée de vie facturable</value>

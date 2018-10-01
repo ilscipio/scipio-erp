@@ -36,6 +36,7 @@
         <value xml:lang="en">The position on the application must be the same as the position on the job requisition</value>
     </property>
     <property key="HumanResRequiredFieldMissingTrainingClassTypeId">
+        <value xml:lang="de">Benötigtes Feld nicht gesetzt: Training Class Type Id.</value>
         <value xml:lang="en">Required Field Missing : Training Class Type Id.</value>
     </property>
 </resource>

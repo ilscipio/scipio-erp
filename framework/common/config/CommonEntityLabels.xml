@@ -16748,6 +16748,7 @@
         <value xml:lang="zh-TW">揀貨</value>
     </property>
     <property key="StatusValidChange.transitionName.PICKLIST_INPUT.PICKLIST_PRINTED">
+        <value xml:lang="de">Druck</value>
         <value xml:lang="en">Print</value>
         <value xml:lang="es">Imprimir</value>
         <value xml:lang="fr">Imprimer</value>
@@ -16760,6 +16761,7 @@
         <value xml:lang="zh-TW">列印</value>
     </property>
     <property key="StatusValidChange.transitionName.PICKLIST_PRINTED.PICKLIST_CANCELLED">
+        <value xml:lang="de">Abbrechen</value>
         <value xml:lang="en">Cancel</value>
         <value xml:lang="es">Cancelar</value>
         <value xml:lang="fr">Annulé</value>
@@ -16773,6 +16775,7 @@
         <value xml:lang="zh-TW">取消</value>
     </property>
     <property key="StatusValidChange.transitionName.PICKLIST_PRINTED.PICKLIST_PICKED">
+        <value xml:lang="de">Pick</value>
         <value xml:lang="en">Pick</value>
         <value xml:lang="es">Recoger</value>
         <value xml:lang="fr">Prélevé</value>

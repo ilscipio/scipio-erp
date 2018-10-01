@@ -6424,6 +6424,7 @@
         <value xml:lang="zh-TW">新建資料源</value>
     </property>
     <property key="PageTitleAddDataResourceFromContent">
+        <value xml:lang="de">DataResource aus Inhalt hinzufügen</value>
         <value xml:lang="en">Add DataResource From Content</value>
         <value xml:lang="fr">Ajouter une ressource de données pour un contenu</value>
         <value xml:lang="ja">コンテンツからデータリソースを追加</value>
@@ -6673,6 +6674,7 @@
     </property>
     <property key="PageTitleEditBlogArticlePermissionError">
         <value xml:lang="da">Tilladelse til at rette artikel fejlede</value>
+        <value xml:lang="de">Fehlende Berechtigung um den Artikel zu bearbeiten</value>
         <value xml:lang="en">Permissions failed to edit Article</value>
         <value xml:lang="fr">Les autorisations ne permettent pas de modifier l'article</value>
         <value xml:lang="it">Aggiorna una associazione</value>
@@ -6816,6 +6818,7 @@
         <value xml:lang="zh-TW">編輯內容屬性</value>
     </property>
     <property key="PageTitleEditContentKeywords">
+        <value xml:lang="de">Keywörter bearbeiten</value>
         <value xml:lang="en">Edit Content Keywords</value>
         <value xml:lang="fr">Édition des mots-clés document</value>
         <value xml:lang="ja">コンテンツキーワードを編集</value>
@@ -7825,6 +7828,7 @@
     </property>
     <property key="PageTitleNavigateContent">
         <value xml:lang="da">Navigér i indhold</value>
+        <value xml:lang="de">Inhalt durchsuchen</value>
         <value xml:lang="en">Navigate Content</value>
         <value xml:lang="fr">Naviguer dans le contenu</value>
         <value xml:lang="it">Naviga contenuto</value>
@@ -7850,6 +7854,7 @@
     </property>
     <property key="PageTitlePleaseSelectData">
         <value xml:lang="da">Vælg data</value>
+        <value xml:lang="de">Bitte Daten auswählen</value>
         <value xml:lang="en">Please select data</value>
         <value xml:lang="fr">Merci de sélectionner une donnée</value>
         <value xml:lang="it">Perfacore seleziona i dati</value>
@@ -7865,6 +7870,7 @@
     </property>
     <property key="PageTitleSearchContent">
         <value xml:lang="da">Søg indhold</value>
+        <value xml:lang="de">Inhalte durchsuchen</value>
         <value xml:lang="en">Search Content</value>
         <value xml:lang="fr">Recherche de contenu</value>
         <value xml:lang="it">Ricerca contenuti</value>
@@ -7892,6 +7898,7 @@
     </property>
     <property key="PageTitleViewCompDocContent">
         <value xml:lang="da">Vis sammensat dokument indhold</value>
+        <value xml:lang="de">CompDoc Inhalte betrachten</value>
         <value xml:lang="en">View CompDoc Content</value>
         <value xml:lang="fr">Voir le contenu du document composite</value>
         <value xml:lang="it">Mostra contenuto composizione documenti</value>
@@ -7903,6 +7910,7 @@
     </property>
     <property key="PageTitleViewCompDocContentBinary">
         <value xml:lang="da">Vis sammensat dokument binært</value>
+        <value xml:lang="de">CompDoc Binärdaten betrachten</value>
         <value xml:lang="en">View CompDoc Content Binary</value>
         <value xml:lang="fr">Voir le contenu du document composite au format binaire</value>
         <value xml:lang="it">Mostra contenuto binario CompDoc</value>
@@ -7914,6 +7922,7 @@
     </property>
     <property key="PageTitleViewCompDocContentHtml">
         <value xml:lang="da">Vis sammensat dokument Html</value>
+        <value xml:lang="de">CompDoc Html betrachten</value>
         <value xml:lang="en">View CompDoc Content Html</value>
         <value xml:lang="fr">Voir le contenu du document composite au format HTML</value>
         <value xml:lang="it">Mostra contenuto html CompDoc</value>
@@ -7925,6 +7934,7 @@
     </property>
     <property key="PageTitleViewCompDocTemplateTree">
         <value xml:lang="da">Vis skabelon træ</value>
+        <value xml:lang="de">Vorlagen- Baum betrachten</value>
         <value xml:lang="en">View Template Tree</value>
         <value xml:lang="fr">Voir l'arborescence modèle</value>
         <value xml:lang="it">Mostra albero template</value>
@@ -7936,6 +7946,7 @@
     </property>
     <property key="PageTitleViewCompDocTree">
         <value xml:lang="da">Vis træ</value>
+        <value xml:lang="de">Baum betrachten</value>
         <value xml:lang="en">View Tree</value>
         <value xml:lang="fr">Voir l'arborescence</value>
         <value xml:lang="it">Mostra albero</value>

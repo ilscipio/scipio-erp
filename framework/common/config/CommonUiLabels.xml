@@ -9624,7 +9624,7 @@
     <property key="CommonProsPrep">
         <value xml:lang="ar">في ظرف الإعداد</value>
         <value xml:lang="cs">Probíhá výběr</value>
-        <value xml:lang="de">Kommisionierung in Arbeit</value>
+        <value xml:lang="de">Picking in Arbeit</value>
         <value xml:lang="en">Picking in progress</value>
         <value xml:lang="es">Preparación en curso</value>
         <value xml:lang="fr">Préparation en cours</value>

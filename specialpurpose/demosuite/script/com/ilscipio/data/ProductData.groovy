@@ -5,8 +5,8 @@ import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
 import org.ofbiz.product.category.CategoryWorker
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DemoSuiteDataGeneratorUtil
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.MockarooDataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper.dataTypeEnum
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript;
 
@@ -14,6 +14,10 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroov
 
 public class ProductData extends DataGeneratorGroovyBaseScript {
 
+    public String getDataType() {
+        return dataTypeEnum.PRODUCT;
+    }
+    
     ProductData() {
         Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PRODUCT DATA-=-=-=-", "");
     }
@@ -91,7 +95,7 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         "RentalStore"
     ]
 
-    List prepareData(int index) throws Exception {
+    List prepareData(int index, DemoDataObject productData) throws Exception {
         Debug.log("prepareData");
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
         List<GenericValue> productItems = new ArrayList<GenericValue>();

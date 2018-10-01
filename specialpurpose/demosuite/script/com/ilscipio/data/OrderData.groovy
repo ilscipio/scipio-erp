@@ -5,8 +5,9 @@ import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
-import org.ofbiz.service.ServiceUtil
 
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper.dataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
 
 public class OrderData extends DataGeneratorGroovyBaseScript {
@@ -23,6 +24,10 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         "ORDER_CREATED",
         "ORDER_COMPLETED"
     ];
+    
+    public String getDataType() {
+        return dataTypeEnum.ORDER;
+    }
 
     public void init() {
         productCount = from("Product").queryCount();
@@ -30,7 +35,7 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         context.totalProductCount = totalProductCount;
     }
 
-    List prepareData(int index) throws Exception {
+    List prepareData(int index, DemoDataObject orderData) throws Exception {
         List toBeStored = new ArrayList();
         List orderItems = new ArrayList();
         // Create OrderHeader

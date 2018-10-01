@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="AccountingCheckAccountCannotBeUpdated">
+        <value xml:lang="de">FEHLER: Das Konto konnte nicht aktualisiert werden.</value>
         <value xml:lang="en">ERROR: Could not update Check Account.</value>
     </property>
     <property key="AccountingDeleteRateAmount">

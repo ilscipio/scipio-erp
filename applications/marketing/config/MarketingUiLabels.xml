@@ -1400,6 +1400,7 @@
         <value xml:lang="en">Segments</value>
     </property>
     <property key="MarketingServiceCommunicationNotFound">
+        <value xml:lang="de">Kommunikation nicht gefunden.</value>
         <value xml:lang="en">Could not find communications.</value>
     </property>
     <property key="MarketingServiceError">

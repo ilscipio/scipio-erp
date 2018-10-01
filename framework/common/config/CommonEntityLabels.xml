@@ -3918,7 +3918,7 @@
         <value xml:lang="zh-TW">完全禁止</value>
     </property>
     <property key="Enumeration.description.WGC_LOOP_BLOCKED">
-        <value xml:lang="en">Schleife blockiert</value>
+        <value xml:lang="de">Schleife blockiert</value>
         <value xml:lang="en">Loop blocked</value>
         <value xml:lang="es">Bucle bloqueado</value>
         <value xml:lang="fr">Structure de réseau limitée à l'emboîtement approprié de boucle (LOOP)</value>
@@ -3932,7 +3932,7 @@
         <value xml:lang="zh-TW">禁止迴圈</value>
     </property>
     <property key="Enumeration.description.WGC_NON_BLOCKED">
-        <value xml:lang="en">Nicht blockiert</value>
+        <value xml:lang="de">Nicht blockiert</value>
         <value xml:lang="en">Non blocked</value>
         <value xml:lang="es">No bloqueado</value>
         <value xml:lang="fr">Pas de restriction sur la structure de réseau (valeur par défaut)</value>
@@ -3946,7 +3946,7 @@
         <value xml:lang="zh-TW">不禁止</value>
     </property>
     <property key="Enumeration.description.WJT_AND">
-        <value xml:lang="en">Und</value>
+        <value xml:lang="de">Und</value>
         <value xml:lang="en">And</value>
         <value xml:lang="es">Y</value>
         <value xml:lang="fr">Synchronisez toutes les transitions entrantes (les attendre toutes)</value>
@@ -4044,7 +4044,7 @@
         <value xml:lang="zh-TW">輸出</value>
     </property>
     <property key="Enumeration.description.WSE_ASYNCHR">
-        <value xml:lang="en">Asynchron</value>
+        <value xml:lang="de">Asynchron</value>
         <value xml:lang="en">Asynchronous</value>
         <value xml:lang="es">Asíncrono</value>
         <value xml:lang="fr">Exécution synchrone</value>
@@ -4058,7 +4058,7 @@
         <value xml:lang="zh-TW">非同步</value>
     </property>
     <property key="Enumeration.description.WSE_SYNCHR">
-        <value xml:lang="en">Synchron</value>
+        <value xml:lang="de">Synchron</value>
         <value xml:lang="en">Synchronous</value>
         <value xml:lang="es">Síncrono</value>
         <value xml:lang="fr">Exécution synchrone</value>
@@ -4072,7 +4072,7 @@
         <value xml:lang="zh-TW">同步</value>
     </property>
     <property key="Enumeration.description.WST_AND">
-        <value xml:lang="en">UND</value>
+        <value xml:lang="de">UND</value>
         <value xml:lang="en">AND</value>
         <value xml:lang="es">Y</value>
         <value xml:lang="fr">Autorise les transitions sortantes convergentes</value>
@@ -4114,7 +4114,8 @@
         <value xml:lang="zh-TW">條件</value>
     </property>
     <property key="Enumeration.description.WTC_OTHERWISE">
-        <value xml:lang="en">WTC_OTHERWISE</value>
+        <value xml:lang="de">Ansonsten</value>
+        <value xml:lang="en">Otherwise</value>
         <value xml:lang="es">En otro caso</value>
         <value xml:lang="fr">Autrement</value>
         <value xml:lang="it">Altrimenti</value>
@@ -4127,7 +4128,8 @@
         <value xml:lang="zh-TW">否則</value>
     </property>
     <property key="Enumeration.description.WTL_FROMLOOP">
-        <value xml:lang="en">WTL_FROMLOOP</value>
+        <value xml:lang="de">From Loop</value>
+        <value xml:lang="en">From Loop</value>
         <value xml:lang="es">Después de bucle</value>
         <value xml:lang="fr">Depuis une boucle</value>
         <value xml:lang="it">Dal loop</value>
@@ -4140,7 +4142,8 @@
         <value xml:lang="zh-TW">自迴圈</value>
     </property>
     <property key="Enumeration.description.WTL_NOLOOP">
-        <value xml:lang="en">WTL_NOLOOP</value>
+        <value xml:lang="de">Keine Schleife</value>
+        <value xml:lang="en">No Loop</value>
         <value xml:lang="es">Sin bucle</value>
         <value xml:lang="fr">Pas de boucle</value>
         <value xml:lang="it">Nessun loop</value>
@@ -4153,7 +4156,8 @@
         <value xml:lang="zh-TW">無迴圈</value>
     </property>
     <property key="Enumeration.description.WTL_TOLOOP">
-        <value xml:lang="en">WTL_TOLOOP</value>
+        <value xml:lang="de">To Loop</value>
+        <value xml:lang="en">To Loop</value>
         <value xml:lang="es">Hasta bucle</value>
         <value xml:lang="fr">Vers une boucle</value>
         <value xml:lang="it">Al loop</value>
@@ -4166,7 +4170,8 @@
         <value xml:lang="zh-TW">到迴圈</value>
     </property>
     <property key="Enumeration.description.WTT_APPLICATION">
-        <value xml:lang="en">WTT_APPLICATIO</value>
+        <value xml:lang="de">Applikation</value>
+        <value xml:lang="en">Application</value>
         <value xml:lang="es">Aplicación</value>
         <value xml:lang="fr">Application</value>
         <value xml:lang="it">Applicazione</value>
@@ -4180,7 +4185,8 @@
         <value xml:lang="zh-TW">應用</value>
     </property>
     <property key="Enumeration.description.WTT_PROCEDURE">
-        <value xml:lang="en">WTT_PROCEDUR</value>
+        <value xml:lang="de">Prozedur</value>
+        <value xml:lang="en">Procedure</value>
         <value xml:lang="es">Procedimiento</value>
         <value xml:lang="fr">Procédure</value>
         <value xml:lang="it">Procedura</value>
@@ -4434,7 +4440,8 @@
         <value xml:lang="zh-TW">產品商店支付服務類型</value>
     </property>
     <property key="EnumerationType.description.PROD_PRICE">
-        <value xml:lang="en">PROD_PRICE</value>
+        <value xml:lang="de">Produktpreis</value>
+        <value xml:lang="en">Product price</value>
         <value xml:lang="es">Precio de producto</value>
         <value xml:lang="fr">Liste des prix d'articles parents</value>
         <value xml:lang="it">Prezzo prodotto</value>
@@ -4579,6 +4586,7 @@
         <value xml:lang="zh-TW">產品需求方法</value>
     </property>
     <property key="EnumerationType.description.PTSOFTTFR">
+        <value xml:lang="de">Punkte der Titelübertragung</value>
         <value xml:lang="en">Points of Title Transfer</value>
         <value xml:lang="es">Puntos de transferencia de título</value>
         <value xml:lang="fr">Points de transfert de titre</value>
@@ -4612,6 +4620,7 @@
         <value xml:lang="zh-TW">詢價序號方法</value>
     </property>
     <property key="EnumerationType.description.TRACKINGCODE_SRC">
+        <value xml:lang="de">Tracking Code Quelle</value>
         <value xml:lang="en">Tracking Code Source</value>
         <value xml:lang="es">Código de seguimiento fuente</value>
         <value xml:lang="fr">Traçage de la source de code</value>

@@ -1009,6 +1009,7 @@
         <value xml:lang="zh-TW">歡迎使用行銷管理程式！</value>
     </property>
     <property key="MarketingMarketing">
+        <value xml:lang="de">Marketing</value>
         <value xml:lang="en">Marketing</value>
     </property>
     <property key="MarketingNoOfEmployees">
@@ -1073,6 +1074,7 @@
         <value xml:lang="zh-TW">上級活動識別</value>
     </property>
     <property key="MarketingPartiesLoaded">
+        <value xml:lang="de">Parties geladen</value>
         <value xml:lang="en">Parties Loaded</value>
         <value xml:lang="fr">Acteurs chargés</value>
     </property>

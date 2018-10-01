@@ -4727,6 +4727,7 @@
     </property>
     <property key="FormFieldTitle_decoratorContentId">
         <value xml:lang="da">Dekoratør indholds ID</value>
+        <value xml:lang="de">Decorator Content ID</value>
         <value xml:lang="en">Decorator Content ID</value>
         <value xml:lang="fr">Ressource de décorateur</value>
         <value xml:lang="it">Decoratore contenuto</value>
@@ -4947,6 +4948,7 @@
     </property>
     <property key="FormFieldTitle_enumTypeId">
         <value xml:lang="da">Nummereringstype ID</value>
+        <value xml:lang="de">Aufzählungstyp ID</value>
         <value xml:lang="en">Enum Type ID</value>
         <value xml:lang="fr">Type d'énumération</value>
         <value xml:lang="it">Tipo enumerazione</value>
@@ -4985,6 +4987,7 @@
     </property>
     <property key="FormFieldTitle_formatString">
         <value xml:lang="da">Format streng</value>
+        <value xml:lang="de">Formatierungs-String</value>
         <value xml:lang="en">Format String</value>
         <value xml:lang="fr">Format chaîne de caractères</value>
         <value xml:lang="it">Formato Stringa</value>
@@ -5116,6 +5119,7 @@
     </property>
     <property key="FormFieldTitle_ftlContentId">
         <value xml:lang="da">Ftl indholds ID</value>
+        <value xml:lang="de">Ftl Content ID</value>
         <value xml:lang="en">Ftl Content ID</value>
         <value xml:lang="it">Contenuto ftl</value>
         <value xml:lang="ja">FTLコンテンツID</value>
@@ -5172,6 +5176,7 @@
     </property>
     <property key="FormFieldTitle_httpPort">
         <value xml:lang="ar">بوابة Http</value>
+        <value xml:lang="de">Http Port</value>
         <value xml:lang="en">Http Port</value>
         <value xml:lang="es">Puerto Http</value>
         <value xml:lang="fr">Port HTTP</value>

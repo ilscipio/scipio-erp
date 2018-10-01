@@ -2929,6 +2929,7 @@
         <value xml:lang="zh-TW">通過匯入vCard自動新建聯絡</value>
     </property>
     <property key="SfaAutoCreateLeadByImportingVCard">
+        <value xml:lang="de">Erstellen Sie automatisch einen neuen Lead, indem Sie eine vCard importieren</value>
         <value xml:lang="en">Automatically create a new lead by importing a vCard</value>
         <value xml:lang="es">Crear nuevo lead automaticamente importando vCard</value>
         <value xml:lang="fr">Créez automatiquement un nouveau prospect par import d'une vCard</value>
@@ -3319,14 +3320,17 @@
         <value xml:lang="zh-TW">匯入線索</value>
     </property>
    <property key="SfaImportVcardDuplicatedVcardError">
+        <value xml:lang="de">Alle Parties in dieser vcard sind dupliziert</value>
         <value xml:lang="en">All parties in this vcard are duplicated.</value>
         <value xml:lang="fr">Tous les acteurs de cette vcard sont dupliqués.</value>
     </property>
     <property key="SfaImportVCardEmailFormatError">
+        <value xml:lang="de">Falsches Email-Format.</value>
         <value xml:lang="en">incorrect email format.</value>
         <value xml:lang="fr">Format de l'addresse courriel incorrect.</value>
     </property>
     <property key="SfaImportVcardNameMissingError">
+        <value xml:lang="de">Vor- oder Nachname fehlt.</value>
         <value xml:lang="en">first name or last name missing.</value>
         <value xml:lang="fr">Prénom ou nom manquant.</value>
     </property>
@@ -3341,11 +3345,12 @@
         <value xml:lang="zh-TW">從VCard匯入資料時出錯:${errorString}</value>
     </property>
     <property key="SfaImportVcardNameMissingError">
+        <value xml:lang="de">Vor- oder Nachname fehlt.</value>
         <value xml:lang="en">first name or last name missing.</value>
         <value xml:lang="fr">Prénom ou nom manquant.</value>
     </property>
     <property key="SfaInitialAccount">
-        <value xml:lang="de">Initiales Account</value>
+        <value xml:lang="de">Anfangskonto</value>
         <value xml:lang="en">Initial Account</value>
         <value xml:lang="fr">Compte initial</value>
         <value xml:lang="it">Utente iniziale</value>
@@ -3356,7 +3361,7 @@
         <value xml:lang="zh-TW">初始帳戶</value>
     </property>
     <property key="SfaInitialStage">
-        <value xml:lang="de">Initiale Phase</value>
+        <value xml:lang="de">Erstphase</value>
         <value xml:lang="en">Initial Stage</value>
         <value xml:lang="fr">Phase initiale</value>
         <value xml:lang="it">Stage iniziale</value>

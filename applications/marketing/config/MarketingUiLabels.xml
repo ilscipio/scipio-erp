@@ -1715,6 +1715,7 @@
         <value xml:lang="zh-TW">次級群組識別</value>
     </property>
     <property key="MarketingTrackingCodeTrackableLifetime">
+        <value xml:lang="de">Verfolgbare Lebensdauer</value>
         <value xml:lang="en">Trackable Lifetime</value>
         <value xml:lang="es">Tiempo de vida</value>
         <value xml:lang="fr">Durée de vie du suivi</value>
@@ -1882,6 +1883,7 @@
         <value xml:lang="zh-TW">角色類型識別</value>
     </property>
     <property key="MarketingTrackingCodeVisitSessionId">
+        <value xml:lang="de">Session ID</value>
         <value xml:lang="en">Session ID</value>
         <value xml:lang="es">Código de sesión</value>
         <value xml:lang="fr">Réf. de la session</value>
@@ -1895,6 +1897,7 @@
         <value xml:lang="zh-TW">活動識別</value>
     </property>
     <property key="MarketingTrackingCodeVisitSourceEnumId">
+        <value xml:lang="de">Quelle ID</value>
         <value xml:lang="en">Source ID</value>
         <value xml:lang="es">Código de fuente de la visita</value>
         <value xml:lang="fr">Réf. de l'origine</value>
@@ -1933,6 +1936,7 @@
         <value xml:lang="zh-TW">拜訪識別</value>
     </property>
     <property key="MarketingTrackingCodeVisitVisitorId">
+        <value xml:lang="de">Besucher ID</value>
         <value xml:lang="en">Visitor ID</value>
         <value xml:lang="es">Código de visitante</value>
         <value xml:lang="fr">Réf. du visiteur</value>

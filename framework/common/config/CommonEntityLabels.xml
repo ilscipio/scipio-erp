@@ -7643,6 +7643,7 @@
     </property>
     <property key="Geo.geoName.PE">
         <value xml:lang="ar">إيل دو الأمير إدوارد</value>
+        <value xml:lang="de">Prinz Edward Insel</value>
         <value xml:lang="en">Prince Edward Island</value>
         <value xml:lang="fr">Île-du-Prince-Edouard</value>
         <value xml:lang="it">PE</value>
@@ -7846,6 +7847,7 @@
     </property>
     <property key="Geo.geoName.QC">
         <value xml:lang="ar">كيبيك</value>
+        <value xml:lang="de">Quebec</value>
         <value xml:lang="en">Quebec</value>
         <value xml:lang="fr">Québec</value>
         <value xml:lang="it">QC</value>
@@ -7954,6 +7956,7 @@
     </property>
     <property key="Geo.geoName.SCOT">
         <value xml:lang="ar">أسكتلندا</value>
+        <value xml:lang="de">Schottland</value>
         <value xml:lang="en">Scotland</value>
         <value xml:lang="fr">Ecosse</value>
         <value xml:lang="it">Scozia</value>
@@ -8061,6 +8064,7 @@
     </property>
     <property key="Geo.geoName.SK">
         <value xml:lang="ar">ساسكاتشوان</value>
+        <value xml:lang="de">Saskatchewan</value>
         <value xml:lang="en">Saskatchewan</value>
         <value xml:lang="fr">Saskatchewan</value>
         <value xml:lang="it">Saskatchewan</value>
@@ -8765,7 +8769,8 @@
     </property>
     <property key="Geo.geoName.WALS">
         <value xml:lang="ar">والز</value>
-        <value xml:lang="en">WALS</value>
+        <value xml:lang="de">Wales</value>
+        <value xml:lang="en">Wales</value>
         <value xml:lang="fr">Pays de Galles</value>
         <value xml:lang="it">Galles</value>
         <value xml:lang="ja">ウェールズ</value>
@@ -8824,6 +8829,7 @@
     </property>
     <property key="Geo.geoName.YT">
         <value xml:lang="ar">يوكون</value>
+        <value xml:lang="de">Yukon Gebiet</value>
         <value xml:lang="en">Yukon Territory</value>
         <value xml:lang="es">Territorio del Yukon</value>
         <value xml:lang="fr">Territoire du Yukon</value>
@@ -9174,7 +9180,8 @@
     </property>
     <property key="StatusItem.description.BLOG_DRAFT">
         <value xml:lang="cs">Návrh</value>
-        <value xml:lang="en">BLOG_DRAFT</value>
+        <value xml:lang="de">Draft</value>
+        <value xml:lang="en">Draft</value>
         <value xml:lang="es">Esbozo</value>
         <value xml:lang="fr">Ébauche</value>
         <value xml:lang="it">Bozza blog</value>
@@ -9188,7 +9195,8 @@
     </property>
     <property key="StatusItem.description.BLOG_PUBLISHED">
         <value xml:lang="cs">Publikováno</value>
-        <value xml:lang="en">BLOG_PUBLISHED</value>
+        <value xml:lang="de">Publiziert</value>
+        <value xml:lang="en">Published</value>
         <value xml:lang="es">Publicado</value>
         <value xml:lang="fr">Publié</value>
         <value xml:lang="it">Pubblicatore blog</value>
@@ -9202,7 +9210,8 @@
     </property>
     <property key="StatusItem.description.BLOG_REJECTED">
         <value xml:lang="cs">Zamítnuto</value>
-        <value xml:lang="en">BLOG_REJECTED</value>
+        <value xml:lang="de">Abgelehnt</value>
+        <value xml:lang="en">Rejected</value>
         <value xml:lang="es">Desechado</value>
         <value xml:lang="fr">Rejeté</value>
         <value xml:lang="it">Rifiutato dal blog</value>
@@ -9216,7 +9225,8 @@
     </property>
     <property key="StatusItem.description.BLOG_SUBMITTED">
         <value xml:lang="cs">Odesláno</value>
-        <value xml:lang="en">BLOG_SUBMITTED</value>
+        <value xml:lang="de">Eingereicht</value>
+        <value xml:lang="en">Submitted</value>
         <value xml:lang="es">Enviado</value>
         <value xml:lang="fr">Soumis</value>
         <value xml:lang="it">Blog submitter</value>
@@ -9344,6 +9354,7 @@
     <property key="StatusItem.description.CAL_IN_PLANNING">
         <value xml:lang="ar">قيد التخطيط</value>
         <value xml:lang="cs">V přípravě</value>
+        <value xml:lang="de">In Planung</value>
         <value xml:lang="en">In Planning</value>
         <value xml:lang="es">En planificación</value>
         <value xml:lang="fr">Planifié</value>
@@ -9378,6 +9389,7 @@
     <property key="StatusItem.description.CAL_PLANNED">
         <value xml:lang="ar">مخططة</value>
         <value xml:lang="cs">Naplánováno</value>
+        <value xml:lang="de">Geplant</value>
         <value xml:lang="en">Planned</value>
         <value xml:lang="es">Planificado</value>
         <value xml:lang="fr">Planifié</value>
@@ -9447,6 +9459,7 @@
     <property key="StatusItem.description.CLPT_IN_USE">
         <value xml:lang="ar">قيد الإستخدام</value>
         <value xml:lang="cs">Používáno</value>
+        <value xml:lang="de">In Benutzung</value>
         <value xml:lang="en">In Use</value>
         <value xml:lang="es">En uso</value>
         <value xml:lang="fr">En cours d'utilisation</value>
@@ -9499,7 +9512,8 @@
     </property>
     <property key="StatusItem.description.CNTAP_APPROVED">
         <value xml:lang="ar">موافق عليها</value>
-        <value xml:lang="cs">Schváleno</value>  
+        <value xml:lang="cs">Schváleno</value>
+        <value xml:lang="de">Genehmigt</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="es">Aprobado</value>
         <value xml:lang="fr">Approuvé</value>
@@ -9515,6 +9529,7 @@
     <property key="StatusItem.description.CNTAP_IN_PROCESS">
         <value xml:lang="ar">الموافقة قيد التنفيذ</value>
         <value xml:lang="cs">Probíhá schvalování</value>
+        <value xml:lang="de">Genehmigung in Bearbeitung</value>
         <value xml:lang="en">Approval In Process</value>
         <value xml:lang="es">Aprobación en curso</value>
         <value xml:lang="fr">Approbation en cours</value>
@@ -9530,6 +9545,7 @@
     <property key="StatusItem.description.CNTAP_NOT_READY">
         <value xml:lang="ar">غير جاهزة للموافقة</value>
         <value xml:lang="cs">Nepřipraveno na schválení</value>
+        <value xml:lang="de">Nicht bereit zur Genehmigung</value>
         <value xml:lang="en">Not Ready for Approval</value>
         <value xml:lang="es">No preparado para aprobación</value>
         <value xml:lang="fr">Non prêt pour approbation</value>
@@ -9545,6 +9561,7 @@
     <property key="StatusItem.description.CNTAP_READY">
         <value xml:lang="ar">جاهزة للموافقة</value>
         <value xml:lang="cs">Připraveno ke schválení</value>
+        <value xml:lang="de">Bereit zur Genehmigung</value>
         <value xml:lang="en">Ready for Approval</value>
         <value xml:lang="es">Preparado para aprobación</value>
         <value xml:lang="fr">Prêt pour approbation</value>
@@ -9560,6 +9577,7 @@
     <property key="StatusItem.description.CNTAP_REJECTED">
         <value xml:lang="ar">مرفوضة</value>
         <value xml:lang="cs">Odmítnuto</value>
+        <value xml:lang="de">Abgelehnt</value>
         <value xml:lang="en">Rejected</value>
         <value xml:lang="es">Rechazado</value>
         <value xml:lang="fr">Refusé</value>
@@ -9575,6 +9593,7 @@
     <property key="StatusItem.description.CNTAP_SOFT_REJ">
         <value xml:lang="ar">مرفوضة سوفت</value>
         <value xml:lang="cs">Dočasně odmítnuto</value>
+        <value xml:lang="de">Soft abgelehnt</value>
         <value xml:lang="en">Soft Rejected</value>
         <value xml:lang="es">Rechazado (admite mejoras)</value>
         <value xml:lang="fr">Support rejetée</value>
@@ -9716,6 +9735,7 @@
     <property key="StatusItem.description.COM_ROLE_COMPLETED">
         <value xml:lang="ar">مقفلة</value>
         <value xml:lang="cs">Uzavřeno</value>
+        <value xml:lang="de">Geschlossen</value>
         <value xml:lang="en">Closed</value>
         <value xml:lang="es">Cerrado</value>
         <value xml:lang="fr">Fermé</value>
@@ -9731,6 +9751,7 @@
     <property key="StatusItem.description.COM_ROLE_CREATED">
         <value xml:lang="ar">مخلقة</value>
         <value xml:lang="cs">Vytvořeno</value>
+        <value xml:lang="de">Erstellt</value>
         <value xml:lang="en">Created</value>
         <value xml:lang="es">Creado</value>
         <value xml:lang="fr">Créé</value>
@@ -9744,7 +9765,7 @@
     </property>
     <property key="StatusItem.description.COM_ROLE_READ">
         <value xml:lang="ar">مقروءة</value>
-        <value xml:lang="de">Lesen</value>
+        <value xml:lang="de">Gelesen</value>
         <value xml:lang="en">Read</value>
         <value xml:lang="es">Leído</value>
         <value xml:lang="fr">Lu</value>
@@ -9830,6 +9851,7 @@
     </property>
     <property key="StatusItem.description.CRQ_DRAFT">
         <value xml:lang="ar">مسودة</value>
+        <value xml:lang="de">Draft</value>
         <value xml:lang="en">Draft</value>
         <value xml:lang="es">Esbozo</value>
         <value xml:lang="fr">Brouillon</value>
@@ -9843,6 +9865,7 @@
     </property>
     <property key="StatusItem.description.CRQ_PENDING">
         <value xml:lang="ar">معلقة</value>
+        <value xml:lang="de">Ausstehender Kunde</value>
         <value xml:lang="en">Pending Cust.</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">En attente</value>
@@ -9909,6 +9932,7 @@
     </property>
     <property key="StatusItem.description.CTNT_AVAILABLE">
         <value xml:lang="ar">موجودة</value>
+        <value xml:lang="de">Verfügbar</value>
         <value xml:lang="en">Available</value>
         <value xml:lang="es">Disponible</value>
         <value xml:lang="fr">Disponible</value>
@@ -10030,6 +10054,7 @@
     </property>
     <property key="StatusItem.description.EMPL_POS_ACTIVE">
         <value xml:lang="ar">مفتوحة / متداولة</value>
+        <value xml:lang="de">Aktiv/Offen</value>
         <value xml:lang="en">Active/Open</value>
         <value xml:lang="es">Activo/Abierto</value>
         <value xml:lang="fr">Actif / Ouvert</value>
@@ -10043,6 +10068,7 @@
     </property>
     <property key="StatusItem.description.EMPL_POS_INACTIVE">
         <value xml:lang="ar">مقفلة/غير متداولة</value>
+        <value xml:lang="de">Inaktiv/Geschlossen</value>
         <value xml:lang="en">Inactive/Closed</value>
         <value xml:lang="es">Inactivo/Cerrado</value>
         <value xml:lang="fr">Inactif / Fermé</value>
@@ -10056,6 +10082,7 @@
     </property>
     <property key="StatusItem.description.EMPL_POS_PLANNEDFOR">
         <value xml:lang="ar">مخطط لها</value>
+        <value xml:lang="de">Geplant für</value>
         <value xml:lang="en">Planned For</value>
         <value xml:lang="es">Planificado para</value>
         <value xml:lang="fr">Prévu pour</value>
@@ -10068,7 +10095,8 @@
         <value xml:lang="zh-TW">已計劃用於</value>
     </property>
     <property key="StatusItem.description.ESR_COMPLETE">
-        <value xml:lang="en">ESR_COMPLETE</value>
+        <value xml:lang="de">Abgeschlossen</value>
+        <value xml:lang="en">Complete</value>
         <value xml:lang="es">Completado</value>
         <value xml:lang="fr">Accompli</value>
         <value xml:lang="it">Completata</value>
@@ -10081,7 +10109,8 @@
         <value xml:lang="zh-TW">完成</value>
     </property>
     <property key="StatusItem.description.ESR_DATA_ERROR">
-        <value xml:lang="en">ESR_DATA_ERROR</value>
+        <value xml:lang="de">Datenfehler</value>
+        <value xml:lang="en">Data Error</value>
         <value xml:lang="es">Error de datos</value>
         <value xml:lang="fr">Erreur de données</value>
         <value xml:lang="it">Errore nei dati</value>
@@ -10094,7 +10123,8 @@
         <value xml:lang="zh-TW">資料錯誤</value>
     </property>
     <property key="StatusItem.description.ESR_NOT_STARTED">
-        <value xml:lang="en">ESR_NOT_STARTED</value>
+        <value xml:lang="de">Nicht gestartet</value>
+        <value xml:lang="en">Not started</value>
         <value xml:lang="es">No iniciado</value>
         <value xml:lang="fr">Non démarré</value>
         <value xml:lang="it">Non iniziato</value>
@@ -10107,7 +10137,8 @@
         <value xml:lang="zh-TW">未開始</value>
     </property>
     <property key="StatusItem.description.ESR_OTHER_ERROR">
-        <value xml:lang="en">ESR_OTHER_ERROR</value>
+        <value xml:lang="de">Anderer Fehler</value>
+        <value xml:lang="en">Other Error</value>
         <value xml:lang="es">Otro error</value>
         <value xml:lang="fr">Autre erreur</value>
         <value xml:lang="it">Altro errore</value>
@@ -10120,7 +10151,8 @@
         <value xml:lang="zh-TW">其他錯誤</value>
     </property>
     <property key="StatusItem.description.ESR_PENDING">
-        <value xml:lang="en">ESR_PENDING</value>
+        <value xml:lang="de">Ausstehend</value>
+        <value xml:lang="en">Pending</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">Hors ligne en attente</value>
         <value xml:lang="it">Sospeso</value>
@@ -10133,7 +10165,8 @@
         <value xml:lang="zh-TW">待定中</value>
     </property>
     <property key="StatusItem.description.ESR_RUNNING">
-        <value xml:lang="en">ESR_RUNNING</value>
+        <value xml:lang="de">Im Gange</value>
+        <value xml:lang="en">Running</value>
         <value xml:lang="es">En ejecución</value>
         <value xml:lang="fr">En fonction</value>
         <value xml:lang="it">In esecuzione</value>
@@ -10146,7 +10179,8 @@
         <value xml:lang="zh-TW">執行中</value>
     </property>
     <property key="StatusItem.description.ESR_SERVICE_ERROR">
-        <value xml:lang="en">ESR_SERVICE_ERROR</value>
+        <value xml:lang="de">Service Fehler</value>
+        <value xml:lang="en">Service Error</value>
         <value xml:lang="es">Error de llamada a servicio</value>
         <value xml:lang="fr">Erreur d'appel au service</value>
         <value xml:lang="it">Errore servizio</value>
@@ -10160,6 +10194,7 @@
     </property>
     <property key="StatusItem.description.EXST_APPROVED">
         <value xml:lang="ar">موافق عليها</value>
+        <value xml:lang="de">Akzeptiert</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="es">Aprobado</value>
         <value xml:lang="fr">Approuvé</value>
@@ -10173,6 +10208,7 @@
     </property>
     <property key="StatusItem.description.EXST_CANCELLED">
         <value xml:lang="ar">ملغاة</value>
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Cancelado</value>
         <value xml:lang="fr">Annulé</value>
@@ -10186,6 +10222,7 @@
     </property>
     <property key="StatusItem.description.EXST_COMPLETE">
         <value xml:lang="ar">منتهية</value>
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Complete</value>
         <value xml:lang="es">Completo</value>
         <value xml:lang="fr">Achevé</value>
@@ -10199,6 +10236,7 @@
     </property>
     <property key="StatusItem.description.EXST_DEFINED">
         <value xml:lang="ar">معرفة</value>
+        <value xml:lang="de">Definiert</value>
         <value xml:lang="en">Defined</value>
         <value xml:lang="es">Definido</value>
         <value xml:lang="fr">Paramétré</value>
@@ -10212,6 +10250,7 @@
     </property>
     <property key="StatusItem.description.EXST_IMPLEMENTED">
         <value xml:lang="ar">منفذة</value>
+        <value xml:lang="de">Implementiert</value>
         <value xml:lang="en">Implemented</value>
         <value xml:lang="es">Implementado</value>
         <value xml:lang="fr">Implémenté</value>
@@ -10225,6 +10264,7 @@
     </property>
     <property key="StatusItem.description.EXST_IN_DESIGN">
         <value xml:lang="ar">قيد التصميم</value>
+        <value xml:lang="de">In Konzeption</value>
         <value xml:lang="en">In Design</value>
         <value xml:lang="es">En proyecto</value>
         <value xml:lang="fr">En projet</value>
@@ -10238,6 +10278,7 @@
     </property>
     <property key="StatusItem.description.EXST_TESTED">
         <value xml:lang="ar">تم اختبارها</value>
+        <value xml:lang="de">Getestet</value>
         <value xml:lang="en">Tested</value>
         <value xml:lang="es">Probado</value>
         <value xml:lang="fr">Testé</value>
@@ -10339,6 +10380,7 @@
     </property>
     <property key="StatusItem.description.FA_ASGN_ASSIGNED">
         <value xml:lang="ar">معيينة</value>
+        <value xml:lang="de">Zugewiesen</value>
         <value xml:lang="en">Assigned</value>
         <value xml:lang="es">Asignado</value>
         <value xml:lang="fr">Affecté</value>
@@ -10353,6 +10395,7 @@
     </property>
     <property key="StatusItem.description.FA_ASGN_DENIED">
         <value xml:lang="ar">الطلب مرفوض</value>
+        <value xml:lang="de">Anfrage abgelehnt</value>
         <value xml:lang="en">Request Denied</value>
         <value xml:lang="es">Solicitud denegada</value>
         <value xml:lang="fr">Demande refusée</value>
@@ -10367,6 +10410,7 @@
     </property>
     <property key="StatusItem.description.FA_ASGN_REQUESTED">
         <value xml:lang="ar">مطلوبة</value>
+        <value xml:lang="de">Angefordert</value>
         <value xml:lang="en">Requested</value>
         <value xml:lang="es">Solicitado</value>
         <value xml:lang="fr">Demandé</value>
@@ -10381,6 +10425,7 @@
     </property>
     <property key="StatusItem.description.FNACT_ACTIVE">
         <value xml:lang="ar">متداولة</value>
+        <value xml:lang="de">Aktiv</value>
         <value xml:lang="en">Active</value>
         <value xml:lang="es">Activo</value>
         <value xml:lang="fr">Actif</value>
@@ -10395,6 +10440,7 @@
     </property>
     <property key="StatusItem.description.FNACT_CANCELLED">
         <value xml:lang="ar">ملغية</value>
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Cancelado</value>
         <value xml:lang="fr">Annulé</value>
@@ -10409,6 +10455,7 @@
     </property>
     <property key="StatusItem.description.FNACT_MANFROZEN">
         <value xml:lang="ar">مجمدة يدويا</value>
+        <value xml:lang="de">Manuell eingefroren</value>
         <value xml:lang="en">Manually Frozen</value>
         <value xml:lang="es">Bloqueo manual</value>
         <value xml:lang="fr">Bloqué manuellement</value>
@@ -10422,6 +10469,7 @@
         <value xml:lang="zh-TW">手工凍結</value>
     </property>
     <property key="StatusItem.description.FNACT_NEGPENDREPL">
+        <value xml:lang="de">Negativer ausstehender Nachschub</value>
         <value xml:lang="en">Negative Pending Replenishment</value>
         <value xml:lang="es">Negativo pendiente de reposición</value>
         <value xml:lang="fr">Replanification en attente</value>
@@ -10436,6 +10484,7 @@
     </property>
     <property key="StatusItem.description.HR_DS_COMPLETE">
         <value xml:lang="ar">منتهية</value>
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Completed</value>
         <value xml:lang="es">Completo</value>
         <value xml:lang="fr">Terminé</value>
@@ -10449,6 +10498,7 @@
     </property>
     <property key="StatusItem.description.HR_DS_DEFERRED">
         <value xml:lang="ar">مؤجلة</value>
+        <value xml:lang="de">Aufgeschoben</value>
         <value xml:lang="en">Deferred</value>
         <value xml:lang="es">Diferido</value>
         <value xml:lang="fr">Reporté</value>
@@ -10462,6 +10512,7 @@
     </property>
     <property key="StatusItem.description.HR_DS_INCOMPLETE">
         <value xml:lang="ar">غير مكتملة</value>
+        <value xml:lang="de">Unvollständig</value>
         <value xml:lang="en">Incomplete</value>
         <value xml:lang="es">Incompleto</value>
         <value xml:lang="fr">Incomplet</value>
@@ -10474,6 +10525,7 @@
         <value xml:lang="zh-TW">未完成</value>
     </property>
     <property key="StatusItem.description.HR_JS_CONTRACTOR">
+        <value xml:lang="de">Auftragnehmer</value>
         <value xml:lang="en">Contractor</value>
         <value xml:lang="es">Contratante</value>
         <value xml:lang="fr">Entrepreneur</value>
@@ -10487,6 +10539,7 @@
     </property>
     <property key="StatusItem.description.HR_JS_FULLTIME">
         <value xml:lang="ar">دوام كامل</value>
+        <value xml:lang="de">Vollzeit</value>
         <value xml:lang="en">Full time</value>
         <value xml:lang="es">Tiempo completo</value>
         <value xml:lang="fr">Temps plein</value>
@@ -10500,6 +10553,7 @@
     </property>
     <property key="StatusItem.description.HR_JS_PARTTIME">
         <value xml:lang="ar">دوام جزئي</value>
+        <value xml:lang="de">Teilzeit</value>
         <value xml:lang="en">Part time</value>
         <value xml:lang="es">Tiempo parcial</value>
         <value xml:lang="fr">Temps partiel</value>
@@ -10666,6 +10720,7 @@
     <property key="StatusItem.description.INV_ACTIVATED">
         <value xml:lang="ar">مفعلة</value>
         <value xml:lang="cs">Activovaná</value>
+        <value xml:lang="de">Aktiviert</value>
         <value xml:lang="en">Activated</value>
         <value xml:lang="es">Activado</value>
         <value xml:lang="fr">Activé</value>
@@ -10733,6 +10788,7 @@
     </property>
     <property key="StatusItem.description.INV_DEACTIVATED">
         <value xml:lang="ar">معطلة</value>
+        <value xml:lang="de">Deaktiviert</value>
         <value xml:lang="en">Deactivated</value>
         <value xml:lang="es">Desactivado</value>
         <value xml:lang="fr">Désactivé</value>
@@ -10781,6 +10837,7 @@
     </property>
     <property key="StatusItem.description.INV_NS_DEFECTIVE">
         <value xml:lang="ar">معطوبة (غير متسلسلة)</value>
+        <value xml:lang="de">Defekte (nicht serialisiert)</value>
         <value xml:lang="en">Defective (Non-Serialized)</value>
         <value xml:lang="es">Defectuoso (no serializado)</value>
         <value xml:lang="fr">Défectueux (non sérialisable)</value>
@@ -10794,6 +10851,7 @@
     </property>
     <property key="StatusItem.description.INV_NS_ON_HOLD">
         <value xml:lang="ar">قيد الانتظار (غير مستلسلة)</value>
+        <value xml:lang="de">In Wartestellung (nicht serialisiert)</value>
         <value xml:lang="en">On Hold (Non-Serialized)</value>
         <value xml:lang="es">Retenido (no serializado)</value>
         <value xml:lang="fr">En attente (non sérialisable)</value>
@@ -11043,6 +11101,7 @@
     </property>
     <property key="StatusItem.description.LEAD_ASSIGNED">
         <value xml:lang="ar">محدد لها مسؤول</value>
+        <value xml:lang="de">Zugewiesen</value>
         <value xml:lang="en">Assigned</value>
         <value xml:lang="es">Asignado</value>
         <value xml:lang="fr">Affecté</value>
@@ -11056,6 +11115,7 @@
     </property>
     <property key="StatusItem.description.LEAD_CONVERTED">
         <value xml:lang="ar">محولة</value>
+        <value xml:lang="de">Konvertiert</value>
         <value xml:lang="en">Converted</value>
         <value xml:lang="es">Convertido</value>
         <value xml:lang="fr">Converti</value>
@@ -11069,6 +11129,7 @@
     </property>
     <property key="StatusItem.description.LEAD_QUALIFIED">
         <value xml:lang="ar">منعوته</value>
+        <value xml:lang="de">Qualifiziert</value>
         <value xml:lang="en">Qualified</value>
         <value xml:lang="es">Cualificado</value>
         <value xml:lang="fr">Qualifié</value>
@@ -11082,6 +11143,7 @@
     </property>
     <property key="StatusItem.description.LEAVE_CREATED">
         <value xml:lang="ar">مخلقة</value>
+        <value xml:lang="de">Erstellt</value>
         <value xml:lang="en">Created</value>
         <value xml:lang="fr">Créé</value>
         <value xml:lang="ja">作成</value>
@@ -11092,6 +11154,7 @@
     </property>
     <property key="StatusItem.description.LEAVE_APPROVED">
         <value xml:lang="ar">موافق عليها</value>
+        <value xml:lang="de">Genehmigt</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="fr">Validé</value>
         <value xml:lang="ja">承認</value>
@@ -11103,6 +11166,7 @@
     </property>
     <property key="StatusItem.description.LEAVE_REJECTED">
         <value xml:lang="ar">مرفوضة</value>
+        <value xml:lang="de">Abgelehnt</value>
         <value xml:lang="en">Rejected</value>
         <value xml:lang="fr">Rejeté</value>
         <value xml:lang="ja">否認</value>
@@ -11221,6 +11285,7 @@
         <value xml:lang="zh-TW">沒有同步</value>
     </property>
     <property key="StatusItem.description.OAGMP_ERRCONFSENT">
+        <value xml:lang="de">Fehler Bestätigung gesendet</value>
         <value xml:lang="en">Error Confirm Sent</value>
         <value xml:lang="es">Confirmación de error enviada</value>
         <value xml:lang="fr">Confirmation d'erreur envoyée</value>
@@ -11234,6 +11299,7 @@
         <value xml:lang="zh-TW">發送確認時出錯</value>
     </property>
     <property key="StatusItem.description.OAGMP_OGEN_ERROR">
+        <value xml:lang="de">Out generiert - Fehler</value>
         <value xml:lang="en">Out Generated - Error</value>
         <value xml:lang="es">Salida generada - Error</value>
         <value xml:lang="fr">Sortie générée - Erreur</value>
@@ -11246,6 +11312,7 @@
         <value xml:lang="zh-TW">產生輸出 - 錯誤</value>
     </property>
     <property key="StatusItem.description.OAGMP_OGEN_SUCCESS">
+        <value xml:lang="de">Out generiert - Erfolgreich</value>
         <value xml:lang="en">Out Generated - Success</value>
         <value xml:lang="es">Salida generada - Correcto</value>
         <value xml:lang="fr">Sortie générée - Succès</value>
@@ -11258,6 +11325,7 @@
         <value xml:lang="zh-TW">產生輸出 - 成功</value>
     </property>
     <property key="StatusItem.description.OAGMP_PROC_ERROR">
+        <value xml:lang="de">In Bearbeitet - Fehler</value>
         <value xml:lang="en">In Processed - Error</value>
         <value xml:lang="es">Procesando - Error</value>
         <value xml:lang="fr">Erreur pendant l'exécution</value>
@@ -11269,6 +11337,7 @@
         <value xml:lang="zh-TW">處理輸入 - 錯誤</value>
     </property>
     <property key="StatusItem.description.OAGMP_PROC_SUCCESS">
+        <value xml:lang="de">In Bearbeitet - Erfolgreich</value>
         <value xml:lang="en">In Processed - Success</value>
         <value xml:lang="es">Procesando - Correcto</value>
         <value xml:lang="fr">Exécuté avec succès</value>
@@ -11281,6 +11350,7 @@
         <value xml:lang="zh-TW">處理輸入 - 成功</value>
     </property>
     <property key="StatusItem.description.OAGMP_RECEIVED">
+        <value xml:lang="de">In Nachricht erhalten</value>
         <value xml:lang="en">In Message Received</value>
         <value xml:lang="es">Mensaje de entrada recibido</value>
         <value xml:lang="fr">Message reçu</value>
@@ -11293,6 +11363,7 @@
         <value xml:lang="zh-TW">接收到的輸入訊息</value>
     </property>
     <property key="StatusItem.description.OAGMP_REC_ERR_CON">
+        <value xml:lang="de">Fehlerbestätigung erhalten</value>
         <value xml:lang="en">Received Error Confirm</value>
         <value xml:lang="es">Recibida confirmación de error</value>
         <value xml:lang="fr">Confirmation d'erreur reçue</value>
@@ -11305,6 +11376,7 @@
         <value xml:lang="zh-TW">接收到的錯誤確認</value>
     </property>
     <property key="StatusItem.description.OAGMP_REC_SUC_CON">
+        <value xml:lang="de">Erfolgsbestätigung erhalten</value>
         <value xml:lang="en">Received Success Confirm</value>
         <value xml:lang="es">Recibida confirmación de completada</value>
         <value xml:lang="fr">Confirmation de succès reçue</value>
@@ -11317,6 +11389,7 @@
         <value xml:lang="zh-TW">接收到的成功確認</value>
     </property>
     <property key="StatusItem.description.OAGMP_SEND_ERROR">
+        <value xml:lang="de">Ausgangsnachricht Sendefehler</value>
         <value xml:lang="en">Out Message Send Error</value>
         <value xml:lang="es">Error de envío del mensaje</value>
         <value xml:lang="fr">Message d'erreur envoyé</value>
@@ -11329,6 +11402,7 @@
         <value xml:lang="zh-TW">輸出訊息發送錯誤</value>
     </property>
     <property key="StatusItem.description.OAGMP_SENT">
+        <value xml:lang="de">Ausgangsnachricht gesendet</value>
         <value xml:lang="en">Out Message Sent</value>
         <value xml:lang="es">Mensaje enviado</value>
         <value xml:lang="fr">Message envoyé</value>
@@ -11341,6 +11415,7 @@
         <value xml:lang="zh-TW">輸出訊息已發送</value>
     </property>
     <property key="StatusItem.description.OAGMP_SYS_ERROR">
+        <value xml:lang="de">Systemfehler</value>
         <value xml:lang="en">System Error</value>
         <value xml:lang="es">Error del sistema</value>
         <value xml:lang="fr">Erreur système</value>
@@ -11353,6 +11428,7 @@
         <value xml:lang="zh-TW">系統錯誤</value>
     </property>
     <property key="StatusItem.description.OAGMP_TRIGGERED">
+        <value xml:lang="de">Ausgangsnachricht ausgelöst</value>
         <value xml:lang="en">Out Message Triggered</value>
         <value xml:lang="es">Mensaje externo disparado</value>
         <value xml:lang="fr">Message en sortie déclenché</value>
@@ -11588,6 +11664,7 @@
         <value xml:lang="zh-TW">送出</value>
     </property>
     <property key="StatusItem.description.PARTYINV_ACCEPTED">
+        <value xml:lang="de">Einladung angenommen</value>
         <value xml:lang="en">Invitation Accepted</value>
         <value xml:lang="es">Invitación aceptada</value>
         <value xml:lang="fr">Invitation acceptée</value>
@@ -11600,6 +11677,7 @@
         <value xml:lang="zh-TW">接受邀請</value>
     </property>
     <property key="StatusItem.description.PARTYINV_CANCELLED">
+        <value xml:lang="de">Einladung abgebrochen</value>
         <value xml:lang="en">Invitation Cancelled</value>
         <value xml:lang="es">Invitación cancelada</value>
         <value xml:lang="fr">Invitation annulée</value>
@@ -11612,6 +11690,7 @@
         <value xml:lang="zh-TW">取消邀請</value>
     </property>
     <property key="StatusItem.description.PARTYINV_DECLINED">
+        <value xml:lang="de">Einladung abgelehnt</value>
         <value xml:lang="en">Invitation Declined</value>
         <value xml:lang="es">Invitación rechazada</value>
         <value xml:lang="fr">Invitation refusée</value>
@@ -11624,6 +11703,7 @@
         <value xml:lang="zh-TW">拒絕邀請</value>
     </property>
     <property key="StatusItem.description.PARTYINV_PENDING">
+        <value xml:lang="de">Einladung ausstehend</value>
         <value xml:lang="en">Invitation Pending</value>
         <value xml:lang="es">Invitación pendiente</value>
         <value xml:lang="fr">Invitation en attente</value>
@@ -11636,6 +11716,7 @@
         <value xml:lang="zh-TW">邀請等待中</value>
     </property>
     <property key="StatusItem.description.PARTYINV_SENT">
+        <value xml:lang="de">Einladung gesendet</value>
         <value xml:lang="en">Invitation Sent</value>
         <value xml:lang="es">Invitación enviada</value>
         <value xml:lang="fr">Invitation envoyée</value>
@@ -11649,6 +11730,7 @@
     </property>
     <property key="StatusItem.description.PARTY_DISABLED">
         <value xml:lang="ar">معطل</value>
+        <value xml:lang="de">Inaktiv</value>
         <value xml:lang="en">Disabled</value>
         <value xml:lang="es">Desactivado</value>
         <value xml:lang="fr">Désactivé</value>
@@ -11662,6 +11744,7 @@
     </property>
     <property key="StatusItem.description.PARTY_ENABLED">
         <value xml:lang="ar">مفعل</value>
+        <value xml:lang="de">Aktiv</value>
         <value xml:lang="en">Enabled</value>
         <value xml:lang="es">Activo</value>
         <value xml:lang="fr">Activé</value>
@@ -11807,6 +11890,7 @@
     </property>
     <property key="StatusItem.description.PAYMENT_REFUNDED">
         <value xml:lang="ar">تم ردها</value>
+        <value xml:lang="de">Zurückerstattet</value>
         <value xml:lang="en">Refunded</value>
         <value xml:lang="es">Devuelto</value>
         <value xml:lang="fr">Remboursé</value>
@@ -11838,6 +11922,7 @@
         <value xml:lang="zh-TW">已結清</value>
     </property>
     <property key="StatusItem.description.PICKITEM_CANCELLED">
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Cancelado</value>
         <value xml:lang="fr">Annulé</value>
@@ -11851,6 +11936,7 @@
         <value xml:lang="zh-TW">已取消</value>
     </property>
     <property key="StatusItem.description.PICKITEM_COMPLETED">
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Completed</value>
         <value xml:lang="es">Completado</value>
         <value xml:lang="fr">Terminé</value>
@@ -11864,6 +11950,7 @@
         <value xml:lang="zh-TW">已完成</value>
     </property>
     <property key="StatusItem.description.PICKITEM_PENDING">
+        <value xml:lang="de">Ausstehend</value>
         <value xml:lang="en">Pending</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">En attente</value>
@@ -11944,6 +12031,7 @@
         <value xml:lang="zh-TW">已揀貨</value>
     </property>
     <property key="StatusItem.description.PICKLIST_PRINTED">
+        <value xml:lang="de">Gedruckt</value>
         <value xml:lang="en">Printed</value>
         <value xml:lang="es">Impreso</value>
         <value xml:lang="fr">Imprimée</value>
@@ -12042,12 +12130,14 @@
         <value xml:lang="zh-TW">已送出</value>
     </property>
     <property key="StatusItem.description.PMNT_VOID">
+        <value xml:lang="de">Entwertet</value>
         <value xml:lang="en">Voided</value>
         <value xml:lang="zh">已作废</value>
         <value xml:lang="zh-TW">已作廢</value>
     </property>
     <property key="StatusItem.description.POSTX_ACTIVE">
-        <value xml:lang="en">POSTX_ACTIVE</value>
+        <value xml:lang="de">Aktiv</value>
+        <value xml:lang="en">Active</value>
         <value xml:lang="es">Activo</value>
         <value xml:lang="fr">Actif</value>
         <value xml:lang="it">Attiva</value>
@@ -12060,7 +12150,8 @@
         <value xml:lang="zh-TW">有效</value>
     </property>
     <property key="StatusItem.description.POSTX_CLOSED">
-        <value xml:lang="en">POSTX_CLOSED</value>
+        <value xml:lang="de">Geschlossen</value>
+        <value xml:lang="en">Closed</value>
         <value xml:lang="es">Cerrado</value>
         <value xml:lang="fr">Fermé</value>
         <value xml:lang="it">Chiusa</value>
@@ -12073,6 +12164,7 @@
         <value xml:lang="zh-TW">已關閉</value>
     </property>
     <property key="StatusItem.description.POSTX_PAID_IN">
+        <value xml:lang="de">Eingezahlt</value>
         <value xml:lang="en">PaidIn</value>
         <value xml:lang="es">Cobrado</value>
         <value xml:lang="fr">Paiement reçu</value>
@@ -12085,6 +12177,7 @@
         <value xml:lang="zh-TW">借入款</value>
     </property>
     <property key="StatusItem.description.POSTX_PAID_OUT">
+        <value xml:lang="de">Ausgezahlt</value>
         <value xml:lang="en">PaidOut</value>
         <value xml:lang="es">Pagado</value>
         <value xml:lang="fr">Paiement en sortie</value>
@@ -12097,7 +12190,8 @@
         <value xml:lang="zh-TW">借出款</value>
     </property>
     <property key="StatusItem.description.POSTX_RETURNED">
-        <value xml:lang="en">POSTX_RETURNED</value>
+        <value xml:lang="de">Retourniert</value>
+        <value xml:lang="en">Returned</value>
         <value xml:lang="es">Devuelto</value>
         <value xml:lang="fr">Retourné</value>
         <value xml:lang="it">Resa</value>
@@ -12110,7 +12204,8 @@
         <value xml:lang="zh-TW">退款</value>
     </property>
     <property key="StatusItem.description.POSTX_SOLD">
-        <value xml:lang="en">POSTX_SOLD</value>
+        <value xml:lang="de">Verkauft</value>
+        <value xml:lang="en">Sold</value>
         <value xml:lang="es">Vendido</value>
         <value xml:lang="fr">Vendu</value>
         <value xml:lang="it">Venduta</value>
@@ -12123,7 +12218,8 @@
         <value xml:lang="zh-TW">已售</value>
     </property>
     <property key="StatusItem.description.POSTX_VOIDED">
-        <value xml:lang="en">POSTX_VOIDED</value>
+        <value xml:lang="de">Entwertet</value>
+        <value xml:lang="en">Voided</value>
         <value xml:lang="es">Anulado</value>
         <value xml:lang="fr">Vidé</value>
         <value xml:lang="it">Annullata</value>
@@ -12136,6 +12232,7 @@
         <value xml:lang="zh-TW">無效的</value>
     </property>
     <property key="StatusItem.description.PQV_NOT_VERIFIED">
+        <value xml:lang="de">Nicht verifiziert</value>
         <value xml:lang="en">Not verified</value>
         <value xml:lang="es">No verificado</value>
         <value xml:lang="fr">Non vérifié</value>
@@ -12148,6 +12245,7 @@
         <value xml:lang="zh-TW">尚未驗證</value>
     </property>
     <property key="StatusItem.description.PQV_VERIFIED">
+        <value xml:lang="de">Verifiziert</value>
         <value xml:lang="en">Verified</value>
         <value xml:lang="es">Verificado</value>
         <value xml:lang="fr">Vérifié</value>
@@ -12160,6 +12258,7 @@
         <value xml:lang="zh-TW">已驗證</value>
     </property>
     <property key="StatusItem.description.PRJ_ACTIVE">
+        <value xml:lang="de">Aktiv</value>
         <value xml:lang="en">Active</value>
         <value xml:lang="es">Activo</value>
         <value xml:lang="fr">Actif</value>
@@ -12173,6 +12272,7 @@
         <value xml:lang="zh-TW">有效</value>
     </property>
     <property key="StatusItem.description.PRJ_CLOSED">
+        <value xml:lang="de">Geschlossen</value>
         <value xml:lang="en">Closed</value>
         <value xml:lang="es">Cerrado</value>
         <value xml:lang="fr">Fermé</value>
@@ -12186,6 +12286,7 @@
         <value xml:lang="zh-TW">已關閉</value>
     </property>
     <property key="StatusItem.description.PRR_APPROVED">
+        <value xml:lang="de">Angenommen</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="es">Aprobado</value>
         <value xml:lang="fr">Validé</value>
@@ -12199,6 +12300,7 @@
         <value xml:lang="zh-TW">已核准</value>
     </property>
     <property key="StatusItem.description.PRR_DELETED">
+        <value xml:lang="de">Gelöscht</value>
         <value xml:lang="en">Deleted</value>
         <value xml:lang="es">Suprimido</value>
         <value xml:lang="fr">Supprimé</value>
@@ -12213,6 +12315,7 @@
         <value xml:lang="zh-TW">已刪除</value>
     </property>
     <property key="StatusItem.description.PRR_PENDING">
+        <value xml:lang="de">Ausstehend</value>
         <value xml:lang="en">Pending</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">En attente</value>

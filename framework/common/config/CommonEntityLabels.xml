@@ -14049,6 +14049,7 @@
         <value xml:lang="zh-TW">發票狀態</value>
     </property>
     <property key="StatusType.description.INV_NON_SER_STTS">
+        <value xml:lang="de">Nicht serialisierter Inventar-Gegenstand</value>
         <value xml:lang="en">Non-Serialized Inventory Item</value>
         <value xml:lang="es">Producto sin número de serie</value>
         <value xml:lang="fr">Ligne de stock sans n° de série</value>
@@ -14065,6 +14066,7 @@
         <value xml:lang="zh-TW">無序的庫存細項</value>
     </property>
     <property key="StatusType.description.INV_SERIALIZED_STTS">
+        <value xml:lang="de">Serialisierter Inventar-Gegenstand</value>
         <value xml:lang="en">Serialized Inventory Item</value>
         <value xml:lang="es">Producto con número de serie</value>
         <value xml:lang="fr">Ligne de stock avec n° de série</value>
@@ -14130,6 +14132,7 @@
         <value xml:lang="zh-TW">訂單細項</value>
     </property>
     <property key="StatusType.description.ORDER_RETURN_STTS">
+        <value xml:lang="de">Bestellretouren Status</value>
         <value xml:lang="en">Order Return Status</value>
         <value xml:lang="es">Estado de devolución</value>
         <value xml:lang="fr">Statut de retour de commande</value>
@@ -15959,6 +15962,7 @@
         <value xml:lang="zh-TW">在途轉移已完成</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_REQUESTED.IXF_CANCELLED">
+        <value xml:lang="de">Inventaranforderung abgebrochen</value>
         <value xml:lang="en">Inventory Request Cancelled</value>
         <value xml:lang="es">Petición de inventario cancelada</value>
         <value xml:lang="fr">Demande d'inventaire annulée</value>
@@ -15973,6 +15977,7 @@
         <value xml:lang="zh-TW">存貨請求已取消</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_REQUESTED.IXF_COMPLETE">
+        <value xml:lang="de">Inventaranforderung abgeschlossen</value>
         <value xml:lang="en">Inventory Request Completed</value>
         <value xml:lang="es">Petición de inventario cerrada</value>
         <value xml:lang="fr">Femande d'inventaire terminée</value>
@@ -15988,6 +15993,7 @@
         <value xml:lang="zh-TW">存貨請求已完成</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_REQUESTED.IXF_EN_ROUTE">
+        <value xml:lang="de">Inventaranforderung auf dem Weg</value>
         <value xml:lang="en">Inventory Request In Route</value>
         <value xml:lang="es">Petición de inventario en camino</value>
         <value xml:lang="fr">La demande d'inventaire est en route</value>
@@ -16003,6 +16009,7 @@
         <value xml:lang="zh-TW">存貨請求在途</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_REQUESTED.IXF_SCHEDULED">
+        <value xml:lang="de">Inventaranforderung eingeplant</value>
         <value xml:lang="en">Inventory Request Scheduled</value>
         <value xml:lang="es">Petición de inventario planificada</value>
         <value xml:lang="fr">La demande d'inventaire est programmée</value>
@@ -16018,6 +16025,7 @@
         <value xml:lang="zh-TW">存貨請求已計劃</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_SCHEDULED.IXF_CANCELLED">
+        <value xml:lang="de">Geplantes Inventar storniert</value>
         <value xml:lang="en">Scheduled Inventory Cancelled</value>
         <value xml:lang="es">Inventario planificado cancelado</value>
         <value xml:lang="fr">L'inventaire programmée est annulé</value>
@@ -16033,6 +16041,7 @@
         <value xml:lang="zh-TW">已計劃的存貨已取消</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_SCHEDULED.IXF_COMPLETE">
+        <value xml:lang="de">Geplantes Inventar abgeschlossen</value>
         <value xml:lang="en">Scheduled Inventory Completed</value>
         <value xml:lang="es">Inventario planificado finalizado</value>
         <value xml:lang="fr">L'inventaire programmé est terminé</value>
@@ -16048,6 +16057,7 @@
         <value xml:lang="zh-TW">已計劃的存貨已完成</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_SCHEDULED.IXF_EN_ROUTE">
+        <value xml:lang="de">Geplantes Inventar unterwegs</value>
         <value xml:lang="en">Scheduled Inventory In Route</value>
         <value xml:lang="es">Inventario planificado en camino</value>
         <value xml:lang="fr">L'inventaire programmée est en route</value>
@@ -16677,6 +16687,7 @@
         <value xml:lang="zh-TW">揀貨</value>
     </property>
     <property key="StatusValidChange.transitionName.PICKLIST_ASSIGNED.PICKLIST_PRINTED">
+        <value xml:lang="de">Gedruckt</value>
         <value xml:lang="en">Printed</value>
         <value xml:lang="es">Impreso</value>
         <value xml:lang="fr">Imprimé</value>

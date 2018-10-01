@@ -5209,6 +5209,7 @@
     </property>
     <property key="FormFieldTitle_httpsPort">
         <value xml:lang="ar">Https بوابة</value>
+        <value xml:lang="de">Https Port</value>
         <value xml:lang="en">Https Port</value>
         <value xml:lang="es">Puerto Https</value>
         <value xml:lang="fr">Port HTTPS</value>
@@ -5654,6 +5655,7 @@
     </property>
     <property key="FormFieldTitle_pathAlias">
         <value xml:lang="da">Sti alias</value>
+        <value xml:lang="de">Pfadalias</value>
         <value xml:lang="en">Path Alias</value>
         <value xml:lang="fr">Raccourci</value>
         <value xml:lang="it">Path alias</value>
@@ -5665,6 +5667,7 @@
     </property>
     <property key="FormFieldTitle_pathAliasTo">
         <value xml:lang="da">Sti alias til</value>
+        <value xml:lang="de">Pfadalias zu</value>
         <value xml:lang="en">Path Alias To</value>
         <value xml:lang="fr">Raccourci vers</value>
         <value xml:lang="it">Path alias a</value>
@@ -5723,6 +5726,7 @@
     </property>
     <property key="FormFieldTitle_queryLine">
         <value xml:lang="da">Forespørgsel linie</value>
+        <value xml:lang="de">Suchzeile</value>
         <value xml:lang="en">Query Line</value>
         <value xml:lang="fr">Ligne de requête</value>
         <value xml:lang="it">Riga query</value>
@@ -5851,6 +5855,7 @@
     </property>
     <property key="FormFieldTitle_section">
         <value xml:lang="da">Sektion</value>
+        <value xml:lang="de">Sektion</value>
         <value xml:lang="en">section</value>
         <value xml:lang="fr">section</value>
         <value xml:lang="it">sezione</value>
@@ -6150,6 +6155,7 @@
     </property>
     <property key="FormFieldTitle_templateTree">
         <value xml:lang="da">Skabelon træ</value>
+        <value xml:lang="de">Vorlagenbaum</value>
         <value xml:lang="en">Template Tree</value>
         <value xml:lang="fr">Modèle d'arbre</value>
         <value xml:lang="it">Albero template</value>
@@ -6177,6 +6183,7 @@
     </property>
     <property key="FormFieldTitle_topic">
         <value xml:lang="da">Emne</value>
+        <value xml:lang="de">Topic</value>
         <value xml:lang="en">Topic</value>
         <value xml:lang="fr">Sujet</value>
         <value xml:lang="it">Argomento</value>
@@ -6204,6 +6211,7 @@
     </property>
     <property key="FormFieldTitle_updateSurveyResponse">
         <value xml:lang="da">Opdater rundspørge svar</value>
+        <value xml:lang="de">Umfrageantwort aktualisieren</value>
         <value xml:lang="en">Update Survey Response</value>
         <value xml:lang="fr">Actualisation de la réponse du sondage</value>
         <value xml:lang="it">Aggiorna risposta sondaggio</value>
@@ -6230,6 +6238,7 @@
     </property>
     <property key="FormFieldTitle_visualThemeSetId">
         <value xml:lang="da">Visuelt temasæt</value>
+        <value xml:lang="de">Visual Theme Set</value>
         <value xml:lang="en">Visual Theme Set</value>
         <value xml:lang="fr">Ensemble de thèmes visuels</value>
         <value xml:lang="it">Set di temi grafici</value>
@@ -6336,6 +6345,7 @@
     </property>
     <property key="PageTitleAddCompDocInstance">
         <value xml:lang="da">Tilføj sammensat dokument instans</value>
+        <value xml:lang="de">CompDoc Instanz hinzufügen</value>
         <value xml:lang="en">Add CompDoc Instance</value>
         <value xml:lang="fr">Ajouter une instance de document composite</value>
         <value xml:lang="it">Aggiungi Istanza CompDoc</value>
@@ -6347,6 +6357,7 @@
     </property>
     <property key="PageTitleAddCompositeDocumentInstance">
         <value xml:lang="da">Tilføj sammensat dokument instans del side</value>
+        <value xml:lang="de">Composite Document Instanz Teilseite hinzufügen </value>
         <value xml:lang="en">Add Composite Document Instance Part Page</value>
         <value xml:lang="fr">Ajouter une instance d'une partie de page de document composite</value>
         <value xml:lang="it">Aggiungi instanza composizione documenti</value>
@@ -6358,6 +6369,7 @@
     </property>
     <property key="PageTitleAddCompositeDocumentTemplate">
         <value xml:lang="da">Tilføj sammensat dokument skabelon side</value>
+        <value xml:lang="de">Composite Document Vorlage hinzufügen</value>
         <value xml:lang="en">Add Composite Document Template Page</value>
         <value xml:lang="fr">Ajouter une page de modèle de document composite</value>
         <value xml:lang="it">Aggiungi template composizione documenti</value>
@@ -6386,6 +6398,7 @@
         <value xml:lang="zh-TW">新建內容</value>
     </property>
     <property key="PageTitleAddContentKeyword">
+        <value xml:lang="de">Inhalts-Keywort hinzufügen</value>
         <value xml:lang="en">Add Content Keyword</value>
         <value xml:lang="fr">Ajout de mot clé document</value>
         <value xml:lang="ja">コンテンツキーワードを追加</value>

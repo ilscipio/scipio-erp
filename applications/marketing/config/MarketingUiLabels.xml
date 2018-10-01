@@ -3431,6 +3431,7 @@
         <value xml:lang="zh-TW">營業支援(SFA)管理</value>
     </property>
     <property key="SfaManagerApplication">
+        <value xml:lang="de">CRM</value>
         <value xml:lang="en">CRM</value>
         <value xml:lang="fr">Application de gestion des ventes</value>
         <value xml:lang="it">Applicazione gestione forze esterne</value>

@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="PageTitleEditProductCategory">
+        <value xml:lang="de">Produkt-Kategorie editieren</value>
         <value xml:lang="en">Edit Product Category</value>
         <value xml:lang="fr">Edition de la catégorie produit</value>
         <value xml:lang="it">Aggiorna categoria prodotti</value>
@@ -30,6 +31,7 @@
         <value xml:lang="zh-TW">編輯產品分類</value>
     </property>
     <property key="PageTitleProductInfomation">
+        <value xml:lang="de">Produkt Infomation</value>
         <value xml:lang="en">Product Infomation</value>
         <value xml:lang="fr">Information produit</value>
         <value xml:lang="it">Informazione prodotti</value>
@@ -40,6 +42,7 @@
         <value xml:lang="zh-TW">產品資訊</value>
     </property>
     <property key="SetupApp">
+        <value xml:lang="de">Setup Applikation</value>
         <value xml:lang="en">Setup Application</value>
         <value xml:lang="fr">Configuration de l'application</value>
         <value xml:lang="it">Applicazione di configurazione</value>
@@ -50,7 +53,7 @@
         <value xml:lang="zh-TW">設置應用程式</value>
     </property>
     <property key="SetupCompanyName">
-        <value xml:lang="de">SCIPIO - Setup Application</value>
+        <value xml:lang="de">SCIPIO - Setup Applikation</value>
         <value xml:lang="en">SCIPIO - Setup Application</value>
         <value xml:lang="it">SCIPIO - componente di configurazione</value>
         <value xml:lang="ja">SCIPIO - 設定アプリケーション</value>
@@ -79,6 +82,7 @@
         <value xml:lang="zh-TW">開放源碼軟體SCIPIO ERP家族一份子</value>
     </property>
     <property key="SetupCreateNewOrganization">
+        <value xml:lang="de">Neue Organisation</value>
         <value xml:lang="en">Create New Organization</value>
         <value xml:lang="fr">Créer une nouvelle organisation</value>
         <value xml:lang="it">Creare nuova organizzazione</value>
@@ -89,6 +93,7 @@
         <value xml:lang="zh-TW">建立新的組織</value>
     </property>
     <property key="SetupEditOrganizationInformation">
+        <value xml:lang="de">Organisation bearbeiten</value>
         <value xml:lang="en">Edit Organization Information</value>
         <value xml:lang="fr">Configuration de l'information sur l'organisation</value>
         <value xml:lang="it">Aggiorna informazioni organizzazione</value>
@@ -99,6 +104,7 @@
         <value xml:lang="zh-TW">編輯組織資訊</value>
     </property>
     <property key="SetupEditProductStore">
+        <value xml:lang="de">Product Store bearbeiten</value>
         <value xml:lang="en">Edit Product Store</value>
         <value xml:lang="fr">Configuration du centre de profit</value>
         <value xml:lang="it">Aggiorna negozio prodotti</value>
@@ -110,6 +116,7 @@
         <value xml:lang="zh-TW">編輯產品商店</value>
     </property>
     <property key="SetupEventMessage">
+        <value xml:lang="de">Setup funktioniert nur, wenn noch keine Organisationen definiert sind</value>
         <value xml:lang="en">Setup only works if there are no organizations defined yet</value>
         <value xml:lang="fr">Setup n'est activé que si il n'y a pas encore d'organisation définie</value>
         <value xml:lang="it">Configura solo i lavori se non c'è ancora nessuna organizzazione definita</value>
@@ -120,6 +127,7 @@
         <value xml:lang="zh-TW">只有當沒有相關組織時才能設置</value>
     </property>
     <property key="SetupFacility">
+        <value xml:lang="de">Lager/Arbeitsstätten</value>
         <value xml:lang="en">Facility</value>
         <value xml:lang="fr">Lieu de stockage</value>
         <value xml:lang="it">Stabilimento</value>
@@ -130,6 +138,7 @@
         <value xml:lang="zh-TW">場所</value>
     </property>
     <property key="SetupFacilityDescription">
+        <value xml:lang="de">Beschreibung</value>
         <value xml:lang="en">Description</value>
         <value xml:lang="fr">Description du lieu de stockage</value>
         <value xml:lang="it">Descrizione stabilimento</value>
@@ -140,6 +149,7 @@
         <value xml:lang="zh-TW">說明</value>
     </property>
     <property key="SetupFacilityNameIsMissing">
+        <value xml:lang="de">Name wurde nicht gesetzt</value>
         <value xml:lang="en">Facility Name is missing</value>
         <value xml:lang="fr">Le nom du lieu de stockage est absent</value>
         <value xml:lang="it">Stabilimento mancante</value>
@@ -149,6 +159,7 @@
         <value xml:lang="zh-TW">缺少場所名稱</value>
     </property>
     <property key="SetupFirstCustomer">
+        <value xml:lang="de">Erster Kunde</value>
         <value xml:lang="en">First Customer</value>
         <value xml:lang="fr">Premier client</value>
         <value xml:lang="it">Primo cliente</value>
@@ -159,6 +170,7 @@
         <value xml:lang="zh-TW">第一位客戶</value>
     </property>
     <property key="SetupFirstProduct">
+        <value xml:lang="de">Erstes Produkt</value>
         <value xml:lang="en">First Product</value>
         <value xml:lang="fr">Premier produit</value>
         <value xml:lang="it">Primo prodotto</value>
@@ -169,6 +181,7 @@
         <value xml:lang="zh-TW">第一項產品</value>
     </property>
     <property key="SetupInitialSetup">
+        <value xml:lang="de">Ersteinrichtung</value>
         <value xml:lang="en">Initial Setup</value>
         <value xml:lang="fr">Configuration initiale</value>
         <value xml:lang="it">Configurazione iniziale</value>
@@ -179,6 +192,7 @@
         <value xml:lang="zh-TW">初始設置</value>
     </property>
     <property key="SetupNewComponent">
+        <value xml:lang="de">Neue Komponente</value>
         <value xml:lang="en">Setup New Component</value>
         <value xml:lang="fr">Configuration d'un nouveau composant</value>
         <value xml:lang="it">Configura nuovo componente</value>
@@ -189,6 +203,7 @@
         <value xml:lang="zh-TW">設置新的元件</value>
     </property>
     <property key="SetupOrganization">
+        <value xml:lang="de">Organisation</value>
         <value xml:lang="en">Organization</value>
         <value xml:lang="fr">Organisation</value>
         <value xml:lang="it">Organizzazione</value>
@@ -199,6 +214,7 @@
         <value xml:lang="zh-TW">組織</value>
     </property>
     <property key="SetupOrganizationInformation">
+        <value xml:lang="de">Informationen zur Organisation</value>
         <value xml:lang="en">Organization Information</value>
         <value xml:lang="it">Informazioni organizzazione</value>
         <value xml:lang="ja">組織情報</value>
@@ -208,6 +224,7 @@
         <value xml:lang="zh-TW">組織資訊</value>
     </property>
     <property key="SetupOrganizationName">
+        <value xml:lang="de">Name der Organisation</value>
         <value xml:lang="en">Organization name</value>
         <value xml:lang="fr">Nom de l'organisation</value>
         <value xml:lang="it">Nome organizzazione</value>
@@ -218,6 +235,7 @@
         <value xml:lang="zh-TW">組織名稱</value>
     </property>
     <property key="SetupOrganizationNameIsMissing">
+        <value xml:lang="de">Der Organisationsname fehlt</value>
         <value xml:lang="en">Organization name is missing</value>
         <value xml:lang="fr">Nom de l'organisation est absente</value>
         <value xml:lang="it">Nome organizzazione è mancante</value>
@@ -227,6 +245,7 @@
         <value xml:lang="zh-TW">缺少組織名稱</value>
     </property>
     <property key="SetupOrganizationPartyId">
+        <value xml:lang="de">Organisations Party ID</value>
         <value xml:lang="en">Organization Party ID</value>
         <value xml:lang="it">Soggetto organizzazione</value>
         <value xml:lang="ja">組織取引先ID</value>
@@ -236,6 +255,7 @@
         <value xml:lang="zh-TW">組織團體識別</value>
     </property>
     <property key="SetupPageError">
+        <value xml:lang="de">Sie haben nicht genügend Daten, um auf diese Seite zuzugreifen.</value>
         <value xml:lang="en">You do not have sufficient data to access this page.</value>
         <value xml:lang="it">Tu non hai sufficienti diritti per accedere a questa pagina.</value>
         <value xml:lang="ja">このページにアクセスする権限がありません</value>
@@ -245,6 +265,7 @@
         <value xml:lang="zh-TW">您沒有進入此頁面的權限.</value>
     </property>
     <property key="SetupProductCatalog">
+        <value xml:lang="de">Produkt Katalog</value>
         <value xml:lang="en">Product Catalog</value>
         <value xml:lang="it">Catalogo prodotti</value>
         <value xml:lang="ja">製品カタログ</value>
@@ -254,6 +275,7 @@
         <value xml:lang="zh-TW">產品型錄</value>
     </property>
     <property key="SetupProductStore">
+        <value xml:lang="de">Product Store</value>
         <value xml:lang="en">Product Store</value>
         <value xml:lang="it">Negozio prodotti</value>
         <value xml:lang="ja">製品店舗</value>
@@ -263,6 +285,7 @@
         <value xml:lang="zh-TW">產品商店</value>
     </property>
     <property key="SetupProductStoreName">
+        <value xml:lang="de">Product Store Name</value>
         <value xml:lang="en">Product Store name</value>
         <value xml:lang="it">Nome negozio prodotti</value>
         <value xml:lang="ja">製品店舗名称</value>
@@ -272,6 +295,7 @@
         <value xml:lang="zh-TW">產品商店名稱</value>
     </property>
     <property key="SetupProductStoreNameIsMissing">
+        <value xml:lang="de">Store Name fehlt</value>
         <value xml:lang="en">Store Name is missing</value>
         <value xml:lang="it">Nome negozio è mancante</value>
         <value xml:lang="pt-BR">Nome da loja está faltando</value>
@@ -280,6 +304,7 @@
         <value xml:lang="zh-TW">缺少店鋪名稱</value>
     </property>
     <property key="SetupResults">
+        <value xml:lang="de">Ergebenis</value>
         <value xml:lang="en">Results</value>
         <value xml:lang="it">Risultati</value>
         <value xml:lang="ja">結果</value>
@@ -289,6 +314,7 @@
         <value xml:lang="zh-TW">結果</value>
     </property>
     <property key="SetupSetToComplete">
+        <value xml:lang="de">Benötigt um den Vorgang abzuschließen</value>
         <value xml:lang="en">Set to complete</value>
         <value xml:lang="it">Imposta a completato</value>
         <value xml:lang="ja">完了設定</value>
@@ -298,6 +324,7 @@
         <value xml:lang="zh-TW">完成設定</value>
     </property>
     <property key="SetupTheFirstCustomerOf">
+        <value xml:lang="de">Erster Kunde von</value>
         <value xml:lang="en">The First Customer of</value>
         <value xml:lang="fr">Le premier client de</value>
         <value xml:lang="it">Il primo cliente di</value>
@@ -308,6 +335,7 @@
         <value xml:lang="zh-TW">第一個客戶屬於</value>
     </property>
     <property key="SetupWebSite">
+        <value xml:lang="de">Webseite</value>
         <value xml:lang="en">Web Site</value>
         <value xml:lang="it">Sito web</value>
         <value xml:lang="ja">Webサイト</value>

@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="AddParty">
+        <value xml:lang="de">Party hinzufügen</value>
         <value xml:lang="en">Add Party</value>
         <value xml:lang="nl">Partij toevoegen</value>
         <value xml:lang="zh">添加会员</value>
@@ -39,6 +40,7 @@
         <value xml:lang="zh-TW">已分攤成本</value>
     </property>
     <property key="FormFieldTitle_authUserLoginId">
+        <value xml:lang="de">Auth User Login ID</value>
         <value xml:lang="en">Auth User Login ID</value>
         <value xml:lang="es">Usuario</value>
         <value xml:lang="fr">Authentification d'identifiant de connexion</value>

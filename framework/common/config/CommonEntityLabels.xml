@@ -17405,6 +17405,7 @@
         <value xml:lang="zh-TW">投遞</value>
     </property>
     <property key="StatusValidChange.transitionName.SHRSCS_ACCEPTED.SHRSCS_VOIDED">
+        <value xml:lang="de">Ungültig</value>
         <value xml:lang="en">Void</value>
         <value xml:lang="es">Anulado</value>
         <value xml:lang="fr">Annuler</value>
@@ -17437,6 +17438,7 @@
         <value xml:lang="zh-TW">接收</value>
     </property>
     <property key="StatusValidChange.transitionName.SHRSCS_CONFIRMED.SHRSCS_VOIDED">
+        <value xml:lang="de">Ungültig</value>
         <value xml:lang="en">Void</value>
         <value xml:lang="es">Anular</value>
         <value xml:lang="fr">Annuler</value>

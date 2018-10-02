@@ -868,7 +868,14 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     public List<String> getAllFieldNames() {
         //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
-        return new ArrayList<>(this.fields.fieldsMap.keySet()); // SCIPIO: 2018-09-29: fields member
+        // SCIPIO: 2018-10-02: keySet() loses the field order defined in entitymodel.xml, so go through list
+        //return new ArrayList<>(this.fields.fieldsMap.keySet()); // SCIPIO: 2018-09-29: fields member
+        // TODO?: May want to make a pre-built this.fields.allFieldNames later if gets used more at runtime
+        List<String> allFieldNames = new ArrayList<>(this.fields.fieldsList.size());
+        for(ModelField field : this.fields.fieldsList) {
+            allFieldNames.add(field.getName());
+        }
+        return allFieldNames;
         //}
     }
 

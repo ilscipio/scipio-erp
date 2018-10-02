@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="FormFieldTitle_accountNumber">
+        <value xml:lang="de">Kontonummer</value>
         <value xml:lang="en">Account Number</value>
         <value xml:lang="fr">N° de compte</value>
         <value xml:lang="it">Numero Conto</value>
@@ -31,6 +32,7 @@
         <value xml:lang="zh-TW">用戶編號</value>
     </property>
     <property key="FormFieldTitle_actualEmployerPaidPercent">
+        <value xml:lang="de">Vom Arbeitgeber bezahlter Prozentsatz</value>
         <value xml:lang="en">Actual Employer Paid Percent</value>
         <value xml:lang="fr">Pourcentage payé par l'employeur actuel</value>
         <value xml:lang="it">Percentuale Pagata Attualmente all'Impiegato</value>
@@ -42,6 +44,7 @@
         <value xml:lang="zh-TW">員工支付部分百分比</value>
     </property>
     <property key="FormFieldTitle_actualFromDate">
+        <value xml:lang="de">Tatsächliches von Datum</value>
         <value xml:lang="en">Actual From Date</value>
         <value xml:lang="fr">Date réelle de début</value>
         <value xml:lang="it">Data Inizio Attuale</value>
@@ -101,6 +104,7 @@
         <value xml:lang="zh-TW">應聘申請人</value>
     </property>
     <property key="FormFieldTitle_approvalStatus">
+        <value xml:lang="de">Genehmigerstatus</value>
         <value xml:lang="en">Approver Status</value>
         <value xml:lang="fr">Etat d'approbation</value>
         <value xml:lang="ja">承認ステータス</value>
@@ -109,6 +113,7 @@
         <value xml:lang="zh-TW">核准人狀態</value>
     </property>
     <property key="FormFieldTitle_approverId">
+        <value xml:lang="de">Genehmiger Party</value>
         <value xml:lang="en">Approver Party</value>
         <value xml:lang="fr">Approbateur</value>
         <value xml:lang="ja">承認者</value>
@@ -118,6 +123,7 @@
         <value xml:lang="zh-TW">核准人團體</value>
     </property>
     <property key="FormFieldTitle_approverPartyId">
+        <value xml:lang="de">Genehmiger Party</value>
         <value xml:lang="en">Approver Party</value>
         <value xml:lang="fr">Approbateur</value>
         <value xml:lang="ja">承認者</value>
@@ -127,6 +133,7 @@
         <value xml:lang="zh-TW">核准人團體</value>
     </property>
     <property key="FormFieldTitle_bankName">
+        <value xml:lang="de">Bankname</value>
         <value xml:lang="en">Bank Name</value>
         <value xml:lang="fr">Nom de la banque</value>
         <value xml:lang="it">Nome Banca</value>
@@ -138,6 +145,7 @@
         <value xml:lang="zh-TW">銀行名稱</value>
     </property>
     <property key="FormFieldTitle_benefitTypeId">
+        <value xml:lang="de">Vorteilstyp ID</value>
         <value xml:lang="en">Benefit Type ID</value>
         <value xml:lang="fr">Type d'avantage</value>
         <value xml:lang="it">Codice Tipo Benefit</value>
@@ -149,6 +157,7 @@
         <value xml:lang="zh-TW">福利類型識別</value>
     </property>
     <property key="FormFieldTitle_budgetId">
+        <value xml:lang="de">Budget ID</value>
         <value xml:lang="en">Budget ID</value>
         <value xml:lang="fr">Budget</value>
         <value xml:lang="it">Codice Budget</value>
@@ -160,6 +169,7 @@
         <value xml:lang="zh-TW">預算識別</value>
     </property>
     <property key="FormFieldTitle_budgetItemSeqId">
+        <value xml:lang="de">Budget Item Seq ID</value>
         <value xml:lang="en">Budget Item Seq ID</value>
         <value xml:lang="fr">Ligne budgétaire</value>
         <value xml:lang="it">Numero Seq. Riga Budget</value>
@@ -171,6 +181,7 @@
         <value xml:lang="zh-TW">預算項目序號</value>
     </property>
     <property key="FormFieldTitle_budgetItemTypeId">
+        <value xml:lang="de">Budget Item Typ ID</value>
         <value xml:lang="en">Budget Item Type ID</value>
         <value xml:lang="fr">Type de ligne budgétaire</value>
         <value xml:lang="it">Tipo Budget Riga</value>
@@ -182,6 +193,7 @@
         <value xml:lang="zh-TW">預算專案類型識別</value>
     </property>
     <property key="FormFieldTitle_budgetTypeId">
+        <value xml:lang="de">Budgettyp ID</value>
         <value xml:lang="en">Budget Type ID</value>
         <value xml:lang="fr">Type de budget</value>
         <value xml:lang="it">Tipo Budget</value>
@@ -193,6 +205,7 @@
         <value xml:lang="zh-TW">預算類型識別</value>
     </property>
     <property key="FormFieldTitle_communicationDate">
+        <value xml:lang="de">Kommunikations- Datum</value>
         <value xml:lang="en">Communication Date</value>
         <value xml:lang="it">Data comunicazione</value>
         <value xml:lang="ja">通信日</value>
@@ -202,6 +215,7 @@
         <value xml:lang="zh-TW">通訊日期</value>
     </property>
     <property key="FormFieldTitle_company">
+        <value xml:lang="de">Firma</value>
         <value xml:lang="en">Company</value>
         <value xml:lang="it">Azienda</value>
         <value xml:lang="ja">会社</value>
@@ -211,6 +225,7 @@
         <value xml:lang="zh-TW">公司</value>
     </property>
     <property key="FormFieldTitle_dateModified">
+        <value xml:lang="de">Veränderungsdatum</value>
         <value xml:lang="en">Date Modified</value>
         <value xml:lang="fr">Date modifiée</value>
         <value xml:lang="it">Data Modifica</value>
@@ -222,6 +237,7 @@
         <value xml:lang="zh-TW">修改日期</value>
     </property>
     <property key="FormFieldTitle_deductionTypeId">
+        <value xml:lang="de">Abzugstyp ID</value>
         <value xml:lang="en">Deduction Type ID</value>
         <value xml:lang="fr">Réf. dy type de déduction</value>
         <value xml:lang="it">Tipo Deduzione</value>
@@ -233,6 +249,7 @@
         <value xml:lang="zh-TW">扣除類型識別</value>
     </property>
     <property key="FormFieldTitle_emplLeaveReasonTypeId">
+        <value xml:lang="de">Abwesenheitstyp Id</value>
         <value xml:lang="en">Leave Reason Type</value>
         <value xml:lang="fr">Raison du congé</value>
         <value xml:lang="ja">休職理由種類</value>
@@ -242,6 +259,7 @@
         <value xml:lang="zh-TW">離職原因類型</value>
     </property>
     <property key="FormFieldTitle_employeePartyId">
+        <value xml:lang="de">Angestellter Party ID</value>
         <value xml:lang="en">Employee Party ID</value>
         <value xml:lang="fr">Employé</value>
         <value xml:lang="it">Soggetto Impiegato</value>
@@ -253,6 +271,7 @@
         <value xml:lang="zh-TW">員工識別</value>
     </property>
     <property key="FormFieldTitle_employeeRoleTypeId">
+        <value xml:lang="de">Angestellten- Rollentyp ID</value>
         <value xml:lang="en">Employee Role Type ID</value>
         <value xml:lang="fr">Type de rôle de l'employé</value>
         <value xml:lang="it">Tipo Ruolo Impiegato</value>
@@ -276,7 +295,7 @@
         <value xml:lang="zh-TW">應聘求職資訊獲取來源</value>
     </property>
     <property key="FormFieldTitle_emplPositionId">
-        <value xml:lang="de">Anstellungspositions-ID</value>
+        <value xml:lang="de">Angestelltenpositions-ID</value>
         <value xml:lang="en">Empl Position ID</value>
         <value xml:lang="fr">Position de l'employé</value>
         <value xml:lang="it">Posizione Impiegato</value>
@@ -288,6 +307,7 @@
         <value xml:lang="zh-TW">員工職位識別</value>
     </property>
     <property key="FormFieldTitle_emplPositionIdManagedBy">
+        <value xml:lang="de">Angestelltenposition wird verwaltet von</value>
         <value xml:lang="en">Empl Position Id Managed By</value>
         <value xml:lang="fr">Position de l'employé contrôlé par</value>
         <value xml:lang="it">Codice Posizione Impiegato Gestita Da</value>
@@ -299,6 +319,7 @@
         <value xml:lang="zh-TW">該職位管理人</value>
     </property>
     <property key="FormFieldTitle_emplPositionIdReportingTo">
+        <value xml:lang="de">Angestelltenposition berichtet an</value>
         <value xml:lang="en">Empl Position Id Reporting To</value>
         <value xml:lang="it">Posizione impiegato gestito da</value>
         <value xml:lang="ja">報告者従業員職位ID</value>
@@ -308,6 +329,7 @@
         <value xml:lang="zh-TW">該職位上級</value>
     </property>
     <property key="FormFieldTitle_estimatedFromDate">
+        <value xml:lang="de">Voraussichtlich Ab Datum</value>
         <value xml:lang="en">Estimated From Date</value>
         <value xml:lang="fr">Date de début estimée</value>
         <value xml:lang="it">Data Inizio Stimata</value>
@@ -319,6 +341,7 @@
         <value xml:lang="zh-TW">預計起始日期</value>
     </property>
     <property key="FormFieldTitle_estimatedThruDate">
+        <value xml:lang="de">Voraussichtlich Bis Datum</value>
         <value xml:lang="en">Estimated Through Date</value>
         <value xml:lang="fr">Date de fin estimée</value>
         <value xml:lang="it">Data Fine Stimata</value>
@@ -330,6 +353,7 @@
         <value xml:lang="zh-TW">預計結束日期</value>
     </property>
     <property key="FormFieldTitle_examTypeEnumId">
+        <value xml:lang="de">Prüfungstyp Aufzählungs- ID</value>
         <value xml:lang="en">Exam Type Enum ID</value>
         <value xml:lang="fr">Type d'examen</value>
         <value xml:lang="ja">検査種類ID</value>
@@ -338,6 +362,7 @@
         <value xml:lang="zh-TW">考試類型列舉標識</value>
     </property>
     <property key="FormFieldTitle_exemptFlag">
+        <value xml:lang="de">Befreit Flag</value>
         <value xml:lang="en">Exempt Flag</value>
         <value xml:lang="fr">Balise d'exemption</value>
         <value xml:lang="it">Flag Esenzione</value>
@@ -349,6 +374,7 @@
         <value xml:lang="zh-TW">是否免付加班費</value>
     </property>
     <property key="FormFieldTitle_experienceMonths">
+        <value xml:lang="de">Erfahrung in Monaten</value>
         <value xml:lang="en">Experience in months</value>
         <value xml:lang="fr">Expérience en mois</value>
         <value xml:lang="it">Esperienza in mesi</value>
@@ -358,6 +384,7 @@
         <value xml:lang="zh-TW">按月計算的經驗</value>
     </property>
     <property key="FormFieldTitle_experienceYears">
+        <value xml:lang="de">Erfahrung in Jahren</value>
         <value xml:lang="en">Experience in years</value>
         <value xml:lang="fr">Expérience en années</value>
         <value xml:lang="it">Esperienza in anni</value>
@@ -367,6 +394,7 @@
         <value xml:lang="zh-TW">按年計算的經驗</value>
     </property>
     <property key="FormFieldTitle_flatAmount">
+        <value xml:lang="de">Fester Betrag</value>
         <value xml:lang="en">Flat Amount</value>
         <value xml:lang="fr">Montant fixe</value>
         <value xml:lang="it">Importo fisso</value>
@@ -378,6 +406,7 @@
         <value xml:lang="zh-TW">固定工資</value>
     </property>
     <property key="FormFieldTitle_fulltimeFlag">
+        <value xml:lang="de">Vollzeit Flag</value>
         <value xml:lang="en">Fulltime Flag</value>
         <value xml:lang="fr">Balise de plein temps</value>
         <value xml:lang="it">Flag tempo pieno</value>
@@ -389,6 +418,7 @@
         <value xml:lang="zh-TW">是否為全職</value>
     </property>
     <property key="FormFieldTitle_jobLocation">
+        <value xml:lang="de">Arbeitsplatz</value>
         <value xml:lang="en">Job Location</value>
         <value xml:lang="fr">Lieu de travail</value>
         <value xml:lang="it">Luogo di lavoro</value>
@@ -398,6 +428,7 @@
         <value xml:lang="zh-TW">工作地點</value>
     </property>
     <property key="FormFieldTitle_jobPostingEnumId">
+        <value xml:lang="de">Stellenangebot Aufzählungs- ID</value>
         <value xml:lang="en">Job Posting Enum ID</value>
         <value xml:lang="fr">Référence d'offre d'emploi</value>
         <value xml:lang="it">Codice offerta di impiego</value>
@@ -407,6 +438,7 @@
         <value xml:lang="zh-TW">工作公告列舉標識</value>
     </property>
     <property key="FormFieldTitle_jobPostingTypeEnumId">
+        <value xml:lang="de">Stellenangebotstyp</value>
         <value xml:lang="en">Job Posting Type</value>
         <value xml:lang="fr">Type d'offre d'emploi</value>
         <value xml:lang="it">Tipo di offerta di impiego</value>
@@ -416,6 +448,7 @@
         <value xml:lang="zh-TW">工作公告類型</value>
     </property>
     <property key="FormFieldTitle_jobRequisitionId">
+        <value xml:lang="de">Stellenausschreibung ID</value>
         <value xml:lang="en">Job Requisition ID</value>
         <value xml:lang="fr">Demande d'emploi</value>
         <value xml:lang="ja">職務辞令ID</value>
@@ -425,6 +458,7 @@
         <value xml:lang="zh-TW">工作單標識</value>
     </property>
     <property key="FormFieldTitle_justification">
+        <value xml:lang="de">Begründung</value>
         <value xml:lang="en">Justification</value>
         <value xml:lang="fr">Justification</value>
         <value xml:lang="it">Giustificazione</value>
@@ -436,6 +470,7 @@
         <value xml:lang="zh-TW">預算用途</value>
     </property>
     <property key="FormFieldTitle_leaveStatus">
+        <value xml:lang="de">Abwesenheits Status</value>
         <value xml:lang="en">Leave Status</value>
         <value xml:lang="fr">Etat de congé</value>
         <value xml:lang="ja">休職ステータス</value>
@@ -445,6 +480,7 @@
         <value xml:lang="zh-TW">離職狀態</value>
     </property>
     <property key="FormFieldTitle_leaveTypeId">
+        <value xml:lang="de">Abwesenheitstyp ID</value>
         <value xml:lang="en">Leave Type ID</value>
         <value xml:lang="fr">Type de congé</value>
         <value xml:lang="it">Tipo di licenziamento</value>
@@ -455,6 +491,7 @@
         <value xml:lang="zh-TW">請假類型識別</value>
     </property>
     <property key="FormFieldTitle_managerPartyId">
+        <value xml:lang="de">Manager Party ID</value>
         <value xml:lang="en">Manager Party ID</value>
         <value xml:lang="fr">Directeur</value>
         <value xml:lang="it">Manager</value>
@@ -466,6 +503,7 @@
         <value xml:lang="zh-TW">該員工經理</value>
     </property>
     <property key="FormFieldTitle_managerRoleTypeId">
+        <value xml:lang="de">Manager-Rollentyp ID</value>
         <value xml:lang="en">Manager Role Type ID</value>
         <value xml:lang="fr">Type de rôle directeur</value>
         <value xml:lang="it">Tipo Ruolo Manager</value>
@@ -477,6 +515,7 @@
         <value xml:lang="zh-TW">經理角色類型識別</value>
     </property>
     <property key="FormFieldTitle_partyQualTypeId">
+        <value xml:lang="de">Party Qualifizierungstyp ID</value>
         <value xml:lang="en">Party Qual Type ID</value>
         <value xml:lang="fr">Diplôme</value>
         <value xml:lang="it">Tipo qualifica soggetto</value>
@@ -487,6 +526,7 @@
         <value xml:lang="zh-TW">團體資格類型</value>
     </property>
     <property key="FormFieldTitle_payGradeId">
+        <value xml:lang="de">Gehaltsgruppen ID</value>
         <value xml:lang="en">Pay Grade ID</value>
         <value xml:lang="fr">Catégorie de salaire</value>
         <value xml:lang="it">Grado Paga</value>
@@ -498,6 +538,7 @@
         <value xml:lang="zh-TW">薪水等級識別</value>
     </property>
     <property key="FormFieldTitle_payGradeName">
+        <value xml:lang="de">Gehaltsgruppen-Name</value>
         <value xml:lang="en">Pay Grade Name</value>
         <value xml:lang="fr">Nom de catégorie de salaire</value>
         <value xml:lang="it">Nome Grado Paga</value>
@@ -509,6 +550,7 @@
         <value xml:lang="zh-TW">薪水等級名稱</value>
     </property>
     <property key="FormFieldTitle_payHistoryFromDate">
+        <value xml:lang="de">Gehaltshistorie Ab Datum</value>
         <value xml:lang="en">Pay History From Date</value>
         <value xml:lang="fr">Date de début</value>
         <value xml:lang="it">Storia Data Pagamento Da</value>
@@ -520,6 +562,7 @@
         <value xml:lang="zh-TW">歷史薪水開始時間</value>
     </property>
     <property key="FormFieldTitle_payHistoryPartyIdFrom">
+        <value xml:lang="de">Gehaltshistorie von Party Id</value>
         <value xml:lang="en">Pay History Party Id From</value>
         <value xml:lang="fr">Réf. d'acteur depuis</value>
         <value xml:lang="it">Storia Soggetto Pagamento Da</value>
@@ -531,6 +574,7 @@
         <value xml:lang="zh-TW">歷史薪水來自(團體)</value>
     </property>
     <property key="FormFieldTitle_payHistoryPartyIdTo">
+        <value xml:lang="de">Gehaltshistorie zu Party Id</value>
         <value xml:lang="en">Pay History Party Id To</value>
         <value xml:lang="fr">Réf. d'acteur vers</value>
         <value xml:lang="it">Storia Soggetto Pagamento A</value>
@@ -542,6 +586,7 @@
         <value xml:lang="zh-TW">歷史薪水去向(團體)</value>
     </property>
     <property key="FormFieldTitle_payHistoryRoleTypeIdFrom">
+        <value xml:lang="de">Gehaltshistorie von Rollentyp Id</value>
         <value xml:lang="en">Pay History Role Type Id From</value>
         <value xml:lang="fr">Type de rôle depuis</value>
         <value xml:lang="it">Storia Tipo Ruolo Pagamento Da</value>
@@ -553,6 +598,7 @@
         <value xml:lang="zh-TW">歷史薪水來自(角色)</value>
     </property>
     <property key="FormFieldTitle_payHistoryRoleTypeIdTo">
+        <value xml:lang="de">Gehaltshistorie zu Rollentyp Id</value>
         <value xml:lang="en">Pay History Role Type Id To</value>
         <value xml:lang="fr">Type de rôle vers</value>
         <value xml:lang="it">Storia Tipo Ruolo Pagamento A</value>
@@ -564,6 +610,7 @@
         <value xml:lang="zh-TW">歷史薪水去向(角色)</value>
     </property>
     <property key="FormFieldTitle_perfRatingTypeId">
+        <value xml:lang="de">Leistungs- Bewertungstyp ID</value>
         <value xml:lang="en">Perf Rating Type ID</value>
         <value xml:lang="it">Tipo percentuale prestazioni</value>
         <value xml:lang="ja">業績評価種類ID</value>
@@ -573,6 +620,7 @@
         <value xml:lang="zh-TW">績效評級類型識別</value>
     </property>
     <property key="FormFieldTitle_perfReviewId">
+        <value xml:lang="de">Leistungsbewertung ID</value>
         <value xml:lang="en">Perf Review ID</value>
         <value xml:lang="fr">Évaluation des performances</value>
         <value xml:lang="it">Rassegna Prestazioni</value>
@@ -584,6 +632,7 @@
         <value xml:lang="zh-TW">績效評定識別</value>
     </property>
     <property key="FormFieldTitle_perfReviewItemSeqId">
+        <value xml:lang="de">Leistungsbewertung Item Seq Id</value>
         <value xml:lang="en">Perf Review Item Seq ID</value>
         <value xml:lang="it">Riga rassegna prestazioni</value>
         <value xml:lang="ja">業績評価アイテム連番ID</value>
@@ -593,6 +642,7 @@
         <value xml:lang="zh-TW">績效評定細項序列識別</value>
     </property>
     <property key="FormFieldTitle_perfReviewItemTypeId">
+        <value xml:lang="de">Leistungsbewertung Item Type ID</value>
         <value xml:lang="en">Perf Review Item Type ID</value>
         <value xml:lang="it">Tipo riga rassegna prestazioni</value>
         <value xml:lang="ja">業績評価アイテム種類ID</value>
@@ -602,6 +652,7 @@
         <value xml:lang="zh-TW">績效評定細項類型識別</value>
     </property>
     <property key="FormFieldTitle_position">
+        <value xml:lang="de">Rang/Position</value>
         <value xml:lang="en">Position</value>
         <value xml:lang="it">Posizione</value>
         <value xml:lang="ja">職位</value>
@@ -611,6 +662,7 @@
         <value xml:lang="zh-TW">職位</value>
     </property>
     <property key="FormFieldTitle_primaryFlag">
+        <value xml:lang="de">Primär Flag</value>
         <value xml:lang="en">Primary Flag</value>
         <value xml:lang="fr">Balise primaire</value>
         <value xml:lang="it">Flag Primario</value>
@@ -622,6 +674,7 @@
         <value xml:lang="zh-TW">是否為直接上級</value>
     </property>
     <property key="FormFieldTitle_purpose">
+        <value xml:lang="de">Zweck</value>
         <value xml:lang="en">Purpose</value>
         <value xml:lang="fr">But</value>
         <value xml:lang="it">Funzione</value>
@@ -633,6 +686,7 @@
         <value xml:lang="zh-TW">用途</value>
     </property>
     <property key="FormFieldTitle_qualificationDesc">
+        <value xml:lang="de">Qualifikations- Beschreibung</value>
         <value xml:lang="en">Qualification Desc</value>
         <value xml:lang="fr">Desc. compl.</value>
         <value xml:lang="it">Descrizione qualifica</value>
@@ -643,6 +697,7 @@
         <value xml:lang="zh-TW">資格描述</value>
     </property>
     <property key="FormFieldTitle_referredByPartyId">
+        <value xml:lang="de">Von Party ID empfohlen</value>
         <value xml:lang="en">Referred By Party ID</value>
         <value xml:lang="fr">Envoyé par l'acteur</value>
         <value xml:lang="it">Riferito Dal Soggetto</value>
@@ -654,6 +709,7 @@
         <value xml:lang="zh-TW">推薦人</value>
     </property>
     <property key="FormFieldTitle_responsibilityTypeId">
+        <value xml:lang="de">Verantwortungstyp ID</value>
         <value xml:lang="en">Responsibility Type ID</value>
         <value xml:lang="fr">Type de responsabilité</value>
         <value xml:lang="it">Tipo Responsibilità</value>
@@ -665,6 +721,7 @@
         <value xml:lang="zh-TW">責任類型識別</value>
     </property>
     <property key="FormFieldTitle_resumeDate">
+        <value xml:lang="de">Lebenslauf Datum</value>
         <value xml:lang="en">Resume Date</value>
         <value xml:lang="fr">Date de CV</value>
         <value xml:lang="it">Data curriculum vitae</value>
@@ -675,6 +732,7 @@
         <value xml:lang="zh-TW">交簡歷日期</value>
     </property>
     <property key="FormFieldTitle_resumeId">
+        <value xml:lang="de">Lebenslauf ID</value>
         <value xml:lang="en">Resume ID</value>
         <value xml:lang="fr">CV</value>
         <value xml:lang="it">Rif. curriculum vitae</value>
@@ -685,6 +743,7 @@
         <value xml:lang="zh-TW">簡歷識別</value>
     </property>
     <property key="FormFieldTitle_resumeText">
+        <value xml:lang="de">Lebenslauf Text</value>
         <value xml:lang="en">Resume Text</value>
         <value xml:lang="fr">Texte de CV</value>
         <value xml:lang="it">Testo curriculum vitae</value>
@@ -695,6 +754,7 @@
         <value xml:lang="zh-TW">簡歷正文</value>
     </property>
     <property key="FormFieldTitle_routingNumber">
+        <value xml:lang="de">Routing Nummer</value>
         <value xml:lang="en">Routing Number</value>
         <value xml:lang="fr">N° de routage</value>
         <value xml:lang="it">Numero Routing</value>
@@ -706,6 +766,7 @@
         <value xml:lang="zh-TW">匯款路線碼</value>
     </property>
     <property key="FormFieldTitle_salary">
+        <value xml:lang="de">Gehalt</value>
         <value xml:lang="en">Salary</value>
         <value xml:lang="it">Salario</value>
         <value xml:lang="ja">給与</value>
@@ -715,6 +776,7 @@
         <value xml:lang="zh-TW">薪水</value>
     </property>
     <property key="FormFieldTitle_salaryFlag">
+        <value xml:lang="de">Gehalt Flag</value>
         <value xml:lang="en">Salary Flag</value>
         <value xml:lang="fr">Balise de salaire</value>
         <value xml:lang="it">Flag Salario</value>
@@ -738,6 +800,7 @@
         <value xml:lang="zh-TW">技能等級</value>
     </property>
     <property key="FormFieldTitle_skillTypeId">
+        <value xml:lang="de">Fähigkeitstyp ID</value>
         <value xml:lang="en">Skill Type ID</value>
         <value xml:lang="fr">Compétence</value>
         <value xml:lang="it">Codice Tipo Abilità</value>
@@ -761,6 +824,7 @@
         <value xml:lang="zh-TW">技能掌握日期</value>
     </property>
     <property key="FormFieldTitle_temporaryFlag">
+        <value xml:lang="de">Vorrübergehend Flag</value>
         <value xml:lang="en">Temporary Flag</value>
         <value xml:lang="fr">Balise temporaire</value>
         <value xml:lang="it">Flag Temporaneo</value>
@@ -772,6 +836,7 @@
         <value xml:lang="zh-TW">是否為臨時</value>
     </property>
     <property key="FormFieldTitle_terminationReasonId">
+        <value xml:lang="de">Kündigungsgrund ID</value>
         <value xml:lang="en">Termination Reason ID</value>
         <value xml:lang="fr">Motif de la fin de contrat</value>
         <value xml:lang="it">Motivazione Licenziamento</value>
@@ -783,6 +848,7 @@
         <value xml:lang="zh-TW">雇佣終止原因識別</value>
     </property>
     <property key="FormFieldTitle_terminationTypeId">
+        <value xml:lang="de">Kündigungsart ID</value>
         <value xml:lang="en">Termination Type ID</value>
         <value xml:lang="fr">Type de fin de contrat</value>
         <value xml:lang="it">Tipo Licenziamento</value>
@@ -794,6 +860,7 @@
         <value xml:lang="zh-TW">雇佣終止類型識別</value>
     </property>
     <property key="FormFieldTitle_title">
+        <value xml:lang="de">Titel</value>
         <value xml:lang="en">Title</value>
         <value xml:lang="fr">Titre</value>
         <value xml:lang="ja">タイトル</value>
@@ -802,6 +869,7 @@
         <value xml:lang="zh-TW">標題</value>
     </property>
     <property key="FormFieldTitle_trainingClassTypeId">
+        <value xml:lang="de">Trainings-Klassen-Typ ID</value>
         <value xml:lang="en">Training Class Type ID</value>
         <value xml:lang="fr">Type de formation</value>
         <value xml:lang="it">Tipo classe corso</value>
@@ -812,6 +880,7 @@
         <value xml:lang="zh-TW">教育訓練課程類型識別</value>
     </property>
     <property key="FormFieldTitle_trainingRequestId">
+        <value xml:lang="de">Trainingsanfrage ID</value>
         <value xml:lang="en">Training Request ID</value>
         <value xml:lang="fr">Approbation</value>
         <value xml:lang="ja">トレーニングリクエストID</value>
@@ -820,6 +889,7 @@
         <value xml:lang="zh-TW">教育訓練請求標識</value>
     </property>
     <property key="FormFieldTitle_unemploymentClaimDate">
+        <value xml:lang="de">Arbeitslosenanspruch Datum</value>
         <value xml:lang="en">Unemployment Claim Date</value>
         <value xml:lang="fr">Date de demande du chômage</value>
         <value xml:lang="it">Data Reclamo Disoccupazione</value>
@@ -831,6 +901,7 @@
         <value xml:lang="zh-TW">解除雇佣聲明日期</value>
     </property>
     <property key="FormFieldTitle_unemploymentClaimId">
+        <value xml:lang="de">Arbeitslosenanspruch ID</value>
         <value xml:lang="en">Unemployment Claim ID</value>
         <value xml:lang="fr">Date de demande du chômage</value>
         <value xml:lang="it">Reclamo Disoccupazione</value>
@@ -842,7 +913,8 @@
         <value xml:lang="zh-TW">解除雇佣聲明識別</value>
     </property>
     <property key="FormFieldTitle_verifStatusId">
-        <value xml:lang="en">Verif Status ID</value>
+        <value xml:lang="de">Überprüfungsstatus ID</value>
+        <value xml:lang="en">Verify Status ID</value>
         <value xml:lang="fr">Verifié</value>
         <value xml:lang="it">Stato verifica</value>
         <value xml:lang="ja">確認ステータスID</value>
@@ -864,6 +936,7 @@
         <value xml:lang="zh-TW">工作經驗(年)</value>
     </property>
     <property key="HumanHolidayName">
+        <value xml:lang="de">Feiertagsname</value>
         <value xml:lang="en">Holiday Name</value>
         <value xml:lang="ja">休日名</value>
         <value xml:lang="vi">Tên kỳ Xin nghỉ</value>
@@ -871,6 +944,7 @@
         <value xml:lang="zh-TW">假日名稱</value>
     </property>
     <property key="HumanResAddEmplLeave">
+        <value xml:lang="de">Abwesenheit hinzufügen</value>
         <value xml:lang="en">Add Employee Leave</value>
         <value xml:lang="fr">Ajouter le congé</value>
         <value xml:lang="it">Aggiungi uscita di un'impiegato</value>
@@ -881,6 +955,7 @@
         <value xml:lang="zh-TW">新建員工請假</value>
     </property>
     <property key="HumanResAddEmplLeaveReasonType">
+        <value xml:lang="de">Abwesenheitsgrund hinzufügen</value>
         <value xml:lang="en">Add Employee Leave Reason</value>
         <value xml:lang="fr">Ajouter un type de congé</value>
         <value xml:lang="ja">従業員休職理由を追加</value>
@@ -890,6 +965,7 @@
         <value xml:lang="zh-TW">增加員工離職原因</value>
     </property>
     <property key="HumanResAddEmplLeaveType">
+        <value xml:lang="de">Neue Abwesenheitsart</value>
         <value xml:lang="en">Add EmplLeave Types</value>
         <value xml:lang="fr">Ajouter un type de congé</value>
         <value xml:lang="it">Aggiungi tipo licenziamento impiegato</value>
@@ -900,6 +976,7 @@
         <value xml:lang="zh-TW">新建員工請假類型</value>
     </property>
     <property key="HumanResAddEmplPositionFulfillment">
+        <value xml:lang="de">Positionseignung hinzufügen</value>
         <value xml:lang="en">Add Position Fulfillment</value>
         <value xml:lang="fr">Ajouter l'acquisition de position</value>
         <value xml:lang="it">Aggiungi posizione soddisfazione</value>
@@ -910,6 +987,7 @@
         <value xml:lang="zh-TW">新建屬於該職位員工</value>
     </property>
     <property key="HumanResAddEmplPositionResponsibility">
+        <value xml:lang="de">Stellenpflichten hinzufügen</value>
         <value xml:lang="en">Add Position Responsibility</value>
         <value xml:lang="fr">Ajouter la responsabilité de la position</value>
         <value xml:lang="it">Aggiungi posizione responsabilità</value>
@@ -920,6 +998,7 @@
         <value xml:lang="zh-TW">新建職位職責</value>
     </property>
     <property key="HumanResAddJobInterviewType">
+        <value xml:lang="de">Vorstellungsgesprächtyp hinzufügen</value>
         <value xml:lang="en">Add Job Interview Type</value>
         <value xml:lang="fr">Ajouter un type d'entretien</value>
         <value xml:lang="ja">職務面談種類を追加</value>
@@ -929,6 +1008,7 @@
         <value xml:lang="zh-TW">增加工作面試類型</value>
     </property>
     <property key="HumanResAddPartyBenefit">
+        <value xml:lang="de">Begünstigung hinzufgüen</value>
         <value xml:lang="en">Add Party Benefit</value>
         <value xml:lang="fr">Ajouter l'avantage</value>
         <value xml:lang="it">Aggiungi benefit soggetto</value>
@@ -939,6 +1019,7 @@
         <value xml:lang="zh-TW">新建團體福利</value>
     </property>
     <property key="HumanResAddPartyQual">
+        <value xml:lang="de">Qualifikation hinzufügen</value>
         <value xml:lang="en">Add Party Qualification</value>
         <value xml:lang="fr">Ajouter la qualification</value>
         <value xml:lang="it">Aggiungi qualifica soggetto</value>
@@ -949,6 +1030,7 @@
         <value xml:lang="zh-TW">增加團體資格</value>
     </property>
     <property key="HumanResAddPartySkill">
+        <value xml:lang="de">Fähigkeit hinzufügen</value>
         <value xml:lang="en">Add Party Skill</value>
         <value xml:lang="fr">Ajoutez la compétence</value>
         <value xml:lang="it">Aggiungi abilità soggetto</value>
@@ -959,6 +1041,7 @@
         <value xml:lang="zh-TW">增加團體技能</value>
     </property>
     <property key="HumanResAddPayrollPreference">
+        <value xml:lang="de">Gehaltsabrechnungs-präferenz hinzufügen</value>
         <value xml:lang="en">Add Payroll Preference</value>
         <value xml:lang="fr">Ajouter la préférence de registre du personnel</value>
         <value xml:lang="it">Aggiungi preferenze paghe</value>
@@ -969,6 +1052,7 @@
         <value xml:lang="zh-TW">新建薪水支付方式</value>
     </property>
     <property key="HumanResAddPerfNote">
+        <value xml:lang="de">Leistungshinweis hinzufügen</value>
         <value xml:lang="en">Add Performance Note</value>
         <value xml:lang="fr">Ajouter la note de performance</value>
         <value xml:lang="it">Aggiungi note di valutazione</value>
@@ -979,6 +1063,7 @@
         <value xml:lang="zh-TW">新建績效注釋</value>
     </property>
     <property key="HumanResAddPerfReviewItems">
+        <value xml:lang="de">Leistungsbeurteilungspunkte hinzufügen</value>
         <value xml:lang="en">Add PerfReview Items</value>
         <value xml:lang="fr">Ajouter des lignes d'évaluation de performance</value>
         <value xml:lang="it">Aggiungi righe di valutazione</value>
@@ -1000,6 +1085,7 @@
         <value xml:lang="zh-TW">新建個人教育訓練</value>
     </property>
     <property key="HumanResAddReportedToEmplPositionReportingStruct">
+        <value xml:lang="de">Personal-Hierarchie anlegen [Reported To ${parameters.emplPositionId}]</value>
         <value xml:lang="en">Add Empl Position Reporting Struct [Reported To ${parameters.emplPositionId}]</value>
         <value xml:lang="fr">Ajouter le compte-rendu de position [en rapport avec ${parameters.emplPositionId}</value>
         <value xml:lang="it">Aggiungi posizione impiegato per le competenze [competenze di ${parameters.emplPositionId}]</value>
@@ -1010,6 +1096,7 @@
         <value xml:lang="zh-TW">新建員工職位級別結構 [上級為 ${parameters.emplPositionId}]</value>
     </property>
     <property key="HumanResAddReportsToEmplPositionReportingStruct">
+        <value xml:lang="de">Personal-Hierarchie anlegen [${parameters.emplPositionId} Reports To]</value>
         <value xml:lang="en">Add Empl Position Reporting Struct [${parameters.emplPositionId} Reports To]</value>
         <value xml:lang="fr">Ajouter le compte-rendu de position [${parameters.emplPositionId} qui se rapporte à]</value>
         <value xml:lang="it">Aggiungi posizione impiegato per le competenze [${parameters.emplPositionId} competenze a]</value>
@@ -1020,6 +1107,7 @@
         <value xml:lang="zh-TW">新建員工職位級別結構 [${parameters.emplPositionId}的上級為]</value>
     </property>
     <property key="HumanResAddSalaryStep">
+        <value xml:lang="de">Gehaltsstufe hinzufügen</value>
         <value xml:lang="en">Add Salary Step</value>
         <value xml:lang="fr">Ajouter l'augmentation de salaire</value>
         <value xml:lang="it">Aggiungi avanzamento di salario</value>
@@ -1030,6 +1118,7 @@
         <value xml:lang="zh-TW">新建薪水等級</value>
     </property>
     <property key="HumanResAddSkillType">
+        <value xml:lang="de">Fähigkeitstyp hinzufügen</value>
         <value xml:lang="en">Add Skill Type</value>
         <value xml:lang="fr">Ajouter un type de compétence</value>
         <value xml:lang="it">Aggiungi tipo abilità</value>
@@ -1040,6 +1129,7 @@
         <value xml:lang="zh-TW">新建技能類型</value>
     </property>
     <property key="HumanResAddTerminationReason">
+        <value xml:lang="de">Kündigungsgrund hinzufügen</value>
         <value xml:lang="en">Add Termination Reason</value>
         <value xml:lang="fr">Ajouter le motif de la fin de contrat</value>
         <value xml:lang="it">Aggiungi motivazione licenziamento</value>
@@ -1050,6 +1140,7 @@
         <value xml:lang="zh-TW">新建雇佣終止原因</value>
     </property>
     <property key="HumanResAddTerminationType">
+        <value xml:lang="de">Kündigungsart hinzufügen</value>
         <value xml:lang="en">Add Termination Type</value>
         <value xml:lang="fr">Ajouter un type de fin de contrat</value>
         <value xml:lang="it">Aggiungi tipo terminazione</value>
@@ -1060,6 +1151,7 @@
         <value xml:lang="zh-TW">新建雇佣終止類型</value>
     </property>
     <property key="HumanResAddUnemploymentClaim">
+        <value xml:lang="de">Arbeitslosenanspruch hinzufügen</value>
         <value xml:lang="en">Add Unemployment Claim</value>
         <value xml:lang="fr">Ajouter la demande de chômage</value>
         <value xml:lang="it">Aggiungi richiesta di disoccupazione</value>
@@ -1070,6 +1162,7 @@
         <value xml:lang="zh-TW">新建解除雇佣聲明</value>
     </property>
     <property key="HumanResAddValidResponsibility">
+        <value xml:lang="de">Gültige Verantwortung hinzufügen</value>
         <value xml:lang="en">Add Valid Responsibility</value>
         <value xml:lang="fr">Ajouter une responsabilité valable</value>
         <value xml:lang="it">Aggiungi responsibilità valida</value>
@@ -1109,6 +1202,7 @@
         <value xml:lang="fr">Candidature</value>
     </property>
     <property key="HumanResApproval">
+        <value xml:lang="de">Genehmigung</value>
         <value xml:lang="en">Approval</value>
         <value xml:lang="fr">Approbation</value>
         <value xml:lang="ja">承認</value>
@@ -1118,6 +1212,7 @@
         <value xml:lang="zh-TW">核准</value>
     </property>
     <property key="HumanResBudgetID">
+        <value xml:lang="de">Budget ID</value>
         <value xml:lang="en">Budget ID</value>
         <value xml:lang="fr">Budget</value>
         <value xml:lang="it">Codice Budget</value>
@@ -1129,6 +1224,7 @@
         <value xml:lang="zh-TW">預算識別</value>
     </property>
     <property key="HumanResBudgetItemSeqId">
+        <value xml:lang="de">Budget Item ID</value>
         <value xml:lang="en">Budget Item ID</value>
         <value xml:lang="fr">Ligne budgétaire</value>
         <value xml:lang="it">Riga Budget</value>
@@ -1140,6 +1236,7 @@
         <value xml:lang="zh-TW">預算專案識別</value>
     </property>
     <property key="HumanResCompanyName">
+        <value xml:lang="de">SCIPIO - Personalmanagement</value>
         <value xml:lang="en">SCIPIO - Human Resources Manager</value>
         <value xml:lang="fr">SCIPIO - Gestion de ressources humaines</value>
         <value xml:lang="it">SCIPIO - Gestione Risorse Umane</value>
@@ -1151,6 +1248,7 @@
         <value xml:lang="zh-TW">SCIPIO - 人力資源管理</value>
     </property>
     <property key="HumanResCompanySubtitle">
+        <value xml:lang="de">Teil der SCIPIO ERP Familie an Open Source Software</value>
         <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
         <value xml:lang="fr">Partie de l'ouverture pour la famille d'affaires du logiciel libre SCIPIO ERP</value>
         <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
@@ -1162,6 +1260,7 @@
         <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="HumanResCurrentEmploymentData">
+        <value xml:lang="de">Aktuelle Anstellungsinformationen</value>
         <value xml:lang="en">Current Employment information</value>
         <value xml:lang="fr">Informations actuelles sur l'emploi</value>
         <value xml:lang="it">Informazioni attuali sull'impiego</value>
@@ -1177,6 +1276,7 @@
         <value xml:lang="fr">Postes à pourvoir</value>
     </property>
     <property key="HumanResEditAgreementEmploymentAppl">
+        <value xml:lang="de">Bewerbungszustimmung bearbeiten</value>
         <value xml:lang="en">Edit Agreement Employment Appl</value>
         <value xml:lang="fr">Modifier l'accord d'application d'emploi</value>
         <value xml:lang="it">Aggiorna applicazione contratto d'impiego</value>
@@ -1187,6 +1287,7 @@
         <value xml:lang="zh-TW">編輯雇佣合約</value>
     </property>
     <property key="HumanResEditApprovalStatus">
+        <value xml:lang="de">Genehmigungsstatus bearbeiten</value>
         <value xml:lang="en">Edit Approval Status</value>
         <value xml:lang="fr">Modifier un status d'approbation</value>
         <value xml:lang="ja">承認ステータスを編集</value>
@@ -1196,6 +1297,7 @@
         <value xml:lang="zh-TW">編輯核准狀態</value>
     </property>
     <property key="HumanResEditEmplLeave">
+        <value xml:lang="de">Mitarbeiterabwesenheit bearbeiten</value>
         <value xml:lang="en">Edit Empl Leave</value>
         <value xml:lang="fr">Modifier une demande de congé</value>
         <value xml:lang="it">Aggiorna licenziamento impiegato</value>
@@ -1206,6 +1308,7 @@
         <value xml:lang="zh-TW">編輯員工請假</value>
     </property>
     <property key="HumanResEditEmplLeaveType">
+        <value xml:lang="de">Abwesenheitstyp bearbeiten</value>
         <value xml:lang="en">Edit Empl Leave Type</value>
         <value xml:lang="fr">Modifier un type de congé</value>
         <value xml:lang="it">Aggiorna tipo licenziamento impiegato</value>
@@ -1216,6 +1319,7 @@
         <value xml:lang="zh-TW">編輯員工請假類型</value>
     </property>
     <property key="HumanResEditEmployment">
+        <value xml:lang="de">Anstellung bearbeiten</value>
         <value xml:lang="en">Edit Employment</value>
         <value xml:lang="fr">Modifier l'emploi</value>
         <value xml:lang="it">Aggiorna impiego</value>
@@ -1227,6 +1331,7 @@
         <value xml:lang="zh-TW">編輯雇佣</value>
     </property>
     <property key="HumanResEditEmploymentApp">
+        <value xml:lang="de">Bewerbung bearbeiten</value>
         <value xml:lang="en">Edit Employment Application</value>
         <value xml:lang="fr">Modifier la demande d'emploi</value>
         <value xml:lang="it">Aggiorna la candidatura d'impiego</value>
@@ -1238,6 +1343,7 @@
         <value xml:lang="zh-TW">編輯雇佣申請</value>
     </property>
     <property key="HumanResEditEmplPosition">
+        <value xml:lang="de">Mitarbeiterposition bearbeiten</value>
         <value xml:lang="en">Edit Employee Position</value>
         <value xml:lang="fr">Modifier la position de l'employé</value>
         <value xml:lang="it">Aggiorna posizione impiegato</value>
@@ -1248,6 +1354,7 @@
         <value xml:lang="zh-TW">編輯員工職位</value>
     </property>
     <property key="HumanResEditEmplPositionReportingStruct">
+        <value xml:lang="de">Personalhierarchie bearbeiten</value>
         <value xml:lang="en">Edit EmplPosition Reporting Structure</value>
         <value xml:lang="fr">Modifier la structure du rapport de position des employés</value>
         <value xml:lang="it">Aggiorna Struttura Stampa Posizione Impiegati</value>
@@ -1259,6 +1366,7 @@
         <value xml:lang="zh-TW">編輯員工職位級別結構</value>
     </property>
     <property key="HumanResEditEmplPositionType">
+        <value xml:lang="de">Mitarbeiterpositonstypen bearbeiten</value>
         <value xml:lang="en">Edit Position Types</value>
         <value xml:lang="fr">Modifier les types de position</value>
         <value xml:lang="it">Aggiorna tipi posizione</value>
@@ -1269,6 +1377,7 @@
         <value xml:lang="zh-TW">編輯職位類型</value>
     </property>
     <property key="HumanResEditJobInterview">
+        <value xml:lang="de">Vorstellungsgespräch bearbeiten</value>
         <value xml:lang="en">Edit Job Interview</value>
         <value xml:lang="fr">Modifier un entretien</value>
         <value xml:lang="ja">職務面談を編集</value>
@@ -1278,6 +1387,7 @@
         <value xml:lang="zh-TW">編輯工作面試</value>
     </property>
     <property key="HumanResEditJobRequisition">
+        <value xml:lang="de">Stellenausschreibungen bearbeiten</value>
         <value xml:lang="en">Edit Job Requisition</value>
         <value xml:lang="fr">Editer une demande de poste</value>
         <value xml:lang="ja">職務辞令を編集</value>
@@ -1287,6 +1397,7 @@
         <value xml:lang="zh-TW">編輯工作單</value>
     </property>
     <property key="HumanResEditLeaveApprovalStatus">
+        <value xml:lang="de">Urlaubsantragstatus bearbeiten</value>
         <value xml:lang="en">Edit Leave Approval Status</value>
         <value xml:lang="ja">休職承認ステータスを編集</value>
         <value xml:lang="pt-BR">Editar Estado de aprovação de licença</value>
@@ -1295,6 +1406,7 @@
         <value xml:lang="zh-TW">編輯離職核准狀態</value>
     </property>
     <property key="HumanResEditPartyBenefit">
+        <value xml:lang="de">Vergünstigungen bearbeiten</value>
         <value xml:lang="en">Party Benefits</value>
         <value xml:lang="fr">Avantages</value>
         <value xml:lang="it">Benefit soggetto</value>
@@ -1305,6 +1417,7 @@
         <value xml:lang="zh-TW">團體福利</value>
     </property>
     <property key="HumanResEditPartyQual">
+        <value xml:lang="de">Qualifikation bearbeiten</value>
         <value xml:lang="en">Edit party Qualification</value>
         <value xml:lang="fr">Modifier la qualification de l'acteur</value>
         <value xml:lang="it">Aggiorna Qualifica Soggetto</value>
@@ -1316,6 +1429,7 @@
         <value xml:lang="zh-TW">編輯團體資格</value>
     </property>
     <property key="HumanResEditPartyResume">
+        <value xml:lang="de">Lebenslauf bearbeiten</value>
         <value xml:lang="en">Edit Party Resume</value>
         <value xml:lang="fr">Modifier le CV de l'acteur</value>
         <value xml:lang="it">Aggiorna Riassunto Soggetto</value>
@@ -1327,6 +1441,7 @@
         <value xml:lang="zh-TW">編輯團體履歷</value>
     </property>
     <property key="HumanResEditPartyReview">
+        <value xml:lang="de">Mitarbeiterbewertung</value>
         <value xml:lang="en">Party Reviews</value>
         <value xml:lang="fr">Evaluations</value>
         <value xml:lang="it">Verifica soggetto</value>
@@ -1337,6 +1452,7 @@
         <value xml:lang="zh-TW">團體評定</value>
     </property>
     <property key="HumanResEditPartySkill">
+        <value xml:lang="de">Fähigkeiten bearbeiten</value>
         <value xml:lang="en">Edit Party Skill</value>
         <value xml:lang="fr">Modifier les compétences de l'acteur</value>
         <value xml:lang="it">Aggiorna Abilità Soggetto</value>
@@ -1348,6 +1464,7 @@
         <value xml:lang="zh-TW">編輯團體技能</value>
     </property>
     <property key="HumanResEditPayGrade">
+        <value xml:lang="de">Gehaltsstufe bearbeiten</value>
         <value xml:lang="en">Edit Pay Grade</value>
         <value xml:lang="fr">Modifier l'échelon de salaire</value>
         <value xml:lang="it">Aggiorna grado paga</value>
@@ -1358,6 +1475,7 @@
         <value xml:lang="zh-TW">編輯薪水等級</value>
     </property>
     <property key="HumanResEditPayHistory">
+        <value xml:lang="de">Gehaltshistorie</value>
         <value xml:lang="en">Pay Histories</value>
         <value xml:lang="fr">Historique de salaire</value>
         <value xml:lang="it">Storia paghe</value>
@@ -1368,6 +1486,7 @@
         <value xml:lang="zh-TW">編輯薪水歷史</value>
     </property>
     <property key="HumanResEditPayrollPreference">
+        <value xml:lang="de">Gehaltsabrechnungs- Präferenz</value>
         <value xml:lang="en">Payroll Preferences</value>
         <value xml:lang="fr">Préférences de registre du personnel</value>
         <value xml:lang="it">Preferenze paghe</value>

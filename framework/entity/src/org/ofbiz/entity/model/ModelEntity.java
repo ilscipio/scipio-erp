@@ -758,8 +758,10 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     public List<ModelField> getFieldsUnmodifiable() {
         //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
-        List<ModelField> newList = new ArrayList<>(this.fields.fieldsList); // SCIPIO: 2018-09-29: fields member
-        return Collections.unmodifiableList(newList);
+        // SCIPIO: 2018-10-02: Extra ArrayList copy is useless
+        //List<ModelField> newList = new ArrayList<>(this.fields.fieldsList); // SCIPIO: 2018-09-29: fields member
+        //return Collections.unmodifiableList(newList);
+        return Collections.unmodifiableList(this.fields.fieldsList); // SCIPIO: 2018-09-29: fields member
         //}
     }
 

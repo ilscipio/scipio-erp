@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="MrpEventType.description.MANUF_ORDER_RECP">
+        <value xml:lang="de">Fertigungsauftrags- bestätigung</value>
         <value xml:lang="en">Manufacturing Order receipt</value>
         <value xml:lang="es">Recibo de Orden de Producción</value>
         <value xml:lang="fr">Reçu d'ordre de fabrication</value>
@@ -33,7 +34,7 @@
         <value xml:lang="zh-TW">製造訂單收據</value>
     </property>
     <property key="MrpEventType.description.MANUF_ORDER_REQ">
-        <value xml:lang="en">Manufacturing Order requirement</value>
+        <value xml:lang="en">Fertigungsauftrags- anforderung</value>
         <value xml:lang="es">Requisito de Orden de Producción</value>
         <value xml:lang="fr">Besoin d'ordre de fabrication</value>
         <value xml:lang="it">Fabbisogno Ordine Produzione</value>
@@ -46,6 +47,7 @@
         <value xml:lang="zh-TW">製造訂單需求</value>
     </property>
     <property key="MrpEventType.description.MRP_REQUIREMENT">
+        <value xml:lang="de">Materialsbedarfsplanungs- anforderung</value>
         <value xml:lang="en">Mrp requirement</value>
         <value xml:lang="es">Requisito de Mrp</value>
         <value xml:lang="fr">Besoin Mrp</value>
@@ -60,6 +62,7 @@
         <value xml:lang="zh-TW">材料需求計劃的需求</value>
     </property>
     <property key="MrpEventType.description.PROP_MANUF_O_RECP">
+        <value xml:lang="de">Vorgeschlagene Fertigungsauftrags- bestätigung</value>
         <value xml:lang="en">Proposed Manufacturing Order receipt</value>
         <value xml:lang="es">Orden de Producción Propuesta</value>
         <value xml:lang="fr">Reçu d'ordre de fabrication proposé</value>
@@ -73,6 +76,7 @@
         <value xml:lang="zh-TW">已提交的製造訂單收據</value>
     </property>
     <property key="MrpEventType.description.PROP_PUR_O_RECP">
+        <value xml:lang="de">Vorgeschlagener Bestellschein</value>
         <value xml:lang="en">Proposed Purchase Order receipt</value>
         <value xml:lang="es">Recibo de Pedido de Compra propuesto</value>
         <value xml:lang="fr">Reçu d'ordre d'achat proposé</value>
@@ -86,6 +90,7 @@
         <value xml:lang="zh-TW">已提交的採購訂單收據</value>
     </property>
     <property key="MrpEventType.description.PUR_ORDER_RECP">
+        <value xml:lang="de">Bestellschein</value>
         <value xml:lang="en">Purchase Order receipt</value>
         <value xml:lang="es">Recibo de Pedido de Compra</value>
         <value xml:lang="fr">Reçu d'ordre d'achat</value>
@@ -99,6 +104,7 @@
         <value xml:lang="zh-TW">購物訂單收據</value>
     </property>
     <property key="MrpEventType.description.SALE_ORDER_SHIP">
+        <value xml:lang="de">Kundenauftragsversand</value>
         <value xml:lang="en">Sales order shipment</value>
         <value xml:lang="es">Envío de Pedido de Venta</value>
         <value xml:lang="fr">Expédition de commande de vente</value>
@@ -113,6 +119,7 @@
         <value xml:lang="zh-TW">銷售訂單運輸</value>
     </property>
     <property key="TechDataCalendar.description.DEFAULT">
+        <value xml:lang="de">Standardkalender, wenn kein bestimmter Kalender definiert ist</value>
         <value xml:lang="en">Default calendar used when no specific calendar is defined</value>
         <value xml:lang="es">El calendario por defecto se usará cuando no se especifique otro</value>
         <value xml:lang="fr">Calendrier utilisé par défaut quand aucun calendrier spécifique n'est défini</value>
@@ -127,6 +134,7 @@
         <value xml:lang="zh-TW">當沒有指定日曆時所用的預設日曆</value>
     </property>
     <property key="TechDataCalendar.description.DEMO_CALENDAR">
+        <value xml:lang="de">Demo-Workcenter-Kalender</value>
         <value xml:lang="en">Demo Workcenter Calendar</value>
         <value xml:lang="it">Calendario demo</value>
         <value xml:lang="ja">デモワークセンターカレンダ</value>
@@ -136,7 +144,8 @@
         <value xml:lang="zh-TW">演示作業中心日曆</value>
     </property>
     <property key="TechDataCalendar.description.DRYING">
-        <value xml:lang="en">DRYING</value>
+        <value xml:lang="de">Trocknen</value>
+        <value xml:lang="en">Drying</value>
         <value xml:lang="es">Calendario del taller de secado</value>
         <value xml:lang="fr">Calendrier d'atelier de séchage</value>
         <value xml:lang="it">Calendario Officina Asciugatura</value>
@@ -150,7 +159,8 @@
         <value xml:lang="zh-TW">烘幹車間日曆</value>
     </property>
     <property key="TechDataCalendar.description.MACHINING">
-        <value xml:lang="en">MACHINING</value>
+        <value xml:lang="de">Bearbeitung</value>
+        <value xml:lang="en">Machining</value>
         <value xml:lang="es">Calendario del Taller de Maquinaria</value>
         <value xml:lang="fr">Calendrier d'atelier d'usinage</value>
         <value xml:lang="it">Calendario Officina Macchine</value>
@@ -164,6 +174,7 @@
         <value xml:lang="zh-TW">加工車間日曆</value>
     </property>
     <property key="TechDataCalendar.description.SUPPLIER">
+        <value xml:lang="de">Kalender, der für die Neubestellungs-Datumsberechnung für verkaufte Produkte verwendet wird</value>
         <value xml:lang="en">Calendar used for Re-Order date calculation for bought product</value>
         <value xml:lang="es">Calendario usado para el cálculo de la fecha de repetición de pedido para productos comprados</value>
         <value xml:lang="fr">Calendrier utilisé pour le calcul de la date de commande répétitive de l'article acheté</value>
@@ -178,6 +189,7 @@
         <value xml:lang="zh-TW">購買產品時計算重新排訂單日期所用的日曆</value>
     </property>
     <property key="TechDataCalendarWeek.description.DEFAULT">
+        <value xml:lang="de">8Stunden/Tag</value>
         <value xml:lang="en">8hours/days</value>
         <value xml:lang="es">8 horas/día</value>
         <value xml:lang="fr">8heures/jour</value>
@@ -192,6 +204,7 @@
         <value xml:lang="zh-TW">8小時/天</value>
     </property>
     <property key="TechDataCalendarWeek.description.DEMO_WEEK">
+        <value xml:lang="de">Demo-Kalenderwoche für 8 Stunden / Tag, 5 Tage / Woche, ab 8.30 Uhr von Montag bis Freitag</value>
         <value xml:lang="en">Demo calendar week of 8hours/days 5days/week starting at 8h30 from monday to friday</value>
         <value xml:lang="it">Calendario settimanale demo di 8 ore/giorno 5 giorni/settimana iniziando alle 8:30 dal lunedì al venerdì</value>
         <value xml:lang="ja">デモカレンダ週、8時間/日、5日/週、月曜日～金曜日、8:30開始</value>
@@ -201,7 +214,8 @@
         <value xml:lang="zh-TW">演示每週5天、每天8小時、週一至週五從8:30開始的日曆週</value>
     </property>
     <property key="TechDataCalendarWeek.description.HOLIDAY">
-        <value xml:lang="en">HOLIDAY</value>
+        <value xml:lang="de">Feiertag</value>
+        <value xml:lang="en">Holiday</value>
         <value xml:lang="es">Calendario de vacaciones, 0 horas/día, 0 días/semana</value>
         <value xml:lang="fr">Caldendrier des vacances (0 heure/jour, 0 jour/semaine)</value>
         <value xml:lang="it">Calendario per il periodo di vacanze, 0 ore/giorno 0 giorni/settimana</value>
@@ -215,7 +229,8 @@
         <value xml:lang="zh-TW">節假日日曆—— 0小時/天、0天/週</value>
     </property>
     <property key="TechDataCalendarWeek.description.STD24H-7D">
-        <value xml:lang="en">STD24H-7D</value>
+        <value xml:lang="de">Standard 24h / 7 Tage</value>
+        <value xml:lang="en">Std 24h-7days</value>
         <value xml:lang="es">Calendario estándar 24h al día, 7 días a la semana</value>
         <value xml:lang="fr">Calendrier standard 24 heures, 7 jours</value>
         <value xml:lang="it">Calendario Standard aperto 24 ore al giorno 7 giorni alla settimana</value>
@@ -229,7 +244,8 @@
         <value xml:lang="zh-TW">標準日曆——24小時/天、7天/週</value>
     </property>
     <property key="TechDataCalendarWeek.description.STD8H-5D">
-        <value xml:lang="en">STD8H-5D</value>
+        <value xml:lang="de">Standard 8h / 5 Tage</value>
+        <value xml:lang="en">Std 8h - 5d</value>
         <value xml:lang="es">Calendario estándar 8 horas/día, 5 días a la semana. Comienza 8h30 de lunes a viernes</value>
         <value xml:lang="fr">Calendrier standard 8heures/jour, 5 jours par semaine</value>
         <value xml:lang="it">Calendario Standard 8 ore/giorno 5giorni/settimana con inizio alle 8:30 dal Lunedì al Venerdì</value>
@@ -243,6 +259,7 @@
         <value xml:lang="zh-TW">標準日曆——8小時/天、5天/週、週一至週五8:30開始</value>
     </property>
     <property key="TechDataCalendarWeek.description.SUPPLIER">
+        <value xml:lang="de">8 Stunden / Tag, der Re-Order-Prozess konvertiert einen Tag zu Stundeneinträgen mit 8 Stunden / Tag</value>
         <value xml:lang="en">8hours/days, currently the Re-Order Process convert day to mms with 8h/days</value>
         <value xml:lang="es">8 horas/día, expresado en mms</value>
         <value xml:lang="fr">8 heures/jour, actuellement le precessus de renouvellement de commande converti le jour en mms à 8h/jour</value>

@@ -74,7 +74,11 @@ public final class EntityUtilProperties implements Serializable {
         if (UtilValidate.isEmpty(resource) || UtilValidate.isEmpty(name)) {
             return results;
         }
-        resource = resource.replace(".properties", "");
+        // SCIPIO: Bad, only replace at end of string
+        //resource = resource.replace(".properties", "");
+        if (resource.endsWith(".properties")) {
+            resource = resource.substring(0, resource.length() - ".properties".length());
+        }
         try {
             GenericValue systemProperty = EntityQuery.use(delegator)
                     .from("SystemProperty")

@@ -1283,9 +1283,13 @@ public final class UtilProperties implements Serializable {
         String resourceName = resource;
         if (removeExtension) {
             if (resourceName.endsWith(".xml")) {
-                resourceName = resourceName.replace(".xml", "");
+                // SCIPIO: Bad logic
+                //resourceName = resourceName.replace(".xml", "");
+                resourceName = resourceName.substring(0, resourceName.length() - ".xml".length());
             } else if (resourceName.endsWith(".properties")) {
-                resourceName = resourceName.replace(".properties", "");
+                // SCIPIO: Bad logic
+                //resourceName = resourceName.replace(".properties", "");
+                resourceName = resourceName.substring(0, resourceName.length() - ".properties".length());
             }
         }
         if (locale != null) {

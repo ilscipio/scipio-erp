@@ -19,6 +19,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="ConnectionPoolStatus">
+        <value xml:lang="de">Connection Pool Status</value>
         <value xml:lang="en">Connection Pool Status</value>
         <value xml:lang="fr">État du pool de connexions</value>
         <value xml:lang="ja">接続プールステータス</value>
@@ -27,6 +28,7 @@
         <value xml:lang="zh-TW">連接池狀態</value>
     </property>
     <property key="EntityImportDeletFile">
+        <value xml:lang="de">Lösche ${fileName}</value>
         <value xml:lang="en">Deleting ${fileName}</value>
         <value xml:lang="fr">Suppression de ${fileName}</value>
         <value xml:lang="it">Stò cancellando il file ${fileName}</value>
@@ -36,6 +38,7 @@
         <value xml:lang="zh-TW">正在刪除 ${fileName}</value>
     </property>
     <property key="EntityImportErrorRetrievingEntityNames">
+        <value xml:lang="de">Fehler beim Laden der Entity-Namen.</value>
         <value xml:lang="en">Error retrieving entity names.</value>
         <value xml:lang="fr">Erreur dans la récupération des noms d'entités.</value>
         <value xml:lang="it">Errore nell'ottenere i nome delle entità.</value>
@@ -45,6 +48,7 @@
         <value xml:lang="zh-TW">取得資料實體名稱時出錯.</value>
     </property>
     <property key="EntityImportFailedFile">
+        <value xml:lang="de">Der Import von ${fileName} ist fehlgeschlagen. Der Vorgang wird beim nächsten Durchlauf erneut versucht.</value>
         <value xml:lang="en">Failed ${fileName} adding to retry list for next pass</value>
         <value xml:lang="fr">Échec sur ${fileName}, ajout dans la liste pour la prochaine passe</value>
         <value xml:lang="it">Fallita ${fileName} aggiunta alla lista di riprova al successivo passaggio</value>
@@ -54,6 +58,7 @@
         <value xml:lang="zh-TW">把失敗的檔 ${fileName} 增加重試清單,以便下輪執行</value>
     </property>
     <property key="EntityImportFailedFileList">
+        <value xml:lang="de">Fehlgeschlagene Dateien:</value>
         <value xml:lang="en">Failed Files:</value>
         <value xml:lang="fr">Fichiers en échec :</value>
         <value xml:lang="it">Lista file che hanno avuto fallimento:</value>
@@ -63,6 +68,7 @@
         <value xml:lang="zh-TW">失敗的檔:</value>
     </property>
     <property key="EntityImportFailedNumberFile">
+        <value xml:lang="de">${failed} von ${total} fehlerhaft</value>
         <value xml:lang="en">Failed: ${failed} of ${total}</value>
         <value xml:lang="fr">Échec : ${failed} sur ${total}</value>
         <value xml:lang="it">Failed: ${failed} di ${total}</value>
@@ -72,6 +78,7 @@
         <value xml:lang="zh-TW">失敗:${failed}/${total}</value>
     </property>
     <property key="EntityImportNoDataSourceSpecified">
+        <value xml:lang="de">Der datasource helper für die Gruppe konnte nicht gefunden werden ${groupNameToUse}</value>
         <value xml:lang="en">Unable to locate the datasource helper for the group ${groupNameToUse}</value>
         <value xml:lang="fr">Impossible de localisé la source de donnée pour le groupe ${groupNameToUse}</value>
         <value xml:lang="it">Non è possibile localizzare la sorgente dati per il gruppo ${groupNameToUse}</value>
@@ -81,6 +88,7 @@
         <value xml:lang="zh-TW">不能找到用於群組 ${groupNameToUse} 的資料源幫助程式</value>
     </property>
     <property key="EntityImportNoXmlFileOrTextSpecified">
+        <value xml:lang="de">Es wurde keine Entity XML Datei oder Text angegeben.</value>
         <value xml:lang="en">No entity xml file or text specified</value>
         <value xml:lang="fr">Aucun fichier xml ou texte fournit</value>
         <value xml:lang="it">Nessun file xml entità o testo specificato</value>
@@ -90,6 +98,7 @@
         <value xml:lang="zh-TW">沒有指定的資料實體XML檔或本文</value>
     </property>
     <property key="EntityImportNoXmlFileSpecified">
+        <value xml:lang="de">Kein Dateiname / URL oder vollständiges XML-Dokument angegeben. Der Vorgang wurde ausgesetzt.</value>
         <value xml:lang="en">No filename/URL or complete XML document specified, doing nothing.</value>
         <value xml:lang="fr">Pas de fichier, URL ou flux XML fournit, aucune action réalisée.</value>
         <value xml:lang="it">Nessun nome file/URL o documento XML completo specificato, nientre verrà fatto.</value>
@@ -99,6 +108,7 @@
         <value xml:lang="zh-TW">沒有指定的檔案名/網址或完整的XML檔,什麼也不做.</value>
     </property>
     <property key="EntityImportNumberOfEntityToBeProcessed">
+        <value xml:lang="de">${numberRead} Entities aus ${fileName} geladen</value>
         <value xml:lang="en">Got ${numberRead} entities from ${fileName}</value>
         <value xml:lang="fr">Chargement de ${numberRead} entités depuis ${fileName}</value>
         <value xml:lang="it">Ottenute ${numberRead} entità da ${fileName}</value>
@@ -108,6 +118,7 @@
         <value xml:lang="zh-TW">從 ${fileName} 中得到了 ${numberRead} 個資料實體</value>
     </property>
     <property key="EntityImportParsingError">
+        <value xml:lang="de">FEHLER beim Lesen des Entity XML Dokuments: ${errorString}</value>
         <value xml:lang="en">ERROR parsing Entity Xml file: ${errorString}</value>
         <value xml:lang="fr">ERREUR dans l'analyse de l'XML : ${errorString}</value>
         <value xml:lang="it">ERRORE di parsing file entità XML: ${errorString}</value>
@@ -117,6 +128,7 @@
         <value xml:lang="zh-TW">解析資料實體XML檔時出錯:${errorString}</value>
     </property>
     <property key="EntityImportPassedFile">
+        <value xml:lang="de">Durchlauf ${passes} abgeschlossen</value>
         <value xml:lang="en">Pass ${passes} complete</value>
         <value xml:lang="fr">Passe ${passes} complete</value>
         <value xml:lang="it">Passati ${passes} completati</value>
@@ -126,6 +138,7 @@
         <value xml:lang="zh-TW">通過 ${passes} 個完成</value>
     </property>
     <property key="EntityImportPathNotFound">
+        <value xml:lang="de">Pfad nicht gefunden oder kann nicht gelesen werden.</value>
         <value xml:lang="en">path not found or can't be read</value>
         <value xml:lang="fr">Chemin non trouvé ou non accessible</value>
         <value xml:lang="it">path non trovato o non può essere letto</value>
@@ -135,6 +148,7 @@
         <value xml:lang="zh-TW">找不到路徑或無法讀取路徑</value>
     </property>
     <property key="EntityImportPathNotSpecified">
+        <value xml:lang="de">Pfad nicht angebeben. Der Vorgang wird ausgesetzt.</value>
         <value xml:lang="en">No path specified, doing nothing.</value>
         <value xml:lang="fr">Pas de chemin indiqué, aucun action réalisée.</value>
         <value xml:lang="it">Nessun path specificato, non verrà fatto niente.</value>
@@ -144,6 +158,7 @@
         <value xml:lang="zh-TW">沒有指定路徑,什麼也不做.</value>
     </property>
     <property key="EntityImportRowProcessed">
+        <value xml:lang="de">${numberRead} Entities werden in die Datasource geschrieben.</value>
         <value xml:lang="en">Got ${numberRead} entities to write to the datasource.</value>
         <value xml:lang="fr">Écriture de ${numberRead} entités dans la source de donnée.</value>
         <value xml:lang="it">Ottenute ${numberRead} entità da scrivere sulla sorgente dati.</value>
@@ -153,6 +168,7 @@
         <value xml:lang="zh-TW">有 ${numberRead} 個資料實體要寫到資料源</value>
     </property>
     <property key="EntityImportSucceededNumberFile">
+        <value xml:lang="de">${succeeded} von ${total} erfolgreich hinzugefügt</value>
         <value xml:lang="en">Succeeded: ${succeeded} of ${total}</value>
         <value xml:lang="fr">Succès : ${succeeded} sur ${total}</value>
         <value xml:lang="it">Successo: ${succeeded} di ${total}</value>

@@ -34,7 +34,8 @@
         <value xml:lang="zh-TW">製造訂單收據</value>
     </property>
     <property key="MrpEventType.description.MANUF_ORDER_REQ">
-        <value xml:lang="en">Fertigungsauftrags- anforderung</value>
+        <value xml:lang="de">Fertigungsauftrags- anforderung</value>
+        <value xml:lang="en">Manufacturing Order requirement</value>
         <value xml:lang="es">Requisito de Orden de Producción</value>
         <value xml:lang="fr">Besoin d'ordre de fabrication</value>
         <value xml:lang="it">Fabbisogno Ordine Produzione</value>

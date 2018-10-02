@@ -3670,6 +3670,7 @@
         <value xml:lang="zh-TW">快速增加線索</value>
     </property>
     <property key="SfaSales">
+        <value xml:lang="de">Verkäufe</value>
         <value xml:lang="en">Sales</value>
     </property>
     <property key="SfaSalesForecast">

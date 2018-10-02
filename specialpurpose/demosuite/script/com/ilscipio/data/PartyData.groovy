@@ -50,7 +50,7 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
     
     List prepareData(int index, DemoDataObject partyData) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
-        List<GenericValue> partyEntrys = new ArrayList<GenericValue>();		
+        List<GenericValue> partyEntries = new ArrayList<GenericValue>();		
 		
 		DataGenerator generator = context.generator;
         

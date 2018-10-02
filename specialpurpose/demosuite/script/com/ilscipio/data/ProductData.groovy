@@ -95,8 +95,7 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         "RentalStore"
     ]
 
-    List prepareData(int index, DemoDataObject productData) throws Exception {
-        Debug.log("prepareData");
+    List prepareData(int index, DemoDataObject productData) throws Exception {        
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
         List<GenericValue> productItems = new ArrayList<GenericValue>();
         if (context.generatedProducts) {

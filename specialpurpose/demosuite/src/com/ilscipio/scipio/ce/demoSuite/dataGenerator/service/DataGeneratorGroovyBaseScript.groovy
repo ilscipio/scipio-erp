@@ -21,7 +21,7 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper
 // FIXME?: revisit extension/reuse pattern; in Ofbiz GroovyBaseScript is not meant to be hardcoded
 abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     private static final Integer DATA_GENERATOR_MAX_RECORDS = UtilProperties.getPropertyAsInteger("demosuite", "demosuite.test.data.max.records", 50);
-    private static final String DATA_GENERATOR_DEFAULT_PROVIDER = UtilProperties.getPropertyValue("demosuite", "demosuite.test.data.default.provider", "JFAIRY");
+    private static final String DATA_GENERATOR_DEFAULT_PROVIDER = UtilProperties.getPropertyValue("demosuite", "demosuite.test.data.default.provider", "LOCAL");
 
     private static final String resource_error = "DemoSuiteUiLabels";
     public static final String module = DataGeneratorGroovyBaseScript.class.getName();
@@ -108,7 +108,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     /**
      * Generates and stores demo data.
      */
-    def Map run() {
+    Map run() {
         try {
             context.dataType = getDataType();
             sanitizeDates();
@@ -116,20 +116,23 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
             init();
             DataGenerator generator = context.generator;
             List<DemoDataObject> data = generator.retrieveData();
-            numRecords = data.size();
+            if (data)
+                numRecords = data.size();
+            else if (generator.getHelper().getCount() != null)
+                numRecords = generator.getHelper().getCount();
             for (int i = 0; i < numRecords; i++) {
-                List toBeStored = prepareData(i, data.get(i));
+                List toBeStored = prepareData(i, (data && data.size() == numRecords) ? data.get(i) : null);
                 if (toBeStored) {
                     storeData(toBeStored);
                 }
             }
         } catch (Exception e) {
-            Debug.logError(e, module);
+            logError(e.getMessage());
             // TODO: localize (but exception message cannot be localized)
-            return ServiceUtil.returnError("Fatal error while generating data (aborted): " + e.getMessage());
+            return error("Fatal error while generating data (aborted): " + e.getMessage());
         }
         // TODO: localize
-        Map result = (totalFailed > 0) ? ServiceUtil.returnFailure("Failed to store " + totalFailed
+        Map result = (totalFailed > 0) ? failure("Failed to store " + totalFailed
             + " records (" + totalStored + " stored successfully)") : ServiceUtil.returnSuccess();
         result.put("generatedDataStats", dataGeneratorStats);
         return result;

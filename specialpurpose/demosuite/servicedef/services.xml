@@ -11,7 +11,9 @@
         <description>Creates a number of Order demo data</description>
         <implements service="demoDataGenerator"/>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="true" default-value="DemoCatalog"/>
-        <attribute name="productStoreId" type="String" mode="IN" optional="true"/> default is inferred from catalog
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/> <!-- default is inferred from catalog -->
+        <attribute name="partyGroupId" type="String" mode="IN" optional="true" default-value="Company"/>
+        <attribute name="partyCustomerId" type="String" mode="IN" optional="true" default-value="DemoCustomer"/>
     </service>
     
     <service name="createTransactionData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TransactionData.groovy" 

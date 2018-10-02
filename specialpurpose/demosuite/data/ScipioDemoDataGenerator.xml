@@ -22,6 +22,7 @@ under the License.
 
     <DataGeneratorProvider dataGeneratorProviderId="JFAIRY" dataGeneratorProviderName="jfairy" dataGeneratorProviderClass="com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl.JFairyDataGenerator" dataGeneratorProviderHelperClass="com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.JFairyDemoDataHelper" hasTable="N" enabled="Y" />
     <DataGeneratorProvider dataGeneratorProviderId="MOCKAROO" dataGeneratorProviderName="mockaroo" dataGeneratorProviderClass="com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl.MockarooDataGenerator" dataGeneratorProviderHelperClass="com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.MockarooDemoDataHelper" hasTable="Y" enabled="Y" />
+    <DataGeneratorProvider dataGeneratorProviderId="LOCAL" dataGeneratorProviderName="local" dataGeneratorProviderClass="com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl.LocalDataGenerator" dataGeneratorProviderHelperClass="com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.LocalDemoDataHelper" hasTable="N" enabled="Y" />
     
     <MockarooDataGeneratorProvider dataGeneratorProviderId="MOCKAROO" url="https://my.api.mockaroo.com/" method="POST" mockarooKey="" exportFormat="json" />
 

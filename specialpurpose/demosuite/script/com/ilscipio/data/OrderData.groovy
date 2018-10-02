@@ -5,7 +5,10 @@ import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
+import org.ofbiz.product.catalog.CatalogWorker
+import org.ofbiz.product.store.ProductStoreWorker
 
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper.dataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
@@ -31,13 +34,24 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
 
     public void init() {
         productCount = from("Product").queryCount();
+        if (productCount == 0) {
+            throw new Exception("This service depends on product data to be present. Please load product data or generate product demo data first and try again.");
+        }
         totalProductCount = (productCount < Integer.MAX_VALUE) ? (int) productCount : Integer.MAX_VALUE - 1;
+        
+        partyGroupCount = from("PartyGroup").queryCount();
+        if (partyGroupCount) {
+            throw new Exception("This service depends on party group data to be present. Please load party group data or generate party group demo data first and try again.");
+        }
         context.totalProductCount = totalProductCount;
     }
 
     List prepareData(int index, DemoDataObject orderData) throws Exception {
         List toBeStored = new ArrayList();
         List orderItems = new ArrayList();
+        
+        DataGenerator generator = context.generator;
+        
         // Create OrderHeader
         String orderId = "GEN_" + delegator.getNextSeqId("demo-orderheader");
         // Create OrderItem (between 1 and 3)
@@ -45,18 +59,28 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         BigDecimal remainingSubTotal = new BigDecimal(0.00);
         BigDecimal grandTotal = new BigDecimal(0.00);
         
-        String prodCatalogId = context.prodCatalogId ?: "DemoCatalog";
+        String prodCatalogId = context.prodCatalogId ?: null;
         String productStoreId = context.productStoreId ?: null;
+        String partyGroupId = context.partyGroupId ?: null;
+        String partyCustomerId = context.partyCustomerId ?: null;
+        
         if (!productStoreId) {
             List productStoreCatalogs = EntityUtil.filterByDate(from("ProductStoreCatalog").where("prodCatalogId", prodCatalogId).queryList());
             if (productStoreCatalogs) {
                 productStoreId = productStoreCatalogs[0].productStoreId;
             }
+        } else {
+            if (!ProductStoreWorker.getProductStore(productStoreId))
+               productStoreId = null;
         }
         
-        for (int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++) {
-            EntityFindOptions efo = new EntityFindOptions();
-            efo.setMaxRows(1);
+        if (!productStoreId) {
+            throw new Exception("Product store not found or invalid.");
+        }
+            
+        EntityFindOptions efo = new EntityFindOptions();
+        efo.setMaxRows(1);
+        for (int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++) {            
             efo.setOffset(UtilRandom.getRandomInt(0, context.totalProductCount));
             products = from("Product").query(efo);
             if (products) {
@@ -88,6 +112,8 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
 
                 GenericValue orderItem = delegator.makeValue("OrderItem", fields);
                 orderItems.add(orderItem);
+            } else {
+                
             }
         }
 
@@ -97,7 +123,7 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         orderSalesChannelList = from("Enumeration").where(["enumTypeId" : "ORDER_SALES_CHANNEL"]).queryList();
         orderSalesChannel = orderSalesChannelList.get(UtilRandom.random(orderSalesChannelList));
 
-        Timestamp orderDate = UtilRandom.generateRandomTimestamp(context);
+        Timestamp orderDate = UtilRandom.generateRandomTimest)amp(context);
         String statusId = orderStatusTypes.get(UtilRandom.random(orderStatusTypes));
         Map fields = UtilMisc.toMap("orderId", orderId,"orderTypeId",orderTypeId,"orderName",orderName,"salesChannelEnumId",
                 orderSalesChannel.enumId,"orderDate",orderDate,"priority","2","entryDate",orderDate,"statusId",statusId,
@@ -108,33 +134,35 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         toBeStored.add(orderHeader);
         toBeStored.addAll(orderItems);
 
-        // Create orderRole
-        fields = UtilMisc.toMap("orderId", orderId,"partyId","Company","roleTypeId","BILL_FROM_VENDOR");
-        GenericValue orderRole1 = delegator.makeValue("OrderRole", fields);
-        toBeStored.add(orderRole1);
-
-        fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","BILL_TO_CUSTOMER");
-        GenericValue orderRole2 = delegator.makeValue("OrderRole", fields);
-        toBeStored.add(orderRole2);
-
-        fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","END_USER_CUSTOMER");
-        GenericValue orderRole3 = delegator.makeValue("OrderRole", fields);
-        toBeStored.add(orderRole3);
-
-        fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","PLACING_CUSTOMER");
-        GenericValue orderRole4 = delegator.makeValue("OrderRole", fields);
-        toBeStored.add(orderRole4);
-
-        fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","SHIP_TO_CUSTOMER");
-        GenericValue orderRole5 = delegator.makeValue("OrderRole", fields);
-        toBeStored.add(orderRole5);
-
-        // Create OrderStatus
-        String orderStatusId = "GEN_"+delegator.getNextSeqId("demo-orderstatusid");
-        fields = UtilMisc.toMap("orderId", orderId,"orderStatusId",orderStatusId,"statusId","ORDER_CREATED",
-                "statusDatetime",orderDate,"statusUserLogin","admin");
-        GenericValue orderStatus = delegator.makeValue("OrderStatus", fields);
-        toBeStored.add(orderStatus);
+        if (orderHeader && orderItems) {
+            // Create orderRoles
+            fields = UtilMisc.toMap("orderId", orderId,"partyId","Company","roleTypeId","BILL_FROM_VENDOR");
+            GenericValue orderRole1 = delegator.makeValue("OrderRole", fields);
+            toBeStored.add(orderRole1);
+    
+            fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","BILL_TO_CUSTOMER");
+            GenericValue orderRole2 = delegator.makeValue("OrderRole", fields);
+            toBeStored.add(orderRole2);
+    
+            fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","END_USER_CUSTOMER");
+            GenericValue orderRole3 = delegator.makeValue("OrderRole", fields);
+            toBeStored.add(orderRole3);
+    
+            fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","PLACING_CUSTOMER");
+            GenericValue orderRole4 = delegator.makeValue("OrderRole", fields);
+            toBeStored.add(orderRole4);
+    
+            fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","SHIP_TO_CUSTOMER");
+            GenericValue orderRole5 = delegator.makeValue("OrderRole", fields);
+            toBeStored.add(orderRole5);
+    
+            // Create OrderStatus
+            String orderStatusId = "GEN_"+delegator.getNextSeqId("demo-orderstatusid");
+            fields = UtilMisc.toMap("orderId", orderId,"orderStatusId",orderStatusId,"statusId","ORDER_CREATED",
+                    "statusDatetime",orderDate,"statusUserLogin","admin");
+            GenericValue orderStatus = delegator.makeValue("OrderStatus", fields);
+            toBeStored.add(orderStatus);
+        }
 
         if (UtilRandom.getRandomBoolean()==true) {
             orderStatusId = "GEN_"+delegator.getNextSeqId("demo-orderstatusid");

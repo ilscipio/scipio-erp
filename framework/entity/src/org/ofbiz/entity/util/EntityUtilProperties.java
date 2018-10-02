@@ -24,6 +24,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +45,8 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 
 @SuppressWarnings("serial")
 public final class EntityUtilProperties implements Serializable {
@@ -80,11 +84,24 @@ public final class EntityUtilProperties implements Serializable {
             resource = resource.substring(0, resource.length() - ".properties".length());
         }
         try {
-            GenericValue systemProperty = EntityQuery.use(delegator)
-                    .from("SystemProperty")
-                    .where("systemResourceId", resource, "systemPropertyId", name)
-                    .cache()
-                    .queryOne();
+            // SCIPIO: Support for resource name aliases
+            EntityCondition resourceAliasCond = ResourceNameAliases.resourceNameAliasConditionMap.get(resource);
+            GenericValue systemProperty;
+            if (resourceAliasCond != null) {
+                systemProperty = EntityQuery.use(delegator)
+                        .from("SystemProperty")
+                        .where(EntityCondition.makeCondition(resourceAliasCond,
+                                EntityOperator.AND,
+                                EntityCondition.makeCondition("systemPropertyId", name)))
+                        .cache()
+                        .queryFirst();
+            } else {
+                systemProperty = EntityQuery.use(delegator)
+                        .from("SystemProperty")
+                        .where("systemResourceId", resource, "systemPropertyId", name)
+                        .cache()
+                        .queryOne();
+            }
             if (systemProperty != null) {
                 //property exists in database
 
@@ -439,5 +456,32 @@ public final class EntityUtilProperties implements Serializable {
 
     public static Properties xmlToProperties(InputStream in, Locale locale, Properties properties) throws IOException, InvalidPropertiesFormatException {
         return UtilProperties.xmlToProperties(in, locale, properties);
+    }
+
+    /**
+     * SCIPIO: Resource name alias support core handling.
+     * <p>
+     * Added 2018-10-02.
+     */
+    private static class ResourceNameAliases {
+        static final Map<String, EntityCondition> resourceNameAliasConditionMap = readResourceNameAliasConditionMap();
+
+        /**
+         * SCIPIO: Pre-builds lookup conditions for resource name aliases
+         * (this is the best can optimize this without adding an extra cache layer).
+         */
+        static Map<String, EntityCondition> readResourceNameAliasConditionMap() {
+            Map<String, EntityCondition> condMap = new HashMap<>();
+            for(Map.Entry<String, List<String>> entry : UtilProperties.getResourceNameAliasAndReverseAliasMap().entrySet()) {
+                List<String> aliases = entry.getValue();
+                List<EntityCondition> condList = new ArrayList<>(aliases.size() + 1);
+                condList.add(EntityCondition.makeCondition("systemResourceId", entry.getKey()));
+                for(String alias : aliases) {
+                    condList.add(EntityCondition.makeCondition("systemResourceId", alias));
+                }
+                condMap.put(entry.getKey(), EntityCondition.makeCondition(condList, EntityOperator.OR));
+            }
+            return condMap;
+        }
     }
 }

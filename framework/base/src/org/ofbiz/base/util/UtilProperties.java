@@ -29,6 +29,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -549,16 +550,23 @@ public final class UtilProperties implements Serializable {
         //return getProperties(url);
         Properties properties = propResourceCache.get(resource);
         if (properties == null) {
+            String realResource = resource;
             if (resource.charAt(0) == '+') {
                 // SCIPIO: 2018-07-18: MERGED PROPERTIES
-                String[] mergeResources = StringUtils.split(resource.substring(1), '+');
-                properties = getMergedPropertiesFromUrlCache(mergeResources);
+                String[] resources = StringUtils.split(resource.substring(1), '+');
+                String[] realResources = ResourceNameAliases.substituteResourceNameAliases(resources); // SCIPIO: 2018-10-02: resource name aliases
+                realResource = "+" + StringUtils.join(realResources, '+');
+                properties = getMergedPropertiesFromUrlCache(realResources);
             } else {
-                URL url = resolvePropertiesUrl(resource, null);
+                realResource = ResourceNameAliases.substituteResourceNameAlias(resource); // SCIPIO: 2018-10-02: resource name aliases
+                URL url = resolvePropertiesUrl(realResource, null);
                 properties = getProperties(url);
             }
             if (properties != null) {
-                propResourceCache.put(resource, properties);
+                properties = propResourceCache.putIfAbsentAndGet(realResource, properties);
+                if (!resource.equals(realResource)) {
+                    propResourceCache.put(resource, properties);
+                }
             }
         }
         return properties;
@@ -586,12 +594,17 @@ public final class UtilProperties implements Serializable {
      * Added 2018-07-18.
      */
     public static Properties getMergedProperties(String... resources) {
-        String propResourceCacheKey = "+" + StringUtils.join(resources, "+");
-        Properties properties = propResourceCache.get(propResourceCacheKey);
+        String cacheKey = "+" + StringUtils.join(resources, '+');
+        Properties properties = propResourceCache.get(cacheKey);
         if (properties == null) {
-            properties = getMergedPropertiesFromUrlCache(resources);
+            String[] realResources = ResourceNameAliases.substituteResourceNameAliases(resources); // SCIPIO: 2018-10-02: resource name aliases
+            String realCacheKey = "+" + StringUtils.join(realResources, '+');
+            properties = getMergedPropertiesFromUrlCache(realResources);
             if (properties != null) {
-                propResourceCache.put(propResourceCacheKey, properties);
+                properties = propResourceCache.putIfAbsentAndGet(realCacheKey, properties);
+                if (!cacheKey.equals(realCacheKey)) {
+                    propResourceCache.put(cacheKey, properties);
+                }
             }
         }
         return properties;
@@ -2117,6 +2130,17 @@ public final class UtilProperties implements Serializable {
             String resourceName = createResourceName(resource, locale, true);
             UtilResourceBundle bundle = bundleCache.get(resourceName);
             if (bundle == null) {
+                // SCIPIO: 2018-10-02: Handle alias case
+                // TODO: Optimize: Alias cases require two cache lookups here, but it's better than nothing.
+                String realResourceName = ResourceNameAliases.getSubstituteResourceNameAliasOrNull(resource);
+                if (realResourceName != null) {
+                    resource = realResourceName;
+                    createResourceName(resource, locale, true);
+                    bundle = bundleCache.get(resourceName);
+                    if (bundle != null) {
+                        return bundle;
+                    }
+                }
                 double startTime = System.currentTimeMillis();
                 List<Locale> candidateLocales = getCandidateLocales(locale);
                 UtilResourceBundle parentBundle = null;
@@ -2223,6 +2247,167 @@ public final class UtilProperties implements Serializable {
             } finally {
                 in.close();
             }
+        }
+    }
+
+    /**
+     * SCIPIO: Returns all the resource name aliases (read-only).
+     * <p>
+     * NOTE: These generally are used in a best-effort fashion for compatibility reasons
+     * rather than express support for aliases. It only PARTIALLY works with UtilProperties
+     * and EntityUtilProperties classes.
+     */
+    public static Map<String, List<String>> getResourceNameAliasMap() {
+        return ResourceNameAliases.resourceNameAliasMap;
+    }
+
+    /**
+     * SCIPIO: Returns all the resource name aliases and reverse aliases (read-only).
+     * <p>
+     * NOTE: These generally are used in a best-effort fashion for compatibility reasons
+     * rather than express support for aliases. It only PARTIALLY works with UtilProperties
+     * and EntityUtilProperties classes.
+     */
+    public static Map<String, List<String>> getResourceNameAliasAndReverseAliasMap() {
+        return ResourceNameAliases.resourceNameAliasAndReverseAliasMap;
+    }
+
+    /**
+     * SCIPIO: Returns all the virtual resource name to real name alias map (read-only).
+     * <p>
+     * NOTE: These generally are used in a best-effort fashion for compatibility reasons
+     * rather than express support for aliases. It only PARTIALLY works with UtilProperties
+     * and EntityUtilProperties classes.
+     */
+    public static Map<String, String> getResourceNameVirtualToRealAliasMap() {
+        return ResourceNameAliases.virtualToRealResourceNameMap;
+    }
+
+    /**
+     * SCIPIO: Resource name alias support core handling.
+     * <p>
+     * Added 2018-10-02.
+     */
+    private static class ResourceNameAliases {
+        static final Map<String, List<String>> resourceNameAliasMap = readResourceNameAliasMap();
+        static final Map<String, List<String>> resourceNameAliasAndReverseAliasMap = makeResourceNameAliasAndReverseAliasMap(resourceNameAliasMap);
+        static final Map<String, String> virtualToRealResourceNameMap = makeVirtualToRealResourceNameMap(resourceNameAliasMap);
+        static {
+            Debug.logInfo("Determined properties file resource name alias map: " + resourceNameAliasMap, module);
+        }
+
+        static Map<String, List<String>> readResourceNameAliasMap() {
+            Map<String, Set<String>> aliasMap = new HashMap<>();
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            Enumeration<URL> resources;
+            try {
+                resources = loader.getResources("scipio-resource.properties");
+            } catch (IOException e) {
+                Debug.logError(e, "Could not load list of freemarkerTransforms.properties", module);
+                throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
+            }
+            while (resources.hasMoreElements()) {
+                URL propertyURL = resources.nextElement();
+                Debug.logInfo("Loading properties: " + propertyURL, module);
+                Properties props;
+                try {
+                    props = new ExtendedProperties(propertyURL, null);
+                } catch (IOException e) {
+                    Debug.logError(e, "Unable to load properties file " + propertyURL, module);
+                    continue;
+                }
+                Map<String, String> rawAliases = getPropertiesWithPrefix(props, "resource.aliases.");
+                for(Map.Entry<String, String> entry : rawAliases.entrySet()) {
+                    String resource = entry.getKey();
+                    List<String> aliases = Arrays.asList(entry.getValue().trim().split("\\s*,\\s*"));
+                    if (aliases.size() > 0) {
+                        Set<String> existingAliases = aliasMap.get(resource);
+                        if (existingAliases == null) {
+                            existingAliases = new LinkedHashSet<>(aliases); // linked just so get semi-predictable order
+                            aliasMap.put(resource, existingAliases);
+                        } else {
+                            existingAliases.addAll(aliases);
+                        }
+                    }
+                }
+            }
+            Map<String, List<String>> optAliasMap = new HashMap<>();
+            for(Map.Entry<String, Set<String>> entry : aliasMap.entrySet()) {
+                Collection<String> aliases = entry.getValue();
+                if (aliases.size() > 0) {
+                    optAliasMap.put(entry.getKey(), new ArrayList<>(aliases));
+                }
+            }
+            return optAliasMap;
+        }
+
+        static Map<String, List<String>> makeResourceNameAliasAndReverseAliasMap(Map<String, List<String>> aliasMap) {
+            Map<String, Set<String>> fullMap = new HashMap<>();
+            for(Map.Entry<String, List<String>> entry : aliasMap.entrySet()) {
+                String resource = entry.getKey();
+                List<String> aliases = entry.getValue();
+                for(int i=0; i < aliases.size(); i++) {
+                    String alias = aliases.get(i);
+                    List<String> reverseAliases = new ArrayList<>(aliases.size());
+                    reverseAliases.add(resource);
+                    for(int j=0; j < aliases.size(); j++) {
+                        if (i != j) {
+                            reverseAliases.add(aliases.get(j));
+                        }
+                    }
+                    Set<String> existingAliases = fullMap.get(alias);
+                    if (existingAliases == null) {
+                        existingAliases = new LinkedHashSet<>(reverseAliases);
+                        fullMap.put(alias, existingAliases);
+                    } else {
+                        existingAliases.addAll(reverseAliases);
+                    }
+                }
+            }
+            Map<String, List<String>> optAliasMap = new HashMap<>();
+            for(Map.Entry<String, Set<String>> entry : fullMap.entrySet()) {
+                Collection<String> aliases = entry.getValue();
+                if (aliases.size() > 0) {
+                    optAliasMap.put(entry.getKey(), new ArrayList<>(aliases));
+                }
+            }
+            return optAliasMap;
+        }
+
+        static Map<String, String> makeVirtualToRealResourceNameMap(Map<String, List<String>> aliasMap) { // SCIPIO
+            Map<String, String> vtorMap = new HashMap<>();
+            for(Map.Entry<String, List<String>> entry : aliasMap.entrySet()) {
+                for(String alias : entry.getValue()) {
+                    vtorMap.put(alias, entry.getKey());
+                }
+            }
+            return vtorMap;
+        }
+
+        static String getSubstituteResourceNameAliasOrNull(String resource) {
+            return virtualToRealResourceNameMap.get(cleanResourceNameForAlias(resource));
+        }
+
+        static String substituteResourceNameAlias(String resource) {
+            String alias = getSubstituteResourceNameAliasOrNull(resource);
+            return (alias != null) ? alias : resource;
+        }
+
+        static String[] substituteResourceNameAliases(String[] resources) {
+            String[] res = new String[resources.length];
+            for(int i=0; i < resources.length; i++) {
+                res[i] = substituteResourceNameAlias(resources[i]);
+            }
+            return res;
+        }
+
+        static String cleanResourceNameForAlias(String resource) {
+            if (resource.endsWith(".xml")) {
+                resource = resource.substring(0, resource.length() - ".xml".length());
+            } else if (resource.endsWith(".properties")) {
+                resource = resource.substring(0, resource.length() - ".properties".length());
+            }
+            return resource;
         }
     }
 }

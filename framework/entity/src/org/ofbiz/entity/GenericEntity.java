@@ -1398,9 +1398,14 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         theString.append(getEntityName());
         theString.append(']');
 
-        for (String curKey: new TreeSet<>(fields.keySet())) {
+        // SCIPIO: 2018-10-02: This sorting was highly counter-productive to readability; instead show fields 
+        // in the order defined in entitymodel.xml, most importantly so that the primary key shows up first
+        //for (String curKey: new TreeSet<>(fields.keySet())) {
+        //    Object curValue = fields.get(curKey);
+        //    ModelField field = this.getModelEntity().getField(curKey);
+        for (ModelField field : this.getModelEntity().getFieldsUnmodifiable()) {
+            String curKey = field.getName();
             Object curValue = fields.get(curKey);
-            ModelField field = this.getModelEntity().getField(curKey);
             if (field.getEncryptMethod().isEncrypted() && curValue instanceof String) {
                 String encryptField = (String) curValue;
                 // the encryptField may not actually be UTF8, it could be any

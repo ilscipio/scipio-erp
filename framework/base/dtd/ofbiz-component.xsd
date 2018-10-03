@@ -126,7 +126,25 @@ under the License.
         <xs:attribute name="purpose" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="websockets"/>
+                    <xs:enumeration value="server-scan">
+                        <xs:annotation>
+                            <xs:documentation>
+                                SCIPIO: Enables scanning libraries by the webserver for annotations (always).
+                                Warning: This can increase server load times.
+                                Added 2018-07-02.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="websockets">
+                        <xs:annotation>
+                            <xs:documentation>
+                                SCIPIO: Enables scanning libraries by the webserver for WebSockets-related annotations;
+                                only used when webSocket=true is set in catalina.properties.
+                                Warning: This can increase server load times.
+                                Added 2018-06-18.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>

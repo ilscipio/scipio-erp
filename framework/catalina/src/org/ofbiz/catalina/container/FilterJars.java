@@ -19,11 +19,9 @@
 package org.ofbiz.catalina.container;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.tomcat.JarScanFilter;
 import org.apache.tomcat.JarScanType;
@@ -34,36 +32,37 @@ import org.ofbiz.base.util.UtilProperties;
 final class FilterJars implements JarScanFilter {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    // SCIPIO: static var for this
-    private static final boolean webSocketEnabled = UtilProperties.getPropertyAsBoolean("catalina", "webSocket", false);
-    // SCIPIO (NOTE: volatile not required - immutable pattern instead)
-    private static Set<String> webSocketEnabledJarNames = null;
-
     @Override
     public boolean check(final JarScanType jarScanType, final String jarName) {
-        return webSocketEnabled ? getWebSocketEnabledJarNames().contains(jarName) : false;
+        return ScanConfig.scanEnabledJarNames.contains(jarName); // SCIPIO: 2018-10-02: Simplified
     }
 
-    private static Set<String> getWebSocketEnabledJarNames() { // SCIPIO
-        Set<String> jarNames = FilterJars.webSocketEnabledJarNames;
-        if (jarNames == null) {
-            jarNames = Collections.unmodifiableSet(readWebSocketEnabledJarNames());
-            FilterJars.webSocketEnabledJarNames = jarNames;
+    /**
+     * SCIPIO: Server JAR scan config (lazy init).
+     * Refactored 2018-10-02.
+     */
+    private static class ScanConfig {
+        private static Set<String> scanEnabledJarNames;
+        static {
+            Set<String> jarNames = getScanEnabledJarNames();
+            Debug.logInfo("Server-scan-enabled JAR names: " + new TreeSet<>(jarNames), module);
+            scanEnabledJarNames = jarNames;
         }
-        return jarNames;
-    }
 
-    private static Set<String> readWebSocketEnabledJarNames() { // SCIPIO
-        Set<String> jarNames = new HashSet<>();
-        jarNames.add("ofbiz.jar");
-        for(File file : ComponentConfig.readClasspathSpecialJarLocations("websockets")) {
-            jarNames.add(file.getName());
+        static Set<String> getScanEnabledJarNames() {
+            Set<String> jarNames = new HashSet<>();
+            if (UtilProperties.getPropertyAsBoolean("catalina", "webSocket", false)) {
+                // SCIPIO: 2018-10-02: This should not be needed in our current setup, 
+                // will only slow loading down.
+                //jarNames.add("ofbiz.jar");
+                for(File file : ComponentConfig.readClasspathSpecialJarLocations("websockets")) {
+                    jarNames.add(file.getName());
+                }
+            }
+            for(File file : ComponentConfig.readClasspathSpecialJarLocations("server-scan")) {
+                jarNames.add(file.getName());
+            }
+            return jarNames;
         }
-        if (Debug.infoOn()) {
-            List<String> jarNamesList = new ArrayList<>(jarNames);
-            Collections.sort(jarNamesList);
-            Debug.logInfo("WebSockets-enabled JAR names: " + jarNamesList, module);
-        }
-        return jarNames;
     }
 }

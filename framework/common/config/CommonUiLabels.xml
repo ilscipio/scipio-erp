@@ -3469,6 +3469,7 @@
     <property key="CommonEmailAlreadyExist">
         <value xml:lang="ar">البريد الإلكتروني موجود مسبقا</value>
         <value xml:lang="cs">Email již existuje</value>
+        <value xml:lang="de">Email Adresse besteht bereits</value>
         <value xml:lang="en">Email already exist</value>
         <value xml:lang="es">Correo electrónico ya existe</value>
         <value xml:lang="fr">Courriel déjà existant</value>
@@ -3482,6 +3483,7 @@
     <property key="CommonEmailDeliveryFailed">
         <value xml:lang="ar">فشل التسليم لعناوين البريد الإلكتروني التالية: </value>
         <value xml:lang="cs">Doručení následujícím příjemcům selhalo:</value>
+        <value xml:lang="de">Lieferung an folgende Empfänger ist fehlgeschlagen:</value>
         <value xml:lang="en">Delivery to the following recipient(s) failed:</value>
         <value xml:lang="es">El envío a los siguientes destinatarios ha fallado:</value>
         <value xml:lang="fr">La distribution du courriel a échoué pour les destinataires suivants : </value>
@@ -3495,6 +3497,7 @@
     <property key="CommonEmailDeliveryOriginalMessage">
         <value xml:lang="ar">----- الرسالة الإصلية -----</value>
         <value xml:lang="cs">----- Původní zpráva -----</value>
+        <value xml:lang="de">----- Original Nachricht -----</value>
         <value xml:lang="en">----- Original message -----</value>
         <value xml:lang="es">----- Mensaje original -----</value>
         <value xml:lang="fr">----- Message d'origine -----</value>
@@ -3508,6 +3511,7 @@
     <property key="CommonEmailNotValid">
         <value xml:lang="ar">الطرف: ${parameters.partyIdTo} ليس لديه بريد الكتروني صالح!</value>
         <value xml:lang="cs">PartyId: ${parameters.partyIdTo} nemá platnou emailovou adresu!</value>
+        <value xml:lang="de">PartyId: ${parameters.partyIdTo} hat keine gültige Email Adresse!</value>
         <value xml:lang="en">PartyId: ${parameters.partyIdTo} has no valid email address!</value>
         <value xml:lang="es">Id de participante: ${parameters.partyIdTo} no tiene dirección de correo electrónico válida!</value>
         <value xml:lang="fr">La réf. acteur : ${parameters.partyIdTo} n'a aucun courriel valide !</value>
@@ -3543,6 +3547,7 @@
     <property key="CommonEmailSendAddressError">
         <value xml:lang="ar">[ADDRERR] خطأ في العنوان عند إرسال الرسالة إلى ${sendTo} من ${sendFrom} نسخة إلى ${sendCC} نسخة مخفية إلى ${sendBcc} بعنوان ${subject}</value>
         <value xml:lang="cs">[ADDRERR] Chyba adresy při odesílání zprávu pro ${sendTo} od ${sendFrom} v kopii ${sendCc} slepé kopii ${sendBcc} předmět ${subject}</value>
+        <value xml:lang="de">[ADDRERR] Adressfehler beim Senden einer Nachricht an ${sendTo} von ${sendFrom} cc ${sendCc} bcc ${sendBcc} Titel ${subject}</value>
         <value xml:lang="en">[ADDRERR] Address error when sending message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
         <value xml:lang="es">[ADDRERR] Error en la dirección al enviar el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto ${subject}</value>
         <value xml:lang="fr">[ADDRERR] Erreur lors de l'envoi du courriel à ${sendTo}, depuis ${sendFrom}, en copie, ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
@@ -3556,6 +3561,7 @@
     <property key="CommonEmailSendConnectionError">
         <value xml:lang="ar">[CON] خطأ في شبكة الإتصال عند إرسال الرسالة إلى ${sendTo} من ${sendFrom} نسخة إلى ${sendCC} نسخة مخفية إلى ${sendBcc} بعنوان ${subject}</value>
         <value xml:lang="cs">[CON] Chyba připojení při odesílání zprávu pro ${sendTo} od ${sendFrom} v kopii ${sendCc} bcc ${sendBcc} předmět ${subject}</value>
+        <value xml:lang="de">[CON] Verbindungsfehler beim Senden der Nachricht an ${sendTo} von ${sendFrom} cc ${sendCc} bcc ${sendBcc} Titel ${subject}</value>
         <value xml:lang="en">[CON] Connection error when sending message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
         <value xml:lang="es">[CON] Error de conexión al enviar el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto ${subject}</value>
         <value xml:lang="fr">[CON] Erreur de connexion lors de l'envoi du courriel à ${sendTo}, depuis ${sendFrom}, en copie, ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
@@ -3569,6 +3575,7 @@
     <property key="CommonEmailSendError">
         <value xml:lang="ar">خطأ في إرسال البريد الإلكتروني: ${errorString}</value>
         <value xml:lang="cs">Chyba při odesílání emailu: ${errorString}</value>
+        <value xml:lang="de">Sendefehler: ${errorString}</value>
         <value xml:lang="en">Error send email: ${errorString}</value>
         <value xml:lang="es">Error enviando correo electrónico: ${errorString}</value>
         <value xml:lang="fr">Erreur dans l'envoi du courriel : ${errorString}</value>
@@ -3582,6 +3589,7 @@
     <property key="CommonEmailSendGettingError">
         <value xml:lang="ar">خطأ في تحميل المحتوى: ${errorString}</value>
         <value xml:lang="cs">Chyba při získávání obsahu: ${errorString}</value>
+        <value xml:lang="de">Fehler beim Laden der Inhalte: ${errorString}</value>
         <value xml:lang="en">Error getting content: ${errorString}</value>
         <value xml:lang="es">Error obteniendo contenido: ${errorString}</value>
         <value xml:lang="fr">Erreur dans l'obtention du contenu du courriel : ${errorString}</value>
@@ -3595,6 +3603,7 @@
     <property key="CommonEmailSendIOException">
         <value xml:lang="ar">خطأ في IOException عند خلق رسالة إلى ${sendTo} من ${sendFrom} نسخة ${sendCc} نسخة مخفية ${sendBcc} بموضوع ${subject}</value>
         <value xml:lang="cs">IOException při přípravě zprávy pro ${sendTo} od ${sendFrom} kopie ${sendCc} bcc ${sendBcc} předmět ${subject}</value>
+        <value xml:lang="de">IOException beim Erstellen einer Nachricht an ${sendTo} von ${sendFrom} cc ${sendCc} bcc ${sendBcc} Titel ${subject}</value>
         <value xml:lang="en">IOException when creating message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
         <value xml:lang="es">IOException creando el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto ${subject}</value>
         <value xml:lang="fr">Erreur d'Entrée/Sortie lors de la création du courriel à ${sendTo}, depuis ${sendFrom}, en copie, ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
@@ -3607,6 +3616,7 @@
     <property key="CommonEmailSendMalformedUrl">
         <value xml:lang="ar">خطأ في العنوان: ${bodyUrl} ونوع الخطأ: ${errorString}</value>
         <value xml:lang="cs">Chybný formát URL: ${bodyUrl}; chyba: ${errorString}</value>
+        <value xml:lang="de">Fehlerhafte URL: ${bodyUrl}; Fehler: ${errorString}</value>
         <value xml:lang="en">Malformed URL: ${bodyUrl}; error was: ${errorString}</value>
         <value xml:lang="es">URL mal formada: ${bodyUrl}; el error fue: ${errorString}</value>
         <value xml:lang="fr">URL invalide : ${bodyUrl}; erreur levée : ${errorString}</value>
@@ -3618,6 +3628,7 @@
     </property>
     <property key="CommonEmailSendMessagingException">
         <value xml:lang="cs">MessagingException při přípravě zprávy ${sendTo} od ${sendFrom} kopie ${sendCc} bcc ${sendBcc} předmět ${subject}</value>
+        <value xml:lang="de">MessagingException beim Erstellen von Nachrichten an ${sendTo} von ${sendFrom} cc ${sendCc} bcc ${sendBcc} Titel ${subject}</value>
         <value xml:lang="en">MessagingException when creating message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
         <value xml:lang="es">MessagingException creando el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto ${subject}</value>
         <value xml:lang="fr">MessagingException lors de la création du courriel à ${sendTo}, depuis ${sendFrom}, en copie, ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
@@ -3629,6 +3640,7 @@
     </property>
     <property key="CommonEmailSendMissingParameterSendVia">
         <value xml:lang="cs">Parametr sendVia je požadován, když sendType není mail.smtp.host</value>
+        <value xml:lang="de">Der Parameter sendVia ist erforderlich, wenn sendType ist ungleich mail.smtp.host</value>
         <value xml:lang="en">Parameter sendVia is required when sendType is not mail.smtp.host</value>
         <value xml:lang="es">El parámetro sendVia debe indicarse cuando sendType no es mail.smtp.host</value>
         <value xml:lang="fr">Le paramêtre sendVia est requis lorsque sendType n'est pas mail.smtp.host</value>
@@ -3641,6 +3653,7 @@
     <property key="CommonEmailSendRenderingScreenEmailError">
         <value xml:lang="ar">خطأ في تقديم شاشة البريد الإلكتروني: ${errorString}</value>
         <value xml:lang="cs">Nepodařilo se připravit obrazovku pro email: ${errorString}</value>
+        <value xml:lang="de">Fehler beim Rendern des Email-Screens: ${errorString}</value>
         <value xml:lang="en">Error rendering screen for email: ${errorString}</value>
         <value xml:lang="es">Error componiendo pantalla para el correo electrónico: ${errorString}</value>
         <value xml:lang="fr">Erreur lors du rendu du contenu du courriel : ${errorString}</value>
@@ -3653,6 +3666,7 @@
     <property key="CommonEmailSendRenderingScreenPdfError">
         <value xml:lang="ar">خطأ في تقديم المرفق PDF للبريد الإلكتروني: ${errorString}</value>
         <value xml:lang="cs">Nepodařilo se připravit PDF přílohu emailu: ${errorString}</value>
+        <value xml:lang="de">Fehler beim Rendern des PDF Email-Anhangs: ${errorString}</value>
         <value xml:lang="en">Error rendering PDF attachment for email: ${errorString}</value>
         <value xml:lang="es">Error componiendo el PDF para adjuntar por correo electrónico: ${errorString}</value>
         <value xml:lang="fr">Erreur dans le rendu des PDF en pièce jointe du courriel : ${errorString}</value>
@@ -3665,6 +3679,7 @@
     <property key="CommonEmailSendUndeliveredMail">
         <value xml:lang="ar">تم إعادة البريد الغير مرسل للمرسل</value>
         <value xml:lang="cs">Nedoručený email vrácen odesílateli</value>
+        <value xml:lang="de">Zurück zum Absender. Die Nachricht konnte nicht ausgeliefert werden.</value>
         <value xml:lang="en">Undelivered Mail Returned to Sender</value>
         <value xml:lang="es">Correo electrónico que no puede ser entregado devuelto al remitente</value>
         <value xml:lang="fr">Non distribution du courriel, retourné à l'expéditeur</value>
@@ -3677,6 +3692,7 @@
     <property key="CommonEmailShouldBeSpecified">
         <value xml:lang="ar">دليل الطرف أو البريد الإلكتروني للشخص المرسل إليه يجب تحديده!</value>
         <value xml:lang="cs">PartyId nebo emailová adresa příjemce by měly být zadány!</value>
+        <value xml:lang="de">PartyId oder Email Adresse (sendTo) muss angegeben werden!</value>
         <value xml:lang="en">PartyId or Email Address (sendTo) should be specified!</value>
         <value xml:lang="es">Debe especificarse el código de participante o la dirección de correo electrónico de destino!</value>
         <value xml:lang="fr">Une réf. acteur ou un courriel (sendTo) doit être spécifié</value>

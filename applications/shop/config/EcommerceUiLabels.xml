@@ -1022,6 +1022,7 @@
     </property>
     <property key="EcommerceEditThisComment">
         <value xml:lang="da">Redigér denne kommentar</value>
+        <value xml:lang="de">Kommentar bearbeiten</value>
         <value xml:lang="en">Edit this comment</value>
         <value xml:lang="fr">Modifier ce commentaire</value>
         <value xml:lang="it">Aggiorna questo commento</value>
@@ -1686,6 +1687,7 @@
         <value xml:lang="zh-TW">細項來自購物清單; 從清單頁更新數量</value>
     </property>
     <property key="EcommerceLanguage">
+        <value xml:lang="de">Sprache</value>
         <value xml:lang="en">Language</value>
         <value xml:lang="ja">言語</value>
         <value xml:lang="vi">Ngôn ngữ</value>
@@ -1769,6 +1771,7 @@
         <value xml:lang="zh-TW">最近看過</value>
     </property>
     <property key="EcommerceLayeredNavigation">
+        <value xml:lang="de">Durchstöbern</value>
         <value xml:lang="en">Layered Navigation</value>
         <value xml:lang="zh">分层导航</value>
     </property>
@@ -1791,6 +1794,7 @@
         <value xml:lang="zh-TW">長度</value>
     </property>
     <property key="EcommerceLimit">
+        <value xml:lang="de">Limit:</value>
         <value xml:lang="en">Limit:</value>
         <value xml:lang="fr">Limite :</value>
         <value xml:lang="ja">制限:</value>
@@ -1913,6 +1917,7 @@
     </property>
     <property key="EcommerceLocation">
         <value xml:lang="da">Placering</value>
+        <value xml:lang="de">Location</value>
         <value xml:lang="en">Location</value>
         <value xml:lang="fr">Emplacement</value>
         <value xml:lang="it">Luogo</value>
@@ -2124,6 +2129,7 @@
         <value xml:lang="zh-TW">請選擇送貨方法</value>
     </property>
     <property key="EcommerceModifyDate">
+        <value xml:lang="de">Verändert am</value>
         <value xml:lang="en">Modified Date</value>
         <value xml:lang="ja">更新日</value>
         <value xml:lang="vi">Ngày chỉnh sửa</value>
@@ -2149,6 +2155,7 @@
         <value xml:lang="zh-TW">月</value>
     </property>
     <property key="EcommerceMonthsAtAddressNotValid">
+        <value xml:lang="de">Monate bei Adresse keine gültige Nummer:${parameters.monthsAtAddress}</value>
         <value xml:lang="en">Months at address not a valid number: ${parameters.monthsAtAddress}</value>
         <value xml:lang="it">Mesi all'indirizzo non è un numero valido: ${parameters.monthsAtAddress}</value>
         <value xml:lang="ja">住所が有効でない月数: ${parameters.monthsAtAddress}</value>
@@ -2157,6 +2164,7 @@
         <value xml:lang="zh-TW">在位址的月數不是一個有效數字:${parameters.monthsAtAddress}</value>
     </property>
     <property key="EcommerceMonthsWithEmployeeNotValid">
+        <value xml:lang="de">Monate bei Arbeitgeber war keine gültige Nummer: ${parameters.monthsWithEmployer}</value>
         <value xml:lang="en">Months with Employer was not a valid number: ${parameters.monthsWithEmployer}</value>
         <value xml:lang="it">Mesi come impiegato non è un numero valido: ${parameters.monthsWithEmployer}</value>
         <value xml:lang="ja">雇用者が有効でない月数: ${parameters.monthsWithEmployer}</value>
@@ -2606,6 +2614,7 @@
         <value xml:lang="zh-TW">訂單沒有啟動</value>
     </property>
     <property key="EcommerceOwner">
+        <value xml:lang="de">Besitzer</value>
         <value xml:lang="en">Owner</value>
         <value xml:lang="ja">所有者</value>
         <value xml:lang="vi">Chủ sở hữu</value>
@@ -2763,6 +2772,7 @@
         <value xml:lang="zh-TW">價格</value>
     </property>
     <property key="EcommercePriceRange">
+        <value xml:lang="de">Preisklasse</value>
         <value xml:lang="en">Price Range</value>
         <value xml:lang="ja">価格レンジ</value>
         <value xml:lang="nl">Prijs range</value>
@@ -2799,6 +2809,7 @@
     </property>
     <property key="EcommerceProductNotConfigured">
         <value xml:lang="da">Produktet er ikke konfigureret</value>
+        <value xml:lang="de">Produkt nicht konfiguriert</value>
         <value xml:lang="en">Product not configured</value>
         <value xml:lang="fr">Article non configuré</value>
         <value xml:lang="it">Prodotto non configurato</value>
@@ -3014,6 +3025,7 @@
     </property>
     <property key="EcommerceRegister">
         <value xml:lang="da">Registrer</value>
+        <value xml:lang="de">Registrierung</value>
         <value xml:lang="en">Register</value>
         <value xml:lang="fr">S'enregistrer</value>
         <value xml:lang="it">Registrati</value>
@@ -3483,6 +3495,7 @@
     </property>
     <property key="EcommerceShortName">
         <value xml:lang="da">Kaldenavn</value>
+        <value xml:lang="de">Kurzer name</value>
         <value xml:lang="en">Short Name</value>
         <value xml:lang="fr">Nom court</value>
         <value xml:lang="it">Nome corto</value>
@@ -3573,6 +3586,7 @@
     </property>
     <property key="EcommerceSorryDigitalProductUploadNotEnabled">
         <value xml:lang="da">Beklager, upload af digitale produkter er ikke aktiveret</value>
+        <value xml:lang="de">Entschuldigung, der Upload digitaler Produkte ist nicht aktiviert.</value>
         <value xml:lang="en">Sorry, digital product upload is not enabled.</value>
         <value xml:lang="fr">Désolé, article numérique non accessible</value>
         <value xml:lang="it">Spiacente, l'upload di prodotti digitali non è abilitato.</value>
@@ -3651,6 +3665,7 @@
         <value xml:lang="zh-TW">標題</value>
     </property>
     <property key="EcommerceSubjectMissing">
+        <value xml:lang="de">Betreff fehlt</value>
         <value xml:lang="en">Subject is missing</value>
         <value xml:lang="ja">件名が正しくありません</value>
         <value xml:lang="vi">Chủ đề chưa có</value>
@@ -3676,6 +3691,7 @@
     </property>
     <property key="EcommerceSubscriptionVerifyEmail">
         <value xml:lang="da">E-mail bekræftelse på abonnement</value>
+        <value xml:lang="de">Bestätigung der E-Mail Adresse</value>
         <value xml:lang="en">Subscription Verify Email</value>
         <value xml:lang="fr">Vérification d'adresse couriel pour subscription</value>
         <value xml:lang="it">Sottiscrivi verifica email</value>
@@ -4113,6 +4129,7 @@
         <value xml:lang="zh-TW">檢視已發送</value>
     </property>
     <property key="EcommerceYearsAtAddressNotValid">
+        <value xml:lang="de">Jahre bei Adresse keine gültige Nummer: ${parameters.yearsAtAddress}</value>
         <value xml:lang="en">Years at address not a valid number: ${parameters.yearsAtAddress}</value>
         <value xml:lang="it">Anni all'indirizzo non è un numero valido: ${parameters.yearsAtAddress}</value>
         <value xml:lang="ja">住所が有効でない年数: ${parameters.yearsAtAddress}</value>
@@ -4121,6 +4138,7 @@
         <value xml:lang="zh-TW">在位址的年數不是一個有效數字:${parameters.yearsAtAddress}</value>
     </property>
     <property key="EcommerceYearsWithEmployeeNotValid">
+        <value xml:lang="de">Jahre bei Arbeitgeber keine gültige Nummer: ${parameters.yearsWithEmployer}</value>
         <value xml:lang="en">Years with Employer was not a valid number: ${parameters.yearsWithEmployer}</value>
         <value xml:lang="it">Anni come impiegato non è un numero valido: ${parameters.yearsWithEmployer}</value>
         <value xml:lang="ja">雇用者が有効でない年数: ${parameters.yearsWithEmployer}</value>
@@ -4256,7 +4274,8 @@
     </property>
     <property key="EcommerceYourGiftCardReloaded">
         <value xml:lang="da">Deres genindlæste gavekort har</value>
-        <value xml:lang="en">Your Gift Card Reloaded Have</value>
+        <value xml:lang="de">Ihre Geschenkkarte wurde neu geladen</value>
+        <value xml:lang="en">Your Giftcard has been reloaded</value>
         <value xml:lang="fr">Votre carte cadeau est rechargée</value>
         <value xml:lang="it">La tua carta regalo è stata ricaricata</value>
         <value xml:lang="ja">ギフトカードチャージ後</value>
@@ -5182,6 +5201,7 @@
     </property>
     <property key="PageTitleViewQuote">
         <value xml:lang="da">Vis tilbud</value>
+        <value xml:lang="de">Angebot ansehen</value>
         <value xml:lang="en">View Quote</value>
         <value xml:lang="fr">Voir les devis</value>
         <value xml:lang="it">Mostra preventivo</value>

@@ -14957,18 +14957,23 @@
         <value xml:lang="zh-TW">分類頁面</value>
     </property>
     <property key="ProductCategoryParentCategoryList">
+        <value xml:lang="de">Parent Kategorie Liste</value>
         <value xml:lang="en">Parent Category List</value>
     </property>
     <property key="ProductCategoryParties">
+        <value xml:lang="de">Kategorie Parties</value>
         <value xml:lang="en">Category Parties</value>
     </property>
     <property key="ProductCategoryProds">
+        <value xml:lang="de">Kategorie Produkte</value>
         <value xml:lang="en">Category Products</value>
     </property>
     <property key="ProductCategoryProduct">
+        <value xml:lang="de">Kategorie Produkt</value>
         <value xml:lang="en">Category Product</value>
     </property>
     <property key="ProductCategoryProductList">
+        <value xml:lang="de">Kategorie Produkt Liste</value>
         <value xml:lang="en">Category Product List</value>
     </property>
     <property key="ProductCategoryProducts">
@@ -15031,6 +15036,7 @@
         <value xml:lang="zh-TW">分類匯總:上級分類</value>
     </property>
     <property key="ProductCategoryRollups">
+        <value xml:lang="de">Kategorie Hierarchie</value>
         <value xml:lang="en">Category Rollups</value>
     </property>
     <property key="ProductCategorySelectCategoryAndEnterFromDate">
@@ -15890,6 +15896,7 @@
         <value xml:lang="zh-TW">把產品分類成員複製到另一個分類</value>
     </property>
     <property key="ProductCopyCategoryProductsToCategory">
+        <value xml:lang="de">Produkte aus Kategorie in eine andere Kategorie kopieren</value>
         <value xml:lang="en">Copy Category Products to Another Category</value>
     </property>
     <property key="ProductCostComponentCalcId">
@@ -15899,6 +15906,7 @@
         <value xml:lang="zh">成本组成计算标识</value>
     </property>
     <property key="ProductCostComponentCalcs">
+        <value xml:lang="de">Komponenten Kostenberechnungen</value>
         <value xml:lang="en">Cost Component Calcs</value>
         <value xml:lang="nl">Calculaties</value>
     </property>
@@ -16088,6 +16096,7 @@
         <value xml:lang="zh-TW">沒有找到貨運識別</value>
     </property>
     <property key="ProductCountryOfOrigin">
+        <value xml:lang="de">Herkunftsland</value>
         <value xml:lang="en">Country of Origin</value>
         <value xml:lang="it">Paese di origine</value>
         <value xml:lang="ja">国(元)</value>
@@ -16550,9 +16559,11 @@
         <value xml:lang="zh-TW">新建者/修訂者</value>
     </property>
     <property key="ProductCreateNewThumbnailSizeSuccessful">
+        <value xml:lang="de">Neue Thumbnail-Größe erfolgreich erstellt.</value>
         <value xml:lang="en">Create new thumbnail size successful.</value>
     </property>
     <property key="ProductCropImageSuccessfully">
+        <value xml:lang="de">Bildbearbeitung erfolgreich.</value>
         <value xml:lang="en">Crop image successfully.</value>
     </property>
     <property key="ProductCrossSell">
@@ -16668,6 +16679,7 @@
         <value xml:lang="zh-TW">客戶評級</value>
     </property>
     <property key="ProductDL">
+        <value xml:lang="de">DL</value>
         <value xml:lang="en">DL</value>
         <value xml:lang="fr">Eff.</value>
         <value xml:lang="zh">效率</value>
@@ -17135,6 +17147,7 @@
         <value xml:lang="zh-TW">直接出貨</value>
     </property>
     <property key="ProductDuplicateCategory">
+        <value xml:lang="de">Kategorie duplizieren</value>
         <value xml:lang="en">Duplicate Category</value>
     </property>
     <property key="ProductDuplicateProduct">
@@ -17166,7 +17179,7 @@
         <value xml:lang="zh-TW">複製產品分類</value>
     </property>
     <property key="ProductDuplicateProductCategorySelected">
-        <value xml:lang="de">Ausgewähltes duplizieren mit neuer ID</value>
+        <value xml:lang="de">Ausgewählte Produktkategorie duplizieren mit neuer ID</value>
         <value xml:lang="en">Duplicate Selected with New ID</value>
         <value xml:lang="es">Duplicar seleccionados con código nuevo</value>
         <value xml:lang="fr">Dupliquer la sélection avec une nouvelle réf.</value>
@@ -17959,6 +17972,7 @@
         <value xml:lang="zh-TW">已有變體識別</value>
     </property>
     <property key="ProductExpireAllCategoryProducts">
+        <value xml:lang="de">Alle Kategorieprodukte auslaufen lassen</value>
         <value xml:lang="en">Expire All Category Products</value>
     </property>
     <property key="ProductExpireAllProductMembers">
@@ -18071,6 +18085,7 @@
         <value xml:lang="zh-TW">${facility.facilityName} [${facility.facilityId}]的下級場所</value>
     </property>
     <property key="ProductFacilityContactMech">
+        <value xml:lang="de">Kontakt Information</value>
         <value xml:lang="en">Contact Information</value>
     </property>
     <property key="ProductFacilityContainer">
@@ -18555,6 +18570,7 @@
         <value xml:lang="zh-TW">特性分類和群組</value>
     </property>
     <property key="ProductFeatureCategories">
+        <value xml:lang="de">Feature Kategorien</value>
         <value xml:lang="en">Feature Categories</value>
     </property>
     <property key="ProductFeatureCategory">
@@ -18639,7 +18655,8 @@
         <value xml:lang="zh">特征组</value>
         <value xml:lang="zh-TW">特性群組</value>
     </property>
-        <property key="ProductFeatureGroups">
+    <property key="ProductFeatureGroups">
+        <value xml:lang="de">Merkmalgruppen</value>
         <value xml:lang="en">Feature Groups</value>
     </property>
     <property key="ProductFeatureGroupAppls">
@@ -19092,6 +19109,7 @@
         <value xml:lang="zh-TW">運費百分比</value>
     </property>
     <property key="ProductFlatTitle">
+        <value xml:lang="de">Pauschalgebühren</value>
         <value xml:lang="en">Flat charges</value>
         <value xml:lang="fr">Frais fixes</value>
         <value xml:lang="it">Ricarichi fissi</value>
@@ -19101,6 +19119,7 @@
         <value xml:lang="zh-TW">固定費用</value>
     </property>
     <property key="ProductFrameImageSuccessfully">
+        <value xml:lang="de">Bild erfolgreich eingerahmt.</value>
         <value xml:lang="en">Frame image successfully.</value>
     </property>
     <property key="ProductFromAnOrder">

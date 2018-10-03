@@ -122,7 +122,7 @@
 <#-- Main theme macros include (TODO?: is there any way to cache this further? (like global vars)) -->
 <@scipioTemplateIncludeDirective />
 
-<#-- FIXME?L For now we must copy/dump all scipio macro and function defs from main namespace into the global namespace manually.
+<#-- FIXME?: For now we must copy/dump all scipio macro and function defs from main namespace into the global namespace manually.
      Easier with a loop for now but this assumes all are meant to be public (not true)...
      If not done they are not accessible from #import-ed libraries and other places.
      This is also done so that the behavior is the same as the java-based ofbiz transforms such as @ofbizUrl,

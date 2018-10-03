@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="FormFieldTitle_accommodationMapId">
+        <value xml:lang="de">Unterkunft Map ID</value>
         <value xml:lang="en">Accommodation Map ID</value>
         <value xml:lang="fr">Réf. de plan de logement</value>
         <value xml:lang="it">Mappa alloggio</value>
@@ -29,6 +30,7 @@
         <value xml:lang="zh-TW">接待地圖示識別</value>
     </property>
     <property key="FormFieldTitle_accommodationSpotId">
+        <value xml:lang="de">Unterkunft Spot ID</value>
         <value xml:lang="en">Accommodation Spot ID</value>
         <value xml:lang="fr">Réf. de lieu de logement</value>
         <value xml:lang="it">Luogo alloggio</value>
@@ -123,6 +125,7 @@
         <value xml:lang="zh-TW">可用性</value>
     </property>
     <property key="FormFieldTitle_calendarType">
+        <value xml:lang="de">Kalendarart</value>
         <value xml:lang="en">Calendar Type</value>
         <value xml:lang="fr">Type de calendrier</value>
         <value xml:lang="it">Tipo ti calendario</value>
@@ -222,6 +225,7 @@
         <value xml:lang="zh-TW">完成日期時間</value>
     </property>
     <property key="FormFieldTitle_hideEvents">
+        <value xml:lang="de">Events ausblenden</value>
         <value xml:lang="en">Hide events</value>
         <value xml:lang="fr">Cacher les évènements</value>
         <value xml:lang="it">Nascondi eventi</value>
@@ -342,10 +346,12 @@
         <value xml:lang="zh-TW">必須回複</value>
     </property>
     <property key="FormFieldTitle_newWorkEffortId">
+        <value xml:lang="de">Neue Arbeitsaufwand ID</value>
         <value xml:lang="en">New WorkEffort ID</value>
         <value xml:lang="fr">Nvlle réf de tâche</value>
     </property>
     <property key="FormFieldTitle_orderTypeDescription">
+        <value xml:lang="de">Bestellart Beschreibung</value>
         <value xml:lang="en">Order Type Description</value>
         <value xml:lang="fr">Description de type de commande</value>
         <value xml:lang="it">Descrizione tipo ordine</value>
@@ -446,6 +452,7 @@
         <value xml:lang="zh-TW">評級</value>
     </property>
     <property key="FormFieldTitle_reminderDateTime">
+        <value xml:lang="de">Erinnerung Datum - Uhrzeit</value>
         <value xml:lang="en">Reminder Date Time</value>
         <value xml:lang="fr">Date heure de rappel</value>
         <value xml:lang="it">Data ora promemoria</value>
@@ -455,6 +462,7 @@
         <value xml:lang="zh-TW">提醒日期時間</value>
     </property>
     <property key="FormFieldTitle_reminderOffset">
+        <value xml:lang="de">Erinnerung Verzögerung</value>
         <value xml:lang="en">Reminder Offset</value>
         <value xml:lang="fr">Décalage 1er rappel</value>
         <value xml:lang="it">Intervallo promemoria</value>
@@ -548,6 +556,7 @@
         <value xml:lang="zh-TW">修訂序號</value>
     </property>
     <property key="FormFieldTitle_scopeEnumId">
+        <value xml:lang="de">Umfang</value>
         <value xml:lang="en">Scope</value>
         <value xml:lang="fr">Possibilité d'accès</value>
         <value xml:lang="it">Scopo</value>
@@ -560,6 +569,7 @@
         <value xml:lang="zh-TW">範圍</value>
     </property>
     <property key="FormFieldTitle_serviceLoaderName">
+        <value xml:lang="de">Service Loader Name </value>
         <value xml:lang="en">Service Loader Name </value>
         <value xml:lang="fr">Nom du service chargeur</value>
         <value xml:lang="it">Nome servizio loader</value>
@@ -608,6 +618,7 @@
         <value xml:lang="zh-TW">特別條款</value>
     </property>
     <property key="FormFieldTitle_statusDateTime">
+        <value xml:lang="de">Status Datum - Uhrzeit</value>
         <value xml:lang="en">Status Date Time</value>
         <value xml:lang="fr">Date-heure de statut</value>
         <value xml:lang="it">Data ora stato</value>
@@ -793,6 +804,7 @@
         <value xml:lang="zh-TW">工作投入上級識別</value>
     </property>
     <property key="FormFieldTitle_workEffortPurposeTypeId">
+        <value xml:lang="de">Arbeitsaufwand Zweck Typ ID</value>
         <value xml:lang="en">Work Effort Purpose Type ID</value>
         <value xml:lang="fr">Type de but de la tâche</value>
         <value xml:lang="it">Tipo di scopo impegno di lavoro</value>
@@ -818,6 +830,7 @@
         <value xml:lang="zh-TW">工作投入類型識別</value>
     </property>
     <property key="FormFieldTitle_workReqFulfTypeDescription">
+        <value xml:lang="de">Auftragsanforderungstyp Beschreibung</value>
         <value xml:lang="en">Work Req Fulf Type Description</value>
         <value xml:lang="fr">Description de type d'éxécution de demande de travail</value>
         <value xml:lang="it">Descrizione del tipo di soddisfazione fabbisogno impegno di lavoro</value>
@@ -830,6 +843,7 @@
         <value xml:lang="zh-TW">工作請求補充類型描述</value>
     </property>
     <property key="FormFieldTitle_workReqFulfTypeId">
+        <value xml:lang="de">Auftragsanforderungstyp ID </value>
         <value xml:lang="en">Work Req Fulf Type ID </value>
         <value xml:lang="fr">Type d'éxécution de demande de travail </value>
         <value xml:lang="it">Tipo di soddisfazione fabbisogno impegno di lavoro</value>
@@ -914,6 +928,7 @@
         <value xml:lang="zh-TW">新增工作投入</value>
     </property>
     <property key="PageTitleAddWorkEffortAssignmentRate">
+        <value xml:lang="de">Arbeitsaufwandsgebühr hinzufügen</value>
         <value xml:lang="en">Add Work Effort Assignment Rate</value>
         <value xml:lang="es">Añadir tasa de asignación a esfuerzo de trabajo</value>
         <value xml:lang="fr">Ajouter un taux d'affectation à la tâche</value>
@@ -928,6 +943,7 @@
     </property>
     <property key="PageTitleAddWorkEffortAttribute">
         <value xml:lang="ar">اضافة سمة لمجهود العمل</value>
+        <value xml:lang="de">Arbeitsaufwands-Attribut hinzufügen</value>
         <value xml:lang="en">Add Work Effort Attribute</value>
         <value xml:lang="fr">Ajouter un attribut à la tâche</value>
     </property>
@@ -957,6 +973,7 @@
         <value xml:lang="zh-TW">新增工作投入事件提醒</value>
     </property>
     <property key="PageTitleAddWorkEffortFixedAssetAssign">
+        <value xml:lang="de">Arbeitsaufwands Materialzuweisung hinzufügen</value>
         <value xml:lang="en">Add Work Effort Fixed Asset Assignment</value>
         <value xml:lang="fr">Ajouter l'affectation d'unetâche à une immobilisation</value>
         <value xml:lang="it">Aggiungi assegnazione impegno di lavoro su cespite</value>
@@ -1016,6 +1033,7 @@
         <value xml:lang="zh-TW">新增工作投入團體指派</value>
     </property>
     <property key="PageTitleAddWorkEffortQuote">
+        <value xml:lang="de">Arbeitsaufwands-Angebot hinzufügen</value>
         <value xml:lang="en">Add Work Effort Quote</value>
         <value xml:lang="es">Añadir cotización a esfuerzo de trabajo</value>
         <value xml:lang="fr">Ajouter un devis à la tâche</value>
@@ -1028,6 +1046,7 @@
         <value xml:lang="zh-TW">新增工作投入詢價</value>
     </property>
     <property key="PageTitleAddWorkEffortQuoteItem">
+        <value xml:lang="de">Arbeitsaufwands-Angebotselement hinzufügen</value>
         <value xml:lang="en">Add Work Effort QuoteItem</value>
         <value xml:lang="es">Añadir ítem a la cotización</value>
         <value xml:lang="fr">Ajouter une ligne de devis à la tâche</value>
@@ -1041,6 +1060,7 @@
         <value xml:lang="zh-TW">新增工作投入詢價細項</value>
     </property>
     <property key="PageTitleAddWorkEffortRequest">
+        <value xml:lang="de">Arbeitsaufwand Anfrage hinzufügen</value>
         <value xml:lang="en">Add Work Effort Request</value>
         <value xml:lang="es">Añadir petición a esfuerzo de trabajo</value>
         <value xml:lang="fr">Ajouter une demande à la tâche</value>
@@ -1054,6 +1074,7 @@
         <value xml:lang="zh-TW">新增工作投入請求</value>
     </property>
     <property key="PageTitleAddWorkEffortRequestItem">
+        <value xml:lang="de">Arbeitsaufwand Anfrageelement hinzufügen</value>
         <value xml:lang="en">Add Work Effort RequestItem</value>
         <value xml:lang="es">Añadir ítem de petición</value>
         <value xml:lang="fr">Ajouter une ligne de demande à la tâche</value>
@@ -1067,6 +1088,7 @@
         <value xml:lang="zh-TW">新增工作投入請求細項</value>
     </property>
     <property key="PageTitleAddWorkEffortRequirement">
+        <value xml:lang="de">Arbeitsaufwand Anforderung hinzufügen</value>
         <value xml:lang="en">Add Work Effort Requirement</value>
         <value xml:lang="es">Añadir requerimiento a esfuerzo de trabajo</value>
         <value xml:lang="fr">Ajouter un besoin à la tâche</value>
@@ -1263,6 +1285,7 @@
         <value xml:lang="zh-TW">編輯工時表角色</value>
     </property>
     <property key="PageTitleEditWorkEffort">
+        <value xml:lang="de">Arbeitsaufwand bearbeiten</value>
         <value xml:lang="en">Edit Work Effort</value>
         <value xml:lang="es">Editar esfuerzo de trabajo</value>
         <value xml:lang="fr">Modifier la tâche</value>
@@ -1276,6 +1299,7 @@
         <value xml:lang="zh-TW">編輯工作投入</value>
     </property>
     <property key="PageTitleEditWorkEffortAssoc">
+        <value xml:lang="de">Arbeitsaufwand-Zuweisung bearbeiten</value>
         <value xml:lang="en">Edit Work Effort Assoc</value>
         <value xml:lang="fr">Modifier l'association de la tâche</value>
         <value xml:lang="it">Aggiorna associazione impegno di lavoro</value>
@@ -1286,6 +1310,7 @@
         <value xml:lang="zh-TW">編輯工作投入結合</value>
     </property>
     <property key="PageTitleEditWorkEffortCommEvent">
+        <value xml:lang="de">Arbeitsaufwand-Kommunikation hinzufügen</value>
         <value xml:lang="en">Edit Work Effort CommEvent</value>
         <value xml:lang="es">Editar evento de comunicación de esfuerzo de trabajo</value>
         <value xml:lang="fr">Modifier l'évènement de communication de la tâche</value>
@@ -1299,6 +1324,7 @@
         <value xml:lang="zh-TW">編輯工作投入通訊事件</value>
     </property>
     <property key="PageTitleEditWorkEffortContactMechs">
+        <value xml:lang="de">Arbeitsaufwand Kontaktdaten bearbeiten</value>
         <value xml:lang="en">Edit Work Effort Contact Mechs</value>
         <value xml:lang="fr">Modifier les contacts de la tâche</value>
         <value xml:lang="it">Aggiorna i contatti dell'impegno di lavoro</value>
@@ -1309,6 +1335,7 @@
         <value xml:lang="zh-TW">編輯工作投入聯絡方法</value>
     </property>
     <property key="PageTitleEditWorkEffortContent">
+        <value xml:lang="de">Arbeitsaufwand-Inhalt</value>
         <value xml:lang="en">Work Effort Content</value>
         <value xml:lang="fr">Contenu de la tâche</value>
         <value xml:lang="it">Contenuto dell'impegno di lavoro</value>
@@ -1319,6 +1346,7 @@
         <value xml:lang="zh-TW">工作投入內容</value>
     </property>
     <property key="PageTitleEditWorkEffortGoodStandards">
+        <value xml:lang="de">Arbeitsaufwand Güterstandard</value>
         <value xml:lang="en">Work Effort Good Standards </value>
         <value xml:lang="fr">Biens standarts</value>
         <value xml:lang="it">Beni standard</value>
@@ -1329,6 +1357,7 @@
         <value xml:lang="zh-TW">工作投入成品規範 </value>
     </property>
     <property key="PageTitleEditWorkEffortPartyAssign">
+        <value xml:lang="de">Arbeitsaufwand Party Zuweisungen bearbeiten</value>
         <value xml:lang="en">Edit Work Effort Party Assignment</value>
         <value xml:lang="es">Editar asignación de participante a esfuerzo de trabajo</value>
         <value xml:lang="fr">Modifier l'affectation de l'acteur à la tâche</value>
@@ -1342,6 +1371,7 @@
         <value xml:lang="zh-TW">編輯工作投入團體指派</value>
     </property>
     <property key="PageTitleEditWorkEffortQuote">
+        <value xml:lang="de">Arbeitsaufwand Angebot bearbeiten</value>
         <value xml:lang="en">Edit Work Effort Quote</value>
         <value xml:lang="es">Editar cotización de esfuerzo de trabajo</value>
         <value xml:lang="fr">Modifier le devis de la tâche</value>
@@ -1355,6 +1385,7 @@
         <value xml:lang="zh-TW">編輯工作投入詢價</value>
     </property>
     <property key="PageTitleEditWorkEffortQuoteItem">
+        <value xml:lang="de">Arbeitsaufwand Angebotselement bearbeiten</value>
         <value xml:lang="en">Edit Work Effort QuoteItem</value>
         <value xml:lang="es">Editar ítem de cotización de esfuerzo de trabajo</value>
         <value xml:lang="fr">Modifier la ligne de devis de la tâche</value>
@@ -1368,6 +1399,7 @@
         <value xml:lang="zh-TW">編輯工作投入詢價細項</value>
     </property>
     <property key="PageTitleEditWorkEffortRequest">
+        <value xml:lang="de">Arbeitsaufwand Anfrage bearbeiten</value>
         <value xml:lang="en">Edit Work Effort Request</value>
         <value xml:lang="es">Editar petición de esfuerzo de trabajo</value>
         <value xml:lang="fr">Modifier la demande de tâche</value>
@@ -1381,6 +1413,7 @@
         <value xml:lang="zh-TW">編輯工作投入請求</value>
     </property>
     <property key="PageTitleEditWorkEffortRequestItem">
+        <value xml:lang="de">Arbeitsaufwand Anfrageelement bearbeiten</value>
         <value xml:lang="en">Edit Work Effort RequestItem</value>
         <value xml:lang="es">Editar ítem de petición de esfuerzo de trabajo</value>
         <value xml:lang="fr">Modifier la ligne de demande de tâche</value>
@@ -1394,6 +1427,7 @@
         <value xml:lang="zh-TW">編輯工作投入請求細項</value>
     </property>
     <property key="PageTitleEditWorkEffortRequirement">
+        <value xml:lang="de">Arbeitsaufwand Anforderung bearbeiten</value>
         <value xml:lang="en">Edit Work Effort Requirement</value>
         <value xml:lang="es">Editar requerimiento de esfuerzo de trabajo</value>
         <value xml:lang="fr">Modifier le besoin de tâche</value>

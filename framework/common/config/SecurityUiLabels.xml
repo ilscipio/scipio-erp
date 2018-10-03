@@ -84,6 +84,7 @@
         <value xml:lang="zh-TW">把使用者登入增加到安全群組</value>
     </property>
     <property key="AnswerSecurityQuestion">
+        <value xml:lang="de">Bitte beantworten Sie Ihre Sicherheitsfrage</value>
         <value xml:lang="en">Answer your Security Question</value>
         <value xml:lang="fr">Répondez à votre question de sécurité</value>
     </property>

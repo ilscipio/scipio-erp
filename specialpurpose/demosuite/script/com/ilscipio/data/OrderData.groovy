@@ -2,6 +2,7 @@ import java.sql.Timestamp
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.UtilNumber
 import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
@@ -33,21 +34,31 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
     }
 
     public void init() {
+        productStoreCount = from("ProductStore").queryCount();
+        if (productStoreCount == 0) {
+            throw new Exception("This service depends on product store data to be present. Please load or create product store data.");
+        }
+        totalProductStoreCount = (productStoreCount  < Integer.MAX_VALUE) ? (int) productStoreCount : Integer.MAX_VALUE - 1;
+        
         productCount = from("Product").queryCount();
         if (productCount == 0) {
             throw new Exception("This service depends on product data to be present. Please load product data or generate product demo data first and try again.");
         }
         totalProductCount = (productCount < Integer.MAX_VALUE) ? (int) productCount : Integer.MAX_VALUE - 1;
         
-        totalPartyGroupCount = from("PartyRole").where("roleTypeId", "INTERNAL_ORGANIZATIO").queryCount();
-        if (totalPartyGroupCount == 0) {
+        partyGroupCount = from("PartyRole").where("roleTypeId", "INTERNAL_ORGANIZATIO").queryCount();
+        if (partyGroupCount == 0) {
             throw new Exception("This service depends on party group data to be present. Please load party group data or generate party group demo data first and try again.");
         }
+        totalPartyGroupCount = (partyGroupCount  < Integer.MAX_VALUE) ? (int) partyGroupCount : Integer.MAX_VALUE - 1;
         
-        totalPartyCustomerCount = from("PartyRole").where("roleTypeId", "CUSTOMER").queryCount();
-        if (totalPartyCustomerCount == 0) {
+        partyCustomerCount = from("PartyRole").where("roleTypeId", "CUSTOMER").queryCount();
+        if (partyCustomerCount == 0) {
             throw new Exception("This service depends on party customer data to be present. Please load party customer data or generate party customer demo data first and try again.");
         }
+        totalPartyCustomerCount = (partyCustomerCount  < Integer.MAX_VALUE) ? (int) partyCustomerCount : Integer.MAX_VALUE - 1;
+        
+        context.totalProductStoreCount = totalProductStoreCount;
         context.totalProductCount = totalProductCount;
         context.totalPartyGroupCount = totalPartyCustomerCount;
         context.totalPartyCustomerCount = totalPartyCustomerCount;
@@ -76,17 +87,25 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         
         // Check if we got a valid ProductStore
         if (!productStoreId) {
-            List productStoreCatalogs = EntityUtil.filterByDate(from("ProductStoreCatalog").where("prodCatalogId", prodCatalogId).queryList());
-            if (productStoreCatalogs) {
-                productStoreId = productStoreCatalogs[0].productStoreId;
+            efo.setOffset(UtilRandom.getRandomInt(0, context.totalProductStoreCount - 1));
+//            Debug.log("productStoreId offset ======> " + efo.getOffset());
+            productStores = from("ProductStore").query(efo);            
+            if (productStores) {
+                productStoreId = productStores[0].productStoreId;
             }
+            if (!prodCatalogId && productStoreId) {
+                productStoreCatalog = EntityUtil.getFirst(EntityUtil.filterByDate(from("ProductStoreCatalog").where("productStoreId", productStoreId).queryList()));
+                prodCatalogId = productStoreCatalog.getString("prodCatalogId");
+            }            
         } else {
             if (!ProductStoreWorker.getProductStore(productStoreId))
                productStoreId = null;
         }        
         if (!productStoreId) {
             throw new Exception("Product store not found or invalid.");
-        }        
+        }
+                
+        // Check if we got a valid WebSite
         GenericValue webSite = from("WebSite").where("productStoreId", productStoreId).queryFirst();
         if (!webSite) {
             throw new Exception("Website not found or invalid.");
@@ -94,28 +113,31 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         
         // If no partyGroupId is passed, pick one randomly
         if (!partyGroupId) {
-            efo.setOffset(UtilRandom.getRandomInt(0, context.totalPartyGroupCount));
-            partyGroup = from("PartyRole").where("roleTypeId", "INTERNAL_ORGANIZATIO").query(efo);
-            if (partyGroup) {
-                partyGroupId = partyGroup.get("partyId");
+            efo.setOffset(UtilRandom.getRandomInt(0, context.totalPartyGroupCount - 1));
+//            Debug.log("party group offset ======> " + efo.getOffset());
+            partyGroups = from("PartyRole").where("roleTypeId", "INTERNAL_ORGANIZATIO").query(efo);
+            if (partyGroups) {
+                partyGroupId = partyGroups[0].getString("partyId");
             }
         }    
         if (!partyGroupId)
             throw new Exception("Party group not found or invalid.");
             
         // If no partyCustomerId is passed, pick one randomly
-        if (!partyCustomerId) {
-            efo.setOffset(UtilRandom.getRandomInt(0, context.totalPartyCustomerCount));
-            partyCustomer = from("PartyRole").where("roleTypeId", "PLACING_CUSTOMER").query(efo);
-            if (partyCustomer) {
-                partyCustomerId = partyCustomer.get("partyId");
+        if (!partyCustomerId) {            
+            efo.setOffset(UtilRandom.getRandomInt(0, context.totalPartyCustomerCount - 1));
+//            Debug.log("party customer offset ======> " + efo.getOffset());
+            partyCustomers = from("PartyRole").where("roleTypeId", "CUSTOMER").query(efo);            
+            if (partyCustomers) {
+                partyCustomerId = partyCustomers[0].getString("partyId");
             }
         }
         if (!partyCustomerId)
             throw new Exception("Party customer not found or invalid.");
        
         for (int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++) {
-            efo.setOffset(UtilRandom.getRandomInt(0, context.totalProductCount));
+            efo.setOffset(UtilRandom.getRandomInt(0, context.totalProductCount - 1));
+//            Debug.log("order item offset ======> " + efo.getOffset());
             products = from("Product").query(efo);
             if (products) {
                 product = products.get(0);
@@ -177,19 +199,19 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
     
             // Create advanced roles, if they exist (optional)
             partyRoleEndUserCustomer = from("PartyRole").where("partyId", partyCustomerId, "roleTypeId", "END_USER_CUSTOMER").cache(true).queryOne();
-            if (!partyRoleEndUserCustomer) {
+            if (partyRoleEndUserCustomer) {
                 fields = UtilMisc.toMap("orderId", orderId,"partyId", partyCustomerId, "roleTypeId", "END_USER_CUSTOMER");
                 GenericValue orderRole3 = delegator.makeValue("OrderRole", fields);
                 toBeStored.add(orderRole3);
             }    
             partyRolePlacingCustomer = from("PartyRole").where("partyId", partyCustomerId, "roleTypeId", "PLACING_CUSTOMER").cache(true).queryOne();
-            if (!partyRolePlacingCustomer) {
+            if (partyRolePlacingCustomer) {
                 fields = UtilMisc.toMap("orderId", orderId,"partyId", partyCustomerId, "roleTypeId", "PLACING_CUSTOMER");
                 GenericValue orderRole4 = delegator.makeValue("OrderRole", fields);
                 toBeStored.add(orderRole4);
             }    
             partyRoleShipToCustomer = from("PartyRole").where("partyId", partyCustomerId, "roleTypeId", "SHIP_TO_CUSTOMER").cache(true).queryOne();
-            if (!partyRoleShipToCustomer) {
+            if (partyRoleShipToCustomer) {
                 fields = UtilMisc.toMap("orderId", orderId,"partyId", partyCustomerId, "roleTypeId", "SHIP_TO_CUSTOMER");
                 GenericValue orderRole5 = delegator.makeValue("OrderRole", fields);
                 toBeStored.add(orderRole5);

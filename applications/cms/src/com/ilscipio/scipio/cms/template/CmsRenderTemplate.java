@@ -181,7 +181,17 @@ public interface CmsRenderTemplate extends Serializable {
             Configuration cfg = FreeMarkerWorker.makeConfiguration(wrapper);
             cfg.setTemplateExceptionHandler(new CmsRenderUtil.CmsTemplateExceptionHandler());
 
-            // Get CMS-specific directives
+            // CMS-specific imports
+            for(Map.Entry<Object, Object> entry : UtilProperties.getProperties("cmsFreemarkerImports").entrySet()) {
+                cfg.addAutoImport((String) entry.getKey(), (String) entry.getValue());
+            }
+
+            // CMS-specific includes
+            for(Map.Entry<Object, Object> entry : UtilProperties.getProperties("cmsFreemarkerIncludes").entrySet()) {
+                cfg.addAutoInclude((String) entry.getValue());
+            }
+
+            // CMS-specific directives
             // SCIPIO: TODO: delegate to FreeMarkerWorker and remove license notice
             // Transforms properties file set up as key=transform name, property=transform class name
             ClassLoader loader = Thread.currentThread().getContextClassLoader();

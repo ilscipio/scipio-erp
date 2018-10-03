@@ -25,7 +25,7 @@ under the License.
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
     <!-- SCIPIO: NOTE: requires webSocket=true in catalina.properties -->
-    <classpath-special purpose="websockets" type="jar" location="build/lib/ofbiz-webtools.jar">
+    <classpath-special purpose="websockets" type="jar" location="build/lib/ofbiz-webtools-example.jar">
         <webapp name="admin"/><!-- Limit JAR scanning to admin webapp only (otherwise all webapps globally) -->
     </classpath-special>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel_scipio.xml"/>

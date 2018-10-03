@@ -44,4 +44,18 @@ under the License.
         <fileset dir="../widget/build/lib" includes="*.jar"/>
         <fileset dir="../testtools/build/lib" includes="*.jar"/>
     </path>
+
+    <target name="jar" depends="classes">
+        <!-- SCIPIO: Build the example package (websockets) in a separate jar -->
+        <main-jar>
+            <main-pattern>
+                <exclude name="org/ofbiz/example/**"/>
+            </main-pattern>
+        </main-jar>
+        <main-jar jarfile="build/lib/ofbiz-webtools-example.jar">
+            <main-pattern>
+                <include name="org/ofbiz/example/**"/>
+            </main-pattern>
+        </main-jar>
+    </target>
 </project>

@@ -198,18 +198,22 @@
         <value xml:lang="zh-TW">庫存不足以滿足這個批次.</value>
     </property>
     <property key="PicklistManageTooMuchQuantity">
+        <value xml:lang="de">Die angegbene Menge (${parameters.quantity}) ist größer als die erwartete Menge (${picklistItem.quantity}).</value>
         <value xml:lang="en">The quantity entered (${parameters.quantity}) is higher than the quantity expected (${picklistItem.quantity}).</value>
         <value xml:lang="fr">La quantité entrée (${parameters.quantity}) est supérieure à  la quantité attendue (${picklistItem.quantity}).</value>
         <value xml:lang="ja">入力した数量 (${parameters.quantity}) が期待した数量 (${picklistItem.quantity}) より大きい。</value>
         <value xml:lang="zh">输入的数量（${parameters.quantity}）大于期望的数量（${picklistItem.quantity}）。</value>
     </property>
     <property key="ProductCannotCreateTheTargetDirectory">
+        <value xml:lang="de">Das Zielverzeichnis konnte nicht angelegt werden.</value>
         <value xml:lang="en">Cannot create the target directory.</value>
     </property>
      <property key="ProductCannotReplaceBecauseBothImagesAreTheSameImage">
-       <value xml:lang="en">Cannot replace because both images are the same image.</value>
+        <value xml:lang="de">Das Bild kann nicht ersetzt werden, da die Quell und Zieldatei identisch sind</value>
+        <value xml:lang="en">Cannot replace because both images are the same image.</value>
     </property>
     <property key="ProductCannotReplaceImage">
+        <value xml:lang="de">Das Bild konnte nicht ersetzt werden.</value>
         <value xml:lang="en">Cannot replace image.</value>
     </property>
     <property key="ProductCreateCommunicationEventProductPermissionError">
@@ -237,9 +241,11 @@
         <value xml:lang="zh-TW">錯誤:所有訂單細項都沒有驗證</value>
     </property>
     <property key="ProductErrorCreatingNewVirtualProductFromVariantProducts">
+        <value xml:lang="de">Fehler beim Erzeugen eines virtuellen Produkts aus einer Produktvariante: ${errorString}</value>
         <value xml:lang="en">Error creating new virtual product from variant products: ${errorString}</value>
     </property>
     <property key="ProductErrorsOccurInParsingImageProperties.xml">
+        <value xml:lang="de">Fehler beim Parsen von ImageProperties.xml: ${errorString}</value>
         <value xml:lang="en">Errors occur in parsing ImageProperties.xml: ${errorString}</value>
     </property>
     <property key="ProductErrorEnteredBothDimensionAndPackageInputBoxField">
@@ -845,12 +851,15 @@
         <value xml:lang="zh-TW">訂單數量必須不是空.請重新輸入列印揀貨表單.</value>
     </property>
     <property key="ProductPleaseChooseImageToReplace">
+        <value xml:lang="de">Bitte wählen Sie das Bild aus, das ersetzt werden soll.</value>
         <value xml:lang="en">Please choose image to replace.</value>
     </property>
     <property key="ProductPleaseChooseReplacementImage">
+        <value xml:lang="de">Bitte wählen Sie das Ersatzbild.</value>
         <value xml:lang="en">Please choose replacement image.</value>
     </property>
     <property key="ProductPleaseSelectImage">
+        <value xml:lang="de">Wählen Sie ein Bild aus.</value>
         <value xml:lang="en">Please select Image.</value>
     </property>
     <property key="ProductRemoveCommunicationEventProductPermissionError">
@@ -893,6 +902,7 @@
         <value xml:lang="zh-TW">狀態變化無效:從 ${productReview.statusId} 變為 ${parameters.statusId}</value>
     </property>
     <property key="ProductScaleAdditionalImageInAllDifferentSizesIsImpossible">
+        <value xml:lang="de">Skalierung des Bilds in verschiedene Bildgrößen fehlgeschlagen: ${errorString}</value>
         <value xml:lang="en">Scale additional image in all different sizes is impossible: ${errorString}</value>
     </property>
     <property key="productSearchEvents.added_param_features">
@@ -1285,6 +1295,7 @@
         <value xml:lang="zh-TW">沒有找到產品識別是</value>
     </property>
     <property key="ProductSubscriptionCouldntBeExpired">
+        <value xml:lang="de">Abonnement konnte nicht invalidiert werden für subscriptionId: ${subscriptionId}</value>
         <value xml:lang="en">Subscription couldn't be expired for subscriptionId: ${subscriptionId}</value>
     </property>
     <property key="productutilservices.did_not_find_any_valid_variants_for_virtual_ID">

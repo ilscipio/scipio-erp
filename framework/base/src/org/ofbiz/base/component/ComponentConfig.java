@@ -27,10 +27,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.ofbiz.base.container.ContainerConfig;
@@ -842,48 +844,86 @@ public final class ComponentConfig {
 
     /**
      * SCIPIO: Reads special JAR locations for given purpose.
+     * Only consults global entries (not those constrained to specific webapps).
      * Added 2018-06-18.
      */
     public static List<File> readClasspathSpecialJarLocations(String purpose) {
         List<File> jarLocations = new ArrayList<>();
         for(ComponentConfig cc : ComponentConfig.getAllComponents()) {
-            String configRoot = cc.getRootLocation();
-            configRoot = configRoot.replace('\\', '/');
-            for(ComponentConfig.ClasspathSpecialInfo info : cc.getClasspathSpecialInfos()) {
-                if (purpose.equals(info.purpose)) {
-                    String type = info.type;
-                    if (type == null || !("jar".equals(type) || "dir".equals(type))) {
-                        continue;
-                    }
-                    String location = info.location.replace('\\', '/');
-                    if (location.startsWith("/")) {
-                        location = location.substring(1);
-                    }
-                    String dirLoc = location;
-                    if (dirLoc.endsWith("/*")) {
-                        // strip off the slash splat
-                        dirLoc = location.substring(0, location.length() - 2);
-                    }
-
-                    String fileNameSeparator = ("\\".equals(File.separator) ? "\\" + File.separator : File.separator);
-                    dirLoc = dirLoc.replaceAll("/+|\\\\+", fileNameSeparator);
-                    File path = new File(configRoot, dirLoc);
-                    if (path.exists()) {
-                        if (path.isDirectory()) {
-                            for (File file: path.listFiles()) {
-                                String fileName = file.getName().toLowerCase();
-                                if (fileName.endsWith(".jar")) {
-                                    jarLocations.add(file);
-                                }
-                            }
-                        } else {
-                            jarLocations.add(path);
-                        }
-                    }
-                }
-            }
+            readClasspathSpecialJarLocations(jarLocations, cc, purpose, null);
         }
         return jarLocations;
+    }
+
+    /**
+     * SCIPIO: Reads special JAR locations for given purpose for given component,
+     * with optional webapp filter.
+     * NOTE: If no webapp filter is given, returns only locations that are not
+     * restricted to specific component webapps.
+     * Added 2018-06-18.
+     */
+    public static List<File> readClasspathSpecialJarLocations(ComponentConfig componentConfig, String purpose, String webappName) {
+        List<File> jarLocations = new ArrayList<>();
+        readClasspathSpecialJarLocations(jarLocations, componentConfig, purpose, webappName);
+        return jarLocations;
+    }
+
+    /**
+     * SCIPIO: Reads special JAR locations for given purpose for given component,
+     * with optional webapp filter.
+     * NOTE: If no webapp filter is given, returns only locations that are not
+     * restricted to specific component webapps.
+     * Added 2018-06-18.
+     */
+    private static void readClasspathSpecialJarLocations(List<File> jarLocations, ComponentConfig componentConfig, String purpose, String webappName) {
+        String configRoot = componentConfig.getRootLocation();
+        configRoot = configRoot.replace('\\', '/');
+        for(ComponentConfig.ClasspathSpecialInfo info : componentConfig.getClasspathSpecialInfos()) {
+            if (purpose != null && !purpose.equals(info.purpose)) {
+                continue;
+            }
+            if (webappName != null) {
+                if (!info.webappNames.contains(webappName)) {
+                    continue;
+                }
+            } else {
+                if (info.isWebappSpecific()) {
+                    continue;
+                }
+            }
+            String type = info.type;
+            if (type == null || !("jar".equals(type) || "dir".equals(type))) {
+                continue;
+            }
+            String location = info.location.replace('\\', '/');
+            if (location.startsWith("/")) {
+                location = location.substring(1);
+            }
+            String dirLoc = location;
+            if (dirLoc.endsWith("/*")) {
+                // strip off the slash splat
+                dirLoc = location.substring(0, location.length() - 2);
+            }
+            String fileNameSeparator = ("\\".equals(File.separator) ? "\\" + File.separator : File.separator);
+            dirLoc = dirLoc.replaceAll("/+|\\\\+", fileNameSeparator);
+            File path = new File(configRoot, dirLoc);
+            if (path.exists()) {
+                if (path.isDirectory()) {
+                    for (File file: path.listFiles()) {
+                        String fileName = file.getName().toLowerCase();
+                        if (fileName.endsWith(".jar")) {
+                            jarLocations.add(file);
+                        }
+                    }
+                } else {
+                    jarLocations.add(path);
+                }
+            } else if (!info.optional) {
+                Debug.logError("Non-optional classpath-special entry location for component '" 
+                        + componentConfig.getGlobalName() + "' references non-existent path: "
+                        + path, module);
+            }
+        }
     }
 
     /**
@@ -978,9 +1018,25 @@ public final class ComponentConfig {
      */
     public static class ClasspathSpecialInfo extends ClasspathInfo {
         public final String purpose;
+        public final Set<String> webappNames;
+        public final boolean optional;
         ClasspathSpecialInfo(ComponentConfig componentConfig, Element element) {
             super(componentConfig, element);
             this.purpose = element.getAttribute("purpose");
+            List<? extends Element> webappElements = UtilXml.childElementList(element, "webapp");
+            Set<String> webappNames = new HashSet<>();
+            for(Element webappElement : webappElements) {
+                String webappName = webappElement.getAttribute("name");
+                if (UtilValidate.isNotEmpty(webappName)) {
+                    webappNames.add(webappName);
+                }
+            }
+            this.webappNames = (webappNames.size() > 0) ? Collections.unmodifiableSet(webappNames) : null;
+            this.optional = "true".equals(element.getAttribute("optional"));
+        }
+
+        public boolean isWebappSpecific() {
+            return (webappNames != null);
         }
     }
 

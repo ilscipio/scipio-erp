@@ -119,6 +119,19 @@ under the License.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="webapp">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Limits the special classpath definition to the specified webapps in this component.
+                            Added 2018-07-02.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute type="xs:string" name="name" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
             <xs:attributeGroup ref="attlist.classpath-special"/>
         </xs:complexType>
     </xs:element>
@@ -129,8 +142,14 @@ under the License.
                     <xs:enumeration value="server-scan">
                         <xs:annotation>
                             <xs:documentation>
-                                SCIPIO: Enables scanning libraries by the webserver for annotations (always).
-                                Warning: This can increase server load times.
+                                Enables scanning specified libraries by the webserver for annotations (always).
+
+                                If webapps are specified using the child webapp element, only those webapps
+                                from this component are affected; otherwise EVERY webapp in the system 
+                                that has these libraries on their classpath will have this jar scanned.
+                                NOTE: For most client uses, it is highly recommended to specify a webapp(s).
+
+                                Warning: This can increase server load times, especially if you do not specify any webapps.
                                 Added 2018-07-02.
                             </xs:documentation>
                         </xs:annotation>
@@ -138,9 +157,15 @@ under the License.
                     <xs:enumeration value="websockets">
                         <xs:annotation>
                             <xs:documentation>
-                                SCIPIO: Enables scanning libraries by the webserver for WebSockets-related annotations;
+                                Enables scanning specified libraries by the webserver for WebSockets-related annotations;
                                 only used when webSocket=true is set in catalina.properties.
-                                Warning: This can increase server load times.
+
+                                If webapps are specified using the child webapp element, only those webapps
+                                from this component are affected; otherwise EVERY webapp in the system 
+                                that has these libraries on their classpath will have this jar scanned.
+                                NOTE: For most client uses, it is highly recommended to specify a webapp(s).
+
+                                Warning: This can increase server load times, especially if you do not specify any webapps.
                                 Added 2018-06-18.
                             </xs:documentation>
                         </xs:annotation>
@@ -156,7 +181,25 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute type="xs:string" name="location" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Location of the library or libraries. Supports a single trailing wildcard.
+                    Relative locations are supported, e.g.:
+                        "../../framework/webapp/build/lib/ofbiz-webapp.jar"
+                        "../../framework/webapp/build/lib/*"
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:boolean" name="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    If false (default), the system prints an error if the location
+                    does not exist in the system.
+                    Added 2018-07-02.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="entity-resource">
         <xs:complexType>

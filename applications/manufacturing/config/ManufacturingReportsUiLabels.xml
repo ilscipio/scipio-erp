@@ -280,7 +280,7 @@
         <value xml:lang="zh-TW">設計編號</value>
     </property>
     <property key="ManufacturingProductionRunComponentsByFeature">
-        <value xml:lang="de">Produktionslauf nach Komponenten mit Feature</value>
+        <value xml:lang="de">Produktionsauftrag nach Komponenten mit Feature</value>
         <value xml:lang="en">Production Runs Componentes By Feature</value>
         <value xml:lang="it">Componenti ordini di produzione per caratteristica</value>
         <value xml:lang="ja">機能別生産実行コンポーネント</value>

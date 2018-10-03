@@ -3717,9 +3717,11 @@
         <value xml:lang="zh-TW">選擇線索擁有者</value>
     </property>
     <property key="SfaServices">
+        <value xml:lang="de">Dienstleistungen</value>
         <value xml:lang="en">Services</value>
     </property>
     <property key="SfaSettings">
+        <value xml:lang="de">Einstellungen</value>
         <value xml:lang="en">Settings</value>
     </property>
     <property key="SfaTaskAssignedByMe">
@@ -3767,6 +3769,7 @@
         <value xml:lang="zh-TW">上傳vCard</value>
     </property>
     <property key="SfaVCard">
+        <value xml:lang="de">vCard</value>
         <value xml:lang="en">vCard</value>
     </property>
 </resource>

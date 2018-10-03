@@ -481,6 +481,7 @@
         <value xml:lang="zh-TW">Admin</value>
     </property>
     <property key="PageTitleDemoDataGenerator">
+        <value xml:lang="de">Demo Daten Generator</value>
         <value xml:lang="en">Demo Data Generator</value>
     </property>
     <property key="PageTitleEditUtilCache">

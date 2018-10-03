@@ -1319,10 +1319,12 @@
         <value xml:lang="zh-TW">用途</value>
     </property>
     <property key="ProductContentType.description.DEFAULT_IMAGE">
+        <value xml:lang="de">Standardbild</value>
         <value xml:lang="en">Defaut Image</value>
         <value xml:lang="fr">Image par défaut</value>
     </property>
     <property key="ProductContentType.description.ALTERNATIVE_URL">
+        <value xml:lang="de">Alternative URL</value>
         <value xml:lang="en">Alternative URL</value>
         <value xml:lang="fr">URL de remplacement</value>
     </property>
@@ -1558,18 +1560,22 @@
         <value xml:lang="zh-TW">增加到購物車圖像</value>
     </property>
     <property key="ProductContentType.description.XTRA_IMG_L_DETAIL">
+        <value xml:lang="de">Bild - Zusätzliche Ansicht (Detail)</value>
         <value xml:lang="en">Image - Additional View Detail</value>
         <value xml:lang="fr">Image - Vue supplémentaire(Détaillée)</value>
     </property>
     <property key="ProductContentType.description.XTRA_IMG_L_LARGE">
+        <value xml:lang="de">Bild - Zusätzliche Ansicht (Groß)</value>
         <value xml:lang="en">Image - Additional View Large</value>
         <value xml:lang="fr">Image - Vue supplémentaire(grande)</value>
     </property>
     <property key="ProductContentType.description.XTRA_IMG_L_MEDIUM">
+        <value xml:lang="de">Bild - Zusätzliche Ansicht (Mittel)</value>
         <value xml:lang="en">Image - Additional View Medium</value>
         <value xml:lang="fr">Image - Vue supplémentaire(moyenne)</value>
     </property>
     <property key="ProductContentType.description.XTRA_IMG_L_SMALL">
+        <value xml:lang="de">Bild - Zusätzliche Ansicht (Klein)</value>
         <value xml:lang="en">Image - Additional View Small</value>
         <value xml:lang="fr">Image - Vue supplémentaire(petite)</value>
     </property>
@@ -1942,22 +1948,27 @@
         <value xml:lang="zh-TW">警告</value>
     </property>
     <property key="ProductContentType.description.EBAY_DESCRIPTION">
+        <value xml:lang="de">Detailseite für eBay Auctions</value>
         <value xml:lang="en">Detail Page for eBay Auctions</value>
         <value xml:lang="fr">Page de ventes aux enchères eBay.</value>
     </property>
     <property key="ProductContentType.description.META_DESCRIPTION">
+        <value xml:lang="de">Meta Beschreibung</value>
         <value xml:lang="en">Meta Description</value>
         <value xml:lang="fr">Description méta</value>
     </property>
     <property key="ProductContentType.description.META_KEYWORD">
+        <value xml:lang="de">Meta Keywords</value>
         <value xml:lang="en">Meta Keywords</value>
         <value xml:lang="fr">Mots-clés méta</value>
     </property>
     <property key="ProductContentType.description.PAGE_TITLE">
+        <value xml:lang="de">Seitentitel</value>
         <value xml:lang="en">Page Title</value>
         <value xml:lang="fr">Page de titre</value>
     </property>
     <property key="ProductContentType.description.SPECIFICATION">
+        <value xml:lang="de">Spezification</value>
         <value xml:lang="en">Specification</value>
         <value xml:lang="fr">Spécification</value>
     </property>

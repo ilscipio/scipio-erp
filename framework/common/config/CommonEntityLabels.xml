@@ -14216,7 +14216,7 @@
         <value xml:lang="zh-TW">付款狀態</value>
     </property>
     <property key="StatusType.description.PRODUCTION_RUN">
-        <value xml:lang="de">Produktionslauf Status</value>
+        <value xml:lang="de">Produktionsauftrag Status</value>
         <value xml:lang="en">Production Run Status</value>
         <value xml:lang="es">Estado de tirada</value>
         <value xml:lang="fr">Statut d'ordre de fabrication</value>
@@ -17589,6 +17589,7 @@
         <value xml:lang="zh-TW">安道爾比薩斜塔</value>
     </property>
     <property key="Uom.abbreviation.LEN_in">
+        <value xml:lang="de">in</value>
         <value xml:lang="en">in</value>
         <value xml:lang="it">in</value>
         <value xml:lang="ja">インチ</value>
@@ -17597,9 +17598,11 @@
         <value xml:lang="zh-TW">英寸</value>
     </property>
     <property key="Uom.abbreviation.WT_g">
+        <value xml:lang="de">g</value>
         <value xml:lang="en">g</value>
     </property>
     <property key="Uom.abbreviation.WT_kg">
+        <value xml:lang="de">kg</value>
         <value xml:lang="en">kg</value>
         <value xml:lang="ru">кг</value>
         <value xml:lang="th">กิโลกรัม</value>
@@ -17946,6 +17949,7 @@
     <property key="Uom.description.AREA_rd2">
         <value xml:lang="ar">مربع رود</value>
         <value xml:lang="cs">Čtvereční rod</value>
+        <value xml:lang="de">Vierkantstab</value>
         <value xml:lang="en">Square Rod</value>
         <value xml:lang="es">Rod cuadrado</value>
         <value xml:lang="fr">Rod carré (1/160 acre = 25,29285 m²)</value>
@@ -18254,6 +18258,7 @@
     <property key="Uom.description.BRR">
         <value xml:lang="ar">برازيل</value>
         <value xml:lang="cs">Brazil</value>
+        <value xml:lang="de">Brasilien</value>
         <value xml:lang="en">Brazil</value>
         <value xml:lang="es">Brazil</value>
         <value xml:lang="fr">Brésil</value>
@@ -18364,7 +18369,8 @@
     </property>
     <property key="Uom.description.CDP">
         <value xml:lang="ar">سانتو دوميونغو</value>
-        <value xml:lang="en">Santo Domiongo</value>
+        <value xml:lang="de">Santo Domingo</value>
+        <value xml:lang="en">Santo Domingo</value>
         <value xml:lang="es">Santo Domingo</value>
         <value xml:lang="fr">Saint-Domingue</value>
         <value xml:lang="it">Santo Domingo</value>
@@ -18853,6 +18859,7 @@
     </property>
     <property key="Uom.description.DRP">
         <value xml:lang="ar">بيزو الجمهورية الدومينيكية</value>
+        <value xml:lang="de">Dominikanische Republik Peso</value>
         <value xml:lang="en">Dominican Republic Peso</value>
         <value xml:lang="fr">Peso de la République Dominicaine</value>
         <value xml:lang="it">Peso Repubblica Domenicana</value>
@@ -18868,6 +18875,7 @@
     <property key="Uom.description.DZD">
         <value xml:lang="ar">دينار جزائري</value>
         <value xml:lang="de">Dinar Algerien</value>
+        <value xml:lang="de">Algerischer Dinar</value>
         <value xml:lang="en">Algerian Dinar</value>
         <value xml:lang="fr">Dinar algérien</value>
         <value xml:lang="it">Dinaro Algerino</value>
@@ -19169,6 +19177,7 @@
     </property>
     <property key="Uom.description.GEK">
         <value xml:lang="ar">كبون جورجي</value>
+        <value xml:lang="de">Georgischer Kupon</value>
         <value xml:lang="en">Georgian Kupon</value>
         <value xml:lang="fr">Kupon de Georgie</value>
         <value xml:lang="it">Kupon Georgia</value>
@@ -19589,6 +19598,7 @@
     </property>
     <property key="Uom.description.KGS">
         <value xml:lang="ar">قيرغيزستان سوم</value>
+        <value xml:lang="de">Kirgisistan Som</value>
         <value xml:lang="en">Kirghizstan Som</value>
         <value xml:lang="fr">Som du Kirghizstan</value>
         <value xml:lang="it">Som Kirghizstan</value>
@@ -19603,6 +19613,7 @@
     </property>
     <property key="Uom.description.KIS">
         <value xml:lang="ar">قيرغيزستان سوم</value>
+        <value xml:lang="de">Kirgisistan Som</value>
         <value xml:lang="en">Kirghizstan Som</value>
         <value xml:lang="fr">Som du Kirghizstan</value>
         <value xml:lang="it">Som Kirghizstan</value>
@@ -19754,6 +19765,7 @@
     </property>
     <property key="Uom.description.LEN_cb">
         <value xml:lang="ar">كابل</value>
+        <value xml:lang="de">Kabel</value>
         <value xml:lang="en">Cable</value>
         <value xml:lang="es">Cable</value>
         <value xml:lang="fr">Câble</value>
@@ -19770,6 +19782,7 @@
     </property>
     <property key="Uom.description.LEN_chG">
         <value xml:lang="ar">سلسلة (مساح / غونترل)</value>
+        <value xml:lang="de">Chain (Guntertakelung / Landvermesser)</value>
         <value xml:lang="en">Chain (Gunter's/surveyor's)</value>
         <value xml:lang="es">Chain (de Gunter/Inspector)</value>
         <value xml:lang="fr">Chaîne (de Gunter/Inspecteur = 20,1168 m)</value>
@@ -19786,7 +19799,8 @@
     </property>
     <property key="Uom.description.LEN_chR">
         <value xml:lang="ar">سلسلة (هندسية / رامدن)</value>
-        <value xml:lang="en">Chain (Ramden's/engineer's)</value>
+        <value xml:lang="de">Chain (Ramsden's/engineers')</value>
+        <value xml:lang="en">Chain (Ramsden's/engineers')</value>
         <value xml:lang="es">Chain (de Ramden/Ingeniero)</value>
         <value xml:lang="fr">Chaîne (de Ramden/Ingénieur = 30,48 m)</value>
         <value xml:lang="it">Chain (Ramden's/engineer's)</value>
@@ -19901,6 +19915,7 @@
     </property>
     <property key="Uom.description.LEN_hand">
         <value xml:lang="ar">يد (طول الحصان)</value>
+        <value xml:lang="de">Hand (horse's height)</value>
         <value xml:lang="en">Hand (horse's height)</value>
         <value xml:lang="es">Mano (altura de caballo)</value>
         <value xml:lang="fr">Main (10,16 cm)</value>
@@ -19969,6 +19984,7 @@
     </property>
     <property key="Uom.description.LEN_lnG">
         <value xml:lang="ar">رابط (غونتر)</value>
+        <value xml:lang="de">Link (Gunter's)</value>
         <value xml:lang="en">Link (Gunter's)</value>
         <value xml:lang="es">Link (de Gunter)</value>
         <value xml:lang="fr">Lien (de Gunter =  0,201168 m)</value>
@@ -19985,7 +20001,8 @@
     </property>
     <property key="Uom.description.LEN_lnR">
         <value xml:lang="ar">رابط (رامدن)</value>
-        <value xml:lang="en">Link (Ramden's)</value>
+        <value xml:lang="de">Link (Ramsden's)</value>
+        <value xml:lang="en">Link (Ramsden's)</value>
         <value xml:lang="es">Link (de Ramden)</value>
         <value xml:lang="fr">Lien (de Randem = 0,3048 m)</value>
         <value xml:lang="it">Link (Ramden's)</value>
@@ -20124,6 +20141,7 @@
     </property>
     <property key="Uom.description.LEN_rd">
         <value xml:lang="ar">قصبة</value>
+        <value xml:lang="de">Rod (5,0292 m)</value>
         <value xml:lang="en">Rod</value>
         <value xml:lang="es">Rod</value>
         <value xml:lang="fr">Rod (5,0292 m)</value>
@@ -20567,6 +20585,7 @@
     </property>
     <property key="Uom.description.ILS">
         <value xml:lang="ar">الشيكل الإسرائيلي الجديد</value>
+        <value xml:lang="de">Neuer israelischer Schekel</value>
         <value xml:lang="en">New Israeli Shekel</value>
         <value xml:lang="fr">Nouveau shekel</value>
         <value xml:lang="it">Shekel Nuovo Israele</value>
@@ -20581,6 +20600,7 @@
     </property>
     <property key="Uom.description.NIS">
         <value xml:lang="ar">الشيكل الإسرائيلي الجديد</value>
+        <value xml:lang="de">Neuer israelischer Schekel</value>
         <value xml:lang="en">New Israeli Shekel</value>
         <value xml:lang="fr">Shekel du nouvel Israël</value>
         <value xml:lang="it">Shekel Nuovo Israele</value>
@@ -20701,6 +20721,7 @@
     </property>
     <property key="Uom.description.OTH_ea">
         <value xml:lang="ar">لكل</value>
+        <value xml:lang="de">Jeder</value>
         <value xml:lang="en">Each</value>
         <value xml:lang="fr">Pièce/s</value>
         <value xml:lang="it">Ciascuno</value>
@@ -20728,6 +20749,7 @@
     </property>
     <property key="Uom.description.OTH_pp">
         <value xml:lang="ar">للشخص</value>
+        <value xml:lang="de">Pro Person</value>
         <value xml:lang="en">Per Person</value>
         <value xml:lang="es">Por persona</value>
         <value xml:lang="fr">Par personne</value>
@@ -20860,6 +20882,7 @@
     </property>
     <property key="Uom.description.PLZ">
         <value xml:lang="ar">بولندا</value>
+        <value xml:lang="de">Polen</value>
         <value xml:lang="en">Poland</value>
         <value xml:lang="es">Polonia</value>
         <value xml:lang="fr">Pologne</value>
@@ -21480,6 +21503,7 @@
     </property>
     <property key="Uom.description.TF_score">
         <value xml:lang="cs">Čas ve dvacetiletích</value>
+        <value xml:lang="de">Zeit in Ergebnissen//Scores</value>
         <value xml:lang="en">Time in Scores</value>
         <value xml:lang="es">Tiempo en notas</value>
         <value xml:lang="fr">Temps en double-décade (ou 4 lustres)</value>
@@ -21716,7 +21740,8 @@
     </property>
     <property key="Uom.description.UAK">
         <value xml:lang="cs">Ukrajinská hřivna</value>
-        <value xml:lang="en">UAK</value>
+        <value xml:lang="de">Ukraine Karbovanets</value>
+        <value xml:lang="en">Ukraine Karbovanets</value>
         <value xml:lang="fr">Hryvnia ukrainienne</value>
         <value xml:lang="it">Karbowanez Ucraina</value>
         <value xml:lang="ja">ウクライナ・グリブナ</value>
@@ -21780,6 +21805,7 @@
     <property key="Uom.description.UYP">
         <value xml:lang="ar">بيزو اوروغواي الجديد</value>
         <value xml:lang="cs">Nové uruguayské peso</value>
+        <value xml:lang="de">Uruguayischer neuer Peso</value>
         <value xml:lang="en">Uruguayan New Peso</value>
         <value xml:lang="es">Nuevo Peso Uruguayo</value>
         <value xml:lang="fr">Nouveau peso d'Uruguay</value>
@@ -21796,6 +21822,7 @@
     <property key="Uom.description.UYU">
         <value xml:lang="ar">بيزو اوروغواي</value>
         <value xml:lang="cs">Uruguayské peso</value>
+        <value xml:lang="de">Uruguay</value>
         <value xml:lang="en">Uruguay</value>
         <value xml:lang="es">Uruguay</value>
         <value xml:lang="fr">Peso uruguayen</value>
@@ -22286,6 +22313,7 @@
     </property>
     <property key="Uom.description.WT_dwt">
         <value xml:lang="ar">وزن البنس</value>
+        <value xml:lang="de">Pennyweight</value>
         <value xml:lang="en">Pennyweight</value>
         <value xml:lang="es">Pennyweight</value>
         <value xml:lang="fr">pennyweight (1,55517384 g)</value>

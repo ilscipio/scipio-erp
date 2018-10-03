@@ -1497,6 +1497,7 @@
         <value xml:lang="zh-TW">薪水支付方式</value>
     </property>
     <property key="HumanResEditPerfReviewItems">
+        <value xml:lang="de">Leistungsbeurteilungs Items</value>
         <value xml:lang="en">PerfReview Items</value>
         <value xml:lang="fr">Lignes d'évaluation des performances</value>
         <value xml:lang="it">Righe performance</value>
@@ -1507,6 +1508,7 @@
         <value xml:lang="zh-TW">績效評定細項</value>
     </property>
     <property key="HumanResEditSalaryStep">
+        <value xml:lang="de">Gehaltsstufen</value>
         <value xml:lang="en">Salary Steps</value>
         <value xml:lang="fr">Augmentations de salaire</value>
         <value xml:lang="it">Aggiorna Passi Salario</value>
@@ -1518,6 +1520,7 @@
         <value xml:lang="zh-TW">薪水浮動</value>
     </property>
     <property key="HumanResEditUnemploymentClaim">
+        <value xml:lang="de">Arbeitslosenansprüche</value>
         <value xml:lang="en">Unemployment Claims</value>
         <value xml:lang="fr">Demandes de chômage</value>
         <value xml:lang="it">Richiesta di disoccupazione</value>

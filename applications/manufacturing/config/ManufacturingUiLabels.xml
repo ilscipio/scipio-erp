@@ -111,6 +111,7 @@
         <value xml:lang="zh-TW">費用總帳帳戶類型識別</value>
     </property>
     <property key="FormFieldTitle_creationDate">
+        <value xml:lang="de">Erstellungsdatum</value>
         <value xml:lang="en">Creation Date</value>
         <value xml:lang="it">Data creazione</value>
         <value xml:lang="ja">作成日</value>
@@ -249,6 +250,7 @@
         <value xml:lang="zh-TW">工作名稱</value>
     </property>
     <property key="FormFieldTitle_lotId">
+        <value xml:lang="de">Posten ID</value>
         <value xml:lang="en">Lot ID</value>
         <value xml:lang="fr">Réf. de lot</value>
         <value xml:lang="it">Numero lotto</value>
@@ -375,7 +377,7 @@
         <value xml:lang="zh-TW">產品識別用於</value>
     </property>
     <property key="FormFieldTitle_productIdIn">
-        <value xml:lang="de">Produkt-Nr. in</value>
+        <value xml:lang="de">Produkt Id in</value>
         <value xml:lang="en">Product ID In</value>
         <value xml:lang="es">Código de producto en</value>
         <value xml:lang="fr">Réf. de l'article dans</value>
@@ -390,6 +392,7 @@
         <value xml:lang="zh-TW">產品識別來自</value>
     </property>
     <property key="FormFieldTitle_productIdInSubst">
+        <value xml:lang="de">Produkt ID für Ersatz</value>
         <value xml:lang="en">Product ID In Subst</value>
         <value xml:lang="es">Código de producto en sustitución</value>
         <value xml:lang="fr">Réf. de l'article dans subst.</value>
@@ -854,6 +857,7 @@
         <value xml:lang="zh-TW">指定固定資產</value>
     </property>
     <property key="ManufacturingAddProdCompInCompCanStatusError">
+        <value xml:lang="de">Komponente kann im abgebrochenen / geschlossenen Produktionslauf nicht hinzugefügt werden.</value>
         <value xml:lang="en">Can't Add Component in Cancelled/Closed Production Run.</value>
     </property>
     <property key="ManufacturingAddProductionRunProductComponent">
@@ -872,6 +876,7 @@
         <value xml:lang="zh-TW">把產品元件增加到生產執行</value>
     </property>
     <property key="ManufacturingAddProductionRunRoutingTaskNotCreated">
+        <value xml:lang="de">Der Produktionslauf-Routing Task konnte nicht hinzugefügt werden</value>
         <value xml:lang="en">Add Production Run Routing Task Not Created</value>
         <value xml:lang="it">Aggiunta componente ad un compito non creato</value>
         <value xml:lang="ja">生産実行経路制御追加タスクは作成されません</value>
@@ -1014,6 +1019,7 @@
         <value xml:lang="zh-TW">物料清單</value>
     </property>
     <property key="ManufacturingBomErrorCreatingBillOfMaterialsTree">
+        <value xml:lang="de">Fehler beim Erstellen des Stücklistenbaums: ${errorString}</value>
         <value xml:lang="en">Error creating bill of materials tree: ${errorString}</value>
         <value xml:lang="it">Errore durante la creazione dell'albero dei materiali: ${errorString}</value>
         <value xml:lang="ja">部品表ツリー作成中にエラー: ${errorString}</value>
@@ -1023,6 +1029,7 @@
         <value xml:lang="zh-TW">新建物料清單樹時出錯:${errorString}</value>
     </property>
     <property key="ManufacturingBomErrorLoadingShipmentItems">
+        <value xml:lang="de">Fehler beim Laden der Versandartikel</value>
         <value xml:lang="en">Error loading the ShipmentItems</value>
         <value xml:lang="it">Errore durante il caricamento di ShipmentItems</value>
         <value xml:lang="ja">発送アイテムのロード中にエラー</value>
@@ -1032,6 +1039,7 @@
         <value xml:lang="zh-TW">載入出貨細項時出錯</value>
     </property>
     <property key="ManufacturingBomErrorLoadingShipmentPackages">
+        <value xml:lang="de">Fehler beim Laden der Versandpakete</value>
         <value xml:lang="en">Error loading the ShipmentPackages</value>
         <value xml:lang="it">Errore durante il caricamento di ShipmentPackages</value>
         <value xml:lang="ja">発送パッケージのロード中にエラー</value>
@@ -1041,6 +1049,7 @@
         <value xml:lang="zh-TW">載入出貨包裝時出錯</value>
     </property>
     <property key="ManufacturingBomErrorRunningDuplicatedAncestorSearch">
+        <value xml:lang="de">Fehler beim Ausführen der duplizierten Vorfahrensuche: ${errorString}</value>
         <value xml:lang="en">Error running duplicated ancestor search: ${errorString}</value>
         <value xml:lang="it">Errore durante l'esecuzione della ricerca duplicati antenato: ${errorString}</value>
         <value xml:lang="ja">重複した原型の検索実行中にエラー: ${errorString}</value>
@@ -1049,6 +1058,7 @@
         <value xml:lang="zh-TW">尋找重複的根時出錯:${errorString}</value>
     </property>
     <property key="ManufacturingBomErrorRunningInitLowLevelCode">
+        <value xml:lang="de">Fehler beim Ausführen des initLowLevelCode: ${errorString}</value>
         <value xml:lang="en">Error running initLowLevelCode: ${errorString}</value>
         <value xml:lang="it">Errore durante l'esecuzione di initLowLevelCode: ${errorString}</value>
         <value xml:lang="ja">低レベルコードの初期化実行中にエラー: ${errorString}</value>
@@ -1058,6 +1068,7 @@
         <value xml:lang="zh-TW">執行低層代碼初始化時出錯:${errorString}</value>
     </property>
     <property key="ManufacturingBomErrorRunningMaxDethAlgorithm">
+        <value xml:lang="de">Fehler bei der Berechnung der maximalen Tiefe: ${errorString}</value>
         <value xml:lang="en">Error running max depth algorithm: ${errorString}</value>
         <value xml:lang="it">Errore durante l'esecuzione dell'algoritmo massima profondità: ${errorString}</value>
         <value xml:lang="ja">最大深度アルゴリズム実行中にエラー: ${errorString}</value>
@@ -1066,6 +1077,7 @@
         <value xml:lang="zh-TW">執行最大深度演算法時出錯:${errorString}</value>
     </property>
     <property key="ManufacturingBomErrorRunningUpdateLowLevelCode">
+        <value xml:lang="de">Fehler beim Ausführen des updateLowLevelCode: ${errorString}</value>
         <value xml:lang="en">Error running updateLowLevelCode: ${errorString}</value>
         <value xml:lang="it">Errore durante l'esecuzione di updateLowLevelCode: ${errorString}</value>
         <value xml:lang="ja">低レベルコード更新実行中にエラー: ${errorString}</value>
@@ -1075,6 +1087,7 @@
         <value xml:lang="zh-TW">執行更新低層代碼(updateLowLevelCode)時發生錯誤:${errorString}</value>
     </property>
     <property key="ManufacturingBomPackageAlreadyFound">
+        <value xml:lang="de">Pakete bereits gefunden.</value>
         <value xml:lang="en">Packages already found.</value>
         <value xml:lang="it">Pacchi già trovati.</value>
         <value xml:lang="ja">パッケージが見つかりました。</value>
@@ -1480,6 +1493,7 @@
         <value xml:lang="zh-TW">完成</value>
     </property>
     <property key="ManufacturingConfigurationNotAvailable">
+        <value xml:lang="de">Konfiguration nicht verfügbar</value>
         <value xml:lang="en">Configuration Not Available</value>
         <value xml:lang="it">Configurazione non disponibile</value>
         <value xml:lang="ja">設定は有効ではありません</value>
@@ -1559,6 +1573,7 @@
         <value xml:lang="zh-TW">費用</value>
     </property>
     <property key="ManufacturingCreateBom">
+        <value xml:lang="de">Neue Stückliste</value>
         <value xml:lang="en">Create Bom</value>
         <value xml:lang="fr">Créer une nomenclature</value>
         <value xml:lang="it">Creare distinta base</value>
@@ -1570,7 +1585,7 @@
         <value xml:lang="zh-TW">新建物料清單</value>
     </property>
     <property key="ManufacturingCreateCalendar">
-        <value xml:lang="de">Kalender erstellen</value>
+        <value xml:lang="de">Neuer Kalender</value>
         <value xml:lang="en">Create calendar</value>
         <value xml:lang="es">Crear calendario</value>
         <value xml:lang="fr">Créer un calendrier</value>
@@ -1584,7 +1599,7 @@
         <value xml:lang="zh-TW">新建日曆</value>
     </property>
     <property key="ManufacturingCreateCalendarWeek">
-        <value xml:lang="de">Kalenderwoche erstellen</value>
+        <value xml:lang="de">Neue Kalenderwoche</value>
         <value xml:lang="en">Create Calendar Week</value>
         <value xml:lang="es">Crear semana</value>
         <value xml:lang="fr">Créer un calendier de semaine</value>
@@ -1598,6 +1613,7 @@
         <value xml:lang="zh-TW">新建日曆週</value>
     </property>
     <property key="ManufacturingCreateDependentProductionRuns">
+        <value xml:lang="de">Neue abhängige Produktionsläufe</value>
         <value xml:lang="en">Create Dependent Production Runs</value>
         <value xml:lang="fr">Créer des ordres de fabrications dépendant</value>
         <value xml:lang="it">Crea ordini di produzione dipendenti</value>
@@ -1635,6 +1651,7 @@
         <value xml:lang="zh-TW">安全錯誤:要執行這個操作,你必須有MANUFACTURING_CREATE或MANUFACTURING_ADMIN權限</value>
     </property>
     <property key="ManufacturingCreateProductBom">
+        <value xml:lang="de">Neue Stückliste</value>
         <value xml:lang="en">Create Bill Of Material</value>
         <value xml:lang="fr">Créer une nomenclature</value>
         <value xml:lang="it">Creazione distinta base</value>
@@ -1955,6 +1972,7 @@
         <value xml:lang="zh-TW">編輯規程任務 - 識別</value>
     </property>
     <property key="ManufacturingEngineeringBillOfMaterials">
+        <value xml:lang="de">Konstruktionsstückliste</value>
         <value xml:lang="en">Engineering Bill of Materials</value>
         <value xml:lang="it">Distinta base ingegnerizzata</value>
         <value xml:lang="ja">設計部品表(EBOM)</value>
@@ -2272,6 +2290,7 @@
         <value xml:lang="zh-TW">開始日期</value>
     </property>
     <property key="ManufacturingGenerateProductionRuns">
+        <value xml:lang="de">Produktionsläufe generieren</value>
         <value xml:lang="en">Generate Production Runs</value>
         <value xml:lang="it">Genera ordini di produzione</value>
         <value xml:lang="ja">生産実行を生成</value>
@@ -2461,6 +2480,7 @@
         <value xml:lang="zh-TW">工作現場</value>
     </property>
     <property key="ManufacturingLLCInit">
+        <value xml:lang="de">Low Level Codes initialisieren</value>
         <value xml:lang="en">Init Low Level Codes</value>
         <value xml:lang="es">Iniciar códigos de bajo nivel</value>
         <value xml:lang="fr">Codes de niveau bas initial</value>
@@ -2474,6 +2494,7 @@
         <value xml:lang="zh-TW">初始化低級別代碼</value>
     </property>
     <property key="ManufacturingLinkProductionRun">
+        <value xml:lang="de">Link zum Produktionslauf</value>
         <value xml:lang="en">Link to Production Run</value>
         <value xml:lang="nl">Aan productierun koppelen</value>
         <value xml:lang="zh">链接到生产运行</value>
@@ -2520,6 +2541,7 @@
         <value xml:lang="zh-TW">生產運行固定資產清單</value>
     </property>
     <property key="ManufacturingListOfProductionRunNotes">
+        <value xml:lang="de">Liste der Produktionslauf Notizen</value>
         <value xml:lang="en">List Of Production Run Notes</value>
         <value xml:lang="fr">Liste des notes de l'ordre de fabrication</value>
         <value xml:lang="it">Lista note ordine di produzione</value>
@@ -2586,6 +2608,7 @@
         <value xml:lang="zh-TW">在進行材料清單清單時發生錯誤</value>
     </property>
     <property key="ManufacturingLotNotExists">
+        <value xml:lang="de">Der Posten existiert nicht</value>
         <value xml:lang="en">Lot Not Exists</value>
         <value xml:lang="it">Lotto non esiste</value>
         <value xml:lang="ja">ロットは存在しません</value>
@@ -2721,6 +2744,7 @@
         <value xml:lang="zh-TW">生產管理首頁</value>
     </property>
     <property key="ManufacturingMainPageNote">
+        <value xml:lang="de">Hinweis: Diese Anwendung befindet sich derzeit in Entwicklung. Eine Änderung dieser Seite in zukünftigen Versionen ist möglich.</value>
         <value xml:lang="en">NOTE: This application is currently in development. This page will change.</value>
         <value xml:lang="es">NOTA: La aplicación aún se encuentra en desarrollo. Es muy probable que la página cambie en las siguientes versiones.</value>
         <value xml:lang="fr">NOTE : Cette application est actuellement à l'étude. Cette page changera.</value>
@@ -2844,7 +2868,7 @@
         <value xml:lang="zh-TW">生產任務所需的材料</value>
     </property>
     <property key="ManufacturingMrp">
-        <value xml:lang="de">MRP</value>
+        <value xml:lang="de">Materialanforderungen</value>
         <value xml:lang="en">MRP</value>
         <value xml:lang="es">MRP</value>
         <value xml:lang="fr">MRP</value>
@@ -2858,6 +2882,7 @@
         <value xml:lang="zh-TW">生產資源計劃</value>
     </property>
     <property key="ManufacturingMrpCannotCountRecords">
+        <value xml:lang="de">Die Ereignisdatensätze für Materialanforderungen können nicht gezählt werden.</value>
         <value xml:lang="en">Unable to count MrpEvent records.</value>
         <value xml:lang="it">Non è possibile contare i records da  i records da MrpEvent.</value>
         <value xml:lang="ja">MRPイベントレコードがカウントできません。</value>
@@ -2866,6 +2891,7 @@
         <value xml:lang="zh-TW">無法統計生產資源計劃事件(MrpEvent)記錄數.</value>
     </property>
     <property key="ManufacturingMrpCannotFindCustomTimePeriod">
+        <value xml:lang="de">Achtung: eine CustomTimePeriod konnte nicht gefunden werden. Weitere Details entnehmen Sie bitte die Systemlogs.</value>
         <value xml:lang="en">Problem, we can not find CustomTimePeriod, for more detail look at the log</value>
         <value xml:lang="it">Problema, non è possibile trovare CustomTimePeriod, più dettagli possono essere trovati nel log</value>
         <value xml:lang="ja">問題、カスタム時期間を見つけることができません。詳細はログを参照してください。</value>
@@ -2874,6 +2900,7 @@
         <value xml:lang="zh-TW">問題:我們不能找到客製時間段(CustomTimePeriod),詳見日誌</value>
     </property>
     <property key="ManufacturingMrpCannotFindProductFacility">
+        <value xml:lang="de">Die Werks- Datensätze konnten nicht abgerufen werden.</value>
         <value xml:lang="en">Unable to retrieve ProductFacility records.</value>
         <value xml:lang="it">Non è possibile ricavare i records da ProductFacility.</value>
         <value xml:lang="ja">製品拠点レコードの取得ができません。</value>
@@ -2882,6 +2909,7 @@
         <value xml:lang="zh-TW">無法獲取產品設施(ProductFacility)記錄.</value>
     </property>
     <property key="ManufacturingMrpCannotFindSalesForecasts">
+        <value xml:lang="de">Achtung: es konnten keine SalesForceCasts gefunden werden. Weitere Details entnehmen Sie bitte die Systemlogs.</value>
         <value xml:lang="en">Problem, we can not find SalesForecasts, for more detail look at the log</value>
         <value xml:lang="it">Problema, non è possibile trovare SalesForecasts, più dettagli possono essere trovati nel log</value>
         <value xml:lang="ja">問題、販売予測を見つけることができません。詳細はログを参照してください。</value>
@@ -2890,6 +2918,7 @@
         <value xml:lang="zh-TW">問題:我們不能找到銷售預測(SalesForecasts),詳見日誌</value>
     </property>
     <property key="ManufacturingMrpCannotFindSalesForecastDetails">
+        <value xml:lang="de">Achtung: es konnten keine SalesForecastDetails gefunden werden. Weitere Details entnehmen Sie bitte die Systemlogs.</value>
         <value xml:lang="en">Problem, we can not find SalesForecastDetails, for more detail look at the log</value>
         <value xml:lang="it">Problema, non è possibile trovare SalesForecastDetails, più dettagli possono essere trovati nel log</value>
         <value xml:lang="ja">問題、販売予測詳細を見つけることができません。詳細はログを参照してください。</value>
@@ -2898,6 +2927,7 @@
         <value xml:lang="zh-TW">問題:我們不能找到銷售預測詳細資訊(SalesForecastDetails),詳見日誌</value>
     </property>
     <property key="ManufacturingMrpCannotFindProductForEvent">
+        <value xml:lang="de">Achtung: es konnten kein dem Event zugehöriges Produkt gefunden werden. Weitere Details entnehmen Sie bitte die Systemlogs.</value>
         <value xml:lang="en">Problem, can not find the product for a event, for more detail look at the log</value>
         <value xml:lang="it">Problema, non è possibile trovare il prodotto per un'evento, più dettagli possono essere trovati nel log</value>
         <value xml:lang="ja">問題、イベントに対する製品を見つけることができません。詳細はログを参照してください。</value>
@@ -2906,6 +2936,7 @@
         <value xml:lang="zh-TW">問題:不能找到一個事件的產品,詳見日誌</value>
     </property>
     <property key="ManufacturingMrpCreateOrUpdateEvent">
+        <value xml:lang="de">Fehler bei der Erzeugung oder Aktualisierung eines Materialanforderungsplan - Events. Parameter: ${parameters}</value>
         <value xml:lang="en">Error during creation or update MrpEvent, parameters: ${parameters}</value>
         <value xml:lang="it">Errore durante la creazione o aggiornamento MrpEvent, parametri: ${parameters}</value>
         <value xml:lang="ja">MRPイベントの作成または更新中にエラー。パラメータ: ${parameters}</value>
@@ -2914,6 +2945,7 @@
         <value xml:lang="zh-TW">新建或更新生產資源計劃事件(MrpEvent)時出錯,參數:${parameters}</value>
     </property>
     <property key="ManufacturingMrpErrorForBomLevel">
+        <value xml:lang="de">Fehler beim Laden des Materialanforderungsplan - Events für Stücklisten-Ebene: ${bomLevel}. Fehler: ${errorString}</value>
         <value xml:lang="en">MRP Error retieving MRP event for the bom level: ${bomLevel}. Error: ${errorString}</value>
         <value xml:lang="it">Errore MRP ricavando l'evento MRP per il livello di distinta base: ${bomLevel}. Errore: ${errorString}</value>
         <value xml:lang="ja">部品表レベル: ${bomLevel} に対するMRPイベント取得中にエラー: ${errorString}</value>
@@ -2922,6 +2954,7 @@
         <value xml:lang="zh-TW">獲取物料清單層的生產資源計劃事件時出錯,物料清單層:${bomLevel},錯誤:${errorString}</value>
     </property>
     <property key="ManufacturingMrpErrorExplodingProduct">
+        <value xml:lang="de">Beim Auflösen des Produkts ist ein Fehler aufgetreten: ${productId}</value>
         <value xml:lang="en">An error occurred exploding the product ${productId}</value>
         <value xml:lang="it">E' successo un'errore durante l'espolosizione del prodotto ${productId}</value>
         <value xml:lang="ja">製品 ${productId} の分散中にエラーが発生しました</value>
@@ -2930,6 +2963,7 @@
         <value xml:lang="zh-TW">分解產品時出錯:${productId}</value>
     </property>
     <property key="ManufacturingMrpErrorRunningInitMrpEvents">
+        <value xml:lang="de">Fehler, der "initMrpEvents Service" konnte nicht ausgeführt werden: ${errorString}</value>
         <value xml:lang="en">Error running the initMrpEvents service: ${errorString}</value>
         <value xml:lang="it">Errore durante l'esecuzione del servizio initMrpEvents: ${errorString}</value>
         <value xml:lang="ja">MRPイベント初期化サービスの実行中にエラー: ${errorString}</value>
@@ -2937,6 +2971,7 @@
         <value xml:lang="zh-TW">執行初始化生產資源計劃事件(initMrpEvents)服務時出錯:${errorString}</value>
     </property>
     <property key="ManufacturingMrpEventFindError">
+        <value xml:lang="de">Achtung:  nicht alle Artikel des Materialanforderungsplan - Events konnten gefunden werden. Weitere Details entnehmen Sie bitte die Systemlogs.</value>
         <value xml:lang="en">Problem, we can not find all the items of MrpEvent, for more detail look at the log</value>
         <value xml:lang="it">Problema, non possaimo trovare tutte le righe di MrpEvent, per più dettagli controllare il log</value>
         <value xml:lang="ja">問題、MRPイベントのすべてのアイテムを見つけることができません。詳細はログを参照してください</value>
@@ -2945,6 +2980,7 @@
         <value xml:lang="zh-TW">問題:我們無法找到生產資源計劃事件(MrpEvent)的全部細項,詳見日誌</value>
     </property>
     <property key="ManufacturingMrpEventProblemInitializing">
+        <value xml:lang="de">Fehler beim initialisieren des Materialanforderungsplan - Eventeintrags (${mrpEventTypeId})</value>
         <value xml:lang="en">Problem initializing the MrpEvent entity (${mrpEventTypeId})</value>
         <value xml:lang="it">Problema di inizializzazione entità MrpEvent (${mrpEventTypeId})</value>
         <value xml:lang="ja">MRPイベントエンティティ ${mrpEventTypeId} の初期化中にエラー</value>
@@ -2953,6 +2989,7 @@
         <value xml:lang="zh-TW">初始化生產資源計劃事件(MrpEvent)資料實體(${mrpEventTypeId})時出問題了</value>
     </property>
     <property key="ManufacturingMrpEventRemoveError">
+        <value xml:lang="de">Achtung: die Materialanforderungsplan-Items konnten nicht enfternt werden. Weitere Details entnehmen Sie bitte die Systemlogs</value>
         <value xml:lang="en">Problem, we can not remove the MrpEvent items, for more detail look at the log</value>
         <value xml:lang="it">Problema, non possaimo rimuovere le righe di MrpEvent, per più dettagli controllare il log</value>
         <value xml:lang="ja">問題、MRPイベントアイテムが削除できません。詳細はログを参照してください</value>
@@ -2961,6 +2998,7 @@
         <value xml:lang="zh-TW">問題:我們不能刪除生產資源計劃事件(MrpEvent)的細項,詳見日誌</value>
     </property>
     <property key="ManufacturingMrpFacilityGroupCannotBeLoad">
+        <value xml:lang="de">Fehler beim Laden von Einrichtungsgruppeninformationen: ${errorString}</value>
         <value xml:lang="en">Problem loading facility group information: ${errorString}</value>
         <value xml:lang="it">Problema durante il caricamento delle informazioni relative al gruppo stabilimento: ${errorString}</value>
         <value xml:lang="ja">拠点グループ情報のロード中にエラー: ${errorString}</value>
@@ -2969,6 +3007,7 @@
         <value xml:lang="zh-TW">載入場所群組資訊時出錯:${errorString}</value>
     </property>
     <property key="ManufacturingMrpFacilityGroupIsNotAssociatedToFacility">
+        <value xml:lang="de">Es ist keine Einrichtung der facilityGroupId ${facilityGroupId} zugeordnet</value>
         <value xml:lang="en">No facility associated to facilityGroupId ${facilityGroupId}</value>
         <value xml:lang="it">Nessuna stabilimento associato al gruppo stabilimento ${facilityGroupId}</value>
         <value xml:lang="ja">拠点グループID ${facilityGroupId} に関連付けられた拠点がありません</value>
@@ -2977,6 +3016,7 @@
         <value xml:lang="zh-TW">沒有場所結合到場所群組標識(facilityGroupId)${facilityGroupId}</value>
     </property>
     <property key="ManufacturingMrpFacilityGroupIsNotValid">
+        <value xml:lang="de">Die facilityGroupId ${facilityGroupId} ist nicht vorhanden</value>
         <value xml:lang="en">facilityGroupId ${facilityGroupId} is not valid</value>
         <value xml:lang="it">Gruppo stabilimento ${facilityGroupId} non è valido</value>
         <value xml:lang="ja">拠点グループID ${facilityGroupId} が有効ではありません</value>
@@ -2985,6 +3025,7 @@
         <value xml:lang="zh-TW">場所群組標識(facilityGroupId)${facilityGroupId} 無效</value>
     </property>
     <property key="ManufacturingMrpFacilityNotAvailable">
+        <value xml:lang="de">Es muss entweder facilityId oder facilityGroupId gesetzt sein</value>
         <value xml:lang="en">facilityId and facilityGroupId cannot be both null</value>
         <value xml:lang="it">Stabilimento e gruppo stabilimento non possono essere entrambi nulli</value>
         <value xml:lang="ja">拠点IDおよび拠点グループIDの両方とも空にできません</value>
@@ -2993,6 +3034,7 @@
         <value xml:lang="zh-TW">場所標識(facilityId)和場所群組標識(facilityGroupId)不能都為空(null)</value>
     </property>
     <property key="ManufacturingMrpFacilityOrManufacturingFacilityNotAvailable">
+        <value xml:lang="de">Es muss entweder facilityId oder manufacturingFacilityId gesetzt sein</value>
         <value xml:lang="en">facilityId and manufacturingFacilityId cannot be null</value>
         <value xml:lang="it">Stabilimento e stabilimento di produzione non possono essere nulli</value>
         <value xml:lang="ja">拠点IDおよび生産拠点IDは空にできません</value>
@@ -3224,6 +3266,7 @@
         <value xml:lang="en">See Warehouse shipments to edit shipment plans.</value>
     </property>
     <property key="ManufacturingNote1">
+        <value xml:lang="de">Datum / Uhrzeit-Einträge zeigen an, dass die aktuelle Zeit vor dem Von-Datum oder nach dem Durch-Datum liegt. Wenn das Von-Datum</value>
         <value xml:lang="en">date/time entries denote that the current time is before the From Date or after the Through Date. If the From Date is</value>
         <value xml:lang="es">entradas fecha/hora indican que la hora actual es antes de la fecha de o hasta. Si la fecha desde es</value>
         <value xml:lang="fr">Les lignes date/heure indiquent que l'heure en cours est avant la date ou après la date en cours. Si la date est </value>
@@ -3236,6 +3279,7 @@
         <value xml:lang="zh-TW">當前時間在開始日期之前或結束日期之後的日期/時間記錄</value>
     </property>
     <property key="ManufacturingNote2">
+        <value xml:lang="de">ist, hat der verknüpfte Eintrag noch nicht begonnen; wenn das Enddatum</value>
         <value xml:lang="en">, association has not started yet; if Through Date is</value>
         <value xml:lang="es">, asociación aún sin empezar; si la fecha hasta es</value>
         <value xml:lang="fr">, l'association n'a pas commencé encore; si la date de fin est</value>
@@ -3248,6 +3292,7 @@
         <value xml:lang="zh-TW">,那麼結合還沒有開始;如果結束日期是</value>
     </property>
     <property key="ManufacturingNote3">
+        <value xml:lang="de">ist, dann ist der verknüpfte Eintrag bereits abgelaufen (und sollte vermutlich gelöscht werden).</value>
         <value xml:lang="en">, association has expired (and should probably be deleted).</value>
         <value xml:lang="es">, la asociación ya no es válida (y probablemente debería borrarse.</value>
         <value xml:lang="fr">, l'association a expiré (et devrait probablement être supprimée.</value>
@@ -3274,6 +3319,7 @@
         <value xml:lang="zh-TW">訂單細項</value>
     </property>
     <property key="ManufacturingPackageConfiguratorError">
+        <value xml:lang="de">Paketkonfigurations- Fehler</value>
         <value xml:lang="en">Package Configurator Error</value>
         <value xml:lang="it">Errore configurazione pacco</value>
         <value xml:lang="ja">梱包設定エラー</value>
@@ -3283,6 +3329,7 @@
         <value xml:lang="zh-TW">包裝配置程式錯誤</value>
     </property>
     <property key="ManufacturingPackageContentsAndOrder">
+        <value xml:lang="de">Paketinhalte und Bestellung</value>
         <value xml:lang="en">Package Contents And Order</value>
         <value xml:lang="it">Pacco contenuti e ordine</value>
         <value xml:lang="ja">梱包内容および注文</value>
@@ -3306,6 +3353,7 @@
         <value xml:lang="zh-TW">包裝標簽報告</value>
     </property>
     <property key="ManufacturingPackageNumber">
+        <value xml:lang="de">Paketnummer</value>
         <value xml:lang="en">Package Number</value>
         <value xml:lang="it">Numero pacco</value>
         <value xml:lang="ja">梱包番号</value>
@@ -3329,7 +3377,8 @@
         <value xml:lang="zh-TW">列印生產運行</value>
     </property>
     <property key="ManufacturingProduceQuantity">
-        <value xml:lang="en">Stock in</value>
+        <value xml:lang="de">Menge auf Lager</value>
+        <value xml:lang="en">Quantity in Stock</value>
         <value xml:lang="es">Invetario</value>
         <value xml:lang="fr">Stock</value>
         <value xml:lang="it">Quantità in Giacenza</value>
@@ -3342,6 +3391,7 @@
         <value xml:lang="zh-TW">入庫數量</value>
     </property>
     <property key="ManufacturingProduceQuantityMessage">
+        <value xml:lang="de">Bei Bedarf werden auch Materialien ausgegeben.</value>
         <value xml:lang="en">If required, materials will be issued as well.</value>
         <value xml:lang="it">Se richiesto, i materiali saranno prelevati.</value>
         <value xml:lang="ja">要求時に部品は発行されます</value>
@@ -3453,6 +3503,7 @@
         <value xml:lang="en">Production Run Content</value>
     </property>
     <property key="ManufacturingProductIsWIP">
+        <value xml:lang="de">Produkt ist in Arbeit</value>
         <value xml:lang="en">Product is WIP</value>
         <value xml:lang="it">Prodotto è di tipo WIP</value>
         <value xml:lang="ja">製品は仕掛(WIP)</value>
@@ -3531,6 +3582,7 @@
         <value xml:lang="zh-TW">虛擬</value>
     </property>
     <property key="ManufacturingProductionResQtyCalc">
+        <value xml:lang="de">Reservierte Produktionsmenge</value>
         <value xml:lang="en">Production Res Qty Calc</value>
         <value xml:lang="it">Quantità riservata produzione</value>
         <value xml:lang="ja">生産リソース数量計算</value>
@@ -3581,6 +3633,7 @@
         <value xml:lang="zh-TW">結合</value>
     </property>
     <property key="ManufacturingProductionRunCannotBeCancelled">
+        <value xml:lang="de">Die Produktion kann nicht abgebrochen werden. Lauf nicht in einem gültigen Status</value>
         <value xml:lang="en">Cannot cancel productionRun, not in a valid status</value>
         <value xml:lang="it">Non è possibile cancellare l'ordin di produzione, non è in uno stato valido</value>
         <value xml:lang="ja">生産実行を取消できません。有効なステータスではありません</value>
@@ -3589,6 +3642,7 @@
         <value xml:lang="zh-TW">無法取消生產執行(productionRun),狀態無效</value>
     </property>
     <property key="ManufacturingProductionRunCannotDecomposingInventoryItem">
+        <value xml:lang="de">Fehler beim Zerlegen des Inventarelements: Inventarelement mit ID ${inventoryItemId} nicht gefunden.</value>
         <value xml:lang="en">Error decomposing inventory item: inventory item with ID ${inventoryItemId} not found.</value>
         <value xml:lang="it">Errore duranta la decomposizione della riga inventario: riga inventario ${inventoryItemId} non trovata.</value>
         <value xml:lang="ja">在庫アイテムの分解中にエラー、ID ${inventoryItemId} の在庫アイテムが見つかりません。</value>
@@ -3597,6 +3651,7 @@
         <value xml:lang="zh-TW">分解庫存細項時出錯:沒有找到標識為 ${inventoryItemId} 的庫存細項</value>
     </property>
     <property key="ManufacturingProductionRunCannotDecomposingInventoryItemNoComponentsFound">
+        <value xml:lang="de">Fehler beim Zerlegen des Inventarelements: Keine Produktkomponente für Marketing-Paket ${productId} gefunden.</value>
         <value xml:lang="en">Error decomposing inventory item: no components found for marketing package ${productId}.</value>
         <value xml:lang="it">Errore duranta la decomposizione della riga inventario: nessun componente trovato per il pacco di vendita ${productId}.</value>
         <value xml:lang="ja">在庫アイテムの分解中にエラー、販売コンポーネント ${productId} に対するコンポーネントがありません。</value>
@@ -3605,6 +3660,7 @@
         <value xml:lang="zh-TW">分解庫存細項時出錯:沒有找到促銷包 ${productId} 的元件.</value>
     </property>
     <property key="ManufacturingProductionRunCannotDecomposingInventoryItemNoMarketingPackagesFound">
+        <value xml:lang="de">Fehler beim Zerlegen des Inventarelements: Kein Marketing-Paket für das Inventarelement ${inventoryItemId} gefunden.</value>
         <value xml:lang="en">Error decomposing inventory item: no marketing packages found in inventory item ${inventoryItemId}.</value>
         <value xml:lang="it">Errore duranta la decomposizione della riga inventario: nessun pacco di vendita trovato nella riga di inventario ${inventoryItemId}.</value>
         <value xml:lang="ja">在庫アイテムの分解中にエラー、在庫アイテム ${inventoryItemId} に販売コンポーネントがありません。</value>
@@ -3627,6 +3683,7 @@
         <value xml:lang="zh-TW">關閉生產運行</value>
     </property>
     <property key="ManufacturingProductionRunCompletionDateNotCorrect">
+        <value xml:lang="de">Produktionslauf-Abschlussdatum nicht korrekt</value>
         <value xml:lang="en">Production Run Completion Date Not Correct</value>
         <value xml:lang="it">Data completamento ordine di produzione non corretta</value>
         <value xml:lang="ja">生産実行完了日が正しくありません</value>
@@ -3636,6 +3693,7 @@
         <value xml:lang="zh-TW">生產運行完成時間不正確</value>
     </property>
     <property key="ManufacturingProductionRunComponentAdded">
+        <value xml:lang="de">Produktionslauf- Komponente hinzugefügt</value>
         <value xml:lang="en">Production Run Component Added</value>
         <value xml:lang="it">Aggiunta componente ordine di produzione</value>
         <value xml:lang="ja">生産実行コンポーネントは追加されました</value>
@@ -3645,6 +3703,7 @@
         <value xml:lang="zh-TW">生產運行元件已增加</value>
     </property>
     <property key="ManufacturingProductionRunComponentNotAdded">
+        <value xml:lang="de">Produktionslauf- Komponente nicht hinzugefügt</value>
         <value xml:lang="en">Production Run Component Not Added</value>
         <value xml:lang="it">Componente ordine di produzione non aggiunto</value>
         <value xml:lang="ja">生産実行コンポーネントは追加されません</value>
@@ -3654,6 +3713,7 @@
         <value xml:lang="zh-TW">生產運行元件沒有增加</value>
     </property>
     <property key="ManufacturingProductionRunComponentNotExists">
+        <value xml:lang="de">Produktionslauf- Komponente existiert nicht</value>
         <value xml:lang="en">Production Run Component Not Exists</value>
         <value xml:lang="it">Componente ordine di produzione non esiste</value>
         <value xml:lang="ja">生産実行コンポーネントは存在しません</value>
@@ -3663,6 +3723,7 @@
         <value xml:lang="zh-TW">生產運行元件不存在</value>
     </property>
     <property key="ManufacturingProductionRunComponentUpdated">
+        <value xml:lang="de">Produktionslauf- Komponente aktualisiert</value>
         <value xml:lang="en">Production Run Component Updated</value>
         <value xml:lang="it">Componente ordine di produzione aggiornato</value>
         <value xml:lang="ja">生産実行コンポーネントは更新されました</value>
@@ -3685,6 +3746,7 @@
         <value xml:lang="zh-TW">生產運行元件</value>
     </property>
     <property key="ManufacturingProductionRunErrorRunningSetEstimatedDeliveryDates">
+        <value xml:lang="de">Fehler beim ausführen des setEstimatedDeliveryDates Service</value>
         <value xml:lang="en">Problem running the setEstimatedDeliveryDates service</value>
         <value xml:lang="it">Problema di esecuzione del servizio setEstimatedDeliveryDates</value>
         <value xml:lang="ja">見積配送日付設定サービスの実行中にエラー</value>
@@ -3737,6 +3799,7 @@
         <value xml:lang="zh-TW">已新建生產執行 ${productionRunId}</value>
     </property>
     <property key="ManufacturingProductionRunDeclaration">
+        <value xml:lang="de">Produktionslauf- Zollerklärung</value>
         <value xml:lang="en">Production Run Declaration</value>
         <value xml:lang="es">Declaración de orden de producción</value>
         <value xml:lang="fr">Déclaration de l'ordre de fabrication</value>
@@ -3750,6 +3813,7 @@
         <value xml:lang="zh-TW">生產運行情況</value>
     </property>
     <property key="ManufacturingProductionRunDeclareAndProduce">
+        <value xml:lang="de">Produktionslauf herstellen und beim Zoll deklarieren</value>
         <value xml:lang="en">Production Run Declare And Produce</value>
         <value xml:lang="it">Ordine di produzione dichiara e produci</value>
         <value xml:lang="ja">生産実行の定義および生産</value>
@@ -3787,6 +3851,7 @@
         <value xml:lang="zh-TW">缺少固定資產識別</value>
     </property>
     <property key="ManufacturingProductionRunFixedAssets">
+        <value xml:lang="de">Produktionslauf Anlagevermögen</value>
         <value xml:lang="en">Production Run Fixed Assets</value>
         <value xml:lang="es">Máquinas de la orden de producción</value>
         <value xml:lang="fr">Machines de l'ordre de fabrication</value>
@@ -3799,6 +3864,7 @@
         <value xml:lang="zh-TW">生產運行固定資產</value>
     </property>
     <property key="ManufacturingProductionRunForMarketingPackagesCreationError">
+        <value xml:lang="de">Fehler beim Erstellen eines Produktionslaufs für das Marketingpaket für die Bestellung ${orderId} ${orderItemSeqId}: ${errorString}</value>
         <value xml:lang="en">Error creating a production run for marketing package for order ${orderId} ${orderItemSeqId}: ${errorString}</value>
         <value xml:lang="it">Errore durante la creazione dell'ordine di produzione per il pacco di vendita per l'ordine ${orderId} ${orderItemSeqId}: ${errorString}</value>
         <value xml:lang="ja">注文 ${orderId} ${orderItemSeqId} に対する販売パッケージの生産実行作成中にエラー: ${errorString}</value>
@@ -3807,6 +3873,7 @@
         <value xml:lang="zh-TW">為訂單 ${orderId} ${orderItemSeqId} 的促銷包新建一個生產運行時出錯:${errorString}</value>
     </property>
     <property key="ManufacturingProductionRunForMarketingPackagesOrderItemNotFound">
+        <value xml:lang="de">Fehler beim Erstellen eines Produktionslaufs für das Marketingpaket für die Bestellung ${orderId}. Bestellartikel ${orderItemSeqId} nicht gefunden.</value>
         <value xml:lang="en">Error creating a production run for marketing package for order ${orderId} ${orderItemSeqId}: order item not found.</value>
         <value xml:lang="it">Errore durante la creazione dell'ordine di produzione per il pacco di vendita per l'ordine ${orderId} ${orderItemSeqId}: riga ordine non trovata.</value>
         <value xml:lang="ja">注文 ${orderId} ${orderItemSeqId} に対する販売パッケージの生産実行作成中にエラー、注文アイテムが見つかりません</value>
@@ -3815,6 +3882,7 @@
         <value xml:lang="zh-TW">為訂單 ${orderId} ${orderItemSeqId} 的促銷包新建一個生產運行時出錯:沒有找到訂單細項</value>
     </property>
     <property key="ManufacturingProductionRunFromConfigurationNotYetImplemented">
+        <value xml:lang="de">Funktion noch nicht implementiert</value>
         <value xml:lang="en">Operation not yet implemented</value>
         <value xml:lang="it">Operazione non è ancora implementata</value>
         <value xml:lang="ja">操作はまだ実装されていません</value>
@@ -3823,6 +3891,7 @@
         <value xml:lang="zh-TW">還沒有完成操作</value>
     </property>
     <property key="ManufacturingProductionRunFromConfigurationNotValid">
+        <value xml:lang="de">Produktkonfiguration nicht gültig</value>
         <value xml:lang="en">Product Configuration Not Valid</value>
         <value xml:lang="it">Configurazione non valida</value>
         <value xml:lang="ja">製品設定が無効です</value>
@@ -3846,6 +3915,7 @@
         <value xml:lang="zh-TW">生產運行識別</value>
     </property>
     <property key="ManufacturingProductionRunIsNotRequiredForProductId">
+        <value xml:lang="de">Für ein Produkt mit der ID ${productId} im Datum ${startDate} ist kein Produktionslauf erforderlich. Bitte überprüfen Sie die Gültigkeitsdaten der Materialliste und des Arbeitsplans.</value>
         <value xml:lang="en">No production run is required for product with ID ${productId} in date ${startDate}; please verify the validity dates of the bill of materials and routing.</value>
         <value xml:lang="it">Nessun ordine di produzione è richiesto per il prodotto ${productId} in data ${startDate}; verificare le date di validità dei materiali.</value>
         <value xml:lang="ja">製品ID ${productId} 日付 ${startDate} の生産実行は必要ではありません、部品表の日付を確認して経路制御してください。</value>
@@ -3868,6 +3938,7 @@
         <value xml:lang="zh-TW">生產運行名稱</value>
     </property>
     <property key="ManufacturingProductionRunNotCreated">
+        <value xml:lang="de">Produktionslauf nicht erstellt</value>
         <value xml:lang="en">Production Run Not Created</value>
         <value xml:lang="it">Ordine di produzione non creato</value>
         <value xml:lang="ja">生産実行は作成されません</value>
@@ -3877,6 +3948,7 @@
         <value xml:lang="zh-TW">生產運行沒有新建</value>
     </property>
     <property key="ManufacturingProductionRunNotExists">
+        <value xml:lang="de">Produktionslauf nicht gefunden</value>
         <value xml:lang="en">Production Run Not Exists</value>
         <value xml:lang="it">Ordine di produzione non esiste</value>
         <value xml:lang="ja">生産実行は存在しません</value>
@@ -3900,6 +3972,7 @@
         <value xml:lang="zh-TW">生產運行更新失敗,請檢視日誌瞭解詳細資訊</value>
     </property>
     <property key="ManufacturingProductionRunParties">
+        <value xml:lang="de">Parteien</value>
         <value xml:lang="en">Parties</value>
         <value xml:lang="nl">Partijen</value>
         <value xml:lang="zh">会员</value>
@@ -3918,6 +3991,7 @@
         <value xml:lang="zh-TW">生產運行列印檔</value>
     </property>
     <property key="ManufacturingProductionRunPrinted">
+        <value xml:lang="de">Produktionslauf gedruckt</value>
         <value xml:lang="en">Production Run Printed</value>
         <value xml:lang="it">Ordine di produzione stampato</value>
         <value xml:lang="ja">生産実行は印刷されました</value>
@@ -3927,6 +4001,7 @@
         <value xml:lang="zh-TW">生產運行已列印</value>
     </property>
     <property key="ManufacturingProductionRunPriorityMissing">
+        <value xml:lang="de">Produktionslauf- Priorität fehlt</value>
         <value xml:lang="en">Production Run Priority Missing</value>
         <value xml:lang="it">Ordine di produzione priorità mancante</value>
         <value xml:lang="ja">生産実行の優先度が正しくありません</value>
@@ -3936,6 +4011,7 @@
         <value xml:lang="zh-TW">生產運行缺少優先順序</value>
     </property>
     <property key="ManufacturingProductionRunProduce">
+        <value xml:lang="de">Produktionsauftrag Erzeugnisse</value>
         <value xml:lang="en">Production Run Produce</value>
         <value xml:lang="it">Ordine di produzione prodotto</value>
         <value xml:lang="ja">生産実行の生産</value>
@@ -3959,7 +4035,8 @@
         <value xml:lang="zh-TW">生產運行產品元件</value>
     </property>
     <property key="ManufacturingProductionRunProductProducedNotStillAvailable">
-        <value xml:lang="en">Production Run Product Produce Not Still Available</value>
+        <value xml:lang="de">Produktionsauftrag Produkterzeugnisse weiterhin nicht verfügbar</value>
+        <value xml:lang="en">Production Run Product Produce Still Not Available</value>
         <value xml:lang="it">Ordine di produzione prodotto da produrre non ancora disponibile</value>
         <value xml:lang="ja">生産実行製品生産はまだ有効ではありません</value>
         <value xml:lang="pt-BR">Produto da Execução de produção a produzir ainda não disponível</value>
@@ -4045,6 +4122,7 @@
         <value xml:lang="zh-TW">生產運行狀態修改成功.</value>
     </property>
     <property key="ManufacturingProductionRunStatusNotChanged">
+        <value xml:lang="de">Produktionsauftrag Status unverändert</value>
         <value xml:lang="en">Production Run Status Not Changed</value>
         <value xml:lang="it">Stato ordine di produzione non cambiato</value>
         <value xml:lang="ja">生産実行ステータスは変更されません</value>
@@ -4054,6 +4132,7 @@
         <value xml:lang="zh-TW">生產運行狀態沒有改變</value>
     </property>
     <property key="ManufacturingProductionRunStatusNotChangedMandatoryProductionRunFound">
+        <value xml:lang="de">Produktionsauftrag Status unverändert. Obligatorischer Produktionsauftrag gefunden</value>
         <value xml:lang="en">Production Run Status Not Changed Mandatory Production Run Found</value>
         <value xml:lang="it">Stato ordine di produzione non cambiato per l'ordine di produzione trovato</value>
         <value xml:lang="ja">生産実行ステータスは変更されません。生産強制実行が見つかりました</value>
@@ -4063,6 +4142,7 @@
         <value xml:lang="zh-TW">生產運行狀態沒有改變,找到了必要的生產運行</value>
     </property>
     <property key="ManufacturingProductionRunStatusNotChangedMandatoryProductionRunNotCompleted">
+        <value xml:lang="de">Produktionsauftrag Status unverändert. Obligatorischer Produktionsauftrag nicht beendet.</value>
         <value xml:lang="en">Production Run Status Not Changed Mandatory Production Run Not Completed</value>
         <value xml:lang="it">Stato ordine di produzione non cambiato per l'ordine di produzione non completato</value>
         <value xml:lang="ja">生産実行ステータスは変更されません。生産強制実行が完了していません</value>
@@ -4072,6 +4152,7 @@
         <value xml:lang="zh-TW">生產運行狀態沒有改變,沒有完成必要的生產運行</value>
     </property>
     <property key="ManufacturingProductionRunTaskCannotReturnMoreItems">
+        <value xml:lang="de">Produktionslauf Aufgabe mit ID ${productionRunTaskId} kann nicht mehr (${quantity}) Gegenstände  erzeugen, als die derzeit zugewiesenen ${quantityAllocated}</value>
         <value xml:lang="en">Production Run Task with ID ${productionRunTaskId} cannot return more items ${quantity} than the ones currently allocated ${quantityAllocated}</value>
         <value xml:lang="it">Compito ordine di produzione ${productionRunTaskId} non può restituire più righe ${quantity} di quelle allocate attualmente ${quantityAllocated}</value>
         <value xml:lang="ja">ID ${productionRunTaskId} の生産実行タスクは現在割り当てられた ${quantityAllocated} より多いアイテム ${quantity} を戻すことはできません</value>
@@ -4080,7 +4161,8 @@
         <value xml:lang="zh-TW">標識為${productionRunTaskId}的生產運行任務,與當前分配的${quantityAllocated}比,沒有返回更多細項${quantity}</value>
     </property>
     <property key="ManufacturingProductionRunTaskCannotStartDocsNotPrinted">
-        <value xml:lang="en">Production Run Task Cannot Start Docs Not Printed</value>
+        <value xml:lang="de">Produktionslauf Aufgabe kann nicht starten. Dokumente nicht gedruckt.</value>
+        <value xml:lang="en">Production Run Task cannot start. Docs not printed</value>
         <value xml:lang="it">Compito ordine di produzione non può iniziare con documento non stampato</value>
         <value xml:lang="ja">生産実行タスクは開始できません。文書が印刷されていません</value>
         <value xml:lang="pt-BR">Tarefa de execução de produção não pode começar pois documentos não foram impressos</value>
@@ -4089,7 +4171,8 @@
         <value xml:lang="zh-TW">生產運行任務無法啟動,檔沒有列印</value>
     </property>
     <property key="ManufacturingProductionRunTaskCannotStartPrevTasksNotCompleted">
-        <value xml:lang="en">Production Run Task Cannot Start Prev Tasks Not Completed</value>
+        <value xml:lang="de">Produktionslauf Aufgabe kann nicht starten. Vorherige Aufgabe ist noch in Bearbeitung.</value>
+        <value xml:lang="en">Production Run Task cannot start. Previous tasks not completed</value>
         <value xml:lang="it">Compito ordine di produzione non può iniziare un precedente compito non completato</value>
         <value xml:lang="ja">生産実行タスクは開始できません。前のタスクが完了していません</value>
         <value xml:lang="pt-BR">Tarefa de execução de produção não pode começar por a anterior não se completou</value>
@@ -4098,6 +4181,7 @@
         <value xml:lang="zh-TW">生產運行任務無法啟動,之前的任務沒有完成</value>
     </property>
     <property key="ManufacturingProductionRunTaskNotFound">
+        <value xml:lang="de">Kann die Produktionslauf- Aufgabe mit ID nicht finden: ${productionRunTaskId}</value>
         <value xml:lang="en">Cannot find the production run task with id: ${productionRunTaskId}</value>
         <value xml:lang="it">Non è possibile trovare il compito dell'ordine di produzione: ${productionRunTaskId}</value>
         <value xml:lang="ja">ID ${productionRunTaskId} の生産実行タスクが見つかりません</value>
@@ -4106,6 +4190,7 @@
         <value xml:lang="zh-TW">無法找到生產運行任務,標識為:${productionRunTaskId}</value>
     </property>
     <property key="ManufacturingProductionRunTaskNotExists">
+        <value xml:lang="de">Produktionslauf- Aufgabe nicht vorhanden</value>
         <value xml:lang="en">Production Run Task Not Exists</value>
         <value xml:lang="it">Compito ordine di produzione non esiste</value>
         <value xml:lang="ja">生産実行タスクは存在しません</value>
@@ -4115,6 +4200,7 @@
         <value xml:lang="zh-TW">生產運行任務不存在</value>
     </property>
     <property key="ManufacturingProductionRunTaskNotRunning">
+        <value xml:lang="de">Produktionslauf- Aufgabe nicht in Bearbeitung</value>
         <value xml:lang="en">Production Run Task Not Running</value>
         <value xml:lang="it">Compito ordine di produzione non in esecuzione</value>
         <value xml:lang="ja">生産実行タスクは実行していません</value>
@@ -4124,6 +4210,7 @@
         <value xml:lang="zh-TW">生產運行任務沒有執行</value>
     </property>
     <property key="ManufacturingProductionRunTaskProduceError">
+        <value xml:lang="de">Fehler beim Aufruf von productionRunTaskProduce: </value>
         <value xml:lang="en">Error calling productionRunTaskProduce: </value>
         <value xml:lang="it">Errore durante l'esecuzione di productionRunTaskProduce: </value>
         <value xml:lang="ja">productionRunTaskProduce の呼び出し中にエラー: </value>
@@ -4132,6 +4219,7 @@
         <value xml:lang="zh-TW">呼叫productionRunTaskProduce時出錯:</value>
     </property>
     <property key="ManufacturingProductionRunTaskStatusChanged">
+        <value xml:lang="de">Produktionslauf- Aufgabe Status verändert</value>
         <value xml:lang="en">Production Run Task Status Changed</value>
         <value xml:lang="it">Compito ordine di produzione stato cambiato</value>
         <value xml:lang="ja">生産実行タスクのステータスが変更されました</value>
@@ -4154,6 +4242,7 @@
         <value xml:lang="zh-TW">生產運行任務</value>
     </property>
     <property key="ManufacturingProductionRunTryToCreateWorkEffortAssoc">
+        <value xml:lang="de">Fehler beim Versuch eine Arbeitsaufwandsverknüpfung hinzuzufügen.</value>
         <value xml:lang="en">Error try to create workeffort assoc</value>
         <value xml:lang="it">Errore durante il tentativo di creazione associazione impegno di lavoro</value>
         <value xml:lang="ja">作業成果関連付け作成中にエラー</value>
@@ -4162,6 +4251,7 @@
         <value xml:lang="zh-TW">嘗試新建工作投入結合時出錯</value>
     </property>
     <property key="ManufacturingProductionRunTryToGetBomListError">
+        <value xml:lang="de">Fehler beim Versuch eine zugehörige Stückliste für die Produktverknüpfung zu finden.</value>
         <value xml:lang="en">Error try to get BOM list from productAssoc</value>
         <value xml:lang="it">Errore durante il tentativo di ottenere la lista della distinta base da productAssoc</value>
         <value xml:lang="ja">製品関連付けからBOM一覧を取得中にエラー</value>
@@ -4170,6 +4260,7 @@
         <value xml:lang="zh-TW">嘗試從產品結合(productAssoc)獲得物料清單時出錯</value>
     </property>
     <property key="ManufacturingProductionRunUnableToCreateMaterialsCosts">
+        <value xml:lang="de">Die Materialkosten für die Produktionsl-Aufaufgabe können nicht angelegt werden ${productionRunTaskId}: ${errorString}</value>
         <value xml:lang="en">Unable to create materials costs for the production run task ${productionRunTaskId}: ${errorString}</value>
         <value xml:lang="it">Non è possibile create i costi dei materiali per il compito dell'ordine di produzione ${productionRunTaskId}: ${errorString}</value>
         <value xml:lang="ja">生産実行タスク ${productionRunTaskId} に対する部品原価が作成できません: ${errorString}</value>
@@ -4178,6 +4269,7 @@
         <value xml:lang="zh-TW">不能為生產運行任務${productionRunTaskId}新建物料成本:${errorString}</value>
     </property>
     <property key="ManufacturingProductionRunUnableToCreateRoutingCosts">
+        <value xml:lang="de">Es konnten keine Routingkosten für die Produktionslaufaufgabe erstellt werden ${productionRunTaskId}: ${errorString}</value>
         <value xml:lang="en">Unable to create routing costs for the production run task ${productionRunTaskId}: ${errorString}</value>
         <value xml:lang="it">Non è possibile create i costi per il compito dell'ordine di produzione ${productionRunTaskId}: ${errorString}</value>
         <value xml:lang="ja">生産実行タスク ${productionRunTaskId} に対する経路制御原価が作成できません: ${errorString}</value>
@@ -4186,6 +4278,7 @@
         <value xml:lang="zh-TW">不能為生產運行任務${productionRunTaskId}新建加工成本:${errorString}</value>
     </property>
     <property key="ManufacturingProductionRunUnableToFindCosts">
+        <value xml:lang="de">Es konnte keine Währung für die Produktionskosten gefunden werden</value>
         <value xml:lang="en">Unable to find a currency for production run costs</value>
         <value xml:lang="it">Non è possibile trovare una valuta per i costi dell'ordine di produzione</value>
         <value xml:lang="ja">生産実行原価に対する通貨を見つけることができません</value>
@@ -4194,6 +4287,7 @@
         <value xml:lang="zh-TW">無法找到生產運行成本的幣種</value>
     </property>
     <property key="ManufacturingProductionRunUnableToFindCostsForWorkEffort">
+        <value xml:lang="de">Die Kosten für den Arbeitsaufwand (${workEffortId}) konnten nicht gefunden werden: ${errorString}</value>
         <value xml:lang="en">Cannot retrieve costs for work effort ${workEffortId}: ${errorString}</value>
         <value xml:lang="it">Non è possibile ricavare i costi per l'impegno di lavoro ${workEffortId}: ${errorString}</value>
         <value xml:lang="ja">作業成果 ${workEffortId} に対する原価が取得できません: ${errorString}</value>
@@ -4202,6 +4296,7 @@
         <value xml:lang="zh-TW">無法獲得工作投入${workEffortId}的成本:${errorString}</value>
     </property>
     <property key="ManufacturingProductionRunUnableToFindOverheadCosts">
+        <value xml:lang="de">Die Gemeinkosten für den Produktionslauf können nicht berechnet werden: ${errorString}</value>
         <value xml:lang="en">Unable to compute overhead costs for production run: ${errorString}</value>
         <value xml:lang="it">Non è possibile elaborare gli ulteriori costo dell'ordine di produzione: ${errorString}</value>
         <value xml:lang="ja">生産実行に対する間接原価が計算できません: ${errorString}</value>
@@ -4210,6 +4305,7 @@
         <value xml:lang="zh-TW">無法計算生產運行的間接成本:${errorString}</value>
     </property>
     <property key="ManufacturingProductionRunUnableToProgressTaskStatus">
+        <value xml:lang="de">Der Status ${prevStatusId} für die Aufgabe ${taskId} kann derzeit nicht in den nächsten Status überführt werden.</value>
         <value xml:lang="en">Unable to progress from status ${prevStatusId} for task ${taskId}</value>
         <value xml:lang="it">Non è possibile cambiare lo stato da 'in corso' ${prevStatusId} per il compito ${taskId}</value>
         <value xml:lang="ja">タスク ${taskId} に対するステータス ${prevStatusId} から進めることができません</value>
@@ -4218,6 +4314,7 @@
         <value xml:lang="zh-TW">不能把任務${taskId}從狀態${prevStatusId}繼續進行</value>
     </property>
     <property key="ManufacturingProposedOrder">
+        <value xml:lang="de">Vorgeschlagene Bestellung</value>
         <value xml:lang="en">Proposed Order</value>
         <value xml:lang="es">Orden propuesta</value>
         <value xml:lang="fr">Ordre Proposé</value>
@@ -4273,6 +4370,7 @@
         <value xml:lang="zh-TW">已生產</value>
     </property>
     <property key="ManufacturingQuantityProducedIsHigherThanQuantityDeclared">
+        <value xml:lang="de">Die produzierte Menge darf nicht größer als die deklarierte Menge sein.</value>
         <value xml:lang="en">Quantity produced cannot be greater than the quantity declared.</value>
         <value xml:lang="es">La cantidad producido no debe ser mayor que la declarada.</value>
         <value xml:lang="fr">La quantité produite ne peut pas être plus importante que la quantité affichée.</value>
@@ -4448,6 +4546,7 @@
         <value xml:lang="zh-TW">需求識別</value>
     </property>
     <property key="ManufacturingRequirementNotDeleted">
+        <value xml:lang="de">Anforderung nicht gelöscht</value>
         <value xml:lang="en">Requirement Non Deleted</value>
         <value xml:lang="fr">Besoin de fabrication non supprimé</value>
         <value xml:lang="it">Fabbisogno non cancellato</value>
@@ -4458,6 +4557,7 @@
         <value xml:lang="zh-TW">沒有需求被刪除</value>
     </property>
     <property key="ManufacturingRequirementNotExists">
+        <value xml:lang="de">Anforderung fehlt</value>
         <value xml:lang="en">Requirement Non Exists</value>
         <value xml:lang="fr">Besoin de fabrication inexistant</value>
         <value xml:lang="it">Fabbisogno non esistente</value>
@@ -4468,6 +4568,7 @@
         <value xml:lang="zh-TW">不存在需求</value>
     </property>
     <property key="ManufacturingRequirementNotUpdated">
+        <value xml:lang="de">Anforderung nicht aktualisiert</value>
         <value xml:lang="en">Requirement Non Updated</value>
         <value xml:lang="fr">Besoin de fabrication non mis à jour</value>
         <value xml:lang="it">Fabbisogno non aggiornato</value>
@@ -4532,6 +4633,7 @@
         <value xml:lang="zh-TW">規程</value>
     </property>
     <property key="ManufacturingRoutingErrorFindingTask">
+        <value xml:lang="de">Fehler beim Suchen der Routing-Aufgabe mit der ID: ${taskId}</value>
         <value xml:lang="en">Error finding routing task with id: ${taskId}</value>
         <value xml:lang="it">Errore durante la ricerca del ciclo per il compito: ${taskId}</value>
         <value xml:lang="ja">ID ${taskId} の経路制御タスク検索時にエラー</value>
@@ -4708,6 +4810,7 @@
         <value xml:lang="zh-TW">規程任務識別</value>
     </property>
     <property key="ManufacturingRoutingTaskIdMissing">
+        <value xml:lang="de">Routing-Task-ID fehlt</value>
         <value xml:lang="en">Routing Task ID Missing</value>
         <value xml:lang="fr">Code d'opération manquant</value>
         <value xml:lang="it">Codice operazione mancante</value>
@@ -4718,6 +4821,7 @@
         <value xml:lang="zh-TW">缺少規程任務識別</value>
     </property>
     <property key="ManufacturingRoutingTaskNotExists">
+        <value xml:lang="de">Routing-Task ist nicht vorhanden</value>
         <value xml:lang="en">Routing Task Not Exists</value>
         <value xml:lang="fr">Cette opération n'existe pas</value>
         <value xml:lang="it">Codice operazione non esiste</value>
@@ -4728,6 +4832,7 @@
         <value xml:lang="zh-TW">規程任務不存在</value>
     </property>
     <property key="ManufacturingRoutingTaskSeqIdAlreadyExist">
+        <value xml:lang="de">Routing Task Seq ID besteht bereits</value>
         <value xml:lang="en">Routing Task Seq ID Already Exists</value>
         <value xml:lang="fr">Cette opération existe déjà</value>
         <value xml:lang="it">Codice operazione sequenza già esistente</value>
@@ -4738,6 +4843,7 @@
         <value xml:lang="zh-TW">規程任務序列號已存在</value>
     </property>
     <property key="ManufacturingRoutingTaskStartDateBeforePRun">
+        <value xml:lang="de">Startdatum der Routing-Aufgabe vor dem Produktionslauf</value>
         <value xml:lang="en">Routing Task Start Date Before Production Run</value>
         <value xml:lang="it">Codice operazione data inizio prima dell'ordine di produzione</value>
         <value xml:lang="ja">経路制御タスク開始日は生産実行前</value>
@@ -4830,6 +4936,7 @@
         <value xml:lang="zh-TW">廢品因素 %</value>
     </property>
     <property key="ManufacturingSelectedFeatures">
+        <value xml:lang="de">Ausgewählte Features</value>
         <value xml:lang="en">Selected Features</value>
         <value xml:lang="it">Caratteristica selezionata</value>
         <value xml:lang="ja">選択された機能</value>
@@ -4867,6 +4974,7 @@
         <value xml:lang="zh-TW">運輸計劃</value>
     </property>
     <property key="ManufacturingShipmentWorkEffortTasks">
+        <value xml:lang="de">Versand Arbeitsaufwands-Tasks</value>
         <value xml:lang="en">Shipment WorkEffort Tasks</value>
         <value xml:lang="it">Compiti impegni di lavoro spedizione</value>
         <value xml:lang="ja">発送作業成果タスク</value>
@@ -4932,6 +5040,7 @@
         <value xml:lang="zh-TW">開始時間</value>
     </property>
     <property key="ManufacturingSummarizedPartBreakdown">
+        <value xml:lang="de">Kurzzusammenfassung</value>
         <value xml:lang="en">Summarized Breakdown</value>
         <value xml:lang="es">Informe resumido</value>
         <value xml:lang="fr">Décompte résumé</value>
@@ -5096,6 +5205,7 @@
         <value xml:lang="zh-TW">任務報告</value>
     </property>
     <property key="ManufacturingTechData">
+        <value xml:lang="de">Tech. Daten</value>
         <value xml:lang="en">Tech. Data</value>
         <value xml:lang="es">Datos Tec.</value>
         <value xml:lang="fr">Données tech.</value>
@@ -5109,6 +5219,7 @@
         <value xml:lang="zh-TW">技術資料</value>
     </property>
     <property key="ManufacturingTechDataCalendarNotExist">
+        <value xml:lang="de">TechDataCalendar ist nicht vorhanden</value>
         <value xml:lang="en">TechDataCalendar does not exist</value>
         <value xml:lang="es">El calendario no existe</value>
         <value xml:lang="fr">Le calendrier des données tech. n'existe pas</value>
@@ -5122,6 +5233,7 @@
         <value xml:lang="zh-TW">不存在技術資料日曆</value>
     </property>
     <property key="ManufacturingTechDataCalendarWeekNotExist">
+        <value xml:lang="de">TechDataCalendarWeek ist nicht vorhanden</value>
         <value xml:lang="en">TechDataCalendarWeek does not exist</value>
         <value xml:lang="es">La semana no existe</value>
         <value xml:lang="fr">Le calendrier par semaine des données tech.  semaine n'existe pas</value>
@@ -5135,6 +5247,7 @@
         <value xml:lang="zh-TW">不存在技術資料日曆週</value>
     </property>
     <property key="ManufacturingTechDataWorkEffortNotExist">
+        <value xml:lang="de">Fehler beim Suchen der gewünschten Arbeitsaufwands-Datensätze: ${errorString}</value>
         <value xml:lang="en">Error finding desired WorkEffort records: ${errorString}</value>
         <value xml:lang="it">Errore durante la ricerca dei records di WorkEffort: ${errorString}</value>
         <value xml:lang="ja">要求された作業成果レコードの検索中にエラー: ${errorString}</value>
@@ -5143,6 +5256,7 @@
         <value xml:lang="zh-TW">尋找期望的工作投入(WorkEffort)記錄時出錯:${errorString}</value>
     </property>
     <property key="ManufacturingTechDataWorkEffortAssocNotExist">
+        <value xml:lang="de">Fehler beim Suchen der gewünschten WorkEffortAssoc-Datensätze: ${errorString}</value>
         <value xml:lang="en">Error finding desired WorkEffortAssoc records: ${errorString}</value>
         <value xml:lang="it">Errore durante la ricerca dei records di WorkEffortAssoc: ${errorString}</value>
         <value xml:lang="ja">要求された作業成果関連付けレコードの検索中にエラー: ${errorString}</value>
@@ -5262,6 +5376,7 @@
         <value xml:lang="zh-TW">安全錯誤:要執行這個操作,你必須具有 MANUFACTURING_UPDATE 或 MANUFACTURING_ADMIN 權限</value>
     </property>
     <property key="ManufacturingUsedCapacity">
+        <value xml:lang="de">Zur Herstellung gebrauchte Kapazität</value>
         <value xml:lang="en">Manufacturing Used Capacity</value>
         <value xml:lang="fr">Capacité de fabrication utilisée</value>
         <value xml:lang="zh">正在制造中的产能占用</value>
@@ -5281,6 +5396,7 @@
         <value xml:lang="zh-TW">你沒有檢視這個頁面的權限.(需要"MANUFACTURING_VIEW" 或 "MANUFACTURING_ADMIN")</value>
     </property>
     <property key="ManufacturingVisitType">
+        <value xml:lang="de">Tree visit Algorithmus</value>
         <value xml:lang="en">Tree visit Algorithm</value>
         <value xml:lang="es">Algoritmo de búsqueda</value>
         <value xml:lang="fr">Algorithme de recherche arborescente</value>
@@ -5350,6 +5466,7 @@
         <value xml:lang="zh-TW">選擇的固定資產類型已經與這個規程任務結合了</value>
     </property>
     <property key="ManufacturingWorkEffortGoodStandardNotExist">
+        <value xml:lang="de">WorkEffortGoodStandard Table nicht vorhanden</value>
         <value xml:lang="en">WorkEffortGoodStandard table does not exist</value>
         <value xml:lang="es">La tabla del WorkEffortGoodStandard no existe</value>
         <value xml:lang="fr">La table WorkEffortGoodStandard n'existe pas</value>
@@ -5363,6 +5480,7 @@
         <value xml:lang="zh-TW">工作投入良好標準表不存在</value>
     </property>
     <property key="ManufacturingWorkEffortIdFromNotExist">
+        <value xml:lang="de">workEffortIdFrom nicht vorhanden</value>
         <value xml:lang="en">workEffortIdFrom does not exist</value>
         <value xml:lang="es">El esfuerzo de trabajo origen no existe</value>
         <value xml:lang="fr">Réf. de tâche inexistante</value>
@@ -5376,6 +5494,7 @@
         <value xml:lang="zh-TW">不存在工作投入識別來自(workEffortIdFrom)</value>
     </property>
     <property key="ManufacturingWorkEffortNotExist">
+        <value xml:lang="de">Arbeitsaufwand nicht vorhanden</value>
         <value xml:lang="en">WorkEffort does not exist</value>
         <value xml:lang="es">El esfuerzo de trabajo no existe</value>
         <value xml:lang="fr">Main d'oeuvre inexistante</value>
@@ -5389,6 +5508,7 @@
         <value xml:lang="zh-TW">工作投入不存在</value>
     </property>
     <property key="ManufacturinWorkOrderItemFulfillmentError">
+        <value xml:lang="de">Fehler beim Lesen des WorkOrderItemFulfillment: ${errorString}</value>
         <value xml:lang="en">Error reading the WorkOrderItemFulfillment: ${errorString}</value>
         <value xml:lang="it">Errore durante la letture di WorkOrderItemFulfillment: ${errorString}</value>
         <value xml:lang="ja">作業注文アイテム執行の読み込み中にエラー: ${errorString}</value>
@@ -5677,6 +5797,7 @@
         <value xml:lang="zh-TW">查詢欄位</value>
     </property>
     <property key="PageTitleFindBom">
+        <value xml:lang="de">Stücklisten Suche</value>
         <value xml:lang="en">Find Bill Of Materials</value>
         <value xml:lang="fr">Rechercher une nomenclature</value>
         <value xml:lang="it">Ricerca distinta base</value>

@@ -1469,6 +1469,7 @@
         <value xml:lang="zh-TW">查詢工作投入</value>
     </property>
     <property key="PageTitleListWorkEffortAssignmentRates">
+        <value xml:lang="de">Arbeitsaufwand Gebührenraten</value>
         <value xml:lang="en">Work Effort Assignment Rates</value>
         <value xml:lang="es">Tasas de asignación</value>
         <value xml:lang="fr">Taux d'affectation de la tâche</value>
@@ -1483,10 +1484,12 @@
     </property>
     <property key="PageTitleListWorkEffortAttributes">
         <value xml:lang="ar">سمات مجهود العمل</value>
+        <value xml:lang="de">Arbeitsaufwand Attribute</value>
         <value xml:lang="en">Work Effort Attributes</value>
         <value xml:lang="fr">Attributs de la tâche</value>
     </property>
     <property key="PageTitleListWorkEffortCommEvents">
+        <value xml:lang="de">Arbeitsaufwand Kommunikationsevents</value>
         <value xml:lang="en">Work Effort Communication Events</value>
         <value xml:lang="es">Eventos de comunicación</value>
         <value xml:lang="fr">Evènement de communication de la tâche</value>
@@ -1500,6 +1503,7 @@
         <value xml:lang="zh-TW">工作投入通訊事件</value>
     </property>
     <property key="PageTitleListWorkEffortEventReminders">
+        <value xml:lang="de">Arbeitsaufwand Event Erinnerungen</value>
         <value xml:lang="en">Work Effort Event Reminders</value>
         <value xml:lang="fr">Rappels d'évènements de tâche</value>
         <value xml:lang="it">Promemoria impegno di lavoro</value>
@@ -1509,6 +1513,7 @@
         <value xml:lang="zh-TW">工作投入事件提醒</value>
     </property>
     <property key="PageTitleListWorkEffortFixedAssetAssigns">
+        <value xml:lang="de">Arbeitsaufwand Materialzuordungen</value>
         <value xml:lang="en">Work Effort Fixed Asset Assignments</value>
         <value xml:lang="fr">Immobilisations affectées à la tâche</value>
         <value xml:lang="it">Assegnazioni impegno di lavoro a cespite</value>
@@ -1518,6 +1523,7 @@
         <value xml:lang="zh-TW">工作投入固定資產分配</value>
     </property>
     <property key="PageTitleListWorkEffortKeyword">
+        <value xml:lang="de">Arbeitsaufwand Keywörter</value>
         <value xml:lang="en">Work Effort Keywords</value>
         <value xml:lang="fr">Mots-clés de la tâche</value>
         <value xml:lang="it">Chiavi dell'impegno di lavoro</value>
@@ -1553,6 +1559,7 @@
         <value xml:lang="zh-TW">工作投入訂單</value>
     </property>
     <property key="PageTitleListWorkEffortPartyAssigns">
+        <value xml:lang="de">Arbeitsaufwand Party Zuweisungen</value>
         <value xml:lang="en">Work Effort Party Assignments</value>
         <value xml:lang="es">Participantes asociados</value>
         <value xml:lang="fr">Affectations de l'acteur à la tâche</value>
@@ -1566,6 +1573,7 @@
         <value xml:lang="zh-TW">工作投入團體指派</value>
     </property>
     <property key="PageTitleListWorkEffortQuotes">
+        <value xml:lang="de">Arbeitsaufwand Angebote</value>
         <value xml:lang="en">Work Effort Quotes</value>
         <value xml:lang="es">Cotizaciones</value>
         <value xml:lang="fr">Devis de la tâche</value>
@@ -1579,6 +1587,7 @@
         <value xml:lang="zh-TW">工作投入詢價</value>
     </property>
     <property key="PageTitleListWorkEffortRequests">
+        <value xml:lang="de">Arbeitsaufwand Anfragen</value>
         <value xml:lang="en">Work Effort Requests</value>
         <value xml:lang="es">Peticiones</value>
         <value xml:lang="fr">Demandes de la tâche</value>
@@ -1592,6 +1601,7 @@
         <value xml:lang="zh-TW">工作投入請求</value>
     </property>
     <property key="PageTitleListWorkEffortRequirements">
+        <value xml:lang="de">Arbeitsaufwand Anforderungen</value>
         <value xml:lang="en">Work Effort Requirements</value>
         <value xml:lang="es">Requerimientos</value>
         <value xml:lang="fr">Besoins de la tâche</value>
@@ -1616,6 +1626,7 @@
         <value xml:lang="zh-TW">工作投入檢查</value>
     </property>
     <property key="PageTitleListWorkEffortShopLists">
+        <value xml:lang="de">Arbeitsaufwand Einkaufslisten</value>
         <value xml:lang="en">Work Effort Shopping Lists</value>
         <value xml:lang="es">Listas de compras</value>
         <value xml:lang="fr">Liste d'achats de la tâche</value>
@@ -1629,6 +1640,7 @@
         <value xml:lang="zh-TW">工作投入購買清單</value>
     </property>
     <property key="PageTitleListWorkEffortTimeEntries">
+        <value xml:lang="de">Arbeitsaufwand Zeiteinträge</value>
         <value xml:lang="en">Work Effort Time Entries</value>
         <value xml:lang="es">Entradas de tiempo</value>
         <value xml:lang="fr">Détails des temps passés sur la tâche</value>
@@ -1656,6 +1668,7 @@
         <value xml:lang="zh-TW">工作投入</value>
     </property>
     <property key="PageTitleLookupTimesheet">
+        <value xml:lang="de">Zeiterfassung nach Name nachschlagen</value>
         <value xml:lang="en">Lookup Timesheet by Name</value>
         <value xml:lang="fr">Rechercher une ou des feuilles de présence par nom</value>
         <value xml:lang="it">Ricerca timbrature per nome</value>
@@ -1668,6 +1681,7 @@
         <value xml:lang="zh-TW">按名稱尋找工時表</value>
     </property>
     <property key="PageTitleLookupWorkEffort">
+        <value xml:lang="de">Arbeitseinsatz nach Name nachschlagen</value>
         <value xml:lang="en">Lookup WorkEffort by Name</value>
         <value xml:lang="fr">Rechercher une ou des tâches par nom</value>
         <value xml:lang="it">Ricerca impegno di lavoro per nome</value>
@@ -1680,6 +1694,7 @@
         <value xml:lang="zh-TW">按名稱查詢工作投入</value>
     </property>
     <property key="PageTitleTreeWorkEfforts">
+        <value xml:lang="de">Child Arbeitsaufwände</value>
         <value xml:lang="en">Child Work Efforts</value>
         <value xml:lang="es">Esfuerzos de trabajo hijos</value>
         <value xml:lang="fr">Tâches descendantes</value>
@@ -1706,6 +1721,7 @@
         <value xml:lang="zh-TW">檢視行動和任務清單</value>
     </property>
     <property key="PageTitleWorkEffortRelatedSummary">
+        <value xml:lang="de">Arbeitsaufwand Verknüpfungen (Zusammenfassung)</value>
         <value xml:lang="en">Work Effort Related Summary</value>
         <value xml:lang="es">Resumen realcionado al esfuerzo de trabajo</value>
         <value xml:lang="fr">Résumé lié à la tâche</value>
@@ -1719,6 +1735,7 @@
         <value xml:lang="zh-TW">工作投入相關摘要</value>
     </property>
     <property key="PageTitleWorkEffortShopLists">
+        <value xml:lang="de">Arbeitsaufwand Einkaufslisten</value>
         <value xml:lang="en">Work Effort Shopping Lists</value>
         <value xml:lang="es">Listas de compras de esfuerzo de trabajo</value>
         <value xml:lang="fr">Listes d'achats de la tâche</value>
@@ -1842,6 +1859,7 @@
         <value xml:lang="zh-TW">新增已有子工作投入</value>
     </property>
     <property key="WorkEffortAddGoodStandard">
+        <value xml:lang="de">Güterstandard hinzufügen</value>
         <value xml:lang="en">Add Good Standard</value>
         <value xml:lang="fr">Ajouter un bien standard</value>
         <value xml:lang="it">Aggiungi bene standard</value>
@@ -1867,6 +1885,7 @@
         <value xml:lang="zh-TW">增加任務</value>
     </property>
     <property key="WorkEffortAgreementAppls">
+        <value xml:lang="de">Vereinbarung Erfüllung</value>
         <value xml:lang="en">Agreement Appls</value>
         <value xml:lang="fr">Applications d'accords</value>
         <value xml:lang="it">Applicazioni contratto</value>
@@ -1906,6 +1925,7 @@
         <value xml:lang="zh-TW">全部任務 </value>
     </property>
     <property key="WorkEffortAnyAssocType">
+        <value xml:lang="de">Jeder Verknüfungstyp</value>
         <value xml:lang="en">Any Assoc Type</value>
         <value xml:lang="fr">Tout type d'association</value>
         <value xml:lang="it">Tutti i tipo di associazione</value>
@@ -1916,6 +1936,7 @@
         <value xml:lang="zh-TW">任一結合類型</value>
     </property>
     <property key="WorkEffortApplicationEventsTasksWorkflowActivities">
+        <value xml:lang="de">Diese Anwendung ist für diejenigen gedacht, die Kalendereinträge und Workflowaktivitäten verwalten und verwenden</value>
         <value xml:lang="en">This application is meant for those who maintain and use calendar events tasks and workflow activities</value>
         <value xml:lang="es">Esta aplicación está destinada para las personas que administran los eventos, las tareas y los flujos de trabajo</value>
         <value xml:lang="fr">Cette application est destinées aux personnes qui gèrent et utilisent les événements des tâches du calendrier, et le déroulement d'opérations</value>
@@ -1949,6 +1970,7 @@
         <value xml:lang="zh-TW">已指派的任務</value>
     </property>
     <property key="WorkEffortAssoc">
+        <value xml:lang="de">Arbeitseinsatz Verbindung</value>
         <value xml:lang="en">WorkEffort Association</value>
         <value xml:lang="fr">Association de la tâche</value>
         <value xml:lang="it">Associazione impegno di lavoro </value>
@@ -1959,6 +1981,7 @@
         <value xml:lang="zh-TW">工作投入結合</value>
     </property>
     <property key="WorkEffortAssociatedFromParentToChild">
+        <value xml:lang="de">(verbunden von Eltern zu Kind)</value>
         <value xml:lang="en">(associated from parent to child)</value>
         <value xml:lang="fr">(associé depuis parent à enfant)</value>
         <value xml:lang="it">(associato dal padre al figlio)</value>
@@ -1987,6 +2010,7 @@
     </property>
     <property key="WorkEffortAttributes">
         <value xml:lang="ar">سمات</value>
+        <value xml:lang="de">Attribute</value>
         <value xml:lang="en">Attributes</value>
         <value xml:lang="fr">Attributs</value>
     </property>
@@ -2004,6 +2028,7 @@
         <value xml:lang="zh-TW">在下面輸入已存在的通訊事件</value>
     </property>
     <property key="WorkEffortBanner4">
+        <value xml:lang="de">ODER fügen Sie unten neue Kommunikationsereignisdaten hinzu, um eine neue Entität zu erstellen (lassen Sie die Kommunikationsereignis-ID leer)</value>
         <value xml:lang="en">OR add new Communication Event data below to create new entity (leave Communication Event ID empty)</value>
         <value xml:lang="fr">OU Ajouter une nouvelle donnée d'événement de communication ci-dessous pour créer la nouvelle entité (Laisser la réf. d'évènement de communication vide)</value>
         <value xml:lang="it">O aggiungi un nuovo evento comunicazione qui sotto per creare una nuova entità (lasciare vuoto)</value>
@@ -2016,6 +2041,7 @@
         <value xml:lang="zh-TW">或者在下面新建通訊事件資料以便新建資料實體 (通訊事件識別保留為空)</value>
     </property>
     <property key="WorkEffortBanner5">
+        <value xml:lang="de">Geben Sie eine vorhandene Anforderungs-ID ein</value>
         <value xml:lang="en">Enter existing Requirement ID below</value>
         <value xml:lang="fr">Entrer la réf. de besoin existant ci-dessous</value>
         <value xml:lang="it">Inserire qui sotto un fabbisogno esistente</value>
@@ -2028,6 +2054,7 @@
         <value xml:lang="zh-TW">在下面輸入已有需求識別</value>
     </property>
     <property key="WorkEffortBanner6">
+        <value xml:lang="de">ODER fügen Sie unten neue Anforderungsdaten hinzu, um eine neue Entität zu erstellen (lassen Sie die Anforderungs-ID leer)</value>
         <value xml:lang="en">OR add new Requirement data below to create new entity (leave Requirement ID empty)</value>
         <value xml:lang="fr">OU ajouter une nouvelle donnée de besoin ci-dessous pour créer la nouvelle entité (laisser la réf. de besoin vide)</value>
         <value xml:lang="it">O aggiungi un nuovo fabbisogno qui sotto per creare una nuova entità (lasciare vuoto)</value>
@@ -2040,6 +2067,7 @@
         <value xml:lang="zh-TW">或在下面增新的需求資料以建立新的資料實體(需求識別保留為空)</value>
     </property>
     <property key="WorkEffortBannerAddWorkEffortAndAssoc1">
+        <value xml:lang="de">Geben Sie eine vorhandene workEffortId ein,</value>
         <value xml:lang="en">Enter an existing workEffortId below,</value>
         <value xml:lang="fr">Entrer la réf. de tâche existante ci-dessous,</value>
         <value xml:lang="it">Inserire qui sotto un'impegno di lavoro esistente,</value>
@@ -2052,6 +2080,7 @@
         <value xml:lang="zh-TW">在下面輸入一個已有工作投入識別,</value>
     </property>
     <property key="WorkEffortBannerAddWorkEffortAndAssoc2">
+        <value xml:lang="de">ODER geben Sie unten die Details zum Arbeitsaufwand ein</value>
         <value xml:lang="en">OR enter the WorkEffort Details below</value>
         <value xml:lang="fr">OU entrer les détails de la tâche ci-dessous</value>
         <value xml:lang="it">O inserisci qui sotto l'Impegno di Lavoro (lasciando vuoto)</value>

@@ -684,8 +684,9 @@ under the License.
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
 
                 <!-- SCIPIO: session-based browsing aid -->
-                <!-- 2017-11: fallback -->
-                <set field="getStoreLastProductStore.defaultProductStoreId" from-field="webSite.productStoreId"/>
+                <!-- 2018-10: don't do this as fallback - override it - otherwise more problems
+                <set field="getStoreLastProductStore.defaultProductStoreId" from-field="webSite.productStoreId"/>-->
+                <set field="getStoreLastProductStore.overrideProductStoreId" from-field="webSite.productStoreId"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
                 <!-- re-save it to prevent wild switching -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>

@@ -666,6 +666,8 @@ public final class SetupDataUtil {
             }
         }
 
+        // NOTE: The following logic must match: org.ofbiz.product.store.ProductStoreWorker.getStoreDefaultWebSite
+
         List<GenericValue> defaultWebSiteList = EntityUtil.filterByAnd(webSiteList, UtilMisc.toMap("isStoreDefault", "Y"));
         GenericValue defaultWebSite = EntityUtil.getFirst(defaultWebSiteList);
         if (defaultWebSiteList.size() > 1) {

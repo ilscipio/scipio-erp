@@ -782,4 +782,63 @@ public class ProductStoreWorker {
     public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores) {
         return getContentReferenceStoreOrFirst(productStores, null);
     }
+
+    /**
+     * SCIPIO: Returns the default WebSite for the given store: if there is only one WebSite,
+     * that one is always returned; if multiple websites, returns the one marked with isStoreDefault Y.
+     * <p>
+     * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y,
+     * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
+     * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
+     * intended for backend usage only, e.g. cms preview!)
+     * <p>
+     * Added 2018-10-02.
+     */
+    public static GenericValue getStoreDefaultWebSite(Delegator delegator, String productStoreId, boolean useCache) {
+        try {
+            List<GenericValue> webSiteList = EntityQuery.use(delegator)
+                    .from("WebSite").where("productStoreId", productStoreId).cache(useCache).queryList();
+            if (webSiteList.size() == 1) {
+                return webSiteList.get(0);
+            // NOTE: This is technically possible, so a warning is not appropriate.
+            //} else if (webSiteList.size() == 0) {
+            //    Debug.logWarning("...", module);
+            } else if (webSiteList.size() >= 2) {
+                List<GenericValue> defaultWebSiteList = EntityUtil.filterByAnd(webSiteList, 
+                        UtilMisc.toMap("isStoreDefault", "Y"));
+                if (defaultWebSiteList.size() == 1) {
+                    return defaultWebSiteList.get(0);
+                } else if (defaultWebSiteList.size() >= 2) {
+                    Debug.logError("Found multiple WebSites marked default (isStoreDefault Y)"
+                            + " for product store '" + productStoreId + "'; only one should be marked default"
+                            + "; using first found (" + defaultWebSiteList.get(0).getString("webSiteId") + ")", module);
+                    return defaultWebSiteList.get(0);
+                } else {
+                    Debug.logWarning("Cannot determine a default WebSite for product store '" + productStoreId 
+                            + "'; no WebSites marked as store default (isStoreDefault Y)"
+                            + "; to rectify this, visit: /catalog/control/EditProductStoreWebSites?productStoreId=" + productStoreId, module);
+                }
+            }
+        } catch(GenericEntityException e) {
+            Debug.logError(e, "Cannot determine a WebSite for product store '" 
+                    + productStoreId + "'", module);
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns the default WebSite for the given store: if there is only one WebSite,
+     * that one is always returned; if multiple websites, returns the one marked with isStoreDefault Y.
+     * <p>
+     * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y, 
+     * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
+     * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
+     * intended for backend usage only, e.g. cms preview!)
+     * <p>
+     * Added 2018-10-02.
+     */
+    public static String getStoreDefaultWebSiteId(Delegator delegator, String productStoreId, boolean useCache) {
+        GenericValue webSite = getStoreDefaultWebSite(delegator, productStoreId, useCache);
+        return (webSite != null) ? webSite.getString("webSiteId") : null;
+    }
 }

@@ -53,6 +53,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
 
 /**
@@ -159,6 +160,33 @@ public class OrderReadHelper {
 
     public String getWebSiteId() {
         return orderHeader.getString("webSiteId");
+    }
+
+    /**
+     * SCIPIO: Returns the OrderHeader.webSiteId field if set;
+     * otherwise returns the default website associated with the
+     * ProductStore pointed to by OrderHeader.productStoreId.
+     * <p>
+     * The default website is the one marked with WebSite.isStoreDefault Y
+     * OR if the store only has one website, that website is returned.
+     * <p>
+     * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y,
+     * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
+     * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
+     * intended for backend usage only, e.g. cms preview!)
+     * <p>
+     * Added 2018-10-02.
+     */
+    public String getWebSiteIdOrStoreDefault() {
+        String webSiteId = getWebSiteId();
+        if (webSiteId == null) {
+            String productStoreId = getProductStoreId();
+            if (productStoreId != null) {
+                webSiteId = ProductStoreWorker.getStoreDefaultWebSiteId(orderHeader.getDelegator(), 
+                        productStoreId, true);
+            }
+        }
+        return webSiteId;
     }
 
     public String getProductStoreId() {

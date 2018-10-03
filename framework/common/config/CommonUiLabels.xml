@@ -3768,10 +3768,12 @@
         <value xml:lang="zh-TW">電子郵件</value>
     </property>
     <property key="CommonNotification">
+        <value xml:lang="de">Benachrichtigung</value>
         <value xml:lang="en">Notification</value>
         <value xml:lang="nl">Notificatie</value>
     </property>
     <property key="CommonNotifications">
+        <value xml:lang="de">Benachrichtigungen</value>
         <value xml:lang="en">Notifications</value>
         <value xml:lang="nl">Notificaties</value>
     </property>
@@ -3790,6 +3792,7 @@
     <property key="CommonEnable">
         <value xml:lang="ar">تفعيل</value>
         <value xml:lang="cs">Povolit</value>
+        <value xml:lang="de">Aktivieren</value>
         <value xml:lang="en">Enable</value>
         <value xml:lang="es">Habilitar</value>
         <value xml:lang="fr">Actif</value>
@@ -4372,6 +4375,7 @@
     <property key="CommonExtHelpUsedFor">
         <value xml:lang="ar">لماذا يستخدم؟</value>
         <value xml:lang="cs">K čemu je to použito?</value>
+        <value xml:lang="de">Wofür wird es verwendet?</value>
         <value xml:lang="en">What is it used for?</value>
         <value xml:lang="es">¿Para qué se usa?</value>
         <value xml:lang="fr">A quoi cela sert-il ?</value>
@@ -4386,6 +4390,7 @@
     <property key="CommonExtIndex">
         <value xml:lang="ar">فهرس</value>
         <value xml:lang="cs">Obsah</value>
+        <value xml:lang="de">Index</value>
         <value xml:lang="en">Index</value>
         <value xml:lang="es">Índice</value>
         <value xml:lang="fr">Index</value>
@@ -4400,6 +4405,7 @@
     <property key="CommonExternalDevice">
         <value xml:lang="ar">جهاز خارجي</value>
         <value xml:lang="cs">Externí zařízení</value>
+        <value xml:lang="de">Externes Gerät</value>
         <value xml:lang="en">External Device</value>
         <value xml:lang="es">Dispositivo externo</value>
         <value xml:lang="fr">Mat. externe</value>
@@ -4412,6 +4418,7 @@
     <property key="CommonExternalDeviceUserAction">
         <value xml:lang="ar">تصرف مستخدم للجهاز الخارجي</value>
         <value xml:lang="cs">Uživatelská akce externího zařízení</value>
+        <value xml:lang="de">Nutzeraktion am externen Gerät</value>
         <value xml:lang="en">External Device User Action</value>
         <value xml:lang="es">Acción del usuario del dispositivo externo</value>
         <value xml:lang="fr">Assoc Action/Utilisateur avec Mat. externe</value>
@@ -4426,6 +4433,7 @@
         <value xml:lang="en">Extra Fields</value>
     </property>
     <property key="CommonFacility">
+        <value xml:lang="de">Gebäude</value>
         <value xml:lang="en">Facility</value>
     </property>
     <property key="CommonFalse">
@@ -4629,6 +4637,7 @@
     <property key="CommonFindErrorPreparingConditions">
         <value xml:lang="ar">خطأ في تحضير الشروط: ${errorString}</value>
         <value xml:lang="cs">Chyba při přípravě podmínek: ${errorString}</value>
+        <value xml:lang="de">Fehler beim Vorbereiten der Bedingungen: ${errorString}</value>
         <value xml:lang="en">Error preparing conditions: ${errorString}</value>
         <value xml:lang="es">Error preparando las condiciones: ${errorString}</value>
         <value xml:lang="fr">Erreur dans la préparation des conditions de recherche : ${errorString}</value>
@@ -4642,6 +4651,7 @@
     <property key="CommonFindErrorRetrieveIterator">
         <value xml:lang="ar">خطأ في العثور على المكرر: ${errorString}</value>
         <value xml:lang="cs">Chyba při přípravě iterátoru: ${errorString}</value>
+        <value xml:lang="de">Fehler beim Finden des Iterators: ${errorString}</value>
         <value xml:lang="en">Error finding iterator: ${errorString}</value>
         <value xml:lang="es">Error buscando iterador: ${errorString}</value>
         <value xml:lang="fr">Erreur dans la récupération de l'itérateur : ${errorString}</value>
@@ -4655,6 +4665,7 @@
     <property key="CommonFindErrorRunning">
         <value xml:lang="ar">خطأ في العثور على الكيان ${entityName}: ${errorString}</value>
         <value xml:lang="cs">Chyba při vyhledávání v ${entityName}: ${errorString}</value>
+        <value xml:lang="de">Fehler beim Suchen auf der ${entityName} entity: ${errorString}</value>
         <value xml:lang="en">Error running Find on the ${entityName} entity: ${errorString}</value>
         <value xml:lang="es">Error buscando en la entidad ${entityName}: ${errorString}</value>
         <value xml:lang="fr">Erreur dans l'exécution de la recherche sur l'entité ${entityName} : ${errorString}</value>
@@ -4704,9 +4715,11 @@
         <value xml:lang="zh-TW">最前</value>
     </property>
     <property key="CommonFixedAsset">
+        <value xml:lang="de">Anlagevermögen/Material</value>
         <value xml:lang="en">Fixed Asset</value>
     </property>
     <property key="CommonFixedAssets">
+        <value xml:lang="de">Anlagevermögen/Material</value>
         <value xml:lang="en">Fixed Assets</value>
     </property>
     <property key="CommonFollowingErrorsOccurred">
@@ -5116,6 +5129,7 @@
         <value xml:lang="zh-TW">開始日/結束日</value>
     </property>
     <property key="CommonFromDateThruDateCheck">
+        <value xml:lang="de">Bis-Datum kann nicht gleich oder kleiner als Ab-Datum sein</value>
         <value xml:lang="en">Through date can't be same or smaller than from date</value>
         <value xml:lang="fr">La date de fin ne peut être égale ou plus récente que la date de début</value>
         <value xml:lang="zh">截至日期不能小于等于开始日期</value>
@@ -5144,6 +5158,7 @@
     <property key="CommonFtpConnectionRefused">
         <value xml:lang="ar">تم رفض الإتصال</value>
         <value xml:lang="cs">připojení odmítnuto</value>
+        <value xml:lang="de">Verbindung abgelehnt</value>
         <value xml:lang="en">connection refused</value>
         <value xml:lang="es">conexión rechazada</value>
         <value xml:lang="fr">Connexion refusée</value>
@@ -5157,6 +5172,7 @@
     <property key="CommonFtpFileCannotBeOpen">
         <value xml:lang="ar">خطأ: غير قادر على فتح الملف المحلي</value>
         <value xml:lang="cs">ERROR: Nepodařilo se otevřít místní soubor</value>
+        <value xml:lang="de">FEHLER: Lokale Datei konnte nicht geöffnet werden</value>
         <value xml:lang="en">ERROR: Could not open local file</value>
         <value xml:lang="es">Error: no se puede abrir el fichero local</value>
         <value xml:lang="fr">Erreur : le fichier local n'a pas pu être ouvert</value>
@@ -5170,6 +5186,7 @@
     <property key="CommonFtpFileNotSentSuccesfully">
         <value xml:lang="ar">لم يتم إرسال الملف بنجاح: ${replyString}</value>
         <value xml:lang="cs">soubor nebyl úspěšně odeslán: ${replyString}</value>
+        <value xml:lang="de">Datei wurde nicht erfolgreich gesendet: ${replyString}</value>
         <value xml:lang="en">File not sent succesfully: ${replyString}</value>
         <value xml:lang="es">Fichero no enviado correctamente: ${replyString}</value>
         <value xml:lang="fr">L'envoi du fichier a échoué : ${replyString}</value>
@@ -5183,6 +5200,7 @@
     <property key="CommonFtpLoginFailure">
         <value xml:lang="ar">محاولة الدخل فشلت (${username}, ${password})</value>
         <value xml:lang="cs">Přihlášení selhalo (${username}, ${password})</value>
+        <value xml:lang="de">Login fehlgeschlagen (${username}, ${password})</value>
         <value xml:lang="en">Login failed (${username}, ${password})</value>
         <value xml:lang="es">Fallo de conexión (${username}, ${password})</value>
         <value xml:lang="fr">Échec de l'authentification (${username}, ${password})</value>
@@ -5196,6 +5214,7 @@
     <property key="CommonFtpProblemWithTransfer">
         <value xml:lang="ar">حدثت مشكلة أثناء نقل الملفات عبر الشبكة: ${errorString}</value>
         <value xml:lang="cs">Chyba FTP přenosu: ${errorString}</value>
+        <value xml:lang="de">Problem beim FTP Transfer: ${errorString}</value>
         <value xml:lang="en">Problem with FTP transfer: ${errorString}</value>
         <value xml:lang="es">Problema con la transferencia FTP: ${errorString}</value>
         <value xml:lang="fr">Erreur pendant le transfert FTP : ${errorString}</value>
@@ -5209,6 +5228,7 @@
     <property key="CommonFtpSiteCommandFailed">
         <value xml:lang="ar">أمر SITE ${command} لم ينجح: ${replyString}</value>
         <value xml:lang="cs">SITE command ${command} failed: ${replyString}</value>
+        <value xml:lang="de">SITE command ${command} fehlgeschlagen: ${replyString}</value>
         <value xml:lang="en">SITE command ${command} failed: ${replyString}</value>
         <value xml:lang="es">Ha fallado el comando ${command}: ${replyString}</value>
         <value xml:lang="fr">La commande ${command} a échoué sur le site distant : ${replyString}</value>
@@ -5220,12 +5240,12 @@
         <value xml:lang="zh-TW">站台指令執行 ${command} 時失敗:${replyString}</value>
     </property>
     <property key="CommonFunctionalityInTestingWarning">
-        <value xml:lang="en">Warning: This functionality is currently in testing. Please backup any important data before attempting to use.</value>
         <value xml:lang="de">Warnung: Diese Funktion wird gerade getestet. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
+        <value xml:lang="en">Warning: This functionality is currently in testing. Please backup any important data before attempting to use.</value>
     </property>
     <property key="CommonFunctionalityWorkInProgressWarning">
-        <value xml:lang="en">Warning: This functionality is a Work-In-Progress. Please backup any important data before attempting to use.</value>
         <value xml:lang="de">Warnung: Diese Funktionalität ist ein Work-In-Progress. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
+        <value xml:lang="en">Warning: This functionality is a Work-In-Progress. Please backup any important data before attempting to use.</value>
     </property>
     <property key="CommonGenericPermissionError">
         <value xml:lang="ar">خطأ في نظام الحماية: لتشغيل ${resourceDescription} يجب أن يكون لديك أحد الصلاحيات التالية: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
@@ -5253,6 +5273,7 @@
     <property key="CommonGenericServiceErrorMessage">
         <value xml:lang="ar">خطأ في تشغيل الخدمة</value>
         <value xml:lang="cs">Chyba při spouštění služby</value>
+        <value xml:lang="de">Fehler beim Ausführen des Service</value>
         <value xml:lang="en">Error while executing service</value>
         <value xml:lang="es">Error ejecutando el servicio</value>
         <value xml:lang="fr">Erreur lors de l'exécution du service</value>
@@ -5266,6 +5287,7 @@
     <property key="CommonGenericServiceSuccessMessage">
         <value xml:lang="ar">تم تشغيل الخدمة بنجاح</value>
         <value xml:lang="cs">Služba úspěšně spuštěna</value>
+        <value xml:lang="de">Service erfolgreich ausgeführt</value>
         <value xml:lang="en">Service executed successfully</value>
         <value xml:lang="es">Servicio ejecutado correctamente</value>
         <value xml:lang="fr">Service exécuté avec succès</value>
@@ -5296,6 +5318,7 @@
     <property key="CommonGeoAbbr">
         <value xml:lang="ar">إختصار</value>
         <value xml:lang="cs">Zkratka</value>
+        <value xml:lang="de">Abkürzung</value>
         <value xml:lang="en">Abbreviation</value>
         <value xml:lang="es">Abreviación</value>
         <value xml:lang="fr">Abbréviation</value>
@@ -5602,6 +5625,7 @@
         <value xml:lang="zh-TW">群組</value>
     </property>
     <property key="CommonHeader">
+        <value xml:lang="de">Header</value>
         <value xml:lang="en">Header</value>
         <value xml:lang="zh-TW">表頭</value>
     </property>

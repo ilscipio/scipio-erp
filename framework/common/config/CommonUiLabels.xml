@@ -2397,11 +2397,13 @@
         <value xml:lang="zh-TW">複製</value>
     </property>
     <property key="CommonContributor">
+        <value xml:lang="de">Beiträger</value>
         <value xml:lang="en">Contributor</value>
     </property>
     <property key="CommonCopyright">
         <value xml:lang="ar">حقوق الطبع</value>
         <value xml:lang="cs">Copyright</value>
+        <value xml:lang="de">Copyright</value>
         <value xml:lang="en">Copyright</value>
         <value xml:lang="fr">Droit d'auteur</value>
         <value xml:lang="hi-IN">कॉपीराइट</value>
@@ -2564,6 +2566,7 @@
         <value xml:lang="zh-TW">縣城</value>
     </property>
     <property key="CommonCost">
+        <value xml:lang="de">Kosten</value>
         <value xml:lang="en">Cost</value>
         <value xml:lang="fr">Coût</value>
         <value xml:lang="nl">Kosten</value>
@@ -2750,6 +2753,7 @@
     <property key="CommonDashboard">
         <value xml:lang="ar">لوحة التحكم</value>
         <value xml:lang="cs">Řídící panel</value>
+        <value xml:lang="de">Dashboard</value>
         <value xml:lang="en">Dashboard</value>
         <value xml:lang="es">Panel de control</value>
         <value xml:lang="fr">Tableau de bord</value>
@@ -2879,6 +2883,7 @@
         <value xml:lang="zh-TW">日期</value>
     </property>
     <property key="CommonDateTime">
+        <value xml:lang="de">Datum - Uhrzeit</value>
         <value xml:lang="en">Date - time</value>
         <value xml:lang="nl">Datum - tijd</value>
     </property>
@@ -2925,6 +2930,7 @@
     <property key="CommonDeactivate">
         <value xml:lang="ar">إبطال وتعيين تاريخ الإنتهاء للوقت الحالي</value>
         <value xml:lang="cs">Deaktivovat, nastavte od data do teď</value>
+        <value xml:lang="de">Zum Deaktivieren, setzen Sie das Bis-Datum (thruDate) auf Jetzt (Now)</value>
         <value xml:lang="en">Deactivate, set thruDate to Now</value>
         <value xml:lang="es">Desactivar, establecer fecha actual como fecha final</value>
         <value xml:lang="fr">Désactiver, mettre la date du jour comme date de fin</value>
@@ -3004,12 +3010,14 @@
         <value xml:lang="zh-TW">預設組織機構團體代號</value>
     </property>
     <property key="CommonDefaultScreen">
+        <value xml:lang="de">Standard Screen</value>
         <value xml:lang="en">Default Screen</value>
         <value xml:lang="fr">Écran par défault</value>
     </property>
     <property key="CommonDeferred">
         <value xml:lang="ar">مؤجل</value>
         <value xml:lang="cs">Odložený</value>
+        <value xml:lang="de">Ausgesetzt</value>
         <value xml:lang="en">Deferred</value>
         <value xml:lang="fr">Différé</value>
         <value xml:lang="ja">延期</value>
@@ -3062,6 +3070,7 @@
     <property key="CommonDeleteColumn">
         <value xml:lang="ar">حذف عمود</value>
         <value xml:lang="cs">Smazat sloupec</value>
+        <value xml:lang="de">Spalte löschen</value>
         <value xml:lang="en">Delete Column</value>
         <value xml:lang="es">Eliminar columna</value>
         <value xml:lang="fr">Supprimer la colonne</value>
@@ -3076,6 +3085,7 @@
     <property key="CommonDeleteThisColumn">
         <value xml:lang="ar">حذف هذا العمود</value>
         <value xml:lang="cs">Smazat tento sloupec</value>
+        <value xml:lang="de">Diese Spalte löschen</value>
         <value xml:lang="en">Delete this column</value>
         <value xml:lang="es">Eliminar esta columna</value>
         <value xml:lang="fr">Supprimer cette colonne</value>
@@ -3090,6 +3100,7 @@
     <property key="CommonDeleteThisPortlet">
         <value xml:lang="ar">حذف هذا المدخل</value>
         <value xml:lang="cs">Smazat tento portlet</value>
+        <value xml:lang="de">Dieses Portlet löschen</value>
         <value xml:lang="en">Delete this portlet</value>
         <value xml:lang="es">Eliminar este portlet</value>
         <value xml:lang="fr">Supprimer cette portlet</value>
@@ -3195,6 +3206,7 @@
         <value xml:lang="en">Developer</value>
     </property>
     <property key="CommonDevelopment">
+        <value xml:lang="de">Entwicklung</value>
         <value xml:lang="en">Development</value>
         <value xml:lang="es">Desarrollo</value>
         <value xml:lang="fr">Développement</value>
@@ -3211,6 +3223,7 @@
     <property key="CommonDimension">
         <value xml:lang="ar">بعد</value>
         <value xml:lang="cs">Rozměr</value>
+        <value xml:lang="de">Abmaße</value>
         <value xml:lang="en">Dimension</value>
         <value xml:lang="es">Dimensión</value>
         <value xml:lang="fr">Dimension</value>
@@ -3338,6 +3351,7 @@
         <value xml:lang="zh-TW">已下載.</value>
     </property>
     <property key="CommonDue">
+        <value xml:lang="de">Lifertermin</value>
         <value xml:lang="en">Due</value>
     </property>
     <property key="CommonDuplicate">

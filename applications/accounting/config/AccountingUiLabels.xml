@@ -9957,7 +9957,7 @@
         <value xml:lang="zh-TW">新建帳單帳戶</value>
     </property>
     <property key="AccountingNewCustomTimePeriod">
-        <value xml:lang="en">Neue Zeitperiode</value>        
+        <value xml:lang="de">Neue Zeitperiode</value>
         <value xml:lang="en">New Custom Time Period</value>
     </property>
     <property key="AccountingNewFixedAsset">
@@ -11431,6 +11431,7 @@
         <value xml:lang="zh-TW">團體必須是一個單位組織(在團體角色中設置)</value>
     </property>
     <property key="AccountingPartyName">
+        <value xml:lang="de">Party Name</value>
         <value xml:lang="en">Party Name</value>
     </property>
     <property key="AccountingPartyRoleAdd">
@@ -12228,6 +12229,7 @@
         <value xml:lang="zh-TW">支付群組</value>
     </property>
     <property key="AccountingPaymentGroupHeader">
+        <value xml:lang="de">Zahlungsgruppen Header</value>
         <value xml:lang="en">Payment Group Header</value>
     </property>
     <property key="AccountingPaymentGroupId">
@@ -12533,6 +12535,7 @@
         <value xml:lang="zh-TW">支付方法資訊</value>
     </property>
      <property key="AccountingPaymentMethodTypeMissing">
+        <value xml:lang="de">Zahlungsart fehlt</value>
         <value xml:lang="en">Payment method type is missing</value>
      </property>
     <property key="AccountingPaymentMethodTypeNotHandled">
@@ -13699,6 +13702,7 @@
         <value xml:lang="zh-TW">卡上字首</value>
     </property>
     <property key="AccountingPreparedBy">
+        <value xml:lang="de">Ausgearbeitet von</value>
         <value xml:lang="en">Prepared by</value>
     </property>
     <property key="AccountingPreviousBankReconciliation">
@@ -14092,6 +14096,7 @@
         <value xml:lang="zh-TW">稅率</value>
     </property>
     <property key="AccountingReceivedBy">
+        <value xml:lang="de">Empfangen von</value>
         <value xml:lang="en">Received by</value>
     </property>
     <property key="AccountingReceivePayment">
@@ -15968,14 +15973,17 @@
         <value xml:lang="zh-TW">現存數量合計</value>
     </property>
     <property key="AccountingTplInvoiceType">
+        <value xml:lang="de">Rechnungsvorlage</value>
         <value xml:lang="en">Template for invoice</value>
         <value xml:lang="fr">Modèle pour facture</value>
     </property>
     <property key="AccountingTplOrderType">
+        <value xml:lang="de">Bestellvorlage</value>
         <value xml:lang="en">Template for order</value>
         <value xml:lang="fr">Modèle pour commande</value>
     </property>
     <property key="AccountingTplQuoteType">
+        <value xml:lang="de">Angebotsvorlage</value>
         <value xml:lang="en">Template for quote</value>
         <value xml:lang="fr">Modèle pour devis</value>
     </property>
@@ -15994,6 +16002,7 @@
         <value xml:lang="zh-TW">交易已過帳</value>
     </property>
     <property key="AccountingTransactionHeader">
+        <value xml:lang="de">Transaktions- Header</value>
         <value xml:lang="en">Transaction Header</value>
         <value xml:lang="de">Allgemeine Transaktions-Info</value>
     </property>
@@ -17644,6 +17653,7 @@
         <value xml:lang="zh-TW">增加調查回應</value>
     </property>
     <property key="FormFieldTitle_agreementContentTypeId">
+        <value xml:lang="de">Vereinbarung Inhaltstyp ID</value>
         <value xml:lang="en">Agreement Content Type ID</value>
         <value xml:lang="fr">Type de contenu</value>
     </property>

@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="EcommerceAboutUs">
+        <value xml:lang="de">Über Uns</value>
         <value xml:lang="en">About Us</value>
         <value xml:lang="fr">A propos</value>
         <value xml:lang="ja">会社案内</value>
@@ -282,6 +283,7 @@
         <value xml:lang="zh-TW">調整</value>
     </property>
     <property key="EcommerceAffiliateCreatedSuccessfully">
+        <value xml:lang="de">Affiliate Eintrag erfolgreich erstellt.</value>
         <value xml:lang="en">Affiliate record successfully created.</value>
         <value xml:lang="it">Record affiliato creato con successo.</value>
         <value xml:lang="ja">アフェリエイトレコードが正しく作成されました。</value>
@@ -328,6 +330,7 @@
         <value xml:lang="zh-TW">文章資訊</value>
     </property>
     <property key="EcommerceAvailable">
+        <value xml:lang="de">Verfügbar:</value>
         <value xml:lang="en">Available:</value>
         <value xml:lang="fr">Disponible :</value>
         <value xml:lang="ja">有効</value>
@@ -337,6 +340,7 @@
     </property>
     <property key="EcommerceAssignItems">
         <value xml:lang="da">Tildel emne</value>
+        <value xml:lang="de">Artikel zuweisen</value>
         <value xml:lang="en">Assign Items</value>
         <value xml:lang="es">Asignar ítems</value>
         <value xml:lang="fr">Affecter les articles</value>
@@ -353,6 +357,7 @@
     </property>
     <property key="EcommerceBeSureToIncludeYourOrderNb">
         <value xml:lang="da">Husk at inkludere din ordre</value>
+        <value xml:lang="de">Vergewissern Sie sich, dass Sie ihre Bestellnr. angegeben haben</value>
         <value xml:lang="en">Be sure to include your order #</value>
         <value xml:lang="es">Asegurese de incluir la Orden #</value>
         <value xml:lang="fr">Soyez sûr(e) d'inclure votre n° de commande</value>
@@ -370,6 +375,7 @@
     </property>
     <property key="EcommerceBlogAddResponse">
         <value xml:lang="da">Tilføj et svar</value>
+        <value xml:lang="de">Einen Kommentar hinzufügen:</value>
         <value xml:lang="en">Add a response:</value>
         <value xml:lang="fr">Ajouter une réponse : </value>
         <value xml:lang="it">Aggiungi una risposta:</value>
@@ -382,6 +388,7 @@
     </property>
     <property key="EcommerceBlogAddResponseMessage">
         <value xml:lang="da">De skal være logget på for at tilføje et svar</value>
+        <value xml:lang="de">Sie müssen angemeldet sein, um einen Kommentar hinzuzufügen.</value>
         <value xml:lang="en">You must be logged in to add a response.</value>
         <value xml:lang="fr">Vous devez être connecté(e) pour pouvoir ajouter une réponse : </value>
         <value xml:lang="it">Devi essere autenticato per aggiungere una risposta.</value>
@@ -393,6 +400,7 @@
         <value xml:lang="zh-TW">你必須登入才能增加一個回應.</value>
     </property>
     <property key="EcommerceBlogAddCommentPermissionError">
+        <value xml:lang="de">Sie haben keine Berechtigung einen Kommentar hinzuzufügen.</value>
         <value xml:lang="en">You do not have permission to add comment.</value>
         <value xml:lang="ja">コメントを追加する権限がありません。</value>
         <value xml:lang="th">คุณไม่มีสิทธิ์ในการแสดงความคิดเห็น</value>
@@ -402,6 +410,7 @@
     </property>
     <property key="EcommerceBlogAddThread">
         <value xml:lang="da">Tilføj en tråd</value>
+        <value xml:lang="de">Neuen Thread hinzufügen:</value>
         <value xml:lang="en">Add a thread:</value>
         <value xml:lang="fr">Ajouter un fil de discussion : </value>
         <value xml:lang="it">Aggiungi una discussione:</value>
@@ -414,6 +423,7 @@
     </property>
     <property key="EcommerceBlogContentNotFound">
         <value xml:lang="da">Kan ikke finde blog indhold!</value>
+        <value xml:lang="de">Bloginhalte konnten nicht gefunden werden!</value>
         <value xml:lang="en">Unable to find Blog content!</value>
         <value xml:lang="fr">Impossible de trouver le contenu du blog !</value>
         <value xml:lang="it">Non è possibile trovare il contenuto Blog!</value>
@@ -426,6 +436,7 @@
     </property>
     <property key="EcommerceBlogEditComments">
         <value xml:lang="da">De skal være logget på for at kunne redigere kommentarer.</value>
+        <value xml:lang="de">Sie müssen angemeldet sein um Kommentare zu editieren.</value>
         <value xml:lang="en">You must be logged in in order to edit comments.</value>
         <value xml:lang="fr">Vous devez être connecté(e) pour pouvoir modifier les commentaires.</value>
         <value xml:lang="it">Devi essere autenticato per poter aggiornare un commento.</value>
@@ -438,6 +449,7 @@
     </property>
     <property key="EcommerceBlogFullMessage">
         <value xml:lang="da">Fuld besked</value>
+        <value xml:lang="de">Ganze Nachricht</value>
         <value xml:lang="en">Full message</value>
         <value xml:lang="fr">Message complet</value>
         <value xml:lang="it">Messaggio completo</value>
@@ -450,6 +462,7 @@
     </property>
     <property key="EcommerceBlogLatestResponses">
         <value xml:lang="da">Sidste svar</value>
+        <value xml:lang="de">Neuste Kommentare</value>
         <value xml:lang="en">Latest Responses</value>
         <value xml:lang="fr">Dernière réponse</value>
         <value xml:lang="it">Ultime risposte</value>
@@ -462,6 +475,7 @@
     </property>
     <property key="EcommerceBlogMessageTree">
         <value xml:lang="da">Besked træstruktur</value>
+        <value xml:lang="de">Nachrichtenübersicht</value>
         <value xml:lang="en">Message tree</value>
         <value xml:lang="fr">Arborescence de messages</value>
         <value xml:lang="it">Albero messaggi</value>
@@ -474,6 +488,7 @@
     </property>
     <property key="EcommerceBlogPostComments">
         <value xml:lang="da">De skal være logget på samt vise en publiceret meddelelse for at kunne tilføje kommentarer.</value>
+        <value xml:lang="de">Sie müssen angemeldet sein und einen publizierten Eintrag ansehen, um einen Kommentar abzugeben.</value>
         <value xml:lang="en">You must be logged in and viewing a published record in order to post comments.</value>
         <value xml:lang="fr">Vous devez être connecté(e) et entrain de visualiser un commentaire afinf de pouvoir envoyer les votres</value>
         <value xml:lang="it">Devi essere autenticato e visualizzare un record pubblicato per poter inviare un commento.</value>
@@ -486,6 +501,7 @@
     </property>
     <property key="EcommerceBlogPostedOn">
         <value xml:lang="da">Sendt til</value>
+        <value xml:lang="de">Veröffentlicht am</value>
         <value xml:lang="en">Posted on</value>
         <value xml:lang="fr">Envoyé le </value>
         <value xml:lang="it">Inviato il</value>
@@ -498,6 +514,7 @@
     </property>
     <property key="EcommerceBlogViewArticle">
         <value xml:lang="da">Vis blog artikel</value>
+        <value xml:lang="de">Blog Artikel ansehen</value>
         <value xml:lang="en">View Blog Article</value>
         <value xml:lang="fr">Voir l'article du blog</value>
         <value xml:lang="it">Mostra articolo blog</value>
@@ -510,6 +527,7 @@
     </property>
     <property key="EcommerceBronze">
         <value xml:lang="da">Bronze</value>
+        <value xml:lang="de">Bronze</value>
         <value xml:lang="en">Bronze</value>
         <value xml:lang="fr">Bronze</value>
         <value xml:lang="it">Bronzo</value>
@@ -542,6 +560,7 @@
         <value xml:lang="zh-TW">購物車有</value>
     </property>
     <property key="EcommerceCartToGoogleCheckout">
+        <value xml:lang="de">Google Checkout</value>
         <value xml:lang="en">Google Checkout</value>
         <value xml:lang="it">Checkout con Google Checkout</value>
         <value xml:lang="ja">Googleチェックアウト</value>
@@ -613,6 +632,7 @@
     </property>
     <property key="EcommerceChangeShippingOptions">
         <value xml:lang="da">Ret forsendelsesmuligheder</value>
+        <value xml:lang="de">Versandoptionen ändern</value>
         <value xml:lang="en">Change Shipping Options</value>
         <value xml:lang="es">Cambie las opciones de envío</value>
         <value xml:lang="fr">Changez les options d'expédition</value>

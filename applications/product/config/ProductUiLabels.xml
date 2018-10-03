@@ -12797,6 +12797,7 @@
         <value xml:lang="zh-TW">增加產品內容 (選擇內容識別, 輸入開始日期):</value>
     </property>
     <property key="ProductAddProductCostComponentCalc">
+        <value xml:lang="de">Produktkosten-Komponentenberechnung hinzufügen</value>
         <value xml:lang="en">Add Product Cost Component Calc</value>
     </property>
     <property key="ProductAddProductFeatureFromCategory">
@@ -12903,6 +12904,7 @@
         <value xml:lang="zh-TW">在這個分類中使用預設數量把產品放入購物車</value>
     </property>
     <property key="ProductAddProductToPack">
+        <value xml:lang="de">Produkt zum Paket hinzufügen</value>
         <value xml:lang="en">Add Product To Package</value>
     </property>
     <property key="ProductAddPromoCategory">
@@ -13191,6 +13193,7 @@
         <value xml:lang="zh-TW">合約</value>
     </property>
     <property key="ProductAgreementUse">
+        <value xml:lang="de">Produktverwendungsvereinbarung</value>
         <value xml:lang="en">Product agreement use</value>
         <value xml:lang="fr">Accord produit utilisé</value>
         <value xml:lang="nl">Contractgebruik</value>
@@ -13594,6 +13597,7 @@
         <value xml:lang="zh-TW">通常應該在送貨前核准</value>
     </property>
     <property key="ProductAqt">
+        <value xml:lang="de">Absolute Verfügbarkeit</value>
         <value xml:lang="en">AQT</value>
     </property>
     <property key="ProductArea">
@@ -14511,14 +14515,16 @@
         <value xml:lang="zh-TW">型錄管理首頁</value>
     </property>
     <property key="ProductCatalogAndStoreAssocRemoved">
+        <value xml:lang="de">Katalog und Store Verknüpfung erfolgreich entfernt.</value>
         <value xml:lang="en">Catalog and store association successfully removed.</value>
-        <value xml:lang="de">Katalog und Speichervereinigung erfolgreich entfernt.</value>
         <value xml:lang="fr">L'association de catalogue et de magasin a été supprimée avec succès.</value>
     </property>
     <property key="ProductCatalogCategories">
+        <value xml:lang="de">Katalog Kategorien</value>
         <value xml:lang="en">Catalog Categories</value>
     </property>
     <property key="ProductCatalogCategoryList">
+        <value xml:lang="de">Katalog Kategorie Liste</value>
         <value xml:lang="en">Catalog Category List</value>
     </property>
     <property key="ProductCatalogCategoryType">
@@ -14660,9 +14666,11 @@
         <value xml:lang="zh-TW">安全錯誤:要執行 ${resourceDescription},你必須具有 CATALOG_DELETE 或 CATALOG_ADMIN 許可權</value>
     </property>
     <property key="ProductCatalogParties">
+        <value xml:lang="de">Katalog Parties</value>
         <value xml:lang="en">Catalog Parties</value>
     </property>
     <property key="ProductCatalogPartyList">
+        <value xml:lang="de">Katalog Nutzer Liste</value>
         <value xml:lang="en">Catalog User List</value>
     </property>
     <property key="ProductCatalogSeoCreate">
@@ -14676,14 +14684,16 @@
         <value xml:lang="zh-TW">新建搜尋引擎優化分類/產品</value>
     </property>
     <property key="ProductCatalogStoreAssocRemoved">
+        <value xml:lang="de">Katalogzuordnung wurde erfolgreich aus dem Store entfernt.</value>
         <value xml:lang="en">Catalog association successfully removed from store.</value>
-        <value xml:lang="de">Katalogzuordnung wurde erfolgreich aus dem Speicher entfernt.</value>
         <value xml:lang="fr">Association catalogue supprimée avec succès du magasin.</value>
     </property>
     <property key="ProductCatalogStoreList">
+        <value xml:lang="de">Katalog Store Liste</value>
         <value xml:lang="en">Catalog Store List</value>
     </property>
     <property key="ProductCatalogStores">
+        <value xml:lang="de">Katalog Stores</value>
         <value xml:lang="en">Catalog Stores</value>
     </property>
     <property key="ProductCatalogUpdatePermissionError">
@@ -14775,9 +14785,11 @@
         <value xml:lang="zh-TW">分類</value>
     </property>
     <property key="ProductCategoryAssociations">
+        <value xml:lang="de">Kategorie Verknüpfungen</value>
         <value xml:lang="en">Category Associations</value>
     </property>
     <property key="ProductCategoryAttributeList">
+        <value xml:lang="de">Kategorie Attribute Liste</value>
         <value xml:lang="en">Category Attribute List</value>
     </property>
     <property key="ProductCategoryAttributes">
@@ -14794,6 +14806,7 @@
         <value xml:lang="zh-TW">分類屬性</value>
     </property>
     <property key="ProductCategoryChildCategoryList">
+        <value xml:lang="de">Child Kategorien Liste</value>
         <value xml:lang="en">Child Category List</value>
     </property>
     <property key="ProductCategoryContent">
@@ -14812,6 +14825,7 @@
         <value xml:lang="zh-TW">內容</value>
     </property>
     <property key="ProductCategoryContentList">
+        <value xml:lang="de">Kategorie Inhalt Liste</value>
         <value xml:lang="en">Category Content List</value>
     </property>
     <property key="ProductCategoryDescription">
@@ -14826,6 +14840,7 @@
         <value xml:lang="zh-TW">分類描述</value>
     </property>
     <property key="ProductCategoryFeatures">
+        <value xml:lang="de">Kategorie Features</value>
         <value xml:lang="en">Category Features</value>
     </property>
     <property key="ProductCategoryId">
@@ -14844,9 +14859,11 @@
         <value xml:lang="zh-TW">分類識別</value>
     </property>
     <property key="ProductCategoryImage">
+        <value xml:lang="de">Kategorie Bild</value>
         <value xml:lang="en">Category Image</value>
     </property>
     <property key="ProductCategoryImageType">
+        <value xml:lang="de">Kategorie Bildtyp</value>
         <value xml:lang="en">Category Image Type</value>
     </property>
     <property key="ProductCategoryImageUrl">
@@ -14879,6 +14896,7 @@
         <value xml:lang="zh-TW">連結</value>
     </property>
     <property key="ProductCategoryList">
+        <value xml:lang="de">Produkt Kategorie Liste</value>
         <value xml:lang="en">Product Category List</value>
     </property>
     <property key="ProductCategoryMembers">

@@ -150,6 +150,7 @@
     <property key="CatalogComponentDescription">
         <value xml:lang="ar">إدارة كتالوج المنتجات, الفئات, المنتجات, أحكام التسعير, الترويج, متجر المنتجات</value>
         <value xml:lang="cs">Správa katalogu produktů, Kategorií, Produktů, Cenových pravidel, Akcí, Obchodu</value>
+        <value xml:lang="de">Produktkatalogverwaltung, Kategorien, Produkte, Preisregeln, Promotionen/Aktionen, Product Stores</value>
         <value xml:lang="en">Product Catalog management, Categories, Product, Price rules, Promotions, Product Store</value>
         <value xml:lang="fr">Gestion des catalogues, Catégories, Articles, Promotions, Règles de prix, Centres de profit </value>
         <value xml:lang="ja">製品カタログ管理、カテゴリ、製品、価格ルール、プロモーション、製品店舗</value>
@@ -161,6 +162,7 @@
     <property key="CommonAbort">
         <value xml:lang="ar">إلغاء</value>
         <value xml:lang="cs">Zrušit</value>
+        <value xml:lang="de">Abbrechen</value>
         <value xml:lang="en">Abort</value>
         <value xml:lang="es">Cancelar</value>
         <value xml:lang="fr">Abandonner</value>
@@ -192,6 +194,7 @@
         <value xml:lang="zh-TW">已接受</value>
     </property>
     <property key="CommonAccount">
+        <value xml:lang="de">Konto</value>
         <value xml:lang="en">Account</value>
     </property>
     <property key="CommonActions">
@@ -311,6 +314,7 @@
     <property key="CommonAddAColumnToThisPortalPage">
         <value xml:lang="ar">إضافة عمود جديد لهذه البوابة</value>
         <value xml:lang="cs">Přidání nového sloupce do portálu</value>
+        <value xml:lang="de">Neue Spalte zum Portal hinzufügen</value>
         <value xml:lang="en">Add a new column to this portal</value>
         <value xml:lang="es">Añadir nueva columna a este portal</value>
         <value xml:lang="fr">Ajouter une nouvelle colonne à ce portail</value>
@@ -325,6 +329,7 @@
     <property key="CommonAddAPortlet">
         <value xml:lang="ar">إضافة مدخل</value>
         <value xml:lang="cs">Přidat portlet...</value>
+        <value xml:lang="de">Ein Portlet hinzufügen...</value>
         <value xml:lang="en">Add A Portlet...</value>
         <value xml:lang="es">Añadir un portlet...</value>
         <value xml:lang="fr">Ajouter un portlet...</value>
@@ -341,6 +346,7 @@
     <property key="CommonAddColumn">
         <value xml:lang="ar">إضافة عمود</value>
         <value xml:lang="cs">Přidat sloupec</value>
+        <value xml:lang="de">Spalte hinzufügen</value>
         <value xml:lang="en">Add Column</value>
         <value xml:lang="es">Añadir columna</value>
         <value xml:lang="fr">Ajouter une colonne</value>
@@ -397,19 +403,23 @@
         <value xml:lang="zh-TW">新增識別</value>
     </property>
     <property key="CommonAddition">
+        <value xml:lang="de">Ergänzung</value>
         <value xml:lang="en">Addition</value>
         <value xml:lang="nl">Toevoeging</value>
     </property>
     <property key="CommonAdditions">
+        <value xml:lang="de">Ergänzungen</value>
         <value xml:lang="en">Additions</value>
         <value xml:lang="nl">Toevoegingen</value>
     </property>
     <property key="CommonAdjustment">
+        <value xml:lang="de">Anpassung</value>
         <value xml:lang="en">Adjustment</value>
         <value xml:lang="nl">Aanpassing</value>
         <value xml:lang="zh">调整</value>
     </property>
     <property key="CommonAdjustments">
+        <value xml:lang="de">Anpassungen</value>
         <value xml:lang="en">Adjustments</value>
         <value xml:lang="nl">Aanpassingen</value>
         <value xml:lang="zh">调整</value>
@@ -438,6 +448,7 @@
     <property key="CommonAddPortletToPage">
         <value xml:lang="ar">إضافة مدخل الى البوابة</value>
         <value xml:lang="cs">Přidat portlet do stránky portálu</value>
+        <value xml:lang="de">Ein portlet zur Portalseite hinzufügen</value>
         <value xml:lang="en">Add a portlet to portal page</value>
         <value xml:lang="es">Añadir un portlet a la página</value>
         <value xml:lang="fr">Ajouter une portlet à la page</value>
@@ -579,6 +590,7 @@
     <property key="CommonAdvancedFeatures">
         <value xml:lang="ar">مميزات متقدمة</value>
         <value xml:lang="cs">Pokročilé možnosti</value>
+        <value xml:lang="de">Erweiterte Funktionen</value>
         <value xml:lang="en">Advanced Features</value>
         <value xml:lang="es">Características avanzadas</value>
         <value xml:lang="fr">Caractéristiques avancées</value>
@@ -934,6 +946,7 @@
         <value xml:lang="zh-TW">套用</value>
     </property>
     <property key="CommonApprove">
+        <value xml:lang="de">Annehmen</value>
         <value xml:lang="en">Approve</value>
         <value xml:lang="nl">Goedkeuren</value>
     </property>
@@ -998,6 +1011,7 @@
         <value xml:lang="zh-TW">地區</value>
     </property>
     <property key="CommonSurfaceArea">
+        <value xml:lang="de">Oberfläche</value>
         <value xml:lang="en">Surface Area</value>
         <value xml:lang="nl">Oppervlakte</value>
     </property>
@@ -1022,10 +1036,12 @@
         <value xml:lang="zh-TW">地區代碼</value>
     </property>
     <property key="CommonAs">
+        <value xml:lang="de">Als</value>
         <value xml:lang="en">As</value>
         <value xml:lang="nl">Als</value>
     </property>
     <property key="CommonAsk">
+        <value xml:lang="de">Frage Sie, falls Sie diese Nachricht nicht verstehen</value>
         <value xml:lang="en">Ask if you don't understand this message</value>
         <value xml:lang="fr">Demandez si vous ne comprenez pas ce message</value>
     </property>
@@ -1176,6 +1192,7 @@
     <property key="CommonAuthenticate">
         <value xml:lang="ar">توثيق</value>
         <value xml:lang="cs">Autentikovat</value>
+        <value xml:lang="de">Authentifizieren</value>
         <value xml:lang="en">Authenticate</value>
         <value xml:lang="es">Autentificar</value>
         <value xml:lang="fr">Authentifier</value>
@@ -1187,6 +1204,7 @@
     <property key="CommonAuthorise">
         <value xml:lang="ar">تفويض</value>
         <value xml:lang="cs">Autorizovat</value>
+        <value xml:lang="de">Autorisieren</value>
         <value xml:lang="en">Authorise</value>
         <value xml:lang="es">Autorizar</value>
         <value xml:lang="fr">Autoriser</value>
@@ -1199,6 +1217,7 @@
     <property key="CommonAutoAssignedId">
         <value xml:lang="ar">الرقم التسلسلي - يعين تلقائيا إذا ما ترك فارغا</value>
         <value xml:lang="cs">Unikátní ID - automaticky přiřazeno pokud je prázdné</value>
+        <value xml:lang="de">Unique ID - automatisch erzeugt falls leer</value>
         <value xml:lang="en">Unique ID - auto-assigned if blank</value>
         <value xml:lang="es">Código único - asignado automáticamente si se deja en blanco</value>
         <value xml:lang="fr">Réf. unique - générée automatiquement si vide</value>
@@ -1234,6 +1253,7 @@
     <property key="CommonAvailablePortlets">
         <value xml:lang="ar">المداخل المتوفرة</value>
         <value xml:lang="cs">Dostupné portlety</value>
+        <value xml:lang="de">Verfügbare Portlets</value>
         <value xml:lang="en">Available Portlets</value>
         <value xml:lang="es">Portlets disponibles</value>
         <value xml:lang="fr">Portlets disponibles</value>
@@ -1412,10 +1432,12 @@
         <value xml:lang="zh-TW">回報</value>
     </property>
     <property key="CommonBranch">
+        <value xml:lang="de">branch</value>
         <value xml:lang="en">branch</value>
         <value xml:lang="fr">branche</value>
     </property>
     <property key="CommonBuiltOn">
+        <value xml:lang="de">gebaut am</value>
         <value xml:lang="en">built on</value>
         <value xml:lang="fr">compilée le</value>
         <value xml:lang="zh">编译日期为</value>
@@ -1461,6 +1483,7 @@
     </property>
     <property key="CommonCDyneAddressError">
         <value xml:lang="cs">Vráceno AddressError=true ze služby CDyne ReturnCityState service; PSČ=${zipcode}</value>
+        <value xml:lang="de">AddressError=true wurde vom CDyne ReturnCityState service zurückgeliefert; zipcode=${zipcode}</value>
         <value xml:lang="en">Got AddressError=true from CDyne ReturnCityState service; zipcode=${zipcode}</value>
         <value xml:lang="es">Se obtuvo AddressError=true del servicio CDyne ReturnCityState; zipcode=${zipcode}</value>
         <value xml:lang="fr">Obtention d'AddressError=true depuis le service CDyne ReturnCityState; zipcode = ${zipcode}</value>
@@ -1472,6 +1495,7 @@
     </property>
     <property key="CommonCDyneCallingError">
         <value xml:lang="cs">Chyba volání služby CDyne na adrese ${serviceUrl}: ${errorString}</value>
+        <value xml:lang="de">Fehler beim Aufruf des CDyne service unter URL ${serviceUrl}: ${errorString}</value>
         <value xml:lang="en">Error calling CDyne service at URL ${serviceUrl}: ${errorString}</value>
         <value xml:lang="es">Error al llamar al servicio CDyne en la URL ${serviceUrl}: ${errorString}</value>
         <value xml:lang="fr">Erreur de l'appel du service CDyne sur l'adresse ${serviceUrl} : ${errorString}</value>
@@ -1483,6 +1507,7 @@
     </property>
     <property key="CommonCDyneParsingError">
         <value xml:lang="cs">Chyba zpracování výsledného XML z CDyne service z URL ${serviceUrl}: ${errorString}</value>
+        <value xml:lang="de">Fehler beim Parsen der XML Ergebnisse vom CDyne service unter URL ${serviceUrl}: ${errorString}</value>
         <value xml:lang="en">Error parsing XML result from CDyne service at URL ${serviceUrl}: ${errorString}</value>
         <value xml:lang="es">Error al analizar el XML devuelto por el servicio CDyne en la URL ${serviceUrl}: ${errorString}</value>
         <value xml:lang="fr">Erreur de lecture XML depuis le service CDyne sur l'adresse ${serviceUrl} : ${errorString}</value>
@@ -1494,6 +1519,7 @@
     </property>
     <property key="CommonCDyneServiceError">
         <value xml:lang="cs">Vráceno ServiceError=true z CDyne ReturnCityState service; PSČ=${zipcode}</value>
+        <value xml:lang="de">ServiceError=true wurde vom CDyne ReturnCityState service zurückgeliefert; zipcode=${zipcode}</value>
         <value xml:lang="en">Got ServiceError=true from CDyne ReturnCityState service; zipcode=${zipcode}</value>
         <value xml:lang="es">Se obtuvo ServiceError=true del servicio CDyne ReturnCityState; zipcode=${zipcode}</value>
         <value xml:lang="fr">Obtention de ServiceError=true depuis le service CDyne ReturnCityState; zipcode=${zipcode}</value>
@@ -1504,6 +1530,7 @@
         <value xml:lang="zh-TW">從CDyne的ReturnCityState服務得到 ServiceError=true 的錯誤;zipcode=${zipcode}</value>
     </property>
     <property key="CommonCalendar">
+        <value xml:lang="de">Kalender</value>
         <value xml:lang="en">Calendar</value>
     </property>
     <property key="CommonCancel">
@@ -1613,11 +1640,13 @@
         <value xml:lang="de">Der Datensatz ${recordName} kann nicht entfernt werden, da er im System noch Assoziationen zu untergeordneten Datensätzen enthält.</value>
     </property>
     <property key="CommonCapacity">
+        <value xml:lang="de">Kapazität</value>
         <value xml:lang="en">Capacity</value>
     </property>
     <property key="CommonCaptchaCode">
         <value xml:lang="ar">رمز كلمة التحقق</value>
         <value xml:lang="cs">Kód captcha</value>
+        <value xml:lang="de">Captcha Code</value>
         <value xml:lang="en">Captcha Code</value>
         <value xml:lang="es">Código captcha</value>
         <value xml:lang="fr">Code captcha</value>
@@ -1629,6 +1658,7 @@
         <value xml:lang="zh-TW">驗證碼</value>
     </property>
     <property key="CommonCategory">
+        <value xml:lang="de">Kategorie</value>
         <value xml:lang="en">Category</value>
     </property>
     <property key="CommonChange">
@@ -1652,6 +1682,7 @@
         <value xml:lang="zh-TW">修改</value>
     </property>
     <property key="CommonChangePassword">
+        <value xml:lang="de">Passwort ändern</value>
         <value xml:lang="en">Change Password</value>
         <value xml:lang="nl">Wachtwoord wijzigen</value>
     </property>
@@ -1776,6 +1807,7 @@
         <value xml:lang="zh-TW">你可以直接結帳而不需要新建一個帳號</value>
     </property>
     <property key="CommonChild">
+        <value xml:lang="de">Child</value>
         <value xml:lang="en">Child</value>
         <value xml:lang="nl">Kind</value>
     </property>
@@ -1962,6 +1994,7 @@
         <value xml:lang="zh-TW">關</value>
     </property>
     <property key="CommonCode">
+        <value xml:lang="de">Code</value>
         <value xml:lang="en">Code</value>
     </property>
     <property key="CommonCollapse">
@@ -2078,12 +2111,15 @@
         <value xml:lang="zh-TW">公司</value>
     </property>
     <property key="CommonCompanyNoLogo">
+        <value xml:lang="de">Kein Logo</value>
         <value xml:lang="en">No Logo</value>
     </property>
     <property key="CommonCompanySelected">
+        <value xml:lang="de">Ausgewählte Firma</value>
         <value xml:lang="en">Selected Company</value>
     </property>
     <property key="CommonCompanyUsage">
+        <value xml:lang="de">Klicken Sie auf einen Link, um eine Firma auszuwählen, und dann auf Fertig, um Ihre Auswahl zu bestätigene</value>
         <value xml:lang="en">Click on a link to select a company, and then on Done to validate your choice</value>
     </property>
     <property key="CommonCompleted">
@@ -2146,6 +2182,7 @@
     <property key="CommonConfirm">
         <value xml:lang="ar">هل تؤكد ؟</value>
         <value xml:lang="cs">Potvrzujete ?</value>
+        <value xml:lang="de">Bestätigen Sie die Eingabe?</value>
         <value xml:lang="en">Do you confirm?</value>
         <value xml:lang="es">¿Está seguro?</value>
         <value xml:lang="fr">Vous confirmez ?</value>
@@ -2161,7 +2198,7 @@
     <property key="CommonConfirmAdd">
         <value xml:lang="ar">هل تؤكد الإضافة ؟</value>
         <value xml:lang="cs">Potvrzujete přidání?</value>
-        <value xml:lang="de">BestÃ¤tigen</value>
+        <value xml:lang="de">Bestätigen</value>
         <value xml:lang="en">Do you confirm the addition?</value>
         <value xml:lang="es">Confirmar</value>
         <value xml:lang="fr">Confirmez-vous l'ajout ?</value>

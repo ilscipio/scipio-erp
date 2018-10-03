@@ -97,6 +97,7 @@
         <value xml:lang="zh-TW">新建產品特色類型</value>
     </property>
     <property key="CreateSalesAgreement">
+        <value xml:lang="de">Neue Verkaufsvereinbarung</value>
         <value xml:lang="en">Create Sales Agreement</value>
         <value xml:lang="nl">Contract aanmaken</value>
     </property>
@@ -460,9 +461,11 @@
         <value xml:lang="zh-TW">產品商店(ProductStore) ${productStore.productStoreId} 允許多個場所;無法使用快速送貨</value>
     </property>
     <property key="FacilityPackageContent">
+        <value xml:lang="de">Versandinhalt</value>
         <value xml:lang="en">Shipment Content</value>
     </property>
     <property key="FacilityPackageContents">
+        <value xml:lang="de">Versand Inhalte</value>
         <value xml:lang="en">Shipment Contents</value>
     </property>
     <property key="FacilityReceiveInventoryProduct">
@@ -546,6 +549,7 @@
         <value xml:lang="zh-TW">全部一次送貨, 或有貨即送？</value>
     </property>
     <property key="FacilityShipment">
+        <value xml:lang="de">Sendung/Lieferung</value>
         <value xml:lang="en">Shipment</value>
     </property>
     <property key="FacilityShipmentConfigProps">
@@ -785,6 +789,7 @@
         <value xml:lang="zh-TW">標籤圖片格式</value>
     </property>
     <property key="FacilityShipmentDhlLabelImageFormatPng">
+        <value xml:lang="de">PNG</value>
         <value xml:lang="en">PNG</value>
     </property>
     <property key="FacilityShipmentDhlMultiplePackagesNotSupported">
@@ -1247,9 +1252,11 @@
         <value xml:lang="zh-TW">標籤圖片類型必須是PDF或PNG</value>
     </property>
     <property key="FacilityShipmentFedexLabelImageTypePdf">
+        <value xml:lang="de">PDF</value>
         <value xml:lang="en">PDF</value>
     </property>
     <property key="FacilityShipmentFedexLabelImageTypePng">
+        <value xml:lang="de">PNG</value>
         <value xml:lang="en">PNG</value>
     </property>
     <property key="FacilityShipmentFedexMeterNumberAlreadyExists">
@@ -1780,6 +1787,7 @@
         <value xml:lang="zh-TW">對於出貨路徑分區(ShipmentRouteSegment),沒有找到出貨包裝路徑分區(ShipmentPackageRouteSegs)(例如,沒有包裹),出貨標識:${shipmentId}、出貨路徑分區標識:${shipmentRouteSegmentId}</value>
     </property>
     <property key="FacilityShipmentPackages">
+        <value xml:lang="de">Versandpakete</value>
         <value xml:lang="en">Shipment Packages</value>
     </property>
     <property key="FacilityShipmentRateNotAvailable">
@@ -3134,6 +3142,7 @@
         <value xml:lang="zh-TW">錯誤:快遞不是美國包裹,出貨路徑分區 ${shipmentRouteSegmentId}、出貨 ${shipmentId}</value>
     </property>
     <property key="FacilityShipmentUspsPriorityMailLabelOriginAddressMissing">
+        <value xml:lang="de">Es kann kein USPS Priority Mail-International-Label angefordert werden: In ShipmentRouteSegment fehlen Telefon- oder Adressdetails des Versenders</value>
         <value xml:lang="en">Unable to request a USPS Priority Mail International Label: ShipmentRouteSegment is missing origin phone or address details</value>
         <value xml:lang="it">Non è possibile richiedere a USPS Etichetta Posta Internazionale: percorso spedizione è mancante del telefono di origine o dettagli sull'indirizzo</value>
         <value xml:lang="ja">USPS優先メール国際ラベルをリクエストできません: 発送経路セグメントの発送元電話または住所詳細が正しくありません</value>
@@ -3157,6 +3166,7 @@
         <value xml:lang="zh-TW">來自美國郵政國際快件服務的回應不完整:缺少或空的條碼代碼(BarcodeNumber)元素</value>
     </property>
     <property key="FacilityShipmentUspsPriorityMailLabelResponseIncompleteElementLabelImage">
+        <value xml:lang="de">Unvollständige Antwort vom USPS Priority Mail International-Dienst: fehlendes oder leeres LabelImage-Element</value>
         <value xml:lang="en">Incomplete response from the USPS Priority Mail International service: missing or empty LabelImage element</value>
         <value xml:lang="it">Risposta incompleta da USPS servizio Posta Internazionale: elemento LabelImage mancante o vuoto</value>
         <value xml:lang="ja">USPS優先メール国際サービスから不完全なレスポンス: ラベル画像要素がないか、正しくありません</value>
@@ -4698,6 +4708,7 @@
         <value xml:lang="zh-TW">預設序號</value>
     </property>
     <property key="FormFieldTitle_defaultTimeZoneString">
+        <value xml:lang="de">Standardzeitzone</value>
         <value xml:lang="en">Default Time Zone</value>
         <value xml:lang="fr">Fuseau horaire par défaut</value>
     </property>
@@ -8585,6 +8596,7 @@
         <value xml:lang="zh-TW">框</value>
     </property>
     <property key="ImageManagementForumCode">
+        <value xml:lang="de">Forum Code</value>
         <value xml:lang="en">Forum Code</value>
         <value xml:lang="ja">フォーラムコード</value>
         <value xml:lang="th">รหัสฟอรั่ม</value>
@@ -8611,6 +8623,7 @@
         <value xml:lang="zh-TW">圖片庫</value>
     </property>
     <property key="ImageManagementHTMLCode">
+        <value xml:lang="de">HTML Code</value>
         <value xml:lang="en">HTML Code</value>
         <value xml:lang="ja">HTMLコード</value>
         <value xml:lang="vi">Nội dung kiểu HTML</value>
@@ -8913,6 +8926,7 @@
         <value xml:lang="zh-TW">META描述(Description)標籤</value>
     </property>
     <property key="MetaKeywords">
+        <value xml:lang="de">Meta Keywords</value>
         <value xml:lang="en">Meta Keywords</value>
         <value xml:lang="ja">メタキーワード</value>
         <value xml:lang="vi">Từ khóa Thuộc tính</value>
@@ -8926,7 +8940,7 @@
         <value xml:lang="zh">制造商</value>
     </property>
     <property key="ManufacturerRef">
-        <value xml:lang="de">Los Ref.</value>
+        <value xml:lang="de">Posten Ref.</value>
         <value xml:lang="en">Lot Ref.</value>
         <value xml:lang="nl">Batch ref.</value>
         <value xml:lang="zh">批次参考</value>
@@ -10865,6 +10879,7 @@
         <value xml:lang="zh-TW">編輯網站分析類型</value>
     </property>
     <property key="PageTitleFacilityLocationGeoLocation">
+        <value xml:lang="de">Lagerort GeoLocation</value>
         <value xml:lang="en">Warehouse Location GeoLocation</value>
         <value xml:lang="fr">Géolocalisation de l'emplacement de stokage</value>
         <value xml:lang="it">Posizione Stabilimento GeoLocation</value>
@@ -10874,6 +10889,7 @@
         <value xml:lang="zh-TW">場所的地理位置</value>
     </property>
     <property key="PageTitleFacilityGeoLocation">
+        <value xml:lang="de">Lager GeoLocation</value>
         <value xml:lang="en">Warehouse Geo Location</value>
         <value xml:lang="fr">Géolocalisation de lieux de stockage</value>
         <value xml:lang="ja">拠点位置情報</value>
@@ -11102,6 +11118,7 @@
         <value xml:lang="zh-TW">尋找產品促銷代碼</value>
     </property>
     <property key="PageTitleFindProductStocktake">
+        <value xml:lang="de">Produkt-Inventarentnahme suchen</value>
         <value xml:lang="en">Find Product Stocktake</value>
         <value xml:lang="fr">Inventaire d'un article</value>
         <value xml:lang="it">Ricerca prodotti in stock</value>
@@ -11111,6 +11128,7 @@
         <value xml:lang="zh-TW">尋找產品存貨</value>
     </property>
     <property key="PageTitleFindProductStoreRoles">
+        <value xml:lang="de">ProductStore Rollen suchen</value>
         <value xml:lang="en">Find Store Roles</value>
         <value xml:lang="ja">製品店舗ロールを検索</value>
         <value xml:lang="vi">Tìm vai trò Cửa hàng</value>
@@ -11118,6 +11136,7 @@
         <value xml:lang="zh-TW">尋找產品商店角色</value>
     </property>
     <property key="PageTitleFindShipmentGatewayConfig">
+        <value xml:lang="de">Liferanten-API Konfiguration suchen</value>
         <value xml:lang="en">Find Shipment Gateway Config</value>
         <value xml:lang="it">Ricerca configurazione gateway spedizione</value>
         <value xml:lang="ja">発送ゲートウェイ設定を検索</value>
@@ -11126,6 +11145,7 @@
         <value xml:lang="zh-TW">尋找出貨閘道配置</value>
     </property>
     <property key="PageTitleFindShipmentGatewayConfigTypes">
+        <value xml:lang="de">Liferanten-API Konfigurationsarten suchen</value>
         <value xml:lang="en">Find Shipment Gateway Config Types</value>
         <value xml:lang="it">Ricerca tipi configurazione gateway spedizione</value>
         <value xml:lang="ja">発送ゲートウェイ設定種類を検索</value>
@@ -11484,12 +11504,15 @@
         <value xml:lang="zh-TW">尋找產品供應商是:</value>
     </property>
     <property key="PageTitleNewConfigItem">
+        <value xml:lang="de">Neues Konfigurationselement</value>
         <value xml:lang="en">New Config Item</value>
     </property>
     <property key="PageTitleNewSubscription">
+        <value xml:lang="de">Neues Abonnement</value>
         <value xml:lang="en">New Subscription</value>
     </property>    
     <property key="PageTitleNewFacilityGroup">
+        <value xml:lang="de">Neue Facility Group </value>
         <value xml:lang="en">New Facility Group</value>
     </property>
     <property key="PageTitleNewFacilityContactMech">
@@ -11521,6 +11544,7 @@
         <value xml:lang="zh-TW">編輯場所位置</value>
     </property>
     <property key="PageTitleNewProductCatalog">
+        <value xml:lang="de">Neuer Produktkatalog</value>
         <value xml:lang="en">New Product Catalog</value>
     </property>    
     <property key="PageTitlePackageShipmentScheduling">
@@ -12293,6 +12317,7 @@
         <value xml:lang="zh-TW">增加上級分類</value>
     </property>
     <property key="ProductAddCommunicationEvent">
+        <value xml:lang="de">Kommunikations- Event hinzufügen</value>
         <value xml:lang="en">Add Communication Event</value>
         <value xml:lang="it">Aggiungi evento comunicazione</value>
         <value xml:lang="ja">通信イベントを追加</value>
@@ -12384,16 +12409,19 @@
         <value xml:lang="zh-TW">增加電子郵件</value>
     </property>
     <property key="ProductAddExistingCatalog">
+        <value xml:lang="de">Bestehenden Katalog hinzufügen</value>
         <value xml:lang="en">Add Existing Catalog</value>
         <value xml:lang="de">Vorhandenen Katalog hinzufügen</value>
         <value xml:lang="fr">Ajouter un catalogue existant</value>
     </property>
     <property key="ProductAddExistingCategory">
+        <value xml:lang="de">Bestehende Kategorie hinzufügen</value>
         <value xml:lang="en">Add Existing Category</value>
         <value xml:lang="de">Vorhandene Kategorie hinzufügen</value>
         <value xml:lang="fr">Ajouter une catégorie existante</value>
     </property>
     <property key="ProductAddExistingContentInCategory">
+        <value xml:lang="de">Bestehenden Inhalt hinzufügen</value>
         <value xml:lang="en">Add Existing Content</value>
     </property>
     <property key="ProductAddExistingProduct">
@@ -12402,6 +12430,7 @@
         <value xml:lang="fr">Ajouter un produit existant</value>
     </property>
     <property key="ProductAddExistingSubCategory">
+        <value xml:lang="de">Bestehende Unterkategorie hinzufügen</value>
         <value xml:lang="en">Add Existing Sub-Category</value>
         <value xml:lang="de">Bestehende Unterkategorie hinzufügen</value>
         <value xml:lang="fr">Ajouter une sous-catégorie existante</value>

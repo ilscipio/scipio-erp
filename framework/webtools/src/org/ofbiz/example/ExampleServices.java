@@ -29,16 +29,20 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
 public class ExampleServices {
-    public static final String module = ExampleServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> sendExamplePushNotifications(DispatchContext dctx, Map<String, ? extends Object> context) {
         String exampleId = (String) context.get("exampleId");
         String message = (String) context.get("message");
-        Set<Session> clients = (Set<Session>) ExampleWebSockets.getClients();
+        Set<Session> clients = ExampleWebSockets.getClients();
         try {
             synchronized (clients) {
+                // SCIPIO: Give log info to show this is doing something
+                String fullMessage = message + ": " + exampleId;
+                Debug.logInfo("Sending example text message to " + clients.size() 
+                    + " clients: \"" + fullMessage + "\"", module);
                 for (Session client : clients) {
-                    client.getBasicRemote().sendText(message + ": " + exampleId);
+                    client.getBasicRemote().sendText(fullMessage);
                 }
             }
         } catch (IOException e) {

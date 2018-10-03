@@ -47,6 +47,9 @@ import org.ofbiz.base.util.UtilXml.LocalResolver;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.security.Security;
+import org.ofbiz.security.SecurityConfigurationException;
+import org.ofbiz.security.SecurityFactory;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.ControlServlet;
 import org.ofbiz.webapp.control.ServletUtil;
@@ -633,6 +636,53 @@ public final class WebAppUtil {
     public static String getServerId(Map<String, Object> context) {
         // FIXME: this is a made-up context variable, never set by ofbiz, placeholder...
         return (String) context.get("_serverId");
+    }
+
+    /**
+     * SCIPIO: Returns Security object for given session, best-effort.
+     * This will practically always return non-null unless there is a serious system error.
+     * <p>
+     * NOTE: This is ONLY for special implementations where only an HttpSession is
+     * available; you should NOT use this if you have a HttpServletRequest object
+     * or render context.
+     * <p>
+     * Added 2018-10-03.
+     */
+    public static Security getSecurity(HttpSession session) {
+        Security security = (Security) session.getAttribute("security");
+        if (security == null) {
+            Delegator delegator = (Delegator) session.getAttribute("delegator");
+            if (delegator == null) {
+                String delegatorName = (String) session.getAttribute("delegatorName");
+                if (delegatorName != null) {
+                    delegator = DelegatorFactory.getDelegator(delegatorName);
+                    if (delegator == null) {
+                        if ("default".equals(delegatorName)) {
+                            // This should never happen
+                            Debug.logError("Could not get Delegator for HttpSession delegatorName '" 
+                                    + delegatorName + "'; cannot get a Security object!", module);
+                            return null;
+                        } else {
+                            Debug.logError("Could not get Delegator for HttpSession delegatorName '" 
+                                + delegatorName + "'; using default delegator", module);
+                            delegator = DelegatorFactory.getDelegator("default");
+                        }
+                    }
+                } else {
+                    Debug.logWarning("No delegator or delegator name in HttpSession"
+                            + "; using default delegator", module);
+                    delegator = DelegatorFactory.getDelegator("default");
+                }
+            }
+            try {
+                security = SecurityFactory.getInstance(delegator);
+            } catch (SecurityConfigurationException e) {
+                Debug.logError(e, "Could not get Security object from SecurityFactory for delegator '" 
+                        + delegator.getDelegatorName() + "'", module);
+                return null;
+            } 
+        }
+        return security;
     }
 
     private WebAppUtil() {}

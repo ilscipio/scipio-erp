@@ -39,16 +39,26 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         }
         totalProductCount = (productCount < Integer.MAX_VALUE) ? (int) productCount : Integer.MAX_VALUE - 1;
         
-        partyGroupCount = from("PartyGroup").queryCount();
-        if (partyGroupCount) {
+        totalPartyGroupCount = from("PartyRole").where("roleTypeId", "INTERNAL_ORGANIZATIO").queryCount();
+        if (totalPartyGroupCount == 0) {
             throw new Exception("This service depends on party group data to be present. Please load party group data or generate party group demo data first and try again.");
         }
+        
+        totalPartyCustomerCount = from("PartyRole").where("roleTypeId", "CUSTOMER").queryCount();
+        if (totalPartyCustomerCount == 0) {
+            throw new Exception("This service depends on party customer data to be present. Please load party customer data or generate party customer demo data first and try again.");
+        }
         context.totalProductCount = totalProductCount;
+        context.totalPartyGroupCount = totalPartyCustomerCount;
+        context.totalPartyCustomerCount = totalPartyCustomerCount;
     }
 
     List prepareData(int index, DemoDataObject orderData) throws Exception {
         List toBeStored = new ArrayList();
         List orderItems = new ArrayList();
+        
+        EntityFindOptions efo = new EntityFindOptions();
+        efo.setMaxRows(1);
         
         DataGenerator generator = context.generator;
         
@@ -64,6 +74,7 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         String partyGroupId = context.partyGroupId ?: null;
         String partyCustomerId = context.partyCustomerId ?: null;
         
+        // Check if we got a valid ProductStore
         if (!productStoreId) {
             List productStoreCatalogs = EntityUtil.filterByDate(from("ProductStoreCatalog").where("prodCatalogId", prodCatalogId).queryList());
             if (productStoreCatalogs) {
@@ -72,15 +83,38 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         } else {
             if (!ProductStoreWorker.getProductStore(productStoreId))
                productStoreId = null;
-        }
-        
+        }        
         if (!productStoreId) {
             throw new Exception("Product store not found or invalid.");
+        }        
+        GenericValue webSite = from("WebSite").where("productStoreId", productStoreId).queryFirst();
+        if (!webSite) {
+            throw new Exception("Website not found or invalid.");
         }
+        
+        // If no partyGroupId is passed, pick one randomly
+        if (!partyGroupId) {
+            efo.setOffset(UtilRandom.getRandomInt(0, context.totalPartyGroupCount));
+            partyGroup = from("PartyRole").where("roleTypeId", "INTERNAL_ORGANIZATIO").query(efo);
+            if (partyGroup) {
+                partyGroupId = partyGroup.get("partyId");
+            }
+        }    
+        if (!partyGroupId)
+            throw new Exception("Party group not found or invalid.");
             
-        EntityFindOptions efo = new EntityFindOptions();
-        efo.setMaxRows(1);
-        for (int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++) {            
+        // If no partyCustomerId is passed, pick one randomly
+        if (!partyCustomerId) {
+            efo.setOffset(UtilRandom.getRandomInt(0, context.totalPartyCustomerCount));
+            partyCustomer = from("PartyRole").where("roleTypeId", "PLACING_CUSTOMER").query(efo);
+            if (partyCustomer) {
+                partyCustomerId = partyCustomer.get("partyId");
+            }
+        }
+        if (!partyCustomerId)
+            throw new Exception("Party customer not found or invalid.");
+       
+        for (int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++) {
             efo.setOffset(UtilRandom.getRandomInt(0, context.totalProductCount));
             products = from("Product").query(efo);
             if (products) {
@@ -112,8 +146,6 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
 
                 GenericValue orderItem = delegator.makeValue("OrderItem", fields);
                 orderItems.add(orderItem);
-            } else {
-                
             }
         }
 
@@ -123,11 +155,11 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         orderSalesChannelList = from("Enumeration").where(["enumTypeId" : "ORDER_SALES_CHANNEL"]).queryList();
         orderSalesChannel = orderSalesChannelList.get(UtilRandom.random(orderSalesChannelList));
 
-        Timestamp orderDate = UtilRandom.generateRandomTimest)amp(context);
+        Timestamp orderDate = UtilRandom.generateRandomTimestamp(context);
         String statusId = orderStatusTypes.get(UtilRandom.random(orderStatusTypes));
         Map fields = UtilMisc.toMap("orderId", orderId,"orderTypeId",orderTypeId,"orderName",orderName,"salesChannelEnumId",
                 orderSalesChannel.enumId,"orderDate",orderDate,"priority","2","entryDate",orderDate,"statusId",statusId,
-                "currencyUom","USD","webSiteId","OrderEntry","remainingSubTotal",remainingSubTotal,"grandTotal",grandTotal,
+                "currencyUom","USD","webSiteId",webSite.getString("webSiteId"),"remainingSubTotal",remainingSubTotal,"grandTotal",grandTotal,
                 "productStoreId", productStoreId);
 
         GenericValue orderHeader = delegator.makeValue("OrderHeader", fields);
@@ -135,26 +167,33 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         toBeStored.addAll(orderItems);
 
         if (orderHeader && orderItems) {
-            // Create orderRoles
-            fields = UtilMisc.toMap("orderId", orderId,"partyId","Company","roleTypeId","BILL_FROM_VENDOR");
+            // Create basic orderRoles, basically the ones we know for sure they exist
+            fields = UtilMisc.toMap("orderId", orderId,"partyId", partyGroupId, "roleTypeId", "INTERNAL_ORGANIZATIO");
             GenericValue orderRole1 = delegator.makeValue("OrderRole", fields);
             toBeStored.add(orderRole1);
-    
-            fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","BILL_TO_CUSTOMER");
+            fields = UtilMisc.toMap("orderId", orderId,"partyId", partyCustomerId,"roleTypeId","CUSTOMER");
             GenericValue orderRole2 = delegator.makeValue("OrderRole", fields);
             toBeStored.add(orderRole2);
     
-            fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","END_USER_CUSTOMER");
-            GenericValue orderRole3 = delegator.makeValue("OrderRole", fields);
-            toBeStored.add(orderRole3);
-    
-            fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","PLACING_CUSTOMER");
-            GenericValue orderRole4 = delegator.makeValue("OrderRole", fields);
-            toBeStored.add(orderRole4);
-    
-            fields = UtilMisc.toMap("orderId", orderId,"partyId","DemoCustomer","roleTypeId","SHIP_TO_CUSTOMER");
-            GenericValue orderRole5 = delegator.makeValue("OrderRole", fields);
-            toBeStored.add(orderRole5);
+            // Create advanced roles, if they exist (optional)
+            partyRoleEndUserCustomer = from("PartyRole").where("partyId", partyCustomerId, "roleTypeId", "END_USER_CUSTOMER").cache(true).queryOne();
+            if (!partyRoleEndUserCustomer) {
+                fields = UtilMisc.toMap("orderId", orderId,"partyId", partyCustomerId, "roleTypeId", "END_USER_CUSTOMER");
+                GenericValue orderRole3 = delegator.makeValue("OrderRole", fields);
+                toBeStored.add(orderRole3);
+            }    
+            partyRolePlacingCustomer = from("PartyRole").where("partyId", partyCustomerId, "roleTypeId", "PLACING_CUSTOMER").cache(true).queryOne();
+            if (!partyRolePlacingCustomer) {
+                fields = UtilMisc.toMap("orderId", orderId,"partyId", partyCustomerId, "roleTypeId", "PLACING_CUSTOMER");
+                GenericValue orderRole4 = delegator.makeValue("OrderRole", fields);
+                toBeStored.add(orderRole4);
+            }    
+            partyRoleShipToCustomer = from("PartyRole").where("partyId", partyCustomerId, "roleTypeId", "SHIP_TO_CUSTOMER").cache(true).queryOne();
+            if (!partyRoleShipToCustomer) {
+                fields = UtilMisc.toMap("orderId", orderId,"partyId", partyCustomerId, "roleTypeId", "SHIP_TO_CUSTOMER");
+                GenericValue orderRole5 = delegator.makeValue("OrderRole", fields);
+                toBeStored.add(orderRole5);
+            }
     
             // Create OrderStatus
             String orderStatusId = "GEN_"+delegator.getNextSeqId("demo-orderstatusid");

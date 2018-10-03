@@ -48,7 +48,7 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
                 productCategoryIds += getCatalogRelatedCategoryIds(prodCatalog);
             }
         }
-        int numRecords = getNumRecordsToBeGenerated();
+
         List<DemoDataProduct> generatedProducts = [];
         if (productCategoryIds) {
             String productCategoryTypeId = (context.productCategoryTypeId) ? context.productCategoryTypeId : "CATALOG_CATEGORY";

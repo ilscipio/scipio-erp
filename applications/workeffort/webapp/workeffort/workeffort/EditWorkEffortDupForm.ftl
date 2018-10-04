@@ -36,4 +36,11 @@ under the License.
                 ${uiLabelMap.ProductContent}&nbsp;<input type="checkbox" name="removeWorkEffortContents" value="Y"/>
                 ${uiLabelMap.WorkEffortNotes}&nbsp;<input type="checkbox" name="removeWorkEffortNotes" value="Y"/>
             </div>
+            <@field type="select" name="statusId" label=uiLabelMap.FormFieldTitle_statusId>
+                <option value=""></option>
+              <#list workEffortStatusList as weStatus>
+                <option value="${weStatus.statusId}"<#rt/>
+                    <#lt/><#if rawString(workEffort.currentStatusId!) == rawString(weStatus.statusId!)> selected="selected"</#if>>${weStatus.get("description", locale)!weStatus.statusId}</option>
+              </#list>
+            </@field>
         </form>

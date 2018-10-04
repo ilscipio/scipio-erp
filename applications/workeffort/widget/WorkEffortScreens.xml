@@ -120,11 +120,24 @@ under the License.
                                 </screenlet>
                             </fail-widgets>
                         </section>
-                        <screenlet title="${uiLabelMap.WorkEffortDuplicateWorkEffort}">
-                            <platform-specific>
-                                <html><html-template location="component://workeffort/webapp/workeffort/workeffort/EditWorkEffortDupForm.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
+                        <section><!-- SCIPIO: Added data prep -->
+                            <actions>
+                                <entity-one entity-name="StatusItem" value-field="workEffortStatus">
+                                    <field-map field-name="statusId" from-field="workEffort.currentStatusId"/>
+                                </entity-one>
+                                <entity-and entity-name="StatusItem" list="workEffortStatusList">
+                                    <field-map field-name="statusTypeId" from-field="workEffortStatus.statusTypeId"/>
+                                    <order-by field-name="sequenceId"/>
+                                </entity-and>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.WorkEffortDuplicateWorkEffort}">
+                                    <platform-specific>
+                                        <html><html-template location="component://workeffort/webapp/workeffort/workeffort/EditWorkEffortDupForm.ftl"/></html>
+                                    </platform-specific>
+                                </screenlet>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

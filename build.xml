@@ -1125,6 +1125,8 @@ under the License.
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
                         <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
+                        <!-- SCIPIO: Uncomment to specify a java.util.logging config for Tomcat (non-log4j)
+                        <jvmarg value="-Djava.util.logging.config.file=${ofbiz.home.dir}/framework/base/config/logging.properties"/>-->
                         <syspropertyset>
                             <propertyref prefix="scipio."/>
                         </syspropertyset>
@@ -1143,6 +1145,8 @@ under the License.
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
                         <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
+                        <!-- SCIPIO: Uncomment to specify a java.util.logging config for Tomcat (non-log4j)
+                        <jvmarg value="-Djava.util.logging.config.file=${ofbiz.home.dir}/framework/base/config/logging.properties"/>-->
                         <syspropertyset>
                             <propertyref prefix="scipio."/>
                         </syspropertyset>

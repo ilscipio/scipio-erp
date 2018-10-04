@@ -248,7 +248,7 @@ public class TrackingCodeEvents {
         int siteIdCookieAge = (60 * 60 * 24 * 365); // should this be configurable?
         String siteId = request.getParameter("siteId");
         if (UtilValidate.isNotEmpty(siteId)) {
-            String visitorSiteIdCookieName = "Ofbiz.TKCD.SiteId";
+            String visitorSiteIdCookieName = "Scipio.TKCD.SiteId";
             String visitorSiteId = null;
             // first try to get the current ID from the visitor cookie
             javax.servlet.http.Cookie[] cookies = request.getCookies();
@@ -263,7 +263,7 @@ public class TrackingCodeEvents {
 
             if (visitorSiteId == null || (visitorSiteId != null && !visitorSiteId.equals(siteId))) {
                 // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Ofbiz.TKCSiteId and timeout will be 60 * 60 * 24 * 365
-                Cookie siteIdCookie = new Cookie("Ofbiz.TKCD.SiteId" ,siteId);
+                Cookie siteIdCookie = new Cookie("Scipio.TKCD.SiteId" ,siteId);
                 siteIdCookie.setMaxAge(siteIdCookieAge);
                 siteIdCookie.setPath("/");
                 if (cookieDomain.length() > 0) siteIdCookie.setDomain(cookieDomain);
@@ -271,7 +271,7 @@ public class TrackingCodeEvents {
                 siteIdCookie.setHttpOnly(true);
                 response.addCookie(siteIdCookie);
                 // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Ofbiz.TKCSiteId and timeout will be 60 * 60 * 24 * 365
-                Cookie updatedTimeStampCookie = new Cookie("Ofbiz.TKCD.UpdatedTimeStamp" ,UtilDateTime.nowTimestamp().toString());
+                Cookie updatedTimeStampCookie = new Cookie("Scipio.TKCD.UpdatedTimeStamp" ,UtilDateTime.nowTimestamp().toString());
                 updatedTimeStampCookie.setMaxAge(siteIdCookieAge);
                 updatedTimeStampCookie.setPath("/");
                 if (cookieDomain.length() > 0) updatedTimeStampCookie.setDomain(cookieDomain);
@@ -455,12 +455,12 @@ public class TrackingCodeEvents {
             for (int i = 0; i < cookies.length; i++) {
                 String cookieName = cookies[i].getName();
                 // find the siteId cookie if it exists
-                if ("Ofbiz.TKCD.SiteId".equals(cookieName)) {
+                if ("Scipio.TKCD.SiteId".equals(cookieName)) {
                     siteId = cookies[i].getValue();
                 }
 
                 // find the referred timestamp cookie if it exists
-                if ("Ofbiz.TKCD.UpdatedTimeStamp".equals(cookieName)) {
+                if ("Scipio.TKCD.UpdatedTimeStamp".equals(cookieName)) {
                     String affiliateReferredTime = cookies[i].getValue();
                     if (affiliateReferredTime !=null && !affiliateReferredTime.equals("")) {
                         try {

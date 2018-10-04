@@ -43,10 +43,14 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 public class WorkEffortKeywordIndex {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static void indexKeywords(GenericValue workEffort) throws GenericEntityException {
-        if (workEffort == null) return;
+        if (workEffort == null) {
+            return;
+        }
 
         Delegator delegator = workEffort.getDelegator();
-        if (delegator == null) return;
+        if (delegator == null) {
+            return;
+        }
         String workEffortId = workEffort.getString("workEffortId");
         String separators = KeywordSearchUtil.getSeparators();
         String stopWordBagOr = KeywordSearchUtil.getStopWordBagOr();
@@ -116,7 +120,9 @@ public class WorkEffortKeywordIndex {
             }
         }
         if (toBeStored.size() > 0) {
-            if (Debug.verboseOn()) Debug.logVerbose("WorkEffortKeywordIndex indexKeywords Storing " + toBeStored.size() + " keywords for workEffortId " + workEffort.getString("workEffortId"), module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("WorkEffortKeywordIndex indexKeywords Storing " + toBeStored.size() + " keywords for workEffortId " + workEffort.getString("workEffortId"), module);
+            }
             delegator.storeAll(toBeStored);
         }
 
@@ -129,10 +135,8 @@ public class WorkEffortKeywordIndex {
             for (int i = 0; i < weight; i++) {
                 strings.add(contentText);
             }
-        } catch (IOException e1) {
-            Debug.logError(e1, "Error getting content text to index", module);
-        } catch (GeneralException e1) {
-            Debug.logError(e1, "Error getting content text to index", module);
+        } catch (IOException | GeneralException e) {
+            Debug.logError(e, "Error getting content text to index", module);
         }
     }
     public static void addWeightedKeywordSourceString(GenericValue value, String fieldName, List<String> strings) {

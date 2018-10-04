@@ -68,7 +68,7 @@ public class WorkEffortSearchSession {
         public static void addConstraint(WorkEffortSearchConstraint workEffortSearchConstraint, HttpSession session) {
             WorkEffortSearchOptions workEffortSearchOptions = getWorkEffortSearchOptions(session);
             if (workEffortSearchOptions.constraintList == null) {
-                workEffortSearchOptions.constraintList = new LinkedList<WorkEffortSearchConstraint>();
+                workEffortSearchOptions.constraintList = new LinkedList<>();
             }
             if (!workEffortSearchOptions.constraintList.contains(workEffortSearchConstraint)) {
                 workEffortSearchOptions.constraintList.add(workEffortSearchConstraint);
@@ -131,12 +131,14 @@ public class WorkEffortSearchSession {
 
         public List<String> searchGetConstraintStrings(boolean detailed, Delegator delegator, Locale locale) {
             List<WorkEffortSearchConstraint> workEffortSearchConstraintList = this.getConstraintList();
-            List<String> constraintStrings = new LinkedList<String>();
+            List<String> constraintStrings = new LinkedList<>();
             if (workEffortSearchConstraintList == null) {
                 return constraintStrings;
             }
             for (WorkEffortSearchConstraint workEffortSearchConstraint: workEffortSearchConstraintList) {
-                if (workEffortSearchConstraint == null) continue;
+                if (workEffortSearchConstraint == null) {
+                    continue;
+                }
                 String constraintString = workEffortSearchConstraint.prettyPrintConstraint(delegator, detailed, locale);
                 if (UtilValidate.isNotEmpty(constraintString)) {
                     constraintStrings.add(constraintString);
@@ -161,9 +163,8 @@ public class WorkEffortSearchSession {
         Boolean alreadyRun = (Boolean) request.getAttribute("processSearchParametersAlreadyRun");
         if (Boolean.TRUE.equals(alreadyRun)) {
             return;
-        } else {
-            request.setAttribute("processSearchParametersAlreadyRun", Boolean.TRUE);
         }
+        request.setAttribute("processSearchParametersAlreadyRun", Boolean.TRUE);
         HttpSession session = request.getSession();
         boolean constraintsChanged = false;
 
@@ -208,7 +209,7 @@ public class WorkEffortSearchSession {
 
 //      add a Product Set to the search
         if (UtilValidate.isNotEmpty(parameters.get("productId_1"))) {
-            List<String> productSet = new LinkedList<String>();
+            List<String> productSet = new LinkedList<>();
             productSet.add((String) parameters.get("productId_1"));
             if (UtilValidate.isNotEmpty(parameters.get("productId_2"))) {
                 productSet.add((String) parameters.get("productId_2"));
@@ -246,7 +247,7 @@ public class WorkEffortSearchSession {
         String sortAscending = (String) parameters.get("sortAscending");
         boolean ascending = !"N".equals(sortAscending);
         if (sortOrder != null) {
-            if (sortOrder.equals("SortKeywordRelevancy")) {
+            if ("SortKeywordRelevancy".equals(sortOrder)) {
                 searchSetSortOrder(new WorkEffortSearch.SortKeywordRelevancy(), session);
             } else if (sortOrder.startsWith("SortWorkEffortField:")) {
                 String fieldName = sortOrder.substring("SortWorkEffortField:".length());
@@ -291,7 +292,7 @@ public class WorkEffortSearchSession {
     public static List<WorkEffortSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<WorkEffortSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            optionsHistoryList = new LinkedList<WorkEffortSearchOptions>();
+            optionsHistoryList = new LinkedList<>();
             session.setAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
         }
         return optionsHistoryList;
@@ -305,7 +306,6 @@ public class WorkEffortSearchSession {
     public static String searchGetSortOrderString(boolean detailed, HttpServletRequest request) {
         Locale locale = UtilHttp.getLocale(request);
         ResultSortOrder resultSortOrder = WorkEffortSearchOptions.getResultSortOrder(request);
-        if (resultSortOrder == null) return "";
         return resultSortOrder.prettyPrintSortOrder(detailed, locale);
     }
     public static void checkSaveSearchOptionsHistory(HttpSession session) {

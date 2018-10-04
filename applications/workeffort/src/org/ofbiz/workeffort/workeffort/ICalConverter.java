@@ -36,6 +36,7 @@ import java.util.Set;
 
 import org.ofbiz.base.util.DateRange;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.TimeDuration;
 import org.ofbiz.base.util.UtilGenerics;
@@ -150,7 +151,7 @@ public class ICalConverter {
     }
 
     protected static ResponseProperties createWorkEffort(Component component, Map<String, Object> context) {
-        Map<String, Object> serviceMap = new HashMap<String, Object>();
+        Map<String, Object> serviceMap = new HashMap<>();
         setWorkEffortServiceMap(component, serviceMap);
         serviceMap.put("workEffortTypeId", "VTODO".equals(component.getName()) ? "TASK" : "EVENT");
         serviceMap.put("currentStatusId", "VTODO".equals(component.getName()) ? "CAL_NEEDS_ACTION" : "CAL_TENTATIVE");
@@ -310,7 +311,7 @@ public class ICalConverter {
         if (propertyName == null) {
             return null;
         }
-        Property property = (Property) propertyList.getProperty(propertyName); // SCIPIO: added cast (FIXME: use generics)
+        Property property = propertyList.getProperty(propertyName);
         if (property != null) {
             return property.getValue();
         }
@@ -438,7 +439,7 @@ public class ICalConverter {
         }
     }
 
-    protected static List<GenericValue> getRelatedWorkEfforts(GenericValue workEffort, Map<String, Object> context) throws GenericEntityException {
+    protected static List<GenericValue> getRelatedWorkEfforts(GenericValue workEffort, Map<String, Object> context) {
         Map<String, ? extends Object> serviceMap = UtilMisc.toMap("workEffortId", workEffort.getString("workEffortId"));
         Map<String, Object> resultMap = invokeService("getICalWorkEfforts", serviceMap, context);
         List<GenericValue> workEfforts = UtilGenerics.checkList(resultMap.get("workEfforts"), GenericValue.class);
@@ -463,7 +464,8 @@ public class ICalConverter {
 
     protected static Map<String, Object> invokeService(String serviceName, Map<String, ? extends Object> serviceMap, Map<String, Object> context) {
         LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
-        Map<String, Object> localMap = new HashMap<String, Object>();
+        Locale locale = (Locale) context.get("locale");
+        Map<String, Object> localMap = new HashMap<>();
         try {
             ModelService modelService = null;
             modelService = dispatcher.getDispatchContext().getModelService(serviceName);
@@ -476,9 +478,9 @@ public class ICalConverter {
                     localMap.put(modelParam.name, value);
                 }
             }
-        } catch (Exception e) {
-            String errMsg = "Error while creating service Map for service " + serviceName + ": ";
-            Debug.logError(e, errMsg, module);
+        } catch (GeneralException e) {
+            String errMsg = UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileCreatingServiceMapForService", UtilMisc.toMap("serviceName", serviceName), locale);
+            Debug.logError(e, UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileCreatingServiceMapForService", UtilMisc.toMap("serviceName", serviceName), Locale.ENGLISH), module); // SCIPIO: Fixed locale for log
             return ServiceUtil.returnError(errMsg + e);
         }
         if (context.get("userLogin") != null) {
@@ -486,10 +488,14 @@ public class ICalConverter {
         }
         localMap.put("locale", context.get("locale"));
         try {
-            return dispatcher.runSync(serviceName, localMap);
+            Map<String, Object> result = dispatcher.runSync(serviceName, localMap);
+            if (ServiceUtil.isError(result)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
+            return result;
         } catch (GenericServiceException e) {
-            String errMsg = "Error while invoking service " + serviceName + ": ";
-            Debug.logError(e, errMsg, module);
+            String errMsg = UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileInvokingService", UtilMisc.toMap("serviceName", serviceName), locale);
+            Debug.logError(e, UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileInvokingService", UtilMisc.toMap("serviceName", serviceName), Locale.ENGLISH), module); // SCIPIO: Fixed locale for log
             return ServiceUtil.returnError(errMsg + e);
         }
     }
@@ -513,11 +519,9 @@ public class ICalConverter {
             }
         }
         ParameterList parameterList = property.getParameters();
-        if (partyAssign != null) {
-            replaceParameter(parameterList, toXParameter(partyIdXParamName, partyAssign.getString("partyId")));
-            replaceParameter(parameterList, new Cn(makePartyName(partyAssign)));
-            replaceParameter(parameterList, toParticipationStatus(partyAssign.getString("assignmentStatusId")));
-        }
+        replaceParameter(parameterList, toXParameter(partyIdXParamName, partyAssign.getString("partyId")));
+        replaceParameter(parameterList, new Cn(makePartyName(partyAssign)));
+        replaceParameter(parameterList, toParticipationStatus(partyAssign.getString("assignmentStatusId")));
     }
 
     protected static void loadRelatedParties(List<GenericValue> relatedParties, PropertyList<Property> componentProps, Map<String, Object> context) {
@@ -562,7 +566,7 @@ public class ICalConverter {
         replaceProperty(componentProps, toLocation(workEffort.getString("locationDesc")));
         replaceProperty(componentProps, toStatus(workEffort.getString("currentStatusId")));
         replaceProperty(componentProps, toSummary(workEffort.getString("workEffortName")));
-        Property uid = (Property) componentProps.getProperty(Uid.UID); // SCIPIO: added cast (FIXME: use generics)
+        Property uid = componentProps.getProperty(Uid.UID);
         if (uid == null) {
             // Don't overwrite UIDs created by calendar clients
             replaceProperty(componentProps, toUid(workEffort.getString("workEffortId")));
@@ -631,7 +635,7 @@ public class ICalConverter {
         if (property == null) {
             return;
         }
-        Property existingProp = (Property) propertyList.getProperty(property.getName()); // SCIPIO: added cast (FIXME: use generics)
+        Property existingProp = propertyList.getProperty(property.getName());
         if (existingProp != null) {
             propertyList.remove(existingProp);
         }
@@ -725,7 +729,7 @@ public class ICalConverter {
         }
         boolean hasCreatePermission = hasPermission(workEffortId, "CREATE", context);
         List<GenericValue> workEfforts = getRelatedWorkEfforts(publishProperties, context);
-        Set<String> validWorkEfforts = new HashSet<String>();
+        Set<String> validWorkEfforts = new HashSet<>();
         if (UtilValidate.isNotEmpty(workEfforts)) {
             // Security issue: make sure only related work efforts get updated
             for (GenericValue workEffort : workEfforts) {
@@ -779,8 +783,8 @@ public class ICalConverter {
 
     protected static ResponseProperties storePartyAssignments(String workEffortId, Component component, Map<String, Object> context) {
         ResponseProperties responseProps = null;
-        Map<String, Object> serviceMap = new HashMap<String, Object>();
-        List<Property> partyList = new LinkedList<Property>();
+        Map<String, Object> serviceMap = new HashMap<>();
+        List<Property> partyList = new LinkedList<>();
         partyList.addAll(UtilGenerics.checkList(component.getProperties("ATTENDEE"), Property.class));
         partyList.addAll(UtilGenerics.checkList(component.getProperties("CONTACT"), Property.class));
         partyList.addAll(UtilGenerics.checkList(component.getProperties("ORGANIZER"), Property.class));
@@ -789,7 +793,7 @@ public class ICalConverter {
             if (partyId == null) {
                 serviceMap.clear();
                 String address = property.getValue();
-                if (address.toUpperCase().startsWith("MAILTO:")) {
+                if (address.toUpperCase(Locale.getDefault()).startsWith("MAILTO:")) {
                     address = address.substring(7);
                 }
                 serviceMap.put("address", address);
@@ -821,7 +825,7 @@ public class ICalConverter {
         return responseProps;
     }
 
-    protected static ResponseProperties storeWorkEffort(Component component, Map<String, Object> context) throws GenericEntityException, GenericServiceException {
+    protected static ResponseProperties storeWorkEffort(Component component, Map<String, Object> context) throws GenericEntityException {
         PropertyList<Property> propertyList = component.getProperties();
         String workEffortId = fromXProperty(propertyList, workEffortIdXPropName);
         Delegator delegator = (Delegator) context.get("delegator");
@@ -832,7 +836,7 @@ public class ICalConverter {
         if (!hasPermission(workEffortId, "UPDATE", context)) {
             return null;
         }
-        Map<String, Object> serviceMap = new HashMap<String, Object>();
+        Map<String, Object> serviceMap = new HashMap<>();
         serviceMap.put("workEffortId", workEffortId);
         setWorkEffortServiceMap(component, serviceMap);
         invokeService("updateWorkEffort", serviceMap, context);

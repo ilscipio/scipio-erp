@@ -29,10 +29,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -53,15 +53,18 @@ import org.ofbiz.webapp.webdav.ResponseHelper;
 import org.ofbiz.webapp.webdav.WebDavUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /** iCalendar worker class. This class handles the WebDAV requests and
  * delegates the calendar conversion tasks to <code>ICalConverter</code>.
  */
-public class ICalWorker {
+public final class ICalWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static class ResponseProperties {
+    private ICalWorker() {};
+
+    public static final class ResponseProperties {
         public final int statusCode;
         public final String statusMessage;
         public ResponseProperties(int statusCode, String statusMessage) {
@@ -70,8 +73,8 @@ public class ICalWorker {
         }
     }
 
-    protected static Map<String, Object> createConversionContext(HttpServletRequest request) {
-        Map<String, Object> context = new HashMap<String, Object>();
+    private static Map<String, Object> createConversionContext(HttpServletRequest request) {
+        Map<String, Object> context = new HashMap<>();
         Enumeration<String> attributeEnum = UtilGenerics.cast(request.getAttributeNames());
         while (attributeEnum.hasMoreElements()) {
             String attributeName = attributeEnum.nextElement();
@@ -127,19 +130,18 @@ public class ICalWorker {
         return new ResponseProperties(HttpServletResponse.SC_PARTIAL_CONTENT, statusMessage);
     }
 
-    protected static Date getLastModifiedDate(HttpServletRequest request) throws GenericEntityException {
+    private static Date getLastModifiedDate(HttpServletRequest request) throws GenericEntityException {
         String workEffortId = (String) request.getAttribute("workEffortId");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         GenericValue publishProperties = EntityQuery.use(delegator).from("WorkEffort").where("workEffortId", workEffortId).queryOne();
         GenericValue iCalData = publishProperties.getRelatedOne("WorkEffortIcalData", false);
         if (iCalData != null) {
             return iCalData.getTimestamp("lastUpdatedStamp");
-        } else {
-            return publishProperties.getTimestamp("lastUpdatedStamp");
         }
+        return publishProperties.getTimestamp("lastUpdatedStamp");
     }
 
-    public static void handleGetRequest(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws ServletException, IOException {
+    public static void handleGetRequest(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
         if (!isValidRequest(request, response)) {
             return;
         }
@@ -159,7 +161,7 @@ public class ICalWorker {
         writeResponse(responseProps, request, response, context);
     }
 
-    public static void handlePropFindRequest(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws ServletException, IOException {
+    public static void handlePropFindRequest(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
         if (!isValidRequest(request, response)) {
             return;
         }
@@ -173,8 +175,8 @@ public class ICalWorker {
             PropFindHelper helper = new PropFindHelper(requestDocument);
             if (!helper.isAllProp() && !helper.isPropName()) {
                 Document responseDocument = helper.getResponseDocument();
-                List<Element> supportedProps = new LinkedList<Element>();
-                List<Element> unSupportedProps = new LinkedList<Element>();
+                List<Element> supportedProps = new LinkedList<>();
+                List<Element> unSupportedProps = new LinkedList<>();
                 List<Element> propElements = helper.getFindPropsList(ResponseHelper.DAV_NAMESPACE_URI);
                 for (Element propElement : propElements) {
                     if ("getetag".equals(propElement.getNodeName())) {
@@ -184,7 +186,7 @@ public class ICalWorker {
                     }
                     if ("getlastmodified".equals(propElement.getNodeName())) {
                         Date lastModified = getLastModifiedDate(request);
-                        Element lmElement = helper.createElementSetValue("D:getlastmodified", WebDavUtil.formatDate(WebDavUtil.RFC1123_DATE_FORMAT, lastModified));
+                        Element lmElement = helper.createElementSetValue("D:getlastmodified", WebDavUtil.formatDate(WebDavUtil.getRFC1123DateFormat(), lastModified));
                         supportedProps.add(lmElement);
                         continue;
                     }
@@ -207,22 +209,19 @@ public class ICalWorker {
                     Debug.logVerbose("[handlePropFindRequest] PROPFIND response:\r\n" + UtilXml.writeXmlDocument(responseDocument), module);
                 }
                 ResponseHelper.prepareResponse(response, 207, "Multi-Status");
-                Writer writer = response.getWriter();
-                try {
+                try (Writer writer = response.getWriter()) {
                     helper.writeResponse(response, writer);
-                } finally {
-                    writer.close();
                 }
                 return;
             }
-        } catch (Exception e) {
+        } catch (RuntimeException | GenericEntityException | SAXException | ParserConfigurationException e) {
             Debug.logError(e, "PROPFIND error: ", module);
         }
         response.setStatus(HttpServletResponse.SC_OK);
         response.flushBuffer();
     }
 
-    public static void handlePutRequest(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws ServletException, IOException {
+    public static void handlePutRequest(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
         if (!isValidRequest(request, response)) {
             return;
         }
@@ -245,7 +244,7 @@ public class ICalWorker {
         writeResponse(responseProps, request, response, context);
     }
 
-    protected static boolean isValidRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private static boolean isValidRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!RequestLinkUtil.isEffectiveSecure(request)) { // SCIPIO: 2018: replace request.isSecure()
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return false;
@@ -259,7 +258,7 @@ public class ICalWorker {
         return true;
     }
 
-    protected static void logInUser(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException, GenericEntityException {
+    private static void logInUser(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException, GenericEntityException {
         Map<String, Object> serviceMap = WebDavUtil.getCredentialsFromRequest(request);
         if (serviceMap == null) {
             return;
@@ -270,7 +269,10 @@ public class ICalWorker {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map<String, Object> result = dispatcher.runSync("userLogin", serviceMap);
         if (ServiceUtil.isError(result) || ServiceUtil.isFailure(result)) {
-            return;
+            String errorMessage = ServiceUtil.getErrorMessage(result);
+            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+            Debug.logError(errorMessage, module);
+            throw new GenericServiceException(errorMessage);
         }
         userLogin = (GenericValue) result.get("userLogin");
         request.setAttribute("userLogin", userLogin);
@@ -287,7 +289,7 @@ public class ICalWorker {
         }
     }
 
-    protected static void setupRequest(HttpServletRequest request, HttpServletResponse response) {
+    private static void setupRequest(HttpServletRequest request, HttpServletResponse response) {
         String path = request.getPathInfo();
         if (UtilValidate.isEmpty(path)) {
             path = "/";
@@ -307,7 +309,7 @@ public class ICalWorker {
         }
     }
 
-    protected static void writeResponse(ResponseProperties responseProps, HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
+    private static void writeResponse(ResponseProperties responseProps, HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
         if (Debug.verboseOn()) {
             Debug.logVerbose("Returning response: code = " + responseProps.statusCode +
                     ", message = " + responseProps.statusMessage, module);
@@ -318,11 +320,8 @@ public class ICalWorker {
         }
         if (responseProps.statusMessage != null) {
             response.setContentLength(responseProps.statusMessage.length());
-            Writer writer = response.getWriter();
-            try {
+            try (Writer writer = response.getWriter()) {
                 writer.write(responseProps.statusMessage);
-            } finally {
-                writer.close();
             }
         }
     }

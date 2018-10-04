@@ -106,7 +106,7 @@ public class WorkEffortSearchEvents {
         String searchSortOrderString = WorkEffortSearchSession.searchGetSortOrderString(false, request);
 
         // ========== populate the result Map
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
 
         result.put("workEffortIds", workEffortIds);
         result.put("viewIndex", viewIndex);

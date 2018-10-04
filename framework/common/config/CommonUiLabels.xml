@@ -3787,6 +3787,7 @@
     </property>
     <property key="CommonEmptyHeader">
         <!-- do not remove this! -->
+        <value xml:lang="de" xml:space="preserve"> </value>
         <value xml:lang="en" xml:space="preserve"> </value>
     </property>
     <property key="CommonEnable">
@@ -3905,6 +3906,7 @@
     <property key="CommonEntityTestFailure">
         <value xml:lang="ar">غير قادر على إنشاء كيان اختبار</value>
         <value xml:lang="cs">Nepodařilo se vytvořit testovací entitu</value>
+        <value xml:lang="de">Test-Entity konnte nicht erstellt werden</value>
         <value xml:lang="en">Unable to create test entity</value>
         <value xml:lang="es">No se puede crear la entidad de prueba</value>
         <value xml:lang="fr">Impossible de créer l'entité de test</value>
@@ -4133,6 +4135,7 @@
         <value xml:lang="zh-TW">事件日期</value>
     </property>
     <property key="CommonExceptionThrownWhileDecodingMetric">
+        <value xml:lang="de">Beim Dekodieren des Metriknamens wurde eine Exception geworfen ${originalName}</value>
         <value xml:lang="en">Exception thrown while decoding metric name ${originalName}</value>
     </property>
     <property key="CommonExclude">
@@ -4333,6 +4336,7 @@
     <property key="CommonExtHelpDefinition">
         <value xml:lang="ar">التعريف: ما هو؟</value>
         <value xml:lang="cs">Definice, co je to?</value>
+        <value xml:lang="de">Definition, was ist es?</value>
         <value xml:lang="en">Definition, what is it?</value>
         <value xml:lang="es">Definición, ¿qué és?</value>
         <value xml:lang="fr">Définition, qu'est-ce ?</value>
@@ -4347,6 +4351,7 @@
     <property key="CommonExtHelpOnScreen">
         <value xml:lang="ar">ماذا يوجد على الشاشة؟</value>
         <value xml:lang="cs">Co je na obrazovce?</value>
+        <value xml:lang="de">Was ist auf dem Screen?</value>
         <value xml:lang="en">What's on the screen?</value>
         <value xml:lang="es">¿Qué hay en la plantalla?</value>
         <value xml:lang="fr">Que dire sur les écrans (screen) ?</value>
@@ -4361,6 +4366,7 @@
     <property key="CommonExtHelpTitle">
         <value xml:lang="ar">شاشة المساعدة</value>
         <value xml:lang="cs">Obrazovka nápovědy.</value>
+        <value xml:lang="de">Hilfeseite.</value>
         <value xml:lang="en">Help screen.</value>
         <value xml:lang="es">Pantalla de ayuda.</value>
         <value xml:lang="fr">Ecran d'aide</value>
@@ -5688,6 +5694,7 @@
     <property key="CommonHelpNotFound">
         <value xml:lang="ar">ملف أو عنوان المساعدة غير موجود</value>
         <value xml:lang="cs">Soubor s nápovědou nebo URL nebylo nalezeno</value>
+        <value xml:lang="de">Hilfedatei oder URL nicht gefunden</value>
         <value xml:lang="en">Help file or URL not found</value>
         <value xml:lang="es">Fichero de ayuda o URL no encontrada</value>
         <value xml:lang="fr">Le fichier ou l'URL d'aide n'a pas été trouvé</value>
@@ -5745,6 +5752,7 @@
         <value xml:lang="zh-TW">高</value>
     </property>
     <property key="CommonHold">
+        <value xml:lang="de">Pause</value>
         <value xml:lang="en">Hold</value>
         <value xml:lang="nl">In wacht</value>
     </property>
@@ -5816,6 +5824,7 @@
     <property key="CommonId">
         <value xml:lang="ar">دليل</value>
         <value xml:lang="cs">ID</value>
+        <value xml:lang="de">ID</value>
         <value xml:lang="en">ID</value>
         <value xml:lang="es">Código</value>
         <value xml:lang="fr">Réf.</value>
@@ -5900,6 +5909,7 @@
     <property key="CommonIds">
         <value xml:lang="ar">دلائل</value>
         <value xml:lang="cs">Identifikátory</value>
+        <value xml:lang="de">IDs</value>
         <value xml:lang="en">IDs</value>
         <value xml:lang="es">Códigos</value>
         <value xml:lang="fr">Références</value>
@@ -5916,6 +5926,7 @@
     <property key="CommonImage">
         <value xml:lang="ar">صورة</value>
         <value xml:lang="cs">Obrázek</value>
+        <value xml:lang="de">Bild</value>
         <value xml:lang="en">Image</value>
         <value xml:lang="es">Imagen</value>
         <value xml:lang="fr">Image</value>
@@ -5927,11 +5938,13 @@
         <value xml:lang="zh-TW">圖片</value>
     </property>
     <property key="CommonImport">
+        <value xml:lang="de">Import</value>
         <value xml:lang="en">Import</value>
         <value xml:lang="zh">导入</value>
         <value xml:lang="zh-TW">匯入</value>
     </property>
     <property key="CommonImportExport">
+        <value xml:lang="de">Import/Export</value>
         <value xml:lang="en">Import/Export</value>
         <value xml:lang="zh">导入/导出</value>
         <value xml:lang="zh-TW">匯入/匯出</value>
@@ -5956,6 +5969,7 @@
         <value xml:lang="zh-TW">在</value>
     </property>
     <property key="CommonIndexable">
+        <value xml:lang="de">Indizierbar</value>
         <value xml:lang="en">Indexable</value>
         <value xml:lang="de">Indexierbar</value>
     </property>
@@ -6232,6 +6246,7 @@
         <value xml:lang="zh-TW">每頁筆數</value>
     </property>
     <property key="CommonIteration">
+        <value xml:lang="de">Iteration</value>
         <value xml:lang="en">Iteration</value>
     </property>
     <property key="CommonJanuary">
@@ -6255,6 +6270,7 @@
         <value xml:lang="zh-TW">一月</value>
     </property>
     <property key="CommonJavaVersion">
+        <value xml:lang="de">mit Java Version:</value>
         <value xml:lang="en">with java version:</value>
         <value xml:lang="fr">avec la version de Java : </value>
     </property>
@@ -6361,6 +6377,7 @@
     <property key="CommonLastSytemNotes">
         <value xml:lang="ar">ملاحظات النظام الأخيرة</value>
         <value xml:lang="cs">Poslední systémová poznámka</value>
+        <value xml:lang="de">Letzte Systemhinweise</value>
         <value xml:lang="en">Last system notes</value>
         <value xml:lang="es">Últimas notas del sistema</value>
         <value xml:lang="fr">Dernières tâches affectées</value>
@@ -6513,6 +6530,7 @@
         <value xml:lang="zh-TW">連結</value>
     </property>
     <property key="CommonLinks">
+        <value xml:lang="de">Links</value>
         <value xml:lang="en">Links</value>
     </property>
     <property key="CommonList">
@@ -6596,6 +6614,7 @@
         <value xml:lang="de">Lokalisierte Felder</value>
     </property>
     <property key="CommonLocation">
+        <value xml:lang="de">Ort</value>
         <value xml:lang="en">Location</value>
         <value xml:lang="nl">Locatie</value>
         <value xml:lang="zh">地点</value>
@@ -6751,6 +6770,7 @@
     <property key="CommonLookupLocale">
         <value xml:lang="ar">البحث بلغة</value>
         <value xml:lang="cs">Vyhledat lokalizaci</value>
+        <value xml:lang="de">Locale suchen</value>
         <value xml:lang="en">Lookup Locale</value>
         <value xml:lang="es">Buscar Locale</value>
         <value xml:lang="fr">Recherche langue</value>
@@ -6763,6 +6783,7 @@
     <property key="CommonLookupWhitepages">
         <value xml:lang="ar">البحث في الصفحات البيضاء</value>
         <value xml:lang="cs">Vyhledat ve Zlatých stránkách</value>
+        <value xml:lang="de">Im Telefonbuch suchen</value>
         <value xml:lang="en">Look up White pages</value>
         <value xml:lang="es">Páginas Blancas</value>
         <value xml:lang="fr">Chercher dans les pages blanches</value>
@@ -6779,6 +6800,7 @@
     </property>
     <property key="CommonLookupWhitepagesAddressLink">
         <value xml:lang="cs">http://zlatestranky.cz/hledani/${addressNum}</value>
+        <value xml:lang="de">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
         <value xml:lang="en">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
         <value xml:lang="es">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
         <value xml:lang="fr">http://www.pagesjaunes.fr/trouverunnom/RecherchePagesBlanches.do</value>
@@ -6791,6 +6813,7 @@
     </property>
     <property key="CommonLookupWhitepagesTelNumberLink">
         <value xml:lang="cs">http://zlatestranky.cz</value>
+        <value xml:lang="de">http://whitepages.com/find_person_results.pl?fid=p&amp;ac=${telecomNumber.areaCode}&amp;s=&amp;p=${telecomNumber.contactNumber}&amp;pt=b&amp;x=40&amp;y=9</value>
         <value xml:lang="en">http://whitepages.com/find_person_results.pl?fid=p&amp;ac=${telecomNumber.areaCode}&amp;s=&amp;p=${telecomNumber.contactNumber}&amp;pt=b&amp;x=40&amp;y=9</value>
         <value xml:lang="es">http://whitepages.com/find_person_results.pl?fid=p&amp;ac=${telecomNumber.areaCode}&amp;s=&amp;p=${telecomNumber.contactNumber}&amp;pt=b&amp;x=40&amp;y=9</value>
         <value xml:lang="fr">http://www.pagesjaunes.fr/quidonc/aquiestcenumero.do</value>

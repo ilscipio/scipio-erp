@@ -55,7 +55,7 @@ public class FixedAssetMaintServices {
         String productId = (String)context.get("productId");
         String facilityId = (String)context.get("facilityId");
         Double quantity = (Double)context.get("quantity");
-        double requestedQty = quantity.doubleValue();
+        double requestedQty = quantity;
 
         try {
             GenericValue product = ProductWorker.findProduct(delegator, productId);
@@ -87,13 +87,13 @@ public class FixedAssetMaintServices {
             while (requestedQty > 0 && itr.hasNext()) {
                 GenericValue inventoryItem = itr.next();
                 String inventoryItemId = inventoryItem.getString("inventoryItemId");
-                atp = inventoryItem.getDouble("availableToPromiseTotal").doubleValue();
+                atp = inventoryItem.getDouble("availableToPromiseTotal");
                 findCurrInventoryParams = UtilMisc.toMap("inventoryItemId", inventoryItemId);
                 Double issueQuantity = null;
                 if (requestedQty > atp) {
-                    issueQuantity = new Double(atp);
+                    issueQuantity = atp;
                 } else {
-                    issueQuantity = new Double(requestedQty);
+                    issueQuantity = requestedQty;
                 }
                 Map<String, Object> itemIssuanceCtx = new HashMap<String, Object>();
                 itemIssuanceCtx.put("userLogin", userLogin);
@@ -106,7 +106,7 @@ public class FixedAssetMaintServices {
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AssetMaintProblemCallingService", locale), null, null, result);
                 }
-                requestedQty = requestedQty - issueQuantity.doubleValue();
+                requestedQty = requestedQty - issueQuantity;
             }
         } catch (GenericEntityException e) {
             Debug.logError("Problem in retriving data from database", module);

@@ -37,7 +37,7 @@ import org.ofbiz.entity.util.EntityQuery;
 
 public class HumanResEvents {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String resourceError = "ProductErrorUiLabels";
+    public static final String resourceError = "HumanResErrorUiLabels";
 
     // Please note : the structure of map in this function is according to the JSON data map of the jsTree
     public static String getChildHRCategoryTree(HttpServletRequest request, HttpServletResponse response){
@@ -92,11 +92,14 @@ public class HumanResEvents {
                             hrefStr = hrefStr + hrefString2;
                         }
                         dataAttrMap.put("href", hrefStr);
+
                         attrMap.put("rel", "P");
-                        dataMap.put("attr", dataAttrMap);
                         attrMap.put("id", memberId);
-                        josonMap.put("attr",attrMap);
+
                         dataMap.put("title", title);
+                        dataMap.put("attr", dataAttrMap);
+
+                        josonMap.put("attr",attrMap);
                         josonMap.put("data", dataMap);
 
                         categoryList.add(josonMap);
@@ -179,7 +182,7 @@ public class HumanResEvents {
                         josonMap.put("data", dataMap);
 
                         categoryList.add(josonMap);
-                }
+                    }
 
                 }
 

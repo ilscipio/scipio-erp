@@ -30,9 +30,11 @@ import org.ofbiz.entity.util.EntityUtil;
 /**
  * Marketing Report Helper
  */
-public class ReportHelper {
+public final class ReportHelper {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private ReportHelper() {}
 
 /**
  * Calculate conversion rates based on a List of visits and orders.  Designed to be used for reporting on

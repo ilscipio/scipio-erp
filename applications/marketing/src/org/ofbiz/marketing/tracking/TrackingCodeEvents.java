@@ -269,7 +269,7 @@ public class TrackingCodeEvents {
                 if (cookieDomain.length() > 0) siteIdCookie.setDomain(cookieDomain);
                 siteIdCookie.setSecure(true);
                 siteIdCookie.setHttpOnly(true);
-                    response.addCookie(siteIdCookie);
+                response.addCookie(siteIdCookie);
                 // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Ofbiz.TKCSiteId and timeout will be 60 * 60 * 24 * 365
                 Cookie updatedTimeStampCookie = new Cookie("Ofbiz.TKCD.UpdatedTimeStamp" ,UtilDateTime.nowTimestamp().toString());
                 updatedTimeStampCookie.setMaxAge(siteIdCookieAge);
@@ -277,7 +277,7 @@ public class TrackingCodeEvents {
                 if (cookieDomain.length() > 0) updatedTimeStampCookie.setDomain(cookieDomain);
                 updatedTimeStampCookie.setSecure(true);
                 updatedTimeStampCookie.setHttpOnly(true);
-                    response.addCookie(updatedTimeStampCookie);
+                response.addCookie(updatedTimeStampCookie);
             }
         }
 
@@ -294,7 +294,7 @@ public class TrackingCodeEvents {
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request,
             // otherwise may lose work done by servlets and filters
-            //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
+            //CategoryWorker.setTrail(request, new LinkedList<String>());
             CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());
         }
 
@@ -454,9 +454,6 @@ public class TrackingCodeEvents {
         if (cookies != null && cookies.length > 0) {
             for (int i = 0; i < cookies.length; i++) {
                 String cookieName = cookies[i].getName();
-
-                //Debug.logInfo(" cookieName is " + cookieName, module);
-                //Debug.logInfo(" cookieValue is " + cookies[i].getValue(), module);
                 // find the siteId cookie if it exists
                 if ("Ofbiz.TKCD.SiteId".equals(cookieName)) {
                     siteId = cookies[i].getValue();

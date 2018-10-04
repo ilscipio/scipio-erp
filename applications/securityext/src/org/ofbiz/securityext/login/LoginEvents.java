@@ -52,7 +52,7 @@ import org.ofbiz.product.product.ProductEvents;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.LoginWorker;
 
 /**
@@ -83,15 +83,19 @@ public class LoginEvents {
             String password = request.getParameter("PASSWORD");
 
             if ((username != null) && ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security", "username.lowercase", delegator)))) {
-                username = username.toLowerCase();
+                username = username.toLowerCase(Locale.getDefault());
             }
             if ((password != null) && ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security", "password.lowercase", delegator)))) {
-                password = password.toLowerCase();
+                password = password.toLowerCase(Locale.getDefault());
             }
 
             // save parameters into the session - so they can be used later, if needed
-            if (username != null) session.setAttribute("USERNAME", username);
-            if (password != null) session.setAttribute("PASSWORD", password);
+            if (username != null) {
+                session.setAttribute("USERNAME", username);
+            }
+            if (password != null) {
+                session.setAttribute("PASSWORD", password);
+            }
 
         } else {
             // if the login object is valid, remove attributes
@@ -132,7 +136,7 @@ public class LoginEvents {
         String errMsg = null;
 
         if ((userLoginId != null) && ("true".equals(EntityUtilProperties.getPropertyValue("security", "username.lowercase", delegator)))) {
-            userLoginId = userLoginId.toLowerCase();
+            userLoginId = userLoginId.toLowerCase(Locale.getDefault());
         }
 
         if (UtilValidate.isEmpty(userLoginId)) {
@@ -192,7 +196,7 @@ public class LoginEvents {
         String userLoginId = request.getParameter("USERNAME");
 
         if ((userLoginId != null) && ("true".equals(EntityUtilProperties.getPropertyValue("security", "username.lowercase", delegator)))) {
-            userLoginId = userLoginId.toLowerCase();
+            userLoginId = userLoginId.toLowerCase(Locale.getDefault());
         }
 
         if (UtilValidate.isEmpty(userLoginId)) {
@@ -247,7 +251,6 @@ public class LoginEvents {
             party = supposedUserLogin.getRelatedOne("Party", false);
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "", module);
-            party = null;
         }
         if (party != null) {
             Iterator<GenericValue> emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
@@ -320,8 +323,8 @@ public class LoginEvents {
         try {
             Map<String, Object> result = dispatcher.runSync("sendMailHiddenInLogFromScreen", serviceContext);
 
-            if (ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE))) {
-                Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", result.get(ModelService.ERROR_MESSAGE));
+            if (ServiceUtil.isError(result)) { // SCIPIO: 2018-10-04: Corrected error check
+                Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", ServiceUtil.getErrorMessage(result));
                 errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service_errorwas", messageMap, UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";

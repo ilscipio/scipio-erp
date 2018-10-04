@@ -291,6 +291,7 @@
         <value xml:lang="zh-TW">SERVICE_TIME已經傳遞了</value>
     </property>
     <property key="protectedviewevents.blocked_message">
+        <value xml:lang="de">Dies ist die gesperrte Nachricht (wird noch angepasst).</value>
         <value xml:lang="en">This is the blocked message (to be adapted).</value>
         <value xml:lang="fr">Ceci est le message de bloquage (à adapter).</value>
         <value xml:lang="it">Questo è il messaggio bloccante (che deve essere adattato).</value>
@@ -299,6 +300,7 @@
         <value xml:lang="zh-TW">這是(要被採用的)被阻塞的資訊.</value>
     </property>
     <property key="protectedviewevents.tarpitted_message">
+        <value xml:lang="de">Dies ist die tarpierte Nachricht (wird noch angepasst).</value>
         <value xml:lang="en">This is the tarpitted message (to be adapted).</value>
         <value xml:lang="fr">Ceci est le message d'engluage (à adapter).</value>
         <value xml:lang="it">Questo è il messaggio (che deve essere adattato).</value>
@@ -320,6 +322,7 @@
         <value xml:lang="zh-TW">呼叫事件時出錯</value>
     </property>
     <property key="requestHandler.InsecureFormPostToSecureRequest">
+        <value xml:lang="de">Es werden keine unsicheren Formulardaten akzeptiert, die an eine sichere Anfrage gesendet wurden</value>
         <value xml:lang="en">Not accepting insecure form data posted to a secure request</value>
         <value xml:lang="es">No permite enviarle un forma inseguro a un pedido seguro</value>
         <value xml:lang="ja">セキュアなリクエストに対して送信された、インセキュアなフォームデータを受け付けることはできません</value>

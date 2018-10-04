@@ -22492,6 +22492,7 @@
         <value xml:lang="zh-TW">編輯合約</value>
     </property>
     <property key="PageTitleAddAgreementContent">
+        <value xml:lang="de">Vereinbarungsinhalt hinzufügen</value>
         <value xml:lang="en">Add Agreement Content</value>
         <value xml:lang="fr">Ajout de contenu à l'accord commercial</value>
     </property>
@@ -24188,6 +24189,7 @@
         <value xml:lang="zh-TW">通過電子郵件發送發票</value>
     </property>
     <property key="PageTitleTaxAuthorityReport">
+        <value xml:lang="de">Steuerbericht</value>
         <value xml:lang="en">Tax Report</value>
     </property>
     <property key="PageTitleUnpostedTransactions">

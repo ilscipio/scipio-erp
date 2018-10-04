@@ -18853,6 +18853,7 @@
         <value xml:lang="zh-TW">按介紹和銷售折扣日期過濾</value>
     </property>
     <property key="ProductFilterProductCosts">
+        <value xml:lang="de">Produktkosten filtern</value>
         <value xml:lang="en">Filter Product Costs</value>
     </property>
     <property key="ProductFindFacilities">
@@ -20642,6 +20643,7 @@
         <value xml:lang="zh-TW">庫存轉運</value>
     </property>
     <property key="ProductInventoryTransfers">
+        <value xml:lang="de">Inventarübertragungsliste</value>
         <value xml:lang="en">Inventory Transfer List</value>
     </property>
     <property key="ProductInventoryTransfersFor">
@@ -21413,9 +21415,11 @@
         <value xml:lang="zh-TW">位置序列識別</value>
     </property>
     <property key="ProductLocationSeqIdFrom">
+        <value xml:lang="de">Location Seq ID von</value>
         <value xml:lang="en">Location Seq ID From</value>
     </property>
     <property key="ProductLocationSeqIdTo">
+        <value xml:lang="de">Location Seq ID nach</value>
         <value xml:lang="en">Location Seq ID To</value>
     </property>
     <property key="ProductLocations">
@@ -22548,6 +22552,7 @@
         <value xml:lang="zh-TW">新建庫存細項</value>
     </property>
     <property key="ProductNewInventoryTransfer">
+        <value xml:lang="de">Neue Inventarübertragung</value>
         <value xml:lang="en">New Inventory Transfer</value>
     </property>
     <property key="ProductNewItem">
@@ -23982,11 +23987,12 @@
         <value xml:lang="zh-TW">必須在範圍內</value>
     </property>
     <property key="ProductOnlyOneFacility">
+        <value xml:lang="de">Wenn es nur eine Einrichtung gibt, müssen Sie sie auswählen, um fortzufahren, keine Suche verfügbar</value>
         <value xml:lang="en">If there is only one facility, you need to select it to continue, no search available</value>
         <value xml:lang="fr">S'il n'y a qu'un seul lieu de stockage, vous devez le sélectionner pour continuer, aucune recherche n'est disponible.</value>
     </property>
     <property key="ProductOnlyShowingFirstN">
-        <value xml:lang="de">ANMERKUNG: Es werden nur die ersten ${viewSize} von ${listSize} Produkten angezeigt. Um die restlichen Anzuzeigen verwenden Sie den Produkt-Bereich dieser Kategorie.</value>
+        <value xml:lang="de">HINWEIS: Es werden nur die ersten ${viewSize} von ${listSize} Produkten angezeigt. Um die restlichen Anzuzeigen verwenden Sie den Produkt-Bereich dieser Kategorie.</value>
         <value xml:lang="en">NOTE: Only showing the first ${viewSize} of ${listSize} products. To view the rest, use the Products tab for this category.</value>
         <value xml:lang="es">NOTA: Sólo se muestran los primeros ${viewSize} de ${listSize} productos. Para ver el resto debe usar la pestaña de productos de esta categoría.</value>
         <value xml:lang="fr">NOTE: Montre seulement les ${viewSize} premiers des ${listSize} produits. Pour voir le reste, utiliser le bouton "Articles" pour cette catégorie</value>
@@ -24349,6 +24355,7 @@
         <value xml:lang="zh-TW">出發地通信位址識別</value>
     </property>
     <property key="ProductOriginal">
+        <value xml:lang="de">Original</value>
         <value xml:lang="en">Original</value>
         <value xml:lang="fr">Original</value>
         <value xml:lang="it">Originale</value>
@@ -25020,6 +25027,7 @@
         <value xml:lang="zh-TW">實際庫存</value>
     </property>
     <property key="ProductPhysicalInventoryList">
+        <value xml:lang="de">Physische Inventurliste</value>
         <value xml:lang="en">Physical Inventory List</value>
     </property>
     <property key="ProductPhysicalInventoryVariance">
@@ -25787,6 +25795,7 @@
         <value xml:lang="zh-TW">產品型錄清單</value>
     </property>
     <property key="ProductProductCategories">
+        <value xml:lang="de">Produktkategorien</value>
         <value xml:lang="en">Product Categories</value>
     </property>
     <property key="ProductProductCategory">
@@ -26651,9 +26660,11 @@
         <value xml:lang="zh-TW">以前檢視的產品</value>
     </property>
     <property key="ProductPromo">
+        <value xml:lang="de">Promo</value>
         <value xml:lang="en">Promo</value>
     </property>
     <property key="ProductPromoAction">
+        <value xml:lang="de">Aktion</value>
         <value xml:lang="en">Action</value>
     </property>
     <property key="ProductPromoCodeBlank">
@@ -26802,6 +26813,7 @@
         <value xml:lang="zh-TW">促銷名稱 [識別]</value>
     </property>
     <property key="ProductPromoRule">
+        <value xml:lang="de">Regel</value>
         <value xml:lang="en">Rule</value>
     </property>
     <property key="ProductPromoShowToCustomer">
@@ -27551,10 +27563,11 @@
         <value xml:lang="zh-TW">要轉運的數量</value>
     </property>
     <property key="ProductQuantityUom">
+        <value xml:lang="de">Mengeneinheit</value>
         <value xml:lang="en">Quantity Uom</value>
     </property>
     <property key="ProductQuantityUomId">
-        <value xml:lang="de">Menge Einheit ID</value>
+        <value xml:lang="de">Mengeneinheit ID</value>
         <value xml:lang="en">Quantity UomId</value>
         <value xml:lang="es">Código de UDM de la cantidad</value>
         <value xml:lang="fr">Unité de mesure de quantité</value>
@@ -27929,6 +27942,7 @@
         <value xml:lang="zh-TW">產品${productId}的數量${quantityToReceive}中的${quantityToBackOrder}會轉為待交訂單</value>
     </property>
     <property key="ProductReceiveInventoryItems">
+        <value xml:lang="de">Inventar erhalten</value>
         <value xml:lang="en">Receive Inventory</value>
     </property>
     <property key="ProductReceiveItem">
@@ -28030,6 +28044,7 @@
         <value xml:lang="zh-TW">已接收</value>
     </property>
     <property key="ProductRecentProductsAdded">
+        <value xml:lang="de">Neue Produkte</value>
         <value xml:lang="en">New Products</value>
     </property>
     <property key="ProductRecreateAssociation">
@@ -28131,6 +28146,7 @@
         <value xml:lang="zh-TW">產品刪除早于</value>
     </property>
     <property key="ProductRemoveExpiredCategoryProducts">
+        <value xml:lang="de">Abgelaufene Kategorieprodukte entfernen</value>
         <value xml:lang="en">Remove Expired Category Products</value>
     </property>
     <property key="ProductRemoveExpiredProductMembers">
@@ -28228,6 +28244,7 @@
         <value xml:lang="zh-TW">刪除結果自</value>
     </property>
     <property key="ProductRenameImageSuccessfully.">
+        <value xml:lang="de">Bild erfolgreich umbenannt.</value>
         <value xml:lang="en">Rename image successfully.</value>
     </property>
     <property key="ProductReorderQuantity">
@@ -28245,6 +28262,7 @@
         <value xml:lang="zh-TW">再訂購數量</value>
     </property>
     <property key="ProductReplaceImageSuccessfully">
+        <value xml:lang="de">Bild erfolgreich ersetzt.</value>
         <value xml:lang="en">Replace image successfully.</value>
     </property>
     <property key="ProductReplaceOriginal">
@@ -28262,6 +28280,7 @@
         <value xml:lang="zh-TW">替換最初的</value>
     </property>
     <property key="ProductRequestedTransfers">
+        <value xml:lang="de">Angeforderte Übertragungen</value>
         <value xml:lang="en">Requested transfers</value>
     </property>
     <property key="ProductRequireAmount">
@@ -28530,6 +28549,7 @@
         <value xml:lang="zh-TW">重置日期</value>
     </property>
     <property key="ProductResizeImagesSuccessful">
+        <value xml:lang="de">Größenänderung des Bildes erfolgreich.</value>
         <value xml:lang="en">Resize images successful.</value>
     </property>
     <property key="ProductResultOfImageUpload">
@@ -28752,6 +28772,7 @@
         <value xml:lang="en">Rooms</value>
     </property>
     <property key="ProductRotatedImageSuccessfully">
+        <value xml:lang="de">Bild erfolgreich gedreht.</value>
         <value xml:lang="en">Rotated image successfully.</value>
     </property>
     <property key="ProductRouteSegment">
@@ -28861,6 +28882,7 @@
         <value xml:lang="zh-TW">規則</value>
     </property>
     <property key="ProductRunSubscriptionExpiredServiceCalledSuccessfully">
+        <value xml:lang="de">runSubscriptionExpired Service erfolgreich für subscriptionId ${subscriptionId} ausgeführt</value>
         <value xml:lang="en">runSubscriptionExpired service called successfully with subscriptionId ${subscriptionId}</value>
     </property>
     <property key="ProductSRCH">
@@ -28878,6 +28900,7 @@
         <value xml:lang="zh-TW">搜尋</value>
     </property>
     <property key="ProductST">
+        <value xml:lang="de">ST</value>
         <value xml:lang="en">ST</value>
         <value xml:lang="fr">Dates</value>
         <value xml:lang="vi">Ngày</value>
@@ -29313,6 +29336,7 @@
         <value xml:lang="zh-TW">選擇一個</value>
     </property>
     <property key="ProductSelectProductCategoryContentTypeId">
+        <value xml:lang="de">Wählen Sie Inhaltstyp</value>
         <value xml:lang="en">Select Content Type</value>
     </property>
     <property key="ProductSelectShipmentReceive">
@@ -29678,6 +29702,7 @@
         <value xml:lang="zh-TW">送貨訂單</value>
     </property>
     <property key="ProductShippingDiameter">
+        <value xml:lang="de">Versandabmaße</value>
         <value xml:lang="en">Shipping Diameter</value>
     </property>
     <property key="ProductShippingSection">
@@ -30264,6 +30289,7 @@
         <value xml:lang="zh-TW">貨運類型識別</value>
     </property>
     <property key="ProductShipmentUomAbbreviation_LEN_in">
+        <value xml:lang="de">in</value>
         <value xml:lang="en">in</value>
         <value xml:lang="it">in</value>
         <value xml:lang="ja">インチ</value>
@@ -30272,9 +30298,11 @@
         <value xml:lang="zh-TW">英寸</value>
     </property>
     <property key="ProductShipmentUomAbbreviation_WT_g">
+        <value xml:lang="de">g</value>
         <value xml:lang="en">g</value>
     </property>
     <property key="ProductShipmentUomAbbreviation_WT_kg">
+        <value xml:lang="de">kg</value>
         <value xml:lang="en">kg</value>
         <value xml:lang="ru">кг</value>
         <value xml:lang="th">กิโลกรัม</value>
@@ -31455,6 +31483,7 @@
         <value xml:lang="zh-TW">附加費</value>
     </property>
     <property key="ProductTD">
+        <value xml:lang="de">TD</value>
         <value xml:lang="en">TD</value>
         <value xml:lang="fr">Assoc.</value>
         <value xml:lang="zh">特征结束日期</value>
@@ -33241,6 +33270,7 @@
         <value xml:lang="zh-TW">追蹤類型</value>
     </property>
     <property key="TrackingTypeDownstream">
+        <value xml:lang="de">Downstream</value>
         <value xml:lang="en">Downstream</value>
         <value xml:lang="fr">Aval</value>
         <value xml:lang="ja">下流</value>
@@ -33258,6 +33288,7 @@
         <value xml:lang="zh-TW">銷售</value>
     </property>
     <property key="TrackingTypeUpstream">
+        <value xml:lang="de">Upstream</value>
         <value xml:lang="en">Upstream</value>
         <value xml:lang="fr">Amont</value>
         <value xml:lang="ja">上流</value>

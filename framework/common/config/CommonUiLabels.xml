@@ -15399,6 +15399,7 @@
     <property key="FormFieldTitle_pending">
         <value xml:lang="ar">قيد الإنتظار</value>
         <value xml:lang="cs">Čekající</value>
+        <value xml:lang="de">Ausstehend</value>
         <value xml:lang="en">Pending</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">En attente</value>
@@ -15946,6 +15947,7 @@
         <value xml:lang="zh-TW">檢視</value>
     </property>
     <property key="Google Base">
+        <value xml:lang="de">Google Base</value>
         <value xml:lang="en">Google Base</value>
         <value xml:lang="hi-IN">गूगल बेस</value>
         <value xml:lang="it">Googleショッピング</value>
@@ -16016,14 +16018,17 @@
         <value xml:lang="zh-TW">人力資源應用程式</value>
     </property>
     <property key="InternalOrganisation">
+        <value xml:lang="de">Interne Organisation</value>
         <value xml:lang="en">Internal Organisation</value>
         <value xml:lang="nl">Interne organisatie</value>
     </property>
     <property key="InternalPerson">
+        <value xml:lang="de">Interne Person</value>
         <value xml:lang="en">Internal Person</value>
         <value xml:lang="nl">Intern persoon</value>
     </property>
     <property key="InternalTeam">
+        <value xml:lang="de">Internes Team</value>
         <value xml:lang="en">Internal Team</value>
         <value xml:lang="nl">Intern team</value>
     </property>
@@ -16128,6 +16133,7 @@
         <value xml:lang="zh-TW">OFBiz網站</value>
     </property>
     <property key="Oagis">
+        <value xml:lang="de">Oagis</value>
         <value xml:lang="en">Oagis</value>
         <value xml:lang="th">การรวมภาษาทางธุรกิจ</value>
         <value xml:lang="vi">Giao thức XML Oagis</value>
@@ -16157,6 +16163,7 @@
     <property key="OrderComponentDescription">
         <value xml:lang="ar">نظام إدارة المبيعات, المشتريات, طلبات العميل, المتطلبات, التسعير والإحصائيات</value>
         <value xml:lang="cs">Správa objednávek, požadavků zákazníků, nabídej a jejich statistika</value>
+        <value xml:lang="de">Kundenauftragsverwaltung, Bestellungen, Kundenanfragen, Anforderungen, Angebote, Statistiken</value>
         <value xml:lang="en">Sales Order management, Purchase order, Customer request, Requirement, Quote, Statistics</value>
         <value xml:lang="fr">Gestion des commandes de vente, d'achat, des demandes, des devis, des besoins, des stats</value>
         <value xml:lang="ja">販売注文管理、購買注音、顧客リクエスト、要求、見積、状態</value>
@@ -16504,6 +16511,7 @@
     <property key="PartyComponentDescription">
         <value xml:lang="ar">العملاء, الموردين, إدارة الموظفين, الإتصالات, التقسيمات</value>
         <value xml:lang="cs">Zákazníci - Dodavatelé - Mamagement, komunikace, klasifikace</value>
+        <value xml:lang="de">Kunden - Lieferanten - Mitarbeitermanagement, Kommunikation, Klassifikationen</value>
         <value xml:lang="en">Customers - Suppliers - Employee Management, Communications, Classifications</value>
         <value xml:lang="fr">Gestion des clients, Fournisseurs, Employés, Communications, Classifications</value>
         <value xml:lang="ja">顧客 - サプライヤ - 従業員管理、通信、分類</value>
@@ -16562,6 +16570,7 @@
         <value xml:lang="zh-TW">專案</value>
     </property>
     <property key="CommonRetrieve">
+        <value xml:lang="de">Abrufen</value>
         <value xml:lang="en">Retrieve</value>
         <value xml:lang="nl">Ophalen</value>
     </property>
@@ -16594,6 +16603,7 @@
         <value xml:lang="zh-TW">請用twitter</value>
     </property>
     <property key="Web Pos">
+        <value xml:lang="de">Web POS</value>
         <value xml:lang="en">Web POS</value>
         <value xml:lang="es">POS web</value>
         <value xml:lang="fr">POS Web</value>

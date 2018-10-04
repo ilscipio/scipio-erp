@@ -8333,6 +8333,7 @@
         <value xml:lang="zh-TW">成本到價格</value>
     </property>
     <property key="OrderOrderQuoteCreatedSuccessfully">
+        <value xml:lang="de">Angebot erfolgreich erstellt</value>
         <value xml:lang="en">Quote Created Successfully</value>
     </property>
     <property key="OrderOrderQuoteDefaultUnitPrice">
@@ -8670,6 +8671,7 @@
         <value xml:lang="zh-TW">報價細項</value>
     </property>
     <property key="OrderOrderQuoteLeadTimeDays">
+        <value xml:lang="de">Vorlaufzeit Tage</value>
         <value xml:lang="en">Lead Time Days</value>
         <value xml:lang="nl">Doorlooptijd (dagen)</value>
     </property>
@@ -8920,6 +8922,7 @@
         <value xml:lang="zh-TW">報價報表</value>
     </property>
     <property key="OrderOrderQuoteRoleAddedSuccessfully">
+        <value xml:lang="de">Angebotsrolle erfolgreich hinzugefügt.</value>
         <value xml:lang="en">Quote Role Added Successfully.</value>
     </property>
     <property key="OrderOrderQuoteRoles">
@@ -9058,6 +9061,7 @@
         <value xml:lang="zh-TW">報價度量單位識別</value>
     </property>
     <property key="OrderOrderQuoteUpdatedSuccessfully">
+        <value xml:lang="de">Angebot aktualisiert.</value>
         <value xml:lang="en">Quote updated successfully.</value>
     </property>
     <property key="OrderOrderQuoteViewProfit">
@@ -9201,6 +9205,7 @@
         <value xml:lang="zh-TW">退貨</value>
     </property>
     <property key="OrderReturnHeaderType">
+        <value xml:lang="de">Retoure Header-Typ</value>
         <value xml:lang="en">Return Header Type</value>
         <value xml:lang="nl">Soort retour</value>
     </property>
@@ -10385,6 +10390,7 @@
         <value xml:lang="zh-TW">用於促銷的產品</value>
     </property>
     <property key="OrderPromoAppliedSuccessfully">
+        <value xml:lang="de">Promotions - Code[${productPromoCodeId}] erfolgreich angewendet</value>
         <value xml:lang="en">Promotion Code[${productPromoCodeId}] has been applied successfully</value>
         <value xml:lang="nl">Promo ${productPromoCodeId] succesvol toegepast</value>
     </property>
@@ -12117,20 +12123,24 @@
         <value xml:lang="zh-TW">要求使用促銷代碼.</value>
     </property>
     <property key="OrderReserveAfterDate">
+        <value xml:lang="de">Reservieren nach Datum</value>
+        <value xml:lang="en">Reserve After Date</value>
+        <value xml:lang="fr">Réserver après cette date</value>
+    </property>
+    <property key="OrderReserveAfterDateDefault">
+        <value xml:lang="de">Standardmäßig Reservieren nach Datum</value>
+        <value xml:lang="en">Default Reserve After Date</value>
+         <value xml:lang="fr">Date de réservation par défaut</value>
+    </property>
+    <property key="OrderReserveAfterDate">
+        <value xml:lang="de">Reservieren nach Datum</value>
          <value xml:lang="en">Reserve After Date</value>
          <value xml:lang="fr">Réserver après cette date</value>
     </property>
     <property key="OrderReserveAfterDateDefault">
-         <value xml:lang="en">Default Reserve After Date</value>
-         <value xml:lang="fr">Date de réservation par défaut</value>
-    </property>
-    <property key="OrderReserveAfterDate">
-         <value xml:lang="en">Reserve After Date</value>
-         <value xml:lang="fr">RÃ©server aprÃ¨s cette date</value>
-    </property>
-    <property key="OrderReserveAfterDateDefault">
-         <value xml:lang="en">Default Reserve After Date</value>
-         <value xml:lang="fr">Date de rÃ©servation par dÃ©faut</value>
+        <value xml:lang="de">Standardmäßig Reservieren nach Datum</value>
+        <value xml:lang="en">Default Reserve After Date</value>
+        <value xml:lang="fr">Date de réservation par défaut</value>
     </property>
     <property key="OrderReturnAccept">
         <value xml:lang="ar">الموافقة للمسترجع</value>
@@ -16357,6 +16367,7 @@
         <value xml:lang="ro">Toate Promotiile </value>
     </property>
     <property key="PageTitleLookupReturnHeader">
+        <value xml:lang="de">Retouren-Header nachschlagen</value>
         <value xml:lang="en">Lookup Return Header</value>
     </property>
 </resource>

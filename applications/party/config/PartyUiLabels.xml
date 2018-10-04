@@ -6955,6 +6955,7 @@
     </property>
     
     <property key="PartyFindCommunicationsByReturn">
+        <value xml:lang="de">Finde Kommunikation nach Antwort</value>
         <value xml:lang="en">Find Communications by Return</value>
     </property>
     <property key="PartyFindParty">
@@ -9246,6 +9247,7 @@
         <value xml:lang="zh-TW">新建內部便箋</value>
     </property>
     <property key="PartyNewPartiesCreated">
+        <value xml:lang="de">${partiesCreated} neue Parteien angelegt"</value>
         <value xml:lang="en">${partiesCreated} new parties created"</value>
     </property>
     <property key="PartyNewPassword">
@@ -9907,6 +9909,7 @@
         <value xml:lang="zh-TW">沒有找到這個團體的訪問.</value>
     </property>
     <property key="PartyNotModifRecreateAttribute">
+        <value xml:lang="de">Dies kann nicht geändert werden, ohne das Attribut neu zu erstellen .</value>
         <value xml:lang="en">This cannot be changed without re-creating the Attribute.</value>
     </property>
     <property key="PartyNotModifRecreatSecurityGroup">
@@ -9929,6 +9932,7 @@
         <value xml:lang="zh-TW">如果不重新新建安全群組的話,不能修改這個.</value>
     </property>
     <property key="PartyNoteCreatedSuccessfully">
+        <value xml:lang="de">Party Notiz erfolgreich erstellt.</value>
         <value xml:lang="en">Party Note created successfully.</value>
     </property>
     <property key="PartyNotificationMailActivated">
@@ -10069,6 +10073,7 @@
         <value xml:lang="zh-TW">訂單——上次</value>
     </property>
     <property key="PartyReturnAdd">
+        <value xml:lang="de">Retoure hinzufügen</value>
         <value xml:lang="en">Return Add</value>
         <value xml:lang="hi-IN">वापसी जोड़ें</value>
     </property>
@@ -12902,6 +12907,7 @@
         <value xml:lang="zh-TW">增加稅務資訊</value>
     </property>
     <property key="PartyTaxAuthPartyAndGeoNotAvailable">
+        <value xml:lang="de">Es ist keine Steuerbehörde für die angebene Steuerbehörden-Party und Geo-Location vorhanden.</value>
         <value xml:lang="en">Tax authority is not available for provided Tax Authority Party and Tax Authority Geo.</value>
     </property>
     <property key="PartyTaxAuthInfos">
@@ -13381,6 +13387,7 @@
     <property key="PartyURI">
         <value xml:lang="ar">الرابط</value>
         <value xml:lang="cs">URI</value>
+        <value xml:lang="de">URI</value>
         <value xml:lang="en">URI</value>
         <value xml:lang="hi-IN">यूआरआइ(URI)</value>
         <value xml:lang="zh">URI</value>
@@ -13775,6 +13782,7 @@
     </property>
     
     <property key="PartyViewCommReturns">
+        <value xml:lang="de">Rück-Antworten ansehen</value>
         <value xml:lang="en">View Communication Returns</value>
         <value xml:lang="hi-IN">संचार रिटर्न देखें</value>
     </property>

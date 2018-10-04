@@ -2342,6 +2342,7 @@
         <value xml:lang="zh-TW">編輯電子資金轉帳帳戶</value>
     </property>
     <property key="PageTitleEditCheckAccount">
+        <value xml:lang="de">Prüfkonto bearbeiten</value>
         <value xml:lang="en">Edit Check Account</value>
     </property>
     <property key="PageTitleEditGiftCard">
@@ -3106,6 +3107,7 @@
         <value xml:lang="zh-TW">帳戶</value>
     </property>
     <property key="PartyAccountLocked">
+        <value xml:lang="de">Konto gesperrt</value>
         <value xml:lang="en">Account Locked</value>
     </property>
     <property key="PartyActive">
@@ -3187,6 +3189,7 @@
         <value xml:lang="zh-TW">增加通訊事件產品</value>
     </property>
     <property key="PartyAddCommEventReturn">
+        <value xml:lang="de">Kommunikationsevent-Return hinzufügen</value>
         <value xml:lang="en">Add Communication Event Return</value>
         <value xml:lang="hi-IN">संचार घटना रिटर्न जोड़ें</value>
     </property>
@@ -4639,6 +4642,7 @@
         <value xml:lang="zh-TW">通訊事件目的</value>
     </property>
     <property key="PartyCommEventReturns">
+        <value xml:lang="de">Kommunikationsevent Eregebnis</value>
         <value xml:lang="en">Communication Event Returns</value>
         <value xml:lang="hi-IN">संचार घटना रिटर्न</value>
     </property>
@@ -5035,6 +5039,7 @@
         <value xml:lang="zh-TW">聯絡資訊</value>
     </property>
     <property key="PartyContactInformationOther">
+        <value xml:lang="de">Weitere Kontakt Information</value>
         <value xml:lang="en">Other Contact Information</value>
         <value xml:lang="fr">Autres Coordonnées</value>
     </property>
@@ -5168,6 +5173,7 @@
         <value xml:lang="zh-TW">已成功新建聯絡方式.</value>
     </property>
     <property key="PartyContactMechanismSuccessfullyDeleted">
+        <value xml:lang="de">Eintrag erfolgreich gelöscht.</value>
         <value xml:lang="en">Record deleted successfully.</value>
     </property>
     <property key="PartyContactMechanismSuccessfullyUpdated">

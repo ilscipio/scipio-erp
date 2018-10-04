@@ -4802,6 +4802,7 @@
         <value xml:lang="zh-TW">執行時間</value>
     </property>
     <property key="WebtoolsRunTimeDataInfo">
+        <value xml:lang="de">Laufzeit Informationen</value>
         <value xml:lang="en">Run Time Data Info</value>
         <value xml:lang="fr">Information sur le moment de l'exécution </value>
         <value xml:lang="zh">运行时间数据信息</value>
@@ -4834,6 +4835,7 @@
         <value xml:lang="zh-TW">任務計劃</value>
     </property>
     <property key="WebtoolsSearchString">
+        <value xml:lang="de">Such-Anfrage</value>
         <value xml:lang="en">Search String</value>
     </property>
     <property key="WebtoolsSecasIgnoreError">
@@ -4934,6 +4936,7 @@
         <value xml:lang="zh-TW">選擇執行程式</value>
     </property>
     <property key="WebtoolsJobManagerLockList">
+        <value xml:lang="de">Job Manager Sperrliste</value>
         <value xml:lang="en">Job manager locks List</value>
         <value xml:lang="fr">Liste des blocages du gest. service</value>
     </property>
@@ -4968,6 +4971,7 @@
         <value xml:lang="zh-TW">服務</value>
     </property>
     <property key="WebtoolsServiceLimitedTime">
+        <value xml:lang="de">Hinweis: Die Dauer des Service ist auf das Transaktionsstandardzeitlimit beschränkt (60 seconds)</value>
         <value xml:lang="en">Note: the duration of the service is limited to the transaction default timeout (60 seconds)</value>
         <value xml:lang="fr">A noter : la durée du service est limitée à la valeur par défaut des transactions (60 secondes)</value>
     </property>
@@ -5198,6 +5202,7 @@
         <value xml:lang="zh-TW">大小總計</value>
     </property>
     <property key="WebtoolsSolr">
+        <value xml:lang="de">Solr</value>
         <value xml:lang="en">Solr</value>
     </property>
     <property key="WebtoolsSpecifiedEntity1">
@@ -5728,6 +5733,7 @@
         <value xml:lang="zh-TW">執行離線同步</value>
     </property>
     <property key="WebtoolsTTL">
+        <value xml:lang="de">TTL</value>
         <value xml:lang="en">TTL</value>
         <value xml:lang="fr">Péremption</value>
         <value xml:lang="zh">存在时间</value>
@@ -6053,11 +6059,13 @@
         <value xml:lang="zh-TW">冗長級別會細顆粒地指出應用程式進行情況的資訊,適于偵錯程式.</value>
     </property>
     <property key="WebtoolsViewAsPdfTheHtmlLayoutDemo">
+        <value xml:lang="de">Anzeigen des HTML-Layouts als PDF: Testen des Makrovorlage ftl und des globalen Renderings (Screen coherence wird nicht erzwungen)</value>
         <value xml:lang="en">View as Pdf the html layout : testing macro template ftl and global render (but not forcing the screen coherence)</value>
         <value xml:lang="fr">Voir en Pdf la disposition html : permet de tester les modèles de macro ftl et le rendu global (mais pas forcement la cohérence d'écran)</value>
         <value xml:lang="zh">按PDF浏览网页版式：测试宏模版FTL和全局渲染程序(但是不强制页面一致)</value>
     </property>
     <property key="WebtoolsViewAsTextTheHtmlLayoutDemo">
+        <value xml:lang="de">Anzeigen des HTML-Layouts als Text (XML, CSV und Text): Testen des Makrovorlage ftl und des globalen Renderings (Screen coherence wird nicht erzwungen)</value>
         <value xml:lang="en">View as text (xml, csv and text) the html layout : testing macro template ftl and global render (but not forcing the screen coherence)</value>
         <value xml:lang="fr">Voir en text (xml, csv, text) la disposition html : permet de tester les modèles de macro ftl et le rendu global (mais pas forcement la cohérence d'écran)</value>
         <value xml:lang="zh">按文本(XML，逗号分隔格式和文本)浏览网页版式：测试宏模版FTL和全局渲染程序(但是不强制页面一致)</value>
@@ -6100,6 +6108,7 @@
         <value xml:lang="zh-TW">檢視日誌</value>
     </property>
     <property key="WebtoolsViewMetrics">
+        <value xml:lang="de">Metriken ansehen</value>
         <value xml:lang="en">View Metrics</value>
         <value xml:lang="fr">Voir les mesures</value>
         <value xml:lang="zh">浏览度量</value>

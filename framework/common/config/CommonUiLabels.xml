@@ -3787,7 +3787,6 @@
     </property>
     <property key="CommonEmptyHeader">
         <!-- do not remove this! -->
-        <value xml:lang="de" xml:space="preserve"> </value>
         <value xml:lang="en" xml:space="preserve"> </value>
     </property>
     <property key="CommonEnable">
@@ -6931,6 +6930,7 @@
         <value xml:lang="zh-TW">管理者</value>
     </property>
     <property key="CommonMandatory">
+        <value xml:lang="de">Pflicht</value>
         <value xml:lang="en">Mandatory</value>
         <value xml:lang="fr">Obligatoire</value>
         <value xml:lang="ja">必須</value>
@@ -6959,6 +6959,7 @@
         <value xml:lang="zh-TW">許多</value>
     </property>
     <property key="CommonMap">
+        <value xml:lang="de">Karte</value>
         <value xml:lang="en">Map</value>
         <value xml:lang="fr">Carte</value>
         <value xml:lang="nl">Kaart</value>
@@ -7008,6 +7009,7 @@
     <property key="CommonMax250Chars">
         <value xml:lang="ar">250 حرف بحد أقصى</value>
         <value xml:lang="cs">Maximálně 250 znaků</value>
+        <value xml:lang="de">Max. 250 Zeichen</value>
         <value xml:lang="en">250 Chars Maximum</value>
         <value xml:lang="es">250 caracteres máximo</value>
         <value xml:lang="fr">250 caractères max.</value>
@@ -7103,9 +7105,11 @@
         <value xml:lang="fr">Médias</value>
     </property>
     <property key="CommonMediaType">
+        <value xml:lang="de">Typ</value>
         <value xml:lang="en">Type</value>
     </property>
     <property key="CommonMediaTypes">
+        <value xml:lang="de">Media Arten</value>
         <value xml:lang="en">Media Types</value>
     </property>
     <property key="CommonMedium">
@@ -7150,6 +7154,7 @@
     <property key="CommonMessageMissing">
         <value xml:lang="ar">الرسالة مفقودة</value>
         <value xml:lang="cs">Chybí zpráva</value>
+        <value xml:lang="de">Nachricht fehlt</value>
         <value xml:lang="en">Message is missing</value>
         <value xml:lang="es">Falta el mensaje</value>
         <value xml:lang="fr">Message manquant</value>
@@ -7164,6 +7169,7 @@
         <value xml:lang="ar">رسائل</value>
         <value xml:lang="cs">Zprávy</value>
         <value xml:lang="de">Meldungen</value>
+        <value xml:lang="de">Nachrichten</value>
         <value xml:lang="en">Messages</value>
         <value xml:lang="es">Mensajes</value>
         <value xml:lang="fr">Messages</value>
@@ -7200,6 +7206,7 @@
         <value xml:lang="zh-TW">方法</value>
     </property>
     <property key="CommonMetricNotFound">
+        <value xml:lang="de">Metrik ${name} nicht gefunden</value>
         <value xml:lang="en">Metric ${name} not found</value>
     </property>
     <property key="CommonMilliSecond">
@@ -7273,6 +7280,7 @@
         <value xml:lang="zh-TW">其他</value>
     </property>
     <property key="CommonModifiedBy">
+        <value xml:lang="de">Geändert am</value>
         <value xml:lang="en">Modified By</value>
     </property>
     <property key="CommonModify">
@@ -7566,6 +7574,7 @@
         <value xml:lang="ar">ل</value>
         <value xml:lang="cs">N</value>
         <value xml:lang="en">N</value>
+        <value xml:lang="de">N</value>
         <value xml:lang="hi-IN">ना</value>
         <value xml:lang="vi">Không</value>
         <value xml:lang="zh">否</value>
@@ -7614,6 +7623,7 @@
         <value xml:lang="zh-TW">名稱</value>
     </property>
     <property key="CommonNames">
+        <value xml:lang="de">Name</value>
         <value xml:lang="en">Name</value>
         <value xml:lang="nl">Naam</value>
     </property>
@@ -7893,6 +7903,7 @@
     <property key="CommonNoDetailImageAvailableToDisplay">
         <value xml:lang="ar">لا يوجد صورة تفصيلية للعرض</value>
         <value xml:lang="cs">Detailní obrázek pro zobrazení není k dispozici.</value>
+        <value xml:lang="de">Es kann kein Detail-Bild zur Anzeige gefunden werden.</value>
         <value xml:lang="en">No detail image available to display.</value>
         <value xml:lang="es">Ninguna imagen de detalles para visualizar.</value>
         <value xml:lang="fr">Aucune image détaillée à afficher.</value>
@@ -8337,7 +8348,8 @@
     <property key="CommonNoteCannotBeUpdated">
         <value xml:lang="ar">لم يتم تحديث بيانات الملاحظة</value>
         <value xml:lang="cs">Nepodařilo se aktualizovat data (chyba zápisu): ${errorString}</value>
-        <value xml:lang="en">Could update note data (write failure): ${errorString}</value>
+        <value xml:lang="de">Die Notiz konnte nicht aktualisiert werden (Schreibfehler): ${errorString}</value>
+        <value xml:lang="en">Could not update note data (write failure): ${errorString}</value>
         <value xml:lang="es">No se pueden actualizar los datos de la nota (fallo de escritura): ${errorString}</value>
         <value xml:lang="fr">Impossible de mettre à jour la note : ${errorString}</value>
         <value xml:lang="it">Non è possibile aggiornare i dati della nota (scrittura fallita): ${errorString}</value>
@@ -8370,6 +8382,7 @@
     <property key="CommonNotifyEmailDeliveryError">
         <value xml:lang="ar">خطأ في تسليم البريد الإلكتروني. راجع سجل الأخطاء</value>
         <value xml:lang="cs">Chyba při doručení emailu, zobrazte chybový protokol</value>
+        <value xml:lang="de">E-Mail-Zustellungsfehler, siehe Fehlerprotokoll</value>
         <value xml:lang="en">Email delivery error, see error log</value>
         <value xml:lang="es">Error en el envío de correo electrónico, verifique el log</value>
         <value xml:lang="fr">Erreur de distribution de courriel, voir le journal</value>
@@ -8383,6 +8396,7 @@
     <property key="CommonNotifyEmailInvalidBody">
         <value xml:lang="ar">نص البريد الإلكتروني غير صالح: لا يمكن ترك النص فارغا</value>
         <value xml:lang="cs">Chybné tělo zprávy; null není povoleno</value>
+        <value xml:lang="de">Ungültiger E-Mail-Text; leer ist nicht erlaubt</value>
         <value xml:lang="en">Invalid email body; null is not allowed</value>
         <value xml:lang="es">Contenido del correo electrónico no válido; no se permite null</value>
         <value xml:lang="fr">Contenu du courriel non valide. Un contenu vide n'est pas permis</value>
@@ -8396,6 +8410,7 @@
     <property key="CommonNotifyEmailMessageBodyGeneratedSuccessfully">
         <value xml:lang="ar">تم خلق نص الرسالة بنجاح</value>
         <value xml:lang="cs">Úspěšně vytvořeno tělo zprávy</value>
+        <value xml:lang="de">Nachrichtentext wurde erfolgreich generiert</value>
         <value xml:lang="en">Message body generated successfully</value>
         <value xml:lang="es">Contenido del correo electrónico generado correctamente</value>
         <value xml:lang="fr">Contenu du courriel généré avec succès</value>
@@ -8409,6 +8424,7 @@
     <property key="CommonNotifyEmailProblemFindingTemplate">
         <value xml:lang="ar">خطأ في العثور على القالب: راجع السجلات</value>
         <value xml:lang="cs">Chyba při hledání šablony, zobrazte chybový protokol</value>
+        <value xml:lang="de">Vorlage nicht gefunden; siehe Protokoll</value>
         <value xml:lang="en">Problem finding template; see logs</value>
         <value xml:lang="es">Problema localizando la plantilla; verifique el log</value>
         <value xml:lang="fr">Problèmpe lors de la récupération du modèle. Voir le journal pour plus de détail</value>
@@ -8422,6 +8438,7 @@
     <property key="CommonNotifyEmailProblemProcessingTemplate">
         <value xml:lang="ar">خطأ في تجهيز القالب: راجع سجلات الأخطاء</value>
         <value xml:lang="cs">Chyba zpracování šablony, zobrazte chybový protokol</value>
+        <value xml:lang="de">Template Verarbeitungsproblem, siehe Fehlerprotokolle</value>
         <value xml:lang="en">Template processing problem, see error logs</value>
         <value xml:lang="es">Problema accediendo a la plantilla, verifique el log de errores</value>
         <value xml:lang="fr">Problème lors de l'exécution du modèle. Voir le journal pour plus de détail</value>
@@ -8435,6 +8452,7 @@
     <property key="CommonNotifyEmailProblemReadingTemplate">
         <value xml:lang="ar">خطأ في قراءة القالب, راجع سجلات الأخطاء</value>
         <value xml:lang="cs">Chyba při čtení šablony, více informací je v logu</value>
+        <value xml:lang="de">Template Leseprobleme, siehe Fehlerprotokolle</value>
         <value xml:lang="en">Template reading problem, see error logs</value>
         <value xml:lang="es">Problema leyendo la plantilla, verifique el log de errores</value>
         <value xml:lang="fr">Problème dans la lecture du modèle. Voir le journal pour plus de détail</value>
@@ -8773,6 +8791,7 @@
     <property key="CommonOrganizationLogo">
         <value xml:lang="ar">شعار المنظمة</value>
         <value xml:lang="cs">Logo organizace</value>
+        <value xml:lang="de">Organisations-Logo</value>
         <value xml:lang="en">Organization Logo</value>
         <value xml:lang="es">Logo de la organización</value>
         <value xml:lang="fr">Logo de l'organisation</value>
@@ -8783,7 +8802,7 @@
         <value xml:lang="zh-TW">機構商標</value>
     </property>
     <property key="CommonOrLoginWith">
-        <value xml:lang="de">Oder melden Sie sich bei</value>
+        <value xml:lang="de">Oder anmelden mit</value>
         <value xml:lang="en">Or login with</value>
         <value xml:lang="es">O inicia sesión con</value>
         <value xml:lang="fr">Ou connectez-vous avec</value>
@@ -8808,9 +8827,11 @@
         <value xml:lang="zh-TW">其他</value>
     </property>
     <property key="CommonOutputFileCouldNotBeCreated">
+        <value xml:lang="de">Die Ausgabedatei konnte nicht erstellt werden: ${errorString}</value>
         <value xml:lang="en">The Outputfile could not be created: ${errorString}</value>
     </property>
     <property key="CommonOutstanding">
+        <value xml:lang="de">Ausstehend</value>
         <value xml:lang="en">Outstanding</value>
     </property>
     <property key="CommonOverridesSelection">
@@ -8911,6 +8932,7 @@
         <value xml:lang="zh-TW">啟用分頁</value>
     </property>
     <property key="CommonPaid">
+        <value xml:lang="de">Bezahlt</value>
         <value xml:lang="en">Paid</value>
     </property>
     <property key="CommonParent">
@@ -8930,9 +8952,11 @@
         <value xml:lang="zh-TW">上層</value>
     </property>
     <property key="CommonParties">
+        <value xml:lang="de">Parties</value>
         <value xml:lang="en">Parties</value>
     </property>
     <property key="CommonParty">
+        <value xml:lang="de">Nutzer</value>
         <value xml:lang="en">User</value>
     </property>
     <property key="CommonPartyGroupName">
@@ -9105,11 +9129,13 @@
     </property>
     <property key="CommonPdf">
         <value xml:lang="ar">PDF</value>
+        <value xml:lang="de">PDF</value>
         <value xml:lang="en">PDF</value>
         <value xml:lang="hi-IN">पीडीऍफ़(PDF)</value>
         <value xml:lang="zh">PDF</value>
     </property>
     <property key="CommonPer">
+        <value xml:lang="de">Pro</value>
         <value xml:lang="en">Per</value>
         <value xml:lang="nl">Per</value>
     </property>
@@ -9150,6 +9176,7 @@
         <value xml:lang="zh-TW">執行</value>
     </property>
     <property key="CommonPercentage">
+        <value xml:lang="de">Prozent</value>
         <value xml:lang="en">Percentage</value>
         <value xml:lang="es">Porcentaje</value>
         <value xml:lang="fr">Pourcentage</value>
@@ -9441,6 +9468,7 @@
         <value xml:lang="zh-TW">應用程式入口網頁面</value>
     </property>
     <property key="CommonPosition">
+        <value xml:lang="de">Position</value>
         <value xml:lang="en">Position</value>
     </property>
     <property key="CommonPostedBy">
@@ -9483,6 +9511,7 @@
     </property>
     <property key="CommonPoweredBy">
         <value xml:lang="ar">مدعوم من قبل</value>
+        <value xml:lang="de">Powered by</value>
         <value xml:lang="en">Powered by</value>
         <value xml:lang="fr">Motorisé par</value>
         <value xml:lang="hi-IN">द्वारा संचालित</value>
@@ -9630,26 +9659,31 @@
         <value xml:lang="en">Printable</value>
     </property>
     <property key="CommonPrice">
+        <value xml:lang="de">Preis</value>
         <value xml:lang="en">Price</value>
         <value xml:lang="nl">Prijs</value>
         <value xml:lang="zh">价格</value>
     </property>
     <property key="CommonPrices">
+        <value xml:lang="de">Preise</value>
         <value xml:lang="en">Prices</value>
         <value xml:lang="nl">Prijzen</value>
         <value xml:lang="zh">价格</value>
     </property>
     <property key="CommonWorkEffort">
+        <value xml:lang="de">Arbeitseinsatz</value>
         <value xml:lang="en">Work Effort</value>
         <value xml:lang="nl">Activiteit</value>
         <value xml:lang="zh">人工服务</value>
     </property>
     <property key="CommonWorkEfforts">
+        <value xml:lang="de">Arbeitsaufwände</value>
         <value xml:lang="en">Work Effort</value>
         <value xml:lang="nl">Activiteiten</value>
         <value xml:lang="zh">人工服务</value>
     </property>
     <property key="CommonProfit">
+        <value xml:lang="de">Gewinn</value>
         <value xml:lang="en">Profit</value>
         <value xml:lang="nl">Winst</value>
         <value xml:lang="zh">利润</value>
@@ -9711,6 +9745,7 @@
         <value xml:lang="zh-TW">處理中</value>
     </property>
     <property key="CommonProduct">
+        <value xml:lang="de">Produkt</value>
         <value xml:lang="en">Product</value>
         <value xml:lang="nl">Product</value>
         <value xml:lang="zh">产品</value>
@@ -9982,11 +10017,13 @@
         <value xml:lang="zh-TW">快速增加到購物清單</value>
     </property>
     <property key="CommonQuote">
+        <value xml:lang="de">Angebot</value>
         <value xml:lang="en">Quote</value>
         <value xml:lang="nl">Offerte</value>
         <value xml:lang="zh">询价</value>
     </property>
     <property key="CommonQuoteTerms">
+        <value xml:lang="de">Angebotsbedingungen</value>
         <value xml:lang="en">Quote Terms</value>
     </property>
     <property key="CommonRate">
@@ -10069,6 +10106,7 @@
         <value xml:lang="zh-TW">原因</value>
     </property>
     <property key="CommonReceipt">
+        <value xml:lang="de">Quittung</value>
         <value xml:lang="en">Receipt</value>
     </property>
     <property key="CommonReceive">
@@ -10112,6 +10150,7 @@
         <value xml:lang="zh-TW">已接收</value>
     </property>
     <property key="CommonRecentActivity">
+        <value xml:lang="de">Letzte Aktivität</value>
         <value xml:lang="en">Recent Activity</value>
     </property>
     <property key="CommonRecreate">
@@ -10240,6 +10279,7 @@
         <value xml:lang="zh-TW">已拒絕</value>
     </property>
     <property key="CommonRelation">
+        <value xml:lang="de">Beziehung</value>
         <value xml:lang="en">Relation</value>
         <value xml:lang="nl">Relatie</value>
         <value xml:lang="zh">关系</value>
@@ -10441,6 +10481,7 @@
         <value xml:lang="zh-TW">再查詢</value>
     </property>
     <property key="CommonRequest">
+        <value xml:lang="de">Anfrage</value>
         <value xml:lang="en">Request</value>
         <value xml:lang="nl">Verzoek</value>
         <value xml:lang="zh">请求</value>
@@ -10634,6 +10675,7 @@
         <value xml:lang="zh-TW">評論</value>
     </property>
     <property key="CommonRevision">
+        <value xml:lang="de">Revision</value>
         <value xml:lang="en">revision</value>
         <value xml:lang="fr">révision</value>
     </property>
@@ -11007,6 +11049,7 @@
         <value xml:lang="zh-TW">任何</value>
     </property>
     <property key="CommonSelectFile">
+        <value xml:lang="de">Datei aussuchen</value>
         <value xml:lang="en">Select File</value>
     </property>
     <property key="CommonSelectOne">
@@ -11297,6 +11340,7 @@
         <value xml:lang="zh-TW">序號數</value>
     </property>
     <property key="CommonSeqId">
+        <value xml:lang="de">Sequenz-ID</value>
         <value xml:lang="en">Sequence ID</value>
         <value xml:lang="nl">Volg ID</value>
         <value xml:lang="zh">序号</value>
@@ -11307,6 +11351,7 @@
         <value xml:lang="fr">Erreur de communication avec le serveur</value>
     </property>
     <property key="CommonServerHour">
+        <value xml:lang="de">Server Stunde</value>
         <value xml:lang="en">Server Hour</value>
         <value xml:lang="fr">Heure du serveur </value>
         <value xml:lang="ru">Час сервера</value>
@@ -11316,6 +11361,7 @@
     <property key="CommonServiceReturnError">
         <value xml:lang="ar">خطأ مرتجع من الخدمة</value>
         <value xml:lang="cs">Služba vrátila chyba : Vrácená chyba</value>
+        <value xml:lang="de">Fehler-Service Antwort : Returning Error</value>
         <value xml:lang="en">Return Error Service : Returning Error</value>
         <value xml:lang="es">El servicio ha devuelto un error: Devolviendo error</value>
         <value xml:lang="fr">Le service a retourné une erreur</value>
@@ -11327,6 +11373,7 @@
         <value xml:lang="zh-TW">返回錯誤服務:正在返回錯誤</value>
     </property>
     <property key="CommonServiceSuccessMessage">
+        <value xml:lang="de">Service erfolgreich ausgeführt</value>
         <value xml:lang="en">Operation has been executed successfully</value>
     </property>
     <property key="CommonSessionTimeoutPleaseLogIn">
@@ -11435,9 +11482,11 @@
         <value xml:lang="zh-TW">(如果是空值,將設定為目前時間)</value>
     </property>
     <property key="CommonSettings">
+        <value xml:lang="de">Einstellungen</value>
         <value xml:lang="en">Settings</value>
     </property>
     <property key="CommonShipment">
+        <value xml:lang="de">Versand</value>
         <value xml:lang="en">Shipment</value>
         <value xml:lang="nl">Zending</value>
         <value xml:lang="zh">送货</value>
@@ -11633,6 +11682,7 @@
         <value xml:lang="zh-TW">小</value>
     </property>
     <property key="CommonSold">
+        <value xml:lang="de">Verkauft</value>
         <value xml:lang="en">Sold</value>
         <value xml:lang="zh">售出</value>
         <value xml:lang="zh-TW">售出</value>
@@ -11894,6 +11944,7 @@
         <value xml:lang="zh-TW">把狀態設為完成</value>
     </property>
     <property key="CommonStore">
+        <value xml:lang="de">Store</value>
         <value xml:lang="en">Store</value>
     </property>
     <property key="CommonSubTitle">
@@ -11918,6 +11969,7 @@
         <value xml:lang="zh-TW">子標題</value>
     </property>
     <property key="CommonStreet">
+        <value xml:lang="de">Straße</value>
         <value xml:lang="en">Street</value>
         <value xml:lang="nl">Straat</value>
     </property>
@@ -12157,6 +12209,7 @@
     <property key="CommonTelephoneAbbr">
         <value xml:lang="ar">هاتف</value>
         <value xml:lang="cs">Tel.</value>
+        <value xml:lang="de">Tel</value>
         <value xml:lang="en">Tel</value>
         <value xml:lang="es">Tel.</value>
         <value xml:lang="fr">Tél.</value>
@@ -12205,12 +12258,14 @@
     </property>
     <property key="CommonTerm">
         <value xml:lang="ar">شرط</value>
+        <value xml:lang="de">Vereinbarung</value>
         <value xml:lang="en">Term</value>
         <value xml:lang="nl">Conditie</value>
         <value xml:lang="zh">期</value>
     </property>
     <property key="CommonTerms">
         <value xml:lang="ar">شروط</value>
+        <value xml:lang="de">Vereinbarungen</value>
         <value xml:lang="en">Terms</value>
         <value xml:lang="nl">Condities</value>
         <value xml:lang="zh">期</value>
@@ -12832,6 +12887,7 @@
         <value xml:lang="zh-TW">價值合計</value>
     </property>
     <property key="CommonTransaction">
+        <value xml:lang="de">Buchung</value>
         <value xml:lang="en">Transaction</value>
     </property>
     <property key="CommonTrue">
@@ -13143,6 +13199,7 @@
         <value xml:lang="zh-TW">上傳</value>
     </property>
     <property key="CommonUseBackButton">
+        <value xml:lang="de">Verwenden Sie dazu die Zurück-Schaltfläche des Browsers</value>
         <value xml:lang="en">Use the browser Back button for that</value>
         <value xml:lang="fr">Utilisez le bouton de retour de votre navigateur pour cela</value>
         <value xml:lang="zh">使用浏览器的后退按钮</value>
@@ -13410,26 +13467,31 @@
         <value xml:lang="zh-TW">檢視</value>
     </property>
     <property key="CommonViewAsCsv">
+        <value xml:lang="de">Als CSV ansehen</value>
         <value xml:lang="en">View as csv</value>
         <value xml:lang="fr">Voir en csv</value>
         <value xml:lang="zh">按逗号分隔格式浏览</value>
     </property>
     <property key="CommonViewAsPdf">
+        <value xml:lang="de">Als PDF ansehen</value>
         <value xml:lang="en">View as Pdf</value>
         <value xml:lang="fr">Voir en Pdf</value>
         <value xml:lang="zh">按PDF格式浏览</value>
     </property>
     <property key="CommonViewAsText">
+        <value xml:lang="de">Als Text ansehen</value>
         <value xml:lang="en">View as text</value>
         <value xml:lang="fr">Voir en texte</value>
         <value xml:lang="zh">按文本格式浏览</value>
     </property>
     <property key="CommonViewAsXml">
+        <value xml:lang="de">Als Xml ansehen</value>
         <value xml:lang="en">View as xml</value>
         <value xml:lang="fr">Voir en xml</value>
         <value xml:lang="zh">按XML格式浏览</value>
     </property>
     <property key="CommonViewAsXls">
+        <value xml:lang="de">Als Excel-Sheet ansehen</value>
         <value xml:lang="en">View as spreadsheet</value>
         <value xml:lang="fr">Voir en tableur</value>
     </property>
@@ -13720,6 +13782,7 @@
         <value xml:lang="zh-TW">週</value>
     </property>
     <property key="CommonWeeks">
+        <value xml:lang="de">Wochen</value>
         <value xml:lang="en">Weeks</value>
         <value xml:lang="fr">Semaines</value>
         <value xml:lang="zh">星期</value>
@@ -13844,6 +13907,7 @@
         <value xml:lang="zh-TW">寬度</value>
     </property>
     <property key="CommonWith">
+        <value xml:lang="de">mit</value>
         <value xml:lang="en">with</value>
         <value xml:lang="fr">avec</value>
     </property>
@@ -14178,6 +14242,7 @@
         <value xml:lang="zh-TW">新建資料源類型</value>
     </property>
     <property key="Ebay">
+        <value xml:lang="de">eBay</value>
         <value xml:lang="en">eBay</value>
         <value xml:lang="th">อีเบย์</value>
         <value xml:lang="zh">eBay</value>
@@ -14219,10 +14284,12 @@
         <value xml:lang="zh-TW">擴充範例</value>
     </property>
     <property key="ExternalOrganisation">
+        <value xml:lang="de">Externe Organisation</value>
         <value xml:lang="en">External Organisation</value>
         <value xml:lang="nl">Externe organisatie</value>
     </property>
     <property key="ExternalPerson">
+        <value xml:lang="de">Externe Person</value>
         <value xml:lang="en">External Person</value>
         <value xml:lang="nl">Extern persoon</value>
     </property>
@@ -14261,6 +14328,7 @@
     <property key="FacilityComponentDescription">
         <value xml:lang="ar">إدارة المخزون, المستودع, المكان, الشحن, الإستلام, الجرد</value>
         <value xml:lang="cs">Správa skladu, lokalit, dodávek, dodacích listů</value>
+        <value xml:lang="de">Lager Verwaltung, Werk, Ort, Versand, Empfang, Inventur</value>
         <value xml:lang="en">Inventory management, Facility, location, Shipment, Receipt, Physical Inventory</value>
         <value xml:lang="fr">Gestion des stocks, lieux de stockage, emplacement, expédition, réception, inventaire</value>
         <value xml:lang="ja">在庫管理、拠点、位置、発送、受領、物理在庫</value>
@@ -14290,6 +14358,7 @@
     <property key="FormFieldTitle_acceptButton">
         <value xml:lang="ar">قبول</value>
         <value xml:lang="cs">Přijmout</value>
+        <value xml:lang="de">Annehmen</value>
         <value xml:lang="en">Accept</value>
         <value xml:lang="es">Aceptar</value>
         <value xml:lang="fr">Accepter</value>
@@ -14303,6 +14372,7 @@
     <property key="FormFieldTitle_actionEnumId">
         <value xml:lang="ar">النشاط</value>
         <value xml:lang="cs">Akce</value>
+        <value xml:lang="de">Aktion</value>
         <value xml:lang="en">Action</value>
         <value xml:lang="es">Acción</value>
         <value xml:lang="fr">Action</value>
@@ -14507,6 +14577,7 @@
     <property key="FormFieldTitle_cmdToCall">
         <value xml:lang="ar">إستدعاء الأمر</value>
         <value xml:lang="cs">Příkaz k zavolání</value>
+        <value xml:lang="de">Jetzt anrufen</value>
         <value xml:lang="en">Cmd To Call</value>
         <value xml:lang="es">Comando a llamar</value>
         <value xml:lang="fr">Cmd d'appel</value>
@@ -14551,6 +14622,7 @@
     <property key="FormFieldTitle_confirmAction">
         <value xml:lang="ar">تأكيد</value>
         <value xml:lang="cs">Potvrdit</value>
+        <value xml:lang="de">Bestätigen</value>
         <value xml:lang="en">Confirm</value>
         <value xml:lang="es">Confirmar</value>
         <value xml:lang="fr">Confirmer</value>
@@ -14564,6 +14636,7 @@
     <property key="FormFieldTitle_confirmButton">
         <value xml:lang="ar">تأكيد</value>
         <value xml:lang="cs">Potvrdit</value>
+        <value xml:lang="de">Bestätigen</value>
         <value xml:lang="en">Confirm</value>
         <value xml:lang="es">Confirmar</value>
         <value xml:lang="fr">Confirmer</value>
@@ -14775,10 +14848,12 @@
         <value xml:lang="zh-TW">目前狀態識別</value>
     </property>
     <property key="FormFieldTitle_customScreenId">
+        <value xml:lang="de">Eigener Screen</value>
         <value xml:lang="en">Custom screen</value>
         <value xml:lang="fr">Écran dédié</value>
     </property>
     <property key="FormFieldTitle_customScreenTypeId">
+        <value xml:lang="de">Eigener Screentyp</value>
         <value xml:lang="en">custom screen type</value>
         <value xml:lang="fr">Type d'écran dédié</value>
     </property>
@@ -14864,6 +14939,7 @@
     <property key="FormFieldTitle_deviceLocation">
         <value xml:lang="ar">موقع الجهاز</value>
         <value xml:lang="cs">Umístění zařízení</value>
+        <value xml:lang="de">Gerätestandort</value>
         <value xml:lang="en">Device Location</value>
         <value xml:lang="es">Emplazamiento dispositivo</value>
         <value xml:lang="fr">Emplacement</value>
@@ -14875,6 +14951,7 @@
     </property>
     <property key="FormFieldTitle_downloadAction">
         <value xml:lang="da">Download</value>
+        <value xml:lang="de">Download</value>
         <value xml:lang="en">Download</value>
         <value xml:lang="fr">Télécharger</value>
         <value xml:lang="it">Scarica</value>
@@ -14975,6 +15052,7 @@
     <property key="FormFieldTitle_extDevicePurposeActionId">
         <value xml:lang="ar">دليل هدف نشاط الجهاز الخارجي</value>
         <value xml:lang="cs">ID účelové akce externího zařázení</value>
+        <value xml:lang="de">Externes Gerät Zweck-ID</value>
         <value xml:lang="en">External Device Purpose Action ID</value>
         <value xml:lang="es">Código acción dispositivo externo</value>
         <value xml:lang="fr">Obj. de l'action</value>
@@ -14986,6 +15064,7 @@
     <property key="FormFieldTitle_externalDeviceId">
         <value xml:lang="ar">دليل الجهاز الخارجي</value>
         <value xml:lang="cs">ID externího zařízení</value>
+        <value xml:lang="de">Externes Gerät-ID</value>
         <value xml:lang="en">External Device ID</value>
         <value xml:lang="es">Código dispositivo externo</value>
         <value xml:lang="fr">Réf. Mat. Externe</value>
@@ -14998,6 +15077,7 @@
     <property key="FormFieldTitle_externalDeviceTypeId">
         <value xml:lang="ar">دليل نوع الجهاز الخارجي</value>
         <value xml:lang="cs">ID externího typu zařízení</value>
+        <value xml:lang="de">Externes Gerät Typ-ID</value>
         <value xml:lang="en">External Device Type ID</value>
         <value xml:lang="es">Código tipo dispositivo externo</value>
         <value xml:lang="fr">Type de Mat. Externe</value>

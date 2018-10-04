@@ -537,6 +537,7 @@
         <value xml:lang="zh-TW">無法選擇另一個禮品，沒有找到用于 # ${alternateGwpLine} 的購物車行明細。 </value>
     </property>
     <property key="OrderCouldNotSetGrantTotalOnOrderHeader">
+        <value xml:lang="de">FEHLER: GrantTotal konnte nicht für die OrderHeader entity gesetzt werden: ${errorString}</value>
         <value xml:lang="en">ERROR: Could not set grantTotal on OrderHeader entity: ${errorString}</value>
     </property>
     <property key="OrderCreateCommunicationEventProductPermissionError">
@@ -552,6 +553,7 @@
         <value xml:lang="zh-TW">創建溝通事件時出現產品權限錯誤</value>
     </property>
     <property key="OrderDatabaseErrorCheckingIfWeShouldChangeOrderHeaderStatusToApproved">
+        <value xml:lang="de">Datenbankfehler bei der Überprüfung ob der Auftragskopfstatus in den genehmigt status geändert werden soll: ${e.toString()}</value>
         <value xml:lang="en">Database error checking if we should change order header status to approved: ${e.toString()}</value>
     </property>
     <property key="OrderDispatcherOrDelegatorOrCartArgumentIsNull">
@@ -1694,9 +1696,11 @@
         <value xml:lang="zh">无法更新退货头状态</value>
     </property>
     <property key="OrderErrorWhileCreatingNewShoppingListBasedOnOrder">
+        <value xml:lang="de">Fehler beim Erstellen einer neuen Einkaufsliste basierend auf der Bestellung ${errorString}</value>
         <value xml:lang="en">Error while creating new shopping list based on order ${errorString}</value>
     </property>
     <property key="OrderErrorWhileCreatingNewShoppingListBasedAutomaticReorder">
+        <value xml:lang="de">Fehler beim Erstellen einer neuen Einkaufsliste basierend auf der automaitschen Nachbestellung ${errorString}</value>
         <value xml:lang="en">Error while creating new shopping list based automatic reorder ${errorString}</value>
     </property>
     <property key="OrderErrorWithCreateBillingAccount">
@@ -1817,6 +1821,7 @@
         <value xml:lang="zh-TW">沒有找到固定資產，固定資產ID：${fixedAssetId}</value>
     </property>
     <property key="OrderFixedAssetSoldOut">
+        <value xml:lang="de">FEHLER: fixed_Asset_sold_out AssetId: ${fixedAssetId} an Datum: ${exceptionDateStartTime}</value>
         <value xml:lang="en">ERROR: fixed_Asset_sold_out AssetId: ${fixedAssetId} on date: ${exceptionDateStartTime}</value>
     </property>
     <property key="OrderFrequencyOrIntervalWasNotSpecified">
@@ -1959,6 +1964,7 @@
         <value xml:lang="zh-TW">用于購物列表重複發生的頻率無效</value>
     </property>
     <property key="OrderItemShipGroupDoesNotExist">
+        <value xml:lang="de">Die Versandgruppe für die Bestellposition existiert nicht</value>
         <value xml:lang="en">Order Item Ship Group Does Not Exist</value>
     </property>
     <property key="OrderItemStatusNotChangedIsNotAValidChange">
@@ -2098,6 +2104,7 @@
         <value xml:lang="zh-TW">沒有訂單頭，無法創建支付</value>
     </property>
     <property key="OrderNoPaymentMethodTypeSelected">
+        <value xml:lang="de">Keine Zahlungsmethode ausgewählt</value>
         <value xml:lang="en">No Payment Method Type selected</value>
     </property>
     <property key="OrderNoPayToPartyIdSetOnProductStore">
@@ -2133,6 +2140,7 @@
         <value xml:lang="zh-TW">沒有產品店鋪，無法創建支付</value>
     </property>
     <property key="OrderNoReturnAmountFound">
+        <value xml:lang="de">Keine returnAmount für die Bestellung gefunden: ${orderId}</value>
         <value xml:lang="en">No returnAmount found for order: ${orderId}</value>
     </property>
     <property key="OrderNoReturnQuantityAvailablePreviousReturnsMayExist">
@@ -2182,6 +2190,7 @@
         <value xml:lang="zh-TW">沒有找到設置</value>
     </property>
     <property key="OrderNoShipmentMethodSelected">
+        <value xml:lang="de">Keine Versandart ausgewählt</value>
         <value xml:lang="en">No Shipment Method selected</value>
     </property>
     <property key="OrderNoShoppingListAvailable">
@@ -3323,6 +3332,7 @@
         <value xml:lang="zh-TW">預定長度應該是一個正數</value>
     </property>
     <property key="OrderReturnItemResponseNotFound">
+        <value xml:lang="de">${errorMsg} Keine Retouren-Antwort wurde für die ID [${responseId}] gefunden.</value>
         <value xml:lang="en">${errorMsg} Return Item Response not found with ID [${responseId}].</value>
     </property>
     <property key="OrderReturnItemTypeIsNotDefined">
@@ -6078,6 +6088,7 @@
     </property>
     <property key="item.availableOk">
         <value xml:lang="ar">OK</value>
+        <value xml:lang="de">OK</value>
         <value xml:lang="en">OK</value>
         <value xml:lang="th">ตกลง</value>
         <value xml:lang="vi">Đồng ý</value>

@@ -13,15 +13,7 @@ public class JFairyDemoDataHelper extends DemoDataHelper {
 
 	public JFairyDemoDataHelper(Map<String, Object> context) throws Exception {
 		super(context, JFairySettings.class);
-	}
-
-	public boolean generateAddress() {
-		return (boolean) getContext().get("generateAddress");
-	}
-
-	public boolean generateUserLogin() {
-		return (boolean) getContext().get("generateUserLogin");
-	}
+	}	
 
 	public Locale getLocale() {
 		return locale;

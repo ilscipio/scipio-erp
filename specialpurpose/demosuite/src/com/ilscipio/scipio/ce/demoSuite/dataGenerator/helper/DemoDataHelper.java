@@ -9,12 +9,14 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataParty;
 
 public abstract class DemoDataHelper {
-
+    private static final Integer DATA_GENERATOR_MAX_RECORDS = UtilProperties.getPropertyAsInteger("demosuite", "demosuite.test.data.max.records", 50);
+    
     public enum dataTypeEnum {
-        PARTY(DemoDataParty.class), PRODUCT(DemoDataObject.class), ORDER(DemoDataObject.class), TRANSACTION(DemoDataObject.class);
+        PARTY(DemoDataParty.class), PRODUCT(DemoDataObject.class), ORDER(DemoDataOrder.class), TRANSACTION(DemoDataObject.class);
 
         private final Class<? extends DemoDataObject> demoDataObject;
 
@@ -43,7 +45,11 @@ public abstract class DemoDataHelper {
         if (UtilValidate.isEmpty(dataTypeEnum.valueOf(dataType))) {
             throw new Exception("dataType not valid");
         }
-        this.count = (Integer) context.get("num");
+        if (context.containsKey("num") && UtilValidate.isNotEmpty(context.get("num"))) {
+            this.count = (Integer) context.get("num");
+        } else {
+            this.count = DATA_GENERATOR_MAX_RECORDS;
+        }
         this.settings = settingsClass.getConstructor(Delegator.class).newInstance(delegator);
         this.properties = UtilProperties.getProperties("demosuite");
     }
@@ -74,6 +80,26 @@ public abstract class DemoDataHelper {
 
     public Delegator getDelegator() {
         return delegator;
+    }
+    
+    public boolean generateAddress() {
+        return (boolean) getContext().get("generateAddress");
+    }
+
+    public boolean generateUserLogin() {
+        return (boolean) getContext().get("generateUserLogin");
+    }
+    
+    public boolean generateOrder() {
+        return (boolean) getContext().get("generateOrder");        
+    }
+    
+    public boolean generateTransaction() {
+        return (boolean) getContext().get("generateTransaction");        
+    }
+    
+    public boolean generateWorkeffort() {
+        return (boolean) getContext().get("generateWorkeffort");        
     }
 
     public static abstract class DataGeneratorSettings {

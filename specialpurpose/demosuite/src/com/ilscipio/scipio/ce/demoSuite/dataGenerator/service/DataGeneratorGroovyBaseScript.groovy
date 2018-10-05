@@ -30,8 +30,6 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     private int totalFailed = 0;
     private int totalStored = 0;
 
-    private int numRecords = DATA_GENERATOR_MAX_RECORDS;
-
     DataGeneratorGroovyBaseScript() {
         dataGeneratorStats = [];
     }
@@ -116,10 +114,12 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
             init();
             DataGenerator generator = context.generator;
             List<DemoDataObject> data = generator.retrieveData();
-            if (data)
+            if (data && data.size() > 0) {
                 numRecords = data.size();
-            else if (generator.getHelper().getCount() != null)
-                numRecords = generator.getHelper().getCount();
+            } else {
+                throw new Exception("No demo data to prepare. Operation aborted.");
+            }
+                  
             for (int i = 0; i < numRecords; i++) {
                 List toBeStored = prepareData(i, (data && data.size() == numRecords) ? data.get(i) : null);
                 if (toBeStored) {
@@ -127,7 +127,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                 }
             }
         } catch (Exception e) {
-            logError(e.getMessage());
+            logError("Fatal error while generating data (aborted): " + e.getMessage());
             // TODO: localize (but exception message cannot be localized)
             return error("Fatal error while generating data (aborted): " + e.getMessage());
         }

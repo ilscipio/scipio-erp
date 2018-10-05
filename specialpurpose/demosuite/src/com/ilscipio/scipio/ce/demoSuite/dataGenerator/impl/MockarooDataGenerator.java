@@ -11,18 +11,18 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.MockarooDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.MockarooDemoDataHelper.MockarooSettings;
 
-public class MockarooDataGenerator extends DataGenerator {
+public class MockarooDataGenerator extends AbstractDataGenerator {
 	private static String MOCKAROO_DATA_GENERATOR = "mockaroo";
 
 	private final MockarooDemoDataHelper helper;
 
-	public MockarooDataGenerator(DemoDataHelper helper) {
+	public MockarooDataGenerator(AbstractDemoDataHelper helper) {
 		super(helper);
 		this.helper = (MockarooDemoDataHelper) helper;
 	}

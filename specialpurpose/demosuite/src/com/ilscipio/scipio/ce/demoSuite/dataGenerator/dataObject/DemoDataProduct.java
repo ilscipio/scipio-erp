@@ -7,6 +7,10 @@ public class DemoDataProduct implements DemoDataObject {
     private String description;
     private String longDescription;
     private String price;
+    private String type;
+    private String category;
+    private String categoryType;
+    private String catalogCategoryType;
 
     public String getId() {
         return id;
@@ -46,6 +50,38 @@ public class DemoDataProduct implements DemoDataObject {
 
     public void setLongDescription(String longDescription) {
         this.longDescription = longDescription;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategoryType() {
+        return categoryType;
+    }
+
+    public void setCategoryType(String categoryType) {
+        this.categoryType = categoryType;
+    }
+
+    public String getCatalogCategoryType() {
+        return catalogCategoryType;
+    }
+
+    public void setCatalogCategoryType(String catalogCategoryType) {
+        this.catalogCategoryType = catalogCategoryType;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

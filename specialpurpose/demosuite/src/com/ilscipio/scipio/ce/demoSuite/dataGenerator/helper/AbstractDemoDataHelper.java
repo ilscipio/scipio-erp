@@ -12,7 +12,7 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataParty;
 
-public abstract class DemoDataHelper {
+public abstract class AbstractDemoDataHelper {
     private static final Integer DATA_GENERATOR_MAX_RECORDS = UtilProperties.getPropertyAsInteger("demosuite", "demosuite.test.data.max.records", 50);
     
     public enum dataTypeEnum {
@@ -36,7 +36,7 @@ public abstract class DemoDataHelper {
     private final Properties properties;
     private DataGeneratorSettings settings;
 
-    public DemoDataHelper(Map<String, Object> context, Class<? extends DataGeneratorSettings> settingsClass) throws Exception {
+    public AbstractDemoDataHelper(Map<String, Object> context, Class<? extends DataGeneratorSettings> settingsClass) throws Exception {
         this.delegator = (Delegator) context.get("delegator");
         this.context = context;
         if (!context.containsKey("dataType"))
@@ -80,27 +80,8 @@ public abstract class DemoDataHelper {
 
     public Delegator getDelegator() {
         return delegator;
-    }
+    }    
     
-    public boolean generateAddress() {
-        return (boolean) getContext().get("generateAddress");
-    }
-
-    public boolean generateUserLogin() {
-        return (boolean) getContext().get("generateUserLogin");
-    }
-    
-    public boolean generateOrder() {
-        return (boolean) getContext().get("generateOrder");        
-    }
-    
-    public boolean generateTransaction() {
-        return (boolean) getContext().get("generateTransaction");        
-    }
-    
-    public boolean generateWorkeffort() {
-        return (boolean) getContext().get("generateWorkeffort");        
-    }
 
     public static abstract class DataGeneratorSettings {
         public DataGeneratorSettings(Delegator delegator) {

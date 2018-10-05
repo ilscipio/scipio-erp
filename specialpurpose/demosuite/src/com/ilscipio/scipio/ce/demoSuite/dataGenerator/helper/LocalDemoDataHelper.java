@@ -7,7 +7,7 @@ import java.util.Map;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 
-public class LocalDemoDataHelper extends DemoDataHelper {
+public class LocalDemoDataHelper extends AbstractDemoDataHelper {
 
     private Locale locale;
 

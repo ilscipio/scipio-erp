@@ -6,13 +6,13 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper;
 
-public abstract class DataGenerator {
+public abstract class AbstractDataGenerator {
 
-	private final DemoDataHelper helper;
+	private final AbstractDemoDataHelper helper;
 
-	public DataGenerator(DemoDataHelper helper) {
+	public AbstractDataGenerator(AbstractDemoDataHelper helper) {
 		this.helper = helper;
 	}
 
@@ -26,7 +26,7 @@ public abstract class DataGenerator {
 
 	public abstract String getDataGeneratorName();
 
-	public DemoDataHelper getHelper() {
+	public AbstractDemoDataHelper getHelper() {
 		return helper;
 	}
 

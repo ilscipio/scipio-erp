@@ -14,9 +14,9 @@ import org.ofbiz.entity.transaction.TransactionUtil
 import org.ofbiz.service.engine.GroovyBaseScript
 import org.ofbiz.service.ServiceUtil
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper
 
 // FIXME?: revisit extension/reuse pattern; in Ofbiz GroovyBaseScript is not meant to be hardcoded
 abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
@@ -112,7 +112,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
             sanitizeDates();
             initDataGenerator();
             init();
-            DataGenerator generator = context.generator;
+            AbstractDataGenerator generator = context.generator;
             List<DemoDataObject> data = generator.retrieveData();
             if (data && data.size() > 0) {
                 numRecords = data.size();
@@ -184,11 +184,11 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
         if (dataGeneratorProvider) {
             context.dataGeneratorProvider = dataGeneratorProvider;
             try {
-                Class<? extends DemoDataHelper> helperClazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderHelperClass"));
-                DemoDataHelper helper = (DemoDataHelper) helperClazz.getConstructor(Map.class).newInstance(context);
+                Class<? extends AbstractDemoDataHelper> helperClazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderHelperClass"));
+                AbstractDemoDataHelper helper = (AbstractDemoDataHelper) helperClazz.getConstructor(Map.class).newInstance(context);
                 try {
-                    Class<? extends DataGenerator> clazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderClass"));
-                    DataGenerator generator = (DataGenerator) clazz.getConstructor(DemoDataHelper.class).newInstance(helper);
+                    Class<? extends AbstractDataGenerator> clazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderClass"));
+                    AbstractDataGenerator generator = (AbstractDataGenerator) clazz.getConstructor(AbstractDemoDataHelper.class).newInstance(helper);
                     context.generator = generator;
                 } catch (Exception e) {
                     throw new Exception("Can't instantiate provider class");

@@ -10,12 +10,12 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
-public class MockarooDemoDataHelper extends DemoDataHelper {
+public class MockarooDemoDataHelper extends AbstractDemoDataHelper {
 
 	private Locale locale;
 
 	public MockarooDemoDataHelper(Map<String, Object> context) throws Exception {
-		super(context, (Class<? extends DemoDataHelper.DataGeneratorSettings>) MockarooSettings.class);
+		super(context, (Class<? extends AbstractDemoDataHelper.DataGeneratorSettings>) MockarooSettings.class);
 	}
 
 	public boolean generateAddress() {

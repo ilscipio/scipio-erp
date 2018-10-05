@@ -201,9 +201,9 @@ under the License.
                                   <#if orderHeader?has_content && !printable>
                                      ${offPayDesc}
                                       <#if requestAttributes.paymentRequest?has_content>
-                                          <@qrcode text=requestAttributes.paymentRequest width=150 height=150/>
+                                          <@qrcode text=requestAttributes.paymentRequest width=250 height=250/>
                                           <@alert type="info" closable=false>
-                                            ${requestAttributes.paymentRequest!""}
+                                            <div style="word-break: break-all;">${requestAttributes.paymentRequest!""}</div>
                                           </@alert>
                                       </#if>
                                   <#else>

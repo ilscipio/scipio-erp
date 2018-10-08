@@ -104,7 +104,7 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
 
         AbstractDataGenerator generator = context.generator;
 
-        productFields = UtilMisc.toMap("productId", productData.getProductId(), "productTypeId", productData.getProductTypeId(), "productName", productData.getName(), "description", productData.getDescription(),
+        productFields = UtilMisc.toMap("productId", productData.getId(), "productTypeId", productData.getProductTypeId(), "productName", productData.getName(), "description", productData.getDescription(),
                 "longDescription", productData.getLongDescription(), "introductionDate", productData.getIntroductionDate());
         toBeStored.add(delegator.makeValue("Product", productFields));
 

@@ -3,6 +3,7 @@ package com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -24,6 +25,7 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder.D
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder.DemoDataOrderRole;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder.DemoDataOrderStatus;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataWorkEffort;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataParty;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.LocalDemoDataHelper;
@@ -45,14 +47,47 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         this.helper = (LocalDemoDataHelper) helper;
     }
 
+    /**
+     * ORDER
+     */
     final List<String> orderTypes = UtilMisc.toList("PURCHASE_ORDER", "SALES_ORDER");
     final List<String> orderStatusTypes = UtilMisc.toList("ORDER_CREATED", "ORDER_COMPLETED");
+
     final List<String> prodCatalogCategoryTypes = UtilMisc.toList("PCCT_ADMIN_ALLW", "PCCT_BROWSE_ROOT", "PCCT_MOST_POPULAR", "PCCT_OTHER_SEARCH", "PCCT_PROMOTIONS",
             "PCCT_PURCH_ALLW", "PCCT_QUICK_ADD", "PCCT_SEARCH", "PCCT_VIEW_ALLW", "PCCT_WHATS_NEW");
+
+    /**
+     * PRODUCT
+     */
     // TODO: Gotta figure how to handle these two types "AGGREGATED",
     // "AGGREGATED_CONF"
     final List<String> productTypes = UtilMisc.toList("ASSET_USAGE", "DIGITAL_GOOD", "FINDIG_GOOD", "FINISHED_GOOD", "GOOD", "MARKETING_PKG_PICK", "MARKETING_PKG_AUTO",
             "RAW_MATERIAL", "SERVICE", "SUBASSEMBLY", "WIP");
+
+    /**
+     * WORKEFFORT
+     */
+    // WorkEffortTypeIds
+    final List<String> workEffortTypeIds = UtilMisc.toList("ACTIVITY", "ASSET_USAGE", "AVAILABLE", "BUSINESS_TRAVEL", "EVENT", "MEETING", "MILESTONE", "PERSONAL_TIMEOFF", "PHASE",
+            "PHASE_TEMPLATE", "PROD_ORDER_HEADER", "PROD_ORDER_TASK", "PROGRAM", "PROJECT", "PROJECT_TEMPLATE", "PUBLIC_HOLIDAY", "PUBLISH_PROPS", "ROU_TASK", "ROUTING",
+            "SCRUM_PROJECT", "SCRUM_SPRINT", "SCRUM_TASK", "SCRUM_TASK_ERROR", "SCRUM_TASK_IMPL", "SCRUM_TASK_INST", "SCRUM_TASK_TEST", "TASK", "TASK_TEMPLATE", "TEMPLATE",
+            "TRAINING", "WORK_FLOW");
+
+    // workEffortTypeIdsAndStatus
+    final Map<String, List<String>> workEffortTypeIdsAndStatus = UtilMisc.toMap("TASK",
+            UtilMisc.toList("CAL_DECLINED", "CAL_DELEGATED", "CAL_COMPLETED", "CAL_CANCELLED", "CAL_ACCEPTED"), "PROD_ORDER_TASK",
+            UtilMisc.toList("PRUN_CANCELLED", "PRUN_COMPLETED", "PRUN_CLOSED", "PRUN_CREATED", "PRUN_RUNNING", "PRUN_SCHEDULED", "PRUN_DOC_PRINTED"), "EVENT",
+            UtilMisc.toList("CAL_DECLINED", "CAL_DELEGATED", "CAL_COMPLETED", "CAL_CANCELLED", "CAL_CONFIRMED", "CAL_TENTATIVE"), "ACTIVITY",
+            UtilMisc.toList("CAL_DECLINED", "CAL_DELEGATED", "CAL_COMPLETED", "CAL_CANCELLED", "CAL_NEEDS_ACTION", "CAL_SENT"));
+
+    final Map<String, List<String>> fixedAssetAndTypes = UtilMisc.toMap("EQUIPMENT",
+            UtilMisc.toList("DEMO_FORKLIFT_01", "DEMO_FORKLIFT_02", "DEMO_HVAC_01", "DEMO_HVAC_02", "DEMO_PROJECTOR"), "VEHICLE",
+            UtilMisc.toList("DEMO_VEHICLE_01", "DEMO_VEHICLE_02"), "GROUP_EQUIPMENT",
+            UtilMisc.toList("DEMO_BOOK_GROUP", "DEMO_FOOD_GROUP", "DEMO_MACHINE_GROUP", "WORKCENTER_COST"), "PRODUCTION_EQUIPMENT",
+            UtilMisc.toList("DEMO_BOOK", "DEMO_FOOD", "DEMO_MACHINE", "DEMO_PROD_EQUIPMT_1", "DEMO_PROD_EQUIPMT_2"));
+
+    final List<String> workEffortPartyAssignmentStatus = UtilMisc.toList("PRTYASGN_ASSIGNED", "PRTYASGN_OFFERED", "PRTYASGN_UNASSIGNED");
+    final List<String> workEffortAssetAssignmentStatus = UtilMisc.toList("FA_ASGN_ASSIGNED", "FA_ASGN_DENIED", "FA_ASGN_REQUESTED");
 
     @Override
     public List<? extends AbstractDataObject> retrieveData() throws Exception {
@@ -62,6 +97,8 @@ public class LocalDataGenerator extends AbstractDataGenerator {
                 results.add(generateOrderData());
             } else if (helper.getReturnObjectClass().equals(DemoDataProduct.class)) {
                 results.add(generateProductData());
+            } else if (helper.getReturnObjectClass().equals(DemoDataWorkEffort.class)) {
+                results.add(generateWorkeffortData());
             } else if (helper.getReturnObjectClass().equals(DemoDataParty.class)) {
                 throw new UnsupportedOperationException("Party demo data is not supported");
             }
@@ -186,10 +223,62 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         product.setId(productId);
         product.setName(productId + "_NAME");
         product.setType(productTypeId);
-        product.setPrice("");       
-        
+        product.setPrice("");
 
         return product;
+    }
+
+    private AbstractDataObject generateWorkeffortData() {
+        Delegator delegator = helper.getDelegator();
+        Map<String, Object> context = helper.getContext();
+        DemoDataWorkEffort workEffort = new DemoDataWorkEffort();
+
+        // if (Boolean.TRUE.equals((context.get("autoCreatePartyRoles"))) {
+        // fields = ["partyId": context.partyId, "roleTypeId" :
+        // "INTERNAL_ORGANIZATIO"];
+        // GenericValue partyRole = delegator.findOne("PartyRole", fields,
+        // false);
+        // if (partyRole == null) {
+        // partyRole = delegator.makeValue("PartyRole", fields);
+        // toBeStored.add(partyRole);
+        // }
+        // }
+
+        workEffort.setId("GEN_" + delegator.getNextSeqId("demo-workEffortId"));
+        List<String> workEffortTypeIdsAndStatusKeys = new ArrayList<String>(workEffortTypeIdsAndStatus.keySet());
+        int index = UtilRandom.random(workEffortTypeIdsAndStatusKeys);
+
+        String workEffortTypeId = workEffortTypeIdsAndStatusKeys.get(index);
+
+        List<String> workEffortTypeIdsAndStatusList = workEffortTypeIdsAndStatus.get(workEffort.getId());
+        workEffort.setStatus(workEffortTypeIdsAndStatusList.get(UtilRandom.random(workEffortTypeIdsAndStatusList)));
+        String workEffortName = "Demo WorkEffort " + workEffort.getId();
+        Date minDate = UtilDateTime.nowDate();
+        if (context.get("minDate") != null)
+            minDate = new Date(((Date) context.get("minDate")).getTime());
+
+        Timestamp createdDate = Timestamp.valueOf(UtilRandom.generateRandomDate(minDate, context));
+
+        String partyStatusId = workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
+
+        String assetStatusId = workEffortAssetAssignmentStatus.get(UtilRandom.random(workEffortAssetAssignmentStatus));
+        String fixedAssetTypeId;
+
+        if (workEffortTypeId.equals("TASK"))
+            fixedAssetTypeId = "EQUIPMENT";
+        else if (workEffortTypeId.equals("PROD_ORDER_TASK"))
+            fixedAssetTypeId = "PRODUCTION_EQUIPMENT";
+        else if (workEffortTypeId.equals("EVENT"))
+            fixedAssetTypeId = "GROUP_EQUIPMENT";
+        else if (workEffortTypeId.equals("ACTIVITY"))
+            fixedAssetTypeId = "VEHICLE";
+        else
+            fixedAssetTypeId = "VEHICLE";
+
+        List<String> fixedAssetAndTypesList = fixedAssetAndTypes.get(fixedAssetTypeId);
+        String fixedAssetId = fixedAssetAndTypesList.get(UtilRandom.random(fixedAssetAndTypesList));
+
+        return null;
     }
 
     @Override

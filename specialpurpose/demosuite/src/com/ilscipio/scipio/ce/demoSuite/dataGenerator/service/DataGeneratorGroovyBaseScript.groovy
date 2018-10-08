@@ -15,7 +15,7 @@ import org.ofbiz.service.engine.GroovyBaseScript
 import org.ofbiz.service.ServiceUtil
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper
 
 // FIXME?: revisit extension/reuse pattern; in Ofbiz GroovyBaseScript is not meant to be hardcoded
@@ -89,7 +89,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
      * It is meant to be called within a loop in run() n times, where n is determined by getNumRecordsToBeGenerated().
      * @return
      */
-    public abstract List<GenericValue> prepareData(int index, DemoDataObject data) throws Exception;
+    public abstract List<GenericValue> prepareData(int index, AbstractDataObject data) throws Exception;
 
     /**
      * All the logic that will be used later on in the prepareData() must be initialized here.
@@ -113,7 +113,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
             initDataGenerator();
             init();
             AbstractDataGenerator generator = context.generator;
-            List<DemoDataObject> data = generator.retrieveData();
+            List<AbstractDataObject> data = generator.retrieveData();
             if (data && data.size() > 0) {
                 numRecords = data.size();
             } else {

@@ -9,12 +9,12 @@ import org.ofbiz.common.login.LoginServices
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper.dataTypeEnum
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
 
 
@@ -40,7 +40,7 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
     ]
     
 	public String getDataType() {
-		return dataTypeEnum.PARTY;
+		return DataTypeEnum.PARTY;
 	}
 	
 	public void init() {				
@@ -48,11 +48,11 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
         context.roleTypeIds = roleTypeIds;		
     }
     
-    List prepareData(int index, DemoDataObject partyData) throws Exception {
+    List prepareData(int index, AbstractDataObject partyData) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
         List<GenericValue> partyEntries = new ArrayList<GenericValue>();		
 		
-		DataGenerator generator = context.generator;
+		AbstractDataGenerator generator = context.generator;
         
         if (partyData) {
             String partyId = "GEN_" + delegator.getNextSeqId("demo-partyId");

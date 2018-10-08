@@ -5,7 +5,7 @@ import java.util.List;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper;
 
 public abstract class AbstractDataGenerator {
@@ -16,13 +16,13 @@ public abstract class AbstractDataGenerator {
 		this.helper = helper;
 	}
 
-	public abstract List<? extends DemoDataObject> retrieveData() throws Exception;
+	public abstract List<? extends AbstractDataObject> retrieveData() throws Exception;
 
-	public DemoDataObject handleData(Object result) {
+	public AbstractDataObject handleData(Object result) {
 		return handleData(result, null);
 	}
 
-	public abstract DemoDataObject handleData(Object result, String format);
+	public abstract AbstractDataObject handleData(Object result, String format);
 
 	public abstract String getDataGeneratorName();
 

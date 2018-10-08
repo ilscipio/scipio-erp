@@ -8,7 +8,7 @@ import org.ofbiz.base.util.UtilValidate;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
@@ -34,8 +34,8 @@ public class JFairyDataGenerator extends AbstractDataGenerator {
     }
 
     @Override
-    public List<? extends DemoDataObject> retrieveData() throws Exception {
-        List<DemoDataObject> result = new ArrayList<>(helper.getCount());
+    public List<? extends AbstractDataObject> retrieveData() throws Exception {
+        List<AbstractDataObject> result = new ArrayList<>(helper.getCount());
         try {
             for (int i = 0; i < helper.getCount(); i++) {
                 Locale locale = DemoSuiteDataGeneratorUtil.LocaleClasses.getRandom();
@@ -61,8 +61,8 @@ public class JFairyDataGenerator extends AbstractDataGenerator {
     }
 
     @Override
-    public DemoDataObject handleData(Object result, String format) throws UnsupportedOperationException {
-        DemoDataObject handledData = null;
+    public AbstractDataObject handleData(Object result, String format) throws UnsupportedOperationException {
+        AbstractDataObject handledData = null;
         // FIXME: Make sure this makes sense for all data generators
         // JFairySettings settings = new JFairySettings();
         // List<String> fields = settings.getFields(helper.getDataType());

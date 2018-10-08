@@ -6,8 +6,9 @@ import org.ofbiz.entity.util.*
 import org.ofbiz.product.category.CategoryWorker
 import org.ofbiz.product.store.ProductStoreWorker
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper.dataTypeEnum
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript;
 
 
@@ -15,7 +16,7 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroov
 public class ProductData extends DataGeneratorGroovyBaseScript {
 
     public String getDataType() {
-        return dataTypeEnum.PRODUCT;
+        return DataTypeEnum.PRODUCT;
     }
 
     ProductData() {
@@ -97,11 +98,11 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
 
 
 
-    List prepareData(int index, DemoDataObject productData) throws Exception {
+    List prepareData(int index, AbstractDataObject productData) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
         List<GenericValue> productItems = new ArrayList<GenericValue>();
 
-        DataGenerator generator = context.generator;
+        AbstractDataGenerator generator = context.generator;
 
         productFields = UtilMisc.toMap("productId", productData.getProductId(), "productTypeId", productData.getProductTypeId(), "productName", productData.getName(), "description", productData.getDescription(),
                 "longDescription", productData.getLongDescription(), "introductionDate", productData.getIntroductionDate());

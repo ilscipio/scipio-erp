@@ -12,7 +12,7 @@ import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator;
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.MockarooDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.MockarooDemoDataHelper.MockarooSettings;
@@ -28,7 +28,7 @@ public class MockarooDataGenerator extends AbstractDataGenerator {
 	}
 
 	@Override
-	public List<? extends DemoDataObject> retrieveData() throws Exception {
+	public List<? extends AbstractDataObject> retrieveData() throws Exception {
 		// if (UtilValidate.isEmpty(args))
 		// throw new Exception("Invalid arguments. This engine requires one
 		// argument to be passed that represents the api");
@@ -51,7 +51,7 @@ public class MockarooDataGenerator extends AbstractDataGenerator {
 
 			JSONToList jsonListConverter = new JSONConverters.JSONToList();
 			List<Object> converted = jsonListConverter.convert(JSON.from(r));
-			List<DemoDataObject> resultList = new ArrayList<>(converted.size());
+			List<AbstractDataObject> resultList = new ArrayList<>(converted.size());
 			for (Object o : converted) {
 				resultList.add(handleData(o, format));
 			}
@@ -69,11 +69,11 @@ public class MockarooDataGenerator extends AbstractDataGenerator {
 	}
 
 	@Override
-	public DemoDataObject handleData(Object result, String format) {
+	public AbstractDataObject handleData(Object result, String format) {
 		if (format.equals("json")) {
 			try {
 				Object o = JSON.from(result);
-				return (DemoDataObject) JSON.from(o).toObject(helper.getReturnObjectClass());
+				return (AbstractDataObject) JSON.from(o).toObject(helper.getReturnObjectClass());
 			} catch (IOException e) {
 				Debug.logError(e.getMessage(), "");
 			}

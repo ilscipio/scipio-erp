@@ -1,5 +1,5 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject;
 
-public interface DemoDataObject {
+public interface AbstractDataObject {
 //    public List<Object> getFields();
 }

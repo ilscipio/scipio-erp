@@ -10,9 +10,9 @@ import org.ofbiz.entity.util.*
 import org.ofbiz.product.catalog.CatalogWorker
 import org.ofbiz.product.store.ProductStoreWorker
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper.dataTypeEnum
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
 
 public class OrderData extends DataGeneratorGroovyBaseScript {
@@ -23,7 +23,7 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
     }
 
     public String getDataType() {
-        return dataTypeEnum.ORDER;
+        return DataTypeEnum.ORDER;
     }
 
     public void init() {
@@ -121,11 +121,11 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         context.webSite = webSite;
     }
 
-    List prepareData(int index, DemoDataObject orderData) throws Exception {
+    List prepareData(int index, AbstractDataObject orderData) throws Exception {
         List toBeStored = new ArrayList();
         List orderItems = new ArrayList();
 
-        DataGenerator generator = context.generator;
+        AbstractDataGenerator generator = context.generator;
         if (orderData) {
             for (orderItem in orderData.getOrderItems()) {
                 Map<String, Object> orderItemFields = UtilMisc.toMap("orderId", orderData.getOrderId(), "orderItemSeqId", orderItem.getOrderItemId(), "orderItemTypeId", orderItem.getOrderItemType(), 

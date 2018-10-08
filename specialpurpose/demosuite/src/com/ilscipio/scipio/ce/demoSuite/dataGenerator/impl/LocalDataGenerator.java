@@ -18,7 +18,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityQuery;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator;
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder.DemoDataOrderItem;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder.DemoDataOrderRole;
@@ -55,8 +55,8 @@ public class LocalDataGenerator extends AbstractDataGenerator {
             "RAW_MATERIAL", "SERVICE", "SUBASSEMBLY", "WIP");
 
     @Override
-    public List<? extends DemoDataObject> retrieveData() throws Exception {
-        List<DemoDataObject> results = new ArrayList<DemoDataObject>();
+    public List<? extends AbstractDataObject> retrieveData() throws Exception {
+        List<AbstractDataObject> results = new ArrayList<AbstractDataObject>();
         for (int i = 0; i < helper.getCount(); i++) {
             if (helper.getReturnObjectClass().equals(DemoDataOrder.class)) {
                 results.add(generateOrderData());
@@ -186,15 +186,14 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         product.setId(productId);
         product.setName(productId + "_NAME");
         product.setType(productTypeId);
-        product.setPrice("");
-        
+        product.setPrice("");       
         
 
         return product;
     }
 
     @Override
-    public DemoDataObject handleData(Object result, String format) {
+    public AbstractDataObject handleData(Object result, String format) {
         return null;
     }
 

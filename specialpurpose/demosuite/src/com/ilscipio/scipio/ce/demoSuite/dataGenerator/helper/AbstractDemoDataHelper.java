@@ -8,23 +8,24 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataParty;
 
 public abstract class AbstractDemoDataHelper {
     private static final Integer DATA_GENERATOR_MAX_RECORDS = UtilProperties.getPropertyAsInteger("demosuite", "demosuite.test.data.max.records", 50);
     
-    public enum dataTypeEnum {
-        PARTY(DemoDataParty.class), PRODUCT(DemoDataObject.class), ORDER(DemoDataOrder.class), TRANSACTION(DemoDataObject.class);
+    public enum DataTypeEnum {
+        PARTY(DemoDataParty.class), PRODUCT(DemoDataProduct.class), ORDER(DemoDataOrder.class), TRANSACTION(AbstractDataObject.class);
 
-        private final Class<? extends DemoDataObject> demoDataObject;
+        private final Class<? extends AbstractDataObject> demoDataObject;
 
-        dataTypeEnum(Class<? extends DemoDataObject> o) {
+        DataTypeEnum(Class<? extends AbstractDataObject> o) {
             this.demoDataObject = o;
         }
 
-        Class<? extends DemoDataObject> getReturnObjectClass() {
+        Class<? extends AbstractDataObject> getReturnObjectClass() {
             return demoDataObject;
         }
     }
@@ -42,7 +43,7 @@ public abstract class AbstractDemoDataHelper {
         if (!context.containsKey("dataType"))
             throw new Exception("dataType not found");
         this.dataType = (String) context.get("dataType");
-        if (UtilValidate.isEmpty(dataTypeEnum.valueOf(dataType))) {
+        if (UtilValidate.isEmpty(DataTypeEnum.valueOf(dataType))) {
             throw new Exception("dataType not valid");
         }
         if (context.containsKey("num") && UtilValidate.isNotEmpty(context.get("num"))) {
@@ -54,8 +55,8 @@ public abstract class AbstractDemoDataHelper {
         this.properties = UtilProperties.getProperties("demosuite");
     }
 
-    public Class<? extends DemoDataObject> getReturnObjectClass() {
-        return dataTypeEnum.valueOf(dataType).getReturnObjectClass();
+    public Class<? extends AbstractDataObject> getReturnObjectClass() {
+        return DataTypeEnum.valueOf(dataType).getReturnObjectClass();
     }
 
     public String getDataType() {

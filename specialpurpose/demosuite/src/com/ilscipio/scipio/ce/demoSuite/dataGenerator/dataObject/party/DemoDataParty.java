@@ -1,11 +1,11 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin;
 
-public class DemoDataParty implements DemoDataObject {
+public class DemoDataParty implements AbstractDataObject {
 
 	DemoDataAddress address;
 	DemoDataPerson person;

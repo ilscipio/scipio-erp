@@ -40,6 +40,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.manufacturing.mrp.ProposedOrder;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
 /** An ItemCoinfigurationNode represents a component in a bill of materials.
  */
@@ -95,7 +96,6 @@ public class BOMNode {
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
         bomTypeId = partBomTypeId;
-//        Delegator delegator = product.getDelegator();
         List<GenericValue> rows = EntityQuery.use(delegator).from("ProductAssoc")
                 .where("productId", product.get("productId"),
                         "productAssocTypeId", partBomTypeId)
@@ -167,7 +167,7 @@ public class BOMNode {
                         }
                     }
                 }
-                if (ruleSatisfied && ruleOperator.equals("OR")) {
+                if (ruleSatisfied && "OR".equals(ruleOperator)) {
                     BOMNode tmpNode = oneChildNode;
                     if (newPart == null || newPart.equals("")) {
                         oneChildNode = null;
@@ -288,12 +288,17 @@ public class BOMNode {
                                 GenericValue variantProduct = null;
                                 try {
                                     storeResult = dispatcher.runSync("getProductVariant", context);
+                                    if (ServiceUtil.isError(storeResult)) {
+                                        String errorMessage = ServiceUtil.getErrorMessage(storeResult);
+                                        Debug.logError(errorMessage, module);
+                                        throw new GenericEntityException(errorMessage);
+                                    }
                                     List<GenericValue> variantProducts = UtilGenerics.checkList(storeResult.get("products"));
                                     if (variantProducts.size() == 1) {
                                         variantProduct = variantProducts.get(0);
                                     }
                                 } catch (GenericServiceException e) {
-                                    if (Debug.infoOn()) Debug.logInfo("Error calling getProductVariant service " + e.getMessage(), module);
+                                    Debug.logError("Error calling getProductVariant service " + e.getMessage(), module);
                                 }
                                 if (variantProduct != null) {
                                     newNode = new BOMNode(variantProduct, dispatcher, userLogin);
@@ -322,7 +327,6 @@ public class BOMNode {
         if (inDate == null) inDate = new Date();
 
         bomTypeId = partBomTypeId;
-//        Delegator delegator = product.getDelegator();
         List<GenericValue> rows = EntityQuery.use(delegator).from("ProductAssoc")
                 .where("productIdTo", product.get("productId"),
                         "productAssocTypeId", partBomTypeId)
@@ -345,7 +349,6 @@ public class BOMNode {
         for (GenericValue oneChild : children) {
             oneChildNode = new BOMNode(oneChild.getString("productId"), delegator, dispatcher, userLogin);
             // Configurator
-            //oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), delegator);
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
@@ -431,12 +434,16 @@ public class BOMNode {
             Map<String, Object> inputContext = UtilMisc.<String, Object>toMap("arguments", arguments, "userLogin", userLogin);
             try {
                 resultContext = dispatcher.runSync(serviceName, inputContext);
+                if (ServiceUtil.isError(resultContext)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(resultContext);
+                    Debug.logError(errorMessage, module);
+                }
                 BigDecimal calcQuantity = (BigDecimal)resultContext.get("quantity");
                 if (calcQuantity != null) {
                     this.quantity = calcQuantity;
                 }
             } catch (GenericServiceException e) {
-                //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
+                Debug.logError(e, "Problem calling the " + serviceName + " service (called by the createManufacturingOrder service)", module);
             }
         } else {
             this.quantity = quantity.multiply(quantityMultiplier).multiply(scrapFactor);
@@ -558,11 +565,15 @@ public class BOMNode {
                 serviceContext.put("startDate", startDate);
             }
             serviceContext.put("userLogin", userLogin);
-            Map<String, Object> resultService = null;
+            Map<String, Object> serviceResult = null;
             try {
-                resultService = dispatcher.runSync("createProductionRun", serviceContext);
-                productionRunId = (String)resultService.get("productionRunId");
-                endDate = (Timestamp)resultService.get("estimatedCompletionDate");
+                serviceResult = dispatcher.runSync("createProductionRun", serviceContext);
+                if (ServiceUtil.isError(serviceResult)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(serviceResult);
+                    Debug.logError(errorMessage, module);
+                }
+                productionRunId = (String)serviceResult.get("productionRunId");
+                endDate = (Timestamp)serviceResult.get("estimatedCompletionDate");
             } catch (GenericServiceException e) {
                 Debug.logError("Problem calling the createProductionRun service", module);
             }
@@ -576,7 +587,7 @@ public class BOMNode {
                     }
                 }
             } catch (GenericEntityException e) {
-                //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
+                Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
             }
         }
         return UtilMisc.toMap("productionRunId", productionRunId, "endDate", endDate);
@@ -667,7 +678,7 @@ public class BOMNode {
     }
 
     public boolean isVirtual() {
-        return (product.get("isVirtual") != null? product.get("isVirtual").equals("Y"): false);
+        return (product.get("isVirtual") != null? "Y".equals(product.get("isVirtual")): false);
     }
 
     public void isConfigured(List<BOMNode> arr) {

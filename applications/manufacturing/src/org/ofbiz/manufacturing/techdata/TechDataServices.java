@@ -117,11 +117,11 @@ public class TechDataServices {
         String workEffortIdTo = (String) context.get("workEffortIdTo");
         String workEffortAssocTypeId = (String) context.get("workEffortAssocTypeId");
         Long sequenceNum =  (Long) context.get("sequenceNum");
-        Timestamp  fromDate =  (Timestamp) context.get("fromDate");
-        Timestamp  thruDate =  (Timestamp) context.get("thruDate");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
         String create = (String) context.get("create");
 
-        boolean createProcess = (create !=null && create.equals("Y")) ? true : false;
+        boolean createProcess = (create !=null && "Y".equals(create)) ? true : false;
         List<GenericValue> listRoutingTaskAssoc = null;
 
         try {
@@ -255,7 +255,6 @@ public class TechDataServices {
                 moveDay +=1;
                 dayStart = (dayStart==7) ? 1 : dayStart +1;
             }
-            //                Debug.logInfo("capacity loop: " + capacity+ " moveDay=" +moveDay, module);
         }
         result.put("capacity",capacity);
         result.put("startTime",startTime);

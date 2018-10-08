@@ -38,7 +38,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.manufacturing.techdata.TechDataServices;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * ProductionRun Object used by the Jobshop management OFBiz components,
@@ -249,7 +249,7 @@ public class ProductionRun {
     }
     /**
      * Recalculate the estimatedCompletionDate property.
-     *     Use the quantity and the estimatedStartDate properties as entries parameters.
+     * Use the quantity and the estimatedStartDate properties as entries parameters.
      * Read the listRoutingTask and for each recalculated and update the estimatedStart and endDate in the object.
      * No store in the database is done.
      * @param priority give the routingTask start point to recalculated
@@ -414,7 +414,7 @@ public class ProductionRun {
             taskTime = task.getDouble("estimatedMilliSeconds");
         }
         totalTaskTime = (setupTime + taskTime * quantity.doubleValue());
-        // TODO
+        
         if (task.get("estimateCalcMethod") != null) {
             String serviceName = null;
             try {
@@ -425,9 +425,12 @@ public class ProductionRun {
                     // and put the value in totalTaskTime
                     Map<String, Object> estimateCalcServiceMap = UtilMisc.<String, Object>toMap("workEffort", task, "quantity", quantity, "productId", productId, "routingId", routingId);
                     Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("arguments", estimateCalcServiceMap);
-                    // serviceContext.put("userLogin", userLogin);
-                    Map<String, Object> resultService = dispatcher.runSync(serviceName, serviceContext);
-                    totalTaskTime = ((BigDecimal)resultService.get("totalTime")).doubleValue();
+                    Map<String, Object> serviceResult = dispatcher.runSync(serviceName, serviceContext);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        String errorMessage = ServiceUtil.getErrorMessage(serviceResult);
+                        Debug.logError(errorMessage, module);
+                    }
+                    totalTaskTime = ((BigDecimal)serviceResult.get("totalTime")).doubleValue();
                 }
             } catch (GenericServiceException exc) {
                 Debug.logError(exc, "Problem calling the customMethod service " + serviceName);

@@ -140,6 +140,9 @@ public class BOMServices {
             GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
             Map<String, Object> depthResult = dispatcher.runSync("getMaxDepth",
                     UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
+            if (ServiceUtil.isError(depthResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(depthResult));
+            }
             llc = (Long)depthResult.get("depth");
             // If the product is a variant of a virtual, then the billOfMaterialLevel cannot be
             // lower than the billOfMaterialLevel of the virtual product.
@@ -167,6 +170,9 @@ public class BOMServices {
             product.store();
             if (alsoComponents) {
                 Map<String, Object> treeResult = dispatcher.runSync("getBOMTree", UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
+                if (ServiceUtil.isError(treeResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(treeResult));
+                }
                 BOMTree tree = (BOMTree)treeResult.get("tree");
                 List<BOMNode> products = new LinkedList<BOMNode>();
                 tree.print(products, llc.intValue());
@@ -194,10 +200,8 @@ public class BOMServices {
                     variantProduct.store();
                 }
             }
-        } catch (GenericEntityException gee) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingBomErrorRunningUpdateLowLevelCode", UtilMisc.toMap("errorString", gee.getMessage()), locale));
-        } catch (GenericServiceException gse) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingBomErrorRunningUpdateLowLevelCode", UtilMisc.toMap("errorString", gse.getMessage()), locale));
+        } catch (GenericEntityException|GenericServiceException ge) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingBomErrorRunningUpdateLowLevelCode", UtilMisc.toMap("errorString", ge.getMessage()), locale));
         } catch (Exception e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingBomErrorRunningUpdateLowLevelCode", UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
@@ -231,6 +235,9 @@ public class BOMServices {
             for (GenericValue product : products) {
                 try {
                     Map<String, Object> depthResult = dispatcher.runSync("updateLowLevelCode", UtilMisc.<String, Object>toMap("productIdTo", product.getString("productId"), "alsoComponents", Boolean.FALSE, "alsoVariants", Boolean.FALSE));
+                    if (ServiceUtil.isError(depthResult)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(depthResult));
+                    }
                     Debug.logInfo("Product [" + product.getString("productId") + "] Low Level Code [" + depthResult.get("lowLevelCode") + "]", module);
                 } catch (Exception exc) {
                     Debug.logWarning(exc.getMessage(), module);
@@ -391,11 +398,17 @@ public class BOMServices {
         try {
             Map<String, Object> routingInMap = UtilMisc.toMap("productId", productId, "ignoreDefaultRouting", "Y", "userLogin", userLogin);
             Map<String, Object> routingOutMap = dispatcher.runSync("getProductRouting", routingInMap);
+            if (ServiceUtil.isError(routingOutMap)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(routingOutMap));
+            }
             GenericValue routing = (GenericValue)routingOutMap.get("routing");
             if (routing == null) {
                 // try to find a routing linked to the virtual product
                 routingInMap = UtilMisc.toMap("productId", tree.getRoot().getProduct().getString("productId"), "userLogin", userLogin);
                 routingOutMap = dispatcher.runSync("getProductRouting", routingInMap);
+                if (ServiceUtil.isError(routingOutMap)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(routingOutMap));
+                }
                 routing = (GenericValue)routingOutMap.get("routing");
             }
             if (routing != null) {
@@ -410,7 +423,7 @@ public class BOMServices {
         result.put("components", components);
 
         // also return a componentMap (useful in scripts and simple language code)
-        List<Map<String, Object>> componentsMap = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> componentsMap = new LinkedList<>();
         for (BOMNode node : components) {
             Map<String, Object> componentMap = new HashMap<String, Object>();
             componentMap.put("product", node.getProduct());
@@ -518,7 +531,7 @@ public class BOMServices {
                 String partyId = (orderReadHelper.getPlacingParty() != null? orderReadHelper.getPlacingParty().getString("partyId"): null); // FIXME: is it the customer?
                 if (partyId != null) {
                     if (!partyOrderShipments.containsKey(partyId)) {
-                        List<Map<String, Object>> orderShipmentReadMapList = new LinkedList<Map<String, Object>>();
+                        List<Map<String, Object>> orderShipmentReadMapList = new LinkedList<>();
                         partyOrderShipments.put(partyId, orderShipmentReadMapList);
                     }
                     List<Map<String, Object>> orderShipmentReadMapList = UtilGenerics.checkList(partyOrderShipments.get(partyId));
@@ -539,13 +552,16 @@ public class BOMServices {
                 Map<String, Object> serviceContext = new HashMap<String, Object>();
                 serviceContext.put("productId", orderItem.getString("productId"));
                 serviceContext.put("quantity", orderShipment.getBigDecimal("quantity"));
-                Map<String, Object> resultService = null;
+                Map<String, Object> serviceResult = null;
                 try {
-                    resultService = dispatcher.runSync("getProductsInPackages", serviceContext);
+                    serviceResult = dispatcher.runSync("getProductsInPackages", serviceContext);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingPackageConfiguratorError", locale));
+                    }
                 } catch (GenericServiceException e) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingPackageConfiguratorError", locale));
                 }
-                List<BOMNode> productsInPackages = UtilGenerics.checkList(resultService.get("productsInPackages"));
+                List<BOMNode> productsInPackages = UtilGenerics.checkList(serviceResult.get("productsInPackages"));
                 if (productsInPackages.size() == 1) {
                     BOMNode root = productsInPackages.get(0);
                     String rootProductId = (root.getSubstitutedNode() != null? root.getSubstitutedNode().getProduct().getString("productId"): root.getProduct().getString("productId"));
@@ -565,7 +581,7 @@ public class BOMServices {
         // of the same box type.
         Map<String, GenericValue> boxTypes = new HashMap<String, GenericValue>();
         for (Map.Entry<String, Object> partyOrderShipment : partyOrderShipments.entrySet()) {
-            Map<String, List<Map<String, Object>>> boxTypeContent = new LinkedHashMap<String, List<Map<String, Object>>>();
+            Map<String, List<Map<String, Object>>> boxTypeContent = new LinkedHashMap<>();
             List<Map<String, Object>> orderShipmentReadMapList = UtilGenerics.checkList(partyOrderShipment.getValue());
             for (int i = 0; i < orderShipmentReadMapList.size(); i++) {
                 Map<String, Object> orderShipmentReadMap = UtilGenerics.checkMap(orderShipmentReadMapList.get(i));
@@ -591,7 +607,7 @@ public class BOMServices {
                                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingPackageConfiguratorError", locale));
                                 }
                                 boxTypes.put(boxTypeId, boxType);
-                                List<Map<String, Object>> box = new LinkedList<Map<String, Object>>();
+                                List<Map<String, Object>> box = new LinkedList<>();
                                 boxTypeContent.put(boxTypeId, box);
                             }
                             List<Map<String, Object>> boxTypeContentList = UtilGenerics.checkList(boxTypeContent.get(boxTypeId));
@@ -621,7 +637,7 @@ public class BOMServices {
                             }
 
                             boxTypes.put(boxTypeId, boxType);
-                            List<Map<String, Object>> box = new LinkedList<Map<String, Object>>();
+                            List<Map<String, Object>> box = new LinkedList<>();
                             boxTypeContent.put(boxTypeId, box);
                         }
                         List<Map<String, Object>> boxTypeContentList = UtilGenerics.checkList(boxTypeContent.get(boxTypeId));
@@ -695,8 +711,11 @@ public class BOMServices {
                         // If needed, create the package
                         if (shipmentPackageSeqId == null) {
                             try {
-                                Map<String, Object> resultService = dispatcher.runSync("createShipmentPackage", UtilMisc.<String, Object>toMap("shipmentId", orderShipment.getString("shipmentId"), "shipmentBoxTypeId", boxTypeId, "userLogin", userLogin));
-                                shipmentPackageSeqId = (String)resultService.get("shipmentPackageSeqId");
+                                Map<String, Object> serviceResult = dispatcher.runSync("createShipmentPackage", UtilMisc.<String, Object>toMap("shipmentId", orderShipment.getString("shipmentId"), "shipmentBoxTypeId", boxTypeId, "userLogin", userLogin));
+                                if (ServiceUtil.isError(serviceResult)) {
+                                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                                }
+                                shipmentPackageSeqId = (String)serviceResult.get("shipmentPackageSeqId");
                             } catch (GenericServiceException e) {
                                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingPackageConfiguratorError", locale));
                             }
@@ -718,7 +737,10 @@ public class BOMServices {
                                 "userLogin", userLogin,
                                 "quantity", qty);
                             }
-                            dispatcher.runSync("createShipmentPackageContent", inputMap);
+                            Map<String, Object> serviceResult = dispatcher.runSync("createShipmentPackageContent", inputMap);
+                            if (ServiceUtil.isError(serviceResult)) {
+                                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingPackageConfiguratorError", locale));
+                            }
                         } catch (GenericServiceException e) {
                             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingPackageConfiguratorError", locale));
                         }

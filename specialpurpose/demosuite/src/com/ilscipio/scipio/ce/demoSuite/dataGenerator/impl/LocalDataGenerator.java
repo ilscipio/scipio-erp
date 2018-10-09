@@ -11,12 +11,14 @@ import java.util.TimeZone;
 
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRandom;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.product.store.ProductStoreWorker;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject;
@@ -25,6 +27,7 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder.D
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder.DemoDataOrderRole;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder.DemoDataOrderStatus;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct.DemoDataProductPrice;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataWorkEffort;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataParty;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper;
@@ -63,6 +66,8 @@ public class LocalDataGenerator extends AbstractDataGenerator {
     // "AGGREGATED_CONF"
     final List<String> productTypes = UtilMisc.toList("ASSET_USAGE", "DIGITAL_GOOD", "FINDIG_GOOD", "FINISHED_GOOD", "GOOD", "MARKETING_PKG_PICK", "MARKETING_PKG_AUTO",
             "RAW_MATERIAL", "SERVICE", "SUBASSEMBLY", "WIP");
+    final List<String> productPriceTypes = UtilMisc.toList("LIST_PRICE", "PROMO_PRICE", "SPECIAL_PROMO_PRICE", "WHOLESALE_PRICE");
+    final List<String> productPricePurposes = UtilMisc.toList("COMPONENT_PRICE", "RECURRING_PRICE", "USAGE_CHARGE");
 
     /**
      * WORKEFFORT
@@ -208,27 +213,45 @@ public class LocalDataGenerator extends AbstractDataGenerator {
     private DemoDataProduct generateProductData() {
         Delegator delegator = helper.getDelegator();
         Map<String, Object> context = helper.getContext();
+
+        double maxPrice = UtilProperties.getPropertyAsDouble("demosuite", "demosuite.test.data.product.maxPrice", 99999.99);
+        double minPrice = UtilProperties.getPropertyAsDouble("demosuite", "demosuite.test.data.product.minPrice", 0.10);
+
         DemoDataProduct product = new DemoDataProduct();
 
         @SuppressWarnings("unchecked")
         List<String> productCategoryIds = (List<String>) context.get("productCategoryIds");
 
         // Create Product
-        String productId = "GEN_" + delegator.getNextSeqId("demo-product");
-        String productCategoryId = productCategoryIds.get(UtilRandom.random(productCategoryIds));
-        String productTypeId = productTypes.get(UtilRandom.random(productTypes));
-        String prodCatalogCategoryTypeId = prodCatalogCategoryTypes.get(UtilRandom.random(prodCatalogCategoryTypes));
-        Timestamp introductionDate = UtilRandom.generateRandomTimestamp(context);
+        product.setId("GEN_" + delegator.getNextSeqId("demo-product"));
+        product.setCategory(productCategoryIds.get(UtilRandom.random(productCategoryIds)));
+        product.setType(productTypes.get(UtilRandom.random(productTypes)));
+        product.setCategoryType(prodCatalogCategoryTypes.get(UtilRandom.random(prodCatalogCategoryTypes)));
+        product.setIntroductionDate(UtilRandom.generateRandomTimestamp(context));
+        product.setName(product.getId() + "_NAME");
 
-        product.setId(productId);
-        product.setName(productId + "_NAME");
-        product.setType(productTypeId);
-        product.setPrice("");
+        // Create ProductPrice
+        GenericValue productStore = ProductStoreWorker.getProductStore((String) context.get("productStoreId"), delegator);
+        String currency = productStore.getString("defaultCurrencyUomId");
+        if (UtilValidate.isEmpty(currency)) {
+            currency = UtilProperties.getPropertyValue("general", "currency.uom.id.default");
+        }
+        DemoDataProductPrice defaultPrice = product.new DemoDataProductPrice(UtilRandom.getRandomBigDecimal(minPrice, maxPrice), "DEFAULT_PRICE", "PURCHASE", currency);
+        product.addPrice(defaultPrice);
+        if (UtilRandom.getRandomInt(0, 9) >= 8) {
+            if (UtilRandom.getRandomInt(0, 9) >= 8) {
+                product.addPrice(product.new DemoDataProductPrice(UtilRandom.getRandomBigDecimal(minPrice, maxPrice), productPriceTypes.get(UtilRandom.random(productPriceTypes)),
+                        productPricePurposes.get(UtilRandom.random(productPricePurposes)), currency));
+            } else {
+                product.addPrice(product.new DemoDataProductPrice(UtilRandom.getRandomBigDecimal(minPrice, maxPrice), productPriceTypes.get(UtilRandom.random(productPriceTypes)),
+                        "PURCHASE", currency));
+            }
+        }
 
         return product;
     }
 
-    private AbstractDataObject generateWorkeffortData() {
+    private DemoDataWorkEffort generateWorkeffortData() {
         Delegator delegator = helper.getDelegator();
         Map<String, Object> context = helper.getContext();
         DemoDataWorkEffort workEffort = new DemoDataWorkEffort();
@@ -246,31 +269,30 @@ public class LocalDataGenerator extends AbstractDataGenerator {
 
         workEffort.setId("GEN_" + delegator.getNextSeqId("demo-workEffortId"));
         List<String> workEffortTypeIdsAndStatusKeys = new ArrayList<String>(workEffortTypeIdsAndStatus.keySet());
-        int index = UtilRandom.random(workEffortTypeIdsAndStatusKeys);
-
-        String workEffortTypeId = workEffortTypeIdsAndStatusKeys.get(index);
-
+        workEffort.setType(workEffortTypeIdsAndStatusKeys.get(UtilRandom.random(workEffortTypeIdsAndStatusKeys)));
         List<String> workEffortTypeIdsAndStatusList = workEffortTypeIdsAndStatus.get(workEffort.getId());
         workEffort.setStatus(workEffortTypeIdsAndStatusList.get(UtilRandom.random(workEffortTypeIdsAndStatusList)));
-        String workEffortName = "Demo WorkEffort " + workEffort.getId();
-        Date minDate = UtilDateTime.nowDate();
+        workEffort.setName("Demo WorkEffort Name " + workEffort.getId());
+        String minDate = UtilRandom.generateRandomDate(context);
         if (context.get("minDate") != null)
-            minDate = new Date(((Date) context.get("minDate")).getTime());
-
-        Timestamp createdDate = Timestamp.valueOf(UtilRandom.generateRandomDate(minDate, context));
-
+            minDate = (String) context.get("minDate");
+        workEffort.setEstimatedStart(UtilRandom.generateRandomTimestamp(UtilDateTime.toDate(minDate), context));
+        workEffort.setEstimatedCompletion(UtilRandom.generateRandomTimestamp(workEffort.getEstimatedStart(), context));
+        
+        workEffort.setActualStart(UtilRandom.generateRandomTimestamp(UtilDateTime.toDate(minDate), context));
+        workEffort.setActualCompletion(UtilRandom.generateRandomTimestamp(workEffort.getActualStart(), context));
+        
         String partyStatusId = workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
-
         String assetStatusId = workEffortAssetAssignmentStatus.get(UtilRandom.random(workEffortAssetAssignmentStatus));
         String fixedAssetTypeId;
 
-        if (workEffortTypeId.equals("TASK"))
+        if (workEffort.getType().equals("TASK"))
             fixedAssetTypeId = "EQUIPMENT";
-        else if (workEffortTypeId.equals("PROD_ORDER_TASK"))
+        else if (workEffort.getType().equals("PROD_ORDER_TASK"))
             fixedAssetTypeId = "PRODUCTION_EQUIPMENT";
-        else if (workEffortTypeId.equals("EVENT"))
+        else if (workEffort.getType().equals("EVENT"))
             fixedAssetTypeId = "GROUP_EQUIPMENT";
-        else if (workEffortTypeId.equals("ACTIVITY"))
+        else if (workEffort.getType().equals("ACTIVITY"))
             fixedAssetTypeId = "VEHICLE";
         else
             fixedAssetTypeId = "VEHICLE";
@@ -278,7 +300,7 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         List<String> fixedAssetAndTypesList = fixedAssetAndTypes.get(fixedAssetTypeId);
         String fixedAssetId = fixedAssetAndTypesList.get(UtilRandom.random(fixedAssetAndTypesList));
 
-        return null;
+        return workEffort;
     }
 
     @Override

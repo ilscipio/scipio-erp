@@ -1,16 +1,22 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 public class DemoDataProduct implements AbstractDataObject {
 
     private String id;
     private String name;
     private String description;
     private String longDescription;
-    private String price;
+    private List<DemoDataProductPrice> prices = new ArrayList<DemoDataProductPrice>();
     private String type;
     private String category;
     private String categoryType;
     private String catalogCategoryType;
+    private Timestamp introductionDate;
 
     public String getId() {
         return id;
@@ -34,14 +40,6 @@ public class DemoDataProduct implements AbstractDataObject {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
     }
 
     public String getLongDescription() {
@@ -82,6 +80,72 @@ public class DemoDataProduct implements AbstractDataObject {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Timestamp getIntroductionDate() {
+        return introductionDate;
+    }
+
+    public void setIntroductionDate(Timestamp introductionDate) {
+        this.introductionDate = introductionDate;
+    }
+
+    public List<DemoDataProductPrice> getPrices() {
+        return prices;
+    }
+
+    public void setPrices(List<DemoDataProductPrice> prices) {
+        this.prices = prices;
+    }
+
+    public void addPrice(DemoDataProductPrice price) {
+        this.prices.add(price);
+    }
+
+    public class DemoDataProductPrice {
+        private BigDecimal price;
+        private String type;
+        private String purpose;
+        private String currency;
+
+        public DemoDataProductPrice(BigDecimal price, String type, String purpose, String currency) {
+            this.price = price;
+            this.type = type;
+            this.purpose = purpose;
+            this.currency = currency;
+        }
+
+        public BigDecimal getPrice() {
+            return price;
+        }
+
+        public void setPrice(BigDecimal price) {
+            this.price = price;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getCurrency() {
+            return currency;
+        }
+
+        public void setCurrency(String currency) {
+            this.currency = currency;
+        }
+
+        public String getPurpose() {
+            return purpose;
+        }
+
+        public void setPurpose(String purpose) {
+            this.purpose = purpose;
+        }
     }
 
 }

@@ -1,10 +1,17 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject;
 
-public class DemoDataWorkEffort {
+import java.sql.Timestamp;
+
+public class DemoDataWorkEffort implements AbstractDataObject {
 
     private String id;
     private String name;
+    private String type;
     private String status;
+    private Timestamp estimatedStart;
+    private Timestamp estimatedCompletion;
+    private Timestamp actualStart;
+    private Timestamp actualCompletion;
 
     public String getId() {
         return id;
@@ -22,12 +29,52 @@ public class DemoDataWorkEffort {
         this.name = name;
     }
 
+    public Timestamp getEstimatedStart() {
+        return estimatedStart;
+    }
+
+    public void setEstimatedStart(Timestamp estimatedStart) {
+        this.estimatedStart = estimatedStart;
+    }
+
+    public Timestamp getEstimatedCompletion() {
+        return estimatedCompletion;
+    }
+
+    public void setEstimatedCompletion(Timestamp estimatedCompletion) {
+        this.estimatedCompletion = estimatedCompletion;
+    }
+
+    public Timestamp getActualStart() {
+        return actualStart;
+    }
+
+    public void setActualStart(Timestamp actualStart) {
+        this.actualStart = actualStart;
+    }
+
+    public Timestamp getActualCompletion() {
+        return actualCompletion;
+    }
+
+    public void setActualCompletion(Timestamp actualCompletion) {
+        this.actualCompletion = actualCompletion;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

@@ -91,12 +91,11 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
             String productCategoryTypeId = (context.productCategoryTypeId) ? context.productCategoryTypeId : "CATALOG_CATEGORY";
             String prodCatalogCategoryTypeId = (context.prodCatalogCategoryTypeId) ? context.prodCatalogCategoryTypeId : null;
         }
+        context.productStoreId = productStoreId;
         context.productCategoryIds = productCategoryIds;
         context.productCategoryTypeId = productCategoryTypeId;
         context.prodCatalogCategoryTypeId = prodCatalogCategoryTypeId;
     }
-
-
 
     List prepareData(int index, AbstractDataObject productData) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
@@ -104,14 +103,12 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
 
         AbstractDataGenerator generator = context.generator;
 
-        productFields = UtilMisc.toMap("productId", productData.getId(), "productTypeId", productData.getProductTypeId(), "productName", productData.getName(), "description", productData.getDescription(),
+        productFields = UtilMisc.toMap("productId", productData.getId(), "productTypeId", productData.getType(), "productName", productData.getName(), "description", productData.getDescription(),
                 "longDescription", productData.getLongDescription(), "introductionDate", productData.getIntroductionDate());
         toBeStored.add(delegator.makeValue("Product", productFields));
 
-        productCategoryMemberFields = UtilMisc.toMap("productId", productData.getProductId(), "productCategoryId", context.productCategoryId, "fromDate", productData.getIntroductionDate());
-        GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember", fields);
-
-        toBeStored.add(productCategoryMember);
+        productCategoryMemberFields = UtilMisc.toMap("productId", productData.getId(), "productCategoryId", productData.getCategory(), "fromDate", productData.getIntroductionDate())
+        toBeStored.add(delegator.makeValue("ProductCategoryMember", productCategoryMemberFields));
         return toBeStored;
     }
 

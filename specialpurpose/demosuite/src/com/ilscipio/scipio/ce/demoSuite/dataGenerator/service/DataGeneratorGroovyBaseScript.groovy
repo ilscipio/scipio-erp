@@ -121,7 +121,8 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
             }
                   
             for (int i = 0; i < numRecords; i++) {
-                List toBeStored = prepareData(i, (data && data.size() == numRecords) ? data.get(i) : null);
+                logVerbose("numRecords =======> " + numRecords);
+                List toBeStored = prepareData(i, data.get(i));
                 if (toBeStored) {
                     storeData(toBeStored);
                 }

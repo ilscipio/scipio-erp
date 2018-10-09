@@ -335,6 +335,8 @@ public final class ServiceUtil {
     }
 
     public static String getErrorMessage(Map<String, ? extends Object> result) {
+        /* SCIPIO: 2018-10-09: This popular function is enhanced to avoid string handling
+           overhead; 99% of cases do not need string building.
         StringBuilder errorMessage = new StringBuilder();
 
         if (result.get(ModelService.ERROR_MESSAGE) != null) {
@@ -354,8 +356,51 @@ public final class ServiceUtil {
         }
 
         return errorMessage.toString();
+        */
+        return getMessage(result.get(ModelService.ERROR_MESSAGE), result.get(ModelService.ERROR_MESSAGE_LIST));
     }
 
+    /**
+     * SCIPIO: Gets message from service result message and message list.
+     * Derived from {@link #getErrorMessage(Map)} but modified to avoid string building
+     * unless actually have multiple messages to concat, and to support toString()
+     * on the single messageObj value.
+     * Added 2018-10-09.
+     */
+    private static String getMessage(Object messageObj, Object messageListObj) {
+        if (messageObj != null) {
+            String message = messageObj.toString();
+            if (messageListObj == null) {
+                return message;
+            }
+            List<?> messages = (List<?>) messageListObj;
+            if (messages.size() == 0) {
+                return message;
+            }
+            return concatMessages(new StringBuilder(message), messages);
+        } else if (messageListObj != null) {
+            List<?> messageList = (List<?>) messageListObj;
+            if (messageList.size() == 1) {
+                return messageList.get(0).toString();
+            } else if (messageList.size() >= 2) { // NOTE: Though rarely false, check size so can use getXxxMessage as a fast message presence check
+                return concatMessages(new StringBuilder(), messageList);
+            }
+        }
+        return "";
+    }
+
+    private static String concatMessages(StringBuilder message, List<?> messages) { // SCIPIO
+        for (Object msg : messages) {
+            // NOTE: this MUST use toString and not cast to String because it may be a MessageString object
+            String curMessage = msg.toString();
+            if (message.length() > 0) {
+                message.append(", ");
+            }
+            message.append(curMessage);
+        }
+        return message.toString();
+    }
+    
     public static String makeErrorMessage(Map<String, ? extends Object> result, String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix) {
         if (result == null) {
             Debug.logWarning("A null result map was passed", module);
@@ -409,23 +454,7 @@ public final class ServiceUtil {
      * Added 2017-11-28.
      */
     public static String getSuccessMessage(Map<String, ? extends Object> result) {
-        StringBuilder successMessage = new StringBuilder();
-
-        if (result.get(ModelService.SUCCESS_MESSAGE) != null) successMessage.append((String) result.get(ModelService.SUCCESS_MESSAGE));
-
-        if (result.get(ModelService.SUCCESS_MESSAGE_LIST) != null) {
-            List<? extends Object> errors = UtilGenerics.checkList(result.get(ModelService.SUCCESS_MESSAGE_LIST));
-            for (Object message: errors) {
-                // NOTE: this MUST use toString and not cast to String because it may be a MessageString object
-                String curMessage = message.toString();
-                if (successMessage.length() > 0) {
-                    successMessage.append(", ");
-                }
-                successMessage.append(curMessage);
-            }
-        }
-
-        return successMessage.toString();
+        return getMessage(result.get(ModelService.SUCCESS_MESSAGE), result.get(ModelService.SUCCESS_MESSAGE_LIST));
     }
 
     public static String makeSuccessMessage(Map<String, ? extends Object> result, String msgPrefix, String msgSuffix, String successPrefix, String successSuffix) {

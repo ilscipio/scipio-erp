@@ -1,5 +1,6 @@
 package org.ofbiz.base.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
@@ -9,6 +10,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+
 
 /**
  * SCIPIO: Randomization utilities.
@@ -119,4 +123,12 @@ public class UtilRandom {
         return new BigInteger(130, new SecureRandom()).toString(32);
     }
 
+    public static BigDecimal getRandomBigDecimal(double min, double max) {        
+        return new BigDecimal(getRandomDouble(min, max));
+    }
+    
+    public static double getRandomDouble(double min, double max) {                
+        return ThreadLocalRandom.current().nextDouble(min, max);
+    }
+    
 }

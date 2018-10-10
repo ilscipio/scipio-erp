@@ -38,9 +38,10 @@ import org.ofbiz.entity.util.EntityQuery;
 /**
  * PartyRelationshipHelper
  */
-public class PartyRelationshipHelper {
+public final class PartyRelationshipHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private PartyRelationshipHelper() {}
 
     /** Return A List of the active Party Relationships (ie with valid from and thru dates)
      *@param delegator needed Delegator
@@ -55,7 +56,7 @@ public class PartyRelationshipHelper {
         String partyRelationshipTypeId = (String) partyRelationshipValues.get("partyRelationshipTypeId") ;
         Timestamp fromDate = UtilDateTime.nowTimestamp();
 
-        List<EntityCondition> condList = new LinkedList<EntityCondition>();
+        List<EntityCondition> condList = new LinkedList<>();
         condList.add(EntityCondition.makeCondition("partyIdFrom", partyIdFrom));
         condList.add(EntityCondition.makeCondition("partyIdTo", partyIdTo));
         condList.add(EntityCondition.makeCondition("roleTypeIdFrom", roleTypeIdFrom));
@@ -78,8 +79,7 @@ public class PartyRelationshipHelper {
         }
         if (UtilValidate.isNotEmpty(partyRelationships)) {
            return partyRelationships;
-        } else {
-            return null;
         }
+        return null;
     }
 }

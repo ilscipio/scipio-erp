@@ -56,12 +56,13 @@ public class PartyWorker {
 
     public static Map<String, GenericValue> getPartyOtherValues(ServletRequest request, String partyId, String partyAttr, String personAttr, String partyGroupAttr) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String, GenericValue> result = new HashMap<String, GenericValue>();
+        Map<String, GenericValue> result = new HashMap<>();
         try {
             GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
 
-            if (party != null)
+            if (party != null) {
                 result.put(partyAttr, party);
+            }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting Party entity", module);
         }
@@ -69,8 +70,9 @@ public class PartyWorker {
         try {
             GenericValue person = EntityQuery.use(delegator).from("Person").where("partyId", partyId).queryOne();
 
-            if (person != null)
+            if (person != null) {
                 result.put(personAttr, person);
+            }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting Person entity", module);
         }
@@ -78,8 +80,9 @@ public class PartyWorker {
         try {
             GenericValue partyGroup = EntityQuery.use(delegator).from("PartyGroup").where("partyId", partyId).queryOne();
 
-            if (partyGroup != null)
+            if (partyGroup != null) {
                 result.put(partyGroupAttr, partyGroup);
+            }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting PartyGroup entity", module);
         }
@@ -247,7 +250,7 @@ public class PartyWorker {
             String stateProvinceGeoId, String postalCode, String postalCodeExt, String countryGeoId,
             String firstName, String middleName, String lastName) throws GeneralException {
         // return list
-        List<GenericValue> returnList = new LinkedList<GenericValue>();
+        List<GenericValue> returnList = new LinkedList<>();
 
         // address information
         if (firstName == null || lastName == null) {
@@ -265,10 +268,10 @@ public class PartyWorker {
                         String fName = p.getString("firstName");
                         String lName = p.getString("lastName");
                         String mName = p.getString("middleName");
-                        if (lName.toUpperCase().equals(lastName.toUpperCase())) {
-                            if (fName.toUpperCase().equals(firstName.toUpperCase())) {
+                        if (lName.toUpperCase(Locale.getDefault()).equals(lastName.toUpperCase(Locale.getDefault()))) {
+                            if (fName.toUpperCase(Locale.getDefault()).equals(firstName.toUpperCase(Locale.getDefault()))) {
                                 if (mName != null && middleName != null) {
-                                    if (mName.toUpperCase().equals(middleName.toUpperCase())) {
+                                    if (mName.toUpperCase(Locale.getDefault()).equals(middleName.toUpperCase(Locale.getDefault()))) {
                                         returnList.add(partyAndAddr);
                                     }
                                 } else if (middleName == null) {
@@ -318,19 +321,19 @@ public class PartyWorker {
             throw new IllegalArgumentException();
         }
 
-        List<EntityCondition> addrExprs = new LinkedList<EntityCondition>();
+        List<EntityCondition> addrExprs = new LinkedList<>();
         if (stateProvinceGeoId != null) {
             if ("**".equals(stateProvinceGeoId)) {
                 Debug.logWarning("Illegal state code passed!", module);
             } else if ("NA".equals(stateProvinceGeoId)) {
                 addrExprs.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, "_NA_"));
             } else {
-                addrExprs.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, stateProvinceGeoId.toUpperCase()));
+                addrExprs.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, stateProvinceGeoId.toUpperCase(Locale.getDefault())));
             }
         }
 
         if (!postalCode.startsWith("*")) {
-            if (postalCode.length() == 10 && postalCode.indexOf("-") != -1) {
+            if (postalCode.length() == 10 && postalCode.indexOf('-') != -1) {
                 String[] zipSplit = postalCode.split("-", 2);
                 postalCode = zipSplit[0];
                 postalCodeExt = zipSplit[1];
@@ -345,7 +348,7 @@ public class PartyWorker {
         addrExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("city"), EntityOperator.EQUALS, EntityFunction.UPPER(city)));
 
         if (countryGeoId != null) {
-            addrExprs.add(EntityCondition.makeCondition("countryGeoId", EntityOperator.EQUALS, countryGeoId.toUpperCase()));
+            addrExprs.add(EntityCondition.makeCondition("countryGeoId", EntityOperator.EQUALS, countryGeoId.toUpperCase(Locale.getDefault())));
         }
 
         // limit to only non-disabled status
@@ -361,14 +364,13 @@ public class PartyWorker {
                 .orderBy("-fromDate")
                 .filterByDate()
                 .queryList();
-        //Debug.logInfo("Checking for matching address: " + addrCond.toString() + "[" + addresses.size() + "]", module);
 
         if (UtilValidate.isEmpty(addresses)) {
             // No address matches, return an empty list
             return addresses;
         }
 
-        List<GenericValue> validFound = new LinkedList<GenericValue>();
+        List<GenericValue> validFound = new LinkedList<>();
         // check the address line
         for (GenericValue address: addresses) {
             // address 1 field
@@ -389,14 +391,12 @@ public class PartyWorker {
                             if (addr2Source.equals(addr2Target)) {
                                 Debug.logInfo("Matching address2; adding valid address", module);
                                 validFound.add(address);
-                                //validParty.put(address.getString("partyId"), address.getString("contactMechId"));
                             }
                         }
                     } else {
                         if (address.get("address2") == null) {
                             Debug.logInfo("No address2; adding valid address", module);
                             validFound.add(address);
-                            //validParty.put(address.getString("partyId"), address.getString("contactMechId"));
                         }
                     }
                 }
@@ -421,7 +421,7 @@ public class PartyWorker {
         }
 
         // upper case the address
-        String str = address.trim().toUpperCase();
+        String str = address.trim().toUpperCase(Locale.getDefault());
 
         // replace mapped words
         List<GenericValue> addressMap = null;
@@ -433,7 +433,7 @@ public class PartyWorker {
 
         if (addressMap != null) {
             for (GenericValue v: addressMap) {
-                str = str.replaceAll(v.getString("mapKey").toUpperCase(), v.getString("mapValue").toUpperCase());
+                str = str.replaceAll(v.getString("mapKey").toUpperCase(Locale.getDefault()), v.getString("mapValue").toUpperCase(Locale.getDefault()));
             }
         }
 
@@ -442,7 +442,7 @@ public class PartyWorker {
     }
 
     public static List<String> getAssociatedPartyIdsByRelationshipType(Delegator delegator, String partyIdFrom, String partyRelationshipTypeId) {
-        List<GenericValue> partyList = new LinkedList<GenericValue>();
+        List<GenericValue> partyList = new LinkedList<>();
         List<String> partyIds = null;
         try {
             EntityConditionList<EntityExpr> baseExprs = EntityCondition.makeCondition(UtilMisc.toList(
@@ -451,7 +451,7 @@ public class PartyWorker {
             List<GenericValue> associatedParties = EntityQuery.use(delegator).from("PartyRelationship").where(baseExprs).cache(true).queryList();
             partyList.addAll(associatedParties);
             while (UtilValidate.isNotEmpty(associatedParties)) {
-                List<GenericValue> currentAssociatedParties = new LinkedList<GenericValue>();
+                List<GenericValue> currentAssociatedParties = new LinkedList<>();
                 for (GenericValue associatedParty : associatedParties) {
                     EntityConditionList<EntityExpr> innerExprs = EntityCondition.makeCondition(UtilMisc.toList(
                             EntityCondition.makeCondition("partyIdFrom", associatedParty.get("partyIdTo")),
@@ -488,7 +488,9 @@ public class PartyWorker {
             String idToFind, String partyIdentificationTypeId,
             boolean searchPartyFirst, boolean searchAllId) throws GenericEntityException {
 
-        if (Debug.verboseOn()) Debug.logVerbose("Analyze partyIdentification: entered id = " + idToFind + ", partyIdentificationTypeId = " + partyIdentificationTypeId, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Analyze partyIdentification: entered id = " + idToFind + ", partyIdentificationTypeId = " + partyIdentificationTypeId, module);
+        }
 
         GenericValue party = null;
         List<GenericValue> partiesFound = null;
@@ -512,10 +514,15 @@ public class PartyWorker {
         }
 
         if (party != null) {
-            if (UtilValidate.isNotEmpty(partiesFound)) partiesFound.add(party);
-            else partiesFound = UtilMisc.toList(party);
+            if (UtilValidate.isNotEmpty(partiesFound)) {
+                partiesFound.add(party);
+            } else {
+                partiesFound = UtilMisc.toList(party);
+            }
         }
-        if (Debug.verboseOn()) Debug.logVerbose("Analyze partyIdentification: found party.partyId = " + party + ", and list : " + partiesFound, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Analyze partyIdentification: found party.partyId = " + party + ", and list : " + partiesFound, module);
+        }
         return partiesFound;
     }
 

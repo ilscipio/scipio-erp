@@ -135,10 +135,8 @@ public class OrderContentWrapper extends CommonContentWrapper {
                 orderContentCache.put(cacheKey, outString);
             }
             return outString;
-        } catch (GeneralException e) {
-            Debug.logError(e, "Error rendering OrderContent, inserting empty String", module);
-            return "";
-        } catch (IOException e) {
+
+        } catch (GeneralException | IOException e) {
             Debug.logError(e, "Error rendering OrderContent, inserting empty String", module);
             return "";
         }

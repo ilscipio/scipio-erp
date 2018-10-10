@@ -136,10 +136,10 @@ public class ShoppingListEvents {
             }
         }
 
-        for (int i = 0; i < items.length; i++) {
+        for (String item2 : items) {
             Integer cartIdInt = null;
             try {
-                cartIdInt = Integer.valueOf(items[i]);
+                cartIdInt = Integer.valueOf(item2);
             } catch (Exception e) {
                 Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderIllegalCharacterInSelectedItemField", cart.getLocale()), module);
             }
@@ -184,7 +184,6 @@ public class ShoppingListEvents {
         String includeChild = request.getParameter("includeChild");
         String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
 
-        String eventMessage = null;
         try {
             addListToCart(delegator, dispatcher, cart, prodCatalogId, shoppingListId, (includeChild != null), true, true);
         } catch (IllegalArgumentException e) {
@@ -192,9 +191,6 @@ public class ShoppingListEvents {
             return "error";
         }
 
-        if (UtilValidate.isNotEmpty(eventMessage)) {
-            request.setAttribute("_EVENT_MESSAGE_", eventMessage);
-        }
 
         return "success";
     }
@@ -220,7 +216,7 @@ public class ShoppingListEvents {
 
             shoppingListItems = shoppingList.getRelated("ShoppingListItem", null, null, false);
             if (shoppingListItems == null) {
-                shoppingListItems = new LinkedList<GenericValue>();
+                shoppingListItems = new LinkedList<>();
             }
 
             // include all items of child lists if flagged to do so
@@ -267,7 +263,7 @@ public class ShoppingListEvents {
                 String listId = shoppingListItem.getString("shoppingListId");
                 String itemId = shoppingListItem.getString("shoppingListItemSeqId");
 
-                Map<String, Object> attributes = new HashMap<String, Object>();
+                Map<String, Object> attributes = new HashMap<>();
                 // list items are noted in the shopping cart
                 if (setAsListItem) {
                     attributes.put("shoppingListId", listId);
@@ -328,6 +324,7 @@ public class ShoppingListEvents {
             quantity = new BigDecimal(quantityStr);
         } catch (Exception e) {
             // do nothing, just won't pass to service if it is null
+            //Debug.logError(e, module); // SCIPIO: 2018-10-09: Don't log this as exception
         }
 
         Map<String, Object> serviceInMap = new HashMap<String, Object>();
@@ -379,7 +376,11 @@ public class ShoppingListEvents {
         if (list == null && dispatcher != null) {
             Map<String, Object> listFields = UtilMisc.<String, Object>toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
             Map<String, Object> newListResult = dispatcher.runSync("createShoppingList", listFields);
-
+            if (ServiceUtil.isError(newListResult)) {
+                String errorMessage = ServiceUtil.getErrorMessage(newListResult);
+                Debug.logError(errorMessage, module);
+                return null;
+            }
             if (newListResult != null) {
                 autoSaveListId = (String) newListResult.get("shoppingListId");
             }
@@ -411,9 +412,9 @@ public class ShoppingListEvents {
 
             try {
                 String[] itemsArray = makeCartItemsArray(cart);
-                if (itemsArray != null && itemsArray.length != 0) {
+                if (itemsArray.length != 0) {
                     addBulkFromCart(delegator, dispatcher, cart, userLogin, autoSaveListId, null, itemsArray, false, false);
-                }else if(itemsArray.length == 0 && currentListSize != 0){
+                } else if (currentListSize != 0) {
                     clearListInfo(delegator, autoSaveListId);
                 }
             } catch (IllegalArgumentException e) {
@@ -566,7 +567,7 @@ public class ShoppingListEvents {
      * Returns Map keyed on item sequence ID containing a list of survey response IDs
      */
     public static Map<String, List<String>> getItemSurveyInfos(List<GenericValue> items) {
-        Map<String, List<String>> surveyInfos = new HashMap<String, List<String>>();
+        Map<String, List<String>> surveyInfos = new HashMap<>();
         if (UtilValidate.isNotEmpty(items)) {
             for (GenericValue item : items) {
                 String listId = item.getString("shoppingListId");
@@ -582,7 +583,7 @@ public class ShoppingListEvents {
      * Returns a list of survey response IDs for a shopping list item
      */
     public static List<String> getItemSurveyInfo(GenericValue item) {
-        List<String> responseIds = new LinkedList<String>();
+        List<String> responseIds = new LinkedList<>();
         List<GenericValue> surveyResp = null;
         try {
             surveyResp = item.getRelated("ShoppingListItemSurvey", null, null, false);
@@ -656,6 +657,11 @@ public class ShoppingListEvents {
                 try {
                     Map<String, Object> listFields = UtilMisc.<String, Object>toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
                     Map<String, Object> newListResult = dispatcher.runSync("createShoppingList", listFields);
+                    if (ServiceUtil.isError(newListResult)) {
+                        String errorMessage = ServiceUtil.getErrorMessage(newListResult);
+                        Debug.logError(errorMessage, module);
+                        return null;
+                    }
                     if (newListResult != null) {
                         autoSaveListId = (String) newListResult.get("shoppingListId");
                     }

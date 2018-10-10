@@ -33,7 +33,9 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderChangeHelper;
+import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
+import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -58,6 +60,9 @@ public class OrderTestServices {
             try {
                 ModelService modelService = dctx.getModelService("createTestSalesOrderSingle");
                 Map<String, Object> outputMap = dispatcher.runSync("createTestSalesOrderSingle", modelService.makeValid(context, ModelService.IN_PARAM));
+                if (ServiceUtil.isError(outputMap)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outputMap));
+                }
                 String orderId = (String)outputMap.get("orderId");
                 Debug.logInfo("Test sales order with id [" + orderId + "] has been processed.", module);
             } catch (GenericServiceException e) {
@@ -88,9 +93,12 @@ public class OrderTestServices {
         try {
             if (UtilValidate.isNotEmpty(productId)) {
                 productsList.add(productId);
-                numberOfProductsPerOrder = Integer.valueOf(1);
+                numberOfProductsPerOrder = 1;
             } else {
                 Map<String, Object> result = dispatcher.runSync("getProductCategoryMembers", UtilMisc.toMap("categoryId", productCategoryId));
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
                 if (result.get("categoryMembers") != null) {
                     List<GenericValue> productCategoryMembers = UtilGenerics.checkList(result.get("categoryMembers"));
                     if (productCategoryMembers != null) {
@@ -137,7 +145,7 @@ public class OrderTestServices {
                 cart.addOrIncreaseItem(productsList.get(k), null, BigDecimal.ONE, null, null, null,
                                        null, null, null, null,
                                        null /*catalogId*/, null, null/*itemType*/, null/*itemGroupNumber*/, null, dispatcher);
-            } catch (Exception exc) {
+            } catch (CartItemModifyException | ItemNotFoundException exc) {
                 Debug.logWarning("Error adding product with id " + productsList.get(k) + " to the cart: " + exc.getMessage(), module);
             }
         }
@@ -157,7 +165,10 @@ public class OrderTestServices {
         Boolean shipOrder = (Boolean) context.get("shipOrder");
         if (shipOrder && UtilValidate.isNotEmpty(orderId)) {
             try {
-                dispatcher.runSync("quickShipEntireOrder", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
+                Map<String, Object> result = dispatcher.runSync("quickShipEntireOrder", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
                 Debug.logInfo("Test sales order with id [" + orderId + "] has been shipped", module);
             } catch (GenericServiceException gse) {
                 Debug.logWarning("Unable to quick ship test sales order with id [" + orderId + "] with error: " + gse.getMessage(), module);

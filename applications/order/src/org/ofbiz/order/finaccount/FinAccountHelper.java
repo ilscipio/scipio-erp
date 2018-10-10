@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import org.ofbiz.base.util.Debug;
@@ -52,6 +53,10 @@ public class FinAccountHelper {
      public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(decimals, rounding);
 
      public static final String giftCertFinAccountTypeId = "GIFTCERT_ACCOUNT";
+     /**
+      * @deprecated SCIPIO: 2018-10-09: Nothing needs this anymore.
+      */
+     @Deprecated
      public static final boolean defaultPinRequired = false;
 
      // pool of available characters for account codes, here numbers plus uppercase characters
@@ -138,7 +143,7 @@ public class FinAccountHelper {
          if (finAccountCode == null) {
              return null;
          }
-         finAccountCode = finAccountCode.toUpperCase().replaceAll("[^0-9A-Z]", "");
+         finAccountCode = finAccountCode.toUpperCase(Locale.getDefault()).replaceAll("[^0-9A-Z]", "");
 
          // now look for the account
          List<GenericValue> accounts = EntityQuery.use(delegator).from("FinAccount")
@@ -273,17 +278,17 @@ public class FinAccountHelper {
         Random rand = new Random();
         boolean isValid = false;
         String number = null;
+        StringBuilder numberBuilder = new StringBuilder();
         while (!isValid) {
-            number = "";
             for (int i = 0; i < length; i++) {
                 int randInt = rand.nextInt(9);
-                number = number + randInt;
+                numberBuilder.append(randInt);
             }
 
             if (isId) {
                 int check = UtilValidate.getLuhnCheckDigit(number);
-                number = number + check;
-
+                numberBuilder.append(check);
+                number = numberBuilder.toString();
                 // validate the number
                 if (checkFinAccountNumber(number)) {
                     // make sure this number doens't already exist

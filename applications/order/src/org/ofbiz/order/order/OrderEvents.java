@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.order.order;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -37,7 +37,6 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.GenericServiceException;
@@ -81,19 +80,9 @@ public class OrderEvents {
             OutputStream os = response.getOutputStream();
             GenericValue dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", dataResourceId).cache().queryOne();
             Map<String, Object> resourceData = DataResourceWorker.getDataResourceStream(dataResource, "", application.getInitParameter("webSiteId"), UtilHttp.getLocale(request), application.getRealPath("/"), false);
-            os.write(IOUtils.toByteArray((ByteArrayInputStream) resourceData.get("stream")));
+            os.write(IOUtils.toByteArray((InputStream) resourceData.get("stream")));
             os.flush();
-        } catch (GenericEntityException e) {
-            String errMsg = "Error downloading digital product content: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
-        } catch (GeneralException e) {
-            String errMsg = "Error downloading digital product content: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
-        } catch (IOException e) {
+        } catch (GeneralException | IOException e) {
             String errMsg = "Error downloading digital product content: " + e.toString();
             Debug.logError(e, errMsg, module);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -105,50 +94,44 @@ public class OrderEvents {
 
     public static String cancelSelectedOrderItems(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        //Delegator delegator = (Delegator) request.getAttribute("delegator"); // SCIPIO: unused
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         Locale locale = UtilHttp.getLocale(request);
 
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap;
         String  orderId = request.getParameter("orderId");
         String[] selectedItems = request.getParameterValues("selectedItem");
-
-
 
         if (selectedItems != null) {
             for (String selectedItem : selectedItems) {
                 String [] orderItemSeqIdAndOrderItemShipGrpId = selectedItem.split(":");
                 String orderItemSeqId = orderItemSeqIdAndOrderItemShipGrpId[0];
                 String shipGroupSeqId = orderItemSeqIdAndOrderItemShipGrpId[1];
-                        BigDecimal cancelQuantity = new BigDecimal(request.getParameter("iqm_"+orderItemSeqId+":"+shipGroupSeqId));
-                        Map<String, Object> contextMap = new HashMap<String, Object>();
-                        contextMap.put("orderId", orderId);
-                        contextMap.put("orderItemSeqId", orderItemSeqId);
-                        contextMap.put("shipGroupSeqId", shipGroupSeqId);
-                        contextMap.put("cancelQuantity", cancelQuantity);
-                        contextMap.put("userLogin", userLogin);
-                        contextMap.put("locale", locale);
-                        try {
-                            resultMap = dispatcher.runSync("cancelOrderItem", contextMap);
-
-                            if (ServiceUtil.isError(resultMap)) {
-                                String errorMessage = ServiceUtil.getErrorMessage(resultMap);
-                                Debug.logError(errorMessage, module);
-                                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                                return "error";
-                            }
-
-                        } catch (GenericServiceException e) {
-                            Debug.logError(e, module);
-                            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
-                            return "error";
-                        }
+                BigDecimal cancelQuantity = new BigDecimal(request.getParameter("iqm_"+orderItemSeqId+":"+shipGroupSeqId));
+                Map<String, Object> contextMap = new HashMap<>();
+                contextMap.put("orderId", orderId);
+                contextMap.put("orderItemSeqId", orderItemSeqId);
+                contextMap.put("shipGroupSeqId", shipGroupSeqId);
+                contextMap.put("cancelQuantity", cancelQuantity);
+                contextMap.put("userLogin", userLogin);
+                contextMap.put("locale", locale);
+                try {
+                    resultMap = dispatcher.runSync("cancelOrderItem", contextMap);
+                    if (ServiceUtil.isError(resultMap)) {
+                        String errorMessage = ServiceUtil.getErrorMessage(resultMap);
+                        request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                        Debug.logError(errorMessage, module);
+                        return "error";
+                    }
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, module);
+                    request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                    return "error";
+                }
             }
             return "success";
-        } else {
-            request.setAttribute("_ERROR_MESSAGE_", "No order item selected. Please select an order item to cancel");
-            return "error";
         }
+        request.setAttribute("_ERROR_MESSAGE_", "No order item selected. Please select an order item to cancel");
+        return "error";
     }
 }

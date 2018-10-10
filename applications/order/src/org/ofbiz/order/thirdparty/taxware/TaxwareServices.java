@@ -35,6 +35,8 @@ import com.ibm.icu.math.BigDecimal;
  */
 public class TaxwareServices {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     public static Map calcTax(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         List items = (List) context.get("itemProductList");
@@ -74,7 +76,7 @@ public class TaxwareServices {
             result.put("itemAdjustments", utl.getItemAdjustments());
 
         } catch (TaxwareException e) {
-            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
+            Debug.logError(e, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Taxware problem (" + e.getMessage() + ").");
         }

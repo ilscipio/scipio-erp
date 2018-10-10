@@ -141,11 +141,11 @@ public class ShoppingListServices {
                 GenericValue shoppingList;
                 while (((shoppingList = eli.next()) != null)) {
                     Timestamp lastOrder = shoppingList.getTimestamp("lastOrderedDate");
-                    GenericValue recurrenceInfo = null;
-                    recurrenceInfo = shoppingList.getRelatedOne("RecurrenceInfo", false);
-
-                    Timestamp startDateTime = recurrenceInfo.getTimestamp("startDateTime");
                     RecurrenceInfo recurrence = null;
+
+                    GenericValue recurrenceInfo = shoppingList.getRelatedOne("RecurrenceInfo", false);
+                    Timestamp startDateTime = recurrenceInfo.getTimestamp("startDateTime");
+                    
                     if (recurrenceInfo != null) {
                         try {
                             recurrence = new RecurrenceInfo(recurrenceInfo);
@@ -153,6 +153,7 @@ public class ShoppingListServices {
                             Debug.logError(e, module);
                         }
                     }
+
 
                     // check the next recurrence
                     if (recurrence != null) {
@@ -172,9 +173,10 @@ public class ShoppingListServices {
 
                     // store the order
                     Map<String, Object> createResp = helper.createOrder(userLogin);
-                    if (createResp != null && ServiceUtil.isError(createResp)) {
+                    if (createResp == null || (createResp != null && ServiceUtil.isError(createResp))) {
                         Debug.logError("Cannot create order for shopping list - " + shoppingList, module);
                     } else {
+
                         String orderId = (String) createResp.get("orderId");
 
                         // authorize the payments
@@ -214,7 +216,7 @@ public class ShoppingListServices {
                 Debug.logError(e2, "[Delegator] Could not rollback transaction: " + e2.toString(), module);
             }
 
-            String errMsg = "Error while creating new shopping list based automatic reorder" + e.toString();
+            String errMsg = UtilProperties.getMessage(resource_error, "OrderErrorWhileCreatingNewShoppingListBasedAutomaticReorder", UtilMisc.toMap("errorString", e.toString()), locale);
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         } finally {
@@ -358,7 +360,7 @@ public class ShoppingListServices {
                 GenericValue paymentPref = EntityUtil.getFirst(orh.getPaymentPreferences());
                 GenericValue shipGroup = EntityUtil.getFirst(orh.getOrderItemShipGroups());
 
-                Map<String, Object> slCtx = new HashMap<String, Object>();
+                Map<String, Object> slCtx = new HashMap<>();
                 slCtx.put("shipmentMethodTypeId", shipGroup.get("shipmentMethodTypeId"));
                 slCtx.put("carrierRoleTypeId", shipGroup.get("carrierRoleTypeId"));
                 slCtx.put("carrierPartyId", shipGroup.get("carrierPartyId"));
@@ -397,7 +399,7 @@ public class ShoppingListServices {
                 Debug.logError(e2, "[Delegator] Could not rollback transaction: " + e2.toString(), module);
             }
 
-            String errMsg = "Error while creating new shopping list based on order" + e.toString();
+            String errMsg = UtilProperties.getMessage(resource_error, "OrderErrorWhileCreatingNewShoppingListBasedOnOrder", UtilMisc.toMap("errorString", e.toString()), locale);
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         } finally {
@@ -546,7 +548,7 @@ public class ShoppingListServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateShoppingListQuantitiesFromOrder(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         String orderId = (String) context.get("orderId");
         try {
@@ -581,6 +583,7 @@ public class ShoppingListServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         List<GenericValue> shoppingList = null;
+        Map<String, Object> result = new HashMap<String, Object>();
         try {
             shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("partyId", null, "shoppingListTypeId", "SLT_SPEC_PURP").queryList();
         } catch (GenericEntityException e) {
@@ -613,15 +616,21 @@ public class ShoppingListServices {
                     }
                     for (GenericValue sli : shoppingListItems) {
                         try {
-                            dispatcher.runSync("removeShoppingListItem", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"),
+                            result = dispatcher.runSync("removeShoppingListItem", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"),
                                     "shoppingListItemSeqId", sli.getString("shoppingListItemSeqId"),
                                     "userLogin", userLogin));
+                            if (ServiceUtil.isError(result)) {
+                                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                            }
                         } catch (GenericServiceException e) {
                             Debug.logError(e.getMessage(), module);
                         }
                     }
                     try {
-                        dispatcher.runSync("removeShoppingList", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"), "userLogin", userLogin));
+                        result = dispatcher.runSync("removeShoppingList", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"), "userLogin", userLogin));
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
                     } catch (GenericServiceException e) {
                         Debug.logError(e.getMessage(), module);
                     }

@@ -34,7 +34,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.event.EventHandler;
@@ -73,8 +73,10 @@ public class TaskEvents {
             Map<String, ? extends Object> context = UtilMisc.toMap("workEffortId", workEffortId, "partyId", partyId, "roleTypeId", roleTypeId,
                     "fromDate", fromDate, "result", parameterMap, "userLogin", userLogin);
             result = dispatcher.runSync("wfCompleteAssignment", context);
-            if (result.containsKey(ModelService.RESPOND_ERROR)) {
-                request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
+            if (ServiceUtil.isError(result)) {
+                String errorMessage = ServiceUtil.getErrorMessage(result);
+                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                Debug.logError(errorMessage, module);
                 return "error";
             }
         } catch (GenericServiceException e) {
@@ -134,6 +136,12 @@ public class TaskEvents {
         Map<String, Object> result = null;
         try {
             result = dispatcher.runSync("addOrderRole", context);
+            if (ServiceUtil.isError(result)) {
+                String errorMessage = ServiceUtil.getErrorMessage(result);
+                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                Debug.logError(errorMessage, module);
+                return false;
+            }
             Debug.logInfo("Added user to order role " + result, module);
         } catch (GenericServiceException gse) {
             request.setAttribute("_ERROR_MESSAGE_", gse.getMessage());

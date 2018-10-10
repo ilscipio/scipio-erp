@@ -91,9 +91,7 @@ public class ExpressCheckoutEvents {
             Debug.logError("No ExpressCheckout token found in cart, you must do a successful setExpressCheckout before redirecting.", module);
             return "error";
         }
-        if (cart != null) {
-            productStoreId = cart.getProductStoreId();
-        }
+        productStoreId = cart.getProductStoreId();
         if (productStoreId != null) {
             GenericValue payPalPaymentSetting = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, "EXT_PAYPAL", null, true);
             if (payPalPaymentSetting != null) {
@@ -125,15 +123,27 @@ public class ExpressCheckoutEvents {
 
     public static String expressCheckoutUpdate(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Locale locale = UtilHttp.getLocale(request); // SCIPIO
         CheckoutType checkoutType = determineCheckoutType(request);
         if (checkoutType.equals(CheckoutType.STANDARD)) {
-            Map<String, Object> inMap = new HashMap<String, Object>();
+            Map<String, Object> inMap = new HashMap<>();
             inMap.put("request", request);
             inMap.put("response", response);
             try {
-                dispatcher.runSync("payPalCheckoutUpdate", inMap);
+                Map<String, Object> result = dispatcher.runSync("payPalCheckoutUpdate", inMap);
+                if (ServiceUtil.isError(result)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(result);
+                    // SCIPIO: 2018-10-09: not appropriate for frontend
+                    //request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                    request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resourceErr, "AccountingPayPalCommunicationError", locale));
+                    Debug.logError(errorMessage, module);
+                    return "error";
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
+                // SCIPIO: 2018-10-09: added missing message and error return
+                request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resourceErr, "AccountingPayPalCommunicationError", locale));
+                return "error";
             }
         }
         return "success";
@@ -179,12 +189,15 @@ public class ExpressCheckoutEvents {
             } else if (checkoutType.equals(CheckoutType.STANDARD)) {
                 serviceName = "payPalDoExpressCheckout";
             }
-            Map<String, Object> inMap = new HashMap<String, Object>();
+            Map<String, Object> inMap = new HashMap<>();
             inMap.put("userLogin", userLogin);
             inMap.put("orderPaymentPreference", paymentPref);
             Map<String, Object> result = null;
             try {
                 result = dispatcher.runSync(serviceName, inMap);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             } catch (GenericServiceException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
@@ -207,12 +220,13 @@ public class ExpressCheckoutEvents {
     }
 
     public static CheckoutType determineCheckoutType(Delegator delegator, String productStoreId) {
-        GenericValue payPalPaymentSetting = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, "EXT_PAYPAL", null, true);
+        GenericValue payPalPaymentSetting = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId,
+                "EXT_PAYPAL", null, true);
         if (payPalPaymentSetting != null && payPalPaymentSetting.getString("paymentGatewayConfigId") != null) {
             try {
                 GenericValue paymentGatewayConfig = payPalPaymentSetting.getRelatedOne("PaymentGatewayConfig", false);
-                String paymentGatewayConfigTypeId = paymentGatewayConfig.getString("paymentGatewayConfigTypeId");
                 if (paymentGatewayConfig != null) {
+                    String paymentGatewayConfigTypeId = paymentGatewayConfig.getString("paymentGatewayConfigTypeId");
                     if ("PAYFLOWPRO".equals(paymentGatewayConfigTypeId)) {
                         return CheckoutType.PAYFLOW;
                     } else if ("PAYPAL".equals(paymentGatewayConfigTypeId)) {

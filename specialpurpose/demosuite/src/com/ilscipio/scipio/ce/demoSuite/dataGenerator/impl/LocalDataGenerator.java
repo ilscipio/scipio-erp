@@ -276,28 +276,28 @@ public class LocalDataGenerator extends AbstractDataGenerator {
             minDate = (String) context.get("minDate");
         workEffort.setEstimatedStart(UtilRandom.generateRandomTimestamp(UtilDateTime.toDate(minDate), context));
         workEffort.setEstimatedCompletion(UtilRandom.generateRandomTimestamp(workEffort.getEstimatedStart(), context));
-        
+
         workEffort.setActualStart(UtilRandom.generateRandomTimestamp(UtilDateTime.toDate(minDate), context));
         workEffort.setActualCompletion(UtilRandom.generateRandomTimestamp(workEffort.getActualStart(), context));
-        
-        String partyStatusId = workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
-        String assetStatusId = workEffortAssetAssignmentStatus.get(UtilRandom.random(workEffortAssetAssignmentStatus));
-        String fixedAssetTypeId;
 
-        if (workEffort.getType().equals("TASK"))
-            fixedAssetTypeId = "EQUIPMENT";
-        else if (workEffort.getType().equals("PROD_ORDER_TASK"))
-            fixedAssetTypeId = "PRODUCTION_EQUIPMENT";
-        else if (workEffort.getType().equals("EVENT"))
-            fixedAssetTypeId = "GROUP_EQUIPMENT";
-        else if (workEffort.getType().equals("ACTIVITY"))
-            fixedAssetTypeId = "VEHICLE";
-        else
-            fixedAssetTypeId = "VEHICLE";
+        if (UtilRandom.getRandomBoolean()) {
+            String partyStatusId = workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
+        } else {
+            String assetStatusId = workEffortAssetAssignmentStatus.get(UtilRandom.random(workEffortAssetAssignmentStatus));
+            String fixedAssetTypeId;
+            // if (workEffort.getType().equals("TASK"))
+            // fixedAssetTypeId = "EQUIPMENT";
+            // else if (workEffort.getType().equals("PROD_ORDER_TASK"))
+            // fixedAssetTypeId = "PRODUCTION_EQUIPMENT";
+            // else if (workEffort.getType().equals("EVENT"))
+            // fixedAssetTypeId = "GROUP_EQUIPMENT";
+            // else if (workEffort.getType().equals("ACTIVITY"))
+            // fixedAssetTypeId = "VEHICLE";
+            // else
+            // fixedAssetTypeId = "VEHICLE";
 
-        List<String> fixedAssetAndTypesList = fixedAssetAndTypes.get(fixedAssetTypeId);
-        String fixedAssetId = fixedAssetAndTypesList.get(UtilRandom.random(fixedAssetAndTypesList));
-
+//            workEffort.setAssetStatus(fixedAssetAndTypes.get(UtilRandom.random(new ArrayList<String>(fixedAssetAndTypes.keySet()))));
+        }
         return workEffort;
     }
 

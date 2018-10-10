@@ -1,21 +1,20 @@
-import java.sql.Timestamp
-
 import org.ofbiz.base.util.Debug
-import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.base.util.UtilMisc
-import org.ofbiz.base.util.UtilProperties
-import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
-import org.ofbiz.service.ServiceUtil
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
 
 public class WorkEffortData extends DataGeneratorGroovyBaseScript {
 
     WorkEffortData() {
         Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - WORK EFFORT DATA-=-=-=-", "");
+    }
+    
+    public String getDataType() {
+        return DataTypeEnum.WORKEFFORT;
     }
 
     void init() {

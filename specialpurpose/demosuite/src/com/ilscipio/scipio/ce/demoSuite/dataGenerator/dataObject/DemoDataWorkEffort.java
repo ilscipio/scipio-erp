@@ -13,6 +13,9 @@ public class DemoDataWorkEffort implements AbstractDataObject {
     private Timestamp actualStart;
     private Timestamp actualCompletion;
 
+    private String partyStatus;
+    private String assetStatus;
+
     public String getId() {
         return id;
     }
@@ -75,6 +78,22 @@ public class DemoDataWorkEffort implements AbstractDataObject {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getPartyStatus() {
+        return partyStatus;
+    }
+
+    public void setPartyStatus(String partyStatus) {
+        this.partyStatus = partyStatus;
+    }
+
+    public String getAssetStatus() {
+        return assetStatus;
+    }
+
+    public void setAssetStatus(String assetStatus) {
+        this.assetStatus = assetStatus;
     }
 
 }

@@ -1,5 +1,6 @@
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
 
@@ -12,17 +13,36 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
     WorkEffortData() {
         Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - WORK EFFORT DATA-=-=-=-", "");
     }
-    
+
     public String getDataType() {
         return DataTypeEnum.WORKEFFORT;
     }
 
     void init() {
-        String partyId = (context.userLogin) ? context.userLogin.partyId : "Company";
-        workEffortTypeIdsAndStatusKeys = new ArrayList(workEffortTypeIdsAndStatus.keySet());
+        partyGroupCount = from("PartyRole").where("roleTypeId", "INTERNAL_ORGANIZATIO").queryCount();
+        if (partyGroupCount == 0) {
+            throw new Exception("This service depends on party group data to be present. Please load party group data or generate party group demo data first and try again.");
+        }
+        totalPartyGroupCount = (partyGroupCount  < Integer.MAX_VALUE) ? (int) partyGroupCount : Integer.MAX_VALUE - 1;
 
-        context.partyId = partyId;
-        context.workEffortTypeIdsAndStatusKeys = workEffortTypeIdsAndStatusKeys;
+        String partyGroupId = context.partyGroupId ?: null;
+        
+        EntityFindOptions efo = new EntityFindOptions();
+        efo.setMaxRows(1);
+
+        // If no partyGroupId is passed, pick one randomly
+        if (!partyGroupId) {
+            efo.setOffset(UtilRandom.getRandomInt(0, context.totalPartyGroupCount - 1));
+            //            Debug.log("party group offset ======> " + efo.getOffset());
+            partyGroups = from("PartyRole").where("roleTypeId", "INTERNAL_ORGANIZATIO").query(efo);
+            if (partyGroups) {
+                partyGroupId = partyGroups[0].getString("partyId");
+            }
+        }
+        if (!partyGroupId)
+            throw new Exception("Party group not found or invalid.");
+
+        context.partyGroupId = partyGroupId;
     }
 
     List prepareData(int index, AbstractDataObject workEffortData) throws Exception {
@@ -34,7 +54,7 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
         GenericValue workEffort = delegator.makeValue("WorkEffort", workEffortFields);
         toBeStored.add(workEffort);
 
-        fields = UtilMisc.toMap("workEffortId", workEffortId, "partyId", context.partyId, "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate", createdDate, "statusId", partyStatusId);
+        fields = UtilMisc.toMap("workEffortId", workEffortId, "partyId", context.partyGroupId, "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate", createdDate, "statusId", partyStatusId);
 
         GenericValue workEffortPartyAssignment = delegator.makeValue("WorkEffortPartyAssignment", fields);
         toBeStored.add(workEffortPartyAssignment);

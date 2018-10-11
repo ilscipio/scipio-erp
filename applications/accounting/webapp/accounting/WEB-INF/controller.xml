@@ -407,7 +407,19 @@ under the License.
     <request-map uri="ListGlAccountOrgCsv.csv">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListGlAccountOrgCsv"/>
-    </request-map>  
+    </request-map>
+    <request-map uri="createGlAccountOrganization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccountOrganization"/>
+        <response name="success" type="view" value="ListGlAccountOrganization"/>
+        <response name="error" type="view" value="ListGlAccountOrganization"/>
+    </request-map>
+    <request-map uri="updateGlAccountOrganization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccount"/>
+        <response name="success" type="view" value="ListGlAccountOrganization"/>
+        <response name="error" type="view" value="ListGlAccountOrganization"/>
+    </request-map>
     
     <!-- PartyGlAccount Requests-->
     <request-map uri="editPartyGlAccounts">

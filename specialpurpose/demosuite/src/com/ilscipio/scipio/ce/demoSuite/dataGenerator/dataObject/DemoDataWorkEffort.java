@@ -8,6 +8,8 @@ public class DemoDataWorkEffort implements AbstractDataObject {
     private String name;
     private String type;
     private String status;
+    private Timestamp createdDate;
+
     private Timestamp estimatedStart;
     private Timestamp estimatedCompletion;
     private Timestamp actualStart;
@@ -94,6 +96,14 @@ public class DemoDataWorkEffort implements AbstractDataObject {
 
     public void setAssetStatus(String assetStatus) {
         this.assetStatus = assetStatus;
+    }
+
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
 }

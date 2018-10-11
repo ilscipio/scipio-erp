@@ -26,7 +26,7 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
         totalPartyGroupCount = (partyGroupCount  < Integer.MAX_VALUE) ? (int) partyGroupCount : Integer.MAX_VALUE - 1;
 
         String partyGroupId = context.partyGroupId ?: null;
-        
+
         EntityFindOptions efo = new EntityFindOptions();
         efo.setMaxRows(1);
 
@@ -49,21 +49,16 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
         List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         List<GenericValue> workEffortEntrys = new ArrayList<GenericValue>();
 
+        Map<String, Object> workEffortFields = UtilMisc.toMap("workEffortId", workEffortData.getId(), "workEffortTypeId", workEffortData.getType(), "currentStatusId", workEffortData.getStatus(),
+                "workEffortName", workEffortData.getName(), "description", workEffortData.getName() + " description", "createdDate", workEffortData.getCreatedDate());
+        toBeStored.add(delegator.makeValue("WorkEffort", workEffortFields));
 
-        Map<String, Object> workEffortFields = UtilMisc.toMap("workEffortId", workEffortData.getId(), "workEffortTypeId", workEffortTypeId, "currentStatusId", currentStatusId, "workEffortName", workEffortName, "description", workEffortName + " description", "createdDate", createdDate);
-        GenericValue workEffort = delegator.makeValue("WorkEffort", workEffortFields);
-        toBeStored.add(workEffort);
+        fields = UtilMisc.toMap("workEffortId", workEffortData.getId(), "partyId", context.partyGroupId, "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate",
+                workEffortData.getCreatedDate(), "statusId", workEffortData.getPartyStatus());
+        toBeStored.add(delegator.makeValue("WorkEffortPartyAssignment", fields));
 
-        fields = UtilMisc.toMap("workEffortId", workEffortId, "partyId", context.partyGroupId, "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate", createdDate, "statusId", partyStatusId);
-
-        GenericValue workEffortPartyAssignment = delegator.makeValue("WorkEffortPartyAssignment", fields);
-        toBeStored.add(workEffortPartyAssignment);
-
-        fields = UtilMisc.toMap("workEffortId", workEffortId, "fixedAssetId", fixedAssetId, "fromDate", createdDate, "statusId", assetStatusId);
-        GenericValue workEffortFixedAssetAssign = delegator.makeValue("WorkEffortFixedAssetAssign", fields);
-        toBeStored.add(workEffortFixedAssetAssign);
-
-
+        fields = UtilMisc.toMap("workEffortId", workEffortData.getId(), "fixedAssetId", workEffortData.getAssetStatus(), "fromDate", workEffortData.getCreatedDate(), "statusId", workEffortData.getStatus());
+        toBeStored.add(delegator.makeValue("WorkEffortFixedAssetAssign", fields));
         return toBeStored;
     }
 }

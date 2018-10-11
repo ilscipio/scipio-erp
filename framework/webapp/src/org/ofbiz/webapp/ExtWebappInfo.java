@@ -209,7 +209,7 @@ public class ExtWebappInfo implements Serializable {
             // copy cache for synch semantics
             Map<String, ExtWebappInfo> newCache = new HashMap<>(serverContextPathCache);
             newCache.put(cacheKey, info);
-            serverContextPathCache = Collections.unmodifiableMap(serverContextPathCache);
+            serverContextPathCache = Collections.unmodifiableMap(newCache);
 
             if (info.getWebSiteId() != null) {
                 newCache = new HashMap<>(webSiteIdCache);

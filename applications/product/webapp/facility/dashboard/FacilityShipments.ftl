@@ -24,7 +24,7 @@
                                 <@td>${facilityName!}</@td>
                                 <@td>${shipmentType.description!}</@td>
                                 <@td>${statusItem.description!}</@td>
-                                <@td>${shipment.createdDate?string('yyyy-MM-dd HH:mm')!}</@td>
+                                <@td><#if shipment.createdDate??>${shipment.createdDate?string('yyyy-MM-dd HH:mm')}</#if></@td>
                             </@tr>
                         </#list>
                     </@tbody>

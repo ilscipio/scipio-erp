@@ -53,7 +53,6 @@ public class ContentEvents {
      * @return String specifying the exit status of this event
      */
     public static String updateAllContentKeywords(HttpServletRequest request, HttpServletResponse response) {
-        //String errMsg = "";
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 

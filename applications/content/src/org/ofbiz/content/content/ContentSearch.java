@@ -171,9 +171,9 @@ public class ContentSearch {
             ArrayList<String> contentIds = null;
             try (EntityListIterator eli = this.doQuery(delegator)) {
                 contentIds = this.makeContentIdList(eli);
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Error closing ContentSearch EntityListIterator");
-                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error closing ContentSearch EntityListIterator");
+            }
 
             long endMillis = System.currentTimeMillis();
             double totalSeconds = ((double)endMillis - (double)startMillis)/1000.0;
@@ -272,7 +272,8 @@ public class ContentSearch {
         }
 
         /**
-         *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE
+         * @param delegator the delegator
+         * @return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE
          *      DONE WITH IT (preferably in a finally block),
          *      AND DON'T LEAVE IT OPEN TOO LONG BECAUSE IT WILL MAINTAIN A DATABASE CONNECTION.
          */
@@ -285,8 +286,6 @@ public class ContentSearch {
             }
             dynamicViewEntity.addAlias("CNT", "contentId", null, null, null, contentIdGroupBy, null);
             EntityCondition whereCondition = EntityCondition.makeCondition(entityConditionList, EntityOperator.AND);
-
-            // Debug.logInfo("ContentSearch, whereCondition = " + whereCondition.toString(), module);
 
             EntityListIterator eli = null;
             try {
@@ -325,19 +324,6 @@ public class ContentSearch {
             try {
                 boolean hasResults = false;
                 Object initialResult = null;
-
-                /* this method has been replaced by the following to address issue with SAP DB and possibly other DBs
-                if (resultOffset != null) {
-                    Debug.logInfo("Before relative, current index=" + eli.currentIndex(), module);
-                    hasResults = eli.relative(resultOffset.intValue());
-                } else {
-                    initialResult = eli.next();
-                    if (initialResult != null) {
-                        hasResults = true;
-                    }
-                }
-                 */
-
                 initialResult = eli.next();
                 if (initialResult != null) {
                     hasResults = true;
@@ -387,21 +373,6 @@ public class ContentSearch {
                     } else {
                         duplicatesFound++;
                     }
-
-                    /*
-                    StringBuilder lineMsg = new StringBuilder("Got search result line: ");
-                    Iterator<String> fieldsToSelectIter = fieldsToSelect.iterator();
-                    while (fieldsToSelectIter.hasNext()) {
-                        String fieldName = fieldsToSelectIter.next();
-                        lineMsg.append(fieldName);
-                        lineMsg.append("=");
-                        lineMsg.append(searchResult.get(fieldName));
-                        if (fieldsToSelectIter.hasNext()) {
-                            lineMsg.append(", ");
-                        }
-                    }
-                    Debug.logInfo(lineMsg.toString(), module);
-                    */
                 }
 
                 if (searchResult != null) {
@@ -600,6 +571,7 @@ public class ContentSearch {
 
         @Override
         public boolean equals(Object obj) {
+            if (!(obj instanceof ContentSearchConstraint)) return false;
             ContentSearchConstraint psc = (ContentSearchConstraint) obj;
             if (psc instanceof ContentAssocConstraint) {
                 ContentAssocConstraint that = (ContentAssocConstraint) psc;
@@ -628,6 +600,16 @@ public class ContentSearch {
             } else {
                 return false;
             }
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((contentAssocTypeId == null) ? 0 : contentAssocTypeId.hashCode());
+            result = prime * result + ((contentId == null) ? 0 : contentId.hashCode());
+            result = prime * result + (includeSubContents ? 1231 : 1237);
+            return result;
         }
     }
 
@@ -721,34 +703,47 @@ public class ContentSearch {
 
         @Override
         public boolean equals(Object obj) {
-            ContentSearchConstraint psc = (ContentSearchConstraint) obj;
-            if (psc instanceof KeywordConstraint) {
-                KeywordConstraint that = (KeywordConstraint) psc;
-                if (this.anyPrefix != that.anyPrefix) {
-                    return false;
-                }
-                if (this.anySuffix != that.anySuffix) {
-                    return false;
-                }
-                if (this.isAnd != that.isAnd) {
-                    return false;
-                }
-                if (this.removeStems != that.removeStems) {
-                    return false;
-                }
-                if (this.keywordsString == null) {
-                    if (that.keywordsString != null) {
+            if ((obj instanceof ContentSearchConstraint)) {
+                ContentSearchConstraint psc = (ContentSearchConstraint) obj;
+                if (psc instanceof KeywordConstraint) {
+                    KeywordConstraint that = (KeywordConstraint) psc;
+                    if (this.anyPrefix != that.anyPrefix) {
                         return false;
                     }
-                } else {
-                    if (!this.keywordsString.equals(that.keywordsString)) {
+                    if (this.anySuffix != that.anySuffix) {
                         return false;
                     }
+                    if (this.isAnd != that.isAnd) {
+                        return false;
+                    }
+                    if (this.removeStems != that.removeStems) {
+                        return false;
+                    }
+                    if (this.keywordsString == null) {
+                        if (that.keywordsString != null) {
+                            return false;
+                        }
+                    } else {
+                        if (!this.keywordsString.equals(that.keywordsString)) {
+                            return false;
+                        }
+                    }
+                    return true;
                 }
-                return true;
-            } else {
-                return false;
             }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (anyPrefix ? 1231 : 1237);
+            result = prime * result + (anySuffix ? 1231 : 1237);
+            result = prime * result + (isAnd ? 1231 : 1237);
+            result = prime * result + ((keywordsString == null) ? 0 : keywordsString.hashCode());
+            result = prime * result + (removeStems ? 1231 : 1237);
+            return result;
         }
     }
 
@@ -806,34 +801,43 @@ public class ContentSearch {
             return ppBuf.toString();
         }
 
-
         @Override
         public boolean equals(Object obj) {
-            ContentSearchConstraint psc = (ContentSearchConstraint) obj;
-            if (psc instanceof LastUpdatedRangeConstraint) {
-                LastUpdatedRangeConstraint that = (LastUpdatedRangeConstraint) psc;
-                if (this.fromDate == null) {
-                    if (that.fromDate != null) {
-                        return false;
+            if (obj instanceof ContentSearchConstraint) {
+                ContentSearchConstraint psc = (ContentSearchConstraint) obj;
+                if (psc instanceof LastUpdatedRangeConstraint) {
+                    LastUpdatedRangeConstraint that = (LastUpdatedRangeConstraint) psc;
+                    if (this.fromDate == null) {
+                        if (that.fromDate != null) {
+                            return false;
+                        }
+                    } else {
+                        if (!this.fromDate.equals(that.fromDate)) {
+                            return false;
+                        }
                     }
-                } else {
-                    if (!this.fromDate.equals(that.fromDate)) {
-                        return false;
+                    if (this.thruDate == null) {
+                        if (that.thruDate != null) {
+                            return false;
+                        }
+                    } else {
+                        if (!this.thruDate.equals(that.thruDate)) {
+                            return false;
+                        }
                     }
+                    return true;
                 }
-                if (this.thruDate == null) {
-                    if (that.thruDate != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.thruDate.equals(that.thruDate)) {
-                        return false;
-                    }
-                }
-                return true;
-            } else {
-                return false;
             }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((fromDate == null) ? 0 : fromDate.hashCode());
+            result = prime * result + ((thruDate == null) ? 0 : thruDate.hashCode());
+            return result;
         }
     }
 

@@ -21,6 +21,7 @@ package org.ofbiz.content.content;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -70,7 +71,7 @@ public class ContentKeywordIndex {
         List<String> strings = new LinkedList<String>();
 
         int pidWeight = 1;
-        keywords.put(content.getString("contentId").toLowerCase(), (long) pidWeight);
+        keywords.put(content.getString("contentId").toLowerCase(Locale.getDefault()), (long) pidWeight);
 
         addWeightedKeywordSourceString(content, "dataResourceId", strings);
         addWeightedKeywordSourceString(content, "contentName", strings);
@@ -178,17 +179,6 @@ public class ContentKeywordIndex {
             addWeightedKeywordSourceString(dataResource, "dataResourceName", strings);
             addWeightedKeywordSourceString(dataResource, "objectInfo", strings);
         }
-        /*List<GenericValue> contentDataResourceViews = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", contentId).queryList();
-        for (GenericValue contentDataResourceView: contentDataResourceViews) {
-            int weight = 1;
-            addWeightedDataResourceString(contentDataResourceView, weight, strings, delegator, content);
-
-            List<GenericValue> alternateViews = contentDataResourceView.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"), false);
-            alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
-            for (GenericValue thisView: alternateViews) {
-                addWeightedDataResourceString(thisView, weight, strings, delegator, content);
-            }
-        }*/
 
         if (UtilValidate.isNotEmpty(strings)) {
             for (String str: strings) {

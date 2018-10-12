@@ -74,15 +74,14 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
         return FreeMarkerWorker.getArg(args, key, ctx);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final StringBuilder buf = new StringBuilder();
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         final Map<String, Object> templateCtx = FreeMarkerWorker.getWrappedObject("context", env);
-        //FreeMarkerWorker.convertContext(templateCtx);
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
-        //final GenericValue userLogin = FreeMarkerWorker.getWrappedObject("userLogin", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
 
@@ -106,43 +105,51 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
 
                 List<Map<String, ? extends Object>> trail = UtilGenerics.checkList(templateCtx.get("globalNodeTrail"));
 
-                if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv(0), trail:"+trail,module);
+                if (Debug.infoOn()) {
+                    Debug.logInfo("in InjectNodeTrailCsv(0), trail:"+trail,module);
+                }
                 // This will build a nodeTrail if none exists
                 // Maybe only contentId or subContentId are passed in
-                //GenericValue currentValue = getCurrentContent(delegator, trail,  userLogin, templateCtx, nullThruDatesOnly, contentAssocPredicateId);
                 String redo = (String)templateCtx.get("redo");
 
-                if (UtilValidate.isEmpty(trail) || (redo != null && redo.equalsIgnoreCase("true"))) {
-                    // String thisContentId = null;
+                if (UtilValidate.isEmpty(trail) || (redo != null && "true".equalsIgnoreCase(redo))) {
                     String subContentId = (String)templateCtx.get("subContentId");
-                    if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv(0), subContentId:"+subContentId,module);
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("in InjectNodeTrailCsv(0), subContentId:"+subContentId,module);
+                    }
                     String contentId = (String)templateCtx.get("contentId");
-                    if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv(0), contentId:"+contentId,module);
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("in InjectNodeTrailCsv(0), contentId:"+contentId,module);
+                    }
                     String contentAssocTypeId = (String)templateCtx.get("contentAssocTypeId");
-                    if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv(0), contentAssocTypeId:"+contentAssocTypeId,module);
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("in InjectNodeTrailCsv(0), contentAssocTypeId:"+contentAssocTypeId,module);
+                    }
                     try {
                         if (UtilValidate.isNotEmpty(subContentId)) {
                             csvTrail = ContentWorker.getContentAncestryNodeTrailCsv(delegator, subContentId, contentAssocTypeId, "to");
-                            if (UtilValidate.isNotEmpty(csvTrail))
+                            if (UtilValidate.isNotEmpty(csvTrail)) {
                                 csvTrail += ",";
+                            }
                             csvTrail += subContentId;
                         } else if (UtilValidate.isNotEmpty(contentId)) {
                             csvTrail = ContentWorker.getContentAncestryNodeTrailCsv(delegator, contentId, contentAssocTypeId, "to");
-                            if (UtilValidate.isNotEmpty(csvTrail))
+                            if (UtilValidate.isNotEmpty(csvTrail)) {
                                 csvTrail += ",";
+                            }
                             csvTrail += contentId;
                         }
                     } catch (GenericEntityException e) {
                         throw new RuntimeException("Error getting current content. " + e.toString());
                     }
-                    if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv(0), csvTrail:"+csvTrail,module);
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("in InjectNodeTrailCsv(0), csvTrail:"+csvTrail,module);
+                    }
                 } else {
                     // Build nodeTrail if one does not exist
-                    //if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, trail:"+trail,module);
-                    //if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, passedCsv:"+passedCsv,module);
                     if (UtilValidate.isNotEmpty(passedCsv)) {
                         csvTrail = passedCsv;
-                        int lastComma = passedCsv.lastIndexOf(",");
+                        int lastComma = passedCsv.lastIndexOf(',');
                         String lastPassedContentId = null;
                         if (lastComma >= 0) {
                             lastPassedContentId = passedCsv.substring(lastComma + 1);
@@ -167,7 +174,6 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
                         csvTrail = ContentWorker.nodeTrailToCsv(trail);
                     }
                 }
-                //if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, csvTrail:"+csvTrail,module);
                 templateCtx.put("nodeTrailCsv", csvTrail);
                 return TransformControl.EVALUATE_BODY;
             }

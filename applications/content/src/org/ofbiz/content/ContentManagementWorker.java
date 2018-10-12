@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,11 +59,13 @@ import org.ofbiz.security.Security;
 /**
  * ContentManagementWorker Class
  */
-public class ContentManagementWorker {
+public final class ContentManagementWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final Map<String, GenericValue> cachedWebSitePublishPoints = new ConcurrentHashMap<>(); // SCIPIO: 2018-03-28: concurrency fix
     public static final Map<String, Map<String, Object>> cachedStaticValues = new ConcurrentHashMap<>(); // SCIPIO: 2018-03-28: concurrency fix
+
+    private ContentManagementWorker() {}
 
     public static void mruAdd(HttpServletRequest request, GenericEntity pk, String suffix) {
         HttpSession session = request.getSession();
@@ -183,7 +186,7 @@ public class ContentManagementWorker {
         HttpSession session = request.getSession();
         Map<String, GenericPK> currentEntityMap = UtilGenerics.checkMap(session.getAttribute("currentEntityMap"));
         if (currentEntityMap == null) {
-            currentEntityMap     = new HashMap<String, GenericPK>();
+            currentEntityMap = new HashMap<String, GenericPK>();
             session.setAttribute("currentEntityMap", currentEntityMap);
         }
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
@@ -248,7 +251,6 @@ public class ContentManagementWorker {
                         }
                     }
                 } else {
-                    //useCached = false;
                     usePassed = false;
                 }
             }
@@ -269,6 +271,7 @@ public class ContentManagementWorker {
             try {
                 currentValue = EntityQuery.use(delegator).from(currentPK.getEntityName()).where(currentPK).queryOne();
             } catch (GenericEntityException e) {
+                Debug.logError(e.getMessage(), module);
             }
             request.setAttribute("currentValue", currentValue);
         }
@@ -276,13 +279,14 @@ public class ContentManagementWorker {
     }
 
     public static List<String []> getPermittedPublishPoints(Delegator delegator, List<GenericValue> allPublishPoints, GenericValue userLogin, Security security, String permittedAction, String permittedOperations, String passedRoles) throws GeneralException {
-        List<String []> permittedPublishPointList = new LinkedList<String []>();
+        List<String []> permittedPublishPointList = new LinkedList<String[]>();
 
         // Check that user has permission to admin sites
         for (GenericValue webSitePP : allPublishPoints) {
             String contentId = (String)webSitePP.get("contentId");
             String templateTitle = (String)webSitePP.get("templateTitle");
             GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", contentId));
+            // TODO check if we want statusId to be filled/used, else this should be removed
             String statusId = null;
             String entityAction = permittedAction;
             if (entityAction == null) {
@@ -297,10 +301,9 @@ public class ContentManagementWorker {
                  targetOperationList = StringUtil.split(permittedOperations, "|");
             }
             Map<String, Object> results = null;
-            //if (Debug.infoOn()) Debug.logInfo("in getPermittedPublishPoints, content:" + content, module);
             results = EntityPermissionChecker.checkPermission(content, statusId, userLogin, passedPurposes, targetOperationList, roles, delegator, security, entityAction);
             String permissionStatus = (String)results.get("permissionStatus");
-            if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            if (permissionStatus != null && "granted".equalsIgnoreCase(permissionStatus)) {
                 String [] arr = {contentId,templateTitle};
                 permittedPublishPointList.add(arr);
             }
@@ -327,7 +330,6 @@ public class ContentManagementWorker {
         GenericValue webSitePublishPoint = null;
         for (GenericValue contentAssoc : relatedPubPts) {
            String pub = (String)contentAssoc.get("contentId");
-           //webSitePublishPoint = EntityQuery.use(delegator).from("WebSitePublishPoint").where("contentId", pub).cache().queryOne();
            webSitePublishPoint = getWebSitePublishPoint(delegator, pub, false);
            allPublishPoints.add(webSitePublishPoint);
         }
@@ -371,7 +373,7 @@ public class ContentManagementWorker {
             throw new GeneralException(e.getMessage());
         }
 
-        List<Map<String, Object>> staticValueList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> staticValueList = new LinkedList<Map<String,Object>>();
         for (GenericValue content : assocValueList) {
             String contentId = (String)content.get("contentId");
             String contentName = (String)content.get("contentName");
@@ -438,9 +440,7 @@ public class ContentManagementWorker {
         String contentId = passedValue.getString("contentId");
         GenericValue webSitePublishPoint = passedValue;
         String contentIdTo = getParentWebSitePublishPointId(delegator, contentId);
-            //if (Debug.infoOn()) Debug.logInfo("in overrideWebSitePublishPoint, contentIdTo:" + contentIdTo, module);
         if (contentIdTo != null) {
-            //webSitePublishPoint = getWebSitePublishPoint(delegator, contentIdTo, false);
             webSitePublishPoint = EntityQuery.use(delegator).from("WebSitePublishPoint").where("contentId", contentIdTo).cache().queryOne();
             if (webSitePublishPoint != null) {
                 webSitePublishPoint = GenericValue.create(webSitePublishPoint);
@@ -473,7 +473,6 @@ public class ContentManagementWorker {
 
     public static GenericValue getStaticValue(Delegator delegator, String parentPlaceholderId, String webSitePublishPointId, boolean ignoreCache) throws GenericEntityException {
         GenericValue webSitePublishPoint = null;
-        // GenericValue staticValue = null;
         if (!ignoreCache) {
             Map<String, Object> subStaticValueMap = cachedStaticValues.get(parentPlaceholderId);
             if (subStaticValueMap == null) {
@@ -485,20 +484,8 @@ public class ContentManagementWorker {
                     }
                 }
             }
-            //Map staticValueMap = (GenericValue)cachedStaticValues.get(web);
         }
 
-/*
-        if (webSitePublishPoint == null) {
-            webSitePublishPoint = EntityQuery.use(delegator).from("WebSitePublishPoint").where("contentId", contentId).queryOne();
-            // If no webSitePublishPoint exists, still try to look for parent by making a dummy value
-            if (webSitePublishPoint == null) {
-                webSitePublishPoint = delegator.makeValue("WebSitePublishPoint", UtilMisc.toMap("contentId", contentId));
-            }
-            webSitePublishPoint = overrideStaticValues(delegator, webSitePublishPoint);
-            cachedWebSitePublishPoints.put(contentId, webSitePublishPoint);
-        }
-*/
         return webSitePublishPoint;
     }
 
@@ -506,35 +493,25 @@ public class ContentManagementWorker {
         // Set up one map with all the top-level publish points (to which only one sub point can be attached to)
         // and another map (publishPointMapAll) that points to one of the top-level points.
         List<GenericValue> allPublishPointList = getAllPublishPoints(delegator, rootPubId);
-        //if (Debug.infoOn()) Debug.logInfo("in getPublishLinks, allPublishPointList:" + allPublishPointList, module);
         List<String []> publishPointList = getPermittedPublishPoints(delegator, allPublishPointList, userLogin, security , permittedAction, permittedOperations, passedRoles);
         Map<String, Object> publishPointMap = new HashMap<String, Object>();
         Map<String, Object> publishPointMapAll = new HashMap<String, Object>();
         for (String [] arr : publishPointList) {
-            //GenericValue webSitePublishPoint = (GenericValue)it.next();
-            //String contentId = (String)webSitePublishPoint.get("contentId");
-            //String description = (String)webSitePublishPoint.get("description");
             String contentId = arr[0];
             String description = arr[1];
-            List<Object []> subPointList = new LinkedList<Object []>();
-            Object nullObj = null;
-            Object [] subArr = {contentId, subPointList, description, nullObj};
+            List<Object []> subPointList = new LinkedList<Object[]>();
+            Object [] subArr = {contentId, subPointList, description, null};
             publishPointMap.put(contentId, subArr);
             publishPointMapAll.put(contentId, contentId);
             List<GenericValue> subPublishPointList = getAllPublishPoints(delegator, contentId);
             for (GenericValue webSitePublishPoint2 : subPublishPointList) {
-                //String [] arr2 = (String [])it2.next();
-                //String contentId2 = (String)arr2[0];
-                //String description2 = (String)arr2[1];
                 String contentId2 = (String)webSitePublishPoint2.get("contentId");
                 String description2 = (String)webSitePublishPoint2.get("templateTitle");
                 publishPointMapAll.put(contentId2, contentId);
-                Timestamp obj = null;
-                Object [] subArr2 = {contentId2, description2, obj};
+                Object [] subArr2 = {contentId2, description2, null};
                 subPointList.add(subArr2);
             }
         }
-/* */
         List<GenericValue> assocValueList = null;
         try {
             assocValueList = EntityQuery.use(delegator).from("ContentAssoc")
@@ -547,7 +524,6 @@ public class ContentManagementWorker {
             String contentIdTo = contentAssoc.getString("contentIdTo");
             String topContentId = (String)publishPointMapAll.get(contentIdTo);
             Object [] subArr = (Object [])publishPointMap.get(topContentId);
-                //if (Debug.infoOn()) Debug.logInfo("in getPublishLinks, subArr:" + Arrays.asList(subArr) , module);
             if (contentIdTo.equals(topContentId)) {
                 subArr[3] =  contentAssoc.get("fromDate");
             } else {
@@ -566,8 +542,9 @@ public class ContentManagementWorker {
             }
         }
 
-        List<Object []> publishedLinkList = new LinkedList<Object []>();
-        for (String contentId : publishPointMap.keySet()) {
+        List<Object []> publishedLinkList = new LinkedList<Object[]>();
+        for (Entry<String, Object> entry : publishPointMap.entrySet()) {
+            String contentId = entry.getKey();
             Object [] subPointArr = (Object [])publishPointMap.get(contentId);
             publishedLinkList.add(subPointArr);
         }
@@ -578,9 +555,8 @@ public class ContentManagementWorker {
         GenericValue authorContent = null;
         try {
             List<String> assocTypes = UtilMisc.toList("AUTHOR");
+            // TODO check if we want contentTypes to be filled/used, else this should be removed
             List<String> contentTypes = null;
-            // String fromDate = null;
-            // String thruDate = null;
             Map<String, Object> results =  ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, null, "To", null, null, assocTypes, contentTypes, Boolean.TRUE, null, null);
             List<GenericValue> valueList = UtilGenerics.checkList(results.get("entityList"));
             if (valueList.size() > 0) {
@@ -588,22 +564,22 @@ public class ContentManagementWorker {
                 authorContent = delegator.makeValue("Content");
                 authorContent.setPKFields(value);
                 authorContent.setNonPKFields(value);
-            //if (Debug.infoOn()) Debug.logInfo("in getAuthorContent, authorContent:" + authorContent, module);
             }
-        } catch (GenericEntityException e) {
-        } catch (MiniLangException e2) {
+        } catch (GenericEntityException | MiniLangException e) {
+            Debug.logError(e.getMessage(), module);
         }
 
         return authorContent;
     }
 
     public static List<String []> getPermittedDepartmentPoints(Delegator delegator, List<GenericValue> allDepartmentPoints, GenericValue userLogin, Security security, String permittedAction, String permittedOperations, String passedRoles) throws GeneralException {
-        List<String []> permittedDepartmentPointList = new LinkedList<String []>();
+        List<String []> permittedDepartmentPointList = new LinkedList<String[]>();
 
         // Check that user has permission to admin sites
         for (GenericValue content : allDepartmentPoints) {
             String contentId = (String)content.get("contentId");
             String contentName = (String)content.get("contentName");
+            // TODO check if we want statusId to be filled/used, else this should be removed
             String statusId = null;
             String entityAction = permittedAction;
             if (entityAction == null)
@@ -617,10 +593,9 @@ public class ContentManagementWorker {
                  targetOperationList = StringUtil.split(permittedOperations, "|");
             }
             Map<String, Object> results = null;
-            //if (Debug.infoOn()) Debug.logInfo("in getPermittedDepartmentPoints, content:" + content, module);
             results = EntityPermissionChecker.checkPermission(content, statusId, userLogin, passedPurposes, targetOperationList, roles, delegator, security, entityAction);
             String permissionStatus = (String)results.get("permissionStatus");
-            if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            if (permissionStatus != null && "granted".equalsIgnoreCase(permissionStatus)) {
                 String [] arr = {contentId,contentName};
                 permittedDepartmentPointList.add(arr);
             }

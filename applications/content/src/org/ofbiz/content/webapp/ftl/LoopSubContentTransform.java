@@ -149,6 +149,7 @@ public class LoopSubContentTransform implements TemplateTransformModel {
         return true;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final StringBuilder buf = new StringBuilder();
@@ -178,15 +179,14 @@ public class LoopSubContentTransform implements TemplateTransformModel {
         if (UtilValidate.isNotEmpty(fromDateStr)) {
             fromDate = UtilDateTime.toTimestamp(fromDateStr);
         }
-        if (fromDate == null) fromDate = UtilDateTime.nowTimestamp();
+        if (fromDate == null) {
+            fromDate = UtilDateTime.nowTimestamp();
+        }
 
         String thisContentId = (String) templateCtx.get("contentId");
 
         //DEJ20080730 Should always use contentId, not subContentId since we're searching for that and it is confusing
-        //if (UtilValidate.isEmpty(thisContentId)) thisContentId = (String)templateCtx.get("subContentId");
-
         String thisMapKey = (String)templateCtx.get("mapKey");
-        //GenericValue subContentDataResourceView = null;
         Map<String, Object> results = ContentServicesComplex.getAssocAndContentAndDataResourceMethod(delegator, thisContentId, thisMapKey, null, fromDate, null, null, null, assocTypes, null);
         List<GenericValue> entityList = UtilGenerics.checkList(results.get("entityList"));
         templateCtx.put("entityList", entityList);
@@ -209,9 +209,8 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                 boolean inProgress = prepCtx(delegator, templateCtx);
                 if (inProgress) {
                     return TransformControl.EVALUATE_BODY;
-                } else {
-                    return TransformControl.SKIP_BODY;
                 }
+                return TransformControl.SKIP_BODY;
             }
 
             @Override
@@ -219,16 +218,15 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                 boolean inProgress = prepCtx(delegator, templateCtx);
                 if (inProgress) {
                     return TransformControl.REPEAT_EVALUATION;
-                } else {
-                    return TransformControl.END_EVALUATION;
                 }
+                return TransformControl.END_EVALUATION;
             }
 
             @Override
             public void close() throws IOException {
                 String wrappedFTL = buf.toString();
                 String encloseWrappedText = (String) templateCtx.get("encloseWrappedText");
-                if (UtilValidate.isEmpty(encloseWrappedText) || encloseWrappedText.equalsIgnoreCase("false")) {
+                if (UtilValidate.isEmpty(encloseWrappedText) || "false".equalsIgnoreCase(encloseWrappedText)) {
                     out.write(wrappedFTL);
                     wrappedFTL = ""; // So it won't get written again below.
                 }
@@ -243,7 +241,9 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                     templateRoot.put("context", templateCtx);
 
                     Locale locale = (Locale) templateCtx.get("locale");
-                    if (locale == null) locale = Locale.getDefault();
+                    if (locale == null) {
+                        locale = Locale.getDefault();
+                    }
                     String mimeTypeId = (String) templateCtx.get("mimeTypeId");
                     try {
                         ContentWorker.renderContentAsText(dispatcher, delegator, wrapTemplateId, out, templateRoot, locale, mimeTypeId, null, null, true);

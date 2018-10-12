@@ -67,7 +67,6 @@ import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 
-
 /**
  * Output Services
  * <p>
@@ -95,7 +94,7 @@ public class OutputServices {
         String printerContentType = (String) serviceContext.remove("printerContentType");
 
         if (UtilValidate.isEmpty(screenContext)) {
-            screenContext = new HashMap<String, Object>();
+            screenContext = new HashMap<>();
         }
         screenContext.put("locale", locale);
         if (UtilValidate.isEmpty(contentType)) {
@@ -188,7 +187,6 @@ public class OutputServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ContentPrinterNotAvailable", locale));
             }
 
-
             PrintRequestAttributeSet praset = new HashPrintRequestAttributeSet();
             List<Object> printRequestAttributes = UtilGenerics.checkList(serviceContext.remove("printRequestAttributes"));
             if (UtilValidate.isNotEmpty(printRequestAttributes)) {
@@ -199,7 +197,7 @@ public class OutputServices {
             }
             DocPrintJob job = printer.createPrintJob();
             job.print(myDoc, praset);
-        } catch (Exception e) {
+        } catch (Exception e) { // SCIPIO: 2018-10-09: Kept Exception for now
             Debug.logError(e, "Error rendering [" + contentType + "]: " + e.toString(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ContentRenderingError", UtilMisc.toMap("contentType", contentType, "errorString", e.toString()), locale));
         }
@@ -217,7 +215,7 @@ public class OutputServices {
         String fileName = (String) serviceContext.remove("fileName");
 
         if (UtilValidate.isEmpty(screenContext)) {
-            screenContext = new HashMap<String, Object>();
+            screenContext = new HashMap<>();
         }
         screenContext.put("locale", locale);
         if (UtilValidate.isEmpty(contentType)) {
@@ -274,7 +272,7 @@ public class OutputServices {
             fos.write(baos.toByteArray());
             fos.close();
 
-        } catch (Exception e) {
+        } catch (Exception e) { // SCIPIO: 2018-10-09: Kept Exception for now
             Debug.logError(e, "Error rendering [" + contentType + "]: " + e.toString(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ContentRenderingError", UtilMisc.toMap("contentType", contentType, "errorString", e.toString()), locale));
         }

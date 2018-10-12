@@ -1038,13 +1038,13 @@ public final class InvoiceWorker {
                         }
                         if (taxGlAccountId == null) {
                             // if there is no TaxAuthorityRateProduct then try with TaxAuthorityGlAccount
-                            String organizationPartyId = invoice.getString("partyId");
+                            String organizationPartyId = invoice.getString("partyIdFrom");
                             String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
                             String taxAuthPartyId = orderAdjustment.getString("taxAuthPartyId");
                             GenericValue taxAuthorityGlAccount = delegator.findOne("TaxAuthorityGlAccount", UtilMisc.toMap(
                                     "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId), true);
                             if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
-                                taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
+                                taxGlAccountId = taxAuthorityGlAccount.getString("glAccountId");
                             }
                         }
                         if (taxGlAccountId != null) {

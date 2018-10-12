@@ -81,7 +81,7 @@ under the License.
     <OrderStatus orderStatusId="9008" statusId="ITEM_CREATED" orderId="DEMO10091" orderItemSeqId="00001" statusDatetime="2008-06-10 13:27:07.024" statusUserLogin="admin"/>
     <OrderContactMech orderId="DEMO10091" contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechId="9200"/>
 
-    <Shipment shipmentId="9999" shipmentTypeId="PURCHASE_SHIPMENT" statusId="PURCH_SHIP_CREATED" primaryOrderId="DEMO10091" primaryShipGroupSeqId="00001"/>
+    <Shipment shipmentId="9999" shipmentTypeId="PURCHASE_SHIPMENT" statusId="PURCH_SHIP_CREATED" primaryOrderId="DEMO10091" primaryShipGroupSeqId="00001" createdDate="2008-06-10 12:59:26.8"/>
     <ShipmentItem shipmentId="9999" shipmentItemSeqId="00001" productId="CAM-2644" quantity="5"/>
     <ItemIssuance itemIssuanceId="9003" orderId="DEMO10091" orderItemSeqId="00001" shipGroupSeqId="00001" shipmentId="9999" shipmentItemSeqId="00001" issuedDateTime="2009-08-13 17:46:29.603" quantity="5"/>
 

@@ -518,7 +518,7 @@ public final class OfbizUrlBuilder {
      */
     public void buildPathPartWithContextPath(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
         if (contextPath == null) {
-            throw new IllegalStateException("Context path is unknown");
+            throw new IllegalStateException("Context path is unknown; there may be no webSiteId or webapp available to determine"); // SCIPIO: message
         }
         if (webSiteProps.isWebappPathPrefixUrlBuild()) {
             buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27

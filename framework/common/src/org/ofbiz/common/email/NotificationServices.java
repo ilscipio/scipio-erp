@@ -281,7 +281,14 @@ public class NotificationServices {
                 builder.buildPathPartWithContextPath(newURL);
                 context.put("baseWebappPath", newURL.toString());
             } catch (Exception e) {
-                Debug.logWarning(e, "Exception thrown while adding baseUrl to context: ", module);
+                // SCIPIO: better log
+                if (webSiteId != null) {
+                    // should not happen
+                    Debug.logError(e, "Exception while adding baseUrl to context [webSiteId: " + webSiteId + "]", module);
+                } else {
+                    // may happen in stock (for now)
+                    Debug.logWarning("Exception while adding baseUrl to context [no webSiteId available]: " + e.toString(), module);
+                }
             }
         }
 

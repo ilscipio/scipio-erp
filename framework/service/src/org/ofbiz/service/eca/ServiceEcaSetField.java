@@ -148,7 +148,8 @@ public class ServiceEcaSetField implements java.io.Serializable { // SCIPIO: add
         result = prime * result + ((envName == null) ? 0 : envName.hashCode());
         result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
         result = prime * result + ((format == null) ? 0 : format.hashCode());
-        result = prime * result + ((mapName == null) ? 0 : mapName.hashCode());
+        // SCIPIO: 2018-10-09: TODO: REVIEW: this is not in equals, can't be here...
+        //result = prime * result + ((mapName == null) ? 0 : mapName.hashCode());
         result = prime * result + ((value == null) ? 0 : value.hashCode());
         return result;
     }

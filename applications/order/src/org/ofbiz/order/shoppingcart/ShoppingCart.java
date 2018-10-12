@@ -24,7 +24,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -4625,9 +4624,11 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
+            // SCIPIO: 2018-10-09: TODO: REVIEW: not part of equals, so can't be here - should be in equals?
+            //result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
             result = prime * result + ((groupNumber == null) ? 0 : groupNumber.hashCode());
-            result = prime * result + ((parentGroup == null) ? 0 : parentGroup.hashCode());
+            // SCIPIO: 2018-10-09: TODO: REVIEW: not part of equals, so can't be here - should be in equals?
+            //result = prime * result + ((parentGroup == null) ? 0 : parentGroup.hashCode());
             return result;
         }
 
@@ -5298,8 +5299,11 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             return pmtCmp;
         }
 
+        /* SCIPIO: 2018-10-09: TODO: REVIEW: this is much more precise than compareTo, but usage
+           is unclear, so will have to omit this until real case clarifies as used in a Map, Set or other
         @Override
         public int hashCode() {
+            // SCIPIO: 2018-10-09: TODO: REVIEW: this is much more precise than compareTo zero, usage unclear
             final int prime = 31;
             int result = 1;
             result = prime * result + ((amount == null) ? 0 : amount.hashCode());
@@ -5395,6 +5399,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             }
             return true;
         }
+        */
 
         @Override
         public String toString() {

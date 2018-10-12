@@ -872,7 +872,9 @@ public class ProductConfigWrapper implements Serializable {
             // SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
             //result = prime * result + getOuterType().hashCode();
             //result = prime * result + ((componentList == null) ? 0 : componentList.hashCode());
-            result = prime * result + ((componentOptions == null) ? 0 : componentOptions.hashCode());
+            // SCIPIO: 2018-10-09: fixed this to use UtilValidate.isNotEmpty, treat null and empty as same
+            //result = prime * result + ((componentOptions == null) ? 0 : componentOptions.hashCode());
+            result = prime * result + ((UtilValidate.isEmpty(componentOptions)) ? 0 : componentOptions.hashCode());
             return result;
         }
 
@@ -883,7 +885,13 @@ public class ProductConfigWrapper implements Serializable {
                 return false;
             }
             ConfigOption co = (ConfigOption)obj;
-            if (componentOptions != null && !componentOptions.equals(co.getComponentOptions())) {
+            // SCIPIO: 2018-10-09: fixed missing null/empty checks, and treat null and empty as same
+            //if (componentOptions != null && !componentOptions.equals(co.getComponentOptions())) {
+            if (UtilValidate.isEmpty(componentOptions)) {
+                if (UtilValidate.isNotEmpty(co.getComponentOptions())) {
+                    return false;
+                }
+            } else if (!componentOptions.equals(co.getComponentOptions())) {
                 return false;
             }
 

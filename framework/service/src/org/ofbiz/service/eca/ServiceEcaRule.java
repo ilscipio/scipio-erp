@@ -188,8 +188,10 @@ public final class ServiceEcaRule implements java.io.Serializable {
         int result = 1;
         result = prime * result + ((actionsAndSets == null) ? 0 : actionsAndSets.hashCode());
         result = prime * result + ((conditions == null) ? 0 : conditions.hashCode());
-        result = prime * result + ((definitionLocation == null) ? 0 : definitionLocation.hashCode());
-        result = prime * result + (enabled ? 1231 : 1237);
+        // SCIPIO: 2018-10-09: TODO: REVIEW: this is not in equals, can't be here...
+        //result = prime * result + ((definitionLocation == null) ? 0 : definitionLocation.hashCode());
+        // SCIPIO: 2018-10-09: TODO: REVIEW: this is not in equals, can't be here...
+        //result = prime * result + (enabled ? 1231 : 1237);
         result = prime * result + ((eventName == null) ? 0 : eventName.hashCode());
         result = prime * result + (runOnError ? 1231 : 1237);
         result = prime * result + (runOnFailure ? 1231 : 1237);

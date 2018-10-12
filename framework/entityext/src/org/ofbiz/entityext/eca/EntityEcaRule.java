@@ -200,14 +200,15 @@ public final class EntityEcaRule implements java.io.Serializable {
         result = prime * result + ((actionsAndSets == null) ? 0 : actionsAndSets.hashCode());
         result = prime * result + ((conditions == null) ? 0 : conditions.hashCode());
         result = prime * result + ((conditionFieldNames == null) ? 0 : conditionFieldNames.hashCode());
-        result = prime * result + (enabled ? 1231 : 1237);
+        // SCIPIO: 2018-10-09: TODO: REVIEW: this is not in equals, can't be here...
+        //result = prime * result + (enabled ? 1231 : 1237);
         result = prime * result + (runOnError ? 1231 : 1237);
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-    if (obj instanceof EntityEcaRule) {
+        if (obj instanceof EntityEcaRule) {
             EntityEcaRule other = (EntityEcaRule) obj;
             if (!UtilValidate.areEqual(this.entityName, other.entityName)) {
                 return false;

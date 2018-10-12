@@ -199,7 +199,8 @@ public class OrderByItem implements Comparator<GenericEntity> {
         final int prime = 31;
         int result = 1;
         result = prime * result + (descending ? 1231 : 1237);
-        result = prime * result + ((nullsFirst == null) ? 0 : nullsFirst.hashCode());
+        // SCIPIO: 2018-10-09: TODO: REVIEW: this is not in equals, can't be here...
+        //result = prime * result + ((nullsFirst == null) ? 0 : nullsFirst.hashCode());
         result = prime * result + ((value == null) ? 0 : value.hashCode());
         return result;
     }

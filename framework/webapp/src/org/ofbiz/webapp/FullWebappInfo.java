@@ -463,13 +463,13 @@ public class FullWebappInfo {
 
     @Override
     public int hashCode() {
-        return getContextPath().hashCode();
+        return extWebappInfo.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
         return (this == obj) ||
-               ((obj instanceof FullWebappInfo) && this.getContextPath().equals(((FullWebappInfo) obj).getContextPath()));
+               ((obj instanceof FullWebappInfo) && this.isSameServerWebapp(((FullWebappInfo) obj)));
     }
 
     public boolean equalsProtoHostPort(FullWebappInfo other) {
@@ -639,6 +639,22 @@ public class FullWebappInfo {
      */
     public boolean isRequestWebapp(HttpServletRequest request) {
         return extWebappInfo.isRequestWebapp(request);
+    }
+
+    public boolean isSameServerWebapp(ExtWebappInfo other) {
+        return extWebappInfo.isSameServerWebapp(other);
+    }
+
+    public boolean isSameWebSite(ExtWebappInfo other) {
+        return extWebappInfo.isSameWebSite(other);
+    }
+
+    public boolean isSameServerWebapp(FullWebappInfo other) {
+        return extWebappInfo.isSameServerWebapp(other.extWebappInfo);
+    }
+
+    public boolean isSameWebSite(FullWebappInfo other) {
+        return extWebappInfo.isSameWebSite(other.extWebappInfo);
     }
 
     /**

@@ -543,7 +543,22 @@ public class ServerHitBin {
             // every server hit even with equal startTimes but that could be
             // solved adding a counter to the ServerHit's PK (a counter
             // counting multiple hits at the same startTime).
-            serverHit.create();
+            
+            // SCIPIO: 2018-10-12: Create often fails with duplicate PK due to entitymodel design despite comments above,
+            // due to AJAX requests on pages.
+            // So prevent entity engine from logging errors; it throws GenericEntityException anyway.
+            // TODO?: in future this should be optimized/replaced using Delegator/GenericValue/SqlProcessor logging options. 
+            //serverHit.create();
+            if (Debug.verboseOn()) {
+                serverHit.create();
+            } else {
+                try {
+                    Debug.setThreadLevelDisableWarningError();
+                    serverHit.create();
+                } finally {
+                    Debug.restoreThreadLevelAllow();
+                }
+            }
         }
     }
 }

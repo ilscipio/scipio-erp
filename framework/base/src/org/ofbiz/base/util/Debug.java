@@ -53,6 +53,30 @@ public final class Debug {
 
     private static final boolean levelOnCache[] = new boolean[8]; // this field is not thread safe
 
+    /**
+     * SCIPIO: Thread-local support to disable levels like warning & error temporarily
+     * - for internal framework use only - do not use. (2018-10-12)
+     * 2018-10-12: Only works for warning & error; ThreadLocal too expensive for info & lower.
+     */
+    private static final ThreadLocal<boolean[]> threadLevelAllowCache = new ThreadLocal<boolean[]>() {
+        @Override
+        protected boolean[] initialValue() {
+            return levelAllowAll;
+        }
+    };
+    private static final boolean[] levelsWithThreadSupport = new boolean[] {
+            false, false, false, false, false, true, true, false
+    };
+    private static final boolean[] levelAllowAll = new boolean[] {
+            true, true, true, true, true, true, true, true
+    };
+    private static final boolean[] levelAllowNoError = new boolean[] {
+            true, true, true, true, true, true, false, true
+    };
+    private static final boolean[] levelAllowNoWarningError = new boolean[] {
+            true, true, true, true, true, false, false, true
+    } ;
+
     private static final Logger root = LogManager.getRootLogger();
 
     static {
@@ -112,7 +136,7 @@ public final class Debug {
     }
 
     public static void log(int level, Throwable t, String msg, String module, String callingClass, Object... params) {
-        if (isOn(level)) {
+        if (isOn(level) && isOnForThread(level)) { // SCIPIO: 2018-10-12: isOnForThread
             if (msg != null && params.length > 0) {
                 StringBuilder sb = new StringBuilder();
                 Formatter formatter = new Formatter(sb);
@@ -730,7 +754,7 @@ public final class Debug {
     }
 
     public static void log(int level, Throwable t, String msg, OfbizLogger logger, String callingClass, Object... params) {
-        if (isOn(level)) {
+        if (isOn(level) && isOnForThread(level)) { // SCIPIO: 2018-10-12: isOnForThread
             if (msg != null && params.length > 0) {
                 StringBuilder sb = new StringBuilder();
                 Formatter formatter = new Formatter(sb);
@@ -898,5 +922,40 @@ public final class Debug {
 
     public static void logFatal(Throwable t, String msg, OfbizLogger module, Object... params) {
         log(Debug.FATAL, t, msg, module, params);
+    }
+
+    /**
+     * SCIPIO: For internal framework use only - do not use - may be removed at any time. (2018-10-12)
+     */
+    private static boolean isOnForThread(int level) {
+        return (!levelsWithThreadSupport[level] || threadLevelAllowCache.get()[level]);
+    }
+
+//    /**
+//     * SCIPIO: For internal framework use only - do not use - may be removed at any time. (2018-10-12)
+//     */
+//    public static void setThreadLevelAllowCache(boolean[] allowLevels) {
+//        threadLevelAllowCache.set(allowLevels);
+//    }
+
+    /**
+     * SCIPIO: For internal framework use only - do not use - may be removed at any time. (2018-10-12)
+     */
+    public static void setThreadLevelDisableWarningError() {
+        threadLevelAllowCache.set(levelAllowNoWarningError);
+    }
+
+    /**
+     * SCIPIO: For internal framework use only - do not use - may be removed at any time. (2018-10-12)
+     */
+    public static void setThreadLevelDisableError() {
+        threadLevelAllowCache.set(levelAllowNoError);
+    }
+
+    /**
+     * SCIPIO: For internal framework use only - do not use - may be removed at any time. (2018-10-12)
+     */
+    public static void restoreThreadLevelAllow() {
+        threadLevelAllowCache.remove();
     }
 }

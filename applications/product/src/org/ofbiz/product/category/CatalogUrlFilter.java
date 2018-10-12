@@ -88,8 +88,8 @@ public class CatalogUrlFilter extends ContextFilter {
         // set initial parameters
         String initDefaultLocalesString = config.getInitParameter("defaultLocaleString");
         String initRedirectUrl = config.getInitParameter("redirectUrl");
-        defaultLocaleString = UtilValidate.isNotEmpty(initDefaultLocalesString) ? initDefaultLocalesString : "";
-        redirectUrl = UtilValidate.isNotEmpty(initRedirectUrl) ? initRedirectUrl : "";
+        setDefaultLocaleString(UtilValidate.isNotEmpty(initDefaultLocalesString) ? initDefaultLocalesString : "");
+        setRedirectUrl(UtilValidate.isNotEmpty(initRedirectUrl) ? initRedirectUrl : "");
 
         String pathInfo = httpRequest.getServletPath();
         if (UtilValidate.isNotEmpty(pathInfo)) {
@@ -901,6 +901,22 @@ public class CatalogUrlFilter extends ContextFilter {
             url = CatalogUrlServlet.makeCatalogUrl(contextPath, trail, productId, productCategoryId, previousCategoryId);
         }
         return url;
+    }
+
+    public static String getDefaultLocaleString() {
+        return defaultLocaleString;
+    }
+
+    public static void setDefaultLocaleString(String defaultLocaleString) {
+        CatalogUrlFilter.defaultLocaleString = defaultLocaleString;
+    }
+
+    public static String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public static void setRedirectUrl(String redirectUrl) {
+        CatalogUrlFilter.redirectUrl = redirectUrl;
     }
 
     /**

@@ -22,12 +22,10 @@ package org.ofbiz.shipment.thirdparty.usps;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -152,7 +150,7 @@ public class UspsServices {
                     .where("shipmentMethodTypeId", (String) context.get("shipmentMethodTypeId"), "partyId", (String) context.get("carrierPartyId"), "roleTypeId", (String) context.get("carrierRoleTypeId"))
                     .queryOne();
             if (carrierShipmentMethod != null) {
-                serviceCode = carrierShipmentMethod.getString("carrierServiceCode").toUpperCase();
+                serviceCode = carrierShipmentMethod.getString("carrierServiceCode").toUpperCase(Locale.getDefault());
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
@@ -166,7 +164,7 @@ public class UspsServices {
         Document requestDocument = createUspsRequestDocument("RateV4Request", true, delegator, shipmentGatewayConfigId, resource);
 
         // TODO: 70 lb max is valid for Express, Priority and Parcel only - handle other methods
-        BigDecimal maxWeight = new BigDecimal("70");
+        BigDecimal maxWeight;
         String maxWeightStr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "maxEstimateWeight",
                 resource, "shipment.usps.max.estimate.weight", "70");
         try {
@@ -197,7 +195,7 @@ public class UspsServices {
 
             BigDecimal weightPounds = packageWeight.setScale(0, RoundingMode.FLOOR);
             // for Parcel post, the weight must be at least 1 lb
-            if ("PARCEL".equals(serviceCode.toUpperCase()) && (weightPounds.compareTo(BigDecimal.ONE) < 0)) {
+            if ("PARCEL".equals(serviceCode.toUpperCase(Locale.getDefault())) && (weightPounds.compareTo(BigDecimal.ONE) < 0)) {
                 weightPounds = BigDecimal.ONE;
                 packageWeight = BigDecimal.ZERO;
             }
@@ -214,9 +212,11 @@ public class UspsServices {
             The <Container> tag is used to specify the flat rate mailing options, or the type of large or oversized package being mailed.
             If you are wanting to get regular Express Mail rates, leave the <Container> tag empty, or do not include it in the request at all.
              */
+            // SCIPIO: TODO: REVIEW: Who modified this, why? Add comment here
             if ("Parcel".equalsIgnoreCase(serviceCode)) {
                 UtilXml.addChildElementValue(packageElement, "Container", "Variable", requestDocument);
-            }else{
+                //UtilXml.addChildElementValue(packageElement, "Container", "None", requestDocument);
+            } else {
                 UtilXml.addChildElementValue(packageElement, "Container", "", requestDocument);
             }
             UtilXml.addChildElementValue(packageElement, "Size", "REGULAR", requestDocument);
@@ -320,14 +320,18 @@ public class UspsServices {
         if (UtilValidate.isNotEmpty(shippingContactMechId)) {
             try {
                 GenericValue shipToAddress = EntityQuery.use(delegator).from("PostalAddress").where("contactMechId", shippingContactMechId).queryOne();
-                if (domesticCountries.contains(shipToAddress.get("countryGeoId"))) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                            "FacilityShipmentUspsRateInternationCannotBeUsedForUsDestinations", locale));
-                }
-                if (shipToAddress != null && UtilValidate.isNotEmpty(shipToAddress.getString("countryGeoId"))) {
-                    GenericValue countryGeo = shipToAddress.getRelatedOne("CountryGeo", false);
-                    // TODO: Test against all country geoNames against what USPS expects
-                    destinationCountry = countryGeo.getString("geoName");
+                if (shipToAddress != null) { // SCIPIO: 2018-10-09: added NPE check
+                    if (domesticCountries.contains(shipToAddress.get("countryGeoId"))) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                                "FacilityShipmentUspsRateInternationCannotBeUsedForUsDestinations", locale));
+                    }
+                    if (UtilValidate.isNotEmpty(shipToAddress.getString("countryGeoId"))) {
+                        GenericValue countryGeo = shipToAddress.getRelatedOne("CountryGeo", false);
+                        // TODO: Test against all country geoNames against what USPS expects
+                        destinationCountry = countryGeo.getString("geoName");
+                    }
+                } else {
+                    Debug.logError("Could not find ship-to address for contactMechId '" + shippingContactMechId + "'", module); // SCIPIO
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
@@ -355,7 +359,7 @@ public class UspsServices {
                     "FacilityShipmentUspsUnableDetermineServiceCode", locale));
         }
 
-        BigDecimal maxWeight = new BigDecimal("70");
+        BigDecimal maxWeight;
         String maxWeightStr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "maxEstimateWeight",
                 resource, "shipment.usps.max.estimate.weight", "70");
         try {
@@ -385,7 +389,7 @@ public class UspsServices {
             }
             Integer[] weightPoundsOunces = convertPoundsToPoundsOunces(packageWeight);
             // for Parcel post, the weight must be at least 1 lb
-            if ("PARCEL".equals(serviceCode.toUpperCase()) && (weightPoundsOunces[0] < 1)) {
+            if ("PARCEL".equals(serviceCode.toUpperCase(Locale.getDefault())) && (weightPoundsOunces[0] < 1)) {
                 weightPoundsOunces[0] = 1;
                 weightPoundsOunces[1] = 0;
             }
@@ -1077,10 +1081,6 @@ public class UspsServices {
             for (Iterator<GenericValue> i = shipmentPackageRouteSegList.iterator(); i.hasNext();) {
 
                 GenericValue shipmentPackageRouteSeg = i.next();
-                //String sprsKeyString = "[" + shipmentPackageRouteSeg.getString("shipmentId") + "," +
-                //        shipmentPackageRouteSeg.getString("shipmentPackageSeqId") + "," +
-                //        shipmentPackageRouteSeg.getString("shipmentRouteSegmentId") + "]";
-
                 Document requestDocument = createUspsRequestDocument("RateRequest", true, delegator, shipmentGatewayConfigId, resource);
 
                 Element packageElement = UtilXml.addChildElement(requestDocument.getDocumentElement(), "Package", requestDocument);
@@ -1106,8 +1106,7 @@ public class UspsServices {
                 try {
                     weight = new BigDecimal(weightStr);
                 } catch (NumberFormatException nfe) {
-                    //nfe.printStackTrace(); // TODO: handle exception
-                    Debug.logError(nfe, module); // SCIPIO: 2018-08-13: remove printStackTrace
+                    Debug.logError(nfe, module); // TODO: handle exception
                 }
 
                 String weightUomId = shipmentPackage.getString("weightUomId");
@@ -1116,9 +1115,12 @@ public class UspsServices {
                 }
                 if (!"WT_lb".equals(weightUomId)) {
                     // attempt a conversion to pounds
-                    Map<String, Object> result = new HashMap<String, Object>();
+                    Map<String, Object> result;
                     try {
                         result = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", "WT_lb", "originalValue", weight));
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
                     } catch (GenericServiceException ex) {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                                 "FacilityShipmentUspsWeightConversionError",
@@ -1213,8 +1215,7 @@ public class UspsServices {
                 try {
                     postage = new BigDecimal(postageString);
                 } catch (NumberFormatException nfe) {
-                    //nfe.printStackTrace(); // TODO: handle exception
-                    Debug.logError(nfe, module); // SCIPIO: 2018-08-13: remove printStackTrace
+                    Debug.logError(nfe, module); // TODO: handle exception
                 }
                 actualTransportCost = actualTransportCost.add(postage);
 
@@ -1418,8 +1419,7 @@ public class UspsServices {
                 try {
                     weight = new BigDecimal(weightStr);
                 } catch (NumberFormatException nfe) {
-                    //nfe.printStackTrace(); // TODO: handle exception
-                    Debug.logError(nfe, module); // SCIPIO: 2018-08-13: remove printStackTrace
+                    Debug.logError(nfe, module); // TODO: handle exception
                 }
 
                 String weightUomId = shipmentPackage.getString("weightUomId");
@@ -1518,16 +1518,16 @@ public class UspsServices {
                         shipmentRouteSegment.getString("shipmentRouteSegmentId") + "_" +
                         shipmentPackageRouteSeg.getString("shipmentPackageSeqId") + ".gif";
 
-                FileOutputStream fileOut = new FileOutputStream(outFileName);
-                fileOut.write(labelImageBytes);
-                fileOut.flush();
-                fileOut.close();
+                try (FileOutputStream fileOut = new FileOutputStream(outFileName)) {
+                    fileOut.write(labelImageBytes);
+                    fileOut.flush();
+                    fileOut.close();
+                } catch (IOException e) {
+                    Debug.logInfo(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
             }
-
         } catch (GenericEntityException e) {
-            Debug.logInfo(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (IOException e) {
             Debug.logInfo(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -1586,7 +1586,6 @@ public class UspsServices {
         String fromFirstName = StringUtils.defaultIfEmpty(StringUtils.substringBefore(fromAttnName, " "), fromAttnName);
         String fromLastName = StringUtils.defaultIfEmpty(StringUtils.substringAfter(fromAttnName, " "), fromAttnName);
         UtilXml.addChildElementValue(rootElement, "FromFirstName", fromFirstName, requestDocument);
-        // UtilXml.addChildElementValue(rootElement, "FromMiddleInitial", "", requestDocument);
         UtilXml.addChildElementValue(rootElement, "FromLastName", fromLastName, requestDocument);
         UtilXml.addChildElementValue(rootElement, "FromFirm", originAddress.getString("toName"), requestDocument);
         // The following 2 assignments are not typos - USPS address1 = OFBiz address2, USPS address2 = OFBiz address1
@@ -1618,9 +1617,8 @@ public class UspsServices {
 
         for (GenericValue shipmentPackageRouteSeg : shipmentPackageRouteSegs) {
             Document packageDocument = (Document) requestDocument.cloneNode(true);
-            //Element packageRootElement = requestDocument.getDocumentElement();
             // This is our reference and can be whatever we want.  For lack of a better alternative we'll use shipmentId:shipmentPackageSeqId:shipmentRouteSegmentId
-            String fromCustomsReference = shipmentRouteSegment.getString("shipmentId") + ":" + shipmentRouteSegment.getString("shipmentRouteSegmentId");
+            String fromCustomsReference;
             fromCustomsReference = StringUtils.join(
                     UtilMisc.toList(
                             shipmentRouteSegment.get("shipmentId"),
@@ -1657,11 +1655,6 @@ public class UspsServices {
                 Debug.logError(e, module);
             }
             UtilXml.addChildElementValue(rootElement, "Container", container, packageDocument);
-            /* TODO:
-            UtilXml.addChildElementValue(rootElement, "Insured", "", packageDocument);
-            UtilXml.addChildElementValue(rootElement, "InsuredNumber", "", packageDocument);
-            UtilXml.addChildElementValue(rootElement, "InsuredAmount", "", packageDocument);
-            */
             // According to the docs sending an empty postage tag will cause the postage to be calculated
             UtilXml.addChildElementValue(rootElement, "Postage", "", packageDocument);
 
@@ -1770,15 +1763,15 @@ public class UspsServices {
         }
         if (UtilValidate.isEmpty(conUrl)) {
             // SCIPIO: Throw config exception to can handle more gracefully
-            if(Debug.verboseOn()) {
+            if (Debug.verboseOn()) {
                 throw new UspsConfigurationException(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentUspsConnectUrlIncomplete", locale));
-            }else{
+            } else {
                 return null;
             }
         }
 
-        OutputStream os = new ByteArrayOutputStream();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         try {
             UtilXml.writeXmlDocument(requestDocument, os, "UTF-8", true, false, 0);
@@ -1789,7 +1782,7 @@ public class UspsServices {
                             UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
 
-        String xmlString = os.toString();
+        String xmlString = new String(os.toByteArray(), UtilIO.getUtf8());
 
         Debug.logInfo("USPS XML request string: " + xmlString, module);
 
@@ -1827,9 +1820,9 @@ public class UspsServices {
             responseDocument = UtilXml.readXmlDocument(responseString, false);
         } catch (Exception e) {
             //throw new UspsRequestException(UtilProperties.getMessage(resourceError, "FacilityShipmentUspsResponseError", UtilMisc.toMap("errorString", e.getMessage()), locale));
-            if(Debug.isOn(Debug.VERBOSE)){
+            if (Debug.verboseOn()) { // SCIPIO
                 throw new UspsRequestException(UtilProperties.getMessage(resourceError, "FacilityShipmentUspsResponseError", UtilMisc.toMap("errorString", e.getMessage()), locale));
-            }else{
+            } else {
                 return null;
             }
         }
@@ -1838,12 +1831,11 @@ public class UspsServices {
         // Other request-level errors should be handled by the caller
         Element responseElement = responseDocument.getDocumentElement();
         if ("Error".equals(responseElement.getNodeName())) {
-            if(Debug.isOn(Debug.VERBOSE)){
+            if (Debug.verboseOn()) { // SCIPIO
                 throw new UspsRequestException(UtilXml.childElementValue(responseElement, "Description"));
-            }else{
+            } else {
                 return null;
             }
-
         }
 
         return responseDocument;
@@ -1864,7 +1856,9 @@ public class UspsServices {
     private static String getShipmentGatewayConfigValue(Delegator delegator, String shipmentGatewayConfigId, String shipmentGatewayConfigParameterName,
             String resource, String parameterName) {
         String returnValue = "";
-        if(resource==null) resource=shipmentPropertiesFile;
+        if (resource == null) { // SCIPIO?
+            resource = shipmentPropertiesFile;
+        }
         if (UtilValidate.isNotEmpty(shipmentGatewayConfigId)) {
             try {
                 GenericValue usps = EntityQuery.use(delegator).from("ShipmentGatewayUsps").where("shipmentGatewayConfigId", shipmentGatewayConfigId).queryOne();

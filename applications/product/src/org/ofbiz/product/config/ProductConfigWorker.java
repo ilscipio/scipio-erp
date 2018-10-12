@@ -47,11 +47,13 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 /**
  * Product Config Worker class to reduce code in templates.
  */
-public class ProductConfigWorker {
+public final class ProductConfigWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
     public static final String SEPARATOR = "::";    // cache key separator
+
+    private ProductConfigWorker () {}
 
     private static final UtilCache<String, ProductConfigWrapper> productConfigCache = UtilCache.createUtilCache("product.config", true);     // use soft reference to free up memory if needed
 
@@ -210,15 +212,17 @@ public class ProductConfigWorker {
      * @param delegator the delegator
      */
     public static void storeProductConfigWrapper(ProductConfigWrapper configWrapper, Delegator delegator) {
-        if (configWrapper == null || (!configWrapper.isCompleted()))  return;
+        if (configWrapper == null || (!configWrapper.isCompleted())) {
+            return;
+        }
         String configId = null;
         List<ConfigItem> questions = configWrapper.getQuestions();
-        List<GenericValue> configsToCheck = new LinkedList<GenericValue>();
+        List<GenericValue> configsToCheck = new LinkedList<>();
         int selectedOptionSize = 0;
         for (ConfigItem ci: questions) {
             String configItemId = null;
             Long sequenceNum = null;
-            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<ProductConfigWrapper.ConfigOption>();
+            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<>();
             List<ConfigOption> options = ci.getOptions();
             if (ci.isStandard()) {
                 selectedOptions.addAll(options);
@@ -267,7 +271,7 @@ public class ProductConfigWorker {
                             for (ConfigItem ci: questions) {
                                 String configItemId = null;
                                 Long sequenceNum = null;
-                                List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<ProductConfigWrapper.ConfigOption>();
+                                List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<>();
                                 List<ConfigOption> options = ci.getOptions();
                                 if (ci.isStandard()) {
                                     selectedOptions.addAll(options);
@@ -287,7 +291,10 @@ public class ProductConfigWorker {
                                             if (anOption.isVirtualComponent(aComponent)) {
                                                 Map<String, String> componentOptions = anOption.getComponentOptions();
                                                 String optionProductId = aComponent.getString("productId");
-                                                String optionProductOptionId = componentOptions.get(optionProductId);
+                                                String optionProductOptionId = null;
+                                                if(UtilValidate.isNotEmpty(componentOptions)) {
+                                                    optionProductOptionId = componentOptions.get(optionProductId);
+                                                }
                                                 String configOptionId = anOption.configOption.getString("configOptionId");
                                                 configItemId = ci.getConfigItemAssoc().getString("configItemId");
                                                 sequenceNum = ci.getConfigItemAssoc().getLong("sequenceNum");
@@ -333,7 +340,7 @@ public class ProductConfigWorker {
         for (ConfigItem ci: questions) {
             String configItemId = null;
             Long sequenceNum = null;
-            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<ProductConfigWrapper.ConfigOption>();
+            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<>();
             List<ConfigOption> options = ci.getOptions();
            if (ci.isStandard()) {
                 selectedOptions.addAll(options);
@@ -355,7 +362,7 @@ public class ProductConfigWorker {
                 sequenceNum = ci.getConfigItemAssoc().getLong("sequenceNum");
                 for (ConfigOption oneOption: selectedOptions) {
                     Map<String, String>  componentOptions = oneOption.componentOptions;
-                    List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+                    List<GenericValue> toBeStored = new LinkedList<>();
                     String configOptionId = oneOption.configOption.getString("configOptionId");
                     String description = oneOption.getComments();
                     GenericValue productConfigConfig = delegator.makeValue("ProductConfigConfig");
@@ -416,8 +423,8 @@ public class ProductConfigWorker {
     public static ProductConfigWrapper loadProductConfigWrapper(Delegator delegator, LocalDispatcher dispatcher, String configId, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) {
         ProductConfigWrapper configWrapper = null;
         try {
-             configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, productStoreId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
-            if (configWrapper != null && UtilValidate.isNotEmpty(configId)) {
+            configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, productStoreId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
+            if (UtilValidate.isNotEmpty(configId)) {
                 configWrapper.loadConfig(delegator, configId);
             }
         } catch (Exception e) {

@@ -148,15 +148,11 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
                 productPromoContentCache.put(cacheKey, outString);
             }
             return outString;
-        } catch (GeneralException e) {
+        } catch (GeneralException | IOException e) {
             Debug.logError(e, "Error rendering ProductPromoContent, inserting empty String", module);
             String candidateOut = productPromo.getModelEntity().isField(candidateFieldName) ? productPromo.getString(candidateFieldName): "";
             return candidateOut == null? "" : encoder.sanitize(candidateOut);
-        } catch (IOException e) {
-            Debug.logError(e, "Error rendering ProductPromoContent, inserting empty String", module);
-            String candidateOut = productPromo.getModelEntity().isField(candidateFieldName) ? productPromo.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.sanitize(candidateOut);
-        }
+       }
     }
 
     public static void getProductPromoContentAsText(String productPromoId, GenericValue productPromo, String productPromoContentTypeId, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter) throws GeneralException, IOException {
@@ -180,7 +176,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
             throw new GeneralRuntimeException("Unable to find a delegator to use!");
         }
 
-        List<EntityExpr> exprs = new ArrayList<EntityExpr>();
+        List<EntityExpr> exprs = new ArrayList<>();
         exprs.add(EntityCondition.makeCondition("productPromoId", EntityOperator.EQUALS, productPromoId));
         exprs.add(EntityCondition.makeCondition("productPromoContentTypeId", EntityOperator.EQUALS, productPromoContentTypeId));
 

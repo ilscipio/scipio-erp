@@ -20,6 +20,7 @@ package org.ofbiz.product.imagemanagement;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -108,25 +109,20 @@ public class ReplaceImage {
             GenericValue productContent = EntityQuery.use(delegator).from("ProductContent").where("productId", productId, "contentId", contentIdReplace, "productContentTypeId", "IMAGE").queryFirst();
 
             if (productContent != null) {
-                Map<String, Object> productContentCtx = new HashMap<String, Object>();
+                Map<String, Object> productContentCtx = new HashMap<>();
                 productContentCtx.put("productId", productId);
                 productContentCtx.put("contentId", contentIdReplace);
                 productContentCtx.put("productContentTypeId", "IMAGE");
                 productContentCtx.put("fromDate", productContent.get("fromDate"));
                 productContentCtx.put("userLogin", userLogin);
-                dispatcher.runSync("removeProductContentAndImageFile", productContentCtx);
+                Map<String, Object> serviceResult = dispatcher.runSync("removeProductContentAndImageFile", productContentCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
             }
-        } catch (GenericEntityException gee) {
+        } catch (IOException | IllegalArgumentException | GenericEntityException | GenericServiceException e) {
             String errMsg = UtilProperties.getMessage(resourceError, "ProductCannotReplaceImage", locale);
-            Debug.logError(errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (GenericServiceException gse) {
-            String errMsg = UtilProperties.getMessage(resourceError, "ProductCannotReplaceImage", locale);
-            Debug.logError(errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (Exception gse) {
-            String errMsg = UtilProperties.getMessage(resourceError, "ProductCannotReplaceImage", locale);
-            Debug.logError(errMsg, module);
+            Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
         String successMsg = UtilProperties.getMessage(resource, "ProductReplaceImageSuccessfully", locale);

@@ -184,6 +184,9 @@ public class PackingSession implements java.io.Serializable {
                     case 0:
                         Debug.logInfo("Packing check returned '0' - doing nothing.", module);
                         break;
+                    default:
+                        Debug.logInfo("Packing check returned '> 2' or '< 0'", module);
+                        break;
                 }
             }
 
@@ -238,6 +241,10 @@ public class PackingSession implements java.io.Serializable {
                 String invItemId = res.getString("inventoryItemId");
                 packLines.add(new PackingSessionLine(orderId, orderItemSeqId, shipGroupSeqId, productId, invItemId, quantity, weight, packageSeqId));
                 break;
+            default:
+                // SCIPIO: 2018-10-09: Not sure how this should be handled, log as error for now...
+                //throw new GeneralException("value of checkCode different than expected");
+                Debug.logError("createPackLineItem: value of checkCode different than expected (0-2); please report this error: " + checkCode, module);
         }
 
         // Add the line weight to the package weight
@@ -623,9 +630,6 @@ public class PackingSession implements java.io.Serializable {
     }
 
     public String complete(boolean force) throws GeneralException {
-        // clear out empty lines
-        // this.checkEmptyLines(); // removing, this seems to be causeing issues -  mja
-
         // check to see if there is anything to process
         if (this.getLines().size() == 0) {
             return "EMPTY";
@@ -934,6 +938,12 @@ public class PackingSession implements java.io.Serializable {
             serviceContext.put("shippableTotal", shippableTotal);
 
             serviceResult = getDispatcher().runSync("calcShipmentCostEstimate", serviceContext);
+
+            if (ServiceUtil.isError(serviceResult)) {
+                Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                return shipmentCostEstimate;
+            }
+
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         } catch (GenericServiceException e) {

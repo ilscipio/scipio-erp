@@ -29,13 +29,14 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 
-public class ImportProductHelper {
+public final class ImportProductHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private ImportProductHelper() {}
 
     // prepare the product map
     public static Map<String, Object> prepareProduct(String productId) {
-        Map<String, Object> fields = new HashMap<String, Object>();
+        Map<String, Object> fields = new HashMap<>();
         fields.put("productId", productId);
         fields.put("productTypeId", "FINISHED_GOOD");
         fields.put("internalName", "Product_" + productId);
@@ -47,7 +48,7 @@ public class ImportProductHelper {
     // prepare the inventoryItem map
     public static Map<String, Object> prepareInventoryItem(String productId,
             BigDecimal quantityOnHand, String inventoryItemId) {
-        Map<String, Object> fields = new HashMap<String, Object>();
+        Map<String, Object> fields = new HashMap<>();
         fields.put("inventoryItemId", inventoryItemId);
         fields.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
         fields.put("productId", productId);
@@ -66,8 +67,9 @@ public class ImportProductHelper {
         try {
             tmpProductGV = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
             if (tmpProductGV != null
-                    && productId.equals(tmpProductGV.getString("productId")))
+                    && productId.equals(tmpProductGV.getString("productId"))) {
                 productExists = true;
+            }
         } catch (GenericEntityException e) {
             Debug.logError("Problem in reading data of product", module);
         }

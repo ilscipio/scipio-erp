@@ -57,7 +57,9 @@ public class KeywordIndex {
     }
 
     public static void indexKeywords(GenericValue product, boolean doAll) throws GenericEntityException {
-        if (product == null) return;
+        if (product == null) {
+            return;
+        }
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         Delegator delegator = product.getDelegator();
         if (!doAll) {
@@ -74,7 +76,9 @@ public class KeywordIndex {
             }
         }
 
-        if (delegator == null) return;
+        if (delegator == null) {
+            return;
+        }
         String productId = product.getString("productId");
 
         // get these in advance just once since they will be used many times for the multiple strings to index
@@ -84,8 +88,8 @@ public class KeywordIndex {
         boolean removeStems = KeywordSearchUtil.getRemoveStems();
         Set<String> stemSet = KeywordSearchUtil.getStemSet();
 
-        Map<String, Long> keywords = new TreeMap<String, Long>();
-        List<String> strings = new LinkedList<String>();
+        Map<String, Long> keywords = new TreeMap<>();
+        List<String> strings = new LinkedList<>();
 
         int pidWeight = 1;
         try {
@@ -218,9 +222,7 @@ public class KeywordIndex {
             for (int i = 0; i < weight; i++) {
                 strings.add(contentText);
             }
-        } catch (IOException e1) {
-            Debug.logError(e1, "Error getting content text to index", module);
-        } catch (GeneralException e1) {
+        } catch (GeneralException | IOException e1) {
             Debug.logError(e1, "Error getting content text to index", module);
         }
     }

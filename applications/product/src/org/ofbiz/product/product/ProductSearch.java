@@ -71,7 +71,7 @@ public class ProductSearch {
     public static final String resourceCommon = "CommonUiLabels";
 
     public static ArrayList<String> parametricKeywordSearch(Map<?, String> featureIdByType, String keywordsString, Delegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
-        Set<String> featureIdSet = new HashSet<String>();
+        Set<String> featureIdSet = new HashSet<>();
         if (featureIdByType != null) {
             featureIdSet.addAll(featureIdByType.values());
         }
@@ -80,7 +80,7 @@ public class ProductSearch {
     }
 
     public static ArrayList<String> parametricKeywordSearch(Set<String> featureIdSet, String keywordsString, Delegator delegator, String productCategoryId, boolean includeSubCategories, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
-        List<ProductSearchConstraint> productSearchConstraintList = new LinkedList<ProductSearchConstraint>();
+        List<ProductSearchConstraint> productSearchConstraintList = new LinkedList<>();
 
         if (UtilValidate.isNotEmpty(productCategoryId)) {
             productSearchConstraintList.add(new CategoryConstraint(productCategoryId, includeSubCategories, null));
@@ -141,17 +141,17 @@ public class ProductSearch {
 
     public static class ProductSearchContext {
         public int index = 1;
-        public List<EntityCondition> entityConditionList = new LinkedList<EntityCondition>();
-        public List<String> orderByList = new LinkedList<String>();
+        public List<EntityCondition> entityConditionList = new LinkedList<>();
+        public List<String> orderByList = new LinkedList<>();
         public List<String> fieldsToSelect = UtilMisc.toList("mainProductId");
         public DynamicViewEntity dynamicViewEntity = new DynamicViewEntity();
         public boolean productIdGroupBy = false;
         public boolean includedKeywordSearch = false;
         public Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        public List<Set<String>> keywordFixedOrSetAndList = new LinkedList<Set<String>>();
-        public Set<String> orKeywordFixedSet = new HashSet<String>();
-        public Set<String> andKeywordFixedSet = new HashSet<String>();
-        public List<GenericValue> productSearchConstraintList = new LinkedList<GenericValue>();
+        public List<Set<String>> keywordFixedOrSetAndList = new LinkedList<>();
+        public Set<String> orKeywordFixedSet = new HashSet<>();
+        public Set<String> andKeywordFixedSet = new HashSet<>();
+        public List<GenericValue> productSearchConstraintList = new LinkedList<>();
         public ResultSortOrder resultSortOrder = null;
         public Integer resultOffset = null;
         public Integer maxResults = null;
@@ -159,29 +159,29 @@ public class ProductSearch {
         protected String visitId = null;
         protected Integer totalResults = null;
 
-        public Set<String> includeCategoryIds = new HashSet<String>();
-        public Set<String> excludeCategoryIds = new HashSet<String>();
-        public Set<String> alwaysIncludeCategoryIds = new HashSet<String>();
+        public Set<String> includeCategoryIds = new HashSet<>();
+        public Set<String> excludeCategoryIds = new HashSet<>();
+        public Set<String> alwaysIncludeCategoryIds = new HashSet<>();
 
-        public List<Set<String>> includeCategoryIdOrSetAndList = new LinkedList<Set<String>>();
-        public List<Set<String>> alwaysIncludeCategoryIdOrSetAndList = new LinkedList<Set<String>>();
+        public List<Set<String>> includeCategoryIdOrSetAndList = new LinkedList<>();
+        public List<Set<String>> alwaysIncludeCategoryIdOrSetAndList = new LinkedList<>();
 
-        public Set<String> includeFeatureIds = new HashSet<String>();
-        public Set<String> excludeFeatureIds = new HashSet<String>();
-        public Set<String> alwaysIncludeFeatureIds = new HashSet<String>();
+        public Set<String> includeFeatureIds = new HashSet<>();
+        public Set<String> excludeFeatureIds = new HashSet<>();
+        public Set<String> alwaysIncludeFeatureIds = new HashSet<>();
 
-        public List<Set<String>> includeFeatureIdOrSetAndList = new LinkedList<Set<String>>();
-        public List<Set<String>> alwaysIncludeFeatureIdOrSetAndList = new LinkedList<Set<String>>();
+        public List<Set<String>> includeFeatureIdOrSetAndList = new LinkedList<>();
+        public List<Set<String>> alwaysIncludeFeatureIdOrSetAndList = new LinkedList<>();
 
-        public Set<String> includeFeatureCategoryIds = new HashSet<String>();
-        public Set<String> excludeFeatureCategoryIds = new HashSet<String>();
-        public Set<String> alwaysIncludeFeatureCategoryIds = new HashSet<String>();
+        public Set<String> includeFeatureCategoryIds = new HashSet<>();
+        public Set<String> excludeFeatureCategoryIds = new HashSet<>();
+        public Set<String> alwaysIncludeFeatureCategoryIds = new HashSet<>();
 
-        public Set<String> includeFeatureGroupIds = new HashSet<String>();
-        public Set<String> excludeFeatureGroupIds = new HashSet<String>();
-        public Set<String> alwaysIncludeFeatureGroupIds = new HashSet<String>();
+        public Set<String> includeFeatureGroupIds = new HashSet<>();
+        public Set<String> excludeFeatureGroupIds = new HashSet<>();
+        public Set<String> alwaysIncludeFeatureGroupIds = new HashSet<>();
 
-        public List<String> keywordTypeIds = new LinkedList<String>();
+        public List<String> keywordTypeIds = new LinkedList<>();
         public String statusId = null;
 
         public ProductSearchContext(Delegator delegator, String visitId) {
@@ -223,14 +223,12 @@ public class ProductSearch {
             long startMillis = System.currentTimeMillis();
 
             // do the query
-            EntityListIterator eli = this.doQuery(delegator);
-            ArrayList<String> productIds = this.makeProductIdList(eli);
-            if (eli != null) {
-                try {
-                    eli.close();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Error closing ProductSearch EntityListIterator");
-                }
+            ArrayList<String> productIds = null;
+            try (EntityListIterator eli = this.doQuery(delegator)) {
+                productIds = this.makeProductIdList(eli);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return null;
             }
 
             long endMillis = System.currentTimeMillis();
@@ -301,7 +299,7 @@ public class ProductSearch {
 
                     // keyword type filter
                     if (UtilValidate.isNotEmpty(keywordTypeIds)) {
-                        List<EntityCondition> keywordTypeCons = new LinkedList<EntityCondition>();
+                        List<EntityCondition> keywordTypeCons = new LinkedList<>();
                         for (String keywordTypeId : keywordTypeIds) {
                             keywordTypeCons.add(EntityCondition.makeCondition("keywordTypeId", EntityOperator.EQUALS, keywordTypeId));
                         }
@@ -337,7 +335,7 @@ public class ProductSearch {
                     dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
                     dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
                     dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
-                    List<EntityCondition> keywordOrList = new LinkedList<EntityCondition>();
+                    List<EntityCondition> keywordOrList = new LinkedList<>();
                     for (String keyword: keywordFixedOrSet) {
                         keywordOrList.add(EntityCondition.makeCondition(prefix + "Keyword", EntityOperator.LIKE, keyword));
                     }
@@ -369,10 +367,10 @@ public class ProductSearch {
             // create new view members with logic:
             // ((each Id = category includes AND Id IN feature includes) AND (Id NOT IN category excludes AND Id NOT IN feature excludes))
             // OR (each Id = category alwaysIncludes AND each Id = feature alwaysIncludes)
-            List<EntityCondition> incExcCondList = new LinkedList<EntityCondition>();
+            List<EntityCondition> incExcCondList = new LinkedList<>();
             EntityCondition incExcCond = null;
 
-            List<EntityCondition> alwIncCondList = new LinkedList<EntityCondition>();
+            List<EntityCondition> alwIncCondList = new LinkedList<>();
             EntityCondition alwIncCond = null;
 
             EntityCondition topCond = null;
@@ -455,7 +453,7 @@ public class ProductSearch {
             }
 
             if (excludeCategoryIds.size() > 0) {
-                List<EntityCondition> idExcludeCondList = new LinkedList<EntityCondition>();
+                List<EntityCondition> idExcludeCondList = new LinkedList<>();
                 idExcludeCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, this.nowTimestamp)));
                 idExcludeCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, this.nowTimestamp));
                 idExcludeCondList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, excludeCategoryIds));
@@ -463,7 +461,7 @@ public class ProductSearch {
                 incExcCondList.add(EntityCondition.makeCondition("mainProductId", EntityOperator.NOT_EQUAL, subSelCond));
             }
             if (excludeFeatureIds.size() > 0) {
-                List<EntityCondition> idExcludeCondList = new LinkedList<EntityCondition>();
+                List<EntityCondition> idExcludeCondList = new LinkedList<>();
                 idExcludeCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, this.nowTimestamp)));
                 idExcludeCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, this.nowTimestamp));
                 idExcludeCondList.add(EntityCondition.makeCondition("productFeatureId", EntityOperator.IN, excludeFeatureIds));
@@ -471,7 +469,7 @@ public class ProductSearch {
                 incExcCondList.add(EntityCondition.makeCondition("mainProductId", EntityOperator.NOT_EQUAL, subSelCond));
             }
             if (excludeFeatureCategoryIds.size() > 0) {
-                List<EntityCondition> idExcludeCondList = new LinkedList<EntityCondition>();
+                List<EntityCondition> idExcludeCondList = new LinkedList<>();
                 idExcludeCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, this.nowTimestamp)));
                 idExcludeCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, this.nowTimestamp));
                 idExcludeCondList.add(EntityCondition.makeCondition("productFeatureCategoryId", EntityOperator.IN, excludeFeatureCategoryIds));
@@ -479,7 +477,7 @@ public class ProductSearch {
                 incExcCondList.add(EntityCondition.makeCondition("mainProductId", EntityOperator.NOT_EQUAL, subSelCond));
             }
             if (excludeFeatureGroupIds.size() > 0) {
-                List<EntityCondition> idExcludeCondList = new LinkedList<EntityCondition>();
+                List<EntityCondition> idExcludeCondList = new LinkedList<>();
                 idExcludeCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, this.nowTimestamp)));
                 idExcludeCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, this.nowTimestamp));
                 idExcludeCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("groupThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("groupThruDate", EntityOperator.GREATER_THAN, this.nowTimestamp)));
@@ -647,9 +645,17 @@ public class ProductSearch {
 
             this.entityConditionList.add(topCond);
 
-            Debug.logInfo("topCond=" + topCond.makeWhereString(null, new LinkedList<EntityConditionParam>(), EntityConfig.getDatasource(delegator.getEntityHelperName("Product"))), module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("topCond=" + topCond.makeWhereString(null, new LinkedList<EntityConditionParam>(), EntityConfig.getDatasource(delegator.getEntityHelperName("Product"))), module);
+            }
         }
 
+        /**
+         * @param delegator the delegator
+         * @return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE
+         *      DONE WITH IT (preferably in a finally block),
+         *      AND DON'T LEAVE IT OPEN TOO LONG BECAUSE IT WILL MAINTAIN A DATABASE CONNECTION.
+         */
         public EntityListIterator doQuery(Delegator delegator) {
             // handle the now assembled or and and keyword fixed lists
             this.finishKeywordConstraints();
@@ -733,7 +739,7 @@ public class ProductSearch {
                 int numRetreived = 1;
                 int duplicatesFound = 0;
 
-                Set<String> productIdSet = new HashSet<String>();
+                Set<String> productIdSet = new HashSet<>();
 
                 productIds.add(searchResult.getString("mainProductId"));
                 productIdSet.add(searchResult.getString("mainProductId"));
@@ -747,19 +753,6 @@ public class ProductSearch {
                     } else {
                         duplicatesFound++;
                     }
-
-                    /*
-                    StringBuilder lineMsg = new StringBuilder("Got search result line: ");
-                    for (String fieldName: fieldsToSelect) {
-                        lineMsg.append(fieldName);
-                        lineMsg.append("=");
-                        lineMsg.append(searchResult.get(fieldName));
-                        if (fieldsToSelectIter.hasNext()) {
-                            lineMsg.append(", ");
-                        }
-                    }
-                    Debug.logInfo(lineMsg.toString(), module);
-                    */
                 }
 
                 if (searchResult != null) {
@@ -852,7 +845,7 @@ public class ProductSearch {
 
         @Override
         public void addConstraint(ProductSearchContext productSearchContext) {
-            List<String> productCategoryIds = new LinkedList<String>();
+            List<String> productCategoryIds = new LinkedList<>();
             for (GenericValue category: productCategories) {
                 productCategoryIds.add(category.getString("productCategoryId"));
             }
@@ -893,28 +886,50 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((prodCatalogId == null) ? 0 : prodCatalogId.hashCode());
+            // SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            //result = prime * result + ((productCategories == null) ? 0 : productCategories.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof CatalogConstraint) {
-                CatalogConstraint that = (CatalogConstraint) psc;
-                if (this.prodCatalogId == null) {
-                    if (that.prodCatalogId != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.prodCatalogId.equals(that.prodCatalogId)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof CatalogConstraint)) {
+                return false;
+            }
+            CatalogConstraint other = (CatalogConstraint) obj;
+            if (prodCatalogId == null) {
+                if (other.prodCatalogId != null) {
+                    return false;
+                }
+            } else if (!prodCatalogId.equals(other.prodCatalogId)) {
+                return false;
+            }
+            /* SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            if (productCategories == null) {
+                if (other.productCategories != null) {
+                    return false;
+                }
+            } else if (!productCategories.equals(other.productCategories)) {
+                return false;
+            }
+            */
+            return true;
         }
 
         public String getProdCatalogId() { // SCIPIO: Added 2017-08-18.
             return prodCatalogId;
         }
+
     }
 
     @SuppressWarnings("serial")
@@ -939,7 +954,7 @@ public class ProductSearch {
 
         @Override
         public void addConstraint(ProductSearchContext productSearchContext) {
-            Set<String> productCategoryIdSet = new HashSet<String>();
+            Set<String> productCategoryIdSet = new HashSet<>();
             if (includeSubCategories) {
                 // find all sub-categories recursively, make a Set of productCategoryId
                 ProductSearch.getAllSubCategoryIds(productCategoryId, productCategoryIdSet, productSearchContext.getDelegator(), productSearchContext.nowTimestamp);
@@ -992,26 +1007,48 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            // SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            //result = prime * result + ((exclude == null) ? 0 : exclude.hashCode());
+            result = prime * result + (includeSubCategories ? 1231 : 1237);
+            result = prime * result + ((productCategoryId == null) ? 0 : productCategoryId.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof CategoryConstraint) {
-                CategoryConstraint that = (CategoryConstraint) psc;
-                if (this.includeSubCategories != that.includeSubCategories) {
-                    return false;
-                }
-                if (this.productCategoryId == null) {
-                    if (that.productCategoryId != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.productCategoryId.equals(that.productCategoryId)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof CategoryConstraint)) {
+                return false;
+            }
+            CategoryConstraint other = (CategoryConstraint) obj;
+            /* SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            if (exclude == null) {
+                if (other.exclude != null) {
+                    return false;
+                }
+            } else if (!exclude.equals(other.exclude)) {
+                return false;
+            }
+            */
+            if (includeSubCategories != other.includeSubCategories) {
+                return false;
+            }
+            if (productCategoryId == null) {
+                if (other.productCategoryId != null) {
+                    return false;
+                }
+            } else if (!productCategoryId.equals(other.productCategoryId)) {
+                return false;
+            }
+            return true;
         }
 
         public String getProductCategoryId() { // SCIPIO: Added 2017-08-18.
@@ -1089,23 +1126,44 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            // SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            //result = prime * result + ((exclude == null) ? 0 : exclude.hashCode());
+            result = prime * result + ((productFeatureId == null) ? 0 : productFeatureId.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof FeatureConstraint) {
-                FeatureConstraint that = (FeatureConstraint) psc;
-                if (this.productFeatureId == null) {
-                    if (that.productFeatureId != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.productFeatureId.equals(that.productFeatureId)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof FeatureConstraint)) {
+                return false;
+            }
+            FeatureConstraint other = (FeatureConstraint) obj;
+            /* SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            if (exclude == null) {
+                if (other.exclude != null) {
+                    return false;
+                }
+            } else if (!exclude.equals(other.exclude)) {
+                return false;
+            }
+            */
+            if (productFeatureId == null) {
+                if (other.productFeatureId != null) {
+                    return false;
+                }
+            } else if (!productFeatureId.equals(other.productFeatureId)) {
+                return false;
+            }
+            return true;
         }
 
         public String getProductFeatureId() { // SCIPIO: Added 2017-08-18.
@@ -1179,23 +1237,44 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            // SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            //result = prime * result + ((exclude == null) ? 0 : exclude.hashCode());
+            result = prime * result + ((productFeatureCategoryId == null) ? 0 : productFeatureCategoryId.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof FeatureCategoryConstraint) {
-                FeatureCategoryConstraint that = (FeatureCategoryConstraint) psc;
-                if (this.productFeatureCategoryId == null) {
-                    if (that.productFeatureCategoryId != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.productFeatureCategoryId.equals(that.productFeatureCategoryId)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof FeatureCategoryConstraint)) {
+                return false;
+            }
+            FeatureCategoryConstraint other = (FeatureCategoryConstraint) obj;
+            /* SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            if (exclude == null) {
+                if (other.exclude != null) {
+                    return false;
+                }
+            } else if (!exclude.equals(other.exclude)) {
+                return false;
+            }
+            */
+            if (productFeatureCategoryId == null) {
+                if (other.productFeatureCategoryId != null) {
+                    return false;
+                }
+            } else if (!productFeatureCategoryId.equals(other.productFeatureCategoryId)) {
+                return false;
+            }
+            return true;
         }
 
         public String getProductFeatureCategoryId() { // SCIPIO: Added 2017-08-18.
@@ -1267,23 +1346,44 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            // SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            //result = prime * result + ((exclude == null) ? 0 : exclude.hashCode());
+            result = prime * result + ((productFeatureGroupId == null) ? 0 : productFeatureGroupId.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof FeatureGroupConstraint) {
-                FeatureGroupConstraint that = (FeatureGroupConstraint) psc;
-                if (this.productFeatureGroupId == null) {
-                    if (that.productFeatureGroupId != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.productFeatureGroupId.equals(that.productFeatureGroupId)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof FeatureGroupConstraint)) {
+                return false;
+            }
+            FeatureGroupConstraint other = (FeatureGroupConstraint) obj;
+            /* SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            if (exclude == null) {
+                if (other.exclude != null) {
+                    return false;
+                }
+            } else if (!exclude.equals(other.exclude)) {
+                return false;
+            }
+            */
+            if (productFeatureGroupId == null) {
+                if (other.productFeatureGroupId != null) {
+                    return false;
+                }
+            } else if (!productFeatureGroupId.equals(other.productFeatureGroupId)) {
+                return false;
+            }
+            return true;
         }
 
         public String getProductFeatureGroupId() { // SCIPIO: Added 2017-08-18.
@@ -1309,7 +1409,7 @@ public class ProductSearch {
          * @param exclude This is a tri-state variable: null = Include, true = Exclude, false = AlwaysInclude
          */
         public FeatureSetConstraint(Collection<String> productFeatureIdSet, Boolean exclude) {
-            this.productFeatureIdSet = new HashSet<String>();
+            this.productFeatureIdSet = new HashSet<>();
             this.productFeatureIdSet.addAll(productFeatureIdSet);
             this.exclude = exclude;
         }
@@ -1370,23 +1470,44 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            // SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            //result = prime * result + ((exclude == null) ? 0 : exclude.hashCode());
+            result = prime * result + ((productFeatureIdSet == null) ? 0 : productFeatureIdSet.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof FeatureSetConstraint) {
-                FeatureSetConstraint that = (FeatureSetConstraint) psc;
-                if (this.productFeatureIdSet == null) {
-                    if (that.productFeatureIdSet != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.productFeatureIdSet.equals(that.productFeatureIdSet)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof FeatureSetConstraint)) {
+                return false;
+            }
+            FeatureSetConstraint other = (FeatureSetConstraint) obj;
+            /* SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            if (exclude == null) {
+                if (other.exclude != null) {
+                    return false;
+                }
+            } else if (!exclude.equals(other.exclude)) {
+                return false;
+            }
+            */
+            if (productFeatureIdSet == null) {
+                if (other.productFeatureIdSet != null) {
+                    return false;
+                }
+            } else if (!productFeatureIdSet.equals(other.productFeatureIdSet)) {
+                return false;
+            }
+            return true;
         }
 
         public Set<String> getProductFeatureIdSet() { // SCIPIO: Added 2017-08-18.
@@ -1421,11 +1542,11 @@ public class ProductSearch {
 
         public Set<String> makeFullKeywordSet(Delegator delegator) {
             Set<String> keywordSet = KeywordSearchUtil.makeKeywordSet(this.keywordsString, null, true);
-            Set<String> fullKeywordSet = new TreeSet<String>();
+            Set<String> fullKeywordSet = new TreeSet<>();
 
             // expand the keyword list according to the thesaurus and create a new set of keywords
             for (String keyword: keywordSet) {
-                Set<String> expandedSet = new TreeSet<String>();
+                Set<String> expandedSet = new TreeSet<>();
                 boolean replaceEntered = KeywordSearchUtil.expandKeywordForSearch(keyword, expandedSet, delegator);
                 fullKeywordSet.addAll(expandedSet);
                 if (!replaceEntered) {
@@ -1450,13 +1571,13 @@ public class ProductSearch {
 
                 // expand the keyword list according to the thesaurus and create a new set of keywords
                 for (String keyword: keywordSet) {
-                    Set<String> expandedSet = new TreeSet<String>();
+                    Set<String> expandedSet = new TreeSet<>();
                     boolean replaceEntered = KeywordSearchUtil.expandKeywordForSearch(keyword, expandedSet, productSearchContext.getDelegator());
                     if (!replaceEntered) {
                         expandedSet.add(keyword);
                     }
                     Set<String> fixedSet = KeywordSearchUtil.fixKeywordsForSearch(expandedSet, anyPrefix, anySuffix, removeStems, isAnd);
-                    Set<String> fixedKeywordSet = new HashSet<String>();
+                    Set<String> fixedKeywordSet = new HashSet<>();
                     fixedKeywordSet.addAll(fixedSet);
                     productSearchContext.keywordFixedOrSetAndList.add(fixedKeywordSet);
                 }
@@ -1487,35 +1608,49 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (anyPrefix ? 1231 : 1237);
+            result = prime * result + (anySuffix ? 1231 : 1237);
+            result = prime * result + (isAnd ? 1231 : 1237);
+            result = prime * result + ((keywordsString == null) ? 0 : keywordsString.hashCode());
+            result = prime * result + (removeStems ? 1231 : 1237);
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof KeywordConstraint) {
-                KeywordConstraint that = (KeywordConstraint) psc;
-                if (this.anyPrefix != that.anyPrefix) {
-                    return false;
-                }
-                if (this.anySuffix != that.anySuffix) {
-                    return false;
-                }
-                if (this.isAnd != that.isAnd) {
-                    return false;
-                }
-                if (this.removeStems != that.removeStems) {
-                    return false;
-                }
-                if (this.keywordsString == null) {
-                    if (that.keywordsString != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.keywordsString.equals(that.keywordsString)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof KeywordConstraint)) {
+                return false;
+            }
+            KeywordConstraint other = (KeywordConstraint) obj;
+            if (anyPrefix != other.anyPrefix) {
+                return false;
+            }
+            if (anySuffix != other.anySuffix) {
+                return false;
+            }
+            if (isAnd != other.isAnd) {
+                return false;
+            }
+            if (keywordsString == null) {
+                if (other.keywordsString != null) {
+                    return false;
+                }
+            } else if (!keywordsString.equals(other.keywordsString)) {
+                return false;
+            }
+            if (removeStems != other.removeStems) {
+                return false;
+            }
+            return true;
         }
 
         public String getKeywordsString() { // SCIPIO: Added 2017-08-18.
@@ -1563,32 +1698,41 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((fromDate == null) ? 0 : fromDate.hashCode());
+            result = prime * result + ((thruDate == null) ? 0 : thruDate.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof LastUpdatedRangeConstraint) {
-                LastUpdatedRangeConstraint that = (LastUpdatedRangeConstraint) psc;
-                if (this.fromDate == null) {
-                    if (that.fromDate != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.fromDate.equals(that.fromDate)) {
-                        return false;
-                    }
-                }
-                if (this.thruDate == null) {
-                    if (that.thruDate != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.thruDate.equals(that.thruDate)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof LastUpdatedRangeConstraint)) {
+                return false;
+            }
+            LastUpdatedRangeConstraint other = (LastUpdatedRangeConstraint) obj;
+            if (fromDate == null) {
+                if (other.fromDate != null) {
+                    return false;
+                }
+            } else if (!fromDate.equals(other.fromDate)) {
+                return false;
+            }
+            if (thruDate == null) {
+                if (other.thruDate != null) {
+                    return false;
+                }
+            } else if (!thruDate.equals(other.thruDate)) {
+                return false;
+            }
+            return true;
         }
 
         public Timestamp getFromDate() { // SCIPIO: Added 2017-08-18.
@@ -1647,16 +1791,49 @@ public class ProductSearch {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (o instanceof StoreGroupPriceConstraint) {
-                StoreGroupPriceConstraint other = (StoreGroupPriceConstraint) o;
-                if (other.productStoreGroupId.equals(productStoreGroupId) &&
-                       other.productPriceTypeId.equals(productPriceTypeId) &&
-                       other.currencyUomId.equals(currencyUomId)) {
-                    return true;
-                }
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((currencyUomId == null) ? 0 : currencyUomId.hashCode());
+            result = prime * result + ((productPriceTypeId == null) ? 0 : productPriceTypeId.hashCode());
+            result = prime * result + ((productStoreGroupId == null) ? 0 : productStoreGroupId.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
             }
-            return false;
+            if (obj == null) {
+                return false;
+            }
+            if (!(obj instanceof StoreGroupPriceConstraint)) {
+                return false;
+            }
+            StoreGroupPriceConstraint other = (StoreGroupPriceConstraint) obj;
+            if (currencyUomId == null) {
+                if (other.currencyUomId != null) {
+                    return false;
+                }
+            } else if (!currencyUomId.equals(other.currencyUomId)) {
+                return false;
+            }
+            if (productPriceTypeId == null) {
+                if (other.productPriceTypeId != null) {
+                    return false;
+                }
+            } else if (!productPriceTypeId.equals(other.productPriceTypeId)) {
+                return false;
+            }
+            if (productStoreGroupId == null) {
+                if (other.productStoreGroupId != null) {
+                    return false;
+                }
+            } else if (!productStoreGroupId.equals(other.productStoreGroupId)) {
+                return false;
+            }
+            return true;
         }
 
         public String getProductStoreGroupId() { // SCIPIO: Added 2017-08-18.
@@ -1750,32 +1927,52 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            // SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            //result = prime * result + ((currencyUomId == null) ? 0 : currencyUomId.hashCode());
+            result = prime * result + ((highPrice == null) ? 0 : highPrice.hashCode());
+            result = prime * result + ((lowPrice == null) ? 0 : lowPrice.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof ListPriceRangeConstraint) {
-                ListPriceRangeConstraint that = (ListPriceRangeConstraint) psc;
-                if (this.lowPrice == null) {
-                    if (that.lowPrice != null) {
-                        return false;
-                    }
-                } else {
-                    if (this.lowPrice.compareTo(that.lowPrice) != 0) {
-                        return false;
-                    }
-                }
-                if (this.highPrice == null) {
-                    if (that.highPrice != null) {
-                        return false;
-                    }
-                } else {
-                    if (this.highPrice.compareTo(that.highPrice) != 0) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof ListPriceRangeConstraint)) {
+                return false;
+            }
+            ListPriceRangeConstraint other = (ListPriceRangeConstraint) obj;
+            /* SCIPIO: 2018-10-09: TODO: REVIEW: Should this be a significant field?
+            if (currencyUomId == null) {
+                if (other.currencyUomId != null) {
+                    return false;
+                }
+            } else if (!currencyUomId.equals(other.currencyUomId)) {
+                return false;
+            }
+            */
+            if (highPrice == null) {
+                if (other.highPrice != null) {
+                    return false;
+                }
+            } else if (other.highPrice == null || highPrice.compareTo(other.highPrice) != 0) { // SCIPIO: 2018-10-09: Fixed equals->compareTo and missing null check
+                return false;
+            }
+            if (lowPrice == null) {
+                if (other.lowPrice != null) {
+                    return false;
+                }
+            } else if (other.lowPrice == null || lowPrice.compareTo(other.lowPrice) != 0) { // SCIPIO: 2018-10-09: Fixed equals->compareTo and missing null check
+                return false;
+            }
+            return true;
         }
 
         public BigDecimal getLowPrice() { // SCIPIO: Added 2017-08-18.
@@ -1822,28 +2019,39 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((supplierPartyId == null) ? 0 : supplierPartyId.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof SupplierConstraint) {
-                SupplierConstraint that = (SupplierConstraint) psc;
-                if (this.supplierPartyId == null) {
-                    if (that.supplierPartyId != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.supplierPartyId.equals(that.supplierPartyId)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof SupplierConstraint)) {
+                return false;
+            }
+            SupplierConstraint other = (SupplierConstraint) obj;
+            if (supplierPartyId == null) {
+                if (other.supplierPartyId != null) {
+                    return false;
+                }
+            } else if (!supplierPartyId.equals(other.supplierPartyId)) {
+                return false;
+            }
+            return true;
         }
 
         public String getSupplierPartyId() { // SCIPIO: Added 2017-08-18.
             return supplierPartyId;
         }
+
     }
 
     @SuppressWarnings("serial")
@@ -1868,13 +2076,25 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result;
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof ExcludeVariantsConstraint) {
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof ExcludeVariantsConstraint)) {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -1900,13 +2120,25 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result;
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof AvailabilityDateConstraint) {
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof AvailabilityDateConstraint)) {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -1937,7 +2169,7 @@ public class ProductSearch {
 
                 EntityComparisonOperator<?,?> operator = EntityOperator.EQUALS;
 
-                if (UtilValidate.isNotEmpty(include) && include == Boolean.FALSE) {
+                if (UtilValidate.isNotEmpty(include) && !include) {
                     operator = EntityOperator.NOT_EQUAL;
                 }
 
@@ -1970,7 +2202,7 @@ public class ProductSearch {
 
             StringBuilder msgBuf = new StringBuilder();
 
-            if (UtilValidate.isNotEmpty(include) && include == Boolean.FALSE) {
+            if (UtilValidate.isNotEmpty(include) && !include) {
                 msgBuf.append(UtilProperties.getMessage(resourceCommon, "CommonExclude", locale));
                 msgBuf.append(" ");
             } else {
@@ -1994,13 +2226,25 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result;
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof GoodIdentificationConstraint) {
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if(obj == null) {
                 return false;
             }
+            if (!(obj instanceof GoodIdentificationConstraint)) {
+                return false;
+            }
+            return true;
         }
 
         public String getGoodIdentificationTypeId() { // SCIPIO: Added 2017-08-18.
@@ -2040,23 +2284,41 @@ public class ProductSearch {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((keyword == null) ? 0 : keyword.hashCode());
+            result = prime * result + ((productFieldName == null) ? 0 : productFieldName.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
-            if (psc instanceof ProductFieldConstraint) {
-                ProductFieldConstraint that = (ProductFieldConstraint) psc;
-                if (this.keyword == null) {
-                    if (that.keyword != null) {
-                        return false;
-                    }
-                } else {
-                    if (!this.keyword.equals(that.keyword)) {
-                        return false;
-                    }
-                }
+            if (this == obj) {
                 return true;
-            } else {
+            }
+            if (obj == null) {
                 return false;
             }
+            if (!(obj instanceof ProductFieldConstraint)) {
+                return false;
+            }
+            ProductFieldConstraint other = (ProductFieldConstraint) obj;
+            if (keyword == null) {
+                if (other.keyword != null) {
+                    return false;
+                }
+            } else if (!keyword.equals(other.keyword)) {
+                return false;
+            }
+            if (productFieldName == null) {
+                if (other.productFieldName != null) {
+                    return false;
+                }
+            } else if (!productFieldName.equals(other.productFieldName)) {
+                return false;
+            }
+            return true;
         }
 
         public String getKeyword() { // SCIPIO: Added 2017-08-18.
@@ -2096,8 +2358,9 @@ public class ProductSearch {
                     productSearchContext.orderByList.add("-totalRelevancy");
                     productSearchContext.fieldsToSelect.add("totalRelevancy");
                 }
-                if (productSearchContext.keywordFixedOrSetAndList.size() > 0)
+                if (productSearchContext.keywordFixedOrSetAndList.size() > 0) {
                     productSearchContext.productIdGroupBy = true;
+                }
             }
         }
 
@@ -2331,143 +2594,4 @@ public class ProductSearch {
             return productFeatureTypeId;
         }
     }
-    /** A rather large and verbose method that doesn't use the cool constraint and sort order objects */
-    /*
-    public static ArrayList parametricKeywordSearchStandAlone(Set featureIdSet, String keywordsString, Delegator delegator, String productCategoryId, boolean includeSubCategories, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
-        // TODO: implement this for the new features
-        boolean removeStems = UtilProperties.propertyValueEquals("prodsearch", "remove.stems", "true");
-
-        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-
-        // make view-entity & EntityCondition
-        int index = 1;
-        List entityConditionList = new LinkedList();
-        List orderByList = new LinkedList();
-        List fieldsToSelect = new LinkedList("productId");
-        DynamicViewEntity dynamicViewEntity = new DynamicViewEntity();
-        dynamicViewEntity.addMemberEntity("PROD", "Product");
-        dynamicViewEntity.addAlias("PROD", "productName");
-        boolean productIdGroupBy = false;
-
-        // Category
-        if (UtilValidate.isNotEmpty(productCategoryId)) {
-            List productCategoryIdList = null;
-            if (includeSubCategories) {
-                // find all sub-categories recursively, make a Set of productCategoryId
-                Set productCategoryIdSet = Fast.newInstance();
-                getAllSubCategoryIds(productCategoryId, productCategoryIdSet, delegator, nowTimestamp);
-                productCategoryIdList = UtilMisc.makeListWritable(productCategoryIdSet);
-            } else {
-                productCategoryIdList = UtilMisc.toList(productCategoryId);
-            }
-
-            // make index based values and increment
-            String entityAlias = "PCM" + index;
-            String prefix = "pcm" + index;
-            index++;
-
-            dynamicViewEntity.addMemberEntity(entityAlias, "ProductCategoryMember");
-            dynamicViewEntity.addAlias(entityAlias, prefix + "ProductCategoryId", "productCategoryId", null, null, null, null);
-            dynamicViewEntity.addAlias(entityAlias, prefix + "FromDate", "fromDate", null, null, null, null);
-            dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
-            dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
-            entityConditionList.add(EntityCondition.makeCondition(prefix + "ProductCategoryId", EntityOperator.IN, productCategoryIdList));
-            entityConditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition(prefix + "ThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition(prefix + "ThruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
-            entityConditionList.add(EntityCondition.makeCondition(prefix + "FromDate", EntityOperator.LESS_THAN, nowTimestamp));
-        }
-
-        // Keyword
-        List keywordFirstPass = KeywordSearch.makeKeywordList(keywordsString);
-        List keywordList = KeywordSearch.fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, isAnd);
-
-        if (keywordList.size() > 0) {
-            if (isAnd) {
-                // add up the relevancyWeight fields from all keyword member entities for a total to sort by
-                ComplexAlias complexAlias = new ComplexAlias("+");
-
-                for (String keyword: keywordList) {
-                    // make index based values and increment
-                    String entityAlias = "PK" + index;
-                    String prefix = "pk" + index;
-                    index++;
-
-                    dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
-                    dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
-                    dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
-                    entityConditionList.add(EntityCondition.makeCondition(prefix + "Keyword", EntityOperator.LIKE, keyword));
-
-                    //don't add an alias for this, will be part of a complex alias: dynamicViewEntity.addAlias(entityAlias, prefix + "RelevancyWeight", "relevancyWeight", null, null, null, null);
-                    complexAlias.addComplexAliasMember(new ComplexAliasField(entityAlias, "relevancyWeight"));
-                }
-                dynamicViewEntity.addAlias(null, "totalRelevancy", null, null, null, null, null, complexAlias);
-                orderByList.add("-totalRelevancy");
-                fieldsToSelect.add("totalRelevancy");
-            } else {
-                // make index based values and increment
-                String entityAlias = "PK" + index;
-                String prefix = "pk" + index;
-                index++;
-
-                dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
-                dynamicViewEntity.addAlias(entityAlias, "totalRelevancy", "relevancyWeight", null, null, null, "sum");
-                dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
-                dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
-                orderByList.add("-totalRelevancy");
-                fieldsToSelect.add("totalRelevancy");
-                List<EntityCondition> keywordOrList = new new LinkedList<EntityCondition>();
-                for (String keyword: keywordList) {
-                    keywordOrList.add(EntityCondition.makeCondition(prefix + "Keyword", EntityOperator.LIKE, keyword));
-                }
-                entityConditionList.add(EntityCondition.makeCondition(keywordOrList, EntityOperator.OR));
-
-                productIdGroupBy = true;
-            }
-        }
-
-        // Features
-        if (UtilValidate.isNotEmpty(featureIdSet)) {
-            for (String productFeatureID: featureIdSet) {
-                // make index based values and increment
-                String entityAlias = "PFA" + index;
-                String prefix = "pfa" + index;
-                index++;
-
-                dynamicViewEntity.addMemberEntity(entityAlias, "ProductFeatureAppl");
-                dynamicViewEntity.addAlias(entityAlias, prefix + "ProductFeatureId", "productFeatureId", null, null, null, null);
-                dynamicViewEntity.addAlias(entityAlias, prefix + "FromDate", "fromDate", null, null, null, null);
-                dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
-                dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
-                entityConditionList.add(EntityCondition.makeCondition(prefix + "ProductFeatureId", EntityOperator.EQUALS, productFeatureId));
-                entityConditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition(prefix + "ThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition(prefix + "ThruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
-                entityConditionList.add(EntityCondition.makeCondition(prefix + "FromDate", EntityOperator.LESS_THAN, nowTimestamp));
-            }
-        }
-
-        dynamicViewEntity.addAlias("PROD", "productId", null, null, null, Boolean.valueOf(productIdGroupBy), null);
-        EntityCondition whereCondition = EntityCondition.makeCondition(entityConditionList, EntityOperator.AND);
-        EntityFindOptions efo = new EntityFindOptions();
-        efo.setDistinct(true);
-
-        EntityListIterator eli = null;
-        try {
-            eli = delegator.findListIteratorByCondition(dynamicViewEntity, whereCondition, null, fieldsToSelect, orderByList, efo);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in product search", module);
-            return null;
-        }
-
-        ArrayList productIds = new ArrayList();
-        Set productIdSet = Fast.newInstance();
-        GenericValue searchResult = null;
-        while ((searchResult = (GenericValue) eli.next()) != null) {
-            String productId = searchResult.getString("productId");
-            if (!productIdSet.contains(productId)) {
-                productIds.add(productId);
-                productIdSet.add(productId);
-            }
-        }
-
-        return productIds;
-    }
-     */
 }

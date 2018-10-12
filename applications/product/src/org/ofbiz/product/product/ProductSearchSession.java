@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -91,7 +92,7 @@ public class ProductSearchSession {
 
         /** Basic copy constructor */
         public ProductSearchOptions(ProductSearchOptions productSearchOptions) {
-            this.constraintList = new LinkedList<ProductSearchConstraint>();
+            this.constraintList = new LinkedList<>();
             if (UtilValidate.isNotEmpty(productSearchOptions.constraintList)) {
                 this.constraintList.addAll(productSearchOptions.constraintList);
             }
@@ -113,7 +114,7 @@ public class ProductSearchSession {
         public static void addConstraint(ProductSearchConstraint productSearchConstraint, HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
             if (productSearchOptions.constraintList == null) {
-                productSearchOptions.constraintList = new LinkedList<ProductSearchConstraint>();
+                productSearchOptions.constraintList = new LinkedList<>();
             }
             if (!productSearchOptions.constraintList.contains(productSearchConstraint)) {
                 productSearchOptions.constraintList.add(productSearchConstraint);
@@ -128,7 +129,7 @@ public class ProductSearchSession {
         public static void removeConstraintsByType(Class<? extends ProductSearchConstraint> constraintCls, HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
             if (productSearchOptions.constraintList == null) {
-                productSearchOptions.constraintList = new LinkedList<ProductSearchConstraint>();
+                productSearchOptions.constraintList = new LinkedList<>();
             }
             Iterator<ProductSearchConstraint> it = productSearchOptions.constraintList.iterator();
             while(it.hasNext()) {
@@ -298,12 +299,14 @@ public class ProductSearchSession {
 
         public List<String> searchGetConstraintStrings(boolean detailed, Delegator delegator, Locale locale) {
             List<ProductSearchConstraint> productSearchConstraintList = this.getConstraintList();
-            List<String> constraintStrings = new LinkedList<String>();
+            List<String> constraintStrings = new LinkedList<>();
             if (productSearchConstraintList == null) {
                 return constraintStrings;
             }
             for (ProductSearchConstraint productSearchConstraint: productSearchConstraintList) {
-                if (productSearchConstraint == null) continue;
+                if (productSearchConstraint == null) {
+                    continue;
+                }
                 String constraintString = productSearchConstraint.prettyPrintConstraint(delegator, detailed, locale);
                 if (UtilValidate.isNotEmpty(constraintString)) {
                     constraintStrings.add(constraintString);
@@ -367,7 +370,7 @@ public class ProductSearchSession {
     public static List<ProductSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<ProductSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            optionsHistoryList = new LinkedList<ProductSearchOptions>();
+            optionsHistoryList = new LinkedList<>();
             session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
         }
         return optionsHistoryList;
@@ -433,14 +436,16 @@ public class ProductSearchSession {
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
         if (productStoreId != null) {
             // get a Set of all keywords in the search, if there are any...
-            Set<String> keywords = new HashSet<String>();
+            Set<String> keywords = new HashSet<>();
             List<ProductSearchConstraint> constraintList = ProductSearchOptions.getConstraintList(session);
             if (constraintList != null) {
                 for (ProductSearchConstraint constraint: constraintList) {
                     if (constraint instanceof KeywordConstraint) {
                         KeywordConstraint keywordConstraint = (KeywordConstraint) constraint;
                         Set<String> keywordSet = keywordConstraint.makeFullKeywordSet(delegator);
-                        if (keywordSet != null) keywords.addAll(keywordSet);
+                        if (keywordSet != null) {
+                            keywords.addAll(keywordSet);
+                        }
                     }
                 }
             }
@@ -498,7 +503,7 @@ public class ProductSearchSession {
         List<ProductSearchConstraint> productSearchConstraintList = productSearchOptions.getConstraintList();
         if (UtilValidate.isEmpty(productSearchConstraintList)) {
             // no constraints, don't do a search...
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
 
         ResultSortOrder resultSortOrder = productSearchOptions.getResultSortOrder();
@@ -568,8 +573,6 @@ public class ProductSearchSession {
         } else {
             request.setAttribute("processSearchParametersAlreadyRun", Boolean.TRUE);
         }
-
-        //Debug.logInfo("Processing Product Search parameters: " + parameters, module);
 
         HttpSession session = request.getSession();
         boolean constraintsChanged = false;
@@ -703,7 +706,8 @@ public class ProductSearchSession {
             }
         }
 
-        for (String parameterName: parameters.keySet()) {
+        for (Entry<String, Object> entry : parameters.entrySet()) {
+            String parameterName = entry.getKey();
             if (parameterName.startsWith("SEARCH_FEAT") && !parameterName.startsWith("SEARCH_FEAT_EXC")) {
                 String productFeatureId = (String) parameters.get(parameterName);
                 if (UtilValidate.isNotEmpty(productFeatureId)) {
@@ -784,7 +788,9 @@ public class ProductSearchSession {
         // add a supplier to the search
         if (UtilValidate.isNotEmpty(parameters.get("SEARCH_SUPPLIER_ID")) || UtilValidate.isNotEmpty(parameters.get("S_SUP"))) {
             String supplierPartyId = (String) parameters.get("SEARCH_SUPPLIER_ID");
-            if (UtilValidate.isEmpty(supplierPartyId)) supplierPartyId = (String) parameters.get("S_SUP");
+            if (UtilValidate.isEmpty(supplierPartyId)) {
+                supplierPartyId = (String) parameters.get("S_SUP");
+            }
             searchAddConstraint(new ProductSearch.SupplierConstraint(supplierPartyId), session);
             constraintsChanged = true;
         }
@@ -813,13 +819,15 @@ public class ProductSearchSession {
         }
         if (UtilValidate.isNotEmpty(parameters.get("LIST_PRICE_RANGE")) || UtilValidate.isNotEmpty(parameters.get("S_LPR"))) {
             String listPriceRangeStr = (String) parameters.get("LIST_PRICE_RANGE");
-            if (UtilValidate.isEmpty(listPriceRangeStr)) listPriceRangeStr = (String) parameters.get("S_LPR");
-            int underscoreIndex = listPriceRangeStr.indexOf("_");
+            if (UtilValidate.isEmpty(listPriceRangeStr)) {
+                listPriceRangeStr = (String) parameters.get("S_LPR");
+            }
+            int underscoreIndex = listPriceRangeStr.indexOf('_');
             String listPriceLowStr;
             String listPriceHighStr;
             if (underscoreIndex >= 0) {
-                listPriceLowStr = listPriceRangeStr.substring(0, listPriceRangeStr.indexOf("_"));
-                listPriceHighStr = listPriceRangeStr.substring(listPriceRangeStr.indexOf("_") + 1);
+                listPriceLowStr = listPriceRangeStr.substring(0, listPriceRangeStr.indexOf('_'));
+                listPriceHighStr = listPriceRangeStr.substring(listPriceRangeStr.indexOf('_') + 1);
             } else {
                 // no underscore: assume it is a low range with no high range, ie the ending underscore was left off
                 listPriceLowStr = listPriceRangeStr;
@@ -884,12 +892,16 @@ public class ProductSearchSession {
 
         // set the sort order
         String sortOrder = (String) parameters.get("sortOrder");
-        if (UtilValidate.isEmpty(sortOrder)) sortOrder = (String) parameters.get("S_O");
+        if (UtilValidate.isEmpty(sortOrder)) {
+            sortOrder = (String) parameters.get("S_O");
+        }
         String sortAscending = (String) parameters.get("sortAscending");
-        if (UtilValidate.isEmpty(sortAscending)) sortAscending = (String) parameters.get("S_A");
+        if (UtilValidate.isEmpty(sortAscending)) {
+            sortAscending = (String) parameters.get("S_A");
+        }
         boolean ascending = !"N".equals(sortAscending);
         if (sortOrder != null) {
-            if (sortOrder.equals("SortKeywordRelevancy") || sortOrder.equals("SKR")) {
+            if ("SortKeywordRelevancy".equals(sortOrder) || "SKR".equals(sortOrder)) {
                 searchSetSortOrder(new ProductSearch.SortKeywordRelevancy(), session);
             } else if (sortOrder.startsWith("SortProductField:")) {
                 String fieldName = sortOrder.substring("SortProductField:".length());
@@ -939,7 +951,7 @@ public class ProductSearchSession {
         //int previousViewSize = 20;
         int previousViewSize = viewSize;
         Map<String, Object> requestParams = UtilHttp.getCombinedMap(request);
-        List<String> keywordTypeIds = new LinkedList<String>();
+        List<String> keywordTypeIds = new LinkedList<>();
         if (requestParams.get("keywordTypeId") instanceof String) {
             keywordTypeIds.add((String) requestParams.get("keywordTypeId"));
         } else if (requestParams.get("keywordTypeId") instanceof List){
@@ -977,7 +989,7 @@ public class ProductSearchSession {
         highIndex = (viewIndex + 1) * viewSize;
 
         // ========== Do the actual search
-        List<String> productIds = new LinkedList<String>();
+        List<String> productIds = new LinkedList<>();
         String visitId = VisitHandler.getVisitId(session);
         List<ProductSearchConstraint> productSearchConstraintList = ProductSearchOptions.getConstraintList(session);
         String noConditionFind = (String) requestParams.get("noConditionFind");
@@ -991,21 +1003,21 @@ public class ProductSearchSession {
 
             int addOnTopTotalListSize = 0;
             int addOnTopListSize = 0;
-            List<GenericValue> addOnTopProductCategoryMembers = new LinkedList<GenericValue>();
+            List<GenericValue> addOnTopProductCategoryMembers;
             if (UtilValidate.isNotEmpty(addOnTopProdCategoryId)) {
                 // always include the members of the addOnTopProdCategoryId
                 Timestamp now = UtilDateTime.nowTimestamp();
-                List<EntityCondition> addOnTopProdCondList = new LinkedList<EntityCondition>();
+                List<EntityCondition> addOnTopProdCondList = new LinkedList<>();
                 addOnTopProdCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, now)));
                 addOnTopProdCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, now));
                 addOnTopProdCondList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, addOnTopProdCategoryId));
                 EntityQuery eq = EntityQuery.use(delegator)
                         .select(UtilMisc.toSet("productId", "sequenceNum"))
-                            .from("ProductCategoryMember")
-                            .where(addOnTopProdCondList)
-                            .orderBy("sequenceNum")
-                            .cursorScrollInsensitive()
-                            .distinct()
+                        .from("ProductCategoryMember")
+                        .where(addOnTopProdCondList)
+                        .orderBy("sequenceNum")
+                        .cursorScrollInsensitive()
+                        .distinct()
                         .maxRows(highIndex);
 
                 try (EntityListIterator pli = eq.queryIterator()) {
@@ -1070,7 +1082,7 @@ public class ProductSearchSession {
         String searchSortOrderString = searchGetSortOrderString(false, request);
 
         // ========== populate the result Map
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
 
         result.put("productIds", productIds);
         result.put("viewIndex", viewIndex);
@@ -1095,7 +1107,7 @@ public class ProductSearchSession {
 
         List<ProductSearchConstraint> constraintList = productSearchOptions.getConstraintList();
         if (UtilValidate.isEmpty(constraintList)) {
-            constraintList = new ArrayList<ProductSearchConstraint>();
+            constraintList = new ArrayList<>();
         }
         int categoriesCount = 0;
         int featuresCount = 0;
@@ -1216,9 +1228,13 @@ public class ProductSearchSession {
                     }
                     searchParamString.append("S_LPR");
                     searchParamString.append("=");
-                    if (lprc.lowPrice != null) searchParamString.append(lprc.lowPrice);
+                    if (lprc.lowPrice != null) {
+                        searchParamString.append(lprc.lowPrice);
+                    }
                     searchParamString.append("_");
-                    if (lprc.highPrice != null) searchParamString.append(lprc.highPrice);
+                    if (lprc.highPrice != null) {
+                        searchParamString.append(lprc.highPrice);
+                    }
                 }
             } else if (psc instanceof ProductSearch.SupplierConstraint) {
                 ProductSearch.SupplierConstraint suppc = (ProductSearch.SupplierConstraint) psc;
@@ -1242,26 +1258,23 @@ public class ProductSearchSession {
             searchParamString.append(topProductCategoryId);
         }
         ResultSortOrder resultSortOrder = productSearchOptions.getResultSortOrder();
-        if (resultSortOrder != null) {
-            if (resultSortOrder instanceof ProductSearch.SortKeywordRelevancy) {
-                //ProductSearch.SortKeywordRelevancy skr = (ProductSearch.SortKeywordRelevancy) resultSortOrder;
-                searchParamString.append("&amp;S_O=SKR");
-            } else if (resultSortOrder instanceof ProductSearch.SortProductField) {
-                ProductSearch.SortProductField spf = (ProductSearch.SortProductField) resultSortOrder;
-                searchParamString.append("&amp;S_O=SPF:");
-                searchParamString.append(spf.fieldName);
-            } else if (resultSortOrder instanceof ProductSearch.SortProductPrice) {
-                ProductSearch.SortProductPrice spp = (ProductSearch.SortProductPrice) resultSortOrder;
-                searchParamString.append("&amp;S_O=SPP:");
-                searchParamString.append(spp.productPriceTypeId);
-            } else if (resultSortOrder instanceof ProductSearch.SortProductFeature) {
-                ProductSearch.SortProductFeature spf = (ProductSearch.SortProductFeature) resultSortOrder;
-                searchParamString.append("&amp;S_O=SPFT:");
-                searchParamString.append(spf.productFeatureTypeId);
-            }
-            searchParamString.append("&amp;S_A=");
-            searchParamString.append(resultSortOrder.isAscending() ? "Y" : "N");
+        if (resultSortOrder instanceof ProductSearch.SortKeywordRelevancy) {
+            searchParamString.append("&amp;S_O=SKR");
+        } else if (resultSortOrder instanceof ProductSearch.SortProductField) {
+            ProductSearch.SortProductField spf = (ProductSearch.SortProductField) resultSortOrder;
+            searchParamString.append("&amp;S_O=SPF:");
+            searchParamString.append(spf.fieldName);
+        } else if (resultSortOrder instanceof ProductSearch.SortProductPrice) {
+            ProductSearch.SortProductPrice spp = (ProductSearch.SortProductPrice) resultSortOrder;
+            searchParamString.append("&amp;S_O=SPP:");
+            searchParamString.append(spp.productPriceTypeId);
+        } else if (resultSortOrder instanceof ProductSearch.SortProductFeature) {
+            ProductSearch.SortProductFeature spf = (ProductSearch.SortProductFeature) resultSortOrder;
+            searchParamString.append("&amp;S_O=SPFT:");
+            searchParamString.append(spf.productFeatureTypeId);
         }
+        searchParamString.append("&amp;S_A=");
+        searchParamString.append(resultSortOrder.isAscending() ? "Y" : "N");
 
         return searchParamString.toString();
     }
@@ -1305,14 +1318,14 @@ public class ProductSearchSession {
 
         List<Map<String, String>> featureCountList = null;
         try (EntityListIterator eli = EntityQuery.use(delegator)
-                    .select(UtilMisc.toSet("pfacProductFeatureId", "featureCount", "pfcDescription", "pfcProductFeatureTypeId"))
-                    .from(dynamicViewEntity)
-                    .where(entityConditionList)
-                    .orderBy(productSearchContext.orderByList)
-                    .cursorScrollInsensitive()
-                    .queryIterator()) {
+                .select(UtilMisc.toSet("pfacProductFeatureId", "featureCount", "pfcDescription", "pfcProductFeatureTypeId"))
+                .from(dynamicViewEntity)
+                .where(entityConditionList)
+                .orderBy(productSearchContext.orderByList)
+                .cursorScrollInsensitive()
+                .queryIterator()) {
 
-            featureCountList = new LinkedList<Map<String, String>>();
+            featureCountList = new LinkedList<>();
             GenericValue searchResult = null;
             while ((searchResult = eli.next()) != null) {
                 featureCountList.add(UtilMisc.<String, String>toMap("productFeatureId", (String) searchResult.get("pfacProductFeatureId"), "productFeatureTypeId", (String) searchResult.get("pfcProductFeatureTypeId"), "description", (String) searchResult.get("pfcDescription"), "featureCount", Long.toString((Long) searchResult.get("featureCount"))));
@@ -1321,7 +1334,6 @@ public class ProductSearchSession {
             Debug.logError(e, "Error in product search", module);
             return null;
         }
-
 
         return featureCountList;
     }
@@ -1359,7 +1371,7 @@ public class ProductSearchSession {
 
         DynamicViewEntity dynamicViewEntity = productSearchContext.dynamicViewEntity;
         List<EntityCondition> entityConditionList = productSearchContext.entityConditionList;
-        List<String> fieldsToSelect = new LinkedList<String>();
+        List<String> fieldsToSelect = new LinkedList<>();
 
         dynamicViewEntity.addMemberEntity("PPC", "ProductPrice");
         dynamicViewEntity.addAlias("PPC", "ppcProductPriceTypeId", "productPriceTypeId", null, null, null, null);
@@ -1378,17 +1390,17 @@ public class ProductSearchSession {
         Long priceRangeCount = 0L;
         try (EntityListIterator eli = EntityQuery.use(delegator)
                 .select(UtilMisc.toSet(fieldsToSelect))
-                    .from(dynamicViewEntity)
-                    .where(entityConditionList)
-                    .orderBy(productSearchContext.orderByList)
-                    .cursorScrollInsensitive()
+                .from(dynamicViewEntity)
+                .where(entityConditionList)
+                .orderBy(productSearchContext.orderByList)
+                .cursorScrollInsensitive()
                 .queryIterator()) {
 
-        GenericValue searchResult = null;
-        while ((searchResult = eli.next()) != null) {
-            priceRangeCount = searchResult.getLong("priceRangeCount");
-        }
-            } catch (GenericEntityException e) {
+            GenericValue searchResult = null;
+            while ((searchResult = eli.next()) != null) {
+                priceRangeCount = searchResult.getLong("priceRangeCount");
+            }
+        } catch (GenericEntityException e) {
             Debug.logError(e, "Error in product search", module);
         }
         return priceRangeCount;
@@ -1415,7 +1427,7 @@ public class ProductSearchSession {
 
         DynamicViewEntity dynamicViewEntity = productSearchContext.dynamicViewEntity;
         List<EntityCondition> entityConditionList = productSearchContext.entityConditionList;
-        List<String> fieldsToSelect = new LinkedList<String>();
+        List<String> fieldsToSelect = new LinkedList<>();
 
         dynamicViewEntity.addMemberEntity("PCMC", "ProductCategoryMember");
         dynamicViewEntity.addAlias("PCMC", "pcmcProductCategoryId", "productCategoryId", null, null, null, null);
@@ -1434,17 +1446,17 @@ public class ProductSearchSession {
         Long categoryCount = 0L;
         try (EntityListIterator eli = EntityQuery.use(delegator)
                 .select(UtilMisc.toSet(fieldsToSelect))
-                    .from(dynamicViewEntity)
-                    .where(entityConditionList)
-                    .orderBy(productSearchContext.orderByList)
-                    .cursorScrollInsensitive()
+                .from(dynamicViewEntity)
+                .where(entityConditionList)
+                .orderBy(productSearchContext.orderByList)
+                .cursorScrollInsensitive()
                 .queryIterator()) {
 
-        GenericValue searchResult = null;
-        while ((searchResult = eli.next()) != null) {
-            categoryCount = searchResult.getLong("categoryCount");
-        }
-            } catch (GenericEntityException e) {
+            GenericValue searchResult = null;
+            while ((searchResult = eli.next()) != null) {
+                categoryCount = searchResult.getLong("categoryCount");
+            }
+        } catch (GenericEntityException e) {
             Debug.logError(e, "Error in product search", module);
         }
         return categoryCount;

@@ -86,7 +86,7 @@ public class ProductStoreEvents {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
+            Debug.logError(e, module);
             return "error";
         }
         return "success";

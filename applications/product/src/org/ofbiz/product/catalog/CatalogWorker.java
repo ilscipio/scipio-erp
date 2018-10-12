@@ -47,7 +47,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 /**
  * CatalogWorker - Worker class for catalog related functionality
  */
-public class CatalogWorker {
+public final class CatalogWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -477,7 +477,6 @@ public class CatalogWorker {
             return null;
         }
     }
-
 
     /**
      * SCIPIO: Returns the first root best-sell category for the current catalog.

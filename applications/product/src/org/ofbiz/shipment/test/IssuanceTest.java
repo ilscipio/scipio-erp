@@ -79,7 +79,7 @@ public class IssuanceTest extends OFBizTestCase {
         assertTrue("Incorrect quantity in OrderShipment. Expected 6.00000 actual " + actual, actual.compareTo(BigDecimal.valueOf(6L))==0);
 
         // Test the ItemIssuances are correct
-        List<GenericValue> itemIssuances = orderHeader.getRelated("ItemIssuance", null, UtilMisc.toList("itemIssuanceId"), false);
+        List<GenericValue> itemIssuances = orderHeader.getRelated("ItemIssuance", null, UtilMisc.toList("inventoryItemId"), false);
         assertFalse("No ItemIssuances for order", UtilValidate.isEmpty(itemIssuances));
         assertEquals( "Incorrect number of ItemIssuances for order", 2, itemIssuances.size());
 
@@ -111,7 +111,8 @@ public class IssuanceTest extends OFBizTestCase {
         // Test order items status are now ITEM_COMPLETED
         List<GenericValue> orderItems = orderHeader.getRelated("OrderItem", null, null, false);
 
-        for ( GenericValue orderItem : orderItems )
+        for (GenericValue orderItem : orderItems) {
             assertEquals("ITEM_COMPLETED", orderItem.getString("statusId"));
+        }
     }
 }

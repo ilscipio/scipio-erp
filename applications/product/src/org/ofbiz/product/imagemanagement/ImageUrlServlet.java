@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,14 +48,6 @@ public class ImageUrlServlet extends HttpServlet {
     }
 
     /**
-     * @see javax.servlet.http.HttpServlet#init(javax.servlet.ServletConfig)
-     */
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-    }
-
-    /**
      * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     @Override
@@ -74,13 +65,13 @@ public class ImageUrlServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
         List<String> pathElements = StringUtil.split(pathInfo, "/");
 
-        List<String> tagElements = new LinkedList<String>();
+        List<String> tagElements = new LinkedList<>();
         for (String pathElement : pathElements) {
             tagElements.addAll(StringUtil.split(pathElement, "-"));
         }
 
         String lastTagElement = tagElements.get(tagElements.size() - 1);
-        String contentId = lastTagElement.substring(0, lastTagElement.lastIndexOf("."));
+        String contentId = lastTagElement.substring(0, lastTagElement.lastIndexOf('.'));
         String sizeTagElement = null;
         if(tagElements.size() > 2){
             sizeTagElement = tagElements.get(tagElements.size() - 2);
@@ -112,13 +103,4 @@ public class ImageUrlServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image not found with ID [" + contentId + "]");
         }
     }
-
-    /**
-     * @see javax.servlet.http.HttpServlet#destroy()
-     */
-    @Override
-    public void destroy() {
-        super.destroy();
-    }
-
 }

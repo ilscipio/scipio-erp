@@ -84,10 +84,6 @@ public class PriceServices {
      * </ul>
      */
     public static Map<String, Object> calculateProductPrice(DispatchContext dctx, Map<String, ? extends Object> context) {
-        // UtilTimer utilTimer = new UtilTimer();
-        // utilTimer.timerString("Starting price calc", module);
-        // utilTimer.setLog(false);
-
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> result = new HashMap<String, Object>();
@@ -105,7 +101,7 @@ public class PriceServices {
         boolean findAllQuantityPrices = "Y".equals(findAllQuantityPricesStr);
         boolean optimizeForLargeRuleSet = "Y".equals(context.get("optimizeForLargeRuleSet"));
 
-        boolean getMinimumVariantPrice = (Boolean) context.get("getMinimumVariantPrice");
+        boolean getMinimumVariantPrice = (Boolean) context.get("getMinimumVariantPrice"); // SCIPIO: new
 
         String agreementId = (String) context.get("agreementId");
 
@@ -275,13 +271,11 @@ public class PriceServices {
         if ("Y".equals(product.getString("isVirtual"))) {
             // only do this if there is no default price, consider the others optional for performance reasons
             if (defaultPriceValue == null) {
-                // Debug.logInfo("Product isVirtual and there is no default price for ID " + productId + ", trying variant prices", module);
-
                 //use the cache to find the variant with the lowest default price
                 try {
                     List<GenericValue> variantAssocList = EntityQuery.use(delegator).from("ProductAssoc").where("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy("-fromDate").cache(useCache).filterByDate().queryList();
                     BigDecimal minDefaultPrice = null;
-                    List<GenericValue> variantProductPrices = new LinkedList<GenericValue>();
+                    List<GenericValue> variantProductPrices = new LinkedList<>();
                     for (GenericValue variantAssoc: variantAssocList) {
                         String curVariantProductId = variantAssoc.getString("productIdTo");
                         List<GenericValue> curVariantPriceList = EntityQuery.use(delegator).from("ProductPrice").where("productId", curVariantProductId).orderBy("-fromDate").cache(useCache).filterByDate(nowTimestamp).queryList();
@@ -341,18 +335,14 @@ public class PriceServices {
             }
         }
 
-        //boolean validPromoPriceFound = false;
         BigDecimal promoPrice = BigDecimal.ZERO;
         if (promoPriceValue != null && promoPriceValue.get("price") != null) {
             promoPrice = promoPriceValue.getBigDecimal("price");
-            //validPromoPriceFound = true;
         }
 
-        //boolean validWholesalePriceFound = false;
         BigDecimal wholesalePrice = BigDecimal.ZERO;
         if (wholesalePriceValue != null && wholesalePriceValue.get("price") != null) {
             wholesalePrice = wholesalePriceValue.getBigDecimal("price");
-            //validWholesalePriceFound = true;
         }
 
         boolean validPriceFound = false;
@@ -469,7 +459,7 @@ public class PriceServices {
                 }
 
                 if (findAllQuantityPrices) {
-                    List<Map<String, Object>> allQuantityPrices = new LinkedList<Map<String, Object>>();
+                    List<Map<String, Object>> allQuantityPrices = new LinkedList<Map<String,Object>>();
 
                     // if findAllQuantityPrices then iterate through quantityProductPriceRules
                     // foreach create an entry in the out list and eval that rule and all nonQuantityProductPriceRules rather than a single rule
@@ -544,22 +534,32 @@ public class PriceServices {
                     Map<String, Object> convertPriceMap = new HashMap<String, Object>();
                     for (Map.Entry<String, Object> entry : result.entrySet()) {
                         BigDecimal tempPrice = BigDecimal.ZERO;
-                        if(entry.getKey() == "basePrice")
+                        switch (entry.getKey()) {
+                        case "basePrice":
                             tempPrice = (BigDecimal) entry.getValue();
-                        else if (entry.getKey() == "price")
+                            break;
+                        case "price":
                             tempPrice = (BigDecimal) entry.getValue();
-                        else if (entry.getKey() == "defaultPrice")
+                            break;
+                        case "defaultPrice":
                             tempPrice = (BigDecimal) entry.getValue();
-                        else if (entry.getKey() == "competitivePrice")
+                            break;
+                        case "competitivePrice":
                             tempPrice = (BigDecimal) entry.getValue();
-                        else if (entry.getKey() == "averageCost")
+                            break;
+                        case "averageCost":
                             tempPrice = (BigDecimal) entry.getValue();
-                        else if (entry.getKey() == "promoPrice")
+                            break;
+                        case "promoPrice":
                             tempPrice = (BigDecimal) entry.getValue();
-                        else if (entry.getKey() == "specialPromoPrice")
+                            break;
+                        case "specialPromoPrice":
                             tempPrice = (BigDecimal) entry.getValue();
-                        else if (entry.getKey() == "listPrice")
+                            break;
+                        case "listPrice":
                             tempPrice = (BigDecimal) entry.getValue();
+                            break;
+                        }
 
                         if (tempPrice != null && tempPrice != BigDecimal.ZERO) {
                             Map<String, Object> priceResults = new HashMap<String, Object>();
@@ -585,7 +585,6 @@ public class PriceServices {
             }
         }
 
-        // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
         return result;
     }
 
@@ -601,10 +600,11 @@ public class PriceServices {
             }
         } else {
             if (filteredPrices != null && filteredPrices.size() > 1) {
-                if (Debug.infoOn())
+                if (Debug.infoOn()) {
                     Debug.logInfo("There is more than one " + productPriceTypeId + " with the currencyUomId " + priceValue.getString("currencyUomId")
                             + " and productId " + priceValue.getString("productId") + ", using the latest found with price: "
                             + priceValue.getBigDecimal("price"), module);
+                }
             }
         }
         if (priceValue == null && secondaryPriceList != null) {
@@ -614,7 +614,7 @@ public class PriceServices {
     }
 
     public static Map<String, Object> addGeneralResults(Map<String, Object> result, GenericValue competitivePriceValue, GenericValue specialPromoPriceValue, GenericValue productStore,
-            String checkIncludeVat, String currencyUomId, String productId, BigDecimal quantity, String partyId, LocalDispatcher dispatcher, Locale locale) {
+        String checkIncludeVat, String currencyUomId, String productId, BigDecimal quantity, String partyId, LocalDispatcher dispatcher, Locale locale) {
         return addGeneralResults(result, competitivePriceValue, specialPromoPriceValue, productStore, checkIncludeVat, currencyUomId, productId, quantity, partyId, dispatcher, locale, true);
     }
 
@@ -685,7 +685,6 @@ public class PriceServices {
         // Genercally I don't think that rule sets will get that big though, so the default is optimize for smaller rule set.
         if (optimizeForLargeRuleSet) {
             // ========= find all rules that must be run for each input type; this is kind of like a pre-filter to slim down the rules to run =========
-            // utilTimer.timerString("Before create rule id list", module);
             TreeSet<String> productPriceRuleIds = new TreeSet<String>();
 
             // ------- These are all of the conditions that DON'T depend on the current inputs -------
@@ -813,11 +812,6 @@ public class PriceServices {
                 productPriceRules.add(productPriceRule);
             }
         } else {
-            // this would be nice, but we can't cache this so easily...
-            // List pprExprs = UtilMisc.toList(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),
-            // EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()));
-            // productPriceRules = delegator.findByOr("ProductPriceRule", pprExprs);
-
             productPriceRules = EntityQuery.use(delegator).from("ProductPriceRule").cache(useCache).queryList();
             if (productPriceRules == null) productPriceRules = new LinkedList<GenericValue>();
         }
@@ -848,7 +842,6 @@ public class PriceServices {
         boolean isSale = false;
 
         // ========= go through each price rule by id and eval all conditions =========
-        // utilTimer.timerString("Before eval rules", module);
         int totalConds = 0;
         int totalActions = 0;
         int totalRules = 0;
@@ -1339,9 +1332,6 @@ public class PriceServices {
                     priceInfoDescription.append(productSupplier.getBigDecimal("lastPrice"));
                     priceInfoDescription.append("]");
                     GenericValue orderItemPriceInfo = delegator.makeValue("OrderItemPriceInfo");
-                    //orderItemPriceInfo.set("productPriceRuleId", productPriceAction.get("productPriceRuleId"));
-                    //orderItemPriceInfo.set("productPriceActionSeqId", productPriceAction.get("productPriceActionSeqId"));
-                    //orderItemPriceInfo.set("modifyAmount", modifyAmount);
                     // make sure description is <= than 250 chars
                     String priceInfoDescriptionString = priceInfoDescription.toString();
                     if (priceInfoDescriptionString.length() > 250) {

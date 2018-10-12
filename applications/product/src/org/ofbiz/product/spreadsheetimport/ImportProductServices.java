@@ -68,7 +68,7 @@ public class ImportProductServices {
         // System.getProperty("user.dir") returns the path upto ofbiz home
         // directory
         String path = System.getProperty("user.dir") + "/spreadsheet";
-        List<File> fileItems = new LinkedList<File>();
+        List<File> fileItems = new LinkedList<>();
 
         if (UtilValidate.isNotEmpty(path)) {
             File importDir = new File(path);
@@ -76,9 +76,12 @@ public class ImportProductServices {
                 File[] files = importDir.listFiles();
                 // loop for all the containing xls file in the spreadsheet
                 // directory
-                for (int i = 0; i < files.length; i++) {
-                    if (files[i].getName().toUpperCase().endsWith("XLS")) {
-                        fileItems.add(files[i]);
+                if (files == null) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "FileFilesIsNull", locale));
+                }
+                for (File file : files) {
+                    if (file.getName().toUpperCase(Locale.getDefault()).endsWith("XLS")) {
+                        fileItems.add(file);
                     }
                 }
             } else {
@@ -97,8 +100,8 @@ public class ImportProductServices {
 
         for (File item: fileItems) {
             // read all xls file and create workbook one by one.
-            List<Map<String, Object>> products = new LinkedList<Map<String, Object>>();
-            List<Map<String, Object>> inventoryItems = new LinkedList<Map<String, Object>>();
+            List<Map<String, Object>> products = new LinkedList<>();
+            List<Map<String, Object>> inventoryItems = new LinkedList<>();
             POIFSFileSystem fs = null;
             HSSFWorkbook wb = null;
             try {
@@ -125,8 +128,9 @@ public class ImportProductServices {
                     // read QOH from ninth column
                     HSSFCell cell5 = row.getCell(5);
                     BigDecimal quantityOnHand = BigDecimal.ZERO;
-                    if (cell5 != null && cell5.getCellTypeEnum() == CellType.NUMERIC) // SCIPIO: switched to CellType enum
+                    if (cell5 != null && cell5.getCellTypeEnum() == CellType.NUMERIC) { // SCIPIO: switched to CellType enum
                         quantityOnHand = new BigDecimal(cell5.getNumericCellValue());
+                    }
 
                     // check productId if null then skip creating inventory item
                     // too.
@@ -134,12 +138,13 @@ public class ImportProductServices {
 
                     if (productId != null && !productId.trim().equalsIgnoreCase("") && !productExists) {
                         products.add(ImportProductHelper.prepareProduct(productId));
-                        if (quantityOnHand.compareTo(BigDecimal.ZERO) >= 0)
+                        if (quantityOnHand.compareTo(BigDecimal.ZERO) >= 0) {
                             inventoryItems.add(ImportProductHelper.prepareInventoryItem(productId, quantityOnHand,
                                     delegator.getNextSeqId("InventoryItem")));
-                        else
+                        } else {
                             inventoryItems.add(ImportProductHelper.prepareInventoryItem(productId, BigDecimal.ZERO, delegator
                                     .getNextSeqId("InventoryItem")));
+                        }
                     }
                     int rowNum = row.getRowNum() + 1;
                     if (row.toString() != null && !row.toString().trim().equalsIgnoreCase("") && productExists) {
@@ -164,8 +169,9 @@ public class ImportProductServices {
                 }
             }
             int uploadedProducts = products.size() + 1;
-            if (products.size() > 0)
+            if (products.size() > 0) {
                 Debug.logInfo("Uploaded " + uploadedProducts + " products from file " + item.getName(), module);
+            }
         }
         return ServiceUtil.returnSuccess();
     }

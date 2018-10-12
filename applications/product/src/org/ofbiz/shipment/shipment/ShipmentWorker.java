@@ -37,14 +37,18 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * ShipmentWorker - Worker methods for Shipment and related entities
  */
-public class ShipmentWorker {
+public final class ShipmentWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final MathContext generalRounding = new MathContext(10);
+
+    private ShipmentWorker() {}
+
     /*
      * Returns the value of a given ShipmentPackageContent record.  Calculated by working out the total value (from the OrderItems) of all ItemIssuances
      * for the ShipmentItem then dividing that by the total quantity issued for the same to get an average item value then multiplying that by the package
@@ -54,7 +58,7 @@ public class ShipmentWorker {
     public static BigDecimal getShipmentPackageContentValue(GenericValue shipmentPackageContent) {
         BigDecimal quantity = shipmentPackageContent.getBigDecimal("quantity");
 
-        BigDecimal value = new BigDecimal("0");
+        BigDecimal value;
 
         // lookup the issuance to find the order
         List<GenericValue> issuances = null;
@@ -106,7 +110,7 @@ public class ShipmentWorker {
 
     public static List<Map<String, BigDecimal>> getPackageSplit(DispatchContext dctx, List<Map<String, Object>> shippableItemInfo, BigDecimal maxWeight) {
         // create the package list w/ the first package
-        List<Map<String, BigDecimal>> packages = new LinkedList<Map<String, BigDecimal>>();
+        List<Map<String, BigDecimal>> packages = new LinkedList<>();
 
         if (UtilValidate.isNotEmpty(shippableItemInfo)) {
             for (Map<String, Object> itemInfo: shippableItemInfo) {
@@ -175,7 +179,7 @@ public class ShipmentWorker {
 
             String weightUomId = (String) productInfo.get("weightUomId");
 
-            Debug.logInfo("Product Id : " + productId.toString() + " Product Weight : " + String.valueOf(productWeight) + " Product UomId : " + weightUomId + " assuming " + defaultWeightUomId + " if null. Quantity : " + String.valueOf(quantity), module);
+            Debug.logInfo("Product Id : " + productId + " Product Weight : " + String.valueOf(productWeight) + " Product UomId : " + weightUomId + " assuming " + defaultWeightUomId + " if null. Quantity : " + String.valueOf(quantity), module);
 
             if (UtilValidate.isEmpty(weightUomId)) {
                 weightUomId = defaultWeightUomId;
@@ -185,6 +189,10 @@ public class ShipmentWorker {
                 Map<String, Object> result = new HashMap<String, Object>();
                 try {
                     result = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", "WT_lb", "originalValue", productWeight));
+                    if (ServiceUtil.isError(result)) {
+                        Debug.logError(ServiceUtil.getErrorMessage(result), module);
+                        return totalWeight;
+                    }
                 } catch (GenericServiceException ex) {
                     Debug.logError(ex, module);
                 }

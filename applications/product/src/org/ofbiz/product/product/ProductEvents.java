@@ -76,7 +76,6 @@ public class ProductEvents {
      * @return String specifying the exit status of this event
      */
     public static String updateAllKeywords(HttpServletRequest request, HttpServletResponse response) {
-        //String errMsg = "";
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -96,7 +95,7 @@ public class ProductEvents {
 
         EntityCondition condition = null;
         if (!"Y".equals(doAll)) {
-            List<EntityCondition> condList = new LinkedList<EntityCondition>();
+            List<EntityCondition> condList = new LinkedList<>();
             condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("autoCreateKeywords", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N")));
             if ("true".equals(EntityUtilProperties.getPropertyValue("prodsearch", "index.ignore.variants", delegator))) {
                 condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isVariant", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("isVariant", EntityOperator.NOT_EQUAL, "Y")));
@@ -139,8 +138,6 @@ public class ProductEvents {
                 try {
                     KeywordIndex.indexKeywords(product, "Y".equals(doAll));
                 } catch (GenericEntityException e) {
-                    //errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_keywords_write", UtilHttp.getLocale(request));
-                    //request.setAttribute("_ERROR_MESSAGE_", errMsg);
                     Debug.logWarning("[ProductEvents.updateAllKeywords] Could not create product-keyword (write error); message: " + e.getMessage(), module);
                     errProds++;
                 }
@@ -165,13 +162,13 @@ public class ProductEvents {
                 Debug.logError(e2, module);
             }
             return "error";
-                }
-            // commit the transaction
-            try {
-                TransactionUtil.commit(beganTx);
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, module);
-            }
+        }
+        // commit the transaction
+        try {
+            TransactionUtil.commit(beganTx);
+        } catch (GenericTransactionException e) {
+            Debug.logError(e, module);
+        }
 
         if (errProds == 0) {
             Map<String, String> messageMap = UtilMisc.toMap("numProds", Integer.toString(numProds));
@@ -196,11 +193,11 @@ public class ProductEvents {
      */
     public static String updateProductAssoc(HttpServletRequest request, HttpServletResponse response) {
         String errMsg = "";
-        List<Object> errMsgList = new LinkedList<Object>();
+        List<Object> errMsgList = new LinkedList<>();
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 
-        String updateMode = request.getParameter("UPDATE_MODE")!=null ? request.getParameter("UPDATE_MODE") : request.getParameter("updateMode"); //SCIPIO: Added backward compatibility
+        String updateMode = request.getParameter("UPDATE_MODE")!= null ? request.getParameter("UPDATE_MODE") : request.getParameter("updateMode"); // SCIPIO: Added backward compatibility
 
         if (UtilValidate.isEmpty(updateMode)) {
             errMsg = UtilProperties.getMessage(resource,"productevents.updatemode_not_specified", UtilHttp.getLocale(request));
@@ -217,10 +214,10 @@ public class ProductEvents {
             return "error";
         }
 
-        String productId =  request.getParameter("PRODUCT_ID")!=null ? request.getParameter("PRODUCT_ID") : request.getParameter("productId"); //SCIPIO: Added backward compatibility
-        String productIdTo = request.getParameter("PRODUCT_ID_TO")!=null ? request.getParameter("PRODUCT_ID_TO") : request.getParameter("productIdTo"); //SCIPIO: Added backward compatibility
-        String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID")!=null ? request.getParameter("PRODUCT_ASSOC_TYPE_ID") : request.getParameter("productAssocTypeId"); //SCIPIO: Added backward compatibility
-        String fromDateStr = request.getParameter("FROM_DATE")!=null ? request.getParameter("FROM_DATE") : request.getParameter("fromDate"); //SCIPIO: Added backward compatibility
+        String productId =  request.getParameter("PRODUCT_ID")!=null ? request.getParameter("PRODUCT_ID") : request.getParameter("productId"); // SCIPIO: Added backward compatibility
+        String productIdTo = request.getParameter("PRODUCT_ID_TO")!=null ? request.getParameter("PRODUCT_ID_TO") : request.getParameter("productIdTo"); // SCIPIO: Added backward compatibility
+        String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID")!=null ? request.getParameter("PRODUCT_ASSOC_TYPE_ID") : request.getParameter("productAssocTypeId"); // SCIPIO: Added backward compatibility
+        String fromDateStr = request.getParameter("FROM_DATE")!=null ? request.getParameter("FROM_DATE") : request.getParameter("fromDate"); // SCIPIO: Added backward compatibility
         Timestamp fromDate = null;
 
         try {
@@ -244,15 +241,19 @@ public class ProductEvents {
                 errMsgList.add("From Date not formatted correctly.");
             }
         }
-        if (UtilValidate.isEmpty(productId))
+        if (UtilValidate.isEmpty(productId)) {
             errMsgList.add(UtilProperties.getMessage(resource,"productevents.product_ID_missing", UtilHttp.getLocale(request)));
-        if (UtilValidate.isEmpty(productIdTo))
+        }
+        if (UtilValidate.isEmpty(productIdTo)) {
             errMsgList.add(UtilProperties.getMessage(resource,"productevents.product_ID_To_missing", UtilHttp.getLocale(request)));
-        if (UtilValidate.isEmpty(productAssocTypeId))
+        }
+        if (UtilValidate.isEmpty(productAssocTypeId)) {
             errMsgList.add(UtilProperties.getMessage(resource,"productevents.association_type_ID_missing", UtilHttp.getLocale(request)));
+        }
         // from date is only required if update mode is not CREATE
-        if (!updateMode.equals("CREATE") && UtilValidate.isEmpty(fromDateStr))
+        if (!"CREATE".equals(updateMode) && UtilValidate.isEmpty(fromDateStr)) {
             errMsgList.add(UtilProperties.getMessage(resource,"productevents.from_date_missing", UtilHttp.getLocale(request)));
+        }
         if (errMsgList.size() > 0) {
             request.setAttribute("_ERROR_MESSAGE_LIST_", errMsgList);
             return "error";
@@ -270,7 +271,7 @@ public class ProductEvents {
 
         GenericValue tempProductAssoc = delegator.makeValue("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
 
-        if (updateMode.equals("DELETE")) {
+        if ("DELETE".equals(updateMode)) {
             GenericValue productAssoc = null;
 
             try {
@@ -295,11 +296,11 @@ public class ProductEvents {
             return "success";
         }
 
-        String thruDateStr = request.getParameter("THRU_DATE")!=null ? request.getParameter("THRU_DATE") : request.getParameter("thruDate"); //SCIPIO: Added backward compatibility
-        String reason = request.getParameter("REASON")!=null ? request.getParameter("REASON") : request.getParameter("reason"); //SCIPIO: Added backward compatibility
-        String instruction = request.getParameter("INSTRUCTION")!=null ? request.getParameter("INSTRUCTION") : request.getParameter("instruction"); //SCIPIO: Added backward compatibility
-        String quantityStr = request.getParameter("QUANTITY")!=null ? request.getParameter("QUANTITY") : request.getParameter("quantity"); //SCIPIO: Added backward compatibility
-        String sequenceNumStr = request.getParameter("SEQUENCE_NUM")!=null ? request.getParameter("SEQUENCE_NUM") : request.getParameter("sequenceNum"); //SCIPIO: Added backward compatibility
+        String thruDateStr = request.getParameter("THRU_DATE")!=null ? request.getParameter("THRU_DATE") : request.getParameter("thruDate"); // SCIPIO: Added backward compatibility
+        String reason = request.getParameter("REASON")!=null ? request.getParameter("REASON") : request.getParameter("reason"); // SCIPIO: Added backward compatibility
+        String instruction = request.getParameter("INSTRUCTION")!=null ? request.getParameter("INSTRUCTION") : request.getParameter("instruction"); // SCIPIO: Added backward compatibility
+        String quantityStr = request.getParameter("QUANTITY")!=null ? request.getParameter("QUANTITY") : request.getParameter("quantity"); // SCIPIO: Added backward compatibility
+        String sequenceNumStr = request.getParameter("SEQUENCE_NUM")!=null ? request.getParameter("SEQUENCE_NUM") : request.getParameter("sequenceNum"); // SCIPIO: Added backward compatibility
         Timestamp thruDate = null;
         BigDecimal quantity = null;
         Long sequenceNum = null;
@@ -336,7 +337,7 @@ public class ProductEvents {
         tempProductAssoc.set("quantity", quantity);
         tempProductAssoc.set("sequenceNum", sequenceNum);
 
-        if (updateMode.equals("CREATE")) {
+        if ("CREATE".equals(updateMode)) {
             // if no from date specified, set to now
             if (fromDate == null) {
                 fromDate = new Timestamp(new java.util.Date().getTime());
@@ -365,7 +366,7 @@ public class ProductEvents {
                 Debug.logWarning("[ProductEvents.updateProductAssoc] Could not create product association (write error); message: " + e.getMessage(), module);
                 return "error";
             }
-        } else if (updateMode.equals("UPDATE")) {
+        } else if ("UPDATE".equals(updateMode)) {
             try {
                 tempProductAssoc.store();
             } catch (GenericEntityException e) {
@@ -389,7 +390,7 @@ public class ProductEvents {
         // just store a new empty list in the session
         HttpSession session = request.getSession();
         if (session != null) {
-            session.setAttribute("lastViewedCategories", new LinkedList<String>());
+            session.setAttribute("lastViewedCategories", new LinkedList<>());
         }
         return "success";
     }
@@ -399,7 +400,7 @@ public class ProductEvents {
         // just store a new empty list in the session
         HttpSession session = request.getSession();
         if (session != null) {
-            session.setAttribute("lastViewedProducts", new LinkedList<String>());
+            session.setAttribute("lastViewedProducts", new LinkedList<>());
         }
         return "success";
     }
@@ -584,7 +585,6 @@ public class ProductEvents {
     public static String updateProductQuickAdminSelFeat(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        //GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String productId = request.getParameter("productId");
         String variantProductId = request.getParameter("productId0");
         String useImagesProdId = request.getParameter("useImages");
@@ -619,7 +619,7 @@ public class ProductEvents {
                             description = null;
                         }
 
-                        Set<String> variantDescRemoveToRemoveOnVirtual = new HashSet<String>();
+                        Set<String> variantDescRemoveToRemoveOnVirtual = new HashSet<>();
                         checkUpdateFeatureApplByDescription(variantProductId, variantProduct, description, productFeatureTypeId, productFeatureType, "STANDARD_FEATURE", nowTimestamp, delegator, null, variantDescRemoveToRemoveOnVirtual);
                         checkUpdateFeatureApplByDescription(productId, product, description, productFeatureTypeId, productFeatureType, "SELECTABLE_FEATURE", nowTimestamp, delegator, variantDescRemoveToRemoveOnVirtual, null);
 
@@ -662,7 +662,7 @@ public class ProductEvents {
 
         GenericValue productFeatureAndAppl = null;
 
-        Set<String> descriptionsForThisType = new HashSet<String>();
+        Set<String> descriptionsForThisType = new HashSet<>();
         List<GenericValue> productFeatureAndApplList = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", productFeatureApplTypeId, "productFeatureTypeId", productFeatureTypeId).filterByDate().queryList();
         if (productFeatureAndApplList.size() > 0) {
             Iterator<GenericValue> productFeatureAndApplIter = productFeatureAndApplList.iterator();
@@ -673,7 +673,7 @@ public class ProductEvents {
                 // remove productFeatureAppl IFF: productFeatureAppl != null && (description is empty/null || description is different than existing)
                 if (productFeatureAppl != null && (description == null || !description.equals(productFeatureAndAppl.getString("description")))) {
                     // if descriptionsToRemove is not null, only remove if description is in that set
-                    if (descriptionsToRemove == null || (descriptionsToRemove != null && descriptionsToRemove.contains(productFeatureAndAppl.getString("description")))) {
+                    if (descriptionsToRemove == null || descriptionsToRemove.contains(productFeatureAndAppl.getString("description"))) {
                         // okay, almost there: before removing it if this is a virtual product check to make SURE this feature's description doesn't exist on any of the variants; wouldn't want to remove something we should have kept around...
                         if ("Y".equals(product.getString("isVirtual"))) {
                             boolean foundFeatureOnVariant = false;
@@ -710,7 +710,7 @@ public class ProductEvents {
             }
         }
 
-        if (description != null && (productFeatureAndAppl == null || (productFeatureAndAppl != null && !descriptionsForThisType.contains(description)))) {
+        if (description != null && (productFeatureAndAppl == null || !descriptionsForThisType.contains(description))) {
             // need to add an appl, and possibly the feature
 
             // see if a feature exists with the type and description specified (if doesn't exist will create later)
@@ -754,8 +754,6 @@ public class ProductEvents {
 
     public static String removeFeatureApplsByFeatureTypeId(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        //Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        //GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String productId = request.getParameter("productId");
         String productFeatureTypeId = request.getParameter("productFeatureTypeId");
 
@@ -790,8 +788,6 @@ public class ProductEvents {
 
     public static String removeProductFeatureAppl(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        //Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        //GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String productId = request.getParameter("productId");
         String productFeatureId = request.getParameter("productFeatureId");
 
@@ -877,7 +873,7 @@ public class ProductEvents {
         if (productFeatureIdArray != null && productFeatureIdArray.length > 0) {
             try {
                 for (String productFeatureId: productFeatureIdArray) {
-                    if (!productFeatureId.equals("~~any~~")) {
+                    if (!"~~any~~".equals(productFeatureId)) {
                         List<GenericValue> featureAppls = EntityQuery.use(delegator).from("ProductFeatureAppl").where("productId", productId, "productFeatureId", productFeatureId, "productFeatureApplTypeId", productFeatureApplTypeId).queryList();
                         if (featureAppls.size() == 0) {
                             // no existing application for this
@@ -1018,7 +1014,7 @@ public class ProductEvents {
         paramMap.put("locale", UtilHttp.getLocale(request));
         paramMap.put("userLogin", session.getAttribute("userLogin"));
 
-        Map<String, Object> context = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
         context.put("bodyScreenUri", bodyScreenLocation);
         context.put("bodyParameters", paramMap);
         context.put("sendTo", paramMap.get("sendTo"));
@@ -1058,10 +1054,10 @@ public class ProductEvents {
         Object compareListObj = session.getAttribute("productCompareList");
         List<GenericValue> compareList = null;
         if (compareListObj == null) {
-            compareList = new LinkedList<GenericValue>();
+            compareList = new LinkedList<>();
         } else if (!(compareListObj instanceof List<?>)) {
             Debug.logWarning("Session attribute productCompareList contains something other than the expected product list, overwriting.", module);
-            compareList = new LinkedList<GenericValue>();
+            compareList = new LinkedList<>();
         } else {
             compareList = UtilGenerics.cast(compareListObj);
         }
@@ -1147,7 +1143,7 @@ public class ProductEvents {
 
     public static String clearProductComparisonList(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        session.setAttribute("productCompareList", new LinkedList<GenericValue>());
+        session.setAttribute("productCompareList", new LinkedList<>());
         String eventMsg = UtilProperties.getMessage("ProductUiLabels", "ProductClearCompareListSuccess", UtilHttp.getLocale(request));
         request.setAttribute("_EVENT_MESSAGE_", eventMsg);
         return "success";
@@ -1179,7 +1175,7 @@ public class ProductEvents {
         String productTags = request.getParameter("productTags");
         String statusId = request.getParameter("statusId");
         if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(productTags)) {
-            List<String> matchList = new LinkedList<String>();
+            List<String> matchList = new LinkedList<>();
             Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
             Matcher regexMatcher = regex.matcher(productTags);
             while (regexMatcher.find()) {

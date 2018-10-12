@@ -31,8 +31,6 @@ import org.ofbiz.service.ServiceUtil;
 
 public class VerifyPickServices {
 
-    private static BigDecimal ZERO = BigDecimal.ZERO;
-
     public static Map<String, Object> verifySingleItem(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
         VerifyPickSession pickSession = (VerifyPickSession) context.get("verifyPickSession");
@@ -56,6 +54,7 @@ public class VerifyPickServices {
         VerifyPickSession pickSession = (VerifyPickSession) context.get("verifyPickSession");
         String orderId = (String) context.get("orderId");
         String shipGroupSeqId = (String) context.get("shipGroupSeqId");
+        // SCIPIO: TODO: REVIEW: clearly something missing here
 //        String selectedMap = null;
 //        if (UtilValidate.isNotEmpty(context.get("selectedMap"))) {
 //            selectedMap = (String) context.get("selectedMap");
@@ -84,7 +83,7 @@ public class VerifyPickServices {
 //                String quantityStr = quantityMap.get(rowKey);
                 if (UtilValidate.isNotEmpty(quantityStr)) {
                     BigDecimal quantity = new BigDecimal(quantityStr);
-                    if (quantity.compareTo(ZERO) > 0) {
+                    if (quantity.compareTo(BigDecimal.ZERO) > 0) {
                         try {
                             pickSession.createRow(orderId, orderItemSeqId, shipGroupSeqId, productId, originGeoId, quantity, locale);
                         } catch (Exception ex) {

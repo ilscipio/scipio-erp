@@ -57,7 +57,7 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * Product Worker class to reduce code in JSPs.
  */
-public class ProductWorker {
+public final class ProductWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
@@ -205,9 +205,8 @@ public class ProductWorker {
         GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
         if (productAssoc != null) {
             return productAssoc.getString("productId");
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -255,12 +254,17 @@ public class ProductWorker {
 
         // check to see if we got enough back...
         if (availableToPromise.compareTo(quantity) >= 0) {
-            if (Debug.infoOn()) Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
+            }
             return true;
-        } else {
-            if (Debug.infoOn()) Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
-            return false;
         }
+        if (Debug.infoOn()) {
+            Debug.logInfo("Returning false because there is insufficient inventory available in facility with id "
+                    + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity
+                    + ", available quantity is " + availableToPromise, module);
+        }
+        return false;
     }
 
     /**
@@ -296,7 +300,7 @@ public class ProductWorker {
      */
     public static Set<GenericValue> getVariantDistinguishingFeatures(GenericValue variantProduct) throws GenericEntityException {
         if (variantProduct == null) {
-            return new HashSet<GenericValue>();
+            return new HashSet<>();
         }
         if (!"Y".equals(variantProduct.getString("isVariant"))) {
             throw new IllegalArgumentException("Cannot get distinguishing features for a product that is not a variant (ie isVariant!=Y).");
@@ -305,10 +309,9 @@ public class ProductWorker {
         String virtualProductId = getVariantVirtualId(variantProduct);
 
         // find all selectable features on the virtual product that are also standard features on the variant
-        Set<GenericValue> distFeatures = new HashSet<GenericValue>();
+        Set<GenericValue> distFeatures = new HashSet<>();
 
         List<GenericValue> variantDistinguishingFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", variantProduct.get("productId"), "productFeatureApplTypeId", "DISTINGUISHING_FEAT").cache(true).queryList();
-        // Debug.logInfo("Found variantDistinguishingFeatures: " + variantDistinguishingFeatures, module);
 
         for (GenericValue variantDistinguishingFeature: EntityUtil.filterByDate(variantDistinguishingFeatures)) {
             GenericValue dummyFeature = delegator.makeValue("ProductFeature");
@@ -317,15 +320,13 @@ public class ProductWorker {
         }
 
         List<GenericValue> virtualSelectableFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", virtualProductId, "productFeatureApplTypeId", "SELECTABLE_FEATURE").cache(true).queryList();
-        // Debug.logInfo("Found virtualSelectableFeatures: " + virtualSelectableFeatures, module);
 
-        Set<String> virtualSelectableFeatureIds = new HashSet<String>();
+        Set<String> virtualSelectableFeatureIds = new HashSet<>();
         for (GenericValue virtualSelectableFeature: EntityUtil.filterByDate(virtualSelectableFeatures)) {
             virtualSelectableFeatureIds.add(virtualSelectableFeature.getString("productFeatureId"));
         }
 
         List<GenericValue> variantStandardFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", variantProduct.get("productId"), "productFeatureApplTypeId", "STANDARD_FEATURE").cache(true).queryList();
-        // Debug.logInfo("Found variantStandardFeatures: " + variantStandardFeatures, module);
 
         for (GenericValue variantStandardFeature: EntityUtil.filterByDate(variantStandardFeatures)) {
             if (virtualSelectableFeatureIds.contains(variantStandardFeature.get("productFeatureId"))) {
@@ -349,8 +350,6 @@ public class ProductWorker {
                 if ("Y".equals(alternativeOptionProduct.getString("isVariant"))) {
                     Set<GenericValue> distFeatures = getVariantDistinguishingFeatures(alternativeOptionProduct);
                     if (UtilValidate.isNotEmpty(distFeatures)) {
-                        // Debug.logInfo("Found distinguishing features: " + distFeatures, module);
-
                         StringBuilder nameBuf = new StringBuilder();
                         for (GenericValue productFeature: distFeatures) {
                             if (nameBuf.length() > 0) {
@@ -370,12 +369,11 @@ public class ProductWorker {
                 // got to here, default to PRODUCT_NAME
                 // SCIPIO: Do NOT HTML-escape this here
                 String alternativeProductName = ProductContentWrapper.getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "raw");
-                // Debug.logInfo("Using PRODUCT_NAME: " + alternativeProductName, module);
                 return alternativeProductName;
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-        } catch (Exception e) {
+        } catch (Exception e) { // SCIPIO: 2018-10-09: Kept Exception here for now
             Debug.logError(e, module);
         }
         // finally fall back to the ID in square braces
@@ -422,7 +420,7 @@ public class ProductWorker {
             features = EntityUtil.orderBy(features, UtilMisc.toList("description"));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            features = new LinkedList<GenericValue>();
+            features = new LinkedList<>();
         }
         return features;
     }
@@ -437,25 +435,23 @@ public class ProductWorker {
 
         if (product != null) {
             return product.getString("virtualVariantMethodEnum");
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
-     * @deprecated Replaced by getProductFeatures
+     * @deprecated SCIPIO: Replaced by {@link #getProductFeatures}
      * @param product
      * @return list featureType and related featuresIds, description and feature price for this product ordered by type and sequence
      */
+    @Deprecated
     public static List<List<Map<String,String>>> getSelectableProductFeaturesByTypesAndSeq(GenericValue product) {
         if (product == null) {
             return null;
         }
-        List <List<Map<String,String>>> featureTypeFeatures = new LinkedList<List<Map<String,String>>>();
+        List <List<Map<String,String>>> featureTypeFeatures = new LinkedList<>();
         try {
             Delegator delegator = product.getDelegator();
-            //List<GenericValue> features = delegator.findByAnd("ProductFeatureAndAppl", fields, order, true);
-            //List<GenericValue> featuresSorted = EntityUtil.orderBy(features, order);
             List<GenericValue> featuresSorted = EntityQuery.use(delegator)
                                                     .from("ProductFeatureAndAppl")
                                                     .where("productId", product.getString("productId"), "productFeatureApplTypeId", "SELECTABLE_FEATURE")
@@ -463,13 +459,13 @@ public class ProductWorker {
                                                     .cache(true)
                                                     .queryList();
             String oldType = null;
-            List<Map<String,String>> featureList = new LinkedList<Map<String,String>>();
+            List<Map<String,String>> featureList = new LinkedList<>();
             for (GenericValue productFeatureAppl: featuresSorted) {
                 if (oldType == null || !oldType.equals(productFeatureAppl.getString("productFeatureTypeId"))) {
                     // use first entry for type and description
                     if (oldType != null) {
                         featureTypeFeatures.add(featureList);
-                        featureList = new LinkedList<Map<String,String>>();
+                        featureList = new LinkedList<>();
                     }
                     GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
                     featureList.add(UtilMisc.<String, String>toMap("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId"),
@@ -514,7 +510,6 @@ public class ProductWorker {
     /**
      * SCIPIO: Returns a list of Product features by Type and sequence Id. Replaces getSelectableProductFeaturesByTypesAndSeq
      * NOTE: 2018-09-06: The return type has been corrected.
-     * @param product
      * @return list featureType and related featuresIds, description and feature price for this product ordered by type and sequence
      * */
     public static List<Map<String, Object>> getProductFeatures(GenericValue product, Locale locale) {
@@ -597,7 +592,7 @@ public class ProductWorker {
         List<String> selectableTypes = EntityUtil.getFieldListFromEntityList(selectableFeatures, "productFeatureTypeId", true);
         // The standard features from the variant product
         List<GenericValue> standardFeatures = ProductWorker.getProductFeaturesByApplTypeId(variantProduct, "STANDARD_FEATURE");
-        List<GenericValue> result = new LinkedList<GenericValue>();
+        List<GenericValue> result = new LinkedList<>();
         for (GenericValue standardFeature : standardFeatures) {
             // For each standard variant feature check it is also a virtual selectable feature and
             // if a feature of the same type hasn't already been added to the list
@@ -610,7 +605,7 @@ public class ProductWorker {
     }
 
     public static Map<String, List<GenericValue>> getOptionalProductFeatures(Delegator delegator, String productId) {
-        Map<String, List<GenericValue>> featureMap = new LinkedHashMap<String, List<GenericValue>>();
+        Map<String, List<GenericValue>> featureMap = new LinkedHashMap<>();
 
         List<GenericValue> productFeatureAppls = null;
         try {
@@ -624,7 +619,7 @@ public class ProductWorker {
                 String featureType = appl.getString("productFeatureTypeId");
                 List<GenericValue> features = featureMap.get(featureType);
                 if (features == null) {
-                    features = new LinkedList<GenericValue>();
+                    features = new LinkedList<>();
                 }
                 features.add(appl);
                 featureMap.put(featureType, features);
@@ -661,18 +656,24 @@ public class ProductWorker {
     }
 
     public static List<GenericValue> filterOrderAdjustments(List<GenericValue> adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
-        List<GenericValue> newOrderAdjustmentsList = new LinkedList<GenericValue>();
+        List<GenericValue> newOrderAdjustmentsList = new LinkedList<>();
 
         if (UtilValidate.isNotEmpty(adjustments)) {
             for (GenericValue orderAdjustment: adjustments) {
                 boolean includeAdjustment = false;
 
                 if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    if (includeTax) includeAdjustment = true;
+                    if (includeTax) {
+                        includeAdjustment = true;
+                    }
                 } else if ("SHIPPING_CHARGES".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    if (includeShipping) includeAdjustment = true;
+                    if (includeShipping) {
+                        includeAdjustment = true;
+                    }
                 } else {
-                    if (includeOther) includeAdjustment = true;
+                    if (includeOther) {
+                        includeAdjustment = true;
+                    }
                 }
 
                 // default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
@@ -793,7 +794,7 @@ public class ProductWorker {
         if (product == null) {
             return null;
         }
-        List<GenericValue> categories = new LinkedList<GenericValue>();
+        List<GenericValue> categories = new LinkedList<>();
         try {
             List<GenericValue> categoryMembers = product.getRelated("ProductCategoryMember", null, null, false);
             categoryMembers = EntityUtil.filterByDate(categoryMembers);
@@ -983,25 +984,24 @@ public class ProductWorker {
 
         if (weight == null) {
             return null;
-        } else {
-            // attempt a conversion if necessary
-            if (desiredUomId != null && product.get("weightUomId") != null && !desiredUomId.equals(product.get("weightUomId"))) {
-                Map<String, Object> result = new HashMap<String, Object>();
-                try {
-                    result = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", desiredUomId, "originalValue", weight));
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
-                }
-
-                if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS) && result.get("convertedValue") != null) {
-                    weight = (BigDecimal) result.get("convertedValue");
-                } else {
-                    Debug.logError("Unsupported conversion from [" + weightUomId + "] to [" + desiredUomId + "]",module);
-                    return null;
-                }
-            }
-            return weight;
         }
+        // attempt a conversion if necessary
+        if (desiredUomId != null && product.get("weightUomId") != null && !desiredUomId.equals(product.get("weightUomId"))) {
+            Map<String, Object> result = new HashMap<>();
+            try {
+                result = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", desiredUomId, "originalValue", weight));
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+            }
+
+            if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS) && result.get("convertedValue") != null) {
+                weight = (BigDecimal) result.get("convertedValue");
+            } else {
+                Debug.logError("Unsupported conversion from [" + weightUomId + "] to [" + desiredUomId + "]", module);
+                return null;
+            }
+        }
+        return weight;
     }
 
 
@@ -1023,7 +1023,9 @@ public class ProductWorker {
             String idToFind, String goodIdentificationTypeId,
             boolean searchProductFirst, boolean searchAllId) throws GenericEntityException {
 
-        if (Debug.verboseOn()) Debug.logVerbose("Analyze goodIdentification: entered id = " + idToFind + ", goodIdentificationTypeId = " + goodIdentificationTypeId, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Analyze goodIdentification: entered id = " + idToFind + ", goodIdentificationTypeId = " + goodIdentificationTypeId, module);
+        }
 
         GenericValue product = null;
         List<GenericValue> productsFound = null;
@@ -1047,10 +1049,15 @@ public class ProductWorker {
         }
 
         if (product != null) {
-            if (UtilValidate.isNotEmpty(productsFound)) productsFound.add(product);
-            else productsFound = UtilMisc.toList(product);
+            if (UtilValidate.isNotEmpty(productsFound)) {
+                productsFound.add(product);
+            } else {
+                productsFound = UtilMisc.toList(product);
+            }
         }
-        if (Debug.verboseOn()) Debug.logVerbose("Analyze goodIdentification: found product.productId = " + product + ", and list : " + productsFound, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Analyze goodIdentification: found product.productId = " + product + ", and list : " + productsFound, module);
+        }
         return productsFound;
     }
 
@@ -1134,7 +1141,7 @@ public class ProductWorker {
     }
 
     public static Set<String> getRefurbishedProductIdSet(String productId, Delegator delegator) throws GenericEntityException {
-        Set<String> productIdSet = new HashSet<String>();
+        Set<String> productIdSet = new HashSet<>();
 
         // find associated refurb items, we want serial number for main item or any refurb items too
         List<GenericValue> refubProductAssocs = EntityQuery.use(delegator).from("ProductAssoc").where("productId", productId, "productAssocTypeId", "PRODUCT_REFURB").filterByDate().queryList();
@@ -1196,7 +1203,6 @@ public class ProductWorker {
                 }
             }
             // find variant
-            // Debug.logInfo("=====try to find variant for product: " + productId + " and features: " + selectedFeatures);
             List<GenericValue> productAssocs = EntityQuery.use(delegator).from("ProductAssoc").where("productId", productId, "productAssocTypeId","PRODUCT_VARIANT").filterByDate().queryList();
             boolean productFound = false;
 nextProd:
@@ -1211,8 +1217,6 @@ nextProd:
                 variantProductId = productAssoc.getString("productIdTo");
                 break;
             }
-//          if (productFound)
-//              Debug.logInfo("=====product found:" + productId + " and features: " + selectedFeatures);
 
             /**
              * 1. variant not found so create new variant product and use the virtual product as basis, new one  is a variant type and not a virtual type.
@@ -1301,7 +1305,7 @@ nextProd:
         if(productId != null || virtualVariantId != null){
             List<GenericValue> alternativePackingProds = null;
             try {
-                List<EntityCondition> condList = new LinkedList<EntityCondition>();
+                List<EntityCondition> condList = new LinkedList<>();
 
                 if (UtilValidate.isNotEmpty(productId)) {
                     condList.add(EntityCondition.makeCondition("productIdTo", productId));
@@ -1311,7 +1315,9 @@ nextProd:
                 }
                 condList.add(EntityCondition.makeCondition("productAssocTypeId", "ALTERNATIVE_PACKAGE"));
                 alternativePackingProds = EntityQuery.use(delegator).from("ProductAssoc").where(condList).cache(true).queryList();
-                if(UtilValidate.isNotEmpty(alternativePackingProds)) isAlternativePacking = true;
+                if(UtilValidate.isNotEmpty(alternativePackingProds)) {
+                    isAlternativePacking = true;
+                }
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Could not found alternative product: " + e.getMessage(), module);
             }
@@ -1332,12 +1338,10 @@ nextProd:
             if (productAssocs != null) {
                 GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
                 return productAssoc.getString("productIdTo");
-            } else {
-                return null;
             }
-        }else{
             return null;
         }
+        return null;
 
     }
     /**
@@ -1377,7 +1381,7 @@ nextProd:
 
     // Method to filter-out out of stock products
     public static List<GenericValue> filterOutOfStockProducts (List<GenericValue> productsToFilter, LocalDispatcher dispatcher, Delegator delegator) throws GeneralException {
-        List<GenericValue> productsInStock = new ArrayList<GenericValue>();
+        List<GenericValue> productsInStock = new ArrayList<>();
         if (UtilValidate.isNotEmpty(productsToFilter)) {
             for (GenericValue genericRecord : productsToFilter) {
                 String productId = genericRecord.getString("productId");
@@ -1386,7 +1390,7 @@ nextProd:
                 Boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.getString("productTypeId"), "parentTypeId", "MARKETING_PKG");
 
                 if ( UtilValidate.isNotEmpty(isMarketingPackage) && isMarketingPackage) {
-                    Map<String, Object> resultOutput = new HashMap<String, Object>();
+                    Map<String, Object> resultOutput = new HashMap<>();
                     resultOutput = dispatcher.runSync("getMktgPackagesAvailable", UtilMisc.toMap("productId" ,productId));
                     Debug.logWarning("Error getting available marketing package.", module);
 

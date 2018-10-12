@@ -34,6 +34,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * ShippingEvents - Events used for processing shipping fees
@@ -99,7 +100,13 @@ public class ShipmentEvents {
             try {
                 Map<String, Object> inputMap = UtilMisc.<String, Object>toMap("shipmentId", shipmentId, "statusId", "PURCH_SHIP_RECEIVED");
                 inputMap.put("userLogin", userLogin);
-                dispatcher.runSync("updateShipment", inputMap);
+                Map<String, Object> resultMap = dispatcher.runSync("updateShipment", inputMap);
+                if (ServiceUtil.isError(resultMap)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(resultMap);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                    Debug.logError(errorMessage, module);
+                    return "error";
+                }
             } catch (GenericServiceException gse) {
                 String errMsg = "Error updating shipment [" + shipmentId + "]: " + gse.toString();
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);

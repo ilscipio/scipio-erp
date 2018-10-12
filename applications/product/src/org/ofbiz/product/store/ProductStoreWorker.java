@@ -52,9 +52,37 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 /**
  * ProductStoreWorker - Worker class for store related functionality
  */
-public class ProductStoreWorker {
+public final class ProductStoreWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    protected static Map<String, String> defaultProductStoreEmailScreenLocation = new HashMap<String, String>();
+
+    static {
+        // SCIPIO: now points to shop
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CONFIRM", "component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_COMPLETE", "component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_BACKORDER", "component://shop/widget/EmailOrderScreens.xml#BackorderNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CHANGE", "component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_ACCEPT", "component://shop/widget/EmailReturnScreens.xml#ReturnAccept");
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_COMPLETE", "component://shop/widget/EmailReturnScreens.xml#ReturnComplete");
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_CANCEL", "component://shop/widget/EmailReturnScreens.xml#ReturnCancel");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_GC_PURCHASE", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
+        defaultProductStoreEmailScreenLocation.put("PRDS_GC_RELOAD", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_QUO_CONFIRM", "component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_PWD_RETRIEVE", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_TELL_FRIEND", "component://shop/widget/EmailProductScreens.xml#TellFriend");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_CUST_REGISTER", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
+    }
+
+    private ProductStoreWorker() {}
 
     public static GenericValue getProductStore(String productStoreId, Delegator delegator) {
         if (productStoreId == null || delegator == null) {
@@ -251,12 +279,10 @@ public class ProductStoreWorker {
                 BigDecimal maxWeight = method.getBigDecimal("maxWeight");
                 if (minWeight != null && minWeight.compareTo(BigDecimal.ZERO) > 0 && minWeight.compareTo(weight) > 0) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to not enough weight", module);
                     continue;
                 }
                 if (maxWeight != null && maxWeight.compareTo(BigDecimal.ZERO) > 0 && maxWeight.compareTo(weight) < 0) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to too much weight", module);
                     continue;
                 }
 
@@ -265,12 +291,10 @@ public class ProductStoreWorker {
                 BigDecimal maxTotal = method.getBigDecimal("maxTotal");
                 if (minTotal != null && minTotal.compareTo(BigDecimal.ZERO) > 0 && minTotal.compareTo(orderTotal) > 0) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to not enough order total", module);
                     continue;
                 }
                 if (maxTotal != null && maxTotal.compareTo(BigDecimal.ZERO) > 0 && maxTotal.compareTo(orderTotal) < 0) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to too much shipping total", module);
                     continue;
                 }
 
@@ -289,7 +313,6 @@ public class ProductStoreWorker {
                     }
                     if (!allMatch) {
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method because not all products are less then min size", module);
                         continue;
                     }
                 }
@@ -305,7 +328,6 @@ public class ProductStoreWorker {
                     }
                     if (!allMatch) {
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method because one or more products were more then max size", module);
                         continue;
                     }
                 }
@@ -316,12 +338,10 @@ public class ProductStoreWorker {
                 boolean isUspsAddress = ContactMechWorker.isUspsAddress(shippingAddress);
                 if ("N".equals(allowUspsAddr) && isUspsAddress) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Remove shipping method due to USPS address", module);
                     continue;
                 }
                 if ("Y".equals(requireUspsAddr) && !isUspsAddress) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to NON-USPS address", module);
                     continue;
                 }
 
@@ -332,12 +352,10 @@ public class ProductStoreWorker {
                 boolean isCompanyAddress = ContactMechWorker.isCompanyAddress(shippingAddress, companyPartyId);
                 if ("N".equals(allowCompanyAddr) && isCompanyAddress) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to Company address", module);
                     continue;
                 }
                 if ("Y".equals(requireCompanyAddr) && !isCompanyAddress) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to NON-Company address", module);
                     continue;
                 }
 
@@ -346,7 +364,6 @@ public class ProductStoreWorker {
                 if (includeFreeShipping != null && "N".equalsIgnoreCase(includeFreeShipping)) {
                     if (UtilValidate.isEmpty(itemSizes) && orderTotal.compareTo(BigDecimal.ZERO) == 0) {
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method due to all items being exempt from shipping", module);
                         continue;
                     }
                 }
@@ -357,7 +374,6 @@ public class ProductStoreWorker {
                 if (UtilValidate.isNotEmpty(includeGeoId) || UtilValidate.isNotEmpty(excludeGeoId)) {
                     if (shippingAddress == null) {
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method due to empty shipping adresss (may not have been selected yet)", module);
                         continue;
                     }
                 }
@@ -368,7 +384,6 @@ public class ProductStoreWorker {
                             !GeoWorker.containsGeo(includeGeoGroup, shippingAddress.getString("postalCodeGeoId"), delegator)) {
                         // not in required included geos
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method due to being outside the included GEO", module);
                         continue;
                     }
                 }
@@ -379,7 +394,6 @@ public class ProductStoreWorker {
                             GeoWorker.containsGeo(excludeGeoGroup, shippingAddress.getString("postalCodeGeoId"), delegator)) {
                         // in excluded geos
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method due to being inside the excluded GEO", module);
                         continue;
                     }
                 }
@@ -404,7 +418,6 @@ public class ProductStoreWorker {
                         }
                         if (!foundOne) {
                             returnShippingMethods.remove(method);
-                            //Debug.logInfo("Removed shipping method due to no required features found", module);
                             continue;
                         }
                     }
@@ -420,7 +433,6 @@ public class ProductStoreWorker {
                         for (GenericValue appl: excludedFeatures) {
                             if (featureIdMap.containsKey(appl.getString("productFeatureId"))) {
                                 returnShippingMethods.remove(method);
-                                //Debug.logInfo("Removed shipping method due to an exluded feature being found : " + appl.getString("productFeatureId"), module);
                                 continue;
                             }
                         }
@@ -710,33 +722,6 @@ public class ProductStoreWorker {
         }
     }
 
-    protected static Map<String, String> defaultProductStoreEmailScreenLocation = new HashMap<String, String>();
-
-    static {
-        // SCIPIO: now points to shop
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CONFIRM", "component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_COMPLETE", "component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_BACKORDER", "component://shop/widget/EmailOrderScreens.xml#BackorderNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CHANGE", "component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_ACCEPT", "component://shop/widget/EmailReturnScreens.xml#ReturnAccept");
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_COMPLETE", "component://shop/widget/EmailReturnScreens.xml#ReturnComplete");
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_CANCEL", "component://shop/widget/EmailReturnScreens.xml#ReturnCancel");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_GC_PURCHASE", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
-        defaultProductStoreEmailScreenLocation.put("PRDS_GC_RELOAD", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_QUO_CONFIRM", "component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_PWD_RETRIEVE", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_TELL_FRIEND", "component://shop/widget/EmailProductScreens.xml#TellFriend");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_CUST_REGISTER", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
-    }
-
     public static String getDefaultProductStoreEmailScreenLocation(String emailType) {
         return defaultProductStoreEmailScreenLocation.get(emailType);
     }
@@ -745,7 +730,9 @@ public class ProductStoreWorker {
      * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or null if none.
      */
     public static GenericValue getContentReferenceStore(List<GenericValue> productStores) {
-        if (productStores == null) return null;
+        if (productStores == null) {
+            return null;
+        }
         for(GenericValue productStore : productStores) {
             if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
                 return productStore;
@@ -759,7 +746,9 @@ public class ProductStoreWorker {
      * Prints warning if no content reference and multiple stores with different defaultLocaleString.
      */
     public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores, String multiWarningInfo) {
-        if (productStores == null || productStores.size() == 0) return null;
+        if (productStores == null || productStores.size() == 0) {
+            return null;
+        }
         for(GenericValue productStore : productStores) {
             if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
                 return productStore;

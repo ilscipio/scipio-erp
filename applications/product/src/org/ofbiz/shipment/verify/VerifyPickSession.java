@@ -56,7 +56,6 @@ public class VerifyPickSession implements Serializable {
 
     private transient Delegator _delegator = null;
     private transient LocalDispatcher _dispatcher = null;
-    private static BigDecimal ZERO = BigDecimal.ZERO;
 
     public VerifyPickSession() {
     }
@@ -112,7 +111,7 @@ public class VerifyPickSession implements Serializable {
             BigDecimal qtyRemain = quantity;
 
             for (GenericValue reservation : reservations) {
-                if (qtyRemain.compareTo(ZERO) > 0) {
+                if (qtyRemain.compareTo(BigDecimal.ZERO) > 0) {
                     if (!productId.equals(reservation.getRelatedOne("InventoryItem", false).getString("productId"))) {
                         continue;
                     }
@@ -141,7 +140,7 @@ public class VerifyPickSession implements Serializable {
                     }
                 }
             }
-            if (qtyRemain.compareTo(ZERO) == 0) {
+            if (qtyRemain.compareTo(BigDecimal.ZERO) == 0) {
                 for (Map.Entry<GenericValue, BigDecimal> entry : reserveQtyMap.entrySet()) {
                     GenericValue reservation = entry.getKey();
                     BigDecimal qty = entry.getValue();
@@ -226,6 +225,9 @@ public class VerifyPickSession implements Serializable {
                 String inventoryItemId = res.getString("inventoryItemId");
                 pickRows.add(new VerifyPickSessionRow(orderId, orderItemSeqId, shipGroupSeqId, productId, originGeoId, inventoryItemId, quantity));
                 break;
+            default:
+                // if a wrong checkCode is given
+                Debug.logError("There was a wrong checkCode given in the method createVerifyPickRow: " + checkCode, module);
         }
     }
 
@@ -284,7 +286,7 @@ public class VerifyPickSession implements Serializable {
     }
 
     public BigDecimal getVerifiedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, String inventoryItemId) {
-        BigDecimal total = ZERO;
+        BigDecimal total = BigDecimal.ZERO;
         for (VerifyPickSessionRow pickRow : this.getPickRows(orderId)) {
             if (orderItemSeqId.equals(pickRow.getOrderItemSeqId()) && shipGroupSeqId.equals(pickRow.getShipGroupSeqId()) && productId.equals(pickRow.getProductId())) {
                 if (inventoryItemId == null || inventoryItemId.equals(pickRow.getInventoryItemId())) {
@@ -313,7 +315,10 @@ public class VerifyPickSession implements Serializable {
         updateShipmentCtx.put("shipmentId", shipmentId);
         updateShipmentCtx.put("statusId", "SHIPMENT_PICKED");
         updateShipmentCtx.put("userLogin", this.getUserLogin());
-        this.getDispatcher().runSync("updateShipment", updateShipmentCtx);
+        Map<String, Object> serviceResult = this.getDispatcher().runSync("updateShipment", updateShipmentCtx);
+        if (ServiceUtil.isError(serviceResult)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(serviceResult));
+        }
 
         return shipmentId;
     }
@@ -334,7 +339,7 @@ public class VerifyPickSession implements Serializable {
     }
 
     public BigDecimal getReservedQty(String orderId, String orderItemSeqId, String shipGroupSeqId) {
-        BigDecimal reservedQty = ZERO;
+        BigDecimal reservedQty = BigDecimal.ZERO;
         try {
             GenericValue reservation = EntityUtil.getFirst(this.getDelegator().findByAnd("OrderItemAndShipGrpInvResAndItemSum", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "shipGroupSeqId", shipGroupSeqId), null, false));
             reservedQty = reservation.getBigDecimal("totQuantityAvailable");
@@ -346,8 +351,8 @@ public class VerifyPickSession implements Serializable {
 
     protected void checkVerifiedQty(String orderId, Locale locale) throws GeneralException {
 
-        BigDecimal verifiedQty = ZERO;
-        BigDecimal orderedQty = ZERO;
+        BigDecimal verifiedQty = BigDecimal.ZERO;
+        BigDecimal orderedQty = BigDecimal.ZERO;
 
         List<GenericValue> orderItems = this.getDelegator().findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_APPROVED"), null, false);
         for (GenericValue orderItem : orderItems) {

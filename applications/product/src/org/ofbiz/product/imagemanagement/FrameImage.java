@@ -71,8 +71,8 @@ public class FrameImage {
     public static final String resource = "ProductUiLabels";
 
     public static Map<String, Object> addImageFrame(DispatchContext dctx, Map<String, ? extends Object> context)
-    throws IOException {
-        Map<String, Object> result = new HashMap<String, Object>();
+            throws IOException {
+        Map<String, Object> result;
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
@@ -108,10 +108,6 @@ public class FrameImage {
             Debug.logError(gee, module);
             result = ServiceUtil.returnError(gee.getMessage());
             result.putAll(context);
-        } catch (Exception e) {
-            Debug.logError(e, module);
-            result = ServiceUtil.returnError(e.getMessage());
-            result.putAll(context);
         }
 
         if (UtilValidate.isNotEmpty(imageName)) {
@@ -131,24 +127,30 @@ public class FrameImage {
             int width = Integer.parseInt(imageWidth);
             int height= Integer.parseInt(imageHeight);
 
-            Map<String, Object> contentCtx = new HashMap<String, Object>();
+            Map<String, Object> contentCtx = new HashMap<>();
             contentCtx.put("contentTypeId", "DOCUMENT");
             contentCtx.put("userLogin", userLogin);
-            Map<String, Object> contentResult = new HashMap<String, Object>();
+            Map<String, Object> contentResult = new HashMap<>();
             try {
                 contentResult = dispatcher.runSync("createContent", contentCtx);
+                if (ServiceUtil.isError(contentResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(contentResult));
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
                 result =  ServiceUtil.returnError(e.getMessage());
                 result.putAll(context);
             }
 
-            Map<String, Object> contentThumb = new HashMap<String, Object>();
+            Map<String, Object> contentThumb = new HashMap<>();
             contentThumb.put("contentTypeId", "DOCUMENT");
             contentThumb.put("userLogin", userLogin);
-            Map<String, Object> contentThumbResult = new HashMap<String, Object>();
+            Map<String, Object> contentThumbResult = new HashMap<>();
             try {
                 contentThumbResult = dispatcher.runSync("createContent", contentThumb);
+                if (ServiceUtil.isError(contentThumbResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(contentThumbResult));
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
                 result =  ServiceUtil.returnError(e.getMessage());
@@ -190,21 +192,24 @@ public class FrameImage {
             ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameToUse, imageUrlResource, contentId, "image/jpeg");
             ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameTouseThumb, imageUrlThumb, contentIdThumb, "image/jpeg");
 
-            Map<String, Object> createContentAssocMap = new HashMap<String, Object>();
+            Map<String, Object> createContentAssocMap = new HashMap<>();
             createContentAssocMap.put("contentAssocTypeId", "IMAGE_THUMBNAIL");
             createContentAssocMap.put("contentId", contentId);
             createContentAssocMap.put("contentIdTo", contentIdThumb);
             createContentAssocMap.put("userLogin", userLogin);
             createContentAssocMap.put("mapKey", "100");
             try {
-                dispatcher.runSync("createContentAssoc", createContentAssocMap);
+                Map<String, Object> serviceResult = dispatcher.runSync("createContentAssoc", createContentAssocMap);
+                if (ServiceUtil.isError(serviceResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
                 result =  ServiceUtil.returnError(e.getMessage());
                 result.putAll(context);
             }
 
-            Map<String, Object> productContentCtx = new HashMap<String, Object>();
+            Map<String, Object> productContentCtx = new HashMap<>();
             productContentCtx.put("productId", productId);
             productContentCtx.put("productContentTypeId", "IMAGE");
             productContentCtx.put("fromDate", UtilDateTime.nowTimestamp());
@@ -212,18 +217,24 @@ public class FrameImage {
             productContentCtx.put("contentId", contentId);
             productContentCtx.put("statusId", "IM_PENDING");
             try {
-                dispatcher.runSync("createProductContent", productContentCtx);
+                Map<String, Object> serviceResult = dispatcher.runSync("createProductContent", productContentCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
                 result =  ServiceUtil.returnError(e.getMessage());
                 result.putAll(context);
             }
 
-            Map<String, Object> contentApprovalCtx = new HashMap<String, Object>();
+            Map<String, Object> contentApprovalCtx = new HashMap<>();
             contentApprovalCtx.put("contentId", contentId);
             contentApprovalCtx.put("userLogin", userLogin);
             try {
-                dispatcher.runSync("createImageContentApproval", contentApprovalCtx);
+                Map<String, Object> serviceResult = dispatcher.runSync("createImageContentApproval", contentApprovalCtx);
+                if (ServiceUtil.isError(serviceResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
                 result =  ServiceUtil.returnError(e.getMessage());
@@ -277,14 +288,14 @@ public class FrameImage {
         }
 
         // Draw Image combine
-        Point2D center =  new Point2D.Float(bufferedImage.getHeight() / 2, bufferedImage.getWidth() / 2);
-        AffineTransform at = AffineTransform.getTranslateInstance(center.getX( ) - (image2.getWidth(null) / 2), center.getY( ) - (image2.getHeight(null) / 2));
+        Point2D center = new Point2D.Float(bufferedImage.getHeight() / 2f, bufferedImage.getWidth() / 2f);
+        AffineTransform at = AffineTransform.getTranslateInstance(center.getX( ) - (image2.getWidth(null) / 2f), center.getY( ) - (image2.getHeight(null) / 2f));
         g.transform(at);
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.drawImage(image2, 0, 0, null);
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .35f);
         g.setComposite(c);
-        at = AffineTransform.getTranslateInstance(center.getX( ) - (bufferedImage.getWidth(null) / 2), center.getY( ) - (bufferedImage.getHeight(null) / 2));
+        at = AffineTransform.getTranslateInstance(center.getX( ) - (bufferedImage.getWidth(null) / 2f), center.getY( ) - (bufferedImage.getHeight(null) / 2f));
         g.setTransform(at);
         g.drawImage(bufferedImage, 0, 0, null);
         g.dispose();
@@ -313,14 +324,14 @@ public class FrameImage {
         String mimType = tempFile.get("uploadMimeType").toString();
         ByteBuffer imageData = (ByteBuffer) tempFile.get("imageData");
         if (UtilValidate.isEmpty(imageName) || UtilValidate.isEmpty(imageData)) {
-            session.setAttribute("frameContentId", request.getParameter("frameExistContentId").toString());
-            session.setAttribute("frameDataResourceId", request.getParameter("frameExistDataResourceId").toString());
+            session.setAttribute("frameContentId", request.getParameter("frameExistContentId"));
+            session.setAttribute("frameDataResourceId", request.getParameter("frameExistDataResourceId"));
             request.setAttribute("_ERROR_MESSAGE_", "There is no frame image, please select the image type *.PNG  uploading.");
             return "error";
         }
         if (!"image/png".equals(mimType)) {
-            session.setAttribute("frameContentId", request.getParameter("frameExistContentId").toString());
-            session.setAttribute("frameDataResourceId", request.getParameter("frameExistDataResourceId").toString());
+            session.setAttribute("frameContentId", request.getParameter("frameExistContentId"));
+            session.setAttribute("frameDataResourceId", request.getParameter("frameExistDataResourceId"));
             request.setAttribute("_ERROR_MESSAGE_", "The selected image type is incorrect, please select the image type *.PNG to upload.");
             return "error";
         }
@@ -348,7 +359,7 @@ public class FrameImage {
             out.close();
 
             //create dataResource
-            Map<String, Object> dataResourceCtx = new HashMap<String, Object>();
+            Map<String, Object> dataResourceCtx = new HashMap<>();
             dataResourceCtx.put("objectInfo", imageServerUrl + imagePath);
             dataResourceCtx.put("dataResourceName", imageName);
             dataResourceCtx.put("userLogin", userLogin);
@@ -356,21 +367,30 @@ public class FrameImage {
             dataResourceCtx.put("mimeTypeId", "image/png");
             dataResourceCtx.put("isPublic", "Y");
             Map<String, Object> dataResourceResult = dispatcher.runSync("createDataResource", dataResourceCtx);
+            if (ServiceUtil.isError(dataResourceResult)) {
+                String errorMessage = ServiceUtil.getErrorMessage(dataResourceResult);
+                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                Debug.logError(errorMessage, module);
+                return "error";
+            }
             dataResourceId = dataResourceResult.get("dataResourceId").toString();
             //create content
-            Map<String, Object> contentCtx = new HashMap<String, Object>();
+            Map<String, Object> contentCtx = new HashMap<>();
             contentCtx.put("dataResourceId", dataResourceResult.get("dataResourceId").toString());
             contentCtx.put("contentTypeId", "IMAGE_FRAME");
             contentCtx.put("contentName", imageName);
             contentCtx.put("fromDate", UtilDateTime.nowTimestamp());
             contentCtx.put("userLogin", userLogin);
             Map<String, Object> contentResult = dispatcher.runSync("createContent", contentCtx);
+            if (ServiceUtil.isError(contentResult)) {
+                String errorMessage = ServiceUtil.getErrorMessage(contentResult);
+                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                Debug.logError(errorMessage, module);
+                return "error";
+            }
             contentId = contentResult.get("contentId").toString();
-        } catch (GenericServiceException gse) {
+        } catch (GenericServiceException | IOException gse) {
             request.setAttribute("_ERROR_MESSAGE_", gse.getMessage());
-            return "error";
-        } catch (Exception e) {
-            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
         }
         session.setAttribute("frameContentId", contentId);
@@ -420,13 +440,12 @@ public class FrameImage {
         } catch (GenericEntityException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
-        } catch (Exception e) {
-            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
-            return "error";
         }
         if (UtilValidate.isNotEmpty(imageName)) {
             File file = new File(imageServerPath + "/preview/" +"/previewImage.jpg");
-            file.delete();
+            if(!file.delete()) {
+                Debug.logError("File :" + file.getName() + ", couldn't be deleted", module);
+            }
             // Image Frame
             BufferedImage bufImg1 = ImageIO.read(new File(imageServerPath + "/" + ImageUtil.cleanPathname(productId) + "/" + ImageUtil.cleanFilename(imageName)).getCanonicalFile()); // SCIPIO: clean parameters
             BufferedImage bufImg2 = ImageIO.read(new File(imageServerPath + "/frame/" + frameImageName));
@@ -473,8 +492,8 @@ public class FrameImage {
         HttpSession session = request.getSession();
         if(UtilValidate.isEmpty(request.getParameter("frameContentId"))) {
             if (UtilValidate.isNotEmpty(request.getParameter("frameExistContentId")) && UtilValidate.isNotEmpty(request.getParameter("frameExistDataResourceId"))) {
-                session.setAttribute("frameExistContentId", request.getParameter("frameExistContentId").toString());
-                session.setAttribute("frameDataResourceId", request.getParameter("frameExistDataResourceId").toString());
+                session.setAttribute("frameExistContentId", request.getParameter("frameExistContentId"));
+                session.setAttribute("frameDataResourceId", request.getParameter("frameExistDataResourceId"));
             }
             request.setAttribute("_ERROR_MESSAGE_", "Required frame image content ID");
             return "error";
@@ -490,9 +509,6 @@ public class FrameImage {
         } catch (GenericEntityException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
-        } catch (Exception e) {
-            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
-            return "error";
         }
         session.setAttribute("frameContentId", frameContentId);
         session.setAttribute("frameDataResourceId", frameDataResourceId);
@@ -504,7 +520,9 @@ public class FrameImage {
         String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", (Delegator) context.get("delegator")), context);
         File file = new File(imageServerPath + "/preview/" + "/previewImage.jpg").getCanonicalFile();
         if (file.exists()) {
-            file.delete();
+            if (!file.delete()) {
+                Debug.logError("File :" + file.getName() + ", couldn't be deleted", module);
+            }
         }
         return "success";
     }

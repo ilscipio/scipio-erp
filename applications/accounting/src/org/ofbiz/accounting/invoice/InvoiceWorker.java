@@ -191,7 +191,16 @@ public final class InvoiceWorker {
     }
 
     public static BigDecimal getInvoiceNoTaxTotal(GenericValue invoice) {
-        return getInvoiceTotal(invoice, Boolean.TRUE).subtract(getInvoiceTaxTotal(invoice));
+        BigDecimal taxAlreadyIncludedTotal = BigDecimal.ZERO;
+        // SCIPIO: get the already tax included so we can subtract later
+        Map<String, Set<String>> taxAuthPartyAndGeos = InvoiceWorker.getInvoiceTaxAuthPartyAndGeos(invoice);
+        for (Map.Entry<String, Set<String>> taxAuthPartyGeos : taxAuthPartyAndGeos.entrySet()) {
+            String taxAuthPartyId = taxAuthPartyGeos.getKey();
+            for (String taxAuthGeoId : taxAuthPartyGeos.getValue()) {
+                taxAlreadyIncludedTotal = taxAlreadyIncludedTotal.add(InvoiceWorker.getTaxAlreadyIncluded(invoice, taxAuthPartyId, taxAuthGeoId));
+            }
+        }
+        return getInvoiceTotal(invoice, Boolean.TRUE).subtract(getInvoiceTaxTotal(invoice)).subtract(taxAlreadyIncludedTotal);
     }
 
     /**
@@ -808,20 +817,23 @@ public final class InvoiceWorker {
             return null;
         }
         // SCIPIO: Vat Included
-        /* TODO?: REVIEW: is taxAlreadyIncluded still needed later, or can be removed?
-        BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
+        /* TODO?: REVIEW: is taxAlreadyIncluded still needed later, or can be removed? */
+        return getTaxTotalForInvoiceItems(invoiceTaxItems);
+//        return getTaxTotalForInvoiceItems(invoiceTaxItems);
+    }
+    
+    public static BigDecimal getTaxAlreadyIncluded(GenericValue invoice, String taxAuthPartyId, String taxAuthGeoId) {
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
-            List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
-                    .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX"
-                            , "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId)).queryList();
-            taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
+            List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment").where(
+                    UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX", "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId))
+                    .queryList();
+            return getTaxAmountIncluded(orderAdjustments);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove
+            // printStackTrace
         }
-        return getTaxTotalForInvoiceItems(invoiceTaxItems).add(taxAlreadyIncluded);
-        */
-        return getTaxTotalForInvoiceItems(invoiceTaxItems);
+        return BigDecimal.ZERO;
     }
 
     /** Returns the invoice tax total for unattributed tax items, that is items which have no taxAuthPartyId value

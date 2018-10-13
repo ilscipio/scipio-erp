@@ -22,7 +22,11 @@ code package.
         <#if billingAddress.address2??>
             <fo:block wrap-option="wrap">${billingAddress.address2}</fo:block>
         </#if>
-        <fo:block wrap-option="wrap">${billingAddress.city!} ${billingAddress.stateProvinceGeoId!} ${billingAddress.postalCode!}</fo:block>
+        <#if delegator?has_content>
+       		<#assign stateProvinceGeo = delegator.findOne("Geo", {"geoId" : billingAddress.stateProvinceGeoId}, true)>
+       		<#assign stateProvinceName = stateProvinceGeo.get("geoName", "component://common/config/CommonEntityLabels.xml", locale)>
+       	</#if>
+        <fo:block wrap-option="wrap">${billingAddress.city!} ${stateProvinceName!billingAddress.stateProvinceGeoId!} ${billingAddress.postalCode!}</fo:block>
         <#if billToPartyTaxId?has_content>
             <fo:block wrap-option="wrap">${uiLabelMap.PartyTaxId}: ${billToPartyTaxId}</fo:block>
         </#if>

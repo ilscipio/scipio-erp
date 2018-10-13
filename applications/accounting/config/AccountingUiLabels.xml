@@ -11017,7 +11017,7 @@
         <value xml:lang="ar">رقم أمر البيع/الشراء</value>
         <value xml:lang="de">Auftrags-Nr.</value>
         <value xml:lang="en">Order #</value>
-        <value xml:lang="es">Orden #</value>
+        <value xml:lang="es">Pedido #</value>
         <value xml:lang="fr">Commande n°</value>
         <value xml:lang="hi-IN">आदेश #</value>
         <value xml:lang="it">Ordine n°</value>
@@ -14828,6 +14828,7 @@
         <value xml:lang="de">Alle Preise inklusive MwSt.</value>
         <value xml:lang="en">All prices include Sales Tax</value>
         <value xml:lang="en-GB">All prices include VAT</value>
+        <value xml:lang="es">IVA</value>
         <value xml:lang="fr">Dont TVA incluse </value>
         <value xml:lang="it">Tasse di vendita incluse</value>
         <value xml:lang="ja">消費税込</value>
@@ -15874,6 +15875,7 @@
     <property key="AccountingTotalExclTax">
         <value xml:lang="de">Summe netto</value>
         <value xml:lang="en">Total excl. tax</value>
+        <value xml:lang="es">Total sin IVA</value>
         <value xml:lang="fr">Total HT</value>
         <value xml:lang="hi-IN">टैक्स छोड़कर कुल</value>
         <value xml:lang="it">Totale escluso tasse</value>
@@ -19514,6 +19516,7 @@
         <value xml:lang="cs">Fakturovaná částka</value>
         <value xml:lang="de">Rechnungsbetrag</value>
         <value xml:lang="en">Invoice Amount</value>
+        <value xml:lang="es">Total factura</value>
         <value xml:lang="fr">Montant</value>
         <value xml:lang="hi-IN">चालान राशि</value>
         <value xml:lang="it">Importo fattura</value>

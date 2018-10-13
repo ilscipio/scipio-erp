@@ -12942,7 +12942,7 @@
         <value xml:lang="de">Steuer ID</value>
         <value xml:lang="en">Tax ID</value>
         <value xml:lang="en-IN">TIN</value>
-        <value xml:lang="es">Código de Impuesto</value>
+        <value xml:lang="es">NIF/CIF</value>
         <value xml:lang="fr">Id. de TVA</value>
         <value xml:lang="hi-IN">कर(tax) क्रमांक</value>
         <value xml:lang="it">ID Tasse</value>

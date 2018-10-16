@@ -281,10 +281,10 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         workEffort.setActualCompletion(UtilRandom.generateRandomTimestamp(workEffort.getActualStart(), context));
 
         if (UtilRandom.getRandomBoolean()) {
-            String partyStatusId = workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
+            //String partyStatusId = workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
         } else {
-            String assetStatusId = workEffortAssetAssignmentStatus.get(UtilRandom.random(workEffortAssetAssignmentStatus));
-            String fixedAssetTypeId;
+            //String assetStatusId = workEffortAssetAssignmentStatus.get(UtilRandom.random(workEffortAssetAssignmentStatus));
+            //String fixedAssetTypeId;
             // if (workEffort.getType().equals("TASK"))
             // fixedAssetTypeId = "EQUIPMENT";
             // else if (workEffort.getType().equals("PROD_ORDER_TASK"))

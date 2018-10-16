@@ -58,19 +58,15 @@ import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
 
-/**
- * WebTools Services
- */
-
 public class WebToolsServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Generates an entity export based on a list of entity-names and optional fromDate. Creates a zip and stores in EntityExport
-     * entity. Afterwards returns the generated downloadLink
-     * @return String of generated filedownloadlink
-     * */
+     * entity. Afterwards returns the generated download link.
+     * @return String of generated file download link
+     */
     public static Map<String, Object> getEntityExport(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         List<String> entityNames = UtilGenerics.checkList(context.get("entityList"));
@@ -99,10 +95,9 @@ public class WebToolsServices {
             entityDateCond = entityThruCond;
         }
 
-
         try {
             // Generate temporary export files
-            for(String curEntityName : entityNames){
+            for(String curEntityName : entityNames) {
                 long numberWritten = 0;
                 ModelEntity me = delegator.getModelEntity(curEntityName);
                 List<GenericValue> values = new LinkedList<GenericValue>();
@@ -114,13 +109,11 @@ public class WebToolsServices {
                 boolean beganTx = TransactionUtil.begin();
 
                 try {
-
                     values = EntityQuery.use(delegator).from(curEntityName).where(entityDateCond).orderBy(me.getPkFieldNames()).queryList();
                 } catch (Exception entityEx) {
                     Debug.logInfo("Error when looking up "+curEntityName + " "+entityEx,module);
                     continue;
                 }
-
 
                 // Iterate over all values
                 if (values != null) {
@@ -129,23 +122,21 @@ public class WebToolsServices {
                     writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                     writer.println("<entity-engine-xml>");
 
-                   for(GenericValue value : values){
+                    for(GenericValue value : values) {
                         value.writeXmlText(writer, "");
                         numberWritten++;
                         if (numberWritten % 500 == 0) {
                             TransactionUtil.commit(beganTx);
                             beganTx = TransactionUtil.begin();
-                            }
                         }
-                   writer.println("</entity-engine-xml>");
-                   writer.close();
-                   srcFiles.add(outFile);
-
+                    }
+                    writer.println("</entity-engine-xml>");
+                    writer.close();
+                    srcFiles.add(outFile);
                 } else {
                     Debug.logInfo(curEntityName + " has no records, not writing file",module);
                 }
                 TransactionUtil.commit(beganTx);
-
             }
 
             // Zip Files
@@ -161,21 +152,21 @@ public class WebToolsServices {
                  byte[] bytes = new byte[1024];
                  int length;
                  while((length = fis.read(bytes)) >= 0) {
-                 zipOut.write(bytes, 0, length);
+                     zipOut.write(bytes, 0, length);
                  }
                  fis.close();
-                 }
+             }
 
              zipOut.close();
              fos.close();
 
-             //Upload to database
+             // Upload to database
              GenericValue dataResource = delegator.makeValue("EntityExport");
              String seqId = delegator.getNextSeqId("EntityExport");
              dataResource.put("exportId", seqId);
-             if(UtilValidate.isNotEmpty(description)){
+             if (UtilValidate.isNotEmpty(description)) {
                  dataResource.put("description", description);
-             }else{
+             } else {
                  dataResource.put("description", "Generated on "+createdDate);
              }
 
@@ -189,16 +180,15 @@ public class WebToolsServices {
              dataResource.put("fileSize", new Long(zipFile.length));
              delegator.createOrStore(dataResource);
 
-             //Return fileId
+             // Return fileId
              result.put("exportId", dataResource.getPrimaryKey().getString("exportId"));
 
-
-             //Cleanup
+             // Cleanup
              for(File srcFile : srcFiles){
                  srcFile.delete();
              }
              // outZipFile.delete();
-        }catch(Exception e){
+        } catch(Exception e) {
             Debug.logError("Error while generating Entity Export "+e, module);
             result = ServiceUtil.returnError("Error while generating Entity Export");
         }

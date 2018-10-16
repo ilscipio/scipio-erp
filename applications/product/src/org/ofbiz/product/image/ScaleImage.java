@@ -147,7 +147,7 @@ public class ScaleImage {
         }
 
         if (fileLocation.lastIndexOf('/') != -1) {
-            fileLocation = fileLocation.substring(0, fileLocation.lastIndexOf('/') + 1); // adding 1 to include the trailing slash
+//            fileLocation = fileLocation.substring(0, fileLocation.lastIndexOf('/') + 1); // adding 1 to include the trailing slash
         }
 
         /* get original BUFFERED IMAGE */

@@ -19,6 +19,7 @@
 package org.ofbiz.entity.datasource;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,9 @@ public class GenericHelperFactory {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // protected static UtilCache helperCache = new UtilCache("entity.GenericHelpers", 0, 0);
-    protected static final Map<String, GenericHelper> helperCache = new HashMap<String, GenericHelper>();
+    // SCIPIO: 2018-10-16: use unmodifiableMap for thread-safe reads
+    //protected static final Map<String, GenericHelper> helperCache = new HashMap<String, GenericHelper>();
+    protected static Map<String, GenericHelper> helperCache = Collections.emptyMap();
 
     public static GenericHelper getHelper(GenericHelperInfo helperInfo) {
         GenericHelper helper = helperCache.get(helperInfo.getHelperFullName());
@@ -86,8 +89,13 @@ public class GenericHelperFactory {
                             throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
                         }
 
-                        if (helper != null)
-                            helperCache.put(helperInfo.getHelperFullName(), helper);
+                        if (helper != null) {
+                            // SCIPIO: 2018-10-16: clone cache to ensure thread-safe reads
+                            //helperCache.put(helperInfo.getHelperFullName(), helper);
+                            Map<String, GenericHelper> newHelperCache = new HashMap<>(helperCache);
+                            newHelperCache.put(helperInfo.getHelperFullName(), helper);
+                            helperCache = Collections.unmodifiableMap(newHelperCache);
+                        }
                     } catch (SecurityException e) {
                         Debug.logError(e, module);
                         throw new IllegalStateException("Error loading GenericHelper class: " + e.toString());

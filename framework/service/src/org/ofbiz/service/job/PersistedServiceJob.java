@@ -184,7 +184,10 @@ public class PersistedServiceJob extends GenericServiceJob {
             throw new InvalidJobException(e);
         }
         if (Debug.infoOn()) {
-            Debug.logInfo("Job  [" + getJobName() + "] Id ["  + getJobId() + "] -- Next runtime: " + new Date(nextRecurrence), module);
+            // SCIPIO: 2018-10-17: detect -1 case and try to make this less confusing
+            //Debug.logInfo("Job  [" + getJobName() + "] Id ["  + getJobId() + "] -- Next runtime: " + new Date(nextRecurrence), module);
+            Debug.logInfo("Job [" + getJobName() + "] Id ["  + getJobId() + "] Retries [" + currentRetryCount + "/" + maxRetry + "] -- Next recurrence: " 
+                    + ((nextRecurrence != -1) ? new Date(nextRecurrence) : "(none)"), module);
         }
     }
 
@@ -285,7 +288,8 @@ public class PersistedServiceJob extends GenericServiceJob {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Unable to re-schedule job [" + getJobId() + "]: ", module);
                 }
-                Debug.logInfo("Persisted Job [" + getJobId() + "] Failed. Re-Scheduling : " + next, module);
+                // SCIPIO: 2018-10-17: display friendly Date format (not just the long value)
+                Debug.logInfo("Persisted Job [" + getJobId() + "] Failed. Re-Scheduling : " + new Date(next) + " (" + next + ")", module);
             } else {
                 Debug.logWarning("Persisted Job [" + getJobId() + "] Failed. Max Retry Hit, not re-scheduling", module);
             }

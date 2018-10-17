@@ -18,7 +18,11 @@ limitations under the License.
 
 
   <div id="frame">
-
+    <!-- SCIPIO: 2018-10-17: Small message to indicate logging cannot be controlled from this screen in scipio -->
+    <div class="block">
+      <span><strong>! Warning:</strong> This page cannot be used to view or control Solr logging under SCIPIO ERP. To change Solr logging levels, use the SCIPIO ERP framework 
+        Log4j configuration file: <i>framework/base/config/log4j2.xml</i>. To view the log, see <i>runtime/logs/ofbiz.log</i> or the Admin application Server/Logging screen (<a href="/admin/control/LogView">/admin/control/LogView</a>).</span>
+    </div>
     <div class="block">
       <h2><span>{{watcher}}</span></h2>
       <ul class="tree jstree">

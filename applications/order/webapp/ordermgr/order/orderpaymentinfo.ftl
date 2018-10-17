@@ -360,7 +360,9 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                         <input type="hidden" name="orderId" value="${orderId}" />
                                         <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
                                         <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
-                                        <input type="hidden" name="checkOutPaymentId" value="${paymentMethodType.paymentMethodTypeId!paymentMethod.paymentMethodTypeId!}" />
+                                        <#-- SCIPIO: paymentMethodType is not set here - crashes + dangerous code in loop
+                                        <input type="hidden" name="checkOutPaymentId" value="${paymentMethodType.paymentMethodTypeId!paymentMethod.paymentMethodTypeId!}" />-->
+                                        <input type="hidden" name="checkOutPaymentId" value="${paymentMethod.paymentMethodTypeId!}" />
                                       </form>
                                    </#if>
                               </#if>
@@ -416,7 +418,9 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                     <input type="hidden" name="orderId" value="${orderId}" />
                                     <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
                                     <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
-                                    <input type="hidden" name="checkOutPaymentId" value="${paymentMethodType.paymentMethodTypeId!paymentMethod.paymentMethodTypeId!}" />
+                                    <#-- SCIPIO: paymentMethodType is not set here - crashes + dangerous code in loop
+                                    <input type="hidden" name="checkOutPaymentId" value="${paymentMethodType.paymentMethodTypeId!paymentMethod.paymentMethodTypeId!}" />-->
+                                    <input type="hidden" name="checkOutPaymentId" value="${paymentMethod.paymentMethodTypeId!}" />
                                   </form>
                                </#if>
                               </#if>
@@ -473,7 +477,9 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                     <input type="hidden" name="orderId" value="${orderId}" />
                                     <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
                                     <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
-                                    <input type="hidden" name="checkOutPaymentId" value="${paymentMethodType.paymentMethodTypeId!paymentMethod.paymentMethodTypeId!}" />
+                                    <#-- SCIPIO: paymentMethodType is not set here - crashes + dangerous code in loop
+                                    <input type="hidden" name="checkOutPaymentId" value="${paymentMethodType.paymentMethodTypeId!paymentMethod.paymentMethodTypeId!}" />-->
+                                    <input type="hidden" name="checkOutPaymentId" value="${paymentMethod.paymentMethodTypeId!}" />
                                   </form>
                                </#if>
                               </#if>

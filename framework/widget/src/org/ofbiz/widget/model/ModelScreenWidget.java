@@ -516,12 +516,25 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             this.isMainSection = isMainSection;
             this.shareScopeExdr = FlexibleStringExpander.getInstance(sectionElement.getAttribute("share-scope"));
 
-            // SCIPIO: warn about this case, which should basically be considered an error
-            if (condition != null && hasActionsElement && !hasWidgetsElement && !hasFailWidgetsElement) {
-                Debug.logWarning("screen [" + modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "] " +
-                        "contains a section condition, with actions, but without widgets or fail-widgets element; actions-only " +
-                        "screens do not support the section condition element and it will be bypassed by directives such as " +
-                        "include-screen-actions - use the actions master if directive instead (see widget-common.xsd)", module);
+            // SCIPIO: Warn about this case, which should basically be considered an error.
+            // 2018-10-17: Because too much code used this pattern, now only print as warning if this is the main section;
+            // when not top section, this can't really be considered an "error" in the general case because there may be sister sections
+            // that do have widgets which is an old-style but not broken pattern, and shouldn't be an outright warning.
+            // TODO?: The ModelScreen constructor could go through its sections recursively to better detect this case, but expensive.
+            if (isMainSection || Debug.verboseOn()) { // 2018-10-17: isMainSection
+                if (condition != null && hasActionsElement && !hasWidgetsElement && !hasFailWidgetsElement) {
+                    if (isMainSection) {
+                        Debug.logWarning("screen [" + modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "] " +
+                            "contains a section condition, with actions, but without widgets or fail-widgets element; actions-only " +
+                            "screens do not support the section condition element and it will be bypassed by directives such as " +
+                            "include-screen-actions - use the actions master if directive instead (see widget-common.xsd)", module);
+                    } else {
+                        Debug.logVerbose("screen [" + modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "] " +
+                            "contains a section condition, with actions, but without widgets or fail-widgets element" +
+                            "; this is an old construct and does not work with the include-screen-actions directive" +
+                            "; prefer the actions master if directive instead (see widget-common.xsd)", module);
+                    }
+                }
             }
 
             // SCIPIO: determine if actions-only

@@ -277,6 +277,40 @@ public abstract class AccessTokenProvider<V> {
     }
 
     /**
+     * Returns the request token - only if it's already set in session (no create).
+     * <p>
+     * NOTE: there is no value parameter, which indicates this cannot create token.
+     * <p>
+     * NOTE: Request-scoped tokens are for very specific implementations only! You probably want
+     * the session-based ones. If you do use this request-based one, you'll need either a weak-keys based
+     * provider or a try/finally block.
+     */
+    public AccessToken getLocalRequestToken(HttpServletRequest request, String attrName) {
+        return (AccessToken) request.getAttribute(attrName);
+    }
+
+    /**
+     * Gets request token; if not yet created or registered in the provider for whatever reason, does so.
+     * <p>
+     * NOTE: there is no value parameter, which indicates this cannot create token.
+     * <p>
+     * NOTE: Request-scoped tokens are for very specific implementations only! You probably want
+     * the session-based ones. If you do use this request-based one, you'll need either a weak-keys based
+     * provider or a try/finally block.
+     */
+    public AccessToken getRequestToken(HttpServletRequest request, String attrName, V initialValue) {
+        AccessToken token = getLocalRequestToken(request, attrName);
+        if (token != null) {
+            return token;
+        }
+        token = newToken();
+        put(token, initialValue);
+        request.setAttribute(attrName, token);
+        return token;
+    }
+    
+    
+    /**
      * Returns the session token - only if it's already set in session (no create).
      * <p>
      * NOTE: there is no value parameter, which indicates this cannot create token.
@@ -325,7 +359,7 @@ public abstract class AccessTokenProvider<V> {
             return createSessionToken(session, request, attrName, initialValue);
         }
     }
-
+    
     /**
      * Creates token in session with given value, removing any prior
      * <p>

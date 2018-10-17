@@ -1142,9 +1142,10 @@ under the License.
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
     <!-- note: this is an insecure version of above for purposes of rendering via fop, which cannot access over https -->
+    <!-- SCIPIO: NOTE: 2018-10-07: This request must now be accessed using an access token; see code -->
     <request-map uri="viewShipmentLabel">
         <security https="false" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
-        <event type="java" path="org.ofbiz.shipment.shipment.ShipmentEvents" invoke="viewShipmentPackageRouteSegLabelImage"/>
+        <event type="java" path="org.ofbiz.shipment.shipment.ShipmentEvents" invoke="viewShipmentPackageRouteSegLabelImageUnsafe"/><!-- SCIPIO: 2018-10-17: security: points to new method -->
         <response name="success" type="none" value=""/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>

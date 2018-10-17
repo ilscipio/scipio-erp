@@ -22,6 +22,12 @@ be included in OFBIZ due to licensing incompatibility, but you can download it y
 and rename the ZIP file that comes with it as jimi-xxx.jar, then copy it into the same directory as fop.jar, which at this time
 is ${ofbiz.home}/framework/webapp/lib/ -->
 
+<#-- SCIPIO: WARN: 2018-10-17: This FTL can currently only be called if a HttpServletRequest is available, due to accessToken;
+    the accessToken here is scoped to the request with weak keys; it is lost as soon as the rendering is over. -->
+<#if !viewShipAccessToken?? && request??>
+  <#assign viewShipAccessToken = Static["org.ofbiz.shipment.shipment.ShipmentEvents"].getShipmentViewRequestAccessTokenString(request)>
+</#if>
+
 <#escape x as x?xml>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
@@ -39,7 +45,8 @@ is ${ofbiz.home}/framework/webapp/lib/ -->
        <#assign segments = Static["org.ofbiz.base.util.UtilHttp"].parseMultiFormData(parameters)>
        <#list segments as segment>
          <fo:block break-before="page"> <#-- this tells fop to put a page break before this content TODO: content-type must be dynamic -->
-           <fo:external-graphic content-type="content-type:image/gif" width="669px" height="724px" src="<@ofbizUrl>viewShipmentLabel?shipmentId=${segment.shipmentId}&amp;shipmentRouteSegmentId=${segment.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=${segment.shipmentPackageSeqId}</@ofbizUrl>"></fo:external-graphic>
+           <fo:external-graphic content-type="content-type:image/gif" width="669px" height="724px" src="<@ofbizUrl>viewShipmentLabel?shipmentId=${segment.shipmentId}&amp;shipmentRouteSegmentId=${segment.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=${segment.shipmentPackageSeqId}<#t/>
+             <#lt/>&amp;accessToken=${viewShipAccessToken!}</@ofbizUrl>"></fo:external-graphic><#-- SCIPIO: 2018-10-17: access token -->
          </fo:block>
       </#list>
       <#if segments.size() == 0>

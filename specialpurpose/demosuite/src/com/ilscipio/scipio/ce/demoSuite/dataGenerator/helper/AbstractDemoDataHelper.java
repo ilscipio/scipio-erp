@@ -11,6 +11,7 @@ import org.ofbiz.entity.Delegator;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataTransaction;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataWorkEffort;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataParty;
 
@@ -18,7 +19,7 @@ public abstract class AbstractDemoDataHelper {
     private static final Integer DATA_GENERATOR_MAX_RECORDS = UtilProperties.getPropertyAsInteger("demosuite", "demosuite.test.data.max.records", 50);
 
     public enum DataTypeEnum {
-        PARTY(DemoDataParty.class), PRODUCT(DemoDataProduct.class), ORDER(DemoDataOrder.class), TRANSACTION(AbstractDataObject.class), WORKEFFORT(DemoDataWorkEffort.class);
+        PARTY(DemoDataParty.class), PRODUCT(DemoDataProduct.class), ORDER(DemoDataOrder.class), TRANSACTION(DemoDataTransaction.class), WORKEFFORT(DemoDataWorkEffort.class);
 
         private final Class<? extends AbstractDataObject> demoDataObject;
 

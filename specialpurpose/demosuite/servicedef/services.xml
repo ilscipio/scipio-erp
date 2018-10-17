@@ -18,13 +18,13 @@
     
     <service name="createTransactionData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TransactionData.groovy" 
         invoke="" transaction-timeout="7200">
-        <description>Creates a number of Acctg Transaction demo data</description>
+        <description>Creates a number of Acctg Transaction demo data (WIP)</description>
         <implements service="demoDataGenerator"/>       
     </service>
 
     <service name="createWorkEffortData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/WorkEffortData.groovy" 
         invoke="" transaction-timeout="7200">
-        <description>Creates a number of WorkEffort demo data</description>
+        <description>Creates a number of WorkEffort demo data (WIP)</description>
         <implements service="demoDataGenerator"/>
         <attribute name="workEffortTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="autoCreatePartyRoles" type="Boolean" mode="IN" optional="true" default-value="true"/>
@@ -53,6 +53,7 @@
     </service>
     
     
+    <!-- SCIPIO (10/17/2018: Commenting this out for now)
     <service name="createTrackingCodeVisitData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeVisitData.groovy" 
         invoke="" transaction-timeout="7200">
         <description>Creates a number of TrackingCodeVisit demo data</description>
@@ -64,5 +65,6 @@
         <description>Creates a number of TrackingCodeOrder demo data</description>
         <implements service="demoDataGenerator"/>
     </service>
+    -->
      
 </services>

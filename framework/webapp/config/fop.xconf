@@ -32,6 +32,9 @@ the location of this file.
 
   <!-- Base URL for resolving relative URLs -->
   <base>http://localhost:8080</base>
+  
+  <!-- SCIPIO: 2018-10-17: Don't do strict, for better backward-compat -->
+  <strict-validation>false</strict-validation>
 
   <!-- Source resolution in dpi (dots/pixels per inch) for determining the size of pixels in SVG and bitmap images, default: 72dpi -->
   <source-resolution>72</source-resolution>

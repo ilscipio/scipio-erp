@@ -185,8 +185,9 @@ public class PersistedServiceJob extends GenericServiceJob {
         }
         if (Debug.infoOn()) {
             // SCIPIO: 2018-10-17: detect -1 case and try to make this less confusing
+            // NOTE: this is only called in GenericServiceJob.exec, so we can say "Running Job" here, should be always true...
             //Debug.logInfo("Job  [" + getJobName() + "] Id ["  + getJobId() + "] -- Next runtime: " + new Date(nextRecurrence), module);
-            Debug.logInfo("Job [" + getJobName() + "] Id ["  + getJobId() + "] Retries [" + currentRetryCount + "/" + maxRetry + "] -- Next recurrence: " 
+            Debug.logInfo("Running Job [" + getJobName() + "] Id ["  + getJobId() + "] Retries [" + currentRetryCount + "/" + maxRetry + "] -- Next recurrence: " 
                     + ((nextRecurrence != -1) ? new Date(nextRecurrence) : "(none)"), module);
         }
     }

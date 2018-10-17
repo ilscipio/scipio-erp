@@ -1,10 +1,15 @@
+<#-- SCIPIO: FIXME: this form erases all user input on event errors! -->
+
 <@section>
-    <#assign formAction = "createShipment"/>    
-    <#if shippment?has_content && shipment.shipmentTypeId == "PURCHASE_RETURN">
-        <#assign formAction = "createShipmentAndItemsForVendorReturn"/>
-    <#else>
-        <#assign formAction = "updateShipment"/>
-    </#if>    
+    <#if shipment?has_content>
+        <#if shipment.shipmentTypeId == "PURCHASE_RETURN">
+            <#assign formAction = "createShipmentAndItemsForVendorReturn"/>
+        <#else>
+            <#assign formAction = "updateShipment"/>
+        </#if>  
+    <#else>  
+        <#assign formAction = "createShipment"/>
+    </#if>
     <form name="EditShipment" action="${formAction}" method="POST">
         <#if shipment?has_content>
             <@field type="hidden" name="shipmentId" value=shipment.shipmentId />
@@ -36,7 +41,7 @@
                 </#list>
             </#if>
         </@field>
-        <#-- SCIPIO: FIXME: I'm not sure we should allow to change the orderId while editing... -->
+        <#-- SCIPIO: TODO: REVIEW: I'm not sure we should allow to change the orderId while editing... -->
         <#if shipment?has_content>
             <@field type="display" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId value=(shipment.primaryOrderId!)>
               <#if shipment.primaryOrderId?has_content><#-- SCIPIO: 2018-06-08: don't crash if not set -->
@@ -156,6 +161,6 @@
         <#else>
             <@field type="textarea" name="handlingInstructions" label=uiLabelMap.ProductHandlingInstructions />
         </#if>
-        <@field type="submit" submitType="link" href="javascript:document.EditShipment.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonUpdate />
+        <@field type="submit" submitType="link" href="javascript:document.EditShipment.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=(shipment?has_content)?then(uiLabelMap.CommonUpdate, uiLabelMap.CommonCreate)/>
     </form>
 </@section>

@@ -951,7 +951,9 @@ under the License.
     </request-map>
     <request-map uri="keywordsearch">
         <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="checkDoKeywordOverride"/>
+        <!-- SCIPIO: 2018-10-18: use custom event to generate better links
+        <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="checkDoKeywordOverride"/>-->
+        <event type="java" path="com.ilscipio.scipio.shop.product.ProductEvents" invoke="checkDoKeywordOverride"/>
         <response name="success" type="view" value="keywordsearch"/>
         <response name="none" type="none" value=""/>
     </request-map>

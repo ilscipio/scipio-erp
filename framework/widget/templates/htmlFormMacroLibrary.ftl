@@ -789,18 +789,18 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   </form>
 </#macro>
 <#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description confirmation extraArgs...>
-  <a<#if linkStyle?has_content> class="${escapeVal(linkStyle, 'html')}"</#if> href="javascript:document['${escapeVal(hiddenFormName, 'js-html')}'].submit()"
-    <#if action?has_content && event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}"</#if>
-    <#if confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}')"</#if>>
-      <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt=""/></#if>${escapeVal(description, 'htmlmarkup')}</a>
+  <a<#if linkStyle?has_content> class="${escapeVal(linkStyle, 'html')}"</#if> href="javascript:document['${escapeVal(hiddenFormName, 'js-html')}'].submit()"<#t/>
+    <#if action?has_content && event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}"</#if><#t/>
+    <#if confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}')"</#if>><#t/>
+      <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt=""/></#if>${escapeVal(description, 'htmlmarkup')}</a><#t/>
 </#macro>
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation extraArgs...>
-    <a<#if linkStyle?has_content> class="${escapeVal(linkStyle, 'html')}"</#if> 
-      href="${escapeFullUrl(linkUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if>
-      <#if action?has_content && event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}"</#if>
-      <#if confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}')"</#if>
-      <#if imgSrc?length == 0 && title?has_content> title="${escapeVal(title, 'html')}"</#if>>
-        <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt="${escapeVal(alternate, 'html')}" title="${escapeVal(title, 'html')}"/></#if>${escapeVal(description, 'htmlmarkup')}</a>
+    <a<#if linkStyle?has_content> class="${escapeVal(linkStyle, 'html')}"</#if> href="${escapeFullUrl(linkUrl, 'html')}"<#t/>
+      <#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if><#t/>
+      <#if action?has_content && event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}"</#if><#t/>
+      <#if confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}')"</#if><#t/>
+      <#if imgSrc?length == 0 && title?has_content> title="${escapeVal(title, 'html')}"</#if>><#t/>
+        <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt="${escapeVal(alternate, 'html')}" title="${escapeVal(title, 'html')}"/></#if>${escapeVal(description, 'htmlmarkup')}</a><#t/>
 </#macro>
 
 <#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns extraArgs...>

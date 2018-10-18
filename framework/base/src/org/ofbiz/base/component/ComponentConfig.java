@@ -42,6 +42,7 @@ import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.KeyStoreUtil;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -62,8 +63,17 @@ public final class ComponentConfig {
      * Also, we are using LinkedHashMap to maintain insertion order - which client code depends on. This means
      * we will need to use synchronization code because there is no concurrent implementation of LinkedHashMap.
      */
-    private static final ComponentConfigCache componentConfigCache = new ComponentConfigCache();
-    private static final Map<String, List<WebappInfo>> serverWebApps = new LinkedHashMap<>();
+    // SCIPIO: 2018-10-18: componentConfigCache is now an immutable cache and we replace it with copies, to avoid blocking reads
+    // TODO: REVIEW: For some of these variables the volatile keyword may not strictly be necessary, but playing it safe for now.
+    //private static final ComponentConfigCache componentConfigCache = new ComponentConfigCache();
+    private static volatile ComponentConfigCache componentConfigCache = new ComponentConfigCache();
+    // SCIPIO: 2018-10-18: new disabled component cache; these are NOT placed in componentConfigCache!
+    private static volatile ComponentConfigCache disabledComponentConfigCache = new ComponentConfigCache();
+    private static final Object componentConfigCacheSyncObj = new Object();
+    // SCIPIO: 2018-10-18: fix bad sync patterns for this using unmodifiable map
+    //private static final Map<String, List<WebappInfo>> serverWebApps = new LinkedHashMap<>();
+    private static volatile Map<String, List<WebappInfo>> serverWebApps = Collections.unmodifiableMap(new LinkedHashMap<>());
+    private static final Object serverWebAppsSyncObj = new Object();
 
     public static Boolean componentExists(String componentName) {
         Assert.notEmpty("componentName", componentName);
@@ -84,6 +94,12 @@ public final class ComponentConfig {
         return classpaths;
     }
 
+    /**
+     * Gets all ENABLED components.
+     * <p>
+     * SCIPIO: NOTE: This EXCLUDES components marked enabled="false".
+     * There is a somewhat inconsistency with {@link #getComponentConfig}.
+     */
     public static Collection<ComponentConfig> getAllComponents() {
         return componentConfigCache.values();
     }
@@ -217,37 +233,46 @@ public final class ComponentConfig {
     public static List<WebappInfo> getAppBarWebInfos(String serverName, Comparator<? super String> comp, String menuName) {
         String serverWebAppsKey = serverName + menuName;
         List<WebappInfo> webInfos = null;
-        synchronized (serverWebApps) {
-            webInfos = serverWebApps.get(serverWebAppsKey);
-        }
+        //synchronized (serverWebApps) { // SCIPIO: 2018-10-18: use immutable cache copies instead
+        webInfos = serverWebApps.get(serverWebAppsKey);
+        //}
         if (webInfos == null) {
-            Map<String, WebappInfo> tm = null;
-            // use a TreeMap to sort the components alpha by title
-            if (comp != null) {
-                tm = new TreeMap<>(comp);
-            } else {
-                tm = new TreeMap<>();
-            }
-            for (ComponentConfig cc : getAllComponents()) {
-                for (WebappInfo wInfo : cc.getWebappInfos()) {
-                    String key = UtilValidate.isNotEmpty(wInfo.position) ? wInfo.position : wInfo.title;
-                    if (serverName.equals(wInfo.server) && wInfo.getAppBarDisplay()) {
-                        if (UtilValidate.isNotEmpty(menuName)) {
-                            if (menuName.equals(wInfo.menuName)) {
-                                tm.put(key, wInfo);
+            synchronized (serverWebAppsSyncObj) { // SCIPIO: 2018-10-18: only sync on writes, ok with immutable cache
+                webInfos = serverWebApps.get(serverWebAppsKey);
+                if (webInfos == null) {
+                    Map<String, WebappInfo> tm = null;
+                    // use a TreeMap to sort the components alpha by title
+                    if (comp != null) {
+                        tm = new TreeMap<>(comp);
+                    } else {
+                        tm = new TreeMap<>();
+                    }
+                    for (ComponentConfig cc : getAllComponents()) {
+                        for (WebappInfo wInfo : cc.getWebappInfos()) {
+                            String key = UtilValidate.isNotEmpty(wInfo.position) ? wInfo.position : wInfo.title;
+                            if (serverName.equals(wInfo.server) && wInfo.getAppBarDisplay()) {
+                                if (UtilValidate.isNotEmpty(menuName)) {
+                                    if (menuName.equals(wInfo.menuName)) {
+                                        tm.put(key, wInfo);
+                                    }
+                                } else {
+                                    tm.put(key, wInfo);
+                                }
                             }
-                        } else {
-                            tm.put(key, wInfo);
                         }
                     }
+                    webInfos = new ArrayList<>(tm.size());
+                    webInfos.addAll(tm.values());
+                    webInfos = Collections.unmodifiableList(webInfos);
+                    // SCIPIO: 2018-10-18: make unmodifiable cache copy
+                    //synchronized (serverWebApps) {
+                    //    // We are only preventing concurrent modification, we are not guaranteeing a singleton.
+                    //    serverWebApps.put(serverWebAppsKey, webInfos);
+                    //}
+                    Map<String, List<WebappInfo>> newServerWebApps = new LinkedHashMap<>(serverWebApps);
+                    newServerWebApps.put(serverWebAppsKey, webInfos);
+                    serverWebApps = Collections.unmodifiableMap(newServerWebApps);
                 }
-            }
-            webInfos = new ArrayList<>(tm.size());
-            webInfos.addAll(tm.values());
-            webInfos = Collections.unmodifiableList(webInfos);
-            synchronized (serverWebApps) {
-                // We are only preventing concurrent modification, we are not guaranteeing a singleton.
-                serverWebApps.put(serverWebAppsKey, webInfos);
             }
         }
         return webInfos;
@@ -257,12 +282,74 @@ public final class ComponentConfig {
         return getAppBarWebInfos(serverName, null, menuName);
     }
 
+    /**
+     * Returns the component by global name.
+     * <p>
+     * SCIPIO: NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).
+     */
     public static ComponentConfig getComponentConfig(String globalName) throws ComponentException {
         // TODO: we need to look up the rootLocation from the container config, or this will blow up
         return getComponentConfig(globalName, null);
     }
 
+    /**
+     * Returns the component by global name.
+     * <p>
+     * SCIPIO: NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).
+     */
     public static ComponentConfig getComponentConfig(String globalName, String rootLocation) throws ComponentException {
+        ComponentConfig componentConfig = checkComponentConfig(globalName, rootLocation); // SCIPIO: 2018-10-18: delegated
+        if (componentConfig != null) {
+            return componentConfig;
+        }
+        if (rootLocation == null) {
+            // Do we really need to do this?
+            // SCIPIO: 2017-08-03: The answer to above is yes.
+            // SCIPIO: 2017-08-03: Now using better exception below to identify specifically when component not found
+            // so that caller can handle gracefully or simply skip.
+            //throw new ComponentException("No component found named : " + globalName);
+            throw new ComponentException.ComponentNotFoundException("No component found named : " + globalName);
+        }
+        // SCIPIO: 2018-10-18: Use an immutable config cache now, with sync (mostly) only on writes
+        // IN ADDITION, use a sync block here, as this ensures that the ComponentConfig instances are unique globally,
+        // which may prevent unexpected problems
+        synchronized(componentConfigCacheSyncObj) {
+            componentConfig = checkComponentConfig(globalName, rootLocation);
+            if (componentConfig != null) {
+                return componentConfig;
+            }
+
+            componentConfig = new ComponentConfig(globalName, rootLocation);
+            if (componentConfig.enabled()) {
+                //componentConfigCache.put(componentConfig);
+                componentConfigCache = componentConfigCache.copyAndPut(componentConfig);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Registered new component in cache: " + componentConfig + " (total: " + componentConfigCache.size() + ")", module);
+                }
+            } else {
+                disabledComponentConfigCache = disabledComponentConfigCache.copyAndPut(componentConfig); // SCIPIO: 2018-10-18: new disabled component cache
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Registered new disabled component in cache: " + componentConfig + " (total disabled: " + disabledComponentConfigCache.size() + ")", module);
+                }
+            }
+            return componentConfig;
+        }
+    }
+
+    private static ComponentConfig checkComponentConfig(String globalName, String rootLocation) { // SCIPIO: 2018-10-18: refactored from method above
+        ComponentConfig componentConfig = checkComponentConfig(componentConfigCache, globalName, rootLocation);
+        if (componentConfig != null) {
+            return componentConfig;
+        }
+        componentConfig = checkComponentConfig(disabledComponentConfigCache, globalName, rootLocation);
+        if (componentConfig != null) {
+            return componentConfig;
+        }
+        return null;
+    }
+
+    private static ComponentConfig checkComponentConfig(ComponentConfigCache componentConfigCache, String globalName, String rootLocation) { // SCIPIO: 2018-10-18: refactored from method above
+        // Original stock code checks
         ComponentConfig componentConfig;
         if (globalName != null && !globalName.isEmpty()) {
             componentConfig = componentConfigCache.fromGlobalName(globalName);
@@ -276,19 +363,7 @@ public final class ComponentConfig {
                 return componentConfig;
             }
         }
-        if (rootLocation == null) {
-            // Do we really need to do this?
-            // SCIPIO: 2017-08-03: The answer to above is yes.
-            // SCIPIO: 2017-08-03: Need better exception below to identify specifically when component not found
-            // so that caller can handle gracefully or simply skip.
-            //throw new ComponentException("No component found named : " + globalName);
-            throw new ComponentException.ComponentNotFoundException("No component found named : " + globalName);
-        }
-        componentConfig = new ComponentConfig(globalName, rootLocation);
-        if (componentConfig.enabled()) {
-            componentConfigCache.put(componentConfig);
-        }
-        return componentConfig;
+        return null;
     }
 
     /**
@@ -296,7 +371,23 @@ public final class ComponentConfig {
      * Public only by force - intended ONLY for use from {@link org.ofbiz.base.container.ComponentContainer}.
      */
     public static void clearStoreComponents(List<ComponentConfig> componentList) {
-        componentConfigCache.clearAndPutAll(componentList);
+        synchronized(componentConfigCacheSyncObj) {
+            // NOTE: 2018-10-18: Due to the stock logic in getComponentConfig(String, String), we must separate
+            // enabled from disabled components here, otherwise getAllComponents() will return disabled components
+            List<ComponentConfig> enabledComponentList = new ArrayList<>(componentList.size());
+            List<ComponentConfig> disabledComponentList = new ArrayList<>(componentList.size());
+            for(ComponentConfig component : componentList) {
+                if (component.enabled()) {
+                    enabledComponentList.add(component);
+                } else {
+                    disabledComponentList.add(component);
+                }
+            }
+            componentConfigCache = new ComponentConfigCache(enabledComponentList);
+            disabledComponentConfigCache = new ComponentConfigCache(disabledComponentList);
+            Debug.logInfo("Setting global component cache: " + enabledComponentList.size() 
+                    + " enabled components, " + disabledComponentList.size() + " disabled components", module);
+        }
     }
 
     public static String getFullLocation(String componentName, String resourceLoaderName, String location) throws ComponentException {
@@ -1040,6 +1131,8 @@ public final class ComponentConfig {
         }
     }
 
+    /* SCIPIO: 2018-10-18: This entire class has a completely anti-server thread sync design, 
+       so it is replaced below with an immutable version with non-blocking reads
     // ComponentConfig instances need to be looked up by their global name and root location,
     // so this class encapsulates the Maps and synchronization code required to do that.
     private static final class ComponentConfigCache {
@@ -1071,31 +1164,107 @@ public final class ComponentConfig {
             return Collections.unmodifiableList(new ArrayList<>(componentConfigs.values()));
         }
 
-        /**
-         * SCIPIO: Clears all (for reordering).
-         */
-        private synchronized void clear() {
+        private synchronized void clear() { // SCIPIO
             componentConfigs.clear();
             componentLocations.clear();
         }
 
-        /**
-         * SCIPIO: putAll.
-         */
-        private synchronized void putAll(Collection<? extends ComponentConfig> configList) {
+        private synchronized void putAll(Collection<? extends ComponentConfig> configList) { // SCIPIO
             for(ComponentConfig config : configList) {
                 put(config);
             }
         }
 
-        /**
-         * SCIPIO: Atomic clear + putAll method.
-         */
-        private synchronized void clearAndPutAll(Collection<? extends ComponentConfig> configList) {
+        private synchronized void clearAndPutAll(Collection<? extends ComponentConfig> configList) { // SCIPIO: Atomic clear + putAll method.
             clear();
             putAll(configList);
         }
     }
+    */
+
+    /**
+     * ComponentConfig instances need to be looked up by their global name and root location,
+     * so this class encapsulates the Maps and synchronization code required to do that.
+     * <p>
+     * SCIPIO: Component config cache version that is non-blocking for reads. Each change creates a new instance.
+     * <p>
+     * Re-written 2018-10-18.
+     */
+    @SuppressWarnings("unused")
+    private static final class ComponentConfigCache {
+        // Key is the global name.
+        private final Map<String, ComponentConfig> componentConfigs;
+        // Root location mapped to global name.
+        private final Map<String, String> componentLocations;
+        // SCIPIO: Separate list of configs for the values() call;
+        private final List<ComponentConfig> componentConfigList;
+
+        ComponentConfigCache(ComponentConfigCache other, Collection<? extends ComponentConfig> newConfigs) {
+            Map<String, ComponentConfig> componentConfigs;
+            Map<String, String> componentLocations;
+            if (other != null) {
+                componentConfigs = new LinkedHashMap<>(other.componentConfigs);
+                componentLocations = new HashMap<>(other.componentLocations);
+            } else {
+                componentConfigs = new LinkedHashMap<>();
+                componentLocations = new HashMap<>();
+            }
+            if (newConfigs != null) {
+                for(ComponentConfig config : newConfigs) {
+                    String globalName = config.getGlobalName();
+                    String fileLocation = config.getRootLocation();
+                    componentLocations.put(fileLocation, globalName);
+                    componentConfigs.put(globalName, config);
+                }
+            }
+            this.componentConfigs = componentConfigs;
+            this.componentLocations = componentLocations;
+            this.componentConfigList = Collections.unmodifiableList(new ArrayList<>(componentConfigs.values()));
+        }
+
+        ComponentConfigCache(Collection<? extends ComponentConfig> newConfigs) {
+            this(null, newConfigs);
+        }
+
+        ComponentConfigCache() {
+            this(null, (Collection<? extends ComponentConfig>) null);
+        }
+
+        /**
+         * SCIPIO: Returns cloned instance with the given config added.
+         */
+        ComponentConfigCache copyAndPut(ComponentConfig config) {
+            return new ComponentConfigCache(this, (UtilMisc.toList(config)));
+        }
+
+        /**
+         * SCIPIO: Returns cloned instance with the given configs added.
+         */
+        ComponentConfigCache copyAndPutAll(Collection<? extends ComponentConfig> configList) {
+            return new ComponentConfigCache(this, configList);
+        }
+
+        ComponentConfig fromGlobalName(String globalName) {
+            return componentConfigs.get(globalName);
+        }
+
+        ComponentConfig fromRootLocation(String rootLocation) {
+            String globalName = componentLocations.get(rootLocation);
+            if (globalName == null) {
+                return null;
+            }
+            return componentConfigs.get(globalName);
+        }
+
+        Collection<ComponentConfig> values() {
+            return componentConfigList;
+        }
+        
+        int size() {
+            return componentConfigList.size();
+        }
+    }
+
 
     /**
      * An object that models the <code>&lt;entity-resource&gt;</code> element.

@@ -116,7 +116,7 @@ public class ComponentContainer implements Container {
 
         // SCIPIO: re-store the component definitions, in order to apply any load order or other modifications we may have made
         // FIXME: in theory we should only clear the ones we loaded (the sizes could differ), in case multiple loaders are involved... but likely never happen
-        int allComponentsSize = ComponentConfig.getAllComponents().size();
+        int allComponentsSize = ComponentConfig.getEnabledComponents().size() + ComponentConfig.getDisabledComponents().size();
         if (componentList.size() != allComponentsSize) {
             Debug.logError("Scipio: The number of components loaded by our container (" +  componentList.size()
                 + ") is different from the number of components that were registered in the system (" + allComponentsSize +

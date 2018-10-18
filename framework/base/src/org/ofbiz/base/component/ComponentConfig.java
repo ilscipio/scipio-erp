@@ -95,13 +95,32 @@ public final class ComponentConfig {
     }
 
     /**
-     * Gets all ENABLED components.
+     * Gets all ENABLED components (enabled="true" or implicit).
      * <p>
-     * SCIPIO: NOTE: This EXCLUDES components marked enabled="false".
-     * There is a somewhat inconsistency with {@link #getComponentConfig}.
+     * SCIPIO: NOTE: This EXCLUDES components marked enabled="false" and always has, but was poorly
+     * named historically. This is the same as {@link #getEnabledComponents()}.
+     * <p>
+     * NOTE: There is inconsistency with {@link #getComponentConfig}.
      */
     public static Collection<ComponentConfig> getAllComponents() {
         return componentConfigCache.values();
+    }
+
+    /**
+     * SCIPIO: Gets all ENABLED components (enabled="true" or implicit).
+     * NOTE: This is the same as {@link #getAllComponents()}, added for clarity.
+     * Added 2018-10-18.
+     */
+    public static Collection<ComponentConfig> getEnabledComponents() {
+        return componentConfigCache.values();
+    }
+
+    /**
+     * SCIPIO: Gets all DISABLED components (enabled="false").
+     * Added 2018-10-18.
+     */
+    public static Collection<ComponentConfig> getDisabledComponents() {
+        return disabledComponentConfigCache.values();
     }
 
     public static List<ContainerConfig.Container> getAllContainers() {

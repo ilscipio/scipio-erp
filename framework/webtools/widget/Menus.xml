@@ -493,6 +493,7 @@ under the License.
     <menu name="DevelopmentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <actions>
             <set field="demoTargetUrl" from-field="demoTargetUrl" default-value="LayoutDemo"/>
+            <property-to-field resource="webtools" property="dev.script.tools.enabled" field="tmplTestEnabled" />
         </actions>
         <menu-item name="LayoutDemo" title="${uiLabelMap.WebtoolsLayoutDemo}">
             <link target="${demoTargetUrl}">
@@ -505,6 +506,7 @@ under the License.
                 <and>
                     <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
                     <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                    <if-true field="tmplTestEnabled"/>
                 </and>
             </condition>
             <link target="TemplateTest"/>

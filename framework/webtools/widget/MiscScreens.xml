@@ -851,10 +851,12 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Development" />
                 <set field="activeSubMenuItem" value="TemplateTest"/>
                 <include-screen-actions name="CodeEditorCommonIncludes" location="component://cms/widget/CommonScreens.xml"/>
+                <property-to-field resource="webtools" property="dev.script.tools.enabled" field="tmplTestEnabled" />
                 <condition-to-field field="hasTmplTestPerm">
                     <and>
                         <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
                         <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                        <if-true field="tmplTestEnabled"/>
                     </and>
                 </condition-to-field>
                 <if>

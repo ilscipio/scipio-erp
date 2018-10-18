@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -427,6 +426,11 @@ public class ProductSearchSession {
 
     /** A ControlServlet event method used to check to see if there is an override for any of the current keywords in the search */
     public static final String checkDoKeywordOverride(HttpServletRequest request, HttpServletResponse response) {
+        return checkDoKeywordOverride(request, response, DefaultKeywordOverrideHandler.INSTANCE); // SCIPIO: now delegating
+    }
+
+    /** A ControlServlet event method used to check to see if there is an override for any of the current keywords in the search */
+    public static final String checkDoKeywordOverride(HttpServletRequest request, HttpServletResponse response, KeywordOverrideHandler handler) { // SCIPIO: CheckDoKeywordOverrideHandler
         HttpSession session = request.getSession();
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
@@ -464,29 +468,28 @@ public class ProductSearchSession {
                         if (keywords.contains(ovrdKeyword)) {
                             String targetTypeEnumId = productStoreKeywordOvrd.getString("targetTypeEnumId");
                             String target = productStoreKeywordOvrd.getString("target");
-                            ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
-                            RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                            // SCIPIO: leave to handler
+                            //ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
+                            //RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                             if ("KOTT_PRODCAT".equals(targetTypeEnumId)) {
-                                String requestName = "/category/~category_id=" + target;
-                                target = rh.makeLink(request, response, requestName, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
+                                target = handler.handleCategoryLink(request, response, target, ovrdKeyword, productStoreKeywordOvrd); // SCIPIO: handler
                             } else if ("KOTT_PRODUCT".equals(targetTypeEnumId)) {
-                                String requestName = "/product/~product_id=" + target;
-                                target = rh.makeLink(request, response, requestName, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
+                                target = handler.handleProductLink(request, response, target, ovrdKeyword, productStoreKeywordOvrd); // SCIPIO: handler
                             } else if ("KOTT_OFBURL".equals(targetTypeEnumId)) {
-                                target = rh.makeLink(request, response, target, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
+                                target = handler.handleNavLink(request, response, target, ovrdKeyword, productStoreKeywordOvrd); // SCIPIO: handler
                             } else if ("KOTT_AURL".equals(targetTypeEnumId)) {
-                                // do nothing, is absolute URL
+                                target = handler.handleAbsoluteLink(request, response, target, ovrdKeyword, productStoreKeywordOvrd); // SCIPIO: handler
                             } else {
-                                Debug.logError("The targetTypeEnumId [] is not recognized, not doing keyword override", module);
-                                // might as well see if there are any others...
-                                continue;
+                                target = handler.handleOther(request, response, target, ovrdKeyword, productStoreKeywordOvrd, targetTypeEnumId); // SCIPIO: handler
                             }
-                            try {
-                                response.sendRedirect(target);
-                                return "none";
-                            } catch (IOException e) {
-                                Debug.logError(e, "Could not send redirect to: " + target, module);
-                                continue;
+                            if (target != null) {
+                                try {
+                                    response.sendRedirect(target);
+                                    return "none";
+                                } catch (IOException e) {
+                                    Debug.logError(e, "Could not send redirect to: " + target, module);
+                                    continue;
+                                }
                             }
                         }
                     }
@@ -495,6 +498,49 @@ public class ProductSearchSession {
         }
 
         return "success";
+    }
+
+    /**
+     * SCIPIO: Can be overridden for different keyword handling.
+     * Added 2018-10-18.
+     */
+    public interface KeywordOverrideHandler {
+        String handleCategoryLink(HttpServletRequest request, HttpServletResponse response, String target, String keyword, GenericValue productStoreKeywordOvrd);
+        String handleProductLink(HttpServletRequest request, HttpServletResponse response, String target, String keyword, GenericValue productStoreKeywordOvrd);
+        String handleNavLink(HttpServletRequest request, HttpServletResponse response, String target, String keyword, GenericValue productStoreKeywordOvrd);
+        String handleAbsoluteLink(HttpServletRequest request, HttpServletResponse response, String target, String keyword, GenericValue productStoreKeywordOvrd);
+        default String handleOther(HttpServletRequest request, HttpServletResponse response, String target, String keyword, GenericValue productStoreKeywordOvrd, String targetTypeEnumId) {
+            Debug.logError("The targetTypeEnumId [" + targetTypeEnumId + "] is not recognized, not doing keyword override", module); // SCIPIO: fixed logging (targetTypeEnumId was missing)
+            // might as well see if there are any others...
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Default checkDoKeywordOverride handler, based on stock code from the original method; can be overridden.
+     * Added 2018-10-18.
+     */
+    public static class DefaultKeywordOverrideHandler implements KeywordOverrideHandler {
+        public static final DefaultKeywordOverrideHandler INSTANCE = new DefaultKeywordOverrideHandler();
+
+        public String handleCategoryLink(HttpServletRequest request, HttpServletResponse response, String target, String keyword, GenericValue productStoreKeywordOvrd) {
+            String requestName = "/category/~category_id=" + target;
+            return RequestHandler.makeUrl(request, response, requestName, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
+        }
+
+        public String handleProductLink(HttpServletRequest request, HttpServletResponse response, String target, String keyword, GenericValue productStoreKeywordOvrd) {
+            String requestName = "/product/~product_id=" + target;
+            return RequestHandler.makeUrl(request, response, requestName, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
+        }
+
+        public String handleNavLink(HttpServletRequest request, HttpServletResponse response, String target, String keyword, GenericValue productStoreKeywordOvrd) {
+            return RequestHandler.makeUrl(request, response, target, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
+        }
+
+        public String handleAbsoluteLink(HttpServletRequest request, HttpServletResponse response, String target, String keyword, GenericValue productStoreKeywordOvrd) {
+            // do nothing, is absolute URL
+            return target;
+        }
     }
 
     public static ArrayList<String> searchDo(HttpSession session, Delegator delegator, String prodCatalogId) {

@@ -121,5 +121,9 @@ under the License.
     <ProductStoreFacility productStoreId="ScipioShop" facilityId="ScipioShopWarehouse" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="ScipioShop" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreKeywordOvrd productStoreId="ScipioShop" keyword="electronic" fromDate="2001-05-13 12:00:00.0" target="ELTRN-100" targetTypeEnumId="KOTT_PRODCAT"/>
+    <ProductStoreKeywordOvrd productStoreId="ScipioShop" keyword="electronics" fromDate="2001-05-13 12:00:00.0" target="ELTRN-100" targetTypeEnumId="KOTT_PRODCAT"/>
+    <ProductStoreKeywordOvrd productStoreId="ScipioShop" keyword="businessphone" fromDate="2001-05-13 12:00:00.0" target="PH-1005" targetTypeEnumId="KOTT_PRODUCT"/>
+    <ProductStoreKeywordOvrd productStoreId="ScipioShop" keyword="login" fromDate="2001-05-13 12:00:00.0" target="checkLogin" targetTypeEnumId="KOTT_OFBURL"/>
+    <ProductStoreKeywordOvrd productStoreId="ScipioShop" keyword="faq" fromDate="2001-05-13 12:00:00.0" target="https://www.scipioerp.com/products/faq" targetTypeEnumId="KOTT_AURL"/>
 
 </entity-engine-xml>

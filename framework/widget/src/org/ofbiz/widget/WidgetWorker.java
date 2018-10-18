@@ -188,9 +188,16 @@ public final class WidgetWorker {
         writer.append(buffer.toString());
         writer.append(location);
     }
+    
+    /**
+     * @deprecated SCIPIO: 2018-10-18: The macro form renderer method must be used instead
+     * ({@link org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHyperlinkByType}); this method may be unmaintained and insecure.
+     */
+    @Deprecated
     public static void makeHyperlinkByType(Appendable writer, String linkType, String linkStyle, String targetType, String target,
             Map<String, String> parameterMap, String description, String targetWindow, String confirmation, ModelFormField modelFormField,
             HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+        Debug.logWarning("makeHyperlinkByType: Deprecated method called (target: " + target + "); use the MacroFormRenderer method instead", module); // SCIPIO
         /* SCIPIO: 2018-09-04: TODO: REVIEW: from upstream...
         if (modelFormField == null) {
             throw new IllegalArgumentException("modelFormField in WidgetWorker.makeHyperlinkByType has turned out to be null");
@@ -216,11 +223,17 @@ public final class WidgetWorker {
         } else {
             WidgetWorker.makeHyperlinkString(writer, linkStyle, targetType, target, parameterMap, description, confirmation, modelFormField, request, response, context, targetWindow);
         }
-
     }
+
+    /**
+     * @deprecated SCIPIO: 2018-10-18: Macro form renderer (Freemarker) makeHyperlinkString macro must be used instead
+     * (via {@link org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHyperlinkString}); this method may be unmaintained and insecure.
+     */
+    @Deprecated
     public static void makeHyperlinkString(Appendable writer, String linkStyle, String targetType, String target, Map<String, String> parameterMap,
             String description, String confirmation, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context, String targetWindow)
             throws IOException {
+        Debug.logWarning("makeHyperlinkString: Deprecated method called (target: " + target + "); use the MacroFormRenderer (Freemarker) macro instead", module); // SCIPIO
         if (UtilValidate.isNotEmpty(description) || UtilValidate.isNotEmpty(request.getAttribute("image"))) {
             writer.append("<a");
 
@@ -267,7 +280,13 @@ public final class WidgetWorker {
         }
     }
 
+    /**
+     * @deprecated SCIPIO: 2018-10-18: The macro form renderer (Freemarker) makeHiddenFormLinkAnchor macro must be used instead
+     * (via {@link org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHiddenFormLinkAnchor}); this method may be unmaintained and insecure.
+     */
+    @Deprecated
     public static void makeHiddenFormLinkAnchor(Appendable writer, String linkStyle, String description, String confirmation, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+        Debug.logWarning("makeHiddenFormLinkAnchor: Deprecated method called; use the MacroFormRenderer (Freemarker) macros instead", module); // SCIPIO
         if (UtilValidate.isNotEmpty(description) || UtilValidate.isNotEmpty(request.getAttribute("image"))) {
             writer.append("<a");
 
@@ -308,7 +327,13 @@ public final class WidgetWorker {
         }
     }
 
+    /**
+     * @deprecated SCIPIO: 2018-10-18: The macro form renderer (Freemarker) makeHiddenFormLinkForm macro must be used instead
+     * (via {@link org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHiddenFormLinkForm}); this method may be unmaintained and insecure.
+     */
+    @Deprecated
     public static void makeHiddenFormLinkForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+        Debug.logWarning("makeHiddenFormLinkForm: Deprecated method called (target: " + target + "); use the MacroFormRenderer (Freemarker) macro instead", module); // SCIPIO
         writer.append("<form method=\"post\"");
         writer.append(" action=\"");
         // note that this passes null for the parameterList on purpose so they won't be put into the URL
@@ -372,6 +397,7 @@ public final class WidgetWorker {
         }
         return formName + modelForm.getItemIndexSeparator() + modelFormField.getName();
     }
+
     public static String determineAutoLinkType(String linkType, String target, String targetType, HttpServletRequest request) {
         if ("auto".equals(linkType)) {
             if ("intra-app".equals(targetType)) {

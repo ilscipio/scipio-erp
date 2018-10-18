@@ -3425,8 +3425,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if ("hidden-form".equals(realLinkType)) {
             parameterMap.put(viewIndexField, Integer.toString(viewIndex));
             parameterMap.put(viewSizeField, Integer.toString(viewSize));
+            // SCIPIO: 2018-10-18: The following makeHiddenFormLinkAnchor and makeHiddenFormLinkForm calls are changed to no longer use the WidgetWorker. static methods
             if ("multi".equals(modelForm.getType())) {
-                WidgetWorker.makeHiddenFormLinkAnchor(writer, linkStyle, encodedDescription, confirmation, modelFormField, request, response, context);
+                makeHiddenFormLinkAnchor(writer, linkStyle, encodedDescription, confirmation, modelFormField, request, response, context);
                 // this is a bit trickier, since we can't do a nested form we'll have to put the link to submit the form in place, but put the actual form def elsewhere, ie after the big form is closed
                 Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
                 Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
@@ -3434,10 +3435,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
                     postMultiFormWriter = new StringWriter();
                     wholeFormContext.put("postMultiFormWriter", postMultiFormWriter);
                 }
-                WidgetWorker.makeHiddenFormLinkForm(postMultiFormWriter, target, targetType, targetWindow, parameterMap, modelFormField, request, response, context);
+                makeHiddenFormLinkForm(postMultiFormWriter, target, targetType, targetWindow, parameterMap, modelFormField, request, response, context);
             } else {
-                WidgetWorker.makeHiddenFormLinkForm(writer, target, targetType, targetWindow, parameterMap, modelFormField, request, response, context);
-                WidgetWorker.makeHiddenFormLinkAnchor(writer, linkStyle, encodedDescription, confirmation, modelFormField, request, response, context);
+                makeHiddenFormLinkForm(writer, target, targetType, targetWindow, parameterMap, modelFormField, request, response, context);
+                makeHiddenFormLinkAnchor(writer, linkStyle, encodedDescription, confirmation, modelFormField, request, response, context);
             }
         } else {
             if ("layered-modal".equals(realLinkType)) {
@@ -3600,10 +3601,35 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
     }
 
-    public void makeHiddenFormLinkForm(Appendable writer, String target, String targetType, String targetWindow, List<CommonWidgetModels.Parameter> parameterList, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+    /**
+     * makeHiddenFormLinkForm.
+     * <p>
+     * SCIPIO: 2018-10-18: refactored so parameters can take multiple source data types.
+     */
+    private void makeHiddenFormLinkForm(Appendable writer, String target, String targetType, String targetWindow, String parameterFtlArg, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
         StringBuilder actionUrl = new StringBuilder();
         WidgetWorker.buildHyperlinkUrl(actionUrl, target, targetType, null, null, null, null, null, request, response, context); // SCIPIO: pass null for fullPath/secure/encode
         String name = WidgetWorker.makeLinkHiddenFormName(context, modelFormField);
+        StringWriter sr = new StringWriter();
+        sr.append("<@makeHiddenFormLinkForm ");
+        sr.append("actionUrl=");
+        sr.append(ftlFmt.makeStringLiteral(actionUrl.toString()));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" parameters=");
+        sr.append(parameterFtlArg);
+        sr.append(" targetWindow=");
+        sr.append(ftlFmt.makeStringLiteral(targetWindow));
+        sr.append(" />");
+        executeMacro(writer, sr.toString());
+    }
+
+    /**
+     * makeHiddenFormLinkForm.
+     * <p>
+     * SCIPIO: 2018-10-18: refactored so parameters can take multiple source data types.
+     */
+    public void makeHiddenFormLinkForm(Appendable writer, String target, String targetType, String targetWindow, List<CommonWidgetModels.Parameter> parameterList, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
         StringBuilder parameters = new StringBuilder();
         parameters.append("[");
         for (CommonWidgetModels.Parameter parameter : parameterList) {
@@ -3617,18 +3643,29 @@ public final class MacroFormRenderer implements FormStringRenderer {
             parameters.append("}");
         }
         parameters.append("]");
-        StringWriter sr = new StringWriter();
-        sr.append("<@makeHiddenFormLinkForm ");
-        sr.append("actionUrl=");
-        sr.append(ftlFmt.makeStringLiteral(actionUrl.toString()));
-        sr.append(" name=");
-        sr.append(ftlFmt.makeStringLiteral(name));
-        sr.append(" parameters=");
-        sr.append(parameters.toString());
-        sr.append(" targetWindow=");
-        sr.append(ftlFmt.makeStringLiteral(targetWindow));
-        sr.append(" />");
-        executeMacro(writer, sr.toString());
+        makeHiddenFormLinkForm(writer, target, targetType, targetWindow, parameters.toString(), modelFormField, request, response, context);
+    }
+
+    /**
+     * makeHiddenFormLinkForm.
+     * <p>
+     * SCIPIO: 2018-10-18: new overload that accepts a Map of parameters (if order important, pass a LinkedHashMap).
+     */
+    public void makeHiddenFormLinkForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+        StringBuilder parameters = new StringBuilder();
+        parameters.append("[");
+        for (Map.Entry<String, String> entry : parameterMap.entrySet()) {
+            if (parameters.length() > 1) {
+                parameters.append(",");
+            }
+            parameters.append("{'name':");
+            parameters.append(ftlFmt.makeStringLiteralSQ(entry.getKey()));
+            parameters.append(",'value':");
+            parameters.append(ftlFmt.makeStringLiteralSQ(encode(entry.getValue(), modelFormField, context))); // SCIPIO: unhardcoded html encode call here
+            parameters.append("}");
+        }
+        parameters.append("]");
+        makeHiddenFormLinkForm(writer, target, targetType, targetWindow, parameters.toString(), modelFormField, request, response, context);
     }
 
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ContainerField containerField) throws IOException {

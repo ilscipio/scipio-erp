@@ -42,7 +42,7 @@ under the License.
           </li>
         <li><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>">${uiLabelMap.ProductPromotions}</a></li>
         <li><a href="<@ofbizUrl>license</@ofbizUrl>">License</a></li>  
-        <li><a href="https://www.scipio-erp.com/products/faq">FAQ's</a></li>
+        <li><a href="https://www.scipioerp.com/products/faq">FAQ's</a></li>
       </ul>
     </@cell>
     <@cell columns=3>      

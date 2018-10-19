@@ -63,7 +63,22 @@ public class ContactMechWorker {
         List<GenericValue> allPartyContactMechs = null;
 
         try {
-            List<GenericValue> tempCol = EntityQuery.use(delegator).from("PartyContactMech").where("partyId", partyId).queryList();
+            // SCIPIO: 2018-10-19: Added filterByDate to initial pre-query instead of manual post-query filter, and handle contactMechTypeId in smarter way
+            if (contactMechTypeId != null) {
+                allPartyContactMechs = EntityQuery.use(delegator)
+                        .from("PartyContactMechAndContactMech")
+                        .where("partyId", partyId, "contactMechTypeId", contactMechTypeId)
+                        .filterByDate(!showOld)
+                        .queryList();
+            } else {
+                allPartyContactMechs = EntityQuery.use(delegator)
+                        .from("PartyContactMech")
+                        .where("partyId", partyId)
+                        .filterByDate(!showOld)
+                        .queryList();
+            }
+            /*
+            List<GenericValue> tempCol = EntityQuery.use(delegator).from("PartyContactMech").where("partyId", partyId).filterByDate(!showOld).queryList();
             if (contactMechTypeId != null) {
                 List<GenericValue> tempColTemp = new ArrayList<>();
                 for (GenericValue partyContactMech: tempCol) {
@@ -76,7 +91,9 @@ public class ContactMechWorker {
                 tempCol = tempColTemp;
             }
             if (!showOld) tempCol = EntityUtil.filterByDate(tempCol, true);
+            
             allPartyContactMechs = tempCol;
+            */
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
@@ -84,6 +101,14 @@ public class ContactMechWorker {
         if (allPartyContactMechs == null) return partyContactMechValueMaps;
 
         for (GenericValue partyContactMech: allPartyContactMechs) {
+            if (contactMechTypeId != null) { // SCIPIO: 2018-10-19
+                try {
+                    partyContactMech = partyContactMech.getRelatedOne("PartyContactMech", false);
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, module);
+                }
+            }
+
             GenericValue contactMech = null;
 
             try {
@@ -134,7 +159,22 @@ public class ContactMechWorker {
         List<GenericValue> allFacilityContactMechs = null;
 
         try {
-            List<GenericValue> tempCol = EntityQuery.use(delegator).from("FacilityContactMech").where("facilityId", facilityId).queryList();
+            // SCIPIO: 2018-10-19: Added filterByDate to initial pre-query instead of manual post-query filter, and handle contactMechTypeId in smarter way
+            if (contactMechTypeId != null) {
+                allFacilityContactMechs = EntityQuery.use(delegator)
+                        .from("FacilityContactMechAndContactMech")
+                        .where("facilityId", facilityId, "contactMechTypeId", contactMechTypeId)
+                        .filterByDate(!showOld)
+                        .queryList();
+            } else {
+                allFacilityContactMechs = EntityQuery.use(delegator)
+                        .from("FacilityContactMech")
+                        .where("facilityId", facilityId)
+                        .filterByDate(!showOld)
+                        .queryList();
+            }
+            /*
+            List<GenericValue> tempCol = EntityQuery.use(delegator).from("FacilityContactMech").where("facilityId", facilityId).filterByDate(!showOld).queryList();
             if (contactMechTypeId != null) {
                 List<GenericValue> tempColTemp = new ArrayList<>();
                 for (GenericValue partyContactMech: tempCol) {
@@ -146,8 +186,9 @@ public class ContactMechWorker {
                 }
                 tempCol = tempColTemp;
             }
-            if (!showOld) tempCol = EntityUtil.filterByDate(tempCol, true);
+            if (!showOld) tempCol = EntityUtil.filterByDate(tempCol, true); // SCIPIO: 2018-10-19: Added filterByDate to initial pre-query instead of manual post-query filter
             allFacilityContactMechs = tempCol;
+            */
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
@@ -155,6 +196,14 @@ public class ContactMechWorker {
         if (allFacilityContactMechs == null) return facilityContactMechValueMaps;
 
         for (GenericValue facilityContactMech: allFacilityContactMechs) {
+            if (contactMechTypeId != null) { // SCIPIO: 2018-10-19
+                try {
+                    facilityContactMech = facilityContactMech.getRelatedOne("FacilityContactMech", false);
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, module);
+                }
+            }
+
             GenericValue contactMech = null;
 
             try {

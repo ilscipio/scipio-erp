@@ -3082,6 +3082,21 @@
         <value xml:lang="zh">删除列</value>
         <value xml:lang="zh-TW">刪除欄位</value>
     </property>
+    <property key="CommonDeleted">
+        <value xml:lang="de">Gelöscht</value>
+        <value xml:lang="en">Deleted</value>
+        <value xml:lang="es">Suprimido</value>
+        <value xml:lang="fr">Supprimé</value>
+        <value xml:lang="it">Cancellata</value>
+        <value xml:lang="ja">削除</value>
+        <value xml:lang="nl">Verwijderd</value>
+        <value xml:lang="pt-BR">Excluído</value>
+        <value xml:lang="ru">Удален</value>
+        <value xml:lang="th">ลบ</value>
+        <value xml:lang="vi">Đã xóa</value>
+        <value xml:lang="zh">已删除</value>
+        <value xml:lang="zh-TW">已刪除</value>
+    </property>
     <property key="CommonDeleteThisColumn">
         <value xml:lang="ar">حذف هذا العمود</value>
         <value xml:lang="cs">Smazat tento sloupec</value>

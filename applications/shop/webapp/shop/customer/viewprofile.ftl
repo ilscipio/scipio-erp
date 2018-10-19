@@ -203,7 +203,7 @@ under the License.
                       </#if>
                       <#-- SCIPIO: needless information
                       <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>-->
-                      <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
+                      <#if partyContactMech.thruDate??><div><em>${uiLabelMap.CommonDeleted}:&nbsp;${partyContactMech.thruDate.toString()}</em></div></#if>
                     </@td>
                     <@td>
                       <#if (partyContactMech.allowSolicitation!) == "Y">

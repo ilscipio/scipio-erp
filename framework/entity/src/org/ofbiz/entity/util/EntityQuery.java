@@ -416,6 +416,25 @@ public class EntityQuery {
     }
 
     /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
+     * using the "now" timestamp (current time), with explicit boolean toggle.
+     * Added 2018-10-19.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
+     * @param moment - Timestamp representing the moment in time that the values should be active during
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable) {
+        this.filterByDate = enable;
+        this.filterByDateMoment = null;
+        this.filterByFieldNames = null;
+        return this;
+    }
+
+    /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
      * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.

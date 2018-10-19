@@ -73,4 +73,9 @@ if (userLogin) {
         context.shipToFaxNumber = shipToFaxNumber;
         context.shipToFaxExtension = faxPartyContactMech.extension;
     }
+    
+    cart = session.getAttribute("shoppingCart");
+    if (cart) {
+        cart.setAllShippingContactMechId(context.shipToContactMechId);
+    }
 }

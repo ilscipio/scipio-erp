@@ -130,7 +130,12 @@ under the License.
             <@td nowrap="nowrap" class="${styles.text_right!}" headers="salesTax" id="completedCartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
             <@td>&nbsp;</@td>
           </@tr>
-        
+		<@tr>
+           <@td id="vatTax" scope="row" colspan=2>${uiLabelMap.OrderTotalSalesTax}</@td>
+           <@td nowrap="nowrap" class="${styles.text_right!}" headers="vatTax" id="completedCartTotalVatTax"><@ofbizCurrency amount=shoppingCart.getTotalVATTax() isoCode=shoppingCart.getCurrency()/></@td>
+           <@td>&nbsp;</@td>
+         </@tr>
+
         <@tr>
             <@td colspan="5"></@td>
             <@td colspan="1"><hr /></@td>
@@ -311,6 +316,12 @@ under the License.
               <@tr>
                 <@td colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
                 <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency()/></@td>
+                <@td>&nbsp;</@td>
+              </@tr>
+              
+              <@tr>
+                <@td colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderSalesTaxIncluded}</@td>
+                <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalVATTax"><@ofbizCurrency amount=shoppingCart.getTotalVATTax() isoCode=shoppingCart.getCurrency()/></@td>
                 <@td>&nbsp;</@td>
               </@tr>
             

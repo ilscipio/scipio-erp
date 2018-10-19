@@ -64,6 +64,7 @@ public class ContactMechWorker {
 
         try {
             // SCIPIO: 2018-10-19: Added filterByDate to initial pre-query instead of manual post-query filter, and handle contactMechTypeId in smarter way
+            // DEV NOTE: WARN: DO NOT ADD A cache() CALL HERE!
             if (contactMechTypeId != null) {
                 allPartyContactMechs = EntityQuery.use(delegator)
                         .from("PartyContactMechAndContactMech")
@@ -160,6 +161,7 @@ public class ContactMechWorker {
 
         try {
             // SCIPIO: 2018-10-19: Added filterByDate to initial pre-query instead of manual post-query filter, and handle contactMechTypeId in smarter way
+            // DEV NOTE: WARN: DO NOT ADD A cache() CALL HERE!
             if (contactMechTypeId != null) {
                 allFacilityContactMechs = EntityQuery.use(delegator)
                         .from("FacilityContactMechAndContactMech")

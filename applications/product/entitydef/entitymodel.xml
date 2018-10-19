@@ -1111,6 +1111,24 @@ under the License.
         <key-map field-name="facilitySizeUomId" rel-field-name="uomId"/>
       </relation>      
     </entity>
+    <!-- SCIPIO: 2018-10-19: New -->
+    <view-entity entity-name="FacilityContactMechAndContactMech" package-name="org.ofbiz.product.facility" title="Facility Contact Mech and Contact Mech View">
+        <member-entity entity-alias="CM" entity-name="FacilityContactMech"/>
+        <member-entity entity-alias="MC" entity-name="ContactMech"/>
+        <alias-all entity-alias="CM"/>
+        <alias-all entity-alias="MC"/>
+        <view-link entity-alias="CM" rel-entity-alias="MC">
+            <key-map field-name="contactMechId"/>
+        </view-link>
+        <relation type="one-nofk" rel-entity-name="FacilityContactMech">
+            <key-map field-name="facilityId"/>
+            <key-map field-name="contactMechId"/>
+            <key-map field-name="fromDate"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="ContactMech">
+            <key-map field-name="contactMechId"/>
+        </relation>
+    </view-entity>
     <view-entity entity-name="FacilityAndContactMech" package-name="org.ofbiz.product.facility" title="Facility and Contact Mech View">
         <member-entity entity-alias="FA" entity-name="Facility"/>
         <member-entity entity-alias="CM" entity-name="FacilityContactMech"/>

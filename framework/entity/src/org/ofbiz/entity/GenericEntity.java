@@ -963,7 +963,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * @param fields The fields Map to get the values from
      * @param setIfEmpty Used to specify whether empty/null values in the field Map should over-write non-empty values in this entity
      * @param namePrefix If not null or empty will be pre-pended to each field name (upper-casing the first letter of the field name first), and that will be used as the fields Map lookup name instead of the field-name
-     * @param pks If null, get all values, if TRUE just get PKs, if FALSE just get non-PKs
+     * @param pks If null, set all values, if TRUE just set PKs, if FALSE just set non-PKs
      */
     public void setAllFields(Map<? extends Object, ? extends Object> fields, boolean setIfEmpty, String namePrefix, Boolean pks) {
         if (fields == null) {

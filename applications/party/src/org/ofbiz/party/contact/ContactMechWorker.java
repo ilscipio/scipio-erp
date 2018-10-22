@@ -73,7 +73,7 @@ public class ContactMechWorker {
                         .queryList();
             } else {
                 allPartyContactMechs = EntityQuery.use(delegator)
-                        .from("PartyContactMech")
+                        .from("PartyContactMechAndContactMech")
                         .where("partyId", partyId)
                         .filterByDate(!showOld)
                         .queryList();
@@ -101,19 +101,20 @@ public class ContactMechWorker {
 
         if (allPartyContactMechs == null) return partyContactMechValueMaps;
 
-        for (GenericValue partyContactMech: allPartyContactMechs) {
-            if (contactMechTypeId != null) { // SCIPIO: 2018-10-19
-                try {
-                    partyContactMech = partyContactMech.getRelatedOne("PartyContactMech", false);
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e, module);
-                }
+        for (GenericValue partyContactMechView : allPartyContactMechs) {
+            GenericValue partyContactMech = null;
+            try { // SCIPIO: 2018-10-19
+                partyContactMech = partyContactMechView.extractViewMember("PartyContactMech");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
             }
 
             GenericValue contactMech = null;
 
             try {
-                contactMech = partyContactMech.getRelatedOne("ContactMech", false);
+                // SCIPIO: 2018-10-22: avoid double-lookup
+                //contactMech = partyContactMech.getRelatedOne("ContactMech", false);
+                contactMech = partyContactMechView.extractViewMember("ContactMech");
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
             }
@@ -170,7 +171,7 @@ public class ContactMechWorker {
                         .queryList();
             } else {
                 allFacilityContactMechs = EntityQuery.use(delegator)
-                        .from("FacilityContactMech")
+                        .from("FacilityContactMechAndContactMech")
                         .where("facilityId", facilityId)
                         .filterByDate(!showOld)
                         .queryList();
@@ -197,19 +198,20 @@ public class ContactMechWorker {
 
         if (allFacilityContactMechs == null) return facilityContactMechValueMaps;
 
-        for (GenericValue facilityContactMech: allFacilityContactMechs) {
-            if (contactMechTypeId != null) { // SCIPIO: 2018-10-19
-                try {
-                    facilityContactMech = facilityContactMech.getRelatedOne("FacilityContactMech", false);
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e, module);
-                }
+        for (GenericValue facilityContactMechView : allFacilityContactMechs) {
+            GenericValue facilityContactMech = null;
+            try { // SCIPIO: 2018-10-19
+                facilityContactMech = facilityContactMechView.extractViewMember("FacilityContactMech");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
             }
 
             GenericValue contactMech = null;
 
             try {
-                contactMech = facilityContactMech.getRelatedOne("ContactMech", false);
+                // SCIPIO: 2018-10-22: avoid double-lookup
+                //contactMech = facilityContactMech.getRelatedOne("ContactMech", false);
+                contactMech = facilityContactMechView.extractViewMember("ContactMech");
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
             }

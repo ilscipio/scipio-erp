@@ -243,7 +243,7 @@ public interface Delegator {
      * <p>
      * Added 2018-10-22.
      */
-    GenericValue extractViewMember(GenericValue viewValue, String entityAliasOrName, boolean allowPartial, boolean nullForAbsentOptViewLink);
+    GenericValue extractViewMember(GenericValue viewValue, String entityAliasOrName, boolean allowPartial, boolean nullForAbsentOptViewLink) throws GenericEntityException;
 
     /**
      * Finds GenericValues by the conditions specified in the EntityCondition

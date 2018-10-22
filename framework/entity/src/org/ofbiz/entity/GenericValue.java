@@ -250,7 +250,7 @@ public class GenericValue extends GenericEntity {
      * Added 2018-10-22.
      * @see #extractViewMember(String, boolean, boolean)
      */
-    public GenericValue extractViewMember(String entityAliasOrName) {
+    public GenericValue extractViewMember(String entityAliasOrName) throws GenericEntityException {
         return this.getDelegator().extractViewMember(this, entityAliasOrName, false, true);
     }
 
@@ -280,7 +280,7 @@ public class GenericValue extends GenericEntity {
      * <p>
      * Added 2018-10-22.
      */
-    public GenericValue extractViewMember(String entityAliasOrName, boolean allowPartial, boolean nullForAbsentOptViewLink) {
+    public GenericValue extractViewMember(String entityAliasOrName, boolean allowPartial, boolean nullForAbsentOptViewLink) throws GenericEntityException {
         return this.getDelegator().extractViewMember(this, entityAliasOrName, allowPartial, nullForAbsentOptViewLink);
     }
 

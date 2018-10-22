@@ -2706,9 +2706,9 @@ public class GenericDelegator implements Delegator {
             throw new IllegalArgumentException("Cannot extract view member: entity " + memberEntity.getEntityName() + " cannot be fully populated using the fields of view-entity " + viewValue.getEntityName());
         }
         ModelEntity entity = this.getModelEntity(memberEntity.getEntityName());
-        if (entity == null) {
-            throw new IllegalArgumentException("[GenericDelegator.makeValue] could not find entity for entityName: " + memberEntity.getEntityName());
-        }
+        //if (entity == null) { // should never happen
+        //    throw new IllegalArgumentException("[GenericDelegator.makeValue] could not find entity for entityName: " + memberEntity.getEntityName());
+        //}
         GenericValue result = GenericValue.createAsFieldSubset(this, entity, viewValue, memberEntity.getMemberEntityToViewFieldMap());
         if (nullForAbsentOptViewLink && memberEntity.isOptionalViewLink()) {
             // SCIPIO: TODO: Optimize: it would be better in this case to do this check before the copy constructor, but for now this is more reliable...

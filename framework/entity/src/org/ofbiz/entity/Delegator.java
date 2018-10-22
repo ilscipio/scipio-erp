@@ -218,6 +218,34 @@ public interface Delegator {
     Object encryptFieldValue(String entityName, ModelField.EncryptMethod encryptMethod, Object fieldValue) throws EntityCryptoException;
 
     /**
+     * SCIPIO: Extracts a member entity value from the given view-entity value, straight from its fields in memory,
+     * for the given view-entity entity alias OR entity name.
+     * <p>
+     * This method can be used to avoid re-querying the database needlessly for the individual entities after a view-entity lookup,
+     * without needing or using the entity cache.
+     * <p>
+     * NOTE: This method does NOT populate the system-generated fields: lastUpdatedStamp, lastUpdatedTxStamp, createdStamp, createdTxStamp.
+     * In most cases this does not cause any issues.
+     * <p>
+     * If allowPartial is false and the target entity fields cannot be fully populated from the view-entity fields, throws
+     * an exception; if true, fields are partially populated. It is up to the caller to ensure that the original 
+     * view-entity definition aliases all the fields needed to populate the member.
+     * <p>
+     * If nullForAbsentOptViewLink is true, the method will <em>attempt</em> to return null for optional view-links
+     * that did not match any records.
+     * <strong>WARN:</strong> This optional view-link check is a best-effort attempt and depends on the view-entity definition; 
+     * it may only work properly if the view-link aliases the primary key for the optional entity redundantly to a second alias,
+     * which will be null if the optional entity was not found. The most popular strategy is this: if your view-entity has rel-optional="true", 
+     * you can use "alias-all" with a field prefix on the optional entity and <em>not</em> "exclude" the PK fields.
+     * The PK field from the referring non-optional entity will still be populated but the prefixed one will not, allowing this check to work properly.
+     * <p>
+     * NOTE: Passing the entity name (instead of entity alias) is only supported if it is aliased only once in the view-entity.
+     * <p>
+     * Added 2018-10-22.
+     */
+    GenericValue extractViewMember(GenericValue viewValue, String entityAliasOrName, boolean allowPartial, boolean nullForAbsentOptViewLink);
+
+    /**
      * Finds GenericValues by the conditions specified in the EntityCondition
      * object, the the EntityCondition javadoc for more details.
      *

@@ -2691,4 +2691,31 @@ public class GenericDelegator implements Delegator {
         List<String> curValList = getUserIdentifierStack();
         return curValList.size() > 0 ? curValList.get(0) : null;
     }
+
+    @Override
+    public GenericValue extractViewMember(GenericValue viewValue, String entityAliasOrName, boolean allowPartial, boolean nullForAbsentOptViewLink) { // SCIPIO
+        if (!(viewValue.getModelEntity() instanceof ModelViewEntity)) {
+            throw new IllegalArgumentException("Cannot extract view member: passed viewValue is not a view-entity");
+        }
+        ModelViewEntity modelViewEntity = ((ModelViewEntity) viewValue.getModelEntity());
+        ModelViewEntity.ModelMemberEntityExt memberEntity = modelViewEntity.getMemberEntityForAliasOrName(entityAliasOrName);
+        if (memberEntity == null) {
+            throw new IllegalArgumentException("Cannot extract view member: entity alias or name '" + entityAliasOrName + "' is not valid for view-entity " + viewValue.getEntityName());
+        }
+        if (!allowPartial && !memberEntity.isAllFieldsMapped()) {
+            throw new IllegalArgumentException("Cannot extract view member: entity " + memberEntity.getEntityName() + " cannot be fully populated using the fields of view-entity " + viewValue.getEntityName());
+        }
+        ModelEntity entity = this.getModelEntity(memberEntity.getEntityName());
+        if (entity == null) {
+            throw new IllegalArgumentException("[GenericDelegator.makeValue] could not find entity for entityName: " + memberEntity.getEntityName());
+        }
+        GenericValue result = GenericValue.createAsFieldSubset(this, entity, viewValue, memberEntity.getMemberEntityToViewFieldMap());
+        if (nullForAbsentOptViewLink && memberEntity.isOptionalViewLink()) {
+            // SCIPIO: TODO: Optimize: it would be better in this case to do this check before the copy constructor, but for now this is more reliable...
+            if (!result.containsPrimaryKey(true)) {
+                return null;
+            }
+        }
+        return result;
+    }
 }

@@ -244,6 +244,36 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         this.observable = new Observable(value.observable);
     }
 
+    /** SCIPIO: Creates new GenericEntity partially from fields from existing GenericEntity with new-to-existing field name mappings, but treated as a "new" instance (not a "copy");
+     * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
+     * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
+     * copy constructor and construction from map. Added 2018-10-22. */
+    protected void initAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericEntity sourceFieldsValue, Map<String, String> newToExistingFieldMapping) {
+        assertIsMutable();
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Cannot create a GenericEntity with a null modelEntity parameter");
+        }
+        this.modelEntity = modelEntity;
+        this.entityName = modelEntity.getEntityName();
+        this.delegatorName = delegator.getDelegatorName();
+        this.internalDelegator = delegator;
+        this.observable = new Observable();
+        if (newToExistingFieldMapping != null) {
+            for(Map.Entry<String, String> entry : newToExistingFieldMapping.entrySet()) {
+                if (entry.getValue() != null) {
+                    this.fields.put(entry.getKey(), sourceFieldsValue.fields.get(entry.getValue()));
+                }
+            }
+        } else {
+            this.fields.putAll(sourceFieldsValue.fields);
+        }
+
+        // check some things
+        if (this.entityName == null) {
+            throw new IllegalArgumentException("Cannot create a GenericEntity with a null entityName in the modelEntity parameter");
+        }
+    }
+
     public void reset() {
         assertIsMutable();
         // from GenericEntity

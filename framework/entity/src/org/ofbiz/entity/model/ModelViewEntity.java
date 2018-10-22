@@ -117,6 +117,9 @@ public class ModelViewEntity extends ModelEntity {
     protected Map<String, ModelConversion[]> conversions = new HashMap<>();
 
     protected ViewEntityCondition viewEntityCondition = null;
+    
+    /** SCIPIO: Maps both entity alias and entity name to its ModelMemberEntity (first only!) */
+    protected transient Map<String, ModelMemberEntityExt> memberEntitiesByAliasOrNameSingle = null;
 
     public ModelViewEntity(ModelReader reader, Element entityElement, UtilTimer utilTimer, ModelInfo def) {
         super(reader, entityElement, def);
@@ -221,6 +224,30 @@ public class ModelViewEntity extends ModelEntity {
 
     public ModelMemberEntity getMemberModelMemberEntity(String alias) {
         return this.memberModelMemberEntities.get(alias);
+    }
+
+    /**
+     * SCIPIO: Returns the member entity for the given entity alias or entity name; for entity name,
+     * arbitrarily returns the first member entity only, so only use entity name if used only once in the view-entity.
+     */
+    public ModelMemberEntityExt getMemberEntityForAliasOrName(String entityAliasOrName) { // SCIPIO
+        return getMemberEntitiesByAliasOrNameSingle().get(entityAliasOrName); 
+    }
+    
+    protected Map<String, ModelMemberEntityExt> getMemberEntitiesByAliasOrNameSingle() { // SCIPIO
+        Map<String, ModelMemberEntityExt> map = this.memberEntitiesByAliasOrNameSingle;
+        if (map == null) {
+            map = new HashMap<>();
+            for(Map.Entry<String, String> entry : memberModelEntities.entrySet()) {
+                ModelMemberEntity memberEntity = memberModelMemberEntities.get(entry.getKey());
+                map.put(entry.getValue(), new ModelMemberEntityExt(memberEntity));
+            }
+            for(Map.Entry<String, ModelMemberEntity> entry : memberModelMemberEntities.entrySet()) {
+                map.put(entry.getKey(), new ModelMemberEntityExt(entry.getValue()));
+            }
+            this.memberEntitiesByAliasOrNameSingle = Collections.unmodifiableMap(map);
+        }
+        return map; 
     }
 
     public ModelEntity getMemberModelEntity(String alias) {
@@ -761,7 +788,7 @@ public class ModelViewEntity extends ModelEntity {
         return "ModelViewEntity[" + getEntityName() + "]";
     }
 
-    public static final class ModelMemberEntity implements Serializable {
+    public static class ModelMemberEntity implements Serializable { // SCIPIO: removed "final"
         public final String entityAlias;
         public final String entityName;
 
@@ -779,6 +806,147 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
+    /**
+     * SCIPIO: Massive kludge class required because ModelMemberEntity was made static and abused in ofbiz stock code by DynamicViewEntity,
+     * meaning we have to extend ModelMemberEntity just have a proper inner class to use here.
+     * <p>
+     * WARN: Client code should not use this too much, because the legacy class design is so ridiculous we may be
+     * forced to change it and break compatibility at some point.
+     */
+    public final class ModelMemberEntityExt extends ModelMemberEntity {
+
+        /**
+         * SCIPIO: Maps member entity field names to view-entity field names.
+         */
+        protected transient Map<String, String> memberEntityToViewFieldMap = null;
+        protected transient Boolean allFieldsMapped = null;
+        protected transient Boolean optionalViewLink = null;
+
+        public ModelMemberEntityExt(ModelMemberEntity memberEntity) {
+            super(memberEntity.getEntityAlias(), memberEntity.getEntityName());
+        }
+        
+        public ModelMemberEntityExt(String entityAlias, String entityName) {
+            super(entityAlias, entityName);
+        }
+
+        private ModelEntity getModelEntity() { // SCIPIO
+            return getModelReader().getModelEntityNoCheck(entityName);
+        }
+
+        /**
+         * SCIPIO: For the given member entity, returns a best-effort map of member entity field names to view-entity
+         * field names. This is not guaranteed to give 1-to-1 mapping and for complex view-entities may make no sense.
+         */
+        public Map<String, String> getMemberEntityToViewFieldMap() { // SCIPIO
+            Map<String, String> fieldMap = memberEntityToViewFieldMap;
+            if (fieldMap == null) {
+                fieldMap = makeMemberEntityViewToMemberFieldMap();
+                this.memberEntityToViewFieldMap = fieldMap;
+            }
+            return fieldMap;
+        }
+
+        /**
+         * SCIPIO: Returns true if and only if all fields of the member entity are mapped to view-entity fields
+         * (excluding internal/auto-created fields).
+         */
+        public boolean isAllFieldsMapped() {
+            Boolean allFieldsMapped = this.allFieldsMapped;
+            if (allFieldsMapped == null) {
+                allFieldsMapped = true;
+                Map<String, String> fieldMap = getMemberEntityToViewFieldMap();
+                for(ModelField field : getModelEntity().getFieldsUnmodifiable()) {
+                    if (!field.getIsAutoCreatedInternal() && !fieldMap.containsKey(field.getName())) {
+                        allFieldsMapped = false;
+                        break;
+                    }
+                }
+                this.allFieldsMapped = allFieldsMapped;
+            }
+            return allFieldsMapped;
+        }
+
+        public boolean isOptionalViewLink() { // SCIPIO
+            Boolean optionalViewLink = this.optionalViewLink;
+            if (optionalViewLink == null) {
+                optionalViewLink = false;
+                for(ModelViewLink viewLink : viewLinks) {
+                    if (viewLink.isRelOptional()) {
+                        if (viewLink.getRelEntityAlias().equals(this.getEntityAlias())) {
+                            optionalViewLink = true;
+                        }
+                    }
+                }
+                this.optionalViewLink = optionalViewLink;
+            }
+            return optionalViewLink;
+        }
+
+        protected Map<String, String> makeMemberEntityViewToMemberFieldMap() { // SCIPIO
+            ModelEntity modelEntity = getMemberModelEntity(entityAlias);
+            Map<String, String> fieldMap = new HashMap<>();
+            // Check alias-all and explicit aliases
+            for(ModelAlias fieldAlias : aliases) {
+                if (fieldAlias.entityAlias.equals(entityAlias)) {
+                    fieldMap.put(fieldAlias.getField(), fieldAlias.getName());
+                }
+            }
+            for(String fieldName : modelEntity.getPkFieldNames()) {
+                if (!fieldMap.containsKey(fieldName)) {
+                    // Check if we can infer PK from the view links
+                    // TODO: REVIEW: we can only safely do this for non-optional view links, otherwise
+                    // we could be assigning a PK field for a value that did not exist...
+                    String pkViewFieldName = null;
+                    for(ModelViewLink viewLink : viewLinks) {
+                        if (!viewLink.isRelOptional()) {
+                            if (viewLink.getEntityAlias().equals(entityAlias)) {
+                                for(ModelKeyMap keyMap : viewLink) {
+                                    if(fieldName.equals(keyMap.getFieldName())) {
+                                        pkViewFieldName = getAliasNameForEntityAndField(viewLink.getRelEntityAlias(), keyMap.getRelFieldName());     
+                                    }
+                                    if (pkViewFieldName != null) {
+                                        break;
+                                    }
+                                }
+                            } else if (viewLink.getRelEntityAlias().equals(entityAlias)) {
+                                for(ModelKeyMap keyMap : viewLink) {
+                                    if(fieldName.equals(keyMap.getRelFieldName())) {
+                                        pkViewFieldName = getAliasNameForEntityAndField(viewLink.getEntityAlias(), keyMap.getFieldName());      
+                                    }
+                                    if (pkViewFieldName != null) {
+                                        break;
+                                    }
+                                }
+                            }
+                            if (pkViewFieldName != null) {
+                                break;
+                            }
+                        }
+                    }
+                    if (pkViewFieldName != null) {
+                        fieldMap.put(fieldName, pkViewFieldName);
+                    } else {
+                        // NOTE: This is not necessarily an error; depends on how caller is using, so don't log as warning
+                        Debug.logInfo("makeMemberEntityViewToMemberFieldMap: For view entity " + getEntityName()
+                                + " member alias '" + entityAlias + "', could not determine view-entity field corresponding to"
+                                + " the PK field '" + fieldName + "' of entity " + modelEntity.getEntityName(), module);
+                    }
+                }
+            }
+            return fieldMap;
+        }
+
+        private String getAliasNameForEntityAndField(String entityAlias, String entityField) { // SCIPIO
+            for(ModelAlias alias : aliases) {
+                if (entityAlias.equals(alias.getEntityAlias()) && entityField.equals(alias.getField())) {
+                    return alias.getName();
+                }
+            }
+            return null;
+        }
+    }
+    
     public static final class ModelAliasAll implements Serializable, Iterable<String> {
         public final String entityAlias;
         public final String prefix;

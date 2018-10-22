@@ -74,6 +74,16 @@ public class GenericValue extends GenericEntity {
         return newValue;
     }
 
+    /** SCIPIO: Creates new GenericValue partially from fields from existing GenericValue with new-to-existing field name mappings, but treated as a "new" instance (not a "copy");
+     * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
+     * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
+     * copy constructor and construction from map. Added 2018-10-22. */
+    protected static GenericValue createAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericValue sourceFieldsValue, Map<String, String> newToExistingFieldMap) {
+        GenericValue newValue = new GenericValue();
+        newValue.initAsFieldSubset(delegator, modelEntity, sourceFieldsValue, newToExistingFieldMap);
+        return newValue;
+    }
+
     public GenericValue create() throws GenericEntityException {
         return this.getDelegator().create(this);
     }
@@ -218,6 +228,60 @@ public class GenericValue extends GenericEntity {
      */
     public GenericPK getRelatedDummyPK(String relationName, Map<String, ? extends Object> byAndFields) throws GenericEntityException {
         return this.getDelegator().getRelatedDummyPK(relationName, byAndFields, this);
+    }
+
+    /**
+     * SCIPIO: Extracts a member entity value from the given view-entity value, straight from its fields in memory,
+     * for the given view-entity entity alias OR entity name. The view-entity must map all fields of the member,
+     * otherwise an exception is thrown. Attempts to return null for non-matched optional view-links (optional joins), best-effort,
+     * dependent on the view-entity definition (see below).
+     * <p>
+     * This is an alias for: <code>extractViewMember(entityAliasOrName, false, true)</code>
+     * <p>
+     * This method can be used to avoid re-querying the database needlessly for the individual entities after a view-entity lookup,
+     * without needing or using the entity cache.
+     * <p>
+     * NOTE: This method does NOT populate the system-generated fields: lastUpdatedStamp, lastUpdatedTxStamp, createdStamp, createdTxStamp.
+     * In most cases this does not cause any issues.
+     * <p>
+     * <strong>WARN:</strong> See {@link #extractViewMember(String, boolean, boolean)} description for complications due to optional
+     * view links (optional joins); the view-entity definition must be written to support it.
+     * <p>
+     * Added 2018-10-22.
+     * @see #extractViewMember(String, boolean, boolean)
+     */
+    public GenericValue extractViewMember(String entityAliasOrName) {
+        return this.getDelegator().extractViewMember(this, entityAliasOrName, false, true);
+    }
+
+    /**
+     * SCIPIO: Extracts a member entity value from the given view-entity value, straight from its fields in memory,
+     * for the given view-entity entity alias OR entity name.
+     * <p>
+     * This method can be used to avoid re-querying the database needlessly for the individual entities after a view-entity lookup,
+     * without needing or using the entity cache.
+     * <p>
+     * NOTE: This method does NOT populate the system-generated fields: lastUpdatedStamp, lastUpdatedTxStamp, createdStamp, createdTxStamp.
+     * In most cases this does not cause any issues.
+     * <p>
+     * If allowPartial is false and the target entity fields cannot be fully populated from the view-entity fields, throws
+     * an exception; if true, fields are partially populated. It is up to the caller to ensure that the original 
+     * view-entity definition aliases all the fields needed to populate the member.
+     * <p>
+     * If nullForAbsentOptViewLink is true, the method will <em>attempt</em> to return null for optional view-links
+     * that did not match any records.
+     * <strong>WARN:</strong> This optional view-link check is a best-effort attempt and depends on the view-entity definition; 
+     * it may only work properly if the view-link aliases the primary key for the optional entity redundantly to a second alias,
+     * which will be null if the optional entity was not found. The most popular strategy is this: if your view-entity has rel-optional="true", 
+     * you can use "alias-all" with a field prefix on the optional entity and <em>not</em> "exclude" the PK fields.
+     * The PK field from the referring non-optional entity will still be populated but the prefixed one will not, allowing this check to work properly.
+     * <p>
+     * NOTE: Passing the entity name (instead of entity alias) is only supported if it is aliased only once in the view-entity.
+     * <p>
+     * Added 2018-10-22.
+     */
+    public GenericValue extractViewMember(String entityAliasOrName, boolean allowPartial, boolean nullForAbsentOptViewLink) {
+        return this.getDelegator().extractViewMember(this, entityAliasOrName, allowPartial, nullForAbsentOptViewLink);
     }
 
     @Override

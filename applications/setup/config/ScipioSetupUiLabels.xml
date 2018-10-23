@@ -107,10 +107,6 @@
         <value xml:lang="de">Buchungsvorgangsart hinzufügen</value>
         <value xml:lang="en">Add Transaction Type</value>
     </property>
-    <property key="SetupCannotAutoRemovePartyRoleNotice">
-        <value xml:lang="de">Warnung: Durch das Ändern der Rolle für diese Beziehung wird die vorherige Rolle nicht vom Benutzer selbst entfernt. Wenn die vorherige Rolle nicht mehr für den Benutzer geeignet ist, können Sie sie im Benutzer-Manager entfernen.</value>
-        <value xml:lang="en">Warning: Changing the role for this relationship will not remove the previous role from the user themselves. If the previous role is no longer appropriate for the user, you can remove it in the User Manager.</value>
-    </property>
     <property key="SetupCompleteMsg">
         <value xml:lang="de">Alle Setup-Schritte wurden abgeschlossen. Setup abgeschlossen!</value>
         <value xml:lang="en">All setup steps completed. Setup Complete!</value>
@@ -129,10 +125,6 @@
     <property key="SetupExportAdvancedInfo">
         <value xml:lang="de">Verwenden Sie für erweiterte Exportfunktionen die Exportbildschirme für die Anwendungsanwendung.</value>
         <value xml:lang="en">For advanced export functionality, please use the Admin application entity export screens.</value>
-    </property>
-    <property key="SetupForceRemovePreviousPartyRole">
-        <value xml:lang="de">Versuch erzwingen vorherige Benutzerrolle entfernen</value>
-        <value xml:lang="en">Force attempt remove previous user role</value>
     </property>
     <property key="SetupIncompleteMsgEnd">
         <value xml:lang="de">Einige Funktionalitäten können beeinträchtigt werden, wenn diese Schritte nicht abgeschlossen sind.</value>
@@ -180,6 +172,11 @@
         <value xml:lang="de">Anmerkung: Aus Gründen des Legacy-Schemas ist die visualThemeId normalerweise auf dem ProductStore-Datensatz und nicht auf dem WebSite-Datensatz angegeben.</value>
         <value xml:lang="en">Note: For legacy schema design reasons, the visualThemeId is usually specified on the ProductStore record rather than the WebSite record.</value>
         <value xml:lang="fr">Remarque: pour les raisons de conception du schéma existant, le visualThemeId est généralement spécifié sur l'enregistrement ProductStore plutôt que sur l'enregistrement WebSite.</value>
+    </property>
+    <property key="SetupRemovePreviousRole">
+        <value xml:lang="de">Entferne die vorherige Rolle</value>
+        <value xml:lang="en">Remove previous role</value>
+        <value xml:lang="fr">Supprimer le rôle précédent</value>
     </property>
     <property key="SetupSaveAndContinue">
         <value xml:lang="de">Speichern &amp; Fortsetzen</value>
@@ -240,8 +237,23 @@
         <value xml:lang="en">Update Address</value>
         <value xml:lang="fr">Mettre à jour l'adresse</value>
     </property>
+    <property key="SetupUpdateExpiredRecordsForNewRole">
+        <value xml:lang="de">Abgelaufene Datensätze ändern (zum Entfernen der vorherigen Rolle erforderlich)</value>
+        <value xml:lang="en">Modify expired records (required to remove previous role)</value>
+        <value xml:lang="fr">Modifier les enregistrements expirés (requis pour supprimer le rôle précédent)</value>
+    </property>
+    <property key="SetupUpdateRecordsForNewRole">
+        <value xml:lang="de">Datensätze für neue Rolle aktualisieren (Achtung: Kann Nebenwirkungen erzeugen)</value>
+        <value xml:lang="en">Update records for new role (Warning: Can produce side-effects)</value>
+        <value xml:lang="fr">Mettre à jour les enregistrements pour le nouveau rôle (Avertissement: peut produire des effets secondaires)</value>
+    </property>
     <property key="SetupUseEmailAddress">
         <value xml:lang="de">Die Email Addresse verwenden</value>
         <value xml:lang="en">Use email address</value>
+    </property>
+    <property key="SetupUserRoleChangeWarning">
+        <value xml:lang="de">Warnung: Die Änderung der Benutzerrolle nach der Erstellung kann fehlschlagen oder zu unerwünschten Änderungen führen, abhängig von den Benutzerdatensätzen. Möglicherweise müssen Sie diese Optionen ändern und Rollen und Datensätze manuell im Benutzer-Manager bearbeiten:</value>
+        <value xml:lang="en">Warning: Changing the user role here after creation may fail or produce undesired changes, depending on the user's records. You may need to toggle these options and edit roles and records manually in the User Manager:</value>
+        <value xml:lang="fr">Avertissement: La modification du rôle d'utilisateur ici après la création peut échouer ou produire des modifications non souhaitées, en fonction des enregistrements de l'utilisateur. Vous devrez peut-être basculer entre ces options et modifier les rôles et les enregistrements manuellement dans le Gestionnaire des utilisateurs:</value>
     </property>
 </resource>

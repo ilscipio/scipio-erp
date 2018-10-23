@@ -19,7 +19,7 @@
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <!-- SCIPIO: New Setup Component Events
         NOTE: the original ofbizsetup methods are found (and still referenced) in:
@@ -323,9 +323,9 @@
         <if>
             <condition>
                 <and>
-                    <not><if-empty field="tempMap.partyId" /></not>
-                    <not><if-empty field="parameters.roleTypeId" /></not>
-                    <not><if-empty field="parameters.partyRelationshipTypeId" /></not>
+                    <not><if-empty field="tempMap.partyId"/></not>
+                    <not><if-empty field="parameters.roleTypeId"/></not>
+                    <not><if-empty field="parameters.partyRelationshipTypeId"/></not>
                 </and>
             </condition>
             <then>
@@ -349,11 +349,17 @@
         <!-- see if we should continue now... -->
         <check-errors/>
 
+        <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true">
+            <field-map field-name="userLoginId" value="system"/>
+        </entity-one>
+        <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
+        <now-timestamp field="nowTimestamp"/>
+
         <if>
             <condition>
                 <and>
-                    <not><if-empty field="parameters.PASSWORD" /></not>
-                    <not><if-empty field="parameters.CONFIRM_PASSWORD" /></not>
+                    <not><if-empty field="parameters.PASSWORD"/></not>
+                    <not><if-empty field="parameters.CONFIRM_PASSWORD"/></not>
                 </and>
             </condition>
             <then>
@@ -370,85 +376,166 @@
            </then>
         </if>
 
+        <!-- DEV NOTE: We only allow one role to be set in the setup User step.
+            Too much implication in UI if we want to allow more than one -->
+        <if-not-empty field="parameters.roleTypeId">
+            <set field="ensurePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
+            <set field="ensurePartyRoleCtx.roleTypeId" from-field="parameters.roleTypeId" />
+            <set field="ensurePartyRoleCtx.userLogin" from-field="systemUserLogin" />
+            <call-service service-name="ensurePartyRole" in-map-name="ensurePartyRoleCtx" />
+        </if-not-empty>
 
-        <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <if>
             <condition>
                 <and>
-                    <not><if-empty field="parameters.roleTypeId" /></not>
-                    <not><if-empty field="parameters.partyRelationshipTypeId" /></not>
+                    <not><if-empty field="parameters.roleTypeId"/></not>
+                    <not><if-empty field="parameters.partyRelationshipTypeId"/></not>
                 </and>
             </condition>
             <then>
-                <!-- DEV NOTE: We only allow one role to be set in the setup User step.
-                Too much implication in UI if we want to allow more than one -->
-                <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>
-                <set field="createNewPartyRelationShipAndRole" value="false" type="Boolean" />
-                <if-compare-field to-field="parameters.partyRelationshipTypeId" operator="not-equals" field="parameters.oldUserPartyRelationshipTypeId">
-                    <set field="createNewPartyRelationShipAndRole" value="true" type="Boolean" />
-                </if-compare-field>
-                <if-compare-field to-field="parameters.roleTypeId" operator="not-equals" field="parameters.oldUserPartyRoleId">
-                    <set field="createNewPartyRelationShipAndRole" value="true" type="Boolean" />
-                </if-compare-field>
-                <if-compare operator="equals" value="true" field="createNewPartyRelationShipAndRole" type="Boolean">
-                    <set field="deletePartyRelationshipCtx.partyIdFrom" from-field="organizationPartyId" />
-                    <set field="deletePartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />
-                    <set field="deletePartyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-                    <set field="deletePartyRelationshipCtx.roleTypeIdTo" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
-                    <set field="deletePartyRelationshipCtx.fromDate" from-field="parameters.oldUserPartyRelationshipFromDate" />
-                    <set field="deletePartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
-                    <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />
-                    <if>
-                        <condition>
-                            <and>
-                                <not><if-empty field="parameters.roleTypeId"/></not>
-                                <!-- Do not try to delete+create the PartyRole if we're not changing it! Can fail for no reason! -->
-                                <if-compare-field field="parameters.oldUserPartyRelationshipRoleTypeIdTo" operator="equals" to-field="parameters.roleTypeId"/>
-                            </and>
-                        </condition>
-                        <then>
-                            <log level="info" message="Creating new ${parameters.partyRelationshipTypeId} PartyRelationship from organization ${organizationPartyId} to party ${parameters.userPartyId} using same roleTypeId (${parameters.roleTypeId})"/>
-                            <set field="createPartyRelationship.partyIdFrom" from-field="organizationPartyId" />
-                            <set field="createPartyRelationship.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-                            <set field="createPartyRelationship.roleTypeIdTo" from-field="parameters.roleTypeId" />
-                            <set field="createPartyRelationship.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
-                            <set field="createPartyRelationship.partyIdTo" from-field="parameters.userPartyId" />
-                            <set field="createPartyRelationship.userLogin" from-field="systemUserLogin" />
-                            <call-service service-name="createPartyRelationship" in-map-name="createPartyRelationship" />
-                            <check-errors/>
-                        </then>
-                        <else>
-                            <log level="info" message="Creating new ${parameters.partyRelationshipTypeId} PartyRelationship from organization ${organizationPartyId} to party ${parameters.userPartyId} using new roleTypeId (${parameters.roleTypeId})"/>
-                            <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
-                            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-                            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
-                            <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
-                            <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="parameters.userPartyId" />
-                            <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
-                            <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />
-                            <check-errors/>
-        
-                            <if-not-empty field="parameters.oldUserPartyRelationshipRoleTypeIdTo">
-                                <!-- UNSAFE: Cannot delete old PartyRole automatically by default because the PartyRole may be reused by more than
-                                    one related entity/function, included being manually depended upon by the client.
-                                    Even if could check the 78 database relations to PartyRole, it could still be needed
-                                    in a secondary purpose by the client for manual use. -->
-                                <if-compare field="parameters.deleteOldRelRole" operator="equals" value="true" type="Boolean">
-                                    <log level="info" message="Attempting to delete party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo}"/>
-                                    <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
-                                    <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
-                                    <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
-                                    <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx" />
-                                    <else>
-                                        <log level="info" message="Not deleting party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} (not requested)"/>
-                                    </else>
-                                </if-compare>
-                            </if-not-empty>
-                        </else>
-                    </if>
+                <if>
+                    <condition>
+                        <or>
+                            <if-compare-field field="parameters.oldUserPartyRelationshipTypeId" operator="not-equals" to-field="parameters.partyRelationshipTypeId"/>
+                            <if-compare-field field="parameters.oldUserPartyRoleId" operator="not-equals" to-field="parameters.roleTypeId"/>
+                        </or>
+                    </condition>
+                    <then>
+                        <log level="info" message="Deleting old PartyRelationship from organization ${organizationPartyId} to party ${parameters.userPartyId}"/>
+                        <set field="deletePartyRelationshipCtx" value="" set-if-null="true"/>
+                        <set field="deletePartyRelationshipCtx.partyIdFrom" from-field="organizationPartyId" />
+                        <set field="deletePartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />
+                        <set field="deletePartyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                        <set field="deletePartyRelationshipCtx.roleTypeIdTo" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
+                        <set field="deletePartyRelationshipCtx.fromDate" from-field="parameters.oldUserPartyRelationshipFromDate" />
+                        <set field="deletePartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
+                        <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />
+
+                        <log level="info" message="Creating new ${parameters.partyRelationshipTypeId} PartyRelationship from organization ${organizationPartyId} to party ${parameters.userPartyId} using roleTypeId (${parameters.roleTypeId})"/>
+                        <set field="createPartyRelationshipCtx" value="" set-if-null="true"/>
+                        <set field="createPartyRelationshipCtx.partyIdFrom" from-field="organizationPartyId" />
+                        <set field="createPartyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                        <set field="createPartyRelationshipCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
+                        <set field="createPartyRelationshipCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
+                        <set field="createPartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />
+                        <set field="createPartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
+                        <call-service service-name="createPartyRelationship" in-map-name="createPartyRelationshipCtx" />
+                    </then>
+                </if>
+            </then>
+        </if>
+
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/></not>
+                    <if-compare-field field="parameters.oldUserPartyRelationshipRoleTypeIdTo" operator="not-equals" to-field="parameters.roleTypeId"/>
+                </and>
+            </condition>
+            <then>
+                <if>
+                    <condition>
+                        <and>
+                            <!-- NOTE: We could actually allow making PartyContactMech.roleTypeId null (no empty check),
+                                but for non-expired records it is a dangerously irreversible operation, so don't risk it for now. -->
+                            <not><if-empty field="parameters.roleTypeId"/></not>
+                            <if-compare field="parameters.updateRecordsForRoleChange" operator="equals" value="true" type="Boolean"/>
+                        </and>
+                    </condition>
+                    <then>
+                        <!-- Update PartyContactMech -->
+                        <if-compare field="parameters.updateExpiredRecordsForRoleChange" operator="equals" value="true" type="Boolean">
+                            <log level="info" message="Updating party ${parameters.userPartyId} PartyContactMechs roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, and removing old role from expired records"/>
+                            <entity-and entity-name="PartyContactMech" list="pcmList" filter-by-date="false">
+                                <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                                <field-map field-name="roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                            </entity-and>
+                            <iterate list="pcmList" entry="pcm">
+                                <!-- Remove the roleTypeId for expired records (is changed again below for non-expired) -->
+                                <set field="pcm.roleTypeId" value="" set-if-null="true"/>
+                            </iterate>
+                            <filter-list-by-date list="pcmList" valid-date="nowTimestamp" to-list="pcmActiveList"/>
+                            <iterate list="pcmActiveList" entry="pcm">
+                                <!-- Set new roleTypeId for non-expired records -->
+                                <set field="pcm.roleTypeId" from-field="parameters.roleTypeId"/>
+                            </iterate>
+                            <store-list list="pcmList"/>
+                            <else>
+                                <log level="info" message="Updating party ${parameters.userPartyId} PartyContactMechs roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, not changing expired records"/>
+                                <entity-and entity-name="PartyContactMech" list="pcmList" filter-by-date="true">
+                                    <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                                    <field-map field-name="roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                                </entity-and>
+                                <iterate list="pcmList" entry="pcm">
+                                    <set field="pcm.roleTypeId" from-field="parameters.roleTypeId"/>
+                                </iterate>
+                                <store-list list="pcmList"/>
+                            </else>
+                        </if-compare>
+
+                        <!-- Update ProductStoreRole 
+                            NOTE: roleTypeId is part of the PK, so can't just change in-place... 
+                            For now, we'll simply delete any expired ones, and recreate the living ones... 
+                            TODO: REVIEW: Ignoring PRODUCT_STORE_ID for now, because don't know if it was changed somewhere along the way... -->
+                        <if-compare field="parameters.updateExpiredRecordsForRoleChange" operator="equals" value="true" type="Boolean">
+                            <log level="info" message="Updating party ${parameters.userPartyId} ProductStoreRoles roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, removing expired records"/>
+                            <entity-and entity-name="ProductStoreRole" list="psrList" filter-by-date="false">
+                                <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                                <field-map field-name="roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                            </entity-and>
+                            <else>
+                                <log level="info" message="Updating party ${parameters.userPartyId} ProductStoreRoles roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, not changing expired records"/>
+                                <entity-and entity-name="ProductStoreRole" list="psrList" filter-by-date="true">
+                                    <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                                    <field-map field-name="roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                                </entity-and>
+                            </else>
+                        </if-compare>
+                        <iterate list="psrList" entry="psr">
+                            <set field="removePsrCtx" value="" set-if-null="true"/>
+                            <set-service-fields service-name="removeProductStoreRole" to-map="removePsrCtx" map="psr"/>
+                            <set field="removePsrCtx.userLogin" from-field="systemUserLogin" />
+                            <call-service service-name="removeProductStoreRole" in-map-name="removePsrCtx" />
+                        </iterate>
+
+                        <!-- We'll only recreate the ones that weren't expired... -->
+                        <if-compare field="parameters.updateExpiredRecordsForRoleChange" operator="equals" value="true" type="Boolean">
+                            <filter-list-by-date list="psrList" valid-date="nowTimestamp" to-list="psrActiveList"/>
+                            <else>
+                                <set field="psrActiveList" from-field="psrList"/>
+                            </else>
+                        </if-compare>
+                        <iterate list="psrActiveList" entry="psr">
+                            <set field="createPsrCtx" value="" set-if-null="true"/>
+                            <set-service-fields service-name="createProductStoreRole" to-map="createPsrCtx" map="psr"/>
+                            <set field="createPsrCtx.roleTypeId" from-field="parameters.roleTypeId"/>
+                            <set field="createPsrCtx.userLogin" from-field="systemUserLogin" />
+                            <call-service service-name="createProductStoreRole" in-map-name="createPsrCtx" />
+                        </iterate>
+                    </then>
+                    <else>
+                        <log level="info" message="Skipping updating party ${parameters.userPartyId} PartyContactMechs and ProductStoreRoles (not requested)"/>
+                    </else>
+                </if>
+
+                <!-- Delete old party role, IF requested
+                    UNSAFE: Cannot always delete old PartyRole automatically by default because the PartyRole may be reused by more than
+                    one related entity/function, included being manually depended upon by the client.
+                    Even if could check the 78 database relations to PartyRole, it could still be needed
+                    in a secondary purpose by the client for manual use. -->
+                <if-compare field="parameters.deleteOldRelRole" operator="equals" value="true" type="Boolean">
+                    <log level="info" message="Attempting to delete party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo}"/>
+                    <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                    <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId"/>
+                    <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
+                    <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx"/>
+                    <check-errors/>
+                    <else>
+                        <log level="info" message="Not deleting party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} (not requested)"/>
+                    </else>
                 </if-compare>
             </then>
-         </if>
+        </if>
 
         <set field="personMap.partyId" from-field="parameters.userPartyId" />
         <call-service service-name="updatePerson" in-map-name="personMap" />

@@ -150,10 +150,13 @@ under the License.
                     one related entity/function, included being manually depended upon by the client.
                     Even if could check the 78 database relations to PartyRole, it could still be needed
                     in a secondary purpose by the client for manual use. -->
-                  <@alert type="warning">${uiLabelMap.SetupCannotAutoRemovePartyRoleNotice}
+                  <@alert type="warning">${uiLabelMap.SetupUserRoleChangeWarning}
                     <@setupExtAppLink uri=("/partymgr/control/viewroles?partyId="+rawString(userParty.partyId!)) text=uiLabelMap.PageTitleViewPartyRole class="${styles.link_nav!} ${styles.action_view!}"/>
-                    <@fields type="default-compact">
-                      <@field type="checkbox" name="deleteOldRelRole" value="true" label=uiLabelMap.SetupForceRemovePreviousPartyRole/>
+                    <br/>
+                    <@fields type="default-compact" fieldArgs={"inlineItems":false}>
+                      <@field type="checkbox" name="updateRecordsForRoleChange" value="true" altValue="false" label=uiLabelMap.SetupUpdateRecordsForNewRole currentValue=(params.updateRecordsForRoleChange!) defaultValue="true"/>
+                      <@field type="checkbox" name="updateExpiredRecordsForRoleChange" value="true" altValue="false" label=uiLabelMap.SetupUpdateExpiredRecordsForNewRole currentValue=(params.updateRecordsForRoleChange!) defaultValue="true"/>
+                      <@field type="checkbox" name="deleteOldRelRole" value="true" altValue="false" label=uiLabelMap.SetupRemovePreviousRole currentValue=(params.deleteOldRelRole!) defaultValue="true"/>
                     </@fields>
                   </@alert>
               </#if>

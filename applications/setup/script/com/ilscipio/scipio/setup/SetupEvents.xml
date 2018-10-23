@@ -453,6 +453,11 @@
                         </and>
                     </condition>
                     <then>
+                        <!-- TODO: REVIEW: Currently, for both PartyContactMech and ProductStoreRole, 
+                            active records are edited in-place, instead of expiring the records and creating new ones; 
+                            I am leaving it this way for now because Setup User step will usually be used to setup new users with fresh records
+                            rather than trying to preserve the history of old users... but could make this a checkbox option... -->
+                    
                         <!-- Update PartyContactMech -->
                         <if-compare field="parameters.relRoleChgUpdExp" operator="equals" value="true" type="Boolean">
                             <log level="info" message="Updating party ${parameters.userPartyId} PartyContactMechs roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, and removing old role from expired records"/>
@@ -466,7 +471,7 @@
                             </iterate>
                             <filter-list-by-date list="pcmList" valid-date="nowTimestamp" to-list="pcmActiveList"/>
                             <iterate list="pcmActiveList" entry="pcm">
-                                <!-- Set new roleTypeId for non-expired records -->
+                                <!-- Set new roleTypeId for non-expired records (NOTE: in-place edit) -->
                                 <set field="pcm.roleTypeId" from-field="parameters.roleTypeId"/>
                             </iterate>
                             <store-list list="pcmList"/>
@@ -477,6 +482,7 @@
                                     <field-map field-name="roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
                                 </entity-and>
                                 <iterate list="pcmList" entry="pcm">
+                                    <!-- Set new roleTypeId for non-expired records (NOTE: in-place edit) -->
                                     <set field="pcm.roleTypeId" from-field="parameters.roleTypeId"/>
                                 </iterate>
                                 <store-list list="pcmList"/>
@@ -505,6 +511,7 @@
                             <set field="removePsrCtx" value="" set-if-null="true"/>
                             <set-service-fields service-name="removeProductStoreRole" to-map="removePsrCtx" map="psr"/>
                             <set field="removePsrCtx.userLogin" from-field="systemUserLogin" />
+                            <!-- NOTE: For active records, we delete the record here for now; but could choose to expire it instead; see comment above -->
                             <call-service service-name="removeProductStoreRole" in-map-name="removePsrCtx" />
                         </iterate>
 

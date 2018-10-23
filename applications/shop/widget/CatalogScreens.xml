@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- Column Included Screens -->
+    <screen name="choosecatalog">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/choosecatalog.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="keywordsearchbox">
+        <section>
+            <actions>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearchOptions.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/keywordsearchbox.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="sidedeepcategory">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/SideDeepCategory.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/sidedeepcategory.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="minireorderprods">
+        <section>
+            <actions>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/catalog/MiniReorderProds.groovy"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/minireorderprods.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="miniassocprods">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/miniassocprods.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="minilastviewedcategories">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/SideDeepCategory.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/minilastviewedcategories.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="minilastviewedproducts">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/catalog/MiniProductSummary.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/minilastviewedproducts.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="minilastproductsearches">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/minilastproductsearches.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="miniproductsummary">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/catalog/MiniProductSummary.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/miniproductsummary.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="productsummary">
+        <section>
+            <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/ProductSummary.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/productsummary.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="breadcrumbs">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/SideDeepCategory.groovy"/>
+                <set field="useBreadcrumbsTitleFallback" type="Boolean" value="false" />
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/breadcrumbs.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- =========== Top-Level and Stand-Alone Screens =========== -->
+
+    <!-- Category Screens -->
+    <screen name="category">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
+                <!-- Open this commented section for the demo of Layered Navigation, navigate through Gizmo and Widgets categories to see it in action.
+                <script location="component://shop/webapp/shop/WEB-INF/actions/catalog/LayeredNavigation.groovy"/>
+                <set field="detailScreen" value="LayeredCategoryDetail"/>
+                 -->
+                <!--<set field="title" value="${uiLabelMap.PageTitleCategoryPage}: ${categoryTitle}"/>-->
+                <set field="title" value="${categoryTitle}"/>
+                <set field="activeSubMenuItem" value="LookupProductCategories"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="breadcrumbs"/>
+                        <include-screen name="category-include"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="category-include">
+        <section>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="productCategory"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${detailScreen}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="head2">${uiLabelMap.ProductCategoryNotFoundForCategoryID} ${productCategoryId}!</label>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="categorydetail">
+        <section>
+            <actions>
+                <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
+                <set field="productCategoryLinkScreen" value="component://shop/widget/CatalogScreens.xml#ProductCategoryLink"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CategoryDetail.groovy"/>
+
+                <entity-and entity-name="ProductCategoryLink" list="productCategoryLinks" use-cache="true" filter-by-date="true">
+                    <field-map field-name="productCategoryId" from-field="productCategoryId"/>
+                    <order-by field-name="sequenceNum"/>
+                </entity-and>
+                <set field="paginateEcommerceStyle" value="Y"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/categorydetail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="categorydetailmatrix">
+        <section>
+            <actions>
+                <set field="numCol" value="3"/>
+                <set field="searchInCategory" value="N"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" default-value="9"/>
+            </actions>
+            <widgets>
+                <include-screen name="categorydetail"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ProductCategoryLink">
+        <section>
+            <actions>
+                <!-- TODO/NOTE DEJ20070223: for some reason this isn't working, doing an assign within the FTL file which does work: <set field="productCategoryLink" from-field="requestAttributes.productCategoryLink"/> -->
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/ProductCategoryLink.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="product">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/shop/images/productAdditionalView.js" global="true"/>
+                <set field="configproductdetailScreen" value="component://shop/widget/CatalogScreens.xml#configproductdetail"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Product.groovy"/>
+                <!--<set field="title" value="${uiLabelMap.PageTitleProductPage}: ${productTitle}"/>-->
+                <set field="title" value="${productTitle}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="product"/></not>
+                            </condition>
+                            <widgets>
+                                <include-screen name="${detailScreen}"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head2">${uiLabelMap.ProductProductNotFound} ${productId}!</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="productdetail">
+        <section>
+            <actions>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/ProductDetail.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="breadcrumbs"/>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/productdetail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="inlineProductDetail">
+        <section>
+            <actions>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/InlineProductDetail.groovy"/>
+            </actions>
+            <widgets>
+                <!-- SCIPIO: now in shop
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/inlineProductDetail.ftl"/></html></platform-specific> -->
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/inlineProductDetail.ftl"/></html></platform-specific> 
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="configproductdetail">
+        <section>
+            <actions>
+                <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
+                <set field="inlineProductDetailScreen" value="component://shop/widget/CatalogScreens.xml#inlineProductDetail"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/ProductDetail.groovy"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/PrepareConfigForm.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="breadcrumbs"/>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/configproductdetail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="productreview">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProductReview"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="inlineproductreview"/>    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="inlineproductreview">
+        <section>
+            <actions>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/ProductReview.groovy"/>            
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/productreview.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="lastviewedproducts">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLastViewProducts"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/lastviewedproducts.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="tellafriend">
+        <section>
+            <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://shop/webapp/shop/catalog/tellafriend.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="quickadd">
+        <section>
+            <actions>
+                <set field="quickaddsummaryScreen" value="component://shop/widget/CatalogScreens.xml#quickaddsummary"/>
+
+                <set field="titleProperty" value="PageTitleQuickAdd"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/QuickAdd.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/quickadd.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="quickaddsummary">
+        <section>
+            <actions>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/ProductSummary.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/quickaddsummary.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="keywordsearch">
+        <section>
+            <actions>
+                <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
+
+                <set field="titleProperty" value="PageTitleSearchResults"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" default-value="10"/>
+                <!-- 2017-08-17: now using shop-specific script (itself may delegate)
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearch.groovy"/>-->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/KeywordSearch.groovy"/>
+                <set field="resetSearch" type="Boolean" value="false"/><!-- prevent reset search context fields here -->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CommonSearchOptions.groovy"/><!-- SCIPIO: new -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/keywordsearch.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="advancedsearch">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleAdvancedSearch"/>
+                <set field="activeMainMenuItem" value="Advanced Search"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/AdvancedSearchOptions.groovy"/>
+                <set field="searchApplyDefaults" type="Boolean" value="true"/><!-- apply the defaults directly in the script (simplifies template) -->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CommonSearchOptions.groovy"/><!-- SCIPIO: new -->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/GetCatalogCategoryTreeForSelect.groovy"/><!-- SCIPIO: new -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/advancedsearch.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LayeredNavBar">
+        <section>
+            <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/LayeredNavBar.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LayeredCategoryDetail">
+        <section>
+            <actions>
+                <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/LayeredCategoryDetail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="bestSellingCategory">
+        <section>
+            <widgets>
+                <section>
+                    <widgets>
+                        <!--<label style="h2" text="Popular Categories"/>-->
+                        <include-screen name="showBestSellingCategory"/>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="showBestSellingCategory">
+        <section>
+            <actions>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/catalog/BestSellingCategory.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/ShowBestSellingCategory.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="productCategories">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="LookupProductCategories"/>
+                
+                <script location="component://shop/webapp/shop/WEB-INF/actions/catalog/ProductCategories.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/ProductCategories.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="productCategoryList">
+        <section>
+            <condition>
+                <if-empty field="parameters.mainSubmitted"/>
+            </condition>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
+                <set field="fromSetSessionLocale" value="${groovy: return request.getAttribute('fromSetSessionLocale');}"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-compare operator="equals" value="true" field="fromSetSessionLocale"/>
+                    </condition>
+                    <widgets>
+                        <include-screen name="category"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-screen name="breadcrumbs" share-scope="true"/>
+                        <include-screen name="category-include" share-scope="true"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+            <fail-widgets>
+                <include-screen name="category"/>
+            </fail-widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Original: component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#compareProducts -->
+    <screen name="compareProducts">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <include-screen name="compareProducts" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Original: component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#ProductUomDropDownOnly -->
+    <screen name="ProductUomDropDownOnly">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <include-screen name="ProductUomDropDownOnly" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+</screens>

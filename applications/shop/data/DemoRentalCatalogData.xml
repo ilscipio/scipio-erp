@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+
+    <!-- product catalog -->
+    <ProdCatalog prodCatalogId="RentalCatalog" catalogName="Rental Catalog" useQuickAdd="N"/>
+    <ProductStoreCatalog productStoreId="RentalStore" prodCatalogId="RentalCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+
+    <!-- categories -->
+    <ProductCategory productCategoryId="RentBrowseRoot" description="Rental Browse Root"
+        longDescription="Rental Catalog Primary Browse Root Category" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory productCategoryId="RentBrowseRoot_SRCH" description="Rental Browse Root to search"
+        longDescription="Rental Catalog Primary Browse Root Category" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory productCategoryId="RentalPromo" description="Rental Promotions"
+        longDescription="Rental Catalog Primary Browse Root Category" productCategoryTypeId="CATALOG_CATEGORY"/>
+
+    <ProductCategory productCategoryId="HotelFac" description="Hotel Facilities" longDescription="long description of Hotel facilities"
+        primaryParentCategoryId="RentBrowseRoot" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory productCategoryId="Rooms" description="Rooms" longDescription="long description of Hotel rooms"
+        primaryParentCategoryId="HotelFac" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory productCategoryId="Suites" description="Suites" longDescription="long description of Hotel suites"
+        primaryParentCategoryId="HotelFac" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory productCategoryId="ConfRooms" description="Conference Rooms" longDescription="long description of Hotel conference rooms"
+        primaryParentCategoryId="HotelFac" productCategoryTypeId="CATALOG_CATEGORY"/>
+
+    <ProductCategory description="Boat Rental" longDescription="long description of Boat rentals"
+        primaryParentCategoryId="RentBrowseRoot" productCategoryId="BoatRental" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory description="Row Boats" longDescription="long description of Row Boats"
+        primaryParentCategoryId="BoatRental" productCategoryId="RowBoats" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory description="Sailing Boats" longDescription="long description of Sailing Boats"
+        primaryParentCategoryId="BoatRental" productCategoryId="SailBoats" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory description="Motor Boats" longDescription="long description of Motor Boats"
+        primaryParentCategoryId="BoatRental" productCategoryId="MotorBoats" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory description="Speed Boats" longDescription="long description of Speed Boats"
+        primaryParentCategoryId="BoatRental" productCategoryId="SpeedBoats" productCategoryTypeId="CATALOG_CATEGORY"/>
+
+    <ProductCategoryRollup productCategoryId="ConfRooms" parentProductCategoryId="HotelFac" fromDate="2004-10-18 15:21:07.613"/>
+    <ProductCategoryRollup productCategoryId="Rooms" parentProductCategoryId="HotelFac" fromDate="2004-10-18 15:22:29.139"/>
+    <ProductCategoryRollup productCategoryId="Suites" parentProductCategoryId="HotelFac" fromDate="2004-10-18 15:23:05.706"/>
+    <ProductCategoryRollup productCategoryId="SpeedBoats" parentProductCategoryId="BoatRental" fromDate="2004-10-18 15:23:54.452"/>
+    <ProductCategoryRollup productCategoryId="MotorBoats" parentProductCategoryId="BoatRental" fromDate="2004-10-18 15:30:56.77"/>
+    <ProductCategoryRollup productCategoryId="RowBoats" parentProductCategoryId="BoatRental" fromDate="2004-10-18 15:32:27.359"/>
+    <ProductCategoryRollup productCategoryId="SailBoats" parentProductCategoryId="BoatRental" fromDate="2004-10-18 15:32:48.86"/>
+
+    <!-- categories for e-commerce -->
+    <ProdCatalogCategory prodCatalogId="RentalCatalog" productCategoryId="RentBrowseRoot" fromDate="2001-05-13 12:00:00.0"
+        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+    <ProdCatalogCategory prodCatalogId="RentalCatalog" productCategoryId="RentBrowseRoot_SRCH" fromDate="2001-05-13 12:00:00.0"
+        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
+    <ProdCatalogCategory prodCatalogId="RentalCatalog" productCategoryId="RentalPromo" fromDate="2001-05-13 12:00:00.0"
+        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
+
+    <!-- products and relation to fixed asset -->
+    <Product productId="RoomStd" productTypeId="ASSET_USAGE" primaryProductCategoryId="Rooms" productName="Standard Room" internalName="StdRoom" description="The standard business room" longDescription="This is the standard room mostly for business" reservMaxPersons="3" reserv2ndPPPerc="20" reservNthPPPerc="5" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"
+        smallImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/large.jpg"/>
+    <FixedAsset fixedAssetId="RoomStd" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
+    <FixedAssetProduct productId="RoomStd" fixedAssetId="RoomStd" fixedAssetProductTypeId="FAPT_USE" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Product productId="RoomLux" productTypeId="ASSET_USAGE" primaryProductCategoryId="Rooms" productName="Luxury Room" internalName="LuxRoom" description="The luxery business room" longDescription="This is the luxery room mostly for business"  reservMaxPersons="4" reserv2ndPPPerc="20" reservNthPPPerc="" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"
+        smallImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/large.jpg"/>
+    <FixedAsset fixedAssetId="RoomLux" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
+    <FixedAssetProduct productId="RoomLux" fixedAssetId="RoomLux" fixedAssetProductTypeId="FAPT_USE" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Product productId="RoomLarge" productTypeId="ASSET_USAGE" primaryProductCategoryId="Rooms" productName="Large Room" internalName="LargeRoom" description="The large room for families" longDescription="This is the large room mostly for large families"  reservMaxPersons="8" reserv2ndPPPerc="20" reservNthPPPerc="3" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"
+        smallImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/large.jpg"/>
+
+    <Product productId="BoatRowSimple" productTypeId="ASSET_USAGE" primaryProductCategoryId="RowBoats" productName="Simple row boat" internalName="SmpRwBoat" description="A simple row boat to rent short time" longDescription="This is the most simplest row boat we have for short term rental only"  reservMaxPersons="12" reserv2ndPPPerc="" reservNthPPPerc="" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"
+        smallImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/large.jpg"/>
+
+    <Product productId="TrvlJacket" productTypeId="FINISHED_GOOD" productName="Travel Jacket" internalName="Travel Jacket" description="A travel jacket" longDescription="An excellent weatherproof travel jacket."  taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"
+        smallImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-03/small.jpg" mediumImageUrl="images/products/shop/gallery/01/clothing/men-jacket-03/medium.jpg" largeImageUrl="images/products/shop/gallery/01/clothing/men-jacket-03/large.jpg"/>
+    
+    <!-- product prices -->
+    <ProductPrice productId="RoomStd" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:49:03.163" price="15.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="RoomStd" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:48:49.113" price="15.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="RoomLux" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:57:38.033" price="25.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="RoomLux" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:57:29.421" price="25.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="RoomLarge" productPricePurposeId="PURCHASE" productPriceTypeId="AVERAGE_COST" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:35.866" price="29.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="RoomLarge" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:45.25" price="25.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="BoatRowSimple" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="549.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="BoatRowSimple" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="550.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="BoatRowSimple" productPricePurposeId="PURCHASE" productPriceTypeId="COMPETITIVE_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="922.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="TrvlJacket" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:45.25" price="5.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+
+    <!-- allocate products to categories -->
+    <ProductCategoryMember productCategoryId="RentalPromo" productId="RoomLux" fromDate="2004-10-18 20:39:58.563"/>
+    <ProductCategoryMember productCategoryId="RentalPromo" productId="RoomStd" fromDate="2004-10-18 20:40:12.749"/>
+    <ProductCategoryMember productCategoryId="RentalPromo" productId="TrvlJacket" fromDate="2004-10-18 20:40:12.749"/>
+</entity-engine-xml>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <!-- For information on how to configure these users for the /solr web UI, see README.txt, "Authentication" -->
+    
+    <UserLoginSecurityGroup groupId="SOLRADM_ADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
+    
+    <Party partyId="solradmin" partyTypeId="PERSON"/>
+    <Person partyId="solradmin" firstName="Solr" lastName="Admin" />
+    <UserLogin userLoginId="solradmin" partyId="solradmin" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" />
+    <UserLoginSecurityGroup groupId="SOLRADM_ADMIN" userLoginId="solradmin" fromDate="2011-01-01 00:00:00.0" />
+
+    <!-- Update user for indexing calls (rebuildSolrIndex, addToSolr, etc.) -->
+    <Party partyId="solrupdate" partyTypeId="PERSON"/>
+    <Person partyId="solrupdate" firstName="Solr" lastName="UpdateUser" />
+    <UserLogin userLoginId="solrupdate" partyId="solrupdate" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" />
+    <UserLoginSecurityGroup groupId="SOLRADM_UPDATE" userLoginId="solrupdate" fromDate="2011-01-01 00:00:00.0" />
+
+    <!-- Query user for solr queries (runSolrQuery from shop, etc.) -->
+    <Party partyId="solrquery" partyTypeId="PERSON"/>
+    <Person partyId="solrquery" firstName="Solr" lastName="QueryUser" />
+    <UserLogin userLoginId="solrquery" partyId="solrquery" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" />
+    <UserLoginSecurityGroup groupId="SOLRADM_QUERY" userLoginId="solrquery" fromDate="2011-01-01 00:00:00.0" />
+
+</entity-engine-xml>

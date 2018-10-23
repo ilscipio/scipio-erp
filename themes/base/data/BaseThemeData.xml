@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+    <VisualTheme visualThemeId="BASE" visualThemeSetId="BACKOFFICE" description="Base - Foundation CSS Based Magic"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://base-theme/data/BaseThemeData.xml" sequenceId="01"/>
+    
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAME" resourceValue="BASE" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/base-theme/screenshot.jpg" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://base-theme/includes/header.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://base-theme/includes/messages.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://base-theme/includes/footer.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://base-theme/includes/appbar.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://base-theme/includes/appbarOpen.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://base-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/base-theme/images/favicon.ico" sequenceId="01"/>
+    <!-- SCIPIO: Set custom logo
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/base-theme/images/scipio-logo.svg" sequenceId="01"/>-->  
+    
+    <!-- SCIPIO: The following includes can be used to override specific default pages
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://base-theme/includes/login.ftl" sequenceId="01"/> // Custom Login Page
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://base-theme/includes/error.ftl" sequenceId="01"/> // Custom Error Page
+     -->
+    
+    <!-- 
+    SCIPIO: Optional renderer stock macro library and scipio library location overrides 
+    
+    Each of these can specify a simple template location (format: "component://...") 
+    or a mapping of rendering platforms to template locations (format: "[html=component://...,xsl-fo=component://...]"; intermediate spaces are automatically 
+    stripped, but the first character must be "[" with no space).
+    In Scipio-patched Ofbiz renderer, simple locations only apply to "html" platform (fixes stock Ofbiz behavior).
+    mapping platform names can be found in widget.properties as "screen*.name=" entries.
+    It is also possible to use flexible expression to define mappings (format: "${groovy: ['html':'component://...']}"),
+    but as of now there is no good reason (all mappings must be static; results are cached globally).
+    Mappings support a "default" key that will cause all platforms with no entries to default 
+    to its specified template; in general this should not be used unless the intent is for the template
+    to be manually written to be platform-agnostic, or if the platform cannot be detected for some reason.
+    The "default" key represents the stock Ofbiz behavior of the VT_XXXX_MACRO_LIB simple locations, 
+    which is corrected in Scipio because usually undesirable (likely break the non-html platforms). -->
+    <!-- Stock macro library locations
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_SCRN_MACRO_LIB" resourceValue="component://widget/templates/htmlScreenMacroLibrary.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FORM_MACRO_LIB" resourceValue="component://widget/templates/htmlFormMacroLibrary.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_MENU_MACRO_LIB" resourceValue="component://widget/templates/htmlMenuMacroLibrary.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_TREE_MACRO_LIB" resourceValue="component://widget/templates/htmlTreeMacroLibrary.ftl" sequenceId="01"/>-->
+    <!-- Scipio library locations for web request render context only (frontend and backend)
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_WEB" resourceValue="component://common/webcommon/includes/scipio/lib/standard/htmlVariables.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_TMPLT_WEB" resourceValue="component://common/webcommon/includes/scipio/lib/standard/htmlTemplate.ftl" sequenceId="01"/>-->
+    <!-- Scipio library locations for email render context only
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_MAIL" resourceValue="component://common/webcommon/includes/scipio/lib/standard/htmlVariables.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_TMPLT_MAIL" resourceValue="component://common/webcommon/includes/scipio/lib/standard/htmlTemplate.ftl" sequenceId="01"/>-->
+    <!-- Scipio library locations used when no web-specific or e-mail-specific locations specified and for any other/unrecognized render contexts 
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://common/webcommon/includes/scipio/lib/standard/htmlVariables.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://common/webcommon/includes/scipio/lib/standard/htmlTemplate.ftl" sequenceId="01"/>-->
+
+    <!-- GENERAL -->
+    <!-- Styles -->
+    <!-- Scripts -->
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery/dist/jquery.min.js" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="02"/>
+    
+    <!-- THEME SPECIFIC -->
+    <!-- Styles -->
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/stylesheets/app.css" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/foundation-datepicker/stylesheets/foundation-datepicker.css" sequenceId="02"/>
+    <!-- Foundation icon font support (disabled for now) 
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/stylesheets/foundation-icons/foundation-icons.css" sequenceId="03"/>-->
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/font-awesome/css/font-awesome.min.css" sequenceId="03"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/gridster/dist/jquery.gridster.min.css" sequenceId="04"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/datatables/datatables.min.css" sequenceId="05"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700" sequenceId="06"/>
+    
+        
+    <!-- Right-to-Left support -->
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_RTL_STYLESHEET" resourceValue="/base-theme/rtl/app.css" sequenceId="1"/>
+
+    
+    <!-- Scripts -->
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/modernizr/modernizr.js" sequenceId="02"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/freetile.min.js" sequenceId="04"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/gridster/dist/jquery.gridster.with-extras.min.js" sequenceId="05"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/sass-to-js/js/dist/sass-to-js.min.js" sequenceId="06"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/Chart.js/dist/Chart.min.js" sequenceId="07"/>
+
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" sequenceId="10"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation.min.js" sequenceId="11"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation/foundation.topbar.js" sequenceId="12"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation/foundation.offcanvas.js" sequenceId="13"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation-datepicker/js/foundation-datepicker.js" sequenceId="14"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/datatables.min.js" sequenceId="15"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/moment/min/moment.min.js" sequenceId="16"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="17"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jstree/dist/jstree.min.js" sequenceId="18"/>
+    
+    <!-- ADD-ONS -->
+    <!-- Uncomment for additional library options
+    // PIZZA Amore - Charts (To activate, uncomment the following and switch the chart macro library to "foundation", e.g.: <@chart library="foundation")
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/Snap.svg/dist/snap.svg-min.js" sequenceId="50"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/pizza/dist/js/pizza.min.js" sequenceId="51"/>    
+    
+    // OWL Slider http://www.owlcarousel.owlgraphic.com/ (To activate, uncomment the following and switch the slider macro library to "owl", e.g.: <@slider library="owl")
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/owlcarousel/owl-carousel/owl.carousel.css" sequenceId="60"/> 
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/owlcarousel/owl-carousel/owl.theme.css" sequenceId="61"/> 
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/owlcarousel/owl-carousel/owl.carousel.min.js" sequenceId="62"/> 
+
+    // Slick Slider http://kenwheeler.github.io/slick/ (To activate, uncomment the following and switch the chart slider library to "slick", e.g.: <@slider library="owl")
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/slick-carousel/slick/slick.css" sequenceId="63"/> 
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/slick-carousel/slick/slick-theme.css" sequenceId="64"/> 
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/slick-carousel/slick/slick.js" sequenceId="65"/> 
+    
+    -->
+</entity-engine-xml>

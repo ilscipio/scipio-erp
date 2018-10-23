@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<!-- 
+Scipio Common Menu Widgets
+
+This file provides base menu widgets for extending. They provide common styles and functionality.
+Most menu widgets should extend one of these definitions using 
+  <menu name="..." extends="CommonXxx" extends-resource="component://common/widget/CommonMenus.xml" ...>
+
+Menu widget language is modified in Scipio with new additions. Please see
+  component://widget/dtd/widget-menu.xsd
+for documentation.
+
+Also see Scipio Freemarker global styles hash.
+
+NOTE (2016-09-01): The global style hash lookups are now all done from the FTL-backed implementation
+    of the widgets (htmlMenuMacroLibrary.ftl) based on the menu type. The previous lookups that were done
+    in widget attributes (e..g default-widget-style="${styles.menu_main_item}") are now
+    all implied by the menu type specified in menu-container-style (e.g., menu-container-style="+menu-type-main").
+
+Common menus NOTES:
+* The widget attribute "selected" (default-selected-style) usually translates to "active target" (not just "active" in general) in 
+  Scipio Freemarker standard macros terminology (@menu) ("selected" may have another meaning there).
+  This is because there's only one highlight option for widgets and by convention the "selected" widget 
+  attribute should practically always be used to select the active menu item.
+  We have also added "selected-ancestor" attributes.
+  In general, in widget -> (translates to) Scipio Freemarker standard macros terminology:
+  * "selected" -> "active target" 
+  * "selected ancestor" -> "active ancestor"
+* menu-container-style is currently specially interpreted by htmlMenuMacroLibrary.ftl, and
+  recognized names in the format "menu-type-xxx" as special values. These are used to identify
+  the menu type, where "menu-type-xxx" is equivalent to <@menu type="xxx"...> in Scipio Freemarker
+  standard macros, and where the menu type is defined in the global styles hash.
+  * These names are stripped from the style string and not included in the file class.
+    Instead, the implementing macro (htmlMenuMacroLibrary.ftl) will substitute them with
+    classes looked up in the global styles hash, if any.
+  * If "menu-type-xxx" is alone in a style string, it MUST be prefixed with "+" to prevent issues.
+* All menu widget xxx-style attributes now support the "+/=" (class arg) prefix.
+  See widget-menu.xsd for details.
+* Be aware that the choice of base widget to extend affects more than style.
+  For example, selected-menuitem-context-field-name controls the selected items.
+-->
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+
+    <!-- SCIPIO: Original stock Ofbiz base app bar menu, modified. -->
+    <menu name="CommonEmptyAppBarMenu" type="simple" menu-container-style="+menu-type-main" 
+        id="app-navigation" title="${applicationTitle}&amp;nbsp;"
+        default-menu-item-name="main" selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
+    </menu>
+    <menu name="CommonAppBarMenu" extends="CommonEmptyAppBarMenu">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
+            <condition><not><if-empty field="userLogin"/></not></condition>
+            <link target="main" link-type="anchor"/>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: New dashboard app bar menu. -->
+    <menu name="CommonEmptyAppBarDashboardMenu" type="simple" menu-container-style="+menu-type-main" 
+        id="app-navigation" title="${applicationTitle}&amp;nbsp;"
+        default-menu-item-name="main" selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
+    </menu>
+    <menu name="CommonAppBarDashboardMenu" extends="CommonEmptyAppBarDashboardMenu">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
+            <condition><not><if-empty field="userLogin"/></not></condition>
+            <link target="main" link-type="anchor"/>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: New menu for sidebars derived from main app bar menus. Should have mostly minor differences with CommonSideBarMenu. -->
+    <menu name="CommonEmptyAppSideBarMenu" type="simple" menu-container-style="+menu-type-sidebar" 
+        selected-menuitem-context-field-name="activeMainMenuItem" selected-menu-context-field-name="activeMainSubMenu" items-sort-mode="displaytext-ignorecase"
+        separate-menu-type="${groovy:context.menuCfgSepMenuType?:'default-sidebar'}" 
+        separate-menu-target-style="${groovy:context.menuCfgSepMenuTargetStyle?:'scipio-nav-actions-menu'}" 
+        separate-menu-target-preference="${groovy:context.menuCfgSepMenuTargetPref?:'greatest-ancestor'}" 
+        separate-menu-target-original-action="${groovy:context.menuCfgSepMenuTargetOrigAction?:'remove-selected'}"
+        ><!-- DEV NOTE: "remove-all" could be needed instead... -->
+    </menu>
+    <menu name="CommonAppSideBarMenu" extends="CommonEmptyAppSideBarMenu">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}" >
+            <condition><not><if-empty field="userLogin"/></not></condition>
+            <link target="main" link-type="anchor"/>
+        </menu-item>
+    </menu>
+
+    <!-- SCIPIO: Original stock Ofbiz base tab bar menu, modified. 
+        NOTE: Despite individual menu names, some "*ButtonBar"-named menus belong more as extending this CommonTabBarMenu instead of CommonButtonBarMenu. -->
+    <menu name="CommonEmptyTabBarMenu" type="simple" menu-container-style="+menu-type-tab" 
+        selected-menuitem-context-field-name="activeSubMenuItem"/>
+    <menu name="CommonTabBarMenu" extends="CommonEmptyTabBarMenu"/>
+    
+    <!-- SCIPIO: New menu for sub-tar bars. 
+        NOTE: 2016-09-22: selected-menuitem-context-field-name has been REMOVED from this menu by default because it rarely makes sense in scipio provided screens anymore -->
+    <menu name="CommonEmptySubTabBarMenu" type="simple" menu-container-style="+menu-type-tab" />
+    <menu name="CommonSubTabBarMenu" extends="CommonEmptySubTabBarMenu"/>
+    
+    <!-- SCIPIO: Original stock Ofbiz base button bar menu, modified. 
+        NOTE: Not all stock Ofbiz menus named "*ButtonBar" should extend CommonButtonBarMenu!
+        WARN: This does not include a selected-menuitem-context-field-name. Menus must specify it themselves! -->
+    <menu name="CommonEmptyButtonBarMenu" type="simple" menu-container-style="+menu-type-button"/>    
+    <menu name="CommonButtonBarMenu" extends="CommonEmptyButtonBarMenu" />    
+    
+    <!-- SCIPIO: New menu for sidebars, usually derived from tar bar menus. 
+        NOTE: Screens expect this to be similar in function as CommonTabBarMenu. For sidebars that deviate, use/make another Common* base menu class. For menus whose contents derive from main app menus, use CommonAppSideBarMenu. -->
+    <menu name="CommonEmptySideBarMenu" type="simple" menu-container-style="+menu-type-sidebar" 
+        selected-menuitem-context-field-name="activeSubMenuItem" items-sort-mode="displaytext-ignorecase">
+    </menu>
+    <menu name="CommonSideBarMenu" extends="CommonEmptySideBarMenu">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
+            <condition>
+                <and>
+                    <not><if-empty field="userLogin"/></not>
+                    <!-- this preserves compability, so CommonSideBarMenu can still be used top-level or nested for the time being -->
+                    <if-compare field="currentMenuRenderState.currentDepth" operator="equals" type="Integer" value="1" />
+                </and>
+            </condition>
+            <link target="main" link-type="anchor"/>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: New menu type. Makes a single drop-down button menu. -->
+    <menu name="CommonEmptyButtonDropdownMenu" type="simple" menu-container-style="+menu-type-button-dropdown"/>    
+    <menu name="CommonButtonDropdownMenu" extends="CommonEmptyButtonDropdownMenu" />    
+    
+</menus>

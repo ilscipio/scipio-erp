@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<web-app version="3.0">
+    <display-name>Apache OFBiz - Web Tools</display-name>
+    <description>Common Application Components of the Apache OFBiz Project</description>
+
+    <context-param>
+        <param-name>entityDelegatorName</param-name>
+        <param-value>default</param-value>
+        <!--<description>The Name of the Entity Delegator to use, defined in entityengine.xml</description>-->
+    </context-param>
+    <context-param>
+        <param-name>localDispatcherName</param-name>
+        <param-value>webtools</param-value>
+        <!--<description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>-->
+    </context-param>
+    <context-param>
+        <param-name>xmlrpc.enabledForExtensions</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <description>The location of the main-decorator screen to use for this webapp; referred to as a context variable
+            in screen def XML files.</description>
+        <param-name>mainDecoratorLocation</param-name>
+        <param-value>component://webtools/widget/CommonScreens.xml</param-value>
+    </context-param>
+    <!--<context-param>
+        <description>SCIPIO: The location of a screen whose actions will be executed just before every new screen request 
+            in this webapp, after context is finalized, and AFTER the context stack has been pushed - per-webapp auto-included actions.
+            Has same effect as including actions at the beginning of the target screen to be rendered (but changes with webapp).
+            Default: [mainDecoratorLocation]#webapp-common-actions - If this param is omitted, will use mainDecoratorLocation instead, 
+                with default screen name "webapp-common-actions", so most webapps don't need to specify this param.
+            SEE ALSO: widget-screen.xsd > screen-settings > render-init > local > actions (static, webapp-agnostic auto-included actions)
+            2016-11-11: Added for 1.14.3.</description>
+        <param-name>renderInitScriptScreenLocation</param-name>
+        <param-value>component://webtools/widget/CommonScreens.xml#webapp-common-actions</param-value>
+    </context-param>-->
+    <!--<context-param>
+        <description>SCIPIO: The location of a context preparation script (usually groovy) for this webapp; executed 
+            just before every new screen request, during initial context population, after the rest of context
+            is populated, but BEFORE the context is pushed (so has full control over other context fields).
+            This is simply a webapp-specific version of widgetContextScripts.properties entries and runs just after those.
+            NOTE: In most cases renderInitScriptScreenLocation is more appropriate, unless you specifically need
+                to alter the initial context (e.g. to produce a non-standard context adapted for different purpose).
+            2016-11-11: Added for 1.14.3.</description>
+        <param-name>widgetContextScriptLocation</param-name>
+        <param-value>component://webtools/widget/WidgetContextScript.groovy</param-value>
+    </context-param>-->
+
+  <context-param>
+    <param-name>GeronimoMultiOfbizInstances</param-name>
+    <param-value>true</param-value>
+    <description>This is only used in case of Geronimo or WASCE using OFBiz multi-instances. It allows to retrieve ofbiz.home value set in JVM env</description>
+  </context-param>
+  
+    <!-- SCIPIO: docs redirects (FIXME?: heavy... but works)-->
+    <filter>
+        <display-name>WebDocsRedirect</display-name>
+        <filter-name>WebDocsRedirect</filter-name>
+        <filter-class>org.ofbiz.webapp.control.SimpleRedirectFilter</filter-class>
+        <init-param>
+            <param-name>matchPattern</param-name>
+            <!-- never access ViewTemplateApiDocPage directly. redirect /admin/docs and /admin/docs/templating -->
+            <param-value>^/admin/(control/ViewTemplateApiDocPage(/.*)?|docs(/?|/templating/?))([?;#].*)?$</param-value>
+        </init-param>
+        <init-param>
+            <param-name>matchFullPath</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>replacement</param-name>
+            <param-value>/admin/docs/templating/ftl/lib/standard/htmlTemplate.html</param-value>
+        </init-param>
+        <init-param>
+            <param-name>usePermanentRedirect</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>WebDocsRedirect</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+  
+    <filter>
+        <display-name>ContextFilter</display-name>
+        <filter-name>ContextFilter</filter-name>
+        <filter-class>org.ofbiz.webapp.control.ContextFilter</filter-class>
+        <init-param>
+            <param-name>disableContextSecurity</param-name>
+            <param-value>N</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowedPaths</param-name>
+            <param-value>
+                /ping.txt:/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/applet:/includes/maincss.css:/docs:/images:/ws:/export
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorCode</param-name>
+            <param-value>403</param-value>
+        </init-param>
+        <init-param>
+            <param-name>redirectPath</param-name>
+            <param-value>/control/main</param-value>
+        </init-param>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>    
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>ContextFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.ofbiz.webapp.control.ControlEventListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.ofbiz.webapp.control.LoginEventListener</listener-class>
+    </listener>
+    <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener interface -->
+    <!-- <listener><listener-class>org.ofbiz.webapp.control.ControlActivationEventListener</listener-class></listener> -->
+
+    <servlet>
+        <description>Main Control Servlet</description>
+        <display-name>ControlServlet</display-name>
+        <servlet-name>ControlServlet</servlet-name>
+        <servlet-class>org.ofbiz.webapp.control.ControlServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControlServlet</servlet-name>
+        <url-pattern>/control/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ExportServlet</servlet-name>
+        <display-name>ExportServlet</display-name>
+        <description>File Export Servlet</description>
+        <servlet-class>com.ilscipio.scipio.webtools.ExportServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ExportServlet</servlet-name>
+        <url-pattern>/export/*</url-pattern>
+    </servlet-mapping>
+    
+    <!-- SCIPIO: Templating API documentation forwarding page -->
+    <servlet>
+        <servlet-name>templateApiDocPage.jsp</servlet-name>
+        <jsp-file>/docs/templating/ftl/lib/templateApiDocPage.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>templateApiDocPage.jsp</servlet-name>
+        <url-pattern>/docs/templating/ftl/lib/*</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>60</session-timeout> <!-- in minutes -->
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>true</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- HTTP Response Code definitions:
+    | "400"   ; Bad Request
+    | "401"   ; Unauthorized
+    | "402"   ; Payment Required
+    | "403"   ; Forbidden
+    | "404"   ; Not Found
+    | "405"   ; Method Not Allowed
+    | "406"   ; Not Acceptable
+    | "407"   ; Proxy Authentication Required
+    | "408"   ; Request Time-out
+    | "409"   ; Conflict
+    | "410"   ; Gone
+    | "411"   ; Length Required
+    | "412"   ; Precondition Failed
+    | "413"   ; Request Entity Too Large
+    | "414"   ; Request-URI Too Large
+    | "415"   ; Unsupported Media Type
+    | "500"   ; Internal Server Error
+    | "501"   ; Not Implemented
+    | "502"   ; Bad Gateway
+    | "503"   ; Service Unavailable
+    | "504"   ; Gateway Time-out
+    | "505"   ; HTTP Version not supported
+    -->
+
+    <!--
+      <security-constraint>
+        <web-resource-collection>
+          <web-resource-name>Entire Site</web-resource-name>
+          <description>Entire Site</description>
+          <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+    -->
+    <!-- For enabling SSL, specify CONFIDENTIAL or INTEGRAL. -->
+    <!--
+        <user-data-constraint>
+          <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+      </security-constraint>
+    -->
+
+</web-app>

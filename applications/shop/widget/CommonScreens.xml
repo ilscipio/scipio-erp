@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <decorator-screen-settings default-fallback-location="component://shop/widget/CommonScreens.xml"/>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://shop/widget/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+        
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+        </actions>
+    </screen>
+    
+    <!-- All actions for ShopDecorator. NOTE: does not include GlobalDecorator actions. -->
+    <screen name="ShopActions">
+        <actions>
+            <!-- TODO: REVIEW: currently ShopUiLabels is included in ShopDecorator, but for reuse reasons,
+                it might make more sense for them to be in main-decorator instead (?)... -->
+            <include-screen-actions name="ShopUiLabelsActions"/>
+            <include-screen-actions name="ShopSetupActions"/>
+        </actions>
+    </screen>
+         
+    <screen name="ShopUiLabelsActions">
+        <actions>
+            <!-- base/top/specific map first, then more common map added for shared labels -->
+            <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        </actions>
+    </screen>
+    
+    <screen name="ShopSetupActions">
+        <actions>
+            <set field="layoutSettings.commonHeaderImageLinkUrl" from-field="layoutSettings.commonHeaderImageLinkUrl" default-value="main" global="true" />
+            <set field="layoutSettings.companyName" from-field="layoutSettings.companyName" default-value="SCIPIO Store" global="true"/>
+            <!--<set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" /> -->
+            <!-- these execute at the wrong time (and redundant)
+            <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]"/>
+            <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]"/>
+            <set field="appbarTemplateLocation" from-field="layoutSettings.VT_NAV_TMPLT_LOC[0]"/>
+            <set field="appbarOpenTemplateLocation" from-field="layoutSettings.VT_NAV_OPEN_TMPLT[0]"/>
+            <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]"/>
+            <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
+            <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
+            <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl" global="true"/>
+            -->
+            
+            <!-- 2017-02-13: overridden by GlobalDecorator
+            <set field="headerTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>-->
+               
+            <!-- The default (main) java scripts -->
+            <!-- NOTE: this should be included on each screen that uses it to avoid including it in all screens: -->
+            <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
+            
+            <!-- A lot of pages still need this -->
+            <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
+
+            <!-- 2016-08-09: this is not appropriate anymore; see GlobalActions
+            <!- Get the store VisualTheme ->
+            <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="FOUNDATION_SHOP" global="false"/>
+            <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
+            -->
+
+            <entity-and entity-name="WebAnalyticsConfig" list="webAnalyticsConfigs">
+                <field-map field-name="webSiteId"/>
+            </entity-and>
+           
+            <!-- Default setup --> 
+            <!-- SCIPIO: NOTE: Scipio now supports parametrized script locations, making the following possible -->
+            <set field="shopSetupScriptLocation" from-field="shopSetupScriptLocation" default-value="component://shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy" />
+            <script location="${shopSetupScriptLocation}"/>
+           
+            <!-- Common scripts relevant to any/all screens -->
+            <set field="permChecksSetGlobal" type="Boolean" value="true" />
+            <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonUserChecks.groovy"/>
+        </actions>
+    </screen>
+        
+    <screen name="ShopDecorator">
+        <section>
+            <actions>
+                <include-screen-actions name="ShopActions"/>
+            </actions>
+            <widgets>
+                <!-- FIXME?: there is a pattern issue here where fields and resources set by GlobalDecorator are not accessible to us here (notably, including the include-screen calls below);
+                    requires either more global="true" in GlobalActions/GlobalDecorator (not very reusable) or maybe refactoring this decorator-screen include in a new way -->
+                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="pre-content">
+                        <decorator-section-include name="pre-content"/>
+                    </decorator-section>                
+                    <decorator-section name="content-full-screen">
+                        <section>
+                            <condition>
+                                <if-true field="customSideBar" />
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <actions>
+                                        <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
+                                    </actions>
+                                    <widgets>
+                                        <container id="content-main-body">
+                                            <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                                        </container>
+                                     </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <or>
+                                                <if-empty-section section-name="left-column" />
+                                                <if-false field="showLeftColumn" />
+                                            </or>
+                                            <or>
+                                                <if-empty-section section-name="right-column" />
+                                                <if-false field="showRightColumn" />
+                                            </or>
+                                        </and>
+                                    </condition>
+                                    <actions>
+                                        <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
+                                    </actions>
+                                    <widgets>
+                                        <container id="content-main-body">
+                                            <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                                        </container>
+                                     </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <not>
+                                                <or>
+                                                    <if-empty-section section-name="left-column" />
+                                                    <if-false field="showLeftColumn" />
+                                                </or>
+                                            </not>
+                                            <or>
+                                                <if-empty-section section-name="right-column" />
+                                                <if-false field="showRightColumn" />
+                                            </or>
+                                        </and>
+                                    </condition>
+                                    <actions>
+                                       <set field="columnLeftStyle" value="${styles.grid_sidebar_1_side}" />
+                                       <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="column-left" location="component://common/widget/CommonScreens.xml"/>
+                                        <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <or>
+                                                <if-empty-section section-name="left-column" />
+                                                <if-false field="showLeftColumn" />
+                                            </or>
+                                            <not>
+                                                <or>
+                                                    <if-empty-section section-name="right-column" />
+                                                    <if-false field="showRightColumn" />
+                                                </or>
+                                            </not>
+                                        </and>
+                                    </condition>
+                                    <actions>
+                                       <set field="columnRightStyle" value="${styles.grid_sidebar_1_side}" />
+                                       <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                                        <include-screen name="column-right" location="component://common/widget/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <not>
+                                                <or>
+                                                    <if-empty-section section-name="left-column" />
+                                                    <if-false field="showLeftColumn" />
+                                                </or>
+                                            </not>
+                                            <not>
+                                                <or>
+                                                    <if-empty-section section-name="right-column" />
+                                                    <if-false field="showRightColumn" />
+                                                </or>
+                                            </not>
+                                        </and>
+                                    </condition>
+                                    <actions>
+                                       <set field="columnLeftStyle" value="${styles.grid_sidebar_2_side}" />
+                                       <set field="columnRightStyle" value="${styles.grid_sidebar_2_side}" />
+                                       <set field="columnMainStyle" value="${styles.grid_sidebar_2_main}" />
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="column-left" location="component://common/widget/CommonScreens.xml"/>
+                                        <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                                        <include-screen name="column-right" location="component://common/widget/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <!-- SCIPIO: NOTE: Here we set defaults in the parameters maps. It is okay because it is run once
+                    for the main request, but other screens with local scopes should usually set context vars instead (which have priority) -->
+                <set field="parameters.VIEW_SIZE" from-field="parameters.VIEW_SIZE" default-value="12"/> <!-- Number of items to be displayed on a page -->
+                <set field="parameters.INDEX_SIZE" from-field="parameters.INDEX_SIZE" default-value="0"/> <!-- View index for a list of items-->
+                
+                <include-screen-actions name="ShopSetupActions"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ShopDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-content" >
+                        <container style="${styles.grid_theme_pre}" id="pre-content-section">
+                            <decorator-section-include name="pre-content"/>
+                        </container>
+                    </decorator-section>
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="leftbar"/>
+                    </decorator-section>
+                    <decorator-section name="pre-body" >
+                        <decorator-section-include name="pre-body"/>
+                    </decorator-section>
+                    <decorator-section name="body" >
+                        <section>
+                            <condition>
+                                <not><if-empty field="globalContext.productStore"/></not>
+                            </condition>
+                            <actions>
+                            </actions>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- SCIPIO: now points to shop -->
+                                <label style="warning" text="A Product Store has not been defined for this shop."/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
+    <screen name="CommonShopAppDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Side Columns -->
+    <screen name="leftbar">
+        <section>
+            <widgets>
+                    <include-screen name="sidedeepcategory" location="component://shop/widget/CatalogScreens.xml"/>
+                    <!--
+                    <include-screen name="choosecatalog" location="component://shop/widget/CatalogScreens.xml"/>
+                    <include-screen name="keywordsearchbox" location="component://shop/widget/CatalogScreens.xml"/>
+
+                    <include-screen name="productCategories" location="component://shop/widget/CatalogScreens.xml"/>
+                    <include-screen name="LayeredNavBar" location="component://shop/widget/CatalogScreens.xml"/>
+                    <include-screen name="minireorderprods" location="component://shop/widget/CatalogScreens.xml"/>
+                    <include-screen name="signupforcontactlist" location="component://shop/widget/EmailContactListScreens.xml"/>-->
+            </widgets>
+        </section>
+    </screen>
+    <screen name="rightbar">
+        <section>
+            <widgets>
+                    <!-- 
+                    <include-screen name="minicart" location="component://shop/widget/CartScreens.xml"/>
+                    <include-screen name="compareproductslist" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
+                    <include-screen name="minipromotext" location="component://shop/widget/CartScreens.xml"/>
+                    <include-screen name="miniassocprods" location="component://shop/widget/CatalogScreens.xml"/>
+                    <include-screen name="minilastviewedcategories" location="component://shop/widget/CatalogScreens.xml"/>
+                    <include-screen name="minilastviewedproducts" location="component://shop/widget/CatalogScreens.xml"/>
+                    <include-screen name="minilastproductsearches" location="component://shop/widget/CatalogScreens.xml"/> -->
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Common Decorators -->
+    <screen name="CommonEmptyDecorator">
+        <section>
+            <actions>
+                <set field="MainColumnStyle" value="center"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ShopDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Column Included Screens -->
+    <screen name="language">
+        <section>
+            <widgets>
+                <!-- SCIPIO: This template was removed.
+                <platform-specific><html><html-template location="component://shop/webapp/shop/includes/language.ftl"/></html></platform-specific>-->
+                <include-screen name="listLocalesCompact" location="component://common/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Top Level Screens -->
+    <screen name="main">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="activeSubMenuItem" value="main"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
+                <!--<set field="title" value="${uiLabelMap.PageTitleMain}: ${categoryTitle}"/>-->
+                <set field="title" value=""/>
+                <set field="titleProperty" value=""/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-content">
+                        <include-screen name="ScipioDashboardImage"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <actions>
+                                <!-- SCIPIO: TODO: This category ID should be configurable -->
+                                <set field="productCategoryId" value="PROMOTIONS"/> <!-- value="ELTRN-100" -->
+                                <set field="viewSize" value="12"/>
+                                <set field="viewIndex" value="0"/>
+                                <set field="viewCluster" value="4"/>
+                                <set field="viewScrollCluster" value="4"/>
+                            </actions>
+                            <widgets>
+                                <include-screen name="ScipioDashboardProductSlider"/>
+                            </widgets>
+                        </section>
+                        <include-screen name="ScipioDashboardSlider"/>
+                        <section>
+                            <actions>
+                                <!-- SCIPIO: TODO: This category ID should be configurable -->
+                                <set field="productCategoryId" value="ELTRN-100"/>
+                                <set field="viewSize" value="6"/>
+                                <set field="viewIndex" value="0"/>
+                                <set field="viewCluster" value="5"/>
+                                <set field="viewScrollCluster" value="1"/>
+                            </actions>
+                            <widgets>
+                                <include-screen name="ScipioDashboardMiniProductSlider"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="login">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLogin"/>
+                <set field="activeMainMenuItem" value="login"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/Login.groovy"/>
+                <set field="shoppingCart" value="${groovy:sessionAttributes.shoppingCart}"/>
+                <set field="checkoutType" value="full" />
+                <set field="activeStep" value="shippingAddress" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <!--
+                    <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
+                        <section> 
+                            <condition>
+                                <if-compare field="shoppingCart" operator="greater" value="0" />
+                            </condition>
+                            <widgets>
+                                <include-screen name="CheckoutProgressFull" location="component://shop/widget/OrderScreens.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>-->
+                    <decorator-section name="body">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                 <platform-specific>
+                                    <html><html-template location="component://shop/webapp/shop/login.ftl"/></html>
+                                </platform-specific>
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                <platform-specific>
+                                    <html><html-template location="component://shop/webapp/shop/order/startanoncheckout.ftl"/></html>
+                                </platform-specific>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="requirePasswordChange">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLogin"/>
+                <set field="activeMainMenuItem" value="login"/>
+                <set field="tmpUserLogin" value="${groovy: request.getAttribute('tmpUserLogin')}"/>                
+                <script location="component://shop/webapp/shop/WEB-INF/actions/Login.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- 
+                                SCIPIO: 03/02/2018 extended the check, so if a tmpUserLogin is present and requirePasswordChange equals Y, 
+                                then render the screen
+                            -->
+                            <condition>
+                                <or>
+                                    <if-true field="userHasAccount" />
+                                    <if-compare field="tmpUserLogin.requirePasswordChange" value="Y" operator="equals" />
+                                </or>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://shop/webapp/shop/requirePasswordChange.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="policies">
+        <section>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <sub-content content-id="WebStoreCONTENT" map-key="policies"/>
+                        <sub-content content-id="WebStoreCONTENT" map-key="policies2"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="license">
+        <section>
+            <actions>
+                 <set field="titleProperty" value="CommonLicense"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://shop/webapp/shop/license.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Widget implementation -->
+    <screen name="ScipioDashboardImage">
+        <section>
+             <widgets>
+               <screenlet>
+                   <platform-specific>
+                        <html><html-template location="component://shop/webapp/shop/dashboard/dashboardImage.ftl"/></html>
+                    </platform-specific>
+               </screenlet>     
+           </widgets>
+        </section>
+    </screen>
+    <screen name="ScipioDashboardSlider">
+        <section>
+             <widgets>
+               <screenlet>
+                   <platform-specific>
+                        <html><html-template location="component://shop/webapp/shop/dashboard/slider.ftl"/></html>
+                    </platform-specific>
+               </screenlet>     
+           </widgets>
+        </section>
+    </screen>
+    <screen name="ScipioDashboardProductSlider">
+        <section>
+            <actions>
+                <set field="productCategoryId" from-field="productCategoryId" default-value="CATALOG1" type="String" />
+                <set field="viewSize" from-field="viewSize" default-value="12" /><!-- Number of products -->
+                <set field="viewIndex" from-field="viewIndex" default-value="0" /><!-- page of result-set -->
+                <set field="viewCluster" from-field="viewCluster" default-value="4" /><!-- items per row -->
+                <set field="viewScrollCluster" from-field="viewScrollCluster" default-value="4" /><!-- items to slide -->
+                <set field="localVarsOnly" type="Boolean" value="true" />
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
+                <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
+                <set field="localVarsOnly" type="Boolean" value="true" />
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CategoryDetail.groovy"/>
+            </actions>
+             <widgets>
+                <section>
+                    <widgets>
+                        <screenlet>
+                           <platform-specific>
+                                <html><html-template location="component://shop/webapp/shop/dashboard/productSlider.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>  
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    <screen name="ScipioDashboardMiniProductSlider">
+        <section>
+            <actions>
+                <set field="productCategoryId" from-field="productCategoryId" default-value="CATALOG1" type="String" />
+                <set field="viewSize" from-field="viewSize" default-value="12" /><!-- Number of products -->
+                <set field="viewIndex" from-field="viewIndex" default-value="0" /><!-- page of result-set -->
+                <set field="viewCluster" from-field="viewCluster" default-value="4" /><!-- items per row -->
+                <set field="viewScrollCluster" from-field="viewScrollCluster" default-value="4" /><!-- items to slide -->
+                <set field="localVarsOnly" type="Boolean" value="true" />
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
+                <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#miniproductsummary"/>
+                <set field="localVarsOnly" type="Boolean" value="true" />
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CategoryDetail.groovy"/>
+            </actions>
+             <widgets>
+                <section>
+                    <widgets>
+                        <screenlet>
+                           <platform-specific>
+                                <html><html-template location="component://shop/webapp/shop/dashboard/productSlider.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>  
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+</screens>

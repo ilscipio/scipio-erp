@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="CommonCalendarDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml#Calendar"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Calendar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!--<include-menu name="CalendarTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>-->
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditCalendar">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="calendar"/>
+                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
+
+                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/EditCalendar.groovy"/>
+                
+                <set field="titleProperty" value="${groovy: context.techDataCalendar ? 'PageTitleEditCalendar' : 'ManufacturingNewCalendar'}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCalendarDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/routing/EditCalendar.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindCalendar">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindCalendar"/>
+                <set field="activeSubMenuItem" value="Calendar"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <entity-condition list="techDataCalendars" entity-name="TechDataCalendar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCalendarDecorator">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <container style="button-bar">
+                                <link style="${styles.link_nav} ${styles.action_add}" target="EditCalendar" text="${uiLabelMap.ManufacturingNewCalendar}"/>
+                            </container>
+                            <include-form name="ListTechDataCalendars" location="component://manufacturing/widget/manufacturing/CalendarForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ListCalendarWeek">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleListCalendarWeek"/>
+                <set field="activeSubMenuItem" value="CalendarWeek"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <entity-condition list="calendarWeeks" entity-name="TechDataCalendarWeek"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCalendarDecorator">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <container style="button-bar">
+                                <link style="${styles.link_nav} ${styles.action_add}" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
+                            </container>
+                            <include-form name="ListCalendarWeek" location="component://manufacturing/widget/manufacturing/CalendarForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditCalendarWeek">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="CalendarWeek"/>
+
+                <entity-one entity-name="TechDataCalendarWeek" value-field="calendarWeek"/>
+                
+                <set field="titleProperty" value="${groovy: context.calendarWeek ? 'PageTitleEditCalendarWeek' : 'ManufacturingNewCalendarWeek'}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCalendarDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="calendarWeek"/></not>
+                            </condition>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link style="${styles.link_nav} ${styles.action_add}" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
+                                </container>
+                            </widgets>
+                        </section>
+                        <screenlet>
+                            <include-form name="UpdateCalendarWeek" location="component://manufacturing/widget/manufacturing/CalendarForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditCalendarExceptionWeek">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditCalendarExceptionWeek"/>
+                <set field="activeSubMenuItem" value="calendarExceptionWeek"/>
+                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
+
+                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/EditCalendarExceptionWeek.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCalendarDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/routing/EditCalendarExceptionWeek.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditCalendarExceptionDay">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditCalendarExceptionDay"/>
+                <set field="activeSubMenuItem" value="calendarExceptionDay"/>
+                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
+
+                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/EditCalendarExceptionDay.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCalendarDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/routing/EditCalendarExceptionDay.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

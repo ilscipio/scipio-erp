@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="main"/>
+                <set field="activeSubMenu" value="TOP"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonDemoSuiteAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label>${uiLabelMap.CommonWelcome}</label>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>

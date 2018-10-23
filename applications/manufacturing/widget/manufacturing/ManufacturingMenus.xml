@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+
+    <menu name="ManufacturingAppBar" title="${uiLabelMap.ManufacturingManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="jobshop" title="${uiLabelMap.ManufacturingJobShop}">
+            <condition>
+                <if-has-permission permission="MANUFACTURING" action="_CREATE"/>
+            </condition>
+            <link target="FindProductionRun"/>
+        </menu-item>
+        <menu-item name="routing" title="${uiLabelMap.ManufacturingRouting}">
+            <condition>
+                <if-has-permission permission="MANUFACTURING" action="_CREATE"/>
+            </condition>
+            <link target="FindRouting"/>
+        </menu-item>
+        <menu-item name="routingTask" title="${uiLabelMap.ManufacturingRoutingTask}">
+            <condition>
+                <if-has-permission permission="MANUFACTURING" action="_CREATE"/>
+            </condition>
+            <link target="FindRoutingTask"/>
+        </menu-item>
+        <menu-item name="calendar" title="${uiLabelMap.ManufacturingCalendar}">
+            <condition>
+                <if-has-permission permission="MANUFACTURING" action="_CREATE"/>
+            </condition>
+            <link target="FindCalendar"/>
+        </menu-item>
+        <menu-item name="costs" title="${uiLabelMap.ManufacturingCostCalcs}">
+            <condition>
+                <if-has-permission permission="MANUFACTURING" action="_CREATE"/>
+            </condition>
+            <link target="EditCostCalcs"/>
+        </menu-item>
+        <menu-item name="bom" title="${uiLabelMap.ManufacturingBillOfMaterials}">
+            <condition>
+                <if-has-permission permission="MANUFACTURING" action="_CREATE"/>
+            </condition>
+            <link target="FindBom"/>
+        </menu-item>
+        <menu-item name="mrp" title="${uiLabelMap.ManufacturingMrp}">
+            <condition>
+                <if-has-permission permission="MANUFACTURING" action="_CREATE"/>
+            </condition>
+            <link target="FindInventoryEventPlan"/>
+        </menu-item>
+        <menu-item name="ShipmentPlans" title="${uiLabelMap.ManufacturingShipmentPlans}">
+            <condition>
+                <if-has-permission permission="MANUFACTURING" action="_CREATE"/>
+            </condition>
+            <link target="WorkWithShipmentPlans"/>
+        </menu-item>
+        <menu-item name="ManufacturingReports" title="${uiLabelMap.ManufacturingReports}">
+            <condition>
+                <if-has-permission permission="MANUFACTURING" action="_CREATE"/>
+            </condition>
+            <link target="ManufacturingReports"/>
+        </menu-item>
+    </menu>
+    <menu name="ManufacturingAppSideBar" title="${uiLabelMap.ManufacturingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
+        <include-elements menu-name="ManufacturingAppBar" recursive="full" />
+        <menu-item name="jobshop">
+            <sub-menu name="ProductionRun" include="ProductionRunSideBar" />
+        </menu-item>
+        <menu-item name="routing">
+            <sub-menu name="Routing" include="RoutingSideBar" />
+        </menu-item>
+        <menu-item name="routingTask">
+            <sub-menu name="RoutingTask" include="RoutingTaskSideBar" />
+        </menu-item>
+        <menu-item name="calendar">
+            <sub-menu name="Calendar" include="CalendarSideBar" />
+        </menu-item>
+        <menu-item name="bom">
+            <sub-menu name="Bom" include="BomSideBar" />
+        </menu-item>
+        <menu-item name="mrp">
+            <sub-menu name="Mrp" include="MrpSideBar" />
+        </menu-item>
+    </menu>
+
+    <menu name="BomTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
+        <menu-item name="findBom" title="${uiLabelMap.CommonFind}">
+            <link target="FindBom"/>
+        </menu-item>-->
+        <menu-item name="bomSimulation" title="${uiLabelMap.ManufacturingBomSimulation}">
+            <link target="BomSimulation">
+                <parameter param-name="productId" from-field="parameters.productId"/>
+                <parameter param-name="productAssocTypeId" from-field="parameters.productAssocTypeId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditProductBom" title="${uiLabelMap.ManufacturingBillOfMaterials}" always-expand-selected-or-ancestor="false"><!--${uiLabelMap.ManufacturingEditProductBom}-->
+            <condition>
+                <not><if-empty field="parameters.productId"/></not><!-- SCIPIO: added for consistency FIXME: poor condition however... -->
+            </condition>
+            <link target="EditProductBom">
+                <parameter param-name="productId" from-field="parameters.productId"/>
+                <parameter param-name="productAssocTypeId" from-field="parameters.productAssocTypeId"/>
+            </link>
+        </menu-item>
+        <menu-item name="productManufacturingRules" title="${uiLabelMap.ManufacturingManufacturingRules}">
+            <link target="EditProductManufacturingRules">
+                <parameter param-name="productId" from-field="parameters.productId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="BomSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="BomTabBar" recursive="includes-only" />
+    </menu>
+
+    <menu name="ProductionRunTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="edit" title="${uiLabelMap.ManufacturingProductionRun}"><!-- ${uiLabelMap.ManufacturingEditProductionRun} -->
+            <condition>
+                <or>
+                    <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_CREATED"/>
+                    <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_SCHEDULED"/>
+                </or>
+            </condition>
+            <link target="EditProductionRun">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="tasks" title="${uiLabelMap.ManufacturingListOfProductionRunRoutingTasks}">
+            <condition>
+                <or>
+                    <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_CREATED"/>
+                    <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_SCHEDULED"/>
+                </or>
+            </condition>
+            <link target="ProductionRunTasks">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="components" title="${uiLabelMap.ManufacturingMaterials}">
+            <condition>
+                <or>
+                    <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_CREATED"/>
+                    <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_SCHEDULED"/>
+                </or>
+            </condition>
+            <link target="ProductionRunComponents">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="fixedAssets" title="${uiLabelMap.AccountingFixedAssets}">
+            <condition>
+                <or>
+                    <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_CREATED"/>
+                    <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_SCHEDULED"/>
+                </or>
+            </condition>
+            <link target="ProductionRunFixedAssets">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="declaration" title="${uiLabelMap.ManufacturingProductionRunDeclaration}">
+            <condition>
+                <not>
+                    <or>
+                        <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_CREATED"/>
+                        <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_SCHEDULED"/>
+                    </or>
+                </not>
+            </condition>
+            <link target="ProductionRunDeclaration">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="actualComponents" title="${uiLabelMap.ManufacturingActualMaterials}">
+            <condition>
+                <not>
+                    <or>
+                        <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_CREATED"/>
+                        <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_SCHEDULED"/>
+                    </or>
+                </not>
+            </condition>
+            <link target="ProductionRunActualComponents">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="assocs" title="${uiLabelMap.ManufacturingProductionRunAssocs}">
+            <link target="ProductionRunAssocs">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="content" title="${uiLabelMap.CommonContent}">
+            <link target="ProductionRunContent">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="costs" title="${uiLabelMap.ManufacturingActualCosts}">
+            <link target="ProductionRunCosts">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="ProductionRunSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="ProductionRunTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="ProductionRunStatusTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="cancel" title="${uiLabelMap.ManufacturingCancel}">
+           <link target="cancelProductionRun">
+                <parameter param-name="productionRunId"/>
+           </link>
+        </menu-item>
+        <menu-item name="quickChangeClose" title="${uiLabelMap.ManufacturingQuickClose}">
+            <condition>
+                 <and>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CANCELLED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_COMPLETED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CLOSED"/>
+                 </and>
+            </condition>
+           <link target="quickChangeProductionRunStatus">
+                <parameter param-name="productionRunId"/>
+                <parameter param-name="statusId" value="PRUN_CLOSED"/>
+           </link>
+        </menu-item>
+        <menu-item name="quickChangeComplete" title="${uiLabelMap.ManufacturingQuickComplete}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
+            <condition>
+                 <and>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CANCELLED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_COMPLETED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CLOSED"/>
+                 </and>
+            </condition>
+           <link target="quickChangeProductionRunStatus">
+                <parameter param-name="productionRunId" />
+                <parameter param-name="statusId" value="PRUN_COMPLETED"/>
+           </link>
+        </menu-item>
+        <menu-item name="changeStatusToPrinted" title="${uiLabelMap.ManufacturingConfirmProductionRun}">
+            <condition>
+                 <or>
+                   <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_CREATED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_SCHEDULED"/>
+                 </or>
+            </condition>
+            <link target="changeProductionRunStatusToPrinted">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="quickRunAllProductionRunTasks" title="${uiLabelMap.ManufacturingQuickRunAllTasks}">
+            <condition>
+                 <and>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CREATED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_SCHEDULED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CANCELLED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_COMPLETED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CLOSED"/>
+                 </and>
+            </condition>
+            <link target="quickStartAllProductionRunTasks">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="quickStartAllProductionRunTasks" title="${uiLabelMap.ManufacturingQuickStartAllTasks}">
+            <condition>
+                 <and>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CREATED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_SCHEDULED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CANCELLED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_COMPLETED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CLOSED"/>
+                 </and>
+            </condition>
+            <link target="quickStartAllProductionRunTasks">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="quickChangeComplete2Close" title="${uiLabelMap.ManufacturingQuickClose}" widget-style="+${styles.action_run_sys} ${styles.action_terminate}">
+            <condition>
+                <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_COMPLETED"/>
+            </condition>
+           <link target="quickChangeProductionRunStatus">
+                <parameter param-name="productionRunId"/>
+                <parameter param-name="statusId" value="PRUN_CLOSED"/>
+           </link>
+        </menu-item>
+        <menu-item name="schedule" title="${uiLabelMap.ManufacturingSchedule}">
+            <condition>
+                 <or>
+                   <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_CREATED"/>
+                   <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_SCHEDULED"/>
+                 </or>
+            </condition>
+            <link target="scheduleProductionRun">
+                <parameter param-name="productionRunId"/>
+                <parameter param-name="statusId" value="PRUN_SCHEDULED"/>
+            </link>
+        </menu-item>
+        <menu-item name="link" title="${uiLabelMap.ManufacturingLinkProductionRun}">
+            <link target="LinkProductionRun">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+        <menu-item name="print" title="${uiLabelMap.CommonPrint} (${uiLabelMap.CommonPdf})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="PrintProductionRun" target-window="_BLANK">
+                <parameter param-name="productionRunId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <!-- SCIPIO: use this if using as a button bar in templates, as opposed to ProductionRunStatusTabBar (ProductionRunStatusTabBar will have issues with active items) -->
+    <menu name="ProductionRunStatusSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="ProductionRunStatusTabBar" recursive="includes-only" />
+    </menu>
+
+    <menu name="MrpTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="RunMrp" title="${uiLabelMap.ManufacturingRunMrp}">
+            <link target="RunMrp"/>
+        </menu-item>
+        <menu-item name="findInventoryEventPlan" title="${uiLabelMap.ManufacturingMrpLog}">
+            <link target="FindInventoryEventPlan"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="MrpSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="MrpTabBar" recursive="includes-only" />
+    </menu>
+
+    <menu name="CalendarTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <!-- SCIPIO: workaround to help smoother browsing here 
+                FIXME: this is only partial, may need a session hack...
+            -->
+            <script><![CDATA[groovy:
+                techDataCalendar = context.techDataCalendar;
+                if (techDataCalendar == null && parameters.calendarId) {
+                    techDataCalendar = delegator.findOne('TechDataCalendar', [calendarId:parameters.calendarId], false);
+                }
+                context.techDataCalendar = techDataCalendar;
+            ]]></script>
+        </actions>
+        <!-- SCIPIO: redundant
+        <menu-item name="Calendar" title="${uiLabelMap.ManufacturingCalendars}">
+            <link target="FindCalendar"/>
+        </menu-item>-->
+        <menu-item name="CalendarWeek" title="${uiLabelMap.ManufacturingCalendarWeeks}">
+            <link target="ListCalendarWeek" />
+                <!-- SCIPIO: if uncommenting the above...
+                <parameter param-name="calendarId" from-field="techDataCalendar.calendarId"/>
+            </link> -->
+        </menu-item>
+        <menu-item name="calendar" title="${uiLabelMap.ManufacturingCalendar}" always-expand-selected-or-ancestor="false"><!-- ${uiLabelMap.CommonEdit} -->
+            <condition>
+                <not><if-empty field="techDataCalendar"/></not>
+            </condition>
+            <link target="EditCalendar">
+                <parameter param-name="calendarId" from-field="techDataCalendar.calendarId"/>
+            </link>
+        </menu-item>
+        <menu-item name="calendarExceptionDay" title="${uiLabelMap.ManufacturingCalendarExceptionDate}">
+            <condition>
+                <not><if-empty field="techDataCalendar"/></not>
+            </condition>
+            <link target="EditCalendarExceptionDay">
+                <parameter param-name="calendarId" from-field="techDataCalendar.calendarId"/>
+            </link>
+        </menu-item>
+        <menu-item name="calendarExceptionWeek" title="${uiLabelMap.ManufacturingCalendarExceptionWeek}">
+            <condition>
+                <not><if-empty field="techDataCalendar"/></not>
+            </condition>
+            <link target="EditCalendarExceptionWeek">
+                <parameter param-name="calendarId" from-field="techDataCalendar.calendarId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="CalendarSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="CalendarTabBar" recursive="includes-only" />
+        <menu-item-alias name="Calendar" for="PARENT-WITHSUB"/>
+    </menu>
+
+    <menu name="RoutingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="editRouting" title="${uiLabelMap.ManufacturingRouting}"><!-- ${uiLabelMap.ManufacturingEditRouting} -->
+            <link target="EditRouting">
+                <parameter param-name="workEffortId" from-field="routing.workEffortId"/>
+            </link>
+        </menu-item>
+        <menu-item name="routingTaskAssoc" title="${uiLabelMap.ManufacturingEditRoutingTaskAssoc}">
+            <link target="EditRoutingTaskAssoc">
+                <parameter param-name="workEffortId" from-field="routing.workEffortId"/>
+            </link>
+        </menu-item>
+        <menu-item name="routingProductLink" title="${uiLabelMap.ManufacturingEditRoutingProductLink}">
+            <link target="EditRoutingProductLink">
+                <parameter param-name="workEffortId" from-field="routing.workEffortId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="RoutingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="RoutingTabBar" recursive="includes-only" />
+        <menu-item-alias name="findRouting" for="PARENT-NOSUB"/>
+    </menu>
+
+    <menu name="RoutingTaskTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="editRoutingTask" title="${uiLabelMap.ManufacturingRoutingTask}"><!-- ${uiLabelMap.ManufacturingEditRoutingTask} -->
+            <link target="EditRoutingTask">
+                <parameter param-name="workEffortId" from-field="routingTask.workEffortId"/>
+            </link>
+        </menu-item>
+        <menu-item name="editRoutingTaskCosts" title="${uiLabelMap.ManufacturingRoutingTaskCosts}">
+            <link target="EditRoutingTaskCosts">
+                <parameter param-name="workEffortId" from-field="routingTask.workEffortId"/>
+            </link>
+        </menu-item>
+        <menu-item name="listRoutingTaskProducts" title="${uiLabelMap.ManufacturingListProducts}">
+            <link target="ListRoutingTaskProducts">
+                <parameter param-name="workEffortId" from-field="routingTask.workEffortId"/>
+            </link>
+        </menu-item>
+        <menu-item name="editRoutingTaskFixedAssets" title="${uiLabelMap.ManufacturingRoutingTaskFixedAssets}">
+            <link target="EditRoutingTaskFixedAssets">
+                <parameter param-name="workEffortId" from-field="routingTask.workEffortId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="RoutingTaskSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="RoutingTaskTabBar" recursive="includes-only" />
+        <menu-item-alias name="routingTask" for="PARENT-NOSUB"/>
+    </menu>
+</menus>

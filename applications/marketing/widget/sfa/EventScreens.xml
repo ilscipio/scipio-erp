@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="titleProperty" value="SfaEvents"/>
+                <set field="activeSubMenuItem" value="Events"/>
+                <entity-and entity-name="WorkEffortAndPartyAssign" list="myTasks" filter-by-date="true">
+                    <field-map field-name="partyId" from-field="userLogin.partyId"/>
+                    <field-map field-name="statusId" value="PRTYASGN_ASSIGNED"/>
+                    <field-map field-name="workEffortTypeId" value="TASK"/>
+                    <field-map field-name="currentStatusId" value="CAL_ACCEPTED"/>
+                    <field-map field-name="workEffortParentId" from-field="null"/>
+                </entity-and>
+                <entity-and entity-name="WorkEffortAndPartyAssign" list="tasksAssignedByMe" filter-by-date="true">
+                    <field-map field-name="assignedByUserLoginId" from-field="userLogin.userLoginId"/>
+                    <field-map field-name="statusId" value="PRTYASGN_ASSIGNED"/>
+                    <field-map field-name="workEffortTypeId" value="TASK"/>
+                    <field-map field-name="currentStatusId" value="CAL_ACCEPTED"/>
+                    <field-map field-name="workEffortParentId" from-field="null"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonEventDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.SfaTaskAssignedToMe}" navigation-form-name="MyTasks">
+                            <include-form name="MyTasks" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.SfaTaskAssignedByMe}" navigation-form-name="MyTasks">
+                            <include-form name="TasksAssignedByMe" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEvent">
+        <section>
+            <actions>
+                <set field="titleProperty" value="WorkEffortAddCalendarEvent"/>
+                <set field="activeSubMenuItem" value="Events"/>
+                <entity-one entity-name="WorkEffort" value-field="workEffort"/>
+                <set field="isNewEvent" type="Boolean" value="${groovy: context.workEffort ? false : true}"/>
+                
+                <set field="createCalEventUrl" from-field="createCalEventUrl" default-value="createEventWorkEffortAndPartyAssign" />
+                <set field="updateCalEventUrl" from-field="updateCalEventUrl" default-value="updateEventWorkEffort" />
+                <set field="cancelEventFormId" value="cancelEventForm"/>
+                <set field="completeEventFormId" value="completeEventForm"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonEventDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-form name="EditEvent" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                            <include-form name="cancelEventHidden" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                            <include-form name="completeEventHidden" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

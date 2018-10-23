@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+    <simple-method method-name="createPartySkill" short-description="Create Party Skills">
+        <make-value entity-name="PartySkill" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <entity-one entity-name="PartySkill" value-field="partySkill" auto-field-map="true"/>
+        <if>
+            <condition>
+                <and>
+                   <if-compare-field field="partySkill.partyId" to-field="parameters.partyId" operator="equals"/>
+                   <if-compare-field field="partySkill.skillTypeId" to-field="parameters.skillTypeId" operator="equals"/>
+                </and>
+            </condition>
+            <then>
+                 <add-error>
+                    <fail-property resource="HumanResUiLabels" property="HumanResPartySkillsAlreadyExists"/>
+                 </add-error>
+                 <check-errors/>
+            </then>
+            <else>
+                <create-value value-field="newEntity"/>
+            </else>
+        </if>
+    </simple-method>
+
+    <!-- Employment Group -->
+    <simple-method method-name="createEmployment" short-description="Create Employment"><!--entity-auto-->
+        <make-value entity-name="Employment" value-field="newEntity"/>
+        <set-pk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.fromDate">
+            <now-timestamp field="nowTimeStamp"/>
+            <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
+        </if-empty>
+        <create-value value-field="newEntity"/>
+
+        <set-service-fields service-name="createPayHistory" map="newEntity" to-map="createPayHistoryMap"/><!--create by seca-->
+        <call-service service-name="createPayHistory" in-map-name="createPayHistoryMap"/>
+    </simple-method>
+
+    <simple-method method-name="deletePayHistory" short-description="Delete Pay History">
+        <now-timestamp field="nowTimeStamp"/>
+        <entity-one entity-name="PayHistory" value-field="lookedUpValue"/>
+        <set field="lookedUpValue.thruDate" from-field="nowTimeStamp"/>
+        <store-value value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="createEmplPositionReportingStruct" short-description="Create a Employee Position Reporting Structure">
+        <make-value entity-name="EmplPositionReportingStruct" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.fromDate">
+            <now-timestamp field="nowTimeStamp"/>
+            <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
+        </if-empty>
+        <if>
+            <condition>
+                <if-compare-field field="parameters.emplPositionIdManagedBy" to-field="parameters.emplPositionIdReportingTo" operator="not-equals"/>
+            </condition>
+            <then>
+                <create-value value-field="newEntity"/>
+            </then>
+            <else>
+                <add-error>
+                    <fail-property resource="HumanResUiLabels" property="HumanResEmplPostitionIdReportingToAndEmplPositionIdManagedByMustBeDiff"/>
+                </add-error>
+                <check-errors/>
+            </else>
+        </if>
+    </simple-method>
+
+    <simple-method method-name="createEmployee" short-description="Create New Employee">
+        <set field="parameters.roleTypeId" value="EMPLOYEE"/>
+        <call-simple-method method-name="createPersonRoleAndContactMechs" xml-resource="component://party/script/org/ofbiz/party/party/PartySimpleMethods.xml"/>
+        <if-not-empty field="parameters.partyIdFrom">
+            <set field="partyRelationshipCtx.partyId" from-field="partyId"/>
+            <set field="partyRelationshipCtx.partyIdFrom" from-field="parameters.partyIdFrom"/>
+            <set field="partyRelationshipCtx.partyIdTo" from-field="partyId"/>
+            <set field="partyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO"/>
+            <set field="partyRelationshipCtx.roleTypeIdTo" value="EMPLOYEE"/>
+            <set field="partyRelationshipCtx.relationshipName" value="EMPLOYMENT"/>
+            <set field="partyRelationshipCtx.fromDate" from-field="parameters.fromDate"/>
+            <now-timestamp field="nowTimestamp"/>
+            <if-empty field="partyRelationshipCtx.fromDate">
+                <set field="partyRelationshipCtx.fromDate" from-field="nowTimestamp"/>
+            </if-empty>
+            <call-service service-name="createPartyRelationship" in-map-name="partyRelationshipCtx"/>
+        </if-not-empty>
+        <field-to-result field="partyId"/>
+
+        <!-- SCIPIO: 2018-04-10: need another message because "telecom number created" alone appears too strange
+            FIXME: try to prevent the telecom number message, failed so far... -->
+        <property-to-field resource="PartyUiLabels" property="PartyUserCreated" field="successMessageList[]"/>
+    </simple-method>
+
+    <simple-method method-name="updateEmplPositionTypeRate" short-description="Update/create EmplPositionTypeRate">
+        <entity-one entity-name="EmplPositionTypeRate" value-field="lookedUpValue"/>
+        <!-- check if already exist is so expire current record -->
+        <entity-and entity-name="EmplPositionTypeRate" list="emplPositionTypeRates" filter-by-date="true">
+            <field-map field-name="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+            <field-map field-name="rateTypeId" from-field="parameters.rateTypeId"/>
+        </entity-and>
+        <if-not-empty field="emplPositionTypeRates">
+            <first-from-list list="emplPositionTypeRates" entry="emplPositionTypeRate"/>
+            <now-timestamp field="emplPositionTypeRate.thruDate"/>
+            <store-value value-field="emplPositionTypeRate"/>
+        </if-not-empty>
+
+        <make-value entity-name="EmplPositionTypeRate" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.fromDate"><now-timestamp field="newEntity.fromDate"/></if-empty>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <create-value value-field="newEntity"/>
+
+        <if-not-empty field="parameters.rateAmount">
+            <set-service-fields service-name="updateRateAmount" map="parameters" to-map="updRate"/>
+            <call-service service-name="updateRateAmount" in-map-name="updRate"/>
+        </if-not-empty>
+    </simple-method>
+
+    <simple-method method-name="deleteEmplPositionTypeRate" short-description="Delete EmplPositionTypeRate">
+        <entity-one entity-name="EmplPositionTypeRate" value-field="lookedUpValue"/>
+        <now-timestamp field="lookedUpValue.thruDate"/>
+        <store-value value-field="lookedUpValue"/>
+
+        <set-service-fields service-name="expireRateAmount" map="parameters" to-map="delRateAmount"/>
+        <set field="delRateAmount.fromDate" from-field="parameters.rateAmountFromDate"/>
+        <call-service service-name="expireRateAmount" in-map-name="delRateAmount"/>
+    </simple-method>
+
+    <simple-method method-name="createEmplLeave" short-description="Create Employee Leave">
+        <make-value entity-name="EmplLeave" value-field="newEntity"/>
+        <set-pk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <create-value value-field="newEntity"/>
+        <check-errors/>
+        <property-to-field resource="HumanResUiLabels" property="HumanResLeaveCreationSuccess" field="successMessage"/>
+        <!-- SCIPIO: 2018-03-01: this unnecessary and inappropriate use of reserved field name
+        <field-to-result field="responseMessage" result-name="successMessage"/>-->
+    </simple-method>
+
+    <simple-method method-name="getCurrentPartyEmploymentData" short-description="Get all current employment information for a certain partyId">
+        <!-- party benefit -->
+        <entity-and entity-name="BenefitTypeAndParty" list="partyBenefitTypes" filter-by-date="true">
+            <field-map field-name="partyIdTo" from-field="parameters.partyId"/>
+        </entity-and>
+        <field-to-result field="partyBenefitTypes"/>
+        <!-- employment -->
+        <entity-and entity-name="Employment" list="employments" filter-by-date="true">
+            <field-map field-name="partyIdTo" from-field="parameters.partyId"/>
+        </entity-and>
+        <first-from-list list="employments" entry="employment"/>
+        <field-to-result field="employment"/>
+        <!-- position -->
+        <entity-and entity-name="EmplPositionAndFulfillment" list="emplPositionAndFulfillments" filter-by-date="true">
+            <field-map field-name="employeePartyId" from-field="parameters.partyId"/>
+            <field-map field-name="partyId" from-field="employment.partyIdFrom"/>
+        </entity-and>
+        <first-from-list list="emplPositionAndFulfillments" entry="emplPositionAndFulfillment"/>
+        <field-to-result field="emplPositionAndFulfillment" result-name="emplPosition"/>
+        <!-- position type -->
+        <if-not-empty field="emplPositionAndFulfillment">
+            <get-related-one value-field="emplPositionAndFulfillment" relation-name="EmplPositionType" to-value-field="emplPositionType"/>
+            <field-to-result field="emplPositionType"/>
+        </if-not-empty>
+        <!-- rate amount -->
+        <entity-one entity-name="PartyAcctgPreference" value-field="partyAcctgPreference">
+            <field-map field-name="partyId" from-field="employment.partyIdFrom"/>
+        </entity-one>
+        <entity-and entity-name="RateAmount" list="rateAmounts" filter-by-date="true">
+            <field-map field-name="emplPositionTypeId" from-field="emplPositionType.emplPositionTypeId"/>
+            <field-map field-name="rateCurrencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+        </entity-and>
+        <first-from-list list="rateAmounts" entry="rateAmount"/>
+        <field-to-result field="rateAmount" result-name="emplPositionRateAmount"/>
+    </simple-method>
+
+    <simple-method method-name="applyTraining" short-description="Apply Training">
+        <make-value entity-name="TrainingRequest" value-field="trainingRequest"/>
+        <make-next-seq-id value-field="trainingRequest" seq-field-name="trainingRequestId"/>
+        <create-value value-field="trainingRequest"/>
+        <make-value entity-name="PersonTraining" value-field="personTraining"/>
+        <set-pk-fields map="parameters" value-field="personTraining"/>
+        <set-nonpk-fields map="parameters" value-field="personTraining"/>
+        <set from-field="trainingRequest.trainingRequestId" field="personTraining.trainingRequestId"/>
+        <set field="personTraining.fromDate" from-field="parameters.fromDate"/>
+        <set field="personTraining.thruDate" from-field="parameters.thruDate"/>
+        <!-- SCIPIO: 2018-09-10: this makes no sense
+        <set field="personTraining.trainingClassTypeId" from-field="parameters.workEffortName"/>-->
+        <create-value value-field="personTraining"/>
+        <check-errors/>
+    </simple-method>
+
+    <simple-method method-name="assignTraining" short-description="Assign Training">
+        <make-value entity-name="TrainingRequest" value-field="trainingRequest"/>
+        <make-next-seq-id value-field="trainingRequest" seq-field-name="trainingRequestId"/>
+        <create-value value-field="trainingRequest"/>
+        <make-value entity-name="PersonTraining" value-field="personTraining"/>
+        <set-pk-fields map="parameters" value-field="personTraining"/>
+        <set-nonpk-fields map="parameters" value-field="personTraining"/>
+        <set from-field="trainingRequest.trainingRequestId" field="personTraining.trainingRequestId"/>
+        <set field="personTraining.fromDate" from-field="parameters.fromDate"/>
+        <set field="personTraining.thruDate" from-field="parameters.thruDate"/>
+        <create-value value-field="personTraining"/>
+        <check-errors/>
+    </simple-method>
+
+    <simple-method method-name="createSalaryStep" short-description="Create a Salary Step">
+        <make-value entity-name="SalaryStep" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="newEntity.createdByUserLogin" from-field="parameters.userLogin.userLoginId"/>
+        <sequenced-id sequence-name="SalaryStep" field="newEntity.salaryStepSeqId"/>
+        <!-- SCIPIO: 2018-09-10: this is wrong
+        <field-to-result field="salaryStepSeqId" result-name="salaryStepSeqId"/>-->
+        <field-to-result field="newEntity.salaryStepSeqId" result-name="salaryStepSeqId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateSalaryStep" short-description="Update Salary Step">
+        <entity-one entity-name="SalaryStep" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set field="lookedUpValue.lastModifiedByUserLogin" from-field="parameters.userLogin.userLoginId"/>
+        <now field="fromDate"/>
+        <set field="lookedUpValue.dateModified" from-field="fromDate"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="createEmploymentApp" short-description="SCIPIO: Create Employment App">
+        <call-simple-method method-name="validateEmploymentAppParams" />
+        <check-errors />
+
+        <make-value entity-name="EmploymentApp" value-field="emplAppValue"/>
+        <set-pk-fields map="parameters" value-field="emplAppValue"/>
+        <if-empty field="parameters.applicationId">
+            <make-next-seq-id seq-field-name="applicationId" value-field="emplAppValue"/>
+        </if-empty>
+        <set-nonpk-fields map="parameters" value-field="emplAppValue"/>
+
+        <call-simple-method method-name="validateEmploymentApp" />
+        <check-errors />
+
+        <create-value value-field="emplAppValue"/>
+        <check-errors />
+        <field-to-result field="emplAppValue.applicationId" result-name="applicationId"/>
+    </simple-method>
+
+    <simple-method method-name="updateEmploymentApp" short-description="SCIPIO: Update Employment App">
+        <field-to-result field="parameters.applicationId" result-name="applicationId"/>
+        <call-simple-method method-name="validateEmploymentAppParams" />
+        <check-errors />
+
+        <entity-one entity-name="EmploymentApp" value-field="emplAppValue"/>
+        <!--<set-pk-fields map="parameters" value-field="emplAppValue"/>-->
+        <set-nonpk-fields map="parameters" value-field="emplAppValue"/>
+
+        <call-simple-method method-name="validateEmploymentApp" />
+        <check-errors />
+
+        <store-value value-field="emplAppValue"/>
+        <check-errors />
+    </simple-method>
+
+    <simple-method method-name="validateEmploymentAppParams" short-description="SCIPIO: Validate Employment App Params">
+        <if-not-empty field="parameters.emplPositionId">
+            <entity-one entity-name="EmplPosition" value-field="emplPosValue" auto-field-map="false">
+                <field-map field-name="emplPositionId" from-field="parameters.emplPositionId"/>
+            </entity-one>
+            <!--<check-errors/>-->
+            <if-empty field="emplPosValue">
+                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidEmplPosition"/></add-error>
+                <!--<check-errors/>-->
+            </if-empty>
+        </if-not-empty>
+        <if-not-empty field="parameters.jobRequisitionId">
+            <entity-one entity-name="JobRequisition" value-field="jobReqValue" auto-field-map="false">
+                <field-map field-name="jobRequisitionId" from-field="parameters.jobRequisitionId"/>
+            </entity-one>
+            <!--<check-errors/>-->
+            <if-empty field="jobReqValue">
+                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidJobRequisition"/></add-error>
+                <!--<check-errors/>-->
+            </if-empty>
+        </if-not-empty>
+    </simple-method>
+
+    <simple-method method-name="validateEmploymentApp" short-description="SCIPIO: Validate Employment App">
+        <!-- check that emplPositionId and/or jobRequisition are set to valid values, and optionally
+            if position not specified, transfer it from the job requisition -->
+        <if-empty field="emplAppValue.emplPositionId">
+            <!-- get it from jobRequisition -->
+            <if-empty field="emplAppValue.jobRequisitionId">
+                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorPositionOrRequisitionMustBeSpecified"/></add-error>
+                <check-errors/>
+            <else>
+                <entity-one entity-name="JobRequisition" value-field="jobReqValue" auto-field-map="false">
+                    <field-map field-name="jobRequisitionId" from-field="emplAppValue.jobRequisitionId"/>
+                </entity-one>
+                <check-errors/>
+                <if-empty field="jobReqValue">
+                    <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidJobRequisition"/></add-error>
+                    <check-errors/>
+                <else>
+                    <!-- SCIPIO: NOTE: this is a new field in scipio -->
+                    <if-not-empty field="jobReqValue.emplPositionId">
+                        <!-- get the position from the requisition -->
+                        <set field="emplAppValue.emplPositionId" from-field="jobReqValue.emplPositionId" />
+                    </if-not-empty>
+                    <check-errors/>
+                </else>
+                </if-empty>
+            </else>
+            </if-empty>
+        <else>
+            <entity-one entity-name="EmplPosition" value-field="emplPosValue" auto-field-map="false">
+                <field-map field-name="emplPositionId" from-field="emplAppValue.emplPositionId"/>
+            </entity-one>
+            <check-errors/>
+            <if-empty field="emplPosValue">
+                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidEmplPosition"/></add-error>
+                <check-errors/>
+            <else>
+                <if-not-empty field="emplAppValue.jobRequisitionId">
+                    <entity-one entity-name="JobRequisition" value-field="jobReqValue" auto-field-map="false">
+                        <field-map field-name="jobRequisitionId" from-field="emplAppValue.jobRequisitionId"/>
+                    </entity-one>
+                    <check-errors/>
+                    <if-empty field="jobReqValue">
+                        <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidJobRequisition"/></add-error>
+                        <check-errors/>
+                    <else>
+                        <if-not-empty field="jobReqValue.emplPositionId">
+                            <!-- Verify that the requisition links to the same position as us -->
+                            <if-compare-field field="emplAppValue.emplPositionId" operator="not-equals" to-field="jobReqValue.emplPositionId">
+                                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorAppPositionMustEqualRequisitionPosition"/></add-error>
+                                <check-errors/>
+                            </if-compare-field>
+                        <else>
+                            <!-- TODO: REVIEW: this case is ambiguous, so don't fail; it is allowed by stock though in most cases you probably
+                                want the job req to link to a position -->
+                            <log level="warning" message="WARNING: Job requisition ${emplAppValue.jobRequisitionId} is not linked to an employee position;
+                                this is allowed by stock ofbiz, but in most cases you want to a link to a position (emplPositionId)" />
+                        </else>
+                        </if-not-empty>
+                    </else>
+                    </if-empty>
+                </if-not-empty>
+            </else>
+            </if-empty>
+        </else>
+        </if-empty>
+    </simple-method>
+
+</simple-methods>

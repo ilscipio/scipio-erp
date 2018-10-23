@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- Generic screens -->
+    
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="main"/>
+                
+                <!-- Includes -->
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
+                <set field="layoutSettings.VT_STYLESHEET[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                <include-screen name="CmsContentTree" location="component://cms/widget/CommonScreens.xml"/>
+                            </container>                            
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonScriptAssocActions"><!-- for editTemplate & editAsset -->
+        <actions>
+            <script lang="groovy"><![CDATA[
+                import org.ofbiz.base.util.*;
+                import org.ofbiz.entity.*;
+                import org.ofbiz.entity.condition.*;
+                import com.ilscipio.scipio.cms.template.CmsScriptTemplate;
+                final String module = "CommonEditRenderTemplateActions.groovy";
+  
+                try {
+                    context.standaloneScriptTemplates = CmsScriptTemplate.getWorker().findAll(delegator,
+                        CmsScriptTemplate.getStandaloneCond(), ["templateName"], false);
+                } catch(Exception e) {
+                    Debug.logError(e, "Cms: Could not read script templates", module);
+                    context.allScriptTemplates = null;
+                }
+            ]]></script> 
+        </actions>
+    </screen>
+    
+    <!-- Page Screens -->
+    
+    <screen name="pages">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Pages"/>
+                <set field="activeSubMenuItem" value="listPages"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetPageList.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/pages/listPages.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="editPage">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Pages"/>
+                <set field="activeSubMenuItem" value="editPage"/>
+                
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/trumbowyg/dist/trumbowyg.min.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/trumbowyg/dist/plugins/table/trumbowyg.table.min.js" global="true"/>
+                
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/trumbowyg.scipio_common.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_media/trumbowyg.scipio_media.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_links/trumbowyg.scipio_links.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_assets/trumbowyg.scipio_assets.js" global="true"/>
+
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
+                <set field="layoutSettings.VT_STYLESHEET[]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
+                
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetPage.groovy"/>
+                
+                <include-screen-actions name="CommonScriptAssocActions"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/pages/editPage.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Template Screens -->
+    
+    <screen name="CommonEditRenderTemplateActions"><!-- for editTemplate & editAsset -->
+        <actions>
+            <include-screen-actions name="CommonScriptAssocActions"/>
+        </actions>
+    </screen>
+    
+    <screen name="templates">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Templates"/>
+                <set field="activeSubMenuItem" value="templates"/>
+                
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <entity-condition entity-name="CmsPageTemplate" list="templateList">
+                    <order-by field-name="templateName"/>
+                    <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/templates/listTemplates.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="editTemplate">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Templates"/>
+                <set field="activeSubMenuItem" value="editTemplate"/>
+                
+                <include-screen-actions name="CodeEditorCommonIncludes" location="component://cms/widget/CommonScreens.xml"/>
+                <include-screen-actions name="CommonEditRenderTemplateActions"/>
+                
+                <!-- Prepare Data -->
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetTemplate.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/templates/editTemplate.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="assets">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Templates"/>
+                <set field="activeSubMenuItem" value="assets"/>
+                
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <entity-condition entity-name="CmsAssetTemplate" list="assetList">
+                    <order-by field-name="templateName"/>
+                    <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/assets/listAssets.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="editAsset">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Templates"/>
+                <set field="activeSubMenuItem" value="editAsset"/>
+                
+                <include-screen-actions name="CodeEditorCommonIncludes" location="component://cms/widget/CommonScreens.xml"/>
+                <include-screen-actions name="CommonEditRenderTemplateActions"/>
+                
+                <!-- Prepare Data -->
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetAsset.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/assets/editAsset.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="scripts">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Templates"/>
+                <set field="activeSubMenuItem" value="scripts"/>
+                
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <set field="showStandaloneOnly" type="String" from-field="parameters.showStandaloneOnly" default-value="N"/>
+                <if>
+                    <condition>
+                        <if-compare field="showStandaloneOnly" operator="equals" value="Y"/>
+                    </condition>
+                    <then>
+                        <entity-condition entity-name="CmsScriptTemplate" list="scriptList">
+                            <condition-list combine="or">
+                                <condition-expr field-name="standalone" value="Y"/>
+                                <!-- WARN: default is hardcoded, see CmsScriptTemplate.java -->
+                                <condition-expr field-name="standalone" value=""/>
+                            </condition-list>
+                            <order-by field-name="templateName"/>
+                            <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
+                        </entity-condition>
+                    </then>
+                    <else>
+                        <entity-condition entity-name="CmsScriptTemplate" list="scriptList">
+                            <order-by field-name="templateName"/>
+                            <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
+                        </entity-condition>
+                    </else>
+                </if>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/scripts/listScripts.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- NOTE: body editor will only support groovy for now; the other languages only support file locations -->
+    <screen name="editScript">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Templates"/>
+                <set field="activeSubMenuItem" value="editScript"/>
+                
+                <include-screen-actions name="CodeEditorCommonIncludes" location="component://cms/widget/CommonScreens.xml"/>
+                
+                <!-- Prepare Data -->
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetScript.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/scripts/editScript.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Media Screens -->
+    
+    <screen name="CommonMediaActions">
+        <actions>
+            <script lang="groovy"><![CDATA[
+                import com.ilscipio.scipio.cms.util.fileType.PreviewHelper;
+                context.previewHelper = PreviewHelper.getInstance(request, response);
+            ]]></script>
+        </actions>
+    </screen>
+    
+    <screen name="media">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Media"/>
+                <set field="activeSubMenuItem" value="media"/>
+                
+                <include-screen-actions name="CommonMediaActions"/>
+                
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <!-- Prepare Data -->
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetMediaList.groovy"/>                
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/media/listMedia.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="editMedia">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Media"/>
+                <set field="activeSubMenuItem" value="media"/><!-- no such: "editMedia" -->
+                <include-screen-actions name="CommonMediaActions"/>         
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetMedia.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/media/editMedia.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Exports Tika media types (mime-types) to entity MimeType representations -->
+    <screen name="libMimeTypeExport">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    import com.ilscipio.scipio.cms.util.fileType.TikaUtil;
+                    def mimeTypes;
+                    // NOTE: CURRENTLY (2017-02-08) DOES NOT INCLUDE ALIASES (BY DEFAULT). TODO: REVIEW. 
+                    boolean aliases = "true".equals(parameters.aliases)
+                    if ("true".equals(parameters.missingOnly)) {
+                        mimeTypes = TikaUtil.makeMissingEntityMimeTypes(delegator, aliases);
+                    } else {
+                        mimeTypes = TikaUtil.makeAllEntityMimeTypes(delegator, aliases);
+                    }
+                    if ("true".equals(parameters.sort)) {
+                        mimeTypes = mimeTypes.toSorted { a, b -> a.mimeTypeId <=> b.mimeTypeId }
+                    }
+                    mimeTypes = mimeTypes.toUnique { a, b -> a.mimeTypeId <=> b.mimeTypeId }
+                    context.mimeTypes = mimeTypes;
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <xml><html-template trim-lines="false"><![CDATA[
+<#if mimeTypes?has_content>
+  <#list mimeTypes as mimeType>
+    <MimeType mimeTypeId="${rawString(mimeType.mimeTypeId)}" description="${rawString(mimeType.description)}"/>
+  </#list>
+</#if>
+                    ]]></html-template></xml>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CmsDataExport">
+        <section>
+            <actions>
+                <set field="titleProperty" value="WebtoolsDataExport"/>
+                <set field="activeSubMenuItem" value="dataExport"/>
+                <script location="component://cms/script/com/ilscipio/scipio/cms/importexport/CmsDataExport.groovy"/>
+                <!-- TODO: we may need to check PageAuthorization at some point, but ENTITY_MAINT is too restrictive
+                    NOTE: ENTITY_MAINT is still used to restrict the individual on-server single- and multi-file output modes -->
+                <set field="useEntityMaintCheck" type="Boolean" value="false" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCmsImportExportDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <platform-specific><html><html-template location="component://cms/webapp/cms/importexport/CmsDataExport.ftl"/></html></platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="menus">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Menus"/>
+                <set field="activeSubMenuItem" value="menus"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
+                <set field="layoutSettings.VT_STYLESHEET[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsMenuTree.groovy"/>
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsContentTree.groovy"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/menus/menuTree.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CmsDataImport">
+        <section>
+            <actions>
+                <set field="titleProperty" value="WebtoolsDataImport"/>
+                <set field="activeSubMenuItem" value="dataImport"/>
+                <set field="parameters.TRANSACTION_TIMEOUT" from-field="parameters.TRANSACTION_TIMEOUT" default-value="7200"/>
+
+                <set field="messages" from-field="parameters.messages"/>
+                <script location="component://cms/script/com/ilscipio/scipio/cms/importexport/CmsDataImport.groovy"/>
+                <!-- NOTE: ENTITY_MAINT is still checked for some parameter options -->
+                <set field="useEntityMaintCheck" type="Boolean" value="false" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCmsImportExportDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://cms/webapp/cms/importexport/CmsDataImport.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+</screens>

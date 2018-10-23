@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <decorator-screen-settings default-fallback-location="component://humanres/widget/CommonScreens.xml"/>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://humanres/widget/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+        
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+        
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <!-- SCIPIO: TODO: REVIEW: added these uiLabelMaps due to some possible inlined screens from other apps still remaining... -->
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="SecurityUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <set field="applicationMenuName" value="HumanResAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://humanres/widget/HumanresMenus.xml" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.HumanResManager}" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
+                
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.HumanResCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.HumanResCompanySubtitle" global="true"/>
+                <!-- layoutSettings.headerImageUrl can be used to specify an application specific logo; if not set,
+                     then the global layoutSettings.commonHeaderImageUrl (specified in GlobalDecorator) will be used. -->
+                <!--<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.gif" global="true"/>-->
+                <set field="activeApp" value="humanres" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/static/partymgr.js" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/partymgr/static/partymgr.css" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/images/humanres/humanres.css" global="true"/>
+
+                <!-- ToDo: Move to themes? -->
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="left-column" /></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="left-column"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
+    <screen name="CommonHumanResAppDecorator">
+        <section>
+            <actions>
+                <condition-to-field field="commonHumanResAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for HumanRes, _VIEW permission -->
+                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
+                </condition-to-field>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="CommonHumanResAppSideBarMenu"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <!-- SCIPIO: factors out the HUMANRES_VIEW perm check for body for all others  -->
+                        <section>
+                            <condition>
+                                <if-true field="commonHumanResAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.HumanResViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="main"/>
+                <set field="titleProperty" value="HumanResManager"/>
+                <set field="employmentAppCtx" type="NewMap" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- TODO: this looks too awful
+                        <screenlet title="${uiLabelMap.HumanResResourcePlanning}">
+                            <container style="${styles.grid_row}">
+                                <container style="${styles.grid_large}6 ${styles.grid_cell} ${styles.grid_end}">
+                                    <screenlet title="${uiLabelMap.WorkEffortCalendar}">
+                                        <include-screen name="TrainingCalendar" location="component://humanres/widget/PersonTrainingScreens.xml"/>
+                                    </screenlet>
+                                </container>
+                            </container>
+                        </screenlet>
+                        -->
+                        
+                        <screenlet title="${uiLabelMap.AccountingApplications}">
+                            <container style="${styles.grid_row}">
+                                <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                    <screenlet title="${uiLabelMap.HumanResNewApplicants}">
+                                        <include-screen name="ScipioNewApplications" location="component://humanres/widget/EmploymentAppScreens.xml"/>
+                                    </screenlet>
+                                </container>
+                                <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                    <screenlet title="${uiLabelMap.HumanResCurrentOpenings}">
+                                        <include-screen name="ScipioOpenPositions" location="component://humanres/widget/EmplPositionScreens.xml"/>
+                                    </screenlet>
+                                </container>
+                            </container>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="OrgTree">
+        <section>
+            <actions>
+                <set field="partyId" from-field="defaultOrganizationPartyId"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/category/CategoryTree.groovy"></script>
+            </actions>
+            <widgets>
+                <screenlet title="${uiLabelMap.FormFieldTitle_company}">
+                    <platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/category/CategoryTree.ftl"/></html></platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PartyGroupTreeLine">
+        <section>
+            <widgets>
+                <label text="${partyAndGroup.groupName}"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PartyPersonTreeLine">
+        <section>
+            <widgets>
+                <label text="${partyAndPerson.firstName} ${partyAndPerson.lastName}"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CommonEmplPositionDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmplPosition" />
+                <set field="emplPositionId" from-field="parameters.emplPositionId"/>
+                <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
+                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.emplPosition}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonEmploymentDecorator">
+        <section>
+            <actions>
+                <!-- SCIPIO: FIXME?: currently not showing this because Employment menu is removed...
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmploymentSideBar" />
+                -->
+                <!-- SCIPIO: WARN: this item was removed from menu...-->
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Employment"/>
+                
+                <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
+                <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
+                <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                <set field="partyIdTo" from-field="parameters.partyIdTo"/>
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
+                <entity-one entity-name="Employment" value-field="employment"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="parameters.partyIdFrom"/></not>
+                            </condition>
+                            <actions>
+                                <entity-one entity-name="PartyNameView" value-field="emplName">
+                                    <field-map field-name="partyId" from-field="parameters.partyIdTo"/>
+                                </entity-one>
+                                <entity-one entity-name="PartyNameView" value-field="orgName">
+                                    <field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
+                                </entity-one>
+                            </actions>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="parameters.fromDate"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu name="EmploymentBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                        <container style="button-bar">
+                                            <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="${styles.link_nav} ${styles.action_add}"/>
+                                        </container>
+                                        <label style="heading" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.partyId}] ${uiLabelMap.CommonFor}"></label>
+                                        <label style="heading" text="${orgName.groupName} [${orgName.partyId}]"></label>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: NEW: previously EmploymentApp screens included CommonEmploymentDecorator, but this causes some factoring issues -->
+    <screen name="CommonEmploymentAppDecorator">
+        <section>
+            <actions>
+                <!-- SCIPIO: FIXME?: there is no EmploymentAppSideBar...
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmploymentAppSideBar" />
+                -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP"/>
+                <!-- FIXME?: we have to force/override this for now
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="EmploymentApp"/>-->
+                <set field="activeSubMenuItem" value="EmploymentApp"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonEmploymentDecorator"/>
+            </widgets>
+        </section>
+    </screen>   
+     
+    <screen name="CommonPerfReviewDecorator">
+        <section>
+            <actions>
+                <set field="perfReviewId" from-field="parameters.perfReviewId"/>
+                <entity-one entity-name="PerfReview" value-field="perfReview"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="PerfReview"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="perfReview"/></not>
+                            </condition>
+                            <actions>
+                                <entity-one entity-name="PartyNameView" value-field="partyNameView">
+                                    <field-map field-name="partyId" from-field="perfReview.employeePartyId"/>
+                                </entity-one>
+                            </actions>
+                            <widgets>
+                                <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                <label style="heading" text="${uiLabelMap.HumanResPerfReview} [${perfReview.perfReviewId}] ${partyNameView.lastName} ${partyNameView.firstName} ${partyNameView.middleName}"></label>
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EmployeeDecorator">
+    <!-- Decorator for Employee edit/view screen set. partyId in this context is a Party in Employee Role and in Employment relationship with internal organization  -->
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmployeeProfile" />
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-field="party"/>
+                <entity-one entity-name="Person" value-field="lookupPerson"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyId}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!--<section>
+                            <condition><not><if-empty field="partyId"/></not></condition>
+                            <widgets>
+                                <container style="heading">
+                                    <section>
+                                        <condition><not><if-empty field="lookupPerson"/></not></condition>
+                                        <widgets>
+                                            <!- SCIPIO: inlined in title instead
+                                            <label style="heading" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} [${partyId}]"/> ->
+                                        </widgets>
+                                        <fail-widgets>
+                                            <!- SCIPIO: doesn't belong here
+                                            <label style="heading" text="${uiLabelMap.HumanResNewEmployee}"/> ->
+                                        </fail-widgets>
+                                    </section>
+                                </container>
+                            </widgets>
+                        </section>-->
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonPartyDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmployeeProfile" />
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-field="party"/>
+                <entity-one entity-name="Person" value-field="lookupPerson"/>
+                <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyId}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+                <!-- SCIPIO: TODO: REVIEW: may want this instead of the old profile header below:
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>-->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- SCIPIO: 2018: TODO: REVIEW: possibly this could all be removed... -->
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <not><if-empty field="partyId"/></not>
+                                            <not><if-true field="skipProfileHeader"/></not><!-- SCIPIO: new -->
+                                        </and>
+                                    </condition>
+                                    <widgets>
+                                        <container style="heading">
+                                            <section>
+                                                <condition>
+                                                    <or>
+                                                        <not><if-empty field="lookupPerson"/></not>
+                                                        <not><if-empty field="lookupGroup"/></not>
+                                                    </or>
+                                                </condition>
+                                                <widgets>
+                                                    <label text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/>
+                                                </widgets>
+                                                <fail-widgets>
+                                                    <section>
+                                                        <condition>
+                                                            <not><if-empty field="party"/></not>
+                                                        </condition>
+                                                        <widgets>
+                                                            <label text="${uiLabelMap.PartyTheProfileOf} ${partyId}"/>
+                                                        </widgets>
+                                                        <fail-widgets>
+                                                            <label style="heading" text="${uiLabelMap.PartyNewUser}"/>
+                                                        </fail-widgets>
+                                                    </section>
+                                                </fail-widgets>
+                                            </section>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="GlobalHRSettingsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#GlobalHRSetting" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonRecruitmentDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#RecruitmentType" />
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonInternalJobPostingDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#InternalJobPosting" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonTrainingDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#TrainingType" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonMyCommunicationEventDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmployeeProfile" />
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://humanres/widget/HumanresMenus.xml"/>
+                <set field="menuCfg.name" value="HumanResAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://humanres/widget/HumanresMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
+        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="CommonHumanResAppSideBarMenu">
+        <section>
+            <actions>
+                <condition-to-field field="commonHumanResAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for HumanRes, _VIEW permission -->
+                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonHumanResAppBasePermCond}"/>
+            </actions>
+            <widgets>
+                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+</screens>

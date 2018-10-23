@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+    <VisualTheme visualThemeId="METRO" visualThemeSetId="BACKOFFICE" description="Metro - Modern Foundation CSS Theme"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://metro-theme/data/MetroThemeData.xml" sequenceId="01"/>
+    
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAME" resourceValue="METRO" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/metro-theme/screenshot.jpg" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://metro-theme/includes/header.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://metro-theme/includes/messages.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://metro-theme/includes/footer.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://metro-theme/includes/appbar.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://metro-theme/includes/appbarOpen.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://metro-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://metro-theme/includes/themeStyles.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://metro-theme/includes/themeTemplate.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/metro-theme/images/favicon.ico" sequenceId="01"/>
+
+    <!-- SCIPIO: The following includes can be used to override specific default pages
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://metro-theme/includes/login.ftl" sequenceId="01"/> // Custom Login Page
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://metro-theme/includes/error.ftl" sequenceId="01"/> // Custom Error Page
+     -->
+    
+    <!-- GENERAL -->
+    <!-- Styles -->
+    <!-- Scripts -->
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery/dist/jquery.min.js" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="02"/>
+
+    
+    <!-- THEME SPECIFIC --> <!-- ToDo: Migrate to own subfolders -->
+    <!-- Styles -->
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/metro-theme/stylesheets/metro.css" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/foundation-datepicker/stylesheets/foundation-datepicker.css" sequenceId="02"/>
+    <!-- Foundation icon font support (disabled for now) 
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/stylesheets/foundation-icons/foundation-icons.css" sequenceId="03"/>-->
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/font-awesome/css/font-awesome.min.css" sequenceId="03"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/gridster/dist/jquery.gridster.min.css" sequenceId="04"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/datatables/datatables.min.css" sequenceId="05"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="//fonts.googleapis.com/css?family=Open+Sans:400,600,300" sequenceId="07"/>
+    
+    <!-- Right-to-Left support -->
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_RTL_STYLESHEET" resourceValue="/metro-theme/rtl/metro.css" sequenceId="1"/>
+    
+    
+    
+    <!-- Scripts -->
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/modernizr/modernizr.js" sequenceId="02"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/freetile.min.js" sequenceId="04"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/gridster/dist/jquery.gridster.with-extras.min.js" sequenceId="05"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/sass-to-js/js/dist/sass-to-js.min.js" sequenceId="06"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/Chart.js/dist/Chart.min.js" sequenceId="07"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/Snap.svg/dist/snap.svg-min.js" sequenceId="08"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/pizza/dist/js/pizza.min.js" sequenceId="09"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" sequenceId="10"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation.min.js" sequenceId="11"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation/foundation.topbar.js" sequenceId="12"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation/foundation.offcanvas.js" sequenceId="13"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation-datepicker/js/foundation-datepicker.js" sequenceId="14"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/datatables.min.js" sequenceId="15"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/moment/min/moment.min.js" sequenceId="16"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="17"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/metro-theme/js/scipio_boxes.js" sequenceId="20"/>
+</entity-engine-xml>

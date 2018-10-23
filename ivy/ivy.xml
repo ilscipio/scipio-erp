@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info module="scipioce" organisation="com.ilscipio.scipio" />
+    <!-- 
+        SCIPIOCE GENERAL IVY CONFIGURATIONS AND DEPENDENCIES
+        
+        These are ivy dependencies for general-purpose use but mainly
+        for JARs that are used outside Scipio instances and should not
+        reuse its dependencies, such as command-line and server scripting tools.
+        
+        If you are looking for the legacy ofbiz download target configurations,
+        these have been moved to (since 2018-03-20):
+          framework/base/ivy.xml
+          framework/entity/ivy.xml
+    -->
+    <configurations defaultconfmapping="%->default">
+    </configurations>
+    <dependencies>
+    </dependencies>
+</ivy-module>

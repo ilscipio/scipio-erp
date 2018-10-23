@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+
+    <menu name="SalesSideBar" title="${uiLabelMap.MarketingSales}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="Accounts" title="${uiLabelMap.SfaAcccounts}"><link target="FindAccounts"/></menu-item>
+        <menu-item name="Contacts" title="${uiLabelMap.SfaContacts}"><link target="FindContacts"/></menu-item>
+        <menu-item name="Leads" title="${uiLabelMap.SfaLeads}"><link target="FindLeads"/></menu-item>
+        <!--<menu-item name="Competitors" title="${uiLabelMap.SfaCompetitors}" widget-style="+disabled"><link target="#" url-mode="plain"/></menu-item>-->
+        <menu-item name="Events" title="${uiLabelMap.SfaEvents}"><link target="Events" url-mode="plain"/></menu-item>
+        <!--<menu-item name="Documents" title="${uiLabelMap.SfaDocuments}" widget-style="+disabled"><link target="#" url-mode="plain"/></menu-item>-->
+        <menu-item name="Forecast" title="${uiLabelMap.SfaForecasts}"><link target="FindSalesForecast"/></menu-item>
+        <menu-item name="Opportunities" title="${uiLabelMap.SfaOpportunities}"><link target="FindSalesOpportunity"/></menu-item>
+    </menu>
+    
+    <!-- <menu name="AccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="find" title="${uiLabelMap.CommonFind}"><link target="FindAccounts"/></menu-item>
+        <menu-item name="profile" title="${uiLabelMap.PartyProfile}">
+            <condition>
+                <not><if-empty field="parameters.partyId"/></not>
+            </condition>
+            <link target="viewprofile">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="AccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="SfaAppSideBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="AccountSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
+        <menu-item name="NewAccounts" title="${uiLabelMap.PageTitleCreateAccount}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="NewAccount"/>
+        </menu-item>
+        <menu-item name="ViewSfaCommEvent" title="${uiLabelMap.PartyCommunications}">
+            <condition>
+                <not><if-empty field="partyId"/></not>
+            </condition>
+            <link target="ListPartyCommEvents">
+                <parameter param-name="partyId" from-field="partyId"/>
+                <parameter param-name="activeSubMenuItem" value="Accounts"/>
+            </link>
+        </menu-item>
+    </menu>
+    <menu name="AccountFindTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="all" title="${uiLabelMap.SfaAllAccounts}">
+            <condition>
+                <if-compare field="parameters.all" operator="equals" value="false"/>
+            </condition>
+            <link target="${parameters._LAST_VIEW_NAME_}">
+                <parameter param-name="all" value="true"/>
+            </link>
+        </menu-item>
+        <menu-item name="my" title="${uiLabelMap.SfaMyAccounts}">
+            <condition>
+                <or>
+                    <if-compare field="parameters.all" operator="equals" value="true"/>
+                    <if-empty field="parameters.all"/>
+                </or>
+            </condition>
+            <link target="${parameters._LAST_VIEW_NAME_}">
+                <parameter param-name="all" value="false"/>
+            </link>
+        </menu-item>
+    </menu> -->
+    
+    
+</menus>

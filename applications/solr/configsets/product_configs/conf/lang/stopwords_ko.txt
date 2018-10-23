@@ -1,0 +1,1 @@
+# SCIPIO: Stopwords for Korean language

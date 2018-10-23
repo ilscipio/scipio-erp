@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+SCIPIO: Generic products defined using a template to help fill up categories and test
+ -->
+<entity-engine-transform-xml template="component://shop/data/templates/commonproduct.ftl">
+    <products>
+        <product productId="FD-1000" productCategoryId="FOOD-100" productName="Bananas" longDescription="Delicious bananas." defaultPrice="0.89" listPrice="0.99" minimumOrderPrice="10.0"/>
+        <product productId="FD-1001" productCategoryId="FOOD-100" productName="Oranges" longDescription="Delicious oranges." defaultPrice="0.85" listPrice="0.85" minimumOrderPrice="12.0"/>
+        <product productId="FD-1002" productCategoryId="FOOD-100" productName="Assorted Vegetables" longDescription="Delicious assorted vegetables, picked at random." defaultPrice="4.99" listPrice="4.89" piecesIncluded="12" />
+        <product productId="FD-1003" productCategoryId="FOOD-100" productName="Green Peppers" longDescription="Delicious green peppers." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1004" productCategoryId="FOOD-100" productName="Red Peppers" longDescription="Delicious red peppers." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1005" productCategoryId="FOOD-100" productName="Yellow Peppers" longDescription="Delicious yellow peppers." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1006" productCategoryId="FOOD-100" productName="Cucumbers" longDescription="Delicious cucumbers." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1007" productCategoryId="FOOD-100" productName="Carrots" longDescription="Delicious carrots." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1008" productCategoryId="FOOD-100" productName="Onions" longDescription="Delicious onions." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1009" productCategoryId="FOOD-100" productName="Parsnips" longDescription="Delicious parsnips." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1010" productCategoryId="FOOD-100" productName="Celery" longDescription="Delicious celery." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1011" productCategoryId="FOOD-100" productName="Pickles" longDescription="Delicious pickles." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1012" productCategoryId="FOOD-100" productName="Tomatoes" longDescription="Delicious tomatoes." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1013" productCategoryId="FOOD-100" productName="Eggplant" longDescription="Delicious eggplant." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1014" productCategoryId="FOOD-100" productName="Arugula" longDescription="Delicious arugula." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1015" productCategoryId="FOOD-100" productName="Romaine Lettuce" longDescription="Delicious romaine lettuce." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1016" productCategoryId="FOOD-100" productName="Spinach" longDescription="Delicious spinach." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1017" productCategoryId="FOOD-100" productName="Green Apples" longDescription="Delicious green apples." defaultPrice="0.85" listPrice="0.95" minimumOrderPrice="10.0" />
+        <product productId="FD-1050" productCategoryId="FOOD-100" productName="Strawberry Cream Cake" longDescription="Delicious strawberry cream cake." defaultPrice="19.99" listPrice="22.99"/>
+        <product productId="FD-1060" productCategoryId="FOOD-100" productName="Pink Shrimp" longDescription="Delicious pink shrimp." defaultPrice="12.99" quantityIncluded="0.454" quantityUomId="WT_kg"/>
+        <product productId="FD-1061" productCategoryId="FOOD-100" productName="Sea Bass" longDescription="Delicious sea bass." defaultPrice="12.99" quantityIncluded="0.454" quantityUomId="WT_kg"/>
+        <product productId="FD-1062" productCategoryId="FOOD-100" productName="Salmon" longDescription="Delicious salmon." defaultPrice="12.99" quantityIncluded="0.454" quantityUomId="WT_kg"/>
+        <product productId="FD-1063" productCategoryId="FOOD-100" productName="Wild-Caught Tuna" longDescription="Delicious wild-caught tuna." defaultPrice="12.99" quantityIncluded="0.454" quantityUomId="WT_kg"/>
+        <product productId="FD-1064" productCategoryId="FOOD-100" productName="Atlantic Cod" longDescription="Delicious atlantic cod." defaultPrice="12.99" quantityIncluded="0.454" quantityUomId="WT_kg"/>
+        <product productId="FD-1065" productCategoryId="FOOD-100" productName="Catfish" longDescription="Delicious catfish." defaultPrice="12.99" quantityIncluded="0.454" quantityUomId="WT_kg"/>
+        <product productId="FD-1066" productCategoryId="FOOD-100" productName="Raw Shrimp (with shell)" longDescription="Delicious shrimp, with shell, zipperback." defaultPrice="11.99" quantityIncluded="0.454" quantityUomId="WT_kg"/>
+        <product productId="PR-1000" productCategoryId="PC-PR-101" extraCategoryId1="ELTRN-100" productName="USB Optical Mouse" longDescription="Simple, durable, USB optical mouse." defaultPrice="19.99" />
+        <product productId="CAM-7000" productCategoryId="ELTRN-100" productName="Nikon FM2 film" description="FM2 film for Nikon Analog Cameras." longDescription="High-quality FM2 film for Nikon Analog Cameras." defaultPrice="19.99" quantityIncluded="100.0" weight="0.1"/>
+    </products>
+</entity-engine-transform-xml>

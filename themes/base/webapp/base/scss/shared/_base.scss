@@ -1,0 +1,761 @@
+/* GRID */
+$include-html-reveal-classes: $include-html-classes;
+body {}
+
+/* FOUNDATION HACK: empty cells sometimes arbitrarily collapse to zero despite width, this prevents */ 
+.column, .columns {
+  min-height: 1px;
+}
+
+.fullWidth {
+    width: 100%;
+    /*max-width: 85em;*/
+    max-width:100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.v-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.row.display {
+  background: #eee;
+  font-size: 11px;
+  margin-bottom: 10px;
+  line-height: 2rem;
+  border: solid 1px #c6c6c6;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.row.display .columns:nth-child(even), .row.display .columns.small-centered, .row.display .columns.large-centered {
+  background: #e1e1e1;
+}
+
+/* Fix margin on rows
+.row {
+    .row {
+        margin-bottom:2em;        
+        .row {
+                    margin-bottom:0px;
+        }
+    }
+}*/
+
+// Fix form elements
+// form > div > .columns:last-child {max-width:50em;float:left!important;}
+// DEV NOTE: I _think_ the selector below is correct in most cases.
+//     widgetpostfix is the container that is by default added around widget and postfix (but not label).
+//     @field supports omitting this container, but as of some time ago, it is there by default.
+//     I think we can simply apply the max-width to both widgetpostfix and widget (for cases without postfix) and it will work out.
+//     The only case this doesn't work is for edge cases where template requests no widgetpostfix container,
+//     but I don't remember any.
+div.form-field-entry div.field-entry-widgetpostfix, 
+div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important;}
+div.form-field-entry div.field-entry-type-textarea {max-width:none !important;}
+
+/* CONTENT */
+.align-right {
+  text-align: right;
+  word-break: normal;
+}
+
+.align-center {
+  text-align: center;
+  word-break: normal;
+}
+
+.amount {
+  text-align: right;
+  word-break: normal;
+}
+
+#content-main-section{
+    padding-top:32px;
+    padding-bottom:32px;
+}
+
+#content-main-body {
+    width:100%;
+    min-height: 100%;
+    position: relative;
+}
+
+h1 {
+    margin-bottom:1rem;
+}
+
+// Using the default styles
+input[type="button"], input[type="submit"],.buttontext  { @include button; @include button-size($padding:$button-tny); }
+
+// tables
+table.basic-table {
+    width: 100%;
+    tr{
+        background: none;
+        
+        td {
+            height:auto;
+            vertical-align: top;
+        }
+    }
+    tr.even {}
+    tr.odd {background: $ghost;}
+    
+    input {margin:0px;}
+            
+}
+
+.reveal-modal {
+  @include reveal-modal-style(
+    $top-offset:rem-calc(200)
+  );
+}
+
+.page-noauth, .page-requirePasswordChange {
+    background: url('/base-theme/images/background3.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.inline-list {
+    li {margin-bottom:10px;}
+
+}
+
+td {word-break:normal;}
+td.button-col {word-break:normal;}
+// don't break button labels; always ugly
+td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {word-break:normal;}
+
+// collapsible fieldset
+.toggleField fieldset{
+    border:none;
+    color: $primary-color;
+    margin:10px 0px;
+    padding:8px 0px;
+}
+fieldset {
+    border:none;
+    padding-left: 0px;
+    padding-right: 0px;
+    
+    legend{
+        padding:0px;
+        margin:0px;
+        text-align:right;
+        background:none;
+    }
+    
+    legend:hover{
+        color: scale-color($primary-color, $lightness: -14%);
+        cursor: pointer;
+    }
+}
+
+
+.collapsed{
+    display:inline-block;
+}
+
+.rotate-90{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    writing-mode: tb-rl;
+    }
+
+.rotate-180{
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    writing-mode: tb-rl;
+    }
+
+.rotate-270{
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    writing-mode: tb-rl;
+    }
+
+.postfix input[type="submit"], .postfix button, {
+        background: $input-prefix-bg;
+        border-color: $input-prefix-border-color;
+        border-size: $input-prefix-border-size;
+        border-type: $input-prefix-border-type;
+        color: $input-prefix-font-color;
+        padding:0px;
+        font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size:1.2rem;
+}
+
+.postfix i {font-size:1.2rem;}
+
+.postfix .fi {
+    font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size:1.2rem;
+    line-height:0.9rem;
+}
+
+ul {
+    &.chart-legend, &.checkmark{
+        list-style:none;
+    }
+    
+    &.checkmark {
+        margin:0px;
+    }
+    
+    &.checkmark li:before {
+        font-family: "FontAwesome";
+        content:"\f00c";
+        padding-right: 10px;
+    }
+}
+
+div.section-screenlet {
+    //margin-bottom: 10px;
+}
+div.section-screenlet-content {
+    // add to this one so margin can combine with content's margins
+    margin-bottom: 0.5rem;
+}
+// note: browsers don't support :blank, so if content may be empty, 
+// template must make sure to not output extra whitespace, or use no-content class
+div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
+    margin-bottom: 0;
+}
+// FIXME?: the two below are a complicated version of this; margin on this div won't 
+// collapse/combine with title margin so can't use as-is; maybe can collapse some other way
+//div.section-screenlet-container {
+//    margin-top: 0.2rem;
+//}
+// slight margin when no title, about same as h2
+div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
+    margin-top: 0.2rem;
+}
+// apply as close to first elem as possible
+div.section-screenlet-container.no-title.no-menu {
+    margin-top: 0;
+}
+
+/*MISC*/
+$pie-color: $primary-color; // chart-color
+
+.progress{
+    .meter{
+        transition-duration: 3s;    //CSS3 progress bar animation
+    }
+}
+
+.button-group .text-entry {
+  padding-left:1em; padding-right:1em;
+}
+
+/* no longer needed for now
+.form-field-label-asterisk {
+}
+.form-field-input-asterisk {
+  display: none;
+}
+*/
+
+// Medium devices
+
+@media #{$medium-only} { 
+    input,select,text-area {max-width:100%;}
+}
+
+// Medium devices
+@media #{$small-only} {
+    input,select,text-area {max-width:100%;}
+    
+    .login-box {
+      min-width: 0;
+    }
+}
+
+
+/* FIXUPS */
+
+/* no longer used - quick custom workaround for be able to scroll tables.
+div.scrollable-table-container {
+  overflow-x: scroll;
+  // FIXME: should get same margin as table had, not hardcoded, but doesn't collapse
+  margin-bottom: 1.25rem;
+}
+div.scrollable-table-container > table {
+  margin-bottom: 0;
+}
+*/
+
+// adds a margin to last elem inside "display" type fields, because all other types get a margin
+.field-entry-widget.field-entry-type-display:last-child, 
+.field-entry-widget.field-entry-type-displayentity:last-child,
+.field-entry-widget.field-entry-type-hyperlink:last-child {
+  margin-bottom: 1rem;
+}
+
+// DEV NOTE: These must remain display:none always.
+// If you want to change global default, use fields_default_inlineitems in global styles.
+.radio-item-inline.radio-item-separator {
+  display:none;
+}
+.checkbox-item-inline.checkbox-item-separator {
+  display:none;
+}
+
+// jquery asmselect
+.asmListItemRemove {
+  margin-left: 1rem;
+}
+
+// Removes large bottom margin from buttons in data tables because take too much space when they go vertical. 
+table.table-type-data .button {
+  margin-bottom:0.1rem;
+}
+/*table .button {
+  margin-bottom:0.1rem;
+}*/
+
+
+/* Tables where having zero cellspacing is extremely important (should be rare) 
+  TODO?: along with this we could have styles for table.table-hint-spacing-tiny and similar... but in this theme currently seems minor...
+      .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
+      .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
+  */
+table.table-nocellspacing, table.table-nocellspacing-hint {
+  border-spacing:0 !important;
+  border-collapse:collapse !important;
+}
+
+table.table-noborder, table.table-noborder-hint {
+  border:none !important;
+}
+
+
+// Fields
+input.field-inline, select.field-inline, textarea.field-inline {
+  display: inline;
+  width: auto;
+}
+
+// Tooltips
+.has-tip.field-tooltip-wrap {
+ font-weight: normal;
+ border-bottom: 0;
+}
+
+/*Tabs*/
+$tab-border-color: $tabs-navigation-bg-color;
+
+ul.tabs {
+  border-bottom: 1px solid $tab-border-color;
+  li {
+    position: relative;
+    bottom: -1px;
+    border-top: 1px solid $tab-border-color;
+    border-left: 1px solid $tab-border-color;
+    border-right: 1px solid $tab-border-color;
+    border-bottom: 1px solid $tab-border-color;
+    &.active {
+      border-bottom: 1px solid #fff;
+    }
+  }
+}
+
+.tabs-content {
+    border-left: 1px solid $tab-border-color;
+    border-right: 1px solid $tab-border-color;
+    border-bottom: 1px solid $tab-border-color;
+    .content {padding:20px;}
+}
+
+/* Special panels */
+
+.text-line-list ul, ul.text-line-list {
+    list-style: none outside none;
+    margin-left: 0;
+}
+.text-line-list li:empty, .text-line-list .text-line:empty {
+    display: none;
+}
+
+
+
+/* GENERAL ELEMENT COLORS */
+
+.colored-elem.primary, .colored-elem { color:$primary-color; }
+.colored-elem.secondary { color:$secondary-color; }
+.colored-elem.info { color:$info-color; }
+.colored-elem.success { color:$success-color; }
+.colored-elem.warning { color:$warning-color; }
+.colored-elem.alert { color:$alert-color; }
+
+
+/* TEXT COLORS */
+
+.colored-text.primary, .colored-text { color:$primary-color; }
+.colored-text.secondary { color:$secondary-color; }
+.colored-text.info { color:$info-color; }
+.colored-text.success { color:$success-color; }
+.colored-text.warning { color:$warning-color; }
+.colored-text.alert { color:$alert-color; }
+
+
+/* ACTION (LINK) STYLES */
+
+/* 2016-01-18: DEV NOTE: colors here are not final style choices, only demos of things that can be done for action links. 
+  not all links and menu items have the appropriate classes yet, but many do. 
+  the most important is probably to have a different visual indication for .action-run.action-scope-sys.action-modify (see below) so that
+  actions that modify state of system are made clear to user. In stock ofbiz these are ambiguous and easily confused with nav links.
+  note that system- vs session- vs page- changing actions can be styled separately. */
+
+/* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
+  NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
+.action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
+   @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
+}
+
+/* REMOVED: no need to make this green, looks strange, so only do it for nav version (above); already covered by action-modify style further below
+ individual run/submit creation links and run creation links in menu items (i.e., the submit button on the form) 
+.action-run.action-scope-sys.action-modify.action-add.button, .action-run.action-scope-sys.action-modify.action-add .button {
+   @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
+}
+*/
+
+/* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
+.action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
+   @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
+}
+
+/* "continue" system action buttons (FIXME?: may want color different than session above) */
+.action-run.action-scope-sys.action-modify.action-continue.button, .action-run.action-scope-sys.action-modify.action-continue .button {
+   @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
+}
+
+/* terminate actions (like cancel order) */
+.action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
+   @include button-style($bg:$warning-button-bg-color, $bg-hover:$warning-button-bg-hover, $border-color:$warning-button-border-color);
+}
+
+
+/* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
+  FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
+.action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
+   @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
+}
+
+/* individual actions that modify only session or local state 
+  FIXME?: should use different color from system? removed for now...
+.action-run.action-scope-session.action-modify.button, .action-run.action-scope-session.action-modify .button,
+.action-run.action-scope-local.action-modify.button, .action-run.action-scope-local.action-modify .button, {
+   @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
+}*/
+
+
+/* high-importance modify actions, like create order button */
+.action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
+   @include button-style($bg:$alert-button-bg-color, $bg-hover:$alert-button-bg-hover, $border-color:$alert-button-border-color);
+}
+
+
+/* special nav cancel/back/return action button (alt regular color) */
+.action-nav.action-cancel.button, .action-nav.action-cancel .button {
+   @include button-style($bg:$secondary-button-bg-color, $bg-hover:$secondary-button-bg-hover, $border-color:$secondary-button-border-color);
+}
+
+/* special run-action cancel action button (warning color) */
+.action-run.action-cancel.button, .action-run.action-cancel .button {
+   @include button-style($bg:$warning-button-bg-color, $bg-hover:$warning-button-bg-hover, $border-color:$warning-button-border-color);
+}
+
+
+/*Firefox specific fixes*/
+// Fix for wrong box height
+input::-moz-focus-inner { 
+    border: 0; 
+    padding: 0; 
+}
+
+/*Complex radio selection stuff*/
+.new-item-selection-content {
+    margin-top: 0.6rem; 
+ 
+}
+
+
+/*Radio and checkbox item long label wrapping workaround
+*/
+
+input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox"] + label {
+  display: inline;
+}
+
+/* Fix for the f-dropdown border */
+.f-dropdown {
+  outline: none;
+  box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
+  -webkit-box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
+}
+
+/*Template API documentation (TODO: REVIEW)*/
+.tmpldoc-content table.entry-parameters {
+  width: 100%;
+  border: 1px outset black;
+}
+
+.tmpldoc-content table.entry-parameters td {
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border: 1px solid black;
+}
+
+.tmpldoc-content table.entry-parameters td.entry-paramname {
+  width: 20%;
+}
+
+.tmpldoc-content .lib-entry-detail {
+  font-style: italic;
+  font-size: 0.6em;
+}
+
+.tmpldoc-content .lib-entry-formalname {
+  font-weight: bold;
+}
+
+.tmpldoc-content .lib-entry-param-desc-extradesc {
+  font-size: 0.8em;
+}
+
+.tmpldoc-content .lib-entry-params-details {
+  font-size: 0.8em;
+}
+
+.tmpldoc-content ul {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
+
+.tmpldoc-content pre {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
+
+.tmpldoc-content .lib-page-intro h4 { /* specific to base and derived themes */
+  margin-top: 2em;
+  font-weight: bold;
+}
+
+
+/*Messages*/
+.message_wrap {
+    display:block;
+    width: 200px;
+    line-height: 1.6em;
+    padding-bottom:8px;
+    
+    .message_header {
+        text-decoration: bold;
+        padding-bottom:0px;
+        height:1.6em;
+    }
+    
+    .message_time {
+        font-size:0.7em;
+        display:inline-block;
+    }
+    
+    .message_body {
+        font-size:0.8em;
+        line-height: 1.2em;
+    }
+    
+    &.message_isread {
+        .message_body,.message_header{ 
+            color: #999;
+        }
+    }
+}
+
+/*trumbowyg fix*/
+.trumbowyg-modal {
+    .dataTables_wrapper div.dataTables_filter label {
+        float:none;
+        margin-right:0px;
+     }
+}
+
+.trumbowyg-modal-box {
+    label {
+        select {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 27px;
+            line-height: 27px;
+            border: 1px solid #DEDEDE;
+            background: #fff;
+            font-size: 14px;
+            max-width: 330px;
+            width: 70%;
+            padding: 0 7px;
+
+            &:hover,
+            &:focus {
+                outline: none;
+                border: 1px solid #95a5a6;
+            }
+            &:focus {
+            }
+        }
+    }
+}
+
+/* stcLocField */
+.stc-locfield {
+    .stc-locfield-entries .stc-locfield-entry:last-child {
+        margin-bottom: 0;
+        select, input {
+            margin-bottom: 0; /* remove last entry's (on top of [+]) margin */
+        }
+    }
+    .stc-locfield-add-cnt {
+        @extend .text-right; /* align add [+] button right */
+        margin-bottom: 1rem; /* add margin after button */
+    }
+}
+
+/* catalog tree */
+/* FIXME?: theme doesn't show gray for disabled + priority problems */
+ul.side-nav.ect-action-menu li.disabled, ul.side-nav.ect-action-menu a.disabled {
+    color:gray;
+}
+.ect-dialogmsg-recordname {
+    font-style:italic;
+}
+
+/*jquery ui*/
+.ui-dialog {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: .2em;
+	outline: 0;
+}
+
+/* Component containers
+----------------------------------*/
+.ui-widget {
+    z-index: 1000;
+    border: 1px solid $gainsboro;
+}
+.ui-dialog-titlebar {
+position:relative;
+height:24px;
+}
+
+.ui-dialog-titlebar-close {
+  padding: 5px;
+  padding-top:0px;
+  margin-right:2px;
+  color: $oil !important;
+  font-weight:bold !important;
+  font-size:1.1em !important;
+  border:none;
+  background:none !important;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  float: right;
+  &:hover{
+    background:none;
+    color: $gainsboro !important;
+  }
+}
+
+
+
+.ui-widget .ui-widget {
+	font-size: 1em;
+}
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+	font-size: 0.9em;
+}
+.ui-widget-content {
+    //border: 1px solid $gainsboro;
+    background: #ffffff;
+    overflow:auto;
+}
+.ui-widget-content a {
+}
+.ui-widget-header {
+    background: #f5f5f5;
+
+}
+.ui-widget-header a {
+}
+
+
+
+/*Slick slider*/
+.slider{
+     visibility:hidden;
+     opacity:0;  
+     transition: opacity 1s;
+
+    &.slick-initialized{
+        visibility:visible;
+        opacity:1;
+    }
+
+
+    .item{
+        display:none ;
+        
+        &::first-child{
+            display:block; 
+            visibility:hidden;
+        } 
+    }
+    
+    & .slick-initialized .item{
+        display:block;
+        visibility:
+        visible!important;
+    }
+    
+}
+
+.slick-list {
+    margin: 0 -10px;
+}
+
+.slick-slide {
+     margin: 0 10px; 
+}
+
+.slick-slider .slick-slide{
+    display: none;
+}
+ .slick-slider .slick-slide:first-child{
+    display: block;
+}
+.slick-initialized.slick-slider .slick-slide,
+.slick-initialized.slick-slider .slick-slide:first-child{
+    display: block;
+}

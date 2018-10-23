@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!-- SCIPIO: DEV NOTE: THIS FILE CONTAINS CUSTOMIZATIONS; 
+    MUST BE REVIEWED AND CHANGES REAPPLIED AFTER VERSION UPDATES. -->
+<!-- SCIPIO: Platform currently cannot read the DTD properly (FIXME)
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0"
+         metadata-complete="true"
+>-->
+<web-app version="3.0"
+         metadata-complete="true"
+>
+
+  <!-- Uncomment if you are trying to use a Resin version before 3.0.19.
+    Their XML implementation isn't entirely compatible with Xerces.
+    Below are the implementations to use with Sun's JVM.
+  <system-property javax.xml.xpath.XPathFactory=
+             "com.sun.org.apache.xpath.internal.jaxp.XPathFactoryImpl"/>
+  <system-property javax.xml.parsers.DocumentBuilderFactory=
+             "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl"/>
+  <system-property javax.xml.parsers.SAXParserFactory=
+             "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"/>
+   -->
+
+  <!-- People who want to hardcode their "Solr Home" directly into the
+       WAR File can set the JNDI property here...
+   -->
+  <!--
+    <env-entry>
+       <env-entry-name>solr/home</env-entry-name>
+       <env-entry-value>/put/your/solr/home/here</env-entry-value>
+       <env-entry-type>java.lang.String</env-entry-type>
+    </env-entry>
+   -->
+   
+  <!-- Any path (name) registered in solrconfig.xml will be sent to that filter -->
+  <filter>
+    <filter-name>SolrRequestFilter</filter-name>
+    <filter-class>org.apache.solr.servlet.SolrDispatchFilter</filter-class>
+    <!--
+    Exclude patterns is a list of directories that would be short circuited by the 
+    SolrDispatchFilter. It includes all Admin UI related static content.
+    NOTE: It is NOT a pattern but only matches the start of the HTTP ServletPath.
+    -->
+    <init-param>
+      <param-name>excludePatterns</param-name>
+      <param-value>/libs/.+,/css/.+,/js/.+,/img/.+,/tpl/.+</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <!--
+      NOTE: When using multicore, /admin JSP URLs with a core specified
+      such as /solr/coreName/admin/stats.jsp get forwarded by a
+      RequestDispatcher to /solr/admin/stats.jsp with the specified core
+      put into request scope keyed as "org.apache.solr.SolrCore".
+
+      It is unnecessary, and potentially problematic, to have the SolrDispatchFilter
+      configured to also filter on forwards.  Do not configure
+      this dispatcher as <dispatcher>FORWARD</dispatcher>.
+    -->
+    <filter-name>SolrRequestFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <servlet>
+    <servlet-name>LoadAdminUI</servlet-name>
+    <servlet-class>org.apache.solr.servlet.LoadAdminUiServlet</servlet-class>
+  </servlet>
+  
+  <!-- Remove in Solr 5.0 -->
+  <!-- This sends SC_MOVED_PERMANENTLY (301) for resources that changed in 4.0 -->
+  <servlet>
+    <servlet-name>RedirectOldAdminUI</servlet-name>
+    <servlet-class>org.apache.solr.servlet.RedirectServlet</servlet-class>
+    <init-param>
+      <param-name>destination</param-name>
+      <param-value>${context}/#/</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>RedirectOldZookeeper</servlet-name>
+    <servlet-class>org.apache.solr.servlet.RedirectServlet</servlet-class>
+    <init-param>
+      <param-name>destination</param-name>
+      <param-value>${context}/admin/zookeeper</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>RedirectLogging</servlet-name>
+    <servlet-class>org.apache.solr.servlet.RedirectServlet</servlet-class>
+    <init-param>
+      <param-name>destination</param-name>
+      <param-value>${context}/#/~logging</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>SolrRestApi</servlet-name>
+    <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
+    <init-param>
+      <param-name>org.restlet.application</param-name>
+      <param-value>org.apache.solr.rest.SolrSchemaRestApi</param-value>
+    </init-param>
+  </servlet>
+
+  <!-- Custom Ofbiz solr addition: ScipioSolrInfoServlet -->
+  <servlet>
+    <servlet-name>ScipioSolrInfoServlet</servlet-name>
+    <servlet-class>com.ilscipio.scipio.solr.ScipioSolrInfoServlet</servlet-class>
+    <!-- Note: load-on-startup with value 0 is essential for this servlet -->
+    <load-on-startup>0</load-on-startup>
+  </servlet> 
+
+  <servlet-mapping>
+    <servlet-name>RedirectOldAdminUI</servlet-name>
+    <url-pattern>/admin/</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RedirectOldAdminUI</servlet-name>
+    <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RedirectOldZookeeper</servlet-name>
+    <url-pattern>/zookeeper.jsp</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RedirectOldZookeeper</servlet-name>
+    <url-pattern>/zookeeper</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RedirectLogging</servlet-name>
+    <url-pattern>/logging</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>LoadAdminUI</servlet-name>
+    <url-pattern>/old.html</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>LoadAdminUI</servlet-name>
+    <url-pattern>/index.html</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SolrRestApi</servlet-name>
+    <url-pattern>/schema/*</url-pattern>
+  </servlet-mapping>
+  
+  <mime-mapping>
+    <extension>.xsl</extension>
+    <!-- per http://www.w3.org/TR/2006/PR-xslt20-20061121/ -->
+    <mime-type>application/xslt+xml</mime-type>
+  </mime-mapping>
+
+  <!-- SCIPIO: explicit session config for solr (not part of Solr 6) -->
+  <session-config>
+    <session-timeout>60</session-timeout>
+      <cookie-config>
+        <http-only>true</http-only>
+        <!-- SCIPIO: must allow HTTP for local access only (solr is the exception!)
+        <secure>true</secure>-->
+      </cookie-config>
+    <tracking-mode>COOKIE</tracking-mode>
+  </session-config>
+
+  <welcome-file-list>
+    <!-- SCIPIO: FIXME: 2017-09-13: This does not work, because Solr LoadAdminUiServlet expects the servlet container
+        (or something) to automatically append the welcome file path to the context, 
+        e.g. for /solr/ request to be translated to /solr/index.html for it (through HttpServletRequest.getRequestURI());
+        but Tomcat 8 does NOT append the welcome-file path in this case (different from Jetty?) and
+        SolrDispatchFilter doesn't seem to be doing anything either.
+        As a workaround, we simply do a redirect from /solr/ to /solr/index.html using a custom jsp.
+    <welcome-file>index.html</welcome-file>-->
+    <welcome-file>redirect-index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <!-- Get rid of error message -->
+  <!-- SCIPIO: FIXME: 2017-09-07: this stock solr code is causing 403 for regular access - servlet container compat issue?
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Disable TRACE</web-resource-name>
+      <url-pattern>/</url-pattern>
+      <http-method>TRACE</http-method>
+    </web-resource-collection>
+    <auth-constraint/>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Enable everything but TRACE</web-resource-name>
+      <url-pattern>/</url-pattern>
+      <http-method-omission>TRACE</http-method-omission>
+    </web-resource-collection>
+  </security-constraint>
+  -->
+</web-app>

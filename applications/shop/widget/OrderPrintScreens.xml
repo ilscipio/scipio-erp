@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<!-- These forms are for generating printed documents, such as invoices, bills, statements, etc. -->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- SCIPIO: Original: component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF -->
+    <!-- generate a PDF for the order, sharing the same BSH file as the HTML page for viewing the order -->
+    <screen name="OrderPDF">
+        <section>
+            <actions>
+                <!-- SCIPIO: FIXME!!!: This screen does not properly do permission checks!!!
+                    It must allow anonymous user (userLoginId "anonymous" with partyId set to temporary value)
+                    and not allow viewing other people's orders!!!
+                    See component://order/widget/ordermgr/OrderPrintScreens.xml -->
+               <set field="permChecksSetGlobal" type="Boolean" value="true" />
+               <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonUserChecks.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-true field="userIsKnown" />
+                    </condition>
+                    <widgets>
+                        <include-screen name="OrderPDF" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label text="${uiLabelMap.ShopViewPermissionError}"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Original: component://accounting/widget/AccountingPrintScreens.xml#InvoicePDF -->
+    <!-- generate a PDF for the invoice.  sharing the same BSH file as the HTML page for viewing invoice -->
+    <screen name="InvoicePDF">
+        <section>
+            <actions>
+                <!-- SCIPIO: FIXME!!!: This screen MAY not properly do permission checks!!!
+                    It must allow anonymous user (userLoginId "anonymous" with partyId set to temporary value)
+                    and not allow viewing other people's orders!!!
+                    See component://accounting/widget/AccountingPrintScreens.xml -->
+               <set field="permChecksSetGlobal" type="Boolean" value="true" />
+               <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonUserChecks.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-true field="userIsKnown" />
+                    </condition>
+                    <widgets>
+                        <include-screen name="InvoicePDF" location="component://accounting/widget/AccountingPrintScreens.xml"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label text="${uiLabelMap.ShopViewPermissionError}"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>

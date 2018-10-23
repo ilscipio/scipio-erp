@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<project name="SCIPIO ERP - Solr Component" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+    <import file="../../common.xml"/>
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <property name="desc" value="SCIPIO ERP SOLR Component"/>
+    <property name="name" value="ofbiz-solr"/>
+    <property name="src.dir" value="src" />
+    <property name="dtd.dir" value="dtd" />
+    <property name="lib.dir" value="lib" />
+    <property name="build.dir" value="build" />
+    <property name="scipio.solr.build.addMissingConfFiles" value="true" />
+
+    <dirset dir="configsets" id="scipio.solr.configsets">
+        <include name="*"/>
+    </dirset>
+
+    <path id="local.class.path">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+        <fileset dir="../../framework/start/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/base/lib" includes="*.jar"/>
+        <fileset dir="../../framework/base/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/entity/lib" includes="*.jar"/>
+        <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/security/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/service/lib" includes="*.jar"/>
+        <fileset dir="../../framework/service/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/minilang/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/common/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/webapp/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/widget/build/lib" includes="*.jar"/><!-- SCIPIO: ofbiz dependency kludge -->
+        <fileset dir="../../applications/content/build/lib" includes="*.jar"/>
+        <!--<fileset dir="../../applications/party/build/lib" includes="*.jar"/> -->
+        <fileset dir="../../applications/product/build/lib" includes="*.jar"/>
+        <!-- <fileset dir="../../applications/marketing/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/order/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/accounting/build/lib" includes="*.jar"/>-->
+        <fileset dir="webapp/WEB-INF/lib" includes="solr-core-*.jar"/><!-- for plugins -->
+    </path>
+    
+    <target name="check-uiloginservice">
+        <available file="uiloginservice.build.xml" property="uiloginservice.present"/>
+    </target>
+    
+    <target name="build-uiloginservice">
+        <subant target="make.repo">
+            <file file="uiloginservice.build.xml"/>
+        </subant>
+    </target>
+    
+    <target name="build">
+        <antcall target="jar"/>
+        <antcall target="build-uiloginservice"/>
+    </target>
+
+    <target name="clean-uiloginservice" depends="check-uiloginservice" if="uiloginservice.present">
+        <subant target="clean">
+            <file file="uiloginservice.build.xml"/>
+        </subant>
+    </target>
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <antcall target="clean-uiloginservice"/>
+    </target>
+    
+    <target name="jar" depends="classes">
+        <antcall target="compile-solr-configsets"/><!-- SCIPIO -->
+        <main-jar>
+            <main-pattern>
+                <exclude name="com/ilscipio/scipio/solr/plugin/**"/>
+            </main-pattern>
+        </main-jar>
+        <main-jar jarfile="webapp/WEB-INF/lib/scipio-solr-plugins-1.0.0.jar">
+            <main-pattern>
+                <include name="com/ilscipio/scipio/solr/plugin/**"/>
+            </main-pattern>
+        </main-jar>
+    </target>
+
+    <target name="compile-solr-configsets" description="Build-time processing for Solr configsets (SCIPIO)">
+        <antcall target="deploy-configsets-defaults"/><!-- SCIPIO -->
+    </target>
+
+    <target name="deploy-configsets-defaults" description="Copies any missing default Solr configsets files to each configset from resources/configsets/default (SCIPIO)">
+        <for param="configsetdir">
+            <dirset refid="scipio.solr.configsets"/>
+            <sequential>
+                <echo>Checking Solr configset @{configsetdir}</echo>
+                <copy todir="@{configsetdir}/conf" verbose="true">
+                    <fileset dir="resources/configsets/default"/>
+                </copy>
+            </sequential>
+        </for>
+    </target>
+
+    <property name="lib.resolve.build.confs" value="solr-webapp"/>
+    <property name="lib.resolve.src.confs" value="solr-webapp-sources"/>
+    
+    <selector id="lib.update.manual.files.solr.webapp">
+        <or>
+            <filename name="scipio-*.jar"/>
+        </or>
+    </selector>
+    
+    <!-- SCIPIO: Special lib download script for complex base includes -->
+    <target name="do-lib-update" description="Downloads all jars (solr component implementation)">
+        <ivy:retrieve pattern="webapp/WEB-INF/lib/${lib.update.filename.pattern.ivy}" conf="solr-webapp"/>
+        <if>
+            <equals arg1="${lib.update.sources}" arg2="true"/>
+            <then>
+                <ivy:retrieve pattern="webapp/WEB-INF/libsrc/${lib.update.filename.pattern.src.ivy}" conf="solr-webapp-sources"/>
+            </then>
+        </if>
+    </target>
+    
+    <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
+        <antcall target="common-lib-clean" inheritrefs="true"/>
+        <remove-lib-files dir="webapp/WEB-INF/lib" excludes-refid="lib.update.manual.files.solr.webapp"/>
+        <if>
+            <equals arg1="${lib.clean.sources}" arg2="true"/>
+            <then>
+                <remove-lib-files dir="webapp/WEB-INF/libsrc" excludes-refid="lib.update.manual.src.files"/>
+            </then>
+        </if>
+    </target>
+    
+    <target name="clean-local-solr-indexes" description="Cleans out any solr data under applications/solr [but not solr data stored outside this folder]">
+        <delete includeemptydirs="true" verbose="on">
+            <fileset dir="./cores" includes="*/data/**" erroronmissingdir="false"/>
+        </delete>
+    </target>
+</project>

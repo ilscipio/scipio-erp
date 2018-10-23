@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="Calendar">
+        <section>
+            <actions>
+                <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.period" from-field="parameters.period" default-value="${initialView}"/>
+                <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/CreateUrlParam.groovy"/>
+                <set field="parentTypeId" from-field="parameters.parentTypeId" default-value="EVENT"/><!-- workeffortTypeId parent to ad events --> 
+            </actions>
+            <widgets>
+                <include-screen name="CalendarOnly"/>
+            </widgets>
+        </section>
+    </screen>
+            
+    <screen name="CalendarOnly">
+        <section>
+            <actions>
+                <set field="eventDetailWidgetName" from-field="eventDetailWidgetName" default-value="eventDetail" />
+                <set field="eventDetailWidgetLocation" from-field="eventDetailWidgetLocation" default-value="component://workeffort/widget/CalendarScreens.xml" />
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-compare field="parameters.period" operator="equals" value="day"/>
+                    </condition>
+                    <actions>
+                        <set field="titleProperty" value="PageTitleCalendarDay"/>
+                        <set field="activeSubMenuItem" value="day"/>
+                    </actions>
+                    <widgets>
+                      <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
+                      <include-screen name="dayCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <or>
+                            <if-compare field="parameters.period" operator="equals" value="week"/>
+                            <!-- SCIPIO: month view should be default
+                            <if-empty field="parameters.period"/> -->
+                        </or>
+                    </condition>
+                    <actions>
+                        <set field="activeSubMenuItem" value="week"/>
+                    </actions>
+                    <widgets>
+                      <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
+                      <include-screen name="weekCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <or>
+                            <if-compare field="parameters.period" operator="equals" value="month"/>
+                            <!-- SCIPIO: month view should be default -->
+                            <if-empty field="parameters.period"/>
+                        </or>
+                    </condition>
+                    <actions>
+                        <set field="activeSubMenuItem" value="month"/>
+                    </actions>
+                    <widgets>
+                      <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
+                      <include-screen name="monthCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <if-compare field="parameters.period" operator="equals" value="upcoming"/>
+                    </condition>
+                    <actions>
+                        <set field="activeSubMenuItem" value="upcoming"/>
+                    </actions>
+                    <widgets>
+                      <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
+                      <include-screen name="upcomingCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="calendarMenu">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <include-menu name="Calendar" location="component://workeffort/widget/WorkEffortMenus.xml" />
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="dayCalendar">
+        <section>
+            <actions>
+                <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="eventDetailWidgetName"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${eventDetailWidgetName}" location="${eventDetailWidgetLocation}"/>
+                    </widgets>
+                </section>
+                <!--<screenlet padded="false">--><!-- navigation-menu-name="Day" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortDayView}: ${groovy:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;EEEE MMMM d, yyyy&quot;, timeZone, locale)}" -->                
+                    <!--<include-menu name="Day" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
+                <platform-specific>
+                    <html><html-template location="component://workeffort/webapp/workeffort/calendar/day.ftl"/></html>
+                </platform-specific>
+                <!--</screenlet>-->
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="weekCalendar">
+        <section>
+            <actions>
+                <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Week.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="eventDetailWidgetName"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${eventDetailWidgetName}" location="${eventDetailWidgetLocation}"/>
+                    </widgets>
+                </section>
+                <!--<screenlet padded="false">--><!-- navigation-menu-name="Week" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortWeekView}: ${uiLabelMap.CommonWeek} ${groovy:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;w&quot;, timeZone, locale)}" -->
+                    <!--<include-menu name="Week" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
+                <platform-specific>
+                    <html><html-template location="component://workeffort/webapp/workeffort/calendar/week.ftl"/></html>
+                </platform-specific>
+                <!--</screenlet>-->
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="monthCalendar">
+        <section>
+            <actions>
+                <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Month.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="eventDetailWidgetName"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${eventDetailWidgetName}" location="${eventDetailWidgetLocation}"/>
+                    </widgets>
+                </section>
+                <!--<screenlet padded="false">--><!-- navigation-menu-name="Month"  --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortMonthView}: ${groovy:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;MMMM yyyy&quot;, timeZone, locale)}" -->
+                    <!--<include-menu name="Month" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
+                <platform-specific>
+                    <html><html-template location="component://workeffort/webapp/workeffort/calendar/month.ftl"/></html>
+                </platform-specific>
+                <!--</screenlet>-->
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="upcomingCalendar">
+        <section>
+            <actions>
+                <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Upcoming.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="eventDetailWidgetName"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${eventDetailWidgetName}" location="${eventDetailWidgetLocation}"/>
+                    </widgets>
+                </section>
+                <!--<screenlet>--><!-- navigation-menu-name="Upcoming" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortCalendarUpComingEventsView}" -->
+                    <!--<include-menu name="Upcoming" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
+                <platform-specific>
+                    <html><html-template location="component://workeffort/webapp/workeffort/calendar/upcoming.ftl"/></html>
+                </platform-specific>
+                <!--</screenlet>-->
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CalendarWithDecorator"><!-- used within the workeffort component to be able to add and show any workeffort type -->
+        <section>
+            <actions>
+                <set field="parameters.period" from-field="parameters.period" default-value="${initialView}"/>
+                <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/CreateUrlParam.groovy"/>
+                <set field="titleProperty" value="WorkEffortCalendar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCalendarDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="CalendarOnly"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="eventDetail">
+        <section>
+            <condition>
+                <if-compare field="parameters.form" operator="equals" value="edit" />
+            </condition>
+            <actions>
+                <entity-one entity-name="WorkEffort" value-field="workEffort" />
+                <set field="calEventIdNum" from-field="calEventIdNum" default-value="0" />
+                <set field="calEventFormPeriod" from-field="parameters.period" />
+                <if><!-- SCIPIO: refactored conditions -->
+                    <condition>
+                        <not><if-empty field="workEffort" /></not>
+                    </condition>
+                    <then>
+                        <script location="component://workeffort/script/isCalOwner.groovy" />
+                    </then>
+                </if>
+                <if>
+                    <condition>
+                        <or>
+                            <and>
+                                <not><if-empty field="workEffort" /></not>
+                                <if-compare field="workEffort.currentStatusId" operator="not-equals" value="CAL_CANCELLED" />
+                                <if-true field="isCalOwner" />
+                            </and>
+                            <if-empty field="workEffort" />
+                            <if-has-permission permission="WORKEFFORTMGR" action="_ADMIN" />
+                        </or>
+                    </condition>
+                    <then>
+                        <set field="useEditForm" value="true" />
+                    </then>
+                </if>
+                <set field="eventDetailCols" from-field="eventDetailCols" default-value="6"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-compare field="useEditForm" operator="equals" value="true" />
+                    </condition>
+                    <actions>
+                        <set field="cancelEventFormId" value="cancelEvent_${calEventIdNum}" />
+                    </actions>
+                    <widgets>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}${eventDetailCols} ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.WorkEffortAddCalendarEvent}">
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="workEffort" /></not>
+                                        </condition>
+                                        <actions>
+                                            <set field="calEventFormAction" value="${groovy:''}" />
+                                        </actions>
+                                        <widgets>
+                                            <!-- SCIPIO: now included in edit form
+                                            <include-form name="cancelEvent" location="component://workeffort/widget/CalendarForms.xml" />-->
+                                            <include-form name="cancelEventHidden" location="component://workeffort/widget/CalendarForms.xml" />
+                                        </widgets>
+                                    </section>
+                                    <section>
+                                        <actions>
+                                            <set field="calEventFormAction" value="edit" />
+                                        </actions>
+                                        <widgets>
+                                            <include-form name="editCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </container>
+                            <section>
+                                <condition>
+                                    <!-- SCIPIO: no point showing this for add event, because can only add roles once created -->
+                                    <not><if-empty field="workEffort" /></not>
+                                </condition>
+                                <widgets>
+                                    <container style="${styles.grid_large}${eventDetailCols} ${styles.grid_cell}">
+                                         <screenlet title="${uiLabelMap.WorkEffortParticipants}">
+                                             <include-form name="showCalEventRolesDel" location="component://workeffort/widget/CalendarForms.xml" />
+                                             <section>
+                                                 <condition>
+                                                     <and>
+                                                         <not><if-empty field="workEffort" /></not>
+                                                         <!-- Commenting this out because it doesn't make any sense.
+                                                         <if-compare field="workEffortTypeId" operator="not-equals" value="WES_PUBLIC" />
+                                                         -->
+                                                     </and>
+                                                 </condition>
+                                                 <actions>
+                                                     <set field="calEventFormAction" value="edit" />
+                                                 </actions>
+                                                 <widgets>
+                                                     <screenlet>
+                                                        <include-form name="addCalEventRole" location="component://workeffort/widget/CalendarForms.xml" />
+                                                     </screenlet>
+                                                 </widgets>
+                                             </section>
+                                         </screenlet>
+                                     </container>
+                                </widgets>
+                            </section>
+                        </container>
+                    </widgets>
+                    <fail-widgets>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}${eventDetailCols} ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.WorkEffortSummary}">
+                                    <section>
+                                        <actions>
+                                            <set field="calEventFormAction" value="edit" />
+                                        </actions>
+                                        <widgets>
+                                            <include-form name="showCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </container>
+                            <container style="${styles.grid_large}${eventDetailCols} ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.WorkEffortParticipants}">
+                                    <section>
+                                        <actions>
+                                            <set field="calEventFormAction" value="edit" />
+                                        </actions>
+                                        <widgets>
+                                            <include-form name="showCalEventRoles" location="component://workeffort/widget/CalendarForms.xml" />
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </container>
+                        </container>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="calendarEventContent">
+        <section>
+            <actions>
+                <set field="periodType" value="${groovy: request.getAttribute('periodType');}"/>
+                <set field="workEffortId" value="${groovy: request.getAttribute('workEffortId');}"/>
+                <set field="calEventVerbose" type="Boolean" value="${groovy: request.getAttribute('calEventVerbose');}"/>
+                <entity-one entity-name="WorkEffort" value-field="workEffort"/>
+                <get-related-one value-field="workEffort" relation-name="ParentWorkEffort" to-value-field="parentWorkEffort"/>
+                <get-related value-field="workEffort" relation-name="WorkOrderItemFulfillment" list="workOrderItemFulfillments"/>
+                <get-related value-field="parentWorkEffort" relation-name="WorkOrderItemFulfillment" list="parentWorkOrderItemFulfillments"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://workeffort/webapp/workeffort/calendar/calendarEventContent.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+</screens>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+
+    <!-- These controller definitions should be included last in webapp's controller , after all other includes -->
+    
+    <description>Cms common client webapp controller definitions</description>
+    
+    <handler name="screen" type="view" class="com.ilscipio.scipio.cms.control.CmsScreenViewHandler"/>
+
+
+    <!-- Request Mappings -->
+    
+    <!-- Special Cms requests, meant for trivial process mappings 
+         (forward a process mapping to one of these requests, then bind a page to "success" response using a process view mapping) -->
+    <request-map uri="cmsPagePlainNoAuth"><security https="false" auth="false"/><response name="success" type="view" value="CmsPage"/></request-map>
+    <request-map uri="cmsPagePlainAuth"><security https="false" auth="true"/><response name="success" type="view" value="CmsPage"/></request-map>
+    <request-map uri="cmsPageSecureNoAuth"><security https="true" auth="false"/><response name="success" type="view" value="CmsPage"/></request-map>
+    <request-map uri="cmsPageSecureAuth"><security https="true" auth="true"/><response name="success" type="view" value="CmsPage"/></request-map>
+    
+        
+    <!-- View Mappings -->
+    
+    <view-map name="CmsBlank" type="screen" page="component://cms/widget/CommonScreens.xml#CmsBlank"/>
+    <!-- For security reasons, by default this view shows completely blank. May be overridden with another screen, but type="screen" is required. -->
+    <view-map name="CmsPage" type="screen" page="component://cms/widget/CommonScreens.xml#CmsBlank"/>
+    
+</site-conf>

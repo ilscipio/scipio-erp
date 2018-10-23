@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+    
+    <form name="FindCategory" type="single" target="FindCategory" title="" default-map-name="category"
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="productCategoryId" title="${uiLabelMap.CommonId}"><text-find/></field>
+        <field name="categoryName"  title="${uiLabelMap.CommonName}"><text-find/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="ListCategory" list-name="listIt" target="" title="" type="list" paginate-target="FindCategory"
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <set field="entityName" value="ProductCategory"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="requestParameters"/>
+                <field-map field-name="entityName" from-field="entityName"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="productCategoryId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_info_id}">
+            <hyperlink also-hidden="false" description="${productCategoryId}" target="EditCategory">
+                <parameter param-name="productCategoryId"/>
+            </hyperlink>
+        </field>
+        <field name="categoryName" title="${uiLabelMap.CommonName}" sort-field="true"><display/></field>
+        <field name="productCategoryTypeId" title="${uiLabelMap.CommonType}" sort-field="true"><display-entity entity-name="ProductCategoryType" description="${description}"/></field>
+        <field name="primaryParentCategoryId" title="${uiLabelMap.CommonParent}" sort-field="true"><display/></field>
+        <field name="description" sort-field="true"><display/></field>
+    </form>
+    
+    <form name="CreateProductCategoryAttribute" header-row-style="header-row" type="single" target="createProductCategoryAttribute" title=""> <!-- orig: default-table-style=-style="basic-table" -->
+        <auto-fields-service service-name="createProductCategoryAttribute" default-field-type="edit"/>
+        <field name="productCategoryId"><display/></field>
+        <field name="submitForm" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
+    </form>
+    
+    <form name="AddCategoryCatalog" type="single" target="category_addProductCategoryToProdCatalog">
+        <field name="productCategoryId"><hidden/></field>
+        <field name="prodCatalogId" title="${uiLabelMap.ProductCatalog}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProdCatalog" description="${catalogName}">
+                    <entity-order-by field-name="catalogName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="prodCatalogCategoryTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProdCatalogCategoryType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- SCIPIO: AddCategoryChild form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioAddCategoryAssociation (can't be removed yet, still references I haven't covered) -->
+    <form name="AddCategoryChild" type="single" target="addProductCategoryToCategory">
+        <field name="showProductCategoryId"><hidden/></field>
+        <field name="parentProductCategoryId"><hidden value="${showProductCategoryId}"/></field>
+        <field name="productCategoryId" title="${uiLabelMap.ProductCategory}" required-field="true">
+            <lookup target-form-name="LookupProductCategory" default-value=" "/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- SCIPIO: AddCategoryChild form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioAddCategoryAssociation (can't be removed yet, still references I haven't covered) -->
+    <form name="AddCategoryParent" type="single" target="addProductCategoryToCategory">
+        <field name="showProductCategoryId"><hidden/></field>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="parentProductCategoryId" title="${uiLabelMap.ProductCategory}" required-field="true">
+            <lookup target-form-name="LookupProductCategory"></lookup>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
+    
+    
+    <form name="AddCategoryParty" type="single" target="addPartyToCategory">
+        <field name="productCategoryId"><hidden/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
+            <lookup target-form-name="LookupPartyName"></lookup>
+        </field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="RoleType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="comment" title="${uiLabelMap.CommonComment}"><textarea/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="UpdateCategoryCatalogs" type="list" target="category_updateProductCategoryToProdCatalog" list-name="prodCatalogCategories"
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <row-actions>
+            <entity-one entity-name="ProdCatalog" value-field="categoryCatalog"></entity-one>
+        </row-actions>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="prodCatalogId" title="${uiLabelMap.ProductCatalog}">
+            <display-entity entity-name="ProdCatalog" description=" " also-hidden="true" cache="true">
+                <sub-hyperlink link-style="${styles.link_nav_info_name}" target="EditProdCatalog" description="${categoryCatalog.catalogName}">
+                    <parameter param-name="prodCatalogId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="prodCatalogCategoryTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="ProdCatalogCategoryType"></display-entity>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="category_removeProductCategoryFromProdCatalog" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+              <parameter param-name="productCategoryId"/>
+              <parameter param-name="prodCatalogCategoryTypeId"/>
+              <parameter param-name="prodCatalogId"/>
+              <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- SCIPIO: UpdateCategoryChild form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioCategoryAssociationList (can't be removed yet, still references I haven't covered) -->
+    <form name="UpdateCategoryChild" type="list" target="updateProductCategoryToCategory" list-name="parentProductCategoryRollups"
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <row-actions>
+            <set field="productCategoryId" from-field="productCategoryId"/>
+            <entity-one entity-name="ProductCategory" value-field="category"/>
+        </row-actions>
+        <field name="showProductCategoryId"><hidden/></field>
+        <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
+            <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
+                <sub-hyperlink link-style="${styles.link_nav_info_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                    <parameter param-name="productCategoryId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
+        <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="removeProductCategoryFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+              <parameter param-name="showproductCategoryId"/>
+              <parameter param-name="productCategoryId"/>
+              <parameter param-name="parentProductCategoryId"/>
+              <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- SCIPIO: UpdateCategoryParent form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioCategoryAssociationParent (can't be removed yet, still references I haven't covered) -->
+    <form name="UpdateCategoryParent" type="list" target="updateProductCategoryToCategory" list-name="currentProductCategoryRollups"
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <row-actions>
+            <set field="productCategoryId" from-field="parentProductCategoryId"/>
+            <entity-one entity-name="ProductCategory" value-field="category"/>
+        </row-actions>
+        <field name="showProductCategoryId"><hidden/></field>
+        <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
+            <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
+                <sub-hyperlink link-style="${styles.link_nav_info_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                    <parameter param-name="productCategoryId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
+        <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="removeProductCategoryFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+              <parameter param-name="showProductCategoryId"/>
+              <parameter param-name="productCategoryId" value="${showProductCategoryId}"/>
+              <parameter param-name="parentProductCategoryId"/>
+              <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <form name="UpdateCategoryParties" type="list" target="updatePartyToCategory" list-name="productCategoryRoles"
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <row-actions>
+            <entity-one entity-name="PartyNameView" value-field="categoryParty"></entity-one>
+        </row-actions>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
+            <display-entity entity-name="PartyNameView" description=" " also-hidden="true" cache="true">
+                <sub-hyperlink link-style="${styles.link_nav_info_name_long}" target="/partymgr/control/viewprofile" target-type="inter-app" target-window="_blank" description="${categoryParty.groupName}${categoryParty.firstName} ${categoryParty.middleInitial} ${categoryParty.lastName}">
+                    <parameter param-name="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
+            <display-entity entity-name="RoleType"></display-entity>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
+        <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="category_removeProductCategoryFromProdCatalog" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+              <parameter param-name="productCategoryId"/>
+              <parameter param-name="prodCatalogCategoryTypeId"/>
+              <parameter param-name="prodCatalogId"/>
+              <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <form name="EditProductCategoryAttributes" odd-row-style="alternate-row" type="list" target="updateProductCategoryAttribute" title="" list-name="categoryAttributes"> <!-- orig: default-table-style=-style="basic-table" -->
+        <auto-fields-service service-name="updateProductCategoryAttribute" default-field-type="display"/>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="attrValue"><text size="60"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="deleteProductCategoryAttribute" description="${uiLabelMap.CommonDelete}">
+                <parameter param-name="productCategoryId"/>
+                <parameter param-name="attrName"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- Product Category Content Forms  -->
+    <form name="AddCategoryContentAssoc" type="single" target="addContentToCategory" title="${uiLabelMap.ProductAddProductCategoryContentFromDate}"
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <auto-fields-entity entity-name="ProductCategoryContent"/>
+        <field name="productCategoryId" map-name="productCategory"><hidden/></field>
+        <field name="contentId" title="${uiLabelMap.ProductContentId}">
+            <lookup target-form-name="LookupContent"/>
+        </field>
+        <field name="prodCatContentTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <drop-down>
+                <entity-options entity-name="ProductCategoryContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="purchaseFromDate"><date-time type="date"/></field>
+        <field name="purchaseThruDate" position="2"><date-time type="date"/></field>
+        <field name="useCountLimit"><text/></field>
+        <field name="useDaysLimit" position="2"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
+
+    <!-- SCIPIO: To be removed -->
+    <form name="PrepareAddCategoryContentAssoc" type="single" target="prepareAddContentToCategory" title="${uiLabelMap.ProductAddProductCategoryContentFromDate}"
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="productId"><hidden/></field>
+        <field name="productCategoryId" map-name="productCategory"><hidden/></field>
+        <field name="prodCatContentTypeId">
+            <drop-down>
+                <entity-options entity-name="ProductCategoryContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- <field name="description"><text size="40"/></field> -->
+        <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="UpdateCategoryContentAssoc" type="list" target="updateContentToCategory" title="" list-name="productCategoryContentList"
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="productCategoryId"><hidden/></field>
+        <field name="contentId" title="${uiLabelMap.ProductContent}">
+            <display-entity entity-name="Content" description="${description}" also-hidden="true">
+                <sub-hyperlink target="EditCategoryContentContent" description="${contentId}" link-style="${styles.link_nav_info_id}">
+                    <parameter param-name="productCategoryId"/>
+                    <parameter param-name="contentId"/>
+                    <parameter param-name="prodCatContentTypeId"/>
+                    <parameter param-name="fromDate"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="prodCatContentTypeId" title="${uiLabelMap.ProductType}">
+            <display-entity entity-name="ProductCategoryContentType" also-hidden="false" description="${description}"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
+        <!--
+        jacopoc: I've disabled the ability to update a content record because it was not working
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="timestamp"/></field>
+        <field name="prodCatContentTypeId">
+            <drop-down>
+                <entity-options entity-name="ProductCategoryContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        -->
+        <field name="editAction" title="${uiLabelMap.ProductEditContent}" widget-style="${styles.link_nav} ${styles.action_update}">
+            <hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}">
+                <parameter param-name="contentId"/>
+            </hyperlink>
+        </field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="removeContentFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="productCategoryId"/>
+                <parameter param-name="contentId"/>
+                <parameter param-name="prodCatContentTypeId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="EditCategoryContentSimpleText" type="single" default-map-name="categoryContent" target="updateSimpleTextContentForCategory" title="${uiLabelMap.ProductUpdateSimpleTextContentCategory}"
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <alt-target use-when="content==null" target="createSimpleTextContentForCategory"/>
+        <auto-fields-entity entity-name="ProductCategoryContent"/>
+
+        <field use-when="content==null" name="contentId"><ignored/></field>
+        <field use-when="content!=null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="categoryContentData"><display/></field>
+        <field name="prodCatContentTypeId" title="${uiLabelMap.CommonType}" position="2"><display-entity entity-name="ProductCategoryContentType" also-hidden="true"/></field>
+        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
+        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
+        
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="description" map-name="content"><textarea/></field>
+        <field name="localeString" map-name="content"><text size="40"/></field>
+        <field name="text" map-name="textDataMap"><textarea cols="80" rows="10"/></field>
+        <field name="textDataResourceId" map-name="textDataMap"><hidden/></field>
+        <field name="useCountLimit"><hidden/></field>
+        <field name="useDaysLimit"><hidden/></field>
+        <field name="purchaseThruDate"><hidden/></field>
+        <field name="purchaseFromDate"><hidden/></field>
+        <field name="productCategoryId"><hidden/></field>
+        <field use-when="content == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field use-when="content != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="CreateSimpleTextContentForAlternateLocale" type="single" target="createSimpleTextContentForAlternateLocaleInCategory" title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}"
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="productCategoryId"><hidden/></field>
+        <field name="mainContentId" entry-name="contentId"><hidden/></field>
+        <field name="localeString"><text/></field>
+        <field name="text"><text/></field>
+        <!-- SCIPIO: 2017-10-26: Added Product-specific hidden fields to preserve browsing. WARN: depends on screen -->
+        <field name="prodCatContentTypeId" map-name="productCategoryContent"><hidden/></field>
+        <field name="fromDate" map-name="productCategoryContent"><hidden/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
+
+    <!-- SCIPIO: new -->
+    <form name="ListSimpleTextContentForAlternateLocale" extends="ListSimpleTextContentForAlternateLocaleCore" extends-resource="component://product/widget/catalog/ProductForms.xml" 
+        target="updateSimpleTextContentForAlternateLocaleInCategory?productCategoryId=${productCategoryContent.productCategoryId}&amp;prodCatContentTypeId=${productCategoryContent.prodCatContentTypeId}&amp;fromDate=${productCategoryContent.fromDate}&amp;contentId=${contentId}">
+        <!-- Product Content Assoc fields, for browsing purposes
+        <field name="productCategoryId" map-name="productCategoryContent"><hidden/></field>
+        <field name="prodCatContentTypeId" map-name="productCategoryContent"><hidden/></field>
+        <field name="fromDate" map-name="productCategoryContent"><hidden/></field>
+        -->
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
+            <submit button-type="text-link"/>
+        </field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="deleteSimpleTextContentForAlternateLocaleInCategory" description="${uiLabelMap.CommonDelete}"
+                also-hidden="false" link-type="hidden-form">
+                <parameter param-name="mainContentId" from-field="contentAssoc.contentId"/>
+                <parameter param-name="contentId" from-field="contentAssoc.contentIdTo"/>
+                <parameter param-name="productCategoryId" from-field="productCategoryContent.productCategoryId"/>
+                <parameter param-name="prodCatContentTypeId" from-field="productCategoryContent.prodCatContentTypeId"/>
+                <parameter param-name="fromDate" from-field="productCategoryContent.fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <!-- ProductCategoryLink Forms-->
+    <form name="ListProductCategoryLinks" type="list" list-name="productCategoryLinks" target="updateProductCategoryLink" separate-columns="true"
+        title="" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <actions>
+            <entity-condition entity-name="ProductCategoryLink">
+                <condition-expr field-name="productCategoryId" from-field="productCategoryId"/>
+                <order-by field-name="sequenceNum"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateProductCategoryLink"/>
+
+        <field name="productCategoryId"><hidden/></field>
+        <field name="linkSeqId"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
+        <field name="titleText"><text size="20" maxlength="250"/></field>
+        <field name="comments"><text size="20" maxlength="250"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequence}"><text maxlength="5" size="5"/></field>
+        <field name="linkTypeEnumId"><ignored/></field>
+        <field name="detailText"><ignored/></field>
+        <field name="linkInfo"><ignored/></field>
+        <field name="detailSubScreen"><ignored/></field>
+        <field name="imageUrl"><ignored/></field>
+        <field name="imageTwoUrl"><ignored/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="deleteProductCategoryAction" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="productCategoryId"/>
+                <parameter param-name="linkSeqId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="AddProductCategoryLink" type="single" target="createProductCategoryLink" title="" default-map-name="productCategoryAction"
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <alt-target use-when="productCategoryLink != null" target="updateProductCategoryAction"/>
+        <auto-fields-service service-name="createProductCategoryLink"/>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="linkSeqId" use-when="productCategoryLink==null"><ignored/></field>
+        <field name="linkSeqId" use-when="productCategoryLink!=null"><display/></field>
+        <field use-when="productCategoryLink != null" name="fromDate" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="productCategoryLink == null" name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequence}"><text maxlength="5" size="5"/></field>
+        <field name="imageUrl" tooltip="${uiLabelMap.ProductImageUrlTooltip}"><text size="60" maxlength="255"/></field>
+        <field name="linkTypeEnumId" title="${uiLabelMap.ProductLinkTypeEnumId}">
+            <drop-down allow-empty = "false">
+                <entity-options description="${groovy: uiLabelMap.get(&quot;ProductCategoryLinkType.description.&quot;+enumId)}" entity-name="Enumeration" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="PCAT_LINK_TYPE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="detailSubScreen" tooltip="${uiLabelMap.ProductDetailSubScreenTooltip}"><text size="60" maxlength="255"/></field>
+        <field name="submitAction" use-when="productCategoryLink==null" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="productCategoryLink!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="clearFormAction" title=" " use-when="productCategoryLink!=null" widget-style="${styles.link_run_local} ${styles.action_clear}">
+            <hyperlink target="EditProductCategoryLinks" target-type="intra-app" description="${uiLabelMap.CommonClear}">
+                <parameter param-name="productCategoryId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="ListTopCategory" type="list" list-name="noParentCategories" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="productCategoryId" widget-style="${styles.link_nav_info_id}">
+            <hyperlink target="EditCategory" description="${productCategoryId}" also-hidden="false">
+                <parameter param-name="CATALOG_TOP_CATEGORY" value="${productCategoryId}"/>
+                <parameter param-name="productCategoryId" value="${productCategoryId}"/>
+            </hyperlink>
+        </field>
+        <field name="description"><display/></field>
+    </form>
+
+    <form name="EditCategoryContentSEO" type="single" target="updateContentSEOForCategory" title="${uiLabelMap.ProductUpdateSEOContentCategory}"
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="title" title="${uiLabelMap.PageTitle}"><text size="40"/></field>
+        <field name="metaKeyword" title="${uiLabelMap.MetaKeywords}"><textarea cols="60" rows="5"/></field>
+        <field name="metaDescription" title="${uiLabelMap.MetaDescription}"><textarea cols="60" rows="5"/></field>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="prodCatContentTypeId"><hidden/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="EditCategoryContentRelatedUrl" type="single" target="updateRelatedUrlContentForCategory" title="${uiLabelMap.ProductUpdateRelatedURLContentCategory}"
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <alt-target use-when="content==null" target="createRelatedUrlContentForCategory"/>
+        <auto-fields-entity entity-name="ProductCategoryContent"/>
+        <field use-when="content==null" name="contentId"><ignored/></field>
+        <field use-when="content!=null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="categoryContentData"><display/></field>
+        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFrom}*" ><date-time/></field>
+        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="dataResourceId"><hidden/></field>
+        <field name="prodCatContentTypeId"><display-entity entity-name="ProductCategoryContentType" also-hidden="true"/></field>
+        <field name="title" title="${uiLabelMap.CommonTitle}"><text size="50"></text></field>
+        <field name="description" title="${uiLabelMap.FormFieldTitle_description}"><textarea cols="50" rows="2"/></field>
+        <field name="url"><textarea cols="50" rows="2"/></field>
+        <field name="localeString">
+            <lookup target-form-name="LookupLocale"></lookup>
+        </field>
+        <field name="purchaseFromDate"><hidden/></field>
+        <field name="purchaseThruDate"><hidden/></field>
+        <field name="useCountLimit"><hidden/></field>
+        <field name="useDaysLimit"><hidden/></field>
+        <field name="productCategoryId"><hidden/></field>
+        <field use-when="content == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field use-when="content != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="EditCategoryContentDownload" type="upload" target="updateDownloadContentForCategory" title="${uiLabelMap.ProductUpdateDownloadContentCategory}">
+        <alt-target use-when="contentId==null" target="createDownloadContentForCategory"/>
+        <auto-fields-entity entity-name="ProductCategoryContent" map-name="productCategoryContentData"/>
+        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFrom}*" ><date-time/></field>
+        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"></field>
+        <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
+        <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}"></field>
+        <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
+        <field name="useDaysLimit" title="${uiLabelMap.ProductUseTime}"></field>
+        
+        <field name="description" title="${uiLabelMap.ProductCategoryDescription}" map-name="content"><text size="40"/></field>
+        <field use-when="contentId == null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductOptional}"><text maxlength="20"/></field>
+        <field use-when="contentId != null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
+            <hyperlink description="${contentId} ${contentName}" target="/content/control/editContent" target-type="inter-app">
+                <parameter param-name="contentId"/>
+            </hyperlink>
+        </field>
+        <field name="imageData" title="${uiLabelMap.ProductFile}"><file/></field>
+        <field name="fileDataResourceId"><hidden/></field>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="prodCatContentTypeId"><hidden/></field>
+        <field name="dataResourceTypeId"><hidden/></field>
+        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+    </form>
+</forms>

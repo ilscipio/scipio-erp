@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- SCIPIO: FIXME: ALL THESE SCREENS ARE MISSING PERMISSION CHECKS -->
+    
+    <screen name="FindEmploymentApps">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindEmploymentApp"/>
+                <set field="employmentAppCtx" from-field="parameters"/>
+                <set field="activeSubMenuItem" value="FindEmploymentApps"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <include-menu name="EmploymentAppGeneralSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindEmploymentApps" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListEmploymentApps" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: FIXME?: this uses CommonPartyDecorator unlike the others but maybe it shouldn't, it's because the way it was integrated?... -->
+    <screen name="EditEmploymentApps">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewEmploymentApp"/>
+                <set field="activeSubMenuItem" value="EditEmploymentApps"/>
+                <set field="referredByPartyId" from-field="parameters.partyId"/>
+                <set field="employmentAppCtx.applicationId" from-field="parameters.applicationId"/>
+                <set field="parameters.insideEmployee" value="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="ListEmploymentApps" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                        <screenlet id="AddEmploymentAppPanel" title="${uiLabelMap.CommonAdd} ${uiLabelMap.HumanResEmploymentApp}" collapsible="true">
+                            <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: NOTE: This screen would be mainly for applicants to fill out themselves; e.g.
+        can't edit once submitted -->
+    <screen name="NewEmploymentApp">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResNewEmploymentApp"/>
+                <set field="applicationId" from-field="parameters.applicationId"/>
+                <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+                <set field="activeSubMenuItem" value="NewEmploymentApp"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new simple screen for editing individual appl (not in stock - stock only has new, above) 
+        Simpler version of EditEmploymentApps above.
+        NOTE: this screen would be mainly for admins, who can edit submitted applications. In admin
+        case it supersedes NewEmploymentApp -->
+    <screen name="EditEmploymentApp">
+        <section>
+            <actions>
+                <set field="applicationId" from-field="parameters.applicationId"/>
+                <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+                <set field="activeSubMenuItem" value="EditEmploymentApp"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-empty field="employmentApp.applicationId"/>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <actions>
+                                <set field="titleProperty" value="HumanResNewEmploymentApp"/>
+                            </actions>
+                            <widgets>
+                                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
+                                    <decorator-section name="body">
+                                        <screenlet navigation-menu-name="EmploymentAppGeneralSubTabBar">
+                                            <include-menu name="EmploymentAppGeneralSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                            <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                                            <include-screen name="EditEmploymentAppInfoBox"/>
+                                        </screenlet>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </widgets>
+                    <fail-widgets>
+                        <!-- FIXME: in this case should check if have rights to view/edit applicationId -->
+                        <section>
+                            <actions>
+                                <set field="titleProperty" value="HumanResEditEmploymentApp"/>
+                            </actions>
+                            <widgets>
+                                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
+                                    <decorator-section name="body">
+                                        <screenlet navigation-menu-name="EmploymentAppEditSubTabBar">
+                                            <include-menu name="EmploymentAppEditSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                            <include-form name="EditEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                                            <include-screen name="EditEmploymentAppInfoBox"/>
+                                            <include-screen name="EmploymentAppResumeContent"/>
+                                        </screenlet>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new info box -->
+    <screen name="EditEmploymentAppInfoBox">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <#-- NOTE: this code works around escaping in a safe manner. TODO: use a utility later -->
+                    <#assign posLink><a href="<@ofbizUrl uri="FindEmplPositions"/>">${getLabel('HumanResEmployeePosition')}</a></#assign>
+                    <#assign jobReqLink><a href="<@ofbizUrl uri="FindJobRequisitions"/>">${getLabel('HumanResJobRequisition')}</a></#assign>
+                    <@alert type="info">** ${getLabel('HumanResEitherPositionOrRequisitionMustBeSpecifiedSubst','',{"position":"POS","jobReq":"JOBREQ"})?replace("POS", posLink)?replace("JOBREQ", jobReqLink)}</@alert>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new simple screen for viewing appl (not in stock)  -->
+    <screen name="ViewEmploymentApp">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEmploymentApplication"/>
+                <set field="applicationId" from-field="parameters.applicationId"/>
+                <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+                <set field="activeSubMenuItem" value="ViewEmploymentApp"/>
+                <set field="resumeReadOnly" type="Boolean" value="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet navigation-menu-name="EmploymentAppEditSubTabBar">
+                            <include-menu name="EmploymentAppEditSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                            <include-form name="ViewEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                            <include-screen name="EmploymentAppResumeContent"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new -->
+    <screen name="EmploymentAppResumeContent">
+        <section>
+            <actions>
+                <set field="resumePartyId" from-field="resumePartyId" default-value="${employmentApp.applyingPartyId}"/>
+                <set field="partyId" from-field="resumePartyId"/>
+            
+                <set field="resumeReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
+                <set field="pcntExtraParams" type="Object" value=""/>
+                <set field="pcntExtraParams.resumeReadOnly" from-field="resumeReadOnly"/>
+                <set field="pcntExtraParams.applicationId" from-field="applicationId"/>
+                <set field="pcntTitle" value="${uiLabelMap.HumanResPartyResume}: ${partyId}"/>
+                <set field="pcntAttachTitle" value="${uiLabelMap.CommonUpload}"/>
+                <set field="pcntNoAttach" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
+                <set field="pcntUploadUri" value="uploadEmplAppResume"/><!-- this loads EmploymentAppResumeList below -->
+                <set field="pcntCntListLoc" value="component://humanres/widget/EmploymentAppScreens.xml#EmploymentAppResumeList"/>
+                <set field="pcntPartyContentTypeId" value="RESUME"/>
+                <set field="pcntAllowPublic" type="Boolean" value="false"/>
+            </actions>
+            <widgets>
+                <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: Duplicated from component://party/widget/partymgr/ProfileScreens.xml#ContentList -->
+    <screen name="EmploymentAppResumeList">
+        <section>
+            <actions>
+                <set field="resumeReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="${groovy: parameters.resumeReadOnly ?: 'true'}"/>
+                <set field="pcntListReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
+                <set field="applicationId" from-field="applicationId" default-value="${parameters.applicationId}"/>
+                <set field="pcntListRemoveDonePage" from-field="pcntListRemoveDonePage" default-value="EditEmploymentApp"/>
+                <set field="pcntListRemoveExtraParams" type="Object" value=""/>
+                <set field="pcntListRemoveExtraParams.applicationId" from-field="applicationId"/>
+                <set field="pcntListShowStatus" type="Boolean" value="false"/>
+                <set field="pcntPartyContentTypeId" value="RESUME"/>
+
+                <!-- modified from component://party/widget/partymgr/ProfileScreens.xml#ContentList -->
+                <set field="partyId" from-field="partyId" default-value="${groovy: (parameters.partyId ?: context.userLogin?.partyId)}"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/><!-- SCIPIO: for PartyNoContent -->
+                <entity-and entity-name="PartyContent" list="partyContent">
+                    <field-map field-name="partyId" from-field="partyId"/>
+                    <field-map field-name="partyContentTypeId" value="RESUME"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <!-- SCIPIO: this widget is invoked through controller for ajax, so perm check needed -->
+                <section>
+                    <condition>
+                        <if-service-permission service-name="partyIdPermissionCheck" main-action="VIEW"/>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <condition><not><if-true field="resumeReadOnly"/></not></condition>
+                            <widgets>
+                                <!-- FIXME: should use pcntMenuCnt for this somehow in above widget... wrong widget... -->
+                                <include-menu name="ResumeListSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                            </widgets>
+                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/></html>
+                        </platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="common-msg-error-perm">${uiLabelMap.CommonPermissionError}</label>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+    
+    <screen name="ScipioNewApplications">
+        <section>
+            <actions>
+                <entity-condition entity-name="EmploymentApp" list="emplAppList" >
+                    <condition-list combine="or">
+                        <condition-expr field-name="statusId" value="EMPL_POS_ACTIVE"/>
+                        <!-- ?
+                        <condition-expr field-name="statusId" value="EMPL_POS_PLANNEDFOR"/>
+                        -->
+                        <!-- SCIPIO: NOTE: this status is unusual and used only in one place, but support it anyway -->
+                        <condition-expr field-name="statusId" value="IJP_APPLIED"/>
+                    </condition-list>
+                    <order-by field-name="-applicationDate" />
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://humanres/webapp/humanres/humanres/emplapp/ScipioApplicationsSummary.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+</screens>

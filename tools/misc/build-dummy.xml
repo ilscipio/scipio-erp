@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SCIPIO: This is needed as a workaround in certain ant tasks -->
+<project name="Ant - Dummy Build">
+</project>

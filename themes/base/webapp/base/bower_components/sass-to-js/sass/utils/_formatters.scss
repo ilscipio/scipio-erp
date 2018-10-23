@@ -1,0 +1,7 @@
+//---
+// Formats provided argument as a string
+//  Might be used for strings, colors and Sass numbers like "100px"
+//---
+@function sassToJs_formatAsString($value) {
+  @return '"#{$value}"';
+}

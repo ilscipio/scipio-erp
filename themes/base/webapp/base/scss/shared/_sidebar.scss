@@ -1,0 +1,161 @@
+/* NAVIGATION */
+
+/* Scipio: duplicated from "side-nav" mixin and modified */
+@mixin side-nav-nested(
+  $divider-color:$side-nav-divider-color,
+  $font-size:$side-nav-font-size,
+  $link-color:$side-nav-link-color,
+  $link-color-active:$side-nav-link-color-active,
+  $link-color-hover:$side-nav-link-color-hover,
+  $link-bg-hover:$side-nav-link-bg-hover) {
+  display: block;
+  font-family: $side-nav-font-family;
+  list-style-position: $side-nav-list-position;
+  // TODO?: this could maybe use a caret ">" image?
+  list-style-type: $side-nav-list-type;
+  //margin: 0;
+  margin-left: rem-calc(12);
+  //padding: $side-nav-padding;
+
+  li {
+    font-size: $font-size;
+    font-weight: $side-nav-font-weight;
+    margin: $side-nav-list-margin;
+
+    // Scipio: added child selector here
+    > a:not(.button) {
+      color: $link-color;
+      display: block;
+      margin: $side-nav-link-margin;
+      padding: $side-nav-link-padding;
+      &:hover,
+      &:focus {
+        background: $link-bg-hover;
+        color: $link-color-hover;
+      }
+      &:active {
+        color: $link-color-active;
+      }
+    }
+
+    &.active > a:first-child:not(.button) {
+      color: $side-nav-link-color-active;
+      font-family: $side-nav-font-family-active;
+      font-weight: $side-nav-font-weight-active;
+    }
+
+    &.divider {
+      border-top: $side-nav-divider-size $side-nav-divider-style;
+      height: 0;
+      list-style: none;
+      padding: 0;
+      border-top-color: $divider-color;
+    }
+
+    &.heading {
+      color: $side-nav-heading-color;
+      font: {
+        size: $side-nav-heading-font-size;
+        weight: $side-nav-heading-font-weight;
+      }
+    }
+  }
+}
+
+
+
+.side-nav {
+    margin-top:0px;
+    background: #FAFAFA;
+    padding:0px;
+
+    form {padding:0px;}
+
+    input[type="search"]:focus {
+        box-shadow: 0 0 0 !important; }
+        
+    li {
+        &.disabled {
+            // This comes out wrong now...?
+            //padding: $side-nav-link-padding;
+            color: $aluminum;
+            cursor: $input-disabled-cursor;
+            
+            > a, > a:hover, > a:visited, > a:active, > a:focus {
+                color: $aluminum;
+                cursor: $input-disabled-cursor;
+            }
+        }
+        &.dashboard {
+            background-color: $white-smoke;
+            border-bottom: 1px solid $gainsboro;
+            
+            
+            a {
+                color: $jet;
+            }
+        }
+        
+        &.active {
+            //Overrides side_nav
+            background: rgba(0, 64, 84, 0.05);
+            > a:first-child:not(.button) {
+                cursor: $sub-nav-active-cursor;
+            }
+        }
+        
+        &.heading {
+            text-transform: $side-nav-heading-text-transform;
+            padding-left: 0.4rem;
+            background: rgba($side-nav-link-color, 0.9); 
+            color: #efefef;
+            margin:0px;
+            margin-top:1rem;
+      
+            &:first-child {
+                margin-top:0px;
+            }
+            
+        }
+        
+        &.scipio-nav-actions-menu-item{
+            //background-color: $white-smoke;
+            //margin-bottom:2px;             
+            a {
+                color: $jet;
+            }
+        }
+    }
+    
+    /* Nested sidebar menu element */
+    .menu-type-sidebar.nested-sametype {
+        /* NOTE: this will clash with some of the above; best-effort */
+        @include side-nav-nested;
+        
+        li {
+            &.active {
+                background: inherit;
+            }
+        }
+    }
+}
+
+
+.sub-top-bar {@include sub-nav(); 
+    margin-top:8px;
+    
+    dt a, dd a, li a {
+        background-color: $ghost;
+        color: $primary-color;
+        border-radius: $button-radius;
+    }
+}
+
+
+// Logo
+li.name img { 
+    width: auto;
+    height: 22px;
+}
+
+.tab-bar h1 img {height: 30px;}

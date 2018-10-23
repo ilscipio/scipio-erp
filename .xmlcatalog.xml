@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 
+    SCIPIO: Catalog of SCIPIO/OFBiz XML schemas for Eclipse
+    
+    Importing this catalog into Eclipse allows the XML editor in Eclipse to validate the service/entity/minilang/other XMLs,
+    using the exact DTD/schema modifications provided by Scipio in the version you are using.
+    It is HIGHLY recommended for developers.
+    
+    To import into Eclipse:
+        File -> Import -> XML -> XML Catalog -> (select this file)
+    https://www.eclipse.org/webtools/community/tutorials/XMLCatalog/XMLCatalogTutorial.html
+    https://cwiki.apache.org/confluence/display/OFBIZ/Eclipse+Tips
+    
+    NOTE: If you have a branched a project from Scipio and changed the Eclipse project name (in .project),
+    you may also need to update the project name in the resource URIs below.
+-->
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <nextCatalog catalog="platform:/resource/scipioce-latest/framework/base/dtd/base-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-latest/framework/datafile/dtd/datafiles-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-latest/framework/entity/dtd/entity-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-latest/framework/minilang/dtd/minilang-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-latest/framework/service/dtd/service-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-latest/framework/testtools/dtd/testtools-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-latest/framework/webapp/dtd/webapp-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-latest/framework/widget/dtd/widget-catalog.xml"/>
+</catalog>

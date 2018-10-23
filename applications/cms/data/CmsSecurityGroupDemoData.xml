@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CMS_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CMS_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CMS_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CMS_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CMS_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="CMS_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="CMS_ADMIN"/>
+    <SecurityGroupPermission groupId="SUPER" permissionId="CMS_ADMIN"/>
+    
+    <SecurityGroup groupId="CMS_GLOBALADMIN" description="CMS global admin group; all admin permissions for all CMS applications."/>
+    <SecurityGroup groupId="CMS_GLOBALUSER" description="CMS global user group; all limited content permissions for all CMS applications."/>
+    <SecurityGroup groupId="CMS_GLOBALVIEWER" description="CMS global user group; all read-only permissions for all CMS applications."/>
+        
+</entity-engine-xml>

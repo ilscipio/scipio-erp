@@ -1,0 +1,13 @@
+{
+  "name": "codemirror-mode-freemarker",
+  "homepage": "https://github.com/liuxiaole/codemirror-mode-freemarker",
+  "_release": "6a2defcf5f",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "6a2defcf5fd83d5574efa6beed7adacfeff25ea2"
+  },
+  "_source": "git://github.com/liuxiaole/codemirror-mode-freemarker.git",
+  "_target": "*",
+  "_originalSource": "liuxiaole/codemirror-mode-freemarker"
+}

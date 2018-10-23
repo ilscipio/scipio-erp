@@ -1,0 +1,194 @@
+<!-- Demo data for SCIPIO_FOUNDATION_1 ProductStore -->
+<ProductStore productStoreId="SCIPIO_FOUNDATION_1" storeName="Scipio Foundation - E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
+        subtitle="Our Passion" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
+        inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        defaultLocaleString="en_US" defaultCurrencyUomId="USD" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
+        headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
+        itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
+        authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
+        authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
+    
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testCCRelease" paymentCustomMethodId="CC_RELEASE_TEST"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture" paymentCustomMethodId="CC_CAPTURE_TEST"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="testCCRefund" paymentCustomMethodId="CC_REFUND_TEST"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="EFT_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveEFTProcessor" paymentCustomMethodId="EFT_AUTH_ALWAYSAPPRO"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveGCProcessor" paymentCustomMethodId="GIFT_AUTH_ALWAYSAPPR"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease" paymentCustomMethodId="GIFT_RELEASE_TEST"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="PAYPAL_CONFIG"/>
+
+<!-- SCIPIO: now points to shop -->
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_CONFIRM" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice" xslfoAttachScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNoticePdf" subject="SCIPIO ERP - Order Confirmation #${orderId}" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_COMPLETE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice" subject="SCIPIO ERP - Your Order Is Complete #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#BackorderNotice" subject="SCIPIO ERP - Backorder Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice" subject="SCIPIO ERP - Order Change Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_PAYRETRY" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_SHIP_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#ShipmentCompleteNotice" subject="SCIPIO ERP - Shipment Complete Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnAccept" subject="SCIPIO ERP - Return Accepted #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_RTN_COMPLETE" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnComplete" subject="SCIPIO ERP - Return Completed #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_RTN_CANCEL" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnCancel" subject="SCIPIO ERP - Return Cancelled #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_GC_PURCHASE" bodyScreenLocation="component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase" fromAddress="test@scipioerp.com" subject="A Gift From ${senderName}!"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_GC_RELOAD" bodyScreenLocation="component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload" fromAddress="test@scipioerp.com" subject="Gift Card Reload Results"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_TELL_FRIEND" bodyScreenLocation="component://shop/widget/EmailProductScreens.xml#TellFriend" subject="${sendFrom} has sent you a link!" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_PWD_RETRIEVE" bodyScreenLocation="component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail" subject="SCIPIO ERP - Password Reminder (${userLogin.userLoginId})" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_QUO_CONFIRM" bodyScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple" xslfoAttachScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#QuoteReport" subject="SCIPIO ERP - Quote Confirmation #${quoteId}" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PARTY_REGIS_CONFIRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_CUST_REGISTER" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="UPD_PRSNL_INF_CNFRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#ChangePersonalInfoNotification" subject="Personal Information Updated" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_EMAIL_VERIFY" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#VerifyEmailAddressNotification" subject="Email Address Verification" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_CUST_ACTIVATED" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#AccountActivatedNotification" subject="Account Activated" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="CONT_NOTI_EMAIL" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactUsEmailNotification" subject="Contact-us Information Notification" fromAddress="test@scipioerp.com" />
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="SUB_CONT_LIST_NOTI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListSubscribeEmail" subject="Subscribe Contact List" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="UNSUB_CONT_LIST_VERI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListUnsubscribeVerifyEmail" subject="Verify Unsubscribe Contact List" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="UNSUB_CONT_LIST_NOTI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListUnsubscribeEmail" subject="Unsubscribe Contact List" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="CONT_EMAIL_TEMPLATE" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListEmailTemplate"/>
+
+<ProductStoreFacility productStoreId="SCIPIO_FOUNDATION_1" facilityId="ScipioShopWarehouse" fromDate="2016-01-12 00:00:00.0"/>
+    
+<ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="SCIPIO_FOUNDATION_1" fromDate="2016-01-12 00:00:00.0"/>
+    
+<!-- <ProductStoreKeywordOvrd productStoreId="SCIPIO_FOUNDATION_1" keyword="gizmo" fromDate="2016-01-12 00:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/> -->
+
+<WebSite webSiteId="ScipioWebStore" siteName="Scipio Foundation eCommerce Web Site" productStoreId="SCIPIO_FOUNDATION_1" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" />
+<WebSite webSiteId="ScipioWebStoreClone" siteName="Scipio Foundation Cloned eCommerce Web Site" productStoreId="SCIPIO_FOUNDATION_1" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" />
+
+<ProdCatalog prodCatalogId="ScipioDemoCatalog" catalogName="Scipio Foundation Demo Catalog" useQuickAdd="Y"/>
+<ProdCatalog prodCatalogId="ScipioTestCatalog" catalogName="Scipio Foundation Test Catalog" useQuickAdd="N"/>
+
+<ProductStoreCatalog productStoreId="SCIPIO_FOUNDATION_1" prodCatalogId="ScipioDemoCatalog" fromDate="2016-01-12 00:00:00.0" sequenceNum="1"/>
+<ProductStoreCatalog productStoreId="SCIPIO_FOUNDATION_1" prodCatalogId="ScipioTestCatalog" fromDate="2016-01-12 00:00:00.0" sequenceNum="2"/>
+
+<ProductCategory categoryName="Scipio Foundation Demo Browse Root" longDescription="Scipio Foundation Demo Catalog Primary Browse Root Category" productCategoryId="SCIPIO_CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Category 10000" longDescription="" primaryParentCategoryId="SCIPIO_CATALOG1" productCategoryId="SCIPIO_10000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Category 20000" longDescription="" primaryParentCategoryId="SCIPIO_CATALOG1" productCategoryId="SCIPIO_20000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Category 30000" longDescription="" primaryParentCategoryId="SCIPIO_10000" productCategoryId="SCIPIO_30000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Category 40000" longDescription="" primaryParentCategoryId="SCIPIO_10000" productCategoryId="SCIPIO_40000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Category 50000" longDescription="" primaryParentCategoryId="SCIPIO_20000" productCategoryId="SCIPIO_50000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Category 60000" longDescription="" primaryParentCategoryId="SCIPIO_20000" productCategoryId="SCIPIO_60000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Category 70000" longDescription="" primaryParentCategoryId="SCIPIO_30000" productCategoryId="SCIPIO_70000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Category 80000" longDescription="" primaryParentCategoryId="SCIPIO_30000" productCategoryId="SCIPIO_80000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Category 90000" longDescription="" primaryParentCategoryId="SCIPIO_70000" productCategoryId="SCIPIO_90000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Promotions Category" longDescription="" productCategoryId="SCIPIO_PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Demo Default Search" longDescription="" productCategoryId="SCIPIO_CATALOG1_SEARCH" productCategoryTypeId="SEARCH_CATEGORY"/>
+<ProductCategory categoryName="Scipio Main Quick Add" longDescription="" productCategoryId="SCIPIO_CATALOG1_QADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
+<ProductCategory categoryName="Scipio Quick Add" longDescription="" productCategoryId="SCIPIO_CATALOG1_QADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
+<ProductCategory categoryName="Scipio Test Limited Admin Category" longDescription="" productCategoryId="SCIPIO_TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
+    
+<ProdCatalogCategory prodCatalogId="ScipioDemoCatalog" productCategoryId="SCIPIO_CATALOG1" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+<ProdCatalogCategory prodCatalogId="ScipioDemoCatalog" productCategoryId="SCIPIO_CATALOG1_SEARCH" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
+<ProdCatalogCategory prodCatalogId="ScipioDemoCatalog" productCategoryId="SCIPIO_CATALOG1_QADD1" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+<ProdCatalogCategory prodCatalogId="ScipioDemoCatalog" productCategoryId="SCIPIO_CATALOG1_QADD2" fromDate="2016-01-12 00:00:00.0" sequenceNum="2" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+<ProdCatalogCategory prodCatalogId="ScipioDemoCatalog" productCategoryId="SCIPIO_PROMOTIONS" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
+<ProdCatalogCategory prodCatalogId="ScipioTestCatalog" productCategoryId="SCIPIO_10000" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+<ProdCatalogCategory prodCatalogId="ScipioTestCatalog" productCategoryId="SCIPIO_TSTLTDADMIN" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
+
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_CATALOG1" productCategoryId="SCIPIO_10000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_10000" productCategoryId="SCIPIO_30000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_10000" productCategoryId="SCIPIO_40000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_CATALOG1" productCategoryId="SCIPIO_20000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_20000" productCategoryId="SCIPIO_50000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_20000" productCategoryId="SCIPIO_60000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_30000" productCategoryId="SCIPIO_70000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_30000" productCategoryId="SCIPIO_80000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_70000" productCategoryId="SCIPIO_90000"/>
+
+<!-- Demo data for SCIPIO_FOUNDATION_2 ProductStore -->
+<ProductStore productStoreId="SCIPIO_FOUNDATION_2" storeName="Scipio Foundation - Alternative E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
+        subtitle="Our Passion" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
+        inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        defaultLocaleString="en_US" defaultCurrencyUomId="USD" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
+        headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
+        itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
+        authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
+        authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
+    
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testCCRelease" paymentCustomMethodId="CC_RELEASE_TEST"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture" paymentCustomMethodId="CC_CAPTURE_TEST"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="testCCRefund" paymentCustomMethodId="CC_REFUND_TEST"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="EFT_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveEFTProcessor" paymentCustomMethodId="EFT_AUTH_ALWAYSAPPRO"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveGCProcessor" paymentCustomMethodId="GIFT_AUTH_ALWAYSAPPR"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease" paymentCustomMethodId="GIFT_RELEASE_TEST"/>
+<ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="PAYPAL_CONFIG"/>
+
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_CONFIRM" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice" xslfoAttachScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNoticePdf" subject="SCIPIO ERP - Order Confirmation #${orderId}" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_COMPLETE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice" subject="SCIPIO ERP - Your Order Is Complete #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#BackorderNotice" subject="SCIPIO ERP - Backorder Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice" subject="SCIPIO ERP - Order Change Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_PAYRETRY" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_SHIP_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#ShipmentCompleteNotice" subject="SCIPIO ERP - Shipment Complete Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnAccept" subject="SCIPIO ERP - Return Accepted #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_RTN_COMPLETE" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnComplete" subject="SCIPIO ERP - Return Completed #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_RTN_CANCEL" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnCancel" subject="SCIPIO ERP - Return Cancelled #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_GC_PURCHASE" bodyScreenLocation="component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase" fromAddress="test@scipioerp.com" subject="A Gift From ${senderName}!"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_GC_RELOAD" bodyScreenLocation="component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload" fromAddress="test@scipioerp.com" subject="Gift Card Reload Results"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_TELL_FRIEND" bodyScreenLocation="component://shop/widget/EmailProductScreens.xml#TellFriend" subject="${sendFrom} has sent you a link!" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_PWD_RETRIEVE" bodyScreenLocation="component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail" subject="SCIPIO ERP - Password Reminder (${userLogin.userLoginId})" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_QUO_CONFIRM" bodyScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple" xslfoAttachScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#QuoteReport" subject="SCIPIO ERP - Quote Confirmation #${quoteId}" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PARTY_REGIS_CONFIRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_CUST_REGISTER" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="UPD_PRSNL_INF_CNFRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#ChangePersonalInfoNotification" subject="Personal Information Updated" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_EMAIL_VERIFY" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#VerifyEmailAddressNotification" subject="Email Address Verification" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_CUST_ACTIVATED" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#AccountActivatedNotification" subject="Account Activated" bccAddress="test@scipioerp.com" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="CONT_NOTI_EMAIL" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactUsEmailNotification" subject="Contact-us Information Notification" fromAddress="test@scipioerp.com" />
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="SUB_CONT_LIST_NOTI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListSubscribeEmail" subject="Subscribe Contact List" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="UNSUB_CONT_LIST_VERI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListUnsubscribeVerifyEmail" subject="Verify Unsubscribe Contact List" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="UNSUB_CONT_LIST_NOTI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListUnsubscribeEmail" subject="Unsubscribe Contact List" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="CONT_EMAIL_TEMPLATE" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListEmailTemplate"/>
+
+<ProductStoreFacility productStoreId="SCIPIO_FOUNDATION_2" facilityId="ScipioShopWarehouse" fromDate="2016-01-12 00:00:00.0"/>
+    
+<ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="SCIPIO_FOUNDATION_2" fromDate="2016-01-12 00:00:00.0"/>
+    
+<!-- <ProductStoreKeywordOvrd productStoreId="SCIPIO_FOUNDATION_2" keyword="gizmo" fromDate="2016-01-12 00:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/> -->
+
+<WebSite webSiteId="ScipioAltWebStore" siteName="Scipio Foundation Alternative eCommerce Web Site" productStoreId="SCIPIO_FOUNDATION_2" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" />
+<WebSite webSiteId="ScipioAltWebStoreClone" siteName="Scipio Foundation Alternative Cloned eCommerce Web Site" productStoreId="SCIPIO_FOUNDATION_2" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" />
+
+<ProdCatalog prodCatalogId="ScipioAltDemoCatalog" catalogName="Scipio Foundation Alternative Demo Catalog" useQuickAdd="Y"/>
+<ProdCatalog prodCatalogId="ScipioAltTestCatalog" catalogName="Scipio Foundation Alternative Test Catalog" useQuickAdd="N"/>
+
+<ProductStoreCatalog productStoreId="SCIPIO_FOUNDATION_2" prodCatalogId="ScipioAltDemoCatalog" fromDate="2016-01-12 00:00:00.0" sequenceNum="1"/>
+<ProductStoreCatalog productStoreId="SCIPIO_FOUNDATION_2" prodCatalogId="ScipioAltTestCatalog" fromDate="2016-01-12 00:00:00.0" sequenceNum="2"/>
+
+<ProductCategory categoryName="Scipio Foundation Alternative Demo Browse Root" longDescription="Scipio Foundation Alternative Demo Catalog Primary Browse Root Category" productCategoryId="SCIPIO_ALT_CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Category 10000" longDescription="" primaryParentCategoryId="SCIPIO_ALT_CATALOG1" productCategoryId="SCIPIO_ALT_10000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Category 20000" longDescription="" primaryParentCategoryId="SCIPIO_ALT_CATALOG1" productCategoryId="SCIPIO_ALT_20000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Category 30000" longDescription="" primaryParentCategoryId="SCIPIO_ALT_10000" productCategoryId="SCIPIO_ALT_30000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Category 40000" longDescription="" primaryParentCategoryId="SCIPIO_ALT_10000" productCategoryId="SCIPIO_ALT_40000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Category 50000" longDescription="" primaryParentCategoryId="SCIPIO_ALT_20000" productCategoryId="SCIPIO_ALT_50000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Category 60000" longDescription="" primaryParentCategoryId="SCIPIO_ALT_20000" productCategoryId="SCIPIO_ALT_60000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Category 70000" longDescription="" primaryParentCategoryId="SCIPIO_ALT_30000" productCategoryId="SCIPIO_ALT_70000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Category 80000" longDescription="" primaryParentCategoryId="SCIPIO_ALT_30000" productCategoryId="SCIPIO_ALT_80000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Category 90000" longDescription="" primaryParentCategoryId="SCIPIO_ALT_70000" productCategoryId="SCIPIO_ALT_90000" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Promotions Category" longDescription="" productCategoryId="SCIPIO_ALT_PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Demo Default Search" longDescription="" productCategoryId="SCIPIO_A_CTLG1_SEARCH" productCategoryTypeId="SEARCH_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Main Quick Add" longDescription="" productCategoryId="SCIPIO_A_CTLG1_QADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Quick Add" longDescription="" productCategoryId="SCIPIO_A_CTLG1_QADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
+<ProductCategory categoryName="Scipio Alternative Test Limited Admin Category" longDescription="" productCategoryId="SCIPIO_A_TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
+    
+<ProdCatalogCategory prodCatalogId="ScipioAltDemoCatalog" productCategoryId="SCIPIO_ALT_CATALOG1" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+<ProdCatalogCategory prodCatalogId="ScipioAltDemoCatalog" productCategoryId="SCIPIO_A_CTLG1_SEARCH" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
+<ProdCatalogCategory prodCatalogId="ScipioAltDemoCatalog" productCategoryId="SCIPIO_A_CTLG1_QADD1" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+<ProdCatalogCategory prodCatalogId="ScipioAltDemoCatalog" productCategoryId="SCIPIO_A_CTLG1_QADD2" fromDate="2016-01-12 00:00:00.0" sequenceNum="2" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+<ProdCatalogCategory prodCatalogId="ScipioAltDemoCatalog" productCategoryId="SCIPIO_ALT_PROMOTIONS" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
+<ProdCatalogCategory prodCatalogId="ScipioAltTestCatalog" productCategoryId="SCIPIO_ALT_10000" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+<ProdCatalogCategory prodCatalogId="ScipioAltTestCatalog" productCategoryId="SCIPIO_A_TSTLTDADMIN" fromDate="2016-01-12 00:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
+
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_ALT_CATALOG1" productCategoryId="SCIPIO_ALT_10000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_ALT_10000" productCategoryId="SCIPIO_ALT_30000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_ALT_10000" productCategoryId="SCIPIO_ALT_40000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_ALT_CATALOG1" productCategoryId="SCIPIO_ALT_20000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_ALT_20000" productCategoryId="SCIPIO_ALT_50000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_ALT_20000" productCategoryId="SCIPIO_ALT_60000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_ALT_30000" productCategoryId="SCIPIO_ALT_70000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_ALT_30000" productCategoryId="SCIPIO_ALT_80000"/>
+<ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_ALT_70000" productCategoryId="SCIPIO_ALT_90000"/>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+
+    <!-- Regular Catalog Products -->
+    <Product productId="PH-1000" smallImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/full.jpg"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-AIMG1" dataResourceName="PH-1000 Additional Image 1" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-AIMG2" dataResourceName="PH-1000 Additional Image 2" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-AIMG3" dataResourceName="PH-1000 Additional Image 3" isPublic="Y"/>
+    <ElectronicText dataResourceId="PH-1000-AIMG1" textData="/images/products/shop/gallery/01/tech/iphone-01/large.jpg"/>
+    <ElectronicText dataResourceId="PH-1000-AIMG2" textData="/images/products/shop/gallery/01/tech/iphone-02/large.jpg"/>
+    <ElectronicText dataResourceId="PH-1000-AIMG3" textData="/images/products/shop/gallery/01/tech/iphone-05/large.jpg"/>
+    <Content contentId="PH-1000-AIMG1" contentTypeId="DOCUMENT" dataResourceId="PH-1000-AIMG1" contentName="PH-1000 Additional Image 1"/>
+    <Content contentId="PH-1000-AIMG2" contentTypeId="DOCUMENT" dataResourceId="PH-1000-AIMG2" contentName="PH-1000 Additional Image 2"/>
+    <Content contentId="PH-1000-AIMG3" contentTypeId="DOCUMENT" dataResourceId="PH-1000-AIMG3" contentName="PH-1000 Additional Image 3"/>
+    <ProductContent productId="PH-1000" contentId="PH-1000-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1000" contentId="PH-1000-AIMG2" productContentTypeId="ADDITIONAL_IMAGE_2" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1000" contentId="PH-1000-AIMG3" productContentTypeId="ADDITIONAL_IMAGE_3" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Product productId="PH-1001" smallImageUrl="/images/products/shop/gallery/01/tech/iphone-03/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/iphone-03/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone-03/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/iphone-03/full.jpg"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG1" dataResourceName="PH-1001 Additional Image 1" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG2" dataResourceName="PH-1001 Additional Image 2" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG3" dataResourceName="PH-1001 Additional Image 3" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG4" dataResourceName="PH-1001 Additional Image 4" isPublic="Y"/>
+    <ElectronicText dataResourceId="PH-1001-AIMG1" textData="/images/products/shop/gallery/01/tech/iphone-06/large.jpg"/>
+    <ElectronicText dataResourceId="PH-1001-AIMG2" textData="/images/products/shop/gallery/01/tech/iphone-07/large.jpg"/>
+    <ElectronicText dataResourceId="PH-1001-AIMG3" textData="/images/products/shop/gallery/01/tech/iphone-08/large.jpg"/>
+    <ElectronicText dataResourceId="PH-1001-AIMG4" textData="/images/products/shop/gallery/01/tech/iphone-09/large.jpg"/>
+    <Content contentId="PH-1001-AIMG1" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG1" contentName="PH-1001 Additional Image 1"/>
+    <Content contentId="PH-1001-AIMG2" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG2" contentName="PH-1001 Additional Image 2"/>
+    <Content contentId="PH-1001-AIMG3" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG3" contentName="PH-1001 Additional Image 3"/>
+    <Content contentId="PH-1001-AIMG4" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG4" contentName="PH-1001 Additional Image 4"/>
+    <ProductContent productId="PH-1001" contentId="PH-1001-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1001" contentId="PH-1001-AIMG2" productContentTypeId="ADDITIONAL_IMAGE_2" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1001" contentId="PH-1001-AIMG3" productContentTypeId="ADDITIONAL_IMAGE_3" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1001" contentId="PH-1001-AIMG4" productContentTypeId="ADDITIONAL_IMAGE_4" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Product productId="PH-1004" smallImageUrl="/images/products/shop/gallery/01/tech/iphone-04/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/iphone-04/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone-04/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/iphone-04/full.jpg"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG1" dataResourceName="PH-1004 Additional Image 1" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG2" dataResourceName="PH-1004 Additional Image 2" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG3" dataResourceName="PH-1004 Additional Image 3" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG4" dataResourceName="PH-1004 Additional Image 4" isPublic="Y"/>
+    <ElectronicText dataResourceId="PH-1004-AIMG1" textData="/images/products/shop/gallery/01/tech/smartphone-03/large.jpg"/>
+    <ElectronicText dataResourceId="PH-1004-AIMG2" textData="/images/products/shop/gallery/01/tech/smartphone-04/large.jpg"/>
+    <ElectronicText dataResourceId="PH-1004-AIMG3" textData="/images/products/shop/gallery/01/tech/smartphone-05/large.jpg"/>
+    <ElectronicText dataResourceId="PH-1004-AIMG4" textData="/images/products/shop/gallery/01/tech/smartphone-06/large.jpg"/>
+    <Content contentId="PH-1004-AIMG1" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG1" contentName="PH-1004 Additional Image 1"/>
+    <Content contentId="PH-1004-AIMG2" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG2" contentName="PH-1004 Additional Image 2"/>
+    <Content contentId="PH-1004-AIMG3" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG3" contentName="PH-1004 Additional Image 3"/>
+    <Content contentId="PH-1004-AIMG4" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG4" contentName="PH-1004 Additional Image 4"/>
+    <ProductContent productId="PH-1004" contentId="PH-1004-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1004" contentId="PH-1004-AIMG2" productContentTypeId="ADDITIONAL_IMAGE_2" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1004" contentId="PH-1004-AIMG3" productContentTypeId="ADDITIONAL_IMAGE_3" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1004" contentId="PH-1004-AIMG4" productContentTypeId="ADDITIONAL_IMAGE_4" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Product productId="PH-1005" smallImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/large.jpg" detailImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/full.jpg"/>
+
+    <Product productId="CL-5005" smallImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-01/full.jpg"/>
+    <Product productId="SW-1006" smallImageUrl="/images/products/shop/gallery/02/tech/software-417880/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/tech/software-417880/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/tech/software-417880/large.jpg" detailImageUrl="/images/products/shop/gallery/02/tech/software-417880/full.jpg"/>
+    <Product productId="CD-2002" smallImageUrl="/images/products/shop/gallery/02/music/cd-158817/small.png" mediumImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/large.jpg" detailImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/full.jpg"/>
+
+    <Product productId="CAM-2644" smallImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-02/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-04/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-04/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-04/full.jpg"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG1" dataResourceName="CAM-2644 Additional Image 1" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG2" dataResourceName="CAM-2644 Additional Image 2" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG3" dataResourceName="CAM-2644 Additional Image 3" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG4" dataResourceName="CAM-2644 Additional Image 4" isPublic="Y"/>
+    <ElectronicText dataResourceId="CAM-2644-AIMG1" textData="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-01/large.jpg"/>
+    <ElectronicText dataResourceId="CAM-2644-AIMG2" textData="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-03/large.jpg"/>
+    <ElectronicText dataResourceId="CAM-2644-AIMG3" textData="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-04/large.jpg"/>
+    <ElectronicText dataResourceId="CAM-2644-AIMG4" textData="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-05/large.jpg"/>
+    <Content contentId="CAM-2644-AIMG1" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG1" contentName="CAM-2644 Additional Image 1"/>
+    <Content contentId="CAM-2644-AIMG2" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG2" contentName="CAM-2644 Additional Image 2"/>
+    <Content contentId="CAM-2644-AIMG3" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG3" contentName="CAM-2644 Additional Image 3"/>
+    <Content contentId="CAM-2644-AIMG4" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG4" contentName="CAM-2644 Additional Image 4"/>
+    <ProductContent productId="CAM-2644" contentId="CAM-2644-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="CAM-2644" contentId="CAM-2644-AIMG2" productContentTypeId="ADDITIONAL_IMAGE_2" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="CAM-2644" contentId="CAM-2644-AIMG3" productContentTypeId="ADDITIONAL_IMAGE_3" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="CAM-2644" contentId="CAM-2644-AIMG4" productContentTypeId="ADDITIONAL_IMAGE_4" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Product productId="CL-7000" smallImageUrl="/images/products/shop/gallery/02/clothing/blouse-792803/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/clothing/blouse-792803/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/clothing/blouse-792803/large.jpg" detailImageUrl="/images/products/shop/gallery/02/clothing/blouse-792803/full.jpg"/>
+    <Product productId="CL-8544" smallImageUrl="/images/products/shop/gallery/02/clothing/socks-1123564/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/clothing/socks-1123564/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/clothing/socks-1123564/large.jpg" detailImageUrl="/images/products/shop/gallery/02/clothing/socks-1123564/full.jpg"/>
+    <Product productId="MPL-9290" smallImageUrl="/images/products/shop/gallery/02/tech/mp3-player-8609/small.png" mediumImageUrl="/images/products/shop/gallery/02/tech/mp3-player-8609/medium.png" largeImageUrl="/images/products/shop/gallery/02/tech/mp3-player-8609/large.png" detailImageUrl="/images/products/shop/gallery/02/tech/mp3-player-8609/full.png"/>
+    <Product productId="CDR-1111" smallImageUrl="/images/products/shop/gallery/02/tech/compact-disk-1108240/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/tech/compact-disk-1108240/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/tech/compact-disk-1108240/large.jpg" detailImageUrl="/images/products/shop/gallery/02/tech/compact-disk-1108240/full.jpg"/>
+    <Product productId="VH-9943" smallImageUrl="/images/products/shop/gallery/02/auto/dumptruck-1201106/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/auto/dumptruck-1201106/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/auto/dumptruck-1201106/large.jpg" detailImageUrl="/images/products/shop/gallery/02/auto/dumptruck-1201106/full.jpg"/>
+    <Product productId="VH-9944" smallImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/large.jpg" detailImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/full.jpg"/>
+
+    <Product productId="KB-5569" smallImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/full.jpg"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="KB-5569-AIMG1" dataResourceName="KB-5569 Additional Image 1" isPublic="Y"/>
+    <ElectronicText dataResourceId="KB-5569-AIMG1" textData="/images/products/shop/gallery/01/tech/keyboard-01/large.jpg"/>
+    <Content contentId="KB-5569-AIMG1" contentTypeId="DOCUMENT" dataResourceId="KB-5569-AIMG1" contentName="KB-5569 Additional Image 1"/>
+    <ProductContent productId="KB-5569" contentId="KB-5569-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Product productId="NEWS-01-1MO" smallImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/small.png" mediumImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/medium.png" largeImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/large.png" detailImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/full.png"/>
+    <Product productId="MP3-1000" smallImageUrl="/images/products/shop/gallery/02/music/mp3-685022/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/large.jpg" detailImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/full.jpg"/>
+    <Product productId="EL-BASKET" smallImageUrl="/images/products/shop/gallery/01/tech/ipad-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/ipad-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/ipad-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/ipad-01/full.jpg"/>
+    <Product productId="EL-BASKET-PICK" smallImageUrl="/images/products/shop/gallery/01/tech/ipad-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/ipad-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/ipad-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/ipad-01/full.jpg"/>
+  
+    <Product productId="PC-1000" smallImageUrl="/images/products/shop/gallery/02/tech/computer-670185/small.png" mediumImageUrl="/images/products/shop/gallery/02/tech/computer-670185/medium.png" largeImageUrl="/images/products/shop/gallery/02/tech/computer-670185/large.png" detailImageUrl="/images/products/shop/gallery/02/tech/computer-670185/full.png"/>
+    <Product productId="ENCHL-01" smallImageUrl="/images/products/shop/gallery/02/food/mexican-245240/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/food/enchilada-245236/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/food/enchilada-245236/large.jpg" detailImageUrl="/images/products/shop/gallery/02/food/enchilada-245236/full.jpg"/>
+    <Product productId="PIZZA-01" smallImageUrl="/images/products/shop/gallery/02/food/american-1239081/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/food/pizza-329523/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/food/pizza-329523/large.jpg" detailImageUrl="/images/products/shop/gallery/02/food/pizza-329523/full.jpg"/>
+    
+    <Product productId="GC-001" smallImageUrl="/images/products/shop/gallery/02/store/coupon-883638/small.png" mediumImageUrl="/images/products/shop/gallery/02/store/coupon-883638/medium.png" largeImageUrl="/images/products/shop/gallery/02/store/coupon-883638/large.png" detailImageUrl="/images/products/shop/gallery/02/store/coupon-883638/full.png"/>
+    <Product productId="GC-002" smallImageUrl="/images/products/shop/gallery/02/store/coupon-883642/small.png" mediumImageUrl="/images/products/shop/gallery/02/store/coupon-883642/medium.png" largeImageUrl="/images/products/shop/gallery/02/store/coupon-883642/large.png" detailImageUrl="/images/products/shop/gallery/02/store/coupon-883642/full.png"/>
+    
+    <Product productId="CL-1000" smallImageUrl="/images/products/shop/gallery/02/clothing/t-shirt-template-1093333/small.png" mediumImageUrl="/images/products/shop/gallery/02/clothing/t-shirt-template-1093333/medium.png" largeImageUrl="/images/products/shop/gallery/02/clothing/t-shirt-template-1093333/large.png" detailImageUrl="/images/products/shop/gallery/02/clothing/t-shirt-template-1093333/full.png"/>
+  
+    <!-- Templated Catalog Products -->
+    <Product productId="FD-1000" smallImageUrl="/images/products/shop/gallery/01/food/bananas-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/bananas-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/bananas-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/bananas-01/full.jpg"/>
+    <Product productId="FD-1001" smallImageUrl="/images/products/shop/gallery/01/food/oranges-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/oranges-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/oranges-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/oranges-01/full.jpg"/>
+    <Product productId="FD-1002" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1003" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1004" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1005" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1006" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1007" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1008" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1009" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1010" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1011" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1012" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1013" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1014" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1015" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1016" smallImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/assorted-vegetables-01/full.jpg"/>
+    <Product productId="FD-1017" smallImageUrl="/images/products/shop/gallery/01/food/green-apple-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/green-apple-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/green-apple-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/green-apple-01/full.jpg"/>
+    <Product productId="FD-1050" smallImageUrl="/images/products/shop/gallery/01/food/srawberry-cream-cake-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/srawberry-cream-cake-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/srawberry-cream-cake-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/srawberry-cream-cake-01/full.jpg"/>
+    <Product productId="FD-1060" smallImageUrl="/images/products/shop/gallery/01/food/shrimp-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/shrimp-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/shrimp-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/shrimp-01/full.jpg"/>
+    <Product productId="FD-1061" smallImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/full.jpg"  />
+    <Product productId="FD-1062" smallImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/full.jpg"  />
+    <Product productId="FD-1063" smallImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/full.jpg"  />
+    <Product productId="FD-1064" smallImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/full.jpg"  />
+    <Product productId="FD-1065" smallImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/sea-bass-01/full.jpg"  />
+    <Product productId="FD-1066" smallImageUrl="/images/products/shop/gallery/01/food/shrimp-02/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/food/shrimp-02/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/food/shrimp-02/large.jpg" detailImageUrl="/images/products/shop/gallery/01/food/shrimp-02/full.jpg"/>
+
+    <Product productId="PR-1000" smallImageUrl="/images/products/shop/gallery/02/tech/mouse-285123/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/tech/mouse-285123/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/tech/mouse-285123/large.jpg" detailImageUrl="/images/products/shop/gallery/02/tech/mouse-285123/full.jpg"/>
+    <Product productId="CAM-7000" smallImageUrl="/images/products/shop/gallery/02/tech/film-147137/small.png" mediumImageUrl="/images/products/shop/gallery/02/tech/film-147137/medium.png" largeImageUrl="/images/products/shop/gallery/02/tech/film-147137/large.png" detailImageUrl="/images/products/shop/gallery/02/tech/film-147137/full.png"/>
+
+    <Product productId="SV-1000" smallImageUrl="/images/products/shop/gallery/02/tech/film-147137/small.png" mediumImageUrl="/images/products/shop/gallery/02/tech/film-147137/medium.png" largeImageUrl="/images/products/shop/gallery/02/tech/film-147137/large.png" detailImageUrl="/images/products/shop/gallery/02/tech/film-147137/full.png"/>
+    <Product productId="SV-1001" smallImageUrl="/images/products/shop/gallery/02/clothing/fashion-1031469/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/clothing/fashion-1031469/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/clothing/fashion-1031469/large.jpg" detailImageUrl="/images/products/shop/gallery/02/clothing/fashion-1031469/full.jpg"/>
+    <Product productId="CSV-1001" smallImageUrl="/images/products/shop/gallery/02/misc/book-blur-1283865/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/misc/book-blur-1283865/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/misc/book-blur-1283865/large.jpg" detailImageUrl="/images/products/shop/gallery/02/misc/book-blur-1283865/full.jpg"/>
+
+    <Product productId="RT-1000" smallImageUrl="/images/products/shop/gallery/02/travel/canoe-983864/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/canoe-983864/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/canoe-983864/large.jpg" detailImageUrl="/images/products/shop/gallery/02/travel/canoe-983864/full.jpg"/>
+
+    <!-- Advanced/Extra/Misc/Other Products (dispersed in files other than DemoCatalogData.xml) -->
+    <Product productId="FA-001" smallImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/large.jpg" detailImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/full.jpg"/>
+    <Product productId="FA-001-30" smallImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/large.jpg" detailImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/full.jpg"/>
+    <Product productId="FA-001-50" smallImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/large.jpg" detailImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/full.jpg"/>
+    <Product productId="FA-001-O" smallImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/large.jpg" detailImageUrl="/images/products/shop/gallery/02/finance/dollar-544956/full.jpg"/>
+
+    <Product productId="dropShip1" smallImageUrl="/images/products/dropShip1/small.jpg" mediumImageUrl="/images/products/dropShip1/medium.jpg" largeImageUrl="/images/products/dropShip1/large.jpg"/>
+    <Product productId="dropShip2" smallImageUrl="/images/products/dropShip2/small.jpg" mediumImageUrl="/images/products/dropShip2/medium.jpg" largeImageUrl="/images/products/dropShip2/large.jpg"/>
+    <Product productId="dropShip3" smallImageUrl="/images/products/dropShip3/small.jpg" mediumImageUrl="/images/products/dropShip3/medium.jpg" largeImageUrl="/images/products/dropShip3/large.jpg"/>
+    <Product productId="orderWhenSold" smallImageUrl="/images/products/orderWhenSold/small.jpg" mediumImageUrl="/images/products/orderWhenSold/medium.jpg" largeImageUrl="/images/products/orderWhenSold/large.jpg"/>
+
+    <Product productId="PROD_MANUF"/>
+    <Product productId="MAT_A_COST"/>
+    <Product productId="MAT_B_COST"/>
+
+    <Product productId="RoomStd" smallImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/large.jpg" detailImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/full.jpg"/>
+    <Product productId="RoomLux" smallImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/large.jpg" detailImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/full.jpg"/>
+    <Product productId="RoomLarge" smallImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/large.jpg" detailImageUrl="/images/products/shop/gallery/02/travel/hotel-951598/full.jpg"/>
+    <Product productId="BoatRowSimple" smallImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/large.jpg" detailImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/full.jpg"/>
+    <Product productId="BoatRowSimple" smallImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/large.jpg" detailImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/full.jpg"/>
+    <Product productId="Cap" smallImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-03/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-03/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-03/large.jpg" detailImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-03/full.jpg"/>
+    
+</entity-engine-xml>

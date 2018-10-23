@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="FindContacts">
+        <section>
+            <actions>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="currentUrl" value="FindContacts"/>
+                <set field="activeSubMenuItem" value="Contacts"/>
+                <script lang="groovy"><![CDATA[
+                    session.setAttribute('contactDescription', context.activeSubMenuItem)
+                    session.removeAttribute('accountDescription')
+                    session.removeAttribute('leadDescription')
+                ]]></script>
+                <set field="title" value="${uiLabelMap.SfaContacts}"/>
+            </actions>
+            <widgets>
+                <!--<decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">-->
+                <decorator-screen name="CommonContactDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-menu name="ContactSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <container>
+                            <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                <decorator-section name="search-options">
+                                    <!-- <include-menu name="ContactFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                                    <include-form name="FindContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                </decorator-section>
+                                <decorator-section name="search-results">
+                                    <section>
+                                        <condition>
+                                            <or>
+                                                <if-empty field="parameters.all"/>
+                                                <if-compare field="parameters.all" operator="equals" value="true"/>
+                                            </or>
+                                        </condition>
+                                        <widgets>
+                                            <!-- list all contacts -->
+                                            <!-- <label style="heading" text="${uiLabelMap.SfaAllContacts}"/> -->
+                                            <include-form name="ListContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                        </widgets>
+                                        <fail-widgets>
+                                            <!-- list my contacts -->
+                                            <!-- <label style="heading" text="${uiLabelMap.SfaMyContacts}"/> -->
+                                            <include-form name="ListMyContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                        </fail-widgets>
+                                    </section>
+                                </decorator-section>
+                            </decorator-screen>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewContact">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleCreateContact"/>
+                <set field="activeSubMenuItem" value="Contacts"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-form name="NewContact" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MergeContacts">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleCreateContact"/>
+                <!--<set field="activeSubMenuItem" value="Contacts"/>-->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/sfa/SfaMenus.xml#Contact"/>
+                <set field="activeSubMenuItem" value="MergeContacts"/>
+                <script location="component://marketing/webapp/sfa/WEB-INF/action/MergeContacts.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.SfaMergeContacts}">
+                            <include-form name="MergeContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                        </screenlet>
+                        <section>
+                            <condition>
+                                <if-compare-field field="parameters.partyIdFrom" operator="not-equals" to-field="parameters.partyIdTo"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="contactInfoList" /></not>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet title="${uiLabelMap.SfaMergeContacts}">
+                                            <platform-specific>
+                                                <html><html-template location="component://marketing/webapp/sfa/contact/mergeContacts.ftl"/></html>
+                                            </platform-specific>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label text="${uiLabelMap.SfaCanNotMergeSameContact}"></label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="NewContactFromVCard">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleCreateContactFromVCard"/>
+                <set field="activeSubMenuItem" value="Contacts"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="common-msg-warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.CommonUnsupportedFunction}</label>
+                        <screenlet>
+                            <container><label text="${uiLabelMap.SfaAutoCreateContactByImportingVCard}"/></container>
+                            <include-form name="NewContactFromVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: 2018-09-12: Moved here from original stock location CommonScreens.xml -->
+    <screen name="ViewPartiesCreatedByVCard">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleCreateContactFromVCard"/>
+                <set field="activeSubMenuItem" value="Contacts"/>
+                <!-- SCIPIO: TODO?: this is a very limited screen, only shows results from import,
+                    cannot list those imported before... -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="common-msg-warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.CommonUnsupportedFunction}</label>
+                        <section>
+                            <condition>
+                                <or>
+                                    <not><if-empty field="parameters.partiesCreated"/></not>
+                                    <not><if-empty field="parameters.partiesExist"/></not>
+                                </or>
+                            </condition>
+                            <actions>
+                                <set field="partiesCreated" from-field="parameters.partiesCreated"/>
+                                <set field="partiesExist" from-field="parameters.partiesExist"/>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.MarketingPartiesLoaded}">
+                                    <include-form name="ViewPartiesCreatedByVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.MarketingPartiesNotLoadedAlreadyExist}">
+                                    <include-form name="ViewPartiesExistInVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-result-norecord" text="${uiLabelMap.MarketingNoPartyLoad}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

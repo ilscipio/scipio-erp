@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="MyTimesheets">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="MyTimesheets"/><!-- value="mytime" -->
+                <set field="titleProperty" value="WorkEffortMyTimesheets"/>
+
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <entity-condition entity-name="Timesheet" list="currentTimesheetList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="partyId" from-field="userLogin.partyId"/>
+                        <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="thruDate" operator="greater-equals" from-field="nowTimestamp"/>
+                            <condition-expr field-name="thruDate" from-field="null"/>
+                        </condition-list>
+                    </condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.WorkEffortMyCurrentTimesheets}">
+                            <!--<container style="button-bar">
+                                <link text="${uiLabelMap.PageTitleCreateWeekTimesheet}" target="createTimesheetForThisWeek" style="${styles.link_nav} ${styles.action_add}">
+                                    <parameter param-name="partyId" from-field="userLogin.partyId"/>
+                                </link>
+                                <link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}">
+                                    <parameter param-name="partyId" from-field="userLogin.partyId"/>
+                                </link>
+                            </container>-->
+                            <iterate-section entry="currentTimesheet" list="currentTimesheetList">
+                                <section>
+                                    <actions>
+                                        <entity-condition entity-name="TimeEntry" list="currentTimeEntryList">
+                                            <condition-list combine="and">
+                                                <condition-expr field-name="partyId" from-field="userLogin.partyId"/>
+                                                <condition-expr field-name="timesheetId" from-field="currentTimesheet.timesheetId"/>
+                                            </condition-list>
+                                        </entity-condition>
+                                    </actions>
+                                    <widgets>
+                                        <screenlet>
+                                            <platform-specific><html><html-template><![CDATA[
+                                                <@heading>${uiLabelMap.WorkEffortTimesheet}: ${currentTimesheet.fromDate!} - ${currentTimesheet.thruDate!}
+                                                    <a href="<@ofbizUrl uri=('EditTimesheet?timesheetId='+rawString(currentTimesheet.timesheetId)) escapeAs='html'/>">[${currentTimesheet.timesheetId}]</a></@heading>
+                                                <#if currentTimesheet.comments?has_content><p>${currentTimesheet.comments}</p></#if>
+                                            ]]></html-template></html></platform-specific>
+                                            <!--<container>
+                                                <label style="heading" text="${uiLabelMap.WorkEffortTimesheet}: ${currentTimesheet.fromDate} ${uiLabelMap.CommonThru} ${currentTimesheet.thruDate} ${currentTimesheet.comments}"/>
+                                                <link target="EditTimesheet" text="${currentTimesheet.timesheetId}" style="${styles.link_nav_info_id}">
+                                                    <parameter param-name="timesheetId" from-field="currentTimesheet.timesheetId"/>
+                                                </link>
+                                            </container>-->
+                                            <iterate-section entry="currentTimeEntry" list="currentTimeEntryList">
+                                                <section>
+                                                    <actions>
+                                                        <entity-one entity-name="RateType" value-field="currentRateType" auto-field-map="false">
+                                                            <field-map field-name="rateTypeId" from-field="currentTimeEntry.rateTypeId"/>
+                                                        </entity-one>
+                                                    </actions>
+                                                    <widgets>
+                                                        <container>
+                                                            <label text="${uiLabelMap.WorkEffortTimesheetTimeEntry} ${uiLabelMap.CommonFor} ${currentTimeEntry.fromDate} "/>
+                                                            <label style="tableheadtext" text="${currentTimeEntry.hours} ${uiLabelMap.WorkEffortTimesheetHours} "/>
+                                                            <label text="${currentTimeEntry.comments} [${currentRateType.description}]"/>
+                                                            <section>
+                                                                <condition><not><if-empty field="currentTimeEntry.workEffortId"/></not></condition>
+                                                                <widgets>
+                                                                    <link target="WorkEffortSummary" text="${uiLabelMap.WorkEffortWorkEffort}: ${currentTimeEntry.workEffortId}" style="${styles.link_nav_info_id_long}">
+                                                                        <parameter param-name="workEffortId" from-field="currentTimeEntry.workEffortId"/>
+                                                                    </link>
+                                                                </widgets>
+                                                            </section>
+                                                        </container>
+                                                    </widgets>
+                                                </section>
+                                            </iterate-section>
+                                            <section>
+                                                <condition><if-compare-field field="parameters.showQuickEntry" operator="equals" to-field="currentTimesheet.timesheetId"/></condition>
+                                                <widgets>
+                                                    <include-form name="QuickCreateTimeEntry" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                                </widgets>
+                                                <fail-widgets>
+                                                    <include-menu name="MyCurrentTimesheetSubTabBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
+                                                    <!--<container>
+                                                        <link target="MyTimesheets" text="${uiLabelMap.WorkEffortTimesheetQuickTimeEntry}" style="${styles.link_nav} ${styles.action_view}">
+                                                            <parameter param-name="showQuickEntry" from-field="currentTimesheet.timesheetId"/>
+                                                        </link>
+                                                        <link target="EditTimesheetEntries" text="${uiLabelMap.WorkEffortTimesheetTimeEntries}" style="${styles.link_nav} ${styles.action_view}">
+                                                            <parameter param-name="timesheetId" from-field="currentTimesheet.timesheetId"/>
+                                                        </link>
+                                                    </container>-->
+                                                </fail-widgets>
+                                            </section>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </iterate-section>
+                        </screenlet>
+                        <!-- createQuickTimeEntry -->
+                        <screenlet title="${uiLabelMap.WorkEffortMyRates}">
+                            <include-form name="ListMyRates" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.WorkEffortMyTimesheets}">
+                            <include-form name="ListMyTimesheets" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindTimesheet">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindTimesheet"/>
+                <set field="activeSubMenuItem" value="FindTimesheet"/>
+                <set field="labelTitleProperty" value="PageTitleFindTimesheet"/>
+
+                <set field="timesheetId" from-field="parameters.timesheetId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet><!-- title="${uiLabelMap.PageTitleFindTimesheet}" -->
+                            <!--<container style="button-bar">
+                                <link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}"/>
+                            </container>-->
+                            <include-form name="FindTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
+                        <screenlet><!-- title="${uiLabelMap.PageTitleFindTimesheet}" -->
+                            <include-form name="ListFindTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditTimesheet">
+        <section>
+            <actions>
+                <set field="timesheetId" from-field="parameters.timesheetId"/>
+                <entity-one entity-name="Timesheet" value-field="timesheet"/>
+                
+                <set field="titleProperty" value="${groovy: context.timesheet ? 'PageTitleEditTimesheet' : 'PageTitleAddTimesheet'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.timesheet ? 'Timesheet' : 'NewTimesheet'}"/>
+                <set field="labelTitleProperty" from-field="titleProperty"/>
+                <set field="isEditTimesheet" type="Boolean" value="true"/><!-- SCIPIO: lame workaround for menu -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-empty field="timesheet"/>
+                            </condition>
+                            <widgets>
+                                <screenlet><!-- title="${uiLabelMap.PageTitleAddTimesheet}" -->
+                                    <include-form name="EditTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet><!-- title="${uiLabelMap.PageTitleEditTimesheet}" -->
+                                    <!--<container style="button-bar">
+                                        <link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}"/>
+                                    </container>-->
+                                    <include-form name="EditTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.PageTitleAddTimesheetToInvoice}">
+                                    <include-form name="AddTimesheetToInvoice" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.PageTitleDisplayTimesheetEntries}">
+                                    <!--<container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}" /></container>-->
+                                    <include-form name="DisplayTimesheetEntries" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.PageTitleAddTimesheetToNewInvoice}">
+                                    <include-form name="AddTimesheetToNewInvoice" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditTimesheetRoles">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditTimesheetRoles"/>
+                <set field="activeSubMenuItem" value="TimesheetRoles"/>
+                <set field="labelTitleProperty" value="PageTitleEditTimesheetRoles"/>
+
+                <set field="timesheetId" from-field="parameters.timesheetId"/>
+                <entity-one entity-name="Timesheet" value-field="timesheet"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet><!-- title="${uiLabelMap.PageTitleEditTimesheetRoles}" -->
+                            <!--<container style="button-bar">
+                                <link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}"/>
+                            </container>-->
+                            <include-form name="ListTimesheetRoles" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleAddTimesheetRoles}">
+                            <include-form name="AddTimesheetRole" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditTimesheetEntries">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditTimesheetEntries"/>
+                <set field="activeSubMenuItem" value="TimesheetEntries"/>
+                <set field="labelTitleProperty" value="PageTitleEditTimesheetEntries"/>
+
+                <set field="timesheetId" from-field="parameters.timesheetId"/>
+                <entity-one entity-name="Timesheet" value-field="timesheet"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet><!-- title="${uiLabelMap.PageTitleEditTimesheetEntries}" -->
+                            <!--<container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}"/></container>-->
+                            <include-form name="ListTimesheetEntries" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleAddTimesheetEntries}">
+                            <include-form name="AddTimesheetEntry" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

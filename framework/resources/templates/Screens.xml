@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="TOP"/><!-- selects a sub-menu in the main complex/sidebar menu(s) (or TOP special value for the top level) -->
+                <set field="activeSubMenuItem" value="main"/><!-- selects a menu-item in the (sub-)menu designated by activeSubMenu, within the main complex/sidebar menu(s) -->
+            </actions>
+            <widgets>
+                <!-- SCIPIO: NOTE: The Common@component-resource-name@AppDecorator decorator is meant to be included using hardcoded location -->
+                <decorator-screen name="Common@component-resource-name@AppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>

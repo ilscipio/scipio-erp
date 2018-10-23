@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<project name="OFBiz - Base" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+    <import file="../../common.xml"/>
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <property name="desc" value="Base API"/>
+    <property name="name" value="ofbiz-base"/>
+
+    <path id="local.class.path">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+        <fileset dir="${lib.dir}/commons" includes="*.jar"/>
+        <fileset dir="${lib.dir}/j2eespecs" includes="*.jar"/>
+        <fileset dir="${lib.dir}/scripting" includes="*.jar"/>
+        <fileset dir="${lib.dir}/media" includes="*.jar"/>
+        <fileset dir="../start/build/lib" includes="*.jar"/>
+    </path>
+
+    <filelist id="test.classes" dir="${src.dir}">
+        <file name="org/ofbiz/base/lang/test/ComparableRangeTests.java"/>
+        <file name="org/ofbiz/base/util/test/IndentingWriterTests.java"/>
+        <file name="org/ofbiz/base/util/test/ObjectTypeTests.java"/>
+        <file name="org/ofbiz/base/util/test/UtilMiscTests.java"/>
+        <file name="org/ofbiz/base/util/test/UtilObjectTests.java"/>
+        <file name="org/ofbiz/base/util/string/test/FlexibleStringExpanderTests.java"/>
+        <file name="org/ofbiz/base/util/collections/test/FlexibleMapAccessorTests.java"/>
+        <file name="org/ofbiz/base/util/test/TimeDurationTests.java"/>
+        <file name="org/ofbiz/base/util/test/StringUtilTests.java"/>
+        <file name="org/ofbiz/base/util/cache/test/UtilCacheTests.java"/>
+        <file name="org/ofbiz/base/json/test/JSONTests.java"/>
+        <file name="org/ofbiz/base/conversion/test/TestBooleanConverters.java"/>
+        <file name="org/ofbiz/base/conversion/test/DateTimeTests.java"/>
+        <file name="org/ofbiz/base/conversion/test/MiscTests.java"/>
+        <file name="org/ofbiz/base/conversion/test/TestJSONConverters.java"/>
+        <file name="org/ofbiz/base/util/test/UtilIOTests.java"/>
+        <file name="org/ofbiz/base/test/BaseUnitTests.java"/>
+        <file name="org/ofbiz/base/util/collections/test/GenericMapTest.java"/>
+    </filelist>
+
+    <patternset id="cobertura-src-dirs">
+        <include name="build/gen-src"/>
+        <include name="src"/>
+    </patternset>
+
+    <target name="init">
+        <!-- make sure we have crypto packages available -->
+        <condition property="exclude.crypto" value="org/ofbiz/base/crypto/**">
+            <not>
+                <available classname="javax.crypto.Cipher" classpathref="local.class.path"/>
+            </not>
+        </condition>
+        <condition property="exclude.cobertura" value="org/ofbiz/base/config/Cobertura*.java">
+            <not>
+                <available classname="net.sourceforge.cobertura.instrument.ClassInstrumenter" classpathref="cobertura.class.path"/>
+            </not>
+        </condition>
+        <patternset id="src.exc.set">
+            <exclude name="${exclude.cobertura}"/>
+            <exclude name="${exclude.crypto}"/>
+            <exclude name="org/ofbiz/base/util/OfbizJsBsfEngine.java"/>
+        </patternset>
+    </target>
+
+    <target name="jar" depends="classes">
+        <main-jar>
+            <main-elements>
+                <!-- also put the DTDs in the jar file... -->
+                <fileset dir="${dtd.dir}" includes="*.dtd"/>
+                <service type="org.ofbiz.base.conversion.ConverterLoader">
+                    <provider classname="org.ofbiz.base.conversion.BooleanConverters"/>
+                    <provider classname="org.ofbiz.base.conversion.CollectionConverters"/>
+                    <provider classname="org.ofbiz.base.conversion.DateTimeConverters"/>
+                    <provider classname="org.ofbiz.base.conversion.JSONConverters"/>
+                    <provider classname="org.ofbiz.base.conversion.MiscConverters"/>
+                    <provider classname="org.ofbiz.base.conversion.NetConverters"/>
+                    <provider classname="org.ofbiz.base.conversion.NumberConverters"/>
+                </service>
+            </main-elements>
+        </main-jar>
+        <test-jar>
+            <test-elements>
+                <service type="org.ofbiz.base.util.test.UtilObjectTests$TestFactoryIntf">
+                    <provider classname="org.ofbiz.base.util.test.UtilObjectTests$FirstTestFactory"/>
+                    <provider classname="org.ofbiz.base.util.test.UtilObjectTests$SecondTestFactory"/>
+                </service>
+            </test-elements>
+        </test-jar>
+    </target>
+
+    <!-- SCIPIO: ivy confs to resolve (defaults to "*", meaning all) 
+        This should include all the confs manually handled in do-lib-update task override below,
+        or otherwise all ivy.xml configurations that are not optional. -->
+    <property name="lib.resolve.build.confs" value="base"/>
+    <property name="lib.resolve.src.confs" value="sources"/>
+    
+    <!-- SCIPIO: Special lib download script for complex base includes -->
+    <target name="do-lib-update" description="Downloads all jars (base component implementation)">
+        <!-- 2018-08: [organisation] is a workaround for duplicate and badly named artifacts, gets stripped off by regexp -->
+        <ivy:retrieve pattern="lib/[organisation]/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}">
+            <firstmatchmapper>
+                <!-- CUSTOM/CLIENT RULES (insert here) -->
+
+                <!-- STOCK SCIPIO RULES -->
+                
+                <!-- Official Servlet API - 2018-04-13: move the servlet API jars to j2eespecs-ref -->
+                <regexpmapper from="^(.*?/)?[^/]+/(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
+
+                <!-- Tomcat-provided Servlet API - 2018-04-13: no longer need to do this; we have two different sets of JARs
+                <regexpmapper from="^(.*?/)?[^/]+/tomcat-servlet-api-([^/-]+)\.jar$" to="\1javax.servlet-api-3.1.0.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?[^/]+/tomcat-jsp-api-([^/-]+)\.jar$" to="\1javax.servlet.jsp-api-2.3.0.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?[^/]+/tomcat-el-api-([^/-]+)\.jar$" to="\1javax.el-api-3.0.0.jar" handledirsep="true"/>
+                <!- - FIXME?: annotations official version is unclear - ->
+                <regexpmapper from="^(.*?/)?[^/]+/tomcat-annotations-api-([^/-]+)\.jar$" to="\1javax.annotation-api-3.0.0.jar" handledirsep="true"/>
+                -->
+
+                <!-- ant-ext libs that are also part of base conf, for compatibility reasons -->
+                <regexpmapper from="^(.*?/)?[^/]+/((asm|asm-tree)-([0-9.]+\.jar))$" to="\1ant-ext/\2" handledirsep="true"/>
+
+                <!-- badly named qrcode artifacts -->
+                <regexpmapper from="^(.*?/)?com.google.zxing/([^/]+\.jar)$" to="\1zxing-\2" handledirsep="true"/>
+
+                <!-- for rest, strip organization folder -->
+                <regexpmapper from="^(.*?/)?[^/]+/([^/]+)$" to="\1\2" handledirsep="true"/>
+                <identitymapper/><!-- NOTE: this should never match anymore -->
+            </firstmatchmapper>
+        </ivy:retrieve>
+        <if>
+            <equals arg1="${lib.update.sources}" arg2="true"/>
+            <then>
+                <!-- 2018-08: [organisation] is a workaround for duplicate and badly named artifacts, gets stripped off by regexp -->
+                <ivy:retrieve pattern="libsrc/[organisation]/${lib.update.filename.pattern.src.ivy}" conf="${lib.resolve.src.confs}">
+                    <firstmatchmapper>
+                        <!-- CUSTOM/CLIENT RULES (insert here) -->
+
+                        <!-- STOCK SCIPIO RULES -->
+
+                        <!-- Official Servlet API - 2018-04-13: move the servlet API jars to j2eespecs-ref -->
+                        <regexpmapper from="^(.*?/)?[^/]+/(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
+
+                        <!-- Tomcat-provided Servlet API - 2018-04-13: no longer need to do this; we have two different sets of JARs
+                        <regexpmapper from="^(.*?/)?[^/]+/tomcat-servlet-api-([^/-]+)-sources\.jar$" to="\1javax.servlet-api-3.1.0-sources.jar" handledirsep="true"/>
+                        <regexpmapper from="^(.*?/)?[^/]+/tomcat-jsp-api-([^/-]+)-sources\.jar$" to="\1javax.servlet.jsp-api-2.3.0-sources.jar" handledirsep="true"/>
+                        <regexpmapper from="^(.*?/)?[^/]+/tomcat-el-api-([^/-]+)-sources\.jar$" to="\1javax.el-api-3.0.0-sources.jar" handledirsep="true"/>
+                        <!- - FIXME?: annotations official version is unclear - ->
+                        <regexpmapper from="^(.*?/)?[^/]+/tomcat-annotations-api-([^/-]+)-sources\.jar$" to="\1javax.annotation-api-3.0.0-sources.jar" handledirsep="true"/>-->
+ 
+                        <!-- badly named qrcode artifacts -->
+                        <regexpmapper from="^(.*?/)?com.google.zxing/([^/]+\.jar)$" to="\1zxing-\2" handledirsep="true"/>
+                        <regexpmapper from="^(.*?/)?com.github.kenglxn.qrgen/([^/]+\.jar)$" to="\1qrgen-\2" handledirsep="true"/>
+
+                        <!-- for rest, strip organization folder -->
+                        <regexpmapper from="^(.*?/)?[^/]+/([^/]+)$" to="\1\2" handledirsep="true"/>
+                        <identitymapper/><!-- NOTE: this should never match anymore -->
+                    </firstmatchmapper>
+                </ivy:retrieve>
+            </then>
+        </if>
+    </target>
+
+    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
+        NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
+    <selector id="lib.update.manual.files">
+        <or>
+            <!-- CUSTOM/CLIENT RULES (insert here) -->
+
+            <!-- STOCK SCIPIO RULES -->
+
+            <!-- Core build system dependencies (Ant & Ivy) -->
+            <filename name="ant/**.jar"/>
+            <filename name="oro-*.jar"/><!-- required by Ivy for matcher="glob", committed in filesystem -->
+ 
+            <!-- Optional dependencies, retrieved separately - do not delete! -->
+            <filename name="ant-opt/**/*.jar"/>
+        </or>
+    </selector>
+    
+</project>

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="FindCatalog">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindCatalog"/>
+                <set field="activeSubMenuItem" value="FindCatalog"/><!-- SCIPIO: NOTE: this gets ignored, but leave for reference -->
+                <set field="labelTitleProperty" value="PageTitleFindCatalog"/><!-- ProductCatalog -->
+                <set field="isSpecificCatalog" type="Boolean" value="false"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditProdCatalog">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="activeSubMenuItem" value="ProductCatalog"/>
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>                
+                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
+                <set field="isCreateProdCatalog" type="Boolean" value="${groovy: !(context.prodCatalog || (parameters.prodCatalogId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateProdCatalog ? 'ProductNewCatalog' : 'ProductCatalog'}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-screen name="ScipioEditProdCatalog"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#EditProdCatalog -->
+    <screen name="ScipioEditProdCatalog">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/EditProdCatalog.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditProdCatalogSection">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProductCatalog"/>
+                <set field="activeSubMenuItem" value="ProductCatalog"/>
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
+                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
+                <set field="labelTitleProperty" value="ProductCatalog"/>
+            </actions>
+            <widgets>
+            <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                    <!-- <include-menu name="CatalogTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                    <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/> -->
+                    <!-- <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label> -->
+                    <screenlet>
+                        <!-- <label>${uiLabelMap.ProductCatalogEmptyWarning}</label> -->
+                        <include-form name="EditProdCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
+                    </screenlet>
+                </decorator-section>
+             </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditProdCatalogCategories">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="activeSubMenuItem" value="ProductCategories"/>
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>   
+                <set field="labelTitleProperty" value="ProductCatalogCategories"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- <screenlet title="${uiLabelMap.ProductAddCatalogProdCat}"> -->
+                        <screenlet>
+                            <include-screen name="ScipioAddProductCategoryToProdCatalog" />
+                           <!--  <include-form name="addProductCategoryToProdCatalog" location="component://product/widget/catalog/CatalogForms.xml"/> -->
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.ProductCatalogCategoryList}">
+                           <!--  <include-form name="EditProdCatalogCategories" location="component://product/widget/catalog/CatalogForms.xml"/> -->
+                            <include-screen name="ScipioProdCatalogCategoryList" />
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
+    <screen name="ScipioAddProductCategoryToProdCatalog">
+        <section>
+            <actions>
+                <entity-condition entity-name="ProdCatalogCategoryType" list="prodCatalogCategoryTypes"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/AddProductCategoryToProdCatalog.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
+     <screen name="ScipioProdCatalogCategoryList">
+        <section>
+            <actions>
+                 <entity-and entity-name="ProdCatalogCategory" list="prodCatalogCategories">
+                    <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
+                    <order-by field-name="prodCatalogCategoryTypeId"/>
+                    <order-by field-name="sequenceNum"/>
+                    <order-by field-name="productCategoryId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ProdCatalogCategoryList.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditProdCatalogParties">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="activeSubMenuItem" value="PartyParties"/>               
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>   
+                <set field="labelTitleProperty" value="ProductCatalogParties"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <!-- <include-form name="AddProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/> -->
+                            <include-screen name="ScipioAddProdCatalogToParty"/>
+                        </screenlet>
+                        <screenlet>
+                           <!--  <include-form name="UpdateProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/> -->
+                            <include-screen name="ScipioProdCatalogPartyList"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#AddProdCatalogToParty -->
+    <screen name="ScipioAddProdCatalogToParty">
+        <section>
+            <actions>
+                <entity-condition entity-name="RoleType" list="roleTypes">
+                    <order-by field-name="description"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/AddProdCatalogToParty.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProdCatalogToParty -->
+    <screen name="ScipioProdCatalogPartyList">
+        <section>
+            <actions>
+                <entity-and entity-name="ProdCatalogRole" list="prodCatalogRoleList">
+                    <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
+                    <order-by field-name="sequenceNum"/>
+                    <order-by field-name="partyId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <section>
+                    <condition><not><if-empty field="prodCatalogRoleList"/></not></condition>
+                    <widgets>
+                        <screenlet  title="${uiLabelMap.ProductCatalogPartyList}">
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ProdCatalogPartyList.ftl"/></html></platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- SCIPIO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
+    <!-- <screen name="EditProdCatalogStores">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="activeSubMenuItem" value="ProductStores"/>
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
+                <set field="title" default-value="${uiLabelMap.ProductCatalogStores} ${prodCatalogId}"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-screen name="ScipioAddProdCatalogToStore"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.ProductCatalogStoreList}">
+                            <include-screen name="ScipioProdCatalogStoreList"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
+    
+     <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#CreateProductStoreCatalog -->
+    <screen name="ScipioAddProdCatalogToStore">
+        <section>
+            <actions>
+                <entity-condition entity-name="ProductStore" list="productStoreList">
+                    <order-by field-name="storeName"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/AddProdCatalogToStore.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProductStoreCatalog -->
+    <screen name="ScipioProdCatalogStoreList">
+        <section>
+            <actions>
+                <entity-and entity-name="ProductStoreCatalog" list="productStoreCatalogList">
+                    <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
+                    <order-by field-name="sequenceNum"/>
+                    <order-by field-name="productStoreId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ProdCatalogStoreList.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- SCIPIO: TODO -->
+    <screen name="ScipioEditCatalogTreePage">
+        <section>
+            <actions>
+                <set field="productStoreId" from-field="productStoreId"/>
+                <set field="layoutSettings.javaScripts[]" value="/content/images/ScpContentCommon.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/catalog/static/ScpCatalogCommon.js" global="true"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- FIXME: strong perm check (ALL functions exposed) -->
+                        <include-screen name="ScipioEditCatalogTree"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Interactive catalog tree widget - DEFAULT implementation 
+        To adapt the tree to another screen, this screen can be duplicated and the custom
+        groovy and ftl should then delegate to EditCatalogTreeCore.groovy and EditCatalogTreeCore.ftl -->
+    <screen name="ScipioEditCatalogTree">
+        <section>
+            <actions>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/tree/EditCatalogTree.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <and>
+                            <not><if-empty field="productStoreId"/></not>
+                            <not><if-empty field="treeMenuData"/></not>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${productStore.storeName}">
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/tree/EditCatalogTree.ftl"/></html></platform-specific>
+                        </screenlet>     
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Read-only catalog tree widget -->
+    <screen name="ScipioViewCatalogTree">
+        <section>
+            <actions>
+                <entity-one entity-name="ProductStore" value-field="productStore"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/tree/ViewCatalogTree.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <and>
+                            <not><if-empty field="productStoreId"/></not>
+                            <not><if-empty field="treeMenuData"/></not>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${productStore.storeName}">
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/tree/ViewCatalogTree.ftl"/></html></platform-specific>
+                        </screenlet>     
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+</screens>

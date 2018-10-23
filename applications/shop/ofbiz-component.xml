@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<ofbiz-component name="shop" enabled="true"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
+    <resource-loader name="main" type="component"/>
+    <classpath type="jar" location="build/lib/*"/>
+    <classpath type="dir" location="config"/>
+    
+    <!-- seed data -->
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ShopTypeData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ShopSecurityData.xml"/>
+    
+    <!-- SCIPIO: most demo data structure is derived from the original data under /specialpurpose/ecommerce/data/ 
+        but heavily customized and reorganized. -->
+    
+    <!-- demo data: store -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoStoreData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalStoreData.xml"/>
+
+    <!-- demo data: catalog - basic -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogGenericProductData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalCatalogData.xml"/>
+    
+    <!-- demo data: survey -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoSurveyData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoSurveyTestData.xml"/>
+    
+    <!-- demo data: content - basic -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoWebSitePublishData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTemplateData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContentData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTopicData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTreeData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRelatedData.xml"/>
+        
+    <!-- demo data: catalog - extended (configuration) -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogConfigurationData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogI18nData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAdditionalViewData.xml"/>
+
+    <!-- demo data: content - extended -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTreeContentData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContentAltUrlData.xml"/>
+    
+    <!-- demo data: store config, shipping, parties -->
+    <!-- FIXME: for some reason rental shipping is required for main store shipping... order should be reversed -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalShippingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoShippingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTaxAuthorityData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrderPartyData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoMarketingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoPurchasingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoStandardCostingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoStoreGiftCertificateData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoFinAccountData.xml"/>
+    
+    <!-- auxiliary catalog data -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogTransientData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogImageData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAltUrlData.xml"/>
+    <!-- SCIPIO: 2017-12-12: replaced by re-exported auto-generated data
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAltUrlLegacyData.xml"/>-->
+    
+    <!-- demo data: example/test records and history -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrderTestData.xml"/>
+    
+    <webapp name="shop"
+        title="SCIPIO Commerce"
+        server="default-server"
+        location="webapp/shop"
+        mount-point="/shop"
+        app-bar-display="true"
+        menu-name="secondary"
+        />
+    <!-- SCIPIO: Legacy mount-point redirect -->
+    <webapp name="ecommerce"
+        title="SCIPIO Commerce"
+        server="default-server"
+        location="webapp/ecommerceredirect"
+        mount-point="/ecommerce"
+        app-bar-display="false"
+        menu-name="secondary"
+        />
+</ofbiz-component>

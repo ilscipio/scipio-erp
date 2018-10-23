@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="FilterCalendarEvents" type="single" target="calendar">
+        <field name="calendarType">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+                    <entity-constraint name="enumTypeId" value="CALENDAR_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyId">
+            <lookup target-form-name="LookupPartyName" size="16"/>
+        </field>
+        <field name="workEffortTypeId" title="${uiLabelMap.PartyEventType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="WorkEffortType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="facilityId" title="${uiLabelMap.Facility}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Facility" description="${facilityName}">
+                    <entity-order-by field-name="facilityName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FixedAsset" description="${fixedAssetName}">
+                    <entity-order-by field-name="fixedAssetId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="hideEvents"><check/></field>
+        <field name="viewAction" title="${uiLabelMap.CommonView}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
+
+        <!-- SCIPIO: ensure we see the form again after change -->
+        <field name="form"><hidden value="${parameters.form}"/></field>
+        <!-- SCIPIO: need to pass period so we return to the correct period -->
+        <field name="period"><hidden value="${parameters.period}"/></field> 
+    </form>
+
+    <!-- Forms Specific to portlet -->
+    <form name="EditCalendar" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml">
+        <field name="initialView">
+            <drop-down>
+                <option key="day" description="${uiLabelMap.WorkEffortDayView}"/>
+                <option key="week" description="${uiLabelMap.WorkEffortWeekView}"/>
+                <option key="month" description="${uiLabelMap.WorkEffortMonthView}"/>
+            </drop-down>
+        </field>
+        <field name="updateAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
+    </form>
+
+    <form name="editCalEvent" type="single" default-map-name="workEffort">
+        <actions>
+            <!-- SCIPIO: NOTE: this could be set to help deal with name clashes, but only workEffortTypeId currently
+                clashes and only for new records, and the prefill is actually sort of desirable in this case
+            <set field="useRequestParameters" type="Boolean" value="false" />
+            -->
+        
+            <set field="statusTypeIds[]" value="EVENT_STATUS"/>
+            <set field="statusTypeIds[]" value="CALENDAR_STATUS"/>
+            <!-- SCIPIO: NOTE: stock code here excluded TASK_STATUS, which contains COMPLETED status; we add it because
+                we may not currently have any other way to mark events completed; intentions of stock code here are unclear
+                TODO: check if special requirements for setting complete and other statuses; may need ECA/service checks? -->
+            <set field="statusTypeIds[]" value="TASK_STATUS"/>
+            
+            <!-- Allow containing screens to specify the create and update URLs -->
+            <set field="createCalEventUrl" from-field="createCalEventUrl" default-value="createWorkEffortAndPartyAssign" />
+            <set field="updateCalEventUrl" from-field="updateCalEventUrl" default-value="updateWorkEffort" />
+            
+            <!-- SCIPIO: new scripts, in part to filter statuses -->
+            <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/EditCalEventForm.groovy"/>
+        </actions>
+        <alt-target use-when="workEffort==null" target="${createCalEventUrl}" />
+        <alt-target use-when="workEffort!=null" target="${updateCalEventUrl}" />
+        <field name="workEffortId" use-when="workEffort!=null"><hidden /></field>
+        <field name="start"><hidden value="${parameters.start}" /></field>
+        <field name="partyId"><hidden value="${parameters.userLogin.partyId}" /></field>
+        <field name="fixedAssetId"><hidden value="${parameters.fixedAssetId}" /></field>
+        <field name="roleTypeId" use-when="workEffort==null"><hidden value="CAL_OWNER" /></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort==null"><hidden value="PRTYASGN_ASSIGNED" /></field>
+        <field name="workEffortName" title="${uiLabelMap.WorkEffortEventName}" required-field="true"><text /></field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" use-when="statusItemList.size() &gt; 1">
+            <!-- SCIPIO: use our list
+            <drop-down no-current-selected-key="CAL_TENTATIVE">
+                <entity-options entity-name="StatusItem" description="${description}" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="in" env-name="statusTypeIds"/>
+                </entity-options>
+            </drop-down>
+            -->
+            <drop-down no-current-selected-key="CAL_TENTATIVE">
+                <list-options key-name="statusId" list-name="statusItemList" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" use-when="statusItemList.size() &lt;= 1">
+            <display description="${currentStatusItem.description}" also-hidden="true"/>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text /></field>
+        <!-- SCIPIO: NOTE: the following comment is from stock, but MEETING currently appears in work effort types, so
+            so it is more about the type date (probably?): -->
+        <!-- This is wrong. A calendar item work effort type is an EVENT. "Meeting" is a work effort purpose. -->
+        <field name="workEffortTypeId" use-when="parentTypeId!=void" title="${uiLabelMap.PartyEventType}">
+            <drop-down no-current-selected-key="MEETING">
+                <entity-options entity-name="WorkEffortType" description="${description}">
+                    <entity-constraint name="parentTypeId" env-name="parentTypeId" />
+                    <entity-order-by field-name="description" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="workEffortTypeId" use-when="parentTypeId==void" title="${uiLabelMap.PartyEventType}">
+            <drop-down >
+                <entity-options entity-name="WorkEffortType" description="${description}">
+                    <entity-order-by field-name="description" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="scopeEnumId">
+            <drop-down no-current-selected-key="WES_PRIVATE">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+                    <entity-constraint name="enumTypeId" value="WORK_EFF_SCOPE" />
+                    <entity-order-by field-name="description" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="estimatedStartDate" required-field="true"><date-time /></field><!-- SCIPIO: FIXME: has escaping issues: input-method="time-dropdown" -->
+        <field name="estimatedCompletionDate"><date-time /></field><!-- SCIPIO: FIXME: has escaping issues: input-method="time-dropdown" -->
+        <field name="actualStartDate" use-when="workEffort!=null"><date-time /></field><!-- SCIPIO: FIXME: has escaping issues: input-method="time-dropdown" -->
+        <field name="actualCompletionDate" use-when="workEffort!=null"><date-time /></field><!-- SCIPIO: FIXME: has escaping issues: input-method="time-dropdown" -->
+        <field name="addAction" widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="workEffort==null"><submit /></field>
+        <field name="updateAction" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="workEffort!=null"><submit /></field>
+        <!-- SCIPIO: new -->
+        <field name="cancelAction" combine-previous="true" widget-style="${styles.link_run_sys} ${styles.action_terminate}" use-when="calEventMayCancel">
+            <hyperlink target-type="plain" target="javascript:document.getElementById('${cancelEventFormId}').submit();" description="${uiLabelMap.CommonCancel}" />
+        </field>
+        
+        <!-- SCIPIO: ensure we see the form again after change -->
+        <field name="form"><hidden value="${calEventFormAction}"/></field>
+        <!-- SCIPIO: need to pass period so we return to the correct period -->
+        <field name="period"><hidden value="${calEventFormPeriod}"/></field> 
+        <!-- SCIPIO: special flag to indicate if we had a form submit -->
+        <field name="calEventEdited"><hidden value="Y"/></field> 
+        <!-- SCIPIO: save the previous values of params used for filtering/browsing (see WorkEffortMenus.xml#Calendar, CreateUrlParam.groovy) -->
+        <field name="calViewParams_partyId"><hidden value="${parameters.partyId}"/></field>
+        <field name="calViewParams_fixedAssetId"><hidden value="${parameters.fixedAssetId}"/></field>
+        <field name="calViewParams_workEffortTypeId"><hidden value="${parameters.workEffortTypeId}"/></field>
+        <field name="calViewParams_calendarType"><hidden value="${parameters.calendarType}"/></field>
+        <field name="calViewParams_facilityId"><hidden value="${parameters.facilityId}"/></field>
+        <field name="calViewParams_hideEvents"><hidden value="${parameters.hideEvents}"/></field>
+    </form>
+
+    <form name="cancelEvent" type="single" target="updateWorkEffort">
+        <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
+        <field name="currentStatusId"><hidden value="CAL_CANCELLED"/></field>
+        <field name="cancel" title="${uiLabelMap.WorkEffortCancelCalendarEvent}" widget-style="${styles.link_run_sys} ${styles.action_terminate}"><submit/></field>
+
+        <!-- SCIPIO: ensure we see the form again after change -->
+        <field name="form"><hidden value="${calEventFormAction}"/></field>
+        <!-- SCIPIO: need to pass period so we return to the correct period -->
+        <field name="period"><hidden value="${calEventFormPeriod}"/></field> 
+        <!-- SCIPIO: special flag to indicate if we had a form submit -->
+        <field name="calEventEdited"><hidden value="Y"/></field> 
+        <!-- SCIPIO: save the previous values of params used for filtering/browsing (see WorkEffortMenus.xml#Calendar, CreateUrlParam.groovy) -->
+        <field name="calViewParams_partyId"><hidden value="${parameters.partyId}"/></field>
+        <field name="calViewParams_fixedAssetId"><hidden value="${parameters.fixedAssetId}"/></field>
+        <field name="calViewParams_workEffortTypeId"><hidden value="${parameters.workEffortTypeId}"/></field>
+        <field name="calViewParams_calendarType"><hidden value="${parameters.calendarType}"/></field>
+        <field name="calViewParams_facilityId"><hidden value="${parameters.facilityId}"/></field>
+        <field name="calViewParams_hideEvents"><hidden value="${parameters.hideEvents}"/></field>
+    </form>
+    
+    <!-- SCIPIO: new -->
+    <form name="cancelEventHidden" extends="cancelEvent" id="${cancelEventFormId}">
+        <field name="cancel"><ignored/></field>
+    </form>
+
+    <form name="showCalEvent" type="single" default-map-name="workEffort">
+        <field name="workEffortName" title="${uiLabelMap.WorkEffortEventName}"><display/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
+        <field name="workEffortTypeId" title="${uiLabelMap.PartyEventType}">
+            <display-entity entity-name="WorkEffortType" description="${description}"/>
+        </field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" description="${description}" key-field-name="statusId"/>
+        </field>
+        <field name="scopeEnumId">
+            <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/>
+        </field>
+        <field name="estimatedStartDate"><display type="date-time"></display></field>
+        <field name="estimatedCompletionDate"><display type="date-time"></display></field>
+        <field name="actualStartDate"><display type="date-time"/></field>
+        <field name="actualCompletionDate"><display type="date-time"/></field>
+    </form>
+
+    <form name="showCalEventRoles" type="list" list-name="roles" 
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <entity-and entity-name="WorkEffortPartyAssignment" list="roles" filter-by-date="true">
+                <field-map field-name="workEffortId" from-field="parameters.workEffortId"/>
+            </entity-and>
+        </actions>
+        <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
+        <field name="partyId" >
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort!=null">
+            <display-entity entity-name="StatusItem" description="${description}"/>
+        </field>
+    </form>
+    <form name="showCalEventRolesDel" type="list" extends="showCalEventRoles" target="deleteWorkEffortPartyAssign">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
+    </form>
+    <form name="addCalEventRole" type="single" target="createWorkEffortPartyAssign">
+        <actions>
+            <!-- SCIPIO: WORKAROUND: prevent lookup in parameters map because of name conflicts
+                with browsing (see WorkEffortMenus.xml#Calendar)
+                this is non-ideal because errors on submit will clear the whole form
+                FIXME?: use param name prefixes instead? -->
+        </actions>
+        <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="PRTYASGN_ASSIGNED"/></field>
+        <field name="partyId" position="1" required-field="true"><lookup target-form-name="LookupPartyName" size="10"></lookup></field>
+        <field name="roleTypeId" position="2">
+            <drop-down no-current-selected-key="CAL_ATTENDEE">
+                <entity-options entity-name="RoleType" description="${description}">
+                    <entity-constraint name="parentTypeId" value="CALENDAR_ROLE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
+
+        <!-- SCIPIO: ensure we see the form again after change -->
+        <field name="form"><hidden value="${calEventFormAction}"/></field>
+        <!-- SCIPIO: need to pass period so we return to the correct period -->
+        <field name="period"><hidden value="${calEventFormPeriod}"/></field> 
+        <!-- SCIPIO: special flag to indicate if we had a form submit -->
+        <field name="calEventEdited"><hidden value="Y"/></field> 
+        <!-- SCIPIO: save the previous values of params used for filtering/browsing (see WorkEffortMenus.xml#Calendar, CreateUrlParam.groovy) -->
+        <field name="calViewParams_partyId"><hidden value="${parameters.partyId}"/></field>
+        <field name="calViewParams_fixedAssetId"><hidden value="${parameters.fixedAssetId}"/></field>
+        <field name="calViewParams_workEffortTypeId"><hidden value="${parameters.workEffortTypeId}"/></field>
+        <field name="calViewParams_calendarType"><hidden value="${parameters.calendarType}"/></field>
+        <field name="calViewParams_facilityId"><hidden value="${parameters.facilityId}"/></field>
+        <field name="calViewParams_hideEvents"><hidden value="${parameters.hideEvents}"/></field>
+    </form>
+</forms>

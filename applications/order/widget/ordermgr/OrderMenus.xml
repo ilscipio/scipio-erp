@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    
+    <menu name="OrderAppBar" title="${uiLabelMap.OrderManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" override-mode="replace" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
+                </or>
+            </condition>
+            <link target="main"/>
+        </menu-item>
+        <menu-item name="findorders" title="${uiLabelMap.OrderOrders}" sort-mode="off"><!-- SCIPIO: this label was too inconsistent with the others: ${uiLabelMap.OrderFindOrder} -->
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+            </condition>
+            <link target="findorders"/>
+        </menu-item>
+        <menu-item name="request" title="${uiLabelMap.OrderRequests}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
+                </or>
+            </condition>
+            <link target="FindRequest"/>
+        </menu-item>
+        <menu-item name="quote" title="${uiLabelMap.OrderOrderQuotes}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
+                </or>
+            </condition>
+            <link target="FindQuote"/>
+        </menu-item>
+        <menu-item name="orderlist" title="${uiLabelMap.OrderOrderList} / ${uiLabelMap.CommonFilter}">
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+            </condition>
+            <link target="orderlist"/>
+        </menu-item>
+        <menu-item name="orderentry" title="${uiLabelMap.OrderOrderEntry}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_CREATE"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_CREATE"/>
+                </or>
+            </condition>
+            <link target="orderentry" link-type="anchor"/>
+        </menu-item>
+        <menu-item name="return" title="${uiLabelMap.OrderOrderReturns}">
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_RETURN"/>
+            </condition>
+            <link target="findreturn"/>
+        </menu-item>
+        <menu-item name="requirement" title="${uiLabelMap.OrderRequirements}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                    <if-has-permission permission="ORDERMGR_ROLE" action="_VIEW"/>
+                </or>
+            </condition>
+            <link target="FindRequirements"/>
+        </menu-item>
+        <!-- SCIPIO: Disabled - requires BIRT 
+        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+            <link target="OrderPurchaseReportOptions"/>
+        </menu-item>
+         -->
+        <menu-item name="stats" title="${uiLabelMap.CommonStats}">
+            <link target="orderstats"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="OrderAppSideBar" title="${uiLabelMap.OrderManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
+        <include-elements menu-name="OrderAppBar" recursive="full" />
+        <menu-item name="findorders">
+            <sub-menu name="Order" include="OrderSideBar"/>
+        </menu-item>
+        <menu-item name="request">
+            <sub-menu name="Request" include="RequestSideBar"/>
+        </menu-item>
+        <menu-item name="quote">
+            <sub-menu name="Quote" include="QuoteSideBar"/>
+        </menu-item>
+        <menu-item name="return">
+            <sub-menu name="Return" include="ReturnSideBar"/>
+        </menu-item>
+        <menu-item name="requirement">
+            <sub-menu name="Requirements" include="RequirementsSideBar"/>
+        </menu-item>
+    </menu>
+
+    <menu name="OrderTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <!-- NOTE: the OrderTabBar_ prefix is in case menu is rendered with share scope (which I think currently does)  -->
+            <entity-and entity-name="OrderItemShipGroup" list="OrderTabBar_shipGroups">
+                <field-map field-name="orderId" from-field="orderId"/>
+            </entity-and>
+            <entity-one entity-name="OrderHeader" value-field="OrderTabBar_orderHeader">
+                <field-map field-name="orderId" from-field="orderId"/>
+            </entity-one>
+        </actions>
+        <menu-item name="Summary" title="${uiLabelMap.CommonSummary}">
+            <condition>
+                <not>
+                    <if-empty field="orderId"/>
+                </not>              
+            </condition>
+            <link target="orderview">
+                <parameter param-name="orderId"/>
+            </link>
+        </menu-item>
+        <menu-item name="OrderShipping" title="${uiLabelMap.OrderShipmentInformation}" widget-style="+${styles.action_nav}">
+            <!-- SCIPIO: this worked badly; the menu has to make a lookup on its own (in actions above) so it works consistently
+            <condition>
+                <not>
+                    <if-empty field="shipGroups"/>
+                </not>              
+            </condition>-->
+            <condition>
+                <not>
+                    <if-empty field="OrderTabBar_shipGroups"/>
+                </not>              
+            </condition>
+            <link target="orderShipping">
+                <parameter param-name="orderId" />
+            </link>
+        </menu-item>
+        <menu-item name="OrderDeliveryScheduleInfo" title="${uiLabelMap.OrderViewEditDeliveryScheduleInfo}">
+            <!-- SCIPIO: this works badly, and a second lookup is required (see above)
+            <condition>
+                <and>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
+                </and>
+            </condition>-->
+            <condition>
+                <and>
+                    <not><if-empty field="OrderTabBar_orderHeader"/></not>
+                    <if-compare field="OrderTabBar_orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
+                    <if-compare field="OrderTabBar_orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
+                </and>
+            </condition>
+            <link target="OrderDeliveryScheduleInfo">
+                <parameter param-name="orderId"/>
+            </link>
+        </menu-item>
+        <menu-item name="OrderHistory" title="${uiLabelMap.OrderViewOrderHistory}">
+            <condition>
+                <not>
+                    <if-empty field="orderId"/>
+                </not>              
+            </condition>
+            <link target="OrderHistory">
+                <parameter param-name="orderId"/>
+            </link>
+        </menu-item>
+        <!--<menu-item name="PDF" title="PDF" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <not><if-empty field="orderId"/></not>
+            </condition>
+            <link target="order.pdf" target-window="_blank">
+                <parameter param-name="orderId"/>
+            </link>
+        </menu-item>-->
+    </menu>
+    
+    <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="OrderTabBar" recursive="includes-only" />
+        <menu-item-alias name="OrderFindOrder" for="PARENT-NOSUB"/>
+        <menu-item-alias name="OrderNewNote" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="OrderReceivePayment" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="SendOrderConfirmation" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="SendOrderCompletion" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="ListOrderTerms" for="PARENT-WITHSUB"/>
+    </menu>
+    
+    <!-- SCIPIO: replaced by orderactions
+    <menu name="OrderSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="CreateShipGroup" title="${uiLabelMap.OrderCreateShipGroup}" widget-style="+${styles.action_run_sys} ${styles.action_add}">
+            <condition>
+                <and>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
+                </and>
+            </condition>
+            <link target="createOrderItemShipGroup">
+                <parameter param-name="orderId"/>
+            </link>
+        </menu-item>
+        <menu-item name="QuickShipOrder" title="${uiLabelMap.OrderQuickShipEntireOrder}" widget-style="+${styles.action_nav} ${styles.action_complete}">
+            <condition>
+                <and>
+                    <if-has-permission permission="FACILITY" action="_CREATE"/>
+                    <if-compare field="orderHeader.orderTypeId" operator="equals" value="SALES_ORDER"/>
+                    <or>
+                        <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_APPROVED"/>
+                        <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_SENT"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="quickShipOrder">
+                <parameter param-name="orderId" from-field="orderId"/>
+            </link>
+        </menu-item>
+        <menu-item name="CreateReturn" title="${uiLabelMap.OrderCreateReturn}" widget-style="+${styles.action_nav}">
+            <condition>
+                <and>
+                    <not><if-empty field="returnableItems"/></not>
+                    <if-has-permission permission="ORDERMGR" action="_RETURN"/>
+                    <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_COMPLETED"/>
+                </and>
+            </condition>
+            <link target="quickreturn">
+                <parameter param-name="orderId"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="returnHeaderTypeId"/>
+                <parameter param-name="needsInventoryReceive"/>
+            </link>
+        </menu-item>
+        <menu-item name="RefundEntireOrder" title="${uiLabelMap.OrderQuickRefundEntireOrder}" widget-style="+${styles.action_nav} ${styles.action_terminate}">
+            <condition>
+                <and>
+                    <if-has-permission permission="ORDERMGR" action="_RETURN"/>
+                    <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_COMPLETED"/>
+                </and>
+            </condition>
+            <link target="quickreturn">
+                <parameter param-name="orderId"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="returnHeaderTypeId"/>
+                <parameter param-name="needsInventoryReceive"/>
+            </link>
+        </menu-item>  
+        <menu-item name="CreateAsNewOrder" title="${uiLabelMap.OrderCreateAsNewOrder}" widget-style="+${styles.action_run_session} ${styles.action_add}">
+            <condition>
+                <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
+            </condition>
+            <link target="loadCartFromOrder">
+                <parameter param-name="orderId"/>
+                <parameter param-name="finalizeMode" value="init"/>
+            </link>
+        </menu-item>
+        <menu-item name="CreateReplacementOrder" title="${uiLabelMap.OrderCreateReplacementOrder}" widget-style="+${styles.action_run_session} ${styles.action_add}">
+            <condition>
+                <and>
+                    <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_COMPLETED"/>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELED"/>
+                </and>
+            </condition>
+            <link target="loadCartFromOrder">
+                <parameter param-name="orderId"/>
+                <parameter param-name="finalizeMode" value="init"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditOrderItems" title="${uiLabelMap.OrderEditItems}" widget-style="+${styles.action_nav}">
+            <condition>
+                <and>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
+                </and>
+            </condition>
+            <link target="editOrderItems">
+                <parameter param-name="orderId"/>
+            </link>
+        </menu-item>
+        <menu-item name="PDF" title="PDF" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="order.pdf" target-window="_blank">
+                <parameter param-name="orderId"/>
+            </link>
+        </menu-item>
+    </menu>
+     -->
+     
+    <menu name="OrderShippingSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="QuickShipOrder" title="${uiLabelMap.OrderQuickShipEntireOrder}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
+            <condition>
+                <and>
+                    <if-has-permission permission="FACILITY" action="_CREATE"/>
+                    <if-compare field="orderHeader.orderTypeId" operator="equals" value="SALES_ORDER"/>
+                    <or>
+                        <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_APPROVED"/>
+                        <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_SENT"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="quickShipOrder">
+                <parameter param-name="orderId" from-field="orderId"/>
+            </link>
+        </menu-item>
+        <menu-item name="CreateShipGroup" title="${uiLabelMap.OrderCreateShipGroup}" widget-style="+${styles.action_run_sys} ${styles.action_add}">
+            <condition>
+                <and>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
+                </and>
+            </condition>
+            <link target="createOrderItemShipGroup">
+                <parameter param-name="orderId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="RequirementsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: DEV NOTE: FindRequirements looks redundant at first, but it's needed... leave here (could rename)... -->
+        <menu-item name="FindRequirements" title="${uiLabelMap.OrderRequirements}">
+            <link target="FindRequirements"/>
+        </menu-item>
+        <menu-item name="ApproveRequirements" title="${uiLabelMap.OrderApproveRequirements}">
+            <link target="ApproveRequirements"/>
+        </menu-item>
+        <menu-item name="ApprovedProductRequirementsByVendor" title="${uiLabelMap.PageTitleFindApprovedRequirementsBySupplier}">
+            <link target="ApprovedProductRequirementsByVendor"/>
+        </menu-item>
+        <menu-item name="ApprovedProductRequirements" title="${uiLabelMap.OrderApprovedProductRequirements}">
+            <link target="ApprovedProductRequirements"/>
+        </menu-item>
+    </menu>
+
+    <menu name="RequirementsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="RequirementsTabBar" recursive="includes-only" />
+        <menu-item name="FindRequirements">
+            <sub-menu name="Requirement" include="RequirementSideBar"/>
+        </menu-item>
+    </menu>
+
+    <menu name="RequirementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditRequirement" title="${uiLabelMap.OrderRequirement}">
+            <link target="EditRequirement">
+                <parameter param-name="requirementId" from-field="requirement.requirementId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListRequirementCustRequests" title="${uiLabelMap.OrderRequests}">
+            <link target="ListRequirementCustRequests">
+                <parameter param-name="requirementId" from-field="requirement.requirementId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListRequirementOrdersTab" title="${uiLabelMap.OrderOrders}">
+            <link target="ListRequirementOrders">
+                <parameter param-name="requirementId" from-field="requirement.requirementId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListRequirementRolesTab" title="${uiLabelMap.PartyRoles}">
+            <link target="ListRequirementRoles">
+                <parameter param-name="requirementId" from-field="requirement.requirementId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="RequirementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="RequirementTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="QuoteTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">    
+        <menu-item name="ViewQuote" title="${uiLabelMap.CommonSummary}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
+            <link target="ViewQuote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditQuote" title="${uiLabelMap.OrderQuote}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
+            <link target="EditQuote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListQuoteAttributes" title="${uiLabelMap.CommonAttributes}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
+            <link target="ListQuoteAttributes">
+                <parameter param-name="quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListQuoteItems" title="${uiLabelMap.CommonItems}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
+            <link target="ListQuoteItems">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="ListQuoteNotes" title="${uiLabelMap.CommonNotes}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
+            <link target="ListQuoteNotes">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListQuoteRoles" title="${uiLabelMap.PartyParties}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
+            <link target="ListQuoteRoles">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListQuoteCoefficients" title="${uiLabelMap.OrderOrderQuoteCoefficients}">
+            <condition>
+                <and>
+                    <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
+                    <not><if-empty field="quoteId"/></not>
+                </and>
+            </condition>
+            <link target="ListQuoteCoefficients">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ManageQuotePrices" title="${uiLabelMap.ProductPrices}">
+            <condition>
+                <and>
+                    <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
+                    <not><if-empty field="quoteId"/></not>
+                </and>
+            </condition>
+            <link target="ManageQuotePrices">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListQuoteAdjustments" title="${uiLabelMap.OrderOrderQuoteAdjustments}">
+            <condition>
+                <and>
+                    <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
+                    <not><if-empty field="quoteId"/></not>
+                </and>
+            </condition>
+            <link target="ListQuoteAdjustments">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ViewQuoteProfit" title="${uiLabelMap.OrderViewQuoteProfit}">
+            <condition>
+                <and>
+                    <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
+                    <not><if-empty field="quoteId"/></not>
+                </and>
+            </condition>
+            <link target="ViewQuoteProfit">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="QuoteWorkEfforts" title="${uiLabelMap.WorkEfforts}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
+            <link target="ListQuoteWorkEfforts">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="QuoteTerms" title="${uiLabelMap.CommonTerms}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
+            <link target="ListQuoteTerms">
+                <parameter param-name="quoteId" from-field="parameters.quoteId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="QuoteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="QuoteTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="QuoteSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        
+        <menu-item name="NewQuote" title="${uiLabelMap.OrderNewQuote}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditQuote"/>
+        </menu-item>
+        <menu-item name="EditQuote" title="${uiLabelMap.CommonEdit}">
+            <condition>
+                <if-compare operator="equals" value="QUO_CREATED" field="quote.statusId"/>
+            </condition>
+            <link target="EditQuote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditQuoteItem" title="${uiLabelMap.OrderCreateOrderQuoteItem}" >
+            <condition>
+                <and>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_APPROVED"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_REJECTED"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
+                </and>
+            </condition>
+            <link target="EditQuoteItem" text="${uiLabelMap.OrderCreateOrderQuoteItem}">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditQuoteTerm" title="${uiLabelMap.OrderCreateOrderQuoteTerm}" >
+            <condition>
+                <and>
+                    <not><if-empty field="quote.quoteId"/></not>
+                    <if-empty field="parameters.quoteItemSeqId"/>
+                        <if-compare field="quote.statusId" operator="not-equals" value="QUO_APPROVED"/>
+                        <if-compare field="quote.statusId" operator="not-equals" value="QUO_REJECTED"/>
+                        <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
+                </and>
+            </condition>
+            <link target="EditQuoteTerm" text="">
+                <parameter param-name="quoteId" from-field="parameters.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditQuoteTermItem" title="${uiLabelMap.OrderCreateOrderQuoteTerm}" >
+            <condition>
+                <and>
+                    <not><if-empty field="quote.quoteId"/></not>
+                    <not><if-empty field="parameters.quoteItemSeqId"/></not>
+                        <if-compare field="quote.statusId" operator="not-equals" value="QUO_APPROVED"/>
+                        <if-compare field="quote.statusId" operator="not-equals" value="QUO_REJECTED"/>
+                        <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
+                </and>
+            </condition>
+            <link target="EditQuoteTermItem" text="">
+                <parameter param-name="quoteId" from-field="parameters.quoteId"/>
+                <parameter param-name="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
+            </link>
+        </menu-item>
+        <menu-item name="NewWorkEffort" title="${uiLabelMap.OrderCreateQuoteWorkEffort}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <and>
+                    <not><if-empty field="quote.quoteId"/></not>
+                    <if-empty field="parameters.quoteItemSeqId"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_APPROVED"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_REJECTED"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
+                </and>
+            </condition>
+            <link target="AddQuoteWorkEffort">
+                <parameter param-name="quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="NewRole" title="${uiLabelMap.OrderCreateOrderQuoteRole}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <and>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_APPROVED"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_REJECTED"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
+                </and>
+            </condition>
+            <link target="EditQuoteRole">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="NewNote" title="${uiLabelMap.OrderCreateOrderQuoteNote}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="createnewquotenote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="createOrder" title="${uiLabelMap.OrderCreateOrder}">
+            <condition disabled-style="disabled">
+                <and>
+                    <not><if-empty field="quote"/></not>
+                    <if-compare operator="equals" value="QUO_APPROVED" field="quote.statusId"/>
+                </and>
+            </condition>
+            <link target="loadCartFromQuote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+                <parameter param-name="finalizeMode" value="init"/>
+            </link>
+        </menu-item>
+        <menu-item name="quoteReport" title="${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="QuoteReport" target-window="new">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="editQuoteReportMail" title="${uiLabelMap.CommonPdf}: ${uiLabelMap.CommonSendReportByMail}" widget-style="+${styles.action_run_sys} ${styles.action_send}">
+            <link target="EditQuoteReportMail">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+                <parameter param-name="emailType" value="PRDS_QUO_CONFIRM"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="QuoteItemsSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <menu-item name="AddAllToCart" title="${uiLabelMap.OrderAddAllToCart}" widget-style="+${styles.action_run_session} ${styles.action_add}">
+            <condition>
+                <if-compare field="maySelectItems" operator="not-equals" value="N" />
+            </condition>
+            <link target="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" url-mode="plain"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="RequestTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="ViewRequest" title="${uiLabelMap.OrderRequestOverview}">
+            <link target="ViewRequest">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+        <menu-item name="editRequest" title="${uiLabelMap.OrderRequest}">
+            <condition>
+                <and>
+                    <not><if-empty field="custRequest"/></not>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_CANCELLED"/>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_COMPLETED"/>
+                </and>
+            </condition>
+            <link target="request">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+        <menu-item name="requestroles" title="${uiLabelMap.OrderRequestRoles}">
+            <condition>
+                <and>
+                    <not><if-empty field="custRequest"/></not>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_CANCELLED"/>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_COMPLETED"/>
+                </and>
+            </condition>
+            <link target="requestroles">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+        <menu-item name="requestitems" title="${uiLabelMap.OrderRequestItems}">
+            <condition>
+                <and>
+                    <not><if-empty field="custRequest"/></not>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_CANCELLED"/>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_COMPLETED"/>
+                </and>
+            </condition>
+            <link target="requestitems">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+        <menu-item name="custRequestContent" title="${uiLabelMap.OrderRequestContent}">
+            <condition>
+                <and>
+                    <not><if-empty field="custRequest"/></not>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_CANCELLED"/>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_COMPLETED"/>
+                </and>
+            </condition>
+            <link target="EditCustRequestContent">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="RequestSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="RequestTabBar" recursive="includes-only" />
+        <menu-item name="requestitems">
+            <sub-menu name="RequestItem" include="RequestItemSideBar"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="RequestSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="newRequest" title="${uiLabelMap.OrderNewRequest}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <or>
+                    <not><if-empty field="custRequest"/></not>
+                    <not><if-compare field="activeSubMenuItem" operator="equals" value="editRequest"/></not>
+                </or>
+            </condition>
+            <link target="EditRequest"/>
+        </menu-item>
+        <menu-item name="createQuoteFromRequest" title="${uiLabelMap.OrderCreateQuoteFromRequest}">
+            <condition>
+                <and>
+                    <not><if-empty field="custRequest"/></not>
+                    <if-compare field="custRequest.custRequestTypeId" operator="equals" value="RF_QUOTE"/>
+                </and>
+            </condition>
+            <link target="createQuoteFromCustRequest">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="RequestScreenletMenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
+        <menu-item name="newRequest" title="${uiLabelMap.OrderNewRequest}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditRequest"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="ReturnTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="OrderReturnHeader" title="${uiLabelMap.CommonSummary}">
+            <link target="returnMain">
+                <parameter param-name="returnId"/>
+            </link>
+        </menu-item>
+        <menu-item name="OrderReturnItems" title="${uiLabelMap.OrderReturnItems}">
+            <link target="returnItems">
+                <parameter param-name="returnId"/>
+            </link>
+        </menu-item>
+        <menu-item name="OrderReturnHistory" title="${uiLabelMap.OrderReturnHistory}">
+            <link target="ReturnHistory">
+                <parameter param-name="returnId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="ReturnSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="ReturnTabBar" recursive="includes-only" />
+        <menu-item-alias name="OrderFindReturn" for="PARENT-NOSUB"/>
+        <menu-item-alias name="OrderQuickReturn" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="OrderReturnList" for="PARENT-WITHSUB"/>
+    </menu>
+    
+    <menu name="editrequestitemmenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="requestitem" title="${uiLabelMap.OrderRequestItem}">
+            <link id="requestitem" target="requestitem">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+                <parameter param-name="custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
+            </link>
+        </menu-item>
+        <menu-item name="requestitemnotes" title="${uiLabelMap.OrderRequestItemNotes}">
+            <link id="requestitemnotes" target="requestitemnotes">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+                <parameter param-name="custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
+            </link>
+        </menu-item>
+        <menu-item name="requestitemquotes" title="${uiLabelMap.OrderRequestItemQuotes}">
+            <link id="requestitemquotes" target="RequestItemQuotes">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+                <parameter param-name="custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
+            </link>
+        </menu-item>
+        <menu-item name="workeffortrequirements" title="${uiLabelMap.OrderRequestItemWorkEffort}">
+            <link id="workeffortrequirements" target="requestitemrequirements">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+                <parameter param-name="custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
+            </link>
+        </menu-item>
+    </menu>
+    <menu name="RequestItemSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="editrequestitemmenu" recursive="includes-only" />
+    </menu>
+    
+    <menu name="quoteTermSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <menu-item name="EditQuoteTerm" title="${uiLabelMap.OrderCreateOrderQuoteTerm}" >
+            <condition>
+                    <and>
+                        <if-empty field="parameters.quoteItemSeqId"/>
+                        <not><if-empty field="quote.quoteId"/></not>
+                    </and>
+            </condition>
+            <link target="EditQuoteTerm" text="">
+                <parameter param-name="quoteId" from-field="parameters.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditQuoteTermItem" title="${uiLabelMap.OrderCreateOrderQuoteTerm}" >
+            <condition>
+                    <and>
+                        <not><if-empty field="parameters.quoteItemSeqId"/></not>
+                        <not><if-empty field="quote.quoteId"/></not>
+                    </and>
+            </condition>
+            <link target="EditQuoteTermItem" text="">
+                <parameter param-name="quoteId" from-field="parameters.quoteId"/>
+                <parameter param-name="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+</menus>

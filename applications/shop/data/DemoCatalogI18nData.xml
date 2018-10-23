@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<entity-engine-xml>
+    <!-- SCIPIO: Category and Product localization -->
+
+    <!-- NOTE: For these to take effect, the corresponding ProductCategory and Product fields must be omitted,
+        otherwise they override the data here -->
+
+    <!-- CATEGORIES (names) -->
+
+    <!-- SCIPIO: TEMPLATE (variables surrounded by underscores _XXX_)
+    <DataResource dataResourceId="DR_ID_DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DR_ID_DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DR_ID_DESCDE" textData="_NAMEDE_"/>
+    <ElectronicText dataResourceId="DR_ID_DESCEN" textData="_NAMEEN_"/>
+
+    <Content contentId="C_ID_DESCDE" contentTypeId="DOCUMENT" dataResourceId="DR_ID_DESCDE" description="DESCRIPTION DE _NAMEEN_" localeString="de"/>
+    <Content contentId="C_ID_DESCEN" contentTypeId="DOCUMENT" dataResourceId="DR_ID_DESCEN" description="DESCRIPTION EN _NAMEEN_" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="_ID_" contentId="C_ID_DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="C_ID_DESCEN" contentIdTo="C_ID_DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    -->
+
+    <!-- Root category -->
+    <DataResource dataResourceId="DRCATALOG1DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCATALOG1DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCATALOG1DESCDE" textData="Demo-Katalog"/>
+    <ElectronicText dataResourceId="DRCATALOG1DESCEN" textData="Demo Catalog"/>
+
+    <Content contentId="CCATALOG1DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCATALOG1DESCDE" description="DESCRIPTION DE Demo Catalog" localeString="de"/>
+    <Content contentId="CCATALOG1DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCATALOG1DESCEN" description="DESCRIPTION EN Demo Catalog" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1" contentId="CCATALOG1DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCATALOG1DESCEN" contentIdTo="CCATALOG1DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Clothing category -->
+    <DataResource dataResourceId="DRCLOTH-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCLOTH-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCLOTH-100DESCDE" textData="Kleidung"/>
+    <ElectronicText dataResourceId="DRCLOTH-100DESCEN" textData="Clothing"/>
+
+    <Content contentId="CCLOTH-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCLOTH-100DESCDE" description="DESCRIPTION DE Clothing" localeString="de"/>
+    <Content contentId="CCLOTH-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCLOTH-100DESCEN" description="DESCRIPTION EN Clothing" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CLOTH-100" contentId="CCLOTH-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCLOTH-100DESCEN" contentIdTo="CCLOTH-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Men's clothing category -->
+    <DataResource dataResourceId="DRCL-MEN-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCL-MEN-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCL-MEN-101DESCDE" textData="Herrenbekleidung"/>
+    <ElectronicText dataResourceId="DRCL-MEN-101DESCEN" textData="Menswear"/>
+
+    <Content contentId="CCL-MEN-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCL-MEN-101DESCDE" description="DESCRIPTION DE Menswear" localeString="de"/>
+    <Content contentId="CCL-MEN-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCL-MEN-101DESCEN" description="DESCRIPTION EN Menswear" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CL-MEN-101" contentId="CCL-MEN-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCL-MEN-101DESCEN" contentIdTo="CCL-MEN-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Women's clothing category -->
+    <DataResource dataResourceId="DRCL-WMN-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCL-WMN-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCL-WMN-101DESCDE" textData="Damen"/>
+    <ElectronicText dataResourceId="DRCL-WMN-101DESCEN" textData="Womenswear"/>
+
+    <Content contentId="CCL-WMN-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCL-WMN-101DESCDE" description="DESCRIPTION DE Womenswear" localeString="de"/>
+    <Content contentId="CCL-WMN-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCL-WMN-101DESCEN" description="DESCRIPTION IT Womenswear" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CL-WMN-101" contentId="CCL-WMN-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCL-WMN-101DESCEN" contentIdTo="CCL-WMN-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Electronics category -->
+    <DataResource dataResourceId="DRELTRN-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRELTRN-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRELTRN-100DESCDE" textData="Elektronik"/>
+    <ElectronicText dataResourceId="DRELTRN-100DESCEN" textData="Electronics"/>
+
+    <Content contentId="CELTRN-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRELTRN-100DESCDE" description="DESCRIPTION DE Electronics" localeString="de"/>
+    <Content contentId="CELTRN-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRELTRN-100DESCEN" description="DESCRIPTION EN Electronics" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="ELTRN-100" contentId="CELTRN-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CELTRN-100DESCEN" contentIdTo="CELTRN-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Computer category -->
+    <DataResource dataResourceId="DRPC-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRPC-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRPC-101DESCDE" textData="Computer"/>
+    <ElectronicText dataResourceId="DRPC-101DESCEN" textData="Computer"/>
+
+    <Content contentId="CPC-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPC-101DESCDE" description="DESCRIPTION DE Computer" localeString="de"/>
+    <Content contentId="CPC-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-101DESCEN" description="DESCRIPTION EN Computer" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="PC-101" contentId="CPC-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CPC-101DESCEN" contentIdTo="CPC-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Systems category -->
+    <DataResource dataResourceId="DRPC-SYS-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRPC-SYS-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRPC-SYS-101DESCDE" textData="Computersysteme"/>
+    <ElectronicText dataResourceId="DRPC-SYS-101DESCEN" textData="Computer Systems"/>
+
+    <Content contentId="CPC-SYS-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPC-SYS-101DESCDE" description="DESCRIPTION DE Computer Systems" localeString="de"/>
+    <Content contentId="CPC-SYS-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-SYS-101DESCEN" description="DESCRIPTION EN Computer Systems" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="PC-SYS-101" contentId="CPC-SYS-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CPC-SYS-101DESCEN" contentIdTo="CPC-SYS-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Software category -->
+    <DataResource dataResourceId="DRPC-SW-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRPC-SW-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRPC-SW-101DESCDE" textData="Software"/>
+    <ElectronicText dataResourceId="DRPC-SW-101DESCEN" textData="Software"/>
+
+    <Content contentId="CPC-SW-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPC-SW-101DESCDE" description="DESCRIPTION DE Software" localeString="de"/>
+    <Content contentId="CPC-SW-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-SW-101DESCEN" description="DESCRIPTION EN Software" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="PC-SW-101" contentId="CPC-SW-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CPC-SW-101DESCEN" contentIdTo="CPC-SW-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Accessories category -->
+    <DataResource dataResourceId="DRPC-AC-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRPC-AC-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRPC-AC-101DESCDE" textData="Computerzubehör"/>
+    <ElectronicText dataResourceId="DRPC-AC-101DESCEN" textData="Computer Accessories"/>
+
+    <Content contentId="CPC-AC-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPC-AC-101DESCDE" description="DESCRIPTION DE Computer Accessories" localeString="de"/>
+    <Content contentId="CPC-AC-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-AC-101DESCEN" description="DESCRIPTION EN Computer Accessories" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="PC-AC-101" contentId="CPC-AC-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CPC-AC-101DESCEN" contentIdTo="CPC-AC-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Peripherals category -->
+    <DataResource dataResourceId="DRPC-PR-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRPC-PR-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRPC-PR-101DESCDE" textData="Peripherals"/>
+    <ElectronicText dataResourceId="DRPC-PR-101DESCEN" textData="Peripherals"/>
+
+    <Content contentId="CPC-PR-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPC-PR-101DESCDE" description="DESCRIPTION DE Peripherals" localeString="de"/>
+    <Content contentId="CPC-PR-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-PR-101DESCEN" description="DESCRIPTION EN Peripherals" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="PC-PR-101" contentId="CPC-PR-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CPC-PR-101DESCEN" contentIdTo="CPC-PR-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- MP3 players category -->
+    <DataResource dataResourceId="DREL-MP3-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DREL-MP3-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DREL-MP3-101DESCDE" textData="MP3-Player"/>
+    <ElectronicText dataResourceId="DREL-MP3-101DESCEN" textData="MP3 Players"/>
+
+    <Content contentId="CEL-MP3-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DREL-MP3-101DESCDE" description="DESCRIPTION DE MP3 Players" localeString="de"/>
+    <Content contentId="CEL-MP3-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DREL-MP3-101DESCEN" description="DESCRIPTION EN MP3 Players" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="EL-MP3-101" contentId="CEL-MP3-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CEL-MP3-101DESCEN" contentIdTo="CEL-MP3-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Phones category -->
+    <DataResource dataResourceId="DREL-PHN-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DREL-PHN-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DREL-PHN-101DESCDE" textData="Handys"/>
+    <ElectronicText dataResourceId="DREL-PHN-101DESCEN" textData="Phones"/>
+
+    <Content contentId="CEL-PHN-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DREL-PHN-101DESCDE" description="DESCRIPTION DE Phones" localeString="de"/>
+    <Content contentId="CEL-PHN-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DREL-PHN-101DESCEN" description="DESCRIPTION EN Phones" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="EL-PHN-101" contentId="CEL-PHN-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CEL-PHN-101DESCEN" contentIdTo="CEL-PHN-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    <!-- Media category -->
+    <DataResource dataResourceId="DRMEDIA-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRMEDIA-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRMEDIA-100DESCDE" textData="Medien"/>
+    <ElectronicText dataResourceId="DRMEDIA-100DESCEN" textData="Media"/>
+
+    <Content contentId="CMEDIA-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRMEDIA-100DESCDE" description="DESCRIPTION DE Media" localeString="de"/>
+    <Content contentId="CMEDIA-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRMEDIA-100DESCEN" description="DESCRIPTION EN Media" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="MEDIA-100" contentId="CMEDIA-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CMEDIA-100DESCEN" contentIdTo="CMEDIA-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Music category -->
+    <DataResource dataResourceId="DRMUSIC-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRMUSIC-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRMUSIC-101DESCDE" textData="Musik"/>
+    <ElectronicText dataResourceId="DRMUSIC-101DESCEN" textData="Music"/>
+
+    <Content contentId="CMUSIC-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRMUSIC-101DESCDE" description="DESCRIPTION DE Music" localeString="de"/>
+    <Content contentId="CMUSIC-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRMUSIC-101DESCEN" description="DESCRIPTION EN Music" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="MUSIC-101" contentId="CMUSIC-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CMUSIC-101DESCEN" contentIdTo="CMUSIC-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    <!-- Music CDs category -->
+    <DataResource dataResourceId="DRMU-CD-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRMU-CD-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRMU-CD-101DESCDE" textData="Musik CDs"/>
+    <ElectronicText dataResourceId="DRMU-CD-101DESCEN" textData="Music CDs"/>
+
+    <Content contentId="CMU-CD-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRMU-CD-101DESCDE" description="DESCRIPTION DE Music CDs" localeString="de"/>
+    <Content contentId="CMU-CD-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRMU-CD-101DESCEN" description="DESCRIPTION EN Music CDs" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="MU-CD-101" contentId="CMU-CD-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CMU-CD-101DESCEN" contentIdTo="CMU-CD-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    <!-- Music Downloads category -->
+    <DataResource dataResourceId="DRMU-DL-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRMU-DL-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRMU-DL-101DESCDE" textData="Musik Downloads"/>
+    <ElectronicText dataResourceId="DRMU-DL-101DESCEN" textData="Music Downloads"/>
+
+    <Content contentId="CMU-DL-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRMU-DL-101DESCDE" description="DESCRIPTION DE Music Downloads" localeString="de"/>
+    <Content contentId="CMU-DL-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRMU-DL-101DESCEN" description="DESCRIPTION EN Music Downloads" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="MU-DL-101" contentId="CMU-DL-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CMU-DL-101DESCEN" contentIdTo="CMU-DL-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    <!-- Travel category (new) -->
+    <DataResource dataResourceId="DRTRVL-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRTRVL-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRTRVL-100DESCDE" textData="Reise"/>
+    <ElectronicText dataResourceId="DRTRVL-100DESCEN" textData="Travel"/>
+
+    <Content contentId="CTRVL-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRTRVL-100DESCDE" description="DESCRIPTION DE Travel" localeString="de"/>
+    <Content contentId="CTRVL-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRTRVL-100DESCEN" description="DESCRIPTION EN Travel" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="TRVL-100" contentId="CTRVL-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CTRVL-100DESCEN" contentIdTo="CTRVL-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Automotive category -->
+    <DataResource dataResourceId="DRAUTO-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRAUTO-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRAUTO-100DESCDE" textData="Automotive"/>
+    <ElectronicText dataResourceId="DRAUTO-100DESCEN" textData="Automotive"/>
+
+    <Content contentId="CAUTO-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRAUTO-100DESCDE" description="DESCRIPTION DE Automotive" localeString="de"/>
+    <Content contentId="CAUTO-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRAUTO-100DESCEN" description="DESCRIPTION EN Automotive" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="AUTO-100" contentId="CAUTO-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CAUTO-100DESCEN" contentIdTo="CAUTO-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Groceries (foods) category (new, replacement) -->
+    <DataResource dataResourceId="DRFOOD-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRFOOD-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRFOOD-100DESCDE" textData="Lebensmittel"/>
+    <ElectronicText dataResourceId="DRFOOD-100DESCEN" textData="Groceries"/>
+
+    <Content contentId="CFOOD-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-100DESCDE" description="DESCRIPTION DE Groceries" localeString="de"/>
+    <Content contentId="CFOOD-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-100DESCEN" description="DESCRIPTION EN Groceries" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="FOOD-100" contentId="CFOOD-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CFOOD-100DESCEN" contentIdTo="CFOOD-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Subscriptions category -->
+    <DataResource dataResourceId="DRSUBS-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRSUBS-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRSUBS-100DESCDE" textData="Abonnements"/>
+    <ElectronicText dataResourceId="DRSUBS-100DESCEN" textData="Subscriptions"/>
+
+    <Content contentId="CSUBS-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRSUBS-100DESCDE" description="DESCRIPTION DE Subscriptions" localeString="de"/>
+    <Content contentId="CSUBS-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRSUBS-100DESCEN" description="DESCRIPTION EN Subscriptions" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="SUBS-100" contentId="CSUBS-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CSUBS-100DESCEN" contentIdTo="CSUBS-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Financial category -->
+    <DataResource dataResourceId="DRFIN-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRFIN-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRFIN-100DESCDE" textData="Finanz"/>
+    <ElectronicText dataResourceId="DRFIN-100DESCEN" textData="Financial"/>
+
+    <Content contentId="CFIN-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRFIN-100DESCDE" description="DESCRIPTION DE Financial" localeString="de"/>
+    <Content contentId="CFIN-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRFIN-100DESCEN" description="DESCRIPTION EN Financial" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="FIN-100" contentId="CFIN-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CFIN-100DESCEN" contentIdTo="CFIN-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Services category (new, replacement) -->
+    <DataResource dataResourceId="DRSERV-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRSERV-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRSERV-100DESCDE" textData="Dienstleistungen"/>
+    <ElectronicText dataResourceId="DRSERV-100DESCEN" textData="Services"/>
+
+    <Content contentId="CSERV-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRSERV-100DESCDE" description="DESCRIPTION DE Services" localeString="de"/>
+    <Content contentId="CSERV-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRSERV-100DESCEN" description="DESCRIPTION EN Services" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="SERV-100" contentId="CSERV-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CSERV-100DESCEN" contentIdTo="CSERV-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Gift Cards category (new, replacement) -->
+    <DataResource dataResourceId="DRGFTC-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRGFTC-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRGFTC-100DESCDE" textData="Geschenkkarten"/>
+    <ElectronicText dataResourceId="DRGFTC-100DESCEN" textData="Gift Cards"/>
+
+    <Content contentId="CGFTC-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRGFTC-100DESCDE" description="DESCRIPTION DE Gift Cards" localeString="de"/>
+    <Content contentId="CGFTC-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRGFTC-100DESCEN" description="DESCRIPTION EN Gift Cards" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="GFTC-100" contentId="CGFTC-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CGFTC-100DESCEN" contentIdTo="CGFTC-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Gift Cards Purchase category (new, replacement) -->
+    <DataResource dataResourceId="DRGC-PR-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRGC-PR-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRGC-PR-101DESCDE" textData="Geschenkkarten kaufen"/>
+    <ElectronicText dataResourceId="DRGC-PR-101DESCEN" textData="Gift Card Purchase"/>
+
+    <Content contentId="CGC-PR-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRGC-PR-101DESCDE" description="DESCRIPTION DE Gift Cards Purchase" localeString="de"/>
+    <Content contentId="CGC-PR-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRGC-PR-101DESCEN" description="DESCRIPTION EN Gift Cards Purchase" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="GC-PR-101" contentId="CGC-PR-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CGC-PR-101DESCEN" contentIdTo="CGC-PR-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Gift Cards Reload category (new, replacement) -->
+    <DataResource dataResourceId="DRGC-RL-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRGC-RL-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRGC-RL-101DESCDE" textData="Geschenkkarten Reload"/>
+    <ElectronicText dataResourceId="DRGC-RL-101DESCEN" textData="Gift Card Reload"/>
+
+    <Content contentId="CGC-RL-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRGC-RL-101DESCDE" description="DESCRIPTION DE Gift Cards Reload" localeString="de"/>
+    <Content contentId="CGC-RL-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRGC-RL-101DESCEN" description="DESCRIPTION EN Gift Cards Reload" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="GC-RL-101" contentId="CGC-RL-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CGC-RL-101DESCEN" contentIdTo="CGC-RL-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Drop-Ship (new, replacement) -->
+    <DataResource dataResourceId="DRDROP-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRDROP-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRDROP-100DESCDE" textData="Drop-Ship"/>
+    <ElectronicText dataResourceId="DRDROP-100DESCEN" textData="Drop-Ship"/>
+
+    <Content contentId="CDROP-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRDROP-100DESCDE" description="DESCRIPTION DE Drop-Ship" localeString="de"/>
+    <Content contentId="CDROP-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRDROP-100DESCEN" description="DESCRIPTION EN Drop-Ship" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="DROP-100" contentId="CDROP-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CDROP-100DESCEN" contentIdTo="CDROP-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Promotions category -->
+    <DataResource dataResourceId="DRPROMO-001DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRPROMO-001DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRPROMO-001DESCDE" textData="Ausgewählte Artikel"/>
+    <ElectronicText dataResourceId="DRPROMO-001DESCEN" textData="Featured Products"/>
+
+    <Content contentId="CPROMO-001DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPROMO-001DESCDE" description="DESCRIPTION DE Featured Products" localeString="de"/>
+    <Content contentId="CPROMO-001DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPROMO-001DESCEN" description="DESCRIPTION EN Featured Products" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="PROMOTIONS" contentId="CPROMO-001DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CPROMO-001DESCEN" contentIdTo="CPROMO-001DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Search category -->
+    <DataResource dataResourceId="DRCAT1SEARCHDESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCAT1SEARCHDESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCAT1SEARCHDESCDE" textData="Demo Standardsuche "/>
+    <ElectronicText dataResourceId="DRCAT1SEARCHDESCEN" textData="Demo Default Search"/>
+
+    <Content contentId="CCAT1SEARCHDESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCAT1SEARCHDESCDE" description="DESCRIPTION DE Demo Default Search" localeString="de"/>
+    <Content contentId="CCAT1SEARCHDESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCAT1SEARCHDESCEN" description="DESCRIPTION EN Demo Default Search" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1_SEARCH" contentId="CCAT1SEARCHDESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCAT1SEARCHDESCEN" contentIdTo="CCAT1SEARCHDESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Main Quick Add category -->
+    <DataResource dataResourceId="DRCAT1QKADD1DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCAT1QKADD1DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCAT1QKADD1DESCDE" textData="Haupt Quick Add"/>
+    <ElectronicText dataResourceId="DRCAT1QKADD1DESCEN" textData="Main Quick Add"/>
+
+    <Content contentId="CCAT1QKADD1DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCAT1QKADD1DESCDE" description="DESCRIPTION DE Main Quick Add" localeString="de"/>
+    <Content contentId="CCAT1QKADD1DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCAT1QKADD1DESCEN" description="DESCRIPTION EN Main Quick Add" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1_QUICKADD1" contentId="CCAT1QKADD1DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCAT1QKADD1DESCEN" contentIdTo="CCAT1QKADD1DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    <!-- Electronics Quick Add category -->
+    <DataResource dataResourceId="DRCAT1QKADD2DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCAT1QKADD2DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCAT1QKADD2DESCDE" textData="Electronics Quick Add"/>
+    <ElectronicText dataResourceId="DRCAT1QKADD2DESCEN" textData="Electronics Quick Add"/>
+
+    <Content contentId="CCAT1QKADD2DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCAT1QKADD2DESCDE" description="DESCRIPTION DE Electronics Quick Add" localeString="de"/>
+    <Content contentId="CCAT1QKADD2DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCAT1QKADD2DESCEN" description="DESCRIPTION EN Electronics Quick Add" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1_QUICKADD2" contentId="CCAT1QKADD2DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCAT1QKADD2DESCEN" contentIdTo="CCAT1QKADD2DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    <!-- Best Selling category -->    
+    <DataResource dataResourceId="DRCAT1BSELLDESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCAT1BSELLDESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCAT1BSELLDESCDE" textData="Meistverkauft"/>
+    <ElectronicText dataResourceId="DRCAT1BSELLDESCEN" textData="Best Selling"/>
+
+    <Content contentId="CCAT1BSELLDESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCAT1BSELLDESCDE" description="DESCRIPTION DE Best Selling" localeString="de"/>
+    <Content contentId="CCAT1BSELLDESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCAT1BSELLDESCEN" description="DESCRIPTION EN Best Selling" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1_BEST_SELL" contentId="CCAT1BSELLDESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCAT1BSELLDESCEN" contentIdTo="CCAT1BSELLDESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    
+    <!-- PRODUCTS -->
+
+    <!-- CAM-2644 (Example) -->
+    <DataResource dataResourceId="CAM-2644DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="CAM-2644DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="CAM-2644DESCDE" textData="Die Nikon retro Analogkamera mit FM2 Film"/>
+    <ElectronicText dataResourceId="CAM-2644DESCEN" textData="The Nikon retro analog camera with FM2 film"/>
+
+    <Content contentId="CAM-2644DESCDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCDE" description="DESCRIPTION DE Nikon Analog Camera" localeString="de"/>
+    <Content contentId="CAM-2644DESCEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCEN" description="DESCRIPTION EN Nikon Analog Camera" localeString="en"/>
+
+    <ProductContent productId="CAM-2644" contentId="CAM-2644DESCEN" productContentTypeId="DESCRIPTION" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CAM-2644DESCEN" contentIdTo="CAM-2644DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <DataResource dataResourceId="CAM-2644NAMEDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="CAM-2644NAMEEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="CAM-2644NAMEDE" textData="Nikon Analogkamera"/>
+    <ElectronicText dataResourceId="CAM-2644NAMEEN" textData="Nikon Analog Camera"/>
+
+    <Content contentId="CAM-2644NAMEDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644NAMEDE" description="DESCRIPTION DE Nikon Analog Camera" localeString="de"/>
+    <Content contentId="CAM-2644NAMEEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644NAMEEN" description="DESCRIPTION EN Nikon Analog Camera" localeString="en"/>
+
+    <ProductContent productId="CAM-2644" contentId="CAM-2644NAMEEN" productContentTypeId="PRODUCT_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CAM-2644NAMEEN" contentIdTo="CAM-2644NAMEDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+</entity-engine-xml>

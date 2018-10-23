@@ -1,0 +1,64 @@
+/* SCIPIO METRO Theme */
+// BASE theme imports
+@import "settings";
+@import "foundation";
+@import "compass/reset/utilities";
+@import "foundation/components/global";
+@import "shared/base";
+@import "shared/login";
+@import "shared/code";
+@import "shared/footer";
+@import "shared/ui_autocomplete";
+@import "shared/tiles";
+@import "pizza";
+@import "shared/chartsjs";
+@import "shared/steps";
+@import "shared/calendar";
+@import "shared/editor";
+
+// METRO Theme Imports
+//@import "style";
+//@import "theme";
+@import "sidebar";
+@import "topbar";
+
+
+/*Theme specific fixes*/
+th a { color: #fff;}
+
+.postfix input { padding:0px;}
+
+.datepicker {
+    td, th {
+        background:none!important;
+        color:$jet;
+        }
+    .date-switch, .next,.prev {
+        color:$smoke;
+    }
+    td.active {
+        color:$black;
+        background-color:$aluminum!important;
+    }
+}
+
+.breadcrumbs {background:$white;}
+
+footer{
+    a {
+        color: $aluminum;
+        
+        &:hover,&:focus{
+            color: $white;
+        }
+    }
+}
+
+/*Template API documentation (TODO: REVIEW)*/
+.tmpldoc-content .lib-page-intro h4 { /* specific to metro theme */
+  color: #666;
+}
+
+.tmpldoc-content .lib-page-intro p { /* specific to metro theme */
+  margin-bottom: 0.4em;
+}

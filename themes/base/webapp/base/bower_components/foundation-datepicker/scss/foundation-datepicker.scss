@@ -1,0 +1,186 @@
+// fdatepicker variables and their defaults
+$fdatepicker-ui-primary: #2ba6cb !default;
+$fdatepicker-ui-color: #000 !default;
+$fdatepicker-ui-bg: #fff !default;
+$fdatepicker-ui-disabled: #eee !default;
+$fdatepicker-ui-border-color: #000 !default;
+$fdatepicker-ui-border-transparency: 0.2 !default;
+$fdatepicker-ui-border: 1px solid rgba($fdatepicker-ui-color, $fdatepicker-ui-border-transparency) !default;
+$fdatepicker-ui-shadow: 0 5px 10px rgba($fdatepicker-ui-color, $fdatepicker-ui-border-transparency) !default;
+$fdatepicker-ui-border-radius: 5px !default;
+$fdatepicker-ui-before-color: #ccc !default;
+$fdatepicker-ui-old-new-color: #999 !default;
+$fdatepicker-ui-text-color: #333 !default;
+$fdatepicker-inline-width: 220px !default;
+
+// uncomment if used with foundation 5 to get compatible defaults, thanks jamesstoneco
+// $fdatepicker-ui-primary: $primary-color;
+// $fdatepicker-ui-bg: $f-dropdown-bg;
+// $fdatepicker-ui-text-color: $body-font-color;
+// $fdatepicker-ui-disabled: rgba($primary-color, 0.7);
+// $fdatepicker-ui-before-color: $secondary-color;
+// $fdatepicker-ui-border-transparency: 0.2 !default;
+// $fdatepicker-ui-border: $f-dropdown-border-style $f-dropdown-border-width $f-dropdown-border-color;
+// $fdatepicker-ui-shadow: none;
+// $fdatepicker-ui-border-radius: 0;
+// $fdatepicker-ui-before-color: lighten($fdatepicker-ui-text-color, 30%);
+// $fdatepicker-ui-old-new-color: lighten($fdatepicker-ui-text-color, 20%);
+// $fdatepicker-inline-width: $f-dropdown-max-width;
+
+@mixin datepicker() {
+	text-align: center;
+	width: 20px;
+	height: 20px;
+	border: 0;
+	font-size: 12px;
+	padding: 4px 8px;
+	background: $fdatepicker-ui-bg;
+	cursor: pointer;
+}
+
+.datepicker {
+	display: none;
+	position: absolute;
+	padding: 4px;
+	margin-top: 1px;
+	direction: ltr;
+	&.dropdown-menu {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		z-index: 1000;
+		float: left;
+		display: none;
+		min-width: 160px;
+		list-style: none;
+		background-color: $fdatepicker-ui-bg;
+		border: $fdatepicker-ui-border;
+
+		-webkit-border-radius: $fdatepicker-ui-border-radius;
+		-moz-border-radius: $fdatepicker-ui-border-radius;
+		border-radius: $fdatepicker-ui-border-radius;
+
+		-webkit-box-shadow: $fdatepicker-ui-shadow;
+		-moz-box-shadow: $fdatepicker-ui-shadow;
+		box-shadow: $fdatepicker-ui-shadow;
+
+		-webkit-background-clip: padding-box;
+		-moz-background-clip: padding;
+		background-clip: padding-box;
+
+		*border-right-width: 2px;
+		*border-bottom-width: 2px;
+		color: $fdatepicker-ui-text-color;
+		font-size: 13px;
+		line-height: 18px;
+		th { padding: 4px 5px; }
+		td { padding: 4px 5px; }
+	}
+	table {
+		border: 0;
+		margin: 0;
+		width: auto;
+		tr td span {
+			display: block;
+			width: 23%;
+			height: 54px;
+			line-height: 54px;
+			float: left;
+			margin: 1%;
+			cursor: pointer;
+		}
+	}
+	td {
+		text-align: center;
+		width: 20px;
+		height: 20px;
+		border: 0;
+		font-size: 12px;
+		padding: 4px 8px;
+		background: $fdatepicker-ui-bg;
+		cursor: pointer;
+		&.active.day, &.active.year { background: $fdatepicker-ui-primary; }
+		&.old , &.new { color: $fdatepicker-ui-old-new-color; }
+		span.active { background: $fdatepicker-ui-primary; }
+		&.day.disabled { color: $fdatepicker-ui-disabled; }
+		span.month.disabled, span.year.disabled {
+			color: $fdatepicker-ui-disabled;
+		}
+	}
+	th {
+		text-align: center;
+		width: 20px;
+		height: 20px;
+		border: 0;
+		font-size: 12px;
+		padding: 4px 8px;
+		background: $fdatepicker-ui-bg;
+		cursor: pointer;
+		&.active.day, &.active.year { background: $fdatepicker-ui-primary; }
+		&.date-switch { width: 145px; }
+		span.active { background: $fdatepicker-ui-primary; }
+	}
+	.cw {
+		font-size: 10px;
+		width: 12px;
+		padding: 0 2px 0 5px;
+		vertical-align: middle;
+	}
+	&.days div.datepicker-days { display: block; }
+	&.months div.datepicker-months { display: block; }
+	&.years div.datepicker-years { display: block; }
+	thead tr:first-child th {
+		cursor: pointer;
+		&.cw {
+			cursor: default;
+			background-color: transparent;
+		}
+	}
+	tfoot tr:first-child th { cursor: pointer; }
+}
+.datepicker-inline { width: $fdatepicker-inline-width; }
+.datepicker-rtl {
+	direction: rtl;
+	table tr td span { float: right; }
+}
+.datepicker-dropdown {
+	top: 0;
+	left: 0;
+	&:before {
+		content: '';
+		display: inline-block;
+		border-left: 7px solid transparent;
+		border-right: 7px solid transparent;
+		border-bottom: 7px solid $fdatepicker-ui-before-color;
+		border-bottom-color: $fdatepicker-ui-border;
+		position: absolute;
+		top: -7px;
+		left: 6px;
+	}
+	&:after {
+		content: '';
+		display: inline-block;
+		border-left: 6px solid transparent;
+		border-right: 6px solid transparent;
+		border-bottom: 6px solid $fdatepicker-ui-bg;
+		position: absolute;
+		top: -6px;
+		left: 7px;
+	}
+}
+.datepicker>div,
+.datepicker-dropdown::before,
+.datepicker-dropdown::after { display: none; }
+.datepicker-close {
+	position: absolute;
+	top: -30px;
+	right: 0;
+	width: 15px;
+	height: 30px;
+	padding: 0;
+	display: none;
+}
+.table-striped .datepicker table tr td,
+.table-striped .datepicker table tr th {
+	background-color: transparent;
+}

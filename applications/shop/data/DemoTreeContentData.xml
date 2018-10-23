@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<entity-engine-xml>
+    <Content contentId="PICTURE" contentTypeId="DOCUMENT" contentName="Picture" dataResourceId=""/>
+    <Content contentId="PROD_DESCRIPTION" contentTypeId="DOCUMENT" contentName="Product Description" dataResourceId=""/>
+    <Content contentId="GENERAL" contentTypeId="DOCUMENT" contentName="General" dataResourceId=""/>
+    <Content contentId="STORE_POLICIES" contentTypeId="DOCUMENT" contentName="Store Policies" dataResourceId=""/>
+
+    <ContentAssoc contentId="TREE_ROOT" contentIdTo="PICTURE" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="TREE_ROOT" contentIdTo="PROD_DESCRIPTION" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="TREE_ROOT" contentIdTo="GENERAL" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="TREE_ROOT" contentIdTo="STORE_POLICIES" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+
+    <ContentAssoc contentId="PICTURE" contentIdTo="MP3-1000-01" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+
+    <!-- SCIPIO: TODO?: Associate new categories content to this tree? -->
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-100DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+ 
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-100DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-PR-101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-PR-101DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-RL-101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-RL-101DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPROMO-001DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPROMO-001DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644NAMEEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644NAMEDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+
+    <ContentAssoc contentId="GENERAL" contentIdTo="SCIPIO-FACT-02" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="GENERAL" contentIdTo="SCIPIO-FACT-03" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="GENERAL" contentIdTo="SCIPIO-FACT-04" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+
+    <ContentAssoc contentId="STORE_POLICIES" contentIdTo="STORE_POLICIES2" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+
+</entity-engine-xml>

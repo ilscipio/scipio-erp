@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <!-- ========================================================= -->
+    <!-- WebSite (bare essentials / non-demo) -->
+    <!-- ========================================================= -->
+    
+    <!-- Essential WebSite definitions -->
+    <!-- NOTE: also see CmsWebsiteDemoData.xml fixups -->
+    <!-- Treating cmsSite as a front-end/shop site, not backend.
+    <WebSite webSiteId="cmsSite" siteName="SCIPIO Dummy Web Site" visualThemeId="BASE"/>-->
+    <WebSite webSiteId="cmsSite" siteName="SCIPIO Dummy Web Site" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" />
+    <WebSite webSiteId="cmsBackendSite" siteName="SCIPIO Dummy Backend Site" visualThemeSetId="BACKOFFICE" />
+    
+</entity-engine-xml>

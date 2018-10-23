@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="ProgramExport" type="single" target="ProgramExport" default-map-name="parameters">
+        <field name="groovyProgram" required-field="true">
+            <textarea cols="120" rows="20" />
+        </field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="LayoutDemoForm" type="single" target="${demoTargetUrl}" default-map-name="demoMap">
+        <field name="name" title="${uiLabelMap.CommonName}" required-field="true">
+            <text />
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
+        <field name="dropDown" title="${uiLabelMap.CommonEnabled}">
+            <drop-down>
+                <option key="Y" description="${uiLabelMap.CommonYes}" />
+                <option key="N" description="${uiLabelMap.CommonNo}" />
+            </drop-down>
+        </field>
+        <field name="checkBox" title="${uiLabelMap.CommonEnabled}">
+            <check/>
+        </field>
+        <field name="radioButton" title="${uiLabelMap.CommonEnabled}">
+            <radio>
+                <option key="Y" description="${uiLabelMap.CommonYes}" />
+                <option key="N" description="${uiLabelMap.CommonNo}" />
+            </radio>
+        </field>
+        <field name="myFormPassedVar1" title="myFormPassedVar1"><display description="${groovy: context.myFormPassedVar1 ?: 'missing'}"/></field>
+        <field name="myFormPassedGlobalVar1" title="myFormPassedGlobalVar1"><display description="${groovy: context.myFormPassedGlobalVar1 ?: 'missing'}"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
+            <hyperlink target="${demoTargetUrl}" description="${uiLabelMap.CommonCancel}"></hyperlink>
+        </field>
+    </form>
+
+    <form name="LayoutDemoList" type="list" list-name="demoList" paginate-target="${demoTargetUrl}" separate-columns="true"
+        odd-row-style="${altRowStyle}" header-row-style="${headerStyle}" default-table-style="${tableStyle}">
+        <field name="name" title="${uiLabelMap.CommonName}"><display/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
+        <field name="dropDown" title="${uiLabelMap.CommonEnabled}">
+            <drop-down>
+                <option key="Y" description="${uiLabelMap.CommonYes}" />
+                <option key="N" description="${uiLabelMap.CommonNo}" />
+            </drop-down>
+        </field>
+        <field name="checkBox" title="${uiLabelMap.CommonEnabled}">
+            <check/>
+        </field>
+        <field name="radioButton" title="${uiLabelMap.CommonEnabled}">
+            <radio>
+                <option key="Y" description="${uiLabelMap.CommonYes}" />
+                <option key="N" description="${uiLabelMap.CommonNo}" />
+            </radio>
+        </field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update} button-col">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="LayoutDemoActionsIncludeTest1" type="single">
+        <actions>
+            <set field="commonActionField2" value="This value 2 was set in LayoutDemoActionsIncludeTest1 screen actions included using the new include-actions screen widget directive. [SUCCESS]"/>
+            <set field="commonActionField3" value="This value 3 was set in LayoutDemoActionsIncludeTest1 screen actions included using the new include-actions screen widget directive, but should be overridden child. [ERROR]"/>
+        </actions>
+    </form>
+    <form name="LayoutDemoActionsIncludeTest2" type="single" extends="LayoutDemoActionsIncludeTest1">
+        <actions>
+            <set field="commonActionField3" value="This value 3 was set in LayoutDemoActionsIncludeTest2 screen actions included using the new include-actions screen widget directive. [SUCCESS]"/>
+        </actions>
+    </form>
+    
+    <!-- NOTE: we can omit this, it's automatically gotten from name: id="TargetedRenderingTestForm1" -->
+    <form name="TargetedRenderingTestForm1" type="single" target="TargetedRenderingTest">
+        <field name="testinput1" title="Input 1"><text/></field>
+        <field name="testinput1" title="Input 2"><text/></field>
+    </form>
+    
+    <form name="TooltipTestForm1" type="single">
+        <actions>
+            <entity-one entity-name="Party" value-field="party">
+                <field-map field-name="partyId" value="admin"/>
+            </entity-one>
+        </actions>
+        <field name="input1" tooltip="This is a tooltip!"><text/></field>
+        <field name="display1" tooltip="This is a tooltip!"><display/></field>
+        <field name="check1" tooltip="This is a tooltip!"><check/></field>
+        <field name="radio1" tooltip="This is a tooltip!"><radio/></field>
+        <field name="dateTime1" tooltip="This is a tooltip!"><date-time/></field>
+        <field name="displayEntity1" tooltip="This is a tooltip!" map-name="party" entry-name="partyId"><display-entity entity-name="Party" key-field-name="partyId"/></field>
+        <field name="file1" tooltip="This is a tooltip!"><file/></field>
+        <field name="lookup1" tooltip="This is a tooltip!"><lookup target-form-name="LookupGeo"></lookup></field>
+        <field name="password1" tooltip="This is a tooltip!"><password/></field>
+        <field name="rangeFind1" tooltip="This is a tooltip!"><range-find/></field>
+        <field name="dateFind1" tooltip="This is a tooltip!"><date-find/></field>
+        <field name="textFind1" tooltip="This is a tooltip!"><text-find/></field>
+        <field name="dropDown1" tooltip="This is a tooltip!"><drop-down/></field>
+        <field name="reset1" tooltip="This is a tooltip!"><reset/></field>
+        <field name="image1" tooltip="This is a tooltip!"><image value="/images/scipio/scipio-logo-small.png"/></field>
+        <field name="hyperlink1" tooltip="This is a tooltip!"><hyperlink target="LayoutDemo" description="This is a link"/></field>
+        <field name="textarea1" tooltip="This is a tooltip!"><textarea/></field>
+        <field name="submit1" tooltip="This is a tooltip!"><submit/></field>
+        <field name="submit2" tooltip="This is a tooltip!"><submit button-type="text-link"/></field>
+    </form>
+
+    <form name="ActionsTestForm1" type="single">
+        <actions>
+            <script lang="groovy"><![CDATA[
+                context.myTestField1 = parameters.myTestField1;
+                context.myTestField3434 = "hello";
+                context.myTestField34 = "hello";
+            ]]></script>
+        </actions>
+        <field name="myTestField1" use-when="myTestField1==null"><display description="myTestField1 value was null"/></field>
+        <field name="myTestField1" use-when="myTestField1!=null"><display description="myTestField1 value was not null"/></field>
+        <field name="myTestField2" use-when="myTestField2==null"><display description="myTestField2 value was null"/></field>
+        <field name="myTestField2" use-when="myTestField2!=null"><display description="myTestField2 value was not null"/></field>
+        <!-- the following is awful, never do this -->
+        <field name="myTestField3" use-when="${myTestField3434 == 'hello'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isEmpty(myTestField1)}">
+            <display description="myTestField3434 was hello and myTestField1 was empty"/>
+        </field>
+    </form>
+</forms>

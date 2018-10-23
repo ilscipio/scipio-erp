@@ -1,0 +1,1742 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- decorator used in creating a response to an ajax request -->
+    <screen name="AjaxGlobalDecorator">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/htmlheader-for-ajax.ftl" />
+                    </html>
+                </platform-specific>
+                <section name="Global-Column-Main">
+                    <widgets>
+                        <decorator-section-include name="body" />
+                    </widgets>
+                </section>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/htmlfooter-for-ajax.ftl" />
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!--
+        The following screen is used to generate Ajax list of options for autocomplete fields
+    -->
+    <screen name="ajaxAutocompleteOptions">
+        <section>
+            <actions>
+                <set field="autocompleteOptions" from-field="parameters.autocompleteOptions" />
+            </actions>
+            <widgets>
+                <decorator-screen name="AjaxGlobalDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://common/webcommon/includes/ajaxAutocompleteOptions.ftl" /></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Global screen rendering context initialization, intended to be included in screen decorators. Devs - please keep this simple and generic. -->
+    <screen name="GlobalActions">
+        <actions>
+            <!-- traditionally layoutSettings.VT_*_JAVASCRIPT[] are only for theme resources (styling-related);
+                 app logic (e.g. ajax date retrieval; heavy app interaction?) should use layoutSettings.javaScripts[];
+                 when overlap and both depends, on a file, should go in layoutSettings.javaScripts[];
+                 same for styles -->            
+                                       
+            <!-- Application-provided styles (common to all themes) - keep to minimum so themes can switch
+            
+            <set field="layoutSettings.styleSheets[]" value="" global="true"/>  
+                          
+            -->
+
+                               
+            <!-- Application scripts (common to all apps; may be shared by themes) - needed for app function (ajax, basic function, etc.)
+                 Can be forced to put some theme scripts here if apps depend heavily on them -->
+            
+            <!-- Legacy jQuery; TODO: Remove once possible -->
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
+            
+            <!--  Foundation jQuery + extras > Moved to themes
+            <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/modernizr/modernizr.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>
+            <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery/dist/jquery.min.js" global="true" />
+            -->
+            <!-- Legacy JS; TODO: Remove once possible -->
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/selectall.js" global="true" />
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/fieldlookup.js" global="true" />
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/miscAjaxFunctions.js" global="true" />               
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/selectMultipleRelatedValues.js" global="true" />
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/util.js" global="true" />
+              
+            <!-- Can now be set in footer
+            <set field="layoutSettings.javaScriptsFooter[]" value="" global="true" />
+            -->
+
+            <!-- Load available JS Language Files -->
+            <!-- DISABLED FOR CLEAN-UP
+            <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}" />
+            <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.datejs.getFilePath(initialLocaleComplete)}" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.jquery.getFilePath(initialLocaleComplete)}" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.dateTime.getFilePath(initialLocaleComplete)}" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" /> // replaced by foundation datepicker
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jquery.maskedinput-1.3.1.min.js" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-migrate-1.2.1.js" global="true"/>
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true" />
+            -->
+                
+            <!-- jQuery CSSs -->
+            <!-- DISABLED FOR CLEAN-UP
+            <set field="layoutSettings.javaScripts[]" value="/images/OpenLayers-2.13.1.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/date/date.format-1.2.3-min.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/date/date.timezone-min.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/miscAjaxFunctions.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/selectMultipleRelatedValues.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/util.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/date/FromThruDateCheck.js" global="true"/>                
+            -->     
+                              
+            <!-- Note: Must be run last after all layoutSettings assignments due to a Ofbiz widget vars bug -->
+            <!-- SCIPIO: 2016-08-09: this is no longer appropriate as default behavior. the theme should have been already
+                looked up into rendererVisualThemeResources, which uses more complex lookup logic.
+            <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
+            <service service-name="getVisualThemeResources">
+                <field-map field-name="visualThemeId" />
+                <field-map field-name="themeResources" from-field="layoutSettings" />
+            </service>
+            <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
+            -->
+            <script location="component://common/webcommon/WEB-INF/actions/includes/GetLayoutSettingsVisualThemeResources.groovy" />
+
+            <set field="setContextScipioTmplGlobalVarsAsGlobal" type="Boolean" value="true" />
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/SetContextScipioTmplGlobalVars.groovy" />
+            
+            <!-- 2016-12-19: read applicationMenuLocation/Name from application parameters 
+                (WARN: do NOT use combined parameters map for this!) -->
+            <script lang="groovy"><![CDATA[
+                if (!context.applicationMenuLocation) { // automatically checks globalContext
+                    applicationMenuLocation = application?.getAttribute("applicationMenuLocation");
+                    if (applicationMenuLocation) {
+                        globalContext.applicationMenuLocation = applicationMenuLocation;
+                    }
+                }
+                if (!context.applicationMenuName) {
+                    applicationMenuName = application?.getAttribute("applicationMenuName");
+                    if (applicationMenuName) {
+                        globalContext.applicationMenuName = applicationMenuName;
+                    }
+                }
+            ]]></script>
+            <!-- Fetch messages from system -->
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/GetUserNotifications.groovy" />
+        </actions>
+    </screen>
+    
+    <screen name="GlobalTemplateActions">
+        <actions>
+            <set field="layoutSettings.commonHeaderImageLinkUrl" from-field="layoutSettings.commonHeaderImageLinkUrl" default-value="main" global="true" />
+            <!--<set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" /> -->
+            <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]" />
+            <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]" />
+            <set field="appbarTemplateLocation" from-field="layoutSettings.VT_NAV_TMPLT_LOC[0]" />
+            <set field="appbarOpenTemplateLocation" from-field="layoutSettings.VT_NAV_OPEN_TMPLT[0]" />
+            <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]" />
+            <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl" global="true"/>
+            <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
+            <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
+            <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
+
+            <!-- Saved the orig "title" and "titleProperty" field JUST IN CASE something needs them; we may overwrite these -->
+            <set field="origTitle" from-field="title" />
+            <set field="origTitleProperty" from-field="titleProperty" />
+
+            <set field="finalTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>
+            <!-- 2016-10-26: support titleFormatString to simplify screens 
+                use backslash to delay the evaluation of expression to here -->
+            <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}" />
+
+            <set field="resolvedTitle" value="${groovy: org.ofbiz.base.util.string.FlexibleStringExpander.expandString(titleFormat, context)}" />
+
+            <!-- OVERWRITE the title field with resolved so automatically works with existing themes -->
+            <!-- NOTE: 2016-10-26: This now means that themes only need to check the "title" field; don't need to check titleProperty anymore (shouldn't be their job) -->
+            <set field="title" from-field="resolvedTitle"/>
+
+            <!-- GLOBAL version of the title so top-level templates can also access it
+                (NOTE: due to language issues, must be a different field name) -->
+            <set field="globalTitle" from-field="resolvedTitle" global="true"/>
+
+            <set field="headerTitle" from-field="resolvedTitle"/>
+            <set field="layoutSettings.companyName" from-field="layoutSettings.companyName" default-value="SCIPIO" global="true"/>
+
+            <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>
+            
+            <!-- 2017-05-19: output the public-facing parts of layoutSettings when in viewAsJson mode
+                WARN: these are returned without ofbizContentUrl wrapping; caller must handle
+                NOTE: DO NOT output the full layoutSettings here, because it contains internal paths that _could_ be considered
+                    security risk on some production systems. -->
+            <set field="scpOutParams.layoutSettings.javaScripts" from-field="layoutSettings.javaScripts" global="true"/>
+            <set field="scpOutParams.layoutSettings.javaScriptsFooter" from-field="layoutSettings.javaScriptsFooter" global="true"/>
+            <set field="scpOutParams.layoutSettings.styleSheets" from-field="layoutSettings.styleSheets" global="true"/>
+        </actions>
+    </screen>
+
+    <screen name="AllGlobalActions">
+        <actions>
+            <include-screen-actions name="GlobalActions" />
+            <include-screen-actions name="GlobalTemplateActions" />
+        </actions>
+    </screen>
+
+    <!-- Global decorator for General Screens/Pages
+         Supported sections: body, pre-body, menu-bar, left-column, right-column
+         Supported section flags (boolean, true default): showLeftColumn, showRightColumn, showPreBody -->
+    <screen name="GlobalDecorator">
+        <section>
+            <actions>
+                <include-screen-actions name="GlobalActions" />
+                <include-screen-actions name="GlobalTemplateActions" />
+                
+                <!-- 2017-05-19: SPECIAL: contains-expressions for header depends on whether
+                    customSideBar is set or not. if the theme does its own sidebar then we cannot
+                    optimize the left column; the theme has to do it with ftl @virtualSection directives -->
+                <if>
+                    <condition><if-true field="customSideBar" /></condition>
+                    <then>
+                        <set field="headAppContainsExpr" value="!$Global-Column-Main, !$Global-Column-Right"/>
+                    </then>
+                    <else>
+                        <set field="headAppContainsExpr" value="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right"/>
+                    </else>
+                </if>
+            </actions>
+            <widgets>
+                <!-- 2017-05-04: "contains" expression is used in targeted rendering mode to exclude unrelated sections from executing 
+                    when certain sections are targeted. It works by negative logic. It is a shorthand to having to wrap everything 
+                    in more unreadable <condition> blocks. It's primarily an optimization to avoid executing needless actions; 
+                    note that even when a section is executed, it does not necessarily mean it will cause rendering output. -->
+                <section contains="${headAppContainsExpr}, *">
+                    <condition>
+                        <if-empty field="parameters.ajaxUpdateEvent" />
+                    </condition>
+                    <widgets>
+                        <!-- render html head open -->
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://common/webcommon/includes/htmlHeadOpen.ftl" />
+                            </html>
+                        </platform-specific>
+                        <!-- render header -->
+                        <section name="Global-Head-Header">
+                            <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="${headerTemplateLocation}" />
+                                    </html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                        <!-- render appbar or its opening part -->
+                        <section name="Global-Main-Nav">
+                            <condition>
+                                <not>
+                                    <if-empty field="appbarOpenTemplateLocation" />
+                                </not>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="${appbarOpenTemplateLocation}" />
+                                    </html>
+                                </platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="${appbarTemplateLocation}" />
+                                    </html>
+                                </platform-specific>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+                <section contains="${headAppContainsExpr}, *">
+                    <condition>
+                        <and>
+                            <if-empty field="parameters.ajaxUpdateEvent" />
+                            <not><if-true field="customSideBar"/></not>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <!-- render appheader: both menu widget style and ftl template style menus are supported -->
+                        <section name="Global-App-Nav">
+                            <condition>
+                                <not>
+                                    <if-empty field="userLogin" />
+                                </not>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not>
+                                            <if-empty field="appheaderTemplate" />
+                                        </not>
+                                    </condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html>
+                                                <html-template location="${appheaderTemplate}" />
+                                            </html>
+                                        </platform-specific>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <!-- FIXME: conflict/inconsistency between context.applicationTitle 
+                                            and parameters.applicationTitle (the latter risks allowing user input as title!) -->
+                                        <section>
+                                            <condition>
+                                                <not>
+                                                    <if-empty field="parameters.applicationTitle" />
+                                                </not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="apptitle">${parameters.applicationTitle}</label>
+                                            </widgets>
+                                        </section>
+                                        <section>
+                                            <condition>
+                                                <not>
+                                                    <if-empty field="applicationMenuLocation" />
+                                                </not>
+                                            </condition>
+                                            <widgets>
+                                                <include-menu name="${applicationMenuName}" location="${applicationMenuLocation}" />
+                                            </widgets>
+                                        </section>
+                                    </fail-widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- better to just not include this, the CommonAppBarMenu doesn't show anything by default if the user isn't logged in, causing a funny empty menu: <include-menu name="CommonAppBarMenu" location="component://common/widget/CommonMenus.xml"/> -->
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+                <!-- render the appbar closing part -->
+                <section contains="${headAppContainsExpr}, *">
+                    <condition>
+                        <and>
+                            <if-empty field="parameters.ajaxUpdateEvent" />
+                            <not>
+                                <if-empty field="appbarCloseTemplateLocation" />
+                            </not>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="${appbarCloseTemplateLocation}" />
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
+                <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
+                     include in <head></head>, but doesn't seem worth it for now -->
+                <section name="Global-Head-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://common/webcommon/includes/commonHeadScripts.ftl" />
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
+                <!-- render content area -->
+                <section name="Global-Pre-Content" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                    <widgets>
+                        <decorator-section-include name="pre-content"/>
+                    </widgets>
+                </section>
+                <container style="${styles.grid_theme}" id="content-main-section">
+                    <section>
+                        <condition>
+                            <not>
+                                <if-empty-section section-name="content-full-screen"/>
+                            </not>
+                        </condition>
+                        <widgets>
+                            <section name="Global-Content-Full">
+                                <widgets>
+                                    <decorator-section-include name="content-full-screen"/>
+                                </widgets>
+                            </section>      
+                        </widgets>
+                        <fail-widgets>
+                        <!-- Closer to body: <decorator-section-include name="pre-body" /> -->
+                            
+                            <!-- Theme Override for menu generation (allows themes to rely on custom macros to generate sidebars) -->
+                            <section name="Global-Content-Main">
+                                <condition>
+                                    <if-true field="customSideBar" />
+                                </condition>
+                                <widgets>
+                                    <!-- Theme styling  -->
+                                    <section>
+                                        <!-- Not Authenticated Screens -->
+                                        <condition>
+                                            <if-empty field="userLogin" />
+                                        </condition>
+                                        <actions>
+                                            <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
+                                            <set field="noTitle" value="true"/>
+                                        </actions>
+                                        <widgets>
+                                            <container id="content-main-body">
+                                                <include-screen name="column-main"/>
+                                            </container>
+                                        </widgets>
+                                        <!-- Authenticated Screens -->
+                                        <fail-widgets>
+                                            <section>
+                                                <actions>
+                                                    <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
+                                                </actions>
+                                                <widgets>
+                                                    <container id="content-main-body">
+                                                        <include-screen name="column-main"/>
+                                                    </container>
+                                                 </widgets>
+                                            </section>
+                                        </fail-widgets>
+                                    </section>
+                                    <!--  Theme styling -->
+                                </widgets>
+                                <fail-widgets>
+                                    <!-- Default layout -->
+                                    <section>
+                                        <!-- Not Authenticated Screens -->
+                                        <condition>
+                                            <if-empty field="userLogin" />
+                                        </condition>
+                                        <actions>
+                                            <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
+                                            <set field="noTitle" value="true"/>
+                                        </actions>
+                                        <widgets>
+                                            <container id="content-main-body">
+                                                <include-screen name="column-main"/>
+                                            </container>
+                                        </widgets>
+                                        <!-- Authenticated Screens -->
+                                        <fail-widgets>
+                                            <section>
+                                                <condition>
+                                                    <and>
+                                                        <or>
+                                                            <if-empty-section section-name="left-column" />
+                                                            <if-false field="showLeftColumn" />
+                                                        </or>
+                                                        <or>
+                                                            <if-empty-section section-name="right-column" />
+                                                            <if-false field="showRightColumn" />
+                                                        </or>
+                                                    </and>
+                                                </condition>
+                                                <actions>
+                                                    <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
+                                                </actions>
+                                                <widgets>
+                                                    <container id="content-main-body">
+                                                        <include-screen name="column-main"/>
+                                                    </container>
+                                                 </widgets>
+                                            </section>
+                                            <section>
+                                                <condition>
+                                                    <and>
+                                                        <not>
+                                                            <or>
+                                                                <if-empty-section section-name="left-column" />
+                                                                <if-false field="showLeftColumn" />
+                                                            </or>
+                                                        </not>
+                                                        <or>
+                                                            <if-empty-section section-name="right-column" />
+                                                            <if-false field="showRightColumn" />
+                                                        </or>
+                                                    </and>
+                                                </condition>
+                                                <actions>
+                                                   <set field="columnLeftStyle" value="${styles.grid_sidebar_1_side}" />
+                                                   <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
+                                                </actions>
+                                                <widgets>
+                                                    <include-screen name="column-left"/>
+                                                    <include-screen name="column-main"/>
+                                                </widgets>
+                                            </section>
+                                            <section>
+                                                <condition>
+                                                    <and>
+                                                        <or>
+                                                            <if-empty-section section-name="left-column" />
+                                                            <if-false field="showLeftColumn" />
+                                                        </or>
+                                                        <not>
+                                                            <or>
+                                                                <if-empty-section section-name="right-column" />
+                                                                <if-false field="showRightColumn" />
+                                                            </or>
+                                                        </not>
+                                                    </and>
+                                                </condition>
+                                                <actions>
+                                                   <set field="columnRightStyle" value="${styles.grid_sidebar_1_side}" />
+                                                   <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
+                                                </actions>
+                                                <widgets>
+                                                    <include-screen name="column-main"/>
+                                                    <include-screen name="column-right"/>
+                                                </widgets>
+                                            </section>
+                                            <section>
+                                                <condition>
+                                                    <and>
+                                                        <not>
+                                                            <or>
+                                                                <if-empty-section section-name="left-column" />
+                                                                <if-false field="showLeftColumn" />
+                                                            </or>
+                                                        </not>
+                                                        <not>
+                                                            <or>
+                                                                <if-empty-section section-name="right-column" />
+                                                                <if-false field="showRightColumn" />
+                                                            </or>
+                                                        </not>
+                                                    </and>
+                                                </condition>
+                                                <actions>
+                                                   <set field="columnLeftStyle" value="${styles.grid_sidebar_2_side}" />
+                                                   <set field="columnRightStyle" value="${styles.grid_sidebar_2_side}" />
+                                                   <set field="columnMainStyle" value="${styles.grid_sidebar_2_main}" />
+                                                </actions>
+                                                <widgets>
+                                                    <include-screen name="column-left"/>
+                                                    <include-screen name="column-main"/>
+                                                    <include-screen name="column-right"/>
+                                                </widgets>
+                                            </section>
+                                        </fail-widgets>
+                                    </section>
+                                <!-- Default layout -->
+                                </fail-widgets>
+                            </section>
+                        </fail-widgets>
+                    </section>
+                </container>
+                <!-- TODO: this could be in theme as described above, but not worth it for now -->
+                <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://common/webcommon/includes/commonFootScripts.ftl" />
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
+                <section contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                    <condition>
+                        <if-empty field="parameters.ajaxUpdateEvent" />
+                    </condition>
+                    <widgets>
+                        <!-- render footer -->
+                        <section name="Global-Footer">
+                            <condition>
+                                <if-empty field="applicationFooterTemplate" />
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="${footerTemplateLocation}" />
+                                    </html>
+                                </platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="${applicationFooterTemplate}" />
+                                    </html>
+                                </platform-specific>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Global decorator for Lookup pop-up windows or layered CSS -->
+    <screen name="LookupDecorator">
+        <section>
+            <condition>
+                <not><if-compare operator="equals" value="Y" field="parameters.ajaxLookup"/></not>
+            </condition>
+            <widgets>
+
+                <section>
+                    <actions>
+                        <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                        <service service-name="getUserPreferenceGroup" result-map="prefResult">
+                            <field-map field-name="userPrefGroupTypeId" value="GLOBAL_PREFERENCES"/>
+                        </service>
+                        <set field="userPreferences" from-field="prefResult.userPrefMap" global="true"/>
+
+                        <property-map resource="general" map-name="generalProperties" global="true"/>
+
+                        <!-- SCIPIO: 2016-08-09: this is no longer appropriate as default behavior. the theme should have been already
+                            looked up into rendererVisualThemeResources, which uses more complex lookup logic.
+                        <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true"/>
+                        <service service-name="getVisualThemeResources">
+                            <field-map field-name="visualThemeId"/>
+                            <field-map field-name="themeResources" from-field="layoutSettings"/>
+                        </service>
+                        <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
+                        -->
+                        <script location="component://common/webcommon/WEB-INF/actions/includes/GetLayoutSettingsVisualThemeResources.groovy" />
+
+                        <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true"/>
+
+                        <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl" global="true"/>
+                    </actions>
+                    <widgets>
+                        <section>
+                            <condition>
+                                <if-compare value="layer" operator="not-equals" field="parameters.presentation"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://common/webcommon/includes/lookup.ftl" /></html></platform-specific>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="body"/></not>
+                            </condition>
+                            <widgets>
+                                <container id="content-main-body">
+                                    <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${title}" id="findScreenlet" collapsible="true" padded="false">
+                                    <container id="search-options">
+                                        <decorator-section-include name="search-options"/>
+                                    </container>
+                                </screenlet>
+                                <screenlet>
+                                    <container id="search-results">
+                                        <decorator-section-include name="search-results"/>
+                                    </container>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                        <section>
+                        <condition>
+                            <if-compare value="layer" operator="not-equals" field="parameters.presentation"/>
+                        </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://common/webcommon/includes/lookupFooter.ftl"/></html></platform-specific>
+                            </widgets>
+                        </section>
+                    </widgets>
+                </section>
+
+            </widgets>
+            <fail-widgets>
+                <section>
+                    <actions>
+                        <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                        <set field="searchType" from-field="parameters.searchType" default-value="${searchType}"/>
+                        <script location="component://common/webcommon/WEB-INF/actions/includes/FindAutocompleteOptions.groovy"/>
+                    </actions>
+                    <widgets>
+                        <decorator-screen name="AjaxGlobalDecorator">
+                            <decorator-section name="body">
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="component://common/webcommon/includes/ajaxAutocompleteOptions.ftl" />
+                                    </html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
+                    </widgets>
+                </section>
+            </fail-widgets>
+        </section>
+    </screen>
+
+    <!-- Simple decorator (no application and menu bars); it can be used:
+         * for printer friendly html screens (no logo and no application bar, header and footer); a print button is also available at the top of the screen
+         * for simple PDF report (a simple header with the logo/date is rendered and a footer with page numbers)
+    -->
+    <screen name="SimpleDecorator">
+        <section>
+            <actions>
+                <!-- The default (global) stylesheet -->
+                <set field="layoutSettings.styleSheets[+0]" value="/images/maincss.css" global="true"/>
+                <set field="layoutSettings.rtlStyleSheets[+0]" value="/images/mainrtl.css" global="true"/>
+                <!-- The default (global) java scripts -->
+                    <!-- jQuery part -->
+                <!-- Load available JS Language Files -->
+                <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
+                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.datejs.getFilePath(initialLocaleComplete)}" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.jquery.getFilePath(initialLocaleComplete)}" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true"/>
+
+                <!-- Replaced by foundation datepicker <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" />-->
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>                
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>
+                    <!-- jQuery CSSs -->
+
+                <set field="layoutSettings.javaScripts[]" value="/images/OpenLayers-2.13.1.js" global="true" />
+                <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true"/>
+                <!-- The default (global) shortcut icon -->
+                <set field="layoutSettings.shortcutIcon" value="/images/scipio/favicon.ico" global="true"/>
+                <!-- The settings below are used for xsl-fo screens -->
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <!--<set field="defaultFontFamily" value="Arial"/>-->
+            </actions>
+            <widgets>
+                <!-- render header -->
+                <platform-specific>
+                    <html><html-template location="component://common/webcommon/includes/simple.ftl"/></html>
+                    <xsl-fo><html-template location="component://common/webcommon/includes/simple.fo.ftl"/></xsl-fo>
+                    <xml><html-template location="component://common/webcommon/includes/minimal-decorator.ftl"/></xml>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Common Widgets -->
+    <screen name="column-left">
+        <section name="Global-Column-Left" contains="!$Global-Column-Main, !$Global-Column-Right, *">
+            <widgets>
+                <container style="${columnLeftStyle}" id="left-sidebar">
+                    <container style="sidebar">
+                        <decorator-section-include name="menu-bar" />
+                        <decorator-section-include name="left-column" />
+                    </container>
+                </container>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="column-right">
+        <section name="Global-Column-Right" contains="!$Global-Column-Main, !$Global-Column-Left, *">
+            <widgets>
+                <container style="${columnRightStyle}" id="right-sidebar">
+                    <container style="sidebar">
+                        <decorator-section-include name="right-column" />
+                    </container>
+                </container>        
+            </widgets>
+        </section>            
+    </screen>
+    
+    <screen name="column-main">
+        <section name="Global-Column-Main" contains="!$Global-Column-Left, !$Global-Column-Right, *">
+            <condition>
+                <if-empty field="noTitle"/>
+            </condition>
+            <widgets>
+                <container style="${columnMainStyle}" id="main-content">
+                    <section name="Global-Column-Main-Inner">
+                        <widgets>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="${messagesTemplateLocation}" />
+                                </html>
+                            </platform-specific>
+                            <decorator-section-include name="pre-body" />
+                            <label style="h1" text="${headerTitle}"/>
+                            <decorator-section-include name="body" />
+                        </widgets>
+                    </section>
+                </container>
+            </widgets>
+            <fail-widgets>
+                <container style="${columnMainStyle}" id="main-content">
+                    <section name="Global-Column-Main-Inner">
+                        <widgets>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="${messagesTemplateLocation}" />
+                                </html>
+                            </platform-specific>
+                            <decorator-section-include name="pre-body" />
+                            <decorator-section-include name="body" />
+                        </widgets>
+                    </section>
+                </container>
+            </fail-widgets>
+        </section>            
+    </screen>
+
+    <!-- fo decorator for pdf documents (invoices, sales orders, purchase orders etc...). -->
+    <screen name="FoReportDecorator">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
+                <property-to-field resource="fop.properties" field="defaultFontFamily" property="fop.font.family" default="Arial"/>
+            </actions>
+            <widgets>
+                <platform-specific><xsl-fo><html-template location="component://common/webcommon/includes/fo/ScipioPdfTemplateDinA4.fo.ftl"/></xsl-fo></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Decorator for xsl-fo rendering -->
+    <screen name="GlobalFoDecorator">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
+                <set field="layoutSettings.commonHeaderImageUrl" default-value="/images/scipio/scipio-logo.svg"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo>
+                        <html-template location="component://common/webcommon/includes/fo/start.fo.ftl"/>
+                        <html-template location="component://common/webcommon/includes/fo/basic-header.fo.ftl"/>
+                        <html-template location="component://common/webcommon/includes/fo/basic-footer.fo.ftl"/>
+                    </xsl-fo>
+                </platform-specific>
+                <decorator-section-include name="body"/>
+                <platform-specific><xsl-fo><html-template location="component://common/webcommon/includes/fo/end.fo.ftl"/></xsl-fo></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- Default "error" page for XSL-FO based output. -->
+    <screen name="FoError">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+<!--                <platform-specific><xsl-fo><html-template location="component://common/webcommon/error.fo.ftl"/></xsl-fo></platform-specific> -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <!-- SCIPIO Email Decorator -->
+    <screen name="ScipioEmailDecorator">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <email>
+                        <html-template location="component://common/webcommon/includes/email/openEmailBody.ftl"/>
+                    </email>
+                </platform-specific>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="headerTemplate" />
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="${headerTemplate}" />
+                            </email>
+                        </platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="component://common/webcommon/includes/email/emailHeader.ftl" />
+                            </email>
+                        </platform-specific>
+                    </fail-widgets>
+                </section>
+                <decorator-section-include name="body" />
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="footerTemplate" />
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="${footerTemplate}" />
+                            </email>
+                        </platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="component://common/webcommon/includes/email/emailFooter.ftl" />
+                            </email>
+                        </platform-specific>
+                    </fail-widgets>
+                </section>
+                <platform-specific>
+                    <email>
+                        <html-template location="component://common/webcommon/includes/email/closeEmailBody.ftl"/>
+                    </email>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="login">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLogin" />
+                <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="${loginTemplateLocation}"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="error">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleError" />
+                <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
+                <set field="isErrorPage" type="Boolean" value="true" />
+                
+                <!-- SCIPIO: this is for when 404 in web.xml sent by ContextFilter -->
+                <script lang="groovy"><![CDATA[
+                    filterRequestUriError = request.getAttribute("filterRequestUriError");
+                    if (filterRequestUriError) {
+                        errMsg = org.ofbiz.base.util.UtilProperties.getMessage("CommonErrorUiLabels", "CommonServerRequestUrlNotFound",
+                            [requestUrl:filterRequestUriError], context.locale);
+                        errorMessageList = context.errorMessageList;
+                        if (errorMessageList == null) {
+                            errorMessageList = [];
+                            context.errorMessageList = errorMessageList;
+                        }
+                        errorMessageList.add(errMsg);
+                    }
+                ]]></script>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="${errorTemplateLocation}"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ajaxNotLoggedIn">
+        <section>
+            <widgets>
+                <decorator-screen name="AjaxGlobalDecorator">
+                    <decorator-section name="body">
+                        <label style="common-msg-info-important" text="${uiLabelMap.CommonSessionTimeoutPleaseLogIn}"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="requirePasswordChange">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://common/webcommon/changePassword.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="forgotPassword">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleForgotPassword" />
+                <set field="noTitle" value="true" global="true"/><!-- Hack to remove the header element -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://common/webcommon/forgotPassword.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Locales Screen (SCIPIO: Note there is also a lookup version in LookupScreens) -->
+    <screen name="ListLocales">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonChooseLanguage}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="listLocales" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="listLocales">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/listLocales.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Compact version of list locales (Note there is also a lookup version in LookupScreens) -->
+    <screen name="ListLocalesCompact">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonChooseLanguage}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="listLocalesCompact" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    
+    <screen name="listLocalesCompact">
+        <section>
+            <actions>
+                <set field="setLocalesTarget" from-field="setLocalesTarget" default-value="${groovy: request.getAttribute('setLocalesTarget')}" />
+                <set field="setLocalesTargetView" from-field="setLocalesTargetView" default-value="${groovy: request.getAttribute('setLocalesTargetView')}" />
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/listLocalesCompact.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>  
+
+    <!-- Timezones Screen (SCIPIO: Note there is also a lookup version in LookupScreens) -->
+    <screen name="ListTimezones">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonTime}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="listTimezones" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="listTimezones">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/listTimezones.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- List visual themes (SCIPIO: Note there is also a lookup version in LookupScreens) -->
+    <screen name="ListVisualThemes">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonVisualThemes}"/>
+                <set field="parameters.presentation" value="window"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="listVisualThemes" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="listVisualThemes">
+        <section>
+            <actions>
+                <entity-one entity-name="WebSite" value-field="webSite"/>
+                <set field="visualThemeSetId" from-field="webSite.visualThemeSetId" default-value="BACKOFFICE" />
+                <entity-condition entity-name="VisualTheme" list="visualThemes">
+                    <condition-expr field-name="visualThemeSetId" from-field="visualThemeSetId" />
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/listVisualThemes.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="EventMessages">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="FindScreenDecorator">
+        <section>
+            <actions>
+                <set field="httpMethod" value="${groovy: request?.getMethod()?.toLowerCase()}" />
+            </actions>
+            <widgets>
+                <!-- ToDo: Decide on what to do with this. In theory this should either be h2 or not existent at all
+                <section>
+                    <condition>
+                        <if-empty field="titleProperty"/>
+                    </condition>
+                    <widgets>
+                        <container style="page-title"><label text="${title}" style="h1"></label></container>
+                    </widgets>
+                    <fail-widgets>
+                        <container style="page-title"><label text="${uiLabelMap[titleProperty]}" style="h1"></label></container>
+                    </fail-widgets>
+                </section>-->
+                <section>
+                    <condition>
+                        <not><if-empty-section section-name="menu-bar"/></not>
+                    </condition>
+                    <widgets>
+                        <decorator-section-include name="menu-bar"/>
+                    </widgets>
+                </section>
+                <container style="clear"/>
+                <screenlet id="searchOptions" name="findScreenlet" collapsible="true" title="${uiLabelMap.CommonSearchOptions}">
+                    <container id="search-options">
+                        <decorator-section-include name="search-options" />
+                    </container>
+                </screenlet>
+                <!-- Hack: don't show results title (or results) if a query not posted; 
+                     only way to know if a query was made from here.
+                     Special case params for webtools: find
+                     Other special cases: VIEW_SIZE, VIEW_INDEX, noConditionFind, inputFields, etc. 
+                     findScreenShowResults context var overrides all if present but screen must do logic. -->
+                <section>
+                    <condition>
+                        <or>
+                            <if-true field="findScreenShowResults" />
+                            <and>
+                                <not><if-false field="findScreenShowResults" /></not>
+                                <or>
+                                    <if-compare field="httpMethod" operator="equals" value="post" />
+                                    <if-compare field="parameters.find" operator="equals" value="true" />
+                                    <if-compare field="parameters.find" operator="equals" value="Y" />
+                                    <not><if-empty field="parameters.VIEW_SIZE" /></not>
+                                    <not><if-empty field="parameters.VIEW_INDEX" /></not>
+                                    <not><if-empty field="parameters.viewSize" /></not>
+                                    <not><if-empty field="parameters.viewIndex" /></not>
+                                    <not><if-empty field="parameters.noConditionFind" /></not>
+                                    <not><if-empty field="parameters.inputFields" /></not>
+                                </or>
+                            </and>
+                        </or>
+                    </condition>
+                    <widgets>
+                        <screenlet padded="false">
+                            <label style="heading" text="${uiLabelMap.CommonSearchResults}"/>
+                            <container id="search-results" style="search-results">
+                                <decorator-section-include name="search-results"/>
+                            </container>
+                        </screenlet>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="help">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleHelp"></set>
+                <property-map resource="CommonHelpUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="helpText" value="${uiLabelMap[parameters.topic]}" default-value="${uiLabelMap.HelpNotFound}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator">
+                    <decorator-section name="body">
+                        <label style="h1">${uiLabelMap.PageTitleHelp}</label>
+                        <label>${helpText}</label>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="viewBlocked">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewBlocked"></set>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/viewBlocked.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="geoChart">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleCommonGeoLocation"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://common/webcommon/includes/geolocation.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="breadcrumbs">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://common/webcommon/includes/breadcrumbs.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Included Screens -->
+    <screen name="states">
+        <section>
+            <actions>
+                <!-- SCIPIO: we now support currentStateProvinceGeoId -->
+                <!--<set field="currentStateProvinceGeoId" from-field="currentStateProvinceGeoId" default-value="${''}"/>-->
+                <set field="statesPreselect" from-field="statesPreselect" type="Boolean" default-value="true"/>
+                <set field="statesPreselectFirst" from-field="statesPreselectFirst" type="Boolean" default-value="false"/>
+                <set field="statesAllowEmpty" from-field="statesAllowEmpty" type="Boolean" default-value="false"/>
+                <!-- see template for other states* options -->
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/states.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="countries">
+        <section>
+            <actions>
+                <!-- SCIPIO: we now support currentCountryGeoId -->
+                <!--<set field="currentCountryGeoId" from-field="currentCountryGeoId" default-value="${''}"/>-->
+                <property-to-field field="defaultSystemCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
+                <set field="defaultCountryGeoId" from-field="defaultCountryGeoIdOverride" default-value="${defaultSystemCountryGeoId}"/>
+                <set field="countriesUseDefault" from-field="countriesUseDefault" type="Boolean" default-value="true"/>
+                <set field="countriesPreselect" from-field="countriesPreselect" type="Boolean" default-value="true"/>
+                <set field="countriesPreselectFirst" from-field="countriesPreselectFirst" type="Boolean" default-value="false"/>
+                <set field="countriesAllowEmpty" from-field="countriesAllowEmpty" type="Boolean" default-value="false"/>
+                <!-- see template for other countries* options -->
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/countries.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="cctypes">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/CcTypes.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/cctypes.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ccmonths">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/ccmonths.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ccyears">
+        <section>
+            <actions>
+                <set field="thisDate" from-field="nowTimestamp"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/ccyears.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <!--
+        The following screen renders a generic link (implemented by an hidden form)
+        that can be included in other screens in the following way:
+        ...
+        <section>
+            <actions>
+                <set field="genericLinkName" value="formName"/> The name of the hidden form (mandatory)
+                <set field="genericLinkText" value="Link message"/> The link text (mandatory)
+                <set field="genericLinkTarget" value="ApprovedProductRequirementsReport"/> The request name (mandatory)
+                <set field="genericLinkStyle" value="${styles.link_xxx}"/> The style of the link (optional)
+                <set field="genericLinkWindow" value="newWindow"/> The target window (optional): if set, a new browser window is created
+                <set field="excludeParameters" value="N"/> If not set to Y, the requestParameters are included in the form as hidden fields (optional, defaults to N)
+            </actions>
+            <widgets>
+                <include-screen name="genericLink" location="component://common/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+        ...
+    -->
+    <screen name="genericLink">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/genericLink.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- 
+        SCIPIO: WIP - Common decorator for dashboards 
+        Render all child sections in a grid. Grid size may be overriden by passing a 'columns' argument. 
+        Although, dashboard grids have size constraints (min col/max col size), defined in widget.properties, 
+        in order to force screens that use this decorator to look like as a dashboard.           
+    
+    <screen name="main-decorator-dashboard">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">                     
+                        <section>
+                            <actions>
+                                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/DashboardLayout.groovy" />                         
+                            </actions>
+                            <widgets>
+                                <label style="h1">${uiLabelMap.CommonDashboard}</label>
+                                <screenlet>
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/scipio/dashboard.ftl"/></html></platform-specific>                                 
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    -->
+    
+    <screen name="scipioMenuWidgetWrapper">
+        <section>
+            <widgets>
+                <include-menu name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}"
+                    max-depth="${scipioWidgetWrapperArgs.maxDepth}" sub-menus="${scipioWidgetWrapperArgs.subMenus}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-menu>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="scipioFormWidgetWrapper">
+        <section>
+            <widgets>
+                <include-form name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-form>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="scipioTreeWidgetWrapper">
+        <section>
+            <widgets>
+                <include-tree name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-tree>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="scipioScreenWidgetWrapper">
+        <section>
+            <widgets>
+                <include-screen name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Complex Menu Wrapper
+        Renders a complex menu supporting complex structure such as any number and depth of sub-menus.
+        
+        Each application should wrap this implementation (or a variant: ComplexSideBarMenu, etc.) in its common screen definitions and provide the location
+        of an complex menu in menuCfg.location/name, plus any other needed configuration in the menuCfg map.
+        
+        The individual screens or decorators then simply need to set the following fields in their actions (with global="false", implied):
+        * activeSubMenu (direct argument)
+        * activeSubMenuItem (direct argument)
+        The following can influence selection but are usually do not need to be specified manually in screens:
+        * activeMainMenuItem (fallback argument) (2016-11-15: now auto-resolved by ResolveComplex(SideBar)MenuExtraItems below, if called from main-decorator of app)
+        (NOTE: Above are the default input field names, but they may be changed per-menu using further configuration below)
+        
+        Details:
+        * activeSubMenu - Name of a sub-menu that is part of the complex menu designated by menuCfg.location/name.
+          The name corresponds to the name attribute in the <sub-menu name="..."/> menu definitions, and is unique within a whole menu.
+          This name may be prefixed with a location, in the usual "component://[location]#[menu-name]" format; 
+          but this location is not used in the complex menu lookup.
+          If the name is not found within the complex menu as sub-menu, the name and location is instead used to lookup a 
+          simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
+          but is only necessary if the menu location differs from the default location as specified to this widget in menuCfg.defLocation.
+          In fallback mode, a suffix (by default "Menu", or "SideBar" if you use ComplexSideBarMenu) is added to the activeSubMenu value before performing the lookup.
+          SPECIAL VALUES:
+          * For supported special values, see description of menu selected-menu-context-field-name attribute
+            in component://widget/dtd/widget-menu.xsd.
+          * In addition, in some cases, empty/missing value may be treated specially, for example due to the menuCfg.allowSubItemTop config parameter.
+        * activeSubMenuItem - Name of a menu item that is child (or parent) of the menu/sub-menu designated/implied by activeSubMenu.
+          If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
+          on the menu/sub-menu designated/implied by activeSubMenu, or otherwise will consider the parent item of the sub-menu as the target.
+          SPECIAL VALUES:
+          * For supported special values, see description of menu selected-menuitem-context-field-name attribute
+            in component://widget/dtd/widget-menu.xsd.
+          SPECIAL VALUE ALIASES: 
+          2016-11-16: The PARENT special values can now be handled more cleanly and centralized by setting them in 
+          menu-item-alias definitions (added for 1.14.3) in menu definitions.
+          For example if a new-record screen identifies itself with "NewRecord" set in activeSubMenuItem, the corresponding
+          sub-menu's definition can be augmented with an alias to make it behave like PARENT(-NOSUB):
+            <menu name="RecordSideBar" extends="CommonSideBarMenu" location="component://common/widget/CommonMenus.xml">
+                [...]
+                <menu-item-alias name="NewRecord" for="PARENT-NOSUB"/>
+                [...]
+            </menu>
+          The effect will be the same as if PARENT-NOSUB had been set in activeSubMenuItem by the screen, but 
+          the definition is centralized with all the other items and better abstracted.
+          NOTE: if the name is not found within the (sub-)menu, a warning (error) will be printed to log. The sub-menu will still be expanded to help
+              pinpoint the error, but the active item selection may not be correct until the error is fixed.
+        * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
+          specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default).
+          NOTE: 2016-11-15: activeMainMenuItem is now auto-determined by DeriveComplex(SideBar)MenuItems when called from main-decorator and usually 
+              does not need to be set anymore, as long as activeSubMenu/activeSubMenuItem are assigned before the main-decorator invocation containing 
+              the DeriveComplex(SideBar)MenuItems call. To exploit this, your app simply needs to call DeriveComplex(SideBar)MenuItems in its main-decorator.
+              Changed for 1.14.3.
+        
+        Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an complex menu.
+        activeMainMenuItem is used to handle some default cases only; however, note that activeMainMenuItem is
+        still necessary to designate items in other unrelated menus (if the app/theme has any that depend on it).
+        
+        The default behavior is based on the usual usage in the standard Scipio screens (based on the Ofbiz pattern).
+        In these screens, the fields activeSubMenu and activeSubMenuItem are used to highlight items in the
+        main side bar menus, with activeMainMenuItem as fallback for the top level.
+        Often, activeSubMenu is by decorators and activeSubMenuItem by individual screens.
+        Additionally, activeMainMenuItem is used in some themes to highlight items in a separate non-complex "main" menu.
+        
+        menuCfg configurable fields, as members of menuCfg map (<set field="menuCfg.name" value="..."/>):
+        
+        Complex menu location:
+        * location (required) - Complex menu location
+        * name (required) - Complex menu name
+        Complex menu render options:
+        * subMenuFilter - Value for <include-menu sub-menus="..." /> attribute (see widget-screen.xsd)
+          NOTE: this can also be overridden using the top context variable:
+          * menuCfgSubMenuFilter (has priority)
+        * maxDepth - Value for <include-menu max-depth="..." /> attribute (see widget-screen.xsd)
+          NOTE: this can also be overridden using the top context variable:
+          * menuCfgMaxDepth (has priority)
+        Default locations:  
+        * defLocation (required) - Application's default menu file location for menus
+            This is only used for fallback simple/non-complex menus, when there is no explicit
+            location specified as prefix in activeSubMenu.
+        Complex menu name suffix control:
+        * nameSuffix (default: "Menu") - Complex menu name suffix
+        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenu field, for menu lookup
+            (only appends if not already ends with)
+        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenu field, for menu lookup
+            Set cplxAddSuffix to false (default) if you used explicit names in menu defs, such as: 
+              <sub-menu name="Server" include="ServerSideBar"/>
+            In this case it's best to leave cplxStripSuffix true for compatibility.
+            Set cplxStripSuffix to true (default) if you used implicit or reused full names, such as: 
+                <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>
+            In this case cplxStripSuffix is ignored (inapplicable).
+        Simple/fallback menu name suffix control:
+        * simpleNameSuffix - Suffix for simple/fallback menu, always added (unless already ends with)         
+        Other:
+        * forceSimple - Override to force rendering simple/fallback menu instead of complex
+        * allowSubItemTop (default: true) - Controls behavior when activeSubMenuItem is set but activeSubMenu is empty,
+            in other words top-level control.
+            If true, when activeSubMenu is empty but activeSubMenuItem is set, uses activeSubMenuItem as top-menu item.
+            In this case, activeMainMenuItem is used only as a fallback.
+            If false, when activeSubMenu is empty but activeSubMenuItem is set, activeSubMenuItem will be squashed by activeMainMenuItem.
+        Client screen field overrides:
+        * activeSubField (default: "activeSubMenu")
+        * activeSubItemField (default: "activeSubMenuItem")
+        * activeMainItemField (default: "activeMainMenuItem")
+        
+        NOTE: Where noted above (only where noted), some of the variables support overrides via 
+            top context variables, following the name pattern menuCfgXxxXxx (for menuCfg.xxxXxx).
+            When set these have priority over the menuCfg map entries. It is technically
+            possible to set these via global context.
+    -->
+    <screen name="ComplexMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareComplexMenu.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-true field="useCplxMenu" />
+                    </condition>
+                    <widgets>
+                        <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-menu location="${smplLoc}" name="${smplName}"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Complex Menu automatic extra item resolution script
+        Automatically resolves activeMainMenuItem from activeSubMenu/activeSubMenuItem, mainly
+        for use in extra menus. Include using include-screen-actions directive.
+        
+        menuCfg configurable fields, as members of menuCfg map (<set field="menuCfg.name" value="..."/>):
+        
+        Complex menu location:
+        * location (required) - Complex menu location
+        * name (required) - Complex menu name
+        Complex menu name suffix control:
+        * nameSuffix (default: "Menu") - Complex menu name suffix
+        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenu field, for menu lookup
+            (only appends if not already ends with)
+        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenu field, for menu lookup
+            Set cplxAddSuffix to false (default) if you used explicit names in menu defs, such as: 
+              <sub-menu name="Server" include="ServerSideBar"/>
+            In this case it's best to leave cplxStripSuffix true for compatibility.
+            Set cplxStripSuffix to true (default) if you used implicit or reused full names, such as: 
+                <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>
+            In this case cplxStripSuffix is ignored (inapplicable).
+     -->
+    <screen name="DeriveComplexMenuItems">
+        <actions>
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/DeriveComplexMenuItems.groovy"/>
+        </actions>
+    </screen>
+
+    <!-- Complex SideBar Menu Wrapper - based on ComplexMenu (see ComplexMenu above for available arguments and details)
+        Currently same as ComplexMenu except sets the activeSubMenu name suffix to "SideBar". -->
+    <screen name="ComplexSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.subMenuFilter" from-field="menuCfg.subMenuFilter" default-value="current" />
+                <set field="menuCfg.nameSuffix" from-field="menuCfg.nameSuffix" default-value="SideBar" /> 
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareComplexMenu.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-true field="useCplxMenu" />
+                    </condition>
+                    <widgets>
+                        <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-menu location="${smplLoc}" name="${smplName}"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Complex SideBar Menu automatic extra item resolution script - based on DeriveComplexMenuItems above
+        Currently same as ComplexMenu except sets the activeSubMenu name suffix to "SideBar". -->
+    <screen name="DeriveComplexSideBarMenuItems">
+        <actions>
+            <set field="menuCfg.nameSuffix" from-field="menuCfg.nameSuffix" default-value="SideBar" /> 
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/DeriveComplexMenuItems.groovy"/>
+        </actions>
+    </screen>
+    
+    
+    <!-- Common SideBar Menu inclusion logic, adequate as a default in common decorators in most apps.
+        In most apps this will be invoked from CommonXxxAppSideBarMenu wrappers, which implement application-specific logic,
+        notably permission checks (this is in contrast to the MainAppSideBarMenu/DefMainAppSideBarMenu wrappers, which
+        are more explicitly designed to be overridable through parameters.mainDecoratorLocation by extending applications).
+    
+        Accepts context fields:
+        
+        Conditions (Booleans):
+        * commonSideBarMenu.cond - boolean to check to allow showing MainSideBarMenu (default: true)
+        * commonSideBarMenu.condList - list of extra booleans to check (logically ANDed)
+        
+        Permissions:
+        NOTE: 2016-09-11: The perm fields below are limited to simple checks; it is now possible and frequently easier to use
+            cond/condList boolean above in conjunction with the new condition-to-field element instead (see widget-common.xsd), such as:
+            <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                <if-has-permission permission="CATALOG" action="_VIEW"/>
+            </condition-fo-field>
+        * commonSideBarMenu.perm - name of single permission to check to allow showing MainSideBarMenu (default: none)
+        * commonSideBarMenu.permAction - single permission action to check to allow showing MainSideBarMenu (default: none, optional for perm)
+        * commonSideBarMenu.permList - list of additional permission names to check to allow showing MainSideBarMenu (logically ANDed) (default: none)
+          entries may be either single strings, {"perm":...,"action":..."} maps, or sub-lists of [perm, action] pairs 
+        * commonSideBarMenu.permServ - single map of arguments for a permission service
+          * name - service name
+          * mainAction - main action
+          * servCtx - a map to use as source context for service call 
+            WARN: may be modified; treat as volatile
+          * resource - the resourceDescription arg of permission service interface
+        * commonSideBarMenu.permServList - list of maps for permission service calls
+          each map supports the same members as permServ
+
+        Menu config:
+        * commonSideBarMenu.targetMenuName - name of menu shown if all permissions and conditions pass (default: "MainSideBarMenu") 
+          SPECIAL VALUE: "NONE"
+        * commonSideBarMenu.fallbackMenuName - name of menu shown if permission or conditions fail (default: "DefMainSideBarMenu") 
+          SPECIAL VALUE: "NONE"
+        * commonSideBarMenu.menuLoc - location of menus (default: parameters.mainDecoratorLocation)
+    -->
+    <screen name="CommonSideBarMenu">
+        <section name="Global-CommonSideBarMenu">
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-true field="hasTargetMenu" />
+                    </condition>
+                    <widgets>
+                        <include-screen name="${targetMenuName}" location="${targetMenuLoc}"/>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+</screens>

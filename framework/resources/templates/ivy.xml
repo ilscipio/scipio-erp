@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info module="@component-name@" organisation="@component-package@"/>
+    <configurations defaultconfmapping="%->default">
+        <conf name="application" description="download all jars required for build"/>
+    </configurations>
+    <dependencies>
+        <!-- lib/example-1.0.0.jar
+        <dependency org="org.example" name="example" rev="1.0.0" transitive="false" conf="application->default"/>-->
+    </dependencies>
+    <!-- 
+        NOTE: To include JARs manually in a Git project (not using maven central), they can be either:
+        1. committed to /ivy/localRepo/** and added as a regular ivy dependency above
+           in this ivy.xml file (see /ivy/ivysettings.xml and the repo dir for path/filename format)
+        2. committed manually to lib/ folder, and:
+           * an exception added to lib/.gitignore
+           * added to the project's build.xml "lib.update.manual.files" property to prevent 
+             deletion by the ivy clean scripts (all JARs not listed in lib.update.manual.files 
+             are deleted) (see /framework/base/build.xml for example)
+    -->
+</ivy-module>

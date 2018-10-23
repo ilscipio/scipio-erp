@@ -1,0 +1,1457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:annotation>
+        <xs:documentation><![CDATA[
+            Screen Widget Definitions
+        
+            SCIPIO: In Scipio, the screen widget language is modified from stock Ofbiz with new elements and
+            modifications to existing elements. The renderer is modified accordingly, and it may have yet
+            additional changes not visible through the language elements alone (may be noted here).
+            Some webapp-specific renderer configuration is done through web.xml 
+            (see descriptions in component://resources/templates/web.xml and component://webtools/webapp/webtools/WEB-INF/web.xml).
+            Patterns, their descriptions and usage examples can be found in CommonScreens.xml of Common and Admin apps
+            (see component://common/widget/CommonScreens.xml and component://webtools/widget/CommonScreens.xml).
+            Changes are prefixed with the string "SCIPIO:" in annotations and comments.
+            
+            Features and Modifications (including but not limited to):
+            * Decorator sections have extended controls to allow auto-inclusion, delegation and
+              conditional definitions. (auto-decorator-section-include, override-by-auto-include, use-when)
+            * decorator-screen element supports a fallback screen/location when named screen is not found
+            * In Scipio standard implementation, label and section title styles support an advanced
+              syntax. (label's style, title-style)
+            * New screen-settings element and construct for new screen configurable options and defaults, 
+              which are applied to all screens in a file or screen-group.
+              * auto-include-settings allows automatically applying settings from CommonScreens.xml (specially-recognized)
+                to the other screen files (*Screens.xml) found statically in the same local folder and subfolders.
+              * decorator-screen-settings allows configuring the default behavior of the decorator-screen
+                element; supports settings a default fallback location for all screens in a file (usually
+                in conjunction with mainDecoratorLocation) (and/or all adjacent files, with auto-include-settings)
+                Allows implementing a common central decorator pattern using mainDecoratorLocation (pointing to CommonScreens.xml),
+                where mainDecoratorLocation is used liberally as the only parametrized decorator location without consequence 
+                to application extensibility (the only constraint being that decorator names should be as globally unique as possible).
+              * render-init settings allows defining statically auto-included actions for all screens of a file
+                (and/or all adjacent files, with auto-include-settings), which are executed for the first of the local 
+                screens encountered in a request or in other words the screen used as the target view.
+                Eliminates the need to include guarded shared actions manually into every screen in the application,
+                and for context variables can eliminate need for the global context (frequently problematic).
+            * The renderer allows auto-including webapp-specific actions at render init (in addition to 
+              statically included ones mentioned above), which are swapped per-webapp, via web.xml context-param
+              renderInitScriptScreenLocation, similar to main-decorator. 
+              In fact, configuring renderInitScriptScreenLocation is not necessary, as it has
+              a default which is to lookup the screen named "webapp-common-actions" in the location specified
+              by mainDecoratorLocation (already in most apps' web.xml file).
+              Allows setting webapp-swappable context fields, with eliminated need for global context and 
+              dangerous parameters map usage.
+            * The renderer supports custom initial context populating modification scripts, either 
+              system wide (widgetContextScripts.properties) or per-webapp (widgetContextScriptLocation - web.xml).
+              
+            To use this and other widget XML schema definition files (*.xsd) in your development environment for autocompletion and validation,
+            import the file named ".xmlcatalog.xml" from the Scipio project root as XML Catalog file/project type using import dialog.
+            Note this also includes the definition files for all other Scipio/ofbiz XML resources such as entity models, service defs, etc.
+        ]]></xs:documentation>
+    </xs:annotation>
+    <xs:include schemaLocation="http://ofbiz.apache.org/dtds/widget-common.xsd" />
+    <xs:element name="screens">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-settings" /><!-- SCIPIO: new -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="screen-settings" /><!-- SCIPIO: new -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-screens" /><!-- SCIPIO: new -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllScreenEntries" /><!-- SCIPIO: minOccurs="0" needed to allow new element combinations -->
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="AllScreenEntries" abstract="true" /><!-- SCIPIO: new -->
+    <xs:element name="include-screens">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Includes all screens from the specified location using the mechanism specified by mode,
+                    optionally filtering by group-name or name.
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:attribute type="xs:string" name="location" use="required">
+                <xs:annotation>
+                    <xs:documentation>Location to include files from. MUST be different than the current file.
+                        </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="group-name" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Group filter. Include only screens from this group.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="name" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Name filter. Include only screen having this name.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="recursive">
+                <xs:annotation>
+                    <xs:documentation>Whether to include recursively or not. Default: full</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="no" />
+                        <xs:enumeration value="full" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="mode" default="delegate">
+                <xs:annotation>
+                    <xs:documentation>
+                        Manner in which the include is implemented.
+                        * delegate: dynamically creates placeholder screens that delegate to the screens of 
+                          same names in the target location; produces a trivial screen definition consisting of 
+                          screen/section/widgets/include-screen elements OR (2016-11-15) - if the target screen
+                          is an actions-only screen - an include definition consisting of screen/actions/include-screen-actions elements.
+                          (see screen element for definition of actions-only screen)
+                        Default: delegate
+                        TODO?: textual mode (usefulness unclear)
+                        2016-11-15: Updated for 1.14.3.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="delegate" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="screen" substitutionGroup="AllScreenEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    Screen element.
+                    
+                    SCIPIO: 2016-11-11: This element is enhanced so promote clearer definitions of actions-only
+                    screens. To this end it now allows an actions element as direct child of screen element, instead of
+                    forcing a section element declaration. The section element itself also no longer forces the widgets element.
+                    
+                    An actions-only screen is one that contains an actions element, but no section condition nor fail-widgets elements, 
+                    and it cannot have more than one widgets element which must be empty if present (this is merely to support old-style actions-only screens).
+                    (Special case: if has empty widgets element and empty actions, it will be considered a widgets screen placeholder, not actions-only)
+                    New code should omit the widgets element. Note that the section condition is considered part of widgets, because
+                    it is implemented outside the actions and complicates their reuse - in its place the actions now supports their own master if condition
+                    (see widget-common.xsd if element, added for 1.14.3). It should generally be considered an error to use section condition with 
+                    actions-only screen.
+                    
+                    It is highly ENCOURAGED to OMIT the section element if you are defining an actions-only screen definition, 
+                    so the intent is clear and discourages the erroneous addition of widgets elements to it;
+                    in turn this allows the include-screen-actions directive to work properly (include-screen-actions only includes the actions 
+                    from the top section actions in a screen, and it bypasses the condition element, only supporting the master if directive instead).
+                    2016-11-11: Enhanced for 1.14.3.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element ref="section" />
+                    <xs:element ref="actions" />
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="transaction-timeout" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Transaction timeout in seconds</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="use-transaction" default="true">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="use-cache" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="screen-group" substitutionGroup="AllScreenEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Screen grouping element that can be used to apply defaults and settings
+                    to a specific group of screens within a file. NOTE: This does not function as a namespace.
+                    2016-10-30: New element, added for 1.14.2.
+                    WARN: EXPERIMENTAL: At current time (2016-10-30), screen-group should be considered untested
+                        and is not used in any Scipio files.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-settings" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="screen-settings" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-screens" />
+                <xs:element maxOccurs="unbounded" ref="AllScreenEntries" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name">
+                <xs:annotation>
+                    <xs:documentation>Group name; should be unique within a file.
+                        Reserved names: root-screens (for the group representing the root screens).</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="section" substitutionGroup="AllWidgets">
+        <xs:annotation>
+            <xs:documentation>Screen section element.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="condition" type="ScreenConditionRootType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Widgets condition element. If evaluates to true, the widgets element children are
+                            rendered; if false, fail-widgets elements are rendered.
+                            
+                            SCIPIO: NOTE: When used in top section of screen, the condition element is ONLY supported
+                            for widgets-containing screen, and NOT for actions-only screens. Using this section condition
+                            on an actions-only screen is considered an error in Scipio. Use the actions master if
+                            directive for actions conditions instead. See screen element for details.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="0" ref="actions" />
+                <xs:element minOccurs="0" ref="widgets" />
+                <xs:element minOccurs="0" ref="fail-widgets" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name">
+                <xs:annotation>
+                    <xs:documentation>Optional section name.
+                        SCIPIO: NOTE: This name may now be used for functional purposes, to designate
+                        code sections (2017-05-04).</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="share-scope"><!-- default="true" -->
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: New share-scope on inlined sections. Default: true.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.generic-screen-widget-elem">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Generic attributes that can apply to any screen widget element definition.
+                Added 2017-05-06.</xs:documentation>
+        </xs:annotation>
+        <xs:attribute type="xs:string" name="contains"><!-- default="*" -->
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Complex expression describing the sections and elements that this element
+                    may and may not contain.
+                    Used in conjunction with targeted rendering, to avoid executing parts not needed, for optimization.
+                    This is a shortcut to writing manual verbose conditions manual everywhere.
+                    Usually used as blacklist.
+                    
+                    This uses close syntax to the targeted rendering "scpRenderTargetExpr" parameter,
+                    which may be passed to ajax render and other render modes.
+                    This documentation also describes some of the features of the query parameter.
+                    
+                    Format:
+                    Consists of a comma-separated list of names that may include wildcards "*" (max one per name).
+                    Names may refer to element names, id values, or other.
+                    Spaces are ignored.
+                    Flexible expressions (${...}) can be specified, BUT it is highly recommended to use
+                    separate variables instead of inlining, because syntax clash is possible.
+                    Each name can be directly prefixed with a Matching Element Type character, which denotes
+                    what widget element or attribute value the name will match against.
+                    An exclusion/negation "!" character may be prefixed before the type character to cause exclusion (blacklist)
+                    of the name instead of inclusion (whitelist), to denote that the element does not contain another.
+                    The last entry in the full expression (after a comma) should always be
+                    either match-all "*" or match-none "!*", to prevent ambiguity and to explicitly show to both
+                    users and renderer whether the intent was to write a blacklist or whitelist, respectively.
+                    
+                    WARN: some of these descriptions have more to do with the targeted rendering query expressions than the contains-expression itself.
+                    
+                    Matching Element Types:
+                    * "$" - specific, matches "section" element "name" attribute value - considered GLOBAL in scope (across includes)
+                            also matches FTL "@virtualSection" directive invocation "name" argument.
+                    * "#" - specific, matches "container", "screenlet" elements "id" attribute value - considered GLOBAL in scope (across includes)
+                            also matches some FTL directive invocations that support IDs (see below)
+                    * "~" - specific, matches "decorator-section-include" element "name" attribute value - considered LOCAL in scope (to current decorator layer)
+                            NOTE: only works on "current" decorator level.
+                            NOTE: this uses an optimization to automatically blacklist the decorator-section-include invocations on the current
+                                level that don't match the specified name.
+                            NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
+                    * "^" - specific, special 'recalling' decorator-section matcher, very confusing.
+                            This first token matches a decorator-screen element (similar to %) and the second matches a section in the remembered decorator.
+                            It uses an internal memory/stack.
+                            The complicated syntax is as follows:
+                              "^decorator-screen ^/decoratorsectionname"
+                            Extra tokens can go in between and after:
+                              "^decorator-screen #some-id-inside-the-decorator-impl ^/decoratorsectionname #some-nested-id"
+                            NOTE: The first ^ token's name should always be "^decorator-screen"; only the attributes are optional.
+                    * "%" - generic widget element AND Freemarker macro invocation selector, matches the element tag name (most elements supported, not guaranteed all).
+                            optionally can add brackets "%tagname[name=SomeName]" or "%tagname[id='some-id']" to only match elements with given name or id.
+                            NOTE: 2017-05-19: this now matches BOTH widget and freemarker elements; 
+                                e.g. "%screenlet" matches either widget "screenlet" element or ftl "@section" invocation.
+                                (whereas "section" element is equivalent to ftl "@virtualSection" invocation).
+                                This is intentionally designed so that selection expressions will be more platform-agnostic.
+                            NOTE: only name and id attributes are supported, and support is best-effort.
+                            NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
+                            FIXME: the attributes in brackets will not work properly inside contains-expressions
+                            FIXME: this selector may currently bypass optimizations, so it should only be used in queries as the last entry.
+
+                    NOTE: These are the same types supported by the scpRenderTargetExpr targeted rendering parameter.
+
+                    Other Special Characters:
+                    * "*" - wilcard
+                            WARN: limited support in scpRenderTargetExpr parameter; may prevent optimizations with contains-expression interaction.
+                    * "!" - exclude/negation
+                            NOTE: not supported in scpRenderTargetExpr parameter
+
+                    Specificity: 
+                    Names without wildcards always match first, followed by partial wildcard, and finally full wildcard.
+                    On a given level, include has priority over exclude, but wildcard-less exclude has priority over wildcard include.
+                    
+                    Default: "*" (matches all)
+                    
+                    ex.: 
+                      "!$MySection1, !$MySection2, !$MySection-*, *" (blacklist)
+                      "$MySection1, $MySection-*, #my-container-1, !*" (whitelist)
+                      
+                    NOTE: These expressions are required for optimization, to be able to skip code execution not related
+                        to the target element.
+                        If the decorator does not blacklist anything, targeted rendering will still work, because
+                        the non-targeted output will still be prevented; but the renderer will still execute the data 
+                        preparation for all those null-output elements, which may (or may not) be expensive.
+                    
+                    Added 2017-05-04.</xs:documentation>
+                    <!-- DEV NOTES:
+                      * Security: The decorators are responsible for implementing the majority of render-related security 
+                        checks. The controller heavily depends on the screens to perform their own security checks.
+                        Everything written above here, below, and in the java files must take into account the security checks.
+                      * TODO?: Automatic contains-expression generation: 
+                        There is a very limited possibility for automatic generation of contains-expressions by the renderer 
+                        in the future; e.g. it can try to work out some relations based on the screen's immediate definitions.
+                        However this becomes extremely complex and may require assumptions that will break decorators and screens.
+                        As general rule, it is physically impossible for the render to build these, because most of the
+                        elements targeted will cross decorator boundaries i.e. decorator-section-include elements.
+                        Only a limited set of other types of includes can be followed, because many are parametrized using
+                        flexible expressions and only resolved at runtime (e.g. location="${parameters.mainDecoratorLocation}").
+                        So only local definitions and hardcoded includes can be used, and it requires making the assumption
+                        that the definitions are exclusive to the screen, e.g. are not found in the decorator-section-includes,
+                        which would break composed decorators such as the shop decorator. 
+                        More generally there is a computational impossibility associated with trying to predict what code
+                        is going to do without actually running it. 
+                      * TODO?: Alternate targeted rendering widget extraction method:
+                        In targeted rendering, it is currently in most cases essential to execute all code in the decorators
+                        (except where explicitly blacklisted as non-relevant using contains-expression).
+                        i.e. it is currently dangerous and usually invalid to try to extract parts of a screen for standalone execution.
+                        This is primarily because the decorators implement most of the security checks, and also because
+                        many widgets rely on the global actions performed by the decorators.
+                        The only way this would be possible would be to in turn extract the security checks and global actions
+                        from the decorators to run them along with the extracted screen parts, but currently this is impossible,
+                        because there is no way or global pattern to identify the decorator code needed to extract (especially
+                        the security checks). Realistically this may never happen. -->
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <!-- ================ CONDITIONS ================ -->
+
+    <xs:complexType name="ScreenConditionRootType">
+        <xs:choice>
+            <xs:element ref="and" />
+            <xs:element ref="or" />
+            <xs:element ref="xor" />
+            <xs:element ref="not" />
+            <xs:element ref="if-service-permission" />
+            <xs:element ref="if-has-permission" />
+            <xs:element ref="if-entity-permission" />
+            <xs:element ref="if-validate-method" />
+            <xs:element ref="if-compare" />
+            <xs:element ref="if-compare-field" />
+            <xs:element ref="if-regexp" />
+            <xs:element ref="if-empty" />
+            <xs:element ref="if-empty-section" />
+            <xs:element ref="if-true" /><!-- SCIPIO: 2016-11-09: new -->
+            <xs:element ref="if-false" /><!-- SCIPIO: 2016-11-09: new -->
+            <xs:element ref="if-widget" /><!-- SCIPIO: 2016-11-11: new -->
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:element name="if-empty-section" substitutionGroup="AllConditionals">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="section-name" use="required" />
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ================ ACTIONS ================ -->
+
+    <xs:element name="actions">
+        <xs:annotation>
+            <xs:documentation>Screen actions.
+                SCIPIO: Scipio modifies and adds a number of screen actions.
+                In particular, the master if element (from simple-method-v2) is supported, and should always
+                be used instead of the section condition element for actions-only sections.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="service" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field-map" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="service-name" use="required" />
+            <xs:attribute type="xs:string" name="result-map" />
+            <xs:attribute type="xs:string" name="auto-field-map" default="true">
+                <xs:annotation>
+                    <xs:documentation>This can be "true", "false" or the name of a Map in the context to use as the source Map for the service context.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="entity-and" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="field-map" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="order-by" />
+                <xs:choice minOccurs="0">
+                    <xs:element ref="limit-range" />
+                    <xs:element ref="limit-view" />
+                    <xs:element ref="use-iterator" />
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="entity-name" use="required" />
+            <xs:attribute name="use-cache" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="filter-by-date" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                        <xs:enumeration value="by-name" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="list" use="required" />
+            <xs:attribute name="result-set-type" default="scroll">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="forward" />
+                        <xs:enumeration value="scroll" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="entity-condition" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0">
+                    <xs:element ref="condition-expr" />
+                    <xs:element ref="condition-list" />
+                    <xs:element ref="condition-object" />
+                </xs:choice>
+                <xs:element minOccurs="0" ref="having-condition-list" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="order-by" />
+                <xs:choice minOccurs="0">
+                    <xs:element ref="limit-range" />
+                    <xs:element ref="limit-view" />
+                    <xs:element ref="use-iterator" />
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="entity-name" use="required" />
+            <xs:attribute name="use-cache" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="filter-by-date" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                        <xs:enumeration value="by-name" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="distinct" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="delegator-name" />
+            <xs:attribute type="xs:string" name="list" use="required" />
+            <xs:attribute name="result-set-type" default="scroll">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="forward" />
+                        <xs:enumeration value="scroll" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ================ WIDGETS ================ -->
+
+    <xs:element name="AllWidgets" abstract="true" />
+    <xs:element name="widgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="fail-widgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="column-container" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="unbounded" name="column">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllWidgets" />
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="id" />
+                        <xs:attribute type="xs:string" name="style" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="id" />
+            <xs:attribute type="xs:string" name="style" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="container" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllWidgets" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="id" />
+            <xs:attribute type="xs:string" name="style" />
+            <xs:attribute type="xs:string" name="auto-update-target">
+                <xs:annotation>
+                    <xs:documentation>The URL to be called for periodic asynchronous area updates.
+                        Some widget rendering environments support asynchronous updates.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="type">
+                <xs:annotation>
+                    <xs:documentation>With the type it is possible to render different containers
+                        than div like section.
+                        SCIPIO: Merged 2018-09-04.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="auto-update-interval">
+                <xs:annotation>
+                    <xs:documentation>The auto-update interval, in seconds.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="horizontal-separator" substitutionGroup="AllWidgets">
+        <xs:complexType mixed="true">
+            <xs:attribute type="xs:string" name="id" />
+            <xs:attribute type="xs:string" name="name" />
+            <xs:attribute type="xs:string" name="style" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="image" substitutionGroup="AllWidgets">
+        <xs:complexType mixed="true">
+            <xs:attribute type="xs:string" name="src" />
+            <xs:attribute type="xs:string" name="id" />
+            <xs:attribute type="xs:string" name="style" />
+            <xs:attribute type="xs:string" name="width" />
+            <xs:attribute type="xs:string" name="height" />
+            <xs:attribute type="xs:string" name="border" />
+            <xs:attribute type="xs:string" name="alt" />
+            <xs:attribute name="url-mode" default="content">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="ofbiz" />
+                        <xs:enumeration value="content" />
+                        <xs:enumeration value="raw" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="label" substitutionGroup="AllWidgets">
+        <xs:complexType mixed="true">
+            <xs:attribute type="xs:string" name="text" />
+            <xs:attribute type="xs:string" name="id" />
+            <xs:attribute type="xs:string" name="style" default="p">
+                <xs:annotation>
+                    <xs:documentation>Label style. 
+                        SCIPIO: This is a STOCK element.
+                        In our standard implementation, the label style string is modified to support
+                        some advanced syntax in the format "elem:[+=]?class" or "h[+]?:[+=]?class"
+                        where "elem" may be one of: div, container, span, h, heading, p, raw.
+                        If only basic string specified (no [:;] delimiters), the string is checked for
+                        those elements and if matching, is treated as element-specifying (elem); otherwise,
+                        assumed to be a class for the title (class).
+                        For "h", the elem may be succeeded by a number giving the heading level ("h2").
+                        If a "+" is in between ("h+2"), the level is relative to the current global heading level. 
+                        NOTE/FIXME?: The default is currently "p" for paragraph because almost always used as a paragraph in stock screens 
+                        rather than an inline text elem (span).</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="link" type="link" substitutionGroup="AllWidgets"/>
+
+    <xs:element name="screenlet" substitutionGroup="AllWidgets">
+        <xs:annotation>
+            <xs:documentation>Screenlet element.
+                SCIPIO: This is a STOCK element. 
+                In our standard implementation, it is interpreted as a basic section, 
+                corresponding to the Scipio Freemarker macro @section.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllWidgets" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="title">
+                <xs:annotation>
+                    <xs:documentation>Title text to be placed in the screenlet title bar.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="title-style">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Style for the title.
+                        In our standard implementation, it supports
+                        some advanced syntax in the format "elem:[+=]?class" or "containerelem:[+=]?containerclass;elem:[+=]?class" or "h[+]?:[+=]?class",
+                        where "elem" may be one of: div, container, span, h, heading, p, raw.
+                        "containerelem" may be: div, container.
+                        If only basic string specified (no [:;] delimiters), the string is checked for
+                        those elements and if matching, is treated as element-specifying (elem); otherwise,
+                        assumed to be a class for the title (class).
+                        For "h", the elem may be succeeded by a number giving the heading level.
+                        If a "+" is in between ("h+2"), the level is relative to the current global heading level.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="id" type="xs:string" />
+            <xs:attribute name="name" type="xs:string" />
+            <xs:attribute name="collapsible" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="initially-collapsed" type="xs:string" default="false">
+                <xs:annotation>
+                    <xs:documentation>When set to true, screenlet will be collapsed initially. Can be an expanded string to get the value from a variable. Defaults to false.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="save-collapsed" default="true">
+                <xs:annotation>
+                    <xs:documentation>When set to true, screenlet collapse status is saved as user preference. Defaults to true.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="padded" default="true">
+                <xs:annotation>
+                    <xs:documentation>When set to true, screenlet content will be padded. Defaults to true.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="navigation-menu-name">
+                <xs:annotation>
+                    <xs:documentation>Name of the screenlet include-menu sub element that will be used for screenlet navigation.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="navigation-form-name">
+                <xs:annotation>
+                    <xs:documentation>Name of the screenlet include-form sub element that will be used for screenlet navigation. The form's pagination menu will be included in the screenlet title bar.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="tab-menu-name">
+                <xs:annotation>
+                    <xs:documentation>Name of the screenlet include-menu sub element that will be used for the screenlet tab bar.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ================ WIDGETS - Includers ================ -->
+
+    <xs:element name="content" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="content-id" />
+            <xs:attribute type="xs:string" name="dataresource-id" />
+            <xs:attribute type="xs:string" name="edit-request" />
+            <xs:attribute type="xs:string" name="edit-container-style" default="editWrapper" />
+            <xs:attribute type="xs:string" name="enable-edit-name" default="enableEdit" />
+            <xs:attribute name="xml-escape" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="width">
+                <xs:annotation>
+                    <xs:documentation>Used if non-html content to specify width of iframe.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="height">
+                <xs:annotation>
+                    <xs:documentation>Used if non-html content to specify height of iframe.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="border">
+                <xs:annotation>
+                    <xs:documentation>Used if non-html content to specify border of iframe.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="decorator-screen" substitutionGroup="AllWidgets">
+        <xs:annotation>
+            <xs:documentation>
+                Renders the named screen and includes the children of this elements at the point where it finds the decorator-section-include tag.
+                Note that because of the recursive nature of this tag the share-scope attribute is not available.
+                SCIPIO: NOTE: This directive is highly enhanced from stock ofbiz, and further for Scipio 1.14.2.
+                It now supports passing through and conditionally defining decorator-sections.
+                For 1.14.2, the default for Scipio's new auto-decorator-section-include attribute has been
+                changed to true, and the language now allows omitting children elements. As a result,
+                it can fully substitute for and is preferable (for decorators) to include-screen directive using the simple form:
+                    &lt;decorator-screen name="SomeDecorator" location="component//..." /&gt;
+                In addition, this directive now supports a fallback-location reference used when the main
+                location#name resolve to a missing decorator; this can be used together with the new
+                screen-settings element to setup application-wide fallback behavior with few code changes.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <!-- SCIPIO: 2016-10-28: Added for 1.14.2: minOccurs="0"
+                    With auto-decorator-section-include true, passing no sections is technically valid. -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="decorator-section" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" />
+            <xs:attribute type="xs:string" name="fallback-name">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: Name of a fallback decorator to use if the decorator specified
+                        by location#name resolves to a missing screen.
+                        Default: (none) OR (if fallback-location specified) same value as 'name' attribute
+                        2016-10-30: Added for 1.14.2.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="fallback-location">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: Location of a fallback decorator to use if the decorator specified
+                        by location#name resolves to a missing screen.
+                        Default: (none) OR (if fallback-name specified) same value as 'location'
+                        2016-10-30: Added for 1.14.2.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="fallback-if-empty" default="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: If true, the fallback decorator will be used if the 'location' attribute
+                        is empty, missing or contains an expression that evaluates to empty, checked
+                        in addition to the case where name#location resolves to a missing screen.
+                        If false, only the latter case applies.
+                        Default: false
+                        2016-10-30: Added for 1.14.2.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="auto-decorator-section-include" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: If true, this decorator-screen definition will automatically inherit all decorator-sections coming from 
+                        the calling screen (as if producing a decorator-section element having only a decorator-section-include with same section name)
+                        except those having the same names as the decorator-sections explicitly defined in this decorator-screen. 
+                        It can be seen as passing-through the incoming decorator-sections from a calling screen to a lower decorator,
+                        in an intermediate decorator. Mainly intended for intermediate decorators.
+                        Default: true (2016-10-28: changed to true for 1.14.2)
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="decorator-section">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllWidgets" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="use-when">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: Minilang/EL/groovy-style condition string - only pass this section for rendering if the given condition 
+                        evaluates to true; else the section will be absent from the "sections" context variable passed to the decorator.
+                        Expression must evaluate to a boolean, using flexible expression syntax: ${...}, ${groovy: ...}, etc. 
+                        NOTE: Unlike the attribute with same name on form widget fields, 
+                            this does NOT interpret as a script if you omit the flexible expression syntax (${...}, ${groovy: ...}, etc.).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="fallback-auto-include" default="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: If true, when a use-when condition evaluates to false, the decorator-section with same name inherited/produced
+                        from caller will be used (auto-included) in its place, if one was passed.
+                        By default, decorator-sections auto-included by auto-decorator-section-include will never be used when decorator-section 
+                        definition of same name exists even when use-when evaluates to false; local defs have priority. Only meaningful when use-when 
+                        present with condition. Will work even if auto-decorator-section-include disabled on parent.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="override-by-auto-include" default="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: Convenience setting. If true, this decorator-section will not be used if
+                        one with the same name is inherited/produced from caller, and the one from caller will be used (auto-included) in its place.
+                        In other words, the caller's decorator-section, if present, will override this decorator-section.
+                        This is the same as: use-when="${groovy: (sections['name'] == null)}" fallback-auto-include="true"
+                        Will work even if auto-decorator-section-include disabled on parent.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="decorator-section-include" substitutionGroup="AllWidgets">
+        <xs:annotation>
+            <xs:documentation>This is just a place holder to tell the renderer to include the parent container's contents at this point.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-form" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+            <xs:attribute type="xs:string" name="share-scope" default="false">
+                <xs:annotation>
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-grid" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+            <xs:attribute type="xs:string" name="share-scope" default="false">
+                <xs:annotation>
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-menu" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+            <xs:attribute type="xs:string" name="share-scope" default="false">
+                <xs:annotation>
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.
+                        NOTE: Because this was missing in stock Ofbiz, we have effectively
+                            changed the default behavior to protecting scope around menu
+                            renders.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="max-depth">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Maximum depth for rendering sub-menus.
+                        1 means render only the top level, -1 means no limit.
+                        Default: -1</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="sub-menus">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Special sub-menu rendering inclusion filter.
+                        Possible values:
+                        'none': same as setting max-depth 1
+                        'current': only render sub-menus that have selected/active items as descendents
+                        'all': render all sub-menus
+                        Default: all</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-screen" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" />
+            <xs:attribute type="xs:string" name="share-scope" default="false">
+                <xs:annotation>
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-tree" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+            <xs:attribute type="xs:string" name="share-scope" default="false">
+                <xs:annotation>
+                    <xs:documentation>Enable/disable sharing of context scope (boolean).
+                        SCIPIO: NOTE: This must resolve to a "true" or "false" boolean string; 
+                            supports flexible expressions to do it.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-portal-page" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="id" />
+            <xs:attribute name="conf-mode" default="false">
+                <xs:annotation>
+                    <xs:documentation>Show the portal in configuration mode.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="use-private" default="true">
+                <xs:annotation>
+                    <xs:documentation>If a derived private PortalPage exists for the actual UserLogin than show the private PortalPage instead of the original.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="sub-content" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="content-id" use="required" />
+            <xs:attribute type="xs:string" name="map-key" use="required" />
+            <xs:attribute type="xs:string" name="edit-request" />
+            <xs:attribute type="xs:string" name="edit-container-style" default="editWrapper" />
+            <xs:attribute type="xs:string" name="enable-edit-name" default="enableEdit" />
+            <xs:attribute name="xml-escape" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="iterate-section" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="section" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="entry" use="required" />
+            <xs:attribute type="xs:string" name="list" use="required" />
+            <xs:attribute type="xs:string" name="key" />
+            <xs:attribute type="xs:string" name="view-size" />
+            <xs:attribute type="xs:string" name="paginate-target" />
+            <xs:attribute type="xs:string" name="paginate" default="${paginate}">
+                <xs:annotation>
+                    <xs:documentation>Indicate if this section is paginated or not, true by default.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+
+    <!-- ============== Platform Specific Elements =============== -->
+    <xs:element name="platform-specific" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="html" />
+                <xs:element minOccurs="0" ref="swing" />
+                <xs:element minOccurs="0" ref="xsl-fo" />
+                <xs:element minOccurs="0" ref="xml" />
+                <xs:element minOccurs="0" ref="text" />
+                <xs:element minOccurs="0" ref="csv" />
+                <xs:element minOccurs="0" ref="xls" />
+                <xs:element minOccurs="0" ref="email" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- ============== HTML Specific Elements =============== -->
+    <xs:element name="HtmlWidgets" abstract="true" />
+    <xs:element name="html">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="xsl-fo">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="xml">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="xls">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="text">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="csv">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- Scipio: Email Widget support -->
+    <xs:element name="email">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="html-template" substitutionGroup="HtmlWidgets">
+        <xs:annotation>
+            <xs:documentation>
+                HTML template, usually a Freemarker *.ftl file by location.
+                SCIPIO: In addition to template location, now supports inline template body 
+                as child CDATA text, along with explicit lang attribute.
+                NOTE: The type attribute can also be set as prefix with colon at the start of the child text data.
+                2016-11-10: Enhanced for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true"><!-- SCIPIO: mixed, so supports nested template body -->
+            <xs:attributeGroup ref="attlist.html-template" />
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.html-template">
+        <xs:attribute type="xs:string" name="location" /><!-- SCIPIO: removed for 1.14.3: use="required" -->
+        <xs:attribute name="lang"><!-- SCIPIO: implied: default="ftl" -->
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Explicit template language - may be needed if template is inlined as CDATA text
+                    element, otherwise inferred from location/extension.
+                    Default: 'ftl' when template inlined; by extension when location specified.
+                    NOTE: This can also be specified using colon separator as prefix of the child CDATA text (e.g., "ftl:").
+                    2016-11-10: Added for 1.14.3.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="ftl" />
+                    <xs:enumeration value="fo-ftl" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="trim-lines" default="true">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: If true, perform trim on every line of child CDATA text to remove excess whitespace from XML.
+                    NOTE: This gets rid of indents, but flattens markup.
+                    NOTE: This has no real performance impact for ftl templates due to way caching is keyed (doesn't depend on template body).
+                    Default: true</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true" />
+                    <xs:enumeration value="false" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="html-template-decorator" substitutionGroup="HtmlWidgets">
+        <xs:annotation>
+            <xs:documentation>
+                We don't really want to encourage the use of the html-template-decorator, should be done on the screen level.
+                To include the sections in the decorator template just use the "render(sectionName)" method "sections" object, FTL example: ${sections.render("main")}.
+                For more
+                efficient use the sections.render(sectionName, writer) method should be used, in FTL this would be in a transform or something.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="html-template-decorator-section" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="location" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="html-template-decorator-section">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllWidgets" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <!-- ============== Swing Specific Elements =============== -->
+    <xs:element name="swing">
+        <xs:complexType />
+    </xs:element>
+    
+    <!-- ============== Configuration Elements (SCIPIO) =============== -->
+    <xs:element name="include-settings">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: New include-settings element, used to include screen-settings definitions from other screens.
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:attribute type="xs:string" name="location"/>
+            <xs:attribute type="xs:string" name="as-name">
+                <xs:annotation>
+                    <xs:documentation>
+                        Name to give the settings in the target (this) file.
+                        Default: same as name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="active" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        Whether the settings apply to the current file (true) or they are only there for
+                        reuse by other screens (false).
+                        Default: true - included settings, even if false in the original file, are
+                        included as active unless false is specified.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="screen-settings">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: New generic screen-settings element, as first child of screen and screen-group elements.
+                    Multiple screen settings are possible. 
+                    Multiple sections with same names are merged in the given order, such that screen-settings
+                    may override settings from include-settings.
+                    If multiple settings elements are active (do not have active="false"), they are merged together to produce the effective settings.
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllScreenSettingEntries" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The name of the screen settings, for referencing and reuse purposes.
+                        Must be unique in a file.
+                        By convention, the main settings in a file are named "main-settings".
+                        Reserved names: default-settings (used when no active settings exist).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="active" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        Whether the settings apply to the current file (true) or they are only there for
+                        reuse by other screens (false).
+                        When defining common definitions for other screens to use but not for the current file,
+                        this should be set to false.
+                        When multiple settings elements have true set, they are merged (in given order) to produce the effective settings.
+                        Default: true
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="AllScreenSettingEntries" abstract="true" />
+    <xs:element name="decorator-screen-settings" substitutionGroup="AllScreenSettingEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Used to override decorator-screen include settings and defaults, for either
+                    all screens (when child of screens element) or a group of screens (when child of screen-group element).
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:attribute type="xs:string" name="default-fallback-name">
+                <xs:annotation>
+                    <xs:documentation>
+                        Custom default value for decorator-screen element's 'fallback-name' attribute
+                        for all decorator-screen elements which are children of this group, within this file only
+                        (file scope; does not affect decorator-screen elements of externally referenced screens).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="default-fallback-location">
+                <xs:annotation>
+                    <xs:documentation>
+                        Custom default value for decorator-screen element's 'fallback-location' attribute
+                        for all decorator-screen elements which are children of this group, within this file only
+                        (file scope; does not affect decorator-screen elements of externally referenced screens).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="default-fallback-if-empty">
+                <xs:annotation>
+                    <xs:documentation>
+                        Custom default value for decorator-screen element's 'fallback-name' attribute
+                        for all decorator-screen elements which are children of this group, within this file only
+                        (file scope; does not affect decorator-screen elements of externally referenced screens).
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="auto-include-settings" substitutionGroup="AllScreenSettingEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Used to automatically include settings from THIS CommonScreens.xml file INTO OTHER screen files.
+                    This is only valid when done from the file having the exact name "CommonScreens.xml"; this 
+                    element is ignored if found in any other file.
+                    The children include directives are essentially copied into the other screen files,
+                    into the root screens element, before the file's own settings (if any).
+                    When a screen file is rendered, it will first look for this section in the CommonScreens.xml
+                    file residing in the same folder; if not found, it will look in the parent directory,
+                    recursively, until the top component://componentname/widget/ folder is reached.
+                    This powerful directive helps avoid error-prone redundancy in screen files.
+                    NOTE: Does not work with screen-groups; only inserts into root screens/group.
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-settings" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="screen-settings" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="file-pattern">
+                <xs:annotation>
+                    <xs:documentation>
+                        A regular expression that determines which screen files these auto settings
+                        should be included into. It is relative to the directory in which the CommonScreens.xml
+                        file resides, and never starts with a /.
+                        Default: "^.*Screens\.xml$" - the CommonScreens.xml will take care of all *Screens.xml 
+                        files in all subfolders except those in subfolders containing a CommonScreens.xml file of their own.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="render-init" substitutionGroup="AllScreenSettingEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Adds or modifies behavior of new screen renders, for the top level target screens.
+                    2016-11-11: New element, added for 1.14.3.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="local">
+                    <xs:complexType>
+                        <xs:annotation>
+                            <xs:documentation>
+                                Render init settings applied to all top level target screens within the local file, applied when
+                                they are chosen as target screen to render.
+                                 
+                                The actions element can be used to auto-include actions, and the recommended pattern is to use 
+                                include-screen-actions directive to include the actions of another screen, by convention
+                                named "static-common-actions".
+                                
+                                NOTE: This is distinct from the webapp-specific render init actions which go by the
+                                    screen name "webapp-common-actions". These actions are more local and always execute
+                                    after the webapp actions and regardless of the webapp through which rendering is done.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" maxOccurs="1" ref="actions"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="screen-settings" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>

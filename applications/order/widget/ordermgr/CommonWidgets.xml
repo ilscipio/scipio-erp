@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+  <screen name="DashboardStatsOrderTotal">
+      <section>
+            <widgets>
+                <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalDay"/></container>
+                <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalWeek"/></container>
+                <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalMonth"/></container>
+            </widgets>
+      </section>
+  </screen>
+  
+  <screen name="DashboardStatsOrderTotalDay">
+      <section>
+            <actions> 
+                <set field="chartType" value="line"/>                
+                <set field="chartIntervalCount" value="1" type="Integer"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="day"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="6" type="Integer"/>     <!-- Look back x days/weeks/months/years -->
+                <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
+                <set field="ylabel" value="${uiLabelMap.CommonDay}"/>
+                <set field="label1" value="${uiLabelMap.OrderTotal}"/>
+                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+                <set field="title" value="${uiLabelMap.OrderGrossSales} (${uiLabelMap.CommonPerDay})"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
+                </platform-specific>
+            </widgets>
+      </section>
+  </screen>
+  
+  <screen name="DashboardStatsOrderTotalWeek">
+      <section>
+            <actions> 
+                <set field="chartType" value="line"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="week"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="4" type="Integer"/>     <!-- Look back x days/weeks/months/years -->
+                <set field="title" value="${uiLabelMap.OrderGrossSales} (${uiLabelMap.CommonPerWeek})"/>
+                <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
+                <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
+                <set field="label1" value="${uiLabelMap.OrderTotal}"/>
+                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
+                </platform-specific>
+            </widgets>
+      </section>
+  </screen>      
+  
+  <screen name="DashboardStatsOrderTotalMonth">
+      <section>
+            <actions> 
+                <set field="chartType" value="bar"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="month"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="3" type="Integer"/>     <!-- Look back x days/weeks/months/years -->
+                <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
+                <set field="ylabel" value="${uiLabelMap.CommonMonth}"/>
+                <set field="label1" value="${uiLabelMap.OrderTotal}"/>
+                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+                <set field="title" value="${uiLabelMap.OrderGrossSales} (${uiLabelMap.CommonPerMonth})"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
+                </platform-specific>
+            </widgets>
+      </section>
+  </screen>
+   
+</screens>
+

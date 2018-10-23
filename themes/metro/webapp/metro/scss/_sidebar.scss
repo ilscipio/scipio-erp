@@ -1,0 +1,402 @@
+/* 
+Sidebar Menu
+*/
+
+
+/********************
+*     VARIABLES     *
+*********************/
+// 26. Side Nav
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// $include-html-nav-classes: $include-html-classes;
+
+// We use this to control padding.
+// $side-nav-padding: rem-calc(14 0);
+
+// We use these to control list styles.
+$side-nav-list-type: none;
+$side-nav-list-position: inside;
+$side-nav-list-margin: rem-calc(0 0 0 0);
+
+// We use these to control link styles.
+$side-nav-link-color: $smoke;
+$side-nav-link-color-active: scale-color($side-nav-link-color, $lightness: 30%);
+$side-nav-link-color-hover: scale-color($side-nav-link-color, $lightness: 20%);
+$side-nav-link-bg-hover: $monsoon;
+// $side-nav-link-margin: 0;
+// $side-nav-link-padding: rem-calc(7 14);
+// $side-nav-font-size: rem-calc(14);
+// $side-nav-font-weight: $font-weight-normal;
+// $side-nav-font-weight-active: $side-nav-font-weight;
+// $side-nav-font-family: $body-font-family;
+// $side-nav-active-font-family: $side-nav-font-family;
+
+// We use these to control heading styles.
+// $side-nav-heading-color: $side-nav-link-color;
+// $side-nav-heading-font-size: $side-nav-font-size;
+// $side-nav-heading-font-weight: bold;
+// $side-nav-heading-text-transform: uppercase;
+
+// We use these to control border styles
+// $side-nav-divider-size: 1px;
+// $side-nav-divider-style: solid;
+// $side-nav-divider-color: scale-color($white, $lightness: 10%);
+
+// Non foundation specific vars 
+$side-bar-bg: #2f323a;
+$dot-sidebar:rgba(255, 255, 255, 0.1);
+$boder-notf-color:rgba(255, 255, 255, 0.1);
+$sidebar-width: 200px;
+
+
+
+/********************
+*   IMPLEMENTATION  *
+*********************/
+
+/* Scipio: duplicated from "side-nav" mixin and modified */
+@mixin side-nav-nested(
+  $divider-color:$side-nav-divider-color,
+  $font-size:$side-nav-font-size,
+  $link-color:$side-nav-link-color,
+  $link-color-active:$side-nav-link-color-active,
+  $link-color-hover:$side-nav-link-color-hover,
+  $link-bg-hover:$side-nav-link-bg-hover) {
+  
+  margin: 0;
+  font-family: $side-nav-font-family;
+  list-style-position: $side-nav-list-position;
+  list-style-type: $side-nav-list-type;
+  
+  padding: $side-nav-padding;
+  
+  h1{
+    color: $white; font-size: 12px;
+  }
+  ul {margin: 0;}
+
+  li {
+    font-size: $font-size;
+    font-weight: $side-nav-font-weight;
+    margin: $side-nav-list-margin;
+    list-style: none;
+    //background: $jet;
+
+    // Scipio: added child selector here
+    > a:not(.button) {
+      color: $link-color;
+      display: block;
+      margin: $side-nav-link-margin;
+      padding: $side-nav-link-padding;
+      border-left: 5px solid transparent;
+      
+      &:hover,
+      &:focus {
+        background: $link-bg-hover;
+        color: $link-color-hover;
+        border-left: 5px solid $primary-color;
+      }
+      &:active {
+        color: $link-color-active;
+      }
+    }
+
+    &.active > a:first-child:not(.button) {
+      background: $side-nav-link-bg-hover;
+      color: $side-nav-link-color-active;
+      border-left: 5px solid $primary-color;
+      font-family: $side-nav-font-family-active;
+      font-weight: $side-nav-font-weight-active;
+    }
+
+    &.divider {
+      border-top: $side-nav-divider-size $side-nav-divider-style;
+      height: 0;
+      list-style: none;
+      padding: 0;
+      border-top-color: $divider-color;
+    }
+
+    &.heading {
+      font: {
+        size: $side-nav-heading-font-size;
+        weight: $side-nav-heading-font-weight;
+      }
+      text-transform: $side-nav-heading-text-transform;
+      background: #444;
+      border-bottom: none;
+      border-top: 1px solid #5e5e5e;
+      color: #999;
+      display: block;
+      padding: 0.3rem 0.9375rem;
+      margin-top:1rem;
+      
+      &:first-child {
+        margin-top:0px;
+      }
+    }
+    
+    &.scipio-nav-actions-menu-item {
+        background-color: rgba($white-smoke,0.12);
+      
+        a {
+            color: $white;
+            border-left-color: $jet;
+        }
+   }
+    
+    &.dashboard {
+            a {
+                background-color: $jet;
+                border-left: 5px solid $jet;
+                color: $white;
+            }
+        }
+        
+    &.disabled {
+            color: $aluminum;
+            cursor: $input-disabled-cursor;
+            
+            > a, > a:hover, > a:visited, > a:active, > a:focus {
+                color: $aluminum;
+                cursor: $input-disabled-cursor;
+                border:none;
+                background:none;
+            }
+        }
+        
+    ul{ 
+        li {
+            font-size: $side-nav-font-size*0.9;
+            
+            > a:not(.button) {
+               background: none;
+               border-left-width:3px;
+               border-color: transparent;
+               
+                &:hover,
+                &:focus {
+                   background: scale-color($side-nav-link-bg-hover, $lightness:-20%);;
+                   border-color: scale-color($primary-color,$lightness:-20%);
+                   border-left-width:3px;
+                }
+                &:active {
+                    
+                }
+            }
+            &.active > a:first-child:not(.button) {
+                   background: scale-color($side-nav-link-bg-hover, $lightness:-20%);
+                   border-color: scale-color($primary-color,$lightness:-20%);
+                   border-left-width:3px;
+                }
+            }
+      }
+  }
+}
+
+
+.inner-wrap {
+}
+
+.fixed {
+    @if $text-direction == ltr {
+        margin-left: $sidebar-width;
+    } @else {
+        margin-right: $sidebar-width;
+    }
+}
+
+.tab-bar {
+    h1 { 
+        img{margin-right:10px;}
+         a {color: $white}
+        }
+}
+
+// Box styling
+.box,canvas {
+    background: $white;
+    padding: 7px 10px;
+    width:100%;
+    border: 1px solid #E6E9ED;
+    canvas {border:none; padding:0px;max-width:100%;}
+}
+
+#content-main-section {
+    padding-top:50px;
+    
+    
+}
+
+#content-main-body{
+    padding-left:20px;
+    padding-right:20px;
+}
+
+.tab-bar-section h1 img{
+    height: 22px;
+}
+
+@media #{$large-up} {
+  .side-bar {
+    @include side-nav-nested;
+    
+    background-color: $side-bar-bg;
+    
+    @if $text-direction == ltr {
+        left: 0px;
+        right:auto;
+        top: 0px;
+        bottom: 0;
+        position: fixed;
+        width: $sidebar-width;
+        overflow-x: hidden;
+    } @else {
+        left:auto;
+        right: 0px;
+        top: 0px;
+        bottom: 0;
+        position: fixed;
+        width: $sidebar-width;
+        overflow-x: hidden;
+    
+    }
+    
+    
+    .name{
+         a {color: $white}
+        .logo-text {display:inline-block; width:100px;word-break: break-word;}
+        img{
+            width: 55px;
+            height: 55px;
+            opacity: 0.9;
+            margin-left:10px;
+            margin-right:10px;
+            background: $white;
+            border-radius: 50%;
+            padding: 7px;
+        }
+    }
+  }
+  
+  /*Top-Bar*/
+  .top-bar {
+      background:$topbar-bg-color;
+      border-bottom: 1px solid #D9DEE4;
+      
+      
+      @if $text-direction == ltr {
+        margin-left: $sidebar-width;
+        margin-right:auto;
+        padding-left:10px;
+      } @else {
+        margin-left: auto;
+        margin-right: $sidebar-width;
+        padding-right:10px;
+      }
+      
+      img{
+        width: 55px;
+        height: 55px;
+        opacity: 0.9;
+        margin-left:10px;
+        margin-right:4px;
+        background: $white;
+        border-radius: 50%;
+        padding: 7px;
+        }
+  }
+  
+  .top-bar-section {
+  
+    ul li {
+        background: none;
+    }
+    
+    li:not(.has-form) a:not(.button) {
+        color: $topbar-link-color;
+    }
+    
+    .dropdown {
+        box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
+        -webkit-box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
+    }
+  
+  }
+ 
+  
+  #content-main-section {
+    width:auto;
+    
+    @if $text-direction == ltr {
+        margin-left: $sidebar-width;
+        margin-right: auto;
+    } @else {
+        margin-right: $sidebar-width;
+         margin-left: auto;
+    }
+    
+  }
+  
+  .page-noauth {
+  
+    .side-bar{
+        display:none !important;
+     }
+    .top-bar, #content-main-section {margin-left:0px ;}
+    } 
+}
+
+.side-nav {
+    /* Nested sidebar menu element */
+    .menu-type-sidebar.nested-sametype {
+        /* NOTE: this will clash with some of the above; best-effort */
+        /* FIXME?: the side-nav-nested was originally supposed to be applied here?... the nested ones...
+          it's what applied the margin-left... but now it's applied to something else... so here is the margin alone...
+        @include side-nav-nested; */
+        margin-left: rem-calc(12);
+        /* extras for metro */
+        padding-top: 0;
+        padding-bottom: 0;
+        /*
+        li {
+            &.active {
+                background: inherit;
+            }
+        }
+        */
+    }
+    
+    li {
+        a:not(.button) {
+            //color: $white;
+        }
+
+        
+        &.heading {
+          background: $side-nav-heading-color;      
+          color: $white;
+        
+         text-transform: $side-nav-heading-text-transform;
+          font: {
+            size: $side-nav-heading-font-size;
+            weight: $side-nav-heading-font-weight;
+          }
+          //border-left: 5px solid  $primary-color;
+          border-bottom: none;
+          border-top: 1px solid scale-color($primary-color, $lightness: 14%);
+          display: block;
+          padding:0px;
+          padding-left: 0.4rem;
+          margin-top:1rem;
+          
+            &:first-child {
+                margin-top:0px;
+            }
+        }
+    }
+    
+     
+}
+

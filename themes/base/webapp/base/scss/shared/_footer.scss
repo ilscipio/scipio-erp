@@ -1,0 +1,20 @@
+/*  FOOTER */
+#body-content {
+  min-height: 100%;
+  margin-bottom: -26px; 
+} 
+
+#body-content:after {
+  content: "";
+  display: block;
+}
+
+#body-content:after, #footer{
+  height: 26px;
+}
+ 
+#footer {
+  background: $oil;
+  color: $smoke;
+  width: 100%;
+}

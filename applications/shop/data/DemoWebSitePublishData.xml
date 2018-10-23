@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>
+
+    <!-- BASIC PUBLISH STRUCTURE -->
+
+    <!-- NOTE DEJ20060610 This is just a skeleton for the most part and does not have complete content -->
+    <Content contentId="WebStoreCONTENT" contentTypeId="WEB_SITE_PUB_PT" contentName="WebStore Content Root" description="Shop Content Categories"/>
+    <WebSiteContent webSiteId="ScipioWebStore" contentId="WebStoreCONTENT" webSiteContentTypeId="PUBLISH_POINT" fromDate="2001-01-01 00:00:00"/>
+
+    <Content contentId="CNTELTRN" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Electronics" description="Electronics" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="CNTELTRN" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="CNTELTRN" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <!-- SCIPIO: Unneeded - but keep as structure reference
+    <Content contentId="CNTGIZMOS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Gizmos" description="Gizmos" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="CNTGIZMOS" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="CNTGIZMOS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <Content contentId="CNTGIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTGIZMOS" contentName="Large Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CNTGIZMOS" contentIdTo="CNTGIZMOSLRG" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="CNTGIZMOSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTGIZMOS" contentName="Small Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CNTGIZMOS" contentIdTo="CNTGIZMOSSML" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="GIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTGIZMOS" contentName="Advocacy" description="Advocacy" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CNTGIZMOS" contentIdTo="GIZMOSLRG" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="GIZMOSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Case Studies" description="Case Studies" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CNTGIZMOS" contentIdTo="GIZMOSSML" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="CNTWIDGETS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Widgets" description="Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="CNTWIDGETS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+    <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="CNTWIDGETS" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="WIDGETSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Sightings" description="Sightings of Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CNTWIDGETS" contentIdTo="WIDGETSSML" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <Content contentId="WIDGETSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Care &amp; Groom" description="Care and Grooming" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CNTWIDGETS" contentIdTo="WIDGETSLRG" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="CNTWIDGETSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTWIDGETS" contentName="Large Widgets" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CNTWIDGETS" contentIdTo="CNTWIDGETSLRG" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="CNTWIDGETSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTWIDGETS" contentName="Small Widgets" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CNTWIDGETS" contentIdTo="CNTWIDGETSSML" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    -->
+
+    <!-- STORE POLICIES -->
+
+    <Content contentId="POLICY" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Policies" description="Policies" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="POLICY" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="POLICY" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <!-- An example of sub-content to be rendered by the root contentId (WebStoreCONTENT) and map-key (policies) -->
+    <DataResource dataResourceId="STORE_POLICIES" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Store Policies"/>
+    <ElectronicText dataResourceId="STORE_POLICIES">
+        <textData><![CDATA[
+            <div class="head2">Store Policies</div>
+            <div>This is a demo store with demo policies. They are as follows:</div>
+            <div>
+                <ol>
+                    <li>All our products should be considered fictional.</li>
+                    <li>We will never fulfill anything you order here.</li>
+                    <li>We will not accept any real money for any of the products advertised and listed.</li>
+                    <li>We will not use your personal information in any way.</li>
+                </ol>
+            </div>
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="STORE_POLICIES" contentTypeId="DOCUMENT" ownerContentId="WebStoreCONTENT" dataResourceId="STORE_POLICIES"
+        contentName="Store Policies 1" description="Store Policies 1 Description" mimeTypeId="text/html" localeString="en_US" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="STORE_POLICIES" mapKey="policies" contentAssocTypeId="SUB_CONTENT"
+        fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <DataResource dataResourceId="STORE_POLICIES2" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Store Policies"/>
+    <ElectronicText dataResourceId="STORE_POLICIES2">
+        <textData><![CDATA[
+            <div>These next policies are meaningless, and are really just used to demonstrate having 2 content sections on the page:</div>
+            <div>
+                <ol>
+                    <li>Item 1</li>
+                    <li>Item 2</li>
+                    <li>Item 3</li>
+                </ol>
+            </div>
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="STORE_POLICIES2" contentTypeId="DOCUMENT" ownerContentId="WebStoreCONTENT" dataResourceId="STORE_POLICIES2"
+        contentName="Store Policies 2" description="Store Policies 2 Description" mimeTypeId="text/html" localeString="en_US" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="STORE_POLICIES2" mapKey="policies2" contentAssocTypeId="SUB_CONTENT"
+        fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+        
+        
+    <!-- FACTOID -->    
+        
+    <Content contentId="WebStoreFACTOID" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="" contentName="Factoids" description="Factoids" createdDate="2004-07-05 12:00:00.000" createdByUserLogin="admin"/>
+        
+    <DataResource dataResourceId="SCIPIO-FACT-02" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
+    <ElectronicText dataResourceId="SCIPIO-FACT-02" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
+        <textData><![CDATA[
+Downloadable music outsells hard-copy music CDs 2:1.
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="SCIPIO-FACT-02" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="SCIPIO-FACT-02" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Downloadable music outsells hard-copy music" description="Downloadable music outsells hard-copy music CDs 2:1." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
+    <ContentAssoc contentId="SCIPIO-FACT-02" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
+
+    <DataResource dataResourceId="SCIPIO-FACT-03" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
+    <ElectronicText dataResourceId="SCIPIO-FACT-03" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
+        <textData><![CDATA[
+Phones are our most popular item.
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="SCIPIO-FACT-03" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="SCIPIO-FACT-03" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Phones most popular" description="Phones are our most popular item." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
+    <ContentAssoc contentId="SCIPIO-FACT-03" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
+
+    <DataResource dataResourceId="SCIPIO-FACT-04" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
+    <ElectronicText dataResourceId="SCIPIO-FACT-04" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
+        <textData><![CDATA[
+The resale value of our phones after five years is 46% higher than that of competitors.
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="SCIPIO-FACT-04" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="SCIPIO-FACT-04" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Phones hold value" description="Phones hold value." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
+    <ContentAssoc contentId="SCIPIO-FACT-04" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
+
+    <ContentAssoc contentId="SCIPIO-FACT-02" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="SCIPIO-FACT-03" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="SCIPIO-FACT-04" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    
+</entity-engine-xml>

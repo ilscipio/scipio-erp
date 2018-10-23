@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <decorator-screen-settings default-fallback-location="component://party/widget/partymgr/CommonScreens.xml"/>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://party/widget/partymgr/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+        
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+        
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <!-- base/top/specific map first, then more common map added for shared labels -->
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="SecurityUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.PartyCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.PartyCompanySubtitle" global="true"/>
+                <!-- layoutSettings.headerImageUrl can be used to specify an application specific logo; if not set,
+                     then the global layoutSettings.commonHeaderImageUrl (specified in GlobalDecorator) will be used. -->
+                <!--<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.gif" global="true"/>-->
+
+                <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
+                <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
+                <!-- TODO: Use transform to specify component URI -->
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/static/partymgr.js" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/partymgr/static/partymgr.css" global="true"/>
+                <set field="activeApp" value="partymgr" global="true"/>
+                <set field="applicationMenuName" value="PartyAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://party/widget/partymgr/PartyMenus.xml" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.Party}" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
+                    <!-- note: multiple ways to write this -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="left-column" /></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="left-column"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
+    <screen name="CommonPartyAppDecorator">
+        <section>
+            <actions>
+                <!-- SCIPIO: NOTE: this central decorator now does the main base VIEW perm check for the body, left-column, etc.
+                    decorator-sections of partymgr screens. other screens and decorators don't need to check perm unless they
+                    have extra perms to check (UPDATE, different type, etc.) or extra sections to show (such as pre-body). -->
+                <condition-to-field field="commonPartyAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="CommonPartyAppSideBarMenu"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-true field="commonPartyAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Primarily intended for screens that actually focus on displaying a Party.
+        For compatibility (and logical) reasons, the Party sub-menu is only selected if there is parameters.partyId specified OR if activeSubMenuItem was set;
+        however screens/decorators that don't focus on a party should now usually use CommonPartyAppDecorator instead. -->
+    <screen name="CommonPartyDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#Profile" />
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-field="party"/>
+                <entity-one entity-name="Person" value-field="lookupPerson"/>
+                <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
+                <set field="lookupGroup" from-field="lookupGroup" global="true"/>
+                <set field="lookupPerson" from-field="lookupPerson" global="true"/>
+                <condition-to-field field="commonPartyAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.party}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.commonPartyAppBasePermCond == true) and (not empty context.party)}">
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonRequestDecorator">
+        <section>
+            <actions/>
+            <widgets>
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonOpportunityDecorator">
+        <section>
+            <actions/>
+            <widgets>
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonCommunicationEventDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#CommEvent" />
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
+                <condition-to-field field="commonPartyAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.commonPartyAppBasePermCond == true)}">
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommSubTabBar"/>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CommonMyCommunicationEventDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#CommEvent" />
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
+                
+                <condition-to-field field="commonPartyAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.commonPartyAppBasePermCond == true)}">
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommSubTabBar"/>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonPartyClassificationDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#PartyClassification" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonPartyInvitationDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#PartyInvitation" />
+                <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
+                <entity-one entity-name="PartyInvitation" value-field="partyInvitation"/>
+                
+                <!-- NOTE: both partyIdFrom and partyInvitationId should display here as designate different things -->
+                <set field="partyInvDescFormat" value=" \${uiLabelMap.CommonFor} ${partyInvitation.partyIdFrom} [${partyInvitationId}]"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyInvitation ? context.partyInvDescFormat : ''}"/>
+                
+                <condition-to-field field="commonPartyAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyInvitation}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.commonPartyAppBasePermCond == true) and (not empty context.partyInvitation)}">
+                        <include-menu name="PartyInvitationTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="partyInvitation"/></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="PartyInvitationSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                <!--<container style="button-bar">
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="title"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <label>${title} ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label>
+                                        </widgets>
+                                        <fail-widgets>
+                                            <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label>
+                                        </fail-widgets>
+                                    </section>
+                                </container>-->
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new, overrides the one from component://common/widget/SecurityScreens.xml -->
+    <screen name="SecurityDecorator">
+        <section>
+            <actions>
+                <set field="securityTargetDecoratorName" from-field="securityTargetDecoratorName" default-value="CommonPartyAppDecorator"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SecurityDecorator" location="component://common/widget/SecurityScreens.xml">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="main">
+        <section>
+            <actions>
+                <!--<set field="titleProperty" value="PageTitleFindParty"/> -->
+                <set field="activeSubMenuItem" value="main"/>
+                <set field="titleProperty" value="PartyUserManagement"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.PartyUserActivity}">
+                                    <container style="${styles.grid_row}">
+                                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                            <include-screen name="LoggedInUsersScreen" location="component://party/widget/partymgr/VisitScreens.xml"/>
+                                        </container>
+                                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                            <include-screen name="ScipioNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                                        </container>
+                                    </container>
+                                </screenlet>
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="ScipioLastCommunication" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="ScipioNewRegistrationsList" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Dashboard widget implementation -->
+    <screen name="ScipioNewRegistrations">
+        <section>
+            <actions>
+                <set field="chartType" value="bar"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="month"/>
+                <set field="chartIntervalCount" value="6"/>
+                <set field="chartDatasets" value="1"/>
+                <set field="xlabel" value=""/> <!-- x-axis label -->
+                <set field="ylabel" value=""/> <!-- y-axis label -->
+                <set field="label1" value="${uiLabelMap.PartyRegistrations}"/> <!-- 1st dataset label -->
+                <script location="component://party/script/com/ilscipio/party/dashboard/PartyNewRegistrations.groovy"/>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="totalMap"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.PartyRegistrations}">
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ScipioNewRegistrationsList">
+        <section>
+            <actions>
+               <entity-condition entity-name="PartyAndPerson" list="registrations">
+                    <order-by field-name="createdDate"/>
+                </entity-condition>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="registrations"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrationsList.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+
+    <screen name="ScipioSecurityAlerts">
+        <section>
+            <actions>
+                <set field="intervalScope" value="month"/>
+                <set field="parameters.VIEW_SIZE" value="10" type="Integer" global="true"/>
+                <script location="component://party/script/com/ilscipio/party/dashboard/PartySecurityAlerts.groovy"/>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="securityAlerts"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonSecurity}">
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartySecurityAlerts.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ScipioLastCommunication">
+        <section>
+            <actions>
+                <set field="intervalScope" value="month"/>
+                <script location="component://party/script/com/ilscipio/party/dashboard/PartyLastCommunications.groovy"/>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="lastCommunications"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.PartyCommunication}">
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyLastCommunications.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://party/widget/partymgr/PartyMenus.xml"/>
+                <set field="menuCfg.name" value="PartyAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://party/widget/partymgr/PartyMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
+        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="CommonPartyAppSideBarMenu">
+        <section>
+            <actions>
+                <condition-to-field field="commonPartyAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonPartyAppBasePermCond}"/>
+            </actions>
+            <widgets>
+                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+</screens>

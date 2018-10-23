@@ -1,0 +1,58 @@
+@import "sass-to-js";
+// ToDo: Update to pattern of chart.js v2 http://nnnick.github.io/Chart.js/docs-v2
+$chartMap: (
+  primaryFillColor: rgba($primary-color,.7),
+  primaryStrokeColor: rgba($primary-color,.9),
+  primaryPointStrokeColor: rgba($primary-color,.7),
+  secondaryFillColor: rgba($secondary-color,.7),
+  secondaryStrokeColor: rgba($secondary-color,.9),
+  secondaryPointStrokeColor: rgba($secondary-color,.7),
+  pieFillColor1: rgba($primary-color,1),
+  pieFillColor2: rgba($secondary-color,1),
+  pieFillColor3: rgba($alert-color,1),
+  pieFillColor4: rgba($success-color,1),
+  pieFillColor5: rgba($warning-color,1),
+  pieFillColor6: rgba($info-color,1),
+  pieHighlightColor1: rgba($primary-color,.6),
+  pieHighlightColor2: rgba($secondary-color,.6),
+  pieHighlightColor3: rgba($alert-color,.6),
+  pieHighlightColor4: rgba($success-color,.6),
+  pieHighlightColor5: rgba($warning-color,.6),
+  pieHighlightColor6: rgba($info-color,.6),
+  pointColor: $white,
+  pointHighlightFill: $ghost,
+  pointHighlightStroke: $base,
+  pointDot : true,
+  pointHitDetectionRadius : 5,
+  pointDotRadius : 3,
+  pointDotStrokeWidth : 1,
+  scaleType: "linear",
+  scaleDisplay : true,
+  scaleGridLineColor: "rgba(0,0,0,.1)",
+  scaleLabelFontFamily: $body-font-family,
+  scaleLabelFontSize: 14,
+  scaleLabelFontColor: $body-font-color,
+  scaleLabelDisplay: false,
+  angleShowLineOut : true,
+  scaleBeginAtZero : true,
+  showTooltips: true,
+  color: #F7464A,
+  highlight : #FF5A5E,
+  dataLabels: false
+);
+
+.chart-data{
+        /*width: 100% !important;
+        max-width: 800px;
+        height: auto !important;*/
+        display:none;
+  
+  &:before{
+    content: sassToJs($chartMap);
+    display: none;
+  }
+}
+
+canvas {
+    margin: 0.5em 0;
+}

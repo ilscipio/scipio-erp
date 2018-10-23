@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+    <!-- suppliers -->
+    <Party partyId="DemoSupplier" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="DemoSupplier" groupName="Demo Supplier"/>
+    <PartyRole partyId="DemoSupplier" roleTypeId="SUPPLIER"/>
+    <ContactMech contactMechId="9001" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PartyContactMech partyId="DemoSupplier" contactMechId="9001" fromDate="2001-05-13 00:00:00.000" allowSolicitation="Y"/>
+    <PostalAddress contactMechId="9001" toName="Demo Supplier Company" address1="2004 Factory Blvd" city="City of Industry" postalCode="90000" countryGeoId="USA" stateProvinceGeoId="CA"/>
+    <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
+    <UserLogin userLoginId="DemoSupplier" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" partyId="DemoSupplier"/>
+
+    <Party partyId="BigSupplier" partyTypeId="PARTY_GROUP" />
+    <PartyGroup partyId="BigSupplier" groupName="Big Supplier" />
+    <PartyRole partyId="BigSupplier" roleTypeId="SUPPLIER" />
+    <ContactMech contactMechId="9002" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PartyContactMech partyId="BigSupplier" contactMechId="9002" fromDate="2000-01-01 00:00:00.000" allowSolicitation="Y"/>
+    <PostalAddress contactMechId="9002" toName="Big Supplier Company" address1="2005 Industrial Park Blvd" city="New York" postalCode="10000" countryGeoId="USA" stateProvinceGeoId="NY"/>
+    <PartyContactMechPurpose partyId="BigSupplier" contactMechId="9002" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="BigSupplier" contactMechId="9002" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="BigSupplier" contactMechId="9002" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
+    <UserLogin userLoginId="BigSupplier" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" partyId="BigSupplier"/>
+
+    <Party partyId="EuroSupplier" partyTypeId="PARTY_GROUP" />
+    <PartyGroup partyId="EuroSupplier" groupName="European Supplier"/>
+    <PartyRole partyId="EuroSupplier" roleTypeId="SUPPLIER"/>
+    <ContactMech contactMechId="9003" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PartyContactMech partyId="EuroSupplier" contactMechId="9003" fromDate="2000-01-01 00:00:00.000" allowSolicitation="Y"/>
+    <PostalAddress contactMechId="9003" toName="Euro Supplier Company" address1="2005 Boulevard Industrie" city="Roissy" postalCode="95700" countryGeoId="FRA"/>
+    <PartyContactMechPurpose partyId="EuroSupplier" contactMechId="9003" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EuroSupplier" contactMechId="9003" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EuroSupplier" contactMechId="9003" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
+    <UserLogin userLoginId="EuroSupplier" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" partyId="EuroSupplier"/>
+
+    <!-- supplier pricing -->
+    <SupplierProduct partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="PH-1000" lastPrice="7.5" supplierProductId="PH-1000-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="PH-1001" lastPrice="12.99" supplierProductId="PH-1001-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="PH-1005" lastPrice="1399.5" supplierProductId="PH-1005-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="SW-1006" lastPrice="2.99" supplierProductId="SW-1006-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="CD-2002" lastPrice="24.0" supplierProductId="CD-2002-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="CAM-2644" lastPrice="24.0" supplierProductId="CAM-2644-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="CL-5005" lastPrice="24.0" supplierProductId="CL-5005-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="CL-7000" lastPrice="499.99" supplierProductId="CL-7000-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="CL-8544" lastPrice="135.0" supplierProductId="CL-8544-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="MPL-9290" lastPrice="49.99" supplierProductId="MPL-9290-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="CDR-1111" lastPrice="30.0" supplierProductId="CDR-1111-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="KB-5569" lastPrice="30.0" supplierProductId="KB-5569-0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="VH-9943" lastPrice="275.0" supplierProductId="VH-9943-0" availableFromDate="2005-01-01 00:00:00.000"/>
+
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="PH-1000" lastPrice="6.75" supplierProductName="" supplierProductId="PH-1000-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="PH-1001" lastPrice="11.69" supplierProductName="" supplierProductId="PH-1001-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="PH-1005" lastPrice="1259.55" supplierProductName="" supplierProductId="PH-1005-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="SW-1006" lastPrice="2.69" supplierProductName="" supplierProductId="SW-1006-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="CD-2002" lastPrice="21.6" supplierProductName="" supplierProductId="CD-2002-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="CAM-2644" lastPrice="21.6" supplierProductName="" supplierProductId="CAM-2644-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="CL-5005" lastPrice="21.6" supplierProductName="" supplierProductId="CL-5005-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="CL-7000" lastPrice="449.99" supplierProductName="" supplierProductId="CL-7000-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="CL-8544" lastPrice="121.5" supplierProductName="" supplierProductId="CL-8544-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="MPL-9290" lastPrice="44.99" supplierProductName="" supplierProductId="MPL-9290-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="CDR-1111" lastPrice="27.0" supplierProductName="" supplierProductId="CDR-1111-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="KB-5569" lastPrice="27.0" supplierProductName="" supplierProductId="KB-5569-5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="VH-9943" lastPrice="247.5" supplierProductName="" supplierProductId="VH-9943-5" availableFromDate="2005-01-01 00:00:00.000"/>
+
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="PH-1000" lastPrice="5.65" supplierProductName="" supplierProductId="PH-1000-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="PH-1001" lastPrice="9.75" supplierProductName="" supplierProductId="PH-1001-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="PH-1005" lastPrice="1049.65" supplierProductName="" supplierProductId="PH-1005-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="SW-1006" lastPrice="2.25" supplierProductName="" supplierProductId="SW-1006-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="CD-2002" lastPrice="18.0" supplierProductName="" supplierProductId="CD-2002-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="CAM-2644" lastPrice="18.0" supplierProductName="" supplierProductId="CAM-2644-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="CL-5005" lastPrice="18.0" supplierProductName="" supplierProductId="CL-5005-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="CL-7000" lastPrice="374.00" supplierProductName="" supplierProductId="CL-7000-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="CL-8544" lastPrice="101.25" supplierProductName="" supplierProductId="CL-8544-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="MPL-9290" lastPrice="37.5" supplierProductName="" supplierProductId="MPL-9290-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="CDR-1111" lastPrice="22.5" supplierProductName="" supplierProductId="CDR-1111-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="KB-5569" lastPrice="22.5" supplierProductName="" supplierProductId="KB-5569-25" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="VH-9943" lastPrice="206.25" supplierProductName="" supplierProductId="VH-9943-25" availableFromDate="2005-01-01 00:00:00.000"/>
+
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="PH-1000" supplierProductName="Bulk iPhone 5" supplierProductId="BKPH-1000" lastPrice="3.75" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="PH-1001" supplierProductName="Bulk iPhone 6" supplierProductId="BKPH-1001" lastPrice="6.49" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="PH-1005" supplierProductName="Bulk iPhone Business" supplierProductId="BKPH-1005" lastPrice="699.75" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="SW-1006" supplierProductName="Bulk LicenseToolPlus" supplierProductId="BKSW-1006" lastPrice="1.4975" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="CD-2002" supplierProductName="Bulk U2 - Greatest Hits (CD)" supplierProductId="BKCD-2002" lastPrice="12.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="CAM-2644" supplierProductName="Bulk Nikon Analog Camera" supplierProductId="BKCAM-2644" lastPrice="12.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="CL-5005" supplierProductName="Bulk Men's Jacket" supplierProductId="BKCL-5005" lastPrice="12.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="CL-7000" supplierProductName="Bulk Blouse" supplierProductId="BKCL-7000" lastPrice="249.99" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="CL-8544" supplierProductName="Bulk Women's Socks" supplierProductId="BKCL-8544" lastPrice="67.5" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="MPL-9290" supplierProductName="Bulk Thumb MP3 Player" supplierProductId="BKMPL-9290" lastPrice="24.99" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="CDR-1111" supplierProductName="Bulk CD-R Writable Discs" supplierProductId="BKCDR-1111" lastPrice="15.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="KB-5569" supplierProductName="Bulk USB Keyboard" supplierProductId="BKKB-5569" lastPrice="15.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="VH-9943" supplierProductName="Bulk A40f Utility Vehicle" supplierProductId="BKVH-9943" lastPrice="137.5" availableFromDate="2005-01-01 00:00:00.000"/>
+
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="PH-1000" supplierProductName="US iPhone 5" supplierProductId="USPH-1000" lastPrice="6.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="PH-1001" supplierProductName="US iPhone 6" supplierProductId="USPH-1001" lastPrice="10.40" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="PH-1005" supplierProductName="US iPhone Business" supplierProductId="USPH-1005" lastPrice="1119.6" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="SW-1006" supplierProductName="US LicenseToolPlus" supplierProductId="USSW-1006" lastPrice="2.396" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="CD-2002" supplierProductName="US U2 - Greatest Hits (CD)" supplierProductId="USCD-2002" lastPrice="19.2" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="CAM-2644" supplierProductName="US Nikon Analog Camera" supplierProductId="USCAM-2644" lastPrice="19.2" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="CL-5005" supplierProductName="US Men's Jacket" supplierProductId="USCL-5005" lastPrice="19.2" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="CL-7000" supplierProductName="US Blouse" supplierProductId="USCL-7000" lastPrice="400.00" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="CL-8544" supplierProductName="US Women's Socks" supplierProductId="USCL-8544" lastPrice="108.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="MPL-9290" supplierProductName="US Thumb MP3 Player" supplierProductId="USMPL-9290" lastPrice="40.00" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="CDR-1111" supplierProductName="US CD-R Writable Discs" supplierProductId="USCDR-1111" lastPrice="24.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="KB-5569" supplierProductName="US USB Keyboard" supplierProductId="USKB-5569" lastPrice="24.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="VH-9943" supplierProductName="US A40f Utility Vehicle" supplierProductId="USVH-9943" lastPrice="220.0" availableFromDate="2005-01-01 00:00:00.000"/>
+
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="PH-1000" supplierProductName="US iPhone 5" supplierProductId="US1-PH-1000" lastPrice="4.6" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="PH-1001" supplierProductName="US iPhone 6" supplierProductId="US1-PH-1001" lastPrice="7.23" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="PH-1005" supplierProductName="US iPhone Business" supplierProductId="US1-PH-1005" lastPrice="771.75" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="SW-1006" supplierProductName="US LicenseToolPlus" supplierProductId="US1-SW-1006" lastPrice="1.75" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="CD-2002" supplierProductName="US U2 - Greatest Hits (CD)" supplierProductId="US1-CD-2002" lastPrice="16.52" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="CAM-2644" supplierProductName="US Nikon Analog Camera" supplierProductId="US1-CAM-2644" lastPrice="16.52" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="CL-5005" supplierProductName="US Men's Jacket" supplierProductId="US1-CL-5005" lastPrice="16.52" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="CL-7000" supplierProductName="US Blouse" supplierProductId="US1-CL-7000" lastPrice="340.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="CL-8544" supplierProductName="US Women's Socks" supplierProductId="US1-CL-8544" lastPrice="85.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="MPL-9290" supplierProductName="US Thumb MP3 Player" supplierProductId="US1-MPL-9290" lastPrice="34.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="CDR-1111" supplierProductName="US CD-R Writable Discs" supplierProductId="US1-CDR-1111" lastPrice="20.00" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="KB-5569" supplierProductName="US USB Keyboard" supplierProductId="US1-KB-5569" lastPrice="20.00" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="VH-9943" supplierProductName="US A40f Utility Vehicle" supplierProductId="US1-VH-9943" lastPrice="180.0" availableFromDate="2005-01-01 00:00:00.000"/>
+
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="PH-1000" supplierProductName="EU iPhone 5" supplierProductId="EU-PH-1000" lastPrice="3.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="PH-1001" supplierProductName="EU iPhone 6" supplierProductId="EU-PH-1001" lastPrice="5.20" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="PH-1005" supplierProductName="EU iPhone Business" supplierProductId="EU-PH-1005" lastPrice="559.8" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="SW-1006" supplierProductName="EU LicenseToolPlus" supplierProductId="EU-SW-1006" lastPrice="1.198" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="CD-2002" supplierProductName="EU U2 - Greatest Hits (CD)" supplierProductId="EU-CD-2002" lastPrice="9.6" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="CAM-2644" supplierProductName="EU Nikon Analog Camera" supplierProductId="EU-CAM-2644" lastPrice="9.6" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="CL-5005" supplierProductName="EU Men's Jacket" supplierProductId="EU-CL-5005" lastPrice="9.6" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="CL-7000" supplierProductName="EU Blouse" supplierProductId="EU-CL-7000" lastPrice="200.00" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="CL-8544" supplierProductName="EU Women's Socks" supplierProductId="EU-CL-8544" lastPrice="54.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="MPL-9290" supplierProductName="EU Thumb MP3 Player" supplierProductId="EU-MPL-9290" lastPrice="20.00" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="CDR-1111" supplierProductName="EU CD-R Writable Discs" supplierProductId="EU-CDR-1111" lastPrice="12.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="KB-5569" supplierProductName="EU USB Keyboard" supplierProductId="EU-KB-5569" lastPrice="12.0" availableFromDate="2005-01-01 00:00:00.000"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="20" currencyUomId="EUR" productId="VH-9943" supplierProductName="EU A40f Utility Vehicle" supplierProductId="EU-VH-9943" lastPrice="110.0" availableFromDate="2005-01-01 00:00:00.000"/>
+
+    <!-- supplier specific feature descriptions -->
+    <SupplierProductFeature productFeatureId="8000" partyId="EuroSupplier" description="EURO-LGPL"/>
+    <SupplierProductFeature productFeatureId="8001" partyId="EuroSupplier" description="EURO-GPL"/>
+    <SupplierProductFeature productFeatureId="8002" partyId="EuroSupplier" description="EURO-BSD"/>
+    <SupplierProductFeature productFeatureId="8003" partyId="EuroSupplier" description="EURO-MIT"/>
+    <SupplierProductFeature productFeatureId="9000" partyId="EuroSupplier" description="Black"/>
+    <SupplierProductFeature productFeatureId="9001" partyId="EuroSupplier" description="Silver"/>
+    <SupplierProductFeature productFeatureId="9002" partyId="EuroSupplier" description="Regular"/>
+    <SupplierProductFeature productFeatureId="9003" partyId="EuroSupplier" description="Large"/>
+
+    <SupplierProductFeature productFeatureId="8000" partyId="BigSupplier" description="BIG-LGP"/>
+    <SupplierProductFeature productFeatureId="8001" partyId="BigSupplier" description="BIG-GPL"/>
+    <SupplierProductFeature productFeatureId="8002" partyId="BigSupplier" description="BIG-BSD"/>
+    <SupplierProductFeature productFeatureId="8003" partyId="BigSupplier" description="BIG-MIT"/>
+    <SupplierProductFeature productFeatureId="9000" partyId="BigSupplier" description="BIG-BLK"/>
+    <SupplierProductFeature productFeatureId="9001" partyId="BigSupplier" description="BIG-SIL"/>
+    <SupplierProductFeature productFeatureId="9002" partyId="BigSupplier" description="BIG-REG"/>
+    <SupplierProductFeature productFeatureId="9003" partyId="BigSupplier" description="BIG-LG"/>
+
+    <!-- supplier agreements -->
+    <!-- The agreement header can be used to link directly two parties  -->
+    <!-- The agreement AGR_TEST is a PURCHASE_AGREEMENT between the Company party and the DemoSupplier party (in the role of SUPPLIER)  -->
+    <Agreement agreementId="AGR_TEST" partyIdFrom="Company" partyIdTo="DemoSupplier" roleTypeIdTo="SUPPLIER" agreementTypeId="PURCHASE_AGREEMENT" description="Agreement for DemoSupplier"/>
+
+    <!-- Each agreement can have many agreement items, each one with its own agreementItemTypeId -->
+    <!-- The agreementItem 10000 is an AGREEMENT_PRICING_PR(OGRAM, i.e. a price list) -->
+    <!-- We will need to add the 'currencyUomId' field to the AgreementItem entity to store the currency of the price list: -->
+    <AgreementItem agreementId="AGR_TEST" agreementItemSeqId="10000" currencyUomId="USD" agreementItemTypeId="AGREEMENT_PRICING_PR" agreementText="Price list in US Dollars"/>
+    <!-- <AgreementItem agreementId="AGR_TEST" agreementItemSeqId="10000" agreementItemTypeId="AGREEMENT_PRICING_PR" agreementText="Price list in EUR"/> -->
+
+    <!-- An agreement can have several terms -->
+    <!-- The same changes that you have proposed for OrderTerm and InvoiceTerm (see issue OFBIZ-75) should be applied to the AgreementTerm entity too -->
+    <!-- Here we have two "Payment term" options available (30 days or 60 days) -->
+
+    <!-- Jacopo - based on my suggested changes, termDays would be the # of days and termValue would be the amount of discount, if any.  Does that make sense?
+        Also, I thought that all the terms of the agreement would apply to the order at the same time, so we would not have "Net 30" and "net 60" simultaneously. -->
+    <!--
+    <AgreementTerm agreementTermId="1000" termTypeId="FIN_PAYMENT_TERM" agreementId="AGR_TEST" termValue="30"/>
+    <AgreementTerm agreementTermId="1001" termTypeId="FIN_PAYMENT_TERM" agreementId="AGR_TEST" termValue="60"/>
+    -->
+    <AgreementTerm agreementTermId="1000" termTypeId="FIN_PAYMENT_TERM" agreementId="AGR_TEST" termDays="30"/>
+    <AgreementTerm agreementTermId="1001" termTypeId="FIN_PAYMENT_DISC" agreementId="AGR_TEST" termDays="10" termValue="2"/> <!-- a 2% discount for paying within 10 days -->
+    <AgreementTerm agreementTermId="1003" termTypeId="PURCH_VENDOR_ID" agreementId="AGR_TEST" textValue="OPEN-001"/>
+    <AgreementTerm agreementTermId="1004" termTypeId="PURCH_FREIGHT" agreementId="AGR_TEST" textValue="Shp via Open Express"/>
+    <!-- A final note: if we use Agreement and AgreementTerm in this way we can store 'party terms' without the need of a new PartyTerm entity -->
+
+    <!-- an example of agreements with multiple payment terms -->
+    <Agreement agreementId="1000" partyIdFrom="Company" partyIdTo="BigSupplier" roleTypeIdTo="SUPPLIER" agreementTypeId="PURCHASE_AGREEMENT" description="Purchasing Agreement with BigSupplier"/>
+    <AgreementItem agreementId="1000" agreementItemSeqId="0001" currencyUomId="USD" agreementItemTypeId="AGREEMENT_PRICING_PR" agreementText="Price list in USD"/>
+    <AgreementTerm agreementTermId="1100" termTypeId="FIN_PAYMENT_TERM" agreementId="1000" termDays="30"/>
+    <AgreementTerm agreementTermId="1101" termTypeId="FIN_PAYMENT_DISC" agreementId="1000" termDays="10" termValue="2"/> <!-- a 2% discount for paying within 10 days -->
+
+    <!-- an example of multiple agreements with the same supplier -->
+    <Agreement agreementId="1001" partyIdFrom="Company" partyIdTo="EuroSupplier" roleTypeIdTo="SUPPLIER" agreementTypeId="PURCHASE_AGREEMENT" description="Purchasing Agreement with EuroSupplier-Milan"/>
+    <AgreementItem agreementId="1001" agreementItemSeqId="0001" currencyUomId="EUR" agreementItemTypeId="AGREEMENT_PRICING_PR" agreementText="Price list in EURO"/>
+    <AgreementTerm agreementTermId="1200" termTypeId="FIN_PAYMENT_TERM" agreementId="1001" termDays="60"/>
+
+    <Agreement agreementId="1002" partyIdFrom="Company" partyIdTo="EuroSupplier" roleTypeIdTo="SUPPLIER" agreementTypeId="PURCHASE_AGREEMENT" description="Purchasing Agreement with EuroSupplier-New York"/>
+    <AgreementItem agreementId="1002" agreementItemSeqId="0001" currencyUomId="USD" agreementItemTypeId="AGREEMENT_PRICING_PR" agreementText="Price list in US Dollars"/>
+    <AgreementTerm agreementTermId="1210" termTypeId="FIN_PAYMENT_TERM" agreementId="1002" termDays="30"/>
+
+    <!-- Drop ship products -->
+    <Product productId="dropShip1" productTypeId="FINISHED_GOOD" internalName="DropShip from DemoSupplier" productName="DropShip from DemoSupplier" smallImageUrl="/images/products/dropShip1/small.jpg" mediumImageUrl="/images/products/dropShip1/medium.jpg" largeImageUrl="/images/products/dropShip1/large.jpg" isVirtual="N" isVariant="N" requirementMethodEnumId="PRODRQM_DS" billOfMaterialLevel="0" createdDate="2007-05-05 14:50:58.584" createdByUserLogin="admin" lastModifiedDate="2007-05-05 15:05:41.62" lastModifiedByUserLogin="admin" inShippingBox="N"/>
+    <ProductCategoryMember productCategoryId="DROP-100" productId="dropShip1" sequenceNum="1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="dropShip1" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="13.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <SupplierProduct productId="dropShip1" partyId="DemoSupplier" availableFromDate="2007-01-01 14:51:52.627" minimumOrderQuantity="0.0" lastPrice="10.0" currencyUomId="USD" supplierProductName="Drop ship product from demo supplier" supplierProductId="dropShip1-DS" canDropShip="Y"/>
+
+    <Product productId="dropShip2" productTypeId="FINISHED_GOOD" internalName="DropShip from BigSupplier" productName="DropShip from BigSupplier" smallImageUrl="/images/products/dropShip2/small.jpg" mediumImageUrl="/images/products/dropShip2/medium.jpg" largeImageUrl="/images/products/dropShip2/large.jpg" isVirtual="N" isVariant="N" requirementMethodEnumId="PRODRQM_DS" billOfMaterialLevel="0" createdDate="2007-05-05 14:50:58.584" createdByUserLogin="admin" lastModifiedDate="2007-05-05 15:05:41.62" lastModifiedByUserLogin="admin" inShippingBox="N"/>
+    <ProductCategoryMember productCategoryId="DROP-100" productId="dropShip2" sequenceNum="1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="dropShip2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="15.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <SupplierProduct productId="dropShip2" partyId="BigSupplier" availableFromDate="2007-01-01 14:51:52.627" minimumOrderQuantity="0.0" lastPrice="12.0" currencyUomId="USD" supplierProductName="Drop ship product from big supplier" supplierProductId="dropShip2-DS" canDropShip="Y"/>
+
+    <Product productId="dropShip3" productTypeId="FINISHED_GOOD" internalName="DropShip from EuroSupplier" productName="DropShip from EuroSupplier" smallImageUrl="/images/products/dropShip3/small.jpg" mediumImageUrl="/images/products/dropShip3/medium.jpg" largeImageUrl="/images/products/dropShip3/large.jpg" isVirtual="N" isVariant="N" requirementMethodEnumId="PRODRQM_DS" billOfMaterialLevel="0" createdDate="2007-05-05 14:50:58.584" createdByUserLogin="admin" lastModifiedDate="2007-05-05 15:05:41.62" lastModifiedByUserLogin="admin" inShippingBox="N"/>
+    <ProductCategoryMember productCategoryId="DROP-100" productId="dropShip3" sequenceNum="1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="dropShip3" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="14.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <SupplierProduct productId="dropShip3" partyId="EuroSupplier" availableFromDate="2007-01-01 14:51:52.627" minimumOrderQuantity="0.0" lastPrice="11.0" currencyUomId="EUR" supplierProductName="Drop ship product from Euro supplier" supplierProductId="dropShip3-DS" canDropShip="Y"/>
+    <ProductPrice productId="dropShip3" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="14.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <SupplierProduct productId="dropShip3" partyId="EuroSupplier" availableFromDate="2007-01-01 14:51:52.627" minimumOrderQuantity="0.0" lastPrice="11.0" currencyUomId="USD" supplierProductName="Drop ship product from Euro supplier" supplierProductId="dropShip3-DS" canDropShip="Y"/>
+
+    <!-- order when product is sold -->
+    <Product productId="orderWhenSold" productTypeId="FINISHED_GOOD" internalName="Order product from DemoSupplier when sold" productName="Order product from DemoSupplier when sold" smallImageUrl="/images/products/orderWhenSold/small.jpg" mediumImageUrl="/images/products/orderWhenSold/medium.jpg" largeImageUrl="/images/products/orderWhenSold/large.jpg" isVirtual="N" isVariant="N" requirementMethodEnumId="PRODRQM_AUTO" billOfMaterialLevel="0" createdDate="2007-05-05 14:50:58.584" createdByUserLogin="admin" inShippingBox="N"/>
+    <ProductCategoryMember productCategoryId="DROP-100" productId="orderWhenSold" sequenceNum="1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="orderWhenSold" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="13.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <SupplierProduct productId="orderWhenSold" partyId="DemoSupplier" availableFromDate="2007-01-01 14:51:52.627" minimumOrderQuantity="0.0" lastPrice="10.0" currencyUomId="USD" supplierProductName="Drop ship product from demo supplier" supplierProductId="dropShip1-DS" canDropShip="Y" lastUpdatedStamp="2007-05-05 14:53:35.248" lastUpdatedTxStamp="2007-05-05 14:53:35.15" createdStamp="2007-05-05 14:53:35.248" createdTxStamp="2007-05-05 14:53:35.15"/>
+</entity-engine-xml>

@@ -1,0 +1,47 @@
+********************
+*       METRO      *
+********************
+
+Metro is a sample theme that is meant as a starting point for your own theme. 
+Developer documentation is available on our website: https://www.scipio-erp.com/community/developer/views-requests/themes/
+
+
+* CUSTOM HTML *
+SCIPIO Commerce relies on a templating toolkit in the form of various freemarker macros 
+that are used to generate the html. These macros can be overriden to match your own needs. 
+All overrides are located within 
+
+/includes/themeTemplate.ftl
+
+In order to override a macro, copy over the original from the scipio library files, located in
+component://common/webcommon/includes/scipio/lib/*.ftl and add your own changes inside 
+your themeTemplate.ftl. This keep your own code maintainable and seperate from the other themes.
+
+
+
+* CUSTOM CSS CLASSES *
+In SCIPIO all css classes are stored in a configurable map that are then used as variables throughout
+the system. The templating toolkit makes use of these to generate the overarching html. 
+Overriding can be achieved by adding your own configuration to:
+
+/includes/themeStyles.groovy
+
+A complete list of all available variables is available in the following file:
+component://common/webcommon/includes/scipio/lib/standard/htmlVariables.groovy
+
+Please be aware, that the template provided is tailored towards Foundation CSS. 
+A bootstrap alternative is available for purchase.
+
+
+
+* CUSTOM CSS *
+/webapp/metro/ contains a set of sass files that are used to generate the underlying css. SCIPIO
+closely follows the build process outlined by http://foundation.zurb.com. 
+
+
+* THEME STRUCTURE *
+The theme consists of:
+
+* /data/MetroThemeData.xml    Seed data for your theme, including css & js files to be included
+* /includes/*     Freemarker templates used to generate the basic html frame (header, sidebar, footer)
+* /webapp/metro/*   styles (here, the sass files used to generate the proper css) 

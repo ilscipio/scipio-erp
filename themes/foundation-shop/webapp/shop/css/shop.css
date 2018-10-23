@@ -1,0 +1,323 @@
+/*HEADER*/
+body {
+    
+}
+.top-bar {
+    position:relative;
+    background: none;
+    max-width: 85em;
+    margin-left: auto;
+    margin-right: auto;
+    height:68px;
+    padding-top:10px;
+}
+
+.top-bar li.name img{height:44px;}
+
+.top-bar-selection ul li {color:#333;}
+.top-bar-section ul li > a {color:#333; }
+
+.top-bar-section .has-form, .top-bar-section ul li,.top-bar-section li:not(.has-form) a:not(.button){
+    background:transparent;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+.top-bar-section li:not(.has-form) a:not(.button):hover {
+    background:none;
+    color: #0078a0;
+}
+
+.top-bar-section .has-dropdown > a:after {
+        border-color: rgba(0, 0, 0, 0.4) transparent transparent transparent;
+}
+
+.top-bar-section li.divider{
+    border:none;
+}
+
+.tab-bar #microCartTotal {display:none;}
+.tab-bar a {color:#fff;}
+
+.sticky {background:#f4f4f4;}
+
+.sticky_animate {
+    top: 0;
+}
+.fixed {
+}
+
+.fixed  .top-bar{
+    background: #f4f4f4;
+    height:45px;
+    padding-top:0px;
+    max-width:100%;
+    border-bottom: 1px solid gainsboro;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+.fixed li.name img{height: 22px;
+        -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+#microcart {
+    display:block;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-decoration: none;
+}
+
+#microCartIcon {
+    float: left;
+    font-size: 22px;
+    }
+#microCartTotal,#microCartQuantity {
+    float: left;
+    line-height: 2.8125rem;
+    padding-left:4px;
+    }
+    
+/*BODY*/
+#content-main-section {
+    background:#fff;
+    padding-top:20px;
+    margin-top:10px;
+    max-width:85em;}
+
+#pre-content-section div:first-child {
+    margin-top:0px;
+}
+
+#pre-content-section .row:last-child{
+    margin-bottom:0px;
+    
+}
+
+.other-content{
+  background-color: #008cba;
+  max-width: 85em;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  color:#fff;
+}
+
+.other-content i {
+  font-size: 100px;
+}
+
+.other-content h2,.other-content h3,.other-content h4 {
+  color: #fff;
+  font-size: 1em;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-top: 2.5rem;
+  margin-bottom: 10px;
+}
+.other-content p, .other-content a {
+  font-weight: 300;
+  font-size: .8em;
+  color: #fff;
+}
+
+@media only screen and (min-width: 40.063em) {
+  .other-content .columns:nth-child(n+2) {
+    min-height: 280px;
+  }
+}
+.other-links {
+  list-style-type: none;
+}
+.other-links li {
+  margin-top: .5em;
+}
+
+.pricing-table .title {}
+.pricing-table .description {height:58px;}
+.pricing-table .price {font-size:1.8rem;}
+
+/*Product Detail*/
+#product-price_old{color: #ccc;}
+#product-price{font-size: 1.3em;}
+#product-saved{font-size: 0.8em; color:#43ac6a;}
+.pricing-table {position:relative;}
+.ribbon {
+    width:85px;
+    height:88px;
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    }
+.ribbon span{
+    position: relative;
+    padding: 7px 0;
+    left: -30px;
+    top: 15px;
+    display:block;
+    font-size:14px;
+    width: 120px;
+    padding:4px;
+    background-color: #43ac6a;
+    color:#fff;
+    text-align: center;
+      -webkit-transform: rotate(-45deg);
+      -moz-transform:    rotate(-45deg);
+      -ms-transform:     rotate(-45deg);
+      -o-transform:      rotate(-45deg);
+    }
+
+/*Slider*/
+
+  .slick-slide {
+    margin: 0 10px;
+  }
+
+  .slick-list {
+    margin: 0 -10px;
+  }
+  
+.slick-slider .slick-slide{
+    display: none;
+}
+ .slick-slider .slick-slide:first-child{
+    display: block;
+}
+.slick-initialized.slick-slider .slick-slide,
+.slick-initialized.slick-slider .slick-slide:first-child{
+    display: block;
+}
+    
+/*FOOTER*/
+footer {
+    max-width: 85em;
+    margin-left: auto;
+    margin-right: auto;
+    text-align:center;
+}
+
+/*Specific elements*/
+.address-list .address-entry {
+    display: inline-block;
+    vertical-align: top;
+    width: 20em;
+    margin-bottom: 1em;
+    margin-right: 4em;
+}
+
+.address-list .address-entry-ownline {
+    display: block;
+}
+
+.pay-meth-info-panel-container {
+    /*
+    width: 30em;*/
+}
+
+.address-panel, .pay-meth-info-panel {
+    /* this was for button
+    margin-bottom: 0;
+    */
+    /*
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+    */
+    position: relative;
+    /*
+    padding-right: 0;
+    padding-bottom: 0;*/
+}
+
+.address-panel .panel-body, .pay-meth-info-panel .panel-body {
+    /*
+    width: 14em;*/
+    /* Extra space for button - should be roughly size of button */
+    margin-bottom: 1.5rem;
+}
+
+.panel .panel-update-link {
+    /*
+    float: right;
+    margin-bottom: 0;
+    */
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.address-panel-content {
+    /* was for floating button isntead of absolute
+    padding-right: 1.25rem;
+    padding-bottom: 1.25rem;*/
+}
+
+.address-list .address-entry .new-address-radio-label {
+    /*margin-left: 1.25rem;*/
+    /*font-style: italic;*/
+}
+
+/*
+div.pay-meth-selection div.pay-meth-options-all-content {
+    margin-top: 1em;
+}
+div.pay-meth-selection div.pay-meth-options-all-content.pay-meth-supplemental {
+    margin-top: 0; // has already margin for some reason
+}
+*/
+
+div.pay-meth-selection div.pay-meth-content {
+    margin-top: 1em;
+}
+
+div.field-extra {
+    display:none;
+}
+
+
+.order-detail-items td, .order-detail-items th {
+    text-align: right;
+}
+
+.order-detail-items td:first-child, .order-detail-items th:first-child {
+    text-align: left;
+}
+
+.order-detail-items .summary-row td:first-child, .order-detail-items .summary-row th:first-child {
+    text-align: right;
+}
+
+.product-configurator .product-config-question {
+    margin-bottom: 1rem;
+}
+
+ul.order-item-attrib-list, .order-item-attrib-list ul {
+
+}
+
+.order-item-attrib-list li {
+    /*font-size: 0.875rem;*/
+    font-size: 0.8em;
+}
+
+.product-image-thumbs {
+    margin-top: 1em;
+}
+
+
+.shariff-button::before {
+    content: none !important;
+}
+
+.shariff-button{
+    padding: 0px !important;  
+    text-align:left !important; 
+}
+

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Ant - Common Hooks">
+    <dirname property="Ant - Common Hooks.dir" file="${ant.file.Ant - Common Hooks}"/>
+
+    <!-- SCIPIO: This file MUST be imported by all build-hooks.xml files.
+            <import file="../../common-hooks.xml" />
+        It provides "abstract" dummy hook targets which are overridable.
+        It may also provide some common utilities.
+        NOTE: build-hooks.xml files are called using inheritall="true", so 
+            ${basedir} is actually the root scipio/ofbiz folder.
+        DEV NOTE: if you add common utilities here, they must be very uniquely named
+            (when in doubt, prefix with scipio-). -->
+    
+    <target name="pre-clean-all"></target>
+    <target name="post-clean-all"></target>
+    <target name="pre-clean-downloads"></target>
+    <target name="post-clean-downloads"></target>
+    <target name="pre-clean-data"></target>
+    <target name="post-clean-data"></target>
+    <target name="pre-clean-logs"></target>
+    <target name="post-clean-logs"></target>
+    <target name="pre-clean-output"></target>
+    <target name="post-clean-output"></target>
+    <target name="pre-clean-xtra"></target>
+    <target name="post-clean-xtra"></target>
+    <target name="pre-clean-catalina"></target>
+    <target name="post-clean-catalina"></target>
+    <target name="pre-clean-cache"></target>
+    <target name="post-clean-cache"></target>
+    <target name="pre-clean-tempfiles"></target>
+    <target name="post-clean-tempfiles"></target>
+    <target name="pre-clean-search-indexes"></target>
+    <target name="post-clean-search-indexes"></target>
+    <target name="pre-clean-uploads"></target>
+    <target name="post-clean-uploads"></target>
+    <target name="pre-clean-analysis"></target>
+    <target name="post-clean-analysis"></target>
+    <target name="pre-tests"></target>
+    <target name="post-tests"></target>
+    <target name="pre-clean"></target>
+    <target name="post-clean"></target>
+    <target name="pre-svninfo"></target>
+    <target name="post-svninfo"></target>
+    <target name="pre-clean-svninfo"></target>
+    <target name="post-clean-svninfo"></target>
+    <target name="pre-gitinfo"></target>
+    <target name="post-gitinfo"></target>
+    <target name="pre-clean-gitinfo"></target>
+    <target name="post-clean-gitinfo"></target>
+    <target name="pre-build-dev"></target>
+    <target name="post-build-dev"></target>
+    <target name="pre-revert-dev"></target>
+    <target name="post-revert-dev"></target>
+    <target name="pre-build-test"></target>
+    <target name="post-build-test"></target>
+    <target name="pre-build-qa"></target>
+    <target name="post-build-qa"></target>
+    <target name="pre-build-production"></target>
+    <target name="post-build-production"></target>
+    <target name="pre-build"></target>
+    <target name="post-build"></target>
+    <target name="pre-docs"></target>
+    <target name="post-docs"></target>
+    <target name="pre-docs-all"></target>
+    <target name="post-docs-all"></target>
+    
+</project>

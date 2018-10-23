@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <!-- cmsSite must be associated with a product store to get default theme -->
+    <ProductStore productStoreId="ScipioShop"/>
+    <WebSite webSiteId="cmsSite" productStoreId="ScipioShop" />
+
+</entity-engine-xml>

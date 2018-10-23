@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <!-- ========================================================= -->
+    <!-- Versioning -->
+    <!-- ========================================================= -->
+
+    <EnumerationType description="CMS Version Record State" enumTypeId="CMS_VER_STATE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Active" enumCode="ACTIVE" enumId="CMS_VER_ACTIVE" sequenceId="01" enumTypeId="CMS_VER_STATE"/>
+
+    <!-- ========================================================= -->
+    <!-- Content Types: Template Parts / Asset Types -->
+    <!-- ========================================================= -->
+
+    <!-- NOTE: In stock Ofbiz there is already a TEMPLATE entry with a different description/meaning, so we have SCP_TEMPLATE here. -->
+    <ContentType contentTypeId="SCP_TEMPLATE" description="Template (Scipio)" hasTable="N"/>
+    <!--<ContentType contentTypeId="CMS_PAGE_TEMPLATE" description="CMS Page Template" hasTable="N" parentTypeId="SCP_TEMPLATE"/>--><!-- Specialization of TEMPLATE -->
+    <!-- Used notably by CmsAssetTemplate.contentTypeId 
+        NOTE: Client setups can add custom template parts to the ones below if needed. 
+            New types can be made children of the existing ones using parentTypeId as deep as needed, and all descendents will be shown. -->
+    <ContentType contentTypeId="SCP_TEMPLATE_PART" description="Scipio Template Part" hasTable="N" parentTypeId="SCP_TEMPLATE"/>
+    
+    <!-- Top-level types - Reflects the Scipio standard templating API -->
+    <ContentType contentTypeId="TMPLPART_GENERAL" description="General" hasTable="N" parentTypeId="SCP_TEMPLATE_PART" sequenceId="010"/>
+    <ContentType contentTypeId="TMPLPART_SCRIPT" description="Script" hasTable="N" parentTypeId="SCP_TEMPLATE_PART" sequenceId="020"/>
+    <ContentType contentTypeId="TMPLPART_STRUCT" description="Structure" hasTable="N" parentTypeId="SCP_TEMPLATE_PART" sequenceId="030"/>
+    <ContentType contentTypeId="TMPLPART_INFO" description="Informational" hasTable="N" parentTypeId="SCP_TEMPLATE_PART" sequenceId="040"/>
+    <ContentType contentTypeId="TMPLPART_NAV" description="Navigation" hasTable="N" parentTypeId="SCP_TEMPLATE_PART" sequenceId="050"/>
+    <ContentType contentTypeId="TMPLPART_CONTENT" description="Content" hasTable="N" parentTypeId="SCP_TEMPLATE_PART" sequenceId="060"/>
+    <ContentType contentTypeId="TMPLPART_FORM" description="Form" hasTable="N" parentTypeId="SCP_TEMPLATE_PART" sequenceId="070"/>
+    <!-- NOTE: LIBRARY is mainly for use with <@asset mode='import/include'.../> -->
+    <ContentType contentTypeId="TMPLPART_LIBRARY" description="Library (Utility)" hasTable="N" parentTypeId="SCP_TEMPLATE_PART" sequenceId="900"/>
+
+    <!-- Sub-types -->
+    <!-- TODO: REVIEW: not sure the prefixes like "Structure - " should be hardcoded here or generated automatically... -->
+    <ContentType contentTypeId="TMPLPART_HEADER" description="Structure - Header" hasTable="N" parentTypeId="TMPLPART_STRUCT" sequenceId="010"/>
+    <ContentType contentTypeId="TMPLPART_BODY" description="Structure - Body" hasTable="N" parentTypeId="TMPLPART_STRUCT" sequenceId="020"/>    
+    <ContentType contentTypeId="TMPLPART_FOOTER" description="Structure - Footer" hasTable="N" parentTypeId="TMPLPART_STRUCT" sequenceId="030"/>
+    
+    <ContentType contentTypeId="TMPLPART_MENU" description="Navigation - Menu" hasTable="N" parentTypeId="TMPLPART_NAV" sequenceId="010"/>
+
+    <!-- ========================================================= -->
+    <!-- Content Types: Media -->
+    <!-- ========================================================= -->
+
+    <!-- NOTE: This does not define the file type categories; those are still determined by DataResourceType. -->
+    
+    <!-- Defines a media document (image, video, audio, document, other) -->
+    <ContentType contentTypeId="SCP_MEDIA" description="CMS Media (Scipio)" hasTable="N"/>
+    <!-- Defines a variant for the given media - for images, these are resized variants -->
+    <ContentType contentTypeId="SCP_MEDIA_VARIANT" description="CMS Media Variant" hasTable="N" parentTypeId="SCP_MEDIA" sequenceId="010"/>
+
+    <!-- ========================================================= -->
+    <!-- Page Mappings  -->
+    <!-- ========================================================= -->
+    
+    <EnumerationType description="CMS Page Special Mapping Type" enumTypeId="CMS_PAGE_SPCMAP_TYPE" hasTable="N" parentTypeId=""/>
+    <!-- Virtual, used only in UI for now
+    <Enumeration description="Standard" enumCode="STD" enumId="CMS_PGSPCMAP_STD" sequenceId="01" enumTypeId="CMS_PAGE_SPCMAP_TYPE"/>-->
+    <Enumeration description="Primary" enumCode="PRIMARY" enumId="CMS_PGSPCMAP_PRIMARY" sequenceId="05" enumTypeId="CMS_PAGE_SPCMAP_TYPE"/>
+    <!-- TODO: 2017-04-06: This one is not used anywhere yet; for future use -->
+    <Enumeration description="Primary Preview" enumCode="PRIMARY_PREVIEW" enumId="CMS_PGSPCMAP_PRPREV" sequenceId="06" enumTypeId="CMS_PAGE_SPCMAP_TYPE"/>
+
+</entity-engine-xml>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Demosuite Entity Model</title>
+    <description>None</description>
+    <version>1.0</version>
+    
+    <!-- ========================================================= -->
+    <!-- com.ilscipio.scipio.ce.demoSuite.dataGenerator -->
+    <!-- Demo Data Generator entities -->
+    <!-- ========================================================= -->
+    <entity entity-name="DataGeneratorProvider"
+            package-name="com.ilscipio.scipio.ce.demoSuite.dataGenerator"
+            title="Demo Data Generator Provider">
+      <field name="dataGeneratorProviderId" type="id-ne"></field>
+      <field name="dataGeneratorProviderName" type="short-varchar"></field>
+      <field name="dataGeneratorProviderClass" type="long-varchar" not-null="true"></field>
+      <field name="dataGeneratorProviderHelperClass" type="long-varchar"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="enabled" type="indicator"></field>      
+      <prim-key field="dataGeneratorProviderId"/>     
+    </entity>
+    
+    <entity entity-name="MockarooDataGeneratorProvider"
+            package-name="com.ilscipio.scipio.ce.demoSuite.dataGenerator"
+            title="Mockaroo Demo Data Generator Provider">
+      <field name="dataGeneratorProviderId" type="id-ne"></field>
+      <field name="url" type="long-varchar" />
+      <field name="method" type="long-varchar" />
+      <field name="mockarooKey" type="short-varchar" />
+      <field name="exportFormat" type="short-varchar" />
+      <prim-key field="dataGeneratorProviderId"/>
+      <relation rel-entity-name="DataGeneratorProvider" type="one">
+        <key-map field-name="dataGeneratorProviderId"/>
+      </relation>    
+    </entity>
+    
+</entitymodel>

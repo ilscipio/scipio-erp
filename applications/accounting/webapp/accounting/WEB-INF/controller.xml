@@ -357,6 +357,13 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="GlAccountNavigate"/>
     </request-map>
+    
+	<request-map uri="getGlAccountExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getGlAccountAndAssocs"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
 
     <!-- TO BE REMOVED
     <request-map uri="ListGlobalGlAccount">

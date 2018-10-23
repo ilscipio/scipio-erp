@@ -79,7 +79,7 @@ under the License.
         setEmailUsername(true);
     });
 </@script>
-    
+
 <@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
     <@defaultWizardFormFields exclude=[] />
     <@field type="hidden" name="isCreateUser" value=(userParty??)?string("N","Y")/>    
@@ -91,7 +91,7 @@ under the License.
     </#if>	
 
     <#assign fieldsRequired = true>
-    	
+
     <#if !getUsername?has_content || (getUsername?has_content && getUsername)>    	      
         <#macro extraFieldContent args={}>	          
           <@field type="checkbox" checkboxType="simple-standard" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);" label=uiLabelMap.SetupUseEmailAddress checked=((parameters.UNUSEEMAIL!) == "on")/>
@@ -107,15 +107,14 @@ under the License.
            <@field type="hidden" name="USERNAME" value=(params.userLoginId!)/>
         </#if>    	      
     </#if>
-    	
+
     <#if !createAllowPassword?has_content || (createAllowPassword?has_content && createAllowPassword)>    	      
       <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=(!params.userLoginId?has_content)!true />      
       <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=(!params.userLoginId?has_content)!true />		      
     <#else>
       <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
     </#if>
-    
-    
+
     <@field type="generic" label=uiLabelMap.PartyRelationships>
         <@fields args={"type":"default-nolabelarea", "ignoreParentField":true}>            
           <@row>
@@ -196,16 +195,16 @@ under the License.
             </#if>
         </@fields>
     </@field>
-    
+
 	<hr/> 
-	 
+
     <input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>    
     <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle personalTitle=(params.personalTitle!params.USER_TITLE!) /> 
     <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(params.firstName!params.USER_FIRST_NAME!) label=uiLabelMap.PartyFirstName required=true />
     <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(params.lastName!params.USER_LAST_NAME) label=uiLabelMap.PartyLastName required=true />
-    
+
     <hr/>
-    
+
     <#if userInfo??>
       <#assign addressManageUri = "/partymgr/control/viewprofile?partyId=${rawString(userPartyId!)}">
       <#assign fieldLabelDetail><@formattedContactMechPurposeDescs (generalAddressContactMechPurposes![]) ; description><b>${escapeVal(description, 'html')}</b><br/></@formattedContactMechPurposeDescs>
@@ -264,7 +263,7 @@ under the License.
             </#if>
         </div>
     </@field>
-	
+
 	<#if userInfo?? && params.USER_WORK_CONTACTMECHID?has_content>
         <@field type="hidden" name="USER_WORK_CONTACTMECHID" value=(params.USER_WORK_CONTACTMECHID!)/>
     </#if>
@@ -274,7 +273,7 @@ under the License.
             <@field type="hidden" name="USER_WORK_ALLOW_SOL" value=(fixedParams.USER_WORK_ALLOW_SOL!)/>        
         </@fields>
     </@telecomNumberField>
-    
+
     <#if userInfo?? && params.USER_MOBILE_CONTACTMECHID?has_content>
         <@field type="hidden" name="USER_MOBILE_CONTACTMECHID" value=(params.USER_MOBILE_CONTACTMECHID!)/>
     </#if>
@@ -284,8 +283,8 @@ under the License.
             <@field type="hidden" name="USER_MOBILE_ALLOW_SOL" value=(fixedParams.USER_MOBILE_ALLOW_SOL!)/>            
         </@fields>
     </@telecomNumberField>
-    
-     <#if userInfo?? && params.USER_FAX_CONTACTMECHID?has_content>
+
+    <#if userInfo?? && params.USER_FAX_CONTACTMECHID?has_content>
         <@field type="hidden" name="USER_FAX_CONTACTMECHID" value=(params.USER_FAX_CONTACTMECHID!)/>
     </#if>
     <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=params
@@ -294,7 +293,7 @@ under the License.
             <@field type="hidden" name="USER_FAX_ALLOW_SOL" value=(fixedParams.USER_FAX_ALLOW_SOL!)/>       
         </@fields>
     </@telecomNumberField>
-    
+
     <#if userInfo?? && params.USER_EMAIL_CONTACTMECHID?has_content>
       <@field type="hidden" name="USER_EMAIL_CONTACTMECHID" value=(params.USER_EMAIL_CONTACTMECHID!)/>
     </#if>
@@ -302,4 +301,3 @@ under the License.
         required=true/><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG unless you edit the server-side service to make this optional, otherwise you mislead the admin! -->            
     <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>    
 </@form>
-

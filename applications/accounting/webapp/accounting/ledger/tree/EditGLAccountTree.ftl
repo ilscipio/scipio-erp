@@ -23,6 +23,10 @@
             "target": "_top",
             "url": makeOfbizInterWebappUrl({"uri":'/accounting/control/EditGlobalGlAccount', "extLoginKey":true})            
         },
+        "select": {
+            "type": "link",
+            "mode": "none"       
+        },        
         "edit": {
             "type": "link",
             "target": "_top",

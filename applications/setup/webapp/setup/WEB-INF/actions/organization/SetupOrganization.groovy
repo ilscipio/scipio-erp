@@ -41,7 +41,8 @@ if (generalAddressContactMech) {
             "USER_ADDRESS1": postalAddress.address1,
             "USER_ADDRESS2": postalAddress.address2,
             "USER_CITY": postalAddress.city,
-            "USER_POSTAL_CODE": postalAddress.postalCode
+            "USER_POSTAL_CODE": postalAddress.postalCode,
+            "USER_ADDRESS_ALLOW_SOL": generalAddressContactMech.allowSolicitation
         ];
         if (organizationInfo != null) {
             organizationInfo.putAll(generalPostalAddress);
@@ -65,7 +66,8 @@ if (workPhoneContactMech) {
             "USER_WORK_COUNTRY": telecomNumber.countryCode,
             "USER_WORK_AREA": telecomNumber.areaCode,
             "USER_WORK_CONTACT": telecomNumber.contactNumber,
-            "USER_WORK_EXT": workPhoneContactMech.extension
+            "USER_WORK_EXT": workPhoneContactMech.extension,
+            "USER_WORK_ALLOW_SOL": workPhoneContactMech.allowSolicitation
         ];
         if (organizationInfo != null) {
             organizationInfo.putAll(workPhoneNumber);
@@ -88,7 +90,8 @@ if (faxPhoneContactMech) {
             "USER_FAX_COUNTRY": telecomNumber.countryCode,
             "USER_FAX_AREA": telecomNumber.areaCode,
             "USER_FAX_CONTACT": telecomNumber.contactNumber,
-            "USER_FAX_EXT": faxPhoneContactMech.extension
+            "USER_FAX_EXT": faxPhoneContactMech.extension,
+            "USER_FAX_ALLOW_SOL": faxPhoneContactMech.allowSolicitation
         ];
         if (organizationInfo != null) {
             organizationInfo.putAll(faxPhoneNumber);
@@ -106,7 +109,8 @@ primaryEmailAddress = null;
 if (primaryEmailContactMech) {
     primaryEmailAddress = [
         "USER_EMAIL_CONTACTMECHID": primaryEmailContactMech.contactMechId,
-        "USER_EMAIL": primaryEmailContactMech.getRelatedOne("ContactMech", false)?.infoString
+        "USER_EMAIL": primaryEmailContactMech.getRelatedOne("ContactMech", false)?.infoString,
+        "USER_EMAIL_ALLOW_SOL": primaryEmailContactMech.allowSolicitation
     ];
     if (organizationInfo != null) {
         organizationInfo.putAll(primaryEmailAddress);

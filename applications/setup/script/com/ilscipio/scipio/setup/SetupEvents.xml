@@ -425,6 +425,16 @@
             </then>
         </if>
 
+        <!-- 2018-10-23: Combined switch to try to simplify the options... -->
+        <if-not-empty field="parameters.relRoleChgUpdExpDelPrev">
+            <if-empty field="parameters.relRoleChgUpdExp">
+                <set field="parameters.relRoleChgUpdExp" from-field="parameters.relRoleChgUpdExpDelPrev"/>
+            </if-empty>
+            <if-empty field="parameters.relRoleChgDelPrev">
+                <set field="parameters.relRoleChgDelPrev" from-field="parameters.relRoleChgUpdExpDelPrev"/>
+            </if-empty>
+        </if-not-empty>
+
         <if>
             <condition>
                 <and>
@@ -439,12 +449,12 @@
                             <!-- NOTE: We could actually allow making PartyContactMech.roleTypeId null (no empty check),
                                 but for non-expired records it is a dangerously irreversible operation, so don't risk it for now. -->
                             <not><if-empty field="parameters.roleTypeId"/></not>
-                            <if-compare field="parameters.updateRecordsForRoleChange" operator="equals" value="true" type="Boolean"/>
+                            <if-compare field="parameters.relRoleChgUpdRec" operator="equals" value="true" type="Boolean"/>
                         </and>
                     </condition>
                     <then>
                         <!-- Update PartyContactMech -->
-                        <if-compare field="parameters.updateExpiredRecordsForRoleChange" operator="equals" value="true" type="Boolean">
+                        <if-compare field="parameters.relRoleChgUpdExp" operator="equals" value="true" type="Boolean">
                             <log level="info" message="Updating party ${parameters.userPartyId} PartyContactMechs roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, and removing old role from expired records"/>
                             <entity-and entity-name="PartyContactMech" list="pcmList" filter-by-date="false">
                                 <field-map field-name="partyId" from-field="parameters.userPartyId"/>
@@ -477,7 +487,7 @@
                             NOTE: roleTypeId is part of the PK, so can't just change in-place... 
                             For now, we'll simply delete any expired ones, and recreate the living ones... 
                             TODO: REVIEW: Ignoring PRODUCT_STORE_ID for now, because don't know if it was changed somewhere along the way... -->
-                        <if-compare field="parameters.updateExpiredRecordsForRoleChange" operator="equals" value="true" type="Boolean">
+                        <if-compare field="parameters.relRoleChgUpdExp" operator="equals" value="true" type="Boolean">
                             <log level="info" message="Updating party ${parameters.userPartyId} ProductStoreRoles roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, removing expired records"/>
                             <entity-and entity-name="ProductStoreRole" list="psrList" filter-by-date="false">
                                 <field-map field-name="partyId" from-field="parameters.userPartyId"/>
@@ -499,7 +509,7 @@
                         </iterate>
 
                         <!-- We'll only recreate the ones that weren't expired... -->
-                        <if-compare field="parameters.updateExpiredRecordsForRoleChange" operator="equals" value="true" type="Boolean">
+                        <if-compare field="parameters.relRoleChgUpdExp" operator="equals" value="true" type="Boolean">
                             <filter-list-by-date list="psrList" valid-date="nowTimestamp" to-list="psrActiveList"/>
                             <else>
                                 <set field="psrActiveList" from-field="psrList"/>
@@ -523,7 +533,7 @@
                     one related entity/function, included being manually depended upon by the client.
                     Even if could check the 78 database relations to PartyRole, it could still be needed
                     in a secondary purpose by the client for manual use. -->
-                <if-compare field="parameters.deleteOldRelRole" operator="equals" value="true" type="Boolean">
+                <if-compare field="parameters.relRoleChgDelPrev" operator="equals" value="true" type="Boolean">
                     <log level="info" message="Attempting to delete party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo}"/>
                     <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
                     <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId"/>

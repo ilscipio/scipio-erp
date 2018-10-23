@@ -237,15 +237,15 @@
         <value xml:lang="en">Update Address</value>
         <value xml:lang="fr">Mettre à jour l'adresse</value>
     </property>
-    <property key="SetupUpdateExpiredRecordsForNewRole">
-        <value xml:lang="de">Abgelaufene Datensätze ändern (zum Entfernen der vorherigen Rolle erforderlich)</value>
-        <value xml:lang="en">Modify expired records (required to remove previous role)</value>
-        <value xml:lang="fr">Modifier les enregistrements expirés (requis pour supprimer le rôle précédent)</value>
+    <property key="SetupUpdateExpiredRemovePreviousRole">
+        <value xml:lang="de">Vorherige Rolle entfernen, abgelaufene Datensätze aktualisieren (wenn Datensätze aktualisiert werden)</value>
+        <value xml:lang="en">Remove previous role, update expired records (if updating records)</value>
+        <value xml:lang="fr">Supprimer le rôle précédent, mettre à jour les enregistrements expirés (si les enregistrements sont mis à jour)</value>
     </property>
     <property key="SetupUpdateRecordsForNewRole">
-        <value xml:lang="de">Datensätze für neue Rolle aktualisieren (Achtung: Kann Nebenwirkungen erzeugen)</value>
-        <value xml:lang="en">Update records for new role (Warning: Can produce side-effects)</value>
-        <value xml:lang="fr">Mettre à jour les enregistrements pour le nouveau rôle (Avertissement: peut produire des effets secondaires)</value>
+        <value xml:lang="de">Datensätze für neue Rolle aktualisieren (Best-Effort, nur aktive Datensätze, es sei denn, auch vorherige entfernen)</value>
+        <value xml:lang="en">Update records for new role (best-effort, active records only unless also removing previous)</value>
+        <value xml:lang="fr">Mettre à jour les enregistrements pour le nouveau rôle (au mieux, enregistrements actifs uniquement, à moins de supprimer également le précédent)</value>
     </property>
     <property key="SetupUseEmailAddress">
         <value xml:lang="de">Die Email Addresse verwenden</value>

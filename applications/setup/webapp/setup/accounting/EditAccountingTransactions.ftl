@@ -27,6 +27,7 @@
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingElsterImportCSV />
 </#macro>
 
+<#-- SCIPIO 10/23/2018: Commenting out DATEV and Elster accounting import
 <#assign eatObjectTypes = {
     "datev": {
         "import": {
@@ -53,6 +54,7 @@
         }      
     }
 }>
+-->
 
 <#assign eatObjectTypes = toSimpleMap(eatObjectTypes!{})>
 <#assign eatDialogIdPrefix = eatDialogIdPrefix!"eat-dialog-">
@@ -317,8 +319,10 @@
 	        		<@menuitem contentId="eat-type" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAddAccountingTransactionType />
 	        		<@menuitem contentId="eat-entry-type" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAddAccountingTransactionEntryType />
 	        		<hr/>
+	        		<#-- SCIPIO 10/23/2018: 
 	       			<@menuitem contentId="eat-datev-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportDatev />	       			
 	       			<@menuitem contentId="eat-elster-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportElster />
+	       			-->
 	       		</li>
 	       	</ul>
 	      </@section>

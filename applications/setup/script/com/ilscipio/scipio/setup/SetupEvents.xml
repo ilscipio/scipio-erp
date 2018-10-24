@@ -320,6 +320,13 @@
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <!-- <set field="personContext.partyId" from-field="parameters.customerPartyId"/> -->
         <call-simple-method method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+
+        <!-- 2018-10-24: Using system here is not right, should use the userLogin from session attributes (admin)...
+        <entity-one value-field="actingUserLogin" entity-name="UserLogin" use-cache="true">
+            <field-map field-name="userLoginId" value="system"/>
+        </entity-one>-->
+        <session-to-field field="actingUserLogin" session-name="userLogin"/>
+
         <if>
             <condition>
                 <and>
@@ -329,14 +336,13 @@
                 </and>
             </condition>
             <then>
-                <field-to-request request-name="userPartyId" field="tempMap.partyId" />
-                <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>
+                <field-to-request request-name="userPartyId" field="tempMap.partyId" />                
                 <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
                 <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
                 <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
                 <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
                 <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="tempMap.partyId" />
-                <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
+                <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="actingUserLogin" />
                 <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />
             </then>
          </if>
@@ -349,9 +355,12 @@
         <!-- see if we should continue now... -->
         <check-errors/>
 
-        <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true">
+        <!-- 2018-10-24: Using system here is not right, should use the userLogin from session attributes (admin)...
+        <entity-one value-field="actingUserLogin" entity-name="UserLogin" use-cache="true">
             <field-map field-name="userLoginId" value="system"/>
-        </entity-one>
+        </entity-one>-->
+        <session-to-field field="actingUserLogin" session-name="userLogin"/>
+
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <now-timestamp field="nowTimestamp"/>
 
@@ -381,7 +390,7 @@
         <if-not-empty field="parameters.roleTypeId">
             <set field="ensurePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
             <set field="ensurePartyRoleCtx.roleTypeId" from-field="parameters.roleTypeId" />
-            <set field="ensurePartyRoleCtx.userLogin" from-field="systemUserLogin" />
+            <set field="ensurePartyRoleCtx.userLogin" from-field="actingUserLogin" />
             <call-service service-name="ensurePartyRole" in-map-name="ensurePartyRoleCtx" />
         </if-not-empty>
 
@@ -408,7 +417,7 @@
                         <set field="deletePartyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
                         <set field="deletePartyRelationshipCtx.roleTypeIdTo" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
                         <set field="deletePartyRelationshipCtx.fromDate" from-field="parameters.oldUserPartyRelationshipFromDate" />
-                        <set field="deletePartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
+                        <set field="deletePartyRelationshipCtx.userLogin" from-field="actingUserLogin" />
                         <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />
 
                         <log level="info" message="Creating new ${parameters.partyRelationshipTypeId} PartyRelationship from organization ${organizationPartyId} to party ${parameters.userPartyId} using roleTypeId (${parameters.roleTypeId})"/>
@@ -418,7 +427,7 @@
                         <set field="createPartyRelationshipCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
                         <set field="createPartyRelationshipCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
                         <set field="createPartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />
-                        <set field="createPartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
+                        <set field="createPartyRelationshipCtx.userLogin" from-field="actingUserLogin" />
                         <call-service service-name="createPartyRelationship" in-map-name="createPartyRelationshipCtx" />
                     </then>
                 </if>
@@ -510,7 +519,7 @@
                         <iterate list="psrList" entry="psr">
                             <set field="removePsrCtx" value="" set-if-null="true"/>
                             <set-service-fields service-name="removeProductStoreRole" to-map="removePsrCtx" map="psr"/>
-                            <set field="removePsrCtx.userLogin" from-field="systemUserLogin" />
+                            <set field="removePsrCtx.userLogin" from-field="actingUserLogin" />
                             <!-- NOTE: For active records, we delete the record here for now; but could choose to expire it instead; see comment above -->
                             <call-service service-name="removeProductStoreRole" in-map-name="removePsrCtx" />
                         </iterate>
@@ -526,7 +535,7 @@
                             <set field="createPsrCtx" value="" set-if-null="true"/>
                             <set-service-fields service-name="createProductStoreRole" to-map="createPsrCtx" map="psr"/>
                             <set field="createPsrCtx.roleTypeId" from-field="parameters.roleTypeId"/>
-                            <set field="createPsrCtx.userLogin" from-field="systemUserLogin" />
+                            <set field="createPsrCtx.userLogin" from-field="actingUserLogin" />
                             <call-service service-name="createProductStoreRole" in-map-name="createPsrCtx" />
                         </iterate>
                     </then>
@@ -544,7 +553,7 @@
                     <log level="info" message="Attempting to delete party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo}"/>
                     <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
                     <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId"/>
-                    <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
+                    <set field="deletePartyRoleCtx.userLogin" from-field="actingUserLogin" />
                     <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx"/>
                     <check-errors/>
                     <else>

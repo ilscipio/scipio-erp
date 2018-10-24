@@ -1011,7 +1011,7 @@ public class InvoiceServices {
             GenericValue partyContactMechPurpose = null;
             try {
                 partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose")
-                        .where("partyId", partyIdBillTo, "contactMechPurposeTypeId", "BILLING_LOCATION").queryFirst();
+                        .where("partyId", partyIdBillTo, "contactMechPurposeTypeId", "BILLING_LOCATION").filterByDate().queryFirst(); // SCIPIO: 2018-10-24: Added missing date filter
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
@@ -1024,7 +1024,7 @@ public class InvoiceServices {
             }
             try {
                 partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose")
-                        .where("partyId", partyIdBillTo, "contactMechPurposeTypeId", "PAYMENT_LOCATION").queryFirst();
+                        .where("partyId", partyIdBillTo, "contactMechPurposeTypeId", "PAYMENT_LOCATION").filterByDate().queryFirst(); // SCIPIO: 2018-10-24: Added missing date filter
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }

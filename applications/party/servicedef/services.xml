@@ -642,7 +642,7 @@ under the License.
     </service>
     <service name="deletePartyContactMechPurpose" engine="java"
             location="org.ofbiz.party.contact.ContactMechServices" invoke="deletePartyContactMechPurpose" auth="true">
-        <description>Delete a Party ContactMech Purpose</description>
+        <description>Delete a Party ContactMech Purpose (Note: actually expires the purpose using thruDate)</description><!-- SCIPIO: added note -->
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="false"/>
@@ -650,7 +650,7 @@ under the License.
     </service>
     <service name="deletePartyContactMechPurposeIfExists" engine="java"
             location="org.ofbiz.party.contact.ContactMechServices" invoke="deletePartyContactMechPurposeIfExists" auth="true">
-        <description>Delete a Party ContactMech Purpose</description>
+        <description>Delete a Party ContactMech Purpose (Note: actually expires the purpose using thruDate)</description><!-- SCIPIO: added note -->
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="false"/>

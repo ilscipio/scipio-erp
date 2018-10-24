@@ -364,6 +364,18 @@
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <now-timestamp field="nowTimestamp"/>
 
+        <if-empty field="parameters.userPartyId">
+            <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupMissingPartyId"/></add-error>
+            <check-errors/>
+        </if-empty>
+        <entity-one entity-name="Party" value-field="userParty">
+            <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+        </entity-one>
+        <if-empty field="userParty">
+            <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupInvalidPartyId"/></add-error>
+            <check-errors/>
+        </if-empty>
+
         <if>
             <condition>
                 <and>

@@ -53,6 +53,16 @@
         <value xml:lang="en">Warehouse currently configured is invalid for this store. It may belong to the wrong organization or other problem.</value>
         <value xml:lang="fr">L'entrepôt actuellement configuré n'est pas valable pour ce magasin. Il peut appartenir à une mauvaise organisation ou à un autre problème.</value>
     </property>
+    <property key="SetupInvalidPartyId">
+        <value xml:lang="de">Ungültige Benutzer-ID (Benutzer wurde möglicherweise gelöscht oder ein anderer Fehler ist aufgetreten)</value>
+        <value xml:lang="en">Invalid user ID (user may have been deleted or an error occurred)</value>
+        <value xml:lang="fr">ID utilisateur non valide (l'utilisateur a peut-être été supprimé ou une autre erreur s'est produite)</value>
+    </property>
+    <property key="SetupMissingPartyId">
+        <value xml:lang="de">Fehlende Benutzer-ID</value>
+        <value xml:lang="en">Missing user ID</value>
+        <value xml:lang="fr">ID d'utilisateur manquant</value>
+    </property>
     <property key="SetupNoAddressOrganizationSetupIncomplete">
         <value xml:lang="de">Keine Postanschrift vorhanden bitte zuerst die Einrichtung des Unternehmens ausfüllen.</value>
         <value xml:lang="en">No postal address available to use; please complete organization setup first.</value>

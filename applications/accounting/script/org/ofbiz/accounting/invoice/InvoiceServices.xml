@@ -781,12 +781,12 @@ under the License.
         <entity-and entity-name="InvoiceItem" list="invoiceItems">
             <field-map field-name="invoiceId" from-field="invoice.invoiceId"/>
         </entity-and>
-        <entity-and entity-name="PartyContactMechPurpose" list="contacts">
+        <entity-and entity-name="PartyContactMechPurpose" list="contacts" filter-by-date="true"><!-- SCIPIO: 2018-10-24: Added missing date filter -->
             <field-map field-name="partyId" from-field="invoice.partyId"/>
             <field-map field-name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
         </entity-and>
         <if-empty field="contacts">
-            <entity-and entity-name="PartyContactMechPurpose" list="contacts">
+            <entity-and entity-name="PartyContactMechPurpose" list="contacts" filter-by-date="true"><!-- SCIPIO: 2018-10-24: Added missing date filter -->
                 <field-map field-name="partyId" from-field="invoice.partyId"/>
                 <field-map field-name="contactMechPurposeTypeId" value="GENERAL_LOCATION"/>
             </entity-and>

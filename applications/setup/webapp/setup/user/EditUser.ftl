@@ -89,7 +89,7 @@ under the License.
         <@field type="display" name="userPartyId" label=uiLabelMap.PartyPartyId>
             <@setupExtAppLink uri=("/partymgr/control/viewprofile?partyId="+rawString(userParty.partyId!)) text=(userParty.partyId!)/><#t/>
         </@field>
-    </#if>	
+    </#if>
 
     <#assign fieldsRequired = true>
 
@@ -110,8 +110,8 @@ under the License.
     </#if>
 
     <#if !createAllowPassword?has_content || (createAllowPassword?has_content && createAllowPassword)>    	      
-      <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=(!params.userLoginId?has_content)!true />      
-      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=(!params.userLoginId?has_content)!true />		      
+      <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=(!userUserLogin.userLoginId?has_content)!true />      
+      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=(!userUserLogin.userLoginId?has_content)!true />		      
     <#else>
       <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
     </#if>

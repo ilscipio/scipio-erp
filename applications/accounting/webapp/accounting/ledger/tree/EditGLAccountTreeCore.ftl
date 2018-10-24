@@ -108,7 +108,8 @@ egltHandler = new ScpAccountingTreeHandler({
         remove: "${escapeVal(uiLabelMap.CommonRemove, 'js')}",                  
         add: "${escapeVal(uiLabelMap.CommonAdd, 'js')}",
         create: "${escapeVal(uiLabelMap.CommonCreate, 'js')}",           
-        manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}"           
+        manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}",
+        select: "${escapeVal(uiLabelMap.CommonSelect, 'js')}"           
     },
     markupSelectors: <@objectAsScript object=egltDefMarkupSelectors lang='js'/>,
     links: {           
@@ -132,7 +133,7 @@ $(document).ready(function() {
 
 <#assign treeEvents = {
     'select_node.jstree': 'egltHandler.sideMenuHandler(data.node);',
-    'activate_node.jstree': 'egltHandler.execEditForNode(data.node);' <#-- TODO: REVIEW: is this too destructive? -->
+    'activate_node.jstree': 'egltHandler.execSelectForNode(data.node);' <#-- TODO: REVIEW: is this too destructive? -->
     <#-- no longer supported by jstree
     'dblclick.jstree': 'egltHandler.execManageForNode(data.node);'-->
 }/>

@@ -31,11 +31,7 @@ under the License.
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-<@script>
-    function setupShowFormActivatedCallback(form, ai) {
-        setupControlMenu.setSubmitFormId(form.prop('id'));
-    };
-		
+<@script>	
 	var tabSettings = {
 	    "preferencesTab": {
 	        "formId": "setupAccounting-preferences-form",

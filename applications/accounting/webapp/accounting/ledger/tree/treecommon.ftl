@@ -2,6 +2,12 @@
 
 <#import "component://common/webcommon/includes/listLocalesMacros.ftl" as listLocaleMacros>
 
+<@script>
+    function setupShowFormActivatedCallback(form, ai) {
+        setupControlMenu.setSubmitFormId(form.prop('id'));
+    };
+</@script>
+
 <#macro acctgMarkupOut dir args={}>
   <#if dir?is_directive>
     <@dir args=args/><#t/>

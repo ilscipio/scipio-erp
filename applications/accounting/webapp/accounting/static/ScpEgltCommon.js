@@ -1016,6 +1016,24 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         return ai;
     };
     
+    this.execSelectForNode = function($node) {
+    	var ai = getActionInfo($node, "select");
+    	var params = makeParamsMap(ai);
+    	
+    	checkExecConfirm(ai, params, {}, function() {
+    		var execSelect = function() {
+                execActionTarget(ai, params);
+            };
+            
+            doExecSelect = true;
+            if (ai.objectType === 'glAccount') {
+            	execSelect();
+            } else if (ai.objectType === 'timePeriod') {
+            	execSelect();
+            }
+    	});    	
+    };
+    
     this.execEditForNode = function($node) {
         var ai = getActionInfo($node, "edit");
         var params = makeParamsMap(ai);
@@ -1134,8 +1152,10 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         });
     };
     
-    this.execForNode = function(actionType, $node, $targetNode) {    	
-        if (actionType === "edit") {
+    this.execForNode = function(actionType, $node, $targetNode) {
+    	if (actionType === "select") {
+            return this.execEditForNode($node);
+    	} else if (actionType === "edit") {
             return this.execEditForNode($node);
         } else if (actionType === "remove") {
             return this.execRemoveForNode($node);
@@ -1156,6 +1176,14 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     var getMenuActionDefs = function($node) {
         var nodeObjectIsParent = isNodeObjectParent($node);
         return {
+        	select: {
+                "separator_before": false,
+                "separator_after": false,
+                "label": scth.labels.select,
+                "action": function(obj) {
+                    scth.execSelectForNode($node);
+                }
+            },
             edit: {
                 "separator_before": false,
                 "separator_after": false,
@@ -1207,6 +1235,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             menuDefs = {
             	"add": defs.add,            
                 "edit": defs.edit,
+                "select": defs.select,
                 "remove": defs.remove,
                 "manage": defs.manage
             };

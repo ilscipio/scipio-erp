@@ -129,9 +129,23 @@
                 </else>
             </if>-->
             <log level="info" message="Setup: Updating party '${partyId}' postal address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
-            <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
-            <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-            <call-service service-name="updatePartyPostalAddress" in-map-name="cutn.contactCtx">
+            <entity-one entity-name="PostalAddress" value-field="oldPostalAddress">
+                <field-map field-name="contactMechId" from-field="cutn.contactMechId"/>
+            </entity-one>
+            <if-empty field="oldPostalAddress">
+                <set field="contactMechId" from-field="cutn.contactMechId"/>
+                <add-error><fail-property resource="PartyErrorUiLabels" property="contactmechservices.cannot_update_postal_address_id_not_found"/></add-error>
+                <check-errors/>
+            </if-empty>
+            <set field="updateAddrCtx" value="" set-if-null="true"/>
+            <!-- IMPORTANT: 2018-10-24: Any PostalAddress fields not specified (no map key) in contactCtx must be read from the existing value,
+                otherwise any fields not handled by the screen will get lost and will trigger an expire/create even if
+                nothing appears to have changed from the user's perspective -->
+            <set-service-fields service-name="updatePartyPostalAddress" map="oldPostalAddress" to-map="updateAddrCtx"/>
+            <set-service-fields service-name="updatePartyPostalAddress" map="cutn.contactCtx" to-map="updateAddrCtx"/>
+            <set field="updateAddrCtx.contactMechId" from-field="cutn.contactMechId"/>
+            <set field="updateAddrCtx.partyId" from-field="partyId"/>
+            <call-service service-name="updatePartyPostalAddress" in-map-name="updateAddrCtx">
                 <!-- IMPORTANT: read back contactMechId because it may have changed in the update;
                     if we don't do this then the purpose updates may associate the purposes with
                     an expired contact mech! -->
@@ -172,8 +186,10 @@
 
                 <!-- Create -->
                 <set field="purposeCtx" value="" set-if-null="true"/>
-                <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                <call-service service-name="createPartyPostalAddress" in-map-name="cutn.contactCtx">
+                <set field="createAddressCtx" value="" set-if-null="true"/>
+                <set-service-fields service-name="createPartyPostalAddress" map="cutn.contactCtx" to-map="createAddressCtx"/>
+                <set field="createAddressCtx.partyId" from-field="partyId"/>
+                <call-service service-name="createPartyPostalAddress" in-map-name="createAddressCtx">
                     <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                 </call-service>
                 <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
@@ -210,9 +226,23 @@
                 </then>
                 <else>
                     <log level="info" message="Setup: Updating party '${partyId}' telecom number '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
-                    <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
-                    <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                    <call-service service-name="updatePartyTelecomNumber" in-map-name="cutn.contactCtx"/>
+                    <entity-one entity-name="TelecomNumber" value-field="oldTelecomNumber">
+                        <field-map field-name="contactMechId" from-field="cutn.contactMechId"/>
+                    </entity-one>
+                    <if-empty field="oldTelecomNumber">
+                        <set field="contactMechId" from-field="cutn.contactMechId"/>
+                        <add-error><fail-property resource="PartyErrorUiLabels" property="contactmechservices.cannot_update_telecom_number_id_not_found"/></add-error>
+                        <check-errors/>
+                    </if-empty>
+                    <set field="updateNumberCtx" value="" set-if-null="true"/>
+                    <!-- IMPORTANT: 2018-10-24: Any TelecomNumber fields not specified (no map key) in contactCtx must be read from the existing value,
+                        otherwise any fields not handled by the screen will get lost and will trigger an expire/create even if
+                        nothing appears to have changed from the user's perspective -->
+                    <set-service-fields service-name="updatePartyTelecomNumber" map="oldTelecomNumber" to-map="updateNumberCtx"/>
+                    <set-service-fields service-name="updatePartyTelecomNumber" map="cutn.contactCtx" to-map="updateNumberCtx"/>
+                    <set field="updateNumberCtx.contactMechId" from-field="cutn.contactMechId"/>
+                    <set field="updateNumberCtx.partyId" from-field="partyId"/>
+                    <call-service service-name="updatePartyTelecomNumber" in-map-name="updateNumberCtx"/>
                     <!-- NOTE: leaves purpose unchanged -->
                 </else>
             </if>
@@ -234,8 +264,10 @@
 
                     <!-- Create -->
                     <set field="purposeCtx" value="" set-if-null="true"/>
-                    <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                    <call-service service-name="createPartyTelecomNumber" in-map-name="cutn.contactCtx">
+                    <set field="createNumberCtx" value="" set-if-null="true"/>
+                    <set-service-fields service-name="createPartyTelecomNumber" map="cutn.contactCtx" to-map="createNumberCtx" />
+                    <set field="createNumberCtx.partyId" from-field="partyId"/>
+                    <call-service service-name="createPartyTelecomNumber" in-map-name="createNumberCtx">
                         <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                     </call-service>
                     <set field="purposeCtx.partyId" from-field="partyId"/>
@@ -271,9 +303,11 @@
                 </then>
                 <else>
                     <log level="info" message="Setup: Updating party '${partyId}' email address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
-                    <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
-                    <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                    <call-service service-name="updatePartyEmailAddress" in-map-name="cutn.contactCtx"/>
+                    <set field="updateEmailCtx" value="" set-if-null="true"/>
+                    <set-service-fields service-name="updatePartyEmailAddress" map="cutn.contactCtx" to-map="updateEmailCtx"/>
+                    <set field="updateEmailCtx.contactMechId" from-field="cutn.contactMechId"/>
+                    <set field="updateEmailCtx.partyId" from-field="partyId"/>
+                    <call-service service-name="updatePartyEmailAddress" in-map-name="updateEmailCtx"/>
                     <!-- NOTE: leaves purpose unchanged -->
                 </else>
             </if>
@@ -295,8 +329,10 @@
 
                     <!-- Create -->
                     <set field="purposeCtx" value="" set-if-null="true"/>
-                    <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                    <call-service service-name="createPartyEmailAddress" in-map-name="cutn.contactCtx">
+                    <set field="createEmailCtx" value="" set-if-null="true"/>
+                    <set-service-fields service-name="createPartyEmailAddress" map="cutn.contactCtx" to-map="createEmailCtx"/>
+                    <set field="createEmailCtx.partyId" from-field="partyId"/>
+                    <call-service service-name="createPartyEmailAddress" in-map-name="createEmailCtx">
                         <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                     </call-service>
                     <set field="purposeCtx.partyId" from-field="partyId"/>
@@ -681,9 +717,11 @@
                 </else>
             </if>-->
             <log level="info" message="Setup: Updating facility '${facilityId}' postal address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
-            <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
-            <set field="cutn.contactCtx.facilityId" from-field="facilityId"/>
-            <call-service service-name="updateFacilityPostalAddress" in-map-name="cutn.contactCtx">
+            <set field="updateAddressCtx" value="" set-if-null="true"/>
+            <set-service-fields service-name="updateFacilityPostalAddress" map="cutn.contactCtx" to-map="updateAddressCtx"/>
+            <set field="updateAddressCtx.contactMechId" from-field="cutn.contactMechId"/>
+            <set field="updateAddressCtx.facilityId" from-field="facilityId"/>
+            <call-service service-name="updateFacilityPostalAddress" in-map-name="updateAddressCtx">
                 <!-- IMPORTANT: read back contactMechId because it may have changed in the update;
                     if we don't do this then the purpose updates may associate the purposes with
                     an expired contact mech! -->
@@ -724,8 +762,10 @@
 
                 <!-- Create -->
                 <set field="purposeCtx" value="" set-if-null="true"/>
-                <set field="cutn.contactCtx.facilityId" from-field="facilityId"/>
-                <call-service service-name="createFacilityPostalAddress" in-map-name="cutn.contactCtx">
+                <set field="createAddressCtx" value="" set-if-null="true"/>
+                <set-service-fields service-name="createFacilityPostalAddress" map="cutn.contactCtx" to-map="createAddressCtx"/>
+                <set field="createAddressCtx.facilityId" from-field="facilityId"/>
+                <call-service service-name="createFacilityPostalAddress" in-map-name="createAddressCtx">
                     <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                 </call-service>
                 <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">

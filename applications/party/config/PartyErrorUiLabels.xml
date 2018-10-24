@@ -187,6 +187,16 @@
         <value xml:lang="zh">跳过无效的电子邮件地址</value>
         <value xml:lang="zh-TW">跳過無效的電子郵件位址</value>
     </property>
+    <property key="contactmechservices.cannot_update_telecom_number_id_not_found">
+        <value xml:lang="de">FEHLER: Konnte die Telecom-Nummer nicht finden, um mit Hilfe von contactMechId '${contactMechId}' zu aktualisieren</value>
+        <value xml:lang="en">ERROR: Could not find Telecom Number to update using contactMechId '${contactMechId}'</value>
+        <value xml:lang="fr">ERREUR: impossible de trouver le numéro de télécom à mettre à jour à l'aide de contactMechId '${contactMechId}'</value>
+    </property>
+    <property key="contactmechservices.cannot_update_postal_address_id_not_found">
+        <value xml:lang="de">FEHLER: Konnte die postalische Adresse nicht finden, um für contactMechId '${contactMechId}' zu aktualisieren</value>
+        <value xml:lang="en">ERROR: Could not find Postal Address to update for contactMechId '${contactMechId}'</value>
+        <value xml:lang="fr">ERREUR: impossible de trouver l'adresse postale à mettre à jour pour contactMechId '${contactMechId}'</value>
+    </property>
     <property key="contactmechservices.cannot_update_specified_contact_info_expired">
         <value xml:lang="de">FEHLER: Die angegebenen Kontaktinformationen können nicht aktualisiert werden, da der Datensatz abgelaufen ist. Es wurde möglicherweise von irgendwo anders modifiziert, bevor Sie es aktualisieren konnten. Falls ja, laden Sie die Seite oder Kontaktdaten erneut und versuchen Sie es erneut.</value>
         <value xml:lang="en">ERROR: Cannot update specified contact info because the record has expired. It may have been modified from somewhere else before you could update it; if so, please reload the page or contact data and try to submit again.</value>

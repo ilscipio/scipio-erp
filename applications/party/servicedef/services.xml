@@ -655,6 +655,11 @@ under the License.
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="expirePartyContactMechPurpose" default-entity-name="PartyContactMechPurpose" engine="entity-auto" invoke="expire">
+        <description>Expires a Party Contact Mech Purpose (Note: same as deletePartyContactMechPurpose except requires partyId)</description><!-- SCIPIO: added note -->
+        <permission-service service-name="partyContactMechPermissionCheck" main-action="DELETE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 
     <!-- ContactMechList services -->
     <service name="createContactMechLink" default-entity-name="ContactMechLink" engine="simple"

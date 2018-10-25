@@ -52,6 +52,10 @@ under the License.
 	    "journalTab": {
 	    	"formId": "setupAccounting-selectJournalEntry-form",
 	    	"disabled": ${(!topGlAccountId?has_content)?string}
+	    },
+	    "taxAuthTab": {
+	    	"formId": "",
+	    	"disabled": ${(!topGlAccountId?has_content)?string}
 	    }
 	  }
 
@@ -122,5 +126,7 @@ under the License.
 	<@tab id="accountingTransactionsTab" title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
 	<#-- SCIPIO (06/14/2018): Commenting this out for now -->
 	<@tab id="journalTab" title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
+	
+	<@tab id="taxAuthTab" title="Configure Tax Authorities"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditTaxAuthorities"/></@tab>
 </@tabs>     
 

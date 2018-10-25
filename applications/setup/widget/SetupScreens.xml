@@ -714,6 +714,23 @@
             </widgets>           
         </section>
     </screen>
+    <screen name="EditTaxAuthorities">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditTaxAuthorities.groovy"/>
+                <!-- <entity-and entity-name="DatevDataCategory" list="datevDataCategories"></entity-and> -->
+            </actions>
+            <widgets>
+                <section>
+                    <widgets>
+                        <screenlet>
+                            <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditTaxAuthorities.ftl"/></html></platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
+            </widgets>           
+        </section>
+    </screen>
     
     <screen name="SetupFacility">
         <section>

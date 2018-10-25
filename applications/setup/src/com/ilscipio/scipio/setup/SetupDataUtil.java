@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -247,6 +248,11 @@ public final class SetupDataUtil {
 
             boolean contactMechsCompleted = locationAddressesCompleted;
             result.put("contactMechsCompleted", contactMechsCompleted);
+
+            // NOTE: this list is NOT filtered by the organization product stores; screen do it for now
+            List<GenericValue> allProductStoreRoleList = EntityQuery.use(delegator).from("ProductStoreRole")
+                    .where("partyId", userPartyId).filterByDate().cache(useCache).queryList();
+            result.put("allProductStoreRoleList", allProductStoreRoleList);
 
             if (contactMechsCompleted) {
                 result.put("completed", true);
@@ -596,6 +602,9 @@ public final class SetupDataUtil {
         }
 
         result.put("productStoreList", productStoreList);
+        Set<String> productStoreIdSet = productStoreList.stream().map(value -> value.getString("productStoreId")).collect(Collectors.toSet());
+        result.put("productStoreIdSet", productStoreIdSet);
+
         if (productStore != null) {
             result.put("coreCompleted", true);
             productStoreId = productStore.getString("productStoreId");
@@ -872,4 +881,106 @@ public final class SetupDataUtil {
         }
         return bestRel;
     }
+    
+    /**
+     * Returns the ProductStoreRole in given list based on priority of productStoreId and roleTypeId.
+     * <p>
+     * DEV NOTE: 2018-10-24: The strict==false case is currently only used to help give warnings to users,
+     * the screen/events does not actually support handling roleTypeId other than the target.
+     */
+    public static GenericValue getBestProductStoreRole(Collection<GenericValue> productStoreRoleList, String mainProductStoreId, 
+            Collection<String> productStoreIds, String targetRoleTypeId, boolean strictRoleType) {
+        if (mainProductStoreId == null || productStoreIds == null) {
+            return null;
+        }
+        // Best-effort: Get the most precise role possible
+        GenericValue bestPsr = null;
+        boolean bestPsrRoleMatches = false;
+        for(GenericValue psr : productStoreRoleList) {
+            String psrId = psr.getString("productStoreId");
+            if (psrId.equals(mainProductStoreId)) {
+                if (psr.getString("roleTypeId").equals(targetRoleTypeId)) {
+                    // perfect match
+                    bestPsr = psr;
+                    bestPsrRoleMatches = true;
+                    break;
+                } else if (!strictRoleType) {
+                    if (bestPsr == null || (!bestPsrRoleMatches && bestPsr.getString("productStoreId").equals(mainProductStoreId))) {
+                        // 3rd best match: matches the main store, but in a different role
+                        bestPsr = psr;
+                        bestPsrRoleMatches = false;
+                    }
+                }
+            }
+            if (productStoreIds.contains(psrId)) {
+                if (psr.getString("roleTypeId").equals(targetRoleTypeId)) {
+                    // 2nd best match: matches non-default store, in target role
+                    bestPsr = psr;
+                    bestPsrRoleMatches = true;
+                } else if (!strictRoleType) {
+                    if (bestPsr == null) {
+                        // 4th best match: matches non-default store, but in a different role
+                        bestPsr = psr;
+                        bestPsrRoleMatches = false;
+                    }
+                }
+            }
+        }
+        return bestPsr;
+    }
+
+    // REMOVED: this was code intended for handling roleTypeId as part of PRODUCT_STORE_ID param for 
+    // ProductStoreRoles to company stores that do not match the company relationship roleTypeId, 
+    // but it is too complicated to implement without causing additional issues.
+//    /**
+//     * Split "productStoreId[::roleTypeId]" string to map containing the values.
+//     * Returns null if param was empty or "::", map with valid flag in every other case.
+//     * <p>
+//     * Used by EditUser.ftl and SetupEvents.xml.
+//     */
+//    public static Map<String, Object> splitProductStoreRoleParamToValues(Delegator delegator, String productStoreRoleParam, Collection<String> allowedProductStoreIds) {
+//        if (UtilValidate.isEmpty(productStoreRoleParam)) {
+//            return null;
+//        }
+//        String[] parts = productStoreRoleParam.split("::", 2);
+//        String productStoreId = parts[0];
+//        String roleTypeId = (parts.length >= 2) ? parts[1] : "";
+//        if (UtilValidate.isEmpty(productStoreId)) {
+//            if (roleTypeId.isEmpty()) {
+//                return null;
+//            } else {
+//                return UtilMisc.toMap("valid", false);
+//            }
+//        }
+//
+//        if (allowedProductStoreIds != null && !allowedProductStoreIds.contains(productStoreId)) {
+//            Debug.logWarning("Setup: Unrecognized productStoreId '" + productStoreId  + " from store role parameter '" 
+//                    + productStoreRoleParam + "'; allowed IDs: " + allowedProductStoreIds, module);
+//            return UtilMisc.toMap("valid", false);
+//        }
+//
+//        GenericValue productStore = null;
+//        GenericValue roleType = null;
+//        boolean valid = true;
+//        try {
+//            productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).queryOne();
+//            if (productStore == null) {
+//                Debug.logWarning("Setup: Unrecognized productStoreId '" + productStoreId + "' from store role parameter '" + productStoreRoleParam + "'", module);
+//                valid = false;
+//            } else {
+//                if (!roleTypeId.isEmpty()) {
+//                    roleType = EntityQuery.use(delegator).from("RoleType").where("roleTypeId", roleTypeId).cache().queryOne();
+//                    if (roleType == null) {
+//                        Debug.logWarning("Setup: Unrecognized roleTypeId '" + roleTypeId + "' from store role parameter '" + productStoreRoleParam + "'", module);
+//                        valid = false;
+//                    }
+//                }
+//            }
+//        } catch (GenericEntityException e) {
+//            Debug.logError(e, module);
+//            valid = false;
+//        }
+//
+//        return UtilMisc.toMap("valid", valid, "productStore", productStore, "roleType", roleType);
+//    }
 }

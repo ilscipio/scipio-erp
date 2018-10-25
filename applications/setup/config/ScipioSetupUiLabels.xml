@@ -107,6 +107,10 @@
         <value xml:lang="de">Buchungsvorgangsart hinzufügen</value>
         <value xml:lang="en">Add Transaction Type</value>
     </property>
+    <property key="SetupAssociateUserToStore">
+        <value xml:lang="de">Benutzer zum Speichern zuordnen (in dieser Rolle)</value>
+        <value xml:lang="en">Associate user to store (in this role)</value>
+    </property>
     <property key="SetupCompleteMsg">
         <value xml:lang="de">Alle Setup-Schritte wurden abgeschlossen. Setup abgeschlossen!</value>
         <value xml:lang="en">All setup steps completed. Setup Complete!</value>
@@ -255,5 +259,10 @@
         <value xml:lang="de">Warnung: Die Änderung der Benutzerrolle nach der Erstellung kann fehlschlagen oder zu unerwünschten Änderungen führen, abhängig von den Benutzerdatensätzen. Möglicherweise müssen Sie diese Optionen ändern und Rollen und Datensätze manuell im Benutzer-Manager bearbeiten:</value>
         <value xml:lang="en">Warning: Changing the user role here after creation may fail or produce undesired changes, depending on the user's records. You may need to toggle these options and edit roles and records manually in the User Manager:</value>
         <value xml:lang="fr">Avertissement: La modification du rôle d'utilisateur ici après la création peut échouer ou produire des modifications non souhaitées, en fonction des enregistrements de l'utilisateur. Vous devrez peut-être basculer entre ces options et modifier les rôles et les enregistrements manuellement dans le Gestionnaire des utilisateurs:</value>
+    </property>
+    <property key="SetupUserStoreRoleMultiWarning">
+        <value xml:lang="de">Hinweis: Dieser Benutzer ist mit Stores in anderen Rollen verknüpft. Dies muss mit dem Catalog Manager verwaltet werden:</value>
+        <value xml:lang="en">Note: This user is related to stores in multiple roles. This must be managed using the Catalog Manager:</value>
+        <value xml:lang="fr">Remarque: Cet utilisateur est lié aux magasins dans d'autres rôles. Cela doit être géré à l'aide du gestionnaire de catalogue:</value>
     </property>
 </resource>

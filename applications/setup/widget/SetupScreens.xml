@@ -456,6 +456,8 @@
                 <set field="setupStep" value="user"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                <set field="storeData" from-field="setupStepStates.store.stepData"/><!-- result from StepDataUtil.java -->
+
                 <script location="component://setup/webapp/setup/WEB-INF/actions/user/SetupUser.groovy"/>                
                 
                 <set field="isCreateForm" type="Boolean" value="${context.userParty == null}"/>

@@ -28,6 +28,8 @@ under the License.
     <#-- TODO: review defaults -->
     "roleTypeId": "OWNER",
     "partyRelationshipTypeId": "OWNER",
+    <#-- NOTE: PRODUCT_STORE_ID is now concatenation of "[productStoreId]::[roleTypeId]"; if roleTypeId is omitted,
+        assumed to be same as the party relationship to company roleTypeIdTo -->
     "PRODUCT_STORE_ID": rawString(productStoreId!)
 }>
 
@@ -85,7 +87,6 @@ under the License.
 <@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
     <@defaultWizardFormFields exclude=["userPartyId"] />
     <@field type="hidden" name="isCreateUser" value=(userParty??)?string("N","Y")/>
-    <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>
     <@field type="hidden" name="userPartyId" value=((userParty.partyId)!)/>    
     <#if userParty??>
         <@field type="display" name="userPartyId" label=uiLabelMap.PartyPartyId>
@@ -119,12 +120,10 @@ under the License.
     </#if>
 
     <@field type="generic" label=uiLabelMap.PartyRelationships>
-        <@fields args={"type":"default-nolabelarea", "ignoreParentField":true}>            
+        <@fields args={"type":"default-compact", "ignoreParentField":true}>            
           <@row>
             <@cell large=6>
-            <@field type="display" value=getLabel('PartyPartyCurrentInTheRoleOf') />
-
-            <@field type="select" name="roleTypeId" id="roleTypeId"
+            <@field type="select" name="roleTypeId" id="roleTypeId" label=getLabel('PartyPartyCurrentInTheRoleOf')
                 required=true><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG, service just crash without it... -->
                 <#list userPartyRoles as partyRole>
                     <#assign selected = (rawString(params.roleTypeId!) == rawString(partyRole.roleTypeId!))>
@@ -155,9 +154,7 @@ under the License.
           </@row>
           <@row>
             <@cell large=6 last=true>
-            <@field type="display" value=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(orgPartyId!)}) />
-            
-            <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId" required=false>
+            <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId" label=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(orgPartyId!)}) required=false>
                 <option value=""<#if !rawString(params.partyRelationshipTypeId!)?has_content> selected="selected"</#if>>--</option>
                 <#list userPartyRelationshipTypes as userPartyRelationshipType>
                     <#assign selected = (rawString(params.partyRelationshipTypeId!) == rawString(userPartyRelationshipType.partyRelationshipTypeId!))>
@@ -174,6 +171,52 @@ under the License.
             <#if userPartyRole??>
                 <@field type="hidden" name="oldUserPartyRoleId" value=userPartyRole.roleTypeId />
             </#if>
+            
+          <@row>
+            <@cell large=6>
+            <@field type="select" name="PRODUCT_STORE_ID" id="PRODUCT_STORE_ID" label=uiLabelMap.SetupAssociateUserToStore required=false>
+                <#assign storeFound = false>
+                <#assign rawStoreIdPram = rawString(params.PRODUCT_STORE_ID!)>
+                <option value=""<#if !rawStoreIdPram?has_content> selected="selected"<#assign storeFound = true></#if>>--</option>
+                <#list productStoreList as store>
+                    <#assign selected = (rawStoreIdPram == rawString(store.productStoreId!))>
+                    <#if selected>
+                      <#assign storeFound = true>
+                    </#if>
+                    <#assign storeName = store.get('storeName', locale)!>
+                    <option value="${store.productStoreId}"<#if selected> selected="selected"</#if>><#if storeName?has_content>${storeName} [${store.productStoreId}]<#else>${store.productStoreId}</#if></option>
+                </#list>
+                <#-- 
+                    // REMOVED: this was code intended for handling roleTypeId as part of PRODUCT_STORE_ID param for 
+                    // ProductStoreRoles to company stores that do not match the company relationship roleTypeId, 
+                    // but it is too complicated to implement without causing additional issues.
+                <#if !storeFound>
+                    <#- - Special case: relation to store in a different roleTypeId - ->
+                    <#assign storeRoleInfo = Static["com.ilscipio.scipio.setup.SetupDataUtil"].splitProductStoreRoleParamToValues(delegator, rawStoreIdPram, productStoreIdSet!)!>
+                    <#if storeRoleInfo.valid && storeRoleInfo.roleType??>
+                        <#assign store = storeRoleInfo.productStore>
+                        <#assign storeName = store.get('storeName', locale)!>
+                        <option value="${escapeVal(rawStoreIdPram, 'html')}" selected="selected"><#if storeName?has_content>${storeName} [${store.productStoreId}]<#else>${store.productStoreId}</#if><#rt/>
+                            <#lt/> ${uiLabelMap.CommonAs} ${storeRoleInfo.roleType.get('description', locale)!storeRoleInfo.roleType.roleTypeId}</option>
+                    </#if>
+                </#if>
+                -->
+            </@field>
+              <#if userProductStoreRole??>
+                <@field type="hidden" name="oldUserPsrProductStoreId" value=userProductStoreRole.productStoreId/>
+                <@field type="hidden" name="oldUserPsrRoleTypeId" value=userProductStoreRole.roleTypeId/>
+                <#-- don't need to this one; it will be relooked-up using date filter server-side
+                <@field type="hidden" name="oldUserPsrFromDate" value=userProductStoreRole.fromDate/>-->
+              </#if>
+            </@cell>
+            <@cell large=6>
+                <#if extraProductStoreRole??>
+                  <@alert type="info">${uiLabelMap.SetupUserStoreRoleMultiWarning}
+                    <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+rawString(extraProductStoreRole.productStoreId)+"&partyId="+rawString(extraProductStoreRole.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
+                  </@alert>
+                </#if>
+            </@cell>
+          </@row>
         </@fields>
     </@field>
 

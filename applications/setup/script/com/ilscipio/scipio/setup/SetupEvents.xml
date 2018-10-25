@@ -496,6 +496,65 @@
             </then>
         </if>
 
+        <!-- DEV NOTE: IMPORTANT:
+            PRODUCT_STORE_ID FOR UPDATES IS IN THE FORM: "productStoreId[::roleTypeId]"  -->
+
+        
+
+        <!-- Update ProductStoreRole, IF changed
+            If only the roleTypeId was changed, it is covered by the case further below...  -->
+        <if>
+            <condition>
+                <if-compare-field field="parameters.PRODUCT_STORE_ID" operator="not-equals" to-field="parameters.oldUserPsrProductStoreId"/>
+            </condition>
+            <then>
+                <!-- NOTE: The previous ProductStoreRole removal is still reliant on screen parameters
+                    TODO?: Could try to redetect ones to remove server-side, but could have side effects... -->
+                <if>
+                    <condition>
+                        <and>
+                            <not><if-empty field="parameters.oldUserPsrProductStoreId"/></not>
+                            <not><if-empty field="parameters.oldUserPsrRoleTypeId"/></not>
+                        </and>
+                    </condition>
+                    <then>
+                        <entity-and entity-name="ProductStoreRole" list="psrList" filter-by-date="true">
+                            <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                            <field-map field-name="productStoreId" from-field="parameters.oldUserPsrProductStoreId"/>
+                            <field-map field-name="roleTypeId" from-field="parameters.oldUserPsrRoleTypeId"/>
+                        </entity-and>
+                        <if-not-empty field="psrList">
+                            <iterate list="psrList" entry="psr">
+                                <log level="info" message="Removing party ${parameters.userPartyId} old ProductStoreRole for store '${parameters.oldUserPsrProductStoreId}' and role '${parameters.oldUserPsrRoleTypeId}'"/>
+                                <set field="removePsrCtx" value="" set-if-null="true"/>
+                                <set-service-fields service-name="removeProductStoreRole" to-map="removePsrCtx" map="psr"/>
+                                <set field="removePsrCtx.userLogin" from-field="actingUserLogin" />
+                                <call-service service-name="removeProductStoreRole" in-map-name="removePsrCtx" />
+                            </iterate>
+                            <else>
+                                <log level="warning" message="Could not remove old ProductStoreRole for party ${parameters.userPartyId} store '${parameters.oldUserPsrProductStoreId}' and role '${parameters.oldUserPsrRoleTypeId}' because not found; they might have been deleted or expired already; ignoring"/>
+                            </else>
+                        </if-not-empty>
+                    </then>
+                </if>
+                <if>
+                    <condition>
+                        <not><if-empty field="parameters.PRODUCT_STORE_ID"/></not>
+                    </condition>
+                    <then>
+                        <log level="info" message="Creating party ${parameters.userPartyId} ProductStoreRole for store '${parameters.PRODUCT_STORE_ID}' and role '${parameters.roleTypeId}'"/>
+                        <set field="createPsrCtx" value="" set-if-null="true"/>
+                        <set field="createPsrCtx.partyId" from-field="parameters.userPartyId"/> 
+                        <set field="createPsrCtx.productStoreId" from-field="parameters.PRODUCT_STORE_ID"/>
+                        <set field="createPsrCtx.roleTypeId" from-field="parameters.roleTypeId"/>
+                        <set field="createPsrCtx.fromDate" from-field="nowTimestamp"/>
+                        <set field="createPsrCtx.userLogin" from-field="actingUserLogin" />
+                        <call-service service-name="ensureProductStoreRole" in-map-name="createPsrCtx" />
+                    </then>
+                </if>
+            </then>
+        </if>
+
         <!-- 2018-10-23: Combined switch to try to simplify the options... -->
         <if-not-empty field="parameters.relRoleChgUpdExpDelPrev">
             <if-empty field="parameters.relRoleChgUpdExp">
@@ -560,10 +619,10 @@
                             </else>
                         </if-compare>
 
-                        <!-- Update ProductStoreRole 
+                        <!-- Update remaining ProductStoreRoles (notably expired)
                             NOTE: roleTypeId is part of the PK, so can't just change in-place... 
                             For now, we'll simply delete any expired ones, and recreate the living ones... 
-                            TODO: REVIEW: Ignoring PRODUCT_STORE_ID for now, because don't know if it was changed somewhere along the way... -->
+                            TODO: REVIEW: Ignoring PRODUCT_STORE_ID for now -->
                         <if-compare field="parameters.relRoleChgUpdExp" operator="equals" value="true" type="Boolean">
                             <log level="info" message="Updating party ${parameters.userPartyId} ProductStoreRoles roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, removing expired records"/>
                             <entity-and entity-name="ProductStoreRole" list="psrList" filter-by-date="false">
@@ -598,7 +657,7 @@
                             <set-service-fields service-name="createProductStoreRole" to-map="createPsrCtx" map="psr"/>
                             <set field="createPsrCtx.roleTypeId" from-field="parameters.roleTypeId"/>
                             <set field="createPsrCtx.userLogin" from-field="actingUserLogin" />
-                            <call-service service-name="createProductStoreRole" in-map-name="createPsrCtx" />
+                            <call-service service-name="ensureProductStoreRole" in-map-name="createPsrCtx" />
                         </iterate>
                     </then>
                     <else>

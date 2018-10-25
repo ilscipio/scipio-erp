@@ -15,11 +15,14 @@ SetupWorker setupWorker = context.setupWorker;
 setupStep = context.setupStep;
 
 userData = context.userData ?: [:];
+storeData = context.storeData ?: [:];
 
 userInfo = null;
 
-if (context.productStoreId) {
-    productStore = ProductStoreWorker.getProductStore(context.productStoreId, delegator);
+productStoreId = context.productStoreId;
+
+if (productStoreId) {
+    productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
 
     context.createAllowPassword = "Y".equals(productStore.allowPassword);
     context.getUsername = !"Y".equals(productStore.usePrimaryEmailUsername);
@@ -32,7 +35,9 @@ context.userPartyId = userPartyId;
 orgPartyId = context.orgPartyId;
 userPartyRelationship = null;
 
-if (context.userParty) {
+relRoleTypeId = null;
+
+if (userParty) {
     userInfo = [:];
     userInfo.putAll(context.userParty);    
     if (userData.userUserLogin) {
@@ -43,7 +48,7 @@ if (context.userParty) {
         userInfo.putAll(userData.userPerson);
     }
 
-    // this can't possibly work properly
+    // This can't possibly work properly
     //partyRole = EntityUtil.getFirst(delegator.findByAnd("PartyRole", ["partyId" : userParty.partyId], null, false));
     //context.userPartyRole = partyRole;
     //if (partyRole) {
@@ -55,6 +60,7 @@ if (context.userParty) {
         if (userPartyRelationship) {
             context.userPartyRelationship = userPartyRelationship;
             context.userPartyRole = userPartyRelationship.getRelatedOne("ToPartyRole", false);
+            relRoleTypeId = userPartyRelationship.roleTypeIdTo;
             userInfo.roleTypeId = userPartyRelationship.roleTypeIdTo;
             userInfo.partyRelationshipTypeId = userPartyRelationship.partyRelationshipTypeId;
         } 
@@ -188,14 +194,14 @@ if (userPartyRelationship) {
     // Ensure our roleTypeId is in the list
     found = false;
     for(roleType in userPartyRoles) {
-        if (roleType.roleTypeId == userPartyRelationship.roleTypeIdTo) {
+        if (roleType.roleTypeId == relRoleTypeId) {
             found = true;
             break;
         }
     }
     if (!found) {
         userPartyRoles = new ArrayList(userPartyRoles);
-        userPartyRoles.add(from("RoleType").where("roleTypeId", userPartyRelationship.roleTypeIdTo).cache().queryOne());
+        userPartyRoles.add(from("RoleType").where("roleTypeId", relRoleTypeId).cache().queryOne());
     }
 }
 context.userPartyRoles = userPartyRoles;
@@ -221,3 +227,52 @@ context.userPartyRelationshipTypes = userPartyRelationshipTypes;
 context.allowEmptyPartyRelType = (userPartyRelationship && !userPartyRelationship.partyRelationshipTypeId);
 
 context.userInfo = userInfo;
+
+// Get all the stores, because it's possible client created a store, then replaced it,
+// and then the option will make no sense
+productStoreList = storeData.productStoreList;
+context.productStoreList = productStoreList;
+productStoreIdSet = storeData.productStoreIdSet;
+context.productStoreIdSet = productStoreIdSet;
+
+if (userParty) {
+    // Lookup ProductStoreRole(s)
+    productStoreIdSet = storeData.productStoreIdSet;
+    // NOTE: this list is not pre-filtered by organization stores; we must do this now
+    allProductStoreRoleList = userData.allProductStoreRoleList;
+    productStoreRoleList = productStoreIdSet ? allProductStoreRoleList?.findAll{ productStoreIdSet.contains(it.productStoreId); } : null;
+    context.productStoreRoleList = productStoreRoleList;
+    Debug.logInfo("Setup: productStoreRoleList for party '" + userPartyId + "': " + productStoreRoleList, module);
+
+    productStoreRole = SetupDataUtil.getBestProductStoreRole(productStoreRoleList, productStoreId, productStoreIdSet, 
+        relRoleTypeId, true);
+    /* do a separate lookup for this
+    psrDiffRole = (productStoreRole && productStoreRole.roleTypeId != relRoleTypeId);
+    if (psrDiffRole) {
+        Debug.logWarning("Setup: Party '" + userPartyId + "' has relation to store '" + productStoreRole.productStoreId +
+            "', but is in different role (" + productStoreRole.roleTypeId + ") than its company relationship (" +
+            relRoleTypeId + "); it cannot be managed by setup (use catalog application)", module);
+        productStoreRole = null;
+        context.psrIsOtherRole;
+    }
+    */
+    Debug.logInfo("Setup: Primary ProductStoreRole for party '" + userPartyId + "': " + productStoreRole?.toString(), module);
+
+    if (productStoreIdSet && relRoleTypeId) {
+        // Check if the user has a complex setup, so can warn against this, otherwise is not clear what is happening
+        EntityCondition cond = EntityCondition.makeCondition(
+            EntityCondition.makeCondition("partyId", userPartyId), EntityOperator.AND,
+            EntityCondition.makeCondition(EntityCondition.makeCondition("productStoreId", EntityOperator.IN, productStoreIdSet), EntityOperator.AND,
+                EntityCondition.makeCondition("roleTypeId", EntityOperator.NOT_EQUAL, relRoleTypeId)));
+        extraProductStoreRoleList = from("ProductStoreRole").where(cond).filterByDate().queryList();
+        context.extraProductStoreRoleList = extraProductStoreRoleList;
+        if (extraProductStoreRoleList) {
+            // This is only for the info box, link the most relevant...
+            // NOTE: could pick a better one, but it's really just to have a working link to catalog
+            context.extraProductStoreRole = productStoreRole ?: extraProductStoreRoleList[0];
+        }
+    }
+    
+    userInfo.PRODUCT_STORE_ID = productStoreRole?.productStoreId;
+    context.userProductStoreRole = productStoreRole;
+}

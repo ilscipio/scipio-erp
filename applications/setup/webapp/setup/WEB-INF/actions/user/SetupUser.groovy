@@ -30,6 +30,7 @@ context.userParty = userParty;
 userPartyId = userData.userPartyId;
 context.userPartyId = userPartyId;
 orgPartyId = context.orgPartyId;
+userPartyRelationship = null;
 
 if (context.userParty) {
     userInfo = [:];
@@ -54,6 +55,8 @@ if (context.userParty) {
         if (userPartyRelationship) {
             context.userPartyRelationship = userPartyRelationship;
             context.userPartyRole = userPartyRelationship.getRelatedOne("ToPartyRole", false);
+            userInfo.roleTypeId = userPartyRelationship.roleTypeIdTo;
+            userInfo.partyRelationshipTypeId = userPartyRelationship.partyRelationshipTypeId;
         } 
     }
 }
@@ -180,9 +183,41 @@ context.userSelected = userSelected;
 context.contactMechsCompleted = userData.contactMechsCompleted;
 
 // FIXME: this omits important roles such as EMPLOYEE
-List<GenericValue> userPartyRoles = EntityQuery.use(delegator).from("RoleType").where(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null)).orderBy(["description"]).query();
+List<GenericValue> userPartyRoles = from("RoleType").where(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null)).orderBy(["description"]).cache().query();
+if (userPartyRelationship) {
+    // Ensure our roleTypeId is in the list
+    found = false;
+    for(roleType in userPartyRoles) {
+        if (roleType.roleTypeId == userPartyRelationship.roleTypeIdTo) {
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        userPartyRoles = new ArrayList(userPartyRoles);
+        userPartyRoles.add(from("RoleType").where("roleTypeId", userPartyRelationship.roleTypeIdTo).cache().queryOne());
+    }
+}
 context.userPartyRoles = userPartyRoles;
-List<GenericValue> userPartyRelationshipTypes = EntityQuery.use(delegator).from("PartyRelationshipType").orderBy(["partyRelationshipName"]).query();
+
+List<GenericValue> userPartyRelationshipTypes = from("PartyRelationshipType").orderBy(["partyRelationshipName"]).cache().query();
+if (userPartyRelationship?.partyRelationshipTypeId) {
+    // Ensure our partyRelationshipTypeId is in the list
+    found = false;
+    for(relType in userPartyRelationshipTypes) {
+        if (relType.partyRelationshipTypeId == userPartyRelationship.partyRelationshipTypeId) {
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        userPartyRelationshipTypes = new ArrayList(userPartyRelationshipTypes);
+        userPartyRelationshipTypes.add(from("PartyRelationshipType").where("partyRelationshipTypeId", userPartyRelationship.partyRelationshipTypeId).cache().queryOne());
+    }
+}
 context.userPartyRelationshipTypes = userPartyRelationshipTypes;
+
+// only allowing this if it was ALREADY empty; need to avoid creating new ones as empty
+context.allowEmptyPartyRelType = (userPartyRelationship && !userPartyRelationship.partyRelationshipTypeId);
 
 context.userInfo = userInfo;

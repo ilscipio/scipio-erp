@@ -379,7 +379,8 @@
                 <and>
                     <not><if-empty field="tempMap.partyId"/></not>
                     <not><if-empty field="parameters.roleTypeId"/></not>
-                    <not><if-empty field="parameters.partyRelationshipTypeId"/></not>
+                    <!-- Not a required field on PartyRelationship
+                    <not><if-empty field="parameters.partyRelationshipTypeId"/></not>-->
                 </and>
             </condition>
             <then>
@@ -392,7 +393,8 @@
                 <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="actingUserLogin" />
                 <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />
             </then>
-         </if>
+        </if>
+
         <property-to-field field="successMessage" resource="PartyUiLabels" property="PartyPartyCreatedSuccessfully"/>
         <set field="_event_message_" value="${successMessage}" />
     </simple-method>
@@ -457,7 +459,8 @@
             <condition>
                 <and>
                     <not><if-empty field="parameters.roleTypeId"/></not>
-                    <not><if-empty field="parameters.partyRelationshipTypeId"/></not>
+                    <!-- Not a required field on PartyRelationship
+                    <not><if-empty field="parameters.partyRelationshipTypeId"/></not>-->
                 </and>
             </condition>
             <then>

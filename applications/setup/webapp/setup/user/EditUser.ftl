@@ -25,7 +25,9 @@ under the License.
     "USER_WORK_ALLOW_SOL": "Y",
     "USER_FAX_ALLOW_SOL": "Y",
     "USER_EMAIL_ALLOW_SOL": "Y",
-    
+    <#-- TODO: review defaults -->
+    "roleTypeId": "OWNER",
+    "partyRelationshipTypeId": "OWNER",
     "PRODUCT_STORE_ID": "${productStoreId}"
 }>
 
@@ -72,7 +74,7 @@ under the License.
                  <#-- document.getElementById('USERNAME').disabled=false; -->
                  jQuery('#USERNAME').slideDown('slow');
              }
-         }   
+         }
     </#if>
     jQuery(document).ready(function() {        
         <#-- SCIPIO: do this also on page load -->
@@ -122,35 +124,24 @@ under the License.
             <@cell large=6>
             <@field type="display" value=getLabel('PartyPartyCurrentInTheRoleOf') />
 
-            <#-- SCIPIO: FIXME: this roleTypeId is very confounded, it is
-                used for both ProductStoreRole creation AND the PartyRelationship to orgPartyId,
-                AND ends up in a ContactMech preventing delete later... -->
             <@field type="select" name="roleTypeId" id="roleTypeId"
                 required=true><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG, service just crash without it... -->
-                <#--<option value="" selected="selected">--</option>-->
-              <#assign roleTypeFound = false>
-              <#assign roleTypeMarkup>
                 <#list userPartyRoles as partyRole>
-                    <#assign selected = (userPartyRole?? && rawString(userPartyRole.roleTypeId) == rawString(partyRole.roleTypeId!))>
-                    <#if selected>
-                      <#assign roleTypeFound = true>
-                    </#if>
+                    <#assign selected = (rawString(params.roleTypeId!) == rawString(partyRole.roleTypeId!))>
                     <option value="${partyRole.roleTypeId}"<#if selected> selected="selected"</#if>>${partyRole.get('description', locale)!partyRole.roleTypeId}</option>
                 </#list>
-              </#assign>
-              <#if userPartyRole?? && !roleTypeFound>
-                <#-- emergency case: might be unlisted type from existing data -->
-                <option value="${userPartyRole.roleTypeId!}" selected="selected">${userPartyRole.getRelatedOne("RoleType", true).get('description', locale)!userPartyRole.roleTypeId}</option>
-              </#if>
-                ${roleTypeMarkup}
             </@field>
             </@cell>
             <@cell large=6>
               <#if userParty?? && userPartyRole??>
+                  <#-- WARNING: roleTypeId is highly confounded: it is
+                      used for ProductStoreRole, PartyContactMech AND PartyRelationship,
+                      so it is not trivial to change, and trying to update all the records can damage data,
+                      so large warning required. -->
                   <#-- DEV NOTE: Cannot delete old PartyRole automatically by default because the PartyRole may be reused by more than
-                    one related entity/function, included being manually depended upon by the client.
-                    Even if could check the 78 database relations to PartyRole, it could still be needed
-                    in a secondary purpose by the client for manual use. -->
+                      one related entity/function, included being manually depended upon by the client.
+                      Even if could check the 78 database relations to PartyRole, it could still be needed
+                      in a secondary purpose by the client for manual use. -->
                   <@alert type="warning">${uiLabelMap.SetupUserRoleChangeWarning}
                     <@setupExtAppLink uri=("/partymgr/control/viewroles?partyId="+rawString(userParty.partyId!)) text=uiLabelMap.PageTitleViewPartyRole class="${styles.link_nav!} ${styles.action_view!}"/>
                     <br/>
@@ -166,25 +157,12 @@ under the License.
             <@cell large=6 last=true>
             <@field type="display" value=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(orgPartyId!)}) />
             
-            <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId"
-                required=true><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG, without a relationship to the company the party will not appear in the list after creation! -->
-                <#--<option value="" selected="selected">--</option>-->
-              <#assign relTypeFound = false>
-              <#assign relTypeMarkup>
+            <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId" required=false>
+                <option value=""<#if !rawString(params.partyRelationshipTypeId!)?has_content> selected="selected"</#if>>--</option>
                 <#list userPartyRelationshipTypes as userPartyRelationshipType>
-                    <#assign selected = (userPartyRelationship?? && rawString(userPartyRelationship.partyRelationshipTypeId!) == rawString(userPartyRelationshipType.partyRelationshipTypeId!))>
-                    <#if selected>
-                      <#assign relTypeFound = true>
-                    </#if>
+                    <#assign selected = (rawString(params.partyRelationshipTypeId!) == rawString(userPartyRelationshipType.partyRelationshipTypeId!))>
                     <option value="${userPartyRelationshipType.partyRelationshipTypeId}"<#if selected> selected="selected"</#if>>${userPartyRelationshipType.get('partyRelationshipName', locale)!userPartyRelationshipType.partyRelationshipTypeId}</option>
                 </#list>
-              </#assign>
-              <#if userPartyRelationship?? && !relTypeFound>
-                <#-- emergency case: might be unlisted or missing type from existing data -->
-                <option value="${userPartyRelationship.partyRelationshipTypeId!}" selected="selected"><#if userPartyRelationship.partyRelationshipTypeId??>${userPartyRelationship.getRelatedOne('PartyRelationshipType', true)
-                    .get('partyRelationshipName', locale)!userPartyRelationship.partyRelationshipTypeId}</#if></option>
-              </#if>
-                ${relTypeMarkup}
             </@field>
             </@cell>
           </@row>

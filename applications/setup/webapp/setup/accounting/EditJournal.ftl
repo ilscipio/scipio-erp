@@ -55,7 +55,7 @@
 	    <#if formActionType == "edit">
 	        <@field type="display" label=uiLabelMap.FormFieldTitle_glJournalId><#rt/>
 	            <span class="acctg-managefield acctg-managefield-for-glJournalId">
-	            	<@setupExtAppLink uri="/accounting/control/EditGlJournal?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.customTimePeriodId!)}" text=params.customTimePeriodId!/>
+	            	<@setupExtAppLink uri="/accounting/control/EditGlJournal?organizationPartyId=${rawString(params.orgPartyId!)}&glJournalId=${rawString(params.glJournalId!)}" text=params.glJournalId!/>
 	            </span><#t/>
 	        </@field><#lt/>
 	        <@field type="hidden" name="glJournalId" value=(params.glJournalId!) class="+acctg-inputfield"/>
@@ -78,26 +78,26 @@
     </@form>
 </#macro>
 
-<@section title=uiLabelMap.AccountingCustomTimePeriod containerId="acctg-newtimeperiod" containerClass="+acctg-newtimeperiod acctg-recordaction acctg-newrecord" 
-    containerStyle=((targetRecordAction == "timeperiod-new")?string("","display:none;"))>
-  <#if targetRecordAction == "timeperiod-new">
+<@section title=uiLabelMap.AccountingGlJournal containerId="acctg-newgljournal" containerClass="+acctg-newgljournal acctg-recordaction acctg-newrecord" 
+    containerStyle=((targetRecordAction == "gljournal-new")?string("","display:none;"))>
+  <#if targetRecordAction == "gljournal-new">
     <#assign paramMaps = initialParamMaps>
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({
       "record":true,
       "defaults":defaultParams,
-      "isError":isTimePeriodError,
+      "isError":isGlJournalError,
       "useReqParams":useReqParams
     })>
   </#if>
-  <@setupJournalForm id="NewTimePeriod" formActionType="new" target="setupCreateTimePeriod" params=paramMaps.values
-    treeFieldValues={"acctgSubmittedFormId":"NewTimePeriod"} <#-- SPECIAL: this form (only) is initially submitted outside the JS tree, so we have to pre-populate treeFieldValues -->
+  <@setupJournalForm id="NewGlJournal" formActionType="new" target="setupCreateGlJournal" params=paramMaps.values
+    treeFieldValues={"acctgSubmittedFormId":"NewGlJournal"} <#-- SPECIAL: this form (only) is initially submitted outside the JS tree, so we have to pre-populate treeFieldValues -->
   />
 </@section>
 
-<@section title=uiLabelMap.AccountingEditJournal containerId="acctg-editjournal" containerClass="+acctg-editjournal acctg-recordaction acctg-editrecord" 
-    containerStyle=((targetRecordAction == "journal-edit")?string("","display:none;"))>
-  <#if targetRecordAction == "journal-edit">
+<@section title=uiLabelMap.AccountingEditJournal containerId="acctg-editgljournal" containerClass="+acctg-editgljournal acctg-recordaction acctg-editrecord" 
+    containerStyle=((targetRecordAction == "gljournal-edit")?string("","display:none;"))>
+  <#if targetRecordAction == "gljournal-edit">
     <#assign paramMaps = initialParamMaps>
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({
@@ -107,7 +107,7 @@
       "useReqParams":useReqParams
     })>
   </#if>
-  <@setupJournalForm id="EditTimePeriod" formActionType="edit" target="setupUpdateTimePeriod" params=paramMaps.values/>
+  <@setupJournalForm id="EditGlJournal" formActionType="edit" target="setupUpdateGlJournal" params=paramMaps.values/>
 </@section>
 
 <div style="display:none;">
@@ -120,9 +120,9 @@
       <@field type="hidden" name="deleteRecordAndRelated" value=isDeleteRecord?string("true", "false")/><#-- for Versatile service -->
       <#-- <@field type="hidden" name="deleteAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
       
-      <@field type="hidden" name="customJournalId" value="" class="+acctg-inputfield"/>
+      <@field type="hidden" name="glJournalId" value="" class="+acctg-inputfield"/>
 
   </@form>
 </#macro>
-  <@setupDeleteJournalForm id="acctg-removejournal-form" target="setupDeleteJournal" isDeleteRecord=true/>  
+  <@setupDeleteJournalForm id="acctg-removegljournal-form" target="setupDeleteGlJournal" isDeleteRecord=true/>  
 </div>

@@ -211,8 +211,16 @@ under the License.
             </@cell>
             <@cell large=6>
                 <#if extraProductStoreRole??>
-                  <@alert type="info">${uiLabelMap.SetupUserStoreRoleMultiWarning}
+                  <@alert type="info">${uiLabelMap.SetupUserStoreRoleMultiInfo}
                     <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+rawString(extraProductStoreRole.productStoreId)+"&partyId="+rawString(extraProductStoreRole.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
+                  </@alert>
+                <#elseif userProductStoreRole??>
+                  <@alert type="info">${uiLabelMap.SetupUserStoreRoleAssocInfo}
+                    <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+rawString(userProductStoreRole.productStoreId)+"&partyId="+rawString(userProductStoreRole.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
+                  </@alert>
+                <#elseif userParty??>
+                  <@alert type="info">${uiLabelMap.SetupUserStoreRoleAssocInfo}
+                    <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+rawString(productStoreId!)+"&partyId="+rawString(userParty.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
                   </@alert>
                 </#if>
             </@cell>

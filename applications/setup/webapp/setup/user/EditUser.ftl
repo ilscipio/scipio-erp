@@ -28,7 +28,7 @@ under the License.
     <#-- TODO: review defaults -->
     "roleTypeId": "OWNER",
     "partyRelationshipTypeId": "OWNER",
-    "PRODUCT_STORE_ID": "${productStoreId}"
+    "PRODUCT_STORE_ID": rawString(productStoreId!)
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({

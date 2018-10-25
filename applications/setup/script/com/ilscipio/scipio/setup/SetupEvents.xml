@@ -25,6 +25,14 @@
         NOTE: the original ofbizsetup methods are found (and still referenced) in:
           component://commonext/script/org/ofbiz/setup/SetupEvents.xml -->
 
+    <simple-method method-name="createOrganization" short-description="Create Organization" login-required="true">
+        <call-simple-method method-name="createOrganization" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
+        <check-errors/>
+
+        <property-to-field field="successMessage" resource="PartyUiLabels" property="PartyOrganizationCreatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
+    </simple-method>
+
     <simple-method method-name="updateOrganization" short-description="Update Organization" login-required="true">
         <!-- verify fields -->
         <call-simple-method method-name="verifyOrganizationFields" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
@@ -99,6 +107,9 @@
         <set field="cutn.contactCtx" from-field="emailContext"/>
         <call-simple-method method-name="createUpdatePartyEmailAddress"/>
         <check-errors/>
+
+        <property-to-field field="successMessage" resource="PartyUiLabels" property="PartyOrganizationUpdatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
     <simple-method method-name="createUpdatePartyPostalAddress">
         <!-- WARN: this one might be too specific for general use; no deletion support for now -->
@@ -702,6 +713,14 @@
         <set field="_event_message_" value="${successMessage}" />
     </simple-method>
 
+    <simple-method method-name="createFacilityAndContactMech" short-description="create Facility and ContactMech">
+        <call-simple-method method-name="createFacilityAndContactMech" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
+        <check-errors/>
+
+        <property-to-field field="successMessage" resource="ProductUiLabels" property="FacilityFacilityCreatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
+    </simple-method>
+    
     <simple-method method-name="updateFacilityAndContactMech" short-description="update Facility and ContactMech">
         <set field="facilityId" from-field="parameters.facilityId"/>
         <call-simple-method method-name="verifyFacilityFields" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
@@ -723,6 +742,9 @@
                 <check-errors/>
             </if-compare>
         </if-compare>
+
+        <property-to-field field="successMessage" resource="ProductUiLabels" property="FacilityFacilityUpdatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
     <simple-method method-name="createUpdateFacilityPostalAddress">
         <!-- REQUIRES:
@@ -811,7 +833,7 @@
         </if-not-empty>
     </simple-method>
 
-    <simple-method method-name="createProductStoreWithDefaultSettingAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
+    <simple-method method-name="createProductStoreAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
         <call-simple-method method-name="createProductStoreWithDefaultSetting" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
         <check-errors/>
 
@@ -828,6 +850,9 @@
                 <log message="isCreateWebsite is not specified; skipping WebSite creation" level="info"/>
             </else>
         </if-compare>
+        
+        <property-to-field field="successMessage" resource="ProductUiLabels" property="ProductProductStoreCreatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
 
     <simple-method method-name="updateProductStoreAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
@@ -856,6 +881,9 @@
                 </if-not-empty>
             </else>
         </if-compare>
+
+        <property-to-field field="successMessage" resource="ProductUiLabels" property="ProductProductStoreUpdatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
 
     <!-- SCIPIO: based on component://commonext/script/org/ofbiz/setup/SetupEvents.xml#createDefaultWebsite -->

@@ -10077,6 +10077,10 @@
         <value xml:lang="en">Return Add</value>
         <value xml:lang="hi-IN">वापसी जोड़ें</value>
     </property>
+    <property key="PartyOrganizationCreatedSuccessfully">
+        <value xml:lang="de">Organisation wurde erfolgreich erstellt.</value>
+        <value xml:lang="en">Organization created successfully.</value>
+    </property>
     <property key="PartyOrganizationParty">
         <value xml:lang="ar">طرف المنظمة</value>
         <value xml:lang="de">Organisation Nutzer</value>
@@ -10112,6 +10116,10 @@
         <value xml:lang="vi">Id Doanh nghiệp</value>
         <value xml:lang="zh">机构会员标识</value>
         <value xml:lang="zh-TW">組織團體識別</value>
+    </property>
+    <property key="PartyOrganizationUpdatedSuccessfully">
+        <value xml:lang="de">Organisation wurde erfolgreich aktualisiert.</value>
+        <value xml:lang="en">Organization updated successfully.</value>
     </property>
     <property key="PartyOriginEmailNotKnown">
         <value xml:lang="ar">عنوان البريد الإلكتروني للمصدر مجهول!</value>

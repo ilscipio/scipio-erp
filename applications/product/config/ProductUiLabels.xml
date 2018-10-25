@@ -186,6 +186,14 @@
         <value xml:lang="zh-CN">仓储设施</value>
         <value xml:lang="zh-TW">場所</value>
     </property>
+    <property key="FacilityFacilityCreatedSuccessfully">
+        <value xml:lang="de">Lager wurde erfolgreich erstellt.</value>
+        <value xml:lang="en">Warehouse created successfully.</value>
+    </property>
+    <property key="FacilityFacilityUpdatedSuccessfully">
+        <value xml:lang="de">Lager wurde erfolgreich aktualisiert.</value>
+        <value xml:lang="en">Warehouse updated successfully.</value>
+    </property>
     <property key="FacilityGroupByNoOfOrderItems">
         <value xml:lang="de">Nach Bestellposition sortieren</value>
         <value xml:lang="en">Group by number of order items</value>
@@ -26337,6 +26345,10 @@
         <value xml:lang="es">Catálogos de una Tienda de Productos</value>
         <value xml:lang="fr">Catalogues du centre de profit</value>
     </property>
+    <property key="ProductProductStoreCreatedSuccessfully">
+        <value xml:lang="de">Shop wurde erfolgreich erstellt.</value>
+        <value xml:lang="en">Store created successfully.</value>
+    </property>
     <property key="ProductProductStoreEmailSettings">
         <value xml:lang="de">Shop E-Mail Einstellungen</value>
         <value xml:lang="en">Store Email Settings</value>
@@ -26381,6 +26393,10 @@
     <property key="ProductProductStoreFacilities">
         <value xml:lang="de">Shop Einrichtungen</value>
         <value xml:lang="en">Store Warehouses</value>
+    </property>
+    <property key="ProductProductStoreUpdatedSuccessfully">
+        <value xml:lang="de">Shop wurde erfolgreich aktualisiert.</value>
+        <value xml:lang="en">Store updated successfully.</value>
     </property>
     <property key="ProductProductStoreGroup">
         <value xml:lang="de">Shopgruppe</value>

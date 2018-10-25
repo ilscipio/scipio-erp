@@ -94,7 +94,7 @@
     </request-map>
     <request-map uri="setupCreateOrganization">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createOrganization"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createOrganization"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupOrganization"/>
     </request-map>
@@ -233,7 +233,7 @@
     </request-map>
     <request-map uri="setupCreateFacility">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createFacilityAndContactMech"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createFacilityAndContactMech"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupFacility"/>
     </request-map>
@@ -357,7 +357,7 @@
     </request-map>
     <request-map uri="setupCreateStore">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createProductStoreWithDefaultSettingAndWebSite"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createProductStoreAndWebSite"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupStore"/>
     </request-map>

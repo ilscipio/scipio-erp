@@ -266,8 +266,8 @@
         <value xml:lang="fr">Les associations d'utilisateurs à stocker peuvent être gérées à l'aide de Catalog Manager:</value>
     </property>
     <property key="SetupUserStoreRoleMultiInfo">
-        <value xml:lang="de">Hinweis: Dieser Benutzer ist mit Stores in anderen Rollen verknüpft. Dies muss mit dem Catalog Manager verwaltet werden:</value>
-        <value xml:lang="en">Note: This user is related to stores in multiple roles. This must be managed using the Catalog Manager:</value>
-        <value xml:lang="fr">Remarque: Cet utilisateur est lié aux magasins dans d'autres rôles. Cela doit être géré à l'aide du gestionnaire de catalogue:</value>
+        <value xml:lang="de">Hinweis: Dieser Benutzer ist mehreren Rollen zugeordnet. Dies muss mit dem Catalog Manager verwaltet werden:</value>
+        <value xml:lang="en">Note: This user is associated to stores in multiple roles. This must be managed using the Catalog Manager:</value>
+        <value xml:lang="fr">Remarque: cet utilisateur est associé à des magasins dans plusieurs rôles. Cela doit être géré à l'aide du gestionnaire de catalogue:</value>
     </property>
 </resource>

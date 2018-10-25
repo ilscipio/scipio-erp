@@ -1041,8 +1041,6 @@
     <simple-method method-name="importDefaultGL" short-description="Import default GL Accounts" login-required="true">
         <!-- TODO -->
         <request-to-field field="predefinedGLAccountId" request-name="importPredefinedGL" />
-        <log level="always" message="predefinedGLAccountId =======> ${predefinedGLAccountId}" />
-
     </simple-method>
 
 </simple-methods>

@@ -58,23 +58,14 @@
 	            	<@setupExtAppLink uri="/accounting/control/EditGlJournal?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.customTimePeriodId!)}" text=params.customTimePeriodId!/>
 	            </span><#t/>
 	        </@field><#lt/>
-	        <@field type="hidden" name="customTimePeriodId" value=(params.customTimePeriodId!) class="+acctg-inputfield"/>
+	        <@field type="hidden" name="glJournalId" value=(params.glJournalId!) class="+acctg-inputfield"/>
 	    <#else>
 	        <#-- TODO: REVIEW: required=true -->
-	        <@field type="input" name="customTimePeriodId" label=uiLabelMap.CommonId value=(params.customTimePeriodId!) class="+acctg-inputfield"/>
+	        <@field type="input" name="glJournalId" label=uiLabelMap.CommonId value=(params.glJournalId!) class="+acctg-inputfield"/>
 	    </#if>
 
-	    <@field type="text" name="periodNum" value=(params.periodNum!) label=uiLabelMap.AccountingPeriodNumber class="+acctg-inputfield" />
-	    <@field type="text" name="periodName" value=(params.periodName!) label=uiLabelMap.AccountingPeriodName class="+acctg-inputfield" />	    
-	    
-	    <@field type="select" name="periodTypeId" label=uiLabelMap.CommonType class="+acctg-inputfield">
-	      <option value="" disabled="disabled"></option>
-	      <#list periodTypes as periodType>
-	        <#assign selected = (rawString(params.periodTypeId!) == (periodType.periodTypeId!))>
-	        <option value="${periodType.periodTypeId!}"<#if selected> selected="selected"</#if>>${periodType.description!}</option>
-	      </#list>
-	    </@field>
-	    
+	    <@field type="text" name="glJournalName" value=(params.glJournalName!) label=uiLabelMap.AccountingGlJournalName class="+acctg-inputfield" />
+	    <@field type="checkbox" name="isPosted" label=uiLabelMap.AccountingPosted required=false value=(params.isPosted!) altValue="N" checked=(params.isClosed?has_content && params.isClosed == "Y") />
 	    <#--
 		    <#if formActionType == "edit">
 	        <@field type="display" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate><span class="ect-displayfield ect-displayfield-for-fromDate">${params.fromDate!}</span></@field>
@@ -83,11 +74,7 @@
 	        <@field type="datetime" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate value=(params.fromDate!) class="+ect-inputfield"/>
 	      </#if>
 	      -->
-	    <@field type="datetime" name="fromDate" value=(params.fromDate!"") required=false label=uiLabelMap.CommonFromDate class="+acctg-inputfield acctg-inputdate" dateType="date"/>
-	    <@field type="datetime" name="thruDate" value=(params.thruDate!"") required=false label=uiLabelMap.CommonThruDate class="+acctg-inputfield acctg-inputdate" dateType="date"/>
-	    
-	    <@field type="checkbox" name="isClosed" value=(params.isClosed!"N") altValue=false checked=(params.isClosed?has_content && params.isClosed == "Y")
-	    	required=false label=uiLabelMap.FormFieldTitle_isClosed class="+acctg-inputfield"/>	       
+	    <@field type="datetime" name="fromDate" value=(params.fromDate!"") required=false label=uiLabelMap.CommonFromDate class="+acctg-inputfield acctg-inputdate" dateType="date"/>	    	       
     </@form>
 </#macro>
 
@@ -103,39 +90,39 @@
       "useReqParams":useReqParams
     })>
   </#if>
-  <@setupTimePeriodForm id="NewTimePeriod" formActionType="new" target="setupCreateTimePeriod" params=paramMaps.values
+  <@setupJournalForm id="NewTimePeriod" formActionType="new" target="setupCreateTimePeriod" params=paramMaps.values
     treeFieldValues={"acctgSubmittedFormId":"NewTimePeriod"} <#-- SPECIAL: this form (only) is initially submitted outside the JS tree, so we have to pre-populate treeFieldValues -->
   />
 </@section>
 
-<@section title=uiLabelMap.AccountingEditCustomTimePeriod containerId="acctg-edittimeperiod" containerClass="+acctg-edittimeperiod acctg-recordaction acctg-editrecord" 
-    containerStyle=((targetRecordAction == "timeperiod-edit")?string("","display:none;"))>
-  <#if targetRecordAction == "timeperiod-edit">
+<@section title=uiLabelMap.AccountingEditJournal containerId="acctg-editjournal" containerClass="+acctg-editjournal acctg-recordaction acctg-editrecord" 
+    containerStyle=((targetRecordAction == "journal-edit")?string("","display:none;"))>
+  <#if targetRecordAction == "journal-edit">
     <#assign paramMaps = initialParamMaps>
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({
       "record":{},
       "defaults":defaultParams,
-      "isError":isTimePeriodError,
+      "isError":isJournalError,
       "useReqParams":useReqParams
     })>
   </#if>
-  <@setupTimePeriodForm id="EditTimePeriod" formActionType="edit" target="setupUpdateTimePeriod" params=paramMaps.values/>
+  <@setupJournalForm id="EditTimePeriod" formActionType="edit" target="setupUpdateTimePeriod" params=paramMaps.values/>
 </@section>
 
 <div style="display:none;">
-<#macro setupDeleteTimePeriodForm id target isDeleteRecord>
+<#macro setupDeleteJournalForm id target isDeleteRecord>
   <@form id=id action=makeOfbizUrl(target) method="post">
       <@defaultWizardFormFields exclude=["topGlAccountId"]/>
       <@acctgCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>
-      <@field type="hidden" name="isDeleteTimePeriod" value="Y"/><#-- for our screens -->
+      <@field type="hidden" name="isDeleteJournal" value="Y"/><#-- for our screens -->
       <@field type="hidden" name="deleteRecordAndRelated" value=isDeleteRecord?string("true", "false")/><#-- for Versatile service -->
       <#-- <@field type="hidden" name="deleteAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
       
-      <@field type="hidden" name="customTimePeriodId" value="" class="+acctg-inputfield"/>
+      <@field type="hidden" name="customJournalId" value="" class="+acctg-inputfield"/>
 
   </@form>
 </#macro>
-  <@setupDeleteTimePeriodForm id="acctg-removetimeperiod-form" target="setupDeleteTimePeriod" isDeleteRecord=true/>  
+  <@setupDeleteJournalForm id="acctg-removejournal-form" target="setupDeleteJournal" isDeleteRecord=true/>  
 </div>

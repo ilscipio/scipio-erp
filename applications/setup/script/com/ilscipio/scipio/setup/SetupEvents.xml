@@ -611,15 +611,49 @@
             </then>
         </if>
 
+        <entity-one entity-name="Person" value-field="oldPerson">
+            <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+        </entity-one>
+
         <set field="personMap.partyId" from-field="parameters.userPartyId" />
         <call-service service-name="updatePerson" in-map-name="personMap" />
         <check-errors/>
+
+        <entity-one entity-name="Person" value-field="newPerson">
+            <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+        </entity-one>
 
         <set field="partyId" from-field="parameters.userPartyId"/>
         <!-- billing address -->
         <if-compare field="parameters.USE_ADDRESS" operator="equals" value="false">
             <!-- address not used, do nothing -->
             <else>
+                <!-- SPECIAL: 2018-10-24: toName is based on the createUser behavior
+                    We'll only update it if the name changed... -->
+                <if>
+                    <condition>
+                        <or>
+                            <if-compare-field field="oldPerson.firstName" operator="not-equals" to-field="newPerson.firstName"/>
+                            <if-compare-field field="oldPerson.middleName" operator="not-equals" to-field="newPerson.middleName"/>
+                            <if-compare-field field="oldPerson.lastName" operator="not-equals" to-field="newPerson.lastName"/>
+                        </or>
+                    </condition>
+                    <then>
+                        <map-to-map map="newPerson" to-map="newPersonMap"/><!-- GenericValue field kludge due to fullName -->
+                        <call-map-processor in-map-name="newPersonMap" out-map-name="addressMap">
+                            <simple-map-processor name="address">
+                                <make-in-string field="fullName">
+                                    <in-field field="firstName"/><constant> </constant>
+                                    <in-field field="middleName"/><constant> </constant>
+                                    <in-field field="lastName"/>
+                                </make-in-string>
+                                <!-- NOTE: fullName is not an actual PostalAddress field, it is added conditionally by caller -->
+                                <process field="fullName"><copy to-field="toName"/></process>
+                            </simple-map-processor>
+                        </call-map-processor>
+                    </then>
+                </if>
+
                 <set field="cutn" value="" set-if-null="true"/>
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
                 <!-- <set field="cutn.contactMechPurposeTypeIdList[]" value="PAYMENT_LOCATION"/> -->

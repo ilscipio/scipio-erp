@@ -3,6 +3,7 @@ package com.ilscipio.scipio.setup;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -560,16 +561,19 @@ public final class SetupDataUtil {
 
         String productStoreId = (String) params.get("productStoreId");
         String orgPartyId = (String) params.get("orgPartyId");
+        boolean hasOrgPartyId = UtilValidate.isNotEmpty(orgPartyId);
 
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Store");
 
         GenericValue productStore = null;
+        List<GenericValue> productStoreList = hasOrgPartyId ? 
+                EntityQuery.use(delegator).from("ProductStore").where("payToPartyId", orgPartyId).cache(useCache).queryList() :
+                Collections.emptyList();
         if (UtilValidate.isNotEmpty(productStoreId) && !isNewOrFailedCreate) { // ignore ID if new or failed create
-            if (UtilValidate.isNotEmpty(orgPartyId)) {
-                Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "payToPartyId", orgPartyId);
-                List<GenericValue> productStores = delegator.findByAnd("ProductStore", fields, null, useCache);
-                if (UtilValidate.isNotEmpty(productStores)) {
-                    productStore = productStores.get(0);
+            if (hasOrgPartyId) {
+                List<GenericValue> targetProductStoreList = EntityUtil.filterByAnd(productStoreList, UtilMisc.toMap("productStoreId", productStoreId));
+                if (UtilValidate.isNotEmpty(targetProductStoreList)) {
+                    productStore = productStoreList.get(0);
                 }
             } else {
                 // we'll require a non-null orgPartyId here to simplify, so both parameters should be passed around
@@ -577,21 +581,21 @@ public final class SetupDataUtil {
         } else {
             // Unless asked to create a new store, read the first store by default;
             // in majority cases clients will create one store per company, so this saves some reloading.
-            if (UtilValidate.isNotEmpty(orgPartyId)) {
-                Map<String, Object> fields = UtilMisc.toMap("payToPartyId", orgPartyId);
-                List<GenericValue> productStores = delegator.findByAnd("ProductStore", fields, null, useCache);
-                if (UtilValidate.isNotEmpty(productStores)) {
-                    productStore = productStores.get(0);
-                    if (productStores.size() >= 2) {
+            if (hasOrgPartyId) {
+                if (UtilValidate.isNotEmpty(productStoreList)) {
+                    // FIXME: there should be a flag somewhere to indicate the default store...
+                    productStore = productStoreList.get(0);
+                    if (productStoreList.size() >= 2) {
                         Debug.logInfo("Setup: Organization '" + orgPartyId
-                            + "' has multiple ProductStores (" + productStores.size()
-                            + "); assume first as default for the setup process (productStoreId: "
+                            + "' has multiple ProductStores (" + productStoreList.size()
+                            + "); assuming first as default for the setup process (productStoreId: "
                             + productStore.getString("productStoreId") + ")", module);
                     }
                 }
             }
         }
 
+        result.put("productStoreList", productStoreList);
         if (productStore != null) {
             result.put("coreCompleted", true);
             productStoreId = productStore.getString("productStoreId");

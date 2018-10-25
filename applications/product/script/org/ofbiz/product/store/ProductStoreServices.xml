@@ -535,5 +535,29 @@ under the License.
             </else>
         </if-empty>
     </simple-method>
+
+    <simple-method method-name="ensureProductStoreRole" short-description="Ensure Product Store Store"><!-- SCIPIO -->
+        <entity-and entity-name="ProductStoreRole" list="psrList" filter-by-date="true">
+            <field-map field-name="partyId" from-field="parameters.partyId"/>
+            <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
+            <field-map field-name="roleTypeId" from-field="parameters.roleTypeId"/>
+        </entity-and>
+        <if-not-empty field="psrList">
+            <!-- TODO: log warning if psrList size > 1 -->
+            <first-from-list list="psrList" entry="psr"/>
+            <field-to-result field="psr.fromDate" result-name="fromDate"/>
+            <if-compare field="parameters.updateOptFields" operator="equals" type="Boolean" value="true">
+                <set-nonpk-fields map="parameters" value-field="psr"/>
+                <store-value value-field="psr"/>
+                <check-errors/>
+            </if-compare>
+            <else>
+                <set-service-fields service-name="createProductStoreRole" map="parameters" to-map="createCtx"/>
+                <call-service service-name="createProductStoreRole" in-map-name="createCtx">
+                    <result-to-result result-name="fromDate"/>
+                </call-service>
+            </else>
+        </if-not-empty>
+    </simple-method>
 </simple-methods>
 

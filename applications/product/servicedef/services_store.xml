@@ -102,6 +102,19 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <!-- SCIPIO: ensureProductStoreRole: new service, analogous to ensurePartyRole, but with extra complication due to fromDate and sequenceNum -->
+    <service name="ensureProductStoreRole" default-entity-name="ProductStoreRole" engine="simple" 
+        location="component://product/script/org/ofbiz/product/store/ProductStoreServices.xml" invoke="ensureProductStoreRole" auth="true">
+        <description>Ensure ProductStoreRole</description>
+        <permission-service service-name="productStoreGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="updateOptFields" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, optional fields such as sequenceNum will be updated on the existing record if different;
+                otherwise they are only set if creating a new record</description>
+        </attribute>
+        <override name="fromDate" optional="true" mode="INOUT"/><!-- NOTE: fromDate is only used if new role record created -->
+    </service>
 
     <!-- Product Store Catalog Services -->
     <service name="createProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="entity-auto" invoke="create" auth="true">

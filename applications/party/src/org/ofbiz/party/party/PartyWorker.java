@@ -601,6 +601,7 @@ public class PartyWorker {
     /**
      * SCIPIO: Returns an EntityCondition for RoleType that matches organization members.
      * Configurable in party.properties.
+     * NOTE: This could return null depending on config, in which case it means all roles.
      * Added 2018-10-26.
      */
     public static EntityCondition getOrganizationMemberRoleTypesCondition(Delegator delegator) { // SCIPIO
@@ -638,11 +639,15 @@ public class PartyWorker {
             if (roleTypeIds.size() > 0) {
                 orList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, roleTypeIds));
             }
-            EntityCondition mainCond = EntityCondition.makeCondition(orList, EntityOperator.OR);
+            EntityCondition mainCond = (orList.size() > 0) ? EntityCondition.makeCondition(orList, EntityOperator.OR) : null;
             
             if (excludeRoleTypeIds.size() > 0) {
-                mainCond = EntityCondition.makeCondition(mainCond, EntityOperator.AND,
-                        EntityCondition.makeCondition("roleTypeId", EntityOperator.NOT_IN, excludeRoleTypeIds));
+                if (mainCond != null) {
+                    mainCond = EntityCondition.makeCondition(mainCond, EntityOperator.AND,
+                            EntityCondition.makeCondition("roleTypeId", EntityOperator.NOT_IN, excludeRoleTypeIds));
+                } else {
+                    mainCond = EntityCondition.makeCondition("roleTypeId", EntityOperator.NOT_IN, excludeRoleTypeIds);
+                }
             }
             return mainCond;
         }

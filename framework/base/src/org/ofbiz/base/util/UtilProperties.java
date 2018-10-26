@@ -90,6 +90,11 @@ public final class UtilProperties implements Serializable {
     private static final UtilCache<String, Properties> propResourceCache = UtilCache.createUtilCache("properties.UtilPropertiesPropResourceCache");
 
     /**
+     * SCIPIO: A cache for Properties instances loaded with {@link #getPropertiesFromAllComponents(String)}.
+     */
+    private static final UtilCache<String, Properties> allComponentsPropResourceCache = UtilCache.createUtilCache("properties.UtilPropertiesAllComponentsPropResourceCache");
+
+    /**
      * SCIPIO: A read-only empty properties instance.
      */
     private static final Properties emptyProperties = new ExtendedProperties();
@@ -686,6 +691,60 @@ public final class UtilProperties implements Serializable {
         return mergedProperties;
     }
 
+    /**
+     * SCIPIO: Returns a merged Properties instance composed of the named resource from all components.
+     * Uses cache.
+     * <p>
+     * See freemarkerTransforms.properties for example.
+     * <p>
+     * Added 2018-10-26.
+     */
+    public static Properties getMergedPropertiesFromAllComponents(String resource) {
+        String cacheKey = resource;
+        if (cacheKey.endsWith(".properties")) {
+            cacheKey = cacheKey.substring(0, cacheKey.length() - ".properties".length());
+        }
+        Properties props = allComponentsPropResourceCache.get(cacheKey);
+        if (props == null) {
+            props = readMergedPropertiesFromAllComponents(resource); // no need for synchronization here
+            props = allComponentsPropResourceCache.putIfAbsentAndGet(cacheKey, props);
+        }
+        return props;
+    }
+
+    /**
+     * SCIPIO: Returns a merged Properties instance composed of the named resource from all components.
+     * No caching.
+     * <p>
+     * See freemarkerTransforms.properties for example.
+     * <p>
+     * Added 2018-10-26.
+     */
+    public static Properties readMergedPropertiesFromAllComponents(String resource) {
+        if (!"resource".endsWith(".properties")) {
+            resource = resource + ".properties";
+        }
+        Properties mergedProps = new ExtendedProperties();
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        Enumeration<URL> resources;
+        try {
+            resources = loader.getResources(resource);
+        } catch (IOException e) {
+            Debug.logError(e, "Could not load list of property files from all components for resource: " + resource, module);
+            return mergedProps;
+        }
+        while (resources.hasMoreElements()) {
+            URL propertyURL = resources.nextElement();
+            Properties props = UtilProperties.getProperties(propertyURL);
+            if (props == null) {
+                Debug.logError("Unable to load properties file: " + propertyURL, module);
+            } else {
+                mergedProps.putAll(props);
+            }
+        }
+        return mergedProps;
+    }
+    
     /** Returns the specified resource/properties file
      * @param url The URL to the resource
      * @return The properties file

@@ -306,6 +306,11 @@ under the License.
                             <xs:element minOccurs="0" name="response-settings">
                                 <xs:complexType>
                                     <xs:sequence>
+                                        <xs:element name="view-last">
+                                            <xs:complexType>
+                                                <xs:attribute type="xs:string" name="default-view"/>
+                                             </xs:complexType>
+                                        </xs:element>
                                         <xs:element minOccurs="0" ref="allow-view-save-default"/>
                                     </xs:sequence>
                                  </xs:complexType>

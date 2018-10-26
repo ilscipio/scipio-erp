@@ -834,6 +834,9 @@ public class RequestHandler {
                 } else if (UtilValidate.isNotEmpty(nextRequestResponseValue)) {
                     viewName = nextRequestResponseValue;
                 }
+                if (viewName == null || viewName.isEmpty()) { // SCIPIO: 2018-10-26: Default/fallback view
+                    viewName = getDefaultViewLastView(viewName, nextRequestResponse, requestMap, controllerConfig, request);
+                }
                 if (urlParams != null) {
                     for (Map.Entry<String, Object> urlParamEntry: urlParams.entrySet()) {
                         String key = urlParamEntry.getKey();
@@ -843,11 +846,6 @@ public class RequestHandler {
                             request.setAttribute(key, urlParamEntry.getValue());
                         }
                     }
-                }
-                // SCIPIO: Sanity check
-                if (viewName == null || viewName.isEmpty()) {
-                    Debug.logError("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("view-last-noparam".equals(nextRequestResponse.type)) {
@@ -866,10 +864,8 @@ public class RequestHandler {
                  } else if (UtilValidate.isNotEmpty(nextRequestResponseValue)) {
                      viewName = nextRequestResponseValue;
                  }
-                 // SCIPIO: Sanity check
-                 if (viewName == null || viewName.isEmpty()) {
-                     Debug.logError("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")", module);
-                     throw new RequestHandlerException("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")");
+                 if (viewName == null || viewName.isEmpty()) { // SCIPIO: 2018-10-26: Default/fallback view
+                     viewName = getDefaultViewLastView(viewName, nextRequestResponse, requestMap, controllerConfig, request);
                  }
                  renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("view-home".equals(nextRequestResponse.type)) {
@@ -884,15 +880,13 @@ public class RequestHandler {
                     viewName = (String) session.getAttribute("_HOME_VIEW_NAME_");
                     urlParams = UtilGenerics.<String, Object>checkMap(session.getAttribute("_HOME_VIEW_PARAMS_"));
                 }
+                if (viewName == null || viewName.isEmpty()) { // SCIPIO: 2018-10-26: Default/fallback view
+                    viewName = getDefaultViewLastView(viewName, nextRequestResponse, requestMap, controllerConfig, request);
+                }
                 if (urlParams != null) {
                     for (Map.Entry<String, Object> urlParamEntry: urlParams.entrySet()) {
                         request.setAttribute(urlParamEntry.getKey(), urlParamEntry.getValue());
                     }
-                }
-                // SCIPIO: Sanity check
-                if (viewName == null || viewName.isEmpty()) {
-                    Debug.logError("Scipio: view-home view name is empty (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("none".equals(nextRequestResponse.type)) {
@@ -903,6 +897,27 @@ public class RequestHandler {
         if (originalRequestMap.metrics != null) {
             originalRequestMap.metrics.recordServiceRate(1, System.currentTimeMillis() - startTime);
         }
+    }
+
+    /**
+     * SCIPIO: Checks default view for view-last and view-home.
+     * Added 2018-10-26.
+     */
+    String getDefaultViewLastView(String viewName, ConfigXMLReader.RequestResponse nextRequestResponse, RequestMap requestMap, 
+            ControllerConfig controllerConfig, HttpServletRequest request) throws RequestHandlerException {
+        try {
+            viewName = controllerConfig.getDefaultViewLastView();
+        } catch (WebAppConfigurationException e) {
+            Debug.logError(e, module);
+            viewName = null;
+        }
+        if (viewName != null) {
+            Debug.logWarning("[uri: " + requestMap.uri + "] " + nextRequestResponse.type + " response could not determine view"
+                    + "; showing controller default-view: " + viewName, module);
+            return viewName;
+        }
+        Debug.logError("[uri: " + requestMap.uri + "] " + nextRequestResponse.type + " response could not determine view", module);
+        throw new RequestHandlerException("Could not determine a view to render");
     }
 
     /**

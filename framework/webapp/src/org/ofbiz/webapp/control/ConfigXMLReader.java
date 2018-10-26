@@ -292,6 +292,10 @@ public class ConfigXMLReader {
         protected ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
         protected Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
         protected List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
+        protected String defaultViewLastView; // SCIPIO: added 2018-10-26
+        
+        // SCIPIO: DEV NOTE:
+        // If you add anything to this class, make sure to reflect it in ResolvedControllerConfig further below!
 
         public ControllerConfig(URL url) throws WebAppConfigurationException {
             this.url = url;
@@ -931,6 +935,44 @@ public class ConfigXMLReader {
             return result;
         }
 
+        /**
+         * SCIPIO: returns view-last default-view-name.
+         */
+        public String getDefaultViewLastView() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    String result;
+                    if (include.recursive) {
+                        result = controllerConfig.getDefaultViewLastView();
+                    } else {
+                        result = controllerConfig.defaultViewLastView;
+                    }
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+            if (defaultViewLastView != null) {
+                return defaultViewLastView;
+            }
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    String result;
+                    if (include.recursive) {
+                        result = controllerConfig.getDefaultViewLastView();
+                    } else {
+                        result = controllerConfig.defaultViewLastView;
+                    }
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
+        
         private void loadGeneralConfig(Element rootElement) {
             this.errorpage = UtilXml.childElementValue(rootElement, "errorpage");
             this.statusCode = UtilXml.childElementValue(rootElement, "status-code");
@@ -1008,6 +1050,7 @@ public class ConfigXMLReader {
             }
             // SCIPIO: new
             Boolean allowViewSaveDefault = null;
+            String defaultViewLastView = null;
             ArrayList<NameFilter<Boolean>> allowViewSaveViewNameFilters = null;
             Element commonSettingsElem = UtilXml.firstChildElement(rootElement, "common-settings");
             if (commonSettingsElem != null) {
@@ -1028,11 +1071,16 @@ public class ConfigXMLReader {
                             }
                             allowViewSaveViewNameFilters.trimToSize();
                         }
+                        Element viewLastElement = UtilXml.firstChildElement(responseSettingsElem, "view-last");
+                        if (viewLastElement != null) {
+                            defaultViewLastView = viewLastElement.getAttribute("default-view");
+                        }
                     }
                 }
             }
             this.allowViewSaveDefault = allowViewSaveDefault;
             this.allowViewSaveViewNameFilters = allowViewSaveViewNameFilters;
+            this.defaultViewLastView = (UtilValidate.isNotEmpty(defaultViewLastView) && !"_none_".equals(defaultViewLastView)) ? defaultViewLastView : null;
         }
 
         private void loadHandlerMap(Element rootElement) {
@@ -1202,6 +1250,7 @@ public class ConfigXMLReader {
             this.allowViewSaveDefault = super.getAllowViewSaveDefault(); // SCIPIO: added 2018-06-13
             this.viewAsJsonConfigOrDefault = super.getViewAsJsonConfigOrDefault();
             this.allowViewSaveViewNameFilters = getOptList(super.getAllowViewSaveViewNameFilters()); // SCIPIO: added 2018-06-13
+            this.defaultViewLastView = super.getDefaultViewLastView();
         }
 
         private static <K, V> Map<K, V> getOptMap(Map<K, V> map) {
@@ -1324,6 +1373,11 @@ public class ConfigXMLReader {
         @Override
         public List<NameFilter<Boolean>> getAllowViewSaveViewNameFilters() throws WebAppConfigurationException {
             return allowViewSaveViewNameFilters;
+        }
+
+        @Override
+        public String getDefaultViewLastView() throws WebAppConfigurationException {
+            return defaultViewLastView;
         }
     }
 

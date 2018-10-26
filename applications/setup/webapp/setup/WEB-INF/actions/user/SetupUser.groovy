@@ -188,10 +188,15 @@ context.userSelected = userSelected;
 
 context.contactMechsCompleted = userData.contactMechsCompleted;
 
-// FIXME: this omits important roles such as EMPLOYEE
-List<GenericValue> userPartyRoles = from("RoleType").where(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null)).orderBy(["description"]).cache().query();
+// FIXME: improve list further...
+List<GenericValue> userPartyRoles = from("RoleType")
+    .where(EntityCondition.makeCondition(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null), 
+        EntityOperator.OR,
+        EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["PERSON_ROLE", "ORGANIZATION_ROLE", "VENDOR", "EMPLOYEE"])))
+    .orderBy(["description"]).cache().query();
+
 if (userPartyRelationship) {
-    // Ensure our roleTypeId is in the list
+    // Ensure our current roleTypeId is in the list
     found = false;
     for(roleType in userPartyRoles) {
         if (roleType.roleTypeId == relRoleTypeId) {

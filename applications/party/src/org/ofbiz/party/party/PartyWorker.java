@@ -20,6 +20,9 @@
 package org.ofbiz.party.party;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +35,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -580,4 +584,67 @@ public class PartyWorker {
         return findParty(delegator, idToFind, null);
     }
 
+    /**
+     * SCIPIO: Returns a list of RoleType suitable for organization members.
+     * Configurable in party.properties.
+     * Added 2018-10-26.
+     */
+    public static List<GenericValue> getOrganizationMemberRoleTypes(Delegator delegator, List<String> orderBy) {
+        try {
+            return EntityQuery.use(delegator).from("RoleType").where(getOrganizationMemberRoleTypesCondition(delegator)).orderBy(orderBy).cache().queryList();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * SCIPIO: Returns an EntityCondition for RoleType that matches organization members.
+     * Configurable in party.properties.
+     * Added 2018-10-26.
+     */
+    public static EntityCondition getOrganizationMemberRoleTypesCondition(Delegator delegator) { // SCIPIO
+        return OrgMemberRoleTypeSpecs.orgMemberRoleTypesCondition;
+    }
+
+    private static class OrgMemberRoleTypeSpecs { // SCIPIO
+        private static final EntityCondition orgMemberRoleTypesCondition = makeOrganizationMemberRoleTypesCondition();
+        
+        private static EntityCondition makeOrganizationMemberRoleTypesCondition() {
+            return makeOrganizationMemberRoleTypesCondition(readIdListProp("roleTypeId"), readIdListProp("parentTypeId"), readIdListProp("exclude.roleTypeId"));
+        }
+
+        private static List<String> readIdListProp(String propSuffix) {
+            String strValue = UtilProperties.getPropertyValue("party", "org.member.roles." + propSuffix);
+            if (UtilValidate.isEmpty(strValue)) {
+                return Collections.emptyList();
+            }
+            return Arrays.asList(strValue.split(","));
+        }
+
+        private static EntityCondition makeOrganizationMemberRoleTypesCondition(List<String> roleTypeIds, List<String> parentTypeIds, List<String> excludeRoleTypeIds) {
+            boolean includeNullParentType = parentTypeIds.contains("null");
+            if (includeNullParentType) {
+                parentTypeIds = new ArrayList<>(parentTypeIds);
+                parentTypeIds.remove("null");
+            }
+            List<EntityCondition> orList = new ArrayList<>();
+            if (includeNullParentType) {
+                orList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null));
+            }
+            if (parentTypeIds.size() > 0) {
+                orList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, parentTypeIds));
+            }
+            if (roleTypeIds.size() > 0) {
+                orList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, roleTypeIds));
+            }
+            EntityCondition mainCond = EntityCondition.makeCondition(orList, EntityOperator.OR);
+            
+            if (excludeRoleTypeIds.size() > 0) {
+                mainCond = EntityCondition.makeCondition(mainCond, EntityOperator.AND,
+                        EntityCondition.makeCondition("roleTypeId", EntityOperator.NOT_IN, excludeRoleTypeIds));
+            }
+            return mainCond;
+        }
+    }
 }

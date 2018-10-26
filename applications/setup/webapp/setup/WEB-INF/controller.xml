@@ -201,6 +201,20 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
+    
+        <!-- AcctgTransType -->
+    <request-map uri="setupCreateAcctgTransType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCustomTimePeriod"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupCreateAcctgTransEntryType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCustomTimePeriod"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
 
         <!-- Preferences -->
     <request-map uri="setupCreateAccountingPreferences">

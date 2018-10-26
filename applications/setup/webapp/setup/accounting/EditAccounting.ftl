@@ -128,5 +128,5 @@ under the License.
 	<@tab id="journalTab" title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
 	
 	<@tab id="taxAuthTab" title="Configure Tax Authorities"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditTaxAuthorities"/></@tab>
-</@tabs>     
+</@tabs>
 

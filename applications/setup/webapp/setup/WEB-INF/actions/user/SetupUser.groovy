@@ -193,7 +193,7 @@ if (UtilProperties.getPropertyAsBoolean("scipiosetup", "user.roles.show.all", fa
     userPartyRoles = from("RoleType").orderBy(["description"]).cache().query();
 } else {
     // NOTE: The roles to include are defined in party.properties
-    userPartyRoles = org.ofbiz.party.party.PartyWorker.getOrganizationMemberRoleTypes(delegator, ["description"]);
+    userPartyRoles = org.ofbiz.party.party.PartyWorker.getRoleTypesForGroup(delegator, "ORGANIZATION_MEMBER", ["description"]);
 }
 
 if (userPartyRelationship) {

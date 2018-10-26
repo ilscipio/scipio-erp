@@ -28,6 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 
 import javax.servlet.ServletRequest;
 
@@ -585,13 +587,13 @@ public class PartyWorker {
     }
 
     /**
-     * SCIPIO: Returns a list of RoleType suitable for organization members.
+     * SCIPIO: Returns a list of RoleType for the given role group, e.g., ORGANIZATION_MEMBER.
      * Configurable in party.properties.
      * Added 2018-10-26.
      */
-    public static List<GenericValue> getOrganizationMemberRoleTypes(Delegator delegator, List<String> orderBy) {
+    public static List<GenericValue> getRoleTypesForGroup(Delegator delegator, String roleGroup, List<String> orderBy) {
         try {
-            return EntityQuery.use(delegator).from("RoleType").where(getOrganizationMemberRoleTypesCondition(delegator)).orderBy(orderBy).cache().queryList();
+            return EntityQuery.use(delegator).from("RoleType").where(getRoleTypesForGroupCondition(delegator, roleGroup)).orderBy(orderBy).cache().queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return Collections.emptyList();
@@ -604,26 +606,53 @@ public class PartyWorker {
      * NOTE: This could return null depending on config, in which case it means all roles.
      * Added 2018-10-26.
      */
-    public static EntityCondition getOrganizationMemberRoleTypesCondition(Delegator delegator) { // SCIPIO
-        return OrgMemberRoleTypeSpecs.orgMemberRoleTypesCondition;
+    public static EntityCondition getRoleTypesForGroupCondition(Delegator delegator, String roleGroup) {
+        return OrgMemberRoleTypeSpecs.getRoleTypesForGroupCondition(delegator, roleGroup);
     }
 
     private static class OrgMemberRoleTypeSpecs { // SCIPIO
-        private static final EntityCondition orgMemberRoleTypesCondition = makeOrganizationMemberRoleTypesCondition();
-        
-        private static EntityCondition makeOrganizationMemberRoleTypesCondition() {
-            return makeOrganizationMemberRoleTypesCondition(readIdListProp("roleTypeId"), readIdListProp("parentTypeId"), readIdListProp("exclude.roleTypeId"));
+        static Map<String, Optional<EntityCondition>> roleGroupConditions = Collections.emptyMap();
+
+        static EntityCondition getRoleTypesForGroupCondition(Delegator delegator, String roleGroup) {
+            Map<String, Optional<EntityCondition>> condMap = roleGroupConditions;
+            Optional<EntityCondition> cond = condMap.get(roleGroup);
+            if (cond == null) {
+                // NOTE: no need to synchronize
+                cond = Optional.ofNullable(makeOrganizationMemberRoleTypesCondition(delegator, roleGroup));
+                condMap = new HashMap<>(condMap);
+                condMap.put(roleGroup, cond);
+                roleGroupConditions = Collections.unmodifiableMap(condMap);
+            }
+            return cond.orElse(null);
         }
 
-        private static List<String> readIdListProp(String propSuffix) {
-            String strValue = UtilProperties.getPropertyValue("party", "org.member.roles." + propSuffix);
+        static EntityCondition makeOrganizationMemberRoleTypesCondition(Delegator delegator, String roleGroup) {
+            Properties roleGroupDefs = UtilProperties.getMergedPropertiesFromAllComponents("rolegroups");
+            String propPrefix = "rolegroup." + roleGroup + ".";
+            EntityCondition cond = makeOrganizationMemberRoleTypesCondition(readIdListProp(roleGroupDefs, propPrefix + "include.roleTypeId"), 
+                    readIdListProp(roleGroupDefs, propPrefix + "include.parentTypeId"), 
+                    readIdListProp(roleGroupDefs, propPrefix + "exclude.roleTypeId"));
+            if (cond != null) {
+                return cond;
+            }
+            // check to make sure it actually existed
+            for(String propName : roleGroupDefs.stringPropertyNames()) {
+                if (propName.startsWith(propPrefix)) {
+                    return null;
+                }
+            }
+            throw new IllegalArgumentException("Invalid role group name: " + roleGroup + " (not found in party.properties)");
+        }
+
+        static List<String> readIdListProp(Properties roleGroupDefs, String propName) {
+            String strValue = UtilProperties.getPropertyValue(roleGroupDefs, propName);
             if (UtilValidate.isEmpty(strValue)) {
                 return Collections.emptyList();
             }
             return Arrays.asList(strValue.split(","));
         }
 
-        private static EntityCondition makeOrganizationMemberRoleTypesCondition(List<String> roleTypeIds, List<String> parentTypeIds, List<String> excludeRoleTypeIds) {
+        static EntityCondition makeOrganizationMemberRoleTypesCondition(List<String> roleTypeIds, List<String> parentTypeIds, List<String> excludeRoleTypeIds) {
             boolean includeNullParentType = parentTypeIds.contains("null");
             if (includeNullParentType) {
                 parentTypeIds = new ArrayList<>(parentTypeIds);

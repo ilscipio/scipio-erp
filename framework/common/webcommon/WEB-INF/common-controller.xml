@@ -46,6 +46,8 @@ under the License.
     <common-settings>
         <request-map-settings>
             <response-settings>
+                <!-- SCIPIO: 2018-10-26: default view for view-last, view-last-noparam and view-home when not found by other means -->
+                <view-last default-view="main"/>
                 <!-- SCIPIO: 2018-06: When the response view-name matches "Lookup*", 
                     set allow-view-save to false instead of true, to prevent interference with "view-last" responses -->
                 <allow-view-save-default>

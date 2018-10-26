@@ -53,6 +53,12 @@ public class PeriodServices {
         Timestamp findDate = (Timestamp) context.get("findDate");
         Locale locale = (Locale) context.get("locale");
 
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        // SCIPIO (10/26/2018): This is often called assuming that only orgPartyId is passed causing issues later
+        if (UtilValidate.isEmpty(organizationPartyId) && UtilValidate.isEmpty(periodTypeId) && UtilValidate.isEmpty(findDate)) {
+            return result;
+        }
+
         // default findDate to now
         if (findDate == null) {
             findDate = UtilDateTime.nowTimestamp();
@@ -60,7 +66,6 @@ public class PeriodServices {
 
         Timestamp lastClosedDate = null; // return parameters
         GenericValue lastClosedTimePeriod = null;
-        Map<String, Object> result = ServiceUtil.returnSuccess();
 
         try {
             // try to get the ending date of the most recent accounting time period before

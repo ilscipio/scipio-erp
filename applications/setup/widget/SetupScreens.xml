@@ -591,7 +591,7 @@
                                         <not><if-empty field="topGlAccountId"/></not>
                                     </condition> -->
                                     <widgets> 
-                                    	<screenlet>                                            
+                                        <screenlet>                                            
                                             <platform-specific>
                                                 <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
                                             </platform-specific>
@@ -626,10 +626,10 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAcctgPreferences.groovy"/>                
             </actions>
             <widgets>
-				<screenlet>
-					<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAcctgPreferences.ftl"/></html></platform-specific>
-				</screenlet>		          
-            </widgets>           
+                <screenlet>
+                    <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAcctgPreferences.ftl"/></html></platform-specific>
+                </screenlet>
+            </widgets>
         </section>
     </screen>
     <screen name="EditGLAccountTree">
@@ -638,19 +638,19 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLAccountTree.groovy"/>                
             </actions>
             <widgets>            
-            	<section>
-            		 <condition>
-		                <and>
-		                    <not><if-empty field="topGlAccountId"/></not>
-		                    <not><if-empty field="treeMenuData"/></not>
-		                </and>
-		            </condition>
-		            <widgets>
-						<screenlet>
-							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccountTree.ftl"/></html></platform-specific>
-						</screenlet>
-					</widgets>						
-            	</section>
+                <section>
+                     <condition>
+                        <and>
+                            <not><if-empty field="topGlAccountId"/></not>
+                            <not><if-empty field="treeMenuData"/></not>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <screenlet>
+                            <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccountTree.ftl"/></html></platform-specific>
+                    </screenlet>
+            </widgets>
+                </section>
             </widgets>           
         </section>
     </screen>
@@ -667,10 +667,10 @@
     <screen name="EditFiscalPeriods">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>
             </actions>
             <widgets>
-            	<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
             </widgets>           
         </section>
     </screen>
@@ -689,13 +689,13 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditJournals.groovy"/>                
             </actions>
             <widgets>
-            	<section>
-		            <widgets>
-						<screenlet>
-							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditJournals.ftl"/></html></platform-specific>
-						</screenlet>
-		            </widgets>
-            	</section>
+                <section>
+                    <widgets>
+                        <screenlet>
+                            <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditJournals.ftl"/></html></platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
             </widgets>           
         </section>
     </screen>
@@ -706,14 +706,14 @@
                 <!-- <entity-and entity-name="DatevDataCategory" list="datevDataCategories"></entity-and> -->
             </actions>
             <widgets>
-            	<section>
-		            <widgets>
-						<screenlet>
-							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAccountingTransactions.ftl"/></html></platform-specific>
-						</screenlet>
-		            </widgets>
-            	</section>
-            </widgets>           
+                <section>
+                    <widgets>
+                        <screenlet>
+                            <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAccountingTransactions.ftl"/></html></platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
+            </widgets>
         </section>
     </screen>
     <screen name="EditTaxAuthorities">
@@ -730,7 +730,7 @@
                         </screenlet>
                     </widgets>
                 </section>
-            </widgets>           
+            </widgets>
         </section>
     </screen>
     

@@ -109,7 +109,7 @@
     <request-map uri="setupUser">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
-        <response name="success" type="view" value="SetupUser"/>
+        <response name="success" type="view" value="SetupUser" save-home-view="true"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
     <request-map uri="setupCreateUser">
@@ -401,7 +401,7 @@
         <response name="finished" type="view" value="SetupFinished"/>
         
         <response name="organization" type="view" value="SetupOrganization" save-home-view="true"/>
-        <response name="user" type="view" value="SetupUser"/>
+        <response name="user" type="view" value="SetupUser" save-home-view="true"/>
         <response name="accounting" type="view" value="SetupAccounting"/>
         <response name="facility" type="view" value="SetupFacility"/>
         <response name="catalog" type="view" value="SetupCatalog"/>

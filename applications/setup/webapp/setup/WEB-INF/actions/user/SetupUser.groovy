@@ -1,11 +1,12 @@
-import org.apache.commons.lang.StringUtils
-import org.ofbiz.base.util.Debug
-import org.ofbiz.entity.GenericValue
-import org.ofbiz.entity.condition.EntityCondition
-import org.ofbiz.entity.condition.EntityOperator
-import org.ofbiz.entity.util.EntityQuery
-import org.ofbiz.entity.util.EntityUtil
-import org.ofbiz.product.store.ProductStoreWorker
+import org.apache.commons.lang.StringUtils;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.store.ProductStoreWorker;
 
 import com.ilscipio.scipio.setup.*;
 
@@ -188,12 +189,12 @@ context.userSelected = userSelected;
 
 context.contactMechsCompleted = userData.contactMechsCompleted;
 
-// FIXME: improve list further...
-List<GenericValue> userPartyRoles = from("RoleType")
-    .where(EntityCondition.makeCondition(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null), 
-        EntityOperator.OR,
-        EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["PERSON_ROLE", "ORGANIZATION_ROLE", "VENDOR", "EMPLOYEE"])))
-    .orderBy(["description"]).cache().query();
+if (UtilProperties.getPropertyAsBoolean("scipiosetup", "user.roles.show.all", false)) {
+    userPartyRoles = from("RoleType").orderBy(["description"]).cache().query();
+} else {
+    // NOTE: The roles to include are defined in party.properties
+    userPartyRoles = org.ofbiz.party.party.PartyWorker.getOrganizationMemberRoleTypes(delegator, ["description"]);
+}
 
 if (userPartyRelationship) {
     // Ensure our current roleTypeId is in the list

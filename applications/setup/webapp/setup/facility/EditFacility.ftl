@@ -122,12 +122,25 @@
             <@field type="generic" label=(rawLabel('CommonOr')+":")>
                 <@modal id="setupFacility-selectShipAddr" linkClass="+${styles.link_nav!} ${styles.action_show!}" label=uiLabelMap.SetupSelectAddress>
                   <div class="setup-addresslist">
+                       <@script>
+                            function editFacilityAddrCloseModal(elemSel) {
+                                try {
+                                    $(elemSel).foundation('reveal', 'close');
+                                } catch(err) {
+                                    try {
+                                        $(elemSel).modal('hide');
+                                    } catch(err) {
+                                        //t.dispatchEvent(event);
+                                    }
+                                }
+                            }
+                        </@script>
                     <#list srcPostalAddressList as postalAddress>
                       <div class="setup-addressentry">
                         <@formattedAddressBasic address=postalAddress 
                             purposes=(srcContactMechPurposeMap[rawString(postalAddress.contactMechId)]!)
                             emphasis=true/><br/>
-                        <a href="javascript:setFacilityShipAddress(srcPostalAddressList[${postalAddress?index}]);jQuery('#modal_setupFacility-selectShipAddr').foundation('reveal', 'close');void(0);"<#rt/> 
+                        <a href="javascript:setFacilityShipAddress(srcPostalAddressList[${postalAddress?index}]);editFacilityAddrCloseModal('#modal_setupFacility-selectShipAddr');void(0);"<#rt/> 
                             <#lt/> class="${styles.link_run_local!} ${styles.action_select!}">${uiLabelMap.CommonSelect}</a>
                       </div>
                     </#list>

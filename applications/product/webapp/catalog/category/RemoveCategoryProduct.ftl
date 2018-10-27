@@ -11,6 +11,14 @@
 </@modal>
 <@script>
     $(document).ready(function() {
-        $('#modal_removeExpiredCategoryProductMembers').foundation('reveal','open');
+        try {
+            $('#modal_removeExpiredCategoryProductMembers').foundation('reveal','open');
+        } catch(err) {
+            try {
+                $('#modal_removeExpiredCategoryProductMembers').modal('show');
+            } catch(err) {
+                //t.dispatchEvent(event);
+            }
+        }
     });
 </@script>

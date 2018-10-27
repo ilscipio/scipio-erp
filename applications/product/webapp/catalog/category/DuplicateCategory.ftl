@@ -25,6 +25,14 @@
 </@modal>
 <@script>
     $(document).ready(function() {
-        $('#modal_duplicateProductCategory').foundation('reveal','open');
+        try {
+            $('#modal_duplicateProductCategory').foundation('reveal','open');
+        } catch(err) {
+            try {
+                $('#modal_duplicateProductCategory').modal('show');
+            } catch(err) {
+                //t.dispatchEvent(event);
+            }
+        }
     });
 </@script>

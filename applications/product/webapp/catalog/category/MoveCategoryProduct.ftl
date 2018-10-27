@@ -29,6 +29,14 @@
 </@modal>
 <@script>
     $(document).ready(function() {
-        $('#modal_copyCategoryProductMembers').foundation('reveal','open');
+        try {
+            $('#modal_copyCategoryProductMembers').foundation('reveal','open');
+        } catch(err) {
+            try {
+                $('#modal_copyCategoryProductMembers').modal('show');
+            } catch(err) {
+                //t.dispatchEvent(event);
+            }
+        }
     });
 </@script>

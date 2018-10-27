@@ -161,7 +161,15 @@ under the License.
         <@script>
             $(document).ready(function() {
                 $('#shipmentPackageContent_${shipmentPackageData_index}').click(function() {
-                    $('#modal_shipmentPackageContent_${shipmentPackageData_index}').foundation('reveal','open');
+                    try {
+                        $('#modal_shipmentPackageContent_${shipmentPackageData_index}').foundation('reveal','open');
+                    } catch(err) {
+                        try {
+                            $('#modal_shipmentPackageContent_${shipmentPackageData_index}').modal('show');
+                        } catch(err) {
+                            //t.dispatchEvent(event);
+                        }
+                    }
                 });
             });
         </@script>

@@ -60,7 +60,15 @@
         <@script>
             $(document).ready(function() { 
                 console.log("before revealing...");
-                $('#modal_addExistingContent').foundation('reveal','open');
+                try {
+                    $('#modal_addExistingContent').foundation('reveal','open');
+                } catch(err) {
+                    try {
+                        $('#modal_addExistingContent').modal('show');
+                    } catch(err) {
+                        //t.dispatchEvent(event);
+                    }
+                }
             });
         </@script>
     </#if>

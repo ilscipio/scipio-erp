@@ -112,9 +112,12 @@ under the License.
         </#if>    	      
     </#if>
 
-    <#if !createAllowPassword?has_content || (createAllowPassword?has_content && createAllowPassword)>    	      
-      <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=(!userUserLogin.userLoginId?has_content)!true />      
-      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=(!userUserLogin.userLoginId?has_content)!true />		      
+    <#if (!createAllowPassword?has_content) || createAllowPassword>
+      <#-- We need to allow empty for any existing user even if has no login
+      <#assign pwRequired = ((!userUserLogin.userLoginId?has_content)!true)>-->
+      <#assign pwRequired = (!userParty??)>
+      <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=pwRequired />      
+      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=pwRequired />		      
     <#else>
       <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
     </#if>

@@ -64,15 +64,18 @@ public abstract class SetupEvents {
 
         worker.setEffectiveStep(SetupWorker.ERROR_STEP); // in case fail
 
-        String thisRequestUri = (String) request.getAttribute("thisRequestUri");
-        if (thisRequestUri == null || !thisRequestUri.startsWith("setup")) {
-            Debug.logError("Setup: setSubmittedSetupStep: controller error: thisRequestUri is not in \"setup[Step]\" name format"
-                    + " (valid steps: " + worker.getSteps() + ")", module);
-            request.setAttribute("_ERROR_MESSAGE_", "INTERNAL ERROR: please contact developers"); // shouldn't happen (TODO: localize)
-            return "error";
+        String setupStep = (String) request.getAttribute("scpSetEffSetupStep");
+        if (setupStep == null) {
+            String thisRequestUri = (String) request.getAttribute("thisRequestUri");
+            if (thisRequestUri == null || !thisRequestUri.startsWith("setup")) {
+                Debug.logError("Setup: setSubmittedSetupStep: controller error: thisRequestUri is not in \"setup[Step]\" name format"
+                        + " (valid steps: " + worker.getSteps() + ")", module);
+                request.setAttribute("_ERROR_MESSAGE_", "INTERNAL ERROR: please contact developers"); // shouldn't happen (TODO: localize)
+                return "error";
+            }
+            setupStep = thisRequestUri.substring("setup".length()).toLowerCase();
         }
 
-        String setupStep = thisRequestUri.substring("setup".length()).toLowerCase();
         if (!worker.getAllStepValues().contains(setupStep)) {
             Debug.logError("Setup: setSubmittedSetupStep: controller error: thisRequestUri \"setup[Step]\" name does not designate a valid setup step "
                     + " (valid steps: " + worker.getSteps() + ")", module);

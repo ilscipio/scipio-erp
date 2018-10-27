@@ -88,6 +88,7 @@
     <!-- Organization step -->
     <request-map uri="setupOrganization">
         <security https="true" auth="true"/>
+        <!-- DEV NOTE: This event is also called in the SetupOrganizationMain screen; code must match! -->
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupOrganization" save-home-view="true"/><!-- save-home-view is needed in case EditContactMech is accessed -->
         <response name="error" type="view" value="SetupError"/>
@@ -508,6 +509,10 @@
     <view-map name="SetupStore" type="screen" page="component://setup/widget/SetupScreens.xml#SetupStore"/>
     <view-map name="SetupFinished" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFinished"/>
     <view-map name="SetupError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupError"/>
+
+    <!-- SCIPIO: Special overrides -->
+    <view-map name="main" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganizationMain"/>
+    <view-map name="SetupOrganizationMain" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganizationMain"/>
 
     <!-- Lookup request mappings -->
     <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>

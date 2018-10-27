@@ -435,6 +435,59 @@
             </widgets>
         </section>
     </screen>
+    <!-- SCIPIO: A version of SetupOrganization that also runs the events from the "setupOrganization" URI.
+        This is used as a fallback so it can fully replace the "main" view on its own. -->
+    <screen name="SetupOrganizationMain">
+        <section>
+            <actions>
+                <!-- Run the event code -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    final module = "SetupOrganizationMain.groovy";
+                    errorMsg = null;
+                    try {
+                        request.setAttribute("scpSetEffSetupStep", "organization");
+                        result = com.ilscipio.scipio.setup.SetupEvents.setEffectiveSetupStep(request, response);
+                        if ("error".equals(result)) {
+                            errorMsg = request.getAttribute("_ERROR_MESSAGE_");
+                            request.removeAttribute("_ERROR_MESSAGE_");
+                        }
+                    } catch(Exception e) {
+                        Debug.logError(e, "Error setting effective setup step", module);
+                        errorMsg = e.toString();
+                    }
+                    if (errorMsg) {
+                        errorMsg = UtilProperties.getMessage("ScipioSetupUiLabels", "SetupSetupWizardError",
+                            context.locale) + ": " + errorMsg;
+                        errorMessageList = context.errorMessageList;
+                        if (errorMessageList == null) {
+                            errorMessageList = [];
+                            context.errorMessageList = errorMessageList;
+                        }
+                        errorMessageList.add(errorMsg)
+                    }
+                    context.setStepSuccess = !errorMsg;
+                ]]></script>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-true field="setStepSuccess"/>
+                    </condition>
+                    <widgets>
+                        <include-screen name="SetupOrganization"/>
+                    </widgets>
+                    <fail-widgets>
+                        <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                            <decorator-section name="body">
+                                <label style="common-msg-error" text="${uiLabelMap.CommonErrorOccurredContactSupport}"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
     <screen name="SelectOrganization">
         <section>
             <actions>

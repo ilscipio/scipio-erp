@@ -226,6 +226,11 @@
         <value xml:lang="en">Setup Wizard</value>
         <value xml:lang="fr">Assistant de configuration</value>
     </property>
+    <property key="SetupSetupWizardError">
+        <value xml:lang="de">Fehler beim Setup-Assistenten</value>
+        <value xml:lang="en">Setup Wizard error</value>
+        <value xml:lang="fr">Erreur de l'assistant d'installation</value>
+    </property>
     <property key="SetupSkip">
         <value xml:lang="de">Überspringen</value>
         <value xml:lang="en">Skip</value>

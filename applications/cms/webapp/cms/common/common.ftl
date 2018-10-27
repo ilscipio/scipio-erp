@@ -222,7 +222,11 @@ Common CMS editor macros and utilities
     function displayCmsErrorMessage(errorMsg) {
         if (errorMsg) {
             var alertBox = '<@compress_single_line><@alert type="error">'+errorMsg+'</@alert></@compress_single_line>';
-            $("#main-alert-box").append(alertBox).foundation();
+            var boxObj = $("#main-alert-box").append(alertBox);
+            try {
+                boxObj.foundation();
+            } catch(err) {
+            }
         }
     }
     
@@ -237,7 +241,11 @@ Common CMS editor macros and utilities
     function displayCmsEventMessage(eventMsg) {
         if (eventMsg) {
             var alertBox = '<@compress_single_line><@alert type="success">'+eventMsg+'</@alert></@compress_single_line>';
-            $("#main-alert-box").append(alertBox).foundation();
+            var boxObj = $("#main-alert-box").append(alertBox);
+            try {
+                boxObj.foundation();
+            } catch(err) {
+            }
         }
     }
     

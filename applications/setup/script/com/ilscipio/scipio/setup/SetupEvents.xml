@@ -404,6 +404,9 @@
         <!-- see if we should continue now... -->
         <check-errors/>
 
+        <!-- Some simple-method calls below need this to be set: -->
+        <set field="tempMap.partyId" from-field="parameters.userPartyId"/>
+
         <!-- 2018-10-24: Using system here is not right, should use the userLogin from session attributes (admin)...
         <entity-one value-field="actingUserLogin" entity-name="UserLogin" use-cache="true">
             <field-map field-name="userLoginId" value="system"/>
@@ -436,13 +439,22 @@
                 <entity-one entity-name="UserLogin" value-field="userUserLogin">
                     <field-map field-name="userLoginId" from-field="parameters.USERNAME"/>
                 </entity-one>
-
-                <set field="updatePasswordCtx.currentPassword" from-field="userUserLogin.currentPassword"/>
-                <set field="updatePasswordCtx.userLoginId" from-field="userUserLogin.userLoginId"/>
-                <set field="updatePasswordCtx.newPassword" from-field="parameters.PASSWORD"/>
-                <set field="updatePasswordCtx.newPasswordVerify" from-field="parameters.CONFIRM_PASSWORD"/>
-                <call-service service-name="updatePassword" in-map-name="updatePasswordCtx"></call-service>
-                <check-errors/>
+                <if-not-empty field="userUserLogin">
+                    <set field="updatePasswordCtx" value="" set-if-null="true"/>
+                    <set field="updatePasswordCtx.currentPassword" from-field="userUserLogin.currentPassword"/>
+                    <set field="updatePasswordCtx.userLoginId" from-field="userUserLogin.userLoginId"/>
+                    <set field="updatePasswordCtx.newPassword" from-field="parameters.PASSWORD"/>
+                    <set field="updatePasswordCtx.newPasswordVerify" from-field="parameters.CONFIRM_PASSWORD"/>
+                    <call-service service-name="updatePassword" in-map-name="updatePasswordCtx"/>
+                    <else>
+                        <call-simple-method method-name="makeNewUserLogin" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+                        <check-errors/>
+                        <log level="info" message="newUserLogin: ${newUserLogin.userLoginId}"/>
+                        <set field="snulSkipSetCurrent" type="Boolean" value="true"/><!-- TODO: REVIEW -->
+                        <call-simple-method method-name="storeNewUserLogin" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+                        <check-errors/>
+                    </else>
+                </if-not-empty>
            </then>
         </if>
 
@@ -495,11 +507,6 @@
                 </if>
             </then>
         </if>
-
-        <!-- DEV NOTE: IMPORTANT:
-            PRODUCT_STORE_ID FOR UPDATES IS IN THE FORM: "productStoreId[::roleTypeId]"  -->
-
-        
 
         <!-- Update ProductStoreRole, IF changed
             If only the roleTypeId was changed, it is covered by the case further below...  -->
@@ -688,9 +695,11 @@
             <field-map field-name="partyId" from-field="parameters.userPartyId"/>
         </entity-one>
 
-        <set field="personMap.partyId" from-field="parameters.userPartyId" />
-        <call-service service-name="updatePerson" in-map-name="personMap" />
-        <check-errors/>
+        <set field="updatePersonCtx" value="" set-if-null="true"/>
+        <set-service-fields service-name="updatePerson" map="personMap" to-map="updatePersonCtx"/>
+        <set field="updatePersonCtx.partyId" from-field="parameters.userPartyId"/>
+        <set field="updatePersonCtx.userLogin" from-field="actingUserLogin"/>
+        <call-service service-name="updatePerson" in-map-name="updatePersonCtx"/>
 
         <entity-one entity-name="Person" value-field="newPerson">
             <field-map field-name="partyId" from-field="parameters.userPartyId"/>

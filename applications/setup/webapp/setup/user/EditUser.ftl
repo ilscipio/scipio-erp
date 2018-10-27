@@ -104,8 +104,11 @@ under the License.
         <#if !userUserLogin?has_content>
            <#if ((parameters.UNUSEEMAIL!) == "on")>
               <#assign fieldStyle = "display:none;">
-            </#if>
-           <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(params.USERNAME!) onFocus="clickUsername();" onchange="changeEmail();" label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
+           </#if>
+           <#-- We need to allow empty for any existing user even if has no login
+           <#assign pwRequired = true>-->
+           <#assign pwRequired = (!userParty??)> 
+           <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(params.USERNAME!) onFocus="clickUsername();" onchange="changeEmail();" label=uiLabelMap.CommonUsername required=pwRequired postWidgetContent=extraFieldContent />
         <#else>
            <@field type="display" value=(userUserLogin.userLoginId!) label=uiLabelMap.CommonUsername />
            <@field type="hidden" name="USERNAME" value=(params.userLoginId!)/>

@@ -419,7 +419,8 @@ under the License.
         </script>
     </simple-method>
     
-    <!-- SCIPIO: 2018-10-26: Refactored from createUser -->
+    <!-- SCIPIO: 2018-10-26: Refactored from createUser 
+        NOTE: This expects the partyId to be in the field: tempMap.partyId -->
     <simple-method method-name="storeNewUserLogin">
         <!-- If password encryption is enabled, encrypt it now -->
         <set field="delegator" from-field="parameters.delegator" type="Object"/>

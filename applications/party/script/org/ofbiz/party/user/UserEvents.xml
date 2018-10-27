@@ -434,7 +434,9 @@ under the License.
         <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
         <set field="newUserLogin.partyId" from-field="tempMap.partyId"/>
         <create-value value-field="newUserLogin"/>
-        <set-current-user-login value-field="newUserLogin"/>
+        <if-compare field="snulSkipSetCurrent" operator="not-equals" type="Boolean" value="true"><!-- SCIPIO: Added flag -->
+            <set-current-user-login value-field="newUserLogin"/>
+        </if-compare>
 
         <!-- On successful user creation, create password history record if configured -->
         <call-class-method method-name="getPropertyValue" class-name="org.ofbiz.base.util.UtilProperties" ret-field="autoPasswordChangeEnabled">

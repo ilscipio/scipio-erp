@@ -226,10 +226,6 @@ Common CMS editor macros and utilities
             try {
                 containerBox.foundation();
             } catch(err) {
-                try {
-                
-                } catch(err) {
-                }
             }
         }
     }
@@ -249,10 +245,6 @@ Common CMS editor macros and utilities
             try {
                 containerBox.foundation();
             } catch(err) {
-                try {
-                
-                } catch(err) {
-                }
             }
         }
     }

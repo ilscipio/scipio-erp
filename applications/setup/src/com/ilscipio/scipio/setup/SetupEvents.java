@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 
 /**
@@ -37,7 +39,7 @@ public abstract class SetupEvents {
         } catch(Exception e) {
             final String enErrMsg = "Error determining next setup step";
             Debug.logError(e, "Setup: " + enErrMsg + ": " + e.getMessage(), module);
-            request.setAttribute("_ERROR_MESSAGE_", enErrMsg + ": " + e.getMessage());// TODO: localize
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("ScipioSetupErrorUiLabels", "SetupErrorDeterminingSetupSteps", UtilHttp.getLocale(request)) + ": " + e.getMessage());
             return "error";
         }
     }
@@ -48,7 +50,7 @@ public abstract class SetupEvents {
         } catch(Exception e) {
             final String enErrMsg = "Error determining submitted setup step";
             Debug.logError(e, "Setup: " + enErrMsg + ": " + e.getMessage(), module);
-            request.setAttribute("_ERROR_MESSAGE_", enErrMsg + ": " + e.getMessage());// TODO: localize
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("ScipioSetupErrorUiLabels", "SetupErrorDeterminingSetupSteps", UtilHttp.getLocale(request)) + ": " + e.getMessage());
             return "error";
         }
     }
@@ -70,7 +72,7 @@ public abstract class SetupEvents {
             if (thisRequestUri == null || !thisRequestUri.startsWith("setup")) {
                 Debug.logError("Setup: setSubmittedSetupStep: controller error: thisRequestUri is not in \"setup[Step]\" name format"
                         + " (valid steps: " + worker.getSteps() + ")", module);
-                request.setAttribute("_ERROR_MESSAGE_", "INTERNAL ERROR: please contact developers"); // shouldn't happen (TODO: localize)
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
                 return "error";
             }
             setupStep = thisRequestUri.substring("setup".length()).toLowerCase();
@@ -79,7 +81,7 @@ public abstract class SetupEvents {
         if (!worker.getAllStepValues().contains(setupStep)) {
             Debug.logError("Setup: setSubmittedSetupStep: controller error: thisRequestUri \"setup[Step]\" name does not designate a valid setup step "
                     + " (valid steps: " + worker.getSteps() + ")", module);
-            request.setAttribute("_ERROR_MESSAGE_", "INTERNAL ERROR: please contact developers"); // shouldn't happen (TODO: localize)
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
             return "error";
         }
 

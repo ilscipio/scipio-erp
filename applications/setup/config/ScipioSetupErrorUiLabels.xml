@@ -38,6 +38,11 @@
         <value xml:lang="en">Setup error</value>
         <value xml:lang="fr">Erreur durant la configuration</value>
     </property>
+    <property key="SetupErrorDeterminingSetupSteps">
+        <value xml:lang="de">Fehler beim Festlegen der Einrichtungsschritte</value>
+        <value xml:lang="en">Error determining setup steps</value>
+        <value xml:lang="fr">Erreur lors de la détermination des étapes de configuration</value>
+    </property>
     <property key="SetupErrorOccurredInfo">
         <value xml:lang="de">Beim Setup ist ein Fehler aufgetreten. Bitte überprüfen Sie den Fehler, versuchen Sie, den Assistenten mit dem unten stehenden Link neu zu starten, oder wenden Sie sich an den Support.</value>
         <value xml:lang="en">An error occured during Setup. Please review the error, try restarting the wizard using the link below, or contact support.</value>

@@ -457,7 +457,7 @@
                         errorMsg = e.toString();
                     }
                     if (errorMsg) {
-                        errorMsg = UtilProperties.getMessage("ScipioSetupUiLabels", "SetupSetupWizardError",
+                        errorMsg = UtilProperties.getMessage("ScipioSetupErrorUiLabels", "SetupError",
                             context.locale) + ": " + errorMsg;
                         errorMessageList = context.errorMessageList;
                         if (errorMessageList == null) {

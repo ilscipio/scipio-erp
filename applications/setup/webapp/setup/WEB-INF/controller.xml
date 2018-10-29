@@ -206,13 +206,13 @@
         <!-- AcctgTransType -->
     <request-map uri="setupCreateAcctgTransType">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createCustomTimePeriod"/>
+        <event type="service" invoke="createAcctgTransType"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
     <request-map uri="setupCreateAcctgTransEntryType">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updateCustomTimePeriod"/>
+        <event type="service" invoke="createAcctgTransEntryType"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>

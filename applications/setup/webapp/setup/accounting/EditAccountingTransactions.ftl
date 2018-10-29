@@ -206,6 +206,7 @@
                             });
                         }
                         $('#' + props.id).fadeIn();
+                        setupControlMenu.setSubmitFormId(props.id + '-form');
                     }
                 } else if (typeAction[2] == "import") {
                     showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function(action) {
@@ -302,7 +303,7 @@
             <@field type="select" name="parentTypeId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
               <option value=""></option>
               <#list acctgParentEntryTransTypes as acctgParentTransEntryType>
-                <#assign selected = (rawString(params.parentTypeId!) == (acctgParentTransEntryType.parentType!))>
+                <#assign selected = (rawString(params.parentTypeId!) == (acctgParentTransEntryType.parentTypeId!))>
                 <option value="${acctgParentTransEntryType.acctgTransEntryTypeId!}"<#if selected> selected="selected"</#if>>${acctgParentTransEntryType.description!}</option>
               </#list>
             </@field>
@@ -458,7 +459,7 @@
       "defaults":defaultParams
     })>
   </#if>
-  <@setupAcctgTransTypeForm id="NewAcctgTransType" formActionType="new" target="setupCreateAcctgTransType" params=paramMaps.values  />
+  <@setupAcctgTransTypeForm id="eat-newacctgtranstype-form" formActionType="new" target="setupCreateAcctgTransType" params=paramMaps.values  />
 </@section>
 
 <@section title=uiLabelMap.PageTitleAddAcctgTransEntryType containerId="eat-newacctgtransentrytype" containerClass="+eat-newacctgtransentrytypeid acctg-recordaction acctg-newrecord" 
@@ -471,5 +472,5 @@
       "defaults":defaultParams
     })>
   </#if>
-  <@setupAcctgTransEntryTypeForm id="NewAcctgTransEntryType" formActionType="new" target="setupCreateAcctgTransEntryType" params=paramMaps.values  />
+  <@setupAcctgTransEntryTypeForm id="eat-newacctgtransentrytype-form" formActionType="new" target="setupCreateAcctgTransEntryType" params=paramMaps.values  />
 </@section>

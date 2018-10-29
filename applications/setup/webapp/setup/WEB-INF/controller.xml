@@ -216,6 +216,14 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
+    
+        <!-- GlJournal -->
+    <request-map uri="setupCreateGlJournal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlJournal"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
 
         <!-- Preferences -->
     <request-map uri="setupCreateAccountingPreferences">

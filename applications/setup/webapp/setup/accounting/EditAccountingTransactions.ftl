@@ -55,6 +55,10 @@
     }
 }>
 -->
+<#assign eatAllHideShowFormIds = [
+    "eat-newacctgtranstype", "eat-newacctgtransentrytype"
+]>
+
 <#assign eatObjectProps = {
     "acctgtype" : {
         "add" : {
@@ -83,6 +87,7 @@
 
 <@script>
     var actionAcctgTransProps = <@objectAsScript object=(eatObjectProps!{}) lang='js'/>;
+    var acctgTransHideShowFormIds = <@objectAsScript object=(eatAllHideShowFormIds!{}) lang='js'/>;
 
     var openModal = function(modalElem) {
         try {
@@ -162,14 +167,14 @@
     var runMultipartAjax = function(data, typeAction) {
         jQuery.ajax({
             url: '<@ofbizUrl>setupImportDatevDataCategory</@ofbizUrl>',
-            data: data,                            
+            data: data,
             async: true,
             type: "POST",
             contentType: false,
             processData: false,
             enctype: 'multipart/form-data',
             success: function(content) {
-                displayStats(content, typeAction);            
+                displayStats(content, typeAction);
             },
             error: function() {
                 console.log("error");
@@ -191,12 +196,16 @@
             var confirmExtraMsg = "";
             var typeAction = this.id.split('-');
             if (typeAction && typeAction.length == 3) {
-                console.log("type ====> " + typeAction[1] + "  action ====> " + typeAction[2]);
                 var modalElem = jQuery('#${eatDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]);
                 if (typeAction[2] == "add" || typeAction[2] == "edit") {
                     props = actionAcctgTransProps[typeAction[1]][typeAction[2]];
                     if (props.type == 'form' && props.mode == "show") {
-                        $('#' + props.id).show();
+                    	if (acctgTransHideShowFormIds) {
+                            jQuery.each(acctgTransHideShowFormIds, function(i, e) {
+                                jQuery('#'+e).fadeOut();
+                            });
+                        }
+                        $('#' + props.id).fadeIn();
                     }
                 } else if (typeAction[2] == "import") {
                     showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function(action) {
@@ -249,13 +258,13 @@
         <#if formActionType == "edit">
               <@field type="display" label=uiLabelMap.CommonParent><#rt/>
                 <span class="acctg-managefield acctg-managefield-for-parentAcctgTransTypeDesc">
-                    <@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
+                    ${params.parentTypeId!}
                    </span><#t/>
             </@field><#lt/>
             <@field type="hidden" name="parentTypeId" value=(params.parentTypeId!) class="+acctg-inputfield"/>
         <#else>
             <@field type="select" name="parentTypeId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
-              <option value="" disabled="disabled"></option>
+              <option value=""></option>
               <#list acctgParentTransTypes as acctgParentTransType>
                 <#assign selected = (rawString(params.parentTypeId!) == (acctgParentTransType.parentTypeId!))>
                 <option value="${acctgParentTransType.acctgTransTypeId!}"<#if selected> selected="selected"</#if>>${acctgParentTransType.description!}</option>
@@ -263,7 +272,7 @@
             </@field>
         </#if>
         <#if formActionType == "edit">
-            <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
+            <@field type="display" label=uiLabelMap.FormFieldTitle_acctgTransTypeId><#rt/>
                 <span class="acctg-managefield acctg-managefield-for-acctgTransType"></span><#t/>
             </@field><#lt/>
             <@field type="hidden" name="acctgTransTypeId" value=(params.acctgTransTypeId!) class="+acctg-inputfield"/>
@@ -271,7 +280,7 @@
             <#-- TODO: REVIEW: required=true -->
             <@field type="input" name="acctgTransTypeId" label=uiLabelMap.FormFieldTitle_acctgTransTypeId value=(params.acctgTransTypeId!) class="+acctg-inputfield"/>
         </#if>
-        <@field type="input" name="description" label=uiLabelMap.CommonDescription value=(params.glAccountId!) class="+acctg-inputfield"/>
+        <@field type="input" name="description" label=uiLabelMap.CommonDescription value=(params.description!) class="+acctg-inputfield"/>
     </@form>
 </#macro>
 <#macro setupAcctgTransEntryTypeForm id formActionType target params>
@@ -282,31 +291,34 @@
         <@field type="hidden" name="isUpdateAcctgEntryTransType" value=(formActionType == "edit")?string("Y", "N")/>
 
         <#assign fieldsRequired = true>
-        <#if formActionType != "edit">
-              <@field type="display" label=uiLabelMap.FormFieldTitle_parentAcctgTransEntryTypeId><#rt/>
+        <#if formActionType == "edit">
+            <@field type="display" label=uiLabelMap.CommonParent><#rt/>
                 <span class="acctg-managefield acctg-managefield-for-parentAcctgTransEntryTypeDesc">
-                    <@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
+                    ${params.parentTypeId!}
                    </span><#t/>
             </@field><#lt/>
             <@field type="hidden" name="parentTypeId" value=(params.parentTypeId!) class="+acctg-inputfield"/>
         <#else>
             <@field type="select" name="parentTypeId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
-              <option value="" disabled="disabled"></option>
-              <#list acctgTransTypes as acctgTransType>
-                <#assign selected = (rawString(params.parentTypeId!) == (acctgTransType.parentType!))>
-                <option value="${glResourceType.glResourceTypeId!}"<#if selected> selected="selected"</#if>>${glResourceType.description!}</option>
+              <option value=""></option>
+              <#list acctgParentEntryTransTypes as acctgParentTransEntryType>
+                <#assign selected = (rawString(params.parentTypeId!) == (acctgParentTransEntryType.parentType!))>
+                <option value="${acctgParentTransEntryType.acctgTransEntryTypeId!}"<#if selected> selected="selected"</#if>>${acctgParentTransEntryType.description!}</option>
               </#list>
             </@field>
         </#if>
         <#if formActionType == "edit">
-            <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
-                <span class="acctg-managefield acctg-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
+            <@field type="display" label=uiLabelMap.FormFieldTitle_acctgTransEntryTypeId><#rt/>
+                <span class="acctg-managefield acctg-managefield-for-acctgTransEntryTypeId">
+                	${params.acctgTransEntryTypeId!}
+               	</span><#t/>
             </@field><#lt/>
-            <@field type="hidden" name="glAccountId" value=(params.glAccountId!) class="+acctg-inputfield"/>
+            <@field type="hidden" name="acctgTransEntryTypeId" value=(params.acctgTransEntryTypeId!) class="+acctg-inputfield"/>
         <#else>
             <#-- TODO: REVIEW: required=true -->
-            <@field type="input" name="glAccountId" label=uiLabelMap.FormFieldTitle_acctgTransEntryTypeId value=(params.glAccountId!) class="+acctg-inputfield"/>
+            <@field type="input" name="acctgTransEntryTypeId" label=uiLabelMap.FormFieldTitle_acctgTransEntryTypeId value=(params.acctgTransEntryTypeId!) class="+acctg-inputfield"/>
         </#if>
+        <@field type="input" name="description" label=uiLabelMap.CommonDescription value=(params.description!) class="+acctg-inputfield"/>
     </@form>
 </#macro>
 
@@ -332,14 +344,14 @@
 
 <#macro eatDefActionMsgModals args={}>
     <#list args.objectTypes?keys as objectType>
-        <#local actionMaps = toSimpleMap(args.objectTypes[objectType])>        
+        <#local actionMaps = toSimpleMap(args.objectTypes[objectType])>
         <#list actionMaps?keys as action>
-            <#local props = toSimpleMap(actionMaps[action])>            
-            <#if props.confirmMsg?has_content>            
+            <#local props = toSimpleMap(actionMaps[action])>
+            <#if props.confirmMsg?has_content>
                 <@modal id="${args.idPrefix}${rawString(objectType)}-${rawString(action)}" class="+eat-dialogmodal">
                     <@heading>${action} ${objectType}</@heading>
                     <@eatDefActionInnerContent props=props/>
-                    <div class="modal-footer ${styles.text_right!}">                       
+                    <div class="modal-footer ${styles.text_right!}">
                        <a class="eat-dialogbtn eat-dialogbtn-cancel ${styles.button!} btn-cancel" href="javascript:void(0);">${uiLabelMap.CommonCancel}</a>
                        <#if action == "import">
                            <a class="eat-dialogbtn eat-dialogbtn-upload ${styles.button!} btn-ok" >${uiLabelMap.CommonUpload}</a>
@@ -347,7 +359,7 @@
                     </div>
                 </@modal>
             </#if>
-        </#list>        
+        </#list>
     </#list>
 </#macro>
 <@eatMarkupOut dir=eatDefActionMsgModals args={    
@@ -384,13 +396,13 @@
                     <@thead>
                         <@tr>
                             <@td>${uiLabelMap.FormFieldTitle_acctgTransTypeId}</@td>
-                            <@td>${uiLabelMap.CommonDescription}</@td>                    
+                            <@td>${uiLabelMap.CommonDescription}</@td>
                         </@tr>
                     </@thead>
                     <#list acctgTransTypes as type>
                         <@tr>
                             <@td>${type.acctgTransTypeId}</@td>
-                            <@td>${type.description}</@td>                                
+                            <@td>${type.description}</@td>
                         </@tr>
                     </#list>
                 </@table>
@@ -402,13 +414,13 @@
                     <@thead>
                         <@tr>
                             <@td>${uiLabelMap.FormFieldTitle_acctgTransEntryTypeId}</@td>
-                            <@td>${uiLabelMap.CommonDescription}</@td>                    
+                            <@td>${uiLabelMap.CommonDescription}</@td>
                         </@tr>
                     </@thead>
                     <#list acctgTransEntryTypes as entryType>
                         <@tr>
                             <@td>${entryType.acctgTransEntryTypeId}</@td>
-                            <@td>${entryType.description}</@td>                                
+                            <@td>${entryType.description}</@td>
                         </@tr>
                     </#list>
                 </@table>
@@ -459,5 +471,5 @@
       "defaults":defaultParams
     })>
   </#if>
-  <@setupAcctgTransTypeForm id="NewAcctgTransEntryType" formActionType="new" target="setupCreateAcctgTransEntryType" params=paramMaps.values  />
+  <@setupAcctgTransEntryTypeForm id="NewAcctgTransEntryType" formActionType="new" target="setupCreateAcctgTransEntryType" params=paramMaps.values  />
 </@section>

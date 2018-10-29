@@ -22336,6 +22336,14 @@
         <value xml:lang="zh">新建总账账户</value>
         <value xml:lang="zh-TW">新建總帳科目</value>
     </property>
+    <property key="PageTitleAddAcctgTransType">
+        <value xml:lang="en">Add Transaction Type</value>
+        <value xml:lang="es">Añadir tipo de transacción</value>
+    </property>
+    <property key="PageTitleAddAcctgTransEntryType">
+        <value xml:lang="en">Add Transaction Entry Type</value>
+        <value xml:lang="es">Añadir tipo de asiento de transacción</value>
+    </property>
     <property key="PageTitleAddTaxAuthorityAssoc">
         <value xml:lang="de">Steuerbehördenzuweisung hinzufügen</value>
         <value xml:lang="en">Add Tax Authority Association</value>

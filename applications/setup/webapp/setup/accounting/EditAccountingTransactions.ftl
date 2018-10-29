@@ -28,7 +28,7 @@
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingElsterImportCSV />
 </#macro>
 
-<#assign eatObjectTypes = {
+<#assign eatObjectProps = {
     "datev": {
         "import": {
             "type": "form",
@@ -55,34 +55,34 @@
     }
 }>
 -->
-<#assign eatObjectTypes = {
-	"acctgtype" : {
-		"add" : {
-			"type": "form",
+<#assign eatObjectProps = {
+    "acctgtype" : {
+        "add" : {
+            "type": "form",
             "mode": "show",
-            "id": "eat-acctgtype",
+            "id": "eat-newacctgtranstype",
             "formAction": makeOfbizUrl('setupCreateAcctgTransType'),
             "defaultParams": wrapRawScript("function() { return; }")
-		}
-	},
-	"acctgentrytype" : {
-		"add" : {
-			"type": "form",
+        }
+    },
+    "acctgentrytype" : {
+        "add" : {
+            "type": "form",
             "mode": "show",
-            "id": "eat-acctgentrytype",
-            "formAction": makeOfbizUrl('setupCreateAcctgTransactionEntryType'),
+            "id": "eat-newacctgtransentrytype",
+            "formAction": makeOfbizUrl('setupCreateAcctgTransEntryType'),
             "defaultParams": wrapRawScript("function() { return; }")
-		}
-	}
+        }
+    }
 }>
 
-<#assign eatObjectTypes = toSimpleMap(eatObjectTypes!{})>
+<#assign eatObjectProps = toSimpleMap(eatObjectProps!{})>
 <#assign eatDialogIdPrefix = eatDialogIdPrefix!"eat-dialog-">
 <#assign eatDialogIdModalPrefix = eatDialogIdModalPrefix!("modal_" + eatDialogIdPrefix)>
 <#assign eatStatsIdPrefix = eatStatsIdPrefix!"eat-stats-">
 
 <@script>
-    var actionProps = <@objectAsScript object=(ectActionProps!{}) lang='js'/>;
+    var actionAcctgTransProps = <@objectAsScript object=(eatObjectProps!{}) lang='js'/>;
 
     var openModal = function(modalElem) {
         try {
@@ -191,32 +191,35 @@
             var confirmExtraMsg = "";
             var typeAction = this.id.split('-');
             if (typeAction && typeAction.length == 3) {
-            	console.log("type ====> " + typeAction[1] + "  action ====> " + typeAction[2]);
+                console.log("type ====> " + typeAction[1] + "  action ====> " + typeAction[2]);
                 var modalElem = jQuery('#${eatDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]);
                 if (typeAction[2] == "add" || typeAction[2] == "edit") {
-                	
+                    props = actionAcctgTransProps[typeAction[1]][typeAction[2]];
+                    if (props.type == 'form' && props.mode == "show") {
+                        $('#' + props.id).show();
+                    }
                 } else if (typeAction[2] == "import") {
-	                showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function(action) {
-	                    if (action == 'upload') {
-	                        // check if the modal had any params, dump them into params
-	                        var containsFile = false;
-	                        var data = new FormData(jQuery('form.eat-dialogopts-form')[0]);
-	                        
-	                        jQuery('form.eat-dialogopts-form :input', modalElem).each(function(i, input) {
-	                            input = jQuery(input);
-	                            if (!containsFile && input.attr('type') == "file") {
-	                                containsFile = true;
-	                            }
-	                        });
-	                        if (containsFile) {
-	                            jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
-	                        }
-	                        
-	                        jQuery('form.eat-dialogopts-form')[0].reset();
-	                        
-	                        runMultipartAjax(data, typeAction);
-	                    }
-	                });
+                    showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function(action) {
+                        if (action == 'upload') {
+                            // check if the modal had any params, dump them into params
+                            var containsFile = false;
+                            var data = new FormData(jQuery('form.eat-dialogopts-form')[0]);
+                            
+                            jQuery('form.eat-dialogopts-form :input', modalElem).each(function(i, input) {
+                                input = jQuery(input);
+                                if (!containsFile && input.attr('type') == "file") {
+                                    containsFile = true;
+                                }
+                            });
+                            if (containsFile) {
+                                jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
+                            }
+                            
+                            jQuery('form.eat-dialogopts-form')[0].reset();
+                            
+                            runMultipartAjax(data, typeAction);
+                        }
+                    });
                 }
             }
         });
@@ -243,31 +246,67 @@
         <@field type="hidden" name="isUpdateAcctgTransType" value=(formActionType == "edit")?string("Y", "N")/>
 
         <#assign fieldsRequired = true>
-		<#if formActionType != "edit">
-	      	<@field type="display" label=uiLabelMap.FormFieldTitle_parentAcctgTransTypeId><#rt/>
-	            <span class="acctg-managefield acctg-managefield-for-parentAcctgTransTypeDesc">
-	            	<@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
-	           	</span><#t/>
-	        </@field><#lt/>
-	        <@field type="hidden" name="parentTypeId" value=(params.parentTypeId!) class="+acctg-inputfield"/>
+        <#if formActionType == "edit">
+              <@field type="display" label=uiLabelMap.CommonParent><#rt/>
+                <span class="acctg-managefield acctg-managefield-for-parentAcctgTransTypeDesc">
+                    <@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
+                   </span><#t/>
+            </@field><#lt/>
+            <@field type="hidden" name="parentTypeId" value=(params.parentTypeId!) class="+acctg-inputfield"/>
         <#else>
-	        <@field type="select" name="parentTypeId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
-		      <option value="" disabled="disabled"></option>
-		      <#list acctgTransTypes as acctgTransType>
-		        <#assign selected = (rawString(params.parentTypeId!) == (acctgTransType.parentType!))>
-		        <option value="${glResourceType.glResourceTypeId!}"<#if selected> selected="selected"</#if>>${glResourceType.description!}</option>
-		      </#list>
-		    </@field>
-	    </#if>
-	    <#if formActionType == "edit">
-	        <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
-	            <span class="acctg-managefield acctg-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
-	        </@field><#lt/>
-	        <@field type="hidden" name="glAccountId" value=(params.glAccountId!) class="+acctg-inputfield"/>
-	    <#else>
-	        <#-- TODO: REVIEW: required=true -->
-	        <@field type="input" name="glAccountId" label=uiLabelMap.CommonId value=(params.glAccountId!) class="+acctg-inputfield"/>
-	    </#if>
+            <@field type="select" name="parentTypeId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
+              <option value="" disabled="disabled"></option>
+              <#list acctgParentTransTypes as acctgParentTransType>
+                <#assign selected = (rawString(params.parentTypeId!) == (acctgParentTransType.parentTypeId!))>
+                <option value="${acctgParentTransType.acctgTransTypeId!}"<#if selected> selected="selected"</#if>>${acctgParentTransType.description!}</option>
+              </#list>
+            </@field>
+        </#if>
+        <#if formActionType == "edit">
+            <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
+                <span class="acctg-managefield acctg-managefield-for-acctgTransType"></span><#t/>
+            </@field><#lt/>
+            <@field type="hidden" name="acctgTransTypeId" value=(params.acctgTransTypeId!) class="+acctg-inputfield"/>
+        <#else>
+            <#-- TODO: REVIEW: required=true -->
+            <@field type="input" name="acctgTransTypeId" label=uiLabelMap.FormFieldTitle_acctgTransTypeId value=(params.acctgTransTypeId!) class="+acctg-inputfield"/>
+        </#if>
+        <@field type="input" name="description" label=uiLabelMap.CommonDescription value=(params.glAccountId!) class="+acctg-inputfield"/>
+    </@form>
+</#macro>
+<#macro setupAcctgTransEntryTypeForm id formActionType target params>
+    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+        <@defaultWizardFormFields exclude=[]/>
+        <@field type="hidden" name="isAddAcctgEntryTransType" value=(formActionType == "add")?string("Y", "N")/>
+        <@field type="hidden" name="isCreateAcctgEntryTransType" value=(formActionType == "new")?string("Y", "N")/>
+        <@field type="hidden" name="isUpdateAcctgEntryTransType" value=(formActionType == "edit")?string("Y", "N")/>
+
+        <#assign fieldsRequired = true>
+        <#if formActionType != "edit">
+              <@field type="display" label=uiLabelMap.FormFieldTitle_parentAcctgTransEntryTypeId><#rt/>
+                <span class="acctg-managefield acctg-managefield-for-parentAcctgTransEntryTypeDesc">
+                    <@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
+                   </span><#t/>
+            </@field><#lt/>
+            <@field type="hidden" name="parentTypeId" value=(params.parentTypeId!) class="+acctg-inputfield"/>
+        <#else>
+            <@field type="select" name="parentTypeId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
+              <option value="" disabled="disabled"></option>
+              <#list acctgTransTypes as acctgTransType>
+                <#assign selected = (rawString(params.parentTypeId!) == (acctgTransType.parentType!))>
+                <option value="${glResourceType.glResourceTypeId!}"<#if selected> selected="selected"</#if>>${glResourceType.description!}</option>
+              </#list>
+            </@field>
+        </#if>
+        <#if formActionType == "edit">
+            <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
+                <span class="acctg-managefield acctg-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
+            </@field><#lt/>
+            <@field type="hidden" name="glAccountId" value=(params.glAccountId!) class="+acctg-inputfield"/>
+        <#else>
+            <#-- TODO: REVIEW: required=true -->
+            <@field type="input" name="glAccountId" label=uiLabelMap.FormFieldTitle_acctgTransEntryTypeId value=(params.glAccountId!) class="+acctg-inputfield"/>
+        </#if>
     </@form>
 </#macro>
 
@@ -312,7 +351,7 @@
     </#list>
 </#macro>
 <@eatMarkupOut dir=eatDefActionMsgModals args={    
-    "objectTypes": eatObjectTypes!{},
+    "objectTypes": eatObjectProps!{},
     "idPrefix": eatDialogIdPrefix,
     "idModalPrefix": eatDialogIdModalPrefix
 }/>
@@ -330,7 +369,7 @@
 
 <#-- 
 <@alert type"warning">
-	${rawString("Be advise that this is currently working in progress")}
+    ${rawString("Be advise that this is currently working in progress")}
 </@alert>
 --> 
 
@@ -357,7 +396,7 @@
                 </@table>
             </@section>
         </@cell>
-		<@cell medium=4 large=4>
+        <@cell medium=4 large=4>
             <@section title=uiLabelMap.SetupAccountingTransactionEntryTypes>
                 <@table>
                     <@thead>
@@ -386,7 +425,7 @@
                 <hr/>
                 <@menuitem contentId="eat-datev-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportDatev />                       
                 <@menuitem contentId="eat-elster-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportElster />
-				-->
+                -->
            </ul>
           </@section>
         </@cell>
@@ -394,10 +433,10 @@
 </@section>
 
 <@eatMarkupOut dir=eatStats args={    
-    "objectTypes": eatObjectTypes!{},
+    "objectTypes": eatObjectProps!{},
     "idPrefix": eatStatsIdPrefix
 }/>
-<@section title=uiLabelMap.PageTitleAddAcctgTransType containerId="acctg-newacctgtranstype" containerClass="+acctg-newacctgtranstypeid acctg-recordaction acctg-newrecord" 
+<@section title=uiLabelMap.PageTitleAddAcctgTransType containerId="eat-newacctgtranstype" containerClass="+eat-newacctgtranstypeid acctg-recordaction acctg-newrecord" 
     containerStyle=((targetRecordAction == "newacctgtranstype-new")?string("","display:none;"))>
   <#if targetRecordAction == "newacctgtranstypeid-new">
     <#assign paramMaps = initialParamMaps>
@@ -408,4 +447,17 @@
     })>
   </#if>
   <@setupAcctgTransTypeForm id="NewAcctgTransType" formActionType="new" target="setupCreateAcctgTransType" params=paramMaps.values  />
+</@section>
+
+<@section title=uiLabelMap.PageTitleAddAcctgTransEntryType containerId="eat-newacctgtransentrytype" containerClass="+eat-newacctgtransentrytypeid acctg-recordaction acctg-newrecord" 
+    containerStyle=((targetRecordAction == "newacctgtransentrytype-new")?string("","display:none;"))>
+  <#if targetRecordAction == "newacctgtransentrytypeid-new">
+    <#assign paramMaps = initialParamMaps>
+  <#else>
+    <#assign paramMaps = getWizardFormFieldValueMaps({
+      "record":true,
+      "defaults":defaultParams
+    })>
+  </#if>
+  <@setupAcctgTransTypeForm id="NewAcctgTransEntryType" formActionType="new" target="setupCreateAcctgTransEntryType" params=paramMaps.values  />
 </@section>

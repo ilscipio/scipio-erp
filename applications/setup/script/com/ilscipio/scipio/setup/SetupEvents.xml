@@ -216,6 +216,7 @@
                             NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
                         <script lang="groovy"><![CDATA[
                             import org.ofbiz.entity.*;
+                            import org.ofbiz.entity.condition.*;
                             import org.ofbiz.entity.util.*;
                             EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", partyId),
                                 EntityOperator.AND, EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, cutn.contactMechPurposeTypeIdList));
@@ -932,6 +933,7 @@
                     NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
                 <script lang="groovy"><![CDATA[
                     import org.ofbiz.entity.*;
+                    import org.ofbiz.entity.condition.*;
                     import org.ofbiz.entity.util.*;
                     EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("facilityId", facilityId),
                         EntityOperator.AND, EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, cutn.contactMechPurposeTypeIdList));

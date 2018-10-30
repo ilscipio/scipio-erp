@@ -224,6 +224,14 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
+     <!-- GlJournal -->
+    <request-map uri="setupCreateTaxAuth">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createSetupTaxAuthority"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    
 
         <!-- Preferences -->
     <request-map uri="setupCreateAccountingPreferences">

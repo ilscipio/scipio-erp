@@ -35,5 +35,14 @@ under the License.
     	<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
     	<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
     </service>
+    
+    <service name="createSetupTaxAuthority" default-entity-name="TaxAuthority" engine="group" auth="true">
+        <!-- TODO: test it properly -->
+        <group>
+            <invoke name="createPartyGroup"/>
+            <invoke name="createTaxAuthority"/>
+        </group>
+    </service>
+    
 
 </services>

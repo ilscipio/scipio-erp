@@ -30,7 +30,8 @@ under the License.
     "partyRelationshipTypeId": "OWNER",
     <#-- NOTE: PRODUCT_STORE_ID is now concatenation of "[productStoreId]::[roleTypeId]"; if roleTypeId is omitted,
         assumed to be same as the party relationship to company roleTypeIdTo -->
-    "PRODUCT_STORE_ID": rawString(productStoreId!)
+    "PRODUCT_STORE_ID": rawString(productStoreId!),
+    "USER_ADDR_PURPOSE": ["GENERAL_LOCATION", "SHIPPING_LOCATION"]
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({
@@ -283,6 +284,16 @@ under the License.
                 <#-- Don't remove existing address (otherwise inconsistent with user creation) -->
                 <@field type="hidden" name="USER_ADDRESS_UPDIGNEMPTY" value="true"/>
             </@fields>
+            
+            <#if !userParty??><#-- FIXME: should also work on update... -->
+                <@field type="generic" label=uiLabelMap.CommonPurpose ignoreParentField=true fieldsType="default">
+                  <#list postalPurposeTypeList as purposeType>
+                    <@field type="checkbox" name="USER_ADDR_PURPOSE" inlineItems=true value=purposeType.contactMechPurposeTypeId label=(purposeType.get("description")!purposeType.contactMechPurposeTypeId)
+                      checked=((params.USER_ADDR_PURPOSE![])?seq_contains(rawString(purposeType.contactMechPurposeTypeId)))/>
+                  </#list>
+                </@field>
+            </#if>
+            
             <#if userParty??>
                 <#assign addressNoticeParams = {"purposes":getContactMechPurposeDescs(locationPurposes)?join(", ")}>
                 <#if !generalAddressContactMech??>

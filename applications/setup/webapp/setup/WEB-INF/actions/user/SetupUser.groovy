@@ -70,7 +70,8 @@ if (userParty) {
 
 generalAddressContactMech = userData.generalAddressContactMech;
 context.generalAddressContactMech = generalAddressContactMech;
-context.generalAddressContactMechPurposes = userData.generalAddressContactMechPurposes;
+generalAddressContactMechPurposes = userData.generalAddressContactMechPurposes;
+context.generalAddressContactMechPurposes = generalAddressContactMechPurposes;
 context.generalAddressStandaloneCompleted = userData.generalAddressStandaloneCompleted;
 context.locationAddressesCompleted = userData.locationAddressesCompleted;
 context.locationPurposes = userData.locationPurposes;
@@ -90,6 +91,7 @@ if (generalAddressContactMech) {
         ];
         if (userInfo != null) {
             userInfo.putAll(generalPostalAddress);
+            userInfo.USER_ADDR_PURPOSE = generalAddressContactMechPurposes;
         }
     } else {
         Debug.logError("Setup: Configuration error: Mail/ship address contact mech '"
@@ -282,3 +284,9 @@ if (userParty) {
     userInfo.PRODUCT_STORE_ID = productStoreRole?.productStoreId;
     context.userProductStoreRole = productStoreRole;
 }
+
+// TODO: factor out/optimize
+postalTypePurposeList = from("ContactMechTypePurpose").where("contactMechTypeId", "POSTAL_ADDRESS").cache().queryList();
+postalPurposeTypeList = postalTypePurposeList.collect { it.getRelatedOne("ContactMechPurposeType", true) };
+postalPurposeTypeList = EntityUtil.localizedOrderBy(postalPurposeTypeList, ["description"], context.locale)
+context.postalPurposeTypeList = postalPurposeTypeList;

@@ -303,10 +303,11 @@ abstract class ContactMechPurposeInfo {
                 pcmList = EntityUtil.orderBy(pcmList, SetupDataUtil.getDefaultContactOrderBy("contactFromDate"));
                 if (pcmList.size() > 0) {
                     GenericValue result = pcmList.get(0).extractViewMember("PartyContactMech");
-                    if (pcmList.size() > 2) {
-                        Debug.logWarning("Setup: Multiple active PartyContactMech records found for contactMechId '"
-                            + contactMechId + "' and partyId '" + partyId + "'; using first only (fromDate '" + result.get("fromDate") + ")'", module);
-                    }
+                    // This check might not work since I switched to PartyContactMechAndPurpose 
+                    //if (pcmList.size() > 2) {
+                    //    Debug.logWarning("Setup: Multiple active PartyContactMech records found for contactMechId '"
+                    //        + contactMechId + "' and partyId '" + partyId + "'; using first only (fromDate '" + result.get("fromDate") + ")'", module);
+                    //}
                     return result;
                 }
             }
@@ -382,10 +383,11 @@ abstract class ContactMechPurposeInfo {
                 pcmList = EntityUtil.orderBy(pcmList, SetupDataUtil.getDefaultContactOrderBy("contactFromDate"));
                 if (pcmList.size() > 0) {
                     GenericValue result = pcmList.get(0).extractViewMember("FacilityContactMech");
-                    if (pcmList.size() > 2) {
-                        Debug.logWarning("Setup: Multiple active FacilityContactMech records found for contactMechId '"
-                            + contactMechId + "' and facility '" + facilityId + "'; using first only (fromDate: " + result.get("fromDate") + ")", module);
-                    }
+                    // This check might not work since I switched to FacilityContactMechAndPurpose 
+                    //if (pcmList.size() > 2) {
+                    //    Debug.logWarning("Setup: Multiple active FacilityContactMech records found for contactMechId '"
+                    //        + contactMechId + "' and facility '" + facilityId + "'; using first only (fromDate: " + result.get("fromDate") + ")", module);
+                    //}
                     return result;
                 }
             }

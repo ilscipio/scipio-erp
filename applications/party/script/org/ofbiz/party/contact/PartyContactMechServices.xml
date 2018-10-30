@@ -148,7 +148,8 @@ under the License.
 
     </simple-method>
 
-    <simple-method method-name="deletePartyContactMech" short-description="Delete a PartyContactMech">
+    <!-- SCIPIO: SCIPIO: 2018-10-30: Renamed to deletePartyContactMechOnly -->
+    <simple-method method-name="deletePartyContactMechOnly" short-description="Delete a PartyContactMech only">
         <make-value entity-name="PartyContactMech" value-field="newPartyContactMech"/>
         <if-empty field="parameters.partyId">
             <set field="parameters.partyId" from-field="userLogin.partyId"/>
@@ -165,8 +166,28 @@ under the License.
             </add-error>
             <return/>
         </if-empty>
-        <now-timestamp field="partyContactMech.thruDate"/>
+        <!-- SCIPIO: reuse timestamp if possible
+        <now-timestamp field="partyContactMech.thruDate"/>-->
+        <if-not-empty field="nowTimestamp">
+            <set field="partyContactMech.thruDate" from-field="nowTimestamp"/>
+            <else>
+                <now-timestamp field="partyContactMech.thruDate"/>
+            </else>
+        </if-not-empty>
         <store-value value-field="partyContactMech"/>
+    </simple-method>
+
+    <simple-method method-name="deletePartyContactMechAndPurposes" short-description="Delete a PartyContactMech and purposes"><!-- SCIPIO: 2018-10-30 -->
+        <now-timestamp field="nowTimestamp"/><!-- We'll use this same date for all the thruDates to make expiries easier to track -->
+        <call-simple-method method-name="deletePartyContactMechOnly"/>
+        <check-errors/>
+        <get-related value-field="partyContactMech" relation-name="PartyContactMechPurpose" list="partyContactMechPurposes"/>
+        <filter-list-by-date list="partyContactMechPurposes" valid-date="nowTimestamp"/>
+        <iterate list="partyContactMechPurposes" entry="partyContactMechPurposeOld">
+            <set field="partyContactMechPurposeOld.thruDate" from-field="nowTimestamp"/>
+            <store-value value-field="partyContactMechPurposeOld"/>
+        </iterate>
+        <check-errors/>
     </simple-method>
 
     <simple-method method-name="createPartyPostalAddress" short-description="Create a PostalAddress for party">

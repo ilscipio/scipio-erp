@@ -425,9 +425,18 @@ under the License.
         <attribute name="infoString" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="IN" optional="true"/>
     </service>
+    <!-- SCIPIO: 2018-10-30: deletePartyContactMech now also expires PartyContactMechPurpose records -->
     <service name="deletePartyContactMech" engine="simple"
-            location="component://party/script/org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="deletePartyContactMech" auth="true">
-        <description>Delete a PartyContactMech</description>
+            location="component://party/script/org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="deletePartyContactMechAndPurposes" auth="true">
+        <description>Delete (expire) a PartyContactMech (SCIPIO: 2018-10-30: Now also expires PartyContactMechPurpose records)</description>
+        <permission-service service-name="partyContactMechPermissionCheck" main-action="DELETE"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+    </service>
+    <!-- SCIPIO: 2018-10-30: new deletePartyContactMechOnly, now that deletePartyContactMech expires the purposes -->
+    <service name="deletePartyContactMechOnly" engine="simple"
+            location="component://party/script/org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="deletePartyContactMechOnly" auth="true">
+        <description>Delete (expire) a PartyContactMech only (SCIPIO: Not its purposes)</description>
         <permission-service service-name="partyContactMechPermissionCheck" main-action="DELETE"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>

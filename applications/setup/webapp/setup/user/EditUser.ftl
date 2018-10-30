@@ -257,7 +257,10 @@ under the License.
     </#if>
     <@field type="generic" label=uiLabelMap.PartyGeneralAddress labelDetail=fieldLabelDetail>
         <div id="setupUser-editMailShipAddr-area">
-        	<@fields args={"type":"default", "ignoreParentField":true}>
+            <@fields args={"type":"default", "ignoreParentField":true}>
+                <#-- Do not mark postal fields required if this is an existing user with no address; but
+                    in all other cases mark as required -->
+        	    <#assign postalFieldsRequired = fieldsRequired && !(userParty?? && !userInfo.USER_ADDRESS_CONTACTMECHID?has_content)>
                 <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
                       ctxVars={
                         "pafFieldNamePrefix":"USER_",
@@ -274,11 +277,13 @@ under the License.
                           "postalCode": "POSTAL_CODE"
                         },
                         "pafUseToAttnName":false,
-                        "pafMarkRequired":fieldsRequired
+                        "pafMarkRequired":postalFieldsRequired
                       }/>
-                <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/> 
+                <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/>
+                <#-- Don't remove existing address (otherwise inconsistent with user creation) -->
+                <@field type="hidden" name="USER_ADDRESS_UPDIGNEMPTY" value="true"/>
             </@fields>
-            <#if userInfo??>
+            <#if userParty??>
                 <#assign addressNoticeParams = {"purposes":getContactMechPurposeDescs(locationPurposes)?join(", ")}>
                 <#if !generalAddressContactMech??>
                     <@alert type="warning">${getLabel('SetupNoAddressDefinedNotice', '', addressNoticeParams)}</@alert>
@@ -335,7 +340,10 @@ under the License.
     <#if userInfo?? && params.USER_EMAIL_CONTACTMECHID?has_content>
       <@field type="hidden" name="USER_EMAIL_CONTACTMECHID" value=(params.USER_EMAIL_CONTACTMECHID!)/>
     </#if>
+    <#-- Only require email field for new users and users with already an email (don't let remove it, otherwise contradicts the create requirement) -->
+    <#assign emailRequired = ((!userParty??) || (userInfo.USER_EMAIL)?has_content)>
     <@field type="input" name="USER_EMAIL" id="USER_EMAIL" value=(params.USER_EMAIL!) onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress 
-        required=true/><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG unless you edit the server-side service to make this optional, otherwise you mislead the admin! -->            
-    <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>    
+        required=emailRequired/><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG unless you edit the server-side service to make this optional, otherwise you mislead the admin! -->            
+    <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>
+    <@field type="hidden" name="USER_EMAIL_UPDIGNEMPTY" value="true"/><#-- Help ensure server-side never remove email on update -->
 </@form>

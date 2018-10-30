@@ -58,6 +58,7 @@
             <else>
                 <set field="cutn" value="" set-if-null="true"/>
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
+                <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_ADDRESS_UPDIGNEMPTY"/>
                 <set field="cutn.contactMechPurposeTypeIdList[]" value="PAYMENT_LOCATION"/>
                 <set field="cutn.contactMechPurposeTypeIdList[]" value="GENERAL_LOCATION"/>
                 <set field="cutn.contactMechPurposeTypeIdList[]" value="BILLING_LOCATION"/>
@@ -71,6 +72,7 @@
         <!-- home phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_HOME_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_HOME_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_HOME"/>
         <set field="cutn.contactCtx" from-field="homePhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
@@ -79,6 +81,7 @@
         <!-- work phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_WORK_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_WORK_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_WORK"/>
         <set field="cutn.contactCtx" from-field="workPhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
@@ -87,6 +90,7 @@
         <!-- fax phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_FAX_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_FAX_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="FAX_NUMBER"/>
         <set field="cutn.contactCtx" from-field="faxPhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
@@ -95,6 +99,7 @@
         <!-- mobile phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_MOBILE_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_MOBILE_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_MOBILE"/>
         <set field="cutn.contactCtx" from-field="mobilePhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
@@ -103,6 +108,7 @@
         <!-- email address -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_EMAIL_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_EMAIL_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PRIMARY_EMAIL"/>
         <set field="cutn.contactCtx" from-field="emailContext"/>
         <call-simple-method method-name="createUpdatePartyEmailAddress"/>
@@ -229,11 +235,13 @@
                     </and>
                 </condition>
                 <then>
-                    <log level="info" message="Setup: Deleting party '${partyId}' telecom number '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
-                    <set field="deleteCtx" value="" set-if-null="true"/>
-                    <set field="deleteCtx.partyId" from-field="partyId"/>
-                    <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
-                    <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                    <if-compare field="cutn.updateIgnoreEmpty" operator="not-equals" type="Boolean" value="true">
+                        <log level="info" message="Setup: Deleting party '${partyId}' telecom number '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
+                        <set field="deleteCtx" value="" set-if-null="true"/>
+                        <set field="deleteCtx.partyId" from-field="partyId"/>
+                        <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
+                        <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                    </if-compare>
                 </then>
                 <else>
                     <log level="info" message="Setup: Updating party '${partyId}' telecom number '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
@@ -306,11 +314,13 @@
                     </and>
                 </condition>
                 <then>
-                    <log level="info" message="Setup: Deleting party '${partyId}' email address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
-                    <set field="deleteCtx" value="" set-if-null="true"/>
-                    <set field="deleteCtx.partyId" from-field="partyId"/>
-                    <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
-                    <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                    <if-compare field="cutn.updateIgnoreEmpty" operator="not-equals" type="Boolean" value="true">
+                        <log level="info" message="Setup: Deleting party '${partyId}' email address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
+                        <set field="deleteCtx" value="" set-if-null="true"/>
+                        <set field="deleteCtx.partyId" from-field="partyId"/>
+                        <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
+                        <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                    </if-compare>
                 </then>
                 <else>
                     <log level="info" message="Setup: Updating party '${partyId}' email address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
@@ -738,6 +748,7 @@
 
                 <set field="cutn" value="" set-if-null="true"/>
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
+                <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_ADDRESS_UPDIGNEMPTY"/>
                 <!-- <set field="cutn.contactMechPurposeTypeIdList[]" value="PAYMENT_LOCATION"/> -->
                 <set field="cutn.contactMechPurposeTypeIdList[]" value="GENERAL_LOCATION"/>
                 <set field="cutn.contactMechPurposeTypeIdList[]" value="BILLING_LOCATION"/>
@@ -751,6 +762,7 @@
         <!-- mobile phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_MOBILE_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_MOBILE_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_MOBILE"/>
         <set field="cutn.contactCtx" from-field="mobileMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
@@ -759,6 +771,7 @@
         <!-- work phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_WORK_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_WORK_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_WORK"/>
         <set field="cutn.contactCtx" from-field="workPhoneMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
@@ -767,6 +780,7 @@
         <!-- fax phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_FAX_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_FAX_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="FAX_NUMBER"/>
         <set field="cutn.contactCtx" from-field="faxMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
@@ -775,6 +789,7 @@
         <!-- email address -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_EMAIL_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_EMAIL_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PRIMARY_EMAIL"/>
         <set field="cutn.contactCtx" from-field="emailMap"/>
         <call-simple-method method-name="createUpdatePartyEmailAddress"/>

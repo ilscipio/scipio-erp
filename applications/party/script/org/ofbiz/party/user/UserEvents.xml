@@ -301,12 +301,24 @@ under the License.
                     <result-to-field result-name="contactMechId" field="addressPurposeContext.contactMechId"/>
                 </call-service>
                 <set field="addressPurposeContext.partyId" from-field="tempMap.partyId"/>
-                <!-- create the shipping location -->
-                <set field="addressPurposeContext.contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
-                <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
-                <!-- also consider this address the general correspondence address -->
-                <set field="addressPurposeContext.contactMechPurposeTypeId" value="GENERAL_LOCATION"/>
-                <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                <if-not-empty field="parameters.USER_ADDR_PURPOSE">
+                    <!-- SCIPIO: 2018-10-30: Caller should be able to specify purpose types (otherwise, stock case below) -->
+                    <script lang="groovy"><![CDATA[
+                        context.purposeTypeIdList = (parameters.USER_ADDR_PURPOSE instanceof List) ? parameters.USER_ADDR_PURPOSE : [parameters.USER_ADDR_PURPOSE];
+                    ]]></script>
+                    <iterate list="purposeTypeIdList" entry="purposeTypeId">
+                        <set field="addressPurposeContext.contactMechPurposeTypeId" from-field="purposeTypeId"/>
+                        <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                    </iterate>
+                    <else>
+                        <!-- create the shipping location -->
+                        <set field="addressPurposeContext.contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
+                        <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                        <!-- also consider this address the general correspondence address -->
+                        <set field="addressPurposeContext.contactMechPurposeTypeId" value="GENERAL_LOCATION"/>
+                        <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                    </else>
+                </if-not-empty>
             </else>
         </if-compare>
 

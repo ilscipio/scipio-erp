@@ -386,7 +386,7 @@
 </@alert>
 --> 
 
-<@section id="mainSection">
+<@section id="mainAcctgTransactionsSection">
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->

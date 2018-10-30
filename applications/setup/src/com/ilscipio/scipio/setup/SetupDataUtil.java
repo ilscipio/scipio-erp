@@ -51,7 +51,7 @@ public final class SetupDataUtil {
     );
 
     public static final Set<String> USER_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
-            "GENERAL_LOCATION", "SHIPPING_LOCATION"
+            "GENERAL_LOCATION" // 2018-10-30: this doesn't make sense for all types of users: "SHIPPING_LOCATION"
     );
 
     private SetupDataUtil() {

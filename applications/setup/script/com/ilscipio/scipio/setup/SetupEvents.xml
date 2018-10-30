@@ -61,9 +61,9 @@
                 <set field="cutn" value="" set-if-null="true"/>
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
                 <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_ADDRESS_UPDIGNEMPTY"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="PAYMENT_LOCATION"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="GENERAL_LOCATION"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="BILLING_LOCATION"/>
+                <script lang="groovy"><![CDATA[
+                    cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.ORGANIZATION_MAINADDR_PURPOSES as List;
+                ]]></script>
                 <set field="cutn.contactCtx" from-field="addressContext"/>
                 <set field="cutn.createMissingPurposes" from-field="parameters.USER_ADDRESS_CREATEMISSINGPURPOSES"/>
                 <call-simple-method method-name="createUpdatePartyPostalAddress"/>
@@ -789,9 +789,9 @@
                 <set field="cutn" value="" set-if-null="true"/>
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
                 <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_ADDRESS_UPDIGNEMPTY"/>
-                <!-- <set field="cutn.contactMechPurposeTypeIdList[]" value="PAYMENT_LOCATION"/> -->
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="GENERAL_LOCATION"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="BILLING_LOCATION"/>
+                <script lang="groovy"><![CDATA[
+                    cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.USER_MAINADDR_PURPOSES as List;
+                ]]></script>
                 <set field="cutn.contactCtx" from-field="addressMap"/>
                 <set field="cutn.createMissingPurposes" from-field="parameters.USER_ADDRESS_CREATEMISSINGPURPOSES"/>
                 <call-simple-method method-name="createUpdatePartyPostalAddress"/>
@@ -860,8 +860,9 @@
             <if-compare field="parameters.useInputFacilityAddr" operator="equals" value="true">
                 <set field="cutn" value="" set-if-null="true"/>
                 <set field="cutn.contactMechId" from-field="parameters.shipAddress_contactMechId"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="SHIPPING_LOCATION"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="SHIP_ORIG_LOCATION"/>
+                <script lang="groovy"><![CDATA[
+                    cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.FACILITY_MAINADDR_PURPOSES as List;
+                ]]></script>
                 <set field="cutn.contactCtx" from-field="shipAddressContext"/>
                 <set field="cutn.createMissingPurposes" from-field="parameters.createMissingShipAddressPurposes"/>
                 <call-simple-method method-name="createUpdateFacilityPostalAddress"/>

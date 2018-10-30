@@ -133,7 +133,7 @@ under the License.
         <field-to-request field="newFacilityContactMech.contactMechId" request-name="contactMechId"/>
     </simple-method>
 
-    <simple-method method-name="deleteFacilityContactMech" short-description="Delete a FacilityContactMech">
+    <simple-method method-name="deleteFacilityContactMechOnly" short-description="Delete a FacilityContactMech Only"><!-- SCIPIO: 2018-10-30: renamed to Only -->
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
 
         <make-value entity-name="FacilityContactMech" value-field="facilityContactMechMap"/>
@@ -148,8 +148,32 @@ under the License.
             </add-error>
             <return/>
         </if-empty>
-        <now-timestamp field="facilityContactMech.thruDate"/>
+        <!-- SCIPIO: reuse timestamp if possible
+        <now-timestamp field="facilityContactMech.thruDate"/>-->
+        <if-not-empty field="nowTimestamp">
+            <set field="facilityContactMech.thruDate" from-field="nowTimestamp"/>
+            <else>
+                <now-timestamp field="facilityContactMech.thruDate"/>
+            </else>
+        </if-not-empty>
         <store-value value-field="facilityContactMech"/>
+    </simple-method>
+
+    <simple-method method-name="deleteFacilityContactMechAndPurposes" short-description="Delete a FacilityContactMech And Purposes"><!-- SCIPIO: 2018-10-30 -->
+        <now-timestamp field="nowTimestamp"/><!-- We'll use this same date for all the thruDates to make expiries easier to track -->
+        <call-simple-method method-name="deleteFacilityContactMechOnly"/>
+        <check-errors/>
+        <get-related value-field="facilityContactMech" relation-name="FacilityContactMechPurpose" list="facilityContactMechPurposes"/>
+        <filter-list-by-date list="facilityContactMechPurposes" valid-date="nowTimestamp"/>
+        <iterate list="facilityContactMechPurposes" entry="facilityContactMechPurposeOld">
+            <set field="facilityContactMechPurposeOld.thruDate" from-field="nowTimestamp"/>
+            <store-value value-field="facilityContactMechPurposeOld"/>
+        </iterate>
+        <check-errors/>
+    </simple-method>
+    <simple-method method-name="deleteFacilityContactMech" short-description="Delete a FacilityContactMech And Purposes"><!-- SCIPIO: 2018-10-30: backward-compat alias -->
+        <call-simple-method method-name="deleteFacilityContactMechAndPurposes"/>
+        <check-errors/>
     </simple-method>
 
     <simple-method method-name="createFacilityPostalAddress" short-description="Create a PostalAddress for facility">

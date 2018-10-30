@@ -977,9 +977,10 @@ under the License.
         <attribute name="infoString" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="IN" optional="true"/>
     </service>
+    <!-- SCIPIO: 2018-10-30: deleteFacilityContactMech now also expires FacilityContactMechPurpose records -->
     <service name="deleteFacilityContactMech" engine="simple"
-            location="component://product/script/org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="deleteFacilityContactMech" auth="true">
-        <description>Delete a FacilityContactMech</description>
+            location="component://product/script/org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="deleteFacilityContactMechAndPurposes" auth="true">
+        <description>Delete (expire) a FacilityContactMech (SCIPIO: 2018-10-30: Now also expires FacilityContactMechPurpose records)</description>
         <permission-service service-name="facilityPermissionCheck" main-action="DELETE"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false">
         <type-validate>
@@ -991,6 +992,13 @@ under the License.
             <fail-property resource="ProductErrorUiLabels" property="facility.contactMechId"/>
         </type-validate>
         </attribute>
+    </service>
+    <!-- SCIPIO: 2018-10-30: new deleteFacilityContactMechOnly, now that deleteFacilityContactMech expires the purposes -->
+    <service name="deleteFacilityContactMechOnly" engine="simple"
+            location="component://product/script/org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="deleteFacilityContactMechOnly" auth="true">
+        <description>Delete (expire) a FacilityContactMech only (SCIPIO: Not its purposes)</description>
+        <permission-service service-name="facilityPermissionCheck" main-action="DELETE"/>
+        <implements service="deleteFacilityContactMech"/>
     </service>
     <service name="createFacilityPostalAddress" engine="simple"
             location="component://product/script/org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="createFacilityPostalAddress" auth="true">

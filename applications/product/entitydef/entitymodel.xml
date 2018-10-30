@@ -1258,6 +1258,35 @@ under the License.
             <key-map field-name="contactMechId"/>
         </relation>
     </entity>
+    <!-- SCIPIO: 2018-10-30: New -->
+    <view-entity entity-name="FacilityContactMechAndPurpose" package-name="org.ofbiz.product.facility" title="Facility Contact Mech and Purpose View">
+        <member-entity entity-alias="FCM" entity-name="FacilityContactMech"/>
+        <member-entity entity-alias="FCMP" entity-name="FacilityContactMechPurpose"/>
+        <alias-all entity-alias="FCM">
+            <exclude field="fromDate"/>
+            <exclude field="thruDate"/>
+        </alias-all>
+        <alias-all entity-alias="FCMP">
+            <exclude field="fromDate"/>
+            <exclude field="thruDate"/>
+        </alias-all>
+        <alias entity-alias="FCM" name="contactFromDate" field="fromDate"/>
+        <alias entity-alias="FCM" name="contactThruDate" field="thruDate"/>
+        <alias entity-alias="FCMP" name="purposeFromDate" field="fromDate"/>
+        <alias entity-alias="FCMP" name="purposeThruDate" field="thruDate"/>
+        <view-link entity-alias="FCM" rel-entity-alias="FCMP">
+            <key-map field-name="facilityId"/>
+            <key-map field-name="contactMechId"/>
+        </view-link>
+        <relation type="one-nofk" rel-entity-name="FacilityContactMech">
+            <key-map field-name="facilityId"/>
+            <key-map field-name="contactMechId"/>
+            <key-map field-name="fromDate"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="ContactMech">
+            <key-map field-name="contactMechId"/>
+        </relation>
+    </view-entity>
     <!-- SCIPIO: 2018-02-01: Joins Facility's PostalAddress and FacilityContactMechPurposes -->
     <view-entity entity-name="FacilityPostalAddressAndPurpose"
         package-name="org.ofbiz.product.facility"

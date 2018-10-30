@@ -2047,6 +2047,45 @@ under the License.
         <key-map field-name="contactMechId"/>
       </relation>
     </view-entity>
+    <!-- SCIPIO: 2018-10-30: PartyContactMechAndPurpose -->
+    <view-entity entity-name="PartyContactMechAndPurpose"
+            package-name="org.ofbiz.party.party"
+            title="Party Contact Mech And Purpose View">
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
+      <member-entity entity-alias="PCMP" entity-name="PartyContactMechPurpose"/>
+      <alias-all entity-alias="PCM">
+        <exclude field="fromDate"/>
+        <exclude field="thruDate"/>
+      </alias-all>
+      <alias-all entity-alias="PCMP">
+        <exclude field="fromDate"/>
+        <exclude field="thruDate"/>
+      </alias-all>
+      <alias entity-alias="PCM" name="contactFromDate" field="fromDate"/>
+      <alias entity-alias="PCM" name="contactThruDate" field="thruDate"/>
+      <alias entity-alias="PCMP" name="purposeFromDate" field="fromDate"/>
+      <alias entity-alias="PCMP" name="purposeThruDate" field="thruDate"/>
+      <view-link entity-alias="PCM" rel-entity-alias="PCMP">
+        <key-map field-name="partyId"/>
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <relation type="many" rel-entity-name="PartyContactMech">
+        <key-map field-name="partyId"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ContactMechPurposeType">
+        <key-map field-name="contactMechPurposeTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="PartyContent"
             package-name="org.ofbiz.party.party"
             title="Party Data Object">

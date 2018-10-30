@@ -146,7 +146,7 @@
                         <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
                         <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
                         <else>
-                            <log level="info" message="Setup: Skipping deleting party '${partyId}' postal address '${cutn.contactMechId}' because cutn.updateIgnoreEmpty is not set"/>
+                            <log level="info" message="Setup: Skipping deleting party '${partyId}' postal address '${cutn.contactMechId}' because cutn.updateIgnoreEmpty is set"/>
                         </else>
                     </if-compare>
                 </then>
@@ -268,7 +268,7 @@
                         <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
                         <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
                         <else>
-                            <log level="info" message="Setup: Skipping deleting party '${partyId}' telecom number '${cutn.contactMechId}' because cutn.updateIgnoreEmpty is not set"/>
+                            <log level="info" message="Setup: Skipping deleting party '${partyId}' telecom number '${cutn.contactMechId}' because cutn.updateIgnoreEmpty is set"/>
                         </else>
                     </if-compare>
                 </then>

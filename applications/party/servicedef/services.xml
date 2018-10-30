@@ -1585,4 +1585,21 @@ under the License.
         <attribute name="userLogin" mode="OUT" type="String" optional="true"/>
     </service>
 
+    <!-- SCIPIO -->
+    <service name="countOldUnexpiredContactMechPurposes" engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="countOldUnexpiredContactMechPurposes" auth="true">
+        <description>Count PartyContactMechPurpose and FacilityContactMechPurpose records that are not expired but whose associated XxxContactMech records are expired</description>  
+        <attribute name="partyPurposeCount" mode="OUT" type="Long" optional="false"/>
+        <attribute name="facilityPurposeCount" mode="OUT" type="Long" optional="false"/>
+        <attribute name="totalPurposeCount" mode="OUT" type="Long" optional="false"/>
+    </service>
+    <!-- SCIPIO -->
+    <service name="expireOldUnexpiredContactMechPurposes" engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="expireOldUnexpiredContactMechPurposes" auth="true">
+        <description>Expire PartyContactMechPurpose and FacilityContactMechPurpose records that are not expired but whose associated XxxContactMech records are expired</description>  
+        <attribute name="previewOnly" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If set to true, print values found to log instead of committing</description>
+        </attribute>
+        <attribute name="partyPurposeCount" mode="OUT" type="Long" optional="false"/>
+        <attribute name="facilityPurposeCount" mode="OUT" type="Long" optional="false"/>
+        <attribute name="totalPurposeCount" mode="OUT" type="Long" optional="false"/>
+    </service>
 </services>

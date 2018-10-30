@@ -1,4 +1,4 @@
-<#-- SCIPIO: SETUP fiscal periods implementation -->
+<#-- SCIPIO: SETUP Gl Accounting transactions implementation -->
 
 <#include "component://setup/webapp/setup/common/common.ftl">
 

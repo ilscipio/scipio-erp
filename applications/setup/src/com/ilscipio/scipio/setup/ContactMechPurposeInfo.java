@@ -16,6 +16,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
@@ -239,7 +240,7 @@ abstract class ContactMechPurposeInfo {
 
     public static class PartyContactMechPurposeInfo extends ContactMechPurposeInfo {
         protected final String partyId;
-        protected final List<GenericValue> partyContactMechPurposeList;
+        protected final List<GenericValue> partyContactMechPurposeList; // PartyContactMechAndPurpose
 
         protected PartyContactMechPurposeInfo(String partyId, Map<String, Set<String>> contactMechPurposes,
                 Map<String, Set<String>> purposeContactMechs, List<GenericValue> partyContactMechPurposeList, String logPrefix) {
@@ -249,12 +250,13 @@ abstract class ContactMechPurposeInfo {
         }
 
         public static PartyContactMechPurposeInfo forParty(Delegator delegator, LocalDispatcher dispatcher, String partyId, boolean useCache, String logPrefix) throws GenericEntityException {
-            List<GenericValue> partyContactMechPurposeList = EntityQuery.use(delegator).from("PartyContactMechPurpose")
-                    .where("partyId", partyId).filterByDate().cache(useCache).queryList();
+            // 2018-10-30: We must filter by BOTH dates, because sometimes PartyContactMechPurpose is not unset properly
+            List<GenericValue> partyContactMechPurposeList = EntityQuery.use(delegator).from("PartyContactMechAndPurpose")
+                    .where("partyId", partyId).filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").cache(useCache).queryList();
             return fromPartyContactMechPurposeList(partyId, partyContactMechPurposeList, logPrefix);
         }
 
-        public static PartyContactMechPurposeInfo fromPartyContactMechPurposeList(String partyId, List<GenericValue> partyContactMechPurposeList, String logPrefix) {
+        protected static PartyContactMechPurposeInfo fromPartyContactMechPurposeList(String partyId, List<GenericValue> partyContactMechPurposeList, String logPrefix) {
             Map<String, Set<String>> contactMechPurposes = new HashMap<>();
             Map<String, Set<String>> purposeContactMechs = new HashMap<>();
             populateIdMaps(partyContactMechPurposeList, "contactMechId", "contactMechPurposeTypeId", contactMechPurposes, purposeContactMechs);
@@ -294,11 +296,13 @@ abstract class ContactMechPurposeInfo {
 
         private GenericValue getPartyContactMechById(Delegator delegator, String contactMechId, boolean useCache) throws GenericEntityException {
             if (UtilValidate.isNotEmpty(contactMechId)) {
-                List<GenericValue> pcmList = EntityQuery.use(delegator).from("PartyContactMech")
-                        .where("contactMechId", contactMechId, "partyId", partyId).filterByDate()
-                        .orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
+                //List<GenericValue> pcmList = EntityQuery.use(delegator).from("PartyContactMech")
+                //        .where("contactMechId", contactMechId, "partyId", partyId).filterByDate()
+                //        .orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
+                List<GenericValue> pcmList = EntityUtil.filterByAnd(this.partyContactMechPurposeList, UtilMisc.toMap("contactMechId", contactMechId, "partyId", partyId));
+                pcmList = EntityUtil.orderBy(pcmList, SetupDataUtil.getDefaultContactOrderBy("contactFromDate"));
                 if (pcmList.size() > 0) {
-                    GenericValue result = pcmList.get(0);
+                    GenericValue result = pcmList.get(0).extractViewMember("PartyContactMech");
                     if (pcmList.size() > 2) {
                         Debug.logWarning("Setup: Multiple active PartyContactMech records found for contactMechId '"
                             + contactMechId + "' and partyId '" + partyId + "'; using first only (fromDate '" + result.get("fromDate") + ")'", module);
@@ -317,7 +321,7 @@ abstract class ContactMechPurposeInfo {
 
     public static class FacilityContactMechPurposeInfo extends ContactMechPurposeInfo {
         protected final String facilityId;
-        protected final List<GenericValue> facilityContactMechPurposeList;
+        protected final List<GenericValue> facilityContactMechPurposeList; // FacilityContactMechAndPurpose
 
         protected FacilityContactMechPurposeInfo(String facilityId, Map<String, Set<String>> contactMechPurposes,
                 Map<String, Set<String>> purposeContactMechs, List<GenericValue> facilityContactMechPurposeList, String logPrefix) {
@@ -327,12 +331,12 @@ abstract class ContactMechPurposeInfo {
         }
 
         public static FacilityContactMechPurposeInfo forFacility(Delegator delegator, LocalDispatcher dispatcher, String facilityId, boolean useCache, String logPrefix) throws GenericEntityException {
-            List<GenericValue> facilityContactMechPurposeList = EntityQuery.use(delegator).from("FacilityContactMechPurpose")
-                    .where("facilityId", facilityId).filterByDate().cache(useCache).queryList();
+            List<GenericValue> facilityContactMechPurposeList = EntityQuery.use(delegator).from("FacilityContactMechAndPurpose")
+                    .where("facilityId", facilityId).filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").cache(useCache).queryList();
             return fromFacilityContactMechPurposeList(facilityId, facilityContactMechPurposeList, logPrefix);
         }
 
-        public static FacilityContactMechPurposeInfo fromFacilityContactMechPurposeList(String facilityId, List<GenericValue> facilityContactMechPurposeList, String logPrefix) {
+        protected static FacilityContactMechPurposeInfo fromFacilityContactMechPurposeList(String facilityId, List<GenericValue> facilityContactMechPurposeList, String logPrefix) {
             Map<String, Set<String>> contactMechPurposes = new HashMap<>();
             Map<String, Set<String>> purposeContactMechs = new HashMap<>();
             populateIdMaps(facilityContactMechPurposeList, "contactMechId", "contactMechPurposeTypeId", contactMechPurposes, purposeContactMechs);
@@ -372,10 +376,12 @@ abstract class ContactMechPurposeInfo {
 
         private GenericValue getFacilityContactMechById(Delegator delegator, String contactMechId, boolean useCache) throws GenericEntityException {
             if (UtilValidate.isNotEmpty(contactMechId)) {
-                List<GenericValue> pcmList = EntityQuery.use(delegator).from("FacilityContactMech")
-                        .where("contactMechId", contactMechId, "facilityId", facilityId).filterByDate().orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
+                //List<GenericValue> pcmList = EntityQuery.use(delegator).from("FacilityContactMech")
+                //        .where("contactMechId", contactMechId, "facilityId", facilityId).filterByDate().orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
+                List<GenericValue> pcmList = EntityUtil.filterByAnd(this.facilityContactMechPurposeList, UtilMisc.toMap("contactMechId", contactMechId, "facilityId", facilityId));
+                pcmList = EntityUtil.orderBy(pcmList, SetupDataUtil.getDefaultContactOrderBy("contactFromDate"));
                 if (pcmList.size() > 0) {
-                    GenericValue result = pcmList.get(0);
+                    GenericValue result = pcmList.get(0).extractViewMember("FacilityContactMech");
                     if (pcmList.size() > 2) {
                         Debug.logWarning("Setup: Multiple active FacilityContactMech records found for contactMechId '"
                             + contactMechId + "' and facility '" + facilityId + "'; using first only (fromDate: " + result.get("fromDate") + ")", module);

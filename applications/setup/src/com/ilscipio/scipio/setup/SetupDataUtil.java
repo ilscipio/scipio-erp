@@ -729,9 +729,12 @@ public final class SetupDataUtil {
 
     // TODO: REVIEW: unclear which code should order fromDate by ASC or DESC, so in the meantime,
     // use this to centralize any fix needed (for setup code only!)
-    private static final List<String> defaultContactOrderBy = UtilMisc.unmodifiableArrayList("fromDate DESC");
+    private static final List<String> defaultContactOrderBy = UtilMisc.unmodifiableArrayList("-fromDate");
     public static List<String> getDefaultContactOrderBy() {
         return defaultContactOrderBy;
+    }
+    public static List<String> getDefaultContactOrderBy(String fromDateField) {
+        return UtilMisc.toList("-" + fromDateField);
     }
 
     private static <T extends Collection<String>> T getEntityStringFieldValues(List<GenericValue> values, String fieldName, T out) {

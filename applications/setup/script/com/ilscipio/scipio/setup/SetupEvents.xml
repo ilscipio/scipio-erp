@@ -212,19 +212,22 @@
                         <log level="info" message="Setup: Creating party '${partyId}' postal address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
                         <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
                             in that case fail and tell user to resubmit because we're creating a duplicate
-                            and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                        <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
-                            <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
-                                <field-map field-name="partyId" from-field="partyId"/>
-                                <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                            </entity-and>
-                            <if-not-empty field="purposes">
-                                <set field="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                                <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
-                                <check-errors/>
-                            </if-not-empty>
-                        </iterate>
-        
+                            and we wouldn't know what we'd be replacing if we edit the re-queried one
+                            NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.entity.*;
+                            import org.ofbiz.entity.util.*;
+                            EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", partyId),
+                                EntityOperator.AND, EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, cutn.contactMechPurposeTypeIdList));
+                            context.purposes = from("PartyContactMechAndPurpose").where(cond)
+                                .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").queryList();
+                        ]]></script>
+                        <if-not-empty field="purposes">
+                            <set field="contactMechPurposeTypeId" from-field="purposes[0].contactMechPurposeTypeId"/>
+                            <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
+                            <check-errors/>
+                        </if-not-empty>
+
                         <!-- Create -->
                         <set field="purposeCtx" value="" set-if-null="true"/>
                         <set field="createAddressCtx" value="" set-if-null="true"/>
@@ -299,11 +302,12 @@
                     <log level="info" message="Setup: Creating party '${partyId}' telecom number (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
                     <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
                         in that case fail and tell user to resubmit because we're creating a duplicate
-                        and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                    <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="partyId" from-field="partyId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="cutn.contactMechPurposeTypeId"/>
-                    </entity-and>
+                        and we wouldn't know what we'd be replacing if we edit the re-queried one
+                        NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
+                    <script lang="groovy"><![CDATA[
+                        context.purposes = from("PartyContactMechAndPurpose").where("partyId", partyId, "contactMechPurposeTypeId", cutn.contactMechPurposeTypeId)
+                            .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").queryList();
+                    ]]></script>
                     <if-not-empty field="purposes">
                         <set field="contactMechPurposeTypeId" from-field="cutn.contactMechPurposeTypeId"/>
                         <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
@@ -369,11 +373,12 @@
                     <log level="info" message="Setup: Creating party '${partyId}' email address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
                     <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
                         in that case fail and tell user to resubmit because we're creating a duplicate
-                        and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                    <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="partyId" from-field="partyId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="cutn.contactMechPurposeTypeId"/>
-                    </entity-and>
+                        and we wouldn't know what we'd be replacing if we edit the re-queried one
+                        NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
+                    <script lang="groovy"><![CDATA[
+                        context.purposes = from("PartyContactMechAndPurpose").where("partyId", partyId, "contactMechPurposeTypeId", cutn.contactMechPurposeTypeId)
+                            .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").queryList();
+                    ]]></script>
                     <if-not-empty field="purposes">
                         <set field="contactMechPurposeTypeId" from-field="cutn.contactMechPurposeTypeId"/>
                         <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
@@ -923,18 +928,21 @@
                 <log level="info" message="Setup: Creating facility '${facilityId}' postal address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
                 <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
                     in that case fail and tell user to resubmit because we're creating a duplicate
-                    and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
-                    <entity-and entity-name="FacilityContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="facilityId" from-field="facilityId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                    </entity-and>
-                    <if-not-empty field="purposes">
-                        <set field="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                        <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
-                        <check-errors/>
-                    </if-not-empty>
-                </iterate>
+                    and we wouldn't know what we'd be replacing if we edit the re-queried one
+                    NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.entity.*;
+                    import org.ofbiz.entity.util.*;
+                    EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("facilityId", facilityId),
+                        EntityOperator.AND, EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, cutn.contactMechPurposeTypeIdList));
+                    context.purposes = from("FacilityContactMechAndPurpose").where(cond)
+                        .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").queryList();
+                ]]></script>
+                <if-not-empty field="purposes">
+                    <set field="contactMechPurposeTypeId" from-field="purposes[0].contactMechPurposeTypeId"/>
+                    <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
+                    <check-errors/>
+                </if-not-empty>    
 
                 <!-- Create -->
                 <set field="purposeCtx" value="" set-if-null="true"/>

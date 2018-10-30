@@ -189,6 +189,10 @@ under the License.
         </iterate>
         <check-errors/>
     </simple-method>
+    <simple-method method-name="deletePartyContactMech" short-description="Delete a PartyContactMech and purposes"><!-- SCIPIO: 2018-10-30: backward-compat alias -->
+        <call-simple-method method-name="deletePartyContactMechAndPurposes"/>
+        <check-errors/>
+    </simple-method>
 
     <simple-method method-name="createPartyPostalAddress" short-description="Create a PostalAddress for party">
         <if-empty field="parameters.partyId">

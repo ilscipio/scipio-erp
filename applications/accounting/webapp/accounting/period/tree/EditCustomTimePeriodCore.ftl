@@ -108,7 +108,7 @@
     "check_callback": wrapRawScript("function(operation, node, node_parent, node_position, more) { return efpHandler.treeCheckCallback(operation, node, node_parent, node_position, more); }")
 } + toSimpleMap(efpTreeSettings!{})>
 	
-<@section id="mainSection" >
+<@section id="mainCustomTimePeriodSection" >
 	<@row>
 	    <@cell medium=9 large=9>	
 	    	<@section title=uiLabelMap.AccountingTimePeriod>

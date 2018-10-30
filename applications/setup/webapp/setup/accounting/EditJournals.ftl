@@ -76,7 +76,7 @@
     });
 </@script>
 
-<@section id="mainSection">	
+<@section id="mainGlJournalsSection">
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
     <@row>

@@ -144,10 +144,11 @@ NOTE: Should avoid using this for regular, common inlined message results such a
     <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
       <div data-alert class="${styles.alert_wrap!} ${styles[rawString(typeClass)]!}">
         <div class="${styles.grid_row!}">
-          <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>>
-            <#if closable><a href="#" class="${styles.closable!}" data-dismiss="alert">&times;</a></#if>
-            <#nested>
-          </div>
+          <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>><#rt/>
+            <#-- DEV NOTE: Watch out not to create extra whitespace before nested but ensure there is one after the closable icon -->
+            <#if closable><a href="#" class="${styles.closable!}" data-dismiss="alert">&times;</a> </#if><#t/>
+            <#nested><#t/>
+          </div><#lt/>
         </div>
       </div>
     </div>

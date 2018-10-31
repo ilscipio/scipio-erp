@@ -669,6 +669,31 @@ under the License.
         <permission-service service-name="partyContactMechPermissionCheck" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    <!-- SCIPIO: 2018-10-31: for ensurePartyContactMechPurposes new service -->
+    <service name="ensureContactMechPurposesInterface" engine="interface">
+        <description>Interface for services similar to ensurePartyContactMechPurposes (SCIPIO)</description>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="contactMechPurposeTypeIds" type="List" mode="IN" optional="false"/>
+        <attribute name="exact" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, other purposes not in the list are removed.</description>
+        </attribute>
+        <attribute name="conflictMode" type="String" mode="IN" optional="true" default-value="error">
+            <description>What to do when a role is already in use by another active contactMechId:
+                * error: return an error (safe mode)
+                * skip: leave old one, don't create new one
+                * steal: steal the purpose from the other contact mech (add to ours, remove from the old)
+                * dup: create a duplicate purpose for the new one, leave old intact (NOT RECOMMENDED)
+                * dup-warn: same as duplicate but also leaves a warning in the log (NOT RECOMMENDED)</description>
+        </attribute>
+    </service>
+    <!-- SCIPIO: 2018-10-31: ensurePartyContactMechPurposes new service -->
+    <service name="ensurePartyContactMechPurposes" engine="java"
+            location="org.ofbiz.party.contact.ContactMechServices" invoke="ensurePartyContactMechPurposes" auth="true">
+        <description>Ensures Party ContactMech has the requested purposes (SCIPIO)</description>
+        <permission-service service-name="partyContactMechPermissionCheck" main-action="UPDATE"/>
+        <implements service="ensureContactMechPurposesInterface"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- ContactMechList services -->
     <service name="createContactMechLink" default-entity-name="ContactMechLink" engine="simple"

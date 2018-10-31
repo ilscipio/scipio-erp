@@ -1081,6 +1081,15 @@ under the License.
         <permission-service service-name="facilityPermissionCheck" main-action="DELETE"/>
         <auto-attributes entity-name="FacilityContactMechPurpose" include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- SCIPIO: 2018-10-31: ensureFacilityContactMechPurposes new service -->
+    <service name="ensureFacilityContactMechPurposes" engine="java"
+            location="org.ofbiz.party.contact.ContactMechServices" invoke="ensureFacilityContactMechPurposes" auth="true">
+        <description>Ensures Party ContactMech has the requested purposes (SCIPIO)</description>
+        <permission-service service-name="facilityPermissionCheck" main-action="UPDATE"/>
+        <implements service="ensureContactMechPurposesInterface"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+    </service>
+    
 <!-- end cm -->
     <service name="addContactMechToFacility" engine="simple" default-entity-name="FacilityContactMech" 
                 location="component://product/script/org/ofbiz/product/storage/StorageServices.xml" invoke="addContactMechToFacility" auth="true">

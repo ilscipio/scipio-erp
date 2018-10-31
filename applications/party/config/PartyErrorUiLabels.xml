@@ -484,6 +484,10 @@
         <value xml:lang="zh">没有改动，所以没有更新联系方式。</value>
         <value xml:lang="zh-TW">沒有改動,所以沒有更新聯絡方式.</value>
     </property>
+    <property key="contactmechservices.purpose_already_exists_different_contact_mech">
+        <value xml:lang="de">Der Zweck '${contactMechPurposeTypeId}' ist bereits für '${entityId}' für den Kontaktmech '${oldContactMechId}' vorhanden. kann nicht für den neuen Kontaktmech '${newContactMechId}' verwendet werden</value>
+        <value xml:lang="en">Purpose '${contactMechPurposeTypeId}' already exists for '${entityId}' for contact mech '${oldContactMechId}'; cannot use it for new contact mech '${newContactMechId}'</value>
+    </property>
     <property key="contactmechservices.service_createContactMech_not_be_used_for_POSTAL_ADDRESS">
         <value xml:lang="de">Dieser Service (createContactMech) sollte nicht für POSTAL_ADDRESS Typ Kontaktmechanismen verwendet werden. Verwenden Sie den Service createPostalAdress. </value>
         <value xml:lang="en">This service (createContactMech) should not be used for POSTAL_ADDRESS type ContactMechs, use the createPostalAddress service.</value>

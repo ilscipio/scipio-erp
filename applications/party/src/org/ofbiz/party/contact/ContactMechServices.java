@@ -21,13 +21,18 @@ package org.ofbiz.party.contact;
 
 import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.util.Debug;
@@ -40,6 +45,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -1137,4 +1144,150 @@ public class ContactMechServices {
         return result;
     }
 
+
+    /**
+     * SCIPIO: ensurePartyContactMechPurposes.
+     * Added 2018-10-31.
+     */
+    public static Map<String, Object> ensurePartyContactMechPurposes(DispatchContext dctx, Map<String, ? extends Object> context) {
+        return ensureContactMechPurposesImpl(dctx, context, "partyId", "PartyContactMechPurpose", "PartyContactMechAndPurpose", "ensurePartyContactMechPurposes: ");
+    }
+    
+    /**
+     * SCIPIO: ensureFacilityContactMechPurposes.
+     * Added 2018-10-31.
+     */
+    public static Map<String, Object> ensureFacilityContactMechPurposes(DispatchContext dctx, Map<String, ? extends Object> context) {
+        return ensureContactMechPurposesImpl(dctx, context, "facilityId", "FacilityContactMechPurpose", "FacilityContactMechAndPurpose", "ensureFacilityContactMechPurposes: ");
+    }
+
+    /**
+     * SCIPIO: This is a shared service implementation for anything that follows the
+     * XxxContactMech+XxxContactMechPurpose pattern.
+     */
+    public static Map<String, Object> ensureContactMechPurposesImpl(DispatchContext dctx, Map<String, ? extends Object> context, 
+            String entityIdField, String purposeEntity, String mechAndPurposeView, String logPrefix) {
+        Delegator delegator = dctx.getDelegator();
+        String entityId = (String) context.get(entityIdField);
+        String contactMechId = (String) context.get("contactMechId");
+        Collection<String> contactMechPurposeTypeIds = new LinkedHashSet<>(UtilGenerics.checkList(context.get("contactMechPurposeTypeIds")));
+        String conflictMode = (String) context.get("conflictMode");
+        boolean exact = Boolean.TRUE.equals(context.get("exact"));
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+
+        try {
+            List<GenericValue> toBeExpired = new ArrayList<>();
+            List<GenericValue> toBeCreated = new ArrayList<>();
+
+            // Get ALL active purposes for the user (even for other contact mechs), we will then sort through them
+            List<GenericValue> allOldPurposes = EntityQuery.use(delegator).from(mechAndPurposeView)
+                    .where(entityIdField, entityId)
+                    .filterByDate(nowTimestamp, "contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").queryList();
+            List<GenericValue> targetMechOldPurposes = EntityUtil.filterByAnd(allOldPurposes, UtilMisc.toMap("contactMechId", contactMechId));
+            Set<String> targetMechOldPurposeTypeIds = new HashSet<>();
+            for(GenericValue purpose : targetMechOldPurposes) {
+                targetMechOldPurposeTypeIds.add(purpose.getString("contactMechPurposeTypeId"));
+            }
+
+            // get the active purposes for all others
+            List<GenericValue> otherMechOldPurposes = EntityUtil.filterByCondition(allOldPurposes, 
+                    EntityCondition.makeCondition("contactMechId", EntityOperator.NOT_EQUAL, "contactMechId"));
+            Map<String, GenericValue> otherMechOldPurposeMap = new HashMap<>();
+            for(GenericValue purpose : otherMechOldPurposes) {
+                otherMechOldPurposeMap.put(purpose.getString("contactMechPurposeTypeId"), purpose);
+            }
+
+            // Delete old
+            if (exact) {
+                for(GenericValue oldPurpose : targetMechOldPurposes) {
+                    if (!contactMechPurposeTypeIds.contains(oldPurpose.getString("contactMechPurposeTypeId"))) {
+                        toBeExpired.add(oldPurpose.extractViewMember(purposeEntity));
+                    }
+                }
+            }
+
+            // Create new
+            for(String contactMechPurposeTypeId : contactMechPurposeTypeIds) {
+                if (targetMechOldPurposeTypeIds.contains(contactMechPurposeTypeId)) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose(logPrefix+"Purpose '" + contactMechPurposeTypeId 
+                                + "' already exists for " + entityIdField + " '" + entityId + "' contactMechId '" + contactMechId + "'", module);
+                    }
+                    continue;
+                } 
+
+                GenericValue oldOtherContactPurpose = otherMechOldPurposeMap.get(contactMechPurposeTypeId);
+                if (oldOtherContactPurpose != null) {
+                    if ("skip".equals(conflictMode)) {
+                        if (Debug.infoOn()) {
+                            Debug.logInfo(logPrefix+"Purpose '" + contactMechPurposeTypeId 
+                                + "' already exists for " + entityIdField + " '" + entityId + "' contactMechId '" 
+                                + oldOtherContactPurpose.getString("contactMechId") + "'; skipping/not-setting for contactMechId '" + contactMechId + "'", module);
+                        }
+                        continue;
+                    } else if ("dup".equals(conflictMode)) {
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose(logPrefix+"Purpose '" + contactMechPurposeTypeId 
+                                    + "' already exists for " + entityIdField + " '" + entityId + "' contactMechId '" 
+                                    + oldOtherContactPurpose.getString("contactMechId") + "'; adding another for contactMechId '" + contactMechId + "'", module);
+                        }
+                    } else if ("dup-warn".equals(conflictMode)) {
+                        Debug.logWarning(logPrefix+"Purpose '" + contactMechPurposeTypeId 
+                                + "' already exists for " + entityIdField + " '" + entityId + "' contactMechId '" 
+                                + oldOtherContactPurpose.getString("contactMechId") + "'; adding another for contactMechId '" + contactMechId + "'", module);
+                    } else if ("steal".equals(conflictMode)) {
+                        if (Debug.infoOn()) {
+                            Debug.logInfo(logPrefix+"Purpose '" + contactMechPurposeTypeId 
+                                + "' already exists for " + entityIdField + " '" + entityId + "' contactMechId '" 
+                                + oldOtherContactPurpose.getString("contactMechId") + "'; stealing and setting it on contactMechId '" + contactMechId + "' instead", module);
+                        }
+                        // Remove all the old
+                        List<GenericValue> toSteal = EntityUtil.filterByAnd(otherMechOldPurposes, UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId));
+                        for(GenericValue value : toSteal) {
+                            toBeExpired.add(value.extractViewMember(purposeEntity));
+                        }
+                    } else {
+                        Map<String, Object> labelArgs = UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId, "entityId", entityId,
+                                "oldContactMechId", oldOtherContactPurpose.getString("contactMechId"), "newContactMechId", contactMechId);
+                        Debug.logError(logPrefix+UtilProperties.getMessage(resourceError, "contactmechservices.purpose_already_exists_different_contact_mech", labelArgs, Locale.ENGLISH), module);
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "contactmechservices.purpose_already_exists_different_contact_mech", labelArgs, (Locale) context.get("locale")));
+                    }
+                }
+                
+                GenericValue newPurpose = delegator.makeValue(purposeEntity);
+                newPurpose.put(entityIdField, entityId);
+                newPurpose.put("contactMechId", contactMechId);
+                newPurpose.put("contactMechPurposeTypeId", contactMechPurposeTypeId);
+                newPurpose.put("fromDate", nowTimestamp);
+                toBeCreated.add(newPurpose);
+            }
+
+            // TODO: REVIEW: Not sure if all these service calls are really needed, staying safe for now (CPU overhead only)
+            // would be maybe useful to have the same nowTimestamp on all the thruDates...
+            //delegator.removeAll(toBeRemoved);
+            for(GenericValue value : toBeExpired) {
+                final String serviceName = "delete"+purposeEntity;
+                Map<String, Object> invokeCtx = dctx.makeValidContext(serviceName, ModelService.IN_PARAM, context);
+                invokeCtx.putAll(dctx.makeValidContext(serviceName, ModelService.IN_PARAM, value));
+                Map<String, Object> invokeResult = dctx.getDispatcher().runSync(serviceName, invokeCtx);
+                if (!ServiceUtil.isSuccess(invokeResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(invokeResult));
+                }
+            }
+            for(GenericValue value : toBeCreated) {
+                //value.create();
+                final String serviceName = "create"+purposeEntity;
+                Map<String, Object> invokeCtx = dctx.makeValidContext(serviceName, ModelService.IN_PARAM, context);
+                invokeCtx.putAll(dctx.makeValidContext(serviceName, ModelService.IN_PARAM, value));
+                Map<String, Object> invokeResult = dctx.getDispatcher().runSync(serviceName, invokeCtx);
+                if (!ServiceUtil.isSuccess(invokeResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(invokeResult));
+                }
+            }
+        } catch (GenericEntityException | GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.toString());
+        }
+        return ServiceUtil.returnSuccess();
+    }
 }

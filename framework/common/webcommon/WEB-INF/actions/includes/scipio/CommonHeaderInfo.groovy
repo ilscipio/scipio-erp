@@ -1,3 +1,7 @@
+/**
+ * SCIPIO: [FIXME: Insert description and original file this was based off here]
+ */
+
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
@@ -6,6 +10,9 @@ import org.ofbiz.order.order.OrderReadHelper;
 import java.sql.Timestamp;
 import org.ofbiz.party.content.PartyContentWrapper;
 
+chiSetGlobal = context.chiSetGlobal;
+if (chiSetGlobal == null) chiSetGlobal = false;
+context.remove("chiSetGlobal");
 
 orderHeader = parameters.orderHeader;
 orderId = parameters.orderId;
@@ -124,5 +131,9 @@ if (partyGroup) {
 }
 //If logoImageUrl not null then only set it to context else it will override the default value "/images/ofbiz_powered.gif"
 if (logoImageUrl) {
-    context.logoImageUrl = logoImageUrl;
+    if (chiSetGlobal) {
+        globalContext.logoImageUrl = logoImageUrl;
+    } else {
+        context.logoImageUrl = logoImageUrl;
+    }
 }

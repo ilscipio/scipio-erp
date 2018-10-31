@@ -620,7 +620,6 @@ under the License.
                 <not><if-compare operator="equals" value="Y" field="parameters.ajaxLookup"/></not>
             </condition>
             <widgets>
-
                 <section>
                     <actions>
                         <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -688,7 +687,6 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-
             </widgets>
             <fail-widgets>
                 <section>
@@ -831,7 +829,8 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/>
+                <set field="chiSetGlobal" type="Boolean" value="true"/>
                 <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
                 <property-to-field resource="fop.properties" field="defaultFontFamily" property="fop.font.family" default="Arial"/>
             </actions>
@@ -845,8 +844,19 @@ under the License.
     <screen name="GlobalFoDecorator">
         <section>
             <actions>
+                <set field="chiSetGlobal" type="Boolean" value="true"/>
                 <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
-                <set field="layoutSettings.commonHeaderImageUrl" default-value="/images/scipio/scipio-logo.svg"/>
+                <!-- SCIPIO: No, groovy puts in logoImageUrl
+                <set field="layoutSettings.commonHeaderImageUrl" default-value="/images/scipio/scipio-logo.svg"/>-->
+                <if>
+                    <condition>
+                        <if-empty field="layoutSettings.commonHeaderImageUrl"/>
+                    </condition>
+                    <then>
+                        <!-- TODO: REVIEW: setting this field at all is probably flawed or wrong -->
+                        <set field="layoutSettings.commonHeaderImageUrl" from-field="logoImageUrl" default-value="/images/scipio/scipio-logo.svg" global="true"/>
+                    </then>
+                </if>
             </actions>
             <widgets>
                 <platform-specific>
@@ -868,7 +878,8 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/><!-- SCIPIO: global="true" is required -->
+                <set field="chiSetGlobal" type="Boolean" value="true"/>
                 <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
             </actions>
             <widgets>
@@ -887,7 +898,8 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/>
+                <set field="chiSetGlobal" type="Boolean" value="true"/>
                 <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
             </actions>
             <widgets>

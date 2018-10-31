@@ -16,7 +16,7 @@
 ]>
 
 <#assign etaObjectProps = {
-    "taxAuthority" : {
+    "taxauth" : {
         "add" : {
             "type": "form",
             "mode": "show",
@@ -87,12 +87,18 @@
         <@cell medium=9 large=9>
             <@section title=uiLabelMap.AccountingTaxAuthorities>    
                 <@table>
-                    <@tr>
-                        <#list partyTaxAuthInfos as partyTaxAuthInfo>
-                            <@td>${partyTaxAuthInfo.taxAuthGeoId!}</@td>
-                            <@td>${partyTaxAuthInfo.taxAuthPartyId!}</@td>
-                        </#list>
-                    </@tr>
+                	<#if partyTaxAuthInfos?has_content>
+		                <@tr>
+		                    <#list partyTaxAuthInfos as partyTaxAuthInfo>
+		                        <@td>${partyTaxAuthInfo.taxAuthGeoId!}</@td>
+		                        <@td>${partyTaxAuthInfo.taxAuthPartyId!}</@td>
+		                    </#list>
+		                </@tr>
+		            <#else>
+		                <@tr type="meta">
+		                  <@td colspan="9"><@commonMsg type="result-norecord">${uiLabelMap.CommonNoRecordFound}</@commonMsg></@td>
+		              	</@tr>
+                  	</#if>
                 </@table>
             </@section>  
         </@cell>
@@ -102,7 +108,7 @@
             <#-- MENU -->
             <ul class="side-nav">
                <li>
-                   <@menuitem type="link" href="javascript:void(0);" text=uiLabelMap.CommonAdd />
+                   <@menuitem contentId="eta-taxauth-add" class="+eta-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.CommonAdd />
                </li>
             </ul>
           </@section>

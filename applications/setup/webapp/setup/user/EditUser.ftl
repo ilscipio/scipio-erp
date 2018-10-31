@@ -301,16 +301,15 @@ under the License.
                 <#else>
                   <#if (generalAddressStandaloneCompleted!false) == false>
                     <#if (locationAddressesCompleted!false) == true>
-                      <#-- 2018-10-31: Not really appropriate for user, because normal that many users will have multiple addresses
                       <@alert type="info">${getLabel('SetupSplitAddressPurposesNotice', '', addressNoticeParams)}
                         <@setupExtAppLink uri=addressManageUri text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
-                      </@alert>-->
+                      </@alert>
                     <#else>
                       <@alert type="warning">${getLabel('SetupMissingAddressPurposesNotice', '', addressNoticeParams)}
                         <@setupExtAppLink uri=addressManageUri text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
                       </@alert>
                       <#-- 2018-10-31: no need for this for user anymore since we have the checkboxes
-                      <#-  - NOTE: this flag could be destructive, that's why it's false by default - ->
+                      <#- - NOTE: this flag could be destructive, that's why it's false by default - ->
                       <@field type="checkbox" checkboxType="simple" name="USER_ADDRESS_CREATEMISSINGPURPOSES" label=uiLabelMap.SetupCreateMissingAddressPurposes
                         id="USER_ADDRESS_CREATEMISSINGPURPOSES_CHECK" value="true" altValue="false" currentValue=(params.USER_ADDRESS_CREATEMISSINGPURPOSES!"false")/>-->
                     </#if>

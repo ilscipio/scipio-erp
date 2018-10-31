@@ -222,6 +222,16 @@ public final class SetupDataUtil {
                     generalAddressContactMech = contactMechInfo.getClosestPartyContactMechForPurposes(delegator, USER_MAINADDR_PURPOSES, useCache);
                 }
             }
+            // 2018-10-31: special case: for user, if there is an address with no purpose, grab it
+            if (generalAddressContactMech == null) {
+                List<GenericValue> extraAddressList = EntityQuery.use(delegator).from("PartyContactMechAndContactMech")
+                        .where("partyId", userPartyId, "contactMechTypeId", "POSTAL_ADDRESS").filterByDate().orderBy("-fromDate").cache(useCache).queryList();
+                if (extraAddressList.size() > 0) {
+                    generalAddressContactMech = extraAddressList.get(0).extractViewMember("PartyContactMech");
+                    Debug.logInfo("Setup: User: party '" + userPartyId + "' has no address having purposes " + USER_MAINADDR_PURPOSES 
+                            + "; using first found address (contactMechId: " + generalAddressContactMech.getString("contactMechId") + ")", module);
+                }
+            }
             if (generalAddressContactMech != null) {
                 generalAddressContactMechPurposes = contactMechInfo.getContactMechPurposes(generalAddressContactMech.getString("contactMechId"));
             }

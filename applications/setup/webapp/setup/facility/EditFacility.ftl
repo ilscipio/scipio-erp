@@ -19,7 +19,7 @@
   <@alert type="info">${uiLabelMap.SetupInfoWarehouse}</@alert>
 </#if>
 
-<@section>
+<#--<@section> already in screen-->
     <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["facilityId"]/>
         <@field type="hidden" name="isCreateFacility" value=(facility??)?string("N","Y")/>
@@ -137,7 +137,7 @@
                             }
                         </@script>
                     <#list srcPostalAddressList as postalAddress>
-                      <div class="setup-addressentry">
+                      <div class="setup-addressentry" style="inline-block;">
                         <@formattedAddressBasic address=postalAddress 
                             purposes=(srcContactMechPurposeMap[rawString(postalAddress.contactMechId)]!)
                             emphasis=true/><br/>
@@ -177,4 +177,4 @@
           </div>
         </@field>
     </@form>
-</@section>
+<#--</@section>-->

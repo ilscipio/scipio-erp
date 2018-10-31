@@ -44,7 +44,8 @@
             </@field><#lt/>
             <@field type="hidden" name="taxAuthGeoId" value=(params.taxAuthGeoId!) class="+acctg-inputfield"/>
         <#else>          
-            
+        	<@field type="input" name="taxAuthPartyId" label=uiLabelMap.FormFieldTitle_taxAuthPartyId value=(params.taxAuthPartyId!) class="+acctg-inputfield"/>        	
+            <@field type="input" name="groupName" label=uiLabelMap.AccountingTaxAuthority value=(params.groupName!) class="+acctg-inputfield"/>            
             <@field type="lookup" name="taxAuthGeoId" label=uiLabelMap.FormFieldTitle_taxAuthGeoId value=(params.taxAuthPartyId!) fieldFormName="LookupGeo" class="+ect-inputfield" required=true/>            
         </#if>
         <@field type="checkbox" name="requireTaxIdForExemption" label=uiLabelMap.FormFieldTitle_requireTaxIdForExemption value="Y" checked=("Y" == params.requireTaxIdForExemption!) />
@@ -71,6 +72,7 @@
                             });
                         }
                         $('#' + props.id).fadeIn();
+                        $("input[name=partyId]").val($("input[name=taxAuthPartyId]").val());
                         setupControlMenu.setSubmitFormId(props.id + '-form');
                     }
                 }
@@ -88,10 +90,16 @@
             <@section title=uiLabelMap.AccountingTaxAuthorities>    
                 <@table>
                 	<#if partyTaxAuthInfos?has_content>
+                		<@thead>
+	                        <@tr>
+	                            <@td>${uiLabelMap.FormFieldTitle_taxAuthPartyId}</@td>
+	                            <@td>${uiLabelMap.FormFieldTitle_taxAuthGeoId!}</@td>
+	                        </@tr>
+                        </@thead>
 		                <@tr>
 		                    <#list partyTaxAuthInfos as partyTaxAuthInfo>
-		                        <@td>${partyTaxAuthInfo.taxAuthGeoId!}</@td>
 		                        <@td>${partyTaxAuthInfo.taxAuthPartyId!}</@td>
+		                        <@td>${partyTaxAuthInfo.taxAuthGeoId!}</@td>
 		                    </#list>
 		                </@tr>
 		            <#else>
@@ -116,7 +124,7 @@
     </@row>
 </@section>
 
-<@section title=uiLabelMap.PageTitleAddTaxAuth containerId="eta-newtaxauth" containerClass="+eta-newtaxauth acctg-recordaction acctg-newrecord" 
+<@section title=uiLabelMap.AccountingNewTaxAuthority containerId="eta-newtaxauth" containerClass="+eta-newtaxauth acctg-recordaction acctg-newrecord" 
     containerStyle=((targetRecordAction == "new-new")?string("","display:none;"))>
   <#if targetRecordAction == "newtaxauthid-new">
     <#assign paramMaps = initialParamMaps>

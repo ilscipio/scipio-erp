@@ -19,7 +19,7 @@
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <!-- SCIPIO: New Setup Component Events
         NOTE: the original ofbizsetup methods are found (and still referenced) in:
@@ -1210,6 +1210,23 @@
     <simple-method method-name="importDefaultGL" short-description="Import default GL Accounts" login-required="true">
         <!-- TODO -->
         <request-to-field field="predefinedGLAccountId" request-name="importPredefinedGL" />
+    </simple-method>
+    
+    <simple-method method-name="createTaxAuthority" short-description="Creates PartyGroup, PartyRole and TaxAuthority" login-required="true">
+        <if-empty field="parameters.taxAuthPartyId">
+            <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupTaxAuthPartyIdMissing"/></add-error>
+        </if-empty>
+        <set-service-fields service-name="createSetupTaxAuthority" map="parameters" to-map="createSetupTaxAuthorityCtx" />        
+        <set field="createSetupTaxAuthorityCtx.partyTypeId" value="PARTY_GROUP" />
+        <set field="createSetupTaxAuthorityCtx.roleTypeId" value="TAX_AUTHORITY" />
+        <set field="createSetupTaxAuthorityCtx.partyId" from-field="parameters.taxAuthPartyId" />
+        <call-service service-name="createSetupTaxAuthority" in-map-name="createSetupTaxAuthorityCtx" />      
+        
+        <!-- Has to be invoked separately because of partyId being different -->
+        <set-service-fields service-name="createPartyTaxAuthInfo" map="parameters" to-map="createPartyTaxAuthInfoCtx" />
+        <now-timestamp field="createPartyTaxAuthInfoCtx.fromDate" />
+        <set field="createPartyTaxAuthInfoCtx.partyId" from-field="parameters.orgPartyId" />
+        <call-service service-name="createPartyTaxAuthInfo" in-map-name="createPartyTaxAuthInfoCtx" />
     </simple-method>
 
 </simple-methods>

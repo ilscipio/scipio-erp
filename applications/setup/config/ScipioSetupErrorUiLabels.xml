@@ -88,4 +88,8 @@
         <value xml:lang="en">The passed Web Site ID is already in use.</value>
         <value xml:lang="fr">L'ID pour ce site web est déjà utilisé.</value>
     </property>
+    <property key="SetupTaxAuthPartyIdMissing">
+        <value xml:lang="en">Tax Authority ID missing</value>
+    </property>
+    
 </resource>

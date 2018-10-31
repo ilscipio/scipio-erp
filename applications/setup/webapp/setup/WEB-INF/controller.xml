@@ -224,14 +224,15 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
-     <!-- GlJournal -->
+    
+       <!-- Tax Auth -->
     <request-map uri="setupCreateTaxAuth">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createSetupTaxAuthority"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createTaxAuthority"/>
+        <!-- <event type="service" invoke="createSetupTaxAuthority"/> -->
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
-    
 
         <!-- Preferences -->
     <request-map uri="setupCreateAccountingPreferences">

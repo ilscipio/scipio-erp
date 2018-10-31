@@ -15,8 +15,9 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-<@alert type="info">${uiLabelMap.SetupInfoWarehouse}</@alert>
-
+<#if !facilityInfo??>
+  <@alert type="info">${uiLabelMap.SetupInfoWarehouse}</@alert>
+</#if>
 
 <@section>
     <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>

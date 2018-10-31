@@ -285,15 +285,15 @@ under the License.
                 <@field type="hidden" name="USER_ADDRESS_UPDIGNEMPTY" value="true"/>
             </@fields>
             
-            <#if !userParty??><#-- FIXME: should also work on update... -->
-                <@field type="generic" label=uiLabelMap.CommonPurpose ignoreParentField=true fieldsType="default">
-                  <#list postalPurposeTypeList as purposeType>
-                    <@field type="checkbox" name="USER_ADDR_PURPOSE" inlineItems=true value=purposeType.contactMechPurposeTypeId label=(purposeType.get("description")!purposeType.contactMechPurposeTypeId)
-                      checked=((params.USER_ADDR_PURPOSE![])?seq_contains(rawString(purposeType.contactMechPurposeTypeId)))/>
-                  </#list>
-                </@field>
-            </#if>
-            
+            <#-- DEV NOTE: for users must allow toggle specific purposes because they're too generic and whole address
+                form is useless without this. Replaces USER_ADDRESS_CREATEMISSINGPURPOSES below. -->
+            <@field type="generic" label=uiLabelMap.CommonPurpose ignoreParentField=true fieldsType="default">
+              <#list postalPurposeTypeList as purposeType>
+                <@field type="checkbox" name="USER_ADDR_PURPOSE" inlineItems=true value=purposeType.contactMechPurposeTypeId label=(purposeType.get("description")!purposeType.contactMechPurposeTypeId)
+                  checked=((params.USER_ADDR_PURPOSE![])?seq_contains(rawString(purposeType.contactMechPurposeTypeId)))/>
+              </#list>
+            </@field>
+
             <#if userParty??>
                 <#assign addressNoticeParams = {"purposes":getContactMechPurposeDescs(locationPurposes)?join(", ")}>
                 <#if !generalAddressContactMech??>
@@ -301,16 +301,18 @@ under the License.
                 <#else>
                   <#if (generalAddressStandaloneCompleted!false) == false>
                     <#if (locationAddressesCompleted!false) == true>
+                      <#-- 2018-10-31: Not really appropriate for user, because normal that many users will have multiple addresses
                       <@alert type="info">${getLabel('SetupSplitAddressPurposesNotice', '', addressNoticeParams)}
                         <@setupExtAppLink uri=addressManageUri text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
-                      </@alert>
+                      </@alert>-->
                     <#else>
                       <@alert type="warning">${getLabel('SetupMissingAddressPurposesNotice', '', addressNoticeParams)}
                         <@setupExtAppLink uri=addressManageUri text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
                       </@alert>
-                      <#-- NOTE: this flag could be destructive, that's why it's false by default -->
+                      <#-- 2018-10-31: no need for this for user anymore since we have the checkboxes
+                      <#-  - NOTE: this flag could be destructive, that's why it's false by default - ->
                       <@field type="checkbox" checkboxType="simple" name="USER_ADDRESS_CREATEMISSINGPURPOSES" label=uiLabelMap.SetupCreateMissingAddressPurposes
-                        id="USER_ADDRESS_CREATEMISSINGPURPOSES_CHECK" value="true" altValue="false" currentValue=(params.USER_ADDRESS_CREATEMISSINGPURPOSES!"false")/>
+                        id="USER_ADDRESS_CREATEMISSINGPURPOSES_CHECK" value="true" altValue="false" currentValue=(params.USER_ADDRESS_CREATEMISSINGPURPOSES!"false")/>-->
                     </#if>
                   </#if>
                 </#if>

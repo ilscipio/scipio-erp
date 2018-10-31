@@ -87,7 +87,7 @@ under the License.
       </fo:table-row>
       <fo:table-row>
         <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.ProductShipmentMethod}</fo:block></fo:table-cell>
-        <fo:table-cell><#if data.carrierShipmentMethod??><fo:block>${data.carrierShipmentMethod.partyId} ${data.shipmentMethodType.description}</fo:block></#if></fo:table-cell>
+        <fo:table-cell><#if data.carrierShipmentMethod??><fo:block wrap-option="wrap">${data.carrierShipmentMethod.partyId} ${data.shipmentMethodType.description}</fo:block></#if></fo:table-cell>
       </fo:table-row>
       <fo:table-row>
         <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.OrderShipBeforeDate}</fo:block></fo:table-cell>

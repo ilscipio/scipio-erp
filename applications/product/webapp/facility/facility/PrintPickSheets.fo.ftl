@@ -125,7 +125,7 @@ under the License.
                                                                   <fo:block>${uiLabelMap.ProductShipmentMethod}:</fo:block>
                                                              </fo:table-cell>
                                                              <fo:table-cell>
-                                                                 <fo:block font-weight="bold">${carrierPartyId!}-${shipmentMethodType!}</fo:block>
+                                                                 <fo:block font-weight="bold" wrap-option="wrap">${carrierPartyId!}-${shipmentMethodType!}</fo:block>
                                                              </fo:table-cell>
                                                          </fo:table-row>
                                                      </fo:table-body>

@@ -92,8 +92,8 @@ under the License.
         -->
         <fo:static-content flow-name="xsl-region-before">
             <fo:table table-layout="fixed" width="100%" >
-                <fo:table-column column-number="1" column-width="proportional-column-width(66)" padding-right="10mm"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
-                <fo:table-column column-number="2" column-width="proportional-column-width(33)"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
+                <fo:table-column column-number="1" padding-right="10mm"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
+                <fo:table-column column-number="2" column-width="80mm"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
                 <fo:table-body>
                     <fo:table-row>
                         <fo:table-cell>${sections.render("topLeft")}</fo:table-cell>

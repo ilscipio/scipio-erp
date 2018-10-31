@@ -41,7 +41,7 @@ under the License.
          page-width="210mm" page-height="297mm"
          margin-top="0.35cm"   margin-bottom="0.35cm"
          margin-left="20mm"  margin-right="20mm">
-              <fo:region-body   margin-top="105mm" margin-left="5mm" margin-right="10mm"/>
+              <fo:region-body   margin-top="35mm" margin-left="5mm" margin-right="10mm"/>
               <!--<fo:region-before extent="3cm" margin="45mm" space-after="2.5cm"/>-->
               <fo:region-after  extent="2cm" />
               <fo:region-start  extent="0cm"/>
@@ -63,7 +63,7 @@ under the License.
               page-width="203mm" page-height="297mm"
               margin-top="0.35cm" margin-bottom="35mm"
               margin-left="35mm" margin-right="35mm">
-            <fo:region-body margin-top="0cm" margin-bottom="0cm" space-after="2.5cm"/>
+            <fo:region-body margin-top="35mm" margin-bottom="0cm" space-after="2.5cm"/>
             <!--<fo:region-before extent="3cm"/>-->
             <fo:region-after extent="2cm"/>
             <fo:region-end    extent="0cm"/>
@@ -96,8 +96,8 @@ under the License.
                 <fo:table-column column-number="2" column-width="80mm"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
                 <fo:table-body>
                     <fo:table-row>
-                        <fo:table-cell>${sections.render("topLeft")}</fo:table-cell>
-                        <fo:table-cell>${sections.render("topRight")}</fo:table-cell>
+                        <fo:table-cell><fo:block>${sections.render("topLeft")}</fo:block></fo:table-cell>
+                        <fo:table-cell><fo:block>${sections.render("topRight")}</fo:block></fo:table-cell>
                     </fo:table-row>
                 </fo:table-body>
             </fo:table>

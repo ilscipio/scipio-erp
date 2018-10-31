@@ -62,10 +62,10 @@ under the License.
                 <fo:table-body>
                     <fo:table-row>
                         <fo:table-cell>
-                            ${sections.render("topLeft")}
+                            <fo:block>${sections.render("topLeft")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
-                            ${sections.render("topRight")}
+                            <fo:block>${sections.render("topRight")}</fo:block>
                         </fo:table-cell>
                     </fo:table-row>
                 </fo:table-body>

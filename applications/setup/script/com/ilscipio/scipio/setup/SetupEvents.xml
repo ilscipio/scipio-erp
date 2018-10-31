@@ -62,7 +62,12 @@
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
                 <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_ADDRESS_UPDIGNEMPTY"/>
                 <script lang="groovy"><![CDATA[
-                    cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.ORGANIZATION_MAINADDR_PURPOSES as List;
+                    if (parameters.USER_ADDR_PURPOSE) {
+                        cutn.contactMechPurposeTypeIdList = (parameters.USER_ADDR_PURPOSE instanceof List) ? parameters.USER_ADDR_PURPOSE : [parameters.USER_ADDR_PURPOSE];
+                        cutn.exactPurposes = true;
+                    } else {
+                        cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.ORGANIZATION_MAINADDR_PURPOSES as List;
+                    }
                 ]]></script>
                 <set field="cutn.contactCtx" from-field="addressContext"/>
                 <set field="cutn.createMissingPurposes" from-field="parameters.USER_ADDRESS_CREATEMISSINGPURPOSES"/>
@@ -174,21 +179,27 @@
                             an expired contact mech! -->
                         <result-to-field result-name="contactMechId" field="cutn.contactMechId"/>
                     </call-service>
-                    <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
-                        <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
-                            <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
-                                <field-map field-name="partyId" from-field="partyId"/>
-                                <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                            </entity-and>
-                            <if-empty field="purposes">
-                                <log level="info" message="Setup: Creating party '${partyId}' postal address '${cutn.contactMechId}' missing purpose: ${contactMechPurposeTypeId}"/>
+                    <if-compare field="cutn.exactPurposes" operator="equals" type="Boolean" value="true">
+                        <log level="info" message="Setup: Setting party '${partyId}' postal address '${cutn.contactMechId}' purposes: ${cutn.contactMechPurposeTypeIdList}"/>
+                        <set field="purposeCtx" value="" set-if-null="true"/>
+                        <set field="purposeCtx.partyId" from-field="partyId"/>
+                        <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
+                        <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                        <set field="purposeCtx.exact" type="Boolean" value="true"/>
+                        <set field="purposeCtx.conflictMode" value="error"/><!-- if roles are already on another contact mech, return error -->
+                        <call-service service-name="ensurePartyContactMechPurposes" in-map-name="purposeCtx"/>
+                        <else>
+                            <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
+                                <log level="info" message="Setup: Checking and creating party '${partyId}' postal address '${cutn.contactMechId}' missing purposes: ${cutn.contactMechPurposeTypeIdList}"/>
                                 <set field="purposeCtx" value="" set-if-null="true"/>
                                 <set field="purposeCtx.partyId" from-field="partyId"/>
                                 <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
-                                <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                                <call-service service-name="createPartyContactMechPurpose" in-map-name="purposeCtx"/>
-                            </if-empty>
-                        </iterate>
+                                <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                                <set field="purposeCtx.exact" type="Boolean" value="false"/>
+                                <set field="purposeCtx.conflictMode" value="skip"/><!-- skip: don't set roles if already set on another contact mechs -->
+                                <call-service service-name="ensurePartyContactMechPurposes" in-map-name="purposeCtx"/>
+                            </if-compare>
+                        </else>
                     </if-compare>
                 </else>
             </if>
@@ -210,10 +221,11 @@
                     </then>
                     <else>
                         <log level="info" message="Setup: Creating party '${partyId}' postal address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
-                        <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
+                        <!-- 2018-10-31: removed, for postal address this is too complicated; here will just do ensurePartyContactMechPurposes with conflictMode Skip, less frustrating for user
+                        <!- - EMERGENCY CHECK: make sure there's no contactmech having this role;
                             in that case fail and tell user to resubmit because we're creating a duplicate
                             and we wouldn't know what we'd be replacing if we edit the re-queried one
-                            NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
+                            NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. - ->
                         <script lang="groovy"><![CDATA[
                             import org.ofbiz.entity.*;
                             import org.ofbiz.entity.condition.*;
@@ -228,6 +240,7 @@
                             <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
                             <check-errors/>
                         </if-not-empty>
+                        -->
 
                         <!-- Create -->
                         <set field="purposeCtx" value="" set-if-null="true"/>
@@ -237,11 +250,16 @@
                         <call-service service-name="createPartyPostalAddress" in-map-name="createAddressCtx">
                             <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                         </call-service>
+                        <!-- 2018-10-31: removed, here will just do ensurePartyContactMechPurposes with conflictMode Skip, less frustrating for user
                         <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
                             <set field="purposeCtx.partyId" from-field="partyId"/>
                             <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
                             <call-service service-name="createPartyContactMechPurpose" in-map-name="purposeCtx"/>
-                        </iterate>
+                        </iterate>-->
+                        <set field="purposeCtx.partyId" from-field="partyId"/>
+                        <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                        <set field="purposeCtx.conflictMode" value="skip"/><!-- skip: don't set roles if already set on another contact mechs -->
+                        <call-service service-name="ensurePartyContactMechPurposes" in-map-name="purposeCtx"/>
                     </else>
                 </if>
             </else>
@@ -790,7 +808,12 @@
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
                 <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_ADDRESS_UPDIGNEMPTY"/>
                 <script lang="groovy"><![CDATA[
-                    cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.USER_MAINADDR_PURPOSES as List;
+                    if (parameters.USER_ADDR_PURPOSE) {
+                        cutn.contactMechPurposeTypeIdList = (parameters.USER_ADDR_PURPOSE instanceof List) ? parameters.USER_ADDR_PURPOSE : [parameters.USER_ADDR_PURPOSE];
+                        cutn.exactPurposes = true;
+                    } else {
+                        cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.USER_MAINADDR_PURPOSES as List;
+                    }
                 ]]></script>
                 <set field="cutn.contactCtx" from-field="addressMap"/>
                 <set field="cutn.createMissingPurposes" from-field="parameters.USER_ADDRESS_CREATEMISSINGPURPOSES"/>
@@ -860,11 +883,11 @@
             <if-compare field="parameters.useInputFacilityAddr" operator="equals" value="true">
                 <set field="cutn" value="" set-if-null="true"/>
                 <set field="cutn.contactMechId" from-field="parameters.shipAddress_contactMechId"/>
+                <set field="cutn.contactCtx" from-field="shipAddressContext"/>
+                <set field="cutn.createMissingPurposes" from-field="parameters.createMissingShipAddressPurposes"/>
                 <script lang="groovy"><![CDATA[
                     cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.FACILITY_MAINADDR_PURPOSES as List;
                 ]]></script>
-                <set field="cutn.contactCtx" from-field="shipAddressContext"/>
-                <set field="cutn.createMissingPurposes" from-field="parameters.createMissingShipAddressPurposes"/>
                 <call-simple-method method-name="createUpdateFacilityPostalAddress"/>
                 <check-errors/>
             </if-compare>
@@ -910,28 +933,35 @@
                     an expired contact mech! -->
                 <result-to-field result-name="contactMechId" field="cutn.contactMechId"/>
             </call-service>
-            <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
-                <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
-                    <entity-and entity-name="FacilityContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="facilityId" from-field="facilityId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                    </entity-and>
-                    <if-empty field="purposes">
-                        <log level="info" message="Setup: Creating facility '${facilityId}' postal address '${cutn.contactMechId}' missing purpose: ${contactMechPurposeTypeId}"/>
+            <if-compare field="cutn.exactPurposes" operator="equals" type="Boolean" value="true">
+                <log level="info" message="Setup: Setting facility '${facilityId}' postal address '${cutn.contactMechId}' purposes: ${cutn.contactMechPurposeTypeIdList}"/>
+                <set field="purposeCtx" value="" set-if-null="true"/>
+                <set field="purposeCtx.facilityId" from-field="facilityId"/>
+                <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
+                <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                <set field="purposeCtx.exact" type="Boolean" value="true"/>
+                <set field="purposeCtx.conflictMode" value="error"/><!-- if roles are already on another contact mech, return error -->
+                <call-service service-name="ensureFacilityContactMechPurposes" in-map-name="purposeCtx"/>
+                <else>
+                    <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
+                        <log level="info" message="Setup: Checking and creating facility '${facilityId}' postal address '${cutn.contactMechId}' missing purposes: ${cutn.contactMechPurposeTypeIdList}"/>
                         <set field="purposeCtx" value="" set-if-null="true"/>
                         <set field="purposeCtx.facilityId" from-field="facilityId"/>
                         <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
-                        <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                        <call-service service-name="createFacilityContactMechPurpose" in-map-name="purposeCtx"/>
-                    </if-empty>
-                </iterate>
+                        <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                        <set field="purposeCtx.exact" type="Boolean" value="false"/>
+                        <set field="purposeCtx.conflictMode" value="skip"/><!-- skip: don't set roles if already set on another contact mechs -->
+                        <call-service service-name="ensureFacilityContactMechPurposes" in-map-name="purposeCtx"/>
+                    </if-compare>
+                </else>
             </if-compare>
             <else>
                 <log level="info" message="Setup: Creating facility '${facilityId}' postal address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
-                <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
+                <!-- 2018-10-31: removed, for postal address this is too complicated; here will just do ensurePartyContactMechPurposes with conflictMode Skip, less frustrating for user
+                <!- - EMERGENCY CHECK: make sure there's no contactmech having this role;
                     in that case fail and tell user to resubmit because we're creating a duplicate
                     and we wouldn't know what we'd be replacing if we edit the re-queried one
-                    NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
+                    NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. - ->
                 <script lang="groovy"><![CDATA[
                     import org.ofbiz.entity.*;
                     import org.ofbiz.entity.condition.*;
@@ -945,7 +975,8 @@
                     <set field="contactMechPurposeTypeId" from-field="purposes[0].contactMechPurposeTypeId"/>
                     <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
                     <check-errors/>
-                </if-not-empty>    
+                </if-not-empty>
+                -->
 
                 <!-- Create -->
                 <set field="purposeCtx" value="" set-if-null="true"/>
@@ -955,11 +986,16 @@
                 <call-service service-name="createFacilityPostalAddress" in-map-name="createAddressCtx">
                     <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                 </call-service>
+                <!-- 2018-10-31: removed, here will just do ensurePartyContactMechPurposes with conflictMode Skip, less frustrating for user
                 <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
                     <set field="purposeCtx.facilityId" from-field="facilityId"/>
                     <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
                     <call-service service-name="createFacilityContactMechPurpose" in-map-name="purposeCtx"/>
-                </iterate>
+                </iterate>-->
+                <set field="purposeCtx.facilityId" from-field="facilityId"/>
+                <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                <set field="purposeCtx.conflictMode" value="skip"/><!-- skip: don't set roles if already set on another contact mechs -->
+                <call-service service-name="ensureFacilityContactMechPurposes" in-map-name="purposeCtx"/>
             </else>
         </if-not-empty>
     </simple-method>

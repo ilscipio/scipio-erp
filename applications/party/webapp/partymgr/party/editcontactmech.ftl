@@ -37,7 +37,11 @@ under the License.
   <#if !mechMap.contactMech?has_content>
     <#assign sectionTitle = (rawLabel('PartyCreateNewContact')+rawString(ecmSecTitleSuffix!))/>
   <#else>
-    <#assign sectionTitle = (rawLabel('PartyEditContactInformation')+rawString(ecmSecTitleSuffix!))/>
+    <#if !ecmSecTitleSuffix?has_content><#-- SCIPIO: if no suffix, this is redundant -->
+      <#assign sectionTitle = "">
+    <#else>
+      <#assign sectionTitle = (rawLabel('PartyEditContactInformation')+rawString(ecmSecTitleSuffix!))/>
+    </#if>
   </#if>
   <@section title=sectionTitle>
   

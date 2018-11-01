@@ -781,6 +781,10 @@ public final class ProductStoreWorker {
      * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
      * intended for backend usage only, e.g. cms preview!)
      * <p>
+     * <strong>WARN:</strong> In most cases relying looking up WebSite using productStoreId (like this method) 
+     * means there is a design issue in code, and the code should be changed to pass a webSiteId around
+     * instead (with this as fallback only).
+     * <p>
      * Added 2018-10-02.
      */
     public static GenericValue getStoreDefaultWebSite(Delegator delegator, String productStoreId, boolean useCache) {

@@ -784,6 +784,9 @@ public final class ProductStoreWorker {
      * Added 2018-10-02.
      */
     public static GenericValue getStoreDefaultWebSite(Delegator delegator, String productStoreId, boolean useCache) {
+        if (UtilValidate.isEmpty(productStoreId)) {
+            return null;
+        }
         try {
             List<GenericValue> webSiteList = EntityQuery.use(delegator)
                     .from("WebSite").where("productStoreId", productStoreId).cache(useCache).queryList();

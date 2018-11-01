@@ -100,7 +100,7 @@ under the License.
     <request-map uri="setSessionLocaleProfile">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
-        <response name="success" type="request-redirect-noparam" value="viewprofile"/>        
+        <response name="success" type="request-redirect-noparam" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
@@ -1948,7 +1948,9 @@ under the License.
     <view-map name="messagelist" type="screen" page="component://shop/widget/CustomerScreens.xml#messagelist"/>
     <view-map name="messagedetail" type="screen" page="component://shop/widget/CustomerScreens.xml#messagedetail"/>
     <view-map name="messagecreate" type="screen" page="component://shop/widget/CustomerScreens.xml#messagecreate"/>
-    <view-map name="ManageAddress" type="screen" page="component://shop/widget/CustomerScreens.xml#ManageAddress"/>
+    <!-- SCIPIO: 2018-11-01: no dedicated address page, use viewprofile instead
+    <view-map name="ManageAddress" type="screen" page="component://shop/widget/CustomerScreens.xml#ManageAddress"/>-->
+    <view-map name="ManageAddress" type="screen" page="component://shop/widget/CustomerScreens.xml#viewprofile"/>
     <view-map name="EditProfile" type="screen" page="component://shop/widget/CustomerScreens.xml#EditProfile"/>
 
     <!-- Quote Views -->

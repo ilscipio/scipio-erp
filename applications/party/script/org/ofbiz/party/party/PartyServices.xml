@@ -883,10 +883,14 @@ under the License.
             <field-map field-name="emailType"/>
             <field-map field-name="productStoreId"/>
         </entity-one>
+        <!-- SCIPIO: 2018-11-01: Use better WebSite selection logic
         <entity-and entity-name="WebSite" list="webSites">
             <field-map field-name="productStoreId" from-field="storeEmail.productStoreId"/>
         </entity-and>
-        <first-from-list list="webSites" entry="webSite"/>
+        <first-from-list list="webSites" entry="webSite"/>-->
+        <script lang="groovy"><![CDATA[
+            context.webSite = org.ofbiz.product.store.ProductStoreWorker.getStoreDefaultWebSite(delegator, context.storeEmail?.productStoreId, false);
+        ]]></script>
         <if-not-empty field="storeEmail.bodyScreenLocation">
             <entity-one entity-name="Person" value-field="person"/>
             <set field="bodyParameters.person" from-field="person"/>
@@ -916,10 +920,14 @@ under the License.
             <field-map field-name="emailType" value="UPD_PRSNL_INF_CNFRM"/>
             <field-map field-name="productStoreId"/>
         </entity-one>
+        <!-- SCIPIO: 2018-11-01: Use better WebSite selection logic
         <entity-and entity-name="WebSite" list="webSites">
             <field-map field-name="productStoreId" from-field="storeEmail.productStoreId"/>
         </entity-and>
-        <first-from-list list="webSites" entry="webSite"/>
+        <first-from-list list="webSites" entry="webSite"/>-->
+        <script lang="groovy"><![CDATA[
+            context.webSite = org.ofbiz.product.store.ProductStoreWorker.getStoreDefaultWebSite(delegator, context.storeEmail?.productStoreId, false);
+        ]]></script>
         <if-not-empty field="storeEmail.bodyScreenLocation">
             <if-not-empty field="parameters.updatedUserLogin.partyId">
                 <set field="partyId" from-field="parameters.updatedUserLogin.partyId"/>
@@ -1050,10 +1058,14 @@ under the License.
             <field-map field-name="emailType"/>
             <field-map field-name="productStoreId"/>
         </entity-one>
+        <!-- SCIPIO: 2018-11-01: Use better WebSite selection logic
         <entity-and entity-name="WebSite" list="webSites">
             <field-map field-name="productStoreId" from-field="storeEmail.productStoreId"/>
         </entity-and>
-        <first-from-list list="webSites" entry="webSite"/>
+        <first-from-list list="webSites" entry="webSite"/>-->
+        <script lang="groovy"><![CDATA[
+            context.webSite = org.ofbiz.product.store.ProductStoreWorker.getStoreDefaultWebSite(delegator, context.storeEmail?.productStoreId, false);
+        ]]></script>
         <if-not-empty field="storeEmail.bodyScreenLocation">
             <entity-one entity-name="UserLogin" value-field="userLoginParty"/>
             <set field="parameters.partyId" from-field="userLoginParty.partyId"/>

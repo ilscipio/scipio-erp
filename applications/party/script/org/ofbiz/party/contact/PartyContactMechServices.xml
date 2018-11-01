@@ -215,6 +215,7 @@ under the License.
         <field-to-result field="newPartyContactMech.contactMechId" result-name="contactMechId"/>
     </simple-method>
     <simple-method method-name="updatePartyPostalAddress" short-description="Update a PostalAddress for party">
+        <field-to-result field="parameters.contactMechId" result-name="oldContactMechId"/><!-- SCIPIO: 2018-11-01: new -->
         <make-value entity-name="PartyContactMech" value-field="newPartyContactMech"/>
         <if-empty field="parameters.partyId">
             <set field="parameters.partyId" from-field="userLogin.partyId"/>

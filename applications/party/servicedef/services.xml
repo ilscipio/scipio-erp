@@ -510,6 +510,7 @@ under the License.
         <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>
         <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="oldContactMechId" type="String" mode="OUT" optional="false"/><!-- SCIPIO: 2018-11-01: needed for ecas -->
         <attribute name="directions" type="String" mode="IN" optional="true"/> <!-- ?? -->
         <override name="address1" optional="false"/>
         <override name="city" optional="false"/>

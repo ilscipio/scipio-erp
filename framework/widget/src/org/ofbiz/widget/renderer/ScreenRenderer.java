@@ -646,7 +646,9 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);
 
-        populateContextScripts(serviceContext);
+        // SCIPIO: 2018-11-01: This was wrong, but unlikely was noticed by any real code
+        //populateContextScripts(serviceContext);
+        populateContextScripts(context);
     }
 
     /**

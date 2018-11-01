@@ -1706,6 +1706,7 @@ under the License.
         <response name="error" type="request" value="json"/>
     </request-map>
 
+    <!-- SCIPIO: NOTE: This request can/should probably be avoided; see updatePostalAddressAndPurposes for details -->
     <request-map uri="updatePartyPostalAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateContactMechAndPurposes"/>

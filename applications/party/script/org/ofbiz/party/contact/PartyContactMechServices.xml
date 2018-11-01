@@ -524,8 +524,10 @@ under the License.
                         <result-to-result result-name="contactMechId"/>
                     </call-service>
                 <else>
-                    <!-- SCIPIO: TODO: REVIEW: Why is (partyProfileDefault.defaultBillAddr == partyProfileDefault.defaultShipAddr == parameters.contactMechId)
-                        treated as a special case here? This code leaves the old PartyContactMech unexpired (and set in PartyProfileDefault) -->
+                    <!-- SCIPIO: WARN: This section (all stock code) is a special case for: 
+                            (parameters.contactMechId == partyProfileDefault.defaultBillAddr == partyProfileDefault.defaultShipAddr)
+                         It leaves the previous contact mech unexpired because supposedly for UI purposes or rather because it assumes
+                         the other ship/bill should stay as it is. -->
                     <set-service-fields service-name="updatePostalAddress" map="parameters" to-map="updatePostalAddressMap"/>
                     <call-service service-name="updatePostalAddress" in-map-name="updatePostalAddressMap">
                         <default-message resource="PartyUiLabels" property="PartyPostalAddressSuccessfullyUpdated"/>
@@ -625,6 +627,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateContactMechAndPurposes" short-description="Update postal address, telecom number and purposes">
+        <!-- SCIPIO: WARN: See updatePostalAddressAndPurposes implementation for issues -->
         <set-service-fields service-name="updatePostalAddressAndPurposes" map="parameters" to-map="updatePostalAddressAndPurposesCtx"/>
         <call-service service-name="updatePostalAddressAndPurposes" in-map-name="updatePostalAddressAndPurposesCtx">
             <result-to-result result-name="contactMechId"/>

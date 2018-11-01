@@ -1376,7 +1376,12 @@ under the License.
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updatePostalAddressAndPurposes" engine="simple" location="component://party/script/org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updatePostalAddressAndPurposes">
-        <description>Update postal address, purposes and set them defaults. The setShippingPurpose and setBillingPurpose enable the service to create purposes for PostalAddress and make them default addresses of party</description>
+        <description>Update postal address, purposes and set them defaults. The setShippingPurpose and setBillingPurpose enable the service to create purposes for PostalAddress and make them default addresses of party
+            (SCIPIO: Note: This is a PartyProfileDefault- and UI-oriented old stock service; see implementation for quirks)</description>
+        <!-- SCIPIO: Note: This service has special behavior: If the passed contactMechId is both bill and ship default in PartyProfileDefault,
+            it will keep the previous PartyContactMech unexpired; in other words, it is designed to target one of the
+            PartyProfileDefault bill or ship addresses while leaving the other as-is. It is not a substitute for updatePartyPostalAddress 
+            or other generic contact mech update services. -->
         <implements service="updatePartyPostalAddress"/>
         <attribute name="setShippingPurpose" type="String" mode="IN" optional="true"/>
         <attribute name="setBillingPurpose" type="String" mode="IN" optional="true"/>
@@ -1384,7 +1389,9 @@ under the License.
         <override name="contactMechId" optional="false"/>
     </service>
     <service name="updateContactMechAndPurposes" engine="simple" location="component://party/script/org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updateContactMechAndPurposes">
-        <description>Update postal address, telecom number and purposes. The setShippingPurpose and setBillingPurpose enable the service to create purposes for TelecomNumber</description>
+        <description>Update postal address, telecom number and purposes. The setShippingPurpose and setBillingPurpose enable the service to create purposes for TelecomNumber
+            (SCIPIO: Note: This is a PartyProfileDefault- and UI-oriented old stock service; see implementation for quirks)</description>
+        <!-- SCIPIO: Note: See updatePostalAddressAndPurposes for warnings -->
         <implements service="updatePostalAddressAndPurposes"/>
         <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
         <attribute name="phoneContactMechId" type="String" mode="IN" optional="true"/>

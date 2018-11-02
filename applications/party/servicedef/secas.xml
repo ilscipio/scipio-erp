@@ -178,7 +178,7 @@ under the License.
         <set field-name="moreInfoUrl" value="/partymgr/control/MyCommunicationEvents"/>
         <action service="createSystemInfoNote" mode="sync"/>
     </eca>
-    
+
     <!-- SCIPIO: 2018-11-01: When update postal address, automatically update PartyProfileDefault defaultShipAddr and defaultBillAddr -->
     <eca service="updatePartyPostalAddress" event="commit">
         <condition field-name="updatePartyProfileIds" operator="not-equals" type="Boolean" value="false"/>

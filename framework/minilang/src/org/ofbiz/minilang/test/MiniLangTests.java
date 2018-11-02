@@ -105,4 +105,93 @@ public class MiniLangTests extends OFBizTestCase {
         assertEquals("Plain expression result name set", "someResultValue", context.getResult("constantResultName"));
         assertEquals("Nested expression result name set", "someResultValue", context.getResult("dynamicResultName"));
     }
+    
+    /**
+     * SCIPIO: Tests for some condition operators.
+     */
+    public void testConditionOperations() throws Exception {
+        SimpleMethod methodToTest = createSimpleMethod(
+                "<simple-method name=\"testIfNotEqualsBooleanBoolean\">" + 
+                "  <set field=\"testBool1\" type=\"Boolean\" value=\"false\"/>" +
+                "  <if-compare field=\"testBool1\" operator=\"not-equals\" type=\"Boolean\" value=\"false\">" +
+                "    <add-error><fail-message message=\"not-equals operator is broken for two booleans\"/></add-error>" +
+                "  </if-compare>" +
+                "  <check-errors/>" +
+                "</simple-method>");
+        MethodContext context = createServiceMethodContext();
+        String result = methodToTest.exec(context);
+        assertEquals("<check-errors> success result", methodToTest.getDefaultSuccessCode(), result);
+        List<String> messages = context.getEnv(methodToTest.getServiceErrorMessageListName());
+        assertNull("<check-errors> null error message list", messages);
+        
+        methodToTest = createSimpleMethod(
+                "<simple-method name=\"testIfNotEqualsBooleanBoolean2\">" + 
+                "  <set field=\"testBool1\" type=\"Boolean\" value=\"false\"/>" +
+                "  <if-compare field=\"testBool1\" operator=\"not-equals\" type=\"Boolean\" value=\"true\">" +
+                "    <else><add-error><fail-message message=\"not-equals operator is broken for two booleans\"/></add-error></else>" +
+                "  </if-compare>" +
+                "  <check-errors/>" +
+                "</simple-method>");
+        context = createServiceMethodContext();
+        result = methodToTest.exec(context);
+        assertEquals("<check-errors> success result", methodToTest.getDefaultSuccessCode(), result);
+        messages = context.getEnv(methodToTest.getServiceErrorMessageListName());
+        assertNull("<check-errors> null error message list", messages);
+        
+        methodToTest = createSimpleMethod(
+                "<simple-method name=\"testIfNotEqualsBooleanNull\">" + 
+                "  <set field=\"testBool1\" type=\"Boolean\" value=\"\"/>" +
+                "  <if-compare field=\"testBool1\" operator=\"not-equals\" type=\"Boolean\" value=\"false\">" +
+                "    <else><add-error><fail-message message=\"not-equals operator is broken for boolean and null\"/></add-error></else>" +
+                "  </if-compare>" +
+                "  <check-errors/>" +
+                "</simple-method>");
+        context = createServiceMethodContext();
+        result = methodToTest.exec(context);
+        assertEquals("<check-errors> success result", methodToTest.getDefaultSuccessCode(), result);
+        messages = context.getEnv(methodToTest.getServiceErrorMessageListName());
+        assertNull("<check-errors> null error message list", messages);
+        
+        methodToTest = createSimpleMethod(
+                "<simple-method name=\"testIfEqualsBooleanBoolean\">" + 
+                "  <set field=\"testBool1\" type=\"Boolean\" value=\"true\"/>" +
+                "  <if-compare field=\"testBool1\" operator=\"equals\" type=\"Boolean\" value=\"false\">" +
+                "    <add-error><fail-message message=\"equals operator is broken for boolean and boolean\"/></add-error>" +
+                "  </if-compare>" +
+                "  <check-errors/>" +
+                "</simple-method>");
+        context = createServiceMethodContext();
+        result = methodToTest.exec(context);
+        assertEquals("<check-errors> success result", methodToTest.getDefaultSuccessCode(), result);
+        messages = context.getEnv(methodToTest.getServiceErrorMessageListName());
+        assertNull("<check-errors> null error message list", messages);
+        
+        methodToTest = createSimpleMethod(
+                "<simple-method name=\"testIfEqualsBooleanBoolean2\">" + 
+                "  <set field=\"testBool1\" type=\"Boolean\" value=\"true\"/>" +
+                "  <if-compare field=\"testBool1\" operator=\"equals\" type=\"Boolean\" value=\"true\">" +
+                "    <else><add-error><fail-message message=\"equals operator is broken for boolean and boolean\"/></add-error></else>" +
+                "  </if-compare>" +
+                "  <check-errors/>" +
+                "</simple-method>");
+        context = createServiceMethodContext();
+        result = methodToTest.exec(context);
+        assertEquals("<check-errors> success result", methodToTest.getDefaultSuccessCode(), result);
+        messages = context.getEnv(methodToTest.getServiceErrorMessageListName());
+        assertNull("<check-errors> null error message list", messages);
+        
+        methodToTest = createSimpleMethod(
+                "<simple-method name=\"testIfEqualsBooleanNull\">" + 
+                "  <set field=\"testBool1\" type=\"Boolean\" value=\"\"/>" +
+                "  <if-compare field=\"testBool1\" operator=\"equals\" type=\"Boolean\" value=\"false\">" +
+                "    <add-error><fail-message message=\"equals operator is broken for boolean and null\"/></add-error>" +
+                "  </if-compare>" +
+                "  <check-errors/>" +
+                "</simple-method>");
+        context = createServiceMethodContext();
+        result = methodToTest.exec(context);
+        assertEquals("<check-errors> success result", methodToTest.getDefaultSuccessCode(), result);
+        messages = context.getEnv(methodToTest.getServiceErrorMessageListName());
+        assertNull("<check-errors> null error message list", messages);
+    }
 }

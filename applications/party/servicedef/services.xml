@@ -448,6 +448,14 @@ under the License.
         <attribute name="infoString" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="IN" optional="true"/>
     </service>
+    <!-- SCIPIO: 2018-11-02: same as updatePartyContactMech but requires a pre-looked-up partyContactMech (NOTE: caller mostly responsible for permissions!) -->
+    <service name="updatePartyContactMechGiven" engine="simple"
+            location="component://party/script/org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updatePartyContactMech" auth="true">
+        <description>Update a PartyContactMech, where the record has already been looked up</description>
+        <permission-service service-name="partyContactMechPermissionCheck" main-action="UPDATE"/>
+        <implements service="updatePartyContactMech"/>
+        <attribute name="partyContactMech" type="GenericValue" mode="IN" optional="false"/>
+    </service>
     <!-- SCIPIO: 2018-10-30: deletePartyContactMech now also expires PartyContactMechPurpose records -->
     <service name="deletePartyContactMech" engine="simple"
             location="component://party/script/org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="deletePartyContactMechAndPurposes" auth="true">
@@ -564,7 +572,7 @@ under the License.
         <description>Update a Telecommunications Number</description>
         <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="forceNewRecord" type="String" mode="IN" optional="true" default-value="false">
+        <attribute name="forceNewRecord" type="Boolean" mode="IN" optional="true" default-value="false">
             <description>SCIPIO: If true, bypasses change detection and creates a new record even if no changes (added 2018-11-02)</description>
         </attribute>
         <attribute name="oldContactMechId" type="String" mode="OUT" optional="false"/>

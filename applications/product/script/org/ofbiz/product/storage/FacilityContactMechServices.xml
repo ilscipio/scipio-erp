@@ -55,11 +55,8 @@ under the License.
         </if-not-empty>
     </simple-method>
 
-    <simple-method method-name="updateFacilityContactMech" short-description="Update a FacilityContactMech">
-        <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
-
-        <!-- Find old value -->
-
+    <!-- SCIPIO: 2018-11-02: Code factored out from updateFacilityContactMech -->
+    <simple-method method-name="lookupFacilityContactMech" short-description="Lookup a FacilityContactMech (logic from updateFacilityContactMech)">
         <entity-and entity-name="FacilityContactMech" list="facilityContactMechs"><!-- filter-by-date="true" -->
             <field-map field-name="facilityId" from-field="parameters.facilityId"/>
             <field-map field-name="contactMechId" from-field="parameters.contactMechId"/>
@@ -78,6 +75,21 @@ under the License.
             </add-error>
         </if-empty>
         <check-errors/>
+    </simple-method>
+
+    <simple-method method-name="updateFacilityContactMech" short-description="Update a FacilityContactMech">
+
+        <if-not-empty field="parameters.facilityContactMech">
+            <!-- SCIPIO: 2018-11-02: support service interface that accepts already looked-up FacilityContactMech -->
+            <set field="facilityContactMech" from-field="parameters.facilityContactMech"/>
+            <else>
+                <!-- SCIPIO: 2018-11-02: Code factored out -->
+                <call-simple-method method-name="lookupFacilityContactMech"/>
+                <check-errors/>
+            </else>
+        </if-not-empty>
+
+        <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
 
         <!--<log message="parameters: ${parameters}" level="info"/> SCIPIO: not appropriate -->
         <clone-value value-field="facilityContactMech" new-value-field="newFacilityContactMech"/>
@@ -100,13 +112,13 @@ under the License.
         <if-compare-field to-field="newFacilityContactMech.contactMechId" field="parameters.contactMechId" operator="not-equals">
             <!-- SCIPIO: 2018-10-31: The following code up to create-value is moved inside condition -->
             <set-nonpk-fields map="parameters" value-field="newFacilityContactMech"/>
-    
+
             <now-timestamp field="newFacilityContactMech.fromDate"/>
             <now-timestamp field="facilityContactMech.thruDate"/>
-    
+
             <store-value value-field="facilityContactMech"/>
             <create-value value-field="newFacilityContactMech"/>
-        
+
             <get-related value-field="facilityContactMech" relation-name="FacilityContactMechPurpose" list="facilityContactMechPurposes"/>
             <!-- SCIPIO: 2017-10-10: MAJOR BUGFIX: the following filter-list-by-date line is missing in stock ofbiz,
                 results in expired purposes being carried over and extreme confusion (replicated from PartyContactMechServices.xml#updatePartyContactMech) -->
@@ -134,11 +146,14 @@ under the License.
             <field-to-request field="newFacilityContactMech.contactMechId" request-name="contactMechId"/>
             <else>
                 <!-- SCIPIO: 2018-10-31: Logic from updatePartyContactMech for extension changes -->
-                <set field="extension" from-field="facilityContactMech.extension"/>
+                <!-- SCIPIO: 2018-11-02: This extension check to set thruDate is doubtful and probably never worked
+                    anyway because the set statement was missing set-if-null="true", so just remove it;
+                    extension is now handled in updateFacilityTelecomNumber instead
+                <set field="extension" from-field="facilityContactMech.extension"/>-->
                 <set-nonpk-fields map="parameters" value-field="facilityContactMech"/>
-                <if-compare-field field="parameters.extension" operator="not-equals" to-field="extension">
-                    <set field="facilityContactMech.thruDate" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
-                </if-compare-field>
+                <!--<if-compare-field field="parameters.extension" operator="not-equals" to-field="extension">
+                    <set field="facilityContactMech.thruDate" value="" set-if-null="true"/><!- - SCIPIO: 2018-11-02: set-if-null="true" required to set null - ->
+                </if-compare-field>-->
                 <store-value value-field="facilityContactMech"/>
                 <log level="info" message="Setting id to result: ${facilityContactMech.contactMechId}"/>
                 <field-to-result field="facilityContactMech.contactMechId" result-name="contactMechId"/>
@@ -249,6 +264,22 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateFacilityTelecomNumber" short-description="Update a TelecomNumber for facility">
+
+        <!-- SCIPIO: 2018-11-02: code refactored out from updateFacilityContactMech -->
+        <call-simple-method method-name="lookupFacilityContactMech"/>
+        <check-errors/>
+        <set field="updateFacilityContactMechMap.facilityContactMech" from-field="facilityContactMech"/>
+
+        <!-- SCIPIO: 2018-11-02: If extension has changed, force clone the whole number which will create
+            a new ContactMech and FacilityContactMech (FacilityContactMech contains the extension field) to preserve
+            history, while avoiding sharing contactMechIds to prevent issues in buggy code -->
+        <set field="extensionPresent" type="Boolean" value="${groovy:parameters.containsKey('extension')}"/>
+        <if-compare field="extensionPresent" operator="equals" type="Boolean" value="true">
+            <if-compare-field field="parameters.extension" operator="not-equals" to-field="facilityContactMech.extension">
+                <set field="updateTelecomNumberMap.forceNewRecord" type="Boolean" value="true"/>
+            </if-compare-field>
+        </if-compare>
+
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
         <set-service-fields service-name="updateTelecomNumber" map="parameters" to-map="updateTelecomNumberMap"/>
         <call-service service-name="updateTelecomNumber" in-map-name="updateTelecomNumberMap">
@@ -256,13 +287,14 @@ under the License.
             <result-to-field result-name="contactMechId" field="newFacilityContactMech.contactMechId"/>
         </call-service>
 
-        <set-service-fields service-name="updateFacilityContactMech" map="parameters" to-map="updateFacilityContactMechMap"/>
+        <!-- SCIPIO: 2018-11-01: Switched to updateFacilityContactMechGiven -->
+        <set-service-fields service-name="updateFacilityContactMechGiven" map="parameters" to-map="updateFacilityContactMechMap"/>
         <set field="updateFacilityContactMechMap.newContactMechId" from-field="newFacilityContactMech.contactMechId"/>
 
         <set field="updateFacilityContactMechMap.contactMechTypeId" value="TELECOM_NUMBER"/>
         <log level="info" message="Copied id to updateFacilityContactMechMap: ${updateFacilityContactMechMap.newContactMechId}"/>
 
-        <call-service in-map-name="updateFacilityContactMechMap" service-name="updateFacilityContactMech">
+        <call-service in-map-name="updateFacilityContactMechMap" service-name="updateFacilityContactMechGiven">
             <default-message resource="PartyUiLabels" property="PartyContactMechanismSuccessfullyUpdated"/>
         </call-service>
         <log level="info" message="Setting result id: ${newFacilityContactMech.contactMechId}"/>

@@ -70,11 +70,8 @@ under the License.
         <create-value value-field="newValue"/>
     </simple-method>
 
-    <simple-method method-name="updatePartyContactMech" short-description="Update a PartyContactMech">
-        <if-empty field="parameters.partyId">
-            <set field="parameters.partyId" from-field="userLogin.partyId"/>
-        </if-empty>
-
+    <!-- SCIPIO: 2018-11-02: Code Factored out from updatePartyContactMech -->
+    <simple-method method-name="lookupPartyContactMech" short-description="Lookup a PartyContactMech (logic from updatePartyContactMech)">
         <!-- Find old value -->
         <make-value entity-name="PartyContactMech" value-field="partyContactMechMap"/>
         <set-pk-fields value-field="partyContactMechMap" map="parameters"/>
@@ -91,6 +88,22 @@ under the License.
             <add-error><fail-property resource="PartyErrorUiLabels" property="contactmechservices.cannot_update_specified_contact_info_expired"/></add-error>
         </if-empty>
         <check-errors/>
+    </simple-method>
+
+    <simple-method method-name="updatePartyContactMech" short-description="Update a PartyContactMech">
+        <if-empty field="parameters.partyId">
+            <set field="parameters.partyId" from-field="userLogin.partyId"/>
+        </if-empty>
+
+        <if-not-empty field="parameters.partyContactMech">
+            <!-- SCIPIO: 2018-11-02: support service interface that accepts already looked-up PartyContactMech -->
+            <set field="partyContactMech" from-field="parameters.partyContactMech"/>
+            <else>
+                <!-- SCIPIO: 2018-11-02: Code factored out -->
+                <call-simple-method method-name="lookupPartyContactMech"/>
+                <check-errors/>
+            </else>
+        </if-not-empty>
 
         <clone-value value-field="partyContactMech" new-value-field="newPartyContactMech"/>
 
@@ -134,11 +147,14 @@ under the License.
             <field-to-result field="newPartyContactMech.contactMechId" result-name="contactMechId"/>
             <field-to-request field="newPartyContactMech.contactMechId" request-name="contactMechId"/>
             <else>
-                <set field="extension" from-field="partyContactMech.extension"/>
+                <!-- SCIPIO: 2018-11-02: This extension check to set thruDate is doubtful and probably never worked
+                    anyway because the set statement was missing set-if-null="true", so just remove it;
+                    extension is now handled in updatePartyTelecomNumber instead
+                <set field="extension" from-field="partyContactMech.extension"/>-->
                 <set-nonpk-fields map="parameters" value-field="partyContactMech"/>
-                <if-compare-field field="parameters.extension" operator="not-equals" to-field="extension">
-                    <set field="partyContactMech.thruDate" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
-                </if-compare-field>
+                <!--<if-compare-field field="parameters.extension" operator="not-equals" to-field="extension">
+                    <set field="partyContactMech.thruDate" value="" set-if-null="true"/><!- - SCIPIO: 2018-11-02: set-if-null="true" required to set null - ->
+                </if-compare-field>-->
                 <store-value value-field="partyContactMech"/>
                 <log level="info" message="Setting id to result: ${partyContactMech.contactMechId}"/>
                 <field-to-result field="partyContactMech.contactMechId" result-name="contactMechId"/>
@@ -266,18 +282,34 @@ under the License.
             <set field="parameters.partyId" from-field="userLogin.partyId"/>
         </if-empty>
 
+        <!-- SCIPIO: 2018-11-02: code refactored out from updatePartyContactMech -->
+        <call-simple-method method-name="lookupPartyContactMech"/>
+        <check-errors/>
+        <set field="updatePartyContactMechMap.partyContactMech" from-field="partyContactMech"/>
+
+        <!-- SCIPIO: 2018-11-02: If extension has changed, force clone the whole number which will create
+            a new ContactMech and PartyContactMech (PartyContactMech contains the extension field) to preserve
+            history, while avoiding sharing contactMechIds to prevent issues in buggy code -->
+        <set field="extensionPresent" type="Boolean" value="${groovy:parameters.containsKey('extension')}"/>
+        <if-compare field="extensionPresent" operator="equals" type="Boolean" value="true">
+            <if-compare-field field="parameters.extension" operator="not-equals" to-field="partyContactMech.extension">
+                <set field="updateTelecomNumberMap.forceNewRecord" type="Boolean" value="true"/>
+            </if-compare-field>
+        </if-compare>
+
         <set-service-fields service-name="updateTelecomNumber" map="parameters" to-map="updateTelecomNumberMap"/>
         <call-service service-name="updateTelecomNumber" in-map-name="updateTelecomNumberMap">
             <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyUpdated"/>
             <result-to-field result-name="contactMechId" field="newPartyContactMech.contactMechId"/>
         </call-service>
 
-        <set-service-fields service-name="updatePartyContactMech" map="parameters" to-map="updatePartyContactMechMap"/>
+        <!-- SCIPIO: 2018-11-01: Switched to updatePartyContactMechGiven -->
+        <set-service-fields service-name="updatePartyContactMechGiven" map="parameters" to-map="updatePartyContactMechMap"/>
         <set field="updatePartyContactMechMap.newContactMechId" from-field="newPartyContactMech.contactMechId"/>
         <set field="updatePartyContactMechMap.contactMechTypeId" value="TELECOM_NUMBER"/>
         <log level="info" message="Copied id to updatePartyContactMechMap: ${updatePartyContactMechMap.newContactMechId}"/>
 
-        <call-service in-map-name="updatePartyContactMechMap" service-name="updatePartyContactMech">
+        <call-service in-map-name="updatePartyContactMechMap" service-name="updatePartyContactMechGiven">
             <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyUpdated"/>
         </call-service>
         <log level="info" message="Setting result id: ${newPartyContactMech.contactMechId}"/>

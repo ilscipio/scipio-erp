@@ -972,10 +972,16 @@ under the License.
                     <fail-property resource="ProductErrorUiLabels" property="facility.contactMechTypeId"/>
                 </type-validate>
         </attribute>
-
-
         <attribute name="infoString" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="IN" optional="true"/>
+    </service>
+    <!-- SCIPIO: 2018-11-02: Same as updateFacilityContactMech but with contact mech already looked up -->
+    <service name="updateFacilityContactMechGiven" engine="simple"
+            location="component://product/script/org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityContactMech" auth="true">
+        <description>Update a FacilityContactMech</description>
+        <permission-service service-name="facilityPermissionCheck" main-action="UPDATE"/>
+        <implements service="updateFacilityContactMech"/>
+        <attribute name="facilityContactMech" type="GenericValue" mode="IN" optional="false"/>
     </service>
     <!-- SCIPIO: 2018-10-30: deleteFacilityContactMech now also expires FacilityContactMechPurpose records -->
     <service name="deleteFacilityContactMech" engine="simple"

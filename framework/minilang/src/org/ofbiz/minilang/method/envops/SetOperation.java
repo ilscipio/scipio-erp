@@ -26,12 +26,14 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.Scriptlet;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.MiniLangUtil;
 import org.ofbiz.minilang.MiniLangValidate;
 import org.ofbiz.minilang.SimpleMethod;
+import org.ofbiz.minilang.ValidationException;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
 import org.w3c.dom.Element;
@@ -100,6 +102,14 @@ public final class SetOperation extends MethodOperation {
             MiniLangValidate.constantAttributes(simpleMethod, element, "type", "set-if-null", "set-if-empty");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "field");
             MiniLangValidate.noChildElements(simpleMethod, element);
+        }
+        // SCIPIO: 2018-11-02: Log error against this, because it is a noop, set-if-null="true" is required:
+        //   <set field="xxx" value=""/>
+        // Warn even when validation disabled because it can lead to serious errors
+        if (element.hasAttribute("value") && UtilValidate.isEmpty(element.getAttribute("value")) && !element.hasAttribute("from")
+                && !element.hasAttribute("from-field") && !element.hasAttribute("default-value") && !element.hasAttribute("set-if-null")) {
+            ValidationException e = new ValidationException("set field=\"" + element.getAttribute("field") + "\" has no effect; value=\"\" only sets null if set-if-null=\"true\" specified", simpleMethod, element);
+            Debug.logError(e.getMessage(), module);
         }
         boolean elementModified = autoCorrect(element);
         if (elementModified && MiniLangUtil.autoCorrectOn()) {

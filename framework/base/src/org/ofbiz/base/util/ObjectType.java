@@ -767,9 +767,12 @@ public class ObjectType {
                 }
             } else if ("not-equals".equals(operator)) {
                 if ((!value1Boolean && value2Boolean) || (value1Boolean && !value2Boolean)) {
-                    result = 0;
-                } else {
+                    // SCIPIO: 2018-11-02: stock bugfix: fixed inverted results!
+                    //result = 0;
                     result = 1;
+                } else {
+                    //result = 1;
+                    result = 0;
                 }
             } else {
                 messages.add("Can only compare Booleans using the operators 'equals' or 'not-equals'");

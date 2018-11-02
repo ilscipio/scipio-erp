@@ -1186,6 +1186,10 @@ under the License.
         <xs:annotation>
             <xs:documentation>
                 Assigns a field from an expression or script, or from a constant value. Also supports a default value and type conversion.
+
+                SCIPIO: WARNING: Unlike other elements, the default for set-if-null for this operation is currently "false".
+                It is recommended to explicitly specify set-if-null="[true|false]" when the source field may be null, including for "false".
+                NOTE: Unlike this one, the screen widgets "set" element uses default true (due to poor upstream legacy design decision)!
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -1259,11 +1263,11 @@ under the License.
                         Controls if the target field can be set to null when the from attribute evaluates to null.
                         Defaults to "false". 
                         
-                        SCIPIO: WARNING: This is default false currently ONLY for "set" and "set-calendar"
-                        operations in simple-method service/event/tests definitions (not other operations, not in screen widgets),
-                        due to a poor upstream legacy design decision; all others have default true instead.
+                        SCIPIO: WARNING: This is default "false" currently ONLY for "set" and "set-calendar"
+                        operations in simple-method service/event/tests definitions (not other operations, not in screen widgets);
+                        all others have default "true" instead (due to poor upstream legacy design decision).
                         
-                        IMPORTANT: It is recommended to explicitly use set-if-null="false" if you explicitly require
+                        NOTE: It is recommended to explicitly use set-if-null="false" if you explicitly require
                         this behavior and NOT rely on the default, because it may be changed in the future.
 
                         Optional. Attribute type: constant.
@@ -1287,6 +1291,9 @@ under the License.
         <xs:annotation>
             <xs:documentation>
                 Adjusts a Timestamp by a specified time duration.
+
+                SCIPIO: WARNING: Unlike other elements, the default for set-if-null for this operation is currently "false".
+                It is recommended to explicitly specify set-if-null="[true|false]" when the source field may be null, including for "false".
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -1341,11 +1348,11 @@ under the License.
                         Controls if the target field can be set to null when the from attribute evaluates to null.
                         Defaults to "false".
 
-                        SCIPIO: WARNING: This is default false currently ONLY for "set" and "set-calendar"
-                        operations in simple-method service/event/tests definitions (not other operations, not in screen widgets),
-                        due to a poor upstream legacy design decision; all others have default true instead.
+                        SCIPIO: WARNING: This is default "false" currently ONLY for "set" and "set-calendar"
+                        operations in simple-method service/event/tests definitions (not other operations, not in screen widgets);
+                        all others have default "true" instead (due to poor upstream legacy design decision).
                         
-                        IMPORTANT: It is recommended to explicitly use set-if-null="false" if you explicitly require
+                        NOTE: It is recommended to explicitly use set-if-null="false" if you explicitly require
                         this behavior and NOT rely on the default, because it may be changed in the future.
 
                         Optional. Attribute type: constant.

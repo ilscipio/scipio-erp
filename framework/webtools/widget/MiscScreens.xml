@@ -544,6 +544,19 @@ under the License.
                                         <if-has-permission permission="CATALOG" action="_VIEW"/>
                                     </or>
                                 </condition-to-field>
+                                
+                                <set field="testField5" type="Boolean" value="true"/>
+                                <condition-to-field field="boolRes5" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField5" operator="not-equals" type="Boolean" value="false"/>
+                                </condition-to-field>
+                                <set field="testField5" type="Boolean" value="" set-if-null="true"/>
+                                <condition-to-field field="boolRes6" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField5" operator="not-equals" type="Boolean" value="false"/>
+                                </condition-to-field>
+                                <set field="testField5" type="Boolean" value="false"/>
+                                <condition-to-field field="boolRes7" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField5" operator="not-equals" type="Boolean" value="false"/>
+                                </condition-to-field>
                             </actions>
                             <widgets>
                                 <label text="boolRes1: '${boolRes1}'"/>
@@ -558,6 +571,9 @@ under the License.
                                 <label text="boolRes3 (only-if-field='empty'): '${boolRes3}'"/>
                                 <label text="boolRes4 (only-if-field='empty'): '${boolRes4}'"/>
                                 <label text="commonSideBarMenuEmu.cond: '${commonSideBarMenuEmu.cond}'"/>
+                                <label text="boolRes5 (should be true): '${boolRes5}'"/>
+                                <label text="boolRes6 (should be true): '${boolRes6}'"/>
+                                <label text="boolRes7 (should be false): '${boolRes7}'"/>
                             </widgets>
                         </section>
                     </screenlet>

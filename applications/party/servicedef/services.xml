@@ -223,9 +223,9 @@ under the License.
         <override name="productStoreId" optional="false"/>
     </service>
     
-    <!-- SCIPIO: 2018-11-01: updatePartyProfileDefaultContactMechIds. NOTE: No perm check, do not call from event. -->
-    <service name="updatePartyProfileDefaultContactMechIds" engine="simple" 
-            location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updatePartyProfileDefaultContactMechIds" auth="false">
+    <!-- SCIPIO: 2018-11-01: updatePartyProfileDefaultPostalAddressIds. NOTE: No perm check, do not call from event. -->
+    <service name="updatePartyProfileDefaultPostalAddressIds" engine="simple" 
+            location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updatePartyProfileDefaultPostalAddressIds" auth="false">
         <description>Updates PartyProfileDefault defaultBillAddr and defaultShipAddr if ID changed (no perm check)</description>
         <!--<permission-service service-name="partyIdPermissionCheck" main-action="UPDATE"/>-->
         <attribute name="partyId" type="String" mode="IN" optional="true">
@@ -233,6 +233,17 @@ under the License.
         </attribute>
         <attribute name="oldContactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <!-- SCIPIO: 2018-11-01: updatePartyPostalAddressAndProfileIds. -->
+    <service name="updatePartyPostalAddressAndProfileIds" engine="group" auth="true">
+        <description>Updates party postal address and then updates PartyProfileDefault defaultBillAddr and defaultShipAddr if ID changed (no perm check)</description>
+        <group>
+            <!-- Currently called using ECA
+            <invoke name="updatePartyPostalAddress" result-to-context="true"/>
+            <invoke name="updatePartyProfileDefaultContactMechIds"/>-->
+            <invoke name="updatePartyPostalAddress"/>
+        </group>
     </service>
 
     <service name="createPartyAttribute" default-entity-name="PartyAttribute" engine="entity-auto" invoke="create" auth="true">

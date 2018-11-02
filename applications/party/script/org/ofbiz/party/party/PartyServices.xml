@@ -1095,7 +1095,7 @@ under the License.
     </simple-method>
 
     <!-- SCIPIO: 2018-11-01: new -->
-    <simple-method method-name="updatePartyProfileDefaultContactMechIds" short-description="Updates PartyProfileDefault defaultBillAddr and defaultShipAddr if ID changed">
+    <simple-method method-name="updatePartyProfileDefaultPostalAddressIds" short-description="Updates PartyProfileDefault defaultBillAddr and defaultShipAddr if ID changed">
         <set field="partyId" from-field="parameters.partyId"/>
         <if-empty field="partyId">
             <set field="partyId" from-field="parameters.userLogin.partyId"/>

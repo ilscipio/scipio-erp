@@ -156,7 +156,7 @@ under the License.
         <set field-name="moreInfoUrl" value="/partymgr/control/MyCommunicationEvents"/>
         <action service="createSystemInfoNote" mode="sync"/>
     </eca>
-     <eca service="createCommunicationEvent" event="commit">
+    <eca service="createCommunicationEvent" event="commit">
         <condition field-name="statusId" operator="equals" value="COM_ENTERED"/>
         <condition field-name="communicationEventTypeId" operator="equals" value="EMAIL_COMMUNICATION"/>
         <condition field-name="partyIdTo" operator="is-not-empty"/>
@@ -177,5 +177,10 @@ under the License.
         <set field-name="moreInfoItemId" env-name="communicationEventId"/>
         <set field-name="moreInfoUrl" value="/partymgr/control/MyCommunicationEvents"/>
         <action service="createSystemInfoNote" mode="sync"/>
+    </eca>
+    
+    <!-- SCIPIO: 2018-11-01: When update postal address, automatically update PartyProfileDefault defaultShipAddr and defaultBillAddr -->
+    <eca service="updatePartyPostalAddress" event="commit">
+        <action service="updatePartyProfileDefaultPostalAddressIds" mode="sync"/>
     </eca>
 </service-eca>

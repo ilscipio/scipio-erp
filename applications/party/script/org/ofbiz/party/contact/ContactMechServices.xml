@@ -187,8 +187,19 @@ under the License.
         <find-by-primary-key entity-name="TelecomNumber" map="newValue" value-field="oldValue"/>
         <set-nonpk-fields map="parameters" value-field="newValue"/>
         <set field="context.contactMechTypeId" value="TELECOM_NUMBER"/>
-
-        <if-compare-field field="oldValue" to-field="newValue" operator="not-equals" type="Object">
+    
+        <!-- SCIPIO: 2018-11-02: allow forced update
+        <if-compare-field field="oldValue" to-field="newValue" operator="not-equals" type="Object">-->
+        <set field="doUpdate" type="Boolean" value="false"/>
+        <if-compare field="parameters.forceNewRecord" operator="equals" type="Boolean" value="true">
+            <set field="doUpdate" type="Boolean" value="true"/>
+            <else>
+                <if-compare-field field="oldValue" to-field="newValue" operator="not-equals" type="Object">
+                    <set field="doUpdate" type="Boolean" value="true"/>
+                </if-compare-field>
+            </else>
+        </if-compare>
+        <if-compare field="doUpdate" operator="equals" type="Boolean" value="true">
             <log level="info" message="Telecom number needs updating"/>
             <call-service service-name="createContactMech" in-map-name="context">
                 <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyUpdated"/>
@@ -209,7 +220,8 @@ under the License.
                     </else>
                 </if-compare-field>
             </else>
-        </if-compare-field>
+        <!--</if-compare-field>-->
+        </if-compare>
         <field-to-result field="newValue.contactMechId" result-name="contactMechId"/>
         <field-to-result field="parameters.contactMechId" result-name="oldContactMechId"/>
     </simple-method>

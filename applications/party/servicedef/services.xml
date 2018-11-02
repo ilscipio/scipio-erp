@@ -564,6 +564,9 @@ under the License.
         <description>Update a Telecommunications Number</description>
         <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="forceNewRecord" type="String" mode="IN" optional="true" default-value="false">
+            <description>SCIPIO: If true, bypasses change detection and creates a new record even if no changes (added 2018-11-02)</description>
+        </attribute>
         <attribute name="oldContactMechId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updatePartyTelecomNumber" engine="simple"

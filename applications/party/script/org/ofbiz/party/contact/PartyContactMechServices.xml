@@ -137,7 +137,7 @@ under the License.
                 <set field="extension" from-field="partyContactMech.extension"/>
                 <set-nonpk-fields map="parameters" value-field="partyContactMech"/>
                 <if-compare-field field="parameters.extension" operator="not-equals" to-field="extension">
-                    <set field="partyContactMech.thruDate" value=""/>
+                    <set field="partyContactMech.thruDate" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
                 </if-compare-field>
                 <store-value value-field="partyContactMech"/>
                 <log level="info" message="Setting id to result: ${partyContactMech.contactMechId}"/>
@@ -384,7 +384,9 @@ under the License.
         </entity-and>
 
         <set field="dash" value="-"/>
-        <set field="emptyString" value=""/>
+        <!-- SCIPIO: 2018-11-02: This does not produce an empty string
+        <set field="emptyString" value=""/>-->
+        <set field="emptyString" value="${''}"/>
         <set field="inputTelno" value="${str:replaceAll(parameters.telno, dash, emptyString)}"/>
         <iterate list="contactMechs" entry="contactMech">
             <set field="telno" value="${str:replace(contactMech.tnContactNumber, dash, emptyString)}"/>
@@ -417,7 +419,9 @@ under the License.
         </entity-and>
 
         <set field="dash" value="-"/>
-        <set field="emptyString" value=""/>
+        <!-- SCIPIO: 2018-11-02: This does not produce an empty string
+        <set field="emptyString" value=""/>-->
+        <set field="emptyString" value="${''}"/>
         <set field="inputTelno" from-field="parameters.telno"/>
         <iterate list="contactMechs" entry="contactMech">
             <set field="telno" from-field="contactMech.tnContactNumber"/>

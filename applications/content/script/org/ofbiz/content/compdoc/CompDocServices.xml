@@ -38,7 +38,7 @@ under the License.
             <if-not-empty field="contentRevisionList">
                 <set from-field="contentRevisionList[0].contentRevisionSeqId" field="contentRevisionSeqId"/>
                 <else>
-                    <set value="" field="contentRevisionSeqId"/>
+                    <set value="" field="contentRevisionSeqId" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
                 </else>
             </if-not-empty>
             <else>

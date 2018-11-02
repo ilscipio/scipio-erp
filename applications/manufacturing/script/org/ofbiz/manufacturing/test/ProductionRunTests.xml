@@ -423,8 +423,8 @@ under the License.
         <set field="serviceCtx.inventoryItemTypeId" value="NON_SERIAL_INV_ITEM"/>
         <set field="serviceCtx.lotId" value="LOT12345"/>
         <set field="componentLocationMap.failIfItemsAreNotAvailable" from-field="Y"/>
-        <set field="componentLocationMap.locationSeqId" value=""/>
-        <set field="componentLocationMap.secondaryLocationSeqId" value=""/>
+        <set field="componentLocationMap.locationSeqId" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
+        <set field="componentLocationMap.secondaryLocationSeqId" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
         <set field="componentsLocationMap.${productionRunMaterialA}" from-field="componentLocationMap"/>
         <set field="componentsLocationMap.${productionRunMaterialB}" from-field="componentLocationMap"/>
         <set field="serviceCtx.componentsLocationMap" from-field="componentsLocationMap"/>
@@ -477,8 +477,8 @@ under the License.
         <set field="serviceCtx.inventoryItemTypeId" value="NON_SERIAL_INV_ITEM"/>
         <set field="serviceCtx.lotId" value="LOT12345"/>
         <set field="componentLocationMap.failIfItemsAreNotAvailable" from-field="Y"/>
-        <set field="componentLocationMap.locationSeqId" value=""/>
-        <set field="componentLocationMap.secondaryLocationSeqId" value=""/>
+        <set field="componentLocationMap.locationSeqId" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
+        <set field="componentLocationMap.secondaryLocationSeqId" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
         <set field="componentsLocationMap.${productionRunMaterialA}" from-field="componentLocationMap"/>
         <set field="componentsLocationMap.${productionRunMaterialB}" from-field="componentLocationMap"/>
         <set field="serviceCtx.componentsLocationMap" from-field="componentsLocationMap"/>

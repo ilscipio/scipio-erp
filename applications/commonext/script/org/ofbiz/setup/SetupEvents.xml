@@ -570,7 +570,7 @@
         <property-to-field resource="scipiosetup" property="store.productStoreData.productStoreShipMethId.bankSize" field="pssmBankSize" default="100"/>
         <set field="pssmBankSize" type="Integer" from-field="pssmBankSize"/>
 
-        <set field="productStoreShipMethIdBase" type="Long" value=""/>
+        <set field="productStoreShipMethIdBase" type="Long" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
         <if-not-empty field="parameters.productStoreShipMethIdBase">
             <set field="productStoreShipMethIdBase" type="Long" from-field="parameters.productStoreShipMethIdBase"/>
             <log level="warning" message="ProductStoreData.xml: caller passed an explicit productStoreShipMethIdBase to use as base for ProductStoreShipmentMeth ID (${groovy:productStoreShipMethIdBase+''}) - if this value is wrongly selected, it could crush existing store records!"/>

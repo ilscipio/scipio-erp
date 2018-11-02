@@ -35,7 +35,7 @@ under the License.
         </iterate>
         <if-empty field="parties">
             <set value="No match" field="resultEntry.label"/>
-            <set value="" field="resultEntry.value"/>
+            <set value="" field="resultEntry.value" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
             <field-to-list field="resultEntry" list="lookupResult"/>
         </if-empty>
         <field-to-result field="lookupResult"/>

@@ -118,7 +118,7 @@ under the License.
             </add-error>
         </if-empty>
         <if-empty field="organizationPartyId">
-            <set field="creditDebit" value=""/>
+            <set field="creditDebit" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
             <set field="requiredField" value="organizationPartyId"/>
             <add-error>
                 <fail-property resource="AccountingErrorUiLabels" property="AccountingFinAccountCannotPost"/>

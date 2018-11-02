@@ -75,7 +75,7 @@ under the License.
                 <set field="checkLocationSeqIdMap.facilityId" from-field="parameters.facilityId"/>
                 <find-by-primary-key entity-name="FacilityLocation" map="checkLocationSeqIdMap" value-field="checkLocationSeqIdValue"/>
                 <if-not-empty field="checkLocationSeqIdValue">
-                    <set field="locationSeqId" value=""/>
+                    <set field="locationSeqId" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
                 </if-not-empty>
             </if-not-empty>
         </if-not-empty>

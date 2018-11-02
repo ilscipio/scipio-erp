@@ -193,7 +193,7 @@ under the License.
         <!-- TODO: make this method aware of serialized inventory in addition to non-serialized inventory -->
 
         <set field="stockMoveHandled" from-field="parameters.stockMoveHandled"/>
-        <set field="productSave.productId" value=""/>
+        <set field="productSave.productId" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
 
         <!--
             The will involve finding all stock moves for ProductFacilityLocation based pre-emptive moves.

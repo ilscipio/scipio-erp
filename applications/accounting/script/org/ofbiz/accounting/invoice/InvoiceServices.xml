@@ -391,7 +391,7 @@ under the License.
             <check-errors/>
         </if-empty>
         <!-- payment -->
-        <set field="currencyUomId" value=""/><!-- currency of the paymentApplication -->
+        <set field="currencyUomId" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null --><!-- currency of the paymentApplication -->
         <if-not-empty field="paymentApplication.paymentId">
             <entity-one entity-name="Payment" value-field="payment">
                 <field-map field-name="paymentId" value="${paymentApplication.paymentId}"/>

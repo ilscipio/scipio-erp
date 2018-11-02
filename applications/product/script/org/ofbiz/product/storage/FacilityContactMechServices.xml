@@ -137,7 +137,7 @@ under the License.
                 <set field="extension" from-field="facilityContactMech.extension"/>
                 <set-nonpk-fields map="parameters" value-field="facilityContactMech"/>
                 <if-compare-field field="parameters.extension" operator="not-equals" to-field="extension">
-                    <set field="facilityContactMech.thruDate" value=""/>
+                    <set field="facilityContactMech.thruDate" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
                 </if-compare-field>
                 <store-value value-field="facilityContactMech"/>
                 <log level="info" message="Setting id to result: ${facilityContactMech.contactMechId}"/>

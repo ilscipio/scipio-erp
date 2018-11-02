@@ -1257,8 +1257,15 @@ under the License.
                 <xs:annotation>
                     <xs:documentation>
                         Controls if the target field can be set to null when the from attribute evaluates to null.
-                        Defaults to "false".
+                        Defaults to "false". 
                         
+                        SCIPIO: WARNING: This is default false currently ONLY for "set" and "set-calendar"
+                        operations in simple-method service/event/tests definitions (not other operations, not in screen widgets),
+                        due to a poor upstream legacy design decision; all others have default true instead.
+                        
+                        IMPORTANT: It is recommended to explicitly use set-if-null="false" if you explicitly require
+                        this behavior and NOT rely on the default, because it may be changed in the future.
+
                         Optional. Attribute type: constant.
                     </xs:documentation>
                 </xs:annotation>
@@ -1333,7 +1340,14 @@ under the License.
                     <xs:documentation>
                         Controls if the target field can be set to null when the from attribute evaluates to null.
                         Defaults to "false".
+
+                        SCIPIO: WARNING: This is default false currently ONLY for "set" and "set-calendar"
+                        operations in simple-method service/event/tests definitions (not other operations, not in screen widgets),
+                        due to a poor upstream legacy design decision; all others have default true instead.
                         
+                        IMPORTANT: It is recommended to explicitly use set-if-null="false" if you explicitly require
+                        this behavior and NOT rely on the default, because it may be changed in the future.
+
                         Optional. Attribute type: constant.
                     </xs:documentation>
                 </xs:annotation>

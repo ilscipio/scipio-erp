@@ -181,6 +181,8 @@ under the License.
     
     <!-- SCIPIO: 2018-11-01: When update postal address, automatically update PartyProfileDefault defaultShipAddr and defaultBillAddr -->
     <eca service="updatePartyPostalAddress" event="commit">
+        <condition field-name="updatePartyProfileIds" operator="not-equals" type="Boolean" value="false"/>
+        <condition-field field-name="contactMechId" operator="not-equals" to-field-name="oldContactMechId"/>
         <action service="updatePartyProfileDefaultPostalAddressIds" mode="sync"/>
     </eca>
 </service-eca>

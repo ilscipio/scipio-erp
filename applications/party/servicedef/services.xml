@@ -535,6 +535,10 @@ under the License.
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
         <attribute name="oldContactMechId" type="String" mode="OUT" optional="false"/><!-- SCIPIO: 2018-11-01: needed for ecas -->
         <attribute name="directions" type="String" mode="IN" optional="true"/> <!-- ?? -->
+        <attribute name="updatePartyProfileIds" type="Boolean" mode="IN" optional="true">
+            <description>SCIPIO: 2018-11-01: If set to false, will prevent trying to update PartyProfileDefault.
+                Currently (2018-11-01), this is true by default.</description>
+        </attribute>
         <override name="address1" optional="false"/>
         <override name="city" optional="false"/>
         <override name="postalCode" optional="false"/>

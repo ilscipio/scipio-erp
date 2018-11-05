@@ -62,7 +62,7 @@ public class LoginEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "SecurityextUiLabels";
-    public static final String usernameCookieName = "OFBiz.Username";
+    public static final String usernameCookieName = "Scipio.Username"; // SCIPIO: renamed cookie
 
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.

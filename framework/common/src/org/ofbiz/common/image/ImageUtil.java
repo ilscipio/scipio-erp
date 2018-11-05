@@ -288,7 +288,7 @@ public abstract class ImageUtil {
 //        }
     }
 
-    private static final Pattern noSlashPat = Pattern.compile("[/\\\\]");
+    private static final Pattern forbiddencharPat = Pattern.compile("[\0/\\\\]");
     //private static final Pattern noMultiDotPat = Pattern.compile("[.]{2,}");
     
     /**
@@ -305,7 +305,7 @@ public abstract class ImageUtil {
             return name;
         }
         String origName = name;
-        name = noSlashPat.matcher(name).replaceAll("_");
+        name = forbiddencharPat.matcher(name).replaceAll("_");
         // There should be no need for this because the slashes are all removed,
         // so the only danger case is if ".." between unknown path delims
         //name = noMultiDotPat.matcher(name).replaceAll(".");

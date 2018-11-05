@@ -20,6 +20,7 @@
 package org.ofbiz.securityext.login;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -394,6 +395,13 @@ public class LoginEvents {
                 }
             }
         }
+        // SCIPIO: 2018-11-05: Decode the username (encoded in setUsername)
+        try {
+            cookieUsername = URLDecoder.decode(cookieUsername, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Debug.logWarning("getUsername: Cannot decode username [" + cookieUsername + "] from \"" 
+                    + usernameCookieName + "\" cookie; returning as-is; cause: " + e.toString(), module);
+        }
         return cookieUsername;
     }
 
@@ -405,7 +413,16 @@ public class LoginEvents {
         synchronized (session) {
             if (UtilValidate.isEmpty(getUsername(request))) {
                 // create the cookie and send it back
-                Cookie cookie = new Cookie(usernameCookieName, request.getParameter("USERNAME"));
+                String usernameParam;
+                try {
+                    usernameParam = URLEncoder.encode(request.getParameter("USERNAME"), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    // SCIPIO: 2018-11-05: Added this try/catch, but it basically impossible for it to cause error here
+                    Debug.logError("setUsername: Error encoding username from parameter [" + request.getParameter("USERNAME") 
+                        + "] for cookie; cannot set username cookie: " + e.toString(), module);
+                    return;
+                }
+                Cookie cookie = new Cookie(usernameCookieName, usernameParam);
                 cookie.setMaxAge(60 * 60 * 24 * 365);
                 cookie.setPath("/");
                 cookie.setDomain(domain);

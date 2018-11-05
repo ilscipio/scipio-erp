@@ -35,7 +35,7 @@ under the License.
                    <#if screenshots?has_content>
                       <#list screenshots as screenshot>
                         <#-- TODO: <a id="single_image" href="<@ofbizContentUrl>${screenshot.resourceValue}</@ofbizContentUrl>">-->
-                        <@img src=makeOfbizContentUrl(screenshot.resourceValue) width="100%"/>
+                        <@img src=makeOfbizContentUrl(screenshot.resourceValue) height="250px" type="contain"/>
                         <#--<span class="${style.text_right}"><@modal icon="${styles.icon} fa-search">
                             <@img src=makeOfbizContentUrl(screenshot.resourceValue)/>
                         </@modal>
@@ -50,15 +50,15 @@ under the License.
                     ${visualTheme.get("description", locale)!visualTheme.visualThemeId}
                 </@pli>
                 <#if visualTheme.visualThemeId == visualThemeId>
-                    <@pli type="description">
-                        ${uiLabelMap.CommonVisualThemeSelected}
+                    <@pli type="button">
+                        <a href="#" class="${styles.button_default} ${styles.disabled}">${uiLabelMap.CommonSelected}</a>
                     </@pli>
                     <#else>
                     <@pli type="button">
                         <a href="javascript:document.SetUserPreferences_${visualTheme.visualThemeId}.submit()" class="${styles.button_default}">${uiLabelMap.CommonSelect}</a>
                     </@pli>
                 </#if>
-            </@pul>   
+            </@pul>
           </li>
       </#list>
     </@grid>

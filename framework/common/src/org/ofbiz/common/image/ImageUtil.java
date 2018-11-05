@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
@@ -287,6 +288,9 @@ public abstract class ImageUtil {
 //        }
     }
 
+    private static final Pattern noSlashPat = Pattern.compile("[/\\\\]");
+    //private static final Pattern noMultiDotPat = Pattern.compile("[.]{2,}");
+    
     /**
      * SCIPIO: Encodes an arbitrary directory name (non-last part of a full file path)
      * for secure usage inside a file path/URL used
@@ -297,16 +301,18 @@ public abstract class ImageUtil {
      * Added 2018-05-04.
      */
     public static String cleanPathname(String name) {
-        name = name.replaceAll("[/\\\\]", "_").replaceAll("[.]{2,}", ".");
+        if (name == null || name.isEmpty()) {
+            return name;
+        }
+        name = noSlashPat.matcher(name).replaceAll("_");
+        // There should be no need for this because the slashes are all removed,
+        // so the only danger case is if ".." between unknown path delims
+        //name = noMultiDotPat.matcher(name).replaceAll(".");
+        if ("..".equals(name)) {
+            Debug.logWarning("cleanPathname: detected a pathname consisting of \"..\" - unusual activity", module);
+            name = "";
+        }
         //if (name.startsWith(".")) name = name.substring(1);
         return name;
-//        try {
-//            name = URLEncoder.encode(name, "UTF-8").replaceAll("[.]{2,}", ".");
-//            if (name.startsWith(".")) name = name.substring(1);
-//            return name;
-//        } catch (UnsupportedEncodingException e) {
-//            Debug.logFatal(e, "Serious system error: could not encode name into UTF-8: " + e.getMessage(), module);
-//            return name.replaceAll("[^a-zA-Z0-9]", ""); // emergency fallback for security reasons
-//        }
     }
 }

@@ -298,7 +298,7 @@ public abstract class ImageUtil {
      */
     public static String cleanPathname(String name) {
         name = name.replaceAll("[/\\\\]", "_").replaceAll("[.]{2,}", ".");
-        if (name.startsWith(".")) name = name.substring(1);
+        //if (name.startsWith(".")) name = name.substring(1);
         return name;
 //        try {
 //            name = URLEncoder.encode(name, "UTF-8").replaceAll("[.]{2,}", ".");

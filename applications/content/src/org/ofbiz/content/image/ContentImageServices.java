@@ -95,6 +95,9 @@ public abstract class ContentImageServices {
         String imageFnFmt = (String) context.get("imageFnFmt");
         String imageOrigFnFmt = (String) context.get("imageOrigFnFmt");
         Map<String, Object> imagePathArgs = UtilGenerics.checkMap(context.get("imagePathArgs"));
+        if (imagePathArgs == null) {
+            imagePathArgs = new HashMap<>();
+        }
         String imagePropXmlPath = (String) context.get("imagePropXmlPath");
         Collection<String> sizeTypeList = UtilGenerics.checkList(context.get("sizeTypeList"));
         boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));

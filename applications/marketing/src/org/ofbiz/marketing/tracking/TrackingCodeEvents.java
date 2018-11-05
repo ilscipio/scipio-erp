@@ -18,6 +18,9 @@
  *******************************************************************************/
 package org.ofbiz.marketing.tracking;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
@@ -248,6 +251,11 @@ public class TrackingCodeEvents {
         int siteIdCookieAge = (60 * 60 * 24 * 365); // should this be configurable?
         String siteId = request.getParameter("siteId");
         if (UtilValidate.isNotEmpty(siteId)) {
+            try { // SCIPIO: 2018-11-05: Only encode if not empty (upstream code moved)
+                siteId = URLEncoder.encode(siteId, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                Debug.logError(e, "Error while saving TrackingCodeVisit", module);
+            }
             String visitorSiteIdCookieName = "Scipio.TKCD.SiteId";
             String visitorSiteId = null;
             // first try to get the current ID from the visitor cookie
@@ -261,9 +269,9 @@ public class TrackingCodeEvents {
                 }
             }
 
-            if (visitorSiteId == null || (visitorSiteId != null && !visitorSiteId.equals(siteId))) {
+            if (visitorSiteId == null || (siteId != null && !visitorSiteId.equals(siteId))) {
                 // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Ofbiz.TKCSiteId and timeout will be 60 * 60 * 24 * 365
-                Cookie siteIdCookie = new Cookie("Scipio.TKCD.SiteId" ,siteId);
+                Cookie siteIdCookie = new Cookie("Scipio.TKCD.SiteId", siteId);
                 siteIdCookie.setMaxAge(siteIdCookieAge);
                 siteIdCookie.setPath("/");
                 if (cookieDomain.length() > 0) siteIdCookie.setDomain(cookieDomain);
@@ -271,7 +279,7 @@ public class TrackingCodeEvents {
                 siteIdCookie.setHttpOnly(true);
                 response.addCookie(siteIdCookie);
                 // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Ofbiz.TKCSiteId and timeout will be 60 * 60 * 24 * 365
-                Cookie updatedTimeStampCookie = new Cookie("Scipio.TKCD.UpdatedTimeStamp" ,UtilDateTime.nowTimestamp().toString());
+                Cookie updatedTimeStampCookie = new Cookie("Scipio.TKCD.UpdatedTimeStamp", UtilDateTime.nowTimestamp().toString());
                 updatedTimeStampCookie.setMaxAge(siteIdCookieAge);
                 updatedTimeStampCookie.setPath("/");
                 if (cookieDomain.length() > 0) updatedTimeStampCookie.setDomain(cookieDomain);
@@ -448,7 +456,7 @@ public class TrackingCodeEvents {
 
         Cookie[] cookies = request.getCookies();
         Timestamp affiliateReferredTimeStamp = null;
-        String siteId = null;
+        String siteIdEnc = null; // SCIPIO: 2018-11-05: New var because it must be URL-decoded
         String isBillable = null;
         String trackingCodeId = null;
         if (cookies != null && cookies.length > 0) {
@@ -456,7 +464,7 @@ public class TrackingCodeEvents {
                 String cookieName = cookies[i].getName();
                 // find the siteId cookie if it exists
                 if ("Scipio.TKCD.SiteId".equals(cookieName)) {
-                    siteId = cookies[i].getValue();
+                    siteIdEnc = cookies[i].getValue();
                 }
 
                 // find the referred timestamp cookie if it exists
@@ -492,6 +500,17 @@ public class TrackingCodeEvents {
         }
 
         if (trackingCode != null) {
+            String siteId = null;
+            if (UtilValidate.isNotEmpty(siteIdEnc)) {
+                try { // SCIPIO: 2018-11-05: Decode var before storing in DB (this 
+                    siteId = URLDecoder.decode(siteIdEnc, "UTF-8");
+                } catch(Exception e) {
+                    Debug.logWarning("makeTrackingCodeOrders: Unable to URL-decode the \"Scipio.TKCD.SiteId\" cookie value [" + siteIdEnc 
+                            + "]; will be stored as-is in TrackingCodeOrder; cause: " + e.toString(), module);
+                    siteId = siteIdEnc;
+                }
+            }
+
             //check effective dates
             if (trackingCode.get("fromDate") != null && nowStamp.before(trackingCode.getTimestamp("fromDate"))) {
                 if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId", module);

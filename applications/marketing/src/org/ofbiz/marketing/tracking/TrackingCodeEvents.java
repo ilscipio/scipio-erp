@@ -270,7 +270,7 @@ public class TrackingCodeEvents {
             }
 
             if (visitorSiteId == null || (siteId != null && !visitorSiteId.equals(siteId))) {
-                // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Ofbiz.TKCSiteId and timeout will be 60 * 60 * 24 * 365
+                // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Scipio.TKCD.SiteId and timeout will be 60 * 60 * 24 * 365
                 Cookie siteIdCookie = new Cookie("Scipio.TKCD.SiteId", siteId);
                 siteIdCookie.setMaxAge(siteIdCookieAge);
                 siteIdCookie.setPath("/");
@@ -278,7 +278,7 @@ public class TrackingCodeEvents {
                 siteIdCookie.setSecure(true);
                 siteIdCookie.setHttpOnly(true);
                 response.addCookie(siteIdCookie);
-                // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Ofbiz.TKCSiteId and timeout will be 60 * 60 * 24 * 365
+                // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Scipio.TKCD.UpdatedTimeStamp and timeout will be 60 * 60 * 24 * 365
                 Cookie updatedTimeStampCookie = new Cookie("Scipio.TKCD.UpdatedTimeStamp", UtilDateTime.nowTimestamp().toString());
                 updatedTimeStampCookie.setMaxAge(siteIdCookieAge);
                 updatedTimeStampCookie.setPath("/");

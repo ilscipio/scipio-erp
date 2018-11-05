@@ -411,7 +411,10 @@ public class LoginEvents {
         String domain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", delegator);
         // first try to get the username from the cookie
         synchronized (session) {
-            if (UtilValidate.isEmpty(getUsername(request))) {
+            // SCIPIO: 2018-11-05: This condition makes little sense, it means this could never save a new user until old cookie expires
+            // or session is cleared/logout, but user can trigger this call outside those cases with a form
+            //if (UtilValidate.isEmpty(getUsername(request))) {
+            if (UtilValidate.isNotEmpty(request.getParameter("USERNAME"))) {
                 // create the cookie and send it back
                 String usernameParam;
                 try {

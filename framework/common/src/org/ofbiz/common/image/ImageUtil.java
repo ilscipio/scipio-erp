@@ -310,7 +310,7 @@ public abstract class ImageUtil {
         // so the only danger case is if ".." between unknown path delims
         //name = noMultiDotPat.matcher(name).replaceAll(".");
         if ("..".equals(name)) {
-            name = "";
+            name = "__";
         }
         if (!origName.equals(name)) {
             Debug.logWarning("cleanPathname: filtered pathname [" + origName + "] to [" + name + "]", module);

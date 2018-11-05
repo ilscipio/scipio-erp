@@ -304,15 +304,36 @@ public abstract class ImageUtil {
         if (name == null || name.isEmpty()) {
             return name;
         }
+        String origName = name;
         name = noSlashPat.matcher(name).replaceAll("_");
         // There should be no need for this because the slashes are all removed,
         // so the only danger case is if ".." between unknown path delims
         //name = noMultiDotPat.matcher(name).replaceAll(".");
         if ("..".equals(name)) {
-            Debug.logWarning("cleanPathname: detected a pathname consisting of \"..\" - unusual activity", module);
             name = "";
+        }
+        if (!origName.equals(name)) {
+            Debug.logWarning("cleanPathname: filtered pathname [" + origName + "] to [" + name + "]", module);
         }
         //if (name.startsWith(".")) name = name.substring(1);
         return name;
+    }
+
+    /**
+     * SCIPIO: Applies {@link #cleanPathname(String)} to every string value in the given map and
+     * returns map copy.
+     * <p>
+     * Added 2018-11-05.
+     */
+    public static Map<String, Object> cleanPathnameValues(Map<String, Object> parts) {
+        Map<String, Object> newImagePathArgs = new HashMap<>();
+        for(Map.Entry<String, Object> entry : parts.entrySet()) {
+            Object value = entry.getValue();
+            if (value instanceof String) {
+                value = ImageUtil.cleanPathname((String) value);
+            }
+            newImagePathArgs.put(entry.getKey(), value);
+        }
+        return newImagePathArgs;
     }
 }

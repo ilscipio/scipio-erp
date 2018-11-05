@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -268,35 +268,24 @@ public abstract class ImageUtil {
     }
 
     /**
-     * SCIPIO: Encodes an arbitrary filename (last part of a full file path)
-     * for secure usage inside a file path/URL used
-     * for images - preventing directory separators and directory switches ("..").
+     * SCIPIO: Encodes an arbitrary filename for secure usage inside a file path/URL used
+     * for images - preventing directory separators, zero-char and directory switches ("..").
      * <p>
-     * TODO: REVIEW: under review.
+     * NOTE: Only use this for the last part of pathnames i.e. the filename with extension.
+     * For middle directories, use {@link #cleanPathname(String)}.
      * <p>
      * Added 2018-05-04.
      */
     public static String cleanFilename(String name) {
         return cleanPathname(name);
-//        try {
-//            name = URLEncoder.encode(name, "UTF-8").replaceAll("[.]{2,}", ".");
-//            if (name.startsWith(".")) name = name.substring(1);
-//            return name;
-//        } catch (UnsupportedEncodingException e) {
-//            Debug.logFatal(e, "Serious system error: could not encode name into UTF-8: " + e.getMessage(), module);
-//            return name.replaceAll("[^a-zA-Z0-9]", ""); // emergency fallback for security reasons
-//        }
     }
 
-    private static final Pattern forbiddencharPat = Pattern.compile("[\0/\\\\]");
-    //private static final Pattern noMultiDotPat = Pattern.compile("[.]{2,}");
-    
     /**
-     * SCIPIO: Encodes an arbitrary directory name (non-last part of a full file path)
-     * for secure usage inside a file path/URL used
-     * for images - preventing directory separators and directory switches ("..").
+     * SCIPIO: Encodes an arbitrary directory name for secure usage inside a file path/URL used
+     * for images - preventing directory separators, zero-char and directory switches ("..").
      * <p>
-     * TODO: REVIEW: under review.
+     * NOTE: This was originally intended for middle pathnames only, such that the filename part
+     * should be handled by {@link #cleanFilename(String)}, but this has become moot (2018-11-05).
      * <p>
      * Added 2018-05-04.
      */
@@ -305,7 +294,7 @@ public abstract class ImageUtil {
             return name;
         }
         String origName = name;
-        name = forbiddencharPat.matcher(name).replaceAll("_");
+        name = StringUtils.replaceChars(name, "/\\\0", "___");
         // There should be no need for this because the slashes are all removed,
         // so the only danger case is if ".." between unknown path delims
         //name = noMultiDotPat.matcher(name).replaceAll(".");

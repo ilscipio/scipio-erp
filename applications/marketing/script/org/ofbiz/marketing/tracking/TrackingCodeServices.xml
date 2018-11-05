@@ -98,7 +98,7 @@ under the License.
                 <get-related-one relation-name="OrderHeader" value-field="returnItem" to-value-field="orderHeader"/>
                 <set field="trackingCodeOrderFindContext.orderId" from-field="orderHeader.orderId"/>
                 <!-- set field="trackingCodeOrderFindContext.trackingCodeTypeId" value="PARTNER_MGD"/-->
-                <!-- get the siteId ,trackingCodeId from TrackingCodeOrder -->
+                <!-- get the siteId, trackingCodeId from TrackingCodeOrder -->
                 <log level="info" message="Find Tracking Code Order For ${trackingCodeOrderFindContext}"/>
                 <find-by-and entity-name="TrackingCodeOrder" list="trackingCodeOrders" map="trackingCodeOrderFindContext"/>
                 <set field="trackingCodeOrder" from-field="trackingCodeOrders[0]"/>

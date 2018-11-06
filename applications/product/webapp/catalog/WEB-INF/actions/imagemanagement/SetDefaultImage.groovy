@@ -31,6 +31,8 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.string.*;
 import org.ofbiz.product.image.ScaleImage;
 
+module = "SetDefaultImage.groovy"
+
 context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
 imageManagementPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
@@ -155,11 +157,11 @@ if (fileType) {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("error deleting existing file (not neccessarily a problem)");
+                Debug.logError(e, "error deleting existing file (not neccessarily a problem)", module);
             }
             file.renameTo(file1);
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
         }
 
         if (imageUrl && imageUrl.length() > 0) {

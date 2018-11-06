@@ -16,6 +16,9 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -31,10 +34,12 @@ import org.ofbiz.service.engine.XMLRPCClientEngine;
  * <p>
  * Supports command-line-level startup service invocation request in the form (default mode: async):
  * <ul>
- * <li><code>./ant start -Dscipio.startup.service=serviceName -Dscipio.startup.service.mode=[sync|async] -Dscipio.startup.service.params.arg1=val1 -Dscipio.startup.service.params.arg2=val2</code></li>
+ * <li><code>./ant start -Dscipio.startup.service=serviceName -Dscipio.startup.service.mode=[sync|async] -Dscipio.startup.service.params.userLogin=system -Dscipio.startup.service.params.arg1=val1 -Dscipio.startup.service.params.arg2=val2</code></li>
  * <li><code>./ant start -Dscipio.startup.service.1=serviceName -Dscipio.startup.service.1.mode=[sync|async] -Dscipio.startup.service.1.params.arg1=val1 -Dscipio.startup.service.1.params.arg2=val2
  *                   -Dscipio.startup.service.2=serviceName -Dscipio.startup.service.2.mode=[sync|async] -Dscipio.startup.service.2.params.arg1=val1 -Dscipio.startup.service.2.params.arg2=val2</code></li>
  * </ul>
+ * For specific user login pass the userLoginId to the params.userLogin parameter (it will be converted to GenericValue).
+ * <p>
  * For advanced multi-service control, create a new group service instead.
  * <p>
  * Test cases:
@@ -158,7 +163,21 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
                 final String indexMsg = (serviceIndex != null) ? " [" + serviceIndex + "]" : "";
                 Debug.logInfo("Scipio: Running startup service '" + serviceName + "'" + indexMsg + " (" + mode + "), params: " + context, module);
             }
+            String userLoginAuthId = null;
+            if (context.get("userLogin") instanceof String) {
+                userLoginAuthId = (String) context.get("userLogin");
+                context.remove("userLogin");
+            }
             Map<String, Object> ctx = dispatcher.getDispatchContext().makeValidContext(serviceName, ModelService.IN_PARAM, context);
+            if (UtilValidate.isNotEmpty(userLoginAuthId)) {
+                GenericValue userLogin = EntityQuery.use(dispatcher.getDelegator()).from("UserLogin")
+                        .where("userLoginId", userLoginAuthId).queryOne();
+                if (userLogin == null) {
+                    Debug.logWarning("Scipio: Could not find UserLogin '" + userLoginAuthId + "' to run startup service '" + serviceName + "'", module);
+                } else {
+                    ctx.put("userLogin", userLogin);
+                }
+            }
             if ("async".equals(mode)) {
                 dispatcher.runAsync(serviceName, ctx, false);
                 return null;
@@ -194,7 +213,7 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
                 }
                 return result;
             }
-        } catch (GenericServiceException e) {
+        } catch (GenericServiceException | GenericEntityException e) {
             Debug.logError("Scipio: Error running startup service '" + serviceName + "': " + e.getMessage(), module);
             return ServiceUtil.returnError(e.getMessage());
         }

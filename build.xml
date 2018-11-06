@@ -488,7 +488,7 @@ under the License.
     </target>
 
     <target name="svninfo"
-        description="Update the Release-revision info in the footer. Note that you need a valid Internet connection and Subversion connected to the OFBiz repository for that ">
+        description="Update the Release-revision info in the footer. Note that you need a valid Internet connection and Subversion connected to the Scipio repository for that ">
         <echo message="Creating svninfo..."/>
         
         <!-- SCIPIO: hooks -->
@@ -1160,7 +1160,7 @@ under the License.
     </macrodef>
     
     <target name="start"
-            description="Start OFBiz (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
+            description="Start Scipio ERP (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
         <!-- SCIPIO: -->
         <property name="currentTarget" value="start"/>
         <condition property="spawn" else="false" >
@@ -1179,7 +1179,7 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="start-batch"
-            description="Start OFBiz as a separate process. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Start Scipio ERP as a separate process. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar spawn="true">
             <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1193,7 +1193,7 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="start-debug"
-            description="Start OFBiz in debugging mode. It uses the 8091 port by default. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Start Scipio ERP in debugging mode. It uses the 8091 port by default. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <jvmarg value="-Xnoagent"/>
             <jvmarg value="-Djava.compiler=NONE"/>
@@ -1204,7 +1204,7 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="start-pos"
-            description="Start OFBiz POS (Point of sale). Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Start SCIPIO ERP POS (Point of sale). Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
@@ -1218,7 +1218,7 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="start-both"
-            description="Start OFBiz in both Web and POS (Point of sale) modes. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Start Scipio ERP in both Web and POS (Point of sale) modes. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1232,14 +1232,14 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="stop"
-            description="Stop OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Stop Scipio ERP. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <arg value="-shutdown"/>
             <arg value="-portoffset=${portoffset}"/>
         </exec-scipio-jar>
     </target>
     <target name="status"
-            description="Display status of OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Display status of Scipio ERP. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <arg value="-status"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1255,11 +1255,11 @@ under the License.
     </target>
 
     <!-- ================================================================== -->
-    <!-- Setup OFBiz Data                                                   -->
+    <!-- Setup Scipio ERP Data                                                   -->
     <!-- ================================================================== -->
 
     <target name="load-demo" depends="build"
-            description="Load all data; meant for generic OFBiz development, testing, demonstration, etc purposes">
+            description="Load all data; meant for generic Scipio ERP development, testing, demonstration, etc purposes">
         <property name="currentTarget" value="load"/>
         <exec-scipio-jar action="load-data"/>
     </target>
@@ -1280,13 +1280,13 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="load-extseed" depends="build"
-            description="Load seed, seed-initial and ext data; meant for manual/generic testing, development, or going into production with a derived system based on stock OFBiz where the ext data basically replaces the demo data">
+            description="Load seed, seed-initial and ext data; meant for manual/generic testing, development, or going into production with a derived system based on stock Scipio ERP where the ext data basically replaces the demo data">
         <exec-scipio-jar action="load-data">
             <arg value="readers=seed,seed-initial,ext"/>
         </exec-scipio-jar>
     </target>
     <target name="load-exttest" depends="build"
-            description="Load seed, seed-initial, ext and ext-test data; meant for automated testing with a derived system based on stock OFBiz">
+            description="Load seed, seed-initial, ext and ext-test data; meant for automated testing with a derived system based on stock Scipio ERP">
         <exec-scipio-jar action="load-data">
             <arg value="readers=seed,seed-initial,ext,ext-test"/>
         </exec-scipio-jar>
@@ -1902,7 +1902,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         </fail>
     </target>
     <target name="run-test-list" depends="_setup-separated-test-run"
-            description="Run all configured tests, stopping/starting ofbiz between each test">
+            description="Run all configured tests, stopping/starting Scipio ERP between each test">
         <delete dir="runtime/logs/test-results"/>
         <ant antfile="runtime/test-list-build.xml" target="all-tests"/>
     </target>
@@ -2380,7 +2380,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
     </target>
 
     <!-- ================================================================== -->
-    <!-- Create New Component. This target will create basic directory structure for an OFBiz component in hot-deploy directory. -->
+    <!-- Create New Component. This target will create basic directory structure for an Scipio ERP component in hot-deploy directory. -->
     <!-- ================================================================== -->
 
     <target name="create-component"
@@ -2875,13 +2875,13 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
     <!-- Old tasks.                                                         -->
     <!-- ================================================================== -->
     <target name="run">
-        <echo message="The 'run' command has been renamed 'start'; please use 'ant start' to start OFBiz."/>
+        <echo message="The 'run' command has been renamed 'start'; please use 'ant start' to start Scipio ERP."/>
     </target>
     <target name="run-debug">
-        <echo message="The 'run-debug' command has been renamed 'start-debug'; please use 'ant start-debug' to start OFBiz in debug mode."/>
+        <echo message="The 'run-debug' command has been renamed 'start-debug'; please use 'ant start-debug' to start Scipio ERP in debug mode."/>
     </target>
     <target name="run-pos">
-        <echo message="The 'run-pos' command has been renamed 'start-pos'; please use 'ant start-pos' to start the OFBiz POS."/>
+        <echo message="The 'run-pos' command has been renamed 'start-pos'; please use 'ant start-pos' to start the Scipio ERP POS."/>
     </target>
     <target name="run-install">
         <echo message="The 'run-install' command has been renamed 'load-demo'; please use 'ant load-demo' to load seed and demo data."/>

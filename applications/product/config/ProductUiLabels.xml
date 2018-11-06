@@ -24384,7 +24384,7 @@
     </property>
     <property key="ProductOriginalImageMessage">
         <value xml:lang="de">Automatisches Skalieren des originalen Bildes, abhängig von der Konfiguration</value>
-        <value xml:lang="en">Automatic scale of the original image, related to the configuration</value>
+        <value xml:lang="en">Automatic scale of the original image, according to the configuration</value>
         <value xml:lang="fr">Redimensionne automatiquement l'original de l'image, suivant la configuration</value>
         <value xml:lang="it">Scala automaticamente l'immagine originale, relativo alla configurazione</value>
         <value xml:lang="ja">設定に関連して、オリジナルの画像を自動的にスケール合わせする</value>

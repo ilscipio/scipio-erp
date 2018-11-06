@@ -36,7 +36,8 @@
 # Paths - Edit for your locations
 JAVA_BINARY=/usr/java/j2sdk1.4.2/bin/java
 SCIPIO_HOME=/home/ofbiz/ofbiz
-SCIPIO_LOG=$SCIPIO_HOME/runtime/logs/console.log
+# SCIPIO (11/06/2018): Uncomment this to enable console logging
+#SCIPIO_LOG=$SCIPIO_HOME/runtime/logs/console.log
 
 # VM Options
 JAVA_VMOPTIONS="-Xms128M -Xmx3512M -XX:MaxPermSize=1024m"
@@ -77,8 +78,12 @@ start() {
     # All clear
     cd $SCIPIO_HOME
     umask 007
-    /bin/rm -f $SCIPIO_LOG
-    $JAVA_BINARY $JAVA_VMOPTIONS $JAVA_ARGS >>$SCIPIO_LOG 2>>$SCIPIO_LOG&
+    if [ "$SCIPIO_LOG" != "" ]; then
+        /bin/rm -f $SCIPIO_LOG
+        $JAVA_BINARY $JAVA_VMOPTIONS $JAVA_ARGS >>$SCIPIO_LOG 2>>$SCIPIO_LOG&
+    else
+        $JAVA_BINARY $JAVA_VMOPTIONS $JAVA_ARGS > /dev/null 2> 1&
+    fi
     echo success
     return 0
 }
@@ -98,7 +103,11 @@ stop() {
     # All clear
     cd $SCIPIO_HOME
     umask 007
-    $JAVA_BINARY $JAVA_VMOPTIONS $JAVA_ARGS -shutdown >>$SCIPIO_LOG
+    if [ "$SCIPIO_LOG" != "" ]; then
+        $JAVA_BINARY $JAVA_VMOPTIONS $JAVA_ARGS -shutdown >>$SCIPIO_LOG
+    else
+        $JAVA_BINARY $JAVA_VMOPTIONS $JAVA_ARGS -shutdown > /dev/null
+    fi
     ofbizprocs
     if [ "$SCIPIO_PROCS" != "" ]; then
         # Let's try to -TERM

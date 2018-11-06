@@ -2542,7 +2542,7 @@ under the License.
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="preventDuplicates" type="Boolean" mode="IN" optional="true" default-value="true">
-            <description>Tries to prevent regenerating the same URLs for the same categories and products more than one</description>
+            <description>Tries to prevent regenerating the same URLs for the same categories and products more than once</description>
         </attribute>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
             <description>May be slightly faster iterating if true, but not recommended</description>

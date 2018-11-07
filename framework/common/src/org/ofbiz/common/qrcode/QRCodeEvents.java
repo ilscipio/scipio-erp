@@ -38,6 +38,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+
 /**
  * Events for QRCode.
  */
@@ -79,7 +80,7 @@ public class QRCodeEvents {
 
         // SCIPIO: 2018-08-22: new parameters
         String logoArg = (String) parameters.get("logo");
-        //String logo = null;
+        String logo = null;
         Boolean useLogo = null; // NOTE: stock ofbiz generateQRCodeImage service default is true
         if ("true".equals(logoArg)) {
             useLogo = true;
@@ -88,7 +89,7 @@ public class QRCodeEvents {
         } else if (UtilValidate.isNotEmpty(logoArg)) {
             useLogo = true;
             // FIXME: security risk, cannot be specified over request - needs strict mapping system
-            //logo = logoArg;
+            logo = logoArg;
         }
         String ecLevel = request.getParameter("ecLevel");
         String logoImageSize = request.getParameter("logoSize");
@@ -147,10 +148,9 @@ public class QRCodeEvents {
                 }
             }
             context.put("useLogo", useLogo); // SCIPIO: 2018-08-22
-            // SCIPIO: TODO?: future
-            //if (logo != null) {
-            //    context.put("logoImage", ...);
-            //}
+            if (logo != null) {
+                context.put("logoImage", logo);
+            }
             context.put("ecLevel", ecLevel); // SCIPIO: 2018-08-22
             context.put("logoImageSize", logoImageSize); // SCIPIO: 2018-08-23
             context.put("logoImageMaxSize", logoImageMaxSize); // SCIPIO: 2018-08-23

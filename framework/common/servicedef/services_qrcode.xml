@@ -33,7 +33,7 @@ under the License.
         <attribute name="height" type="Integer" mode="IN" optional="true"/>
         <attribute name="width" type="Integer" mode="IN" optional="true"/>
         <attribute name="encoding" type="String" mode="IN" optional="true"/>
-        <attribute name="logoImage" type="java.awt.image.BufferedImage" mode="IN" optional="true"/>
+        <attribute name="logoImage" type="String" mode="IN" optional="true"/>
         <attribute name="logoImageMaxWidth" type="Integer" mode="IN" optional="true"/>
         <attribute name="logoImageMaxHeight" type="Integer" mode="IN" optional="true"/>
         <attribute name="verifyOutput" type="Boolean" mode="IN" optional="true"/>

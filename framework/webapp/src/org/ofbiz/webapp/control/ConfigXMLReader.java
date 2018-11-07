@@ -663,25 +663,50 @@ public class ConfigXMLReader {
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
-                        result.push(controllerConfig.getRequestMapMap());
+                        mergePushRequestMapMap(result, controllerConfig.getRequestMapMap(), controllerConfig);
                     } else {
-                        result.push(controllerConfig.requestMapMap);
+                        mergePushRequestMapMap(result, controllerConfig.requestMapMap, controllerConfig);
                     }
                 }
             }
-            result.push(requestMapMap);
+            mergePushRequestMapMap(result, requestMapMap, this); // SCIPIO: pushMergeRequestMapMap
             for (Include include : includesPostLocal) {
                 ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
-                        result.push(controllerConfig.getRequestMapMap());
+                        mergePushRequestMapMap(result, controllerConfig.getRequestMapMap(), controllerConfig);
                     } else {
-                        result.push(controllerConfig.requestMapMap);
+                        mergePushRequestMapMap(result, controllerConfig.requestMapMap, controllerConfig);
                     }
                 }
             }
             return result;
+        }
+
+        /**
+         * SCIPIO: Add the requestMapMap on top of the result map context, honoring request-map override-mode.
+         * <p>
+         * TODO: REVIEW: The whole MapContext on top of these copies is probably slow for nothing, but for scipio not concerned with the performance
+         * because this is cached by {@link ConfigXMLReader.ResolvedControllerConfig}. Maybe review in future.
+         */
+        private void mergePushRequestMapMap(MapContext<String, RequestMap> result, Map<String, RequestMap> requestMapMap, ControllerConfig controllerConfig) {
+            Map<String, RequestMap> updatedRequestMapMap = new HashMap<>();
+            for(Map.Entry<String, RequestMap> entry : requestMapMap.entrySet()) {
+                String uri = entry.getKey();
+                RequestMap requestMap = entry.getValue();
+                if (requestMap.getOverrideMode() == RequestMap.OverrideMode.MERGE) {
+                    RequestMap existingRequestMap = result.get(uri);
+                    if (existingRequestMap != null) {
+                        updatedRequestMapMap.put(uri, new RequestMap(existingRequestMap, requestMap));
+                    } else {
+                        updatedRequestMapMap.put(uri, requestMap);
+                    }
+                } else {
+                    updatedRequestMapMap.put(uri, requestMap);
+                }
+            }
+            result.push(updatedRequestMapMap);
         }
 
         public String getSecurityClass() throws WebAppConfigurationException {
@@ -1472,7 +1497,7 @@ public class ConfigXMLReader {
                 UtilMisc.unmodifiableHashSet("get", "post", "head", "put", "delete", "patch", "options");
 
         public String uri;
-        public Set<String> methods = Collections.emptySet(); // SCIPIO: Allowed HTTP methods
+        public Set<String> methods; // SCIPIO: Allowed HTTP methods
         public boolean edit = true;
         public boolean trackVisit = true;
         public boolean trackServerHit = true;
@@ -1485,6 +1510,14 @@ public class ConfigXMLReader {
         public boolean securityDirectRequest = true;
         public Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>();
         public Metrics metrics = null;
+        public OverrideMode overrideMode;
+
+        // SCIPIO: Special definition-presence flags, needed by merge constructor to determine if should use the base or override settings
+        private final boolean methodsSpecified;
+        private final boolean editSpecified;
+        private final boolean trackVisitSpecified;
+        private final boolean trackServerHitSpecified;
+        private final boolean securitySpecified;
 
         public RequestMap(Element requestMapElement) {
             // Get the URI info
@@ -1492,8 +1525,12 @@ public class ConfigXMLReader {
             // SCIPIO: HTTP methods
             // NOTE: We will be permissive to uppercase for security reasons, but should be written with lowercase in files.
             String methodStr = requestMapElement.getAttribute("method");
-            if (methodStr.isEmpty() || "all".equalsIgnoreCase(methodStr)) {
-                //this.methods = Collections.emptySet();
+            if (methodStr.isEmpty()) {
+                this.methods = Collections.emptySet();
+                methodsSpecified = false;
+            } else if ("all".equalsIgnoreCase(methodStr)) {
+                this.methods = Collections.emptySet();
+                methodsSpecified = true;
             } else {
                 String[] methodList = methodStr.toLowerCase(Locale.getDefault()).split("\\s*,\\s*");
                 Set<String> methods = new HashSet<>();
@@ -1506,10 +1543,18 @@ public class ConfigXMLReader {
                     }
                 }
                 this.methods = methods;
+                methodsSpecified = true;
             }
-            this.edit = !"false".equals(requestMapElement.getAttribute("edit"));
-            this.trackServerHit = !"false".equals(requestMapElement.getAttribute("track-serverhit"));
-            this.trackVisit = !"false".equals(requestMapElement.getAttribute("track-visit"));
+            String editStr = requestMapElement.getAttribute("edit");
+            this.edit = !"false".equals(editStr);
+            this.editSpecified = UtilValidate.isNotEmpty(editStr); // SCIPIO
+            
+            String trackServerHitStr = requestMapElement.getAttribute("track-serverhit");
+            this.trackServerHit = !"false".equals(trackServerHitStr);
+            this.trackServerHitSpecified = UtilValidate.isNotEmpty(trackServerHitStr); // SCIPIO
+            String trackVisitStr = requestMapElement.getAttribute("track-visit");
+            this.trackVisit = !"false".equals(trackVisitStr);
+            this.trackVisitSpecified = UtilValidate.isNotEmpty(trackVisitStr); // SCIPIO
             // Check for security
             Element securityElement = UtilXml.firstChildElement(requestMapElement, "security");
             if (securityElement != null) {
@@ -1532,6 +1577,9 @@ public class ConfigXMLReader {
                 this.securityCert = "true".equals(securityElement.getAttribute("cert"));
                 this.securityExternalView = !"false".equals(securityElement.getAttribute("external-view"));
                 this.securityDirectRequest = !"false".equals(securityElement.getAttribute("direct-request"));
+                this.securitySpecified = true; // SCIPIO
+            } else {
+                this.securitySpecified = false; // SCIPIO
             }
             // Check for event
             Element eventElement = UtilXml.firstChildElement(requestMapElement, "event");
@@ -1550,8 +1598,54 @@ public class ConfigXMLReader {
             if (metricsElement != null) {
                 this.metrics = MetricsFactory.getInstance(metricsElement);
             }
+            this.overrideMode = OverrideMode.fromNameAlways(requestMapElement.getAttribute("override-mode"));
         }
 
+        /**
+         * SCIPIO: Merge constructor, for {@link OverrideMode#MERGE}.
+         */
+        RequestMap(RequestMap baseMap, RequestMap overrideMap) {
+            this.uri = overrideMap.uri;
+
+            this.methodsSpecified = overrideMap.methodsSpecified || baseMap.methodsSpecified;
+            this.methods = overrideMap.methodsSpecified ? overrideMap.methods : baseMap.methods;
+                    
+            this.editSpecified = overrideMap.editSpecified || baseMap.editSpecified;
+            this.edit = overrideMap.editSpecified ? overrideMap.edit : baseMap.edit;
+            
+            this.trackVisitSpecified = overrideMap.trackVisitSpecified || baseMap.trackVisitSpecified;
+            this.trackVisit = overrideMap.trackVisitSpecified ? overrideMap.trackVisit : baseMap.trackVisit;
+
+            this.trackServerHitSpecified = overrideMap.trackServerHitSpecified || baseMap.trackServerHitSpecified;
+            this.trackServerHit = overrideMap.trackVisitSpecified ? overrideMap.trackServerHit : baseMap.trackServerHit;
+            
+            this.description = (overrideMap.description != null) ? overrideMap.description : baseMap.description;
+            this.event = (overrideMap.event != null) ? overrideMap.event : baseMap.event;
+
+            this.securitySpecified = overrideMap.securitySpecified || baseMap.securitySpecified;
+            if (overrideMap.securitySpecified) {
+                this.securityHttps = overrideMap.securityHttps;
+                this.securityAuth = overrideMap.securityAuth;
+                this.securityCert = overrideMap.securityCert;
+                this.securityExternalView = overrideMap.securityExternalView;
+                this.securityDirectRequest = overrideMap.securityDirectRequest;
+            } else {
+                this.securityHttps = baseMap.securityHttps;
+                this.securityAuth = baseMap.securityAuth;
+                this.securityCert = baseMap.securityCert;
+                this.securityExternalView = baseMap.securityExternalView;
+                this.securityDirectRequest = baseMap.securityDirectRequest;
+            }
+            
+            Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>();
+            requestResponseMap.putAll(baseMap.requestResponseMap);
+            requestResponseMap.putAll(overrideMap.requestResponseMap);
+            this.requestResponseMap = Collections.unmodifiableMap(requestResponseMap);
+            this.metrics = (overrideMap.metrics != null) ? overrideMap.metrics : baseMap.metrics;
+
+            this.overrideMode = OverrideMode.DEFAULT; // This flag should not be transitive
+        }
+        
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
 
         public String getUri() {
@@ -1604,6 +1698,36 @@ public class ConfigXMLReader {
 
         public Metrics getMetrics() {
             return metrics;
+        }
+
+        public OverrideMode getOverrideMode() {
+            return overrideMode;
+        }
+
+        public enum OverrideMode { // SCIPIO
+            REPLACE("replace"),
+            MERGE("merge");
+            
+            public static final OverrideMode DEFAULT = REPLACE;
+            
+            private final String name;
+            private OverrideMode(String name) { this.name = name; }
+
+            public String getName() {
+                return name;
+            }
+
+            public static OverrideMode fromNameAlways(String name) {
+                if (UtilValidate.isEmpty(name)) {
+                    return DEFAULT;      
+                }
+                for(OverrideMode mode : OverrideMode.values()) {
+                    if (mode.name.equals(name)) {
+                        return mode;
+                    }
+                }
+                throw new IllegalArgumentException("Unrecognized controller request-map override-mode: " + name);
+            }
         }
     }
 

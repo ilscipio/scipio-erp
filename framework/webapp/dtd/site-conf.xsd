@@ -426,10 +426,10 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="method" use="optional" default="all">
+        <xs:attribute name="method" use="optional"><!-- default="all" -->
             <xs:annotation>
                 <xs:documentation>
-                    The HTTP method of this request. This will be the HTTP method used to access the request.
+                    The HTTP method of this request. This will be the HTTP method used to access the request. Default: all.
 
                     SCIPIO: NOTE: This attribute does not currently influence request resolution; 
                     it behaves more like the security checks done for attributes on the security element 
@@ -454,26 +454,61 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>-->
         </xs:attribute>
-        <xs:attribute type="xs:boolean" name="edit" default="true">
+        <xs:attribute type="xs:boolean" name="edit"><!-- default="true" --><!--  SCIPIO: make default implicit -->
             <xs:annotation>
                 <xs:documentation>
-                    Reserved for future use (not used yet).
+                    Reserved for future use (not used yet). Default: true.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:boolean" name="track-visit" default="true">
+        <xs:attribute type="xs:boolean" name="track-visit"><!-- default="true" --><!--  SCIPIO: make default implicit -->
             <xs:annotation>
                 <xs:documentation>
-                    Allow or not to track first visit (related to firstvisit preprocessor).
+                    Allow or not to track first visit (related to firstvisit preprocessor). Default: true.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:boolean" name="track-serverhit" default="true">
+        <xs:attribute type="xs:boolean" name="track-serverhit"><!-- default="true" --><!--  SCIPIO: make default implicit -->
             <xs:annotation>
                 <xs:documentation>
-                    Allow or not to track statistics.
+                    Allow or not to track statistics. Default: true.
                 </xs:documentation>
             </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="override-mode" default="replace">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Controls how the request-map should override or inherit from any existing request-maps with
+                    the same uri. Default: replace.
+
+                    * replace: Replaces the entire request-map definition and all elements (default/legacy behavior).
+                    * merge: Merges the responses and keeps information not specified from the existing request-map definition.
+                    
+                    NOTE: The override-mode flag itself is not inherited, only the other settings are.
+                    NOTE: 2018-11-07: Currently the security element flags are treated as a single setting by
+                    merge logic, so to inherit security with merge you must omit the security element entirely 
+                    (this may change in future).
+                    Added 2018-11-07.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="replace">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Replaces the entire request-map definition and all elements (default/legacy behavior)
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="merge">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Merges the responses and keeps information not specified from the existing request-map definition.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="security">

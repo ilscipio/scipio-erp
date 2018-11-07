@@ -1873,8 +1873,7 @@ Creates a QR Code image link.
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     text                    = (string) Text or Target URL (will be url-encoded)
     logo                    = ((boolean|string), default: false) Render overlaying logo on top of qrcode?
-                              Can be boolean true/false or a value.
-                              FIXME: does not support specific value here yet due to security issues
+                              Can be boolean true/false (for default logo) or a file location (component://).
                               Default logo is configured in {{{framework/common/config/qrcode.properties}}}.
     export                  = ((string) image|link|url, default: image) Export as image or link
     width                   = ((integer)) QRCode width
@@ -1922,10 +1921,15 @@ Creates a QR Code image link.
   <#if !targetUri?has_content>
     <#local targetUri = "qrcode">
   </#if>
-  <#if !logo?is_boolean && !logo?has_content>
+  <#if !logo?is_boolean>
+    <#if !logo?has_content>
     <#-- NOTE: the stock serveQRCodeImage event used true by default, 
         so for macro we must explicit decide a true/false default here/above -->
-    <#local logo = false>
+      <#local logo = false>
+    <#else>
+      <#-- Convert the file location to an ID for passing over parameters and register it server-side -->
+      <#local logo = Static["org.ofbiz.common.qrcode.QRCodeLogoRegistry"].getIdForLocation(delegator, logo)>
+    </#if>
   </#if>
   <@qrcode_markup id=id class=class text=text export=export logo=logo export=export 
     width=width height=height ecLevel=ecLevel format=format logoSize=logoSize logoMaxSize=logoMaxSize linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>

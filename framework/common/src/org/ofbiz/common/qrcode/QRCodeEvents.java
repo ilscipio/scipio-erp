@@ -29,10 +29,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -44,12 +46,13 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class QRCodeEvents {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Streams QR Code to the output. */
     public static String serveQRCodeImage(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
         Map<String, Object> parameters = UtilHttp.getParameterMap(request);
         String message = (String) parameters.get("message");
         GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
@@ -88,8 +91,13 @@ public class QRCodeEvents {
             useLogo = false;
         } else if (UtilValidate.isNotEmpty(logoArg)) {
             useLogo = true;
-            // FIXME: security risk, cannot be specified over request - needs strict mapping system
-            logo = logoArg;
+            logo = QRCodeLogoRegistry.getLocationForId(delegator, logoArg);
+            if (logo == null) {
+                Debug.logWarning("QRCode: Could not find logo for ID '" + logoArg 
+                        + "'; it is usually setup automatically by the @qrcode macro"
+                        + "; if accessing a different way, you can pre-whitelist using qrcode[-custom].properties or QRCodeLogoRegistry", module);
+                useLogo = false;
+            }
         }
         String ecLevel = request.getParameter("ecLevel");
         String logoImageSize = request.getParameter("logoSize");

@@ -64,9 +64,9 @@ under the License.
         <@cell>
         <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
-            <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
                 <#list productFeatureAndTypeDatas! as productFeatureAndTypeData>
                 <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
+                <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
                 <#assign productFeature = productFeatureAndTypeData.productFeature>
                 <#assign productFeatureTypeId = productFeatureType.productFeatureTypeId>
                 <@field type="display" label=(productFeatureType.description)>

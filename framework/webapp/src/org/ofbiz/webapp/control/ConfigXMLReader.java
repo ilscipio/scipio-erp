@@ -203,8 +203,10 @@ public class ConfigXMLReader {
             }
         } catch(WebAppConfigurationException e) {
             if (optional && (e.getCause() instanceof java.io.FileNotFoundException)) {
-                if (Debug.infoOn()) {
-                    Debug.logInfo("controller skipped (not found, optional): " + url.toString(), module);
+                // SCIPIO: NOTE: Changed this to verbose to simplify and to make this consistent with loadIncludes
+                // below, which also can generate a similar message (when component missing)
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("controller skipped (not found, optional): " + url.toString(), module);
                 }
                 return null;
             } else {

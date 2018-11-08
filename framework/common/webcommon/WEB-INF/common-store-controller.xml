@@ -343,7 +343,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     </request-map>
     -->
 
-    <request-map uri="qrcode"><!-- SCIPIO: now needed in shops -->
+    <request-map uri="qrcode" track-serverhit="false"><!-- SCIPIO: 2018-11-07: Don't track due to ajax --><!-- SCIPIO: now needed in shops -->
         <security auth="false" https="true" />
         <event type="java" path="org.ofbiz.common.qrcode.QRCodeEvents" invoke="serveQRCodeImage"/>
         <response name="success" type="none" />

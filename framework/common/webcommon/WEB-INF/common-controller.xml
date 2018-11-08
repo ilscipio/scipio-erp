@@ -330,7 +330,7 @@ under the License.
         <response name="error" type="request" value="json"/>
     </request-map>
 
-    <request-map uri="qrcode">
+    <request-map uri="qrcode" track-serverhit="false"><!-- SCIPIO: 2018-11-07: Don't track due to ajax -->
         <security auth="true" https="true" /><!-- SCIPIO: 2018-07-09: set https true -->
         <event type="java" path="org.ofbiz.common.qrcode.QRCodeEvents" invoke="serveQRCodeImage"/>
         <response name="success" type="none" />

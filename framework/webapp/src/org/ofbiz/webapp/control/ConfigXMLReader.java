@@ -35,6 +35,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentURLException.ComponentNotFoundURLException;
 import org.ofbiz.base.location.FlexibleLocation;
@@ -1319,26 +1320,43 @@ public class ConfigXMLReader {
                     // SCIPIO: support non-recursive
                     boolean recursive = !"no".equals(includeElement.getAttribute("recursive"));
                     boolean optional = "true".equals(includeElement.getAttribute("optional"));
-                    try {
-                        URL urlLocation = FlexibleLocation.resolveLocation(includeLocation);
-                        String order = includeElement.getAttribute("order");
-                        Include include = new Include(urlLocation, recursive, optional, order);
-                        includes.add(include);
-                        if (include.isPostLocal()) {
-                            includesPostLocal.add(include);
-                        } else {
-                            includesPreLocal.add(include);
+                    String order = includeElement.getAttribute("order");
+                    if (includeLocation.startsWith("component://*/")) { // SCIPIO: new case
+                        if (!optional) {
+                            Debug.logWarning("Include at [" + includeLocation + "] has component wildcard but not marked optional"
+                                    + "; you probably want optional=\"true\"",  module);
                         }
-                    } catch (ComponentNotFoundURLException mue) { // SCIPIO: 2017-08-03: special case needed for missing component
-                        if (optional) {
-                            if (Debug.verboseOn()) Debug.logVerbose("Skipping optional processing include at [" + includeLocation + "]: component not found", module);
-                        } else {
-                            Debug.logError(mue, "Error processing include at [" + includeLocation + "]: " + mue.toString(), module);
+                        String includeSuffix = includeLocation.substring("component://*".length());
+                        for(ComponentConfig component : ComponentConfig.getAllComponents()) {
+                            loadInclude("component://" + component.getGlobalName() + includeSuffix, recursive, optional, order, true);
                         }
-                    } catch (MalformedURLException mue) {
-                        Debug.logError(mue, "Error processing include at [" + includeLocation + "]: " + mue.toString(), module); // SCIPIO: 2017-08-03: typo fix
+                    } else {
+                        loadInclude(includeLocation, recursive, optional, order, false);
                     }
                 }
+            }
+        }
+
+        private void loadInclude(String includeLocation, boolean recursive, boolean optional, String order, boolean wildcard) { // SCIPIO: refactored from loadIncludes
+            try {
+                URL urlLocation = FlexibleLocation.resolveLocation(includeLocation);
+                Include include = new Include(urlLocation, recursive, optional, order);
+                includes.add(include);
+                if (include.isPostLocal()) {
+                    includesPostLocal.add(include);
+                } else {
+                    includesPreLocal.add(include);
+                }
+            } catch (ComponentNotFoundURLException e) { // SCIPIO: 2017-08-03: special case needed for missing component
+                if (optional) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Skipping optional processing include at [" + includeLocation + "]: component not found", module);
+                    }
+                } else {
+                    Debug.logError(e, "Error processing include at [" + includeLocation + "]: " + e.toString(), module);
+                }
+            } catch (MalformedURLException e) {
+                Debug.logError(e, "Error processing include at [" + includeLocation + "]: " + e.toString(), module); // SCIPIO: 2017-08-03: typo fix
             }
         }
 

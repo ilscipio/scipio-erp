@@ -200,6 +200,13 @@ public class RequestHandler {
 
         // get the controllerConfig once for this method so we don't have to get it over and over inside the method
         ConfigXMLReader.ControllerConfig controllerConfig = this.getControllerConfig();
+        
+        if (controllerConfig == null) { // SCIPIO: 2018-11-08: Handle error more cleanly
+            throw new RequestHandlerException("Could not process controller request"
+                    + " for webapp [" + request.getContextPath() + "] because its controller failed to load ("
+                    + this.controllerConfigURL + ")");
+        }
+
         Map<String, ConfigXMLReader.RequestMap> requestMapMap = null;
         String statusCodeString = null;
         try {
@@ -1009,7 +1016,13 @@ public class RequestHandler {
     public String getDefaultErrorPage(HttpServletRequest request) {
         String errorpage = null;
         try {
-            errorpage = getControllerConfig().getErrorpage();
+            // SCIPIO: 2018-11-08: Handle controller load fail more cleanly
+            //errorpage = getControllerConfig().getErrorpage();
+            ControllerConfig controllerConfig = getControllerConfig();
+            if (controllerConfig == null) {
+                return "/error/error.jsp";
+            }
+            errorpage = controllerConfig.getErrorpage();
             // SCIPIO: 2017-11-14: now supports flexible expressions contains ServletContext attributes
             Map<String, Object> exprCtx = new HashMap<>();
             exprCtx.putAll(UtilHttp.getServletContextMap(request));
@@ -1026,7 +1039,13 @@ public class RequestHandler {
     public String getStatusCode(HttpServletRequest request) {
         String statusCode = null;
         try {
-            statusCode = getControllerConfig().getStatusCode();
+            // SCIPIO: 2018-11-08: Handle controller load fail more cleanly
+            //statusCode = getControllerConfig().getStatusCode();
+            ControllerConfig controllerConfig = getControllerConfig();
+            if (controllerConfig == null) {
+                return null;
+            }
+            statusCode = controllerConfig.getStatusCode();
         } catch (WebAppConfigurationException e) {
             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
         }
@@ -2489,7 +2508,13 @@ public class RequestHandler {
             }
             ConfigXMLReader.RequestMap requestMap = null;
             try {
-                requestMap = getControllerConfig().getRequestMapMap().get(uriString);
+                // SCIPIO: 2018-11-08: Handle controller load fail more cleanly
+                //requestMap = getControllerConfig().getRequestMapMap().get(uriString);
+                ControllerConfig controllerConfig = getControllerConfig();
+                if (controllerConfig == null) {
+                    return false;
+                }
+                requestMap = controllerConfig.getRequestMapMap().get(uriString);
             } catch (WebAppConfigurationException e) {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
             }
@@ -2508,7 +2533,13 @@ public class RequestHandler {
             }
             ConfigXMLReader.RequestMap requestMap = null;
             try {
-                requestMap = getControllerConfig().getRequestMapMap().get(uriString);
+                // SCIPIO: 2018-11-08: Handle controller load fail more cleanly
+                //requestMap = getControllerConfig().getRequestMapMap().get(uriString);
+                ControllerConfig controllerConfig = getControllerConfig();
+                if (controllerConfig == null) {
+                    return false;
+                }
+                requestMap = controllerConfig.getRequestMapMap().get(uriString);
             } catch (WebAppConfigurationException e) {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
             }

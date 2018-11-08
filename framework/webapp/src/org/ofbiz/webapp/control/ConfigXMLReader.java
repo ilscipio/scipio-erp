@@ -194,6 +194,13 @@ public class ConfigXMLReader {
     public static ControllerConfig readControllerConfig(URL url, boolean optional) throws WebAppConfigurationException {
         try {
             return ControllerConfigFactory.getFactory().readControllerConfig(url);
+        } catch(FatalWebAppConfigurationException e) {
+            // TODO: REVIEW: This block allows factory to bypass the FileNotFoundException check 
+            if (e.getCause() instanceof WebAppConfigurationException) {
+                throw (WebAppConfigurationException) e.getCause();
+            } else {
+                throw new WebAppConfigurationException(e.getCause());
+            }
         } catch(WebAppConfigurationException e) {
             if (optional && (e.getCause() instanceof java.io.FileNotFoundException)) {
                 if (Debug.infoOn()) {
@@ -206,6 +213,17 @@ public class ConfigXMLReader {
         }
     }
 
+    /**
+     * SCIPIO: A hack for {@link #readControllerConfig} to allow passing through FileNotFoundException.
+     * TODO: REVIEW: hackish
+     */
+    @SuppressWarnings("serial")
+    private static class FatalWebAppConfigurationException extends WebAppConfigurationException {
+        public FatalWebAppConfigurationException(Throwable t) {
+            super(t);
+        }
+    }
+    
     public static URL getControllerConfigURL(ServletContext context) {
         try {
             return context.getResource(controllerXmlFileName);
@@ -1420,7 +1438,19 @@ public class ConfigXMLReader {
         public static class Factory extends ControllerConfigFactory {
             @Override
             public ControllerConfig readControllerConfig(URL url) throws WebAppConfigurationException {
-                return new ResolvedControllerConfig(new ControllerConfig(url));
+                ControllerConfig cc = new ControllerConfig(url);
+                try {
+                    return new ResolvedControllerConfig(cc);
+                } catch(WebAppConfigurationException e) {
+                    if (e.getCause() instanceof java.io.FileNotFoundException) {
+                        // SPECIAL: Due to pre-resolving, we must treat FileNotFoundException here as "fatal",
+                        // and we can't pass it back down due to readControllerConfig method handling it and hiding errors.
+                        // TODO: REVIEW: hackish
+                        throw new FatalWebAppConfigurationException(e);
+                    } else {
+                        throw e;
+                    }
+                }
             }
         }
 

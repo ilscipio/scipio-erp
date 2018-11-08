@@ -80,19 +80,33 @@ public class ControlServlet extends HttpServlet {
             Debug.logInfo("Loading webapp [" + webappName + "], located at " + servletContext.getRealPath("/"), module);
         }
 
-        // configure custom BSF engines
-        configureBsf();
-        // initialize the request handler
-        getRequestHandler();
-
         // SCIPIO: 2017-11-14: new _CONTROL_MAPPING_ and _CONTROL_SERVPATH_ servlet attributes; setting
         // these here allows them to be available from early filters (instead of hardcoding there).
         String servletMapping = ServletUtil.getBaseServletMapping(config.getServletContext(), config.getServletName());
         String servletPath = "/".equals(servletMapping) ? "" : servletMapping;
-        config.getServletContext().setAttribute("_CONTROL_MAPPING", servletMapping);
+        config.getServletContext().setAttribute("_CONTROL_MAPPING_", servletMapping);
         config.getServletContext().setAttribute("_CONTROL_SERVPATH_", servletPath);
         if (servletPath == null) {
             Debug.logError("Scipio: ERROR: Control servlet with name '" +  config.getServletName() + "' has no servlet mapping! Cannot set _CONTROL_SERVPATH_! Please fix web.xml or app will crash!", module);
+        }
+
+        // configure custom BSF engines
+        try {  
+            configureBsf();
+        } catch(Exception e) { // SCIPIO
+            Debug.logError(e, "init: Error configuring BSF engines for webapp [" + config.getServletContext().getContextPath() + "]", module);
+        }
+        // initialize the request handler
+        // SCIPIO: NOTE: getRequestHandler may throw an exception if bad controller...
+        // We could let the init fail and the servlet container will try again later, but this results
+        // in inconsistent error handling because we can also have an initialized ControlServlet but then
+        // further controller changes break the controller again.
+        // So to minimize strange behavior, we have to prevent exception here and let init finish;
+        // instead it will be doGet, ContextFilter or another filter that will trigger a crash on request.
+        try {
+            getRequestHandler();
+        } catch(Exception e) {
+            Debug.logError(e, "init: Error initializing RequestHandler for webapp [" + config.getServletContext().getContextPath() + "]", module);
         }
     }
 

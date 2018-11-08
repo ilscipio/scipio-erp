@@ -132,7 +132,8 @@ public class RequestHandler {
             // constructor throws a confusing GeneralRuntimeException following an NPE. This is because getControllerConfig returns
             // null on exception, which we can't change in code. So instead we'll handle null here and throw
             // an exception so that the server crashes with a much more informative message.
-            // NOTE: We cannot allow the app to continue, because everywhere else will crash even more confusingly.
+            // NOTE: We cannot allow initialization to continue, because then an incomplete RequestHandler will get stored
+            // in servlet context attributes and prevent any chance at recovering after fix.
             throw new IllegalStateException("Could not initialize a RequestHandler"
                     + " for webapp [" + context.getContextPath() + "] because its controller failed to load ("
                     + this.controllerConfigURL + ")");

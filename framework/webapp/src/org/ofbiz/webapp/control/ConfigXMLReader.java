@@ -188,6 +188,14 @@ public class ConfigXMLReader {
     }
 
     /**
+     * SCIPIO: version of getControllerConfig that supports optional loading.
+     * Added 2017-05-03.
+     */
+    private static ControllerConfig getControllerConfig(ControllerConfig.Include include) throws WebAppConfigurationException {
+        return getControllerConfig(include.getLocation(), include.isOptional());
+    }
+
+    /**
      * SCIPIO: version of getControllerConfig that bypasses cache.
      * Added 2018-06-13.
      */
@@ -509,7 +517,7 @@ public class ConfigXMLReader {
         public Map<String, Event> getAfterLoginEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -521,7 +529,7 @@ public class ConfigXMLReader {
             }
             result.push(afterLoginEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -537,7 +545,7 @@ public class ConfigXMLReader {
         public Map<String, Event> getBeforeLogoutEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -549,7 +557,7 @@ public class ConfigXMLReader {
             }
             result.push(beforeLogoutEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -564,7 +572,7 @@ public class ConfigXMLReader {
 
         public String getDefaultRequest() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String defaultRequest = controllerConfig.getDefaultRequest();
@@ -583,7 +591,7 @@ public class ConfigXMLReader {
                 return defaultRequest;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String defaultRequest = controllerConfig.getDefaultRequest();
@@ -603,7 +611,7 @@ public class ConfigXMLReader {
 
         public String getErrorpage() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String errorpage = controllerConfig.getErrorpage();
@@ -622,7 +630,7 @@ public class ConfigXMLReader {
                 return errorpage;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String errorpage = controllerConfig.getErrorpage();
@@ -643,7 +651,7 @@ public class ConfigXMLReader {
         public Map<String, String> getEventHandlerMap() throws WebAppConfigurationException {
             MapContext<String, String> result = MapContext.getMapContext();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -655,7 +663,7 @@ public class ConfigXMLReader {
             }
             result.push(eventHandlerMap);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -671,7 +679,7 @@ public class ConfigXMLReader {
         public Map<String, Event> getFirstVisitEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -683,7 +691,7 @@ public class ConfigXMLReader {
             }
             result.push(firstVisitEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -698,7 +706,7 @@ public class ConfigXMLReader {
 
         public String getOwner() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String owner = controllerConfig.getOwner();
@@ -717,7 +725,7 @@ public class ConfigXMLReader {
                 return owner;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String owner = controllerConfig.getOwner();
@@ -738,7 +746,7 @@ public class ConfigXMLReader {
         public Map<String, Event> getPostprocessorEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -750,7 +758,7 @@ public class ConfigXMLReader {
             }
             result.push(postprocessorEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -766,7 +774,7 @@ public class ConfigXMLReader {
         public Map<String, Event> getPreprocessorEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -778,7 +786,7 @@ public class ConfigXMLReader {
             }
             result.push(preprocessorEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -793,7 +801,7 @@ public class ConfigXMLReader {
 
         public String getProtectView() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String protectView = controllerConfig.getProtectView();
@@ -812,7 +820,7 @@ public class ConfigXMLReader {
                 return protectView;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String protectView = controllerConfig.getProtectView();
@@ -833,7 +841,7 @@ public class ConfigXMLReader {
         public Map<String, RequestMap> getRequestMapMap() throws WebAppConfigurationException {
             MapContext<String, RequestMap> result = MapContext.getMapContext();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -845,7 +853,7 @@ public class ConfigXMLReader {
             }
             mergePushRequestMapMap(result, requestMapMap, this); // SCIPIO: pushMergeRequestMapMap
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -885,7 +893,7 @@ public class ConfigXMLReader {
 
         public String getSecurityClass() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String securityClass = controllerConfig.getSecurityClass();
@@ -904,7 +912,7 @@ public class ConfigXMLReader {
                 return securityClass;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String securityClass = controllerConfig.getSecurityClass();
@@ -924,7 +932,7 @@ public class ConfigXMLReader {
 
         public String getStatusCode() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String statusCode = controllerConfig.getStatusCode();
@@ -943,7 +951,7 @@ public class ConfigXMLReader {
                 return statusCode;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String statusCode = controllerConfig.getStatusCode();
@@ -964,7 +972,7 @@ public class ConfigXMLReader {
         public Map<String, String> getViewHandlerMap() throws WebAppConfigurationException {
             MapContext<String, String> result = MapContext.getMapContext();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -976,7 +984,7 @@ public class ConfigXMLReader {
             }
             result.push(viewHandlerMap);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -992,7 +1000,7 @@ public class ConfigXMLReader {
         public Map<String, ViewMap> getViewMapMap() throws WebAppConfigurationException {
             MapContext<String, ViewMap> result = MapContext.getMapContext();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -1004,7 +1012,7 @@ public class ConfigXMLReader {
             }
             result.push(viewMapMap);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -1022,7 +1030,7 @@ public class ConfigXMLReader {
          */
         public ViewAsJsonConfig getViewAsJsonConfig() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     ViewAsJsonConfig viewAsJsonConfig;
                     if (include.recursive) {
@@ -1039,7 +1047,7 @@ public class ConfigXMLReader {
                 return viewAsJsonConfig;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     ViewAsJsonConfig viewAsJsonConfig;
                     if (include.recursive) {
@@ -1068,7 +1076,7 @@ public class ConfigXMLReader {
          */
         public Boolean getAllowViewSaveDefault() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     Boolean result;
                     if (include.recursive) {
@@ -1085,7 +1093,7 @@ public class ConfigXMLReader {
                 return allowViewSaveDefault;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     Boolean result;
                     if (include.recursive) {
@@ -1107,7 +1115,7 @@ public class ConfigXMLReader {
         public List<NameFilter<Boolean>> getAllowViewSaveViewNameFilters() throws WebAppConfigurationException {
             List<NameFilter<Boolean>> result = new ArrayList<>();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -1121,7 +1129,7 @@ public class ConfigXMLReader {
                 result.addAll(this.allowViewSaveViewNameFilters);
             }
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -1139,7 +1147,7 @@ public class ConfigXMLReader {
          */
         public String getDefaultViewLastView() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     String result;
                     if (include.recursive) {
@@ -1156,7 +1164,7 @@ public class ConfigXMLReader {
                 return defaultViewLastView;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     String result;
                     if (include.recursive) {
@@ -1388,13 +1396,23 @@ public class ConfigXMLReader {
                 return this.order == Order.POST_LOCAL;
             }
             public enum Order {
-                PRE_LOCAL,
-                POST_LOCAL;
+                PRE_LOCAL("pre-local"),
+                POST_LOCAL("post-local");
+
+                private final String name;
+
+                private Order(String name) {
+                    this.name = name;
+                }
+                
+                public String getName() {
+                    return name;
+                }
 
                 public static Order fromName(String name) {
-                    if (name == null || name.isEmpty() || name.equals("pre-local")) {
+                    if (name == null || name.isEmpty() || PRE_LOCAL.name.equals(name)) {
                         return PRE_LOCAL;
-                    } else if ("post-local".equals(name)) {
+                    } else if (POST_LOCAL.name.equals(name)) {
                         return POST_LOCAL;
                     } else {
                         throw new IllegalArgumentException("invalid controller include order value: " + name);
@@ -1418,6 +1436,12 @@ public class ConfigXMLReader {
 
             public Order getOrder() {
                 return order;
+            }
+
+            @Override
+            public String toString() {
+                return "[location=" + location + ", recursive=" + recursive + ", optional=" + optional
+                        + ", order=" + order.getName() + "]";
             }
         }
     }

@@ -120,7 +120,18 @@ public class RequestHandler {
         // init the ControllerConfig, but don't save it anywhere, just load it into the cache
         this.controllerConfigURL = ConfigXMLReader.getControllerConfigURL(context);
         try {
-            ConfigXMLReader.getControllerConfig(this.controllerConfigURL);
+            // SCIPIO: 2018-11-08: If the controller fails to load here, what happens is ViewFactory/EventFactory
+            // constructor throws a confusing GeneralRuntimeException following an NPE. This is because getControllerConfig returns
+            // null on exception, which we can't change in code. So instead we'll handle null here and throw
+            // an exception so that the server crashes with a much more informative message.
+            // NOTE: We cannot allow the app to continue, because everywhere else will crash even more confusingly.
+            //ConfigXMLReader.getControllerConfig(this.controllerConfigURL);
+            ControllerConfig controllerConfig = ConfigXMLReader.getControllerConfig(this.controllerConfigURL);
+            if (controllerConfig == null) {
+                throw new IllegalStateException("Could not initialize a RequestHandler"
+                        + " for webapp [" + context.getContextPath() + "] because its controller failed to load ("
+                        + this.controllerConfigURL + ")");
+            }
         } catch (WebAppConfigurationException e) {
             // FIXME: controller.xml errors should throw an exception.
             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);

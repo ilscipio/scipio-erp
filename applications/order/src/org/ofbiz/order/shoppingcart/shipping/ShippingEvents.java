@@ -298,8 +298,9 @@ public class ShippingEvents {
         if (ServiceUtil.isError(genericEstimate) || ServiceUtil.isFailure(genericEstimate)) {
             Debug.logError(ServiceUtil.getErrorMessage(genericEstimate), module);
             throw new GeneralException();
-        } else if (ServiceUtil.isFailure(genericEstimate)) {
-            genericShipAmt = BigDecimal.ONE.negate();
+        // SCIPIO: 2018-11-09: This is both redundant/not-called and alarming, because callers didn't handle -1 as special.
+        //} else if (ServiceUtil.isFailure(genericEstimate)) {
+        //    genericShipAmt = BigDecimal.ONE.negate();
         } else {
             genericShipAmt = (BigDecimal) genericEstimate.get("shippingEstimateAmount");
         }

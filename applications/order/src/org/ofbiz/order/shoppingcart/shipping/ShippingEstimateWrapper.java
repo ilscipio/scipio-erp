@@ -36,24 +36,25 @@ public class ShippingEstimateWrapper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    protected Delegator delegator = null;
-    protected LocalDispatcher dispatcher = null;
+    // SCIPIO: 2018-11-09: All fields now final.
+    protected final Delegator delegator;
+    protected final LocalDispatcher dispatcher;
 
-    protected Map<GenericValue, BigDecimal> shippingEstimates = null;
-    protected List<GenericValue> shippingMethods = null;
+    protected final Map<GenericValue, BigDecimal> shippingEstimates;
+    protected final List<GenericValue> shippingMethods;
 
-    protected GenericValue shippingAddress = null;
-    protected Map<String, BigDecimal> shippableItemFeatures = null;
-    protected List<BigDecimal> shippableItemSizes = null;
-    protected List<Map<String, Object>> shippableItemInfo = null;
-    protected String productStoreId = null;
-    protected BigDecimal shippableQuantity = BigDecimal.ZERO;
-    protected BigDecimal shippableWeight = BigDecimal.ZERO;
-    protected BigDecimal shippableTotal = BigDecimal.ZERO;
-    protected String partyId = null;
-    protected String supplierPartyId = null;
+    protected final GenericValue shippingAddress;
+    protected final Map<String, BigDecimal> shippableItemFeatures;
+    protected final List<BigDecimal> shippableItemSizes;
+    protected final List<Map<String, Object>> shippableItemInfo;
+    protected final String productStoreId;
+    protected final BigDecimal shippableQuantity;
+    protected final BigDecimal shippableWeight;
+    protected final BigDecimal shippableTotal;
+    protected final String partyId;
+    protected final String supplierPartyId;
 
-    protected Locale locale = Locale.ENGLISH; // SCIPIO: 2018-11-09: Added locale
+    protected final Locale locale; // SCIPIO: 2018-11-09: Added locale
 
     public static ShippingEstimateWrapper getWrapper(LocalDispatcher dispatcher, ShoppingCart cart, int shipGroup) {
         return new ShippingEstimateWrapper(dispatcher, cart, shipGroup);
@@ -73,24 +74,27 @@ public class ShippingEstimateWrapper {
         this.productStoreId = cart.getProductStoreId();
         this.partyId = cart.getPartyId();
         this.supplierPartyId = cart.getSupplierPartyId(shipGroup);
+        
+        this.locale = cart.getLocale();
 
-        this.locale = cart.getLocale(); // SCIPIO: 2018-11-09: Added locale
-
-        this.loadShippingMethods();
-        this.loadEstimates();
+        List<GenericValue> shippingMethods = this.loadShippingMethods(); // SCIPIO: Locals
+        Map<GenericValue, BigDecimal> shippingEstimates = this.loadEstimates(shippingMethods);
+        this.shippingMethods = shippingMethods;
+        this.shippingEstimates = shippingEstimates;
     }
 
-    protected void loadShippingMethods() {
+    protected List<GenericValue> loadShippingMethods() { // SCIPIO: Added return value
         try {
-            this.shippingMethods = ProductStoreWorker.getAvailableStoreShippingMethods(delegator, productStoreId,
+            return ProductStoreWorker.getAvailableStoreShippingMethods(delegator, productStoreId,
                     shippingAddress, shippableItemSizes, shippableItemFeatures, shippableWeight, shippableTotal);
         } catch (Throwable t) {
             Debug.logError(t, module);
         }
+        return null;
     }
 
-    protected void loadEstimates() {
-        this.shippingEstimates = new HashMap<GenericValue, BigDecimal>();
+    protected Map<GenericValue, BigDecimal> loadEstimates(List<GenericValue> shippingMethods) { // SCIPIO: Added return value
+        Map<GenericValue, BigDecimal> shippingEstimates = new HashMap<>();
         if (shippingMethods != null) {
             for (GenericValue shipMethod : shippingMethods) {
                 String shippingMethodTypeId = shipMethod.getString("shipmentMethodTypeId");
@@ -110,6 +114,7 @@ public class ShippingEstimateWrapper {
                 }
             }
         }
+        return shippingEstimates;
     }
 
     public List<GenericValue> getShippingMethods() {

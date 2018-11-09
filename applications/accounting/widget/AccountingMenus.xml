@@ -52,19 +52,14 @@
         
         <!-- Transactions -->
         <menu-item name="Transactions" title="${uiLabelMap.AccountingTransactions}">
-            <link target="TransactionReports" />
+            <link target="Transactions" />
         </menu-item>
         
         <!-- Reports -->
-        <menu-item name="Reports" title="${uiLabelMap.AccountingReports}">
-            <link target="" />
+        <menu-item name="TransactionReports" title="${uiLabelMap.AccountingReports}">
+            <link target="TransactionReports" />
         </menu-item>
-        
-        <!-- Journals -->
-        <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
-            <link target="journals" />
-        </menu-item>
-        
+
         <!-- Controlling -->
         <menu-item name="controlling" title="${uiLabelMap.AccountingControlling}">
             <link target="ListBudgets"/>
@@ -114,8 +109,8 @@
         <menu-item name="Transactions">
             <sub-menu name="Transactions" include="TransactionsSideBar"/>
         </menu-item>
-        <menu-item name="Reports">
-            <sub-menu name="Reports" include="ReportsSideBar"/>
+        <menu-item name="TransactionReports">
+            <sub-menu name="TransactionReports" include="TransactionReportsSideBar"/>
         </menu-item>
         <menu-item name="payments">
             <sub-menu name="Payment" include="PaymentSideBar"/>
@@ -1256,8 +1251,8 @@
     * Reports 
     **************
     -->
-    <menu name="ReportsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="Reports" always-expand-selected-or-ancestor="true">
+    <menu name="TransactionReportsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="TransactionTotals" always-expand-selected-or-ancestor="true">
         <actions>
             <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
         </actions>
@@ -1266,9 +1261,9 @@
             <link target="journals" />
         </menu-item>-->
         
-        <menu-item name="TransactionReports" title="${uiLabelMap.AccountingAcctgTrans}" sort-mode="off">
+<!--         <menu-item name="TransactionReports" title="${uiLabelMap.AccountingAcctgTrans}" sort-mode="off">
             <link target="TransactionReports" />
-        </menu-item>
+        </menu-item> -->
         <menu-item name="SalesInvoiceByProductCategorySummary" title="${uiLabelMap.PageTitleSalesInvoiceByProductCategorySummary}">
             <link target="SalesInvoiceByProductCategorySummary" >
                 <parameter param-name="organizationPartyId"/>

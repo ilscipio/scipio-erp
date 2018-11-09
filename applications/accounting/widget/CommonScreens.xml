@@ -467,7 +467,7 @@ under the License.
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                <decorator-screen name="CommonReportsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
                     <decorator-section name="body">
                         <include-menu name="OrganizationTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
@@ -539,13 +539,14 @@ under the License.
     
     <!--
     *************** 
-    * Journals
+    * Reports
     ***************
      -->
-    <screen name="CommonJournalsDecorator">
+    <screen name="CommonReportsDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
+                <!-- <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="TransactionReports"/> -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#TransactionReportsSideBar" />
                 <!-- <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#JournalsSideBar" /> -->
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
             </actions>
@@ -565,7 +566,7 @@ under the License.
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                <decorator-screen name="CommonReportsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
                     <decorator-section name="body">
                         <section>
                             <condition>

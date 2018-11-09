@@ -1765,6 +1765,22 @@ under the License.
         <response name="success" type="view" value="journals"/>
         <response name="error" type="view" value="journals"/>
     </request-map>
+    
+    <!-- 
+    **************
+    * Transactions
+    **************
+    -->
+    <request-map uri="Transactions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Transactions"/>
+    </request-map>
+    
+    <!-- 
+    **************
+    * Reports
+    **************
+    -->
     <request-map uri="TransactionReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TransactionReports"/>
@@ -3075,14 +3091,24 @@ under the License.
     <view-map name="ExportTransactionCsv" type="screencsv" page="component://accounting/widget/tools/ImportExportScreens.xml#ExportTransactionCsv" content-type="text/csv" encoding="none"/>
     <view-map name="ExportTransactions" type="screen" page="component://accounting/widget/tools/ImportExportScreens.xml#ExportTransactions"/>
     
+     <!-- 
+    **************
+    * Transactions
+    **************-->
+    <view-map name="Transactions" page="component://accounting/widget/journals/JournalScreens.xml#Transactions" type="screen"/>    
+    
     <!-- 
     **************
     * Journals
     **************-->
-     <view-map name="journals" type="screen" page="component://accounting/widget/journals/JournalScreens.xml#Journals"/>
-     <view-map name="TransactionReports" page="component://accounting/widget/journals/JournalScreens.xml#TransactionReports" type="screen"/>
+     <view-map name="journals" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#Journals"/>     
      <!--<view-map name="FinancialTransactionReport" page="component://accounting/widget/journals/JournalScreens.xml#FinancialTransactionReport" type="screen"/> -->
    
+    <!-- 
+    **************
+    * Reports
+    **************
+     -->
     <view-map name="FinancialSummaryReportOptions" type="screen" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#FinancialSummaryReportOptions"/>
     <view-map name="SalesInvoiceByProductCategorySummary" type="screen" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#SalesInvoiceByProductCategorySummary"/>
     <view-map name="TrialBalance" type="screen" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#TrialBalance"/>

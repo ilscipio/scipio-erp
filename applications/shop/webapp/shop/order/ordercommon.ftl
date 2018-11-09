@@ -50,7 +50,7 @@ SCIPIO: Local order template common defs
 <#assign taxRounding = Static["org.ofbiz.order.shoppingcart.ShoppingCart"].taxRounding>
 
 <#function isDisplayShipEst shippingEst carrierShipmentMethod shippingEstWpr>
-  <#if shippingEst?has_content && (shippingEst > -1)>
+  <#if (shippingEst?has_content && (shippingEst > -1)) || ("NO_SHIPPING" == carrierShipmentMethod.shipmentMethodTypeId!)>
     <#return true>
   </#if>
   <#if !scpShipShowMethodIfNoEst??>

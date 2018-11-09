@@ -21,6 +21,7 @@ package org.ofbiz.order.shoppingcart.shipping;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -52,6 +53,8 @@ public class ShippingEstimateWrapper {
     protected String partyId = null;
     protected String supplierPartyId = null;
 
+    protected Locale locale = Locale.ENGLISH; // SCIPIO: 2018-11-09: Added locale
+
     public static ShippingEstimateWrapper getWrapper(LocalDispatcher dispatcher, ShoppingCart cart, int shipGroup) {
         return new ShippingEstimateWrapper(dispatcher, cart, shipGroup);
     }
@@ -70,6 +73,8 @@ public class ShippingEstimateWrapper {
         this.productStoreId = cart.getProductStoreId();
         this.partyId = cart.getPartyId();
         this.supplierPartyId = cart.getSupplierPartyId(shipGroup);
+
+        this.locale = cart.getLocale(); // SCIPIO: 2018-11-09: Added locale
 
         this.loadShippingMethods();
         this.loadEstimates();
@@ -94,7 +99,8 @@ public class ShippingEstimateWrapper {
                 String productStoreShipMethId = shipMethod.getString("productStoreShipMethId");
                 String shippingCmId = shippingAddress != null ? shippingAddress.getString("contactMechId") : null;
 
-                Map<String, Object> estimateMap = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, "SALES_ORDER",
+                // SCIPIO: 2018-11-09: Added locale
+                Map<String, Object> estimateMap = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, locale, "SALES_ORDER",
                         shippingMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingCmId, productStoreId,
                         supplierPartyId, shippableItemInfo, shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
 

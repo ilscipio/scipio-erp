@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -97,12 +98,12 @@ public class ShippingEvents {
         String carrierPartyId = cart.getCarrierPartyId(groupNo);
         String productStoreShipMethId = cart.getProductStoreShipMethId(groupNo);
 
-        return getShipGroupEstimate(dispatcher, delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, null,
+        return getShipGroupEstimate(dispatcher, delegator, cart.getLocale(), cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, null, // SCIPIO: 2018-11-09: Added locale
                 cart.getShippingContactMechId(groupNo), cart.getProductStoreId(), cart.getSupplierPartyId(groupNo), cart.getShippableItemInfo(groupNo),
                 cart.getShippableWeight(groupNo), cart.getShippableQuantity(groupNo), cart.getShippableTotal(groupNo), cart.getPartyId(), productStoreShipMethId);
     }
 
-    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, OrderReadHelper orh, String shipGroupSeqId) {
+    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, OrderReadHelper orh, String shipGroupSeqId) { // SCIPIO: 2018-11-09: Added locale
         // check for shippable items
         if (!orh.shippingApplies()) {
             Map<String, Object> responseResult = ServiceUtil.returnSuccess();
@@ -127,22 +128,57 @@ public class ShippingEvents {
         if (partyObject != null) {
              partyId = partyObject.getString("partyId");
         }
-        return getShipGroupEstimate(dispatcher, delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId,
+        return getShipGroupEstimate(dispatcher, delegator, locale, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId,
                 contactMechId, orh.getProductStoreId(), supplierPartyId, orh.getShippableItemInfo(shipGroupSeqId), orh.getShippableWeight(shipGroupSeqId),
                 orh.getShippableQuantity(shipGroupSeqId), orh.getShippableTotal(shipGroupSeqId), partyId, null);
     }
 
+    /**
+     * @deprecated SCIPIO: 2018-11-09: Use overload with Locale instead.
+     */
+    @Deprecated
+    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, OrderReadHelper orh, String shipGroupSeqId) { // SCIPIO: 2018-11-09: Added locale
+        return getShipEstimate(dispatcher, delegator, Locale.ENGLISH, orh, shipGroupSeqId);
+    }
+
     // version with no support for using the supplier's address as the origin
-    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId,
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
-        return getShipGroupEstimate(dispatcher, delegator, orderTypeId, shipmentMethodTypeId, carrierPartyId,
+        return getShipGroupEstimate(dispatcher, delegator, locale, orderTypeId, shipmentMethodTypeId, carrierPartyId,
                 carrierRoleTypeId, shippingContactMechId, productStoreId, null, itemInfo,
-                shippableWeight, shippableQuantity, shippableTotal, partyId,productStoreShipMethId);
+                shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
     }
 
-    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId,
+    /**
+     * @deprecated SCIPIO: 2018-11-09: Use overload with Locale instead.
+     */
+    @Deprecated
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
+            String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
+            String productStoreId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
+            BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
+        return getShipGroupEstimate(dispatcher, delegator, Locale.ENGLISH, orderTypeId, shipmentMethodTypeId, carrierPartyId,
+                carrierRoleTypeId, shippingContactMechId, productStoreId, null, itemInfo,
+                shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2018-11-09: Use overload with Locale instead.
+     */
+    @Deprecated
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
+            String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
+            String productStoreId, String supplierPartyId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
+            BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
+        return getShipGroupEstimate(dispatcher, delegator, Locale.ENGLISH, orderTypeId, 
+                shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingContactMechId, 
+                productStoreId, supplierPartyId, itemInfo, shippableWeight, shippableQuantity, 
+                shippableTotal, partyId, productStoreShipMethId);
+    }
+
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, String supplierPartyId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {

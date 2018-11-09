@@ -1257,7 +1257,7 @@
     **************
     -->
     <menu name="ReportsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="Journals" always-expand-selected-or-ancestor="true">
+        default-menu-item-name="Reports" always-expand-selected-or-ancestor="true">
         <actions>
             <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
         </actions>
@@ -1759,12 +1759,11 @@
             <link target="FindPaymentGatewayConfig"/>
             <sub-menu name="PaymentGatewayConfig" include="PaymentGatewayConfigSideBar"/>
         </menu-item>
-        <!--
         <menu-item name="SetupGlJournals" title="${uiLabelMap.AccountingGlJournals}">
             <link target="SetupGlJournals">
                 <parameter param-name="organizationPartyId" />
             </link>
-        </menu-item>-->
+        </menu-item>
         <menu-item name="GlAccountAssignment" title="${uiLabelMap.AccountingGlAccountDefault}">
             <link target="GlAccountAssignment">
                 <parameter param-name="organizationPartyId" />

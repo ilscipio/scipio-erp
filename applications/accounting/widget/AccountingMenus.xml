@@ -1759,8 +1759,8 @@
             <link target="FindPaymentGatewayConfig"/>
             <sub-menu name="PaymentGatewayConfig" include="PaymentGatewayConfigSideBar"/>
         </menu-item>
-        <menu-item name="SetupGlJournals" title="${uiLabelMap.AccountingGlJournals}">
-            <link target="SetupGlJournals">
+        <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
+            <link target="journals">
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>

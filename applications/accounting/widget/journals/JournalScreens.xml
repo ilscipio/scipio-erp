@@ -24,23 +24,18 @@ under the License.
     <screen name="Journals">
         <section>
             <actions>
-                <set field="activeMenuItem" value="journals"/>
+                <!-- <set field="activeMenuItem" value="settings"/> -->
+                <set field="activeSubMenuItem" value="Journals"/>
                 <set field="titleProperty" value="AccountingGlJournals"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!-- <screenlet>
-                                <label text="This is a placeholder!"></label>
-                        </screenlet> -->
-                        
                         <screenlet>
                             <include-form name="EditGlJournal" location="component://accounting/widget/settings/GlSetupForms.xml"/>
                         </screenlet>
                         <include-form name="ListGlJournals" location="component://accounting/widget/settings/GlSetupForms.xml"/>
-                    
-                        
                     </decorator-section>
                 </decorator-screen>
             </widgets>

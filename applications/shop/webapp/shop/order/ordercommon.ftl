@@ -48,9 +48,3 @@ SCIPIO: Local order template common defs
 <#assign taxCalcScale = Static["org.ofbiz.order.shoppingcart.ShoppingCart"].taxCalcScale>
 <#assign taxFinalScale = Static["org.ofbiz.order.shoppingcart.ShoppingCart"].taxFinalScale>
 <#assign taxRounding = Static["org.ofbiz.order.shoppingcart.ShoppingCart"].taxRounding>
-
-<#-- DEV NOTE: This logic is duplicated in component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml#getShipOptions! -->
-<#function isDisplayShipEst shippingEst carrierShipmentMethod shippingEstWpr>
-  <#return Static["com.ilscipio.scipio.shop.shoppingcart.CheckOutHelper"].isDisplayShipEstimate(shippingEst, carrierShipmentMethod, shippingEstWpr)>
-</#function>
-

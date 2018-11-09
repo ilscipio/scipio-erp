@@ -89,7 +89,6 @@ function submitForm(form, mode, value) {
                   <option value="">${uiLabelMap.OrderSelectShippingMethod}</option>
                   <#list carrierShipmentMethods as carrierShipmentMethod>
                     <#assign shippingEst = shipEstimateWrapper.getShippingEstimate(carrierShipmentMethod)?default(-1)>
-                  <#if isDisplayShipEst(shippingEst, carrierShipmentMethod, shippingEstWpr)><#-- SCIPIO: 2018-11-09 (see checkoutshippingoptions.ftl) -->
                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                     <option value="${shippingMethod}" <#if (shippingMethod == selectedShippingMethod)>selected="selected"</#if>>
                       <#if carrierShipmentMethod.partyId != "_NA_">
@@ -105,7 +104,6 @@ function submitForm(form, mode, value) {
                         </#if>
                       </#if>
                     </option>
-                  </#if>
                   </#list>
                 </select>
 

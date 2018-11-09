@@ -286,7 +286,6 @@ under the License.
                     <#if carrierShipMethods?has_content>
                       <#list carrierShipMethods as shipMeth>
                         <#assign shippingEst = shippingEstWpr.getShippingEstimate(shipMeth)?default(-1)>
-                      <#if isDisplayShipEst(shippingEst, shipMeth, shippingEstWpr)><#-- SCIPIO: 2018-11-09 (see checkoutshippingoptions.ftl) -->
                         <#assign shippingMethod = shipMeth.shipmentMethodTypeId + "@" + shipMeth.partyId>
                         <option value="${shippingMethod}"<#if shippingMethod == chosenShippingMethod> selected="selected"</#if>>
                           <#if shipMeth.partyId != "_NA_">
@@ -302,7 +301,6 @@ under the License.
                             </#if>
                           </#if>
                         </option>
-                      </#if>
                       </#list>
                     <#else>
                       <option value="">${uiLabelMap.OrderSelectAddressFirst}</option>

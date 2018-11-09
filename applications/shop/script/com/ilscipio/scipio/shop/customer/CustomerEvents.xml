@@ -1019,30 +1019,22 @@ under the License.
             <if-empty field="shippingEst">
                 <set field="shippingEst" value="-1" type="BigDecimal"/>
             </if-empty>
-            <!-- SCIPIO: 2018-11-09: New display logic -->
-            <call-class-method method-name="isDisplayShipEstimate" class-name="com.ilscipio.scipio.shop.shoppingcart.CheckOutHelper" ret-field="doDisplay">
-                <field field="shippingEst" type="BigDecimal"/>
-                <field field="carrierShipmentMethod" type="org.ofbiz.entity.GenericValue"/>
-                <field field="shippingEstWpr" type="org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper"/>
-            </call-class-method>
-            <if-compare field="doDisplay" operator="equals" type="Boolean" value="true">
-                <set field="negValue" value="-1" type="BigDecimal"/>
-                <set field="shippingMethod" value="${carrierShipmentMethod.shipmentMethodTypeId}@${carrierShipmentMethod.partyId}"/>
-                <if-compare-field field="shippingEst" operator="greater" to-field="negValue">
-                    <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${carrierShipmentMethod.description} - ${shippingEst?currency(${currency})}"/>
-                    <else>
-                        <property-to-field resource="OrderUiLabels" property="OrderCalculatedOffline" field="calcOfflineLabel"/>
-                        <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${carrierShipmentMethod.description} - ${calcOfflineLabel}"/>
-                    </else>
-                </if-compare-field>
-                <set field="shippingOptionMap.shippingMethod" from-field="shippingMethod"/>
-                <set field="shippingOptionMap.shippingDesc" from-field="shippingDesc"/>
-                <if-not-empty field="carrierShipmentMethod.productStoreShipMethId">
-                    <set field="shippingOptionMap.productStoreShipMethId" from-field="carrierShipmentMethod.productStoreShipMethId"/>
-                </if-not-empty>
-                <field-to-list field="shippingOptionMap" list="shippingOptions"/>
-                <clear-field field="shippingOptionMap"/>
-            </if-compare>
+            <set field="negValue" value="-1" type="BigDecimal"/>
+            <set field="shippingMethod" value="${carrierShipmentMethod.shipmentMethodTypeId}@${carrierShipmentMethod.partyId}"/>
+            <if-compare-field field="shippingEst" operator="greater" to-field="negValue">
+                <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${carrierShipmentMethod.description} - ${shippingEst?currency(${currency})}"/>
+                <else>
+                    <property-to-field resource="OrderUiLabels" property="OrderCalculatedOffline" field="calcOfflineLabel"/>
+                    <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${carrierShipmentMethod.description} - ${calcOfflineLabel}"/>
+                </else>
+            </if-compare-field>
+            <set field="shippingOptionMap.shippingMethod" from-field="shippingMethod"/>
+            <set field="shippingOptionMap.shippingDesc" from-field="shippingDesc"/>
+            <if-not-empty field="carrierShipmentMethod.productStoreShipMethId">
+                <set field="shippingOptionMap.productStoreShipMethId" from-field="carrierShipmentMethod.productStoreShipMethId"/>
+            </if-not-empty>
+            <field-to-list field="shippingOptionMap" list="shippingOptions"/>
+            <clear-field field="shippingOptionMap"/>
         </iterate>
          <set field="parameters.shippingOptions" from-field="shippingOptions"/>
          <field-to-request field="parameters.shippingOptions" request-name="shippingOptions"/>

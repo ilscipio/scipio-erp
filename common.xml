@@ -70,7 +70,6 @@ under the License.
                     <filename name="**/*.bsh" />
                     <filename name="**/*.logic" />
                     <filename name="**/*.js" />
-                    <filename name="**/*.js" />
                     <filename name="**/*.jacl" />
                     <filename name="**/*.py" />
                     <filename name="META-INF/**" />

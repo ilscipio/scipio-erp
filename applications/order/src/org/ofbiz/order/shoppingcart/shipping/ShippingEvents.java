@@ -235,7 +235,9 @@ public class ShippingEvents {
         }
 
         // the initial amount before manual estimates
-        BigDecimal shippingTotal = BigDecimal.ZERO;
+        // SCIPIO: 2018-11-09: Start with null, only return a number if got something usable
+        //BigDecimal shippingTotal = BigDecimal.ZERO;
+        BigDecimal shippingTotal = null;
 
         // prepare the service invocation fields
         Map<String, Object> serviceFields = new HashMap<String, Object>();
@@ -260,7 +262,7 @@ public class ShippingEvents {
                 externalAmt = getExternalShipEstimate(dispatcher, storeShipMethod, serviceFields);
             }
             if (externalAmt != null) {
-                shippingTotal = shippingTotal.add(externalAmt);
+                shippingTotal = externalAmt;
             }
         } catch (GeneralException e) {
             return ServiceUtil.returnError(standardMessage);
@@ -273,7 +275,11 @@ public class ShippingEvents {
         try {
             BigDecimal genericAmt = getGenericShipEstimate(dispatcher, storeShipMethod, serviceFields);
             if (genericAmt != null) {
-                shippingTotal = shippingTotal.add(genericAmt);
+                if (shippingTotal == null) { // SCIPIO: 2018-11-09
+                    shippingTotal = genericAmt;
+                } else {
+                    shippingTotal = shippingTotal.add(genericAmt);
+                }
             }
         } catch (GeneralException e) {
             return ServiceUtil.returnError(standardMessage);

@@ -2777,7 +2777,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             }
             // set the default shipment method
             ShippingEstimateWrapper shipEstimateWrapper = org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper.getWrapper(dispatcher, this, 0);
-            GenericValue carrierShipmentMethod = EntityUtil.getFirst(shipEstimateWrapper.getShippingMethods());
+            // SCIPIO: 2018-11-09: Make sure select a method with a valid/present estimate
+            //GenericValue carrierShipmentMethod = EntityUtil.getFirst(shipEstimateWrapper.getShippingMethods());
+            GenericValue carrierShipmentMethod = shipEstimateWrapper.getFirstShippingMethodWithValidEstimate();
             if (carrierShipmentMethod != null) {
                 this.setAllShipmentMethodTypeId(carrierShipmentMethod.getString("shipmentMethodTypeId"));
                 this.setAllCarrierPartyId(carrierShipmentMethod.getString("partyId"));

@@ -12,12 +12,12 @@ import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
 public final class CheckOutHelper {
 
     private static final boolean isShowAlways = "always".equals(UtilProperties.getPropertyValue("shop", "shop.shipping.estimate.showMethodIfNoEst"));
-    private static final BigDecimal MINUS_ONE = BigDecimal.ONE.negate();
+
     private CheckOutHelper() {
     }
 
     public static boolean isDisplayShipEstimate(BigDecimal shippingEst, GenericValue carrierShipmentMethod, ShippingEstimateWrapper shippingEstWpr) {
-        if ((shippingEst != null && shippingEst.compareTo(MINUS_ONE) > 0) || "NO_SHIPPING".equals(carrierShipmentMethod.getString("shipmentMethodTypeId"))) {
+        if (shippingEstWpr.isValidEstimate(shippingEst, carrierShipmentMethod)) {
             return true;
         }
         return isShowAlways;

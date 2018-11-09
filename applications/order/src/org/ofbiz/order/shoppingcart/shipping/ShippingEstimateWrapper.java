@@ -129,4 +129,35 @@ public class ShippingEstimateWrapper {
         return shippingEstimates.get(storeCarrierShipMethod);
     }
 
+    /**
+     * SCIPIO: isValidShippingEstimate.
+     * Added 2018-11-09.
+     */
+    public boolean isValidEstimate(GenericValue storeCarrierShipMethod) {
+        return isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
+   }
+    
+    /**
+     * SCIPIO: isValidShippingEstimate (same as above but estimate already fetched).
+     * Added 2018-11-09.
+     */
+    public boolean isValidEstimate(BigDecimal estimate, GenericValue storeCarrierShipMethod) {
+        if (!(estimate == null || estimate.compareTo(BigDecimal.ZERO) < 0)) { // Same logic as PayPalServices.payPalCheckoutUpdate
+            return true;
+        }
+        return ("NO_SHIPPING".equals(storeCarrierShipMethod.get("shipmentMethodTypeId"))); // Special case
+    }
+
+    /**
+     * SCIPIO: getFirstShippingMethodWithValidEstimate.
+     * Added 2018-11-09.
+     */
+    public GenericValue getFirstShippingMethodWithValidEstimate() {
+        for(GenericValue shipMethod : getShippingMethods()) {
+            if (isValidEstimate(shipMethod)) {
+                return shipMethod;
+            }
+        }
+        return null;
+    }
 }

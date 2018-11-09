@@ -212,17 +212,4 @@ public class ShippingEstimateWrapper {
         }
         return ("NO_SHIPPING".equals(storeCarrierShipMethod.get("shipmentMethodTypeId"))); // Special case
     }
-
-    /**
-     * SCIPIO: getFirstShippingMethodWithValidEstimate.
-     * Added 2018-11-09.
-     */
-    public GenericValue getFirstShippingMethodWithValidEstimate() {
-        for(GenericValue shipMethod : getShippingMethods()) {
-            if (isValidEstimate(shipMethod)) {
-                return shipMethod;
-            }
-        }
-        return null;
-    }
 }

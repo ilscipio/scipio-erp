@@ -301,12 +301,17 @@ public class ShippingEvents {
             Debug.logError(e, "Shipment Service Error during calcShipmentCostEstimate (exception): " + e.getMessage(), module); // SCIPIO: show message!
             throw new GeneralException();
         }
-        if (ServiceUtil.isError(genericEstimate) || ServiceUtil.isFailure(genericEstimate)) {
+        
+        // SCIPIO: 2018-11-09: Fixed:
+        // * First isFailure check caused exception throw
+        // * Second isFailure check was unreachable and should not be returning -1 (return null instead)
+        //if (ServiceUtil.isError(genericEstimate) || ServiceUtil.isFailure(genericEstimate)) {
+        if (ServiceUtil.isError(genericEstimate)) {
             Debug.logError(ServiceUtil.getErrorMessage(genericEstimate), module);
             throw new GeneralException();
-        // SCIPIO: 2018-11-09: This is both redundant/not-called and alarming, because callers didn't handle -1 as special.
-        //} else if (ServiceUtil.isFailure(genericEstimate)) {
-        //    genericShipAmt = BigDecimal.ONE.negate();
+        } else if (ServiceUtil.isFailure(genericEstimate)) {
+            // SCIPIO: 2018-11-09: Return null, don't even log for now
+            //genericShipAmt = BigDecimal.ONE.negate();
         } else {
             genericShipAmt = (BigDecimal) genericEstimate.get("shippingEstimateAmount");
         }

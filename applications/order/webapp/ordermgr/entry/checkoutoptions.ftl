@@ -169,6 +169,7 @@ function submitForm(form, mode, value) {
                         <@field type="radio" name="shipping_method" value=shippingMethod checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>
                       </@td>
                       <@td valign="top">
+                          <#assign shippingEst = ""><#-- SCIPIO -->
                           <#if shoppingCart.getShippingContactMechId()??>
                             <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                           </#if>

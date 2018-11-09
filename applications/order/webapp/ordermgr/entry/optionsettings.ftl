@@ -55,7 +55,7 @@ under the License.
                           <#if (shippingEst > -1)>
                             <@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/>
                           <#else>
-                            Calculated Offline
+                            ${uiLabelMap.OrderCalculatedOffline}
                           </#if>
                         </#if>
                       </#if>

@@ -49,4 +49,13 @@ SCIPIO: Local order template common defs
 <#assign taxFinalScale = Static["org.ofbiz.order.shoppingcart.ShoppingCart"].taxFinalScale>
 <#assign taxRounding = Static["org.ofbiz.order.shoppingcart.ShoppingCart"].taxRounding>
 
+<#function isDisplayShipEst shippingEst carrierShipmentMethod shippingEstWpr>
+  <#if shippingEst?has_content && (shippingEst > -1)>
+    <#return true>
+  </#if>
+  <#if !scpShipShowMethodIfNoEst??>
+    <#global scpShipShowMethodIfNoEst = getPropertyValue("shop", "shop.shipping.estimate.showMethodIfNoEst")!>
+  </#if>
+  <#return (scpShipShowMethodIfNoEst == "always")>
+</#function>
 

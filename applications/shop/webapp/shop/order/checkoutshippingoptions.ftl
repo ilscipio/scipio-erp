@@ -74,12 +74,13 @@ function submitForm(form, mode, value) {
                     orders with offline calculation, but we know the failure is very likely to be misconfiguration
                     or connectivity failure, and by default we can't assume the store is equipped to handle offlines in these cases.
                     NOTE: Failure is subtly noted by the absence of ship estimate (null). -->
-                <#if shippingEstWpr.getShippingEstimate(carrierShipmentMethod)??>
+                <#assign shippingEst = "">
+                <#if shoppingCart.getShippingContactMechId()??>
+                  <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
+                </#if>
+                <#if isDisplayShipEst(shippingEst, carrierShipmentMethod, shippingEstWpr)><#-- SCIPIO: 2018-11-09 -->
                   <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                   <#assign labelContent>
-                    <#if shoppingCart.getShippingContactMechId()??>
-                      <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
-                    </#if>
                     <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
                     <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
                   </#assign>

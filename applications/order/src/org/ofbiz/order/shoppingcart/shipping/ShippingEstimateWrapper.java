@@ -19,6 +19,7 @@
 package org.ofbiz.order.shoppingcart.shipping;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +56,9 @@ public class ShippingEstimateWrapper {
     protected final String supplierPartyId;
 
     protected final Locale locale; // SCIPIO: 2018-11-09: Added locale
+    protected final List<GenericValue> validShippingMethods; // SCIPIO: 2018-11-09
+
+    protected final boolean allowMissingEstimates = false; // SCIPIO: TODO: property for this...
 
     public static ShippingEstimateWrapper getWrapper(LocalDispatcher dispatcher, ShoppingCart cart, int shipGroup) {
         return new ShippingEstimateWrapper(dispatcher, cart, shipGroup);
@@ -81,6 +85,14 @@ public class ShippingEstimateWrapper {
         Map<GenericValue, BigDecimal> shippingEstimates = this.loadEstimates(shippingMethods);
         this.shippingMethods = shippingMethods;
         this.shippingEstimates = shippingEstimates;
+        
+        List<GenericValue> validShippingMethods = new ArrayList<>(shippingMethods.size());
+        for(GenericValue shipMethod : shippingMethods) {
+            if (isValidShippingMethod(shipMethod)) {
+                validShippingMethods.add(shipMethod);
+            }
+        }
+        this.validShippingMethods = validShippingMethods;
     }
 
     protected List<GenericValue> loadShippingMethods() { // SCIPIO: Added return value
@@ -117,7 +129,42 @@ public class ShippingEstimateWrapper {
         return shippingEstimates;
     }
 
+    /**
+     * SCIPIO: Returns only valid shipping methods for selection for the current process.
+     * ALIAS for {@link #getValidShippingMethods()}.
+     * <p>
+     * <strong>NOTE:</strong> As of 2018-11-09, this method only returns shipping methods
+     * deemed "valid" for the current process. Prior to this, this used to return methods
+     * even if they missed estimates and this is not allowed; to get that behavior again,
+     * use {@link #getAllShippingMethods()}.
+     * <p>
+     * Largely depends on {@link #isAllowMissingEstimates()}.
+     * <p>
+     * Modified 2018-11-09.
+     */
     public List<GenericValue> getShippingMethods() {
+        //return shippingMethods;
+        return validShippingMethods;
+    }
+
+    /**
+     * SCIPIO: Returns only valid shipping methods for selection for the current process.
+     * ALIAS for {@link #getShippingMethods()}.
+     * <p>
+     * Added 2018-11-09.
+     */
+    public List<GenericValue> getValidShippingMethods() {
+        return validShippingMethods;
+    }
+
+    /**
+     * SCIPIO: Returns all shipping methods for the store even if invalid for selection (e.g. bad estimates).
+     * <p>
+     * This implements the old behavior of {@link #getShippingMethods()} prior to 2018-11-09.
+     * <p>
+     * Added 2018-11-09.
+     */
+    public List<GenericValue> getAllShippingMethods() {
         return shippingMethods;
     }
 
@@ -130,15 +177,33 @@ public class ShippingEstimateWrapper {
     }
 
     /**
-     * SCIPIO: isValidShippingEstimate.
+     * SCIPIO: If true, {@link #getShippingMethods()} will return methods
+     * even if they returned no valid estimates.
+     */
+    public boolean isAllowMissingEstimates() {
+        return allowMissingEstimates;
+    }
+
+    /**
+     * SCIPIO: Returns true if the shipping method is valid for selection.
+     * Added 2018-11-09.
+     */
+    public boolean isValidShippingMethod(GenericValue storeCarrierShipMethod) {
+        return isAllowMissingEstimates() || isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
+    }
+
+    /**
+     * SCIPIO: Checks if the given ship method has a valid estimate.
+     * NOTE: Does NOT necessarily imply the whole shipping method is valid for usage;
+     * use {@link #isValidShippingMethod} for that.
      * Added 2018-11-09.
      */
     public boolean isValidEstimate(GenericValue storeCarrierShipMethod) {
         return isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
-   }
-    
+    }
+
     /**
-     * SCIPIO: isValidShippingEstimate (same as above but estimate already fetched).
+     * SCIPIO: isValidShippingEstimate.
      * Added 2018-11-09.
      */
     public boolean isValidEstimate(BigDecimal estimate, GenericValue storeCarrierShipMethod) {

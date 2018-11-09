@@ -739,7 +739,7 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="glJournal!=null" target="updateGlJournal"/>
         <auto-fields-service service-name="createGlJournal"/>
-        <field name="organizationPartyId"><hidden/></field>
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="glJournalId" title="${uiLabelMap.CommonId}" use-when="glJournal!=null"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>

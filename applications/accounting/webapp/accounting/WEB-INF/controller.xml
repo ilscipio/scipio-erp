@@ -1747,6 +1747,24 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="journals"/>
     </request-map>
+    <request-map uri="createGlJournal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlJournal"/>
+        <response name="success" type="view" value="journals"/>
+        <response name="error" type="view" value="journals"/>
+    </request-map>
+    <request-map uri="updateGlJournal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlJournal"/>
+        <response name="success" type="view" value="journals"/>
+        <response name="error" type="view" value="journals"/>
+    </request-map>
+    <request-map uri="deleteGlJournal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteGlJournal"/>
+        <response name="success" type="view" value="journals"/>
+        <response name="error" type="view" value="journals"/>
+    </request-map>
     <request-map uri="TransactionReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TransactionReports"/>

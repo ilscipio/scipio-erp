@@ -546,7 +546,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#JournalsSideBar" />
+                <!-- <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#JournalsSideBar" /> -->
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
             </actions>
             <widgets>

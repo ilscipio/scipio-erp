@@ -50,9 +50,19 @@
             <link target="FindAgreement"/>
         </menu-item>      
         
+        <!-- Transactions -->
+        <menu-item name="Transactions" title="${uiLabelMap.AccountingTransactions}">
+            <link target="TransactionReports" />
+        </menu-item>
+        
+        <!-- Reports -->
+        <menu-item name="Reports" title="${uiLabelMap.AccountingReports}">
+            <link target="" />
+        </menu-item>
+        
         <!-- Journals -->
         <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
-            <link target="TransactionReports" />
+            <link target="journals" />
         </menu-item>
         
         <!-- Controlling -->
@@ -101,8 +111,11 @@
         <menu-item name="ImportExport">
             <sub-menu name="ImportExport" include="ImportExportSideBar"/>
         </menu-item>
-        <menu-item name="Journals">
-            <sub-menu name="Journals" include="JournalsSideBar"/>
+        <menu-item name="Transactions">
+            <sub-menu name="Transactions" include="TransactionsSideBar"/>
+        </menu-item>
+        <menu-item name="Reports">
+            <sub-menu name="Reports" include="ReportsSideBar"/>
         </menu-item>
         <menu-item name="payments">
             <sub-menu name="Payment" include="PaymentSideBar"/>
@@ -1240,10 +1253,10 @@
     
     <!-- 
     **************
-    * Journals 
+    * Reports 
     **************
     -->
-    <menu name="JournalsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="ReportsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="Journals" always-expand-selected-or-ancestor="true">
         <actions>
             <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>

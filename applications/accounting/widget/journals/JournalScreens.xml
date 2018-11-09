@@ -28,7 +28,7 @@ under the License.
                 <set field="titleProperty" value="AccountingAcctgTrans"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonReportsDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="ListAcctgTransOverview" location="component://accounting/widget/ledger/GlForms.xml"/>

@@ -536,7 +536,26 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
+    <!--
+    *************** 
+    * Transactions
+    ***************
+     -->
+    <screen name="CommonTransactionsDecorator">
+        <section>
+            <actions>
+                <!--  <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Transactions"/> -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#TransactionsSideBar" />
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <!--
     *************** 
     * Reports

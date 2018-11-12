@@ -154,7 +154,7 @@ under the License.
     </@table>
   </div>
   <div id="editCartPanel">
-    <form id="cartForm" method="post" action="<@ofbizUrl></@ofbizUrl>">
+    <form id="cartForm" method="post" action="">
       <fieldset>
         <input type="hidden" name="removeSelected" value="false" />
         

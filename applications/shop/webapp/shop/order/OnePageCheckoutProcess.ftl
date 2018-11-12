@@ -149,7 +149,7 @@ under the License.
 
 <#-- ============================================================= -->
           <div id="editShippingOptionPanel" style="display: none;">
-            <form id="shippingOptionForm" action="<@ofbizUrl></@ofbizUrl>" method="post">
+            <form id="shippingOptionForm" action="" method="post">
               <fieldset>
                 <@alert type="error" containerId="shippingOptionFormServerError_container" containerStyle="display:none;">
                   <div id="shippingOptionFormServerError" class="errorMessage"></div>
@@ -199,7 +199,7 @@ under the License.
 <#-- ============================================================= -->
 
           <div id="editBillingPanel" style="display: none;">
-            <form id="billingForm" class="theform" action="<@ofbizUrl></@ofbizUrl>" method="post">
+            <form id="billingForm" class="theform" action="" method="post">
               <fieldset class="col">
                 <input type="hidden" id="billToContactMechId" name="billToContactMechId" value="${billToContactMechId!}" />
                 <input type="hidden" id="shipToContactMechIdInBillingForm" name="shipToContactMechId" value="${shipToContactMechId!}" />

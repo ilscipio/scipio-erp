@@ -1022,12 +1022,21 @@ under the License.
             <set field="negValue" value="-1" type="BigDecimal"/>
             <set field="shippingMethod" value="${carrierShipmentMethod.shipmentMethodTypeId}@${carrierShipmentMethod.partyId}"/>
             <if-compare-field field="shippingEst" operator="greater" to-field="negValue">
-                <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${carrierShipmentMethod.description} - ${shippingEst?currency(${currency})}"/>
+                <set field="shippingDesc" value="${carrierShipmentMethod.description} - ${shippingEst?currency(${currency})}"/>
                 <else>
                     <property-to-field resource="OrderUiLabels" property="OrderCalculatedOffline" field="calcOfflineLabel"/>
-                    <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${carrierShipmentMethod.description} - ${calcOfflineLabel}"/>
+                    <if-compare field="carrierShipmentMethod.shipmentMethodTypeId" operator="equals" value="NO_SHIPPING"><!-- SCIPIO: 2018-11-12: NO_SHIPPING check -->
+                        <set field="shippingDesc" value="${carrierShipmentMethod.description}"/>
+                        <else>
+                            <set field="shippingDesc" value="${carrierShipmentMethod.description} - ${calcOfflineLabel}"/>
+                        </else>
+                    </if-compare>
                 </else>
             </if-compare-field>
+            <!-- SCIPIO: 2018-11-12: Only add carrier party if not _NA_ -->
+            <if-compare field="carrierShipmentMethod.partyId" operator="not-equals" value="_NA_">
+                <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${shippingDesc}"/>
+            </if-compare>
             <set field="shippingOptionMap.shippingMethod" from-field="shippingMethod"/>
             <set field="shippingOptionMap.shippingDesc" from-field="shippingDesc"/>
             <if-not-empty field="carrierShipmentMethod.productStoreShipMethId">

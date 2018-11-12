@@ -1069,7 +1069,8 @@ under the License.
             <field-map field-name="partyId" from-field="carrierPartyId"/>
             <field-map field-name="roleTypeId" value="CARRIER"/>
         </entity-one>
-        <field-to-request field="shipmentMethod.description" request-name="shippingDescription"/>
+        <!-- SCIPIO: 2018-11-12: this is missing half the info - set further below
+        <field-to-request field="shipmentMethod.description" request-name="shippingDescription"/>-->
 
         <set field="shoppingCart" from-field="parameters.shoppingCart"/>
         <if-empty field="shoppingCart">
@@ -1136,6 +1137,16 @@ under the License.
         <log level="info" message="Shipping total is : ${parameters.shippingTotal}"/>
         <log level="info" message="Cart Grand total is : ${parameters.cartGrandTotal}"/>
         <log level="info" message="Total sale tax is : ${parameters.totalSalesTax}"/>
+
+        <!-- SCIPIO: 2018-11-12: Show the selected ship method correctly -->
+        <set field="shippingDescription" value="${shipmentMethod.description}"/>
+        <if-compare field="shipmentMethod.partyId" operator="not-equals" value="_NA_">
+            <set field="shippingDescription" value="${shipmentMethod.partyId} ${shippingDescription}"/>
+        </if-compare>
+        <if-not-empty field="shipCost.shippingTotal">
+            <set field="shippingDescription" value="${shippingDescription} - ${shipCost.shippingTotal?currency(${isoCode})}"/>
+        </if-not-empty>
+        <field-to-request field="shippingDescription" request-name="shippingDescription"/>
     </simple-method>
 
     <simple-method method-name="createCustomerProfile" short-description="create a customer profile" login-required="false">

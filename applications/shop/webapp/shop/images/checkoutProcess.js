@@ -414,7 +414,7 @@ function setShippingOption() {
                 //jQuery('#totalSalesTax').val(json.totalSalesTax);
                 result = true;
             } else {
-                jQuery('#shippingOptionFormServerError').html(error);
+                jQuery('#shippingOptionFormServerError').html(serverError);
                 jQuery('#shippingOptionFormServerError_container').fadeIn('fast');
                 result = false;
             }

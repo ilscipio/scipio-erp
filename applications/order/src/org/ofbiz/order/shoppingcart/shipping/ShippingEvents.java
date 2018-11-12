@@ -48,6 +48,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceErrorException;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -264,6 +265,15 @@ public class ShippingEvents {
             if (externalAmt != null) {
                 shippingTotal = externalAmt;
             }
+        } catch (ServiceErrorException e) { // SCIPIO: Added 2018-11-12
+            // SCIPIO: TODO: REVIEW: For now, return failure as error...
+            // NOTE: The most important part in this case is that we return initialEstimateAmt null for failures,
+            // and DON'T run the generic ship estimate;
+            // secondarily, it _may_ be important in some cases that the caller aborts in this case...
+            //if (ServiceUtil.isFailure(e.getServiceResult())) {
+            //    return ServiceUtil.returnFailure(standardMessage);
+            //}
+            return ServiceUtil.returnError(standardMessage);
         } catch (GeneralException e) {
             return ServiceUtil.returnError(standardMessage);
         }
@@ -281,6 +291,13 @@ public class ShippingEvents {
                     shippingTotal = shippingTotal.add(genericAmt);
                 }
             }
+        } catch (ServiceErrorException e) { // SCIPIO: Added 2018-11-12
+            // SCIPIO: TODO: REVIEW: For now, return failure as error...
+            // NOTE: The most important part in this case is that we return initialEstimateAmt null for failures, instead of zero.
+            //if (ServiceUtil.isFailure(e.getServiceResult())) {
+            //    return ServiceUtil.returnFailure(standardMessage);
+            //}
+            return ServiceUtil.returnError(standardMessage);
         } catch (GeneralException e) {
             return ServiceUtil.returnError(standardMessage);
         }
@@ -307,11 +324,15 @@ public class ShippingEvents {
         // * Second isFailure check was unreachable and should not be returning -1 (return null instead)
         //if (ServiceUtil.isError(genericEstimate) || ServiceUtil.isFailure(genericEstimate)) {
         if (ServiceUtil.isError(genericEstimate)) {
-            Debug.logError(ServiceUtil.getErrorMessage(genericEstimate), module);
-            throw new GeneralException();
+            Debug.logError("Error getting generic shipment cost estimate: " + ServiceUtil.getErrorMessage(genericEstimate), module);
+            throw new ServiceErrorException(ServiceUtil.getErrorMessage(genericEstimate), genericEstimate); // SCIPIO: ServiceErrorException
         } else if (ServiceUtil.isFailure(genericEstimate)) {
-            // SCIPIO: 2018-11-09: Return null, don't even log for now
+            // SCIPIO: 2018-11-09: Don't return -1, this is not interpreted properly by callers!
             //genericShipAmt = BigDecimal.ONE.negate();
+            // SCIPIO: 2018-11-12: We have to indicate to caller that a failure happened... so always DO throw an exception here
+            // DEV NOTE: DO NOT REMOVE THIS EXCEPTION - if problems, change the caller(s)!
+            Debug.logError("Failure getting generic shipment cost estimate: " + ServiceUtil.getErrorMessage(genericEstimate), module);
+            throw new ServiceErrorException(ServiceUtil.getErrorMessage(genericEstimate), genericEstimate);
         } else {
             genericShipAmt = (BigDecimal) genericEstimate.get("shippingEstimateAmount");
         }
@@ -378,11 +399,14 @@ public class ShippingEvents {
                 if (ServiceUtil.isError(serviceResp)) {
                     String errMsg = "Error getting external shipment cost estimate: " + ServiceUtil.getErrorMessage(serviceResp);
                     Debug.logError(errMsg, module);
-                    throw new GeneralException(errMsg);
+                    throw new ServiceErrorException(errMsg, serviceResp); // SCIPIO: ServiceErrorException
                 } else if (ServiceUtil.isFailure(serviceResp)) {
                     String errMsg = "Failure getting external shipment cost estimate: " + ServiceUtil.getErrorMessage(serviceResp);
                     Debug.logError(errMsg, module);
-                    // should not throw an Exception here, otherwise getShipGroupEstimate would return an error, causing all sorts of services like add or update order item to abort
+                    // SCIPIO: 2018-11-12: We have to indicate to caller that a failure happened... so always DO throw an exception here
+                    // DEV NOTE: DO NOT REMOVE THIS EXCEPTION - if problems, change the caller(s)!
+                    //// should not throw an Exception here, otherwise getShipGroupEstimate would return an error, causing all sorts of services like add or update order item to abort
+                    throw new ServiceErrorException(errMsg, serviceResp);
                 } else {
                     externalShipAmt = (BigDecimal) serviceResp.get("shippingEstimateAmount");
                 }

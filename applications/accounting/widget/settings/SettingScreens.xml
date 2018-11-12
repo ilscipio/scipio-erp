@@ -26,7 +26,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingAddCustomTimePeriod"/>
-                <set field="activeSubMenuItem" value="CustomTimePeriods"/>
+                <set field="activeSubMenuItem" value="TimePeriods"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/period/EditCustomTimePeriod.groovy"/>
             </actions>
             <widgets>
@@ -50,6 +50,9 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://accounting/webapp/accounting/period/EditCustomTimePeriod.ftl"/></html></platform-specific>
                     </decorator-section>
+                    <screenlet title="${uiLabelMap.AccountingClosedTimePeriods}">
+                        <include-form name="ListClosedTimePeriods" location="component://accounting/widget/settings/GlSetupForms.xml"/>
+                    </screenlet>
                 </decorator-screen>
             </widgets>
         </section>

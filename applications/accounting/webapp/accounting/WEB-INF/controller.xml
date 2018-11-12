@@ -2136,7 +2136,7 @@ under the License.
     </request-map>
     <request-map uri="TimePeriods">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="TimePeriods"/>
+        <response name="success" type="view" value="EditCustomTimePeriod"/>
     </request-map>
     <request-map uri="createCustomTimePeriod">
         <security https="true" auth="true"/>
@@ -3181,7 +3181,7 @@ under the License.
     **************-->
     <view-map name="ListCompanies" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#ListCompanies"/>
     <view-map name="AddCompany" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#AddCompany"/>
-    <view-map name="TimePeriods" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#TimePeriods"/>
+    <!-- <view-map name="TimePeriods" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#TimePeriods"/> -->
     <view-map name="AddCustomTimePeriod" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#AddCustomTimePeriod"/>
     <view-map name="EditCustomTimePeriod" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#EditCustomTimePeriod"/>    
 

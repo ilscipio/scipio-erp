@@ -15593,7 +15593,7 @@
     </property>
     <property key="AccountingTimePeriod">
         <value xml:lang="ar">الفترة الزمنية</value>
-        <value xml:lang="de">Zeiträume</value>
+        <value xml:lang="de">Zeitraum</value>
         <value xml:lang="en">Time Period</value>
         <value xml:lang="es">Periodo de tiempo</value>
         <value xml:lang="fr">Période</value>
@@ -15608,6 +15608,12 @@
         <value xml:lang="vi">Kỳ</value>
         <value xml:lang="zh">时间段</value>
         <value xml:lang="zh-TW">時間段</value>
+    </property>
+    <property key="AccountingTimePeriods">        
+        <value xml:lang="de">Zeiträume</value>
+        <value xml:lang="en">Time Periods</value>
+        <value xml:lang="es">Periodos de tiempo</value>
+        <value xml:lang="fr">Périodes</value>
     </property>
     <property key="AccountingTitleTransfer">
         <value xml:lang="ar">عنوان التحويل</value>

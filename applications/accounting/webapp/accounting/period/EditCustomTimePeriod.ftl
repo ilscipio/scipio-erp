@@ -25,6 +25,7 @@ under the License.
 
 <@section menuContent=menuContent>
     <#if security.hasPermission("PERIOD_MAINT", session)>
+    	<#-- 
         <@section title=uiLabelMap.AccountingShowOnlyPeriodsWithOrganization>
             <form method="post" action="<@ofbizUrl>EditCustomTimePeriod</@ofbizUrl>" name="setOrganizationPartyIdForm">
                 <input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" />
@@ -33,6 +34,7 @@ under the License.
                 <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
             </form>
         </@section>
+        -->
         
         <@section title=uiLabelMap.AccountingChildPeriods>
             <@form method="post" action=makeOfbizUrl("updateCustomTimePeriod") name="updateCustomTimePeriod">

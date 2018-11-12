@@ -1089,8 +1089,25 @@ under the License.
         <set field="delegator" from-field="parameters.delegator" type="Object"/>
         <set field="locale" from-field="parameters.locale" type="Object"/>
 
+        <!-- SCIPIO: 2018-11-12: Ensure ship estimate is valid, return error otherwise! -->
         <script>groovy:
+            import org.ofbiz.service.ServiceUtil;
             Map shipCost = org.ofbiz.order.shoppingcart.shipping.ShippingEvents.getShipGroupEstimate(dispatcher, delegator, shoppingCart, 0);
+            context.shipCost = shipCost;
+            shipCostErrorMsg = null;
+            if (ServiceUtil.isError(shipCost)) {
+                shipCostErrorMsg = ServiceUtil.getErrorMessage(shipCost);
+            }
+            context.shipCostErrorMsg = shipCostErrorMsg;
+        </script>
+        <if-not-empty field="shipCostErrorMsg">
+            <add-error><fail-message message="${shipCostErrorMsg}"/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <script>groovy:
+            // SCIPIO
+            //Map shipCost = org.ofbiz.order.shoppingcart.shipping.ShippingEvents.getShipGroupEstimate(dispatcher, delegator, shoppingCart, 0);
+            Map shipCost = context.shipCost;
             shippingTotal = shipCost.get("shippingTotal");
             if (shippingTotal == null) {
                 shippingTotal = java.math.BigDecimal.ZERO;

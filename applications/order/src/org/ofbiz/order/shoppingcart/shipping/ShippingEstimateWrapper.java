@@ -127,7 +127,7 @@ public class ShippingEstimateWrapper {
                     try {
                         parentTx = TransactionUtil.suspend();
                     } catch (GenericTransactionException e) {
-                        Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), module);
+                        Debug.logError(e, "Could not suspend transaction for loadEstimates: " + e.getMessage(), module);
                     }
                     try {
                         try {
@@ -150,7 +150,7 @@ public class ShippingEstimateWrapper {
                         try {
                             TransactionUtil.commit(beganTransaction);
                         } catch (GenericTransactionException e) {
-                            Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), module);
+                            Debug.logError(e, "Could not commit nested transaction for loadEstimates: " + e.getMessage(), module);
                         }
                     }
                 } finally {
@@ -159,7 +159,7 @@ public class ShippingEstimateWrapper {
                         try {
                             TransactionUtil.resume(parentTx);
                         } catch (GenericTransactionException e) {
-                            Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), module);
+                            Debug.logError(e, "Could not resume parent nested transaction for loadEstimates: " + e.getMessage(), module);
                         }
                     }
                 }

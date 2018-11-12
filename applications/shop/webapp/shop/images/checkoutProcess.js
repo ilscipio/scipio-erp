@@ -358,24 +358,24 @@ function getShipOptions() {
             success: function(json) {
                 var serverError = getServerError(json);
                 if (!serverError) {
-                        jQuery('#shippingFormServerError_container').fadeOut('fast');
-                        isShipStepValidate = true;
-                        shipOptions = json.shippingOptions;
-                        var shipMethod = jQuery('#shipMethod');
-                        shipMethod.find("option").remove();
-                        jQuery.each(shipOptions, function(shipOption) {
-                            if (this.productStoreShipMethId){
-                                shipMethod.append(jQuery("<option value = " + this.shippingMethod + ":" + this.productStoreShipMethId + " > " + this.shippingDesc  + " </option>"));
-                            } else {
-                                shipMethod.append(jQuery("<option value = " + this.shippingMethod + " > " + this.shippingDesc  + " </option>"));
-                            }
-                        });
-                        result = true;
-                    } else {
-                        jQuery('#shippingFormServerError').html(serverError);
-                        jQuery('#shippingFormServerError_container').fadeIn('fast');
-                        result = false;
-                    }
+                    jQuery('#shippingFormServerError_container').fadeOut('fast');
+                    isShipStepValidate = true;
+                    shipOptions = json.shippingOptions;
+                    var shipMethod = jQuery('#shipMethod');
+                    shipMethod.find("option").remove();
+                    jQuery.each(shipOptions, function(shipOption) {
+                        if (this.productStoreShipMethId){
+                            shipMethod.append(jQuery("<option value = " + this.shippingMethod + ":" + this.productStoreShipMethId + " > " + this.shippingDesc  + " </option>"));
+                        } else {
+                            shipMethod.append(jQuery("<option value = " + this.shippingMethod + " > " + this.shippingDesc  + " </option>"));
+                        }
+                    });
+                    result = true;
+                } else {
+                    jQuery('#shippingFormServerError').html(serverError);
+                    jQuery('#shippingFormServerError_container').fadeIn('fast');
+                    result = false;
+                }
             },
             error: function(error) {
                 if (error != "") {

@@ -25,13 +25,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.transaction.Transaction;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.transaction.GenericTransactionException;
-import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
@@ -119,49 +115,14 @@ public class ShippingEstimateWrapper {
                 String productStoreShipMethId = shipMethod.getString("productStoreShipMethId");
                 String shippingCmId = shippingAddress != null ? shippingAddress.getString("contactMechId") : null;
 
-                // SCIPIO: 2018-11-09: Wrap each shipping method in its own transaction so that service errors
-                // don't affect the caller or other ship methods.
-                Transaction parentTx = null;
-                boolean beganTransaction = false;
-                try {
-                    try {
-                        parentTx = TransactionUtil.suspend();
-                    } catch (GenericTransactionException e) {
-                        Debug.logError(e, "Could not suspend transaction for loadEstimates: " + e.getMessage(), module);
-                    }
-                    try {
-                        try {
-                            beganTransaction = TransactionUtil.begin(7200);
-                        } catch (GenericTransactionException e) {
-                            Debug.logError(e, "Could not begin transaction for loadEstimates", module);
-                        }
+                // SCIPIO: 2018-11-09: Added locale
+                Map<String, Object> estimateMap = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, locale, "SALES_ORDER",
+                        shippingMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingCmId, productStoreId,
+                        supplierPartyId, shippableItemInfo, shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
 
-                        // SCIPIO: 2018-11-09: Added locale
-                        Map<String, Object> estimateMap = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, locale, "SALES_ORDER",
-                                shippingMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingCmId, productStoreId,
-                                supplierPartyId, shippableItemInfo, shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
-
-                        if (ServiceUtil.isSuccess(estimateMap)) {
-                            BigDecimal shippingTotal = (BigDecimal) estimateMap.get("shippingTotal");
-                            shippingEstimates.put(shipMethod, shippingTotal);
-                        }
-
-                    } finally {
-                        try {
-                            TransactionUtil.commit(beganTransaction);
-                        } catch (GenericTransactionException e) {
-                            Debug.logError(e, "Could not commit nested transaction for loadEstimates: " + e.getMessage(), module);
-                        }
-                    }
-                } finally {
-                    // resume/restore parent transaction
-                    if (parentTx != null) {
-                        try {
-                            TransactionUtil.resume(parentTx);
-                        } catch (GenericTransactionException e) {
-                            Debug.logError(e, "Could not resume parent nested transaction for loadEstimates: " + e.getMessage(), module);
-                        }
-                    }
+                if (ServiceUtil.isSuccess(estimateMap)) {
+                    BigDecimal shippingTotal = (BigDecimal) estimateMap.get("shippingTotal");
+                    shippingEstimates.put(shipMethod, shippingTotal);
                 }
             }
         }

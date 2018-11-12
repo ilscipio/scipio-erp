@@ -255,6 +255,7 @@ public class ShippingEvents {
         serviceFields.put("shippingOriginContactMechId", shippingOriginContactMechId);
         serviceFields.put("partyId", partyId);
         serviceFields.put("productStoreShipMethId", productStoreShipMethId);
+        serviceFields.put("locale", locale); // SCIPIO
 
         // call the external shipping service
         try {

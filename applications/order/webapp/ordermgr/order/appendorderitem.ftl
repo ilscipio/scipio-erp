@@ -33,10 +33,10 @@ under the License.
               <input type="hidden" name="prodCatalogId" value=""/>
           </#if>
           <#if catalogCol?has_content && catalogCol?size == 1>
-              <input type="hidden" name="prodCatalogId" value="${catalogCol.first}"/>
+              <input type="hidden" name="prodCatalogId" value="${catalogCol?first}"/>
           </#if>
           <#if shipGroups?size == 1>
-              <input type="hidden" name="shipGroupSeqId" value="${shipGroups.first.shipGroupSeqId}"/>
+              <input type="hidden" name="shipGroupSeqId" value="${shipGroups?first.shipGroupSeqId}"/>
           </#if>
              
           <#if catalogCol?has_content && (catalogCol?size > 1)>

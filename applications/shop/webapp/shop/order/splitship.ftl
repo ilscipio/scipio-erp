@@ -96,11 +96,10 @@ function submitForm(form, mode, value) {
                       </#if>
                       ${carrierShipmentMethod.description!}
                       <#if shippingEst?has_content>
-                        &nbsp;-&nbsp;
                         <#if (shippingEst > -1)>
-                          <@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/>
-                        <#else>
-                          ${uiLabelMap.OrderCalculatedOffline}
+                          &nbsp;-&nbsp;<@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/>
+                        <#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
+                          &nbsp;-&nbsp;${uiLabelMap.OrderCalculatedOffline}
                         </#if>
                       </#if>
                     </option>

@@ -397,7 +397,7 @@ under the License.
                           UPS&nbsp;${shippingRate.shipmentMethodDescription!}
                           <#if (shippingRate.rate > -1)>
                             <@ofbizCurrency amount=shippingRate.rate isoCode=orderReadHelper.getCurrency()/>
-                          <#else>
+                          <#elseif rawString(shippingRate.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
                             ${uiLabelMap.OrderCalculatedOffline}
                           </#if>
                         </@td>

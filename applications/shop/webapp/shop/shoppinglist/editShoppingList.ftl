@@ -293,11 +293,10 @@ under the License.
                           </#if>
                           ${shipMeth.description!}
                           <#if shippingEst?has_content>
-                            &nbsp;-&nbsp;
                             <#if (shippingEst > -1)>
-                              <@ofbizCurrency amount=shippingEst isoCode=listCart.getCurrency()/>
-                            <#else>
-                              ${uiLabelMap.OrderCalculatedOffline}
+                              &nbsp;-&nbsp;<@ofbizCurrency amount=shippingEst isoCode=listCart.getCurrency()/>
+                            <#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
+                              &nbsp;-&nbsp;${uiLabelMap.OrderCalculatedOffline}
                             </#if>
                           </#if>
                         </option>

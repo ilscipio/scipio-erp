@@ -1,6 +1,7 @@
 <%--
-This file is subject to the terms and conditions defined in
-file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 --%>
 <%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.base.config.*, org.ofbiz.base.util.*, org.ofbiz.entity.*, org.ofbiz.entity.config.*, org.ofbiz.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" /><%
 
@@ -47,8 +48,9 @@ file 'LICENSE', which is part of this source code package.
 %><?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE entitygroup PUBLIC "-//OFBiz//DTD Entity Group//EN" "http://ofbiz.apache.org/dtds/entitygroup.dtd">
 <!--
-This file is subject to the terms and conditions defined in
-file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <%
   ModelReader reader = delegator.getModelReader();

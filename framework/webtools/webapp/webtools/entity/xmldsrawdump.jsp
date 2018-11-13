@@ -1,6 +1,7 @@
 <%--
-This file is subject to the terms and conditions defined in
-file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 --%><%@ page import="java.io.*, java.util.*, java.net.*, org.w3c.dom.*, org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.entity.condition.*, org.ofbiz.entity.util.*, org.ofbiz.base.util.*, org.ofbiz.entity.model.*, org.ofbiz.entity.transaction.*" %><jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" /><jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" /><%
   if(security.hasPermission("ENTITY_MAINT", session)) {
       TreeSet passedEntityNames = (TreeSet) session.getAttribute("xmlrawdump_entitylist");

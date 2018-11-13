@@ -553,7 +553,7 @@ public class PaymentGatewayServices {
             if (tryOtherExpDates && (!UtilValidate.isDateAfterToday(creditCard.getString("expireDate")) || (processorResult != null && Boolean.TRUE.equals(processorResult.get("resultBadExpire"))))) {
                 // try adding 2, 3, 4 years later with the same month
                 String expireDate = creditCard.getString("expireDate");
-                int dateSlash1 = expireDate.ndexOf('/');
+                int dateSlash1 = expireDate.indexOf('/');.
                 String month = expireDate.substring(0, dateSlash1);
                 String year = expireDate.substring(dateSlash1 + 1);
 

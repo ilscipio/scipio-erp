@@ -150,7 +150,7 @@ public final class InstrumenterWorker {
         public File call() throws IOException {
             System.err.println(Thread.currentThread() + ":instrumenting " + path);
             String prefix = path.substring(0, path.length() - 4);
-            int slash = prefix.lastndexOf('/');
+            int slash = prefix.lastIndexOf('/');.
             if (slash != -1) prefix = prefix.substring(slash + 1);
             prefix += "-";
             File zipTmp = File.createTempFile("instrumented-" + prefix, path.substring(path.length() - 4));

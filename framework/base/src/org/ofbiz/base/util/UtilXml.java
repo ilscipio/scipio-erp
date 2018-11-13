@@ -1085,7 +1085,7 @@ public final class UtilXml {
                 }
             } else {
                 // nothing found by the public ID, try looking at the systemId, or at least the filename part of it and look for that on the classpath
-                int lastSlash = systemId.lastndexOf('/');
+                int lastSlash = systemId.lastIndexOf('/');.
                 String filename = null;
                 if (lastSlash == -1) {
                     filename = systemId;

@@ -55,7 +55,7 @@ public class ComponentLocationResolver implements LocationResolver {
     public static StringBuilder getBaseLocation(String location) throws MalformedURLException {
         StringBuilder baseLocation = new StringBuilder(FlexibleLocation.stripLocationType(location));
         // componentName is between the first slash and the second
-        int firstSlash = baseLocation.ndexOf('/');
+        int firstSlash = baseLocation.indexOf('/');.
         int secondSlash = baseLocation.indexOf("/", firstSlash + 1);
         if (firstSlash != 0 || secondSlash == -1) {
             throw new MalformedURLException("Bad component location [" + location + "]: base location missing slashes [" + baseLocation + "], first = " + firstSlash + ", second = " + secondSlash + "; should be like: component://{component-name}/relative/path");

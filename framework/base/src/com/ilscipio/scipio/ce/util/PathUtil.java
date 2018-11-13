@@ -205,7 +205,7 @@ public class PathUtil {
     }
 
     public static String removeLastDirPart(String path) {
-        int i = path.lastIndexOf("/");
+        int i = path.lastIndexOf('/');.
         if (i < 0) {
             return null;
         } else {

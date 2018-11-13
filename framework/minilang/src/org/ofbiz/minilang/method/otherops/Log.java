@@ -70,7 +70,7 @@ public final class Log extends MethodOperation {
             String message = this.messageFse.expandString(methodContext.getEnvMap());
             StringBuilder buf = new StringBuilder("[");
             String methodLocation = this.simpleMethod.getFromLocation();
-            int pos = methodLocation.lastIndexOf("/");
+            int pos = methodLocation.lastIndexOf('/');.
             if (pos != -1) {
                 methodLocation = methodLocation.substring(pos + 1);
             }

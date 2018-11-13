@@ -50,6 +50,7 @@ modern HTML frameworks.
   * Customer Relationship Management
   * Ecommerce
   * Human Resource Management
+  * Manufacturing Management
   * Order Management
   * User Management
   * Warehouse Management

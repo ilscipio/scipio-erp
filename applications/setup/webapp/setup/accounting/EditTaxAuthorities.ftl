@@ -96,12 +96,12 @@
 	                            <@td>${uiLabelMap.FormFieldTitle_taxAuthGeoId!}</@td>
 	                        </@tr>
                         </@thead>
-		                <@tr>
-		                    <#list partyTaxAuthInfos as partyTaxAuthInfo>
+                        <#list partyTaxAuthInfos as partyTaxAuthInfo>
+		                	<@tr>
 		                        <@td>${partyTaxAuthInfo.taxAuthPartyId!}</@td>
-		                        <@td>${partyTaxAuthInfo.taxAuthGeoId!}</@td>
-		                    </#list>
-		                </@tr>
+		                        <@td>${partyTaxAuthInfo.taxAuthGeoId!}</@td>		                    
+		                	</@tr>
+		                </#list>
 		            <#else>
 		                <@tr type="meta">
 		                  <@td colspan="9"><@commonMsg type="result-norecord">${uiLabelMap.CommonNoRecordFound}</@commonMsg></@td>

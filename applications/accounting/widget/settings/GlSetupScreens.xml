@@ -94,48 +94,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="TimePeriods">
-        <section>
-            <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="AccountingSetTimePeriod"/>
-                <set field="labelTitleProperty" value="${uiLabelMap.AccountingSetTimePeriod}"/>
-                <set field="activeSubMenuItem" value="TimePeriods"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <entity-condition entity-name="CustomTimePeriod" list="openTimePeriods">
-                    <condition-list>
-                        <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
-                        <condition-expr field-name="isClosed" operator="equals" value="N"/>
-                    </condition-list>
-                    <order-by field-name="thruDate"/>
-                </entity-condition>
-                <entity-condition entity-name="CustomTimePeriod" list="closedTimePeriods">
-                    <condition-list>
-                        <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
-                        <condition-expr field-name="isClosed" operator="equals" value="Y"/>
-                    </condition-list>
-                    <order-by field-name="periodTypeId"/>
-                    <order-by field-name="periodNum"/>
-                    <order-by field-name="thruDate"/>
-                </entity-condition>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingOpenTimePeriods}">
-                            <include-form name="ListOpenTimePeriods" location="component://accounting/widget/settings/GlSetupForms.xml"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.AccountingClosedTimePeriods}">
-                            <include-form name="ListClosedTimePeriods" location="component://accounting/widget/settings/GlSetupForms.xml"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.CommonNew}">
-                            <include-form name="CreateTimePeriod" location="component://accounting/widget/settings/GlSetupForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+
     <screen name="PartyAcctgPreference">
         <section>
             <actions>

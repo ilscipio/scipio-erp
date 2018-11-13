@@ -26,7 +26,7 @@
                 </@field>
             </div>
             <div>                      
-                <@field type="input" size="20" name="organizationPartyId" label=uiLabelMap.AccountingOrgPartyId />                      
+                <@field type="input" size="20" name="organizationPartyId" label=uiLabelMap.AccountingOrgPartyId value=findOrganizationPartyId!organizationPartyId!/>
                 <@field type="select" name="periodTypeId" label=uiLabelMap.AccountingPeriodType>
                     <#list periodTypes as periodType>
                         <#assign isDefault = false>

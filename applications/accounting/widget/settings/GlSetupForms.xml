@@ -681,35 +681,6 @@ under the License.
     </form>
 
     <!-- Accounting Time Period forms-->
-    <form name="ListClosedTimePeriods" type="list" list-name="closedTimePeriods"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
-        <auto-fields-entity entity-name="CustomTimePeriod" default-field-type="display"/>
-        <field name="organizationPartyId"><hidden/></field>
-        <field name="isClosed"><hidden/></field>
-        <field name="periodTypeId">
-          <display-entity entity-name="PeriodType"/>
-        </field>
-        <field name="parentPeriodId">
-          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="[${customTimePeriodId}] ${periodName}: ${fromDate} - ${thruDate}"/>
-        </field>
-    </form>
-    <form name="ListOpenTimePeriods" type="list" list-name="openTimePeriods"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
-        <auto-fields-entity entity-name="CustomTimePeriod" default-field-type="display"/>
-        <field name="organizationPartyId"><hidden/></field>
-        <field name="isClosed"><hidden/></field>
-        <field name="periodTypeId">
-          <display-entity entity-name="PeriodType"/>
-        </field>
-        <field name="parentPeriodId">
-          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="[${customTimePeriodId}] ${periodName}: ${fromDate} - ${thruDate}"/>
-        </field>
-        <field name="close" title=" " widget-style="${styles.link_run_sys} ${styles.action_terminate}">
-            <hyperlink target="closeFinancialTimePeriod" description="${uiLabelMap.CommonClose}">
-                <parameter param-name="organizationPartyId"/><parameter param-name="customTimePeriodId"/>
-            </hyperlink>
-        </field>
-    </form>
     <form name="CreateTimePeriod" type="single" title="" target="createCustomTimePeriod"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createCustomTimePeriod"/>

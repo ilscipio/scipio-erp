@@ -19,7 +19,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("AddCustomTimePeriod") text=uiLabelMap.CommonAdd class="+${styles.action_run_local!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("AddCustomTimePeriod?customTimePeriodId=" + organizationPartyId!) text=uiLabelMap.CommonAdd class="+${styles.action_run_local!} ${styles.action_add!}" />
     </@menu>
 </#macro>
 

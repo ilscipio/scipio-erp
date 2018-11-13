@@ -18,18 +18,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+<forms xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="ListPaymentMethodType" type="list" target="updatePaymentMethodType" list-name="paymentMethodTypes"
         odd-row-style="alternate-row" paginate-target="editPaymentMethodType"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <entity-and entity-name="GlAccount" list="glAccounts" />
+        </actions>
         <field name="paymentMethodTypeId"><display/></field>
         <field name="description"><display/></field>
         <field name="defaultGlAccountId" parameter-name="defaultGlAccountId">
-            <drop-down allow-empty="true">
-                <entity-options description="${glAccountId} : ${accountName}" entity-name="GlAccount" key-field-name="glAccountId">
+            <drop-down allow-empty="true" >
+                <!-- <entity-options description="${glAccountId} : ${accountName}" entity-name="GlAccount" key-field-name="glAccountId" >
                     <entity-order-by field-name="glAccountId"/>
-                </entity-options>
+                </entity-options> -->
+                <list-options key-name="glAccountId" list-name="glAccounts" description="${glAccountId} : ${accountName}"/>
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>

@@ -1,8 +1,9 @@
 <#-- TODO: License -->
 
 <#--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#--macro menuContent menuArgs={}>

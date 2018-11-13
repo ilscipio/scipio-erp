@@ -1,6 +1,7 @@
 <#--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if glAcctBalancesByCostCenter?has_content && glAccountCategories?has_content>
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->

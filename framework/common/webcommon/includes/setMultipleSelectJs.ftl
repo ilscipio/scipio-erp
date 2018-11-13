@@ -1,6 +1,7 @@
 <#--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if asm_multipleSelect??> <#-- we check only this var and suppose the others are also present -->
   <@dynamicSelectFieldScript id=asm_multipleSelect!"" title=asm_title!"" sortable=asm_sortable!false formId=asm_multipleSelectForm!""

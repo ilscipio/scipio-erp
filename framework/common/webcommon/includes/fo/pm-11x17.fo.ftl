@@ -1,6 +1,7 @@
 <#--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
     <fo:simple-page-master master-name="11x17-portrait"
         page-width="11in" page-height="17in"

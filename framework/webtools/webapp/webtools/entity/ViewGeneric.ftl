@@ -1,6 +1,7 @@
 <#--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#-- SCIPIO: 2017-04-13: if the value was just deleted, do not allow editing -->
 <#if (deleteSuccess!false) == true>

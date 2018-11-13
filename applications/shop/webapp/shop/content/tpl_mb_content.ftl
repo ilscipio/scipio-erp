@@ -1,7 +1,8 @@
 <#ftl ns_prefixes={"ask":"http://www.automationgroups.com/dtd/ask/"}>
 <#--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#recurse doc>

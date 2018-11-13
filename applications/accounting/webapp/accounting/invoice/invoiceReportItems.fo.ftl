@@ -1,6 +1,7 @@
 <#--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#escape x as x?xml>
     <#if invoice?has_content><fo:block font-size="16pt" font-weight="bold" margin-bottom="5mm">${invoice.getRelatedOne("InvoiceType", false).get("description",locale)}</fo:block></#if>

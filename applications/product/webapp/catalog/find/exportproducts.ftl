@@ -1,6 +1,7 @@
 <#--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if productExportList?has_content>
   <#list productExportList as productExportMap><#assign productCategoryCount=0/><#assign productFeatureCount=0/>

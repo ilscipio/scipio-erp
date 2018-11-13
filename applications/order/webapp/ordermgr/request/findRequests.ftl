@@ -1,6 +1,7 @@
 <#--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <form method="post" name="lookuporder" id="lookuporder" action="<@ofbizUrl>FindRequest</@ofbizUrl>" >
 <input type="hidden" name="viewSize" value="${viewSize}"/>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-This file is subject to the terms and conditions defined in
- file 'LICENSE', which is part of this source code package.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <entity-engine-xml>
     <TemporalExpression tempExprId="MIDNIGHT_DAILY" tempExprTypeId="FREQUENCY" description="Daily Midnight" date1="2000-01-01 00:00:00.000" integer1="5" integer2="1"/>

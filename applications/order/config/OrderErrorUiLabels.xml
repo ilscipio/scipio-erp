@@ -6479,6 +6479,10 @@
         <value xml:lang="vi">Mã khuyến mãi [${productPromoCodeId}] sẽ được kích hoạt tại thời điểm: {fromDate}</value>
         <value xml:lang="zh">促销代码[${productPromoCodeId}]激活日期为：{fromDate}</value>
     </property>
+    <property key="shippingevents.problem_calculating_shipping">
+        <value xml:lang="de">Beim Berechnen des Versandes ist ein Problem aufgetreten.</value>
+        <value xml:lang="en">A problem occurred calculating shipping.</value>
+    </property>
     <property key="shoppingCartEvents.invalid_alternateGwpLine">
         <value xml:lang="ar">لا يمكن اختيار هدية بديلة, alternateGwpLine هو رقم غير صالح</value>
         <value xml:lang="de">Alternatives Geschenk konnte nicht gewählt werden, alternateGwpLine ist keine gültige Nummer</value>

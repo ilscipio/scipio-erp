@@ -37,6 +37,8 @@ public class ShippingEstimateWrapper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    // SCIPIO: WARN: do not store a ShoppingCart reference in this object.
+
     // SCIPIO: 2018-11-09: All fields now final.
     protected final Delegator delegator;
     protected final LocalDispatcher dispatcher;

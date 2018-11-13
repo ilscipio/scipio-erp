@@ -59,8 +59,7 @@ public class ShippingEstimateWrapper {
 
     protected final Locale locale; // SCIPIO: 2018-11-09: Added locale
     protected final List<GenericValue> validShippingMethods; // SCIPIO: 2018-11-09
-
-    protected final boolean allowMissingEstimates = false; // SCIPIO: TODO: property for this...
+    protected final boolean allowMissingEstimates; // SCIPIO
 
     public static ShippingEstimateWrapper getWrapper(LocalDispatcher dispatcher, ShoppingCart cart, int shipGroup) {
         return new ShippingEstimateWrapper(dispatcher, cart, shipGroup);
@@ -82,6 +81,9 @@ public class ShippingEstimateWrapper {
         this.supplierPartyId = cart.getSupplierPartyId(shipGroup);
         
         this.locale = cart.getLocale();
+        // SCIPIO: TODO
+        //this.allowMissingEstimates = cart.isAllowMissingShipEstimates();
+        this.allowMissingEstimates = false;
 
         List<GenericValue> shippingMethods = this.loadShippingMethods(); // SCIPIO: Locals
         Map<GenericValue, BigDecimal> shippingEstimates = this.loadEstimates(shippingMethods);
@@ -90,7 +92,7 @@ public class ShippingEstimateWrapper {
         
         List<GenericValue> validShippingMethods = new ArrayList<>(shippingMethods.size());
         for(GenericValue shipMethod : shippingMethods) {
-            if (isValidShippingMethod(shipMethod)) {
+            if (isValidShippingMethodInternal(shipMethod)) {
                 validShippingMethods.add(shipMethod);
             }
         }
@@ -191,9 +193,21 @@ public class ShippingEstimateWrapper {
      * Added 2018-11-09.
      */
     public boolean isValidShippingMethod(GenericValue storeCarrierShipMethod) {
-        return isAllowMissingEstimates() || isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
+        if (isAllowMissingEstimates()) {
+            return shippingMethods.contains(storeCarrierShipMethod);
+        } else {
+            return isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
+        }
     }
 
+    protected boolean isValidShippingMethodInternal(GenericValue storeCarrierShipMethod) { // same as isValidShippingMethod but assumes storeCarrierShipMethod part of store methods
+        if (isAllowMissingEstimates()) {
+            return true;
+        } else {
+            return isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
+        }
+    }    
+    
     /**
      * SCIPIO: Checks if the given ship method has a valid estimate.
      * NOTE: Does NOT necessarily imply the whole shipping method is valid for usage;

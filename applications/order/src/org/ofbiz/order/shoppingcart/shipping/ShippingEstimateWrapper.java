@@ -208,10 +208,10 @@ public class ShippingEstimateWrapper {
      * SCIPIO: isValidShippingEstimate.
      * Added 2018-11-09.
      */
-    public boolean isValidEstimate(BigDecimal estimate, GenericValue storeCarrierShipMethod) {
+    protected boolean isValidEstimate(BigDecimal estimate, GenericValue storeCarrierShipMethod) {
         if (!(estimate == null || estimate.compareTo(BigDecimal.ZERO) < 0)) { // Same logic as PayPalServices.payPalCheckoutUpdate
             return true;
         }
-        return ("NO_SHIPPING".equals(storeCarrierShipMethod.get("shipmentMethodTypeId"))); // Special case
+        return ("NO_SHIPPING".equals(storeCarrierShipMethod.get("shipmentMethodTypeId"))) && shippingEstimates.containsKey(storeCarrierShipMethod); // Special case
     }
 }

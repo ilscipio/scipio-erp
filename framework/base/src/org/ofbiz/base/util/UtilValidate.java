@@ -967,8 +967,8 @@ public final class UtilValidate {
         String day;
         String year;
 
-        int dateSlash1 = date.indexOf('/');.
-        int dateSlash2 = date.lastIndexOf('/');.
+        int dateSlash1 = date.ndexOf('/');
+        int dateSlash2 = date.lastndexOf('/');
 
         if (dateSlash1 <= 0 || dateSlash1 == dateSlash2) {
             return false;
@@ -985,8 +985,8 @@ public final class UtilValidate {
         if (isEmpty(date)) {
             return defaultEmptyOK;
         }
-        int dateSlash1 = date.indexOf('/');.
-        int dateSlash2 = date.lastIndexOf('/');.
+        int dateSlash1 = date.ndexOf('/');
+        int dateSlash2 = date.lastndexOf('/');
 
         if (dateSlash1 <= 0) {
             return false;
@@ -1034,8 +1034,8 @@ public final class UtilValidate {
         if (isEmpty(date)) {
             return defaultEmptyOK;
         }
-        int dateSlash1 = date.indexOf('/');.
-        int dateSlash2 = date.lastIndexOf('/');.
+        int dateSlash1 = date.ndexOf('/');
+        int dateSlash2 = date.lastndexOf('/');
 
         if (dateSlash1 <= 0) {
             return defaultEmptyOK; // In this case an issue number has been provided (requires a javascript check in template!)

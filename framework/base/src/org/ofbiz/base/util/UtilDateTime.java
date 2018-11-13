@@ -545,8 +545,8 @@ public final class UtilDateTime {
         String minute;
         String second;
 
-        int dateSlash1 = date.indexOf('/');.
-        int dateSlash2 = date.lastIndexOf('/');.
+        int dateSlash1 = date.indexOf('/');
+        int dateSlash2 = date.lastIndexOf('/');
 
         if (dateSlash1 <= 0 || dateSlash1 == dateSlash2) {
             return null;

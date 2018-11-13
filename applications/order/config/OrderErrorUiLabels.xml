@@ -6479,9 +6479,21 @@
         <value xml:lang="vi">Mã khuyến mãi [${productPromoCodeId}] sẽ được kích hoạt tại thời điểm: {fromDate}</value>
         <value xml:lang="zh">促销代码[${productPromoCodeId}]激活日期为：{fromDate}</value>
     </property>
+    <property key="shippingevents.cannot_find_origin_ship_addr">
+        <value xml:lang="de">Die Ursprungsversandadresse für den Lieferanten mit der ID ${supplierPartyId} kann nicht gefunden werden. kann die Drop-Drop-Schätzung nicht berechnen.</value>
+        <value xml:lang="en">Cannot find the origin shipping address for the supplier with ID ${supplierPartyId}; cannot calculate drop shipment estimate.</value>
+    </property>
     <property key="shippingevents.problem_calculating_shipping">
-        <value xml:lang="de">Beim Berechnen des Versandes ist ein Problem aufgetreten.</value>
-        <value xml:lang="en">A problem occurred calculating shipping.</value>
+        <value xml:lang="de">Beim Berechnen des Versandes ist ein Problem aufgetreten. Bitte versuche es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an den Support.</value>
+        <value xml:lang="en">A problem occurred calculating shipping. Please try again. If the problem persists, please contact support.</value>
+    </property>
+    <property key="shippingevents.select_shipping_method">
+        <value xml:lang="de">Bitte wählen Sie Ihre Versandart.</value>
+        <value xml:lang="en">Please select your shipping method.</value>
+    </property>
+    <property key="shippingevents.ship_meth_not_applicable">
+        <value xml:lang="de">Die angegebene Versandart ist für diesen Shop nicht anwendbar.</value>
+        <value xml:lang="en">Specified shipping method is not applicable for this store.</value>
     </property>
     <property key="shoppingCartEvents.invalid_alternateGwpLine">
         <value xml:lang="ar">لا يمكن اختيار هدية بديلة, alternateGwpLine هو رقم غير صالح</value>

@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -56,6 +57,7 @@ import org.ofbiz.service.ServiceUtil;
 public class ShippingEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final String resource_error = "OrderErrorUiLabels"; // SCIPIO
 
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
@@ -140,7 +142,7 @@ public class ShippingEvents {
      */
     @Deprecated
     public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, OrderReadHelper orh, String shipGroupSeqId) { // SCIPIO: 2018-11-09: Added locale
-        return getShipEstimate(dispatcher, delegator, Locale.ENGLISH, orh, shipGroupSeqId);
+        return getShipEstimate(dispatcher, delegator, Locale.getDefault(), orh, shipGroupSeqId);
     }
 
     // version with no support for using the supplier's address as the origin
@@ -161,7 +163,7 @@ public class ShippingEvents {
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
-        return getShipGroupEstimate(dispatcher, delegator, Locale.ENGLISH, orderTypeId, shipmentMethodTypeId, carrierPartyId,
+        return getShipGroupEstimate(dispatcher, delegator, Locale.getDefault(), orderTypeId, shipmentMethodTypeId, carrierPartyId,
                 carrierRoleTypeId, shippingContactMechId, productStoreId, null, itemInfo,
                 shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
     }
@@ -174,7 +176,7 @@ public class ShippingEvents {
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, String supplierPartyId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
-        return getShipGroupEstimate(dispatcher, delegator, Locale.ENGLISH, orderTypeId, 
+        return getShipGroupEstimate(dispatcher, delegator, Locale.getDefault(), orderTypeId, 
                 shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingContactMechId, 
                 productStoreId, supplierPartyId, itemInfo, shippableWeight, shippableQuantity, 
                 shippableTotal, partyId, productStoreShipMethId);
@@ -186,7 +188,7 @@ public class ShippingEvents {
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
         // SCIPIO: This message assumes too much about the caller's intentions. Leave out the second part.
         //String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
-        String standardMessage = "A problem occurred calculating shipping.";
+        String standardMessage = UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping", locale);
         List<String> errorMessageList = new LinkedList<String>();
 
         if ("NO_SHIPPING".equals(shipmentMethodTypeId)) {
@@ -195,7 +197,9 @@ public class ShippingEvents {
 
         if (shipmentMethodTypeId == null || carrierPartyId == null) {
             if ("SALES_ORDER".equals(orderTypeId)) {
-                errorMessageList.add("Please Select Your Shipping Method.");
+                // SCIPIO
+                //errorMessageList.add("Please Select Your Shipping Method.");
+                errorMessageList.add(UtilProperties.getMessage(resource_error, "shippingevents.select_shipping_method", locale));
                 return ServiceUtil.returnError(errorMessageList);
             } else {
                 return ServiceUtil.returnSuccess();
@@ -212,7 +216,9 @@ public class ShippingEvents {
             try {
                 GenericValue originAddress = getShippingOriginContactMech(delegator, supplierPartyId);
                 if (originAddress == null) {
-                    return ServiceUtil.returnError("Cannot find the origin shipping address (SHIP_ORIG_LOCATION) for the supplier with ID ["+supplierPartyId+"].  Will not be able to calculate drop shipment estimate.");
+                    // SCIPIO
+                    //return ServiceUtil.returnError("Cannot find the origin shipping address (SHIP_ORIG_LOCATION) for the supplier with ID ["+supplierPartyId+"]. Will not be able to calculate drop shipment estimate.");
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "shippingevents.cannot_find_origin_ship_addr", UtilMisc.toMap("supplierPartyId", supplierPartyId), locale));
                 }
                 shippingOriginContactMechId = originAddress.getString("contactMechId");
             } catch (GeneralException e) {
@@ -232,7 +238,9 @@ public class ShippingEvents {
                 shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId);
 
         if (storeShipMethod == null) {
-            errorMessageList.add("No applicable shipment method found.");
+            // SCIPIO
+            //errorMessageList.add("No applicable shipment method found.");
+            errorMessageList.add(UtilProperties.getMessage(resource_error, "shippingevents.ship_meth_not_applicable", locale));
             return ServiceUtil.returnError(errorMessageList);
         }
 
@@ -391,7 +399,7 @@ public class ShippingEvents {
                 // invoke the service
                 Map<String, Object> serviceResp = null;
                 try {
-                    Debug.logInfo("Service : " + serviceName + " / shipmentGatewayConfigId : " + shipmentGatewayConfigId + " / configProps : " + configProps + " -- " + context, module);
+                    Debug.logInfo("Service: " + serviceName + " / shipmentGatewayConfigId : " + shipmentGatewayConfigId + " / configProps : " + configProps + " -- " + context, module);
                     // because we don't want to blow up too big or rollback the transaction when this happens, always have it run in its own transaction...
                     serviceResp = dispatcher.runSync(serviceName, context, 0, true);
                 } catch (GenericServiceException e) {

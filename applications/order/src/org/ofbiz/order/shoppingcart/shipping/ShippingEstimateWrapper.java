@@ -20,6 +20,7 @@ package org.ofbiz.order.shoppingcart.shipping;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -106,7 +107,9 @@ public class ShippingEstimateWrapper {
         } catch (Throwable t) {
             Debug.logError(t, module);
         }
-        return null;
+        // SCIPIO: code will crash on this
+        //return null;
+        return Collections.emptyList();
     }
 
     protected Map<GenericValue, BigDecimal> loadEstimates(List<GenericValue> shippingMethods) { // SCIPIO: Added return value

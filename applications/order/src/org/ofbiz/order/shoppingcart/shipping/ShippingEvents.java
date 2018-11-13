@@ -47,7 +47,6 @@ import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceErrorException;
 import org.ofbiz.service.ServiceUtil;
 
@@ -71,7 +70,9 @@ public class ShippingEvents {
             }
             Map<String, Object> result = getShipGroupEstimate(dispatcher, delegator, cart, i);
             ServiceUtil.getMessages(request, result, null, "", "", "", "", null, null);
-            if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+            // SCIPIO
+            //if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+            if (ServiceUtil.isError(result)) {
                 return "error";
             }
 

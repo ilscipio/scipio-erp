@@ -25,7 +25,7 @@ under the License.
 
 <@section menuContent=menuContent>
     <#if security.hasPermission("PERIOD_MAINT", session)>
-    	<#-- 
+    <#-- 
         <@section title=uiLabelMap.AccountingShowOnlyPeriodsWithOrganization>
             <form method="post" action="<@ofbizUrl>EditCustomTimePeriod</@ofbizUrl>" name="setOrganizationPartyIdForm">
                 <input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" />
@@ -35,8 +35,8 @@ under the License.
             </form>
         </@section>
         -->
-        
-        <@section title=uiLabelMap.AccountingChildPeriods>
+
+        <@section title=uiLabelMap.AccountingOpenTimePeriods>
             <@form method="post" action=makeOfbizUrl("updateCustomTimePeriod") name="updateCustomTimePeriod">
                 <#if customTimePeriods?has_content>
                     <@table type="data-list"> <#-- orig: class="basic-table" -->
@@ -51,7 +51,8 @@ under the License.
                                 <@th>${uiLabelMap.CommonFromDate}</@th>
                                 <@th>${uiLabelMap.CommonThruDate}</@th>
                                 <@th>&nbsp;</@th>
-                                <@th>&nbsp;</@th>                                
+                                <@th>&nbsp;</@th>
+                                <@th>&nbsp;</@th>
                             </@tr>
                         </@thead>
 
@@ -63,14 +64,14 @@ under the License.
                             <#assign periodType = customTimePeriod.getRelatedOne("PeriodType", true)>
                             <input type="hidden" name="customTimePeriodId_o_${customTimePeriod_index}" value="${customTimePeriod.customTimePeriodId!}" />    
                             <input type="hidden" name="_useRowSubmit" value="Y" />    
-                            <input type="hidden" name="_rowSubmit_o_${customTimePeriod_index}"/>                    
+                            <input type="hidden" name="_rowSubmit_o_${customTimePeriod_index}"/>
                             <@tr id="row_${customTimePeriod.customTimePeriodId!}">
                                 <@td>${customTimePeriod.customTimePeriodId}</@td>
                                 <@td>
                                     <@field type="select" name="parentPeriodId_o_${customTimePeriod.customTimePeriodId!}">
                                         <option value="">&nbsp;</option>
                                         <#list allCustomTimePeriods as allCustomTimePeriod>
-                                            <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)>                                            
+                                            <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)>
                                             <option value="${allCustomTimePeriod.customTimePeriodId}"<#if customTimePeriod.parentPeriodId?has_content && customTimePeriod.parentPeriodId == allCustomTimePeriod.customTimePeriodId> selected="selected"</#if>>                                                
                                                 <#if allPeriodType??> ${allPeriodType.description}: </#if>
                                                 ${allCustomTimePeriod.periodNum!}
@@ -118,21 +119,66 @@ under the License.
                                 <@td>
                                     <a href="javascript:document.deleteCustomTimePeriod_${customTimePeriod_index}.submit();" class="${styles.link_run_sys} ${styles.action_remove}">${uiLabelMap.CommonDelete}</a>
                                 </@td>
+                                <@td>
+                                    <a href="javascript:document.closeCustomTimePeriod_${customTimePeriod_index}.submit();" class="${styles.link_run_sys} ${styles.action_terminate}">${uiLabelMap.CommonClose}</a>
+                                </@td>
                             </@tr>
                         </#list>
-                    </@table>                   
-                   
+                    </@table>
                 <#else>
                     <@commonMsg type="result-norecord">${uiLabelMap.AccountingNoChildPeriodsFound}</@commonMsg>
                 </#if>
             </@form>
-            <#list customTimePeriods as customTimePeriod>                
+            <#list customTimePeriods as customTimePeriod>
                 <form method="post" action="<@ofbizUrl>deleteCustomTimePeriod</@ofbizUrl>" name="deleteCustomTimePeriod_${customTimePeriod_index}">
-                    <@field type="hidden" name="customTimePeriodId" value="${customTimePeriod.customTimePeriodId!}" />                      
-                    <@field type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}"/>                              
+                    <@field type="hidden" name="customTimePeriodId" value="${customTimePeriod.customTimePeriodId!}" />
+                    <@field type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}"/>
+                </form>
+                <form method="post" action="<@ofbizUrl>closeFinancialTimePeriod</@ofbizUrl>" name="closeCustomTimePeriod_${customTimePeriod_index}">
+                    <@field type="hidden" name="customTimePeriodId" value="${customTimePeriod.customTimePeriodId!}" />
+                    <@field type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}"/>
                 </form>
             </#list>
-        </@section>      
+        </@section>
+
+        <#-- SCIPIO (11/13/2018): Showing closed time periods -->
+        <#if allClosedCustomTimePeriods?has_content>
+            <@section title=uiLabelMap.AccountingClosedTimePeriods>
+                <@table type="data-list"> <#-- orig: class="basic-table" -->
+                    <@thead>
+                        <@tr class="header-row">
+                            <@th>${uiLabelMap.CommonId}</@th>
+                            <@th>${uiLabelMap.CommonParent}</@th>
+                            <@th>${uiLabelMap.AccountingOrgPartyId}</@th>
+                            <@th>${uiLabelMap.AccountingPeriodType}</@th>
+                            <@th>${uiLabelMap.CommonNbr}</@th>
+                            <@th>${uiLabelMap.AccountingPeriodName}</@th>
+                            <@th>${uiLabelMap.CommonFromDate}</@th>
+                            <@th>${uiLabelMap.CommonThruDate}</@th>
+                        </@tr>
+                    </@thead>
+                    <#list allClosedCustomTimePeriods as customTimePeriod>
+                        <#assign periodType = customTimePeriod.getRelatedOne("PeriodType", true)>
+                        <@tr>
+                            <@td>${customTimePeriod.customTimePeriodId}</@td>
+                            <@td>
+                                <#if customTimePeriod.parentPeriodId?has_content>
+	                                <#assign parentPeriod = delegator.findOne("CustomTimePeriod", {"customTimePeriodId" : customTimePeriod.parentPeriodId}, false)>
+	                                <#assign parentPeriodType = parentPeriod.getRelatedOne("PeriodType", true)>
+	                                ${parentPeriodType.description}: ${parentPeriod.periodNum!} [${parentPeriod.customTimePeriodId}]
+                                </#if>
+                            </@td>
+                            <@td>${customTimePeriod.organizationPartyId!}</@td>
+                            <@td>${periodType.description} [${periodType.periodTypeId}]</@td>
+                            <@td>${customTimePeriod.periodNum!}</@td>
+                            <@td>${customTimePeriod.periodName!}</@td>
+                            <@td>${customTimePeriod.fromDate?string('yyyy-MM-dd')}</@td>
+                            <@td>${customTimePeriod.thruDate?string('yyyy-MM-dd')}</@td>
+                        </@tr>
+                    </#list>
+                </@table>
+            </@section>
+        </#if>
     <#else>
       <@commonMsg type="error">${uiLabelMap.AccountingPermissionPeriod}.</@commonMsg>
     </#if>

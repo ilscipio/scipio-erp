@@ -2141,14 +2141,14 @@ under the License.
     <request-map uri="createCustomTimePeriod">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustomTimePeriod"/>
-        <response name="success" type="view" value="TimePeriods"/>
-        <response name="error" type="view" value="TimePeriods"/>
+        <response name="success" type="view" value="EditCustomTimePeriod"/>
+        <response name="error" type="view" value="EditCustomTimePeriod"/>
     </request-map>
     <request-map uri="closeFinancialTimePeriod">
         <security https="true" auth="true"/>
         <event type="service" invoke="closeFinancialTimePeriod"/>
-        <response name="success" type="view" value="TimePeriods"/>
-        <response name="error" type="view" value="TimePeriods"/>
+        <response name="success" type="view" value="EditCustomTimePeriod"/>
+        <response name="error" type="view" value="EditCustomTimePeriod"/>
     </request-map>
     <request-map uri="PartyAcctgPreference">
         <security https="true" auth="true"/>
@@ -2450,7 +2450,7 @@ under the License.
     <!-- CustomTimePeriod requests -->
     <request-map uri="EditCustomTimePeriod">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCustomTimePeriod"/>
+        <response name="success" type="view" value="TimePeriods"/>
     </request-map>
     <request-map uri="AddCustomTimePeriod">
         <security https="true" auth="true"/>
@@ -3181,7 +3181,7 @@ under the License.
     **************-->
     <view-map name="ListCompanies" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#ListCompanies"/>
     <view-map name="AddCompany" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#AddCompany"/>
-    <!-- <view-map name="TimePeriods" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#TimePeriods"/> -->
+    <view-map name="TimePeriods" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#TimePeriods"/>
     <view-map name="AddCustomTimePeriod" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#AddCustomTimePeriod"/>
     <view-map name="EditCustomTimePeriod" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#EditCustomTimePeriod"/>    
 

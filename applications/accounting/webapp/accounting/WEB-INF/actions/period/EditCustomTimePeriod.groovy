@@ -46,12 +46,19 @@ if (currentPeriodType) {
 findMap = [ : ];
 if (findOrganizationPartyId) findMap.organizationPartyId = findOrganizationPartyId;
 if (currentCustomTimePeriodId) findMap.parentPeriodId = currentCustomTimePeriodId;
+findMap.isClosed = "N";
 
 customTimePeriods = from("CustomTimePeriod").where(findMap).orderBy(["periodTypeId", "periodNum", "fromDate"]).queryList();
 context.customTimePeriods = customTimePeriods;
 
-allCustomTimePeriods = from("CustomTimePeriod").orderBy(["organizationPartyId", "parentPeriodId", "periodTypeId", "periodNum", "fromDate"]).queryList();
+// SCIPIO (11/13/2018): Filtering by company and closed=N
+allCustomTimePeriods = from("CustomTimePeriod").where(findMap).orderBy(["organizationPartyId", "parentPeriodId", "periodTypeId", "periodNum", "fromDate"]).queryList();
 context.allCustomTimePeriods = allCustomTimePeriods;
+
+// SCIPIO (11/13/2018): Filtering by company and closed=Y
+findMap.isClosed = "Y";
+allClosedCustomTimePeriods = from("CustomTimePeriod").where(findMap).orderBy(["organizationPartyId", "parentPeriodId", "periodTypeId", "periodNum", "fromDate"]).queryList();
+context.allClosedCustomTimePeriods = allClosedCustomTimePeriods;
 
 periodTypes = from("PeriodType").orderBy("description").cache(true).queryList();
 context.periodTypes = periodTypes;

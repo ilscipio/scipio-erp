@@ -6484,6 +6484,14 @@
         <value xml:lang="en">Cannot find the origin shipping address for the supplier with ID ${supplierPartyId}; cannot calculate drop shipment estimate.</value>
     </property>
     <property key="shippingevents.problem_calculating_shipping">
+        <value xml:lang="de">Beim Berechnen des Versandes ist ein Problem aufgetreten.</value>
+        <value xml:lang="en">A problem occurred calculating shipping.</value>
+    </property>
+    <property key="shippingevents.problem_calculating_shipping_offline">
+        <value xml:lang="de">Beim Berechnen des Versandes ist ein Problem aufgetreten. Die Gebühren werden offline berechnet.</value>
+        <value xml:lang="en">A problem occurred calculating shipping. Fees will be calculated offline.</value>
+    </property>
+    <property key="shippingevents.problem_calculating_shipping_try_again">
         <value xml:lang="de">Beim Berechnen des Versandes ist ein Problem aufgetreten. Bitte versuche es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an den Support.</value>
         <value xml:lang="en">A problem occurred calculating shipping. Please try again. If the problem persists, please contact support.</value>
     </property>

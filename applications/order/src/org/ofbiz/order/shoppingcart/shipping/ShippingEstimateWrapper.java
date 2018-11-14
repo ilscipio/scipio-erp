@@ -60,7 +60,7 @@ public class ShippingEstimateWrapper {
 
     protected final Locale locale; // SCIPIO: 2018-11-09: Added locale
     protected final List<GenericValue> validShippingMethods; // SCIPIO: 2018-11-09
-    protected final boolean allowMissingEstimates; // SCIPIO
+    protected final boolean allowMissingShipEstimates; // SCIPIO
 
     public static ShippingEstimateWrapper getWrapper(LocalDispatcher dispatcher, ShoppingCart cart, int shipGroup) {
         return new ShippingEstimateWrapper(dispatcher, cart, shipGroup);
@@ -82,9 +82,7 @@ public class ShippingEstimateWrapper {
         this.supplierPartyId = cart.getSupplierPartyId(shipGroup);
         
         this.locale = cart.getLocale();
-        // SCIPIO: TODO
-        //this.allowMissingEstimates = cart.isAllowMissingShipEstimates();
-        this.allowMissingEstimates = false;
+        this.allowMissingShipEstimates = cart.isAllowMissingShipEstimates();
 
         List<GenericValue> shippingMethods = this.loadShippingMethods(); // SCIPIO: Locals
         Map<GenericValue, BigDecimal> shippingEstimates = this.loadEstimates(shippingMethods);
@@ -122,10 +120,11 @@ public class ShippingEstimateWrapper {
                 String productStoreShipMethId = shipMethod.getString("productStoreShipMethId");
                 String shippingCmId = shippingAddress != null ? shippingAddress.getString("contactMechId") : null;
 
-                // SCIPIO: 2018-11-09: Added locale
+                // SCIPIO: 2018-11-09: Added locale, allowMissingEstimates
                 Map<String, Object> estimateMap = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, locale, "SALES_ORDER",
                         shippingMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingCmId, productStoreId,
-                        supplierPartyId, shippableItemInfo, shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
+                        supplierPartyId, shippableItemInfo, shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId,
+                        allowMissingShipEstimates);
 
                 if (ServiceUtil.isSuccess(estimateMap)) {
                     BigDecimal shippingTotal = (BigDecimal) estimateMap.get("shippingTotal");
@@ -145,7 +144,7 @@ public class ShippingEstimateWrapper {
      * even if they missed estimates and this is not allowed; to get that behavior again,
      * use {@link #getAllShippingMethods()}.
      * <p>
-     * Largely depends on {@link #isAllowMissingEstimates()}.
+     * Largely depends on {@link #isAllowMissingShipEstimates()}.
      * <p>
      * Modified 2018-11-09.
      */
@@ -187,8 +186,8 @@ public class ShippingEstimateWrapper {
      * SCIPIO: If true, {@link #getShippingMethods()} will return methods
      * even if they returned no valid estimates.
      */
-    public boolean isAllowMissingEstimates() {
-        return allowMissingEstimates;
+    public boolean isAllowMissingShipEstimates() {
+        return allowMissingShipEstimates;
     }
 
     /**
@@ -196,7 +195,7 @@ public class ShippingEstimateWrapper {
      * Added 2018-11-09.
      */
     public boolean isValidShippingMethod(GenericValue storeCarrierShipMethod) {
-        if (isAllowMissingEstimates()) {
+        if (isAllowMissingShipEstimates()) {
             return shippingMethods.contains(storeCarrierShipMethod);
         } else {
             return isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
@@ -204,7 +203,7 @@ public class ShippingEstimateWrapper {
     }
 
     protected boolean isValidShippingMethodInternal(GenericValue storeCarrierShipMethod) { // same as isValidShippingMethod but assumes storeCarrierShipMethod part of store methods
-        if (isAllowMissingEstimates()) {
+        if (isAllowMissingShipEstimates()) {
             return true;
         } else {
             return isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);

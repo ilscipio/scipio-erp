@@ -201,6 +201,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     // SCIPIO: Cart item subscriptions
     protected Map<String, List<GenericValue>> cartSubscriptionItems = null;
+    protected boolean allowMissingShipEstimates = false; // SCIPIO: TODO
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -5563,5 +5564,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             return true;
         }
         return false;
+    }
+
+    /**
+     * SCIPIO: Returns true if should allow selecting ship method even if estimate was null ("calculated offline").
+     */
+    public boolean isAllowMissingShipEstimates() {
+        return allowMissingShipEstimates;
     }
 }

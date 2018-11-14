@@ -104,10 +104,11 @@ public class ShippingEvents {
 
         return getShipGroupEstimate(dispatcher, delegator, cart.getLocale(), cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, null, // SCIPIO: 2018-11-09: Added locale
                 cart.getShippingContactMechId(groupNo), cart.getProductStoreId(), cart.getSupplierPartyId(groupNo), cart.getShippableItemInfo(groupNo),
-                cart.getShippableWeight(groupNo), cart.getShippableQuantity(groupNo), cart.getShippableTotal(groupNo), cart.getPartyId(), productStoreShipMethId);
+                cart.getShippableWeight(groupNo), cart.getShippableQuantity(groupNo), cart.getShippableTotal(groupNo), cart.getPartyId(), productStoreShipMethId, cart.isAllowMissingShipEstimates());
     }
 
-    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, OrderReadHelper orh, String shipGroupSeqId) { // SCIPIO: 2018-11-09: Added locale
+    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, OrderReadHelper orh, String shipGroupSeqId,
+            boolean allowMissingShipEstimates) { // SCIPIO: 2018-11-09: Added locale, allowMissingShipEstimates
         // check for shippable items
         if (!orh.shippingApplies()) {
             Map<String, Object> responseResult = ServiceUtil.returnSuccess();
@@ -134,61 +135,61 @@ public class ShippingEvents {
         }
         return getShipGroupEstimate(dispatcher, delegator, locale, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId,
                 contactMechId, orh.getProductStoreId(), supplierPartyId, orh.getShippableItemInfo(shipGroupSeqId), orh.getShippableWeight(shipGroupSeqId),
-                orh.getShippableQuantity(shipGroupSeqId), orh.getShippableTotal(shipGroupSeqId), partyId, null);
+                orh.getShippableQuantity(shipGroupSeqId), orh.getShippableTotal(shipGroupSeqId), partyId, null, allowMissingShipEstimates);
     }
 
     /**
      * @deprecated SCIPIO: 2018-11-09: Use overload with Locale instead.
      */
     @Deprecated
-    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, OrderReadHelper orh, String shipGroupSeqId) { // SCIPIO: 2018-11-09: Added locale
-        return getShipEstimate(dispatcher, delegator, Locale.getDefault(), orh, shipGroupSeqId);
+    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, OrderReadHelper orh, String shipGroupSeqId) {
+        return getShipEstimate(dispatcher, delegator, Locale.getDefault(), orh, shipGroupSeqId, false);
     }
 
     // version with no support for using the supplier's address as the origin
-    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, String orderTypeId, // SCIPIO: 2018-11-09: Added locale, allowMissingShipEstimates
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
-            BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
+            BigDecimal shippableTotal, String partyId, String productStoreShipMethId, boolean allowMissingShipEstimates) {
         return getShipGroupEstimate(dispatcher, delegator, locale, orderTypeId, shipmentMethodTypeId, carrierPartyId,
                 carrierRoleTypeId, shippingContactMechId, productStoreId, null, itemInfo,
-                shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
+                shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId, allowMissingShipEstimates);
     }
 
     /**
      * @deprecated SCIPIO: 2018-11-09: Use overload with Locale instead.
      */
     @Deprecated
-    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId,
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
         return getShipGroupEstimate(dispatcher, delegator, Locale.getDefault(), orderTypeId, shipmentMethodTypeId, carrierPartyId,
                 carrierRoleTypeId, shippingContactMechId, productStoreId, null, itemInfo,
-                shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
+                shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId, false);
     }
 
     /**
      * @deprecated SCIPIO: 2018-11-09: Use overload with Locale instead.
      */
     @Deprecated
-    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId,
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, String supplierPartyId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
         return getShipGroupEstimate(dispatcher, delegator, Locale.getDefault(), orderTypeId, 
                 shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingContactMechId, 
                 productStoreId, supplierPartyId, itemInfo, shippableWeight, shippableQuantity, 
-                shippableTotal, partyId, productStoreShipMethId);
+                shippableTotal, partyId, productStoreShipMethId, false);
     }
 
-    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, String orderTypeId, // SCIPIO: 2018-11-09: Added locale, allowMissingShipEstimates
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, String supplierPartyId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
-            BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
+            BigDecimal shippableTotal, String partyId, String productStoreShipMethId, boolean allowMissingShipEstimates) {
         // SCIPIO: This message assumes too much about the caller's intentions. Leave out the second part.
         //String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
-        String standardMessage = UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping", locale);
+        //String standardMessage = UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping", locale);
         List<String> errorMessageList = new LinkedList<String>();
 
         if ("NO_SHIPPING".equals(shipmentMethodTypeId)) {
@@ -222,7 +223,7 @@ public class ShippingEvents {
                 }
                 shippingOriginContactMechId = originAddress.getString("contactMechId");
             } catch (GeneralException e) {
-                return ServiceUtil.returnError(standardMessage);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_try_again", locale));
             }
         }
 
@@ -283,9 +284,17 @@ public class ShippingEvents {
             //if (ServiceUtil.isFailure(e.getServiceResult())) {
             //    return ServiceUtil.returnFailure(standardMessage);
             //}
-            return ServiceUtil.returnError(standardMessage);
+            if (allowMissingShipEstimates) {
+                if (ServiceUtil.isFailure(e.getServiceResult())) {
+                    // TODO: REVIEW: here we can return either success or failure, for now return success for backward-compat...
+                    //return ServiceUtil.returnFailure(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", locale));
+                    Debug.logWarning(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", Locale.ENGLISH), module);
+                    return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", locale));
+                }
+            }
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_try_again", locale));
         } catch (GeneralException e) {
-            return ServiceUtil.returnError(standardMessage);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_try_again", locale));
         }
 
         // update the initial amount
@@ -307,9 +316,17 @@ public class ShippingEvents {
             //if (ServiceUtil.isFailure(e.getServiceResult())) {
             //    return ServiceUtil.returnFailure(standardMessage);
             //}
-            return ServiceUtil.returnError(standardMessage);
+            if (allowMissingShipEstimates) {
+                if (ServiceUtil.isFailure(e.getServiceResult())) {
+                    // TODO: REVIEW: here we can return either success or failure, for now return success for backward-compat...
+                    //return ServiceUtil.returnFailure(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", locale));
+                    Debug.logWarning(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", Locale.ENGLISH), module);
+                    return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", locale));
+                }
+            }
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_try_again", locale));
         } catch (GeneralException e) {
-            return ServiceUtil.returnError(standardMessage);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_try_again", locale));
         }
 
         // return the totals

@@ -1817,7 +1817,7 @@ public class OrderServices {
                     continue;
                 }
 
-                Map<String, Object> shippingEstMap = ShippingEvents.getShipEstimate(dispatcher, delegator, locale, orh, shipGroupSeqId); // SCIPIO: 2018-11-09: Added locale
+                Map<String, Object> shippingEstMap = ShippingEvents.getShipEstimate(dispatcher, delegator, locale, orh, shipGroupSeqId, false); // SCIPIO: 2018-11-09: Added locale
                 BigDecimal shippingTotal = null;
                 if (UtilValidate.isEmpty(orh.getValidOrderItems(shipGroupSeqId))) {
                     shippingTotal = ZERO;

@@ -25,6 +25,11 @@ code package.
         <param-name>mainDecoratorLocation</param-name>
         <param-value>component://order/widget/ordermgr/CommonScreens.xml</param-value>
     </context-param>
+    <context-param>
+        <description>SCIPIO: Whether shipping estimate selection should be allowed in the interface even if no estimate could be determined ("Calculated Offline") (default: false)</description>
+        <param-name>orderAllowMissingShipEstimates</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
     <filter>
         <display-name>ContextFilter</display-name>

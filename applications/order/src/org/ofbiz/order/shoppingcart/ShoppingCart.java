@@ -201,7 +201,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     // SCIPIO: Cart item subscriptions
     protected Map<String, List<GenericValue>> cartSubscriptionItems = null;
-    protected boolean allowMissingShipEstimates = false; // SCIPIO: TODO
+
+    protected boolean allowMissingShipEstimates = false; // SCIPIO: see WebShoppingCart for implementation
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -264,6 +265,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
         this.facilityId = cart.facilityId;
         this.webSiteId = cart.webSiteId;
+
+        this.allowMissingShipEstimates = cart.allowMissingShipEstimates; // SCIPIO
     }
 
     /** Creates new empty ShoppingCart object. */
@@ -5568,8 +5571,21 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /**
      * SCIPIO: Returns true if should allow selecting ship method even if estimate was null ("calculated offline").
+     * Default: false.
+     * See {@link WebShoppingCart} for how this is set.
+     * Added 2018-11-14.
      */
     public boolean isAllowMissingShipEstimates() {
         return allowMissingShipEstimates;
+    }
+
+    /**
+     * SCIPIO: Sets if should allow selecting ship method even if estimate was null ("calculated offline").
+     * Default: false.
+     * See {@link WebShoppingCart} for how this is set.
+     * Added 2018-11-14.
+     */
+    public void setAllowMissingShipEstimates(boolean allowMissingShipEstimates) {
+        this.allowMissingShipEstimates = allowMissingShipEstimates;
     }
 }

@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -38,6 +39,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 @SuppressWarnings("serial")
 public class WebShoppingCart extends ShoppingCart {
+
     public WebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
         // for purchase orders, bill to customer partyId must be set - otherwise, no way to know who we're purchasing for.  supplierPartyId is furnished
         // by order manager for PO entry.
@@ -52,6 +54,12 @@ public class WebShoppingCart extends ShoppingCart {
         this.userLogin = (GenericValue) session.getAttribute("userLogin");
         this.autoUserLogin = (GenericValue) session.getAttribute("autoUserLogin");
         this.orderPartyId = (String) session.getAttribute("orderPartyId");
+
+        // SCIPIO: Determine if allow ship estimates (WARN: do not determine this from request params; server-side info only!)
+        Boolean allowMissingShipEstimates = UtilMisc.booleanValue(request.getServletContext().getAttribute("orderAllowMissingShipEstimates"));
+        if (allowMissingShipEstimates != null) {
+            this.setAllowMissingShipEstimates(allowMissingShipEstimates);
+        }
     }
 
     public WebShoppingCart(HttpServletRequest request) {

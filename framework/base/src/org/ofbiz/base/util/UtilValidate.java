@@ -19,9 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.ofbiz.base.lang.IsEmpty;
@@ -967,8 +965,8 @@ public final class UtilValidate {
         String day;
         String year;
 
-        int dateSlash1 = date.indexOf("/");
-        int dateSlash2 = date.lastIndexOf("/");
+        int dateSlash1 = date.indexOf('/');
+        int dateSlash2 = date.lastIndexOf('/');
 
         if (dateSlash1 <= 0 || dateSlash1 == dateSlash2) {
             return false;
@@ -985,8 +983,8 @@ public final class UtilValidate {
         if (isEmpty(date)) {
             return defaultEmptyOK;
         }
-        int dateSlash1 = date.indexOf("/");
-        int dateSlash2 = date.lastIndexOf("/");
+        int dateSlash1 = date.indexOf('/');
+        int dateSlash2 = date.lastIndexOf('/');
 
         if (dateSlash1 <= 0) {
             return false;
@@ -1034,8 +1032,8 @@ public final class UtilValidate {
         if (isEmpty(date)) {
             return defaultEmptyOK;
         }
-        int dateSlash1 = date.indexOf("/");
-        int dateSlash2 = date.lastIndexOf("/");
+        int dateSlash1 = date.indexOf('/');
+        int dateSlash2 = date.lastIndexOf('/');
 
         if (dateSlash1 <= 0) {
             return defaultEmptyOK; // In this case an issue number has been provided (requires a javascript check in template!)
@@ -1341,15 +1339,14 @@ public final class UtilValidate {
         String first4digs = cc.substring(0, 4);
         String first6digs = cc.substring(0, 6);
 
+        // Scipio: Simplified if statement
+        String test4dg[] = { "4903", "4905", "4911", "4936", "6333","6759" };
+        Set<String> first4dgSet = new HashSet<String>(Arrays.asList(test4dg));
+        String test6dg[] = { "564182", "633110" };
+        Set<String> first6dgSet = new HashSet<String>(Arrays.asList(test6dg));
+
         if (((cc.length() == 16) || (cc.length() == 18) || (cc.length() == 19)) &&
-            ("4903".equals(first4digs) ||
-                "4905".equals(first4digs) ||
-                "4911".equals(first4digs) ||
-                "4936".equals(first4digs) ||
-                "564182".equals(first6digs) ||
-                "633110".equals(first6digs) ||
-                "6333".equals(first4digs) ||
-                "6759".equals(first4digs))) {
+            (first4dgSet.contains(first4digs) || first6dgSet.contains(first6digs))) {
             return isCreditCard(cc);
         }
         return false;
@@ -1377,13 +1374,13 @@ public final class UtilValidate {
         String first6digs = cc.substring(0, 6);
         String first4digs = cc.substring(0, 4);
 
-        if ((cc.length() == 16) &&
-            ("417500".equals(first6digs) ||
-                "4917".equals(first4digs) ||
-                "4913".equals(first4digs) ||
-                "4508".equals(first4digs) ||
-                "4844".equals(first4digs) ||
-                "4027".equals(first4digs))) {
+        // Scipio: Simplified if statement
+        String test4dg[] = { "4917", "4913", "4508", "4844", "4027" };
+        Set<String> first4dgSet = new HashSet<String>(Arrays.asList(test4dg));
+        String test6dg[] = { "417500"};
+        Set<String> first6dgSet = new HashSet<String>(Arrays.asList(test6dg));
+
+        if ((cc.length() == 16) && (first4dgSet.contains(first4digs) || first6dgSet.contains(first6digs))) {
             return isCreditCard(cc);
         }
         return false;

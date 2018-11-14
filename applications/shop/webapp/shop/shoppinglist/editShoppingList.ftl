@@ -1,21 +1,9 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
+<#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <@script>
     // function to add extra info for Timestamp format
@@ -292,11 +280,10 @@ under the License.
                           </#if>
                           ${shipMeth.description!}
                           <#if shippingEst?has_content>
-                            &nbsp;-&nbsp;
                             <#if (shippingEst > -1)>
-                              <@ofbizCurrency amount=shippingEst isoCode=listCart.getCurrency()/>
-                            <#else>
-                              ${uiLabelMap.OrderCalculatedOffline}
+                              &nbsp;-&nbsp;<@ofbizCurrency amount=shippingEst isoCode=listCart.getCurrency()/>
+                            <#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
+                              &nbsp;-&nbsp;${uiLabelMap.OrderCalculatedOffline}
                             </#if>
                           </#if>
                         </option>

@@ -39,7 +39,7 @@ import org.ofbiz.service.ServiceUtil;
 import com.ilscipio.scipio.ce.webapp.control.util.AccessTokenProvider;
 
 /**
- * ShippingEvents - Events used for processing shipping fees
+ * ShipmentEvents - Events used for processing shipping fees
  */
 public class ShipmentEvents {
 

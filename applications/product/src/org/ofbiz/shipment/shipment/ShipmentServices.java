@@ -255,12 +255,28 @@ public class ShipmentServices {
                     "ProductShipmentCostEstimateCannotRetrieve", locale));
         }
         if (estimates == null || estimates.size() < 1) {
-            if (initialEstimateAmt.compareTo(BigDecimal.ZERO) == 0) {
-                Debug.logWarning("No shipping estimates found; the shipping amount returned is 0! Condition used was: " + estFieldsCond + "; Using the passed context: " + context, module);
+            // SCIPIO: 2018-11-09: We must return null if no ShipmentCostEstimate records instead of ZERO so that
+            // caller is aware we got nothing (not appropriate to return failure because this is normal and don't want in logs)
+            // We will also only log warning if initialEstimateAmt was outright null (because shipping could theoretically be deemed free by other service and give 0$).
+//            if (initialEstimateAmt.compareTo(BigDecimal.ZERO) == 0) {
+//                Debug.logWarning("No shipping estimates found; the shipping amount returned is 0! Condition used was: " + estFieldsCond + "; Using the passed context: " + context, module);
+//            }
+//
+//            Map<String, Object> respNow = ServiceUtil.returnSuccess();
+//            respNow.put("shippingEstimateAmount", BigDecimal.ZERO);
+//            return respNow;
+            Map<String, Object> respNow = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "ProductShipmentCostEstimateCannotFoundForCarrier",
+                    UtilMisc.toMap("carrierPartyId", carrierPartyId, "shipmentMethodTypeId", shipmentMethodTypeId), locale));
+            if (context.get("initialEstimateAmt") == null) {
+                // SCIPIO: TODO: REVIEW: It is strange for this service to be responsible to print this warning, but no better alternative for now
+                Debug.logWarning("No entity ShipmentCostEstimate shipping estimates found for condition: " + estFieldsCond + "; using context: " + context, module);
+            } else {
+                // If we got a initialEstimateAmt (from external services), it is normal for there to be no ShipmentCostEstimate records, so verbose this
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("No entity ShipmentCostEstimate shipping estimates found for condition: " + estFieldsCond + "; using context: " + context, module);
+                }
             }
-
-            Map<String, Object> respNow = ServiceUtil.returnSuccess();
-            respNow.put("shippingEstimateAmount", BigDecimal.ZERO);
+            respNow.put("shippingEstimateAmount", null);
             return respNow;
         }
 

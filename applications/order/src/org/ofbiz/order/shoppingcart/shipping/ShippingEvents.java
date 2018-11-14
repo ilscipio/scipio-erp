@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -46,7 +48,7 @@ import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceErrorException;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -55,6 +57,7 @@ import org.ofbiz.service.ServiceUtil;
 public class ShippingEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final String resource_error = "OrderErrorUiLabels"; // SCIPIO
 
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
@@ -69,7 +72,9 @@ public class ShippingEvents {
             }
             Map<String, Object> result = getShipGroupEstimate(dispatcher, delegator, cart, i);
             ServiceUtil.getMessages(request, result, null, "", "", "", "", null, null);
-            if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+            // SCIPIO
+            //if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+            if (ServiceUtil.isError(result)) {
                 return "error";
             }
 
@@ -97,12 +102,12 @@ public class ShippingEvents {
         String carrierPartyId = cart.getCarrierPartyId(groupNo);
         String productStoreShipMethId = cart.getProductStoreShipMethId(groupNo);
 
-        return getShipGroupEstimate(dispatcher, delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, null,
+        return getShipGroupEstimate(dispatcher, delegator, cart.getLocale(), cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, null, // SCIPIO: 2018-11-09: Added locale
                 cart.getShippingContactMechId(groupNo), cart.getProductStoreId(), cart.getSupplierPartyId(groupNo), cart.getShippableItemInfo(groupNo),
                 cart.getShippableWeight(groupNo), cart.getShippableQuantity(groupNo), cart.getShippableTotal(groupNo), cart.getPartyId(), productStoreShipMethId);
     }
 
-    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, OrderReadHelper orh, String shipGroupSeqId) {
+    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, OrderReadHelper orh, String shipGroupSeqId) { // SCIPIO: 2018-11-09: Added locale
         // check for shippable items
         if (!orh.shippingApplies()) {
             Map<String, Object> responseResult = ServiceUtil.returnSuccess();
@@ -127,28 +132,63 @@ public class ShippingEvents {
         if (partyObject != null) {
              partyId = partyObject.getString("partyId");
         }
-        return getShipGroupEstimate(dispatcher, delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId,
+        return getShipGroupEstimate(dispatcher, delegator, locale, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId,
                 contactMechId, orh.getProductStoreId(), supplierPartyId, orh.getShippableItemInfo(shipGroupSeqId), orh.getShippableWeight(shipGroupSeqId),
                 orh.getShippableQuantity(shipGroupSeqId), orh.getShippableTotal(shipGroupSeqId), partyId, null);
     }
 
+    /**
+     * @deprecated SCIPIO: 2018-11-09: Use overload with Locale instead.
+     */
+    @Deprecated
+    public static Map<String, Object> getShipEstimate(LocalDispatcher dispatcher, Delegator delegator, OrderReadHelper orh, String shipGroupSeqId) { // SCIPIO: 2018-11-09: Added locale
+        return getShipEstimate(dispatcher, delegator, Locale.getDefault(), orh, shipGroupSeqId);
+    }
+
     // version with no support for using the supplier's address as the origin
-    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId,
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
-        return getShipGroupEstimate(dispatcher, delegator, orderTypeId, shipmentMethodTypeId, carrierPartyId,
+        return getShipGroupEstimate(dispatcher, delegator, locale, orderTypeId, shipmentMethodTypeId, carrierPartyId,
                 carrierRoleTypeId, shippingContactMechId, productStoreId, null, itemInfo,
-                shippableWeight, shippableQuantity, shippableTotal, partyId,productStoreShipMethId);
+                shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
     }
 
-    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId,
+    /**
+     * @deprecated SCIPIO: 2018-11-09: Use overload with Locale instead.
+     */
+    @Deprecated
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
+            String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
+            String productStoreId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
+            BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
+        return getShipGroupEstimate(dispatcher, delegator, Locale.getDefault(), orderTypeId, shipmentMethodTypeId, carrierPartyId,
+                carrierRoleTypeId, shippingContactMechId, productStoreId, null, itemInfo,
+                shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2018-11-09: Use overload with Locale instead.
+     */
+    @Deprecated
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
+            String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
+            String productStoreId, String supplierPartyId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
+            BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
+        return getShipGroupEstimate(dispatcher, delegator, Locale.getDefault(), orderTypeId, 
+                shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingContactMechId, 
+                productStoreId, supplierPartyId, itemInfo, shippableWeight, shippableQuantity, 
+                shippableTotal, partyId, productStoreShipMethId);
+    }
+
+    public static Map<String, Object> getShipGroupEstimate(LocalDispatcher dispatcher, Delegator delegator, Locale locale, String orderTypeId, // SCIPIO: 2018-11-09: Added locale
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, String supplierPartyId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
         // SCIPIO: This message assumes too much about the caller's intentions. Leave out the second part.
         //String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
-        String standardMessage = "A problem occurred calculating shipping.";
+        String standardMessage = UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping", locale);
         List<String> errorMessageList = new LinkedList<String>();
 
         if ("NO_SHIPPING".equals(shipmentMethodTypeId)) {
@@ -157,7 +197,9 @@ public class ShippingEvents {
 
         if (shipmentMethodTypeId == null || carrierPartyId == null) {
             if ("SALES_ORDER".equals(orderTypeId)) {
-                errorMessageList.add("Please Select Your Shipping Method.");
+                // SCIPIO
+                //errorMessageList.add("Please Select Your Shipping Method.");
+                errorMessageList.add(UtilProperties.getMessage(resource_error, "shippingevents.select_shipping_method", locale));
                 return ServiceUtil.returnError(errorMessageList);
             } else {
                 return ServiceUtil.returnSuccess();
@@ -174,7 +216,9 @@ public class ShippingEvents {
             try {
                 GenericValue originAddress = getShippingOriginContactMech(delegator, supplierPartyId);
                 if (originAddress == null) {
-                    return ServiceUtil.returnError("Cannot find the origin shipping address (SHIP_ORIG_LOCATION) for the supplier with ID ["+supplierPartyId+"].  Will not be able to calculate drop shipment estimate.");
+                    // SCIPIO
+                    //return ServiceUtil.returnError("Cannot find the origin shipping address (SHIP_ORIG_LOCATION) for the supplier with ID ["+supplierPartyId+"]. Will not be able to calculate drop shipment estimate.");
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "shippingevents.cannot_find_origin_ship_addr", UtilMisc.toMap("supplierPartyId", supplierPartyId), locale));
                 }
                 shippingOriginContactMechId = originAddress.getString("contactMechId");
             } catch (GeneralException e) {
@@ -194,12 +238,16 @@ public class ShippingEvents {
                 shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId);
 
         if (storeShipMethod == null) {
-            errorMessageList.add("No applicable shipment method found.");
+            // SCIPIO
+            //errorMessageList.add("No applicable shipment method found.");
+            errorMessageList.add(UtilProperties.getMessage(resource_error, "shippingevents.ship_meth_not_applicable", locale));
             return ServiceUtil.returnError(errorMessageList);
         }
 
         // the initial amount before manual estimates
-        BigDecimal shippingTotal = BigDecimal.ZERO;
+        // SCIPIO: 2018-11-09: Start with null, only return a number if got something usable
+        //BigDecimal shippingTotal = BigDecimal.ZERO;
+        BigDecimal shippingTotal = null;
 
         // prepare the service invocation fields
         Map<String, Object> serviceFields = new HashMap<String, Object>();
@@ -216,6 +264,7 @@ public class ShippingEvents {
         serviceFields.put("shippingOriginContactMechId", shippingOriginContactMechId);
         serviceFields.put("partyId", partyId);
         serviceFields.put("productStoreShipMethId", productStoreShipMethId);
+        serviceFields.put("locale", locale); // SCIPIO
 
         // call the external shipping service
         try {
@@ -224,8 +273,17 @@ public class ShippingEvents {
                 externalAmt = getExternalShipEstimate(dispatcher, storeShipMethod, serviceFields);
             }
             if (externalAmt != null) {
-                shippingTotal = shippingTotal.add(externalAmt);
+                shippingTotal = externalAmt;
             }
+        } catch (ServiceErrorException e) { // SCIPIO: Added 2018-11-12
+            // SCIPIO: TODO: REVIEW: For now, return failure as error...
+            // NOTE: The most important part in this case is that we return initialEstimateAmt null for failures,
+            // and DON'T run the generic ship estimate;
+            // secondarily, it _may_ be important in some cases that the caller aborts in this case...
+            //if (ServiceUtil.isFailure(e.getServiceResult())) {
+            //    return ServiceUtil.returnFailure(standardMessage);
+            //}
+            return ServiceUtil.returnError(standardMessage);
         } catch (GeneralException e) {
             return ServiceUtil.returnError(standardMessage);
         }
@@ -237,8 +295,19 @@ public class ShippingEvents {
         try {
             BigDecimal genericAmt = getGenericShipEstimate(dispatcher, storeShipMethod, serviceFields);
             if (genericAmt != null) {
-                shippingTotal = shippingTotal.add(genericAmt);
+                if (shippingTotal == null) { // SCIPIO: 2018-11-09
+                    shippingTotal = genericAmt;
+                } else {
+                    shippingTotal = shippingTotal.add(genericAmt);
+                }
             }
+        } catch (ServiceErrorException e) { // SCIPIO: Added 2018-11-12
+            // SCIPIO: TODO: REVIEW: For now, return failure as error...
+            // NOTE: The most important part in this case is that we return initialEstimateAmt null for failures, instead of zero.
+            //if (ServiceUtil.isFailure(e.getServiceResult())) {
+            //    return ServiceUtil.returnFailure(standardMessage);
+            //}
+            return ServiceUtil.returnError(standardMessage);
         } catch (GeneralException e) {
             return ServiceUtil.returnError(standardMessage);
         }
@@ -259,11 +328,21 @@ public class ShippingEvents {
             Debug.logError(e, "Shipment Service Error during calcShipmentCostEstimate (exception): " + e.getMessage(), module); // SCIPIO: show message!
             throw new GeneralException();
         }
-        if (ServiceUtil.isError(genericEstimate) || ServiceUtil.isFailure(genericEstimate)) {
-            Debug.logError(ServiceUtil.getErrorMessage(genericEstimate), module);
-            throw new GeneralException();
+        
+        // SCIPIO: 2018-11-09: Fixed:
+        // * First isFailure check caused exception throw
+        // * Second isFailure check was unreachable and should not be returning -1 (return null instead)
+        //if (ServiceUtil.isError(genericEstimate) || ServiceUtil.isFailure(genericEstimate)) {
+        if (ServiceUtil.isError(genericEstimate)) {
+            Debug.logError("Error getting generic shipment cost estimate: " + ServiceUtil.getErrorMessage(genericEstimate), module);
+            throw new ServiceErrorException(ServiceUtil.getErrorMessage(genericEstimate), genericEstimate); // SCIPIO: ServiceErrorException
         } else if (ServiceUtil.isFailure(genericEstimate)) {
-            genericShipAmt = BigDecimal.ONE.negate();
+            // SCIPIO: 2018-11-09: Don't return -1, this is not interpreted properly by callers!
+            //genericShipAmt = BigDecimal.ONE.negate();
+            // SCIPIO: 2018-11-12: We have to indicate to caller that a failure happened... so always DO throw an exception here
+            // DEV NOTE: DO NOT REMOVE THIS EXCEPTION - if problems, change the caller(s)!
+            Debug.logError("Failure getting generic shipment cost estimate: " + ServiceUtil.getErrorMessage(genericEstimate), module);
+            throw new ServiceErrorException(ServiceUtil.getErrorMessage(genericEstimate), genericEstimate);
         } else {
             genericShipAmt = (BigDecimal) genericEstimate.get("shippingEstimateAmount");
         }
@@ -320,7 +399,7 @@ public class ShippingEvents {
                 // invoke the service
                 Map<String, Object> serviceResp = null;
                 try {
-                    Debug.logInfo("Service : " + serviceName + " / shipmentGatewayConfigId : " + shipmentGatewayConfigId + " / configProps : " + configProps + " -- " + context, module);
+                    Debug.logInfo("Service: " + serviceName + " / shipmentGatewayConfigId : " + shipmentGatewayConfigId + " / configProps : " + configProps + " -- " + context, module);
                     // because we don't want to blow up too big or rollback the transaction when this happens, always have it run in its own transaction...
                     serviceResp = dispatcher.runSync(serviceName, context, 0, true);
                 } catch (GenericServiceException e) {
@@ -330,11 +409,14 @@ public class ShippingEvents {
                 if (ServiceUtil.isError(serviceResp)) {
                     String errMsg = "Error getting external shipment cost estimate: " + ServiceUtil.getErrorMessage(serviceResp);
                     Debug.logError(errMsg, module);
-                    throw new GeneralException(errMsg);
+                    throw new ServiceErrorException(errMsg, serviceResp); // SCIPIO: ServiceErrorException
                 } else if (ServiceUtil.isFailure(serviceResp)) {
                     String errMsg = "Failure getting external shipment cost estimate: " + ServiceUtil.getErrorMessage(serviceResp);
                     Debug.logError(errMsg, module);
-                    // should not throw an Exception here, otherwise getShipGroupEstimate would return an error, causing all sorts of services like add or update order item to abort
+                    // SCIPIO: 2018-11-12: We have to indicate to caller that a failure happened... so always DO throw an exception here
+                    // DEV NOTE: DO NOT REMOVE THIS EXCEPTION - if problems, change the caller(s)!
+                    //// should not throw an Exception here, otherwise getShipGroupEstimate would return an error, causing all sorts of services like add or update order item to abort
+                    throw new ServiceErrorException(errMsg, serviceResp);
                 } else {
                     externalShipAmt = (BigDecimal) serviceResp.get("shippingEstimateAmount");
                 }

@@ -23,14 +23,14 @@
     xmlns="http://docbook.org/ns/docbook">
     <title>Receiving Email.</title>
         <para>
-            OFBiz can receive email for multiple email addresses and via an MCA can create Communication events
+            Scipio can receive email for multiple email addresses and via an MCA can create Communication events
             for the involved parties of the email. Email attachments, via again the MCA are stored in the content component
             and can be accessed via the content Id. Examples of an MCA can be found in the Party and Content Component.
         </para>
         <para>
             To receive email a single POP/IMAP mailbox is polled at regular intervals. This is configured in the
             ${ofbiz install dir}/framework/base/config/ofbiz-containers.xml file. Any email address you want to be handled 
-            by OFBiz need to be forwarded to this single mailbox by an external mail server. OFBiz then will try to match the 
+            by Scipio need to be forwarded to this single mailbox by an external mail server. Scipio then will try to match the
             email addresses to existing parties and will create a single communication event referring to the found parties.
         </para>
         <para>

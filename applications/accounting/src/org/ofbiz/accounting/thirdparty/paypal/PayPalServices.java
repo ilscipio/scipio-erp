@@ -622,8 +622,12 @@ public class PayPalServices {
         cart.cleanUpShipGroups();
         cart.setAllShippingContactMechId(postalContactId);
         Map<String, Object> result = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, cart, 0);
-        if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
-            return ServiceUtil.returnError((String) result.get(ModelService.ERROR_MESSAGE));
+        // SCIPIO: bad check
+        //if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+        //    return ServiceUtil.returnError((String) result.get(ModelService.ERROR_MESSAGE));
+        //}
+        if (ServiceUtil.isError(result)) {
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
         }
 
         BigDecimal shippingTotal = (BigDecimal) result.get("shippingTotal");

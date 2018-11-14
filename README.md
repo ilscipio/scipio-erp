@@ -47,9 +47,10 @@ modern HTML frameworks.
   * Asset Maintenance
   * Catalog Management
   * Content Management
-  * Customer Relationship Management
+  * Customer Relationship Management (CRM)
   * Ecommerce
   * Human Resource Management
+  * Manufacturing Management
   * Order Management
   * User Management
   * Warehouse Management

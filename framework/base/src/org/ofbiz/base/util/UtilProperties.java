@@ -1038,6 +1038,14 @@ public final class UtilProperties implements Serializable {
             return "";
         }
 
+        if (locale == null) {
+            // SCIPIO: 2018-11-13: getResourceBundle throws exception if locale null.
+            // Locale should always be specified so it is an error, but we can log instead of crashing.
+            locale = Locale.getDefault();
+            Debug.logWarning("getMessage: locale (required) is null; using default (" + locale + "); label: " 
+                    + resource + "#" + name, module);
+        }
+
         ResourceBundle bundle = getResourceBundle(resource, locale);
 
         if (bundle == null) {

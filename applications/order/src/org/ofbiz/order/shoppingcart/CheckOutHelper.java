@@ -424,22 +424,29 @@ public class CheckOutHelper {
 
             // Recalc shipping costs before setting payment
             Map<String, Object> shipEstimateMap = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, cart, 0);
-            BigDecimal shippingTotal = (BigDecimal) shipEstimateMap.get("shippingTotal");
-            if (shippingTotal == null) {
-                shippingTotal = BigDecimal.ZERO;
+            
+            // SCIPIO: 2018-11-12: Make sure we got a valid estimate result (again), otherwise something is wrong here
+            if (ServiceUtil.isError(shipEstimateMap)) {
+                errMsg = UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                errorMessages.add(errMsg);
+            } else {
+                BigDecimal shippingTotal = (BigDecimal) shipEstimateMap.get("shippingTotal");
+                if (shippingTotal == null) {
+                    shippingTotal = BigDecimal.ZERO;
+                }
+                cart.setItemShipGroupEstimate(shippingTotal, 0);
+            
+                ProductPromoWorker.doPromotions(cart, dispatcher);
+    
+                //Recalc tax before setting payment
+                try {
+                    this.calcAndAddTax();
+                } catch (GeneralException e) {
+                    Debug.logError(e, module);
+                }
+                // set the payment method(s) option
+                errorMessages.addAll(setCheckOutPaymentInternal(selectedPaymentMethods, singleUsePayments, billingAccountId));
             }
-            cart.setItemShipGroupEstimate(shippingTotal, 0);
-            ProductPromoWorker.doPromotions(cart, dispatcher);
-
-            //Recalc tax before setting payment
-            try {
-                this.calcAndAddTax();
-            } catch (GeneralException e) {
-                Debug.logError(e, module);
-            }
-            // set the payment method(s) option
-            errorMessages.addAll(setCheckOutPaymentInternal(selectedPaymentMethods, singleUsePayments, billingAccountId));
-
         } else {
             errMsg = UtilProperties.getMessage(resource_error,"checkhelper.no_items_in_cart", (cart != null ? cart.getLocale() : Locale.getDefault()));
             errorMessages.add(errMsg);

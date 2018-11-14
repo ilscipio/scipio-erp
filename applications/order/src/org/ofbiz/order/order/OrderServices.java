@@ -1804,6 +1804,8 @@ public class OrderServices {
                     "OrderErrorNoValidOrderHeaderFoundForOrderId", UtilMisc.toMap("orderId",orderId), locale));
         }
 
+        List<String> estimateErrorMessageList = new ArrayList<>(); // SCIPIO
+        
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         List<GenericValue> shipGroups = orh.getOrderItemShipGroups();
         if (shipGroups != null) {
@@ -1815,7 +1817,7 @@ public class OrderServices {
                     continue;
                 }
 
-                Map<String, Object> shippingEstMap = ShippingEvents.getShipEstimate(dispatcher, delegator, orh, shipGroupSeqId);
+                Map<String, Object> shippingEstMap = ShippingEvents.getShipEstimate(dispatcher, delegator, locale, orh, shipGroupSeqId); // SCIPIO: 2018-11-09: Added locale
                 BigDecimal shippingTotal = null;
                 if (UtilValidate.isEmpty(orh.getValidOrderItems(shipGroupSeqId))) {
                     shippingTotal = ZERO;
@@ -1836,9 +1838,17 @@ public class OrderServices {
                     Debug.logInfo("Old Shipping Total [" + orderId + " / " + shipGroupSeqId + "] : " + currentShipping, module);
                 }
 
-                List<String> errorMessageList = UtilGenerics.checkList(shippingEstMap.get(ModelService.ERROR_MESSAGE_LIST));
-                if (errorMessageList != null) {
-                    Debug.logWarning("Problem finding shipping estimates for [" + orderId + "/ " + shipGroupSeqId + "] = " + errorMessageList, module);
+                // SCIPIO: 2018-11-12: Check for errors in standard way; in addition, treat errors getting ship estimates as a problem and return from this service
+                // TODO: REVIEW: should this return failure or error if an
+                //List<String> errorMessageList = UtilGenerics.checkList(shippingEstMap.get(ModelService.ERROR_MESSAGE_LIST));
+                //if (errorMessageList != null) {
+                //    Debug.logWarning("Problem finding shipping estimates for [" + orderId + "/ " + shipGroupSeqId + "] = " + errorMessageList, module);
+                //    continue;
+                //}
+                if (!ServiceUtil.isSuccess(shippingEstMap)) {
+                    final String errMsg = "recalcShippingTotal: Problem finding shipping estimates for [" + orderId + "/ " + shipGroupSeqId + "]: " + ServiceUtil.getErrorMessage(shippingEstMap);
+                    estimateErrorMessageList.add(errMsg);
+                    Debug.logError(errMsg, module);
                     continue;
                 }
 
@@ -1867,8 +1877,16 @@ public class OrderServices {
             }
         }
 
+        // SCIPIO: TODO: REVIEW: This should return failure or error, but may be dangerous because this is mainly called
+        // from the recalcShippingTotal seca on changeOrderItemStatus in sync mode with a slew of other changes
+        // So for now, make a clear error message here...
+        //return ServiceUtil.returnSuccess();
+        //return (estimateErrorMessageList.size() > 0) ? ServiceUtil.returnError(errorMessageList) : ServiceUtil.returnSuccess();
+        if (estimateErrorMessageList.size() > 0) {
+            Debug.logError("ERROR: recalcShippingTotal: There were " + estimateErrorMessageList.size() + " error(s) while re-evaluating shipping estimates"
+                    + " for order '" + orderId + "'; you may need to repeat this operation (recalcShippingTotal service or other) or fixup the order shipping manually", module);
+        }
         return ServiceUtil.returnSuccess();
-
     }
 
     /** Service for checking to see if an order is fully completed or canceled */

@@ -435,7 +435,7 @@ public final class FreeMarkerWorker {
         String locationProtocol = locationUrl.getProtocol();
         if ("file".equals(locationProtocol) && Debug.verboseOn()) {
             String locationFile = locationUrl.getFile();
-            int lastSlash = locationFile.lastIndexOf("/");
+            int lastSlash = locationFile.lastIndexOf('/');
             String locationDir = locationFile.substring(0, lastSlash);
             String filename = locationFile.substring(lastSlash + 1);
             Debug.logVerbose("FreeMarker render: filename=" + filename + ", locationDir=" + locationDir, module);

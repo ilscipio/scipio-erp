@@ -4051,6 +4051,17 @@ code package.
             <key-map field-name="productCategoryId"/>
         </relation>
     </entity>
+    <!-- SCIPIO: New fields (used by addons) -->
+    <extend-entity entity-name="TaxAuthorityRateProduct">
+        <field name="revenueGlAccountId" type="id"></field>
+        <field name="taxGlAccountId" type="id"></field>
+        <relation type="many" fk-name="TAXRATPR_REV_GLAC" rel-entity-name="GlAccount" title="Revenue">
+            <key-map field-name="revenueGlAccountId" rel-field-name="glAccountId"/>
+        </relation>
+        <relation type="many" fk-name="TAXRATPR_TAX_GLAC" rel-entity-name="GlAccount" title="Tax">
+            <key-map field-name="taxGlAccountId" rel-field-name="glAccountId"/>
+        </relation>
+    </extend-entity>
     <entity entity-name="TaxAuthorityRateType"
         package-name="org.ofbiz.accounting.tax"
         default-resource-name="AccountingEntityLabels"

@@ -87,6 +87,7 @@ under the License.
                 <entity-one entity-name="PaymentGatewayiDEAL" value-field="paymentGatewayiDEAL">
                     <field-map field-name="paymentGatewayConfigId" from-field="parameters.paymentGatewayConfigId"/>
                 </entity-one>
+                <script location="component://accounting/script/com/ilscipio/scipio/accounting/settings/PaymentGatewayConfig.groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
@@ -198,6 +199,29 @@ under the License.
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigiDEAL}">
                                     <include-form name="EditPaymentGatewayConfigiDEAL" location="component://accounting/widget/settings/PaymentGatewayConfigForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <!-- SCIPIO (11/14/2018): Added custom sections for PaymentGatewayConfigs that are defined from addons. 
+                            If the addons are not present they won't be available.
+                        -->
+                        <section>
+                            <condition>
+                                <not><if-empty field="paymentGatewayStripeRest"/></not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayStripeRest}">
+                                    <include-form name="EditPaymentGatewayStripeRest" location="component://stripe/widget/settings/PaymentGatewayConfigForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <not><if-empty field="paymentGatewayPayPalRest"/></not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayPayPalRest}">
+                                    <include-form name="EditPaymentGatewayPayPalRest" location="component://paypal/widget/settings/PaymentGatewayConfigForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>

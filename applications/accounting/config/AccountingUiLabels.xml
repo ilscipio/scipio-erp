@@ -24317,6 +24317,15 @@
         <value xml:lang="zh">更新Payflow Pro的支付网关配置</value>
         <value xml:lang="zh-TW">更新Payflow Pro的支付閘道配置</value>
     </property>
+    <property key="PageTitleUpdatePaymentGatewayConfigPayPalRest">
+        <value xml:lang="de">Bezahl-Schnittstelle PayPal REST aktualisieren</value>
+        <value xml:lang="en">Update Payment Gateway Config PayPal REST</value>
+        <value xml:lang="fr">Mise à jour de la configuration de l'interface de paiement PayPal REST</value>
+        <value xml:lang="hi-IN">भुगतान गेटवे विन्यास PayPal REST उन्नत करे</value>
+        <value xml:lang="it">Aggiorna configurazione gateway pagamento PayPal REST</value>
+        <value xml:lang="ja">PayPalREST支払ゲートウェイ設定を更新</value>
+        <value xml:lang="pt">Atualizar configuração do Gateway de Pagamento PayPal REST</value>
+    </property>
     <property key="PageTitleUpdatePaymentGatewayConfigSagePay">
         <value xml:lang="de">Bezahl-Schnittstelle SagePay aktualisieren</value>
         <value xml:lang="en">Update Payment Gateway Config SagePay</value>
@@ -24338,6 +24347,9 @@
         <value xml:lang="vi">Sửa đổi cấu hình Cổng thanh toán SecurePay</value>
         <value xml:lang="zh">更新SecurePay支付网关配置</value>
         <value xml:lang="zh-TW">更新SecurePay支付閘道配置</value>
+    </property>
+    <property key="PageTitleUpdatePaymentGatewayConfigStripeRest">
+        <value xml:lang="en">Update Payment Gateway Config Stripe</value>        
     </property>
     <property key="PageTitleUpdatePaymentGatewayConfigType">
         <value xml:lang="de">Bezahl-Schnittstellen-Typ aktualisieren</value>

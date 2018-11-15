@@ -121,7 +121,7 @@ code package.
                                    
                                             <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                                                 
-                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveItem}</a>
                                                   <#assign nestedFormMarkup>${nestedFormMarkup}
                                                     <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>

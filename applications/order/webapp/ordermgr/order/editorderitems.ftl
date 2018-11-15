@@ -17,6 +17,7 @@ code package.
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
+        <@menuitem type="link" href="javascript:document.updateItemInfo.submit()" text=uiLabelMap.OrderUpdateItems class="+${styles.action_run_sys!} ${styles.action_update!}"/>
         <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text=uiLabelMap.OrderCancelSelectedItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
         <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.submit()" text=uiLabelMap.OrderCancelAllItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
         <@menuitem type="link" href=makeOfbizUrl("orderview?${rawString(paramString)}") text=uiLabelMap.OrderViewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
@@ -383,14 +384,6 @@ code package.
                       
                       
                     </#if>
-                <@tr>
-                    <@td colspan="6">&nbsp;</@td>
-                    <@td>
-                        <@menu type="button">
-                          <@menuitem type="submit" text=uiLabelMap.OrderUpdateItems class="+${styles.action_run_sys!} ${styles.action_update!}"/>
-                        </@menu>
-                    </@td>
-                </@tr>
                     
                 </#list>
                 <@tr>

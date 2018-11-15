@@ -1,31 +1,14 @@
-How to use Janrain Engage Social Login.
-======================================
+# SCIPIO ERP - Default Shop
+This is the default shop component.
 
-1.Get API Key from http://www.janrain.com/products/engage/social-login.
-2.Configure file setting : ecommerce.properties you can put it 
-          Example:
-          --------------------------------------------------------------------------------
-            # -- Enable janrain engage (Y/ N) default N
-            janrain.enabled=N
-            
-            # -- Janrain api key (secret)
-            janrain.apiKey=exampleKey
-            
-            # -- Janrain application domain
-            janrain.baseUrl=https://example.rpxnow.com
-            
-            # -- Janrain application name
-            janrain.appName=exampleAppName
-          --------------------------------------------------------------------------------
-3.Restart the server.
+For your own customization efforts, we recommend the creation of a child component, which inherits all of the shop
+components features. This allows you to override all undesired aspects, insert new code and still remain compatible
+with future updates to the component.
 
+To create a child-component run from your scipio root directory:
 
-How to test Janrain Engage Social Login.
-=======================================
+```
+./ant create-component-shop-override
+```
 
-1. Go to Login screen.
-2. Look the Social Login Widget and you can use these existing accounts to sign-in to your website.
-3. First time if account does not exists then system will create new account.
-4. After account existing in the system you can use "Social Login Widget" to login account.
-
-===================================================================================================
+A new component will be created in the hot-deploy directory.

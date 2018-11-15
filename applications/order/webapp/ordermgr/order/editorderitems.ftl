@@ -336,7 +336,8 @@ code package.
                                     <@td>
                                       <@menu type="button">
                                         <#if itemSelectable>
-                                          <@menuitem type="link" href="javascript:document.updateItemInfo.action='${escapeFullUrl(makeOfbizUrl('cancelOrderItem'), 'js')}';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" text="${rawLabel('CommonCancel')} ${rawLabel('CommonItem')}" target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" />
+                                          <@menuitem type="link" href="javascript:document.updateItemInfo.action='${escapeFullUrl(makeOfbizUrl('cancelOrderItem'), 'js')}';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()"
+                                            text="${rawLabel('CommonCancel')} ${rawLabel('CommonItem')}" class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" /><#-- SCIPIO: removed: target="_orderImage" -->
                                         </#if>
                                       </@menu>
                                     </@td>

@@ -26,6 +26,8 @@ code package.
   </#macro>
   <@section title=uiLabelMap.OrderOrderItems menuContent=menuContent>
 
+    <#assign nestedFormMarkup></#assign><#-- SCIPIO: fix for bad nested html forms -->
+
         <#if !orderItemList?has_content>
             <@commonMsg type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@commonMsg>
         </#if>
@@ -120,11 +122,13 @@ code package.
                                             <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                                                 
                                                     <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
+                                                  <#assign nestedFormMarkup>${nestedFormMarkup}
                                                     <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
                                                         <input type="hidden" name="orderId" value="${orderId!}"/>
                                                         <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
                                                     </form>
+                                                  </#assign>
                                                 <br/>
                                             </#if>
                                   <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
@@ -543,6 +547,8 @@ code package.
                     <@td>&nbsp;</@td>
                 </@tr>
         </@table>
+        
+        ${nestedFormMarkup}<#-- SCIPIO -->
         
   </@section>
     

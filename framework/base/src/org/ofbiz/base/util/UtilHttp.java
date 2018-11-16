@@ -1616,4 +1616,30 @@ public final class UtilHttp {
      */
     private static final List<String> fullUrlPermPrefixes = makeFullUrlPermPrefixes();
 
+    /**
+     * SCIPIO: Returns all the [paramNameSuffix] suffixes from parameters named "[paramNamePrefix][paramNameSuffix]" for which
+     * the parameter value is in the specified values.
+     */
+    public static List<String> getParameterNamesWithValue(HttpServletRequest request, Collection<String> values, String paramNamePrefix) {
+        List<String> result = new ArrayList<>();
+        Enumeration<String> e = UtilGenerics.cast(request.getParameterNames());
+        if (paramNamePrefix == null) {
+            paramNamePrefix = "";
+        }
+        while (e.hasMoreElements()) {
+            String name = e.nextElement();
+            if (name.startsWith(paramNamePrefix) && values.contains(request.getParameter(name))) {
+                result.add(name.substring(paramNamePrefix.length()));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * SCIPIO: Returns all the [paramNameSuffix] suffixes from parameters named "[paramNamePrefix][paramNameSuffix]" for which
+     * the parameter value is in the specified values.
+     */
+    public static List<String> getParameterNamesWithValue(HttpServletRequest request, String value, String paramNamePrefix) {
+        return getParameterNamesWithValue(request, UtilMisc.toSet(value), paramNamePrefix);
+    }
 }

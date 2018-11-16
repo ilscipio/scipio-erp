@@ -30,6 +30,7 @@ shoppingCart = ShoppingCartEvents.getCartObject(request);
 // ----------------------------------
 if (context.checkoutType == "quick") {
     // SCIPIO: quickFinalizeOrder
+    checkoutSteps.add([label : "OrderOrderItems", uri : "orderentry", enabled : "Y"])
     checkoutSteps.add([label : "PageTitleCheckoutOptions", uri : "quickcheckout", enabled : "Y"])
     checkoutSteps.add([label : "OrderReviewOrder", uri : "checkout", enabled : "Y"])
 } else {

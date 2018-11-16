@@ -4,6 +4,8 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
+<#-- SCIPIO: OrderEntry Shipment method selection (full checkout) -->
+
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <#assign columns=6>
 
@@ -18,6 +20,7 @@ code package.
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
 
+<#assign chosenShippingMethod = "N@A"><#-- SCIPIO: Always reset vars -->
 <#if cart.getShipmentMethodTypeId(shipGroupIndex)?? && cart.getCarrierPartyId(shipGroupIndex)??>
     <#assign chosenShippingMethod = rawString(cart.getShipmentMethodTypeId(shipGroupIndex)) + '@' + rawString(cart.getCarrierPartyId(shipGroupIndex))>
 </#if>
@@ -46,7 +49,7 @@ code package.
                         </#if>
                       </#if>
                     </#assign>
-                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value=shippingMethod id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=wrapAsRaw(radioText, 'htmlmarkup') checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
+                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value=shippingMethod id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=wrapAsRaw(radioText, 'htmlmarkup') checked=(shippingMethod == chosenShippingMethod)/>                   
                 </#list>
                 <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                     <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value="Default" checked=true label=uiLabelMap.FacilityNoOtherShippingMethods/>

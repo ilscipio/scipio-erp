@@ -138,13 +138,15 @@ function submitForm(form, mode, value) {
 
     <@section title=shipping?then("2) ${rawLabel('OrderHowShallWeShipIt')}?", "2) ${rawLabel('OrderOptions')}?")>
         <@fields type="default-manual">
+        
                 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
                  <#if shipping == true>
+                  <#assign chosenShippingMethod = rawString(chosenShippingMethod!"N@A")>
                   <#list carrierShipmentMethodList as carrierShipmentMethod>
-                    <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
+                    <#assign shippingMethod = rawString(carrierShipmentMethod.shipmentMethodTypeId) + "@" + rawString(carrierShipmentMethod.partyId)>
                     <@tr>
                       <@td width="1%">
-                        <@field type="radio" name="shipping_method" value=shippingMethod checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>
+                        <@field type="radio" name="shipping_method" value=shippingMethod checked=(shippingMethod == chosenShippingMethod)/>
                       </@td>
                       <@td>
                           <#assign shippingEst = ""><#-- SCIPIO -->

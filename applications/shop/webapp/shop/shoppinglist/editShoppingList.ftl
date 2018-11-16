@@ -271,10 +271,11 @@ code package.
                   <select name="shippingMethodString">
                     <option value="">${uiLabelMap.OrderSelectShippingMethod}</option>
                     <#if carrierShipMethods?has_content>
+                      <#assign chosenShippingMethod = rawString(chosenShippingMethod!"N@A")>
                       <#list carrierShipMethods as shipMeth>
                         <#assign shippingEst = shippingEstWpr.getShippingEstimate(shipMeth)?default(-1)>
-                        <#assign shippingMethod = shipMeth.shipmentMethodTypeId + "@" + shipMeth.partyId>
-                        <option value="${shippingMethod}"<#if shippingMethod == chosenShippingMethod> selected="selected"</#if>>
+                        <#assign shippingMethod = rawString(shipMeth.shipmentMethodTypeId) + "@" + rawString(shipMeth.partyId)>
+                        <option value="${escapeVal(shippingMethod, 'html')}"<#if shippingMethod == chosenShippingMethod> selected="selected"</#if>>
                           <#if shipMeth.partyId != "_NA_">
                             ${shipMeth.partyId!}&nbsp;
                           </#if>

@@ -55,7 +55,9 @@ checkoutSteps.eachWithIndex { checkoutStep, i ->
         if (i == (checkoutSteps.size() - 1)) {
             isLastStep = "Y";
         }
-        if (stepLabelId.equals(checkoutStep.label)) {
+        // SCIPIO: NPE
+        //if (stepLabelId.equals(checkoutStep.label)) {
+        if (context.stepLabelId == checkoutStep.label) {
             enabled = "N";
         }
     }

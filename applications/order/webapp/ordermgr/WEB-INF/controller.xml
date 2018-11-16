@@ -189,14 +189,14 @@ code package.
     <request-map uri="cancelOrderItem">
         <security https="true" auth="true"/>
         <event type="service" invoke="cancelOrderItem"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="orderview"/>
+        <response name="success" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
+        <response name="error" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
     </request-map>
     <request-map uri="cancelSelectedOrderItems">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.order.OrderEvents" invoke="cancelSelectedOrderItems"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="orderview"/>
+        <response name="success" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
+        <response name="error" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
     </request-map>
     <request-map uri="createOrderAdjustment">
         <security https="true" auth="true"/>
@@ -365,7 +365,7 @@ code package.
     <request-map uri="updateOrderItems">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateOrderItems"/>
-        <response name="success" type="view" value="orderview"/>
+        <response name="success" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
         <response name="error" type="view" value="editorderitems"/>
     </request-map>
     <request-map uri="appendItemToOrder">

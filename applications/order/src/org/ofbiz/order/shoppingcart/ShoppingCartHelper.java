@@ -68,14 +68,16 @@ public class ShoppingCartHelper {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource_error = "OrderErrorUiLabels";
 
+    // SCIPIO: 2018-11: Fields now final.
+
     // The shopping cart to manipulate
-    private ShoppingCart cart = null;
+    private final ShoppingCart cart;
 
     // The entity engine delegator
-    private Delegator delegator = null;
+    private final Delegator delegator;
 
     // The service invoker
-    private LocalDispatcher dispatcher = null;
+    private final LocalDispatcher dispatcher;
 
     /**
      * Changes will be made to the cart directly, as opposed
@@ -85,12 +87,12 @@ public class ShoppingCartHelper {
      */
     public ShoppingCartHelper(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart) {
         this.dispatcher = dispatcher;
+        if (delegator == null) {
+            delegator = dispatcher.getDelegator();
+        }
         this.delegator = delegator;
         this.cart = cart;
 
-        if (delegator == null) {
-            this.delegator = dispatcher.getDelegator();
-        }
         if (dispatcher == null) {
             throw new IllegalArgumentException("Dispatcher argument is null");
         }

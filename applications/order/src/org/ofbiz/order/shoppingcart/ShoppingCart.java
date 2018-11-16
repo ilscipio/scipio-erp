@@ -267,6 +267,15 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.facilityId = cart.facilityId;
         this.webSiteId = cart.webSiteId;
 
+        // SCIPIO
+        Map<String, List<GenericValue>> cartSubscriptionItems = null;
+        if (cart.cartSubscriptionItems != null) {
+            cartSubscriptionItems = new HashMap<>();
+            for(Map.Entry<String, List<GenericValue>> entry : cart.cartSubscriptionItems.entrySet()) {
+                cartSubscriptionItems.put(entry.getKey(), (entry.getValue() != null) ? new ArrayList<>(entry.getValue()) : null);
+            }
+        }
+        this.cartSubscriptionItems = cartSubscriptionItems;
         this.allowMissingShipEstimates = cart.allowMissingShipEstimates; // SCIPIO
     }
 

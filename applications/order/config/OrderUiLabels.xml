@@ -2645,6 +2645,10 @@
         <value xml:lang="zh-CN">取消所有项目</value>
         <value xml:lang="zh-TW">取消全部細項</value>
     </property>
+    <property key="OrderCancelItemShipGroup">
+        <value xml:lang="de">Versandgruppe abbrechen</value>
+        <value xml:lang="en">Cancel Item Ship Group</value>
+    </property>
     <property key="OrderCancelledItemToOrder">
         <value xml:lang="ar">البند الملغى لأمر البيع\الشراء</value>
         <value xml:lang="de">Anullierter Artikel der Bestellung: </value>

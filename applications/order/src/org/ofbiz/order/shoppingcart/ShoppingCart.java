@@ -324,6 +324,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this(delegator, productStoreId, null, locale, currencyUom);
     }
 
+    /** SCIPIO: Performs a deep copy of the cart.
+     * Changes to this copy do not affect the main cart. Added 2018-11-16. */
+    public synchronized ShoppingCart copyCart() {
+        return new ShoppingCart(this);
+    }
+    
     public Delegator getDelegator() {
         if (delegator == null) {
             delegator = DelegatorFactory.getDelegator(delegatorName);

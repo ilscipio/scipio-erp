@@ -1031,6 +1031,18 @@ public class ShoppingCartEvents {
         return getCartObject(request, null, null);
     }
 
+    /** SCIPIO: Returns a deep copy of the main session cart (created if missing). 
+     * Changes to this copy do not affect the main cart. Added 2018-11-16. */
+    public static ShoppingCart getCartObjectCopy(HttpServletRequest request) {
+        return getCartObject(request, null, null).copyCart();
+    }
+
+    /** SCIPIO: Returns an atomic, read-only view of the main session cart (created if missing). 
+     * This cart instance should never be changed and contents are not changed by other threads. Added 2018-11-16. */
+    public static ShoppingCart getCartObjectReadOnly(HttpServletRequest request) {
+        return getCartObject(request, null, null).copyCart();
+    }
+
     public static String switchCurrentCartObject(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(true);
         String cartIndexStr = request.getParameter("cartIndex");

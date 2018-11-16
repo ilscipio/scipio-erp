@@ -70,4 +70,11 @@ public class WebShoppingCart extends ShoppingCart {
     public WebShoppingCart(ShoppingCart cart) {
         super(cart);
     }
+
+    /** SCIPIO: Performs a deep copy of the cart.
+     * Changes to this copy do not affect the main cart. Added 2018-11-16. */
+    @Override
+    public synchronized WebShoppingCart copyCart() {
+        return new WebShoppingCart(this);
+    }
 }

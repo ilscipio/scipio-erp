@@ -6,7 +6,7 @@ code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <simple-method method-name="updatePaymentGatewayConfig" short-description="Update Payment Gateway Config">
         <entity-one entity-name="PaymentGatewayConfig" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -14,61 +14,78 @@ code package.
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigSagePay" short-description="Update Payment Gateway Config SagePay">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>    
         <entity-one entity-name="PaymentGatewaySagePay" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigAuthorizeNet" short-description="Update Payment Gateway Config Authorize Dot Net">
+        <call-simple-method method-name="updatePaymentGatewayConfig" />
         <entity-one entity-name="PaymentGatewayAuthorizeNet" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigClearCommerce" short-description="Update Payment Gateway Config Clear Commerce">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>
         <entity-one entity-name="PaymentGatewayClearCommerce" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigCyberSource" short-description="Update Payment Gateway Config CyberSource">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>
         <entity-one entity-name="PaymentGatewayCyberSource" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigPayflowPro" short-description="Update Payment Gateway Config Payflow Pro">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>
         <entity-one entity-name="PaymentGatewayPayflowPro" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigPayPal" short-description="Update Payment Gateway Config PayPal">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>
         <entity-one entity-name="PaymentGatewayPayPal" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigWorldPay" short-description="Update Payment Gateway Config RBS WorldPay">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>
         <entity-one entity-name="PaymentGatewayWorldPay" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigType" short-description="Update Payment Gateway Config Type">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>
         <entity-one entity-name="PaymentGatewayConfigType" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigSecurePay" short-description="Update Payment Gateway Config SecurePay">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>
         <entity-one entity-name="PaymentGatewaySecurePay" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updatePaymentGatewayConfigiDEAL" short-description="Update Payment Gateway Config iDEAL">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>
         <entity-one entity-name="PaymentGatewayiDEAL" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="updatePaymentGatewayConfigOrbital" short-description="Update Payment Gateway Config Orbital">
+        <call-simple-method method-name="updatePaymentGatewayConfig"/>
+        <entity-one entity-name="PaymentGatewayOrbital" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>

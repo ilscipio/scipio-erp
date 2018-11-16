@@ -6,7 +6,7 @@ code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-screen.xsd">
 
     <screen name="FindPaymentGatewayConfig">
         <section>
@@ -44,6 +44,7 @@ code package.
                 
                 <set field="paymentGatewayConfigId" from-field="parameters.paymentGatewayConfigId"/>
                 <entity-one entity-name="PaymentGatewayConfig" value-field="paymentGatewayConfig"/>
+
                 <entity-one entity-name="PaymentGatewaySagePay" value-field="paymentGatewaySagePay">
                     <field-map field-name="paymentGatewayConfigId" from-field="parameters.paymentGatewayConfigId"/>
                 </entity-one>
@@ -74,34 +75,33 @@ code package.
                 <entity-one entity-name="PaymentGatewayiDEAL" value-field="paymentGatewayiDEAL">
                     <field-map field-name="paymentGatewayConfigId" from-field="parameters.paymentGatewayConfigId"/>
                 </entity-one>
+                <!-- SCIPIO (11/15/2018): Added missing orbital payment gateway config check -->
+                <entity-one entity-name="PaymentGatewayOrbital" value-field="paymentGatewayOrbital">
+                    <field-map field-name="paymentGatewayConfigId" from-field="parameters.paymentGatewayConfigId"/>
+                </entity-one>
+                <!-- SCIPIO (11/14/2018): Check if payment gateway configs from addons exist -->
                 <script location="component://accounting/script/com/ilscipio/scipio/accounting/settings/PaymentGatewayConfig.groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfig}">
+                        <!-- SCIPIO: (11/16/2018) Doesn't make any sense. This must me included in a single form -->
+                        <!-- <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfig}">
                             <include-form name="EditPaymentGatewayConfig" location="component://accounting/widget/settings/PaymentGatewayConfigForms.xml"/>
-                        </screenlet>
+                        </screenlet> -->
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewaySagePay"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="SAGEPAY_CONFIG"/>
                             </condition>
-                            <widgets>
-                                <container style="screenlet">
-                                    <container style="screenlet-title-bar">
-                                        <container>
-                                            <label text="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigSagePay}"/>
-                                        </container>
-                                    </container>
-                                    <container style="screenlet-body">
-                                        <include-form name="EditPaymentGatewayConfigSagePay" location="component://accounting/widget/settings/PaymentGatewayConfigForms.xml"/>
-                                    </container>
-                                </container>
+                            <widgets>    
+                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigSagePay}">
+                                    <include-form name="EditPaymentGatewayConfigSagePay" location="component://accounting/widget/settings/PaymentGatewayConfigForms.xml"/>
+                                </screenlet>
                             </widgets>
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayAuthorizeNet"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="AUTHORIZE_NET_CONFIG"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigAuthorizeNet}">
@@ -111,7 +111,7 @@ code package.
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayCyberSource"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="CYBERSOURCE_CONFIG"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigCyberSource}">
@@ -121,7 +121,7 @@ code package.
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayPayflowPro"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="PAYFLOWPRO_CONFIG"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigPayflowPro}">
@@ -131,7 +131,7 @@ code package.
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayPayPal"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="PAYPAL_CONFIG"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigPayPal}">
@@ -141,7 +141,7 @@ code package.
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayClearCommerce"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="CLEARCOMMERCE_CONFIG"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigClearCommerce}">
@@ -151,7 +151,7 @@ code package.
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayWorldPay"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="WORLDPAY_CONFIG"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigWorldPay}">
@@ -161,7 +161,7 @@ code package.
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewaySecurePay"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="SECUREPAY_CONFIG"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigSecurePay}">
@@ -171,7 +171,7 @@ code package.
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayEway"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="EWAY_CONFIG"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigEway}">
@@ -181,7 +181,7 @@ code package.
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayiDEAL"/></not>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="IDEAL_CONFIG"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigiDEAL}">
@@ -189,26 +189,44 @@ code package.
                                 </screenlet>
                             </widgets>
                         </section>
+                        <section>
+                            <condition>
+                                <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="ORBITAL_CONFIG"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigOrbital}">
+                                    <include-form name="EditPaymentGatewayConfigOrbital" location="component://accounting/widget/settings/PaymentGatewayConfigForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        
                         <!-- SCIPIO (11/14/2018): Added custom sections for PaymentGatewayConfigs that are defined from addons. 
                             If the addons are not present they won't be available.
                         -->
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayStripeRest"/></not>
+                                <and>
+                                    <not><if-empty field="paymentGatewayStripeRestModelEntity"/></not>
+                                    <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="PAYPAL_REST_CFG"/>
+                                </and>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayStripeRest}">
-                                    <include-form name="EditPaymentGatewayStripeRest" location="component://stripe/widget/settings/PaymentGatewayConfigForms.xml"/>
+                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayPayPalRest}">
+                                    <include-form name="EditPaymentGatewayPayPalRest" location="component://paypal/widget/settings/PaymentGatewayConfigForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
                         <section>
                             <condition>
-                                <not><if-empty field="paymentGatewayPayPalRest"/></not>
+                                <and>
+                                    <not><if-empty field="paymentGatewayPayPalRestModelEntity"/></not>
+                                    <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="STRIPE_REST_CFG"/>
+                                </and>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayPayPalRest}">
-                                    <include-form name="EditPaymentGatewayPayPalRest" location="component://paypal/widget/settings/PaymentGatewayConfigForms.xml"/>
+                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayStripelRest}">
+                                    <include-form name="EditPaymentGatewayStripeRest" location="component://stripe/widget/settings/PaymentGatewayConfigForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>

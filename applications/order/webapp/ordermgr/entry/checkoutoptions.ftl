@@ -107,10 +107,10 @@ function submitForm(form, mode, value) {
                      <#list shippingContactMechList as shippingContactMech>
                        <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                        <@tr>
-                         <@td valign="top" width="1%">
+                         <@td width="1%">
                            <@field type="radio" name="shipping_contact_mech_id" value=shippingAddress.contactMechId onClick="javascript:submitForm(document.checkoutInfoForm, 'SA', null);" checked=((shoppingCart.getShippingContactMechId()!"") == shippingAddress.contactMechId)/>
                          </@td>
-                         <@td valign="top" width="99%">
+                         <@td width="99%">
                              <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                              <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
                              <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
@@ -152,10 +152,10 @@ function submitForm(form, mode, value) {
                   <#list carrierShipmentMethodList as carrierShipmentMethod>
                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                     <@tr>
-                      <@td width="1%" valign="top">
+                      <@td width="1%">
                         <@field type="radio" name="shipping_method" value=shippingMethod checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>
                       </@td>
-                      <@td valign="top">
+                      <@td>
                           <#assign shippingEst = ""><#-- SCIPIO -->
                           <#if shoppingCart.getShippingContactMechId()??>
                             <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
@@ -167,10 +167,10 @@ function submitForm(form, mode, value) {
                   </#list>
                   <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                     <@tr>
-                      <@td width="1%" valign="top">
+                      <@td width="1%">
                         <@field type="radio" name="shipping_method" value="Default" checked=true/>
                       </@td>
-                      <@td valign="top">${uiLabelMap.OrderUseDefault}.</@td>
+                      <@td>${uiLabelMap.OrderUseDefault}.</@td>
                     </@tr>
                   </#if>
                   <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
@@ -180,16 +180,16 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                   <@tr>
-                    <@td valign="top">
+                    <@td>
                       <@field type="radio" checked=((shoppingCart.getMaySplit()!"N") == "N") name="may_split" value="false"/>
                     </@td>
-                    <@td valign="top">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</@td>
+                    <@td>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</@td>
                   </@tr>
                   <@tr>
-                    <@td valign="top">
+                    <@td>
                       <@field type="radio" name="may_split" value="true" checked=((shoppingCart.getMaySplit()!"N") == "Y")/>
                     </@td>
-                    <@td valign="top">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</@td>
+                    <@td>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</@td>
                   </@tr>
                   <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                  <#else>

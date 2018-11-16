@@ -285,7 +285,7 @@ function submitForm(form, mode, value) {
                     <@td width="1%">
                       <@field type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == checkOutPaymentId)/>
                     </@td>
-                    <@td width="50%">${uiLabelMap.OrderMoneyOrder}
+                    <@td width="50%">${uiLabelMap.OrderPaymentOfflineCheckMoney}
                     </@td>
                   </@tr>
                   </#if>

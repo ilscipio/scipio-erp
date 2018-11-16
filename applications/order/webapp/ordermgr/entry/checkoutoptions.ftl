@@ -4,11 +4,16 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
+<#-- SCIPIO: "Quick Finalize" / "One Page Checkout" template for order entry
+    This is the nearest equivalent of shop OnePageCheckout for orderentry.
+    NOTE: In the past this was shared by shop, but is no longer supported in shop in Scipio (OnePageCheckout superior). -->
+
 <@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
-        form.action="<@ofbizUrl>checkout</@ofbizUrl>";
+        <#-- SCIPIO: NOTE: ?checkoutType=quick is what makes the review page show the "quick" top menu instead of the full one -->
+        form.action="<@ofbizUrl>checkout?checkoutType=quick</@ofbizUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
@@ -64,17 +69,10 @@ function submitForm(form, mode, value) {
   <input type="hidden" name="checkoutpage" value="quick"/>
   <input type="hidden" name="BACK_PAGE" value="quickcheckout"/>
 
-    <#assign sectionTitle>
-      <#if shipping == true>
-        1) ${rawLabel('OrderWhereShallWeShipIt')}?
-      <#else>
-        ${rawLabel('OrderInformationAboutYou')}
-      </#if>
-    </#assign>
-    <@section title=sectionTitle>
+    <@section title=shipping?then("1) ${rawLabel('OrderWhereShallWeShipIt')}?", rawLabel('OrderInformationAboutYou'))>
         <@fields type="default-manual">
             <#-- SCIPIO: TODO: convert tables -->
-                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
+                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
                   <@tr>
                     <@td colspan="2">
                       <span>${uiLabelMap.OrderShipToParty}:</span>
@@ -92,7 +90,7 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                   <#if (shoppingCart.getTotalQuantity() > 1) && !shoppingCart.containAllWorkEffortCartItems()> <#-- no splitting when only rental items -->
-                    <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                    <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                     <@tr>
                       <@td colspan="2" align="center">
                         <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderSplitIntoMultipleShipments}</a>
@@ -103,7 +101,7 @@ function submitForm(form, mode, value) {
                     </@tr>
                   </#if>
                    <#if shippingContactMechList?has_content>
-                     <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                     <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                      <#list shippingContactMechList as shippingContactMech>
                        <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                        <@tr>
@@ -123,7 +121,7 @@ function submitForm(form, mode, value) {
                            </@td>
                        </@tr>
                        <#if shippingContactMech_has_next>
-                         <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                         <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                        </#if>
                      </#list>
                    </#if>
@@ -137,17 +135,10 @@ function submitForm(form, mode, value) {
                 -->
         </@fields>
     </@section>
-        
-    <#assign sectionTitle>
-        <#if shipping == true>
-            2) ${rawLabel('OrderHowShallWeShipIt')}?
-        <#else>
-            2) ${rawLabel('OrderOptions')}?
-        </#if>
-    </#assign>
-    <@section title=sectionTitle>
+
+    <@section title=shipping?then("2) ${rawLabel('OrderHowShallWeShipIt')}?", "2) ${rawLabel('OrderOptions')}?")>
         <@fields type="default-manual">
-                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
+                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
                  <#if shipping == true>
                   <#list carrierShipmentMethodList as carrierShipmentMethod>
                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
@@ -158,7 +149,7 @@ function submitForm(form, mode, value) {
                       <@td>
                           <#assign shippingEst = ""><#-- SCIPIO -->
                           <#if shoppingCart.getShippingContactMechId()??>
-                            <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
+                            <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)!-1>
                           </#if>
                           <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
                           <#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if></#if><#-- SCIPIO: NO_SHIPPING check -->
@@ -173,7 +164,7 @@ function submitForm(form, mode, value) {
                       <@td>${uiLabelMap.OrderUseDefault}.</@td>
                     </@tr>
                   </#if>
-                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                   <@tr>
                     <@td colspan="2">
                       <@heading>${uiLabelMap.OrderShipAllAtOnce}?</@heading>
@@ -191,7 +182,7 @@ function submitForm(form, mode, value) {
                     </@td>
                     <@td>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</@td>
                   </@tr>
-                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                  <#else>
                     <input type="hidden" name="shipping_method" value="NO_SHIPPING@_NA_"/>
                     <input type="hidden" name="may_split" value="false"/>
@@ -209,7 +200,7 @@ function submitForm(form, mode, value) {
                   </@tr>
                  <#if shipping == true>
                   <#if (productStore.showCheckoutGiftOptions!) != "N" && (giftEnable!) != "N">
-                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                   <@tr>
                     <@td colspan="2">
                         <span><b>${uiLabelMap.OrderIsThisGift}</b></span>
@@ -217,7 +208,7 @@ function submitForm(form, mode, value) {
                         <@field type="radio" checked=((shoppingCart.getIsGift()!"N") == "N") name="is_gift" value="false" label=uiLabelMap.CommonNo />
                       </@td>
                   </@tr>
-                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                   <@tr>
                     <@td colspan="2">
                       <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
@@ -232,7 +223,7 @@ function submitForm(form, mode, value) {
                   <input type="hidden" name="is_gift" value="false"/>
                   </#if>
                  </#if>
-                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                   <@tr>
                     <@td colspan="2">
                       <@heading>${uiLabelMap.PartyEmailAddresses}</@heading>
@@ -261,7 +252,7 @@ function submitForm(form, mode, value) {
 
     <@section title="3) ${rawLabel('OrderHowShallYouPay')}?">
         <@fields type="default-manual">
-                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="" -->
+                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
                   <@tr>
                     <@td colspan="2">
                       <span>${uiLabelMap.CommonAdd}:</span>
@@ -273,13 +264,13 @@ function submitForm(form, mode, value) {
                       </#if>
                     </@td>
                   </@tr>
-                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                   <@tr>
                     <@td colspan="2" align="center">
                       <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.AccountingSplitPayment}</a>
                     </@td>
                   </@tr>
-                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                   <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
                   <@tr>
                     <@td width="1%">
@@ -334,7 +325,7 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                   </#if>
-                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
 
                   <#-- financial accounts -->
                   <#list finAccounts as finAccount>
@@ -422,7 +413,7 @@ function submitForm(form, mode, value) {
                 <#-- special billing account functionality to allow use w/ a payment method -->
                 <#if productStorePaymentMethodTypeIdMap.EXT_BILLACT??>
                   <#if billingAccountList?has_content>
-                    <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                    <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                     <@tr>
                       <@td width="1%">
                         <@field type="select" name="billingAccountId">
@@ -450,7 +441,7 @@ function submitForm(form, mode, value) {
                 <#-- end of special billing account functionality -->
 
                 <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
+                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                   <@tr>
                     <@td width="1%">
                       <@field type="checkbox" name="addGiftCard" value="Y"/>
@@ -485,11 +476,13 @@ function submitForm(form, mode, value) {
             
 </form>
 
+<#-- SCIPIO: NOTE: we still need this because the page is long so it's too annoying for user to scroll way back up to click "continue" -->
 <@row>
   <@cell>
     <@menu type="button">
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text=uiLabelMap.OrderBacktoShoppingCart class="+${styles.action_nav!} ${styles.action_cancel!}" />
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text=uiLabelMap.OrderContinueToFinalOrderReview class="+${styles.action_run_session!} ${styles.action_continue!}" />
+      <#-- SCIPIO: I don't like this view-override
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text=uiLabelMap.OrderBacktoShoppingCart class="+${styles.action_nav!} ${styles.action_cancel!}" />-->
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}" /><#-- OrderContinueToFinalOrderReview -->
     </@menu>
   </@cell>
 </@row>

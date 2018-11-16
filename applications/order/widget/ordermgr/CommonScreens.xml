@@ -169,6 +169,7 @@ code package.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="orderentry"/>
+                <set field="checkoutType" from-field="checkoutType" default-value="${parameters.checkoutType}"/><!-- SCIPIO -->
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetCheckOutTabBar.groovy"/>
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.orderId}"/>

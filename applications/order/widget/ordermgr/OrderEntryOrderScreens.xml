@@ -12,16 +12,22 @@ code package.
         <section>
             <actions>
                 <set field="activeSubMenuItem" value="orderentry"/>
-                <set field="titleProperty" value="PageTitleCheckoutOptions"/>
+                <!--<set field="titleProperty" value="PageTitleCheckoutOptions"/>-->
+                <!--<set field="titleProperty" value="OrderQuickFinalizeOrder"/>-->
+                <set field="stepLabelId" value="PageTitleCheckoutOptions"/><!-- SCIPIO -->
+                <set field="stepTitleId" value="PageTitleCheckoutOptions"/><!-- SCIPIO -->
+                <set field="checkoutType" value="quick"/><!-- SCIPIO -->
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutPayment.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutOptions.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
                 <property-to-field resource="order" property="orderPreference.giftEnable" field="giftEnable" default="Y"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <!-- SCIPIO
+                <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">-->
+                <decorator-screen name="CommonOrderCheckoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="heading" text="${uiLabelMap.OrderQuickFinalizeOrder}"/>
+                        <!--<label style="heading" text="${uiLabelMap.OrderQuickFinalizeOrder}"/>-->
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutoptions.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>

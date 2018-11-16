@@ -2382,20 +2382,20 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     * @return
     */
     public int getItemShipGroupIndex(int itemId) {
-    int shipGroupIndex = this.getShipGroupSize() - 1;
-    ShoppingCartItem item = this.findCartItem(itemId);
-    int result=0;
-    for (int i = 0; i <(shipGroupIndex + 1); i++) {
-       CartShipInfo csi = this.getShipInfo(i);
-       Iterator<ShoppingCartItem> it = csi.shipItemInfo.keySet().iterator();
-        while (it.hasNext()) {
-            ShoppingCartItem item2 = it.next();
-            if (item.equals(item2) ) {
-                result = i;
+        int shipGroupIndex = this.getShipGroupSize() - 1;
+        ShoppingCartItem item = this.findCartItem(itemId);
+        int result=0;
+        for (int i = 0; i <(shipGroupIndex + 1); i++) {
+           CartShipInfo csi = this.getShipInfo(i);
+           Iterator<ShoppingCartItem> it = csi.shipItemInfo.keySet().iterator();
+            while (it.hasNext()) {
+                ShoppingCartItem item2 = it.next();
+                if (item.equals(item2) ) {
+                    result = i;
+                }
             }
         }
-    }
-    return result;
+        return result;
     }
 
     /** Sets the shipping contact mech id. */

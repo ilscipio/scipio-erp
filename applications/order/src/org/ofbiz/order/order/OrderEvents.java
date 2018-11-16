@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -35,6 +36,7 @@ import org.apache.commons.io.IOUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -102,12 +104,32 @@ public class OrderEvents {
         String  orderId = request.getParameter("orderId");
         String[] selectedItems = request.getParameterValues("selectedItem");
 
-        if (selectedItems != null) {
+        // SCIPIO: 2018-11: support alternative way to specify selectedItem
+        // WARN: security: selectedItemParamPrefix can only be used to extract parameters, NOT to extract request attribute values (future)
+        String selectedItemParamPrefix = request.getParameter("selectedItemParamPrefix");
+        if (UtilValidate.isNotEmpty(selectedItemParamPrefix)) {
+            List<String> selectedItemsList = UtilHttp.getParameterNamesWithValue(request, "Y", selectedItemParamPrefix);
+            selectedItems = selectedItemsList.toArray(new String[selectedItemsList.size()]);
+        }
+
+        if (UtilValidate.isNotEmpty(selectedItems)) { // SCIPIO: isNotEmpty instead of null check
             for (String selectedItem : selectedItems) {
                 String [] orderItemSeqIdAndOrderItemShipGrpId = selectedItem.split(":");
                 String orderItemSeqId = orderItemSeqIdAndOrderItemShipGrpId[0];
-                String shipGroupSeqId = orderItemSeqIdAndOrderItemShipGrpId[1];
-                BigDecimal cancelQuantity = new BigDecimal(request.getParameter("iqm_"+orderItemSeqId+":"+shipGroupSeqId));
+                // SCIPIO: make shipGroupSeqId optional
+                //String shipGroupSeqId = orderItemSeqIdAndOrderItemShipGrpId[1];
+                String shipGroupSeqId = (orderItemSeqIdAndOrderItemShipGrpId.length >= 2) ? orderItemSeqIdAndOrderItemShipGrpId[1] : null;
+
+                // SCIPIO: shipGroupSeqId and iqm_ parameter may be omitted for us, so this gave an NPE
+                //BigDecimal cancelQuantity = new BigDecimal(request.getParameter("iqm_"+orderItemSeqId+":"+shipGroupSeqId));
+                BigDecimal cancelQuantity = null;
+                if (UtilValidate.isNotEmpty(shipGroupSeqId)) {
+                    String iqmValue = request.getParameter("iqm_"+orderItemSeqId+":"+shipGroupSeqId);
+                    if (UtilValidate.isNotEmpty(iqmValue)) {
+                        cancelQuantity = new BigDecimal(iqmValue);
+                    }
+                }
+
                 Map<String, Object> contextMap = new HashMap<>();
                 contextMap.put("orderId", orderId);
                 contextMap.put("orderItemSeqId", orderItemSeqId);

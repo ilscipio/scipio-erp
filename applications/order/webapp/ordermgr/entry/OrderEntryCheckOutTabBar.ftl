@@ -10,7 +10,9 @@ code package.
 
 <@section title=rawLabel((shoppingCart.getOrderType() == "PURCHASE_ORDER")?then('OrderPurchaseOrder', 'OrderSalesOrder'))+": "+rawString(stepTitle!)>
     <@menu type="button">
-      <#list checkoutSteps?reverse as checkoutStep>
+      <#-- SCIPIO: Why reverse this? Silly
+      <#list checkoutSteps?reverse as checkoutStep>-->
+      <#list checkoutSteps as checkoutStep>
         <@menuitem type="link" href=makeOfbizUrl("${checkoutStep.uri}") text=uiLabelMap[checkoutStep.label] class="+${styles.action_nav!}" disabled=(checkoutStep.enabled == "N") />
       </#list>
 

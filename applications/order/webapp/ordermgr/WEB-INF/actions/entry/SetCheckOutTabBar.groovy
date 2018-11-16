@@ -42,7 +42,9 @@ if (context.checkoutType == "quick") {
     if (shoppingCart.getShipGroupSize() > 1) {
         checkoutSteps.add([label : "OrderShipGroups", uri : "SetItemShipGroups", enabled : "Y"])
     }
-    checkoutSteps.add([label : "CommonOptions", uri : "setOptions", enabled : "Y"])
+    // SCIPIO: better label
+    //checkoutSteps.add([label : "CommonOptions", uri : "setOptions", enabled : "Y"])
+    checkoutSteps.add([label : "OrderShippingOptions", uri : "setOptions", enabled : "Y"])
     if ("SALES_ORDER".equals(shoppingCart.getOrderType())) {
         checkoutSteps.add([label : "OrderOrderTerms", uri : "setOrderTerm", enabled : "Y"])
         checkoutSteps.add([label : "AccountingPayment", uri : "setBilling", enabled : "Y"])

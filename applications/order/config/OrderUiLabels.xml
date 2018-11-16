@@ -13892,6 +13892,24 @@
         <value xml:lang="zh">送货便笺</value>
         <value xml:lang="zh-TW">遞送便箋</value>
     </property>
+    <property key="OrderShippingOptions">
+        <value xml:lang="da">Forsendelses muligheder</value>
+        <value xml:lang="de">Versand Einstellungen</value>
+        <value xml:lang="en">Shipping Options</value>
+        <value xml:lang="es">Opciones de envío</value>
+        <value xml:lang="fr">Options d'expédition</value>
+        <value xml:lang="hi-IN">भेजने के उपाय</value>
+        <value xml:lang="it">Opzioni di spedizione</value>
+        <value xml:lang="ja">発送オプション</value>
+        <value xml:lang="nl">Verzendopties</value>
+        <value xml:lang="pt-BR">Opções de envio</value>
+        <value xml:lang="ro">Optiuni Expediere </value>
+        <value xml:lang="ru">Параметры поставки</value>
+        <value xml:lang="th">ลักษณะการขนส่ง</value>
+        <value xml:lang="vi">Tùy chọn giao hàng</value>
+        <value xml:lang="zh">送货选项</value>
+        <value xml:lang="zh-TW">送貨選項</value>
+    </property>
     <property key="OrderShippmentDateHope">
         <value xml:lang="ar">تاريخ الشحن المرغوب</value>
         <value xml:lang="de">Erhofftes Versanddatum</value>

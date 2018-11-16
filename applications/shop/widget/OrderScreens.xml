@@ -340,7 +340,8 @@ code package.
         </section>
     </screen>
 
-    <!-- SCIPIO: NOTE: This is the "quick" checkout, currently unsupported and unmaintained
+    <!-- SCIPIO: DEPRECATED (REMOVED): This is the "quick" checkout, currently unsupported and unmaintained;
+        OnePageCheckout is the one you want.
         Leave for reference (if need to prevent access, comment controller view-map instead) -->
     <screen name="checkoutoptions">
         <section>
@@ -358,7 +359,9 @@ code package.
             <widgets>
                 <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutoptions.ftl"/></html></platform-specific>
+                        <!-- SCIPIO: 2018-11: REMOVED: the file pointed to here is now geared to orderentry only, so if you use this for some reason, you'll
+                            have to copy and modify it (possibly use an old copy from project history)
+                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutoptions.ftl"/></html></platform-specific>-->
                     </decorator-section>
                 </decorator-screen>
             </widgets>

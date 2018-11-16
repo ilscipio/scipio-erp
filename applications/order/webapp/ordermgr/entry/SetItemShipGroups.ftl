@@ -12,26 +12,26 @@ code package.
   <@section>
         <#list 1..shoppingCart.getShipGroupSize() as currIndex>
           <#assign shipGroupIndex = currIndex - 1>
-          <#assign supplier =  delegator.findOne("PartyGroup", {"partyId":shoppingCart.getSupplierPartyId(shipGroupIndex)}, false)! />
+          <#assign supplier = delegator.findOne("PartyGroup", {"partyId":shoppingCart.getSupplierPartyId(shipGroupIndex)!}, false)! />
           <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${rawLabel('OrderDropShipped')} - ${rawString(supplier.groupName!supplier.partyId)}</#if></#assign>
           <@section title=sectionTitle>
             <@row>
               <@cell>
                 <form method="post" action="<@ofbizUrl>assignItemToShipGroups</@ofbizUrl>" name="assignitemtoshipgroup${shipGroupIndex}">
                   <input type="hidden" name="_useRowSubmit" value="N" />
-                <@table type="data-list"> <#-- orig: class="basic-table" -->
+                <@table type="data-list">
                   <@thead>
                     <@tr>
-                      <@th>
+                      <@th width="40%">
                         ${uiLabelMap.ProductProduct}
                       </@th>
-                      <@th>
+                      <@th width="20%">
                         ${uiLabelMap.CommonQuantity}
                       </@th>
-                      <@th>
+                      <@th width="20%">
                         ${uiLabelMap.ProductMoveQuantity}
                       </@th>
-                      <@th>
+                      <@th width="20%">
                         ${uiLabelMap.OrderShipGroupTo}
                       </@th>
                     </@tr>

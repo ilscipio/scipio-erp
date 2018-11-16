@@ -2079,6 +2079,9 @@ public class OrderServices {
                     "OrderErrorCannotGetOrderItemAssocEntity", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
         }
 
+        // SCIPIO: TODO: REVIEW: orderItemShipGroupAssocs is never null here, it will be an empty list;
+        // for now this is GOOD because the service will not fail if the item exists but had no ship groups;
+        // just in case, commented the error message further below...
         if (orderItemShipGroupAssocs != null) {
             for (GenericValue orderItemShipGroupAssoc : orderItemShipGroupAssocs) {
                 GenericValue orderItem = null;
@@ -2248,8 +2251,9 @@ public class OrderServices {
                 }
             }
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-                    "OrderErrorCannotCancelItemItemNotFound", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
+            // SCIPIO: never reached due to null check always true; but we don't want this anyway!
+            //return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+            //        "OrderErrorCannotCancelItemItemNotFound", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
         }
 
         // SCIPIO: Return a basic success message if it worked

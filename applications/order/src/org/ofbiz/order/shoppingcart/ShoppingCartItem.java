@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -139,9 +138,11 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Timestamp estimatedShipDate = null;
     private Timestamp cancelBackOrderDate = null;
 
+    // SCIPIO: Changed all LinkedList to ArrayList
+
     private Map<String, String> contactMechIdsMap = new HashMap<>();
     private List<GenericValue> orderItemPriceInfos = null;
-    private List<GenericValue> itemAdjustments = new LinkedList<>();
+    private List<GenericValue> itemAdjustments = new ArrayList<>();
     private boolean isPromo = false;
     private BigDecimal promoQuantityUsed = BigDecimal.ZERO;
     private Map<GenericPK, BigDecimal> quantityUsedPerPromoCandidate = new HashMap<>();
@@ -150,7 +151,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map<String, GenericValue> additionalProductFeatureAndAppls = new HashMap<>();
     private List<String> alternativeOptionProductIds = null;
     private ProductConfigWrapper configWrapper = null;
-    private List<GenericValue> featuresForSupplier = new LinkedList<>();
+    private List<GenericValue> featuresForSupplier = new ArrayList<>();
 
     /**
      * SCIPIO: A parameter structure to help manage new options to the extremely
@@ -789,7 +790,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.setEstimatedShipDate(item.getEstimatedShipDate());
         this.setCancelBackOrderDate(item.getCancelBackOrderDate());
         this.contactMechIdsMap = item.getOrderItemContactMechIds() == null ? null : new HashMap<>(item.getOrderItemContactMechIds());
-        this.orderItemPriceInfos = item.getOrderItemPriceInfos() == null ? null : new LinkedList<>(item.getOrderItemPriceInfos());
+        this.orderItemPriceInfos = item.getOrderItemPriceInfos() == null ? null : new ArrayList<>(item.getOrderItemPriceInfos());
         this.itemAdjustments.addAll(item.getAdjustments());
         this.isPromo = item.getIsPromo();
         this.promoQuantityUsed = item.promoQuantityUsed;
@@ -799,7 +800,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
                 null : new HashMap<>(item.getAdditionalProductFeatureAndAppls());
         if (item.getAlternativeOptionProductIds() != null) {
-            List<String> tempAlternativeOptionProductIds = new LinkedList<>();
+            List<String> tempAlternativeOptionProductIds = new ArrayList<>();
             tempAlternativeOptionProductIds.addAll(item.getAlternativeOptionProductIds());
             this.setAlternativeOptionProductIds(tempAlternativeOptionProductIds);
         }

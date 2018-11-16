@@ -23,7 +23,8 @@ code package.
     <#assign sectionTitle>${rawLabel('OrderSalesOrder')}<#if shoppingCart??> ${rawLabel('OrderInProgress')}</#if></#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
+        <#-- SCIPIO: 2018-11: now redundant, just click magnifying glass on fields
+        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
         <@menuitem type="link" href="javascript:document.salesentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
       </@menu>
     </#macro>
@@ -72,7 +73,8 @@ code package.
     <#assign sectionTitle>${rawLabel('OrderPurchaseOrder')}<#if shoppingCart??> ${rawLabel('OrderInProgress')}</#if></#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
+        <#-- SCIPIO: 2018-11: now redundant, just click magnifying glass on fields
+        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
         <@menuitem type="link" href="javascript:document.poentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}" />
       </@menu>
     </#macro>

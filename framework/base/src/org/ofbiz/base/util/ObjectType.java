@@ -19,6 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -862,6 +863,10 @@ public class ObjectType {
         }
         if (value instanceof java.util.Date) {
             return false;
+        }
+        // SCIPIO: Check array length
+        if (value.getClass().isArray()) {
+            return Array.getLength(value) == 0;
         }
 
         if (Debug.verboseOn()) {

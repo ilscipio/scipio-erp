@@ -16,7 +16,7 @@ standard order confirmation page and to be re-usable by other screens.
 <#if cart??>
   <@section title=uiLabelMap.OrderShippingInformation>
     <#-- DEV NOTE: FIXME? responsive=true here causes jquery crash... -->
-    <@table type="data-complex"> <#-- orig: class="basic-table" -->
+    <@table type="data-complex">
 
       <#-- header -->
       <@thead>

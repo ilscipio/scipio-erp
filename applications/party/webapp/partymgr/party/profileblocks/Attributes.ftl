@@ -13,7 +13,7 @@ code package.
   </#macro>
   <@section id="partyAttributes" title=uiLabelMap.PartyAttributes menuContent=menuContent>
       <#if attributes?has_content>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.CommonName}</@th>

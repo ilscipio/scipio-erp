@@ -8,7 +8,7 @@ code package.
     
 
     <@section>
-        <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" autoAltRows=false>
             <@thead>
                 <@tr>
                     <@th>${uiLabelMap.ProductPackage}</@th>
@@ -122,7 +122,7 @@ code package.
                 </@section>
                 <#-- -->
 
-                <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-complex" autoAltRows=true>
                     <@thead>
                         <@tr>
                             <@th>${uiLabelMap.ProductItem}</@th>

@@ -6,7 +6,7 @@ code package.
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
 <@section title=uiLabelMap.ProductSerializedInventorySummary id="serialized-inventory-summary">
-    <@table type="data-list"> <#-- orig: width="100%" cellspacing="0" cellpadding="2" -->
+    <@table type="data-list">
         <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductInventoryItemId}</@th>

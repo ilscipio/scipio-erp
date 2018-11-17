@@ -30,7 +30,7 @@ code package.
   <#if orderList?has_content && productId??>
   <#-- forcePost required because search done from service event with https="true" -->
   <@paginate mode="content" url=makeOfbizUrl("viewProductOrder") paramStr=paramList viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=orderListSize!0 altParam=true viewIndexFirst=1 forcePost=true>
-    <@table type="data-list"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.OrderOrderId}</@th>

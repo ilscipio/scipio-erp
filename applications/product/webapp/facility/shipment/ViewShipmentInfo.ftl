@@ -5,7 +5,7 @@ code package.
 -->
 <#if shipment??>
 <@section title=uiLabelMap.PageTitleViewShipment>
-        <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" --> <#-- orig: border="0" -->
+        <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.ProductShipmentId}</@td>
             <@td width="80%">${shipment.shipmentId}</@td>

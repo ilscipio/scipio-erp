@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section title="${rawLabel('OrderOrderQuoteId')} ${rawString(quote.quoteId)} ${rawLabel('CommonInformation')}">
-        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="fields">
             <#-- quote header information -->
             <@tr>
                 <@td align="right" valign="top" width="20%">

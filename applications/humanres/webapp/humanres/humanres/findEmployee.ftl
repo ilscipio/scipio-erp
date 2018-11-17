@@ -95,7 +95,7 @@ code package.
     <#if partyList?has_content>
       <#assign paramStr = addParamsToStr(rawString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&", false)>
       <@paginate mode="content" url=makeOfbizUrl("findEmployees") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.PartyName}</@th>

@@ -53,7 +53,7 @@ function call_fieldlookup3(view_name) {
 <@section>
   <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
   <@fields type="default-manual">
-      <@table type="data-list" class="+${styles.table_spacing_small_hint!}"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="4" --> <#-- orig: border="0" --> <#-- orig: width="100%" -->
+      <@table type="data-list" class="+${styles.table_spacing_small_hint!}">
         <@tr>
             <@td>${uiLabelMap.ContentWebSite}</@td>
             <#list blogRoleIdList as roleTypeId>

@@ -38,7 +38,7 @@ code package.
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
-            <@table type="data-complex"> <#-- orig: cellspacing="0" -->
+            <@table type="data-complex">
             <@tbody>
             <#assign hasCurrent = false>
             <#if curPostalAddress?has_content>

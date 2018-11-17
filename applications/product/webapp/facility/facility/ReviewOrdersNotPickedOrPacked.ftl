@@ -6,7 +6,7 @@ code package.
 
 <@section title=uiLabelMap.OrderOrderList>
       <#if orders?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-list">
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.OrderOrderId}</@th>

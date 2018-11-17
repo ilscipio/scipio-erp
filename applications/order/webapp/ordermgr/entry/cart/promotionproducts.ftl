@@ -15,7 +15,7 @@ code package.
     </#if>
 
     <#if (listSize > 0)>
-      <@table type="data-list" autoAltRows=false width="100%" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
+      <@table type="data-list" autoAltRows=false width="100%" class="+boxbottom">
         <@thead>
           <@tr>
             <@td>${uiLabelMap.CommonQualifier}</@td>

@@ -82,7 +82,7 @@ function setAlternateGwp(field) {
     <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
     <@fields fieldArgs={"checkboxType":"simple-standard"}><#-- TODO: type="..." -->
       <input type="hidden" name="removeSelected" value="false" />
-        <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" role="grid">
             <@thead>
                 <@tr valign="bottom" class="header-row">
                     <@th width="25%">${uiLabelMap.ProductProduct}</@th>

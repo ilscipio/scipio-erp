@@ -5,7 +5,7 @@ code package.
 -->
 
 <@section title="${rawLabel('OrderRequest')} ${rawString(custRequest.custRequestId)} ${rawLabel('CommonInformation')}">
-        <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="generic" class="${styles.table_basic!}" cellspacing="0">
             <#-- request header information -->
             <@tr>
                 <@td align="right" valign="top" width="15%" class="label">

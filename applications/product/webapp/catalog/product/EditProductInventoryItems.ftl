@@ -20,7 +20,7 @@ code package.
 <@section title=sectionTitle menuContent=menuContent>
   <#if product??>
         <#if productId??>
-          <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+          <@table type="data-list" autoAltRows=true>
             <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.ProductItemId}</@th>

@@ -268,7 +268,7 @@ ${virtualJavaScript!}
 
 <div id="productdetail">
 
-<@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" --> <#-- orig: border="0" -->
+<@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%">
   <#-- Category next/previous -->
   <#if category??>
     <@tr>
@@ -584,7 +584,7 @@ ${virtualJavaScript!}
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
         <p>&nbsp;</p>
-        <@table type="data-complex"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
+        <@table type="data-complex">
           <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>

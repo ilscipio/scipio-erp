@@ -35,7 +35,7 @@ code package.
         
         <#-- SCIPIO: FIXME: this whole template is full of forms inside table elems = invalid HTML -->
         
-        <@table type="data-complex" class="+order-items"> <#-- orig: class="basic-table order-items" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" class="+order-items">
 
         <#if orderItemList?has_content>
             <form name="updateItemInfo" method="post" action="<@ofbizUrl>updateOrderItems</@ofbizUrl>">
@@ -174,7 +174,7 @@ code package.
                                   <#assign remainingQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)) - shippedQuantity?double)>
                                 </#if>
                                 <@modal id="${productId}_q" label=orderItem.quantity?default(0)?string.number>    
-                                            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                                            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
                                                 <@tr valign="top">
                                                     
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>

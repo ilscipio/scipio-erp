@@ -19,7 +19,7 @@ code package.
       <input type="hidden" name="hasAgreements" value="N"/>
     </#if>
     
-    <@table type="fields"> <#-- orig: class="basic-table" -->
+    <@table type="fields">
       <#if agreements??>     
       <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
             <option value="">${uiLabelMap.CommonNone}</option>

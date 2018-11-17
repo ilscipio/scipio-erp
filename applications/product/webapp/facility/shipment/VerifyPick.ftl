@@ -129,7 +129,7 @@ code package.
                     <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
                     <input type="hidden" name="orderId" value="${orderId!}"/>
                     <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                         <@thead>
                             <@tr>                                    
                                 <@th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@th>
@@ -266,7 +266,7 @@ code package.
             <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
             <#if pickRows?has_content>
                 <@section title="${rawLabel('ProductVerified')} ${rawLabel('OrderItems')} : ${pickRows.size()!}">
-                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                         <@thead>
                             <@tr class="header-row">
                                 <@th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@th>

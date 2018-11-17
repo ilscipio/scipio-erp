@@ -5,7 +5,7 @@ code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
-<@table type="fields"> <#-- orig: border="0" cellpadding="1" -->
+<@table type="fields">
   <@tr>
       <@td width="25%">Account Number</@td>
       <@td>${ownedFinAccount.finAccountId}</@td>
@@ -30,7 +30,7 @@ code package.
   </#if>
 </@table>
 
-<@table type="data-list"> <#-- orig: border="0" cellpadding="1" border="2" -->
+<@table type="data-list">
 <@thead>
   <@tr>
     <@th>Transaction ${uiLabelMap.CommonDate}</@th>
@@ -69,7 +69,7 @@ code package.
 </@table>
 
 <#if ownedFinAccountAuthList?has_content>
-<@table type="data-list"> <#-- orig: border="0" cellpadding="1" -->
+<@table type="data-list">
 <@thead>
   <@tr>
     <@th>Authorization ${uiLabelMap.CommonDate}</@th>

@@ -67,7 +67,7 @@ code package.
         <#if mechMap.purposeTypes?has_content>
         <@field type="generic" label=uiLabelMap.PartyContactPurposes>
           <@fields type="default-manual-widgetonly" ignoreParentField=true>
-            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true>
             <#if mechMap.facilityContactMechPurposes?has_content>
               <#list mechMap.facilityContactMechPurposes as facilityContactMechPurpose>
                 <#assign contactMechPurposeType = facilityContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>

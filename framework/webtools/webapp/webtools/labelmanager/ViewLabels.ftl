@@ -23,7 +23,7 @@ code package.
         </@cell>
     </@row>
     </#if>
-  <@table type="data-list" autoAltRows=true responsive=true> <#-- orig: class="basic-table" -->
+  <@table type="data-list" autoAltRows=true responsive=true>
    <@thead>
     <@tr class="header-row">
       <#--<@th>${uiLabelMap.WebtoolsLabelManagerRow}</@th>-->

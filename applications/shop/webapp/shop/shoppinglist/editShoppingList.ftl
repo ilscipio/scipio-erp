@@ -122,7 +122,7 @@ code package.
         <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
             <input type="hidden" name="partyId" value="${shoppingList.partyId!}"/>
-            <@table type="fields"> <#-- orig: border="0" width="100%" cellspacing="0" cellpadding="0" -->
+            <@table type="fields">
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommerceListName}</div></@td>
                 <@td><input type="text" size="25" name="listName" value="${shoppingList.listName}" /></@td>
@@ -213,7 +213,7 @@ code package.
         <form name="reorderinfo" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
         <@fields type="default-manual-widgetonly">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
-            <@table type="fields"> <#-- orig:  width="100%" cellspacing="0" cellpadding="1" border="0" -->
+            <@table type="fields">
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommerceRecurrence}</div></@td>
                 <@td>
@@ -336,7 +336,7 @@ code package.
                       <#assign lastOrderedString = Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(lastSlOrderDate)!>
                     </#if>
                     <div>
-                      <@table type="fields"> <#-- orig: cellspacing="2" cellpadding="2" border="0" -->
+                      <@table type="fields">
                         <@tr>
                           <@td><div class="tableheadtext">${uiLabelMap.OrderLastOrderedDate}</div></@td>
                           <@td><div class="tableheadtext">:</div></@td>
@@ -365,7 +365,7 @@ code package.
     </@menu>
   </#macro>
   <@section title="${rawLabel('EcommerceChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
-    <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
+    <@table type="data-complex">
       <@tr>
         <@td><b>${uiLabelMap.EcommerceListName}</b></@td>
         <@td align="right"><b>${uiLabelMap.EcommerceTotalPrice}</b></@td>
@@ -409,7 +409,7 @@ code package.
     <#if shoppingListItemDatas?has_content>
         <#-- Pagination -->
         <@paginationControls/>
-        <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
+        <@table type="data-complex">
           <@tr>
             <@td><b>${uiLabelMap.OrderProduct}</b></@td>
             <@td><@table type="generic"><@tr><@td nowrap="nowrap" align="center"><b>- ${uiLabelMap.EcommerceStartdate} -</b></@td><@td nowrap="nowrap"><b>- ${uiLabelMap.EcommerceNbrOfDays} -</b></@td></@tr><@tr><@td nowrap="nowrap"><b>- ${uiLabelMap.EcommerceNbrOfPersons} -</b></@td><@td nowrap="nowrap" align="center"><b>- ${uiLabelMap.CommonQuantity} -</b></@td></@tr></@table></@td>
@@ -438,7 +438,7 @@ code package.
                     <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}"/>
                     <input type="hidden" name="reservStart"/>
                     <div>
-                       <@table type="fields"> <#-- orig: border="0" width="100%" -->
+                       <@table type="fields">
                        <#if product.productTypeId == "ASSET_USAGE" || product.productTypeId == "ASSET_USAGE_OUT_IN">
                             <@tr>
                                 <@td width="1%">&nbsp;</@td>
@@ -532,7 +532,7 @@ code package.
   </@section>
 
   <@section title="${rawLabel('EcommerceShoppingListPriceTotals')} - ${rawString(shoppingList.listName)}">
-      <@table type="fields"> <#-- orig: width="100%" border="0" cellspacing="1" cellpadding="1" -->
+      <@table type="fields">
         <@tr>
           <@td width="5%" nowrap="nowrap">${uiLabelMap.EcommerceChildListTotalPrice}
           </@td>

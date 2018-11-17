@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section title=uiLabelMap.OrderRequestRoles>
-        <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="generic" class="${styles.table_basic!}" cellspacing="0">
          <#assign row = 1>
          <#list requestParties as requestParty>
             <#assign roleType = requestParty.getRelatedOne("RoleType", false)>

@@ -128,7 +128,7 @@ code package.
       <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
     </div>
 
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
       <@thead>
         <@tr class="header-row-2">
           <@td>${uiLabelMap.AccountingInvoice}</@td>

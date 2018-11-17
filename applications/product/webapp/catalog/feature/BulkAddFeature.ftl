@@ -9,7 +9,7 @@ code package.
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
       <#-- SCIPIO: don't enable responsive on this table, comes out wrong -->
-      <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-complex" autoAltRows=true>
         <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.CommonDescription}</@th>

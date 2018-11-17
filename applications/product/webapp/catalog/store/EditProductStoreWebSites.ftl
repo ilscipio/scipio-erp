@@ -14,7 +14,7 @@ code package.
 </#macro>
 <@section title=uiLabelMap.PageTitleEditProductStoreWebSites menuContent=menuContent>
     <@webSiteWarnings webSiteList=(storeWebSites!)/>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.ProductWebSiteId}</@th>

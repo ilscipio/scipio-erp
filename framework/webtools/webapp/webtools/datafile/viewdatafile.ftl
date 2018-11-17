@@ -7,7 +7,7 @@ code package.
 
     <#if security.hasPermission("DATAFILE_MAINT", session)>
       <form method="post" action="<@ofbizUrl>viewdatafile</@ofbizUrl>">
-        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="fields">
           <@tr>
             <@td>${uiLabelMap.WebtoolsDataDefinitionFileName}</@td>
             <@td><input name="DEFINITION_LOCATION" type="text" size="60" value="${parameters.DEFINITION_LOCATION!}" /></@td>
@@ -70,7 +70,7 @@ code package.
             <#if lastRecordName??>
               <@table close=true open=false />
             </#if>
-            <@table type="fields"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="fields">
               <@tr>
                 <@td><b>Record: ${modelRecord.name}</b></@td>
                 <#if (modelRecord.parentName)?has_content>
@@ -79,7 +79,7 @@ code package.
                  <@td>${modelRecord.description}</@td>
               </@tr>
             </@table>
-            <@table type="fields" class="+dark-grid" open=true close=false/> <#-- orig: class="dark-grid" --> <#-- orig: cellspacing="0" -->
+            <@table type="fields" class="+dark-grid" open=true close=false/>
               <@tr>
                 <#list modelRecord.fields as modelField>
                   <@td><b>${modelField.name}</b></@td>
@@ -107,7 +107,7 @@ code package.
 
       <#if dataFile?has_content && modelDataFile?has_content && (!parameters.ENTITYXML_FILE_SAVE?has_content || parameters.ENTITYXML_FILE_SAVE.length() == 0) && (parameters.DATAFILE_SAVE == null || parameters.DATAFILE_SAVE.length() == 0)>
         <hr />
-        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="fields">
          <@thead>
           <@tr class="header-row">
             <@th>Name</@th>

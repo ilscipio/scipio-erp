@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section title="${rawLabel('PageTitleEditSurveyQuestions')} ${rawLabel('ContentSurveySurveyId')} ${rawString(surveyId)}">
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
         <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.CommonId}</@th>
@@ -117,7 +117,7 @@ code package.
 <#if surveyQuestionCategory?has_content>
     <@section title="${rawLabel('ContentSurveyApplyQuestionFromCategory')} - ${rawString(surveyQuestionCategory.description!)} [${rawString(surveyQuestionCategory.surveyQuestionCategoryId)}]">
         <a name="appl">
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.CommonId}</@th>
@@ -233,7 +233,7 @@ code package.
 
 <#if (surveyQuestion?has_content && (surveyQuestion.surveyQuestionTypeId!"") == "OPTION")>
   <@section title="${rawLabel('ContentSurveyOptions')} - ${rawLabel('CommonId')}) ${rawString(surveyQuestion.surveyQuestionId!)}">
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonDescription}</@th>

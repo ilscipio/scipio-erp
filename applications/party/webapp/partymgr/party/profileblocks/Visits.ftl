@@ -12,7 +12,7 @@ code package.
   </#macro>-->
   <@section id="partyVisits" title=uiLabelMap.PartyVisits>
       <#if visits?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.PartyVisitId}</@th>

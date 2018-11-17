@@ -25,7 +25,7 @@ code package.
      </#if>
     <@section title=getLabel("ContentTree", "ContentUiLabels")>
     <#if tree?has_content>
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
        <@thead>
         <@tr class="header-row">
           <@th width="10%">${uiLabelMap.ManufacturingProductLevel}</@th>
@@ -40,7 +40,7 @@ code package.
           <#list tree as node>
             <@tr valign="middle">
               <@td>
-                <@table type="generic" cellspacing="1"> <#-- orig: class="" -->
+                <@table type="generic" cellspacing="1">
                   <@tr>
                     <@td>${node.depth}</@td>
                   <#list 0..(node.depth) as level>
@@ -50,7 +50,7 @@ code package.
                 </@table>
               </@td>
               <@td>
-                <@table type="generic" cellspacing="1"> <#-- orig: class="" -->
+                <@table type="generic" cellspacing="1">
                   <@tr>
                   <#list 0..(node.depth) as level>
                     <@td>&nbsp;&nbsp;</@td>
@@ -81,7 +81,7 @@ code package.
     
     <@section title=uiLabelMap.ProductProducts>
     <#if productsData?has_content>
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
        <@thead>
         <@tr class="header-row">
           <@th width="20%">${uiLabelMap.ProductProductId}</@th>

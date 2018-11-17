@@ -14,7 +14,7 @@ code package.
   <#if userLogin?has_content>
     <input type="hidden" name="partyId" value="${userLogin.partyId}" />
   </#if>
-  <@table type="fields"> <#-- orig: align="center" -->
+  <@table type="fields">
     <@tr>
       <@td colspan="2" align="center">
         <div class="tableheadtext">${uiLabelMap.AccountingPhysicalCard}</div>

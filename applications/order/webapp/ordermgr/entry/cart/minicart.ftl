@@ -26,7 +26,7 @@ code package.
             <@cartLinks />
           </#if>
           
-          <@table type="data-complex"> <#-- orig: class="" -->
+          <@table type="data-complex">
             <@thead>
               <@tr>
                 <@th>${uiLabelMap.OrderQty}</@th>

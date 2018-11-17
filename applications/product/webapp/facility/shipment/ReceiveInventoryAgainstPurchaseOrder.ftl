@@ -62,7 +62,7 @@ code package.
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
                 <input type="hidden" name="shipmentId" value="${shipmentId}" />
                 <input type="hidden" name="_useRowSubmit" value="Y"/>
-                <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-list" autoAltRows=true>
                     <@thead>
                     <@tr class="header-row">
                         <@th>${uiLabelMap.ProductProduct}</@th>

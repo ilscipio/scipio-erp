@@ -22,7 +22,7 @@ code package.
     </#macro>
     <#assign sectionTitle>${getLabel('OrderOrder')} <#if orderHeader?has_content>${getLabel('CommonNbr')}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a> </#if>${getLabel('CommonInformation')}</#assign>
     <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
-        <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+        <@table type="fields">
             <#-- placing customer information -->
             <#if localOrderReadHelper?? && orderHeader?has_content>
               <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
@@ -93,7 +93,7 @@ code package.
                   <#assign groupNumber = groupIdx + 1>
                 </#if>
 
-              <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+              <@table type="fields">
                 <#if shippingAddress?has_content>
                   <@tr>
                     <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.OrderDestination}</b> [${groupNumber}]

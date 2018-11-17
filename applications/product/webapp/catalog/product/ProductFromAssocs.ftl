@@ -5,7 +5,7 @@ code package.
 -->
 
 <#if productId?? && product??>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
          <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.CommonProduct}</@th>

@@ -6,7 +6,7 @@ code package.
 <h1>Attention!</h1>
 <div>&nbsp;</div>
 
-<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="70%"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="70%">
   <@tr>
     <@td align="right"><b>Order #:</b></@td>
     <@td>${orderId!}</@td>

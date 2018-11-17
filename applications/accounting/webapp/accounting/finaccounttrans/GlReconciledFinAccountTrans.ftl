@@ -24,7 +24,7 @@ code package.
     
     <@section title=uiLabelMap.AccountingPreviousBankReconciliation>
         <#if previousGlReconciliation?has_content>
-            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
                 <@tr>
                     <@td>${uiLabelMap.FormFieldTitle_glReconciliationName}</@td>
                     <@td>${previousGlReconciliation.glReconciliationName!}</@td>
@@ -62,7 +62,7 @@ code package.
 
     <@section title=uiLabelMap.AccountingFinAcctTransAssociatedToGlReconciliation>
         <#if finAccountTransList?has_content>
-            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" -->
+            <@table type="data-list" autoAltRows=true>
                 <@thead>   
                     <@tr class="header-row-2">
                         <@th>${uiLabelMap.FormFieldTitle_finAccountTransId}</@th>

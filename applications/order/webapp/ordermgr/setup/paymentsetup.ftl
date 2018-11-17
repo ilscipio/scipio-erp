@@ -15,7 +15,7 @@ code package.
     </#macro>
     <@section title="Payment Processor Setup" menuContent=menuContent>
         <#if paymentSetups?has_content> 
-          <@table type="data-list" autoAltRows=false width="100%" class="+${styles.table_spacing_small_hint!}"> <#-- orig: cellpadding="2" cellspacing="2" --> <#-- orig: border="0" -->
+          <@table type="data-list" autoAltRows=false width="100%" class="+${styles.table_spacing_small_hint!}">
             <@thead>
               <@tr class="header-row">
                 <@th nowrap="nowrap">WebSite</@th>

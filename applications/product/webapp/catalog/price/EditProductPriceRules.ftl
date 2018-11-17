@@ -10,7 +10,7 @@ code package.
 </#macro>
 <@section title=uiLabelMap.ProductGlobalPriceRule menuContent=menuContent>
   <@fields type="default-manual-widgetonly">
-    <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list">
         <@thead>
           <@tr class="header-row">
             <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
@@ -53,7 +53,7 @@ code package.
           <@tr valign="top">
             <@td align="right">${uiLabelMap.ProductConditions}</@td>
             <@td colspan="2">
-                <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-list" autoAltRows=true>
                 <@thead>
                   <@tr class="header-row">
                     <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
@@ -137,7 +137,7 @@ code package.
           <@tr valign="top">
             <@td align="right">${uiLabelMap.ProductActions}</@td>
             <@td colspan="2">
-                <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-list" autoAltRows=true>
                   <@tr class="header-row">
                     <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
                     <@th width="85%">${uiLabelMap.ProductActionTypeAmount}</@th>

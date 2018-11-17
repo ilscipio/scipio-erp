@@ -6,7 +6,7 @@ code package.
 
 <#if salesReps?has_content>
 <@section title=uiLabelMap.OrderSalesReps>
-      <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list">
       <@thead>
       <@tr class="header-row">
         <@th width="50%">${uiLabelMap.PartyLastName}</@th>

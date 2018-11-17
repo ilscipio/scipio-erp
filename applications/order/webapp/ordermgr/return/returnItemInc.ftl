@@ -19,7 +19,7 @@ code package.
   <#-- information about orders and amount refunded/credited on past returns -->
   <#if orh??>
   <@section>
-        <@table type="summary"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="summary">
           <@tr>
             <@th width="25%">${uiLabelMap.OrderOrderTotal}</@th>
             <@td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></@td>

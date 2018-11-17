@@ -19,7 +19,7 @@ code package.
     </#macro>
     <@section id="partyShoppingCart" title=uiLabelMap.PartyCurrentShoppingCart>
         <#if savedCartItems?has_content>
-          <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+          <@table type="data-list">
            <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.PartySequenceId}</@th>

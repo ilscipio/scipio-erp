@@ -7,7 +7,7 @@ code package.
 
 <#assign acctgTransAndEntries = dispatcher.runSync("getAssociatedAcctgTransEntriesWithFinAccountTrans", {"finAccountTransId":finAccountTrans.finAccountTransId, "userLogin":userLogin})/>
 <#assign acctgTransAndEntries = acctgTransAndEntries.acctgTransAndEntries>
-<@table type="data-list"> <#-- orig: class="basic-table hover-bar" -->
+<@table type="data-list">
     <@thead>
         <@tr class="header-row-2">
             <@th>${uiLabelMap.FormFieldTitle_acctgTransId}</@th>

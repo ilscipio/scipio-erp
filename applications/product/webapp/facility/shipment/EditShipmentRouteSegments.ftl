@@ -9,7 +9,7 @@ code package.
 
   <@section><#--  title=uiLabelMap.PageTitleEditShipmentRouteSegments -->
     <@fields type="default-manual-widgetonly">
-    <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-complex" autoAltRows=false>
         <@thead> 
         <@tr class="header-row">
             <@th valign="top">${uiLabelMap.ProductSegment}</@th>
@@ -347,7 +347,7 @@ code package.
     <form action="<@ofbizUrl>createShipmentRouteSegment</@ofbizUrl>" method="post" name="createShipmentRouteSegmentForm">
       <@fields type="default-manual-widgetonly">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="fields">
             <@tr>
                 <@td valign="top">
                         <span>${uiLabelMap.ProductNewSegment}</span>

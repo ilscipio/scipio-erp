@@ -6,7 +6,7 @@ code package.
 
 <#if orderTerms?has_content>
   <@section title=uiLabelMap.OrderOrderTerms>
-    <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list">
       <@thead> 
         <@tr class="header-row">
           <@th width="35%">${uiLabelMap.OrderOrderTermType}</@th>

@@ -26,7 +26,7 @@ code package.
     </#if>
     &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBackToList}</a>
 
-    <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
+    <@table type="fields">
     <@tr>
       <@td width="26%">${uiLabelMap.ProductProductName}</@td>
       <@td width="74%"><input type="text" size="30" maxlength="60" name="productName" value="${(product.productName)!}"/>*</@td>

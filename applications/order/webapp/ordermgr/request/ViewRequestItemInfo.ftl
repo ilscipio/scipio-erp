@@ -5,7 +5,7 @@ code package.
 -->
 
 <@section title=uiLabelMap.OrderRequestItems>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr valign="bottom" class="header-row">
                 <@th width="10%">${uiLabelMap.ProductItem}</@th>

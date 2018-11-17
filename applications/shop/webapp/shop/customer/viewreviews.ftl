@@ -7,7 +7,7 @@ code package.
 
 <#if reviews?has_content>
   <@section title=uiLabelMap.ProductReviews>
-    <@table type="data-list"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+    <@table type="data-list">
       <@tr>
         <@th>${uiLabelMap.EcommerceSentDate}</@th>
         <@th>${uiLabelMap.ProductProductId}</@th>

@@ -29,7 +29,7 @@ code package.
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <input type="hidden" name="_useRowSubmit" value="Y" />
               <#assign rowCount = 0>
-              <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+              <@table type="data-list" autoAltRows=true>
                <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductProductId}</@th>

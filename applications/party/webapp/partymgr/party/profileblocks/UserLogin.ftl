@@ -6,7 +6,7 @@ code package.
 
   <@section id="partyUserLogins" title=uiLabelMap.PartyUserName>
       <#if userLogins?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
           <@tbody>
           <#list userLogins as userUserLogin>
             <@tr>

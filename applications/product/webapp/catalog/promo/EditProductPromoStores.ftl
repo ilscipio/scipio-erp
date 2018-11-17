@@ -31,7 +31,7 @@ code package.
                 </@section>
                 <@section title=uiLabelMap.PageTitleEditProductPromoStores>
                   <@fields type="default-manual-widgetonly">
-                    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="data-list" autoAltRows=true>
                          <@thead>
                             <@tr class="header-row">
                                 <@th>${uiLabelMap.ProductStoreNameId}</@th>

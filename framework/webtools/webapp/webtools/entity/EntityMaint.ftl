@@ -37,7 +37,7 @@ code package.
       </#list>
          </@nav>
         <#assign firstChar = "*">
-        <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" autoAltRows=false>
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsEntityName}</@th>

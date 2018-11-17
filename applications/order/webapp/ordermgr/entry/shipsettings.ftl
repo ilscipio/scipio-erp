@@ -36,7 +36,7 @@ code package.
     <@section title="${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}">
         <@row>
             <@cell columns=6>
-            <@table type="data-complex"> <#-- orig: class="basic-table" -->
+            <@table type="data-complex">
                 <#assign i = 0>
                 <#assign shipGroup = cart.getShipInfo(shipGroupIndex)>
                 <#list facilityMaps as facilityMap>
@@ -101,7 +101,7 @@ code package.
   <@section title=uiLabelMap.OrderShipToAnotherParty>
     <@row>
       <@cell columns=6>
-        <@table type="data-complex"> <#-- orig: class="basic-table" -->
+        <@table type="data-complex">
         
           <@tr><@td colspan="3">${uiLabelMap.OrderShipToAnotherParty}: <b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(shipToParty)}</b></@td></@tr>
           <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
@@ -163,7 +163,7 @@ code package.
     <@section title="${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}">
         <@row>
         <@cell columns=6>
-            <@table type="data-complex"> <#-- orig: class="basic-table" -->
+            <@table type="data-complex">
               <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.PartySupplier}</@td>
                 <@td class="${styles.grid_large!}6">

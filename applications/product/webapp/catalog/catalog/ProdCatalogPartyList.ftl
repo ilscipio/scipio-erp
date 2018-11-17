@@ -11,7 +11,7 @@
         <form id="UpdateProdCatalogToParty" name="UpdateProdCatalogToParty" method="post" action="<@ofbizUrl>updateProdCatalogToParty</@ofbizUrl>">
             <input name="prodCatalogId" type="hidden" value="${parameters.prodCatalogId}"/>
             <input name="_useRowSubmit" type="hidden" value="Y"/>
-            <@table type="data-list" autoAltRows=true responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">

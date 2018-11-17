@@ -52,7 +52,7 @@ code package.
       <#if mechMap.purposeTypes?has_content>
         <@field type="generic" label=uiLabelMap.PartyContactPurposes>
           <@fields type="default-manual" ignoreParentField=true>
-          <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+          <@table type="data-list">
             <@tbody>
               <#if mechMap.partyContactMechPurposes?has_content>
                 <#list mechMap.partyContactMechPurposes as partyContactMechPurpose>

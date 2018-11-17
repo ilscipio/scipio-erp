@@ -129,7 +129,7 @@ code package.
     <@section title=uiLabelMap.ProductUploadImage>
         <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>" name="imageUploadForm">
           <@fields type="default-nolabelarea">
-            <p><em>${uiLabelMap.ProductOriginalImageMessage} : &dollar;{ofbiz.home}/applications/product/config/ImageProperties.xml</em></p><#-- orig: <span class="tooltip"> -->
+            <p><em>${uiLabelMap.ProductOriginalImageMessage} : &dollar;{ofbiz.home}/applications/product/config/ImageProperties.xml</em></p>
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">
                 <@field type="radio" name="upload_file_type_bogus" value="small" onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=small'), 'js')}');" label=uiLabelMap.CommonSmall/>

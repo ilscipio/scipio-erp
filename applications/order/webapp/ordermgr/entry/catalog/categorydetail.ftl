@@ -115,7 +115,7 @@ code package.
       <#assign tabCol = 1>
       <div<#if categoryImageUrl?string?has_content> style="position: relative; margin-top: ${height}px;"</#if>
           class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
-      <@table type="data-list" autoAltRows=false open=(numCol?int > 1) close=(numCol?int > 1)> <#-- orig: class="" -->
+      <@table type="data-list" autoAltRows=false open=(numCol?int > 1) close=(numCol?int > 1)>
         <#list productCategoryMembers as productCategoryMember>
           <#if (numCol?int == 1)>
             <@render resource=productsummaryScreen reqAttribs={"optProductId":productCategoryMember.productId, "productCategoryMember":productCategoryMember, "listIndex":productCategoryMember_index}/>

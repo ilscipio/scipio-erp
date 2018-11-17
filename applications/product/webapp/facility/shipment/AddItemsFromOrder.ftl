@@ -50,7 +50,7 @@ code package.
         </#if>
         <input type="hidden" name="shipmentId" value="${shipmentId}" />
         <input type="hidden" name="_useRowSubmit" value="Y" />
-        <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+        <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductOrderId}<br />${uiLabelMap.ProductOrderShipGroupId}<br />${uiLabelMap.ProductOrderItem}</@th>

@@ -31,7 +31,7 @@ code package.
     </@menu>
 </#macro>
 <@section title=uiLabelMap.EcommerceReadMessage menuContent=menuContent menuLayoutTitle="inline-title">
-    <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+    <@table type="fields">
       <@tr><@td>&nbsp;</@td></@tr>
       <@tr>
           <@td>${uiLabelMap.CommonFrom}</@td>

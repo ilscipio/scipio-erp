@@ -71,7 +71,7 @@ code package.
   </#macro>
   -->  
   <@section title=uiLabelMap.OrderContactInformation>
-      <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="fields">
         <#-- the setting of shipping method is only supported for sales orders at this time -->
         <@tr>
           <@td class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>

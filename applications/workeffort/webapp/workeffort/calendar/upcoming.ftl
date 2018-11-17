@@ -18,7 +18,7 @@ code package.
   </#list>
 
   <#if hasEvents>
-    <@table type="data-list" autoAltRows="" responsive=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows="" responsive=true>
      <@thead>
       <@tr class="header-row">
         <@th width="20%">${uiLabelMap.CommonStartDateTime}</@th>

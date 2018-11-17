@@ -108,7 +108,7 @@ code package.
         </#macro>
         <@section title=uiLabelMap.PartyContactInformation menuContent=menuContent>
           <#if partyContactMechValueMaps?has_content>
-            <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="0" -->
+            <@table type="data-complex">
               <@thead>
                 <@tr valign="bottom">
                   <@th>${uiLabelMap.PartyContactType}</@th>
@@ -248,7 +248,7 @@ code package.
         </#macro>
         <@section title=uiLabelMap.AccountingPaymentMethodInformation menuContent=menuContent>
           <#if paymentMethodValueMaps?has_content>
-              <@table type="data-complex"> <#-- orig: width="100%" cellpadding="2" cellspacing="0" border="0" -->
+              <@table type="data-complex">
                 <#list paymentMethodValueMaps as paymentMethodValueMap>
                   <#assign paymentMethod = paymentMethodValueMap.paymentMethod! />
                   <#assign creditCard = paymentMethodValueMap.creditCard! />
@@ -347,7 +347,7 @@ code package.
 <#-- ============================================================= -->
 <#-- SCIPIO: TODO?
 <@section title=uiLabelMap.EcommerceFileManager>
-    <@table type="fields"> <#-orig: width="100%" border="0" cellpadding="1"->
+    <@table type="fields">
       <#if partyContent?has_content>
         <#list partyContent as contentRole>
         <#assign content = contentRole.getRelatedOne("Content", false) />
@@ -408,7 +408,7 @@ code package.
 <#-- ============================================================= -->
 <#-- SCIPIO: TODO?
 <@section title=uiLabelMap.PartyContactLists>
-    <@table type="data-complex"> <#-orig: width="100%" border="0" cellpadding="1" cellspacing="0"->
+    <@table type="data-complex">
       <@tr>
         <@th>${uiLabelMap.EcommerceListName}</@th>
         <#-<@th>${uiLabelMap.OrderListType}</@th>->

@@ -35,7 +35,7 @@
 <#--<hr />-->
 
 <#if contentAssoc?has_content>  
-<@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+<@table type="data-list" autoAltRows=true>
     <#if activeSubMenuItem=="ListContentTree">
     <#--Form ListContentTree-->
     <@thead>

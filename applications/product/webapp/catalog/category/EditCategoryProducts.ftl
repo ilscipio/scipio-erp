@@ -26,7 +26,7 @@ code package.
                 <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
                 <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
                 <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-                <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-complex" autoAltRows=true>
                     <@thead>
                      <@tr class="header-row">
                         <@th>#</@th>

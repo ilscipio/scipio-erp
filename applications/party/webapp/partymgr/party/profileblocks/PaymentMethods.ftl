@@ -34,7 +34,7 @@ code package.
   -->
   <@section id="partyPaymentMethod" title=uiLabelMap.PartyPaymentMethodInformation>
       <#if paymentMethodValueMaps?has_content || billingAccounts?has_content>
-        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex">
         <@tbody>
         <#if paymentMethodValueMaps?has_content>
           <#list paymentMethodValueMaps as paymentMethodValueMap>

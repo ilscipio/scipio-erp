@@ -108,7 +108,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                 </@row>
             </#if>
     
-            <@table type="data-list" autoAltRows=true responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">
@@ -179,7 +179,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                                 -->
                                 <#if payments?has_content>
                                     <@modal id="displayPayments_${finAccountTrans.finAccountTransId}" label=finAccountTrans.finAccountTransId>
-                                        <@table type="data-list" autoAltRows=true inheritAltRows=true> <#-- orig: class="basic-table hover-bar" -->
+                                        <@table type="data-list" autoAltRows=true inheritAltRows=true>
                                             <@thead>
                                                 <@tr class="header-row-2">
                                                     <@th>${uiLabelMap.AccountingDepositSlipId}</@th>
@@ -291,7 +291,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                     </form>
                 </#if>
             </#list>
-            <@table type="summary"> <#-- orig: class="basic-table" -->
+            <@table type="summary">
                 <@thead>
                     <@tr>
                         <@th class="align-right">${uiLabelMap.FormFieldTitle_grandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
@@ -310,7 +310,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                 </@tbody>
             </@table>
         <#else>
-            <@table type="summary"> <#-- orig: class="basic-table" -->
+            <@table type="summary">
                 <@thead>
                     <@tr>
                         <@th class="align-right">${uiLabelMap.AccountingRunningTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>

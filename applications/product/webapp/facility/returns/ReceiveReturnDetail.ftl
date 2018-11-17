@@ -13,7 +13,7 @@ code package.
                 <@commonMsg type="result">${uiLabelMap.ProductReturnCompletelyReceived}</@commonMsg>
             </#if>
      
-            <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list">
                 <@thead>
                     <@tr class="header-row">
                         <@th>${uiLabelMap.ProductReceipt}</@th>
@@ -54,7 +54,7 @@ code package.
                     <#if !returnItems?? || returnItems?size == 0>
                         <@commonMsg type="result-norecord">${uiLabelMap.ProductNoItemsToReceive}</@commonMsg>
                     <#else>
-                        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                        <@table type="data-complex">
                             <@tr>
                                 <@td>
                                     <@heading>
@@ -86,7 +86,7 @@ code package.
                                     </@tr>
                                     <@tr>
                                         <@td>
-                                            <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                                            <@table type="fields">
                                                 <@tr>
                                                     <#assign productId = "">
                                                     <#if orderItem.productId??>

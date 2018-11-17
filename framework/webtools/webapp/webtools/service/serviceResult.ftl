@@ -8,7 +8,7 @@ code package.
     <@row>
         <@cell>
         <form method="post" action="<@ofbizUrl>saveServiceResultsToSession</@ofbizUrl>">
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
               <@thead>
           <@tr class="header-row">
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>

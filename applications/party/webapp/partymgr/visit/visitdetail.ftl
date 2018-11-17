@@ -5,7 +5,7 @@ code package.
 -->
 
 <@section><#-- redundant: title=uiLabelMap.PartyVisitDetail -->
-      <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="fields">
         <@tr>
           <@td>${uiLabelMap.PartyVisitIDSessionID}</@td>
           <@td>${visit.visitId!} / ${visit.sessionId!}</@td>
@@ -68,7 +68,7 @@ code package.
   <#if serverHits?has_content>
     <#assign paramStr = addParamsToStr("", {"visitId": visitId!})>
     <@paginate mode="content" url=makeOfbizUrl("visitdetail") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paramStr=paramStr>   
-      <@table type="data-list"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list">
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyContentId}</@th>
@@ -115,7 +115,7 @@ https://issues.apache.org/jira/browse/OFBIZ-4488
 *******************************************************************************
 <@section title=uiLabelMap.PartyPagePushFollowing>
       <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
-        <@table type="fields"> <#- orig: class="basic-table" -> <#- orig: cellspacing="0" ->
+        <@table type="fields">
             <@tr>
               <@th>${uiLabelMap.PartyPushURL}</@th>
               <@td>

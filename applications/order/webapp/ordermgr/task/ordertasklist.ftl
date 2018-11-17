@@ -30,7 +30,7 @@ code package.
     <#if poList?has_content>
       <#assign tasksFound = true>
       <@section title=uiLabelMap.OrderOrderPurchaseToBeScheduled>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.OrderOrderNumber}</@th>
@@ -87,7 +87,7 @@ code package.
     <#if partyTasks?has_content>
       <#assign tasksFound = true>
       <@section title=uiLabelMap.OrderWorkflow>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
          <@thead>
           <@tr class="header-row">
             <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
@@ -144,7 +144,7 @@ code package.
       <#assign tasksFound = true>
       <@section title=uiLabelMap.CommonWorkflowActivityUserRole>
         <@fields type="default-manual">
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
          <@thead>
           <@tr class="header-row">
             <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>

@@ -12,7 +12,7 @@ code package.
           </#if>
         </@menu>
         
-        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex">
           <@thead>
           <@tr>
             <#assign prodColWidth = "65%">

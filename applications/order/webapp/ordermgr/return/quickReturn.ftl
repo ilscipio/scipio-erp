@@ -56,7 +56,7 @@ code package.
             <#assign fieldLabel = uiLabelMap["checkhelper.select_shipping_destination"]>
           </#if>
           <@field type="generic" label=fieldLabel>
-            <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list">
               <@tbody>
               <#list shippingContactMechList as shippingContactMech>
                 <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>

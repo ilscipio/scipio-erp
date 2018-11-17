@@ -7,7 +7,7 @@ code package.
 
     <p>${uiLabelMap.WebtoolsThisThread}<b> ${Static["java.lang.Thread"].currentThread().getName()} (${Static["java.lang.Thread"].currentThread().getId()})</b></p>
    
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.WebtoolsGroup}</@th>

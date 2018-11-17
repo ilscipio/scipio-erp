@@ -6,7 +6,7 @@ code package.
 
 <@section title="${rawLabel('ProductIssueInventoryItemsToShipment')}: [${rawString(shipmentId!)}]">
   <@fields type="default-manual">
-    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonReturn} ${uiLabelMap.CommonDescription}</@th>

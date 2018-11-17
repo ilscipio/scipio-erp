@@ -175,7 +175,7 @@ code package.
                             <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}" />
                             <input type="hidden" name="originFacilityId" value="${facilityId!}" />
                             <input name="_useRowSubmit" type="hidden" value="Y"/>
-                            <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                            <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                                 <@thead>
                                     <@tr class="header-row">                                    
                                         <@th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@th>
@@ -282,7 +282,7 @@ code package.
                             <input type="hidden" name="showInput" value="N"/>
                             
     
-                            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+                            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
                                 <@thead>
                                     <@tr>
                                         <@th>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval})</@th>
@@ -352,7 +352,7 @@ code package.
                     <#if packedLines?has_content>
                         <#assign packedLine = packedLines.get(0)!>
                         ${uiLabelMap.ProductPackage}&nbsp;${packedLine.getPackageSeq()!}
-                        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                        <@table type="data-list">
                             <@tr class="header-row">
                                 <@td>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@td>
                                 <@td>${uiLabelMap.ProductProductId}</@td>

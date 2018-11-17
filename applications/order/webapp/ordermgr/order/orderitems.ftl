@@ -6,7 +6,7 @@ code package.
 
 <#if orderHeader?has_content>
 <@section title=uiLabelMap.OrderOrderItems>
-            <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-complex" role="grid">
               <@thead>
                 <@tr valign="bottom" class="header-row">
                     <@th width="30%">${uiLabelMap.ProductProduct}</@th>
@@ -167,7 +167,7 @@ code package.
                                                         </#if>
                                                     </#list>
                                         <@modal id="${productId}_q" label=(orderItem.quantity!0)?string.number>    
-                                            <@table type="data-complex"> <#-- orig: class="" -->
+                                            <@table type="data-complex">
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>
                                                     <@td>${orderItem.quantity?default(0)?string.number}</@td>
@@ -243,7 +243,7 @@ code package.
                                             <#if unplannedQuantity < 0><#assign unplannedQuantity = 0></#if>
                                             &nbsp;
                                             <@modal id="${productId}_i" label=uiLabelMap.ProductInventory>
-                                                    <@table type="fields"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
+                                                    <@table type="fields">
                                                         <@tr>
                                                             <@td>${uiLabelMap.OrderRequiredForSO}</@td>
                                                             <@td style="padding-left: 15px; text-align: left;">${requiredQuantity}</@td>
@@ -302,7 +302,7 @@ code package.
                                 <@td class="${styles.text_right!}" valign="top" nowrap="nowrap">
                                     <#assign modalLabel><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></#assign>
                                     <@modal id="${productId}_adj" label=modalLabel>
-                                        <@table type="data-complex" class="+grid"> <#-- orig: class="grid" -->
+                                        <@table type="data-complex" class="+grid">
                                             <@thead>
                                                 <@tr>
                                                 <@th width="70%" colspan="2">${uiLabelMap.OrderAdjustments}</@th>
@@ -651,7 +651,7 @@ code package.
                             <@td>&nbsp;</@td>
                             <@td colspan="4">
                               <@section>
-                                  <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                                  <@table type="data-list">
                                     <@tr>
                                       <@td class="${styles.text_right!}" nowrap="nowrap">
                                         ${uiLabelMap.CommonComments}

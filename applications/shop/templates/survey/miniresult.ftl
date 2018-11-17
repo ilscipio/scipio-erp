@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="2" cellspacing="0" -->
+<@table type="data-complex">
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
 
     <#-- get an answer from the answerMap -->

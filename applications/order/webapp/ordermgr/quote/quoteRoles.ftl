@@ -5,7 +5,7 @@ code package.
 -->
 <@section title=uiLabelMap.OrderOrderQuoteRoles>
       <#if quoteRoles?has_content>
-        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex">
             <#assign row = 1>
             <#list quoteRoles as quoteRole>
                 <#assign roleType = quoteRole.getRelatedOne("RoleType", false)>

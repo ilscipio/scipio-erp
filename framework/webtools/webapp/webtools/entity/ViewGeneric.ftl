@@ -129,7 +129,7 @@ function ShowTab(lname) {
             <@fields type="default-manual">
             <#assign showFields = true>
             <#-- FIXME: inputs within table elems -->
-            <@table type="fields" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="fields" autoAltRows=true>
               <#if value?has_content>
                 <#if hasUpdatePermission>
                   <#if newFieldPkList?has_content>
@@ -250,7 +250,7 @@ function ShowTab(lname) {
             <@cell>
               <@heading id="current-view" attribs={"data-magellan-destination":"current-view"}>${uiLabelMap.WebtoolsEntityCurrentValue}</@heading>
               <#if value?has_content>
-                <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12"> <#-- orig: class="basic-table ${styles.grid_large!}12" --> <#-- orig: cellspacing="0" -->
+                <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12">
                   <@thead>
                   <@tr>
                     <@th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</@th>
@@ -294,7 +294,7 @@ function ShowTab(lname) {
             <#if relation.valueRelated?has_content>
                             <@pli>
                               <@modal id="rel_${relation.relatedTable}" label=uiLabelMap.CommonValues>                                
-                                  <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12"> <#-- orig: cellspacing="0" -->
+                                  <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12">
                                     <@thead>
                                         <@tr>
                                             <@th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</@th>

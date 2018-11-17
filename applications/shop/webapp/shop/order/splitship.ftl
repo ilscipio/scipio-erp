@@ -34,7 +34,7 @@ function submitForm(form, mode, value) {
 </@script>
 
 <@section title=uiLabelMap.OrderItemGroups>
-    <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
+    <@table type="data-complex">
       <#assign shipGroups = cart.getShipGroups()>
       <#if (shipGroups.size() > 0)>
         <#assign groupIdx = 0>
@@ -134,7 +134,7 @@ function submitForm(form, mode, value) {
 </@section>
 
 <@section title=uiLabelMap.EcommerceAssignItems>
-  <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
+  <@table type="data-complex">
     <@thead>
       <@tr>
         <@td>${uiLabelMap.OrderProduct}</@td>

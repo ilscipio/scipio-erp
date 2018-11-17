@@ -18,7 +18,7 @@ code package.
     </#if>
 </@section>
 <@section title=uiLabelMap.PartyCertSaveToKeyStore>
-  <@table type="data-list"> <#-- orig: cellspacing="0" -->
+  <@table type="data-list">
     <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.PartyCertComponent}</@th>

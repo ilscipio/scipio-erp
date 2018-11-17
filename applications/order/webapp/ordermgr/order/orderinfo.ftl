@@ -10,7 +10,7 @@ code package.
   </#if>
   <#assign orderType = orderHeader.getRelatedOne("OrderType", false)/>
     
-  <@table type="fields"> <#-- orig: class="basic-table" -->
+  <@table type="fields">
   
   <#if orderHeader.orderName?has_content>
     <@tr>

@@ -6,7 +6,7 @@ code package.
 
 <@section id="serialized-inventory-summary" title=uiLabelMap.ProductSerializedInventorySummary>
 
-        <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id="serialized-inventory"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+        <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id="serialized-inventory">
             <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductInventoryItemId}</@th>

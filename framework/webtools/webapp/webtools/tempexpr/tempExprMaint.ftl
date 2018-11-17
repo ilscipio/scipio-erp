@@ -12,7 +12,7 @@ code package.
       <input type="hidden" name="tempExprId" value="${temporalExpression.tempExprId}"/>
       <input type="hidden" name="tempExprTypeId" value="${temporalExpression.tempExprTypeId}"/>
   </#if>
-  <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+  <@table type="fields">
     <@tr>
       <@td>${uiLabelMap.TemporalExpressionId}</@td>
       <@td>${temporalExpression.tempExprId}</@td>
@@ -134,7 +134,7 @@ code package.
 <#macro CreateForm expressionTypeId="" formContents=NullMacro>
   <form name="${expressionTypeId}" method="post" action="<@ofbizUrl>createTemporalExpression</@ofbizUrl>">
     <input type="hidden" name="tempExprTypeId" value="${expressionTypeId}"/>
-    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="fields">
       <#assign mapExpression = "TemporalExpression_" + expressionTypeId/>
       <#assign headingText = uiLabelMap[mapExpression]/>
       <@tr><@td colspan="2" class="h2">${headingText}</@td></@tr>

@@ -25,7 +25,7 @@ code package.
         
       <#assign lastkeyword = "">
       <#if keywordThesauruses?has_content>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
             <#-- SCIPIO: TODO: rewrite this somehow without need for open/close -->
             <#list keywordThesauruses as keyword>
               <#assign relationship = keyword.getRelatedOne("RelationshipEnumeration", true)>

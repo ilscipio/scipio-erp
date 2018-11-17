@@ -14,7 +14,7 @@ code package.
   </#macro>
   <@section title=uiLabelMap.OrderShipmentInformation menuContent=menuContent>
     <@fields type="default-manual">
-      <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-complex" role="grid">
         <@thead>
           <@tr class="header-row">
               <@th width="15%">${uiLabelMap.OrderItemId}</@th>
@@ -62,7 +62,7 @@ code package.
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
                 
-                <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: border="0" -->
+                <@table type="data-complex">
                 
               <#list OISGAssContents as OISGAssContent>
                 <#assign OISG = OISGAssContent.getRelatedOne("OrderItemShipGroup", false)>
@@ -122,7 +122,7 @@ code package.
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
                 <input type="hidden" name="quantity" value="0"/>
-                  <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                  <@table type="fields">
                       <@tr>
                           <@td>
                              <div class="label">${uiLabelMap.OrderAddToshipGroup} : </div>
@@ -179,7 +179,7 @@ code package.
     </#macro>
     <@section title="${rawLabel('OrderShipmentInformation')} - ${rawString(shipGroup.shipGroupSeqId)}" menuContent=menuContent>
         <@fields type="default-manual">
-            <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="fields">
                     <form name="updateOrderItemShipGroup" method="post" action="<@ofbizUrl>updateShipGroupShipInfo</@ofbizUrl>">
                         <input type="hidden" name="orderId" value="${orderId!}"/>
                         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId!}"/>

@@ -74,7 +74,7 @@ code package.
           <#if !(shipmentPackages?has_content)>
             <@section>
             <#if packedLines?has_content>
-              <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+              <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}">
                 <@thead>
                 <@tr>
                   <@th>
@@ -153,7 +153,7 @@ code package.
                   <hr/>
                 </#if>
             <#-- SCIPIO: NOTE/FIXME?: this table is meant to align with the previous table... maybe should be part of it... -->
-            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}">
                 <@tr>
                   <@td>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
                       <br />
@@ -188,7 +188,7 @@ code package.
             </@section>
           <#else>
             <@section>
-            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}">  <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}"> 
              <@thead>
              <@tr>
                 <@th>

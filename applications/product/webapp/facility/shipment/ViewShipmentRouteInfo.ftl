@@ -5,7 +5,7 @@ code package.
 -->
 <#if shipmentRouteSegmentDatas?has_content>
 <@section>
-        <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true > <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+        <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true >
          <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductSegment}</@th>

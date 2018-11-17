@@ -9,7 +9,7 @@ code package.
 
 <p>${uiLabelMap.AccountingEnterGiftCardNumber}</p>
 
-<@table type="fields"> <#-- orig: align="center" -->
+<@table type="fields">
   <#if requestAttributes.processResult??>
     <@tr>
       <@td colspan="2">

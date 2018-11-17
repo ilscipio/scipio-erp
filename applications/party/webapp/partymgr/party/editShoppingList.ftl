@@ -98,7 +98,7 @@ code package.
   </@menu>
 </#macro>
 <@section title="${rawLabel('PartyChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
       <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyListName}</@th>
@@ -131,7 +131,7 @@ code package.
 
     <#assign paramStr = "partyId=" + partyId + "&shoppingListId=" + (shoppingListId!)/>
     <@paginate mode="content" url=makeOfbizUrl("editShoppingList") paramStr=paramStr viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1>
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyProduct}</@th>

@@ -6,7 +6,7 @@ code package.
 <@heading>Connection Pool Status</@heading>
 
 <#assign groups = delegator.getModelGroupReader().getGroupNames(delegator.getDelegatorName())!/>
-<@table type="data-list" autoAltRows=true class="+light-grid ${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table light-grid hover-bar" --> <#-- orig: cellspacing="" -->
+<@table type="data-list" autoAltRows=true class="+light-grid ${styles.table_spacing_tiny_hint!}">
   <@thead>
     <@tr class="header-row">
         <@th>Helper Name</@th>

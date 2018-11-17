@@ -34,7 +34,7 @@ code package.
 <#if variantProducts??>
   <@row>
     <@cell>
-    <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list">
        <@thead>
         <@tr class="header-row">
             <@td>${uiLabelMap.ProductProductId}</@td>

@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
         <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.CommonId}</@th>

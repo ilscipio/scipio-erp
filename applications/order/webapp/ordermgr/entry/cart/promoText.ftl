@@ -5,7 +5,7 @@ code package.
 -->
 <#if showPromoText?? && showPromoText>
     <@section title=uiLabelMap.OrderSpecialOffers>
-        <@table type="data-list"> <#-- orig: class="basic-table" -->
+        <@table type="data-list">
           <#-- show promotions text -->
           <#list productPromos as productPromo>
             <@tr>

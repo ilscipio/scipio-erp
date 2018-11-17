@@ -47,7 +47,7 @@ code package.
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
-            <@table type="data-list" autoAltRows=true> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true>
             <@tbody>
             <#if curPostalAddress??>
               <@tr>

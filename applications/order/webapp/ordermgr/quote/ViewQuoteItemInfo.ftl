@@ -13,7 +13,7 @@ code package.
 
 <@section title=uiLabelMap.OrderOrderQuoteItems menuContent=menuContent>
 
-    <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-complex" autoAltRows=true>
           <@thead>
             <@tr valign="bottom" class="header-row">
                 <@th width="15%">${uiLabelMap.ProductItem}</@th>

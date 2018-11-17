@@ -17,7 +17,7 @@ code package.
       <#if hasViewPermission>
         <#--<@heading>${uiLabelMap.WebtoolsForEntity}: ${entityName}</@heading>-->
 
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.WebtoolsTitle}</@th>

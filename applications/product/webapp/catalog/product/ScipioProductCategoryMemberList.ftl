@@ -10,7 +10,7 @@
         <form id="UpdateProductCategoryMember" name="UpdateProductCategoryMember" method="post" action="<@ofbizUrl>updateProductToCategory</@ofbizUrl>">            
             <input name="_useRowSubmit" type="hidden" value="Y"/>
             <input name="productId" type="hidden" value="${parameters.productId}"/>
-            <@table type="data-list" autoAltRows=true responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">

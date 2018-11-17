@@ -5,7 +5,7 @@ code package.
 -->
 <#-- SCIPIO: duplicate:
 <@heading>${uiLabelMap.WebtoolsLabelManagerViewReferences}</@heading>-->
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
         <@thead>
             <@tr>
                 <@th>${uiLabelMap.WebtoolsLabelManagerKey}</@th>

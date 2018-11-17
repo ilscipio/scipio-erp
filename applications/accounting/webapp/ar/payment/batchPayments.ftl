@@ -151,7 +151,7 @@ function setServiceName(selection) {
                         </select>
                     </#if>
                 </div>
-                <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" -->
+                <@table type="data-list" autoAltRows=true>
                   <@thead>
                     <@tr class="header-row-2">
                       <@th>${uiLabelMap.FormFieldTitle_paymentId}</@th>

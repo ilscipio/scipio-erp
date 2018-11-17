@@ -11,7 +11,7 @@ code package.
     </ul>
     <br class="clear"/>
   </div>
-  <table cellspacing="0" class="${styles.table_basic!}"> <#-- orig: class="basic-table hover-bar" -->
+  <table cellspacing="0" class="${styles.table_basic!}">
     <#assign altRow = true>
     <#assign displayStyle = Static["java.util.TimeZone"].LONG>
     <#assign availableTimeZones = Static["org.ofbiz.base.util.UtilDateTime"].availableTimeZones()/>

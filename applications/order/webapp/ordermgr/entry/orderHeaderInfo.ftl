@@ -37,7 +37,7 @@ code package.
                 </@row>
             </#if>
             
-        <@table type="fields"> <#-- orig: class="basic-table" -->
+        <@table type="fields">
             <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.Party}</@td>
                 <@td>

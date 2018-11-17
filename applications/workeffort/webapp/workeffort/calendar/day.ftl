@@ -25,7 +25,7 @@ code package.
   </#if>
 <div class="day-calendar-full">
 <@table type="data-complex" class="+calendar" 
-    autoAltRows=true responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+    autoAltRows=true responsive=false>
  <@thead>
   <@tr class="header-row">
     <@th width="15%">${uiLabelMap.CommonTime}</@th>

@@ -12,7 +12,7 @@ code package.
         <@row>
             <@cell columns=6>
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
-                            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" -->
+                            <@table type="data-list" autoAltRows=true>
                               <@thead>
                                 <@tr class="header-row">
                                   <@th>${uiLabelMap.OrderOrderTermType}</@th>

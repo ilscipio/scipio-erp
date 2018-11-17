@@ -16,7 +16,7 @@ code package.
       <@fields type="default-manual">
         <#if productFeatureCatGrpAppls?has_content>
             <#-- Feature Groups -->
-            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true>
               <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductFeatureGroup}</@th>
@@ -85,7 +85,7 @@ code package.
       <@fields type="default-manual">
         <#if productFeatureCategoryAppls?has_content>
             <#-- Feature Categories -->
-            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true>
               <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductFeature}</@th>

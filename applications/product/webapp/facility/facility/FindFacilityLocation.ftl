@@ -34,7 +34,7 @@ code package.
     <#if foundLocations??>
       <#assign sectionTitle>${rawLabel('CommonFound')}: ${foundLocations.size()} ${rawLabel('ProductLocationsFor')} <#if facility??>${rawString((facility.facilityName)!)}</#if> [${rawString(facilityId!)}]</#assign>
       <@section title=sectionTitle>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
         <@thead>
         <@tr class="header-row-2">
             <@th>${uiLabelMap.ProductFacility}</@th>

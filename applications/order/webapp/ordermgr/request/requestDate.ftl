@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section title=uiLabelMap.CommonDate>
-        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="fields">
             <@tr>
                 <@td align="right" valign="top" width="25%">
                     &nbsp;${uiLabelMap.OrderRequestDate}

@@ -22,7 +22,7 @@ code package.
     <#assign entryWidth = (85 / (maxConcurrentEntries))>
   </#if>
 <div class="week-calendar-full">
-<@table type="data-complex" class="+calendar" autoAltRows=true responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<@table type="data-complex" class="+calendar" autoAltRows=true responsive=false>
  <@thead>
   <@tr class="header-row">
     <@th width="15%">${uiLabelMap.CommonDay}</@th>

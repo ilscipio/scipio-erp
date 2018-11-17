@@ -26,7 +26,7 @@ code package.
       padding: 10px 0 10px 0;
     }
     </style>
-    <@table type="fields"> <#-- orig: class="" --> <#-- orig: cellspacing=0 -->
+    <@table type="fields">
       <#-- Work Effort Info -->
       <@tr><@td>${uiLabelMap.CommonDate}</@td><@td>${parameters.eventDateTime?default("&nbsp;")}</@td></@tr>
       <@tr><@td>${uiLabelMap.CommonName}</@td><@td>${workEffort.workEffortName?default("&nbsp;")}</@td></@tr>
@@ -38,7 +38,7 @@ code package.
     </@table>
     <#if partyAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortPartyAssigns}</b></div>
-      <@table type="data-list" class="+${styles.table_spacing_small_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing=0 --> <#-- orig: cellpadding=2 --> <#-- orig: border=1 -->
+      <@table type="data-list" class="+${styles.table_spacing_small_hint!}">
         <@thead><@tr>
           <@th>${uiLabelMap.PartyParty}</@th>
           <@th>${uiLabelMap.PartyRole}</@th>
@@ -63,7 +63,7 @@ code package.
     </#if>
     <#if fixedAssetAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortFixedAssetAssigns}</b></div>
-      <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing=0 --> <#-- orig: cellpadding=2 --> <#-- orig: border=1 -->
+      <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
         <@thead><@tr>
           <@th>${uiLabelMap.AccountingFixedAsset}</@th>
           <@th>${uiLabelMap.CommonFromDate}</@th>

@@ -16,7 +16,7 @@ code package.
   <@section title=uiLabelMap.OrderNotes menuContent=menuContent>
  
   <#if orderNotes?has_content>
-    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="fields">
       <#list orderNotes as note>
         <@tr>
           <@td valign="top" width="35%">

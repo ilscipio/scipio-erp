@@ -8,7 +8,7 @@
         <form action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" method="post">
         <input type="hidden" name="facilityId" value="${facilityId!}" />        
         
-            <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1>
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">

@@ -10,7 +10,7 @@ code package.
 
 <#if associatedProducts?has_content>
   <@section title=uiLabelMap.OrderHelpAlsoInterestedIn>
-      <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=false> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
+      <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=false>
         <#-- random complementary products -->
         <#list associatedProducts as assocProduct>
           <@tr>

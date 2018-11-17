@@ -37,7 +37,7 @@ code package.
         <#return byteStr />
       </#function>
       <@section title=uiLabelMap.WebtoolsResults> 
-          <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+          <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1>
               <@thead>
                 <@tr>
                   <@th>${uiLabelMap.File}</@th>

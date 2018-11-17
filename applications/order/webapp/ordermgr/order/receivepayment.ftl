@@ -16,7 +16,7 @@ code package.
         <input type="hidden" name="partyId" value="${orderRoles[0].partyId}" />
 
         <#if paymentMethods?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.PaymentMethod}</@th>
@@ -39,7 +39,7 @@ code package.
         </#if>
         
         <#if paymentMethodTypes?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.OrderPaymentType}</@th>

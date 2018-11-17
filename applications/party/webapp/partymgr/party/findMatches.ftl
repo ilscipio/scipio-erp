@@ -39,7 +39,7 @@ code package.
       
           <#if match?has_content>
             <#if matches?has_content>
-              <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+              <@table type="data-list">
                 <@thead>
                 <@tr>
                   <@td colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</@td>

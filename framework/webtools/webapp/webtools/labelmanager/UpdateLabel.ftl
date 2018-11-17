@@ -11,7 +11,7 @@ code package.
 </@script>
 <@section>
     <form method="post" action="<@ofbizUrl>SaveLabelsToXmlFile</@ofbizUrl>" name="UpdateLabelForm">
-        <@table type="fields" class="+${styles.table_spacing_small_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="3" -->
+        <@table type="fields" class="+${styles.table_spacing_small_hint!}">
             <@tr>
                 <@td colspan="2">&nbsp;</@td>
             </@tr>

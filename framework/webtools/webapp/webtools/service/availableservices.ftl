@@ -49,7 +49,7 @@ code package.
       </@row>
     <@row>
         <@cell>
-        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="fields">
         <@thead>
           <@tr>
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -106,7 +106,7 @@ code package.
     <@cell>
         <@heading>${uiLabelMap.SecurityGroups}</@heading>
       <#if selectedServiceMap.permissionGroups != 'NA'>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsNameOrRole}</@th>
@@ -157,7 +157,7 @@ code package.
 <@row>
    <@cell>
           <@heading>${uiLabelMap.WebtoolsServiceECA}</@heading>
-        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex">
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsEventName}</@th>
@@ -184,7 +184,7 @@ code package.
               <#if ecaMap.actions?has_content>
                 <@td>
                   <#list ecaMap.actions as action>
-                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="fields">
                       <@tr>
                         <@td colspan="2"><a href="<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>">${action.serviceName!uiLabelMap.CommonNA}</a></@td>
                       </@tr>
@@ -211,7 +211,7 @@ code package.
               <#if ecaMap.conditions?has_content>
                 <@td>
                   <#list ecaMap.conditions as condition>
-                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="fields">
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType!uiLabelMap.CommonNA}</@td>
                         <@td>
@@ -246,7 +246,7 @@ code package.
               <#if ecaMap.sets?has_content>
                 <@td>
                   <#list ecaMap.sets as set>
-                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="fields">
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsFieldName}</b> ${set.fieldName!uiLabelMap.CommonNA}</@td>
                         <@td>&nbsp;</@td>
@@ -294,7 +294,7 @@ code package.
           <@heading>${paramList.title}</@heading>
 
         <#if paramList.paramList?? && paramList.paramList?has_content>
-          <@table type="data-list" class="+param-table"> <#-- orig: class="basic-table param-table" --> <#-- orig: cellspacing="0" -->
+          <@table type="data-list" class="+param-table">
             <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -362,7 +362,7 @@ code package.
   <@section menuContent=menuContent>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName!uiLabelMap.CommonNA} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
-      <@table type="data-list" autoAltRows=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true scrollable=true>
         <@thead>
         <@tr class="header-row">
           <@th id="Service_all">${uiLabelMap.WebtoolsServiceName}</@th>

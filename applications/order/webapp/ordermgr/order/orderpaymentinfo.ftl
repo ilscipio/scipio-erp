@@ -44,7 +44,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
    <#assign orderTypeId = orderReadHelper.getOrderTypeId()>
 
   <#if orderTypeId == "PURCHASE_ORDER">
-  <@table type="data-complex"> <#-- orig: class="basic-table" -->
+  <@table type="data-complex">
     <#if orderPaymentPreferences?has_content || invoices?has_content>
       <@thead>
         <@tr>
@@ -99,7 +99,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
      </#if>
   </@table>       
   <#else>
-  <@table type="data-complex"> <#-- orig: class="basic-table" -->
+  <@table type="data-complex">
      <#-- order payment status -->
     <#assign orderPaymentStatuses = orderReadHelper.getOrderPaymentStatuses()>
      <#if orderPaymentStatuses?has_content>

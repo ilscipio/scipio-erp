@@ -6,7 +6,7 @@ code package.
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
   <@section title=uiLabelMap.PartyParty> <#-- class="boxoutside" -->
-      <@table type="fields" width="100%" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
+      <@table type="fields" width="100%" class="+boxbottom">
         <@tr>
           <@td align="center">
             <#if person?has_content>

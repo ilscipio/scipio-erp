@@ -79,7 +79,7 @@ code package.
   <#if !requestParameters.orderId?? && returnHeader?has_content>
           <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
           <input type="hidden" name="_useRowSubmit" value="Y" />
-        <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" autoAltRows=false>
           <#assign readOnly = (returnHeader.statusId != "RETURN_REQUESTED" && returnHeader.statusId != "SUP_RETURN_REQUESTED")>
           <@tr><@td colspan="10"><@heading>${uiLabelMap.OrderOrderReturn} #${returnId}</@heading></@td></@tr>
 
@@ -87,7 +87,7 @@ code package.
           <#if orh??>
           <@tr>
             <@td colspan="10">
-              <@table type="summary"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+              <@table type="summary">
                 <@tr>
                   <@th width="25%">${uiLabelMap.OrderOrderTotal}</@th>
                   <@td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></@td>

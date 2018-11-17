@@ -14,7 +14,7 @@ code package.
 </#macro>
 <@section title=uiLabelMap.ProductInventorySummary menuContent=menuContent>
   <#if product??>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductFacility}</@th>

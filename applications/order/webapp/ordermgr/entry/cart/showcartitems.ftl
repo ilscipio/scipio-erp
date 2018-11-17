@@ -24,7 +24,7 @@ code package.
         <input type="hidden" name="finalizeReqPayInfo" value="false"/>
         <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
       </#if>
-      <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
+      <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true>
         <@thead>
         <@tr>
           <@th>&nbsp;</@th>
@@ -60,7 +60,7 @@ code package.
             <@td>
 
           <@fields type="default-manual-widgetonly">
-          <@table type="fields" inheritAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: border="0" -->
+          <@table type="fields" inheritAltRows=true>
           <@tr><@td colspan="2">
                   <#if cartLine.getProductId()??>
                     <#-- product item -->

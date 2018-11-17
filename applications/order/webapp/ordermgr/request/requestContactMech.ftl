@@ -18,7 +18,7 @@ code package.
 </#if>
 
   <@section title=uiLabelMap.PartyContactInformation>
-        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="fields">
             <@tr>
                 <@td align="right" valign="top" width="25%">
                     &nbsp;${label!uiLabelMap.PartyUnknown}

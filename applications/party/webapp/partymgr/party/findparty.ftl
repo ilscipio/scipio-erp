@@ -134,7 +134,7 @@ code package.
     <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": hideFields!"", "sortField" : sortField!""}, "&", false)>
     <@paginate mode="content" url=makeOfbizUrl("findparty") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0 altParam=false paramStr=paramStr viewIndexFirst=0>
     
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
      <@thead>
       <@tr class="header-row-2">
         <@th>${uiLabelMap.PartyPartyId}</@th>

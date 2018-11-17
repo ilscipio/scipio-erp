@@ -6,7 +6,7 @@ code package.
 
 <div>
   <#if contactMeches?has_content>
-    <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->      
+    <@table type="data-list">      
       <@thead>
         <@tr>
            <@th>${uiLabelMap.PartyContactType}</@th>

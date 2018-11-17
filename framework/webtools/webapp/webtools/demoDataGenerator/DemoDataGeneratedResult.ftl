@@ -1,7 +1,7 @@
 <#assign sectionTitle = rawLabel('WebtoolsDemoDataGeneratorResults') + " - " + rawString(parameters.SERVICE_NAME!)>
 <@section title=sectionTitle>
     <#if generatedDataStats?has_content>
-        <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1>
             <@thead>
                 <@tr class="header-row-2">
                     <@td>${uiLabelMap.CommonIteration}</@td>
@@ -42,7 +42,7 @@
                             <@td>                                 
                                 <@modal id="displayRecords_${statKeys[i]}_${stat_index}" label="${rawLabel('WebtoolsGeneratedDataStored')}: ${rawString(stat[statKeys[i]].stored)}">
                                     <@heading level=1>${uiLabelMap.CommonIteration} #${stat_index + 1}</@heading>
-                                    <@table type="data-list"> <#-- orig: class="basic-table hover-bar" -->
+                                    <@table type="data-list">
                                         <@thead>
                                             <@tr>
                                                 <@td>${statKeys[i]}</@td>

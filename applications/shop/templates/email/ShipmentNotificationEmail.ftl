@@ -7,7 +7,7 @@ code package.
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 <#if shipment?has_content>
   <@section title=(title!)>
-    <@table type="data-complex"> <#-- orig: border="0" cellpadding="0" cellspacing="0" -->
+    <@table type="data-complex">
       <@tbody>
         <@tr>
           <@td><b>${uiLabelMap.OrderTrackingNumber}</b></@td>
@@ -24,7 +24,7 @@ code package.
     </@table>
 
     <@section title="<b>${uiLabelMap.EcommerceShipmentItems}</b>">
-      <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="0" -->
+      <@table type="data-complex">
         <@tr valign="bottom">
           <@td width="35%"><span class="tableheadtext"><b>${uiLabelMap.OrderProduct}</b></span></@td>
           <@td width="10%" align="right"><span class="tableheadtext"><b>${uiLabelMap.OrderQuantity}</b></span></@td>

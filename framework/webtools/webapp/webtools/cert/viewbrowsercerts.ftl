@@ -14,7 +14,7 @@ code package.
   <#if (isSecure)>
     <#if (clientCerts?has_content)>
       <@fields type="default-manual">
-      <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="" -->
+      <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
         <#list clientCerts as cert>
           <#assign certString = Static["org.ofbiz.base.util.KeyStoreUtil"].certToString(cert)!>
           <#if (certString?has_content)>

@@ -32,7 +32,7 @@ function submitForm(form, mode, value) {
 
 <@section title=uiLabelMap.OrderItemGroups>
     <@fields type="default-manual">
-        <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
+        <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%">
           <#assign shipGroups = cart.getShipGroups()>
           <#if (shipGroups.size() > 0)>
             <#assign groupIdx = 0>
@@ -134,7 +134,7 @@ function submitForm(form, mode, value) {
 
 <@section title=uiLabelMap.OrderAssignItems>
     <@fields type="default-manual">
-        <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
+        <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%">
           <@tr>
             <@td><div class="tabletext"><b>${uiLabelMap.OrderProduct}</b></div></@td>
             <@td align="center"><div class="tabletext"><b>${uiLabelMap.OrderTotalQty}</b></div></@td>

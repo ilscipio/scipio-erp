@@ -6,7 +6,7 @@
     <#-- Receiving Results -->
     <#if receivedItems?has_content>
         <@section title="${rawLabel('ProductReceiptPurchaseOrder')} ${rawString(purchaseOrder.orderId)}">
-            <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list">
                 <@thead>
                     <@tr class="header-row">
                       <@th>${uiLabelMap.ProductShipmentId}</@th>
@@ -236,7 +236,7 @@
                 <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>
                     <@commonMsg type="result-norecord">${uiLabelMap.ProductNoItemsPoReceive}.</@commonMsg>
                 <#else>
-                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                         <@thead>
                             <@tr>
                                 <@td>${uiLabelMap.ProductId}</@td>

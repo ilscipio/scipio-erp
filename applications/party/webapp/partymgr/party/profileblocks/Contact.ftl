@@ -20,7 +20,7 @@ code package.
   </#macro>-->
   <@section id="partyContactInfo" title=partyContactInfoTitle open=partyContactInfoUseSection close=partyContactInfoUseSection>
       <#if contactMeches?has_content>
-        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex">
           <@thead>
           <@tr>
             <@th>${uiLabelMap.PartyContactType}</@th>

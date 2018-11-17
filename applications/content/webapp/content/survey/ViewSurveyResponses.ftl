@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-  <@table type="data-complex"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+  <@table type="data-complex">
     <#assign questions = surveyWrapper.getSurveyQuestionAndAppls()>
     <#assign surveyResults = surveyWrapper.getResults(questions)>
 

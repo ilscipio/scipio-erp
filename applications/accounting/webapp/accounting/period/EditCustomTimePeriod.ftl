@@ -26,7 +26,7 @@ code package.
         <@section title=uiLabelMap.AccountingOpenTimePeriods>
             <@form method="post" action=makeOfbizUrl("updateCustomTimePeriod") name="updateCustomTimePeriod">
                 <#if customTimePeriods?has_content>
-                    <@table type="data-list"> <#-- orig: class="basic-table" -->
+                    <@table type="data-list">
                         <@thead>
                             <@tr class="header-row">
                                 <@th>${uiLabelMap.CommonId}</@th>
@@ -131,7 +131,7 @@ code package.
         <#-- SCIPIO (11/13/2018): Showing closed time periods -->
         <#if allClosedCustomTimePeriods?has_content>
             <@section title=uiLabelMap.AccountingClosedTimePeriods>
-                <@table type="data-list"> <#-- orig: class="basic-table" -->
+                <@table type="data-list">
                     <@thead>
                         <@tr class="header-row">
                             <@th>${uiLabelMap.CommonId}</@th>

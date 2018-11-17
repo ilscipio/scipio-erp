@@ -5,7 +5,7 @@ code package.
 -->
 <@section>
   <#if parameters.searchLabels??>
-  <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" -->
+  <@table type="data-list" autoAltRows=true>
     <@thead>
       <@tr class="header-row">
           <@th>${uiLabelMap.WebtoolsLabelManagerRow}</@th>

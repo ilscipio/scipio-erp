@@ -51,7 +51,7 @@ code package.
           <#assign sectionTitle = uiLabelMap.ProductLocationProduct/>
           <@section title=sectionTitle>
                 <#-- ProductFacilityLocation stuff -->
-                <@table type="data-list"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-list">
                 <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductProduct}</@th>

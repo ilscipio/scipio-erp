@@ -105,7 +105,7 @@ code package.
             </div>
             <#if picklistBinInfo.picklistItemInfoList?has_content>
               <div style="margin-left: 30px;">
-                <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-list" autoAltRows=true>
                  <@thead>
                   <@tr class="header-row">
                     <@th>${uiLabelMap.ProductOrderId}</@th>
@@ -158,7 +158,7 @@ code package.
               </div>
               <#if picklistBinInfo.productStore.managedByLot?? && picklistBinInfo.productStore.managedByLot == "Y">
                 <div style="margin-left: 30px;">
-                  <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                  <@table type="data-list" autoAltRows=true>
                     <@thead>
                     <@tr class="header-row">                   
                           <@th>${uiLabelMap.ProductOrderId}</@th>

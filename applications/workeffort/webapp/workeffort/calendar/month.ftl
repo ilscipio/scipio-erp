@@ -28,7 +28,7 @@ code package.
 <#-- not using scrollable=true, should have better resizing method-->
 <div class="month-calendar-full">
 <@table type="data-complex" autoAltRows=true class="+calendar"
-    responsive=false><#--responsiveOptions={"ordering":false}--><#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+    responsive=false><#--responsiveOptions={"ordering":false}-->
   <@thead>
   <@tr class="header-row">
     <@th class="+month-header-week">&nbsp;</@th>
@@ -208,14 +208,14 @@ code package.
 
 <#--
     <@td valign="top">
-      <@table type="fields" width="100%"> <#- orig: cellspacing="0" -> <#- orig: cellpadding="0" -> <#- orig: border="0" ->
+      <@table type="fields" width="100%">
         <@tr>
           <@td nowrap="nowrap" class="monthdaynumber"><a href="<@ofbizUrl>day?startTime=${period.start.time?string("#")}<#if eventsParam?has_content>&amp;${eventsParam}</#if>${addlParam!}</@ofbizUrl>"  class="${styles.link_nav_info_number!} monthdaynumber">${period.start?date?string("d")?cap_first}</a></@td>
           <@td align="right"><a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=EVENT&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonAddNew}</a>&nbsp;&nbsp;</@td>
         </@tr>
       </@table>
       <#list period.calendarEntries as calEntry>
-      <@table type="fields" width="100%"> <#- orig: cellspacing="0" -> <#- orig: cellpadding="0" -> <#- orig: border="0" ->
+      <@table type="fields" width="100%">
         <@tr width="100%">
           <@td class='monthcalendarentry' width="100%" valign='top'>
             <#if (calEntry.workEffort.estimatedStartDate.compareTo(period.start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(period.end) >= 0)>

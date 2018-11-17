@@ -15,7 +15,7 @@ code package.
 <@section title=uiLabelMap.WorkEffortMyCurrentTaskList menuContent=menuContent>
 
   <@section title=uiLabelMap.WorkEffortAssignedTasks>
-  <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+  <@table type="data-list" autoAltRows=true>
    <@thead>
     <@tr class="header-row">
       <@th>${uiLabelMap.CommonStartDateTime}</@th>
@@ -41,7 +41,7 @@ code package.
   
   <#if (activities.size() > 0)>
     <@section title=uiLabelMap.WorkEffortWorkflowActivitiesUser>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
       <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonStartDateTime}</@th>
@@ -73,7 +73,7 @@ code package.
   </#if>
   <#if (roleActivities.size() > 0)>
     <@section title=uiLabelMap.WorkEffortWorkflowActivitiesUserRole>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
       <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonStartDateTime}</@th>
@@ -105,7 +105,7 @@ code package.
   </#if>
   <#if (groupActivities.size() > 0)>
     <@section title=uiLabelMap.WorkEffortWorkflowActivitiesUserGroup>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonStartDateTime}</@th>

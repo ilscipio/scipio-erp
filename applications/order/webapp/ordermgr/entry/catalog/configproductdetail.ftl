@@ -376,7 +376,7 @@ function getConfigDetails() {
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
 
-        <@table type="data-complex"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
+        <@table type="data-complex">
           <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>

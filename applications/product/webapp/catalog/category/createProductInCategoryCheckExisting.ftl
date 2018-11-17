@@ -25,7 +25,7 @@ code package.
 </#assign>
 <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
       <#if products?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
           <@thead>
             <@tr>
                 <@td>${uiLabelMap.ProductInternalName}</@td>

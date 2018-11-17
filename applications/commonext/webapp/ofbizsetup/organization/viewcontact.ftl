@@ -13,7 +13,7 @@ code package.
   </#macro>
   <@section id="partyContactInfo" title=uiLabelMap.PartyContactInformation menuContent=menuContent>
       <#if contactMeches?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
           <@tr>
             <@th>${uiLabelMap.PartyContactType}</@th>
             <@th>${uiLabelMap.PartyContactInformation}</@th>

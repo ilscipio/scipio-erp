@@ -108,7 +108,7 @@ code package.
           <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
           <@tr>
             <@td colspan="6">
-              <@table type="fields"> <#-- orig: cellspacing="1" cellpadding="2" width="100%" -->
+              <@table type="fields">
                 <#list shippingContactMechList as shippingContactMech>
                   <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                   <@tr>

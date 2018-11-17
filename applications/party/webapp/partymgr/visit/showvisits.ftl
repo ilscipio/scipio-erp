@@ -25,7 +25,7 @@ code package.
     <#assign paramStr = addParamsToStr("", {"sort": sort!, "partyId": partyId!, "showAll": showAll!}, "&amp;", false)>
     <@paginate mode="content" url=makeOfbizUrl("showvisits") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=visitSize!0 altParam=false paramStr=paramStr viewIndexFirst=1>
     
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
        <@thead>
         <@tr class="header-row">
           <@th><a href="<@ofbizUrl>showvisits?sort=visitId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitId}</a></@th>

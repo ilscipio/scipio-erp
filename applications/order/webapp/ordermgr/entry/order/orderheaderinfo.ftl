@@ -5,7 +5,7 @@ code package.
 -->
 
 <@section title=uiLabelMap.OrderOrderHeaderInfo>
-    <@table type="fields"> <#-- orig: class="basic-table" -->
+    <@table type="fields">
         <#-- order name -->
         <#if (orderName?has_content)>
             <@tr>
@@ -41,7 +41,7 @@ code package.
                     &nbsp;<b>${uiLabelMap.OrderOrderTerms}</b>
                 </@td>
                 <@td colspan="2">
-                    <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                    <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}">
                         <@tr>
                             <@td width="35%"><b>${uiLabelMap.OrderOrderTermType}</b></@td>
                             <@td width="10%"><b>${uiLabelMap.OrderOrderTermValue}</b></@td>

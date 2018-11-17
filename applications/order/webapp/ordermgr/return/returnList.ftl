@@ -11,7 +11,7 @@ code package.
 </#macro>
 <@section title=uiLabelMap.OrderReturnsCurrent menuContent=menuContent>
   <#if returnList?has_content>
-    <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list">
       <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.OrderReturnId} ${uiLabelMap.CommonNbr}</@th>

@@ -22,7 +22,7 @@ code package.
         <input type="hidden" name="communicationEventTypeId" value="WEB_SITE_COMMUNICATI" />
         <input type="hidden" name="productStoreId" value="${productStore.productStoreId}" />
         <input type="hidden" name="emailType" value="CONT_NOTI_EMAIL" />
-        <@table type="fields" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="fields" class="${styles.table_basic!}" cellspacing="0">
             <@tbody>
                 <@tr>
                    <@td>${uiLabelMap.EcommerceSubject}</@td>

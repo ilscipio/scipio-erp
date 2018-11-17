@@ -38,7 +38,7 @@ code package.
           </#if>
           <input type="hidden" name="origCommEventId" value="${orgComm}"/>
         </#if>
-        <@table type="fields"> <#-- orig: width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom" -->
+        <@table type="fields">
           <@tr>
             <@td colspan="2">&nbsp;</@td>
           </@tr>

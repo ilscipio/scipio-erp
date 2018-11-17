@@ -30,7 +30,7 @@ code package.
     <input type="hidden" name="_checkGlobalScope" value="Y" />
     <input type="hidden" name="productId" value="${productId}" />
   
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
       <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonId}</@th>

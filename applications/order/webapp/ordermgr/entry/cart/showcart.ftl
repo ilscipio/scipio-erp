@@ -44,7 +44,7 @@ code package.
         <#if parameters.availabalityList?has_content>
         <@row>
           <@cell>
-          <@table type="data-list" autoAltRows=false> <#-- orig: class="" -->
+          <@table type="data-list" autoAltRows=false>
             <@thead>
               <@tr>
                   <@th>${uiLabelMap.Facility}</@th>

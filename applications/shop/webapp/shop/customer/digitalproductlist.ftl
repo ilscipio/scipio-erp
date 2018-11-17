@@ -11,7 +11,7 @@ code package.
     </@menu>
 </#macro>
 <@section title=uiLabelMap.PageTitleDigitalProductList menuContent=menuContent>
-    <@table type="data-complex"> <#-- orig: width="100%" cellpadding="1" cellspacing="0" border="0" -->
+    <@table type="data-complex">
       <@tr>
         <@td width="30%"><b>${uiLabelMap.ProductProductName}</b>
         </@td>

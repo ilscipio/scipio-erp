@@ -40,7 +40,7 @@ function clickAll(e) {
             <input type="hidden" name="productId" value="${productId}" />
             <input type="hidden" name="_useRowSubmit" value="Y" />
             <input type="hidden" name="_checkGlobalScope" value="Y" />
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
         <#assign rowCount = 0>
         <@thead>
           <@tr class="header-row">

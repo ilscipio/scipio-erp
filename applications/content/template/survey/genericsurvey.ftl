@@ -189,7 +189,7 @@ code package.
       <#assign haveOpenMultiRespHeader = true/>
       <@tr width="100%" open=true close=false />
         <@td colspan="5" width="100%" open=true close=false />
-          <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" open=true close=false /> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="1" -->
+          <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" open=true close=false />
             <@tr>
               <@td>
                 <div class="tableheadtext">${surveyMultiResp.multiRespTitle?default("&nbsp;")}</div>

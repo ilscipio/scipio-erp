@@ -5,7 +5,7 @@ code package.
 -->
 <#if glAcctgAndAmountPercentageList?has_content && glAccountCategories?has_content>
     <form id="costCenters" method="post" action="<@ofbizUrl>createUpdateCostCenter</@ofbizUrl>">
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-list" autoAltRows=true>
             <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.FormFieldTitle_organizationPartyId}</@th>

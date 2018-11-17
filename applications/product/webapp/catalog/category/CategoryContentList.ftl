@@ -8,7 +8,7 @@
                   <input name="fromDate" type="hidden" value="${productCategoryContent.fromDate}"/>
             </form>
         </#list>
-        <@table type="data-list" autoAltRows=true responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
             <#-- Header Begins -->
             <@thead>
                 <@tr class="header-row-2">

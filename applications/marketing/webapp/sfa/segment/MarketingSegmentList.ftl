@@ -1,6 +1,6 @@
 <#if listMarketingSegment?has_content>
     <@section>
-        <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1>
             <#-- Header Begins -->
             <@thead>
                 <@tr>

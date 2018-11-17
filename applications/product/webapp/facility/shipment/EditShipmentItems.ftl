@@ -15,7 +15,7 @@ code package.
         </form>
     </@section>
     <@section>
-        <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" autoAltRows=false>
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductItem}</@th>

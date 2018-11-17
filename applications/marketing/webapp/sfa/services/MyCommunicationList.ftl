@@ -1,7 +1,7 @@
 <#if commEventList?has_content>
     <@section>
         <form action="<@ofbizUrl>deleteCommunicationEvents</@ofbizUrl>" method="post">        
-            <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                 <#-- Header Begins -->
                 <@thead>
                     <@tr>                        

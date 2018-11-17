@@ -6,7 +6,7 @@ code package.
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
   <@section>
-    <@table type="summary"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="summary">
         <@thead>
           <@tr>
             <@th>&nbsp;</@th>

@@ -32,7 +32,7 @@ code package.
 </#macro>
 <@section title=uiLabelMap.ProductFindOrdersToPick menuContent=menuContent>
   <#if pickMoveInfoList?has_content>
-    <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-complex" autoAltRows=false>
       <#if pickMoveInfoList?has_content || rushOrderInfo?has_content>
        <@thead>
         <@tr class="header-row">
@@ -236,7 +236,7 @@ code package.
 
 <#if toPickList?has_content>
   <@section title=uiLabelMap.ProductPickingDetail>
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
       <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.ProductOrderId}</@th>

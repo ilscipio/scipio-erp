@@ -70,7 +70,9 @@ public class CheckOutEvents {
     public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
 
-        if (UtilValidate.isNotEmpty(cart.items())) {
+        // SCIPIO: 2018-11: better check
+        //if (UtilValidate.isNotEmpty(cart.items())) {
+        if (cart.size() > 0) {
             return "success";
         }
         String errMsg = UtilProperties.getMessage(resource_error, "checkevents.cart_empty", cart.getLocale());

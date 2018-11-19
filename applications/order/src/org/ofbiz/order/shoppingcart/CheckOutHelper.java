@@ -79,9 +79,11 @@ public class CheckOutHelper {
     public static final int scale = UtilNumber.getBigDecimalScale("order.decimals");
     public static final RoundingMode rounding = UtilNumber.getRoundingMode("order.rounding");
 
-    protected LocalDispatcher dispatcher = null;
-    protected Delegator delegator = null;
-    protected ShoppingCart cart = null;
+    // SCIPIO: 2018-11: Fields now final.
+
+    protected final LocalDispatcher dispatcher;
+    protected final Delegator delegator;
+    protected final ShoppingCart cart;
 
     public CheckOutHelper(LocalDispatcher dispatcher, Delegator delegator, ShoppingCart cart) {
         this.delegator = delegator;

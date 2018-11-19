@@ -32,7 +32,10 @@ cart = session.getAttribute("shoppingCart");
 if (cart) {
 createNewShipGroup = request.getParameter("createNewShipGroup");
 if ("Y".equals(createNewShipGroup)) {
-    cart.addShipInfo();
+    synchronized (shoppingCart) { // SCIPIO
+        // SCIPIO: FIXME: Screen scripts should avoid modifying the cart...
+        cart.addShipInfo();
+    }
 }
 
 orderPartyId = cart.getPartyId();

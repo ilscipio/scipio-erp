@@ -68,7 +68,10 @@ if (partyId) {
         contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
         if (contactMech) {
             ShoppingCart shoppingCart = ShoppingCartEvents.getCartObject(request);
-            shoppingCart.setAllShippingContactMechId(contactMech.contactMechId);
+            synchronized (shoppingCart) { // SCIPIO
+                // SCIPIO: FIXME: Screen scripts should avoid modifying the cart...
+                shoppingCart.setAllShippingContactMechId(contactMech.contactMechId);
+            }
         }
     }
 }

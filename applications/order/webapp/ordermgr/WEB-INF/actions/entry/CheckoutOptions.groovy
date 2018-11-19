@@ -58,11 +58,14 @@ if (shoppingCart.getShipmentMethodTypeId() && shoppingCart.getCarrierPartyId()) 
 }
 
 // other profile defaults
-if (!shoppingCart.getShippingAddress() && profiledefs?.defaultShipAddr) {
-    shoppingCart.setAllShippingContactMechId(profiledefs.defaultShipAddr);
-}
-if (shoppingCart.selectedPayments() == 0 && profiledefs?.defaultPayMeth) {
-    shoppingCart.addPayment(profiledefs.defaultPayMeth);
+synchronized (shoppingCart) { // SCIPIO
+    // SCIPIO: FIXME: Screen scripts should avoid modifying the cart...
+    if (!shoppingCart.getShippingAddress() && profiledefs?.defaultShipAddr) {
+        shoppingCart.setAllShippingContactMechId(profiledefs.defaultShipAddr);
+    }
+    if (shoppingCart.selectedPayments() == 0 && profiledefs?.defaultPayMeth) {
+        shoppingCart.addPayment(profiledefs.defaultPayMeth);
+    }
 }
 
 // create a list containing all the parties associated to the current cart, useful to change

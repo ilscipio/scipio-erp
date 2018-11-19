@@ -76,6 +76,9 @@ if (userLogin) {
     
     cart = session.getAttribute("shoppingCart");
     if (cart) {
-        cart.setAllShippingContactMechId(context.shipToContactMechId);
+        synchronized (cart) { // SCIPIO
+            // SCIPIO: FIXME: Screen scripts should avoid modifying the cart...
+            cart.setAllShippingContactMechId(context.shipToContactMechId);
+        }
     }
 }

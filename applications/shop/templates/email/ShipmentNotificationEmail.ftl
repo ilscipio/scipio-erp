@@ -23,7 +23,7 @@ code package.
       </@tbody>
     </@table>
 
-    <@section title="<b>${uiLabelMap.EcommerceShipmentItems}</b>">
+    <@section title=uiLabelMap.EcommerceShipmentItems>
       <@table type="data-complex">
         <@tr valign="bottom">
           <@td width="35%"><span class="tableheadtext"><b>${uiLabelMap.OrderProduct}</b></span></@td>

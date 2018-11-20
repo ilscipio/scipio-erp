@@ -10,6 +10,8 @@ code package.
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
     
+    <include location="component://*/webapp/hooks/backend-controller-post.xml" optional="true" order="post-local"/>
+    
     <!-- All controller entries were exported to external controller files, to simplify the work whilst reviewing all entries -->
     <description>Accounting Manager Module Site Configuration File</description>
     

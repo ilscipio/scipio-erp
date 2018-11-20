@@ -8,8 +8,7 @@ if (paymentGatewayStripeRestModelEntity) {
     Debug.log("paymentGatewayStripeRestModelEntity exists");
     paymentGatewayStripeRest = delegator.findOne("PaymentGatewayStripeRest", ["paymentGatewayConfigId" : parameters.paymentGatewayConfigId], false);
     context.paymentGatewayStripeRest = paymentGatewayStripeRest;
-    context.paymentGatewayStripeRestModelEntity = paymentGatewayStripeRestModelEntity; 
-    Debug.log("PaymentGatewayStripeRest ====> " + paymentGatewayStripeRest);
+    context.paymentGatewayStripeRestModelEntity = paymentGatewayStripeRestModelEntity;    
 }
 
 // Check if PaymentGatewayPayPalRest entity exists

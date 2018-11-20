@@ -978,25 +978,26 @@ public class RequestHandler {
             ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
 
         // SCIPIO: 2018-11-19: implement synchronize
-        String eventReturn = runEventImpl(request, response, event.getSynchronizeObjList(request, response), 0, event, requestMap, trigger);
+        String eventReturn = runEventImpl(request, response, event.getSynchronizeExprList(), 0, event, requestMap, trigger);
         if (Debug.verboseOn() || (Debug.infoOn() && "request".equals(trigger))) Debug.logInfo("Ran Event [" + event.type + ":" + event.path + "#" + event.invoke + "] from [" + trigger + "], result is [" + eventReturn + "]", module);
         return eventReturn;
     }
     
-    private String runEventImpl(HttpServletRequest request, HttpServletResponse response, List<Object> synchronizeObjList, int synchronizeObjIndex, // SCIPIO
+    private String runEventImpl(HttpServletRequest request, HttpServletResponse response, List<ConfigXMLReader.ValueExpr> synchronizeExprList, int synchronizeObjIndex, // SCIPIO
             ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
-        if (synchronizeObjList == null || synchronizeObjIndex >= synchronizeObjList.size()) {
+        if (synchronizeExprList == null || synchronizeObjIndex >= synchronizeExprList.size()) {
             // SCIPIO: stock case
             EventHandler eventHandler = eventFactory.getEventHandler(event.type);
             return eventHandler.invoke(event, requestMap, request, response);
         } else {
-            Object synchronizeObj = synchronizeObjList.get(synchronizeObjIndex);
+            Object synchronizeObj = synchronizeExprList.get(synchronizeObjIndex).getValue(request, response);
             if (synchronizeObj != null) {
                 synchronized(synchronizeObj) {
-                    return runEventImpl(request, response, synchronizeObjList, synchronizeObjIndex + 1, event, requestMap, trigger);
+                    return runEventImpl(request, response, synchronizeExprList, synchronizeObjIndex + 1, event, requestMap, trigger);
                 }
             } else {
-                return runEventImpl(request, response, synchronizeObjList, synchronizeObjIndex + 1, event, requestMap, trigger);
+                Debug.logWarning("[uri=" + requestMap.getUri() + "] Event could not synchronize on object (null): " + synchronizeExprList.get(synchronizeObjIndex).getOrigValue(), module);
+                return runEventImpl(request, response, synchronizeExprList, synchronizeObjIndex + 1, event, requestMap, trigger);
             }
         }
     }

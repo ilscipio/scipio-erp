@@ -2440,10 +2440,10 @@ public class ConfigXMLReader {
      * Similar to FlexibleStringExpander but with some specific expression support for controller.
      */
     public static abstract class ValueExpr {
-        protected final String nameOrVal;
+        protected final String origValue;
 
-        protected ValueExpr(String nameOrVal) {
-            this.nameOrVal = nameOrVal;
+        protected ValueExpr(String origValue) {
+            this.origValue = origValue;
         }
 
         public static String ensureDelims(String value) {
@@ -2468,15 +2468,15 @@ public class ConfigXMLReader {
                     String name = expr.substring(dotIndex+1);
                     if (scope.length() > 0 && name.length() > 0) {
                         if ("requestAttributes".equals(scope)) {
-                            return new ReqAttrValueExpr(name);
+                            return new ReqAttrValueExpr(value, name);
                         } else if ("requestParameters".equals(scope)) {
-                            return new ReqParamValueExpr(name);
+                            return new ReqParamValueExpr(value, name);
                         } else if ("requestAttrParam".equals(scope)) {
-                            return new ReqAttrParamValueExpr(name);
+                            return new ReqAttrParamValueExpr(value, name);
                         } else if ("sessionAttributes".equals(scope)) {
-                            return new SessionAttrValueExpr(name);
+                            return new SessionAttrValueExpr(value, name);
                         } else if ("applicationAttributes".equals(scope)) {
-                            return new ApplAttrValueExpr(name);
+                            return new ApplAttrValueExpr(value, name);
                         }
                     }
                 }
@@ -2487,10 +2487,14 @@ public class ConfigXMLReader {
 
         public abstract Object getValue(HttpServletRequest request, HttpServletResponse response);
 
+        public String getOrigValue() {
+            return origValue;
+        }
+        
         protected static class NullValueExpr extends ValueExpr {
             public static final NullValueExpr INSTANCE = new NullValueExpr();
             protected NullValueExpr() {
-                super(null);
+                super("");
             }
             
             @Override
@@ -2506,14 +2510,14 @@ public class ConfigXMLReader {
             
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
-                return nameOrVal;
+                return origValue;
             }
         }
 
         protected static class FlexibleValueExpr extends ValueExpr {
             protected final FlexibleStringExpander exdr;
             protected FlexibleValueExpr(String expr) {
-                super(null);
+                super(expr);
                 this.exdr = FlexibleStringExpander.getInstance(expr);
             }
 
@@ -2527,66 +2531,74 @@ public class ConfigXMLReader {
             }
         }
 
-        protected static class ReqAttrValueExpr extends ValueExpr {
-            protected ReqAttrValueExpr(String name) {
-                super(name);
+        protected static abstract class NameBasedValueExpr extends ValueExpr {
+            protected final String name;
+            protected NameBasedValueExpr(String origValue, String name) {
+                super(origValue);
+                this.name = name;
+            }
+        }
+        
+        protected static class ReqAttrValueExpr extends NameBasedValueExpr {
+            protected ReqAttrValueExpr(String origValue, String name) {
+                super(origValue, name);
             }
 
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
-                return request.getAttribute(nameOrVal);
+                return request.getAttribute(name);
             }
         }
 
-        protected static class ReqParamValueExpr extends ValueExpr {
-            protected ReqParamValueExpr(String name) {
-                super(name);
+        protected static class ReqParamValueExpr extends NameBasedValueExpr {
+            protected ReqParamValueExpr(String origValue, String name) {
+                super(origValue, name);
             }
 
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
-                return request.getParameter(nameOrVal);
+                return request.getParameter(name);
             }
         }
 
-        protected static class ReqAttrParamValueExpr extends ValueExpr {
-            protected ReqAttrParamValueExpr(String name) {
-                super(name);
+        protected static class ReqAttrParamValueExpr extends NameBasedValueExpr {
+            protected ReqAttrParamValueExpr(String origValue, String name) {
+                super(origValue, name);
             }
 
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
-                Object attrValue = request.getAttribute(nameOrVal);
+                Object attrValue = request.getAttribute(name);
                 if (attrValue == null) {
-                    attrValue = request.getParameter(nameOrVal);
+                    attrValue = request.getParameter(name);
                 }
                 return attrValue;
             }
         }
 
-        protected static class SessionAttrValueExpr extends ValueExpr {
-            protected SessionAttrValueExpr(String name) {
-                super(name);
+        protected static class SessionAttrValueExpr extends NameBasedValueExpr {
+            protected SessionAttrValueExpr(String origValue, String name) {
+                super(origValue, name);
             }
 
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
                 HttpSession session = request.getSession(false);
                 if (session != null) {
-                    return session.getAttribute(nameOrVal);
+                    return session.getAttribute(name);
                 }
                 return null;
             }
         }
 
-        protected static class ApplAttrValueExpr extends ValueExpr {
-            protected ApplAttrValueExpr(String name) {
-                super(name);
+        protected static class ApplAttrValueExpr extends NameBasedValueExpr {
+            protected ApplAttrValueExpr(String origValue, String name) {
+                super(origValue, name);
             }
 
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
-                return request.getServletContext().getAttribute(nameOrVal);
+                return request.getServletContext().getAttribute(name);
             }
         }
     }

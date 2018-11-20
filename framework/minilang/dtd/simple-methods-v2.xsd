@@ -4859,6 +4859,34 @@ under the License.
         </xs:complexType>
     </xs:element>
 
+
+<!--
+    ================================
+    == Other Operations (SCIPIO) ===
+    ================================
+-->
+
+    <xs:element name="synchronized" substitutionGroup="OtherOperations">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Wraps the code in a java synchronized block on the given field.
+                Added 2018-11-20.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="AllOperations"/>
+            <xs:attribute name="field" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The name of the field to use.
+                        
+                        Optional. Attribute type: expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
     <!--
         ======================================================
         ========== The Simple Map Processor Section ==========

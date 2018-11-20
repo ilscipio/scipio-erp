@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -139,10 +141,11 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Timestamp cancelBackOrderDate = null;
 
     // SCIPIO: Changed all LinkedList to ArrayList
+    // SCIPIO: 2018-11-20: Changed all to concurrent collections to ensure safe individual field reads
 
     private Map<String, String> contactMechIdsMap = new HashMap<>();
     private List<GenericValue> orderItemPriceInfos = null;
-    private List<GenericValue> itemAdjustments = new ArrayList<>();
+    private List<GenericValue> itemAdjustments = new CopyOnWriteArrayList<>();
     private boolean isPromo = false;
     private BigDecimal promoQuantityUsed = BigDecimal.ZERO;
     private Map<GenericPK, BigDecimal> quantityUsedPerPromoCandidate = new HashMap<>();
@@ -151,7 +154,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map<String, GenericValue> additionalProductFeatureAndAppls = new HashMap<>();
     private List<String> alternativeOptionProductIds = null;
     private ProductConfigWrapper configWrapper = null;
-    private List<GenericValue> featuresForSupplier = new ArrayList<>();
+    private List<GenericValue> featuresForSupplier = new CopyOnWriteArrayList<>();
 
     /**
      * SCIPIO: A parameter structure to help manage new options to the extremely
@@ -789,18 +792,18 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.setShipAfterDate(item.getShipAfterDate());
         this.setEstimatedShipDate(item.getEstimatedShipDate());
         this.setCancelBackOrderDate(item.getCancelBackOrderDate());
-        this.contactMechIdsMap = item.getOrderItemContactMechIds() == null ? null : new HashMap<>(item.getOrderItemContactMechIds());
-        this.orderItemPriceInfos = item.getOrderItemPriceInfos() == null ? null : new ArrayList<>(item.getOrderItemPriceInfos());
+        this.contactMechIdsMap = item.getOrderItemContactMechIds() == null ? null : new ConcurrentHashMap<>(item.getOrderItemContactMechIds());
+        this.orderItemPriceInfos = item.getOrderItemPriceInfos() == null ? null : new CopyOnWriteArrayList<>(item.getOrderItemPriceInfos());
         this.itemAdjustments.addAll(item.getAdjustments());
         this.isPromo = item.getIsPromo();
         this.promoQuantityUsed = item.promoQuantityUsed;
-        this.quantityUsedPerPromoCandidate = new HashMap<>(item.quantityUsedPerPromoCandidate);
-        this.quantityUsedPerPromoFailed = new HashMap<>(item.quantityUsedPerPromoFailed);
-        this.quantityUsedPerPromoActual = new HashMap<>(item.quantityUsedPerPromoActual);
+        this.quantityUsedPerPromoCandidate = new ConcurrentHashMap<>(item.quantityUsedPerPromoCandidate);
+        this.quantityUsedPerPromoFailed = new ConcurrentHashMap<>(item.quantityUsedPerPromoFailed);
+        this.quantityUsedPerPromoActual = new ConcurrentHashMap<>(item.quantityUsedPerPromoActual);
         this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
-                null : new HashMap<>(item.getAdditionalProductFeatureAndAppls());
+                null : new ConcurrentHashMap<>(item.getAdditionalProductFeatureAndAppls());
         if (item.getAlternativeOptionProductIds() != null) {
-            List<String> tempAlternativeOptionProductIds = new ArrayList<>();
+            List<String> tempAlternativeOptionProductIds = new CopyOnWriteArrayList<>();
             tempAlternativeOptionProductIds.addAll(item.getAlternativeOptionProductIds());
             this.setAlternativeOptionProductIds(tempAlternativeOptionProductIds);
         }
@@ -862,7 +865,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         this.itemGroup = itemGroup;
         this.prodCatalogId = prodCatalogId;
-        this.attributes = (attributes == null ? new HashMap<>() : attributes);
+        this.attributes = (attributes == null ? new ConcurrentHashMap<>() : attributes);
         this.delegator = _product.getDelegator();
         this.delegatorName = _product.getDelegator().getDelegatorName();
         this.addAllProductFeatureAndAppls(additionalProductFeatureAndAppls);
@@ -886,7 +889,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             this.setBasePrice(basePrice);
             this.setDisplayPrice(basePrice);
         }
-        this.attributes = (attributes == null ? new HashMap<>() : attributes);
+        this.attributes = (attributes == null ? new ConcurrentHashMap<>() : attributes);
         this.prodCatalogId = prodCatalogId;
         this.delegatorName = delegator.getDelegatorName();
         this.locale = locale;
@@ -2318,7 +2321,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Creates an OrderItemAttribute entry. */
     public void setOrderItemAttribute(String name, String value) {
         if (orderItemAttributes == null) {
-            orderItemAttributes = new HashMap<>();
+            orderItemAttributes = new ConcurrentHashMap<>();
         }
         this.orderItemAttributes.put(name, value);
     }

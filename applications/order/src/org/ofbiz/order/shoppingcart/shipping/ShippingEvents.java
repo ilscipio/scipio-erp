@@ -64,6 +64,8 @@ public class ShippingEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
+        synchronized (cart) { // SCIPIO
+
         int shipGroups = cart.getShipGroupSize();
         for (int i = 0; i < shipGroups; i++) {
             String shipmentMethodTypeId = cart.getShipmentMethodTypeId(i);
@@ -86,6 +88,9 @@ public class ShippingEvents {
         }
 
         ProductPromoWorker.doPromotions(cart, dispatcher);
+
+        }
+
         // all done
         return "success";
     }

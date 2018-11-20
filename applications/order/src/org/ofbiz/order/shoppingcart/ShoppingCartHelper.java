@@ -61,6 +61,8 @@ import org.ofbiz.service.ServiceUtil;
  * {@link org.ofbiz.order.shoppingcart.ShoppingCart ShoppingCart}
  * providing catalog and product services to simplify the interaction
  * with the cart directly.
+ * <p>
+ * SCIPIO: NOTE: 2018-11-19: All high-level cart modification methods now synchronize on the cart object.
  */
 public class ShoppingCartHelper {
 
@@ -165,6 +167,10 @@ public class ShoppingCartHelper {
             context.remove("itemComment");
         }
 
+        int itemId = -1; // SCIPIO: moved definition here from below
+
+        synchronized(cart) { // SCIPIO
+
         // stores the default desired delivery date in the cart if need
         if (UtilValidate.isNotEmpty(context.get("useAsDefaultDesiredDeliveryDate"))) {
             cart.setDefaultItemDeliveryDate((String) context.get("itemDesiredDeliveryDate"));
@@ -239,7 +245,7 @@ public class ShoppingCartHelper {
         }
 
         // add or increase the item to the cart
-        int itemId = -1;
+        //int itemId = -1; // SCIPIO: moved above
         try {
             if (productId != null) {
 
@@ -268,6 +274,8 @@ public class ShoppingCartHelper {
         } catch (ItemNotFoundException e) {
             result = ServiceUtil.returnError(e.getMessage());
             return result;
+        }
+
         }
 
         // Indicate there were no critical errors
@@ -307,6 +315,9 @@ public class ShoppingCartHelper {
         String orderItemTypeId = null;
         String productId = null;
         if (itemIter != null && itemIter.hasNext()) {
+
+            synchronized(cart) { // SCIPIO
+
             while (itemIter.hasNext()) {
                 GenericValue orderItem = null;
                 Object value = itemIter.next();
@@ -350,6 +361,9 @@ public class ShoppingCartHelper {
                     }
                 }
             }
+
+            }
+
             if (errorMsgs.size() > 0) {
                 result = ServiceUtil.returnError(errorMsgs);
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -388,6 +402,8 @@ public class ShoppingCartHelper {
 
         // If a _ign_${itemGroupNumber} is appended to the name it will be put in that group instead of the default in the request parameter in itemGroupNumber
         String ignSeparator = "_ign_";
+
+        synchronized(cart) { // SCIPIO
 
         // iterate through the context and find all keys that start with "quantity_"
         for (Map.Entry<String, ? extends Object> entry : context.entrySet()) {
@@ -473,6 +489,8 @@ public class ShoppingCartHelper {
             }
         }
 
+        }
+
         //Indicate there were no non critical errors
         return ServiceUtil.returnSuccess();
     }
@@ -488,6 +506,8 @@ public class ShoppingCartHelper {
 
         // The number of multi form rows is retrieved
         int rowCount = UtilHttp.getMultiFormRowCount(context);
+
+        synchronized(cart) { // SCIPIO
 
         // assume that the facility is the same for all requirements
         String facilityId = (String) context.get("facilityId_o_0");
@@ -564,6 +584,9 @@ public class ShoppingCartHelper {
                 }
             }
         }
+        
+        }
+
         //Indicate there were no non critical errors
         return ServiceUtil.returnSuccess();
     }
@@ -605,6 +628,9 @@ public class ShoppingCartHelper {
         }
 
         BigDecimal totalQuantity = BigDecimal.ZERO;
+
+        synchronized(cart) { // SCIPIO
+
         for (GenericValue productCategoryMember : prodCatMemberCol) {
             BigDecimal quantity = productCategoryMember.getBigDecimal("quantity");
 
@@ -625,6 +651,8 @@ public class ShoppingCartHelper {
             return result; // don't return error because this is a non-critical error and should go back to the same page
         }
 
+        }
+
         result = ServiceUtil.returnSuccess();
         result.put("totalQuantity", totalQuantity);
         return result;
@@ -634,6 +662,9 @@ public class ShoppingCartHelper {
     public Map<String, Object> deleteFromCart(Map<String, ? extends Object> context) {
         Map<String, Object> result = null;
         List<String> errorMsgs = new ArrayList<>();
+
+        synchronized(cart) { // SCIPIO
+
         for (String o : context.keySet()) {
             if (o.toUpperCase(Locale.getDefault()).startsWith("DELETE")) {
                 try {
@@ -649,6 +680,8 @@ public class ShoppingCartHelper {
                     Debug.logError("Error deleting from cart: " + nfe.getMessage(), module);
                 }
             }
+        }
+
         }
 
         if (errorMsgs.size() > 0) {
@@ -674,6 +707,8 @@ public class ShoppingCartHelper {
         BigDecimal oldQuantity;
         String oldDescription = "";
         BigDecimal oldPrice = BigDecimal.ONE.negate();
+
+        synchronized(cart) { // SCIPIO
 
         if (this.cart.isReadOnlyCart()) {
             String errMsg = UtilProperties.getMessage(resource_error, "cart.cart_is_in_read_only_mode", this.cart.getLocale());
@@ -930,6 +965,8 @@ public class ShoppingCartHelper {
         // Promotions are run again.
         ProductPromoWorker.doPromotions(this.cart, dispatcher);
 
+        }
+
         if (errorMsgs.size() > 0) {
             result = ServiceUtil.returnError(errorMsgs);
             return result;
@@ -941,7 +978,9 @@ public class ShoppingCartHelper {
 
     /** Empty the shopping cart. */
     public boolean clearCart() {
+        synchronized(cart) { // SCIPIO
         this.cart.clear();
+        }
         return true;
     }
 
@@ -1023,6 +1062,9 @@ public class ShoppingCartHelper {
         if (agreement == null) {
             result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderCouldNotGetAgreement",UtilMisc.toMap("agreementId",agreementId),this.cart.getLocale()));
         } else {
+
+            synchronized(cart) { // SCIPIO
+
             // set the agreement id in the cart
             cart.setAgreementId(agreementId);
             try {
@@ -1066,6 +1108,8 @@ public class ShoppingCartHelper {
                   result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderCouldNotGetAgreementTermsThrough",UtilMisc.toMap("agreementId",agreementId),this.cart.getLocale())  + UtilProperties.getMessage(resource_error,"OrderError",this.cart.getLocale()) + e.getMessage());
                   return result;
             }
+            
+            }
         }
         return result;
     }
@@ -1074,7 +1118,9 @@ public class ShoppingCartHelper {
         Map<String, Object> result = null;
 
         try {
-            this.cart.setCurrency(this.dispatcher,currencyUomId);
+            synchronized(cart) { // SCIPIO
+            this.cart.setCurrency(this.dispatcher, currencyUomId);
+            }
             result = ServiceUtil.returnSuccess();
          } catch (CartItemModifyException ex) {
              result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderSetCurrencyError",this.cart.getLocale()) + ex.getMessage());
@@ -1089,14 +1135,18 @@ public class ShoppingCartHelper {
 
     public Map<String, Object> addOrderTerm(String termTypeId, BigDecimal termValue,Long termDays, String textValue) {
         Map<String, Object> result = null;
+        synchronized(cart) { // SCIPIO
         this.cart.addOrderTerm(termTypeId,termValue,termDays,textValue);
+        }
         result = ServiceUtil.returnSuccess();
         return result;
     }
 
     public Map<String, Object> removeOrderTerm(int index) {
         Map<String, Object> result = null;
+        synchronized(cart) { // SCIPIO
         this.cart.removeOrderTerm(index);
+        }
         result = ServiceUtil.returnSuccess();
         return result;
     }

@@ -76,6 +76,9 @@ public class CartEventListener implements HttpSessionListener {
 
             Debug.logInfo("Saving abandoned cart", module);
             int seqId = 1;
+
+            synchronized (cart) { // SCIPIO
+
             for (ShoppingCartItem cartItem : cart) {
                 GenericValue cartAbandonedLine = delegator.makeValue("CartAbandonedLine");
 
@@ -99,6 +102,8 @@ public class CartEventListener implements HttpSessionListener {
                 cartAbandonedLine.create();
 
                 seqId++;
+            }
+
             }
         } catch (GenericEntityException e) {
             try {

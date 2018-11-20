@@ -96,6 +96,8 @@ public class CheckOutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
+        synchronized (cart) { // SCIPIO
+
         GenericValue userLogin = cart.getUserLogin();
         if (userLogin == null) {
             userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -269,6 +271,8 @@ public class CheckOutEvents {
             curPage = determineInitialCheckOutPage(cart);
         }
 
+        }
+
         return curPage;
     }
 
@@ -301,10 +305,12 @@ public class CheckOutEvents {
         }
 
         // if no shipping applies, set the no shipment method and skip to payment
+        synchronized (cart) { // SCIPIO
         if (!cart.shippingApplies()) {
             cart.setAllShipmentMethodTypeId("NO_SHIPPING");
             cart.setAllCarrierPartyId("_NA_");
             page = "payment";
+        }
         }
 
         return page;
@@ -346,8 +352,10 @@ public class CheckOutEvents {
     public static String setCartShipToCustomerParty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         String shipToCustomerPartyId = request.getParameter("shipToCustomerPartyId");
+        synchronized (cart) { // SCIPIO
         cart.setShipToCustomerPartyId(shipToCustomerPartyId);
         cart.setAllShippingContactMechId(null);
+        }
         return "success";
     }
 
@@ -496,6 +504,9 @@ public class CheckOutEvents {
             return "error";
         }
 
+        Map<String, Object> optResult;
+        synchronized (cart) { // SCIPIO
+
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
         // get the billing account and amount
@@ -590,10 +601,12 @@ public class CheckOutEvents {
             saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
         }
 
-        Map<String, Object> optResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, selectedPaymentMethods,
+        optResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, selectedPaymentMethods,
                 singleUsePayments, billingAccountId, shippingInstructions,
                 orderAdditionalEmails, maySplit, giftMessage, isGift, internalCode, shipBeforeDate, shipAfterDate);
 
+        }
+        
         ServiceUtil.getMessages(request, optResult, null);
         if (ServiceUtil.isError(optResult)) {
             return "error";
@@ -628,6 +641,9 @@ public class CheckOutEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+        
+        synchronized (cart) { // SCIPIO
+
         Map<String, Object> callResult;
         /* SCIPIO: 2018-10-09: TODO: REVIEW: added check from upstream...
         String result = checkoutValidation(request,response);
@@ -674,6 +690,8 @@ public class CheckOutEvents {
 
 
         return cart.getOrderType().toLowerCase(Locale.getDefault());
+
+        }
     }
 
     // Event wrapper for the tax calc.
@@ -695,7 +713,9 @@ public class CheckOutEvents {
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
         //Calculate and add the tax adjustments
+        synchronized (cart) { // SCIPIO
         checkOutHelper.calcAndAddTax();
+        }
     }
 
     public static boolean explodeOrderItems(Delegator delegator, ShoppingCart cart) {
@@ -764,6 +784,7 @@ public class CheckOutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
@@ -772,13 +793,18 @@ public class CheckOutEvents {
 
         // load the ProductStore settings
         GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
-        Map<String, Object> callResult = checkOutHelper.processPayment(productStore, userLogin, false, holdOrder);
+        
+        Map<String, Object> callResult;
+        synchronized (cart) { // SCIPIO
+        callResult = checkOutHelper.processPayment(productStore, userLogin, false, holdOrder);
 
         if (ServiceUtil.isError(callResult)) {
             // clear out the rejected payment methods (if any) from the cart, so they don't get re-authorized
             cart.clearDeclinedPaymentMethods(delegator);
             // null out the orderId for next pass
             cart.setOrderId(null);
+        }
+
         }
 
         // generate any messages required
@@ -828,7 +854,11 @@ public class CheckOutEvents {
         // Load the properties store
         GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
-        Map<String, Object> callResult = checkOutHelper.failedBlacklistCheck(userLogin, productStore);
+
+        Map<String, Object> callResult;
+        synchronized (cart) { // SCIPIO
+        callResult = checkOutHelper.failedBlacklistCheck(userLogin, productStore);
+        }
 
         //Generate any messages required
         ServiceUtil.getMessages(request, callResult, null);
@@ -916,6 +946,8 @@ public class CheckOutEvents {
         if (mode == null) {
             return "customer";
         }
+
+        synchronized (cart) { // SCIPIO
 
         // check the userLogin object
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
@@ -1168,6 +1200,7 @@ public class CheckOutEvents {
         }
         // determine where to direct the browser
         return determineNextFinalizeStep(request, response);
+        }
     }
 
     public static String determineNextFinalizeStep(HttpServletRequest request, HttpServletResponse response) {
@@ -1358,6 +1391,8 @@ public class CheckOutEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
 
+        synchronized (cart) { // SCIPIO
+
         Map<String, Object> context = cart.makeCartMap(dispatcher, false);
         String originalOrderId = request.getParameter("orderId");
 
@@ -1402,6 +1437,8 @@ public class CheckOutEvents {
             return "error";
         }
         return "success";
+
+        }
     }
 
     /**

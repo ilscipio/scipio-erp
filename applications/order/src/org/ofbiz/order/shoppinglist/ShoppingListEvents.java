@@ -78,6 +78,9 @@ public class ShoppingListEvents {
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListTypeId = request.getParameter("shoppingListTypeId");
         String selectedCartItems[] = request.getParameterValues("selectedItem");
+        
+        synchronized (cart) { // SCIPIO
+        
         if (UtilValidate.isEmpty(selectedCartItems)) {
             selectedCartItems = makeCartItemsArray(cart);
         }
@@ -87,6 +90,8 @@ public class ShoppingListEvents {
         } catch (IllegalArgumentException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
+        }
+
         }
 
         request.setAttribute("shoppingListId", shoppingListId);
@@ -100,6 +105,8 @@ public class ShoppingListEvents {
             errMsg = UtilProperties.getMessage(resource_error, "shoppinglistevents.select_items_to_add_to_list", cart.getLocale());
             throw new IllegalArgumentException(errMsg);
         }
+
+        synchronized (cart) { // SCIPIO
 
         if (UtilValidate.isEmpty(shoppingListId)) {
             // create a new shopping list
@@ -171,6 +178,8 @@ public class ShoppingListEvents {
             }
         }
 
+        }
+
         // return the shoppinglist id
         return shoppingListId;
     }
@@ -240,6 +249,8 @@ public class ShoppingListEvents {
             return errMsg;
         }
 
+        synchronized (cart) { // SCIPIO
+
         // check if we are to clear the cart first
         if (!append) {
             cart.clear();
@@ -305,6 +316,8 @@ public class ShoppingListEvents {
 
         if (eventMessage.length() > 0) {
             return eventMessage.toString();
+        }
+
         }
 
         // all done
@@ -394,6 +407,8 @@ public class ShoppingListEvents {
      */
     public static void fillAutoSaveList(ShoppingCart cart, LocalDispatcher dispatcher) throws GeneralException {
         if (cart != null && dispatcher != null) {
+            synchronized (cart) { // SCIPIO
+
             GenericValue userLogin = ShoppingListEvents.getCartUserLogin(cart);
             Delegator delegator = cart.getDelegator();
             String autoSaveListId = cart.getAutoSaveListId();
@@ -419,6 +434,8 @@ public class ShoppingListEvents {
                 }
             } catch (IllegalArgumentException e) {
                 throw new GeneralException(e.getMessage(), e);
+            }
+            
             }
         }
     }
@@ -454,6 +471,8 @@ public class ShoppingListEvents {
 
         HttpSession session = request.getSession();
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+
+        synchronized (cart) { // SCIPIO
 
         // safety check for missing required parameter.
         if (cart.getWebSiteId() == null) {
@@ -528,6 +547,8 @@ public class ShoppingListEvents {
             } catch (IllegalArgumentException e) {
                 Debug.logError(e, module);
             }
+        }
+
         }
 
         return "success";
@@ -678,10 +699,14 @@ public class ShoppingListEvents {
         }
         if (UtilValidate.isNotEmpty(autoSaveListId)) {
             if (UtilValidate.isNotEmpty(cart)) {
+                synchronized (cart) { // SCIPIO
                 cart.setAutoSaveListId(autoSaveListId);
+                }
             } else {
                 cart = ShoppingCartEvents.getCartObject(request);
+                synchronized (cart) { // SCIPIO
                 cart.setAutoSaveListId(autoSaveListId);
+                }
             }
         }
         return "success";

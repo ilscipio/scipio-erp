@@ -207,12 +207,12 @@ code package.
                         <section>
                             <condition>
                                 <and>
-                                    <not><if-empty field="paymentGatewayStripeRestModelEntity"/></not>
+                                    <not><if-empty field="paymentGatewayPayPalRestModelEntity"/></not>
                                     <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="PAYPAL_REST_CFG"/>
                                 </and>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayPayPalRest}">
+                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigPayPalRest}">
                                     <include-form name="EditPaymentGatewayPayPalRest" location="component://paypal/widget/settings/PaymentGatewayConfigForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -220,12 +220,12 @@ code package.
                         <section>
                             <condition>
                                 <and>
-                                    <not><if-empty field="paymentGatewayPayPalRestModelEntity"/></not>
+                                    <not><if-empty field="paymentGatewayStripeRestModelEntity"/></not>
                                     <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="STRIPE_REST_CFG"/>
                                 </and>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayStripelRest}">
+                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigStripeRest}">
                                     <include-form name="EditPaymentGatewayStripeRest" location="component://stripe/widget/settings/PaymentGatewayConfigForms.xml"/>
                                 </screenlet>
                             </widgets>

@@ -387,7 +387,9 @@ code package.
                 session = request.getSession();
                 cart = session.getAttribute("shoppingCart");
                 if (cart != null) {
+                    synchronized(cart) { // SCIPIO
                     cart.setOrderPartyId(tempMap.get("partyId"));
+                    }
                 }
             </script>
         </if-compare>
@@ -461,6 +463,9 @@ code package.
         <check-errors/>
         <log level="info" message="Setting up party ${tempMap.partyId} and shipping address ${addressPurposeContext} in cart"/>
         <session-to-field field="cart" session-name="shoppingCart"/>
+        
+        <synchronized field="cart"><!-- SCIPIO -->
+        
         <session-to-field field="userLogin"/>
         <log level="info" message="userLogin in Env ${userLogin} in parameters.userLogin ${parameters.userLogin}"/>
         <if-empty field="userLogin">
@@ -510,6 +515,9 @@ code package.
             </if-not-empty>
         </if-empty>
         <check-errors/>
+
+        </synchronized>
+
         <log level="info" message="If anonymous, user-login has been activated"/>
         <!-- SCIPIO: Don't show a success message, it only looks odd during checkout -->
         <set field="_event_message_" value="" set-if-empty="true" set-if-null="true"/>
@@ -809,6 +817,8 @@ code package.
         </if-not-empty>
         <session-to-field field="cart" session-name="shoppingCart"/>
         <if-not-empty field="cart">
+            <synchronized field="cart"><!-- SCIPIO -->
+
             <call-object-method obj-field="cart" method-name="addContactMech">
                 <string value="SHIPPING_LOCATION"/>
                 <field field="addressContext.contactMechId"/>
@@ -816,6 +826,8 @@ code package.
             <call-object-method obj-field="cart" method-name="setAllShippingContactMechId">
                 <field field="addressContext.contactMechId"/>
             </call-object-method>
+            
+            </synchronized>
         </if-not-empty>
     </simple-method>
 
@@ -829,6 +841,8 @@ code package.
        </script>
        <session-to-field field="cart" session-name="shoppingCart"/>
        <if-not-empty field="cart">
+           <synchronized field="cart"><!-- SCIPIO -->
+        
            <set field="shipmentMethodTypeId" from-field="parameters.shipmentMethodTypeId"/>
            <call-object-method obj-field="cart" method-name="setAllShipmentMethodTypeId">
                <field field="shipmentMethodTypeId"/>
@@ -873,6 +887,8 @@ code package.
                <field field="giftMessage" type="String"/>
            </call-object-method>
            </if-not-empty>
+           
+           </synchronized>
        </if-not-empty>
     </simple-method>
 
@@ -1072,6 +1088,9 @@ code package.
         <if-empty field="shoppingCart">
             <session-to-field field="shoppingCart"/>
         </if-empty>
+
+        <synchronized field="shoppingCart"><!-- SCIPIO -->
+
         <call-object-method obj-field="shoppingCart" method-name="setAllShipmentMethodTypeId">
             <field field="shipmentMethodTypeId"/>
         </call-object-method>
@@ -1127,6 +1146,9 @@ code package.
             <field field="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart"/>
             <field field="dispatcher" type="org.ofbiz.service.LocalDispatcher"/>
         </call-class-method>
+
+        </synchronized>
+
         <field-to-request field="parameters.shippingTotal" request-name="shippingTotal"/>
         <field-to-request field="parameters.cartGrandTotal" request-name="cartGrandTotal"/>
         <field-to-request field="parameters.totalSalesTax" request-name="totalSalesTax"/>

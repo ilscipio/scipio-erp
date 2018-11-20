@@ -483,6 +483,9 @@ code package.
 
         <!-- see if we should continue now... -->
         <session-to-field field="cart" session-name="shoppingCart"/>
+        
+        <synchronized field="cart"><!-- SCIPIO -->
+
         <session-to-field field="userLogin"/>
         <if-empty field="userLogin">
             <call-object-method obj-field="session" method-name="removeAttribute">
@@ -549,6 +552,8 @@ code package.
         </if-compare>
         <!-- set the partyId in the request -->
         <field-to-request field="partyId" request-name="partyId"/>
+        
+        </synchronized>
     </simple-method>
 
     <simple-method method-name="processShipOptions" short-description="Process Ship Options; to be called as a Request Event" login-required="false">
@@ -561,6 +566,8 @@ code package.
        </script>
        <session-to-field field="cart" session-name="shoppingCart"/>
        <if-not-empty field="cart">
+           <synchronized field="cart"><!-- SCIPIO -->
+       
            <set field="shipmentMethodTypeId" from-field="parameters.shipmentMethodTypeId"/>
            <call-object-method obj-field="cart" method-name="setAllShipmentMethodTypeId">
                <field field="shipmentMethodTypeId"/>
@@ -601,6 +608,8 @@ code package.
                    <field field="giftMessage" type="String"/>
                </call-object-method>
            </if-not-empty>
+           
+           </synchronized>
        </if-not-empty>
     </simple-method>
 

@@ -1003,14 +1003,32 @@ public class RequestHandler {
         return value;
     }
 
-
     /** Find the event handler and invoke an event. */
     public String runEvent(HttpServletRequest request, HttpServletResponse response,
             ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
-        EventHandler eventHandler = eventFactory.getEventHandler(event.type);
-        String eventReturn = eventHandler.invoke(event, requestMap, request, response);
+
+        // SCIPIO: 2018-11-19: implement synchronize
+        String eventReturn = runEventImpl(request, response, event.getSynchronizeObjList(request, response), 0, event, requestMap, trigger);
         if (Debug.verboseOn() || (Debug.infoOn() && "request".equals(trigger))) Debug.logInfo("Ran Event [" + event.type + ":" + event.path + "#" + event.invoke + "] from [" + trigger + "], result is [" + eventReturn + "]", module);
         return eventReturn;
+    }
+    
+    private String runEventImpl(HttpServletRequest request, HttpServletResponse response, List<Object> synchronizeObjList, int synchronizeObjIndex, // SCIPIO
+            ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
+        if (synchronizeObjList == null || synchronizeObjIndex >= synchronizeObjList.size()) {
+            // SCIPIO: stock case
+            EventHandler eventHandler = eventFactory.getEventHandler(event.type);
+            return eventHandler.invoke(event, requestMap, request, response);
+        } else {
+            Object synchronizeObj = synchronizeObjList.get(synchronizeObjIndex);
+            if (synchronizeObj != null) {
+                synchronized(synchronizeObj) {
+                    return runEventImpl(request, response, synchronizeObjList, synchronizeObjIndex + 1, event, requestMap, trigger);
+                }
+            } else {
+                return runEventImpl(request, response, synchronizeObjList, synchronizeObjIndex + 1, event, requestMap, trigger);
+            }
+        }
     }
 
     /** Returns the default error page for this request. */

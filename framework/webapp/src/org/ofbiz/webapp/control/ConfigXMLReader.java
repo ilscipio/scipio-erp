@@ -34,6 +34,9 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
@@ -54,6 +57,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapContext;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -1612,7 +1616,8 @@ public class ConfigXMLReader {
         public final Metrics metrics; // = null;
         public final Boolean transaction; // = null; // SCIPIO: A generic transaction flag
         public final String abortTransaction; // = ""; // SCIPIO: Allow aborting transaction
-
+        protected final List<ValueExpr> synchronizedExprList; // SCIPIO
+        
         public Event(Element eventElement) {
             this.type = eventElement.getAttribute("type");
             this.path = eventElement.getAttribute("path");
@@ -1641,6 +1646,16 @@ public class ConfigXMLReader {
                 transaction = null;
             }
             this.abortTransaction = eventElement.getAttribute("abort-transaction");
+            
+            List<ValueExpr> synchronizedExprList = null;
+            List<? extends Element> synchronizeElementList = UtilXml.childElementList(eventElement, "synchronized");
+            if (UtilValidate.isNotEmpty(synchronizeElementList)) {
+                synchronizedExprList = new ArrayList<>(synchronizeElementList.size());
+                for(Element synchronizeElement : synchronizeElementList) {
+                    synchronizedExprList.add(ValueExpr.getInstance(ValueExpr.stripDelims(synchronizeElement.getAttribute("value"))));
+                }
+            }
+            this.synchronizedExprList = synchronizedExprList;
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction) {
@@ -1653,6 +1668,7 @@ public class ConfigXMLReader {
             this.transaction = null;
             this.transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT;
             this.metrics = null;
+            this.synchronizedExprList = null;
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction, Metrics metrics,
@@ -1666,6 +1682,7 @@ public class ConfigXMLReader {
             // SCIPIO: Added missing inits
             this.transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT;
             this.metrics = null;
+            this.synchronizedExprList = null;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -1696,6 +1713,22 @@ public class ConfigXMLReader {
 
         public String getAbortTransaction() {
             return abortTransaction;
+        }
+
+        public List<ValueExpr> getSynchronizeExprList() { // SCIPIO
+            return synchronizedExprList;
+        }
+
+        // SCIPIO: TODO: REVIEW: this violates this xml class design to a small extent...
+        public List<Object> getSynchronizeObjList(HttpServletRequest request, HttpServletResponse response) { // SCIPIO
+            if (synchronizedExprList == null) {
+                return null;
+            }
+            List<Object> objList = new ArrayList<>(synchronizedExprList.size());
+            for(ValueExpr expr : synchronizedExprList) {
+                objList.add(expr.getValue(request, response));
+            }
+            return objList;
         }
     }
 
@@ -2389,6 +2422,143 @@ public class ConfigXMLReader {
             @Override
             public boolean matches(String fieldValue) {
                 return pattern.matcher(fieldValue).matches();
+            }
+        }
+    }
+
+    /**
+     * SCIPIO: Precompiles parsable request responses and synchronize values.
+     */
+    public static abstract class ValueExpr {
+        protected final String name;
+
+        protected ValueExpr(String name) {
+            this.name = name;
+        }
+
+        public static String stripDelims(String value) {
+            if (value.startsWith("${") && value.endsWith("}")) {
+                value = value.substring(2, value.length() - 1);
+            }
+            return value;
+        }
+
+        public static ValueExpr getInstance(String value) {
+            int dotIndex = value.indexOf('.');
+            if (dotIndex >= 0) {
+                String scope = value.substring(0, dotIndex).trim();
+                String name = value.substring(dotIndex+1, value.length()).trim();
+                if (scope.length() > 0 && name.length() > 0) {
+                    if ("requestAttributes".equals(scope)) {
+                        return new ReqAttrValueExpr(name);
+                    } else if ("requestParameters".equals(scope)) {
+                        return new ReqParamValueExpr(name);
+                    } else if ("requestAttrParam".equals(scope)) {
+                        return new ReqAttrParamValueExpr(name);
+                    } else if ("sessionAttributes".equals(scope)) {
+                        return new SessionAttrValueExpr(name);
+                    } else if ("applicationAttributes".equals(scope)) {
+                        return new ApplAttrValueExpr(name);
+                    }
+                }
+            }
+            if (UtilValidate.isEmpty(value.trim())) {
+                return NullValueExpr.INSTANCE;
+            }
+            return new FlexibleValueExpr("${"+value+"}");
+        }
+
+        public abstract Object getValue(HttpServletRequest request, HttpServletResponse response);
+        
+        protected static class NullValueExpr extends ValueExpr {
+            public static final NullValueExpr INSTANCE = new NullValueExpr();
+            protected NullValueExpr() {
+                super(null);
+            }
+            
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return null;
+            }
+        }
+
+        protected static class FlexibleValueExpr extends ValueExpr {
+            protected final FlexibleStringExpander exdr;
+            protected FlexibleValueExpr(String expr) {
+                super(null);
+                this.exdr = FlexibleStringExpander.getInstance(expr);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                Map<String, Object> context = new HashMap<>();
+                context.put("request", request);
+                context.put("response", response);
+                // TODO?: more fields (not too many, otherwise may be slow)...
+                return exdr.expand(context);
+            }
+        }
+
+        protected static class ReqAttrValueExpr extends ValueExpr {
+            protected ReqAttrValueExpr(String name) {
+                super(name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return request.getAttribute(name);
+            }
+        }
+
+        protected static class ReqParamValueExpr extends ValueExpr {
+            protected ReqParamValueExpr(String name) {
+                super(name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return request.getParameter(name);
+            }
+        }
+
+        protected static class ReqAttrParamValueExpr extends ValueExpr {
+            protected ReqAttrParamValueExpr(String name) {
+                super(name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                Object attrValue = request.getAttribute(name);
+                if (attrValue == null) {
+                    attrValue = request.getParameter(name);
+                }
+                return attrValue;
+            }
+        }
+
+        protected static class SessionAttrValueExpr extends ValueExpr {
+            protected SessionAttrValueExpr(String name) {
+                super(name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                HttpSession session = request.getSession(false);
+                if (session != null) {
+                    return session.getAttribute(name);
+                }
+                return null;
+            }
+        }
+
+        protected static class ApplAttrValueExpr extends ValueExpr {
+            protected ApplAttrValueExpr(String name) {
+                super(name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return request.getServletContext().getAttribute(name);
             }
         }
     }

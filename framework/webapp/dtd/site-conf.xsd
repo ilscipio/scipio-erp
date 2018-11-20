@@ -636,6 +636,7 @@ under the License.
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="metric"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="synchronized"/><!-- SCIPIO: 2018-11-19 -->
             </xs:sequence>
             <xs:attributeGroup ref="attlist.event"/>
         </xs:complexType>
@@ -719,6 +720,34 @@ under the License.
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
+    <xs:element name="synchronized">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Synchronizes the event on a Java object from request, session or application attributes.
+                If the object is null, no synchronization occurs - typically you can setup the object using
+                preprocessor events or filter init method.
+                Added 2018-11-19.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="value" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        An expression that determines the value to fetch. (${...} brackets may be omitted; implied) 
+                        Supports the following expression types (similar to request responses):
+                        * requestAttributes.xxx
+                        * sessionAttributes.xxx
+                        * applicationAttributes.xxx
+                        e.g.: value="${sessionAttributes.shoppingCart}"
+                        In addition, it is possible to specify groovy in form: value="${groovy:xxx}", however,
+                        this is slow and not recommended (only "request" and "response" objects may be available).
+                        NOTE: There is currently little to no support for real flexible expressions here;
+                        if complex, the object should be determined by a preprocessor event.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="response">
         <xs:annotation>
             <xs:documentation>

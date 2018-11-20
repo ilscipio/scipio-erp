@@ -1577,7 +1577,9 @@ code package.
     </request-map>
     <request-map uri="setShippingOption">
         <security https="true" auth="false"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="setShippingOption"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="setShippingOption">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>

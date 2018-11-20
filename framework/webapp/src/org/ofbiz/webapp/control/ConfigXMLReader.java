@@ -1652,7 +1652,7 @@ public class ConfigXMLReader {
             if (UtilValidate.isNotEmpty(synchronizeElementList)) {
                 synchronizedExprList = new ArrayList<>(synchronizeElementList.size());
                 for(Element synchronizeElement : synchronizeElementList) {
-                    synchronizedExprList.add(ValueExpr.getInstance(ValueExpr.stripDelims(synchronizeElement.getAttribute("value"))));
+                    synchronizedExprList.add(ValueExpr.getInstance(ValueExpr.ensureDelims(synchronizeElement.getAttribute("value"))));
                 }
             }
             this.synchronizedExprList = synchronizedExprList;
@@ -2020,7 +2020,8 @@ public class ConfigXMLReader {
         public final String includeMode; // = "auto"; // SCIPIO: new 2017-04-24
         public final Boolean allowViewSave; // SCIPIO: new 2018-06-12: can be set explicit false to prevent recording this view
         private final Type typeEnum; // SCIPIO: new 2018-06-13
-
+        private final ValueExpr valueExpr; // SCIPIO: 2018-11-19: precompiled value expression
+        
         /**
          * @deprecated SCIPIO: 2018-11-07: This does nothing useful, all fields are final and should never have been
          * modifiable.
@@ -2040,6 +2041,7 @@ public class ConfigXMLReader {
             this.includeMode = "auto";
             this.allowViewSave = null;
             this.typeEnum = null;
+            this.valueExpr = null;
         }
 
         private RequestResponse(String name, String type, String value, Type typeEnum) { // SCIPIO: 2018-11-07
@@ -2056,6 +2058,7 @@ public class ConfigXMLReader {
             this.includeMode = "auto";
             this.allowViewSave = null;
             this.typeEnum = typeEnum;
+            this.valueExpr = null;
         }
 
         public RequestResponse(Element responseElement) {
@@ -2105,6 +2108,8 @@ public class ConfigXMLReader {
             Boolean allowViewSave = UtilMisc.booleanValue(responseElement.getAttribute("allow-view-save")); // SCIPIO
             this.allowViewSave = allowViewSave;
             this.typeEnum = Type.fromName(this.type);
+            // SCIPIO: precompiled value expression
+            this.valueExpr = ValueExpr.getInstance(this.value);
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -2159,6 +2164,10 @@ public class ConfigXMLReader {
 
         public Type getTypeEnum() { // SCIPIO
             return typeEnum;
+        }
+
+        public ValueExpr getValueExpr() { // SCIPIO
+            return valueExpr;
         }
 
         public enum Type { // SCIPIO: 2018-06
@@ -2428,48 +2437,56 @@ public class ConfigXMLReader {
 
     /**
      * SCIPIO: Precompiles parsable request responses and synchronize values.
+     * Similar to FlexibleStringExpander but with some specific expression support for controller.
      */
     public static abstract class ValueExpr {
-        protected final String name;
+        protected final String nameOrVal;
 
-        protected ValueExpr(String name) {
-            this.name = name;
+        protected ValueExpr(String nameOrVal) {
+            this.nameOrVal = nameOrVal;
         }
 
-        public static String stripDelims(String value) {
-            if (value.startsWith("${") && value.endsWith("}")) {
-                value = value.substring(2, value.length() - 1);
+        public static String ensureDelims(String value) {
+            if (value == null) {
+                return null;
+            }
+            if (!value.startsWith("${")) {
+                value = "${" + value + "}";
             }
             return value;
         }
 
         public static ValueExpr getInstance(String value) {
-            int dotIndex = value.indexOf('.');
-            if (dotIndex >= 0) {
-                String scope = value.substring(0, dotIndex).trim();
-                String name = value.substring(dotIndex+1, value.length()).trim();
-                if (scope.length() > 0 && name.length() > 0) {
-                    if ("requestAttributes".equals(scope)) {
-                        return new ReqAttrValueExpr(name);
-                    } else if ("requestParameters".equals(scope)) {
-                        return new ReqParamValueExpr(name);
-                    } else if ("requestAttrParam".equals(scope)) {
-                        return new ReqAttrParamValueExpr(name);
-                    } else if ("sessionAttributes".equals(scope)) {
-                        return new SessionAttrValueExpr(name);
-                    } else if ("applicationAttributes".equals(scope)) {
-                        return new ApplAttrValueExpr(name);
-                    }
-                }
-            }
-            if (UtilValidate.isEmpty(value.trim())) {
+            if (value == null) {
                 return NullValueExpr.INSTANCE;
             }
-            return new FlexibleValueExpr("${"+value+"}");
+            if (value.startsWith("${") && value.endsWith("}")) {
+                String expr = value.substring(2, value.length() - 1).trim();
+                int dotIndex = expr.indexOf('.');
+                if (dotIndex >= 0) {
+                    String scope = expr.substring(0, dotIndex);
+                    String name = expr.substring(dotIndex+1);
+                    if (scope.length() > 0 && name.length() > 0) {
+                        if ("requestAttributes".equals(scope)) {
+                            return new ReqAttrValueExpr(name);
+                        } else if ("requestParameters".equals(scope)) {
+                            return new ReqParamValueExpr(name);
+                        } else if ("requestAttrParam".equals(scope)) {
+                            return new ReqAttrParamValueExpr(name);
+                        } else if ("sessionAttributes".equals(scope)) {
+                            return new SessionAttrValueExpr(name);
+                        } else if ("applicationAttributes".equals(scope)) {
+                            return new ApplAttrValueExpr(name);
+                        }
+                    }
+                }
+                return new FlexibleValueExpr(value);
+            }
+            return new ConstValueExpr(value);
         }
 
         public abstract Object getValue(HttpServletRequest request, HttpServletResponse response);
-        
+
         protected static class NullValueExpr extends ValueExpr {
             public static final NullValueExpr INSTANCE = new NullValueExpr();
             protected NullValueExpr() {
@@ -2479,6 +2496,17 @@ public class ConfigXMLReader {
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
                 return null;
+            }
+        }
+
+        protected static class ConstValueExpr extends ValueExpr {
+            protected ConstValueExpr(String value) {
+                super(value);
+            }
+            
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return nameOrVal;
             }
         }
 
@@ -2506,7 +2534,7 @@ public class ConfigXMLReader {
 
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
-                return request.getAttribute(name);
+                return request.getAttribute(nameOrVal);
             }
         }
 
@@ -2517,7 +2545,7 @@ public class ConfigXMLReader {
 
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
-                return request.getParameter(name);
+                return request.getParameter(nameOrVal);
             }
         }
 
@@ -2528,9 +2556,9 @@ public class ConfigXMLReader {
 
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
-                Object attrValue = request.getAttribute(name);
+                Object attrValue = request.getAttribute(nameOrVal);
                 if (attrValue == null) {
-                    attrValue = request.getParameter(name);
+                    attrValue = request.getParameter(nameOrVal);
                 }
                 return attrValue;
             }
@@ -2545,7 +2573,7 @@ public class ConfigXMLReader {
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
                 HttpSession session = request.getSession(false);
                 if (session != null) {
-                    return session.getAttribute(name);
+                    return session.getAttribute(nameOrVal);
                 }
                 return null;
             }
@@ -2558,7 +2586,7 @@ public class ConfigXMLReader {
 
             @Override
             public Object getValue(HttpServletRequest request, HttpServletResponse response) {
-                return request.getServletContext().getAttribute(name);
+                return request.getServletContext().getAttribute(nameOrVal);
             }
         }
     }

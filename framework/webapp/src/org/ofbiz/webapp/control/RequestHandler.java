@@ -711,7 +711,7 @@ public class RequestHandler {
         }
 
         // SCIPIO: Parse value
-        String nextRequestResponseValue = parseResponseValue(request, response, nextRequestResponse.value, requestMap);
+        String nextRequestResponseValue = parseResponseValue(request, response, nextRequestResponse, requestMap);
         // SCIPIO: Determine if should prevent view-saving operations
         boolean allowViewSave = nextRequestResponse.getTypeEnum().isViewType() ?
                 isAllowViewSave(nextRequestResponse.value, request, controllerConfig, requestMap, nextRequestResponse, viewAsJson, viewAsJsonConfig) : false;
@@ -954,53 +954,23 @@ public class RequestHandler {
      * <p>
      * Returns empty string instead of null if missing, for compatibility with existing Ofbiz code.
      */
-    String parseResponseValue(HttpServletRequest request, HttpServletResponse response, String value, ConfigXMLReader.RequestMap requestMap) {
-        if (value == null) {
-            return "";
-        }
-        if (value.startsWith("${") && value.endsWith("}")) {
-            Object attrValue = null;
-            int dotIndex = value.indexOf('.');
-            if (dotIndex >= 0) {
-                String scope = value.substring(2, dotIndex).trim();
-                String name = value.substring(dotIndex+1, value.length() - 1).trim();
-                if (scope.length() > 0 && name.length() > 0) {
-                    if ("requestAttributes".equals(scope)) {
-                        attrValue = request.getAttribute(name);
-                    } else if ("requestParameters".equals(scope)) {
-                        attrValue = request.getParameter(name);
-                    } else if ("requestAttrParam".equals(scope)) {
-                        attrValue = request.getAttribute(name);
-                        if (attrValue == null) {
-                            attrValue = request.getParameter(name);
-                        }
-                    } else if ("sessionAttributes".equals(scope)) {
-                        HttpSession session = request.getSession(false);
-                        if (session != null) {
-                            attrValue = session.getAttribute(name);
-                        }
-                    } else if ("applicationAttributes".equals(scope)) {
-                        attrValue = request.getServletContext().getAttribute(name);
-                    }
-                }
-            }
-            if (attrValue != null) {
-                if (attrValue instanceof String) {
-                    String attrStr = (String) attrValue;
-                    return attrStr;
+    String parseResponseValue(HttpServletRequest request, HttpServletResponse response, ConfigXMLReader.RequestResponse responseDef, ConfigXMLReader.RequestMap requestMap) {
+        Object attrValue = responseDef.getValueExpr().getValue(request, response);
+        if (attrValue != null) {
+            if (attrValue instanceof String) {
+                String attrStr = (String) attrValue;
+                return attrStr;
+            } else {
+                if (requestMap != null) {
+                    Debug.logError("Scipio: Error in request handler: The interpreted request response value '" +
+                            responseDef.getValue() + "' from request URI '" + requestMap.uri + "' did not evaluate to a string; treating as empty", module);
                 } else {
-                    if (requestMap != null) {
-                        Debug.logError("Scipio: Error in request handler: The interpreted request response value '" +
-                                attrValue.toString() + "' from request URI '" + requestMap.uri + "' did not evaluate to a string; treating as empty", module);
-                    } else {
-                        Debug.logError("Scipio: Error in request handler: The interpreted request response value '" +
-                                attrValue.toString() + "' did not evaluate to a string; treating as empty", module);
-                    }
+                    Debug.logError("Scipio: Error in request handler: The interpreted request response value '" +
+                            responseDef.getValue() + "' did not evaluate to a string; treating as empty", module);
                 }
             }
-            return "";
         }
-        return value;
+        return "";
     }
 
     /** Find the event handler and invoke an event. */

@@ -1070,7 +1070,7 @@ public class ShoppingCartEvents {
 
     /** SCIPIO: Returns an atomic, read-only view of the main session cart (created if missing). 
      * This cart instance should never be changed and contents are not changed by other threads. Added 2018-11-16. */
-    public static ShoppingCart getCartObjectReadOnly(HttpServletRequest request) {
+    public static ShoppingCart getCartObjectForRead(HttpServletRequest request) {
         return getCartObject(request, null, null).copyCart();
     }
 

@@ -24348,8 +24348,8 @@
         <value xml:lang="zh">更新SecurePay支付网关配置</value>
         <value xml:lang="zh-TW">更新SecurePay支付閘道配置</value>
     </property>
-    <property key="PageTitleUpdatePaymentGatewayConfigStripeRest">
-        <value xml:lang="en">Update Payment Gateway Config Stripe</value>        
+    <property key="PageTitleUpdatePaymentGatewayStripeRest">
+        <value xml:lang="en">Update Payment Gateway Config Stripe</value>
     </property>
     <property key="PageTitleUpdatePaymentGatewayConfigType">
         <value xml:lang="de">Bezahl-Schnittstellen-Typ aktualisieren</value>

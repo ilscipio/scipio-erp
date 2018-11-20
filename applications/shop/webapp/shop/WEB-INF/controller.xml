@@ -281,7 +281,9 @@ code package.
     </request-map>
     <request-map uri="processCustomerSettings">
         <security https="true" auth="false"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="processCustomerSettings"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="processCustomerSettings">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="request" value="anonCheckShipmentNeeded"/>
         <response name="error" type="view" value="custsetting"/>
     </request-map>
@@ -301,7 +303,9 @@ code package.
     </request-map>
     <request-map uri="processShipSettings">
         <security https="true" auth="false"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="processShipSettings"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="processShipSettings">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="request" value="setShipOptions"/>
         <response name="error" type="view" value="shipsetting"/>
     </request-map>
@@ -313,7 +317,9 @@ code package.
 
     <request-map uri="processShipOptions">
         <security https="true" auth="false"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="processShipOptions"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="processShipOptions">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="request" value="setShippingBeforePayment"/>
         <response name="error" type="view" value="optionsetting"/>
     </request-map>
@@ -416,7 +422,9 @@ code package.
 
     <request-map uri="quickAnonProcessCustomerSettings">
         <security https="true" auth="false"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/QuickAnonCustomerEvents.xml" invoke="createUpdateCustomer"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/QuickAnonCustomerEvents.xml" invoke="createUpdateCustomer">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="request" value="quickAnonOrderReview"/>
         <response name="error" type="view" value="quickAnonCustSetting"/>
     </request-map>
@@ -428,14 +436,18 @@ code package.
 
     <request-map uri="quickAnonProcessShipOptions">
         <security https="true" auth="false"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/QuickAnonCustomerEvents.xml" invoke="processShipOptions"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/QuickAnonCustomerEvents.xml" invoke="processShipOptions">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="view" value="quickAnonOptionSetting"/>
         <response name="error" type="view" value="quickAnonOptionSetting"/>
     </request-map>
 
     <request-map uri="quickAnonProcessShipOptionsUpdateOrderItems">
         <security https="true" auth="false"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/QuickAnonCustomerEvents.xml" invoke="processShipOptions"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/QuickAnonCustomerEvents.xml" invoke="processShipOptions">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="request" value="quickAnonUpdateShippingChargeOrderItems"/>
         <response name="error" type="view" value="quickAnonOrderItems"/>
     </request-map>
@@ -570,7 +582,9 @@ code package.
         with their main form (the party is persistent so don't really want to create a party before forms start getting submitted) -->
     <request-map uri="checkoutoptions">
         <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="checkCreateUpdateAnonUser"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="checkCreateUpdateAnonUser">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="request" value="checkoutoptionscore"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>   
@@ -1014,7 +1028,9 @@ code package.
     </request-map>
     <request-map uri="createcustomer">
         <security https="true" auth="false"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="createCustomer">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>
@@ -1673,14 +1689,18 @@ code package.
 
     <request-map uri="createCustomerProfile">
         <security https="true" auth="false"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="createCustomerProfile"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="createCustomerProfile">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>
 
     <request-map uri="updateCustomerProfile">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="updateCustomerProfile"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="updateCustomerProfile">
+            <synchronized value="sessionAttributes.shoppingCart"/><!-- SCIPIO -->
+        </event>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="EditProfile"/>
     </request-map>

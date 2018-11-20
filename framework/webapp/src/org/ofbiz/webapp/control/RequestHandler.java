@@ -714,9 +714,9 @@ public class RequestHandler {
         String nextRequestResponseValue = parseResponseValue(request, response, nextRequestResponse, requestMap);
         // SCIPIO: Determine if should prevent view-saving operations
         boolean allowViewSave = nextRequestResponse.getTypeEnum().isViewType() ?
-                isAllowViewSave(nextRequestResponse.value, request, controllerConfig, requestMap, nextRequestResponse, viewAsJson, viewAsJsonConfig) : false;
+                isAllowViewSave(nextRequestResponseValue, request, controllerConfig, requestMap, nextRequestResponse, viewAsJson, viewAsJsonConfig) : false;
 
-        if (Debug.verboseOn()) Debug.logVerbose("[Event Response Selected]  type=" + nextRequestResponse.type + ", value=" + nextRequestResponse.value + ". " + showSessionId(request), module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Event Response Selected]  type=" + nextRequestResponse.type + ", value=" + nextRequestResponse.value + " (effective: " + nextRequestResponseValue + "). " + showSessionId(request), module); // SCIPIO: effective
 
         // ========== Handle the responses - chains/views ==========
 

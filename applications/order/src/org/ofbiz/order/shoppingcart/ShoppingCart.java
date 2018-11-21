@@ -211,6 +211,18 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     protected boolean allowMissingShipEstimates = false; // SCIPIO: see WebShoppingCart for implementation
 
+    /**
+     * SCIPIO: An object which can be used for locking across multiple cart instances. 
+     * It is transferred over to new instances by the copy constructor.
+     * <p>
+     * NOTE: This object is expected to be stored as the session attribute "shoppingCartLock".
+     * If you lock on this object returned by {@link #getLockObj()}, then inside the synchronized block you
+     * must re-fetch the ShoppingCart instance in case another thread changed the cart reference.
+     * <p>
+     * Added 2018-11-20.
+     */
+    protected Serializable lockObj = new Serializable() {};
+
     /** don't allow empty constructor */
     protected ShoppingCart() {}
 
@@ -283,6 +295,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
         this.cartSubscriptionItems = cartSubscriptionItems;
         this.allowMissingShipEstimates = cart.allowMissingShipEstimates; // SCIPIO
+        this.lockObj = cart.lockObj; // SCIPIO
     }
 
     /** Creates new empty ShoppingCart object. */
@@ -5609,5 +5622,29 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      */
     public void setAllowMissingShipEstimates(boolean allowMissingShipEstimates) {
         this.allowMissingShipEstimates = allowMissingShipEstimates;
+    }
+
+    /**
+     * SCIPIO: Returns an object which can be used for locking across multiple cart instances. 
+     * It is transferred over to new instances by the copy constructor.
+     * <p>
+     * NOTE: This object is expected to be stored as the session attribute "shoppingCartLock".
+     * If you lock on this object returned by {@link #getLockObj()}, then inside the synchronized block you
+     * must re-fetch the ShoppingCart instance in case another thread changed the cart reference.
+     * <p>
+     * Added 2018-11-20.
+     */
+    public Object getLockObj() {
+        return lockObj;
+    }
+
+    /**
+     * SCIPIO: Sets an object which can be used for locking across multiple cart instances. 
+     * It is transferred over to new instances by the copy constructor.
+     * NOTE: This object must implement Serializable.
+     * Added 2018-11-20.
+     */
+    public void setLockObj(Serializable lock) {
+        this.lockObj = lock;
     }
 }

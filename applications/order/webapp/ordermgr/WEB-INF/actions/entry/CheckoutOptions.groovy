@@ -23,7 +23,10 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.accounting.payment.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
+import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.order.shoppingcart.shipping.*;
+
+synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
 
 shoppingCart = session.getAttribute("shoppingCart");
 currencyUomId = shoppingCart.getCurrency();
@@ -58,14 +61,11 @@ if (shoppingCart.getShipmentMethodTypeId() && shoppingCart.getCarrierPartyId()) 
 }
 
 // other profile defaults
-synchronized (shoppingCart) { // SCIPIO
-    // SCIPIO: FIXME: Screen scripts should avoid modifying the cart...
-    if (!shoppingCart.getShippingAddress() && profiledefs?.defaultShipAddr) {
-        shoppingCart.setAllShippingContactMechId(profiledefs.defaultShipAddr);
-    }
-    if (shoppingCart.selectedPayments() == 0 && profiledefs?.defaultPayMeth) {
-        shoppingCart.addPayment(profiledefs.defaultPayMeth);
-    }
+if (!shoppingCart.getShippingAddress() && profiledefs?.defaultShipAddr) {
+    shoppingCart.setAllShippingContactMechId(profiledefs.defaultShipAddr);
+}
+if (shoppingCart.selectedPayments() == 0 && profiledefs?.defaultPayMeth) {
+    shoppingCart.addPayment(profiledefs.defaultPayMeth);
 }
 
 // create a list containing all the parties associated to the current cart, useful to change
@@ -98,3 +98,7 @@ if (salesReps) {
     }
 }
 context.cartParties = cartParties;
+
+ShoppingCartEvents.registerCartChange(request, shoppingCart); // SCIPIO
+}
+

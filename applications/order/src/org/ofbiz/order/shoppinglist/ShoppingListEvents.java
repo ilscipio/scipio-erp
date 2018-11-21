@@ -72,15 +72,15 @@ public class ShoppingListEvents {
     public static String addBulkFromCart(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListTypeId = request.getParameter("shoppingListTypeId");
         String selectedCartItems[] = request.getParameterValues("selectedItem");
         
-        synchronized (cart) { // SCIPIO
-        
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+
         if (UtilValidate.isEmpty(selectedCartItems)) {
             selectedCartItems = makeCartItemsArray(cart);
         }
@@ -92,6 +92,7 @@ public class ShoppingListEvents {
             return "error";
         }
 
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         request.setAttribute("shoppingListId", shoppingListId);
@@ -105,8 +106,6 @@ public class ShoppingListEvents {
             errMsg = UtilProperties.getMessage(resource_error, "shoppinglistevents.select_items_to_add_to_list", cart.getLocale());
             throw new IllegalArgumentException(errMsg);
         }
-
-        synchronized (cart) { // SCIPIO
 
         if (UtilValidate.isEmpty(shoppingListId)) {
             // create a new shopping list
@@ -178,8 +177,6 @@ public class ShoppingListEvents {
             }
         }
 
-        }
-
         // return the shoppinglist id
         return shoppingListId;
     }
@@ -187,19 +184,21 @@ public class ShoppingListEvents {
     public static String addListToCart(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
 
         String shoppingListId = request.getParameter("shoppingListId");
         String includeChild = request.getParameter("includeChild");
         String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
 
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
         try {
             addListToCart(delegator, dispatcher, cart, prodCatalogId, shoppingListId, (includeChild != null), true, true);
         } catch (IllegalArgumentException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
         }
-
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+        }
 
         return "success";
     }
@@ -248,8 +247,6 @@ public class ShoppingListEvents {
             errMsg = UtilProperties.getMessage(resource_error,"shoppinglistevents.no_items_added", cart.getLocale());
             return errMsg;
         }
-
-        synchronized (cart) { // SCIPIO
 
         // check if we are to clear the cart first
         if (!append) {
@@ -316,8 +313,6 @@ public class ShoppingListEvents {
 
         if (eventMessage.length() > 0) {
             return eventMessage.toString();
-        }
-
         }
 
         // all done
@@ -407,8 +402,6 @@ public class ShoppingListEvents {
      */
     public static void fillAutoSaveList(ShoppingCart cart, LocalDispatcher dispatcher) throws GeneralException {
         if (cart != null && dispatcher != null) {
-            synchronized (cart) { // SCIPIO
-
             GenericValue userLogin = ShoppingListEvents.getCartUserLogin(cart);
             Delegator delegator = cart.getDelegator();
             String autoSaveListId = cart.getAutoSaveListId();
@@ -435,8 +428,6 @@ public class ShoppingListEvents {
             } catch (IllegalArgumentException e) {
                 throw new GeneralException(e.getMessage(), e);
             }
-            
-            }
         }
     }
 
@@ -445,12 +436,15 @@ public class ShoppingListEvents {
      */
     public static String saveCartToAutoSaveList(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
-
         try {
             fillAutoSaveList(cart, dispatcher);
         } catch (GeneralException e) {
             Debug.logError(e, "Error saving the cart to the auto-save list: " + e.toString(), module);
+        }
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         return "success";
@@ -470,9 +464,9 @@ public class ShoppingListEvents {
         }
 
         HttpSession session = request.getSession();
+        
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
-
-        synchronized (cart) { // SCIPIO
 
         // safety check for missing required parameter.
         if (cart.getWebSiteId() == null) {
@@ -549,6 +543,7 @@ public class ShoppingListEvents {
             }
         }
 
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         return "success";
@@ -645,7 +640,6 @@ public class ShoppingListEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession(true);
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         Properties systemProps = System.getProperties();
         String guestShoppingUserName = "GuestShoppingListId_" + systemProps.getProperty("user.name").replace(" ", "_");
@@ -698,15 +692,10 @@ public class ShoppingListEvents {
             }
         }
         if (UtilValidate.isNotEmpty(autoSaveListId)) {
-            if (UtilValidate.isNotEmpty(cart)) {
-                synchronized (cart) { // SCIPIO
-                cart.setAutoSaveListId(autoSaveListId);
-                }
-            } else {
-                cart = ShoppingCartEvents.getCartObject(request);
-                synchronized (cart) { // SCIPIO
-                cart.setAutoSaveListId(autoSaveListId);
-                }
+            synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+            ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+            cart.setAutoSaveListId(autoSaveListId);
+            ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
             }
         }
         return "success";

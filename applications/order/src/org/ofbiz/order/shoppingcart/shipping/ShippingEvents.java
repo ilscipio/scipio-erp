@@ -44,6 +44,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
@@ -60,11 +61,12 @@ public class ShippingEvents {
     private static final String resource_error = "OrderErrorUiLabels"; // SCIPIO
 
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
+
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-
-        synchronized (cart) { // SCIPIO
 
         int shipGroups = cart.getShipGroupSize();
         for (int i = 0; i < shipGroups; i++) {
@@ -89,6 +91,7 @@ public class ShippingEvents {
 
         ProductPromoWorker.doPromotions(cart, dispatcher);
 
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         // all done

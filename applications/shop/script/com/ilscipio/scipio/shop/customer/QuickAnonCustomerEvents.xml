@@ -481,10 +481,13 @@ code package.
             </if-empty>
         </if-not-empty>
 
+        <call-class-method method-name="getCartLockObject" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="cartLock">
+            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+        </call-class-method>
+        <synchronized field="cartLock"><!-- SCIPIO -->
+
         <!-- see if we should continue now... -->
         <session-to-field field="cart" session-name="shoppingCart"/>
-        
-        <synchronized field="cart"><!-- SCIPIO -->
 
         <session-to-field field="userLogin"/>
         <if-empty field="userLogin">
@@ -553,6 +556,10 @@ code package.
         <!-- set the partyId in the request -->
         <field-to-request field="partyId" request-name="partyId"/>
         
+        <call-class-method method-name="registerCartChange" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents"><!-- SCIPIO -->
+            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="cart" type="org.ofbiz.order.shoppingcart.ShoppingCart"/>
+        </call-class-method>
         </synchronized>
     </simple-method>
 
@@ -564,10 +571,14 @@ code package.
               parameters.put("carrierPartyId", shipmentMethod.substring(shipmentMethod.indexOf("@")+1));
            }
        </script>
-       <session-to-field field="cart" session-name="shoppingCart"/>
-       <if-not-empty field="cart">
-           <synchronized field="cart"><!-- SCIPIO -->
        
+       <call-class-method method-name="getCartLockObject" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="cartLock">
+           <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+       </call-class-method>
+       <synchronized field="cartLock"><!-- SCIPIO -->
+        
+       <session-to-field field="cart" session-name="shoppingCart"/>
+       <if-not-empty field="cart">       
            <set field="shipmentMethodTypeId" from-field="parameters.shipmentMethodTypeId"/>
            <call-object-method obj-field="cart" method-name="setAllShipmentMethodTypeId">
                <field field="shipmentMethodTypeId"/>
@@ -608,9 +619,13 @@ code package.
                    <field field="giftMessage" type="String"/>
                </call-object-method>
            </if-not-empty>
-           
-           </synchronized>
        </if-not-empty>
+       
+        <call-class-method method-name="registerCartChange" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents"><!-- SCIPIO -->
+            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="cart" type="org.ofbiz.order.shoppingcart.ShoppingCart"/>
+        </call-class-method>
+       </synchronized>
     </simple-method>
 
 </simple-methods>

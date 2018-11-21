@@ -88,15 +88,16 @@ public class ShoppingCartEvents {
     public static String addProductPromoCode(HttpServletRequest request, HttpServletResponse response) {
         Locale locale = UtilHttp.getLocale(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = getCartObject(request);
         String productPromoCodeId = request.getParameter("productPromoCodeId");
         if (UtilValidate.isNotEmpty(productPromoCodeId)) {
-            synchronized (cart) { // SCIPIO
+            synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+            ShoppingCart cart = getCartObject(request);
             String checkResult = cart.addProductPromoCode(productPromoCodeId, dispatcher);
             if (UtilValidate.isNotEmpty(checkResult)) {
                 request.setAttribute("_ERROR_MESSAGE_", checkResult);
                 return "error";
             }
+            ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
             }
         }
         request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resource, "OrderPromoAppliedSuccessfully", UtilMisc.toMap("productPromoCodeId", productPromoCodeId), locale));
@@ -105,12 +106,12 @@ public class ShoppingCartEvents {
 
     public static String removePromotion(HttpServletRequest request,HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = getCartObject(request);
         String promoCodeId = request.getParameter("promoCode");
         String result = "error";
 
         if (!promoCodeId.isEmpty()) {
-            synchronized (cart) { // SCIPIO
+            synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+            ShoppingCart cart = getCartObject(request);
             cart.getProductPromoCodesEntered().clear();
             GenericValue productPromoCode = null;
             try {
@@ -149,6 +150,7 @@ public class ShoppingCartEvents {
                         cart.removeProductPromoUse(productPromoId);
                     }
                 }
+                ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
             } catch (GenericEntityException e) {
                 Debug.logError(e.getMessage(), module);
             }
@@ -158,26 +160,28 @@ public class ShoppingCartEvents {
     }
 
     public static String addItemGroup(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
         Map<String, Object> parameters = UtilHttp.getParameterMap(request);
         String groupName = (String) parameters.get("groupName");
         String parentGroupNumber = (String) parameters.get("parentGroupNumber");
-        synchronized (cart) { // SCIPIO
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
         String groupNumber = cart.addItemGroup(groupName, parentGroupNumber);
         request.setAttribute("itemGroupNumber", groupNumber);
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
         return "success";
     }
 
     public static String addCartItemToGroup(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
         Map<String, Object> parameters = UtilHttp.getParameterMap(request);
         String itemGroupNumber = (String) parameters.get("itemGroupNumber");
         String indexStr = (String) parameters.get("lineIndex");
         int index = Integer.parseInt(indexStr);
-        synchronized (cart) { // SCIPIO
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
         ShoppingCartItem cartItem = cart.findCartItem(index);
         cartItem.setItemGroup(itemGroupNumber, cart);
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
         return "success";
     }
@@ -186,11 +190,6 @@ public class ShoppingCartEvents {
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = getCartObject(request);
-
-        synchronized (cart) { // SCIPIO
-
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String controlDirective = null;
         Map<String, Object> result = null;
         String productId = null;
@@ -298,6 +297,11 @@ public class ShoppingCartEvents {
             itemDescription = null;
         }
 
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        
         // Get the ProductConfigWrapper (it's not null only for configurable items)
         ProductConfigWrapper configWrapper = null;
         configWrapper = ProductConfigWorker.getProductConfigWrapper(productId, cart.getCurrency(), request);
@@ -694,6 +698,9 @@ public class ShoppingCartEvents {
         if (controlDirective.equals(ERROR)) {
             return "error";
         }
+        
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+        
         if (cart.viewCartOnAdd()) {
             return "viewcart";
         }
@@ -707,21 +714,27 @@ public class ShoppingCartEvents {
         String orderId = request.getParameter("orderId");
         String itemGroupNumber = request.getParameter("itemGroupNumber");
         String[] itemIds = request.getParameterValues("item_id");
-        ShoppingCart cart = getCartObject(request);
+        
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         Map<String, Object> result;
         String controlDirective;
 
         boolean addAll = ("true".equals(request.getParameter("add_all")));
+        
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addToCartFromOrder(catalogId, orderId, itemIds, addAll, itemGroupNumber);
         controlDirective = processResult(result, request);
 
         //Determine where to send the browser
         if (controlDirective.equals(ERROR)) {
             return "error";
+        }
+        
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
         return "success";
     }
@@ -732,21 +745,27 @@ public class ShoppingCartEvents {
      */
     public static String addToCartBulk(HttpServletRequest request, HttpServletResponse response) {
         String categoryId = request.getParameter("category_id");
-        ShoppingCart cart = getCartObject(request);
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String controlDirective;
         Map<String, Object> result;
         //Convert the params to a map to pass in
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
+
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addToCartBulk(catalogId, categoryId, paramMap);
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         controlDirective = processResult(result, request);
 
         //Determine where to send the browser
         if (controlDirective.equals(ERROR)) {
             return "error";
+        }
+        
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
         return "success";
     }
@@ -805,46 +824,50 @@ public class ShoppingCartEvents {
 
         cart.setOrderType("PURCHASE_ORDER");
 
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
         session.setAttribute("orderPartyId", cart.getOrderPartyId());
+        }
 
         return "success";
     }
 
     public static String quickCheckoutOrderWithDefaultOptions(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         ShoppingCart cart = getCartObject(request);
-
-        synchronized (cart) { // SCIPIO
-
         // Set the cart's default checkout options for a quick checkout
         cart.setDefaultCheckoutOptions(dispatcher);
-
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
-
         return "success";
     }
 
     /** Adds a set of requirements to the cart
      */
     public static String addToCartBulkRequirements(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String controlDirective;
         Map<String, Object> result;
         //Convert the params to a map to pass in
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
+
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addToCartBulkRequirements(catalogId, paramMap);
         controlDirective = processResult(result, request);
 
         //Determine where to send the browser
         if (controlDirective.equals(ERROR)) {
             return "error";
+        }
+        
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
         return "success";
     }
@@ -857,16 +880,21 @@ public class ShoppingCartEvents {
         String itemGroupNumber = request.getParameter("itemGroupNumber");
         String categoryId = request.getParameter("category_id");
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
-        ShoppingCart cart = getCartObject(request);
+        
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        
         String controlDirective;
         Map<String, Object> result;
         BigDecimal totalQuantity;
         Locale locale = UtilHttp.getLocale(request);
 
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addCategoryDefaults(catalogId, categoryId, itemGroupNumber);
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+        }
         controlDirective = processResult(result, request);
 
         //Determine where to send the browser
@@ -886,13 +914,15 @@ public class ShoppingCartEvents {
 
     /** Delete an item from the shopping cart. */
     public static String deleteFromCart(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
         String controlDirective;
         Map<String, Object> result;
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-        //Delegate the cart helper
+
+        //Delegate the cart item
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
         result = cartHelper.deleteFromCart(paramMap);
         controlDirective = processResult(result, request);
 
@@ -900,18 +930,19 @@ public class ShoppingCartEvents {
         if (controlDirective.equals(ERROR)) {
             return "error";
         }
+        
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+        }
         return "success";
     }
 
     /** Update the items in the shopping cart. */
     public static String modifyCart(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        ShoppingCart cart = getCartObject(request);
         Locale locale = UtilHttp.getLocale(request);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Security security = (Security) request.getAttribute("security");
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
         String controlDirective;
         Map<String, Object> result;
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
@@ -919,6 +950,10 @@ public class ShoppingCartEvents {
         String removeSelectedFlag = request.getParameter("removeSelected");
         String selectedItems[] = request.getParameterValues("selectedItem");
         boolean removeSelected = ("true".equals(removeSelectedFlag) && selectedItems != null && selectedItems.length > 0);
+        
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
         result = cartHelper.modifyCart(security, userLogin, paramMap, removeSelected, selectedItems, locale);
         controlDirective = processResult(result, request);
 
@@ -926,15 +961,18 @@ public class ShoppingCartEvents {
         if (controlDirective.equals(ERROR)) {
             return "error";
         }
+        
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+        }
         return "success";
     }
 
     /** Empty the shopping cart. */
     public static String clearCart(HttpServletRequest request, HttpServletResponse response) {
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         ShoppingCart cart = getCartObject(request);
-
-        synchronized (cart) { // SCIPIO
         cart.clear();
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         // if this was an anonymous checkout process, go ahead and clear the session and such now that the order is placed; we don't want this to mess up additional orders and such
@@ -984,7 +1022,7 @@ public class ShoppingCartEvents {
             return "error";
         }
         ShoppingCart cart = getCartObject(request);
-        if (cart == null) {
+        if (cart == null) { // NOTE: this should never happen
             return "error";
         }
 
@@ -1002,11 +1040,8 @@ public class ShoppingCartEvents {
      */
     public static String checkCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
-
-        synchronized (cart) { // SCIPIO
         if (cart == null || cart.size() <= 0) {
             return "cartEmpty";
-        }
         }
 
         return "success";
@@ -1015,12 +1050,14 @@ public class ShoppingCartEvents {
     /** Totally wipe out the cart, removes all stored info. */
     public static String destroyCart(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         clearCart(request, response);
         session.removeAttribute("shoppingCart");
         session.removeAttribute("orderPartyId");
         session.removeAttribute("orderMode");
         session.removeAttribute("productStoreId");
         session.removeAttribute("CURRENT_CATALOG_ID");
+        }
         return "success";
     }
 
@@ -1040,14 +1077,16 @@ public class ShoppingCartEvents {
             session.setAttribute("shoppingCart", cart);
         } else {
             if (locale != null && !locale.equals(cart.getLocale())) {
-                synchronized (cart) { // SCIPIO
+                synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
                 cart.setLocale(locale);
+                cart = ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
                 }
             }
             if (currencyUom != null && !currencyUom.equals(cart.getCurrency())) {
                 try {
-                    synchronized (cart) { // SCIPIO
+                    synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
                     cart.setCurrency(dispatcher, currencyUom);
+                    cart = ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
                     }
                 } catch (CartItemModifyException e) {
                     Debug.logError(e, "Unable to modify currency in cart", module);
@@ -1095,7 +1134,19 @@ public class ShoppingCartEvents {
         return lock;
     }
     
+    /**
+     * SCIPIO: Registers (publishes to other threads) the given cart, assumed to have been changed. 
+     * If the request attribute "shoppingCartPublish" is set to boolean false, this does nothing; 
+     * caller can use flag to prevent subordinate code from publishing too early. Added 2018-11-20. */
+    public static ShoppingCart registerCartChange(HttpServletRequest request, ShoppingCart cart) {
+        if (!Boolean.FALSE.equals(request.getAttribute("shoppingCartPublish"))) {
+            request.getSession(true).setAttribute("shoppingCart", cart);
+        }
+        return cart;
+    }
+
     public static String switchCurrentCartObject(HttpServletRequest request, HttpServletResponse response) {
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         HttpSession session = request.getSession(true);
         String cartIndexStr = request.getParameter("cartIndex");
         int cartIndex = -1;
@@ -1129,9 +1180,11 @@ public class ShoppingCartEvents {
         }
         session.setAttribute("shoppingCart", newCart);
         return "success";
+        }
     }
 
     public static String clearCartFromList(HttpServletRequest request, HttpServletResponse response) {
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         HttpSession session = request.getSession(true);
         String cartIndexStr = request.getParameter("cartIndex");
         int cartIndex = -1;
@@ -1145,6 +1198,7 @@ public class ShoppingCartEvents {
         List<ShoppingCart> cartList = UtilGenerics.checkList(session.getAttribute("shoppingCartList"));
         if (UtilValidate.isNotEmpty(cartList) && cartIndex >= 0 && cartIndex < cartList.size()) {
             cartList.remove(cartIndex);
+        }
         }
         return "success";
     }
@@ -1160,8 +1214,9 @@ public class ShoppingCartEvents {
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             if (userLogin != null) {
                 try {
-                    synchronized (cart) { // SCIPIO
+                    synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
                     cart.setUserLogin(userLogin, dispatcher);
+                    cart = ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
                     }
                 } catch (CartItemModifyException e) {
                     Debug.logWarning(e, module);
@@ -1175,15 +1230,17 @@ public class ShoppingCartEvents {
             if (autoUserLogin != null) {
                 if (cart.getUserLogin() == null) {
                     try {
-                        synchronized (cart) { // SCIPIO
+                        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
                         cart.setAutoUserLogin(autoUserLogin, dispatcher);
+                        cart = ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
                         }
                     } catch (CartItemModifyException e) {
                         Debug.logWarning(e, module);
                     }
                 } else {
-                    synchronized (cart) { // SCIPIO
+                    synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
                     cart.setAutoUserLogin(autoUserLogin);
+                    cart = ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
                     }
                 }
             }
@@ -1192,8 +1249,9 @@ public class ShoppingCartEvents {
         // update the locale
         Locale locale = UtilHttp.getLocale(request);
         if (cart.getLocale() == null || !locale.equals(cart.getLocale())) {
-            synchronized (cart) { // SCIPIO
+            synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
             cart.setLocale(locale);
+            cart = ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
             }
         }
 
@@ -1202,7 +1260,6 @@ public class ShoppingCartEvents {
 
     /** For GWP Promotions with multiple alternatives, selects an alternative to the current GWP */
     public static String setDesiredAlternateGwpProductId(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String alternateGwpProductId = request.getParameter("alternateGwpProductId");
@@ -1226,7 +1283,8 @@ public class ShoppingCartEvents {
             return "error";
         }
 
-        synchronized (cart) { // SCIPIO
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
 
         ShoppingCartItem cartLine = cart.findCartItem(alternateGwpLine);
         if (cartLine == null) {
@@ -1247,6 +1305,7 @@ public class ShoppingCartEvents {
                     if ("SALES_ORDER".equals(cart.getOrderType())) {
                         org.ofbiz.order.shoppingcart.product.ProductPromoWorker.doPromotions(cart, dispatcher);
                     }
+                    ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
                     return "success";
                 }
             }
@@ -1260,7 +1319,6 @@ public class ShoppingCartEvents {
 
     /** Associates a party to order */
     public static String addAdditionalParty(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
         String partyId = request.getParameter("additionalPartyId");
         String roleTypeId[] = request.getParameterValues("additionalRoleTypeId");
         List<String> eventList = new LinkedList<>();
@@ -1277,7 +1335,8 @@ public class ShoppingCartEvents {
             eventList.addAll(msg);
         }
 
-        synchronized (cart) { // SCIPIO
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
 
         for (i = 0; i < roleTypeId.length; i++) {
             try {
@@ -1287,16 +1346,17 @@ public class ShoppingCartEvents {
             }
         }
 
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         request.removeAttribute("_EVENT_MESSAGE_LIST_");
         request.setAttribute("_EVENT_MESSAGE_LIST_", eventList);
+
         return "success";
     }
 
     /** Removes a previously associated party to order */
     public static String removeAdditionalParty(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
         String partyId = request.getParameter("additionalPartyId");
         String roleTypeId[] = request.getParameterValues("additionalRoleTypeId");
         List<String> eventList = new LinkedList<>();
@@ -1313,7 +1373,8 @@ public class ShoppingCartEvents {
             eventList.addAll(msg);
         }
 
-        synchronized (cart) { // SCIPIO
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
 
         for (i = 0; i < roleTypeId.length; i++) {
             try {
@@ -1324,6 +1385,7 @@ public class ShoppingCartEvents {
             }
         }
 
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         request.removeAttribute("_EVENT_MESSAGE_LIST_");
@@ -1377,13 +1439,18 @@ public class ShoppingCartEvents {
     public static String selectAgreement(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        String agreementId = request.getParameter("agreementId");
+        Map<String, Object> result;
+
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         ShoppingCart cart = getCartObject(request);
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
-        String agreementId = request.getParameter("agreementId");
-        Map<String, Object> result = cartHelper.selectAgreement(agreementId);
+        result = cartHelper.selectAgreement(agreementId);
         if (ServiceUtil.isError(result)) {
            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
            return "error";
+        }
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
         return "success";
     }
@@ -1392,13 +1459,17 @@ public class ShoppingCartEvents {
     public static String setCurrency(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        String currencyUomId = request.getParameter("currencyUomId");
+        Map<String, Object> result;
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         ShoppingCart cart = getCartObject(request);
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
-        String currencyUomId = request.getParameter("currencyUomId");
-        Map<String, Object> result = cartHelper.setCurrency(currencyUomId);
+        result = cartHelper.setCurrency(currencyUomId);
         if (ServiceUtil.isError(result)) {
            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
            return "error";
+        }
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
         return "success";
     }
@@ -1408,10 +1479,11 @@ public class ShoppingCartEvents {
      *
      */
     public static String setOrderName(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
         String orderName = request.getParameter("orderName");
-        synchronized (cart) { // SCIPIO
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
         cart.setOrderName(orderName);
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
         return "success";
     }
@@ -1421,10 +1493,11 @@ public class ShoppingCartEvents {
      *
      */
     public static String setPoNumber(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
         String correspondingPoId = request.getParameter("correspondingPoId");
-        synchronized (cart) { // SCIPIO
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
         cart.setPoNumber(correspondingPoId);
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
         return "success";
     }
@@ -1433,8 +1506,6 @@ public class ShoppingCartEvents {
      * Add an order term *
      */
     public static String addOrderTerm(HttpServletRequest request, HttpServletResponse response) {
-
-        ShoppingCart cart = getCartObject(request);
         Locale locale = UtilHttp.getLocale(request);
 
         String termTypeId = request.getParameter("termTypeId");
@@ -1484,12 +1555,12 @@ public class ShoppingCartEvents {
             }
         }
 
-        synchronized (cart) { // SCIPIO
-
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         removeOrderTerm(request, response);
 
+        ShoppingCart cart = getCartObject(request); // SCIPIO: moved to here from start of method
         cart.addOrderTerm(termTypeId, null, termValue, termDays, textValue, description);
-
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         return "success";
@@ -1499,19 +1570,18 @@ public class ShoppingCartEvents {
      * Remove an order term *
      */
     public static String removeOrderTerm(HttpServletRequest request, HttpServletResponse response) {
-
-        ShoppingCart cart = getCartObject(request);
-
         String termIndexStr = request.getParameter("termIndex");
         if (UtilValidate.isNotEmpty(termIndexStr)) {
             try {
                 Integer termIndex = Integer.parseInt(termIndexStr);
                 if (termIndex >= 0) {
-                    synchronized (cart) { // SCIPIO
+                    synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+                    ShoppingCart cart = getCartObject(request);
                     List<GenericValue> orderTerms = cart.getOrderTerms();
                     if (orderTerms != null && orderTerms.size() > termIndex) {
                         cart.removeOrderTerm(termIndex);
                     }
+                    ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
                     }
                 }
             } catch (NumberFormatException e) {
@@ -1547,10 +1617,12 @@ public class ShoppingCartEvents {
             return "error";
         }
 
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
         session.setAttribute("orderPartyId", cart.getOrderPartyId());
+        }
 
         return "success";
     }
@@ -1584,10 +1656,12 @@ public class ShoppingCartEvents {
         // Make the cart read-only
         cart.setReadOnlyCart(true);
 
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
         session.setAttribute("orderPartyId", cart.getOrderPartyId());
+        }
 
         return "success";
     }
@@ -1667,10 +1741,12 @@ public class ShoppingCartEvents {
         // Since we only need the cart items, so set the order id as null
         cart.setOrderId(null);
 
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
         session.setAttribute("orderPartyId", cart.getOrderPartyId());
+        }
 
         // SCIPIO: this is moved before the session.setAttribute for thread safety reasons
         //// Since we only need the cart items, so set the order id as null
@@ -1684,10 +1760,9 @@ public class ShoppingCartEvents {
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         String destroyCart = request.getParameter("destroyCart");
 
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         ShoppingCart cart = getCartObject(request);
-        
-        synchronized (cart) { // SCIPIO
-        
+
         Map<String, Object> result = null;
         String quoteId = null;
         try {
@@ -1708,6 +1783,7 @@ public class ShoppingCartEvents {
             ShoppingCartEvents.destroyCart(request, response);
         }
 
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         return "success";
@@ -1719,9 +1795,8 @@ public class ShoppingCartEvents {
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         String destroyCart = request.getParameter("destroyCart");
 
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
         ShoppingCart cart = getCartObject(request);
-        
-        synchronized (cart) { // SCIPIO
 
         Map<String, Object> result = null;
         String custRequestId = null;
@@ -1743,6 +1818,7 @@ public class ShoppingCartEvents {
             ShoppingCartEvents.destroyCart(request, response);
         }
 
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         return "success";
@@ -1761,9 +1837,9 @@ public class ShoppingCartEvents {
         if (UtilValidate.isNotEmpty(productStoreId)) {
             session.setAttribute("productStoreId", productStoreId);
         }
-        ShoppingCart cart = getCartObject(request);
 
-        synchronized (cart) { // SCIPIO
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
 
         // TODO: re-factor and move this inside the ShoppingCart constructor
         String orderMode = request.getParameter("orderMode");
@@ -1884,6 +1960,7 @@ public class ShoppingCartEvents {
             }
         }
 
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         return "success";
@@ -1910,7 +1987,6 @@ public class ShoppingCartEvents {
     public static String doManualPromotions(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        ShoppingCart cart = getCartObject(request);
         List<GenericValue> manualPromotions = new LinkedList<>();
 
         // iterate through the context and find all keys that start with "productPromoId_"
@@ -1933,8 +2009,10 @@ public class ShoppingCartEvents {
             }
         }
         
-        synchronized (cart) { // SCIPIO
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
         ProductPromoWorker.doPromotions(cart, manualPromotions, dispatcher);
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         return "success";
@@ -1944,8 +2022,6 @@ public class ShoppingCartEvents {
     public static String bulkAddProducts(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String controlDirective = null;
         Map<String, Object> result = null;
         String productId = null;
@@ -1971,7 +2047,10 @@ public class ShoppingCartEvents {
         if (rowCount < 1) {
             Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
         } else {
-            synchronized (cart) { // SCIPIO
+            synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+            ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+            ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+
             for (int i = 0; i < rowCount; i++) {
                 controlDirective = null;                // re-initialize each time
                 String thisSuffix = UtilHttp.getMultiRowDelimiter() + i;        // current suffix after each field id
@@ -2062,10 +2141,15 @@ public class ShoppingCartEvents {
                     }
                 }
             }
+
+            ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+
+            // Determine where to send the browser
+            return cart.viewCartOnAdd() ? "viewcart" : "success";
             }
         }
 
-        // Determine where to send the browser
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: fetch cart for non-modifying case
         return cart.viewCartOnAdd() ? "viewcart" : "success";
     }
 
@@ -2073,8 +2157,7 @@ public class ShoppingCartEvents {
     public static String setOrderCurrencyAgreementShipDates(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        ShoppingCart cart = getCartObject(request);
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+
 
         String agreementId = request.getParameter("agreementId");
         String currencyUomId = request.getParameter("currencyUomId");
@@ -2088,8 +2171,10 @@ public class ShoppingCartEvents {
         Locale locale = UtilHttp.getLocale(request);
         Map<String, Object> result = null;
 
-        synchronized (cart) { // SCIPIO
-        
+        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+            
         // set the agreement if specified otherwise set the currency
         if (UtilValidate.isNotEmpty(agreementId)) {
             result = cartHelper.selectAgreement(agreementId);
@@ -2152,6 +2237,7 @@ public class ShoppingCartEvents {
             return "error";
         }
         
+        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
         }
 
         return "success";

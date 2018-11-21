@@ -26,17 +26,18 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityUtil;
 
-
-cart = session.getAttribute("shoppingCart");
-
-if (cart) {
-createNewShipGroup = request.getParameter("createNewShipGroup");
-if ("Y".equals(createNewShipGroup)) {
-    synchronized (shoppingCart) { // SCIPIO
-        // SCIPIO: FIXME: Screen scripts should avoid modifying the cart...
-        cart.addShipInfo();
+synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+    cart = session.getAttribute("shoppingCart");
+    if (cart) {
+        createNewShipGroup = request.getParameter("createNewShipGroup");
+        if ("Y".equals(createNewShipGroup)) {
+            cart.addShipInfo();
+            ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+        }
     }
 }
+
+if (cart) {
 
 orderPartyId = cart.getPartyId();
 shipToPartyId = parameters.shipToPartyId;

@@ -385,10 +385,11 @@ code package.
                 org.ofbiz.webapp.control.LoginWorker.doBasicLogin(createdUserLogin, request);
                 org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
                 session = request.getSession();
-                cart = session.getAttribute("shoppingCart");
-                if (cart != null) {
-                    synchronized(cart) { // SCIPIO
-                    cart.setOrderPartyId(tempMap.get("partyId"));
+                synchronized (org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+                    cart = session.getAttribute("shoppingCart");
+                    if (cart != null) {
+                        cart.setOrderPartyId(tempMap.get("partyId"));
+                        org.ofbiz.order.shoppingcart.ShoppingCartEvents.registerCartChange(request, cart);
                     }
                 }
             </script>
@@ -462,10 +463,13 @@ code package.
         <!-- see if we should continue now... -->
         <check-errors/>
         <log level="info" message="Setting up party ${tempMap.partyId} and shipping address ${addressPurposeContext} in cart"/>
+        
+        <call-class-method method-name="getCartLockObject" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="cartLock">
+            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+        </call-class-method>
+        <synchronized field="cartLock"><!-- SCIPIO -->
         <session-to-field field="cart" session-name="shoppingCart"/>
-        
-        <synchronized field="cart"><!-- SCIPIO -->
-        
+
         <session-to-field field="userLogin"/>
         <log level="info" message="userLogin in Env ${userLogin} in parameters.userLogin ${parameters.userLogin}"/>
         <if-empty field="userLogin">
@@ -516,6 +520,10 @@ code package.
         </if-empty>
         <check-errors/>
 
+        <call-class-method method-name="registerCartChange" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents"><!-- SCIPIO -->
+            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="cart" type="org.ofbiz.order.shoppingcart.ShoppingCart"/>
+        </call-class-method>
         </synchronized>
 
         <log level="info" message="If anonymous, user-login has been activated"/>
@@ -815,10 +823,13 @@ code package.
                 <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
             </else>
         </if-not-empty>
+
+        <call-class-method method-name="getCartLockObject" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="cartLock">
+            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+        </call-class-method>
+        <synchronized field="cartLock"><!-- SCIPIO -->
         <session-to-field field="cart" session-name="shoppingCart"/>
         <if-not-empty field="cart">
-            <synchronized field="cart"><!-- SCIPIO -->
-
             <call-object-method obj-field="cart" method-name="addContactMech">
                 <string value="SHIPPING_LOCATION"/>
                 <field field="addressContext.contactMechId"/>
@@ -826,9 +837,13 @@ code package.
             <call-object-method obj-field="cart" method-name="setAllShippingContactMechId">
                 <field field="addressContext.contactMechId"/>
             </call-object-method>
-            
-            </synchronized>
+
+            <call-class-method method-name="registerCartChange" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents"><!-- SCIPIO -->
+                <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+                <field field="cart" type="org.ofbiz.order.shoppingcart.ShoppingCart"/>
+            </call-class-method>
         </if-not-empty>
+        </synchronized>
     </simple-method>
 
     <simple-method method-name="processShipOptions" short-description="Process Ship Options; to be called as a Request Event" login-required="false">
@@ -839,10 +854,13 @@ code package.
               parameters.put("carrierPartyId", shipmentMethod.substring(shipmentMethod.indexOf("@")+1));
            }
        </script>
+       
+       <call-class-method method-name="getCartLockObject" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="cartLock">
+           <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+       </call-class-method>
+       <synchronized field="cartLock"><!-- SCIPIO -->
        <session-to-field field="cart" session-name="shoppingCart"/>
-       <if-not-empty field="cart">
-           <synchronized field="cart"><!-- SCIPIO -->
-        
+       <if-not-empty field="cart">        
            <set field="shipmentMethodTypeId" from-field="parameters.shipmentMethodTypeId"/>
            <call-object-method obj-field="cart" method-name="setAllShipmentMethodTypeId">
                <field field="shipmentMethodTypeId"/>
@@ -888,8 +906,12 @@ code package.
            </call-object-method>
            </if-not-empty>
            
-           </synchronized>
+           <call-class-method method-name="registerCartChange" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents"><!-- SCIPIO -->
+               <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+               <field field="cart" type="org.ofbiz.order.shoppingcart.ShoppingCart"/>
+           </call-class-method>
        </if-not-empty>
+       </synchronized>
     </simple-method>
 
     <!-- One page checkout process  -->
@@ -1084,12 +1106,15 @@ code package.
         <!-- SCIPIO: 2018-11-12: this is missing half the info - set further below
         <field-to-request field="shipmentMethod.description" request-name="shippingDescription"/>-->
 
+        <call-class-method method-name="getCartLockObject" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="cartLock">
+            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+        </call-class-method>
+        <synchronized field="cartLock"><!-- SCIPIO -->
+
         <set field="shoppingCart" from-field="parameters.shoppingCart"/>
         <if-empty field="shoppingCart">
             <session-to-field field="shoppingCart"/>
         </if-empty>
-
-        <synchronized field="shoppingCart"><!-- SCIPIO -->
 
         <call-object-method obj-field="shoppingCart" method-name="setAllShipmentMethodTypeId">
             <field field="shipmentMethodTypeId"/>
@@ -1147,6 +1172,10 @@ code package.
             <field field="dispatcher" type="org.ofbiz.service.LocalDispatcher"/>
         </call-class-method>
 
+        <call-class-method method-name="registerCartChange" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents"><!-- SCIPIO -->
+            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart"/>
+        </call-class-method>
         </synchronized>
 
         <field-to-request field="parameters.shippingTotal" request-name="shippingTotal"/>

@@ -11176,6 +11176,9 @@
         <value xml:lang="zh">用iDEAL支付</value>
         <value xml:lang="zh-TW">用iDEAL支付</value>
     </property>
+    <property key="AccountingPayWithStripe">
+        <value xml:lang="en">Stripe</value>
+    </property>
     <property key="AccountingPIN">
         <value xml:lang="ar">الرمز السري</value>
         <value xml:lang="de">PIN</value>
@@ -15327,6 +15330,12 @@
         <value xml:lang="vi">Tiền tố trên Thẻ</value>
         <value xml:lang="zh">卡上后缀</value>
         <value xml:lang="zh-TW">卡上後綴</value>
+    </property>
+    <property key="AccountingStripePublishableKey">
+        <value xml:lang="en">Publishable Key</value>
+    </property>
+    <property key="AccountingStripeSecretKey">
+        <value xml:lang="en">Secret Key</value>
     </property>
     <property key="AccountingTaxAuthorities">
         <value xml:lang="ar">السلطات الضريبية</value>

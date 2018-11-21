@@ -71,9 +71,9 @@ public class WebShoppingCart extends ShoppingCart {
         // WARN: 2018-11-20: The behavior here is subject to change
         Object shoppingCartLock = session.getAttribute("shoppingCartLock");
         if (shoppingCartLock != null) {
-            this.setLockObj((Serializable) shoppingCartLock);
+            this.setLockObject((Serializable) shoppingCartLock);
         } else {
-            session.setAttribute("shoppingCartLock", this.getLockObj());
+            session.setAttribute("shoppingCartLock", this.getLockObject());
             Debug.logWarning("No shoppingCartLock found in session; creating", module);
         }
     }

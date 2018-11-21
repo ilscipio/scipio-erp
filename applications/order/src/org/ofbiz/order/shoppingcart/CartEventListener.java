@@ -40,13 +40,12 @@ public class CartEventListener implements HttpSessionListener {
 
     public CartEventListener() {}
 
-    @SuppressWarnings("serial")
     @Override
     public void sessionCreated(HttpSessionEvent event) {
         //for this one do nothing when the session is created...
         
         // SCIPIO: dedicated lock for shoppingCart instance; see WebShoppingCart
-        event.getSession().setAttribute("shoppingCartLock", new java.io.Serializable() {});
+        event.getSession().setAttribute("shoppingCartLock", ShoppingCart.createLockObject());
     }
 
     @Override

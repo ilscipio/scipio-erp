@@ -1074,6 +1074,27 @@ public class ShoppingCartEvents {
         return getCartObject(request, null, null).copyCart();
     }
 
+    /** SCIPIO: Returns an object which should be used to lock on whether modifying the cart.
+     * Added 2018-11-20. */
+    public static Object getCartLockObject(HttpServletRequest request) {
+        Object lock = request.getSession(true).getAttribute("shoppingCartLock");
+        if (lock == null) {
+            // Check if cart has it but for some reason it's not in session
+            ShoppingCart cart = (ShoppingCart) request.getSession(true).getAttribute("shoppingCart");
+            if (cart != null) {
+                lock = cart.getLockObject();
+                request.getSession(true).setAttribute("shoppingCartLock", lock);
+                Debug.logWarning("shoppingCartLock not found in session; setting to lock object found in cart (" 
+                        + lock + ")", module); 
+            } else {
+                lock = ShoppingCart.createLockObject();
+                request.getSession(true).setAttribute("shoppingCartLock", lock);
+                Debug.logWarning("shoppingCartLock not found in session; creating", module); 
+            }
+        }
+        return lock;
+    }
+    
     public static String switchCurrentCartObject(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(true);
         String cartIndexStr = request.getParameter("cartIndex");

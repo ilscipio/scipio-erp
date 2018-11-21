@@ -213,12 +213,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * It is transferred over to new instances by the copy constructor.
      * <p>
      * NOTE: This object is expected to be stored as the session attribute "shoppingCartLock".
-     * If you lock on this object returned by {@link #getLockObj()}, then inside the synchronized block you
+     * If you lock on this object returned by {@link #getLockObject()}, then inside the synchronized block you
      * must re-fetch the ShoppingCart instance in case another thread changed the cart reference.
      * <p>
      * Added 2018-11-20.
      */
-    protected Serializable lockObj = new Serializable() {};
+    protected Serializable lockObj = createLockObject();
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -5626,12 +5626,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * It is transferred over to new instances by the copy constructor.
      * <p>
      * NOTE: This object is expected to be stored as the session attribute "shoppingCartLock".
-     * If you lock on this object returned by {@link #getLockObj()}, then inside the synchronized block you
+     * If you lock on this object returned by {@link #getLockObject()}, then inside the synchronized block you
      * must re-fetch the ShoppingCart instance in case another thread changed the cart reference.
      * <p>
      * Added 2018-11-20.
      */
-    public Object getLockObj() {
+    public Object getLockObject() {
         return lockObj;
     }
 
@@ -5641,7 +5641,15 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * NOTE: This object must implement Serializable.
      * Added 2018-11-20.
      */
-    public void setLockObj(Serializable lock) {
+    public void setLockObject(Serializable lock) {
         this.lockObj = lock;
+    }
+
+    /**
+     * SCIPIO: Create a new lock object for {@link #setLockObject(Serializable)} and the
+     * shoppingCartLock session attribute.
+     */
+    public static Serializable createLockObject() {
+        return new Serializable() {};
     }
 }

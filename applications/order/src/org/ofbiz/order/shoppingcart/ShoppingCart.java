@@ -37,8 +37,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -136,40 +134,39 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     private String autoSaveListId = null;
 
     // SCIPIO: Changed all LinkedList to ArrayList
-    // SCIPIO: 2018-11-20: Changed all to concurrent collections to ensure safe individual field reads
 
     /** Holds value of order adjustments. */
-    private List<GenericValue> adjustments = new CopyOnWriteArrayList<>();
+    private List<GenericValue> adjustments = new ArrayList<>();
     // OrderTerms
     private boolean orderTermSet = false;
-    private List<GenericValue> orderTerms = new CopyOnWriteArrayList<>();
+    private List<GenericValue> orderTerms = new ArrayList<>();
 
-    private List<ShoppingCartItem> cartLines = new CopyOnWriteArrayList<>();
-    private Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = new ConcurrentHashMap<>();
+    private List<ShoppingCartItem> cartLines = new ArrayList<>();
+    private Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = new HashMap<>();
     protected long nextGroupNumber = 1;
-    private List<CartPaymentInfo> paymentInfo = new CopyOnWriteArrayList<>();
-    private List<CartShipInfo> shipInfo = new CopyOnWriteArrayList<>();
-    private Map<String, String> contactMechIdsMap = new ConcurrentHashMap<>();
-    private Map<String, String> orderAttributes = new ConcurrentHashMap<>();
-    private Map<String, Object> attributes = new ConcurrentHashMap<>(); // user defined attributes
+    private List<CartPaymentInfo> paymentInfo = new ArrayList<>();
+    private List<CartShipInfo> shipInfo = new ArrayList<>();
+    private Map<String, String> contactMechIdsMap = new HashMap<>();
+    private Map<String, String> orderAttributes = new HashMap<>();
+    private Map<String, Object> attributes = new HashMap<>(); // user defined attributes
     // Lists of internal/public notes: when the order is stored they are transformed into OrderHeaderNotes
-    private List<String> internalOrderNotes = new CopyOnWriteArrayList<>(); // internal notes
-    private List<String> orderNotes = new CopyOnWriteArrayList<>(); // public notes (printed on documents etc.)
+    private List<String> internalOrderNotes = new ArrayList<>(); // internal notes
+    private List<String> orderNotes = new ArrayList<>(); // public notes (printed on documents etc.)
 
     /** contains a list of partyId for each roleTypeId (key) */
-    private Map<String, List<String>> additionalPartyRole = new ConcurrentHashMap<>();
+    private Map<String, List<String>> additionalPartyRole = new HashMap<>();
 
     /** these are defaults for all ship groups */
     private Timestamp defaultShipAfterDate = null;
     private Timestamp defaultShipBeforeDate = null;
 
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
-    private List<ProductPromoUseInfo> productPromoUseInfoList = new CopyOnWriteArrayList<>();
+    private List<ProductPromoUseInfo> productPromoUseInfoList = new ArrayList<>();
     /** Contains the promo codes entered */
     private Set<String> productPromoCodes = new HashSet<>();
-    private List<GenericValue> freeShippingProductPromoActions = new CopyOnWriteArrayList<>();
+    private List<GenericValue> freeShippingProductPromoActions = new ArrayList<>();
     /** Note that even though this is promotion info, it should NOT be cleared when the promos are cleared, it is a preference that will be used in the next promo calculation */
-    private Map<GenericPK, String> desiredAlternateGiftByAction = new ConcurrentHashMap<>();
+    private Map<GenericPK, String> desiredAlternateGiftByAction = new HashMap<>();
     private Timestamp cartCreatedTs = UtilDateTime.nowTimestamp();
 
     private transient Delegator delegator = null;
@@ -242,8 +239,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.quoteId = cart.getQuoteId();
         this.orderAdditionalEmails = cart.getOrderAdditionalEmails();
         this.adjustments.addAll(cart.getAdjustments());
-        this.contactMechIdsMap = new ConcurrentHashMap<>(cart.getOrderContactMechIds());
-        this.freeShippingProductPromoActions = new CopyOnWriteArrayList<>(cart.getFreeShippingProductPromoActions());
+        this.contactMechIdsMap = new HashMap<>(cart.getOrderContactMechIds());
+        this.freeShippingProductPromoActions = new ArrayList<>(cart.getFreeShippingProductPromoActions());
         this.desiredAlternateGiftByAction = cart.getAllDesiredAlternateGiftByActionCopy();
         this.productPromoUseInfoList.addAll(cart.productPromoUseInfoList);
         this.productPromoCodes = new HashSet<>(cart.productPromoCodes);
@@ -261,9 +258,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.autoOrderShoppingListId = cart.getAutoOrderShoppingListId();
 
         // clone the additionalPartyRoleMap
-        this.additionalPartyRole = new ConcurrentHashMap<>();
+        this.additionalPartyRole = new HashMap<>();
         for (Map.Entry<String, List<String>> me : cart.additionalPartyRole.entrySet()) {
-            this.additionalPartyRole.put(me.getKey(), new CopyOnWriteArrayList<>(me.getValue()));
+            this.additionalPartyRole.put(me.getKey(), new ArrayList<>(me.getValue()));
         }
 
         // clone the groups
@@ -288,9 +285,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         // SCIPIO
         Map<String, List<GenericValue>> cartSubscriptionItems = null;
         if (cart.cartSubscriptionItems != null) {
-            cartSubscriptionItems = new ConcurrentHashMap<>();
+            cartSubscriptionItems = new HashMap<>();
             for(Map.Entry<String, List<GenericValue>> entry : cart.cartSubscriptionItems.entrySet()) {
-                cartSubscriptionItems.put(entry.getKey(), (entry.getValue() != null) ? new CopyOnWriteArrayList<>(entry.getValue()) : null);
+                cartSubscriptionItems.put(entry.getKey(), (entry.getValue() != null) ? new ArrayList<>(entry.getValue()) : null);
             }
         }
         this.cartSubscriptionItems = cartSubscriptionItems;
@@ -1529,7 +1526,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
         // clear the additionalPartyRole Map
         for (Map.Entry<String, List<String>> me : this.additionalPartyRole.entrySet()) {
-            ((CopyOnWriteArrayList<String>) me.getValue()).clear();
+            ((ArrayList<String>) me.getValue()).clear();
         }
         this.additionalPartyRole.clear();
 
@@ -3647,7 +3644,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 }
             }
         } else {
-            parties = new CopyOnWriteArrayList<>();
+            parties = new ArrayList<>();
             additionalPartyRole.put(roleTypeId, parties);
         }
 
@@ -4723,8 +4720,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public static class CartShipInfo implements Serializable {
-        public Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo = new ConcurrentHashMap<>();
-        public List<GenericValue> shipTaxAdj = new CopyOnWriteArrayList<>();
+        public Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo = new HashMap<>();
+        public List<GenericValue> shipTaxAdj = new ArrayList<>();
         public String orderTypeId = null;
         private String internalContactMechId = null;
         public String telecomContactMechId = null;
@@ -4744,7 +4741,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         private String associatedShipGroupSeqId = null;
         public String vendorPartyId = null;
         public String productStoreShipMethId = null;
-        public Map<String, Object> attributes = new ConcurrentHashMap<>();
+        public Map<String, Object> attributes = new HashMap<>();
 
         public void setAttribute(String name, Object value) {
             this.attributes.put(name, value);
@@ -5007,7 +5004,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
         /** SCIPIO: VAT Tax calculation. */
         public BigDecimal getTotalVATTax(ShoppingCart cart){
-            List<GenericValue> taxAdjustments = new ArrayList<>();
+            List<GenericValue> taxAdjustments = new ArrayList<GenericValue>();
             taxAdjustments.addAll(shipTaxAdj);
             for (CartShipItemInfo info : shipItemInfo.values()) {
                 taxAdjustments.addAll(info.itemTaxAdj);
@@ -5028,7 +5025,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
 
         public static class CartShipItemInfo implements Serializable {
-            public List<GenericValue> itemTaxAdj = new CopyOnWriteArrayList<>();
+            public List<GenericValue> itemTaxAdj = new ArrayList<>();
             public ShoppingCartItem item = null;
             public BigDecimal quantity = BigDecimal.ZERO;
 
@@ -5564,7 +5561,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      */
     public List<GenericValue> getItemSubscriptions(Delegator delegator, String productId) throws GenericEntityException {
         if (this.cartSubscriptionItems == null) {
-            this.cartSubscriptionItems = new ConcurrentHashMap<>();
+            this.cartSubscriptionItems = new HashMap<>();
         }
         List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource").where("productId", productId)
                 .cache(true).filterByDate().queryList();

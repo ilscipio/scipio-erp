@@ -21,10 +21,10 @@ package org.ofbiz.product.config;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -105,7 +105,7 @@ public class ProductConfigWrapper implements Serializable {
             configId = pcw.configId;
             List<ConfigItem> questions = null;
             if (pcw.questions != null) {
-                questions = new LinkedList<>();
+                questions = new ArrayList<>();
                 for (ConfigItem ci: pcw.questions) {
                     questions.add(new ConfigItem(ci, exactCopy));
                 }
@@ -114,7 +114,7 @@ public class ProductConfigWrapper implements Serializable {
         } else {
             product = GenericValue.create(pcw.product);
 
-            questions = new LinkedList<>();
+            questions = new ArrayList<>();
             delegator = pcw.getDelegator();
             delegatorName = delegator.getDelegatorName();
             dispatcher = pcw.getDispatcher();
@@ -169,7 +169,7 @@ public class ProductConfigWrapper implements Serializable {
         if (price != null) {
             basePrice = price;
         }
-        questions = new LinkedList<>();
+        questions = new ArrayList<>();
         if ("AGGREGATED".equals(product.getString("productTypeId")) || "AGGREGATED_SERVICE".equals(product.getString("productTypeId"))) {
             List<GenericValue> questionsValues = EntityQuery.use(delegator).from("ProductConfig").where("productId", productId).orderBy("sequenceNum").filterByDate().queryList();
             Set<String> itemIds = new HashSet<>();
@@ -371,7 +371,7 @@ public class ProductConfigWrapper implements Serializable {
     }
 
     public List<ConfigOption> getSelectedOptions() {
-        List<ConfigOption> selectedOptions = new LinkedList<>();
+        List<ConfigOption> selectedOptions = new ArrayList<>();
         for (ConfigItem ci: questions) {
             if (ci.isStandard()) {
                 selectedOptions.addAll(ci.getOptions());
@@ -387,7 +387,7 @@ public class ProductConfigWrapper implements Serializable {
     }
 
     public List<ConfigOption> getDefaultOptions() {
-        List<ConfigOption> defaultOptions = new LinkedList<>();
+        List<ConfigOption> defaultOptions = new ArrayList<>();
         for (ConfigItem ci: questions) {
             ConfigOption co = ci.getDefault();
             if (co != null) {
@@ -490,7 +490,7 @@ public class ProductConfigWrapper implements Serializable {
         public ConfigItem(GenericValue questionAssoc) throws Exception {
             configItemAssoc = questionAssoc;
             configItem = configItemAssoc.getRelatedOne("ConfigItemProductConfigItem", false);
-            options = new LinkedList<>();
+            options = new ArrayList<>();
             first = true;
         }
 
@@ -509,7 +509,7 @@ public class ProductConfigWrapper implements Serializable {
             if (exactCopy) {
                 configItem = ci.configItem;
                 configItemAssoc = ci.configItemAssoc;
-                List<ConfigOption> options = new LinkedList<>();
+                List<ConfigOption> options = new ArrayList<>();
                 for (ConfigOption co: ci.options) {
                     options.add(new ConfigOption(co, exactCopy, this));
                 }
@@ -517,7 +517,7 @@ public class ProductConfigWrapper implements Serializable {
             } else {
                 configItem = GenericValue.create(ci.configItem);
                 configItemAssoc = GenericValue.create(ci.configItemAssoc);
-                List<ConfigOption> options = new LinkedList<>();
+                List<ConfigOption> options = new ArrayList<>();
                 for (ConfigOption co: ci.options) {
                     options.add(new ConfigOption(co, this));
                 }
@@ -755,7 +755,7 @@ public class ProductConfigWrapper implements Serializable {
         public ConfigOption(ConfigOption co, boolean exactCopy, ConfigItem parentConfigItem) {
             if (exactCopy) {
                 configOption = co.configOption;
-                List<GenericValue> componentList = new LinkedList<>(); // SCIPIO: Use local var
+                List<GenericValue> componentList = new ArrayList<>(); // SCIPIO: Use local var
                 for (GenericValue component: co.componentList) {
                     componentList.add(component);
                 }
@@ -763,7 +763,7 @@ public class ProductConfigWrapper implements Serializable {
                 comments = co.getComments();
             } else {
                 configOption = GenericValue.create(co.configOption);
-                List<GenericValue> componentList = new LinkedList<>(); // SCIPIO: Use local var
+                List<GenericValue> componentList = new ArrayList<>(); // SCIPIO: Use local var
                 for (GenericValue component: co.componentList) {
                     componentList.add(GenericValue.create(component));
                 }

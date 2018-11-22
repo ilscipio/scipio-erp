@@ -204,7 +204,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     protected Timestamp cancelBackOrderDate = null;
 
     // SCIPIO: Cart item subscriptions
+    /* 2018-11-22: This cache is problematic due to both thread safety and because it risks going out of
+     * sync with some cart operations, so we simply omit it for now... the lookups will rely on entity cache instead.
+     * NOTE: ShoppingCart cannot be treated like OrderReadHelper (global vs local).
+     * DEV NOTE: If a transient cache is ever really needed on ShoppingCart, this should go on
+     * ShoppingCartItem instead as a List<GenericValue> field.
     protected Map<String, List<GenericValue>> cartSubscriptionItems = null;
+    */
 
     protected boolean allowMissingShipEstimates = false; // SCIPIO: see WebShoppingCart for implementation
 
@@ -269,6 +275,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.transactionId = cart.transactionId;
             this.autoOrderShoppingListId = cart.autoOrderShoppingListId;
 
+            /* 2018-11-22: Removed: cartSubscriptionItems cache is counter-productive
             // SCIPIO
             Map<String, List<GenericValue>> cartSubscriptionItems = null;
             if (cart.cartSubscriptionItems != null) {
@@ -278,6 +285,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 }
             }
             this.cartSubscriptionItems = cartSubscriptionItems;
+            */
             this.lockObj = cart.lockObj; // SCIPIO
 
             // SCIPIO: Stock fields not covered by legacy copy constructor
@@ -1177,14 +1185,17 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         if (cartLines.size() <= index) {
             return;
         }
+        ShoppingCartItem item;
+        /* 2018-11-22: Removed: cartSubscriptionItems cache is counter-productive
         // SCIPIO: Removing cart item from subscriptions map, if exists
-        ShoppingCartItem item = cartLines.get(index);
+        item = cartLines.get(index);
         String prodId = item.getProductId();
         if (UtilValidate.isNotEmpty(cartSubscriptionItems)
                 && UtilValidate.isNotEmpty(prodId)
                 && cartSubscriptionItems.containsKey(prodId)) {
             cartSubscriptionItems.remove(prodId);
         }
+        */
         item = cartLines.remove(index);
 
 
@@ -1679,10 +1690,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.productPromoUseInfoList.clear();
         this.productPromoCodes.clear();
 
+        /* 2018-11-22: Removed: cartSubscriptionItems cache is counter-productive
         // SCIPIO: Clearing subscription items
         if (this.cartSubscriptionItems != null) {
             this.cartSubscriptionItems.clear();
         }
+        */
 
         // clear the auto-save info
         if (ProductStoreWorker.autoSaveCart(this.getDelegator(), this.getProductStoreId())) {
@@ -5761,38 +5774,63 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     // ================= Cart Subscriptions =================
 
     /**
-     * SCIPIO: Retrieve all subscription of the entire cart
+     * SCIPIO: Retrieve all subscription of the entire cart.
      */
-    public Map<String, List<GenericValue>> getItemSubscriptions() throws GenericEntityException {
+    public Map<String, List<GenericValue>> getItemSubscriptions() {
         List<ShoppingCartItem> cartItems = items();
         if (cartItems != null) {
+            Map<String, List<GenericValue>> cartSubscriptionItems = new HashMap<>();
             for (ShoppingCartItem cartItem : cartItems) {
                 List<GenericValue> productSubscriptions = getItemSubscriptions(cartItem.getDelegator(), cartItem.getProductId());
-                for (GenericValue productSubscription : productSubscriptions) {
-                    Debug.logInfo("Found cartItem [" + cartItem.getOrderItemSeqId() + "#" + cartItem.getProductId() + "] with subscription id["
-                            + productSubscription.getString("subscriptionResourceId") + "]", module);
+                if (Debug.infoOn()) {
+                    for (GenericValue productSubscription : productSubscriptions) {
+                        Debug.logInfo("Found cartItem [" + cartItem.getOrderItemSeqId() + "#" + cartItem.getProductId() + "] with subscription id["
+                                + productSubscription.getString("subscriptionResourceId") + "]", module);
+                    }
+                }
+                if (UtilValidate.isNotEmpty(productSubscriptions)) {
+                    cartSubscriptionItems.put(cartItem.getProductId(), productSubscriptions);
                 }
             }
+            /* 2018-11-22: Removed: cartSubscriptionItems cache poses several issues
             return this.cartSubscriptionItems;
+            */
+            return cartSubscriptionItems;
         }
         return null;
     }
 
     /**
-     * SCIPIO: Retrieve all subscriptions associated to an productId
+     * SCIPIO: Retrieve all subscriptions associated to an productId.
      */
-    public List<GenericValue> getItemSubscriptions(Delegator delegator, String productId) throws GenericEntityException {
+    public List<GenericValue> getItemSubscriptions(Delegator delegator, String productId) {
+        /*
+         * DEV NOTE: 2018-11-22: This currently relies on entity cache for performance;
+         * if this proves unacceptable, maybe can add a transient List<GenericValue> productSubscriptionResources cache
+         * to ShoppingCartItem instead - it is less likely to go out of sync with the cart if there instead of this.cartSubscriptionItems.
+         */
+        
+        /* 2018-11-22: Removed: cartSubscriptionItems cache poses several issues
         if (this.cartSubscriptionItems == null) {
             this.cartSubscriptionItems = new HashMap<>();
         }
-        List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource").where("productId", productId)
-                .cache(true).filterByDate().queryList();
+        */
+        List<GenericValue> productSubscriptionResources;
+        try {
+            productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource").where("productId", productId)
+                    .cache(true).filterByDate().queryList();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error while looking up ProductSubscriptionResource for product '" + productId + "'", module);
+            return new ArrayList<>();
+        }
+        /* 2018-11-22: Removed: cartSubscriptionItems cache poses several issues
         if (UtilValidate.isNotEmpty(productSubscriptionResources)) {
             this.cartSubscriptionItems.put(productId, productSubscriptionResources);
         } else {
             // 2018-11-12: Keep sync when no subscription
             this.cartSubscriptionItems.remove(productId);
         }
+        */
         return productSubscriptionResources;
     }
 
@@ -5800,21 +5838,23 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * SCIPIO: Checks if any order item has an underlying subscription/s bound to it.
      */
     public boolean hasSubscriptions() {
-        return UtilValidate.isNotEmpty(this.cartSubscriptionItems);
+        return UtilValidate.isNotEmpty(this.getItemSubscriptions());
     }
 
     /**
      * SCIPIO: Checks if an order item has an underlying subscription/s bound to it.
      */
     public boolean hasSubscriptions(GenericValue cartItem) {
-        return UtilValidate.isNotEmpty(this.cartSubscriptionItems) && this.cartSubscriptionItems.containsKey(cartItem.getString("productId"));
+        Map<String, List<GenericValue>> cartSubscriptionItems = getItemSubscriptions();
+        return UtilValidate.isNotEmpty(cartSubscriptionItems) && cartSubscriptionItems.containsKey(cartItem.getString("productId"));
     }
 
     /**
-     * SCIPIO: Check if the order contains only subscription items
+     * SCIPIO: Check if the order contains only subscription items.
      */
     public boolean orderContainsSubscriptionItemsOnly() {
         List<ShoppingCartItem> cartItems = items();
+        Map<String, List<GenericValue>> cartSubscriptionItems = getItemSubscriptions();
         if (cartItems != null && cartSubscriptionItems != null) {
             for (ShoppingCartItem orderItem : cartItems) {
                 if (!cartSubscriptionItems.containsKey(orderItem.getProductId())) {

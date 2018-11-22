@@ -26,9 +26,14 @@ import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.order.shoppingcart.shipping.*;
 
-synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
-
-shoppingCart = session.getAttribute("shoppingCart");
+// SCIPIO: FIXME: Having cart updates in a groovy script is very inefficient and not proper
+// and this probably triggers cart updates for no reason
+CartUpdate cartUpdate = new CartUpdate(request);
+try { // SCIPIO
+synchronized (cartUpdate.getLockObject()) {
+//shoppingCart = session.getAttribute("shoppingCart");
+shoppingCart = cartUpdate.getCartForUpdate();
+    
 currencyUomId = shoppingCart.getCurrency();
 partyId = shoppingCart.getPartyId();
 party = from("Party").where("partyId", partyId).cache(true).queryOne();
@@ -46,7 +51,7 @@ if (shoppingCart) {
 profiledefs = from("PartyProfileDefault").where("partyId", userLogin.partyId, "productStoreId", productStoreId).queryOne();
 context.profiledefs = profiledefs;
 
-context.shoppingCart = shoppingCart;
+//context.shoppingCart = shoppingCart; // SCIPIO: done below
 context.userLogin = userLogin;
 context.productStoreId = productStore.get("productStoreId");
 context.productStore = productStore;
@@ -99,6 +104,9 @@ if (salesReps) {
 }
 context.cartParties = cartParties;
 
-ShoppingCartEvents.registerCartChange(request, shoppingCart); // SCIPIO
+shoppingCart = cartUpdate.commit(shoppingCart); // SCIPIO
+context.shoppingCart = shoppingCart;
 }
-
+} finally {
+    cartUpdate.close();
+}

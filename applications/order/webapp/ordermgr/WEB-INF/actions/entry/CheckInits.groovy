@@ -67,11 +67,18 @@ if (partyId) {
     if (party) {
         contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
         if (contactMech) {
-            synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
-                ShoppingCart shoppingCart = ShoppingCartEvents.getCartObject(request);
-                // SCIPIO: FIXME: Screen scripts should avoid modifying the cart...
-                shoppingCart.setAllShippingContactMechId(contactMech.contactMechId);
-                ShoppingCartEvents.registerCartChange(request, shoppingCart);
+            CartUpdate cartUpdate = new CartUpdate(request);
+            try { // SCIPIO
+                synchronized (cartUpdate.getLockObject()) {
+                    shoppingCart = cartUpdate.getCartForUpdate();
+                    
+                    shoppingCart.setAllShippingContactMechId(contactMech.contactMechId);
+                    
+                    shoppingCart = cartUpdate.commit(shoppingCart);
+                    context.shoppingCart = shoppingCart;
+                }
+            } finally {
+                cartUpdate.close();
             }
         }
     }

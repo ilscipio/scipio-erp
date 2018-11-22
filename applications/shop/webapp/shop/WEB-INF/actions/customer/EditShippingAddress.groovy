@@ -19,7 +19,7 @@
 
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.contact.ContactHelper;
-import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
+import org.ofbiz.order.shoppingcart.*;
 
 if (userLogin) {
     party = userLogin.getRelatedOne("Party", false);
@@ -75,12 +75,16 @@ if (userLogin) {
         context.shipToFaxExtension = faxPartyContactMech.extension;
     }
     
-    synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
-        cart = session.getAttribute("shoppingCart");
-        if (cart) {
-            // SCIPIO: FIXME: Screen scripts should avoid modifying the cart...
-            cart.setAllShippingContactMechId(context.shipToContactMechId);
-            ShoppingCartEvents.registerCartChange(request, cart);
+    CartUpdate cartUpdate = new CartUpdate(request);
+    try { // SCIPIO
+        synchronized (cartUpdate.getLockObject()) {
+            ShoppingCart cart = cartUpdate.getCartForUpdate();
+
+            cart.setAllShippingContactMechId(context.shipToContactMechId); // SCIPIO
+
+            cart = cartUpdate.commit(cart); // SCIPIO
         }
+    } finally {
+        cartUpdate.close();
     }
 }

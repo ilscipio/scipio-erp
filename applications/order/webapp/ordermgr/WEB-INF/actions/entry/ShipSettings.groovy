@@ -26,15 +26,22 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityUtil;
 
-synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
-    cart = session.getAttribute("shoppingCart");
-    if (cart) {
-        createNewShipGroup = request.getParameter("createNewShipGroup");
-        if ("Y".equals(createNewShipGroup)) {
+createNewShipGroup = request.getParameter("createNewShipGroup");
+if ("Y".equals(createNewShipGroup)) {
+    CartUpdate cartUpdate = new CartUpdate(request);
+    try { // SCIPIO
+        synchronized (cartUpdate.getLockObject()) {
+            cart = cartUpdate.getCartForUpdate();
+
             cart.addShipInfo();
-            ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+
+            cart = cartUpdate.commit(cart); // SCIPIO
         }
+    } finally {
+        cartUpdate.close();
     }
+} else {
+    cart = session.getAttribute("shoppingCart");
 }
 
 if (cart) {

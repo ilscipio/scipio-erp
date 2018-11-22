@@ -45,9 +45,9 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
+import org.ofbiz.order.shoppingcart.CartUpdate;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
-import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.config.ProductConfigWorker;
@@ -78,8 +78,9 @@ public class ShoppingListEvents {
         String shoppingListTypeId = request.getParameter("shoppingListTypeId");
         String selectedCartItems[] = request.getParameterValues("selectedItem");
         
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
+        synchronized (cartUpdate.getLockObject()) {
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         if (UtilValidate.isEmpty(selectedCartItems)) {
             selectedCartItems = makeCartItemsArray(cart);
@@ -92,9 +93,9 @@ public class ShoppingListEvents {
             return "error";
         }
 
-        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+        cartUpdate.commit(cart); // SCIPIO
         }
-
+        }
         request.setAttribute("shoppingListId", shoppingListId);
         return "success";
     }
@@ -189,17 +190,20 @@ public class ShoppingListEvents {
         String includeChild = request.getParameter("includeChild");
         String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
 
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
+        synchronized (cartUpdate.getLockObject()) {
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         try {
             addListToCart(delegator, dispatcher, cart, prodCatalogId, shoppingListId, (includeChild != null), true, true);
         } catch (IllegalArgumentException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
         }
-        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
-        }
 
+        cartUpdate.commit(cart); // SCIPIO
+        }
+        }
         return "success";
     }
 
@@ -437,16 +441,19 @@ public class ShoppingListEvents {
     public static String saveCartToAutoSaveList(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
+        synchronized (cartUpdate.getLockObject()) {
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         try {
             fillAutoSaveList(cart, dispatcher);
         } catch (GeneralException e) {
             Debug.logError(e, "Error saving the cart to the auto-save list: " + e.toString(), module);
         }
-        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
-        }
 
+        cartUpdate.commit(cart); // SCIPIO
+        }
+        }
         return "success";
     }
 
@@ -465,8 +472,9 @@ public class ShoppingListEvents {
 
         HttpSession session = request.getSession();
         
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
+        synchronized (cartUpdate.getLockObject()) {
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         // safety check for missing required parameter.
         if (cart.getWebSiteId() == null) {
@@ -543,9 +551,9 @@ public class ShoppingListEvents {
             }
         }
 
-        ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+        cartUpdate.commit(cart); // SCIPIO
         }
-
+        }
         return "success";
     }
 
@@ -692,10 +700,14 @@ public class ShoppingListEvents {
             }
         }
         if (UtilValidate.isNotEmpty(autoSaveListId)) {
-            synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
-            ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+            try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
+            synchronized (cartUpdate.getLockObject()) {
+            ShoppingCart cart = cartUpdate.getCartForUpdate();
+
             cart.setAutoSaveListId(autoSaveListId);
-            ShoppingCartEvents.registerCartChange(request, cart); // SCIPIO
+
+            cartUpdate.commit(cart); // SCIPIO
+            }
             }
         }
         return "success";

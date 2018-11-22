@@ -63,6 +63,8 @@ public class DesCrypt {
         return keyGen.generateKey();
     }
 
+    private static volatile int encryptWarnCount = 0; // SCIPIO 
+    
     /**
      * Encrypt bytes with DES.
      * @deprecated SCIPIO: 2018-04: DES is no longer considered secure for encryption
@@ -71,6 +73,13 @@ public class DesCrypt {
      */
     @Deprecated
     public static byte[] encrypt(Key key, byte[] bytes) throws GeneralException {
+
+        if (encryptWarnCount < 10) { // SCIPIO: Show this the first ~10 times, then stop, because may flood log
+            Debug.logWarning("WARNING: DES encrypt() called"
+                + "; DES encryption is insecure and should not be used to encrypt any new data", module);
+            encryptWarnCount++; // NOTE: no need to synchronize; approx. is fine
+        }
+
         Cipher cipher = DesCrypt.getCipher(key, Cipher.ENCRYPT_MODE);
         byte[] encBytes = null;
         try {

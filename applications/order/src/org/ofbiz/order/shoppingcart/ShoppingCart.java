@@ -231,7 +231,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.doPromotions = cart.getDoPromotions();
         this.poNumber = cart.getPoNumber();
         this.orderId = cart.getOrderId();
-        this.orderName = "Copy of " + cart.getOrderName();
+        // SCIPIO: This is counterproductive: copy constructor should make a copy, caller can change it after
+        //this.orderName = "Copy of " + cart.getOrderName();
+        this.orderName = cart.getOrderName();
         this.workEffortId = cart.getWorkEffortId();
         this.firstAttemptOrderId = cart.getFirstAttemptOrderId();
         this.billingAccountId = cart.getBillingAccountId();

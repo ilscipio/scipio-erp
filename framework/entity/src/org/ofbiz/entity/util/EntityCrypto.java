@@ -387,6 +387,7 @@ public final class EntityCrypto {
      * LegacyStorageHandler, uses DES encryption.
      */
     protected static abstract class LegacyStorageHandler extends StorageHandler {
+        @SuppressWarnings("deprecation") // SCIPIO: 2018-11-22: DES generateKey calls logged as warnings, so no need for source warnings
         @Override
         protected Key generateNewKey() throws EntityCryptoException {
             try {
@@ -411,6 +412,7 @@ public final class EntityCrypto {
             return DesCrypt.decrypt(DesCrypt.getDesKey(key), StringUtil.fromHexString(encryptedString));
         }
 
+        @SuppressWarnings("deprecation") // SCIPIO: 2018-11-22: DES encrypt calls logged as warnings, so no need for source warnings
         @Override
         protected String encryptValue(EncryptMethod encryptMethod, byte[] key, byte[] objBytes) throws GeneralException {
             return StringUtil.toHexString(DesCrypt.encrypt(DesCrypt.getDesKey(key), objBytes));
@@ -482,6 +484,7 @@ public final class EntityCrypto {
             this.kek = key;
         }
 
+        @SuppressWarnings("deprecation") // SCIPIO: 2018-11-22: DES generateKey calls logged as warnings, so no need for source warnings
         @Override
         protected Key generateNewKey() throws EntityCryptoException {
             try {
@@ -523,6 +526,7 @@ public final class EntityCrypto {
             return keyBytes;
         }
 
+        @SuppressWarnings("deprecation") // SCIPIO: 2018-11-22: DES encrypt calls logged as warnings, so no need for source warnings
         @Override
         protected String encodeKey(byte[] key) throws GeneralException {
             if (kek != null) {
@@ -558,6 +562,7 @@ public final class EntityCrypto {
             allBytes[0] = (byte) saltBytes.length;
             System.arraycopy(saltBytes, 0, allBytes, 1, saltBytes.length);
             System.arraycopy(objBytes, 0, allBytes, 1 + saltBytes.length, objBytes.length);
+            @SuppressWarnings("deprecation") // SCIPIO: 2018-11-22: DES encrypt calls logged as warnings, so no need for source warnings
             String result = Base64.encodeBase64String(DesCrypt.encrypt(DesCrypt.getDesKey(key), allBytes));
             return result;
         }

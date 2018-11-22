@@ -328,17 +328,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.orderDate = cart.orderDate;
             
             // clone the groups
-            Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = new HashMap<>(); // SCIPIO: Use local var
-            for (ShoppingCartItemGroup itemGroup : cart.itemGroupByNumberMap.values()) {
-                // get the new parent group by number from the existing set; as before the parent must come before all children to work...
-                ShoppingCartItemGroup parentGroup = null;
-                if (itemGroup.getParentGroup() != null) {
-                    parentGroup = this.getItemGroupByNumber(itemGroup.getParentGroup().getGroupNumber());
-                }
-                ShoppingCartItemGroup newGroup = new ShoppingCartItemGroup(itemGroup, parentGroup);
-                itemGroupByNumberMap.put(newGroup.getGroupNumber(), newGroup);
-            }
-            this.itemGroupByNumberMap = itemGroupByNumberMap;
+            this.itemGroupByNumberMap = copyItemGroupByNumberMap(exactCopy, cart.itemGroupByNumberMap);
 
             // clone the items
             List<ShoppingCartItem> cartLines = new ArrayList<>(); // SCIPIO: Use local var
@@ -384,7 +374,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.autoOrderShoppingListId = cart.getAutoOrderShoppingListId();
             
             // clone the groups
-            Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = new HashMap<>(); // SCIPIO: Use local var
+            /* SCIPIO: This is wrong; there is nothing guarantees parents will be iterated before children in a HashMap
             for (ShoppingCartItemGroup itemGroup : cart.itemGroupByNumberMap.values()) {
                 // get the new parent group by number from the existing set; as before the parent must come before all children to work...
                 ShoppingCartItemGroup parentGroup = null;
@@ -394,7 +384,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 ShoppingCartItemGroup newGroup = new ShoppingCartItemGroup(itemGroup, parentGroup);
                 itemGroupByNumberMap.put(newGroup.getGroupNumber(), newGroup);
             }
-            this.itemGroupByNumberMap = itemGroupByNumberMap;
+            */
+            this.itemGroupByNumberMap = copyItemGroupByNumberMap(false, cart.itemGroupByNumberMap);
 
             // clone the items
             List<ShoppingCartItem> cartLines = new ArrayList<>(); // SCIPIO: Use local var
@@ -419,6 +410,35 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.allowMissingShipEstimates = cart.allowMissingShipEstimates; // SCIPIO
     }
 
+    /**
+     * SCIPIO: Deep copy of itemGroupByNumberMap (fixes flawed stock logic) with parent references resolved.
+     */
+    private Map<String, ShoppingCartItemGroup> copyItemGroupByNumberMap(boolean exactCopy, Map<String, ShoppingCartItemGroup> itemGroupByNumberMap) {
+        Map<String, ShoppingCartItemGroup> newMap = new HashMap<>(); // SCIPIO: Use local var
+        for (ShoppingCartItemGroup itemGroup : itemGroupByNumberMap.values()) {
+            if (!newMap.containsKey(itemGroup.getGroupNumber())) { // Parent may be already created
+                copyItemGroupParentsFirst(itemGroup, exactCopy, newMap);
+            }
+        }
+        return newMap;
+    }
+
+    /**
+     * SCIPIO: Recursively registers the group, depth-first starting with parent.
+     */
+    private ShoppingCartItemGroup copyItemGroupParentsFirst(ShoppingCartItemGroup itemGroup, boolean exactCopy, Map<String, ShoppingCartItemGroup> newMap) {
+        ShoppingCartItemGroup newParentGroup = null;
+        if (itemGroup.getParentGroup() != null) {
+            newParentGroup = newMap.get(itemGroup.getParentGroup().getGroupNumber());
+            if (newParentGroup == null) {
+                newParentGroup = copyItemGroupParentsFirst(itemGroup.getParentGroup(), exactCopy, newMap);
+            }
+        }
+        ShoppingCartItemGroup newGroup = new ShoppingCartItemGroup(itemGroup, newParentGroup);
+        newMap.put(newGroup.getGroupNumber(), newGroup);
+        return newGroup;
+    }
+    
     /** Creates new empty ShoppingCart object. */
     public ShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId) {
 

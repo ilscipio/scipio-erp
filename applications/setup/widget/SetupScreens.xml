@@ -613,12 +613,6 @@
                 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SetupAccounting.groovy"/>
                 
-                <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
-                <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
-                
-                <set field="setupTimePeriodForms.location" value="component://setup/widget/SetupScreens.xml"/>
-                <set field="setupTimePeriodForms.name" value="SetupTimePeriodForms"/>
-                
                 <set field="isCreateForm" type="Boolean" value="false"/>      
                    
                 <set field="target" value="setupUpdateGlAccount" />
@@ -688,31 +682,30 @@
     <screen name="EditGLAccountTree">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLAccountTree.groovy"/>                
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>                
+                <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
             </actions>
-            <widgets>            
+            <widgets>
                 <section>
-                     <condition>
+                    <condition>
                         <and>
                             <not><if-empty field="topGlAccountId"/></not>
                             <not><if-empty field="treeMenuData"/></not>
                         </and>
                     </condition>
-                    <widgets>
-                        <screenlet>
-                            <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccountTree.ftl"/></html></platform-specific>
+                    <widgets>                      
+                    <screenlet>
+                        <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccountTree.ftl"/></html></platform-specific>
                     </screenlet>
+                    </widgets>
+                </section>                                                                       
             </widgets>
-                </section>
-            </widgets>           
         </section>
     </screen>
     <screen name="SetupGlAccountForms">
         <section>
-            <actions>
-            </actions>
             <widgets>
-                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
                 <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccount.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -720,7 +713,10 @@
     <screen name="EditFiscalPeriods">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>   
+                <set field="setupTimePeriodForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupTimePeriodForms.name" value="SetupTimePeriodForms"/>            
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
@@ -728,61 +724,57 @@
         </section>
     </screen>
     <screen name="SetupTimePeriodForms">
-        <section>
-            <actions>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriod.ftl"/></html></platform-specific>
+        <section>            
+            <widgets>                
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriod.ftl"/></html></platform-specific>                    
             </widgets>
         </section>
     </screen>
     <screen name="EditJournals">
         <section>
             <actions>
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditJournals.groovy"/>                
             </actions>
             <widgets>
-                <section>
-                    <widgets>
-                        <screenlet>
-                            <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditJournals.ftl"/></html></platform-specific>
-                        </screenlet>
-                    </widgets>
-                </section>
+               <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditJournals.ftl"/></html></platform-specific>                     
             </widgets>           
         </section>
     </screen>
     <screen name="EditAccountingTransactions">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAccountingTransactions.groovy"/>
-                <!-- <entity-and entity-name="DatevDataCategory" list="datevDataCategories"></entity-and> -->
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAccountingTransactions.groovy"/>                
             </actions>
             <widgets>
-                <section>
-                    <widgets>
-                        <screenlet>
-                            <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAccountingTransactions.ftl"/></html></platform-specific>
-                        </screenlet>
-                    </widgets>
-                </section>
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAccountingTransactions.ftl"/></html></platform-specific>                
             </widgets>
         </section>
     </screen>
     <screen name="EditTaxAuthorities">
         <section>
             <actions>
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditTaxAuthorities.groovy"/>
-                <!-- <entity-and entity-name="DatevDataCategory" list="datevDataCategories"></entity-and> -->
             </actions>
             <widgets>
-                <section>
-                    <widgets>
-                        <screenlet>
-                            <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditTaxAuthorities.ftl"/></html></platform-specific>
-                        </screenlet>
-                    </widgets>
-                </section>
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditTaxAuthorities.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SetupAccountingTabError">
+        <section>
+            <actions>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupAccountingTabsDecorator" location="component://setup/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/SetupAccountingTabError.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

@@ -182,6 +182,32 @@
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
+        <!-- Specific request maps for setup accounting tabs -->
+    <request-map uri="setupGlAccountsTab">
+        <security https="true" auth="true" />        
+        <response name="success" type="view" value="SetupGlAccountsTab" />
+        <response name="error" type="view" value="SetupAccountingTabError"/>
+    </request-map>
+    <request-map uri="setupFiscalPeriodsTab">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="SetupFiscalPeriodsTab" />
+        <response name="error" type="view" value="SetupAccountingTabError"/>
+    </request-map>
+    <request-map uri="setupAccountingTransactionsTab">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="SetupAccountingTransactionsTab" />
+        <response name="error" type="view" value="SetupAccountingTabError"/>
+    </request-map>
+    <request-map uri="setupJournalTab">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="SetupJournalTab" />
+        <response name="error" type="view" value="SetupAccountingTabError"/>
+    </request-map>
+    <request-map uri="setupTaxAuthTab">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="SetupTaxAuthTab" />
+        <response name="error" type="view" value="SetupAccountingTabError"/>
+    </request-map>
     
         <!-- Time Periods -->
     <request-map uri="setupCreateTimePeriod">
@@ -526,6 +552,12 @@
     <view-map name="SetupStore" type="screen" page="component://setup/widget/SetupScreens.xml#SetupStore"/>
     <view-map name="SetupFinished" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFinished"/>
     <view-map name="SetupError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupError"/>
+    
+    <view-map name="SetupGlAccountsTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditGLAccountTree" />
+    <view-map name="SetupFiscalPeriodsTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditFiscalPeriods" />
+    <view-map name="SetupAccountingTransactionsTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditAccountingTransactions" />
+    <view-map name="SetupJournalTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditJournals" />
+    <view-map name="SetupTaxAuthTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditTaxAuthorities" />
 
     <!-- SCIPIO: Special overrides -->
     <view-map name="main" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganizationMain"/>

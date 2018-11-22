@@ -435,4 +435,46 @@
         </section>
     </screen>
     
+    <screen name="CommonSetupAccountingTabsAction">    
+        <section>
+            <actions>
+                <set field="setupStep" value="accounting"/>
+                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="accountingData" from-field="setupStepStates[setupStep].stepData"/>
+                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SetupAccounting.groovy"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLAccountTree.groovy"/>
+            
+                <property-map resource="ScipioSetupErrorUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ScipioSetupUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="SetupUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonErrorUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <set field="commonSetupAppBasePermCond" from-field="commonSetupAppBasePermCond" type="Boolean" default-value="true"/>
+            </actions>
+            <!-- <widgets>       
+                <section>
+                    <condition>
+                        <if-true field="commonSetupAppBasePermCond"/>
+                    </condition>
+                    <widgets>
+                        <decorator-section-include name="body"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="common-msg-error-perm">${uiLabelMap.CommonPermissionError}</label>
+                    </fail-widgets>
+                </section>
+            </widgets> -->
+        </section>
+    </screen>
+    
 </screens>

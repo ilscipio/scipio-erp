@@ -35,20 +35,11 @@ if (UtilValidate.isEmpty(parameters.groovyProgram)) {
     
     groovyProgram = '''
 // Use the List variable recordValues to fill it with GenericValue maps.
-// full groovy syntaxt is available
+// Full groovy script syntax is available.
 
-import org.ofbiz.entity.util.EntityFindOptions;
-
-// example:
-
-// find the first three record in the product entity (if any)
-EntityFindOptions findOptions = new EntityFindOptions();
-findOptions.setMaxRows(3);
-
-List products = delegator.findList("Product", null, null, null, findOptions, false);
-if (products != null) {  
-    recordValues.addAll(products);
-}
+// Example: Find the first three record in the product entity (if any)
+products = from("Product").maxRows(3).queryList();
+recordValues.addAll(products);
 
 
 '''
@@ -57,18 +48,25 @@ if (products != null) {
     groovyProgram = parameters.groovyProgram;
 }
 
+// SCIPIO: 
+langVariant = GroovyUtil.GroovyLangVariant.STANDARD;
+
 // Add imports for script.
 def importCustomizer = new ImportCustomizer()
 importCustomizer.addImport("org.ofbiz.entity.GenericValue");
 importCustomizer.addImport("org.ofbiz.entity.model.ModelEntity");
-def configuration = new CompilerConfiguration()
+def configuration = new CompilerConfiguration(langVariant.getGroovyCompilerConfiguration()) // SCIPIO: derive from STANDARD 
 configuration.addCompilationCustomizers(importCustomizer)
 
-Binding binding = new Binding();
+// SCIPIO: This is the bare minimum to get better context var availability here
+//Binding binding = new Binding();
+Binding binding = langVariant.createBinding(context);
 binding.setVariable("delegator", delegator);
 binding.setVariable("recordValues", recordValues);
 
-ClassLoader loader = Thread.currentThread().getContextClassLoader();
+// SCIPIO
+//ClassLoader loader = Thread.currentThread().getContextClassLoader();
+ClassLoader loader = langVariant.createGroovyClassLoader();
 def shell = new GroovyShell(loader, binding, configuration);
 
 if (UtilValidate.isNotEmpty(groovyProgram)) {

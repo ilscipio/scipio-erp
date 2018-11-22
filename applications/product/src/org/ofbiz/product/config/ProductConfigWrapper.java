@@ -84,24 +84,57 @@ public class ProductConfigWrapper implements Serializable {
         init(delegator, dispatcher, productId, productStoreId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
     }
 
+    /**
+     * Copy constructor (exactCopy==false).
+     */
     public ProductConfigWrapper(ProductConfigWrapper pcw) {
-        product = GenericValue.create(pcw.product);
+        this(pcw, false);
+    }
+    
+    /**
+     * Copy constructor.
+     * SCIPIO: Added exactCopy
+     */
+    public ProductConfigWrapper(ProductConfigWrapper pcw, boolean exactCopy) {
+        if (exactCopy) {
+            dispatcher = pcw.dispatcher;
+            dispatcherName = pcw.dispatcherName;
+            delegator = pcw.delegator;
+            delegatorName = pcw.delegatorName;
+            product = pcw.product;
+            configId = pcw.configId;
+            List<ConfigItem> questions = null;
+            if (pcw.questions != null) {
+                questions = new LinkedList<>();
+                for (ConfigItem ci: pcw.questions) {
+                    questions.add(new ConfigItem(ci, exactCopy));
+                }
+            }
+            this.questions = questions;
+        } else {
+            product = GenericValue.create(pcw.product);
+
+            questions = new LinkedList<>();
+            delegator = pcw.getDelegator();
+            delegatorName = delegator.getDelegatorName();
+            dispatcher = pcw.getDispatcher();
+            dispatcherName = dispatcher.getName();
+            for (ConfigItem ci: pcw.questions) {
+                questions.add(new ConfigItem(ci));
+            }
+        }
+        
         listPrice = pcw.listPrice;
         basePrice = pcw.basePrice;
         defaultPrice = pcw.defaultPrice;
-        questions = new LinkedList<>();
-        delegator = pcw.getDelegator();
-        delegatorName = delegator.getDelegatorName();
-        dispatcher = pcw.getDispatcher();
-        dispatcherName = dispatcher.getName();
+        
         productStoreId = pcw.productStoreId;
         catalogId = pcw.catalogId;
         webSiteId = pcw.webSiteId;
         currencyUomId = pcw.currencyUomId;
         autoUserLogin = pcw.autoUserLogin;
-        for (ConfigItem ci: pcw.questions) {
-            questions.add(new ConfigItem(ci));
-        }
+        
+        originalListPrice = pcw.originalListPrice; // SCIPIO
     }
 
     private void init(Delegator delegator, LocalDispatcher dispatcher, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
@@ -448,24 +481,47 @@ public class ProductConfigWrapper implements Serializable {
     }
 
     public class ConfigItem implements java.io.Serializable {
-        GenericValue configItem = null;
-        GenericValue configItemAssoc = null;
-        ProductConfigItemContentWrapper content = null;
-        List<ConfigOption> options = null;
-        boolean first = true;
+        GenericValue configItem;
+        GenericValue configItemAssoc;
+        ProductConfigItemContentWrapper content;
+        List<ConfigOption> options;
+        boolean first;
 
         public ConfigItem(GenericValue questionAssoc) throws Exception {
             configItemAssoc = questionAssoc;
             configItem = configItemAssoc.getRelatedOne("ConfigItemProductConfigItem", false);
             options = new LinkedList<>();
+            first = true;
         }
 
+        /**
+         * Copy constructor (exactCopy==false).
+         */
         public ConfigItem(ConfigItem ci) {
-            configItem = GenericValue.create(ci.configItem);
-            configItemAssoc = GenericValue.create(ci.configItemAssoc);
-            options = new LinkedList<>();
-            for (ConfigOption co: ci.options) {
-                options.add(new ConfigOption(co));
+            this(ci, false);
+        }
+        
+        /**
+         * Copy constructor.
+         * SCIPIO: Added exactCopy flag.
+         */
+        public ConfigItem(ConfigItem ci, boolean exactCopy) {
+            if (exactCopy) {
+                configItem = ci.configItem;
+                configItemAssoc = ci.configItemAssoc;
+                List<ConfigOption> options = new LinkedList<>();
+                for (ConfigOption co: ci.options) {
+                    options.add(new ConfigOption(co, exactCopy, this));
+                }
+                this.options = options;
+            } else {
+                configItem = GenericValue.create(ci.configItem);
+                configItemAssoc = GenericValue.create(ci.configItemAssoc);
+                List<ConfigOption> options = new LinkedList<>();
+                for (ConfigOption co: ci.options) {
+                    options.add(new ConfigOption(co, this));
+                }
+                this.options = options;
             }
             first = ci.first;
             content = ci.content; // FIXME: this should be cloned
@@ -676,13 +732,46 @@ public class ProductConfigWrapper implements Serializable {
             }
         }
 
+        /**
+         * Copy constructor (exactCopy==false, same parentConfigItem).
+         * @deprecated SCIPIO: 2018-11-22: Use an overload with parentConfigItem instead.
+         */
+        @Deprecated
         public ConfigOption(ConfigOption co) {
-            configOption = GenericValue.create(co.configOption);
-            componentList = new LinkedList<>();
-            for (GenericValue component: co.componentList) {
-                componentList.add(GenericValue.create(component));
+            this(co, false, null);
+        }
+
+        /**
+         * Copy constructor (exactCopy==false).
+         */
+        public ConfigOption(ConfigOption co, ConfigItem parentConfigItem) {
+            this(co, false, parentConfigItem);
+        }
+
+        /**
+         * Copy constructor.
+         * SCIPIO: Added exactCopy.
+         */
+        public ConfigOption(ConfigOption co, boolean exactCopy, ConfigItem parentConfigItem) {
+            if (exactCopy) {
+                configOption = co.configOption;
+                List<GenericValue> componentList = new LinkedList<>(); // SCIPIO: Use local var
+                for (GenericValue component: co.componentList) {
+                    componentList.add(component);
+                }
+                this.componentList = componentList;
+                comments = co.getComments();
+            } else {
+                configOption = GenericValue.create(co.configOption);
+                List<GenericValue> componentList = new LinkedList<>(); // SCIPIO: Use local var
+                for (GenericValue component: co.componentList) {
+                    componentList.add(GenericValue.create(component));
+                }
+                this.componentList = componentList;
+                comments = co.getComments();
             }
-            parentConfigItem = co.parentConfigItem;
+            
+            this.parentConfigItem = (parentConfigItem != null) ? parentConfigItem : co.parentConfigItem;
             // SCIPIO: 2018-10-09: This must be cloned
             //componentOptions = co.componentOptions;
             componentOptions = (co.componentOptions != null) ? new HashMap<>(co.componentOptions) : null;
@@ -690,7 +779,6 @@ public class ProductConfigWrapper implements Serializable {
             optionPrice = co.optionPrice;
             available = co.available;
             selected = co.selected;
-            comments = co.getComments();
         }
 
         public void recalculateOptionPrice(ProductConfigWrapper pcw) throws Exception {

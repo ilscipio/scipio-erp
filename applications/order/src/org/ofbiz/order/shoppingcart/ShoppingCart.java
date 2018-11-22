@@ -223,78 +223,200 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     /** don't allow empty constructor */
     protected ShoppingCart() {}
 
-    /** Creates a new cloned ShoppingCart Object. */
+    /** Creates a new cloned ShoppingCart Object.
+     * SCIPIO: NOTE: This is legacy copy constructor with exactCopy==false. */
     public ShoppingCart(ShoppingCart cart) {
-        this.delegator = cart.getDelegator();
-        this.delegatorName = delegator.getDelegatorName();
-        this.productStoreId = cart.getProductStoreId();
-        this.doPromotions = cart.getDoPromotions();
-        this.poNumber = cart.getPoNumber();
-        this.orderId = cart.getOrderId();
-        // SCIPIO: This is counterproductive: copy constructor should make a copy, caller can change it after
-        //this.orderName = "Copy of " + cart.getOrderName();
-        this.orderName = cart.getOrderName();
-        this.workEffortId = cart.getWorkEffortId();
-        this.firstAttemptOrderId = cart.getFirstAttemptOrderId();
-        this.billingAccountId = cart.getBillingAccountId();
-        this.agreementId = cart.getAgreementId();
-        this.quoteId = cart.getQuoteId();
-        this.orderAdditionalEmails = cart.getOrderAdditionalEmails();
-        this.adjustments.addAll(cart.getAdjustments());
-        this.contactMechIdsMap = new HashMap<>(cart.getOrderContactMechIds());
-        this.freeShippingProductPromoActions = new ArrayList<>(cart.getFreeShippingProductPromoActions());
-        this.desiredAlternateGiftByAction = cart.getAllDesiredAlternateGiftByActionCopy();
-        this.productPromoUseInfoList.addAll(cart.productPromoUseInfoList);
-        this.productPromoCodes = new HashSet<>(cart.productPromoCodes);
-        this.locale = cart.getLocale();
-        this.currencyUom = cart.getCurrency();
-        this.externalId = cart.getExternalId();
-        this.internalCode = cart.getInternalCode();
-        this.viewCartOnAdd = cart.viewCartOnAdd();
-        this.defaultShipAfterDate = cart.getDefaultShipAfterDate();
-        this.defaultShipBeforeDate = cart.getDefaultShipBeforeDate();
-        this.cancelBackOrderDate = cart.getCancelBackOrderDate();
+        this(cart, false);
+    }
+    
+    /** Creates a new cloned ShoppingCart Object.
+     * SCIPIO: Added exactCopy flag, toggles between legacy (partial) and full/exact cloning the whole cart. */
+    public ShoppingCart(ShoppingCart cart, boolean exactCopy) {
+        if (exactCopy) {
+            this.delegator = cart.delegator;
+            this.delegatorName = cart.delegatorName;
+            this.productStoreId = cart.productStoreId;
+            this.doPromotions = cart.doPromotions;
+            this.poNumber = cart.poNumber;
+            this.orderId = cart.orderId;
+            this.orderName = cart.orderName;
+            this.workEffortId = cart.workEffortId;
+            this.firstAttemptOrderId = cart.firstAttemptOrderId;
+            this.billingAccountId = cart.billingAccountId;
+            this.agreementId = cart.agreementId;
+            this.quoteId = cart.quoteId;
+            this.orderAdditionalEmails = cart.orderAdditionalEmails;
+            // SCIPIO: Replace it
+            //this.adjustments.addAll(cart.getAdjustments());
+            this.adjustments = new ArrayList<>(cart.adjustments);
+            this.contactMechIdsMap = new HashMap<>(cart.contactMechIdsMap);
+            this.freeShippingProductPromoActions = new ArrayList<>(cart.freeShippingProductPromoActions);
+            this.desiredAlternateGiftByAction = cart.getAllDesiredAlternateGiftByActionCopy();
+            // SCIPIO: Replace it
+            //this.productPromoUseInfoList.addAll(cart.productPromoUseInfoList);
+            this.productPromoUseInfoList = new ArrayList<>(cart.productPromoUseInfoList);
+            this.productPromoCodes = new HashSet<>(cart.productPromoCodes);
+            this.locale = cart.locale;
+            this.currencyUom = cart.currencyUom;
+            this.externalId = cart.externalId;
+            this.internalCode = cart.internalCode;
+            this.viewCartOnAdd = cart.viewCartOnAdd;
+            this.defaultShipAfterDate = cart.defaultShipAfterDate;
+            this.defaultShipBeforeDate = cart.defaultShipBeforeDate;
+            this.cancelBackOrderDate = cart.cancelBackOrderDate;
+    
+            this.terminalId = cart.terminalId;
+            this.transactionId = cart.transactionId;
+            this.autoOrderShoppingListId = cart.autoOrderShoppingListId;
 
-        this.terminalId = cart.getTerminalId();
-        this.transactionId = cart.getTransactionId();
-        this.autoOrderShoppingListId = cart.getAutoOrderShoppingListId();
+            // SCIPIO
+            Map<String, List<GenericValue>> cartSubscriptionItems = null;
+            if (cart.cartSubscriptionItems != null) {
+                cartSubscriptionItems = new HashMap<>();
+                for(Map.Entry<String, List<GenericValue>> entry : cart.cartSubscriptionItems.entrySet()) {
+                    cartSubscriptionItems.put(entry.getKey(), (entry.getValue() != null) ? new ArrayList<>(entry.getValue()) : null);
+                }
+            }
+            this.cartSubscriptionItems = cartSubscriptionItems;
+            this.lockObj = cart.lockObj; // SCIPIO
+
+            // SCIPIO: Stock fields not covered by legacy copy constructor
+            this.orderType = cart.orderType;
+            this.channel = cart.channel;
+            this.orderStatusId = cart.orderStatusId;
+            this.orderStatusString = cart.orderStatusString;
+            this.billingAccountAmt = cart.billingAccountAmt;
+            this.nextItemSeq = cart.nextItemSeq;
+            this.defaultItemDeliveryDate = cart.defaultItemDeliveryDate;
+            this.defaultItemComment = cart.defaultItemComment;
+            this.readOnlyCart = cart.readOnlyCart;
+            this.lastListRestore = cart.lastListRestore;
+            this.autoSaveListId = cart.autoSaveListId;
+            this.orderTermSet = cart.orderTermSet;
+            this.orderTerms = new ArrayList<>(cart.orderTerms);
+            this.nextGroupNumber = cart.nextGroupNumber;
+            
+            List<CartPaymentInfo> paymentInfo = new ArrayList<>();
+            for(CartPaymentInfo cpi : cart.paymentInfo) {
+                paymentInfo.add(new CartPaymentInfo(cpi, exactCopy));
+            }
+            this.paymentInfo = paymentInfo;
+            
+            List<CartShipInfo> shipInfo = new ArrayList<>();
+            for(CartShipInfo csi : cart.shipInfo) {
+                shipInfo.add(new CartShipInfo(csi, exactCopy));
+            }
+            this.shipInfo = shipInfo;
+
+            this.orderAttributes = new HashMap<>(cart.orderAttributes);
+            this.attributes = new HashMap<>(cart.attributes);
+            this.internalOrderNotes = new ArrayList<>(cart.internalOrderNotes);
+            this.orderNotes = new ArrayList<>(cart.orderNotes);
+            this.freeShippingProductPromoActions = new ArrayList<>(cart.freeShippingProductPromoActions);
+            this.cartCreatedTs = cart.cartCreatedTs;
+            this.orderPartyId = cart.orderPartyId;
+            this.placingCustomerPartyId = cart.placingCustomerPartyId;
+            this.billToCustomerPartyId = cart.billToCustomerPartyId;
+            this.shipToCustomerPartyId = cart.shipToCustomerPartyId;
+            this.endUserCustomerPartyId = cart.endUserCustomerPartyId;
+            this.billFromVendorPartyId = cart.billFromVendorPartyId;
+            this.shipFromVendorPartyId = cart.shipFromVendorPartyId;
+            this.supplierAgentPartyId = cart.supplierAgentPartyId;
+            this.userLogin = cart.userLogin;
+            this.autoUserLogin = cart.autoUserLogin;
+            this.holdOrder = cart.holdOrder;
+            this.orderDate = cart.orderDate;
+            
+            // clone the groups
+            Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = new HashMap<>(); // SCIPIO: Use local var
+            for (ShoppingCartItemGroup itemGroup : cart.itemGroupByNumberMap.values()) {
+                // get the new parent group by number from the existing set; as before the parent must come before all children to work...
+                ShoppingCartItemGroup parentGroup = null;
+                if (itemGroup.getParentGroup() != null) {
+                    parentGroup = this.getItemGroupByNumber(itemGroup.getParentGroup().getGroupNumber());
+                }
+                ShoppingCartItemGroup newGroup = new ShoppingCartItemGroup(itemGroup, parentGroup);
+                itemGroupByNumberMap.put(newGroup.getGroupNumber(), newGroup);
+            }
+            this.itemGroupByNumberMap = itemGroupByNumberMap;
+
+            // clone the items
+            List<ShoppingCartItem> cartLines = new ArrayList<>(); // SCIPIO: Use local var
+            for (ShoppingCartItem item : cart.items()) {
+                cartLines.add(new ShoppingCartItem(item, exactCopy, itemGroupByNumberMap));
+            }
+            this.cartLines = cartLines;
+        } else {
+            this.delegator = cart.getDelegator();
+            this.delegatorName = delegator.getDelegatorName();
+            this.productStoreId = cart.getProductStoreId();
+            this.doPromotions = cart.getDoPromotions();
+            this.poNumber = cart.getPoNumber();
+            this.orderId = cart.getOrderId();
+            this.orderName = "Copy of " + cart.getOrderName();
+            this.workEffortId = cart.getWorkEffortId();
+            this.firstAttemptOrderId = cart.getFirstAttemptOrderId();
+            this.billingAccountId = cart.getBillingAccountId();
+            this.agreementId = cart.getAgreementId();
+            this.quoteId = cart.getQuoteId();
+            this.orderAdditionalEmails = cart.getOrderAdditionalEmails();
+            // SCIPIO: Replace it
+            //this.adjustments.addAll(cart.getAdjustments());
+            this.adjustments = new ArrayList<>(cart.getAdjustments());
+            this.contactMechIdsMap = new HashMap<>(cart.getOrderContactMechIds());
+            this.freeShippingProductPromoActions = new ArrayList<>(cart.getFreeShippingProductPromoActions());
+            this.desiredAlternateGiftByAction = cart.getAllDesiredAlternateGiftByActionCopy();
+            // SCIPIO: Replace it
+            //this.productPromoUseInfoList.addAll(cart.productPromoUseInfoList);
+            this.productPromoUseInfoList = new ArrayList<>(cart.productPromoUseInfoList);
+            this.productPromoCodes = new HashSet<>(cart.productPromoCodes);
+            this.locale = cart.getLocale();
+            this.currencyUom = cart.getCurrency();
+            this.externalId = cart.getExternalId();
+            this.internalCode = cart.getInternalCode();
+            this.viewCartOnAdd = cart.viewCartOnAdd();
+            this.defaultShipAfterDate = cart.getDefaultShipAfterDate();
+            this.defaultShipBeforeDate = cart.getDefaultShipBeforeDate();
+            this.cancelBackOrderDate = cart.getCancelBackOrderDate();
+    
+            this.terminalId = cart.getTerminalId();
+            this.transactionId = cart.getTransactionId();
+            this.autoOrderShoppingListId = cart.getAutoOrderShoppingListId();
+            
+            // clone the groups
+            Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = new HashMap<>(); // SCIPIO: Use local var
+            for (ShoppingCartItemGroup itemGroup : cart.itemGroupByNumberMap.values()) {
+                // get the new parent group by number from the existing set; as before the parent must come before all children to work...
+                ShoppingCartItemGroup parentGroup = null;
+                if (itemGroup.getParentGroup() != null) {
+                    parentGroup = this.getItemGroupByNumber(itemGroup.getParentGroup().getGroupNumber());
+                }
+                ShoppingCartItemGroup newGroup = new ShoppingCartItemGroup(itemGroup, parentGroup);
+                itemGroupByNumberMap.put(newGroup.getGroupNumber(), newGroup);
+            }
+            this.itemGroupByNumberMap = itemGroupByNumberMap;
+
+            // clone the items
+            List<ShoppingCartItem> cartLines = new ArrayList<>(); // SCIPIO: Use local var
+            for (ShoppingCartItem item : cart.items()) {
+                cartLines.add(new ShoppingCartItem(item));
+            }
+            this.cartLines = cartLines;
+        }
 
         // clone the additionalPartyRoleMap
-        this.additionalPartyRole = new HashMap<>();
+        // SCIPIO: Use local var
+        //this.additionalPartyRole = new HashMap<>();
+        Map<String, List<String>> additionalPartyRole = new HashMap<>();
         for (Map.Entry<String, List<String>> me : cart.additionalPartyRole.entrySet()) {
-            this.additionalPartyRole.put(me.getKey(), new ArrayList<>(me.getValue()));
+            additionalPartyRole.put(me.getKey(), new ArrayList<>(me.getValue()));
         }
-
-        // clone the groups
-        for (ShoppingCartItemGroup itemGroup : cart.itemGroupByNumberMap.values()) {
-            // get the new parent group by number from the existing set; as before the parent must come before all children to work...
-            ShoppingCartItemGroup parentGroup = null;
-            if (itemGroup.getParentGroup() != null) {
-                parentGroup = this.getItemGroupByNumber(itemGroup.getParentGroup().getGroupNumber());
-            }
-            ShoppingCartItemGroup newGroup = new ShoppingCartItemGroup(itemGroup, parentGroup);
-            itemGroupByNumberMap.put(newGroup.getGroupNumber(), newGroup);
-        }
-
-        // clone the items
-        for (ShoppingCartItem item : cart.items()) {
-            cartLines.add(new ShoppingCartItem(item));
-        }
+        this.additionalPartyRole = additionalPartyRole;
 
         this.facilityId = cart.facilityId;
         this.webSiteId = cart.webSiteId;
 
-        // SCIPIO
-        Map<String, List<GenericValue>> cartSubscriptionItems = null;
-        if (cart.cartSubscriptionItems != null) {
-            cartSubscriptionItems = new HashMap<>();
-            for(Map.Entry<String, List<GenericValue>> entry : cart.cartSubscriptionItems.entrySet()) {
-                cartSubscriptionItems.put(entry.getKey(), (entry.getValue() != null) ? new ArrayList<>(entry.getValue()) : null);
-            }
-        }
-        this.cartSubscriptionItems = cartSubscriptionItems;
         this.allowMissingShipEstimates = cart.allowMissingShipEstimates; // SCIPIO
-        this.lockObj = cart.lockObj; // SCIPIO
     }
 
     /** Creates new empty ShoppingCart object. */
@@ -342,10 +464,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this(delegator, productStoreId, null, locale, currencyUom);
     }
 
-    /** SCIPIO: Performs a deep copy of the cart.
+    /** SCIPIO: Performs an exact, deep copy of the cart.
      * Changes to this copy do not affect the main cart. Added 2018-11-16. */
-    public synchronized ShoppingCart copyCart() {
-        return new ShoppingCart(this);
+    public ShoppingCart copyCart() {
+        return new ShoppingCart(this, true);
     }
     
     public Delegator getDelegator() {
@@ -4722,28 +4844,84 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public static class CartShipInfo implements Serializable {
-        public Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo = new HashMap<>();
-        public List<GenericValue> shipTaxAdj = new ArrayList<>();
-        public String orderTypeId = null;
-        private String internalContactMechId = null;
-        public String telecomContactMechId = null;
-        public String shipmentMethodTypeId = null;
-        public String supplierPartyId = null;
-        public String carrierRoleTypeId = null;
-        public String carrierPartyId = null;
-        private String facilityId = null;
-        public String giftMessage = null;
-        public String shippingInstructions = null;
-        public String maySplit = "N";
-        public String isGift = "N";
+        public Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo;
+        public List<GenericValue> shipTaxAdj;
+        public String orderTypeId;
+        private String internalContactMechId;
+        public String telecomContactMechId;
+        public String shipmentMethodTypeId;
+        public String supplierPartyId;
+        public String carrierRoleTypeId;
+        public String carrierPartyId;
+        private String facilityId;
+        public String giftMessage;
+        public String shippingInstructions;
+        public String maySplit;
+        public String isGift;
         public BigDecimal shipEstimate = BigDecimal.ZERO;
-        public Timestamp shipBeforeDate = null;
-        public Timestamp shipAfterDate = null;
-        private String shipGroupSeqId = null;
-        private String associatedShipGroupSeqId = null;
-        public String vendorPartyId = null;
-        public String productStoreShipMethId = null;
-        public Map<String, Object> attributes = new HashMap<>();
+        public Timestamp shipBeforeDate;
+        public Timestamp shipAfterDate;
+        private String shipGroupSeqId;
+        private String associatedShipGroupSeqId;
+        public String vendorPartyId;
+        public String productStoreShipMethId;
+        public Map<String, Object> attributes;
+
+        /**
+         * SCIPIO: Default constructor.
+         */
+        public CartShipInfo() {
+            this.shipItemInfo = new HashMap<>();
+            this.shipTaxAdj = new ArrayList<>();
+            this.orderTypeId = null;
+            this.internalContactMechId = null;
+            this.telecomContactMechId = null;
+            this.shipmentMethodTypeId = null;
+            this.supplierPartyId = null;
+            this.carrierRoleTypeId = null;
+            this.carrierPartyId = null;
+            this.facilityId = null;
+            this.giftMessage = null;
+            this.shippingInstructions = null;
+            this.maySplit = "N";
+            this.isGift = "N";
+            this.shipEstimate = BigDecimal.ZERO;
+            this.shipBeforeDate = null;
+            this.shipAfterDate = null;
+            this.shipGroupSeqId = null;
+            this.associatedShipGroupSeqId = null;
+            this.vendorPartyId = null;
+            this.productStoreShipMethId = null;
+            this.attributes = new HashMap<>();
+        }
+
+        /**
+         * SCIPIO: Copy constructor.
+         */
+        public CartShipInfo(CartShipInfo other, boolean exactCopy) {
+            this.shipItemInfo = other.shipItemInfo;
+            this.shipTaxAdj = other.shipTaxAdj;
+            this.orderTypeId = other.orderTypeId;
+            this.internalContactMechId = other.internalContactMechId;
+            this.telecomContactMechId = other.telecomContactMechId;
+            this.shipmentMethodTypeId = other.shipmentMethodTypeId;
+            this.supplierPartyId = other.supplierPartyId;
+            this.carrierRoleTypeId = other.carrierRoleTypeId;
+            this.carrierPartyId = other.carrierPartyId;
+            this.facilityId = other.facilityId;
+            this.giftMessage = other.giftMessage;
+            this.shippingInstructions = other.shippingInstructions;
+            this.maySplit = other.maySplit;
+            this.isGift = other.isGift;
+            this.shipEstimate = other.shipEstimate;
+            this.shipBeforeDate = other.shipBeforeDate;
+            this.shipAfterDate = other.shipAfterDate;
+            this.shipGroupSeqId = other.shipGroupSeqId;
+            this.associatedShipGroupSeqId = other.associatedShipGroupSeqId;
+            this.vendorPartyId = other.vendorPartyId;
+            this.productStoreShipMethId = other.productStoreShipMethId;
+            this.attributes = other.attributes;
+        }
 
         public void setAttribute(String name, Object value) {
             this.attributes.put(name, value);
@@ -5057,27 +5235,49 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public static class CartPaymentInfo implements Serializable, Comparable<Object> {
-        public String paymentMethodTypeId = null;
-        public String paymentMethodId = null;
-        public String finAccountId = null;
-        public String securityCode = null;
-        public String postalCode = null;
-        public String[] refNum = new String[2];
-        public String track2 = null;
-        public String partyId = null; // SCIPIO: 2018-07-19: billing address default: partyId
-        public BigDecimal amount = null;
-        public boolean singleUse = false;
-        public boolean isPresent = false;
-        public boolean isSwiped = false;
-        public boolean overflow = false;
-        public BigDecimal origAmount = null; // SCIPIO: original amount as specified upon creation. should not change.
+        public String paymentMethodTypeId;
+        public String paymentMethodId;
+        public String finAccountId;
+        public String securityCode;
+        public String postalCode;
+        public String[] refNum;
+        public String track2;
+        public String partyId; // SCIPIO: 2018-07-19: billing address default: partyId
+        public BigDecimal amount;
+        public boolean singleUse; // = false
+        public boolean isPresent; // = false
+        public boolean isSwiped; // = false
+        public boolean overflow; // = false
+        public BigDecimal origAmount; // SCIPIO: original amount as specified upon creation. should not change.
 
         /**
-         * SCIPIO: Default constructor
+         * SCIPIO: Default constructor.
          */
         public CartPaymentInfo(String partyId) { // SCIPIO: 2018-07-19: billing address default: partyId
             super();
             this.partyId = partyId;
+            this.refNum = new String[2];
+            // All others are null or false
+        }
+
+        /**
+         * SCIPIO: Copy constructor.
+         */
+        public CartPaymentInfo(CartPaymentInfo other, boolean exactCopy) {
+            this.paymentMethodTypeId = other.paymentMethodTypeId;
+            this.paymentMethodId = other.paymentMethodId;
+            this.finAccountId = other.finAccountId;
+            this.securityCode = other.securityCode;
+            this.postalCode = other.postalCode;
+            this.refNum = other.refNum.clone();
+            this.track2 = other.track2;
+            this.partyId = other.partyId;
+            this.amount = other.amount;
+            this.singleUse = other.singleUse;
+            this.isPresent = other.isPresent;
+            this.isSwiped = other.isSwiped;
+            this.overflow = other.overflow;
+            this.origAmount = other.origAmount;
         }
 
         public GenericValue getValueObject(Delegator delegator) {

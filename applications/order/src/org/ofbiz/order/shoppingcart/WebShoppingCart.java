@@ -87,10 +87,15 @@ public class WebShoppingCart extends ShoppingCart {
         super(cart);
     }
 
-    /** SCIPIO: Performs a deep copy of the cart.
+    /** SCIPIO: Creates a new cloned ShoppingCart Object, exact copy. */
+    public WebShoppingCart(ShoppingCart cart, boolean exactCopy) {
+        super(cart, exactCopy);
+    }
+
+    /** SCIPIO: Performs an exact, deep copy of the cart.
      * Changes to this copy do not affect the main cart. Added 2018-11-16. */
     @Override
-    public synchronized WebShoppingCart copyCart() {
-        return new WebShoppingCart(this);
+    public WebShoppingCart copyCart() {
+        return new WebShoppingCart(this, true);
     }
 }

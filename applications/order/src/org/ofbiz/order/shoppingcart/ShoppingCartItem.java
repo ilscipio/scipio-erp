@@ -52,6 +52,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.order.shoppingcart.ShoppingCart.ShoppingCartItemGroup;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
 import org.ofbiz.product.catalog.CatalogWorker;
@@ -730,84 +731,169 @@ public class ShoppingCartItem implements java.io.Serializable {
         return newItem;
     }
 
-    /** Clone an item. */
+    /** Clone an item (exactCopy==false).
+     * SCIPIO: WARN: This overload cannot fully clone the itemGroup field (FIXME?) */
     public ShoppingCartItem(ShoppingCartItem item) {
-        this.delegator = item.getDelegator();
-        try {
-            this._product = item.getProduct();
-        } catch (IllegalStateException e) {
-            this._product = null;
+        this(item, false, null);
+    }
+    
+    /** Clone an item (exactCopy==false). */
+    public ShoppingCartItem(ShoppingCartItem item, Map<String, ShoppingCartItemGroup> itemGroupByNumberMap) {
+        this(item, false, itemGroupByNumberMap);
+    }
+
+    /** Clone an item. SCIPIO: Added exactCopy flag. */
+    public ShoppingCartItem(ShoppingCartItem item, boolean exactCopy, Map<String, ShoppingCartItemGroup> itemGroupByNumberMap) {
+        if (exactCopy) {
+            this.delegator = item.delegator;
+            this._product = item._product;
+            this._parentProduct = item._parentProduct;
+            this.delegatorName = item.delegatorName;
+            this.prodCatalogId = item.prodCatalogId;
+            this.productId = item.productId;
+            this.supplierProductId = item.supplierProductId;
+            this.parentProductId = item.parentProductId;
+            this.externalId = item.externalId;
+            this.itemType = item.itemType;
+            
+            if (item.itemGroup != null) {
+                if (item.itemGroup.getParentGroup() != null) {
+                    ShoppingCartItemGroup parentGroup = itemGroupByNumberMap.get(item.itemGroup.getParentGroup().getGroupNumber());
+                    if (parentGroup == null) {
+                        // This shouldn't happen if caller filled itemGroupByNumberMap properly, but report just in case
+                        Debug.logWarning("Could not fully clone ShoppingCartItemGroup because no copy was made for parent group"
+                                + " with number: " + item.itemGroup.getParentGroup().getGroupNumber(), module);
+                    }
+                    this.itemGroup = new ShoppingCart.ShoppingCartItemGroup(item.itemGroup, parentGroup);
+                } else {
+                    this.itemGroup = new ShoppingCart.ShoppingCartItemGroup(item.itemGroup, null);
+                }
+            } else {
+                item.itemGroup = null;
+            }
+            this.productCategoryId = item.productCategoryId;
+            this.itemDescription = item.itemDescription;
+            this.reservStart = item.reservStart;
+            this.reservLength = item.reservLength;
+            this.reservPersons = item.reservPersons;
+            this.accommodationMapId = item.accommodationMapId;
+            this.accommodationSpotId = item.accommodationSpotId;
+            this.quantity = item.quantity;
+            this.basePrice = item.basePrice;
+            this.displayPrice = item.displayPrice;
+            this.recurringBasePrice = item.recurringBasePrice;
+            this.recurringDisplayPrice = item.recurringDisplayPrice;
+            this.specialPromoPrice = item.specialPromoPrice;
+            this.reserv2ndPPPerc = item.reserv2ndPPPerc;
+            this.reservNthPPPerc = item.reservNthPPPerc;
+            this.listPrice = item.listPrice;
+            this.isModifiedPrice = item.isModifiedPrice;
+            this.selectedAmount = item.selectedAmount;
+            this.requirementId = item.requirementId;
+            this.quoteId = item.quoteId;
+            this.quoteItemSeqId = item.quoteItemSeqId;
+            this.associatedOrderId = item.associatedOrderId;
+            this.associatedOrderItemSeqId = item.associatedOrderItemSeqId;
+            this.orderItemAssocTypeId = item.orderItemAssocTypeId;
+            this.statusId = item.statusId;
+            this.orderItemAttributes = (item.orderItemAttributes != null) ? new HashMap<>(item.orderItemAttributes) : null;
+            this.attributes = (item.attributes != null) ? new HashMap<>(item.attributes) : null;
+            this.orderItemSeqId = item.orderItemSeqId;
+            this.locale = item.locale;
+            this.shipBeforeDate = item.shipBeforeDate;
+            this.shipAfterDate = item.shipAfterDate;
+            this.estimatedShipDate = item.estimatedShipDate;
+            this.cancelBackOrderDate = item.cancelBackOrderDate;
+            this.contactMechIdsMap = new HashMap<>(item.contactMechIdsMap);
+            this.orderItemPriceInfos = (item.orderItemPriceInfos != null) ? new ArrayList<>(item.orderItemPriceInfos) : null;
+            this.itemAdjustments = new ArrayList<>(item.itemAdjustments);
+            this.isPromo = item.isPromo;
+            this.promoQuantityUsed = item.promoQuantityUsed;
+            this.quantityUsedPerPromoCandidate = new HashMap<>(item.quantityUsedPerPromoCandidate);
+            this.quantityUsedPerPromoFailed = new HashMap<>(item.quantityUsedPerPromoFailed);
+            this.quantityUsedPerPromoActual = new HashMap<>(item.quantityUsedPerPromoActual);
+            this.additionalProductFeatureAndAppls = new HashMap<>(item.additionalProductFeatureAndAppls);
+            this.alternativeOptionProductIds = (item.alternativeOptionProductIds != null) ? new ArrayList<>(item.alternativeOptionProductIds) : null;
+            this.configWrapper = (item.configWrapper != null) ? new ProductConfigWrapper(item.configWrapper, exactCopy) : null;
+            this.featuresForSupplier = new ArrayList<>(item.featuresForSupplier);
+        } else {
+            this.delegator = item.getDelegator();
+            try {
+                this._product = item.getProduct();
+            } catch (IllegalStateException e) {
+                this._product = null;
+            }
+            try {
+                this._parentProduct = item.getParentProduct();
+            } catch (IllegalStateException e) {
+                this._parentProduct = null;
+            }
+            this.delegatorName = item.delegatorName;
+            this.prodCatalogId = item.getProdCatalogId();
+            this.productId = item.getProductId();
+            this.supplierProductId = item.getSupplierProductId();
+            this.parentProductId = item.getParentProductId();
+            this.externalId = item.getExternalId();
+            this.itemType = item.getItemType();
+            this.itemGroup = item.getItemGroup();
+            this.productCategoryId = item.getProductCategoryId();
+            this.itemDescription = item.itemDescription;
+            this.reservStart = item.getReservStart();
+            this.reservLength = item.getReservLength();
+            this.reservPersons = item.getReservPersons();
+            this.accommodationMapId = item.getAccommodationMapId();
+            this.accommodationSpotId = item.getAccommodationSpotId();
+            this.quantity = item.getQuantity();
+            this.setBasePrice(item.getBasePrice());
+            this.setDisplayPrice(item.getDisplayPrice());
+            this.setRecurringBasePrice(item.getRecurringBasePrice());
+            this.setRecurringDisplayPrice(item.getRecurringDisplayPrice());
+            this.setSpecialPromoPrice(item.getSpecialPromoPrice());
+            this.reserv2ndPPPerc = item.getReserv2ndPPPerc();
+            this.reservNthPPPerc = item.getReservNthPPPerc();
+            this.listPrice = item.getListPrice();
+            this.setIsModifiedPrice(item.getIsModifiedPrice());
+            this.selectedAmount = item.getSelectedAmount();
+            this.requirementId = item.getRequirementId();
+            this.quoteId = item.getQuoteId();
+            this.quoteItemSeqId = item.getQuoteItemSeqId();
+            this.associatedOrderId = item.getAssociatedOrderId();
+            this.associatedOrderItemSeqId = item.getAssociatedOrderItemSeqId();
+            this.orderItemAssocTypeId = item.getOrderItemAssocTypeId();
+            this.setStatusId(item.getStatusId());
+            // SCIPIO: 2018-07-17: ofbiz bug
+            //if (UtilValidate.isEmpty(item.getOrderItemAttributes())) {
+            if (UtilValidate.isNotEmpty(item.getOrderItemAttributes())) {
+                this.orderItemAttributes = new HashMap<>();
+                this.orderItemAttributes.putAll(item.getOrderItemAttributes());
+            }
+            this.attributes = item.getAttributes() == null ? new HashMap<>() : new HashMap<>(item.getAttributes());
+            this.setOrderItemSeqId(item.getOrderItemSeqId());
+            this.locale = item.locale;
+            this.setShipBeforeDate(item.getShipBeforeDate());
+            this.setShipAfterDate(item.getShipAfterDate());
+            this.setEstimatedShipDate(item.getEstimatedShipDate());
+            this.setCancelBackOrderDate(item.getCancelBackOrderDate());
+            this.contactMechIdsMap = item.getOrderItemContactMechIds() == null ? null : new HashMap<>(item.getOrderItemContactMechIds());
+            this.orderItemPriceInfos = item.getOrderItemPriceInfos() == null ? null : new ArrayList<>(item.getOrderItemPriceInfos());
+            this.itemAdjustments.addAll(item.getAdjustments());
+            this.isPromo = item.getIsPromo();
+            this.promoQuantityUsed = item.promoQuantityUsed;
+            this.quantityUsedPerPromoCandidate = new HashMap<>(item.quantityUsedPerPromoCandidate);
+            this.quantityUsedPerPromoFailed = new HashMap<>(item.quantityUsedPerPromoFailed);
+            this.quantityUsedPerPromoActual = new HashMap<>(item.quantityUsedPerPromoActual);
+            this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
+                    null : new HashMap<>(item.getAdditionalProductFeatureAndAppls());
+            if (item.getAlternativeOptionProductIds() != null) {
+                List<String> tempAlternativeOptionProductIds = new ArrayList<>();
+                tempAlternativeOptionProductIds.addAll(item.getAlternativeOptionProductIds());
+                this.setAlternativeOptionProductIds(tempAlternativeOptionProductIds);
+            }
+            if (item.configWrapper != null) {
+                this.configWrapper = new ProductConfigWrapper(item.configWrapper);
+            }
+            this.featuresForSupplier.addAll(item.featuresForSupplier);
         }
-        try {
-            this._parentProduct = item.getParentProduct();
-        } catch (IllegalStateException e) {
-            this._parentProduct = null;
-        }
-        this.delegatorName = item.delegatorName;
-        this.prodCatalogId = item.getProdCatalogId();
-        this.productId = item.getProductId();
-        this.supplierProductId = item.getSupplierProductId();
-        this.parentProductId = item.getParentProductId();
-        this.externalId = item.getExternalId();
-        this.itemType = item.getItemType();
-        this.itemGroup = item.getItemGroup();
-        this.productCategoryId = item.getProductCategoryId();
-        this.itemDescription = item.itemDescription;
-        this.reservStart = item.getReservStart();
-        this.reservLength = item.getReservLength();
-        this.reservPersons = item.getReservPersons();
-        this.accommodationMapId = item.getAccommodationMapId();
-        this.accommodationSpotId = item.getAccommodationSpotId();
-        this.quantity = item.getQuantity();
-        this.setBasePrice(item.getBasePrice());
-        this.setDisplayPrice(item.getDisplayPrice());
-        this.setRecurringBasePrice(item.getRecurringBasePrice());
-        this.setRecurringDisplayPrice(item.getRecurringDisplayPrice());
-        this.setSpecialPromoPrice(item.getSpecialPromoPrice());
-        this.reserv2ndPPPerc = item.getReserv2ndPPPerc();
-        this.reservNthPPPerc = item.getReservNthPPPerc();
-        this.listPrice = item.getListPrice();
-        this.setIsModifiedPrice(item.getIsModifiedPrice());
-        this.selectedAmount = item.getSelectedAmount();
-        this.requirementId = item.getRequirementId();
-        this.quoteId = item.getQuoteId();
-        this.quoteItemSeqId = item.getQuoteItemSeqId();
-        this.associatedOrderId = item.getAssociatedOrderId();
-        this.associatedOrderItemSeqId = item.getAssociatedOrderItemSeqId();
-        this.orderItemAssocTypeId = item.getOrderItemAssocTypeId();
-        this.setStatusId(item.getStatusId());
-        // SCIPIO: 2018-07-17: ofbiz bug
-        //if (UtilValidate.isEmpty(item.getOrderItemAttributes())) {
-        if (UtilValidate.isNotEmpty(item.getOrderItemAttributes())) {
-            this.orderItemAttributes = new HashMap<>();
-            this.orderItemAttributes.putAll(item.getOrderItemAttributes());
-        }
-        this.attributes = item.getAttributes() == null ? new HashMap<>() : new HashMap<>(item.getAttributes());
-        this.setOrderItemSeqId(item.getOrderItemSeqId());
-        this.locale = item.locale;
-        this.setShipBeforeDate(item.getShipBeforeDate());
-        this.setShipAfterDate(item.getShipAfterDate());
-        this.setEstimatedShipDate(item.getEstimatedShipDate());
-        this.setCancelBackOrderDate(item.getCancelBackOrderDate());
-        this.contactMechIdsMap = item.getOrderItemContactMechIds() == null ? null : new HashMap<>(item.getOrderItemContactMechIds());
-        this.orderItemPriceInfos = item.getOrderItemPriceInfos() == null ? null : new ArrayList<>(item.getOrderItemPriceInfos());
-        this.itemAdjustments.addAll(item.getAdjustments());
-        this.isPromo = item.getIsPromo();
-        this.promoQuantityUsed = item.promoQuantityUsed;
-        this.quantityUsedPerPromoCandidate = new HashMap<>(item.quantityUsedPerPromoCandidate);
-        this.quantityUsedPerPromoFailed = new HashMap<>(item.quantityUsedPerPromoFailed);
-        this.quantityUsedPerPromoActual = new HashMap<>(item.quantityUsedPerPromoActual);
-        this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
-                null : new HashMap<>(item.getAdditionalProductFeatureAndAppls());
-        if (item.getAlternativeOptionProductIds() != null) {
-            List<String> tempAlternativeOptionProductIds = new ArrayList<>();
-            tempAlternativeOptionProductIds.addAll(item.getAlternativeOptionProductIds());
-            this.setAlternativeOptionProductIds(tempAlternativeOptionProductIds);
-        }
-        if (item.configWrapper != null) {
-            this.configWrapper = new ProductConfigWrapper(item.configWrapper);
-        }
-        this.featuresForSupplier.addAll(item.featuresForSupplier);
     }
 
     /** Cannot create shopping cart item with no parameters */

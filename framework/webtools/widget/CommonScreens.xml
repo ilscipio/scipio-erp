@@ -441,7 +441,6 @@ code package.
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for WEBTOOLS, _VIEW permission -->
                             <condition>
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>

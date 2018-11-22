@@ -58,19 +58,50 @@ code package.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityExportAll"/>
                 <set field="activeSubMenuItem" value="programExport"/>
+                <!-- SCIPIO: conditions -->
+                <property-to-field resource="webtools" property="dev.script.tools.enabled" field="tmplTestEnabled"/>
+                <set field="tmplTestEnabled" from-field="tmplTestEnabled" type="Boolean"/>
+                <condition-to-field field="hasTmplTestPerm" type="Boolean">
+                    <and>
+                        <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                        <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                        <if-true field="tmplTestEnabled"/>
+                    </and>
+                </condition-to-field>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/ProgramExport.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                         <screenlet>
-                            <include-form name="ProgramExport" location="component://webtools/widget/MiscForms.xml"/>
-                        </screenlet>
-                        <screenlet>
-                            <platform-specific>
-                                <html><html-template location="component://webtools/webapp/webtools/entity/ProgramExport.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                                    <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                                </and>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-true field="tmplTestEnabled"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="common-msg-warning">${uiLabelMap.CommonFunctionIsDisabled}</label>
+                                    </widgets>
+                                </section>
+                                <screenlet>
+                                    <include-form name="ProgramExport" location="component://webtools/widget/MiscForms.xml"/>
+                                </screenlet>
+                                <screenlet>
+                                    <platform-specific>
+                                        <html><html-template location="component://webtools/webapp/webtools/entity/ProgramExport.ftl"/></html>
+                                    </platform-specific>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

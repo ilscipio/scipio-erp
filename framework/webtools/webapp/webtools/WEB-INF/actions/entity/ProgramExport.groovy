@@ -69,7 +69,8 @@ binding.setVariable("recordValues", recordValues);
 ClassLoader loader = langVariant.createGroovyClassLoader();
 def shell = new GroovyShell(loader, binding, configuration);
 
-if (UtilValidate.isNotEmpty(groovyProgram)) {
+if (UtilValidate.isNotEmpty(groovyProgram) && 
+    context.hasTmplTestPerm == true && request.getMethod().toLowerCase() == "post") { // SCIPIO: hasTmplTestPerm, POST
     try {
         shell.parse(groovyProgram);
         shell.evaluate(groovyProgram)

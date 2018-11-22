@@ -5259,6 +5259,11 @@
         <value xml:lang="zh">运行站点命令 ${command} 时失败：${replyString}</value>
         <value xml:lang="zh-TW">站台指令執行 ${command} 時失敗:${replyString}</value>
     </property>
+    <property key="CommonFunctionIsDisabled">
+        <value xml:lang="de">Diese Funktion ist deaktiviert.</value>
+        <value xml:lang="en">This function is disabled.</value>
+        <value xml:lang="fr">Cette fonction est désactivée.</value>
+    </property>
     <property key="CommonFunctionalityInTestingWarning">
         <value xml:lang="de">Warnung: Diese Funktion wird gerade getestet. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
         <value xml:lang="en">Warning: This functionality is currently in testing. Please backup any important data before attempting to use.</value>

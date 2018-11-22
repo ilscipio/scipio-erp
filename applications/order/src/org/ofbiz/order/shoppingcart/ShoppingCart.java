@@ -5789,6 +5789,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 .cache(true).filterByDate().queryList();
         if (UtilValidate.isNotEmpty(productSubscriptionResources)) {
             this.cartSubscriptionItems.put(productId, productSubscriptionResources);
+        } else {
+            // 2018-11-12: Keep sync when no subscription
+            this.cartSubscriptionItems.remove(productId);
         }
         return productSubscriptionResources;
     }

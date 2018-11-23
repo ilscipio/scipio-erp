@@ -317,7 +317,10 @@ public class ServiceMultiEventHandler implements EventHandler {
                 // invoke the service
                 Map<String, Object> result = null;
                 try {
+                    /* SCIPIO: 2018-11-23: Refactored
                     result = dispatcher.runSync(serviceName, serviceContext);
+                    */
+                    result = invokeService(dispatcher, modelService, serviceName, serviceContext, mode);
                 } catch (ServiceAuthException e) {
                     // not logging since the service engine already did
                     errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNonNestedMessage());
@@ -415,5 +418,14 @@ public class ServiceMultiEventHandler implements EventHandler {
         }
 
         return returnString;
+    }
+
+    /**
+     * SCIPIO: Core service invocation, overridable.
+     * Refactored from {@link #invoke(Event, RequestMap, HttpServletRequest, HttpServletResponse)}.
+     * Added 2018-11-23.
+     */
+    protected Map<String, Object> invokeService(LocalDispatcher dispatcher, ModelService modelService, String serviceName, Map<String, Object> serviceContext, String mode) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return dispatcher.runSync(serviceName, serviceContext);
     }
 }

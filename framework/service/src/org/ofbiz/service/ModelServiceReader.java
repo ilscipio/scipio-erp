@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -35,10 +36,12 @@ import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.metrics.MetricsFactory;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.model.ModelEntity;
@@ -259,6 +262,7 @@ public class ModelServiceReader implements Serializable {
         this.createAttrDefs(serviceElement, service);
         this.createOverrideDefs(serviceElement, service);
         this.createDeprecated(serviceElement, service);
+        this.createProperties(serviceElement, service); // SCIPIO: 2018-11-23
         // Get metrics.
         Element metricsElement = UtilXml.firstChildElement(serviceElement, "metric");
         if (metricsElement != null) {
@@ -689,6 +693,44 @@ public class ModelServiceReader implements Serializable {
             String deprecatedReason = UtilXml.elementValue(deprecated);
             service.deprecatedReason = (deprecatedReason != null) ? deprecatedReason.trim() : null;
             service.informIfDeprecated(false); // SCIPIO: do not log as warning during loading
+        }
+    }
+
+    /**
+     * SCIPIO: Loads custom service properties.
+     * Added 2018-11-23.
+     */
+    private void createProperties(Element baseElement, ModelService service) {
+        List<? extends Element> propertyElements = UtilXml.childElementList(baseElement, "property");
+        if (UtilValidate.isNotEmpty(propertyElements)) {
+            Map<String, Object> properties = new HashMap<>();
+            for(Element propertyElement : propertyElements) {
+                String name = propertyElement.getAttribute("name");
+                String type = propertyElement.getAttribute("type");
+                String valueStr = propertyElement.getAttribute("value");
+                Object value = null;
+                if (UtilValidate.isNotEmpty(valueStr)) { // NOTE: empty allowed; means override inherited with null
+                    try {
+                        Map<String, Object> propertyCtx = new HashMap<>();
+                        // TODO?: should we make anything available in this context? This runs early during system load.
+                        FlexibleStringExpander expr = FlexibleStringExpander.getInstance(valueStr);
+                        Object result = expr.expand(propertyCtx);
+                        if (result != null && UtilValidate.isNotEmpty(type)) {
+                            value = ObjectType.simpleTypeConvert(result, type, null, null);
+                        } else {
+                            value = result;
+                        }
+                    } catch (Exception e) {
+                        Debug.logError(e, "Unable to evaluate service property '" + name 
+                                + "' for service '" + service.name + " (will be null)", module);
+                    }
+                }
+                properties.put(name, value);
+            }
+            service.properties = Collections.unmodifiableMap(properties);
+            if (Debug.verboseOn() && properties.size() > 0) {
+                Debug.logVerbose("Explicit properties for service '" + service.name + "': " + properties, module);
+            }
         }
     }
 

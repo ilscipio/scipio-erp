@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -245,6 +246,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public Metrics metrics = null;
 
+    /**
+     * SCIPIO: Defines custom service properties, which can be interpreted by the system or custom
+     * code as needed.
+     */
+    protected Map<String, Object> properties = Collections.emptyMap(); 
+    
     public ModelService() {}
 
     public ModelService(ModelService model) {
@@ -1241,6 +1248,16 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                                 this.addParam(newParamClone);
                             }
                         }
+                        
+                        // SCIPIO: 2018-11-23: Inherit custom properties
+                        if (!model.properties.isEmpty()) {
+                            Map<String, Object> newProperties = new HashMap<>(model.properties);
+                            newProperties.putAll(this.properties);
+                            this.properties = Collections.unmodifiableMap(newProperties);
+                            if (Debug.verboseOn() && newProperties.size() > 0) {
+                                Debug.logVerbose("Merged properties for service '" + this.name + "': " + newProperties, module);
+                            }
+                        }
                     } else {
                         Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
                     }
@@ -2179,5 +2196,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             }
         }
         return valid;
+    }
+
+    /**
+     * SCIPIO: Get the custom properties defined on this service.
+     * Added 2018-11-23.
+     */
+    public Map<String, Object> getProperties() {
+        return properties;
     }
 }

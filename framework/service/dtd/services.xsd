@@ -45,6 +45,25 @@ under the License.
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="required-permissions"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="implements"/>
                 <xs:element minOccurs="0" ref="metric"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="property">
+                    <xs:annotation>
+                        <xs:documentation>
+                            SCIPIO: Defines a custom property for the service.
+                            Can be used to indicate to system or custom/client code some feature or behavior of the service.
+                            Automatically inherited from "implements" service interfaces.
+                            If value is empty, sets null and overrides any inherited values with null.
+                            Added 2018-11-23.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" ref="description"/>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="type" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
                 <xs:choice maxOccurs="1" minOccurs="0">
                     <xs:choice minOccurs="0" maxOccurs="unbounded">
                         <xs:element ref="auto-attributes"/>

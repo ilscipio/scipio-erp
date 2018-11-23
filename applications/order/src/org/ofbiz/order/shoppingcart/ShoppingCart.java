@@ -104,41 +104,42 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public static final BigDecimal percentage = new BigDecimal("0.01");
     public static final MathContext generalRounding = new MathContext(10);
 
+    // SCIPIO: NOTE: 2018-11-22: Many default values have been moved to the constructors, or removed and defaults used (null/false)
 
     private String orderType = "SALES_ORDER"; // default orderType
     private String channel = "UNKNWN_SALES_CHANNEL"; // default channel enum
 
-    private String poNumber = null;
-    private String orderId = null;
-    private String orderName = null;
-    private String orderStatusId = null;
-    private String orderStatusString = null;
-    private String firstAttemptOrderId = null;
-    private String externalId = null;
-    private String internalCode = null;
-    private String billingAccountId = null;
+    private String poNumber;
+    private String orderId;
+    private String orderName;
+    private String orderStatusId;
+    private String orderStatusString;
+    private String firstAttemptOrderId;
+    private String externalId;
+    private String internalCode;
+    private String billingAccountId;
     private BigDecimal billingAccountAmt = BigDecimal.ZERO;
-    private String agreementId = null;
-    private String quoteId = null;
-    private String workEffortId = null;
+    private String agreementId;
+    private String quoteId;
+    private String workEffortId;
     private long nextItemSeq = 1;
 
-    private String defaultItemDeliveryDate = null;
-    private String defaultItemComment = null;
+    private String defaultItemDeliveryDate;
+    private String defaultItemComment;
 
-    private String orderAdditionalEmails = null;
-    private boolean viewCartOnAdd = false;
-    private boolean readOnlyCart = false;
+    private String orderAdditionalEmails;
+    private boolean viewCartOnAdd; // = false;
+    private boolean readOnlyCart; // = false;
 
-    private Timestamp lastListRestore = null;
-    private String autoSaveListId = null;
+    private Timestamp lastListRestore;
+    private String autoSaveListId;
 
     // SCIPIO: Changed all LinkedList to ArrayList
 
     /** Holds value of order adjustments. */
     private List<GenericValue> adjustments = new ArrayList<>();
     // OrderTerms
-    private boolean orderTermSet = false;
+    private boolean orderTermSet; // = false;
     private List<GenericValue> orderTerms = new ArrayList<>();
 
     private List<ShoppingCartItem> cartLines = new ArrayList<>();
@@ -157,8 +158,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     private Map<String, List<String>> additionalPartyRole = new HashMap<>();
 
     /** these are defaults for all ship groups */
-    private Timestamp defaultShipAfterDate = null;
-    private Timestamp defaultShipBeforeDate = null;
+    private Timestamp defaultShipAfterDate;
+    private Timestamp defaultShipBeforeDate;
 
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
     private List<ProductPromoUseInfo> productPromoUseInfoList = new ArrayList<>();
@@ -169,39 +170,39 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     private Map<GenericPK, String> desiredAlternateGiftByAction = new HashMap<>();
     private Timestamp cartCreatedTs = UtilDateTime.nowTimestamp();
 
-    private transient Delegator delegator = null;
-    private String delegatorName = null;
+    private transient Delegator delegator;
+    private String delegatorName;
 
-    protected String productStoreId = null;
+    protected String productStoreId;
     protected boolean doPromotions = true;
-    protected String transactionId = null;
-    protected String facilityId = null;
-    protected String webSiteId = null;
-    protected String terminalId = null;
-    protected String autoOrderShoppingListId = null;
+    protected String transactionId;
+    protected String facilityId;
+    protected String webSiteId;
+    protected String terminalId;
+    protected String autoOrderShoppingListId;
 
     /** General partyId for the Order, all other IDs default to this one if not specified explicitly */
-    protected String orderPartyId = null;
+    protected String orderPartyId;
 
     // sales order parties
-    protected String placingCustomerPartyId = null;
-    protected String billToCustomerPartyId = null;
-    protected String shipToCustomerPartyId = null;
-    protected String endUserCustomerPartyId = null;
+    protected String placingCustomerPartyId;
+    protected String billToCustomerPartyId;
+    protected String shipToCustomerPartyId;
+    protected String endUserCustomerPartyId;
 
     // purchase order parties
-    protected String billFromVendorPartyId = null;
-    protected String shipFromVendorPartyId = null;
-    protected String supplierAgentPartyId = null;
+    protected String billFromVendorPartyId;
+    protected String shipFromVendorPartyId;
+    protected String supplierAgentPartyId;
 
-    protected GenericValue userLogin = null;
-    protected GenericValue autoUserLogin = null;
+    protected GenericValue userLogin;
+    protected GenericValue autoUserLogin;
 
     protected Locale locale;  // holds the locale from the user session
-    protected String currencyUom = null;
-    protected boolean holdOrder = false;
-    protected Timestamp orderDate = null;
-    protected Timestamp cancelBackOrderDate = null;
+    protected String currencyUom;
+    protected boolean holdOrder; // = false;
+    protected Timestamp orderDate;
+    protected Timestamp cancelBackOrderDate;
 
     // SCIPIO: Cart item subscriptions
     /* 2018-11-22: This cache is problematic due to both thread safety and because it risks going out of
@@ -209,10 +210,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * NOTE: ShoppingCart cannot be treated like OrderReadHelper (global vs local).
      * DEV NOTE: If a transient cache is ever really needed on ShoppingCart, this should go on
      * ShoppingCartItem instead as a List<GenericValue> field.
-    protected Map<String, List<GenericValue>> cartSubscriptionItems = null;
+    protected Map<String, List<GenericValue>> cartSubscriptionItems;
     */
 
-    protected boolean allowMissingShipEstimates = false; // SCIPIO: see WebShoppingCart for implementation
+    protected boolean allowMissingShipEstimates; // = false; // SCIPIO: see WebShoppingCart for implementation 
 
     /**
      * SCIPIO: An object which can be used for locking across multiple cart instances. 
@@ -234,11 +235,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public ShoppingCart(ShoppingCart cart) {
         this(cart, false);
     }
-    
+
     /** Creates a new cloned ShoppingCart Object.
      * SCIPIO: Added exactCopy flag, toggles between legacy (partial) and full/exact cloning the whole cart. */
     public ShoppingCart(ShoppingCart cart, boolean exactCopy) {
         if (exactCopy) {
+            // Exact/full instance copy (SCIPIO)
             this.delegator = cart.delegator;
             this.delegatorName = cart.delegatorName;
             this.productStoreId = cart.productStoreId;
@@ -260,7 +262,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.desiredAlternateGiftByAction = cart.getAllDesiredAlternateGiftByActionCopy();
             // SCIPIO: Replace it
             //this.productPromoUseInfoList.addAll(cart.productPromoUseInfoList);
-            this.productPromoUseInfoList = new ArrayList<>(cart.productPromoUseInfoList);
+            this.productPromoUseInfoList = new ArrayList<>(cart.productPromoUseInfoList); // SCIPIO: NOTE: 2018-11-12: ProductPromoUseInfo now immutable, so no need for deep copy
             this.productPromoCodes = new HashSet<>(cart.productPromoCodes);
             this.locale = cart.locale;
             this.currencyUom = cart.currencyUom;
@@ -274,19 +276,6 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.terminalId = cart.terminalId;
             this.transactionId = cart.transactionId;
             this.autoOrderShoppingListId = cart.autoOrderShoppingListId;
-
-            /* 2018-11-22: Removed: cartSubscriptionItems cache is counter-productive
-            // SCIPIO
-            Map<String, List<GenericValue>> cartSubscriptionItems = null;
-            if (cart.cartSubscriptionItems != null) {
-                cartSubscriptionItems = new HashMap<>();
-                for(Map.Entry<String, List<GenericValue>> entry : cart.cartSubscriptionItems.entrySet()) {
-                    cartSubscriptionItems.put(entry.getKey(), (entry.getValue() != null) ? new ArrayList<>(entry.getValue()) : null);
-                }
-            }
-            this.cartSubscriptionItems = cartSubscriptionItems;
-            */
-            this.lockObj = cart.lockObj; // SCIPIO
 
             // SCIPIO: Stock fields not covered by legacy copy constructor
             this.orderType = cart.orderType;
@@ -320,7 +309,6 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.attributes = new HashMap<>(cart.attributes);
             this.internalOrderNotes = new ArrayList<>(cart.internalOrderNotes);
             this.orderNotes = new ArrayList<>(cart.orderNotes);
-            this.freeShippingProductPromoActions = new ArrayList<>(cart.freeShippingProductPromoActions);
             this.cartCreatedTs = cart.cartCreatedTs;
             this.orderPartyId = cart.orderPartyId;
             this.placingCustomerPartyId = cart.placingCustomerPartyId;
@@ -334,17 +322,31 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.autoUserLogin = cart.autoUserLogin;
             this.holdOrder = cart.holdOrder;
             this.orderDate = cart.orderDate;
-            
             // clone the groups
             this.itemGroupByNumberMap = copyItemGroupByNumberMap(exactCopy, cart.itemGroupByNumberMap);
-
             // clone the items
             List<ShoppingCartItem> cartLines = new ArrayList<>(); // SCIPIO: Use local var
             for (ShoppingCartItem item : cart.items()) {
                 cartLines.add(new ShoppingCartItem(item, exactCopy, itemGroupByNumberMap));
             }
             this.cartLines = cartLines;
+            
+            // SCIPIO: new fields
+
+            /* 2018-11-22: Removed: cartSubscriptionItems cache is counter-productive
+            // SCIPIO
+            Map<String, List<GenericValue>> cartSubscriptionItems = null;
+            if (cart.cartSubscriptionItems != null) {
+                cartSubscriptionItems = new HashMap<>();
+                for(Map.Entry<String, List<GenericValue>> entry : cart.cartSubscriptionItems.entrySet()) {
+                    cartSubscriptionItems.put(entry.getKey(), (entry.getValue() != null) ? new ArrayList<>(entry.getValue()) : null);
+                }
+            }
+            this.cartSubscriptionItems = cartSubscriptionItems;
+            */
+            this.lockObj = cart.lockObj; // SCIPIO
         } else {
+            // Partial/high-level instance copy (legacy)
             this.delegator = cart.getDelegator();
             this.delegatorName = delegator.getDelegatorName();
             this.productStoreId = cart.getProductStoreId();
@@ -4838,18 +4840,19 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public static class ProductPromoUseInfo implements Serializable, Comparable<ProductPromoUseInfo> {
-        public String productPromoId = null;
-        public String productPromoCodeId = null;
-        public BigDecimal totalDiscountAmount = BigDecimal.ZERO;
-        public BigDecimal quantityLeftInActions = BigDecimal.ZERO;
-        private Map<ShoppingCartItem,BigDecimal> usageInfoMap = null;
+        // SCIPIO: 2018-11-12: All fields now final and not public (no need for copies)
+        protected final String productPromoId;
+        protected final String productPromoCodeId;
+        protected final BigDecimal totalDiscountAmount; // = BigDecimal.ZERO
+        protected final BigDecimal quantityLeftInActions; // = BigDecimal.ZERO
+        private final Map<ShoppingCartItem,BigDecimal> usageInfoMap;
 
         public ProductPromoUseInfo(String productPromoId, String productPromoCodeId, BigDecimal totalDiscountAmount, BigDecimal quantityLeftInActions, Map<ShoppingCartItem,BigDecimal> usageInfoMap) {
             this.productPromoId = productPromoId;
             this.productPromoCodeId = productPromoCodeId;
             this.totalDiscountAmount = totalDiscountAmount;
             this.quantityLeftInActions = quantityLeftInActions;
-            this.usageInfoMap = usageInfoMap;
+            this.usageInfoMap = (usageInfoMap != null) ? Collections.unmodifiableMap(usageInfoMap) : null; // SCIPIO: unmodifiableMap
         }
 
         public String getProductPromoId() { return this.productPromoId; }
@@ -4877,6 +4880,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public static class CartShipInfo implements Serializable {
+        // SCIPIO: 2018-11-22: Defaults moved into constructor
         public Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo;
         public List<GenericValue> shipTaxAdj;
         public String orderTypeId;
@@ -4891,7 +4895,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         public String shippingInstructions;
         public String maySplit;
         public String isGift;
-        public BigDecimal shipEstimate = BigDecimal.ZERO;
+        public BigDecimal shipEstimate; // = BigDecimal.ZERO
         public Timestamp shipBeforeDate;
         public Timestamp shipAfterDate;
         private String shipGroupSeqId;

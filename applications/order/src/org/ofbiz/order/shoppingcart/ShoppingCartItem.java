@@ -81,77 +81,79 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public static final MathContext generalRounding = new MathContext(10);
 
-    private transient Delegator delegator = null;
+    // SCIPIO: Removed trivial defaults (null)
+    
+    private transient Delegator delegator;
     /** the actual or variant product */
-    private transient GenericValue _product = null;
+    private transient GenericValue _product;
     /** the virtual product if _product is a variant */
-    private transient GenericValue _parentProduct = null;
+    private transient GenericValue _parentProduct;
 
-    private String delegatorName = null;
-    private String prodCatalogId = null;
-    private String productId = null;
-    private String supplierProductId = null;
-    private String parentProductId = null;
-    private String externalId = null;
+    private String delegatorName;
+    private String prodCatalogId;
+    private String productId;
+    private String supplierProductId;
+    private String parentProductId;
+    private String externalId;
     /** ends up in orderItemTypeId */
-    private String itemType = null;
-    private ShoppingCart.ShoppingCartItemGroup itemGroup = null;
-    private String productCategoryId = null;
-    private String itemDescription = null;
+    private String itemType;
+    private ShoppingCart.ShoppingCartItemGroup itemGroup;
+    private String productCategoryId;
+    private String itemDescription;
     /** for reservations: date start*/
-    private Timestamp reservStart = null;
+    private Timestamp reservStart;
     /** for reservations: length */
     private BigDecimal reservLength = BigDecimal.ZERO;
     /** for reservations: number of persons using */
     private BigDecimal reservPersons = BigDecimal.ZERO;
-    private String accommodationMapId = null;
-    private String accommodationSpotId = null;
+    private String accommodationMapId;
+    private String accommodationSpotId;
     private BigDecimal quantity = BigDecimal.ZERO;
     private BigDecimal basePrice = BigDecimal.ZERO;
-    private BigDecimal displayPrice = null;
-    private BigDecimal recurringBasePrice = null;
-    private BigDecimal recurringDisplayPrice = null;
+    private BigDecimal displayPrice;
+    private BigDecimal recurringBasePrice;
+    private BigDecimal recurringDisplayPrice;
     /** comes from price calc, used for special promo price promotion action */
-    private BigDecimal specialPromoPrice = null;
+    private BigDecimal specialPromoPrice;
     /** for reservations: extra % 2nd person */
     private BigDecimal reserv2ndPPPerc = BigDecimal.ZERO;
     /** for reservations: extra % Nth person */
     private BigDecimal reservNthPPPerc = BigDecimal.ZERO;
     private BigDecimal listPrice = BigDecimal.ZERO;
     /** flag to know if the price have been modified */
-    private boolean isModifiedPrice = false;
+    private boolean isModifiedPrice; // = false;
     private BigDecimal selectedAmount = BigDecimal.ZERO;
-    private String requirementId = null;
-    private String quoteId = null;
-    private String quoteItemSeqId = null;
+    private String requirementId;
+    private String quoteId;
+    private String quoteItemSeqId;
     // The following three optional fields are used to collect information for the OrderItemAssoc entity
-    private String associatedOrderId = null; // the order Id, if any, to which the given item is associated (typically a sales order item can be associated to a purchase order item, for example in drop shipments)
-    private String associatedOrderItemSeqId = null; // the order item Id, if any, to which the given item is associated
+    private String associatedOrderId; // the order Id, if any, to which the given item is associated (typically a sales order item can be associated to a purchase order item, for example in drop shipments)
+    private String associatedOrderItemSeqId; // the order item Id, if any, to which the given item is associated
     private String orderItemAssocTypeId = "PURCHASE_ORDER"; // the type of association between this item and an external item; by default, for backward compatibility, a PURCHASE association is used (i.e. the extarnal order is a sales order and this item is a purchase order item created to fulfill the sales order item
 
-    private String statusId = null;
-    private Map<String, String> orderItemAttributes = null;
-    private Map<String, Object> attributes = null;
-    private String orderItemSeqId = null;
-    private Locale locale = null;
-    private Timestamp shipBeforeDate = null;
-    private Timestamp shipAfterDate = null;
-    private Timestamp estimatedShipDate = null;
-    private Timestamp cancelBackOrderDate = null;
+    private String statusId;
+    private Map<String, String> orderItemAttributes;
+    private Map<String, Object> attributes;
+    private String orderItemSeqId;
+    private Locale locale;
+    private Timestamp shipBeforeDate;
+    private Timestamp shipAfterDate;
+    private Timestamp estimatedShipDate;
+    private Timestamp cancelBackOrderDate;
 
     // SCIPIO: Changed all LinkedList to ArrayList
 
     private Map<String, String> contactMechIdsMap = new HashMap<>();
-    private List<GenericValue> orderItemPriceInfos = null;
+    private List<GenericValue> orderItemPriceInfos;
     private List<GenericValue> itemAdjustments = new ArrayList<>();
-    private boolean isPromo = false;
+    private boolean isPromo; // = false;
     private BigDecimal promoQuantityUsed = BigDecimal.ZERO;
     private Map<GenericPK, BigDecimal> quantityUsedPerPromoCandidate = new HashMap<>();
     private Map<GenericPK, BigDecimal> quantityUsedPerPromoFailed = new HashMap<>();
     private Map<GenericPK, BigDecimal> quantityUsedPerPromoActual = new HashMap<>();
     private Map<String, GenericValue> additionalProductFeatureAndAppls = new HashMap<>();
-    private List<String> alternativeOptionProductIds = null;
-    private ProductConfigWrapper configWrapper = null;
+    private List<String> alternativeOptionProductIds;
+    private ProductConfigWrapper configWrapper;
     private List<GenericValue> featuresForSupplier = new ArrayList<>();
 
     /**
@@ -732,11 +734,11 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** Clone an item (exactCopy==false).
-     * SCIPIO: WARN: This overload cannot fully clone the itemGroup field (FIXME?) */
+     * SCIPIO: WARN: This overload cannot fully clone the itemGroup field (FIXME or doesn't matter?) */
     public ShoppingCartItem(ShoppingCartItem item) {
         this(item, false, null);
     }
-    
+
     /** Clone an item (exactCopy==false). */
     public ShoppingCartItem(ShoppingCartItem item, Map<String, ShoppingCartItemGroup> itemGroupByNumberMap) {
         this(item, false, itemGroupByNumberMap);
@@ -760,8 +762,8 @@ public class ShoppingCartItem implements java.io.Serializable {
                 if (item.itemGroup.getParentGroup() != null) {
                     ShoppingCartItemGroup parentGroup = itemGroupByNumberMap.get(item.itemGroup.getParentGroup().getGroupNumber());
                     if (parentGroup == null) {
-                        // This shouldn't happen if caller filled itemGroupByNumberMap properly, but report just in case
-                        Debug.logWarning("Could not fully clone ShoppingCartItemGroup because no copy was made for parent group"
+                        // This should never happen, but caller could mess up
+                        Debug.logError("Could not fully clone ShoppingCartItemGroup because no copy was made for parent group"
                                 + " with number: " + item.itemGroup.getParentGroup().getGroupNumber(), module);
                     }
                     this.itemGroup = new ShoppingCart.ShoppingCartItemGroup(item.itemGroup, parentGroup);
@@ -771,6 +773,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             } else {
                 item.itemGroup = null;
             }
+
             this.productCategoryId = item.productCategoryId;
             this.itemDescription = item.itemDescription;
             this.reservStart = item.reservStart;

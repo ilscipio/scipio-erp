@@ -97,6 +97,7 @@ public class ProductConfigWrapper implements Serializable {
      */
     public ProductConfigWrapper(ProductConfigWrapper pcw, boolean exactCopy) {
         if (exactCopy) {
+            // SCIPIO: full copy
             dispatcher = pcw.dispatcher;
             dispatcherName = pcw.dispatcherName;
             delegator = pcw.delegator;
@@ -112,16 +113,23 @@ public class ProductConfigWrapper implements Serializable {
             }
             this.questions = questions;
         } else {
+            // legacy
             product = GenericValue.create(pcw.product);
 
-            questions = new ArrayList<>();
             delegator = pcw.getDelegator();
             delegatorName = delegator.getDelegatorName();
             dispatcher = pcw.getDispatcher();
             dispatcherName = dispatcher.getName();
-            for (ConfigItem ci: pcw.questions) {
-                questions.add(new ConfigItem(ci));
+            // SCIPIO: Use local var
+            //questions = new ArrayList<>();
+            List<ConfigItem> questions = null;
+            if (pcw.questions != null) {
+                questions = new ArrayList<>();
+                for (ConfigItem ci: pcw.questions) {
+                    questions.add(new ConfigItem(ci));
+                }
             }
+            this.questions = questions;
         }
         
         listPrice = pcw.listPrice;
@@ -507,6 +515,7 @@ public class ProductConfigWrapper implements Serializable {
          */
         public ConfigItem(ConfigItem ci, boolean exactCopy) {
             if (exactCopy) {
+                // SCIPIO: full copy
                 configItem = ci.configItem;
                 configItemAssoc = ci.configItemAssoc;
                 List<ConfigOption> options = new ArrayList<>();
@@ -515,6 +524,7 @@ public class ProductConfigWrapper implements Serializable {
                 }
                 this.options = options;
             } else {
+                // legacy
                 configItem = GenericValue.create(ci.configItem);
                 configItemAssoc = GenericValue.create(ci.configItemAssoc);
                 List<ConfigOption> options = new ArrayList<>();
@@ -524,7 +534,7 @@ public class ProductConfigWrapper implements Serializable {
                 this.options = options;
             }
             first = ci.first;
-            content = ci.content; // FIXME: this should be cloned
+            content = ci.content; // SCIPIO: NOTE: The wrapper is immutable so no need to clone
         }
 
         public void setContent(Locale locale, String mimeTypeId) {

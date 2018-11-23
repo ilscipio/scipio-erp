@@ -1118,13 +1118,37 @@ public class ShoppingCartEvents {
         if (cart == null) {
             cart = (ShoppingCart) session.getAttribute("shoppingCart");
         } else {
-            session.setAttribute("shoppingCart", cart);
+            // SCIPIO: Only set if not already there, otherwise will hit synchronized too often
+            // TODO: REVIEW: This whole section is questionable; why is the request attrib automatically
+            // copied to session at every call?
+            //session.setAttribute("shoppingCart", cart);
+            ShoppingCart prevCart = (ShoppingCart) session.getAttribute("shoppingCart");
+            if (prevCart != cart) {
+                synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+                    prevCart = (ShoppingCart) session.getAttribute("shoppingCart");
+                    if (prevCart != cart) {
+                        if (prevCart != null) {
+                            Debug.logWarning("Replacing existing session shoppingCart with shoppingCart from request attributes", module);
+                        }
+                        session.setAttribute("shoppingCart", cart);
+                    }
+                }
+            }
         }
 
+        boolean cartIsNew = false;
         if (cart == null) {
-            cart = new WebShoppingCart(request, locale, currencyUom);
-            session.setAttribute("shoppingCart", cart);
-        } else {
+            synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+                // SCIPIO: check again inside synchronized block
+                cart = (ShoppingCart) session.getAttribute("shoppingCart");
+                if (cart == null) {
+                    cart = new WebShoppingCart(request, locale, currencyUom);
+                    session.setAttribute("shoppingCart", cart);
+                    cartIsNew = true;
+                }
+            }
+        } 
+        if (!cartIsNew) {
             // SCIPIO: Refactored for safe cart update
             // This appears complicated because we must re-check everything again inside the synchronized block
             boolean localeChanged = (locale != null && !locale.equals(cart.getLocale()));

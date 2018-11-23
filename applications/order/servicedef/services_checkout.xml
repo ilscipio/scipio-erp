@@ -10,6 +10,7 @@ code package.
 
     <service name="createUpdateCustomerAndShippingAddress" engine="simple" location="component://order/script/org/ofbiz/order/order/CheckoutServices.xml" auth="false" invoke="createUpdateCustomerAndShippingAddress">
         <implements service="createUpdateShippingAddress"/>
+        <property name="shoppingCart.update" type="Boolean" value="true"><description>SCIPIO: This service modifies the passed shoppingCart</description></property>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="firstName" type="String" mode="IN" optional="true"/>
         <attribute name="lastName" type="String" mode="IN" optional="true"/>
@@ -27,6 +28,7 @@ code package.
     <service name="createUpdateBillingAddressAndPaymentMethod" engine="simple" location="component://order/script/org/ofbiz/order/order/CheckoutServices.xml" auth="false" invoke="createUpdateBillingAddressAndPaymentMethod">
         <implements service="createUpdateBillingAddress"/>
         <implements service="createUpdateCreditCard"/>
+        <property name="shoppingCart.update" type="Boolean" value="true"><description>SCIPIO: This service modifies the passed shoppingCart</description></property>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="billToCountryCode" type="String" mode="IN" optional="true"/>

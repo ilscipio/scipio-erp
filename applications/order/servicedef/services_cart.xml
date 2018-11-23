@@ -29,6 +29,7 @@ code package.
     <service name="assignItemShipGroup" engine="java" auth="false"
             location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="assignItemShipGroup">
         <description>Assign a ShoppingCartItem -> Quantity to a ship group</description>
+        <property name="shoppingCart.update" type="Boolean" value="true"><description>SCIPIO: Modifies the passed shoppingCart</description></property>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="fromGroupIndex" type="Integer" mode="IN" optional="false"/>
         <attribute name="toGroupIndex" type="Integer" mode="IN" optional="false"/>
@@ -40,6 +41,7 @@ code package.
     <service name="setCartShippingOptions" engine="java" auth="false"
             location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="setShippingOptions">
         <description>Sets The ShoppingCart Shipping Options</description>
+        <property name="shoppingCart.update" type="Boolean" value="true"><description>SCIPIO: This service modifies the passed shoppingCart</description></property>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="groupIndex" type="Integer" mode="IN" optional="false"/>
         <attribute name="shippingContactMechId" type="String" mode="IN" optional="false">
@@ -69,6 +71,7 @@ code package.
     <service name="setCartShippingAddress" engine="java" auth="false"
             location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="setShippingOptions">
         <description>Sets The ShoppingCart Shipping Options</description>
+        <property name="shoppingCart.update" type="Boolean" value="true"><description>SCIPIO: This service modifies the passed shoppingCart</description></property>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="groupIndex" type="Integer" mode="IN" optional="false"/>
         <attribute name="shippingContactMechId" type="String" mode="IN" optional="false">
@@ -81,6 +84,7 @@ code package.
     <service name="setCartPaymentOptions" engine="java" auth="false"
             location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="setPaymentOptions">
         <description>Sets the ShoppingCart Payment Options</description>
+        <property name="shoppingCart.update" type="Boolean" value="true"><description>SCIPIO: This service modifies the passed shoppingCart</description></property>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="paymentInfoId" type="String" mode="IN" optional="false"/>
         <attribute name="amount" type="BigDecimal" mode="IN" optional="true"/>
@@ -90,6 +94,7 @@ code package.
     <service name="setCartOtherOptions" engine="java" auth="false"
             location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="setOtherOptions">
         <description>Sets the ShoppingCart Other Options (besided payment and shipping)</description>
+        <property name="shoppingCart.update" type="Boolean" value="true"><description>SCIPIO: This service modifies the passed shoppingCart</description></property>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="orderAdditionalEmails" type="String" mode="IN" optional="true"/>
         <attribute name="correspondingPoId" type="String" mode="IN" optional="true"/>
@@ -151,6 +156,7 @@ code package.
     <service name="resetShipGroupItems" engine="java" auth="false"
             location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="resetShipGroupItems">
         <description>Reset the ship Groups in the cart and put the items in default group</description>
+        <property name="shoppingCart.update" type="Boolean" value="true"><description>SCIPIO: This service modifies the passed shoppingCart</description></property>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
     </service>
 

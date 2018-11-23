@@ -1,6 +1,10 @@
 package org.ofbiz.order.shoppingcart;
 
+import java.io.Serializable;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.ofbiz.base.util.Debug;
 
 /**
  * SCIPIO: Helper object to manage atomic, synchronized cart updates.
@@ -32,13 +36,25 @@ import javax.servlet.http.HttpServletRequest;
  * @see ShoppingCartEvents#getCartLockObject(HttpServletRequest)
  */
 public class CartUpdate implements AutoCloseable {
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     private final HttpServletRequest request;
-    private final Boolean prevPublish;
+    private final CartUpdateStatus status;
     
     public CartUpdate(HttpServletRequest request) {
         this.request = request;
-        this.prevPublish = (Boolean) request.getAttribute("shoppingCartPublish");
-        request.setAttribute("shoppingCartPublish", false); // for the nested updaters; we bypass
+        // DEV NOTE: could use a ThreadLocal in place of req attr, but this less likely to cause leaks in case of errors
+        CartUpdateStatus status = getCartUpdateStatus(request);
+        if (status == null) {
+            status = new CartUpdateStatus(1, null);
+            request.setAttribute("cartUpdateStatus", status);
+        } else {
+            status.nestedLevel++;
+        }
+        this.status = status;
+        if (status.debug) {
+            Debug.logInfo("Begin cart update section (depth: " + status.nestedLevel + ")" + getLogSuffix(), module);
+        }
     }
 
     /**
@@ -52,42 +68,100 @@ public class CartUpdate implements AutoCloseable {
      * Returns a modifiable cart instance derived from the current (request/session) cart, 
      * which may be committed if changes successful (using {@link #commit(ShoppingCart)}).
      * <p>
+     * NOTE: This also acts as a "begin" section flag, at start of synchronized block.
+     * <p>
      * WARN: This must ONLY be called inside a synchronized block that synchronizes
      * on the object returned by {@link #getLockObject()}.
      */
     public ShoppingCart getCartForUpdate() {
-        return getCartForUpdate(ShoppingCartEvents.getCartObject(request));
+        if (status.cartForUpdate == null) {
+            status.cartForUpdate = makeCartForUpdate(ShoppingCartEvents.getCartObject(request));
+        }
+        return status.cartForUpdate;
     }
 
     /**
      * Returns a modifiable cart instance derived from the given cart,
      * which may be committed if changes successful (using {@link #commit(ShoppingCart)}).
      * <p>
-     * WARN: This must ONLY be called inside a synchronized block that synchronizes
-     * on the object returned by {@link #getLockObject()}.
+     * 2018-11-12: Switched to private because it will probably get misused and cause
+     * problems.
      */
-    public ShoppingCart getCartForUpdate(ShoppingCart cart) {
-        // TODO
-        //return cart.exactCopy();
-        return cart;
+    private ShoppingCart makeCartForUpdate(ShoppingCart cart) {
+        ShoppingCart newCart = cart.exactCopy();
+        if (status.debug) {
+            Debug.logInfo("Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
+                + " for update " + getLogSuffix(), module);
+        }
+        return newCart;
     }
 
     /**
-     * Commits the cart changes.
+     * Commits the cart changes (if top level).
      */
     public ShoppingCart commit(ShoppingCart cart) {
-        if (!Boolean.FALSE.equals(prevPublish)) {
-            ShoppingCartEvents.storeCart(request, cart);
+        if (status.isTopLevel()) {
+            if (status.debug) {
+                Debug.logInfo("Committing modified shopping cart " + getLogCartDesc(cart) + getLogSuffix(), module);
+            }
+            ShoppingCartEvents.replaceCurrentCartObject(request, cart, true);
+        } else {
+            if (status.debug) {
+                Debug.logInfo("Delaying shopping cart commit (nested)" + getLogSuffix(), module);
+            }
         }
         return cart;
     }
 
     @Override
     public void close() {
-        if (prevPublish == null) {
-            request.removeAttribute("shoppingCartPublish");
+        if (status.isTopLevel()) {
+            request.removeAttribute("cartUpdateStatus");
         } else {
-            request.setAttribute("shoppingCartPublish", prevPublish);
+            status.nestedLevel--;
+        }
+        if (ShoppingCart.DEBUG || Debug.verboseOn()) {
+            Debug.logInfo("End cart update section (depth: " + status.nestedLevel + ")" + getLogSuffix(), module);
+        }
+    }
+
+    private String getLogCartDesc(ShoppingCart cart) {
+        return "@" + Integer.toHexString(System.identityHashCode(cart));
+    }
+    
+    private String getLogSuffix() {
+        return "; threadId: " + Thread.currentThread().getId();
+    }
+    
+    public static CartUpdateStatus getCartUpdateStatus(HttpServletRequest request) {
+        return (CartUpdateStatus) request.getAttribute("cartUpdateStatus");
+    }
+
+    /**
+     * Stored in request attribute cartUpdateStatus and records nesting level.
+     * Also lowers need for attributes.
+     */
+    @SuppressWarnings("serial")
+    public static class CartUpdateStatus implements Serializable {
+        private int nestedLevel = 1;
+        private ShoppingCart cartForUpdate;
+        private final boolean debug = (ShoppingCart.DEBUG || Debug.verboseOn());
+        
+        protected CartUpdateStatus(int nestedLevel, ShoppingCart cartForUpdate) {
+            this.nestedLevel = nestedLevel;
+            this.cartForUpdate = cartForUpdate;
+        }
+
+        public int getNestedLevel() {
+            return nestedLevel;
+        }
+
+        public ShoppingCart getCartForUpdate() {
+            return cartForUpdate;
+        }
+        
+        public boolean isTopLevel() {
+            return (nestedLevel <= 1);
         }
     }
 }

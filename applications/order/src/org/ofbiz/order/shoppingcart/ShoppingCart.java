@@ -104,6 +104,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public static final BigDecimal percentage = new BigDecimal("0.01");
     public static final MathContext generalRounding = new MathContext(10);
 
+    public static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("order", "shoppingcart.debug", false); // SCIPIO
+
     // SCIPIO: NOTE: 2018-11-22: Many default values have been moved to the constructors, or removed and defaults used (null/false)
 
     private String orderType = "SALES_ORDER"; // default orderType

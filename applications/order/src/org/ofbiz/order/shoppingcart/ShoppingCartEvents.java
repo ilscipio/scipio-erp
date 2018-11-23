@@ -1188,25 +1188,13 @@ public class ShoppingCartEvents {
     }
 
     /**
-     * SCIPIO: Registers (publishes to other threads) the given cart, assumed changed.
-     * The caller or its caller(s) can control whether this takes effect by
-     * setting the shoppingCartPublish boolean request attribute.
-     * NOTE: Prefer using {@link CartUpdate} instead of this directly. Added 2018-11-20. */
-    public static ShoppingCart registerCartChange(HttpServletRequest request, ShoppingCart cart) {
-        if (!Boolean.FALSE.equals(request.getAttribute("shoppingCartPublish"))) {
-            storeCart(request, cart);
-        }
-        return cart;
-    }
-
-    /**
      * SCIPIO: Sets the cart in session (and request if applicable) immediately. 
      * NOTE: For synchronized updates, prefer using {@link CartUpdate} instead of this directly. Added 2018-11-20. */
-    public static ShoppingCart storeCart(HttpServletRequest request, ShoppingCart cart) {
+    public static ShoppingCart replaceCurrentCartObject(HttpServletRequest request, ShoppingCart cart, boolean updateRequest) {
         request.getSession(true).setAttribute("shoppingCart", cart);
         // If the request attribute was set, we must replace it, otherwise rest of this request 
         // will not see the changes properly (see getCartObject)
-        if (request.getAttribute("shoppingCart") != null) {
+        if (updateRequest && request.getAttribute("shoppingCart") != null) {
             request.setAttribute("shoppingCart", cart);
         }
         return cart;

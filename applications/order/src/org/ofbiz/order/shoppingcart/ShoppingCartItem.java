@@ -1373,7 +1373,9 @@ public class ShoppingCartItem implements java.io.Serializable {
                     }
 
                     this.setDisplayPrice(this.basePrice);
-                    this.orderItemPriceInfos = UtilGenerics.checkList(priceResult.get("orderItemPriceInfos"));
+                    // SCIPIO: ensure only ArrayList here
+                    //this.orderItemPriceInfos = UtilGenerics.checkList(priceResult.get("orderItemPriceInfos"));
+                    this.orderItemPriceInfos = UtilMisc.asArrayList(UtilGenerics.checkList(priceResult.get("orderItemPriceInfos")));
                 } else {
                     if (productId != null) {
                         String productStoreId = cart.getProductStoreId();
@@ -1426,8 +1428,8 @@ public class ShoppingCartItem implements java.io.Serializable {
                         throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "], not adding to cart.");
                     }
 
-                    //set alternative product price
-                    if(isAlternativePacking){
+                    // set alternative product price
+                    if (isAlternativePacking) {
                         int decimals = 2;
                         if (priceResult.get("listPrice") != null) {
                             this.listPrice = ((BigDecimal) priceResult.get("listPrice")).divide(pieces, decimals, RoundingMode.HALF_UP);
@@ -1444,7 +1446,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                         if (priceResult.get("specialPromoPrice") != null) {
                             this.setSpecialPromoPrice(((BigDecimal) priceResult.get("specialPromoPrice")).divide(pieces, decimals, RoundingMode.HALF_UP));
                         }
-                    }else{
+                    } else {
                         if (priceResult.get("listPrice") != null) {
                             this.listPrice = ((BigDecimal) priceResult.get("listPrice"));
                         }
@@ -1460,7 +1462,9 @@ public class ShoppingCartItem implements java.io.Serializable {
                         this.setSpecialPromoPrice((BigDecimal) priceResult.get("specialPromoPrice"));
                     }
 
-                    this.orderItemPriceInfos = UtilGenerics.checkList(priceResult.get("orderItemPriceInfos"));
+                    // SCIPIO: ensure only ArrayList here
+                    //this.orderItemPriceInfos = UtilGenerics.checkList(priceResult.get("orderItemPriceInfos"));
+                    this.orderItemPriceInfos = UtilMisc.asArrayList(UtilGenerics.checkList(priceResult.get("orderItemPriceInfos")));
 
                     // If product is configurable, the price is taken from the configWrapper.
                     if (configWrapper != null) {

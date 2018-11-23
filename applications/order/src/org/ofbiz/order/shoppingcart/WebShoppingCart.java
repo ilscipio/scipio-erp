@@ -38,6 +38,9 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  * Extension of {@link org.ofbiz.order.shoppingcart.ShoppingCart ShoppingCart}
  * class which provides web presentation layer specific functionality
  * related specifically to user session information.
+ * <p>
+ * SCIPIO: NOTE: 2018-11-22: Events which modify the shopping cart stored in session ("shoppingCart") 
+ * must wrap its update code in a {@link CartUpdate} section.
  */
 @SuppressWarnings("serial")
 public class WebShoppingCart extends ShoppingCart {

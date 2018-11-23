@@ -69,6 +69,9 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
  * <p><b>Description:</b> Shopping cart item object.
+ * <p>
+ * SCIPIO: NOTE: 2018-11-22: Events which modify the shopping cart stored in session ("shoppingCart") 
+ * must wrap its update code in a {@link CartUpdate} section.
  */
 @SuppressWarnings("serial")
 public class ShoppingCartItem implements java.io.Serializable {

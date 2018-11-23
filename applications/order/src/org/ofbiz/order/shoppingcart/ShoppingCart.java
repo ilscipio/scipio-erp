@@ -77,8 +77,8 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * Shopping Cart Object
  * <p>
- * SCIPIO: NOTE: 2018-11-19: Events which modify the cart stored in session should synchronize
- * on the ShoppingCart object for atomic updates.
+ * SCIPIO: NOTE: 2018-11-22: Events which modify the shopping cart stored in session ("shoppingCart") 
+ * must wrap its update code in a {@link CartUpdate} section.
  */
 @SuppressWarnings("serial")
 public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {

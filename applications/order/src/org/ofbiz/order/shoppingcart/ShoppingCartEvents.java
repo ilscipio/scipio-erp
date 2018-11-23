@@ -69,7 +69,8 @@ import org.ofbiz.webapp.control.RequestHandler;
 /**
  * Shopping cart events.
  * <p>
- * SCIPIO: NOTE: 2018-11-19: All high-level cart modification methods now synchronize on the cart object.
+ * SCIPIO: NOTE: 2018-11-22: Events which modify the shopping cart stored in session ("shoppingCart") 
+ * must wrap its update code in a {@link CartUpdate} section.
  */
 public class ShoppingCartEvents {
 

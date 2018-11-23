@@ -40,6 +40,7 @@ public class CartUpdate implements AutoCloseable {
 
     private final HttpServletRequest request;
     private final CartUpdateStatus status;
+    private boolean commitCalled = false;
     
     public CartUpdate(HttpServletRequest request) {
         this.request = request;
@@ -91,7 +92,7 @@ public class CartUpdate implements AutoCloseable {
         ShoppingCart newCart = cart.exactCopy();
         if (status.debug) {
             Debug.logInfo("Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
-                + " for update " + getLogSuffix(), module);
+                + " for update" + getLogSuffix(), module);
         }
         return newCart;
     }
@@ -110,6 +111,7 @@ public class CartUpdate implements AutoCloseable {
                 Debug.logInfo("Delaying shopping cart commit (nested)" + getLogSuffix(), module);
             }
         }
+        commitCalled = true;
         return cart;
     }
 
@@ -121,7 +123,12 @@ public class CartUpdate implements AutoCloseable {
             status.nestedLevel--;
         }
         if (ShoppingCart.DEBUG || Debug.verboseOn()) {
-            Debug.logInfo("End cart update section (depth: " + status.nestedLevel + ")" + getLogSuffix(), module);
+            if (commitCalled) {
+                Debug.logInfo("End cart update section (depth: " + status.nestedLevel + ")" + getLogSuffix(), module);
+            } else {
+                Debug.logWarning("End cart update section (depth: " + status.nestedLevel 
+                        + ") - commit never invoked" + getLogSuffix(), module);
+            }
         }
     }
 

@@ -2006,7 +2006,16 @@ public class ShoppingCartEvents {
                 }
 
                 if (hasPermission) {
-                    cart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
+                    // SCIPIO: 2018-11-18: This only crushes the cart needlessly
+                    //cart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
+                    String currencyUom = productStore.getString("defaultCurrencyUomId");
+                    if (currencyUom != null && !currencyUom.equals(cart.getCurrency())) {
+                        try {
+                            cart.setCurrency((LocalDispatcher) request.getAttribute("dispatcher"), currencyUom);
+                        } catch (CartItemModifyException e) {
+                            Debug.logWarning(e, "Could not set cart currency", module);
+                        }
+                    }
                 } else {
                     request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderYouDoNotHavePermissionToTakeOrdersForThisStore", locale));
                     cart.clear();

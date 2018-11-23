@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
 
 /**
  * SCIPIO: Helper object to manage atomic, synchronized cart updates.
@@ -38,6 +39,8 @@ import org.ofbiz.base.util.Debug;
 public class CartUpdate implements AutoCloseable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    private static final boolean CART_COPIES_ENABLED = UtilProperties.getPropertyAsBoolean("order", "shoppingcart.update.useCartCopies", true);
+    
     private final HttpServletRequest request;
     private final CartUpdateStatus status;
     private boolean commitCalled = false;
@@ -89,15 +92,15 @@ public class CartUpdate implements AutoCloseable {
      * problems.
      */
     private ShoppingCart makeCartForUpdate(ShoppingCart cart) {
-        /* TODO
+        if (!CART_COPIES_ENABLED) {
+            return cart;
+        }
         ShoppingCart newCart = cart.exactCopy();
         if (status.debug) {
             Debug.logInfo("Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
                 + " for update" + getLogSuffix(), module);
         }
         return newCart;
-        */
-        return cart;
     }
 
     /**

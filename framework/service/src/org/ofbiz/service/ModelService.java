@@ -2199,6 +2199,22 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     /**
+     * SCIPIO: Get the named custom property defined on this service.
+     * Added 2018-11-23.
+     */
+    public Object getProperty(String name) {
+        return properties.get(name);
+    }
+
+    /**
+     * SCIPIO: Checks if this service has any custom properties.
+     * Added 2018-11-23.
+     */
+    public Object hasProperties() {
+        return !properties.isEmpty();
+    }
+
+    /**
      * SCIPIO: Get the custom properties defined on this service.
      * Added 2018-11-23.
      */

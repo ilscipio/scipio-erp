@@ -496,7 +496,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** SCIPIO: Performs an exact, deep copy of the cart.
      * Changes to this copy do not affect the main cart. Added 2018-11-16. */
-    public ShoppingCart copyCart() {
+    public ShoppingCart exactCopy() {
         return new ShoppingCart(this, true);
     }
     

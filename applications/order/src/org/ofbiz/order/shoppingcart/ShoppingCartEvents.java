@@ -1166,12 +1166,6 @@ public class ShoppingCartEvents {
         return getCartObject(request, null, null);
     }
 
-    /** SCIPIO: Returns a deep copy of the main session cart (created if missing). 
-     * Changes to this copy do not affect the main cart. Added 2018-11-16. */
-    public static ShoppingCart getCartObjectCopy(HttpServletRequest request) {
-        return getCartObject(request, null, null).copyCart();
-    }
-
     /** SCIPIO: Returns an object which should be used to lock on whether modifying the cart.
      * Added 2018-11-20. */
     public static Object getCartLockObject(HttpServletRequest request) {

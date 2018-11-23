@@ -51,24 +51,24 @@ public class CartUpdate implements AutoCloseable {
     /**
      * Returns a modifiable cart instance derived from the current (request/session) cart, 
      * which may be committed if changes successful (using {@link #commit(ShoppingCart)}).
-     * This must ONLY be called inside a synchronized block that synchronizes
+     * <p>
+     * WARN: This must ONLY be called inside a synchronized block that synchronizes
      * on the object returned by {@link #getLockObject()}.
      */
     public ShoppingCart getCartForUpdate() {
-        // TODO
-        //return ShoppingCartEvents.getCartObjectCopy(request);
-        return ShoppingCartEvents.getCartObject(request);
+        return getCartForUpdate(ShoppingCartEvents.getCartObject(request));
     }
 
     /**
      * Returns a modifiable cart instance derived from the given cart,
      * which may be committed if changes successful (using {@link #commit(ShoppingCart)}).
-     * This must ONLY be called inside a synchronized block that synchronizes
+     * <p>
+     * WARN: This must ONLY be called inside a synchronized block that synchronizes
      * on the object returned by {@link #getLockObject()}.
      */
     public ShoppingCart getCartForUpdate(ShoppingCart cart) {
         // TODO
-        //return cart.copyCart();
+        //return cart.exactCopy();
         return cart;
     }
 

@@ -199,8 +199,7 @@ code package.
                                 </screenlet>
                             </widgets>
                         </section>
-                        
-                        
+
                         <!-- SCIPIO (11/14/2018): Added custom sections for PaymentGatewayConfigs that are defined from addons. 
                             If the addons are not present they won't be available.
                         -->
@@ -227,6 +226,19 @@ code package.
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigStripeRest}">
                                     <include-form name="EditPaymentGatewayStripeRest" location="component://stripe/widget/settings/PaymentGatewayConfigForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <not><if-empty field="paymentGatewayRedsysModelEntity"/></not>
+                                    <if-compare field="parameters.paymentGatewayConfigId" operator="equals" value="REDSYS_CFG"/>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigRedsys}">
+                                    <include-form name="EditPaymentGatewayRedsys" location="component://redsys/widget/settings/PaymentGatewayConfigForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>

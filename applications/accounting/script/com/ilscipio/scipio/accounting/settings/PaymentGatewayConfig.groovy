@@ -4,8 +4,7 @@ import org.ofbiz.base.util.Debug
 
 // Check if PaymentGatewayStripeRest entity exists
 paymentGatewayStripeRestModelEntity = delegator.getModelReader().getModelEntityNoCheck("PaymentGatewayStripeRest");
-if (paymentGatewayStripeRestModelEntity) {
-    Debug.log("paymentGatewayStripeRestModelEntity exists");
+if (paymentGatewayStripeRestModelEntity) {    
     paymentGatewayStripeRest = delegator.findOne("PaymentGatewayStripeRest", ["paymentGatewayConfigId" : parameters.paymentGatewayConfigId], false);
     context.paymentGatewayStripeRest = paymentGatewayStripeRest;
     context.paymentGatewayStripeRestModelEntity = paymentGatewayStripeRestModelEntity;    
@@ -17,4 +16,12 @@ if (paymentGatewayPayPalRestModelEntity) {
     paymentGatewayPayPalRest = delegator.findOne("PaymentGatewayPayPalRest", ["paymentGatewayConfigId" : parameters.paymentGatewayConfigId], false);
     context.paymentGatewayPayPalRest = paymentGatewayPayPalRest;
     context.paymentGatewayPayPalRestModelEntity = paymentGatewayPayPalRestModelEntity;
+}
+
+// Check if PaymentGatewayRedsys entity exists
+paymentGatewayRedsysModelEntity = delegator.getModelReader().getModelEntityNoCheck("PaymentGatewayRedsys");
+if (paymentGatewayRedsysModelEntity) {
+    paymentGatewayRedsys = delegator.findOne("PaymentGatewayRedsys", ["paymentGatewayConfigId" : parameters.paymentGatewayConfigId], false);
+    context.paymentGatewayRedsys = paymentGatewayRedsys;
+    context.paymentGatewayRedsysModelEntity = paymentGatewayRedsysModelEntity;
 }

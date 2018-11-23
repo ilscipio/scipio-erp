@@ -89,12 +89,15 @@ public class CartUpdate implements AutoCloseable {
      * problems.
      */
     private ShoppingCart makeCartForUpdate(ShoppingCart cart) {
+        /* TODO
         ShoppingCart newCart = cart.exactCopy();
         if (status.debug) {
             Debug.logInfo("Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
                 + " for update" + getLogSuffix(), module);
         }
         return newCart;
+        */
+        return cart;
     }
 
     /**

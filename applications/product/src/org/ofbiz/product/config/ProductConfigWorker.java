@@ -76,7 +76,9 @@ public final class ProductConfigWorker {
                                                          productId, productStoreId, catalogId, webSiteId,
                                                          currencyUomId, UtilHttp.getLocale(request),
                                                          autoUserLogin);
-                configWrapper = productConfigCache.putIfAbsentAndGet(cacheKey, new ProductConfigWrapper(configWrapper));
+                // SCIPIO: The wrapper copy must be created from the result, not before being put in
+                //configWrapper = productConfigCache.putIfAbsentAndGet(cacheKey, new ProductConfigWrapper(configWrapper));
+                configWrapper = new ProductConfigWrapper(productConfigCache.putIfAbsentAndGet(cacheKey, configWrapper));
             } else {
                 configWrapper = new ProductConfigWrapper(configWrapper);
             }
@@ -317,14 +319,14 @@ public final class ProductConfigWorker {
 
                                 if (match && (UtilValidate.isEmpty(configOptionProductOptions))) {
                                     configWrapper.configId = tempConfigId;
-                                    Debug.logInfo("Existing configuration found with configId:"+ tempConfigId,  module);
+                                    Debug.logInfo("Existing configuration found with configId: "+ tempConfigId,  module);
                                     return;
                                 }
                             }
 
                         } else {
                             configWrapper.configId = tempConfigId;
-                            Debug.logInfo("Existing configuration found with configId:"+ tempConfigId,  module);
+                            Debug.logInfo("Existing configuration found with configId: "+ tempConfigId,  module);
                             return;
                         }
                     }
@@ -401,7 +403,7 @@ public final class ProductConfigWorker {
 
         //save  configId to configWrapper, so we can use it in shopping cart operations
         configWrapper.configId = configId;
-        Debug.logInfo("New configId created:"+ configId,  module);
+        Debug.logInfo("New configId created: " + configId,  module);
         return;
     }
 

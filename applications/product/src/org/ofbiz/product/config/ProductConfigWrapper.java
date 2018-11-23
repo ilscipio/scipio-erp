@@ -200,6 +200,63 @@ public class ProductConfigWrapper implements Serializable {
         }
     }
 
+    /**
+     * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify {@link #exactCopy}.
+     * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
+     */
+    public void ensureExactEquals(ProductConfigWrapper other) {
+        try {
+            ensureExactEquals(this.dispatcher, other.dispatcher);
+            ensureExactEquals(this.dispatcherName, other.dispatcherName);
+            ensureExactEquals(this.productStoreId, other.productStoreId);
+            ensureExactEquals(this.catalogId, other.catalogId);
+            ensureExactEquals(this.webSiteId, other.webSiteId);
+            ensureExactEquals(this.currencyUomId, other.currencyUomId);
+            ensureExactEquals(this.delegator, other.delegator);
+            ensureExactEquals(this.delegatorName, other.delegatorName);
+            ensureExactEquals(this.product, other.product);
+            ensureExactEquals(this.autoUserLogin, other.autoUserLogin);
+            ensureExactEquals(this.listPrice, other.listPrice);
+            ensureExactEquals(this.basePrice, other.basePrice);
+            ensureExactEquals(this.defaultPrice, other.defaultPrice);
+            ensureExactEquals(this.configId, other.configId);
+            ensureExactEquals(this.questions, other.questions);
+        } catch(IllegalStateException e) {
+            throw new IllegalStateException("ProductConfigWrapper field not equal: " + e.getMessage(), e);
+        }
+    }
+
+    static void ensureExactEquals(Object first, Object second) {
+        if (first == null) {
+            if (second != null) {
+                throw new IllegalStateException("values not equal: " + first + ", " + second);
+            } else {
+                return;
+            }
+        }
+        if (!first.getClass().equals(second.getClass())) {
+            throw new IllegalStateException("values not equal: " + first + ", " + second);
+        }
+        if (first instanceof ConfigItem) {
+            ((ConfigItem) first).ensureExactEquals((ConfigItem) second);
+        } else if (first instanceof ConfigOption) {
+            ((ConfigOption) first).ensureExactEquals((ConfigOption) second);
+        } else if (first instanceof List) {
+            List<?> firstList = (List<?>) first;
+            List<?> secondList = (List<?>) second;
+            if (firstList.size() != secondList.size()) {
+                throw new IllegalStateException("values not equal: " + first + ", " + second);
+            }
+            for(int i=0; i<firstList.size(); i++) {
+                ensureExactEquals(firstList.get(i), secondList.get(i));
+            }
+        } else {
+            if (!first.equals(second)) {
+                throw new IllegalStateException("values not equal: " + first + ", " + second);
+            }
+        }
+    }
+
     public void loadConfig(Delegator delegator, String configId) throws Exception {
         //configure ProductConfigWrapper according to ProductConfigConfig entity
         if (UtilValidate.isNotEmpty(configId)) {
@@ -537,6 +594,22 @@ public class ProductConfigWrapper implements Serializable {
             content = ci.content; // SCIPIO: NOTE: The wrapper is immutable so no need to clone
         }
 
+        /**
+         * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify {@link #exactCopy}.
+         * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
+         */
+        void ensureExactEquals(ConfigItem other) {
+            try {
+                ProductConfigWrapper.ensureExactEquals(this.configItem, other.configItem);
+                ProductConfigWrapper.ensureExactEquals(this.configItemAssoc, other.configItemAssoc);
+                ProductConfigWrapper.ensureExactEquals(this.content, other.content);
+                ProductConfigWrapper.ensureExactEquals(this.options, other.options);
+                ProductConfigWrapper.ensureExactEquals(this.first, other.first);
+            } catch(IllegalStateException e) {
+                throw new IllegalStateException("ConfigItem field not equal: " + e.getMessage(), e);
+            }
+        }
+        
         public void setContent(Locale locale, String mimeTypeId) {
             content = new ProductConfigItemContentWrapper(dispatcher, configItem, locale, mimeTypeId);
         }
@@ -791,6 +864,27 @@ public class ProductConfigWrapper implements Serializable {
             selected = co.selected;
         }
 
+        /**
+         * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify {@link #exactCopy}.
+         * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
+         */
+        void ensureExactEquals(ConfigOption other) {
+            try {
+                ProductConfigWrapper.ensureExactEquals(this.optionListPrice, other.optionListPrice);
+                ProductConfigWrapper.ensureExactEquals(this.optionPrice, other.optionPrice);
+                ProductConfigWrapper.ensureExactEquals(this.availabilityDate, other.availabilityDate);
+                ProductConfigWrapper.ensureExactEquals(this.componentList, other.componentList);
+                ProductConfigWrapper.ensureExactEquals(this.componentOptions, other.componentOptions);
+                ProductConfigWrapper.ensureExactEquals(this.configOption, other.configOption);
+                ProductConfigWrapper.ensureExactEquals(this.selected, other.selected);
+                ProductConfigWrapper.ensureExactEquals(this.available, other.available);
+                ProductConfigWrapper.ensureExactEquals(this.parentConfigItem, other.parentConfigItem);
+                ProductConfigWrapper.ensureExactEquals(this.comments, other.comments);
+            } catch(IllegalStateException e) {
+                throw new IllegalStateException("ConfigOption field not equal: " + e.getMessage(), e);
+            }
+        }
+        
         public void recalculateOptionPrice(ProductConfigWrapper pcw) throws Exception {
             optionListPrice = BigDecimal.ZERO;
             optionPrice = BigDecimal.ZERO;

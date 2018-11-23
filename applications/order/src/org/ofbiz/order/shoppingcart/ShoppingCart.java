@@ -262,9 +262,26 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.contactMechIdsMap = new HashMap<>(cart.contactMechIdsMap);
             this.freeShippingProductPromoActions = new ArrayList<>(cart.freeShippingProductPromoActions);
             this.desiredAlternateGiftByAction = cart.getAllDesiredAlternateGiftByActionCopy();
+            
+            // clone the groups
+            this.itemGroupByNumberMap = copyItemGroupByNumberMap(exactCopy, cart.itemGroupByNumberMap);
+            // clone the items
+            Map<ShoppingCartItem, ShoppingCartItem> oldToNewItemMap = new HashMap<>();
+            List<ShoppingCartItem> cartLines = new ArrayList<>(); // SCIPIO: Use local var
+            for (ShoppingCartItem item : cart.items()) {
+                ShoppingCartItem newItem = new ShoppingCartItem(item, exactCopy, itemGroupByNumberMap);
+                cartLines.add(newItem);
+                oldToNewItemMap.put(item, newItem);
+            }
+            this.cartLines = cartLines;
+
             // SCIPIO: Replace it
             //this.productPromoUseInfoList.addAll(cart.productPromoUseInfoList);
-            this.productPromoUseInfoList = new ArrayList<>(cart.productPromoUseInfoList); // SCIPIO: NOTE: 2018-11-12: ProductPromoUseInfo now immutable, so no need for deep copy
+            List<ProductPromoUseInfo> productPromoUseInfoList = new ArrayList<>(cart.productPromoUseInfoList.size());
+            for(ProductPromoUseInfo ppui : cart.productPromoUseInfoList) {
+                productPromoUseInfoList.add(new ProductPromoUseInfo(ppui, exactCopy, oldToNewItemMap));
+            }
+            this.productPromoUseInfoList = productPromoUseInfoList;
             this.productPromoCodes = new HashSet<>(cart.productPromoCodes);
             this.locale = cart.locale;
             this.currencyUom = cart.currencyUom;
@@ -303,7 +320,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             
             List<CartShipInfo> shipInfo = new ArrayList<>();
             for(CartShipInfo csi : cart.shipInfo) {
-                shipInfo.add(new CartShipInfo(csi, exactCopy));
+                shipInfo.add(new CartShipInfo(csi, exactCopy, oldToNewItemMap));
             }
             this.shipInfo = shipInfo;
 
@@ -324,14 +341,6 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.autoUserLogin = cart.autoUserLogin;
             this.holdOrder = cart.holdOrder;
             this.orderDate = cart.orderDate;
-            // clone the groups
-            this.itemGroupByNumberMap = copyItemGroupByNumberMap(exactCopy, cart.itemGroupByNumberMap);
-            // clone the items
-            List<ShoppingCartItem> cartLines = new ArrayList<>(); // SCIPIO: Use local var
-            for (ShoppingCartItem item : cart.items()) {
-                cartLines.add(new ShoppingCartItem(item, exactCopy, itemGroupByNumberMap));
-            }
-            this.cartLines = cartLines;
             
             // SCIPIO: new fields
 
@@ -500,6 +509,146 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * Changes to this copy do not affect the main cart. Added 2018-11-16. */
     public ShoppingCart exactCopy() {
         return new ShoppingCart(this, true);
+    }
+    
+    /**
+     * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+     * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
+     */
+    void ensureExactEquals(ShoppingCart other) throws IllegalStateException {
+        try {
+            ShoppingCart.ensureExactEquals(this.orderType, other.orderType);
+            ShoppingCart.ensureExactEquals(this.channel, other.channel);
+            ShoppingCart.ensureExactEquals(this.poNumber, other.poNumber);
+            ShoppingCart.ensureExactEquals(this.orderId, other.orderId);
+            ShoppingCart.ensureExactEquals(this.orderName, other.orderName);
+            ShoppingCart.ensureExactEquals(this.orderStatusId, other.orderStatusId);
+            ShoppingCart.ensureExactEquals(this.orderStatusString, other.orderStatusString);
+            ShoppingCart.ensureExactEquals(this.firstAttemptOrderId, other.firstAttemptOrderId);
+            ShoppingCart.ensureExactEquals(this.externalId, other.externalId);
+            ShoppingCart.ensureExactEquals(this.internalCode, other.internalCode);
+            ShoppingCart.ensureExactEquals(this.billingAccountId, other.billingAccountId);
+            ShoppingCart.ensureExactEquals(this.billingAccountAmt, other.billingAccountAmt);
+            ShoppingCart.ensureExactEquals(this.agreementId, other.agreementId);
+            ShoppingCart.ensureExactEquals(this.quoteId, other.quoteId);
+            ShoppingCart.ensureExactEquals(this.workEffortId, other.workEffortId);
+            ShoppingCart.ensureExactEquals(this.nextItemSeq, other.nextItemSeq);
+            ShoppingCart.ensureExactEquals(this.defaultItemDeliveryDate, other.defaultItemDeliveryDate);
+            ShoppingCart.ensureExactEquals(this.defaultItemComment, other.defaultItemComment);
+            ShoppingCart.ensureExactEquals(this.orderAdditionalEmails, other.orderAdditionalEmails);
+            ShoppingCart.ensureExactEquals(this.viewCartOnAdd, other.viewCartOnAdd);
+            ShoppingCart.ensureExactEquals(this.readOnlyCart, other.readOnlyCart);
+            ShoppingCart.ensureExactEquals(this.lastListRestore, other.lastListRestore);
+            ShoppingCart.ensureExactEquals(this.autoSaveListId, other.autoSaveListId);
+            ShoppingCart.ensureExactEquals(this.adjustments, other.adjustments);
+            ShoppingCart.ensureExactEquals(this.orderTermSet, other.orderTermSet);
+            ShoppingCart.ensureExactEquals(this.orderTerms, other.orderTerms);
+            ShoppingCart.ensureExactEquals(this.cartLines, other.cartLines);
+            ShoppingCart.ensureExactEquals(this.itemGroupByNumberMap, other.itemGroupByNumberMap);
+            ShoppingCart.ensureExactEquals(this.nextGroupNumber, other.nextGroupNumber);
+            ShoppingCart.ensureExactEquals(this.paymentInfo, other.paymentInfo);
+            ShoppingCart.ensureExactEquals(this.shipInfo, other.shipInfo);
+            ShoppingCart.ensureExactEquals(this.contactMechIdsMap, other.contactMechIdsMap);
+            ShoppingCart.ensureExactEquals(this.orderAttributes, other.orderAttributes);
+            ShoppingCart.ensureExactEquals(this.attributes, other.attributes);
+            ShoppingCart.ensureExactEquals(this.internalOrderNotes, other.internalOrderNotes);
+            ShoppingCart.ensureExactEquals(this.orderNotes, other.orderNotes);
+            ShoppingCart.ensureExactEquals(this.additionalPartyRole, other.additionalPartyRole);
+            ShoppingCart.ensureExactEquals(this.defaultShipAfterDate, other.defaultShipAfterDate);
+            ShoppingCart.ensureExactEquals(this.defaultShipBeforeDate, other.defaultShipBeforeDate);
+            ShoppingCart.ensureExactEquals(this.productPromoUseInfoList, other.productPromoUseInfoList);
+            ShoppingCart.ensureExactEquals(this.productPromoCodes, other.productPromoCodes);
+            ShoppingCart.ensureExactEquals(this.freeShippingProductPromoActions, other.freeShippingProductPromoActions);
+            ShoppingCart.ensureExactEquals(this.desiredAlternateGiftByAction, other.desiredAlternateGiftByAction);
+            ShoppingCart.ensureExactEquals(this.cartCreatedTs, other.cartCreatedTs);
+            ShoppingCart.ensureExactEquals(this.delegator, other.delegator);
+            ShoppingCart.ensureExactEquals(this.delegatorName, other.delegatorName);
+            ShoppingCart.ensureExactEquals(this.productStoreId, other.productStoreId);
+            ShoppingCart.ensureExactEquals(this.doPromotions, other.doPromotions);
+            ShoppingCart.ensureExactEquals(this.transactionId, other.transactionId);
+            ShoppingCart.ensureExactEquals(this.facilityId, other.facilityId);
+            ShoppingCart.ensureExactEquals(this.webSiteId, other.webSiteId);
+            ShoppingCart.ensureExactEquals(this.terminalId, other.terminalId);
+            ShoppingCart.ensureExactEquals(this.autoOrderShoppingListId, other.autoOrderShoppingListId);
+            ShoppingCart.ensureExactEquals(this.orderPartyId, other.orderPartyId);
+            ShoppingCart.ensureExactEquals(this.placingCustomerPartyId, other.placingCustomerPartyId);
+            ShoppingCart.ensureExactEquals(this.billToCustomerPartyId, other.billToCustomerPartyId);
+            ShoppingCart.ensureExactEquals(this.shipToCustomerPartyId, other.shipToCustomerPartyId);
+            ShoppingCart.ensureExactEquals(this.endUserCustomerPartyId, other.endUserCustomerPartyId);
+            ShoppingCart.ensureExactEquals(this.billFromVendorPartyId, other.billFromVendorPartyId);
+            ShoppingCart.ensureExactEquals(this.shipFromVendorPartyId, other.shipFromVendorPartyId);
+            ShoppingCart.ensureExactEquals(this.supplierAgentPartyId, other.supplierAgentPartyId);
+            ShoppingCart.ensureExactEquals(this.userLogin, other.userLogin);
+            ShoppingCart.ensureExactEquals(this.autoUserLogin, other.autoUserLogin);
+            ShoppingCart.ensureExactEquals(this.locale, other.locale);
+            ShoppingCart.ensureExactEquals(this.currencyUom, other.currencyUom);
+            ShoppingCart.ensureExactEquals(this.holdOrder, other.holdOrder);
+            ShoppingCart.ensureExactEquals(this.orderDate, other.orderDate);
+            ShoppingCart.ensureExactEquals(this.cancelBackOrderDate, other.cancelBackOrderDate);
+            ShoppingCart.ensureExactEquals(this.allowMissingShipEstimates, other.allowMissingShipEstimates);
+        } catch(IllegalStateException e) {
+            throw new IllegalStateException("ShoppingCart field not equal: " + e.getMessage(), e);
+        }
+    }
+
+    static void ensureExactEquals(Object first, Object second) {
+        if (first == null) {
+            if (second != null) {
+                throw new IllegalStateException("values not equal: " + first + ", " + second);
+            } else {
+                return;
+            }
+        }
+        if (!first.getClass().equals(second.getClass())) {
+            throw new IllegalStateException("values not equal: " + first + " (" + first.getClass() + "), " 
+                    + second + " (" + second.getClass() + ")");
+        }
+        if (first instanceof ShoppingCartItem) {
+            ((ShoppingCartItem) first).ensureExactEquals((ShoppingCartItem) second);
+        } else if (first instanceof ShoppingCartItemGroup) {
+            ((ShoppingCartItemGroup) first).ensureExactEquals((ShoppingCartItemGroup) second);
+        } else if (first instanceof CartPaymentInfo) {
+            ((CartPaymentInfo) first).ensureExactEquals((CartPaymentInfo) second);
+        } else if (first instanceof CartShipInfo) {
+            ((CartShipInfo) first).ensureExactEquals((CartShipInfo) second);
+        } else if (first instanceof CartShipInfo.CartShipItemInfo) {
+            ((CartShipInfo.CartShipItemInfo) first).ensureExactEquals((CartShipInfo.CartShipItemInfo) second);
+        } else if (first instanceof ProductPromoUseInfo) {
+            ((ProductPromoUseInfo) first).ensureExactEquals((ProductPromoUseInfo) second);
+        } else if (first instanceof ProductConfigWrapper) {
+            ((ProductConfigWrapper) first).ensureExactEquals((ProductConfigWrapper) second);
+        } else if (first instanceof GenericValue) {
+            if (!first.equals(second)) {
+                throw new IllegalStateException("values not equal: " + first + ", " + second);
+            }
+        } else if (first instanceof Map) {
+            Map<?, ?> firstMap = (Map<?, ?>) first;
+            Map<?, ?> secondMap = (Map<?, ?>) second;
+            if (firstMap.size() != secondMap.size()) {
+                throw new IllegalStateException("values not equal: " + first + ", " + second);
+            }
+            for(Map.Entry<?, ?> entry : firstMap.entrySet()) {
+                if (entry.getKey() instanceof ShoppingCartItem) {
+                    // FIXME: can't verify this type of key because ShoppingCartItem is missing formal equals/hashcode
+                    continue;
+                }
+                ensureExactEquals(entry.getValue(), secondMap.get(entry.getKey()));
+            }
+        } else if (first instanceof List) {
+            List<?> firstList = (List<?>) first;
+            List<?> secondList = (List<?>) second;
+            if (firstList.size() != secondList.size()) {
+                throw new IllegalStateException("values not equal: " + first + ", " + second);
+            }
+            for(int i=0; i<firstList.size(); i++) {
+                ensureExactEquals(firstList.get(i), secondList.get(i));
+            }
+
+        } else {
+            if (!first.equals(second)) {
+                throw new IllegalStateException("values not equal: " + first + ", " + second);
+            }
+        }
     }
     
     public Delegator getDelegator() {
@@ -4785,6 +4934,20 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.parentGroup = parentGroup;
         }
 
+        /**
+         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+         * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
+         */
+        void ensureExactEquals(ShoppingCartItemGroup other) {
+            try {
+                ShoppingCart.ensureExactEquals(this.groupNumber, other.groupNumber);
+                ShoppingCart.ensureExactEquals(this.groupName, other.groupName);
+                ShoppingCart.ensureExactEquals(this.parentGroup, other.parentGroup);
+            } catch(IllegalStateException e) {
+                throw new IllegalStateException("ShoppingCartItemGroup field not equal: " + e.getMessage(), e);
+            }
+        }
+
         public String getGroupNumber() {
             return this.groupNumber;
         }
@@ -4842,12 +5005,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public static class ProductPromoUseInfo implements Serializable, Comparable<ProductPromoUseInfo> {
-        // SCIPIO: 2018-11-12: All fields now final and not public (no need for copies)
+        // SCIPIO: 2018-11-12: All fields now final and not public
         protected final String productPromoId;
         protected final String productPromoCodeId;
         protected final BigDecimal totalDiscountAmount; // = BigDecimal.ZERO
         protected final BigDecimal quantityLeftInActions; // = BigDecimal.ZERO
-        private final Map<ShoppingCartItem,BigDecimal> usageInfoMap;
+        private final Map<ShoppingCartItem, BigDecimal> usageInfoMap;
 
         public ProductPromoUseInfo(String productPromoId, String productPromoCodeId, BigDecimal totalDiscountAmount, BigDecimal quantityLeftInActions, Map<ShoppingCartItem,BigDecimal> usageInfoMap) {
             this.productPromoId = productPromoId;
@@ -4855,6 +5018,46 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.totalDiscountAmount = totalDiscountAmount;
             this.quantityLeftInActions = quantityLeftInActions;
             this.usageInfoMap = (usageInfoMap != null) ? Collections.unmodifiableMap(usageInfoMap) : null; // SCIPIO: unmodifiableMap
+        }
+
+        /**
+         * SCIPIO: Copy constructor.
+         */
+        public ProductPromoUseInfo(ProductPromoUseInfo other, boolean exactCopy, Map<ShoppingCartItem, ShoppingCartItem> oldToNewItemMap) {
+            this.productPromoId = other.productPromoId;
+            this.productPromoCodeId = other.productPromoCodeId;
+            this.totalDiscountAmount = other.totalDiscountAmount;
+            this.quantityLeftInActions = other.quantityLeftInActions;
+            Map<ShoppingCartItem, BigDecimal> usageInfoMap = null;
+            if (other.usageInfoMap != null) {
+                usageInfoMap = new HashMap<>();
+                for(Map.Entry<ShoppingCartItem, BigDecimal> entry : other.usageInfoMap.entrySet()) {
+                    ShoppingCartItem newItem = oldToNewItemMap.get(entry.getKey());
+                    if (newItem == null) {
+                        Debug.logError("ShoppingCartItem " + entry.getKey() + " was not cloned properly", module);
+                        continue;
+                    }
+                    usageInfoMap.put(newItem, entry.getValue());
+                }
+                usageInfoMap = Collections.unmodifiableMap(usageInfoMap);
+            }
+            this.usageInfoMap = usageInfoMap;
+        }
+
+        /**
+         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+         * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
+         */
+        void ensureExactEquals(ProductPromoUseInfo other) {
+            try {
+                ShoppingCart.ensureExactEquals(this.productPromoId, other.productPromoId);
+                ShoppingCart.ensureExactEquals(this.productPromoCodeId, other.productPromoCodeId);
+                ShoppingCart.ensureExactEquals(this.totalDiscountAmount, other.totalDiscountAmount);
+                ShoppingCart.ensureExactEquals(this.quantityLeftInActions, other.quantityLeftInActions);
+                ShoppingCart.ensureExactEquals(this.usageInfoMap, other.usageInfoMap);
+            } catch(IllegalStateException e) {
+                throw new IllegalStateException("ProductPromoUseInfo field not equal: " + e.getMessage(), e);
+            }
         }
 
         public String getProductPromoId() { return this.productPromoId; }
@@ -4937,9 +5140,22 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         /**
          * SCIPIO: Copy constructor.
          */
-        public CartShipInfo(CartShipInfo other, boolean exactCopy) {
-            this.shipItemInfo = other.shipItemInfo;
-            this.shipTaxAdj = other.shipTaxAdj;
+        public CartShipInfo(CartShipInfo other, boolean exactCopy, Map<ShoppingCartItem, ShoppingCartItem> oldToNewItemMap) {
+            Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo = new HashMap<>();
+            for(Map.Entry<ShoppingCartItem, CartShipItemInfo> entry : shipItemInfo.entrySet()) {
+                ShoppingCartItem newItem = oldToNewItemMap.get(entry.getKey());
+                if (newItem == null) {
+                    Debug.logError("ShoppingCartItem " + entry.getKey() + " was not cloned properly", module);
+                    continue;
+                }
+                if (entry.getValue() == null) {
+                    shipItemInfo.put(newItem, null);
+                } else {
+                    shipItemInfo.put(newItem, new CartShipItemInfo(entry.getValue(), exactCopy, newItem));
+                }
+            }
+            this.shipItemInfo = shipItemInfo;
+            this.shipTaxAdj = new ArrayList<>(other.shipTaxAdj);
             this.orderTypeId = other.orderTypeId;
             this.internalContactMechId = other.internalContactMechId;
             this.telecomContactMechId = other.telecomContactMechId;
@@ -4962,6 +5178,39 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.attributes = other.attributes;
         }
 
+        /**
+         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+         * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
+         */
+        void ensureExactEquals(CartShipInfo other) {
+            try {
+                ShoppingCart.ensureExactEquals(this.shipItemInfo, other.shipItemInfo);
+                ShoppingCart.ensureExactEquals(this.shipTaxAdj, other.shipTaxAdj);
+                ShoppingCart.ensureExactEquals(this.orderTypeId, other.orderTypeId);
+                ShoppingCart.ensureExactEquals(this.internalContactMechId, other.internalContactMechId);
+                ShoppingCart.ensureExactEquals(this.telecomContactMechId, other.telecomContactMechId);
+                ShoppingCart.ensureExactEquals(this.shipmentMethodTypeId, other.shipmentMethodTypeId);
+                ShoppingCart.ensureExactEquals(this.supplierPartyId, other.supplierPartyId);
+                ShoppingCart.ensureExactEquals(this.carrierRoleTypeId, other.carrierRoleTypeId);
+                ShoppingCart.ensureExactEquals(this.carrierPartyId, other.carrierPartyId);
+                ShoppingCart.ensureExactEquals(this.facilityId, other.facilityId);
+                ShoppingCart.ensureExactEquals(this.giftMessage, other.giftMessage);
+                ShoppingCart.ensureExactEquals(this.shippingInstructions, other.shippingInstructions);
+                ShoppingCart.ensureExactEquals(this.maySplit, other.maySplit);
+                ShoppingCart.ensureExactEquals(this.isGift, other.isGift);
+                ShoppingCart.ensureExactEquals(this.shipEstimate, other.shipEstimate);
+                ShoppingCart.ensureExactEquals(this.shipBeforeDate, other.shipBeforeDate);
+                ShoppingCart.ensureExactEquals(this.shipAfterDate, other.shipAfterDate);
+                ShoppingCart.ensureExactEquals(this.shipGroupSeqId, other.shipGroupSeqId);
+                ShoppingCart.ensureExactEquals(this.associatedShipGroupSeqId, other.associatedShipGroupSeqId);
+                ShoppingCart.ensureExactEquals(this.vendorPartyId, other.vendorPartyId);
+                ShoppingCart.ensureExactEquals(this.productStoreShipMethId, other.productStoreShipMethId);
+                ShoppingCart.ensureExactEquals(this.attributes, other.attributes);
+            } catch(IllegalStateException e) {
+                throw new IllegalStateException("CartShipInfo field not equal: " + e.getMessage(), e);
+            }
+        }
+        
         public void setAttribute(String name, Object value) {
             this.attributes.put(name, value);
         }
@@ -5244,9 +5493,42 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
 
         public static class CartShipItemInfo implements Serializable {
-            public List<GenericValue> itemTaxAdj = new ArrayList<>();
-            public ShoppingCartItem item = null;
-            public BigDecimal quantity = BigDecimal.ZERO;
+            // SCIPIO: 2018-11-23: Defaults moved to constructor
+            public List<GenericValue> itemTaxAdj;
+            public ShoppingCartItem item;
+            public BigDecimal quantity;
+
+            /**
+             * SCIPIO: Default constructor.
+             */
+            public CartShipItemInfo() {
+                this.itemTaxAdj = new ArrayList<>();
+                this.item = null;
+                this.quantity = BigDecimal.ZERO;
+            }
+
+            /**
+             * SCIPIO: Copy constructor.
+             */
+            public CartShipItemInfo(CartShipItemInfo other, boolean exactCopy, ShoppingCartItem parentItem) {
+                this.itemTaxAdj = new ArrayList<>(other.itemTaxAdj);
+                this.item = (parentItem != null) ? parentItem : other.item;
+                this.quantity = other.quantity;
+            }
+
+            /**
+             * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+             * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
+             */
+            void ensureExactEquals(CartShipItemInfo other) {
+                try {
+                    ShoppingCart.ensureExactEquals(this.itemTaxAdj, other.itemTaxAdj);
+                    ShoppingCart.ensureExactEquals(this.item, other.item);
+                    ShoppingCart.ensureExactEquals(this.quantity, other.quantity);
+                } catch(IllegalStateException e) {
+                    throw new IllegalStateException("CartShipItemInfo field not equal: " + e.getMessage(), e);
+                }
+            }
 
             public BigDecimal getItemTax(ShoppingCart cart) {
                 BigDecimal itemTax = BigDecimal.ZERO;
@@ -5319,6 +5601,31 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.origAmount = other.origAmount;
         }
 
+        /**
+         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+         * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
+         */
+        void ensureExactEquals(CartPaymentInfo other) {
+            try {
+                ShoppingCart.ensureExactEquals(this.paymentMethodTypeId, other.paymentMethodTypeId);
+                ShoppingCart.ensureExactEquals(this.paymentMethodId, other.paymentMethodId);
+                ShoppingCart.ensureExactEquals(this.finAccountId, other.finAccountId);
+                ShoppingCart.ensureExactEquals(this.securityCode, other.securityCode);
+                ShoppingCart.ensureExactEquals(this.postalCode, other.postalCode);
+                ShoppingCart.ensureExactEquals(this.refNum, other.refNum);
+                ShoppingCart.ensureExactEquals(this.track2, other.track2);
+                ShoppingCart.ensureExactEquals(this.partyId, other.partyId);
+                ShoppingCart.ensureExactEquals(this.amount, other.amount);
+                ShoppingCart.ensureExactEquals(this.singleUse, other.singleUse);
+                ShoppingCart.ensureExactEquals(this.isPresent, other.isPresent);
+                ShoppingCart.ensureExactEquals(this.isSwiped, other.isSwiped);
+                ShoppingCart.ensureExactEquals(this.overflow, other.overflow);
+                ShoppingCart.ensureExactEquals(this.origAmount, other.origAmount);
+            } catch(IllegalStateException e) {
+                throw new IllegalStateException("CartPaymentInfo field not equal: " + e.getMessage(), e);
+            }
+        }
+        
         public GenericValue getValueObject(Delegator delegator) {
             String entityName = null;
             Map<String, String> lookupFields = null;

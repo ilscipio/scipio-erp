@@ -97,8 +97,14 @@ public class CartUpdate implements AutoCloseable {
         }
         ShoppingCart newCart = cart.exactCopy();
         if (status.debug) {
-            Debug.logInfo("Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
+            try {
+                newCart.ensureExactEquals(cart);
+                Debug.logInfo("Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
                 + " for update" + getLogSuffix(), module);
+            } catch(IllegalStateException e) {
+                Debug.logError(e, "Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
+                + " for update, but differences encountered (see previous) - please report this issue" + getLogSuffix(), module);
+            }
         }
         return newCart;
     }

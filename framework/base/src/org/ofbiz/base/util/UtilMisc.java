@@ -1366,4 +1366,15 @@ public final class UtilMisc {
         }
         return true;
     }
+    
+    /**
+     * SCIPIO: If the given list is not already an ArrayList, creates a copy as an ArrayList.
+     * Added 2018-11-23.
+     */
+    public static <T> List<T> asArrayList(List<T> list) {
+        if (list instanceof ArrayList || list == null) {
+            return list;
+        }
+        return new ArrayList<>(list);
+    }
 }

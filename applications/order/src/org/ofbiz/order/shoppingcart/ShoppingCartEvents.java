@@ -1297,7 +1297,7 @@ public class ShoppingCartEvents {
             modifyCart = false;
             try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
             synchronized (cartUpdate.getLockObject()) {
-            ShoppingCart newCart = cartUpdate.getCartForUpdate();
+            cart = cartUpdate.getCartForUpdate();
             
             // if we just logged in set the UL
             if (cart.getUserLogin() == null) {
@@ -1336,7 +1336,7 @@ public class ShoppingCartEvents {
             }
             
             if (modifyCart) {
-                cart = cartUpdate.commit(newCart); // SCIPIO
+                cart = cartUpdate.commit(cart); // SCIPIO
             }
             }
             }

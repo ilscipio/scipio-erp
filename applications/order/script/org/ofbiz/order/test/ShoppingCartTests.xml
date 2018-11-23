@@ -246,6 +246,9 @@ code package.
         <!-- Shopping Cart Make all ShipGroupInfos -->
         <call-object-method method-name="makeAllShipGroupInfos" obj-field="shoppingCart"/>
 
+        <call-simple-method method-name="testCartCopy"/><!-- SCIPIO -->
+        <check-errors/>
+
         <!-- Shopping Cart checkout and create order -->
         <script>groovy:
             checkOutHelper = new org.ofbiz.order.shoppingcart.CheckOutHelper(dispatcher, delegator, shoppingCart);
@@ -257,7 +260,6 @@ code package.
         <call-object-method method-name="clear" obj-field="shoppingCart"/>
 
         <field-to-result field="parameters.orderMap" result-name="orderMap"/>
-
     </simple-method>
 
     <simple-method method-name="testCreateOrderRentalProduct" short-description="Test create order rental of product" login-required="false">
@@ -352,6 +354,9 @@ code package.
         <call-object-method method-name="setDefaultCheckoutOptions" obj-field="shoppingCart">
             <field field="dispatcher" type="org.ofbiz.service.LocalDispatcher"/>
         </call-object-method>
+
+        <call-simple-method method-name="testCartCopy"/><!-- SCIPIO -->
+        <check-errors/>
 
         <!-- Create order -->
         <create-object class-name="org.ofbiz.order.shoppingcart.CheckOutHelper" field="checkOutHelper">
@@ -473,6 +478,9 @@ code package.
         <call-object-method method-name="setDefaultCheckoutOptions" obj-field="shoppingCart">
             <field field="dispatcher" type="org.ofbiz.service.LocalDispatcher"/>
         </call-object-method>
+        
+        <call-simple-method method-name="testCartCopy"/><!-- SCIPIO -->
+        <check-errors/>
 
         <create-object class-name="org.ofbiz.order.shoppingcart.CheckOutHelper" field="checkOutHelper">
             <field field="dispatcher" type="org.ofbiz.service.LocalDispatcher"/>
@@ -572,6 +580,9 @@ code package.
         <set field="expected" value="165.00" type="BigDecimal"/>
         <call-object-method obj-field="shoppingCart" method-name="getGrandTotal" ret-field="grandTotal"/>
         <assert><if-compare-field operator="equals" field="grandTotal" to-field="expected"/></assert>
+        <check-errors/>
+
+        <call-simple-method method-name="testCartCopy"/><!-- SCIPIO -->
         <check-errors/>
     </simple-method>
 
@@ -742,4 +753,27 @@ code package.
         <check-errors/>
     </simple-method>
 
+    <!-- SCIPIO: Run at the end of each test to validate the cart clone functionality -->
+    <simple-method method-name="testCartCopy" login-required="false">
+        <set field="testCartCopyErr" value="" set-if-null="true"/>
+        <script lang="groovy"><![CDATA[
+            shoppingCart = context.shoppingCart;
+            if (shoppingCart != null) {
+                newCart = shoppingCart.exactCopy();
+                try {
+                    newCart.ensureExactEquals(shoppingCart);
+                } catch(IllegalStateException e) {
+                    testCartCopyErr = e.getMessage();
+                }
+            }
+        ]]></script>
+        <if-not-empty field="testCartCopyErr">
+            <log level="error" message="Cart copy failed: ${testCartCopyErr}"/>
+            <assert><if-empty field="testCartCopyErr"/></assert>
+            <check-errors/>
+            <else>
+                <log level="info" message="Cart copy succeeded"/>
+            </else>
+        </if-not-empty>
+    </simple-method>
 </simple-methods>

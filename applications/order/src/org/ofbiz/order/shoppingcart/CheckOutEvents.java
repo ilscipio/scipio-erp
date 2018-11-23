@@ -611,12 +611,17 @@ public class CheckOutEvents {
                 singleUsePayments, billingAccountId, shippingInstructions,
                 orderAdditionalEmails, maySplit, giftMessage, isGift, internalCode, shipBeforeDate, shipAfterDate);
         
+        // SCIPIO: TODO: REVIEW: for now we have to commit cart even if error,
+        // because setCheckOutOptions partial update with error is relied on by some screens;
+        // in theory it belongs below...
+        cartUpdate.commit(cart); // SCIPIO
+        
         ServiceUtil.getMessages(request, optResult, null);
         if (ServiceUtil.isError(optResult)) {
             return "error";
         }
 
-        cartUpdate.commit(cart); // SCIPIO
+        //cartUpdate.commit(cart); // SCIPIO
         }
         }
         return "success";

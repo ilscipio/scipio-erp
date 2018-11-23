@@ -24,6 +24,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -619,34 +620,44 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             ((ProductConfigWrapper) first).ensureExactEquals((ProductConfigWrapper) second);
         } else if (first instanceof GenericValue) {
             if (!first.equals(second)) {
-                throw new IllegalStateException("values not equal: " + first + ", " + second);
+                throw new IllegalStateException("GenericValues not equal: " + first + ", " + second);
             }
         } else if (first instanceof Map) {
             Map<?, ?> firstMap = (Map<?, ?>) first;
             Map<?, ?> secondMap = (Map<?, ?>) second;
             if (firstMap.size() != secondMap.size()) {
-                throw new IllegalStateException("values not equal: " + first + ", " + second);
+                throw new IllegalStateException("Maps not equal: " + first + ", " + second);
             }
+            boolean comparable = true;
             for(Map.Entry<?, ?> entry : firstMap.entrySet()) {
                 if (entry.getKey() instanceof ShoppingCartItem) {
                     // FIXME: can't verify this type of key because ShoppingCartItem is missing formal equals/hashcode
+                    comparable = false;
                     continue;
                 }
                 ensureExactEquals(entry.getValue(), secondMap.get(entry.getKey()));
+            }
+            if (comparable) {
+                if (!first.equals(second)) { // WARN: This may break on new fields
+                    throw new IllegalStateException("Maps not equal: " + first + ", " + second);
+                }
             }
         } else if (first instanceof List) {
             List<?> firstList = (List<?>) first;
             List<?> secondList = (List<?>) second;
             if (firstList.size() != secondList.size()) {
-                throw new IllegalStateException("values not equal: " + first + ", " + second);
+                throw new IllegalStateException("Lists not equal: " + first + ", " + second);
             }
             for(int i=0; i<firstList.size(); i++) {
                 ensureExactEquals(firstList.get(i), secondList.get(i));
             }
-
+        } else if (first.getClass().isArray()) {
+            if (!Arrays.equals((Object[]) first, (Object[]) second)) {
+                throw new IllegalStateException("Arrays not equal: " + first + ", " + second);
+            }
         } else {
             if (!first.equals(second)) {
-                throw new IllegalStateException("values not equal: " + first + ", " + second);
+                throw new IllegalStateException("Values not equal: " + first + ", " + second);
             }
         }
     }
@@ -5142,7 +5153,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
          */
         public CartShipInfo(CartShipInfo other, boolean exactCopy, Map<ShoppingCartItem, ShoppingCartItem> oldToNewItemMap) {
             Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo = new HashMap<>();
-            for(Map.Entry<ShoppingCartItem, CartShipItemInfo> entry : shipItemInfo.entrySet()) {
+            for(Map.Entry<ShoppingCartItem, CartShipItemInfo> entry : other.shipItemInfo.entrySet()) {
                 ShoppingCartItem newItem = oldToNewItemMap.get(entry.getKey());
                 if (newItem == null) {
                     Debug.logError("ShoppingCartItem " + entry.getKey() + " was not cloned properly", module);

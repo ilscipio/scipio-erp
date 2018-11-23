@@ -103,7 +103,7 @@ public class CartUpdate implements AutoCloseable {
                 + " for update" + getLogSuffix(), module);
             } catch(IllegalStateException e) {
                 Debug.logError(e, "Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
-                + " for update, but differences encountered (see previous) - please report this issue" + getLogSuffix(), module);
+                + " for update, but differences encountered - please report this issue" + getLogSuffix(), module);
             }
         }
         return newCart;

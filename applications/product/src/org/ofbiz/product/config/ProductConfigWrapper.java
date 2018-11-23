@@ -22,6 +22,7 @@ package org.ofbiz.product.config;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -235,24 +236,45 @@ public class ProductConfigWrapper implements Serializable {
             }
         }
         if (!first.getClass().equals(second.getClass())) {
-            throw new IllegalStateException("values not equal: " + first + ", " + second);
+            throw new IllegalStateException("values not equal: " + first + " (" + first.getClass() + "), " 
+                    + second + " (" + second.getClass() + ")");
         }
         if (first instanceof ConfigItem) {
             ((ConfigItem) first).ensureExactEquals((ConfigItem) second);
         } else if (first instanceof ConfigOption) {
             ((ConfigOption) first).ensureExactEquals((ConfigOption) second);
+        } else if (first instanceof GenericValue) {
+            if (!first.equals(second)) {
+                throw new IllegalStateException("GenericValues not equal: " + first + ", " + second);
+            }
+        } else if (first instanceof Map) {
+            Map<?, ?> firstMap = (Map<?, ?>) first;
+            Map<?, ?> secondMap = (Map<?, ?>) second;
+            if (firstMap.size() != secondMap.size()) {
+                throw new IllegalStateException("Maps not equal: " + first + ", " + second);
+            }
+            for(Map.Entry<?, ?> entry : firstMap.entrySet()) {
+                ensureExactEquals(entry.getValue(), secondMap.get(entry.getKey()));
+            }
+            if (!first.equals(second)) { // WARN: This may break on new fields
+                throw new IllegalStateException("Maps not equal: " + first + ", " + second);
+            }
         } else if (first instanceof List) {
             List<?> firstList = (List<?>) first;
             List<?> secondList = (List<?>) second;
             if (firstList.size() != secondList.size()) {
-                throw new IllegalStateException("values not equal: " + first + ", " + second);
+                throw new IllegalStateException("Lists not equal: " + first + ", " + second);
             }
             for(int i=0; i<firstList.size(); i++) {
                 ensureExactEquals(firstList.get(i), secondList.get(i));
             }
+        } else if (first.getClass().isArray()) {
+            if (!Arrays.equals((Object[]) first, (Object[]) second)) {
+                throw new IllegalStateException("Arrays not equal: " + first + ", " + second);
+            }
         } else {
             if (!first.equals(second)) {
-                throw new IllegalStateException("values not equal: " + first + ", " + second);
+                throw new IllegalStateException("Values not equal: " + first + ", " + second);
             }
         }
     }

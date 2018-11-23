@@ -11179,6 +11179,12 @@
     <property key="AccountingPayWithStripe">
         <value xml:lang="en">Stripe</value>
     </property>
+    <property key="AccountingPayWithRedsys">
+        <value xml:lang="de">Kreditkarte (Redsys)</value>
+        <value xml:lang="en">Credit Card (Redsys)</value>
+        <value xml:lang="es">Tarjeta de crédito (Redsys)</value>
+        <value xml:lang="fr">Carte de crédit (Redsys)</value>    
+    </property>
     <property key="AccountingPIN">
         <value xml:lang="ar">الرمز السري</value>
         <value xml:lang="de">PIN</value>
@@ -24335,15 +24341,24 @@
         <value xml:lang="ja">PayPalREST支払ゲートウェイ設定を更新</value>
         <value xml:lang="pt">Atualizar configuração do Gateway de Pagamento PayPal REST</value>
     </property>
-    <property key="PageTitleUpdatePaymentGatewayConfigSagePay">
-        <value xml:lang="de">Bezahl-Schnittstelle SagePay aktualisieren</value>
-        <value xml:lang="en">Update Payment Gateway Config SagePay</value>
-        <value xml:lang="fr">Mise à jour de la configuration de l'interface de paiement SagePay</value>
-        <value xml:lang="ja">SagePay支払ゲートウェイ設定を更新</value>
-        <value xml:lang="pt">Atualizar configuração do Gateway de Pagamento SagePay</value>
-        <value xml:lang="vi">Sửa đổi cấu hình Cổng thanh toán SagePay</value>
-        <value xml:lang="zh">更新SagePay支付网关配置</value>
-        <value xml:lang="zh-TW">更新SagePay的支付閘道配置</value>
+    <property key="PageTitleUpdatePaymentGatewayConfigPayPalRest">
+        <value xml:lang="de">Bezahl-Schnittstelle PayPal REST aktualisieren</value>
+        <value xml:lang="en">Update Payment Gateway Config PayPal REST</value>
+        <value xml:lang="fr">Mise à jour de la configuration de l'interface de paiement PayPal REST</value>
+        <value xml:lang="hi-IN">भुगतान गेटवे विन्यास PayPal REST उन्नत करे</value>
+        <value xml:lang="it">Aggiorna configurazione gateway pagamento PayPal REST</value>
+        <value xml:lang="ja">PayPalREST支払ゲートウェイ設定を更新</value>
+        <value xml:lang="pt">Atualizar configuração do Gateway de Pagamento PayPal REST</value>
+    </property>    
+    <property key="PageTitleUpdatePaymentGatewayConfigRedsys">
+        <value xml:lang="de">Bezahl-Schnittstelle Redsys aktualisieren</value>
+        <value xml:lang="en">Update Payment Gateway Config Redsys</value>
+        <value xml:lang="fr">Mise à jour de la configuration de l'interface de paiement Redsys</value>
+        <value xml:lang="ja">Redsys支払ゲートウェイ設定を更新</value>
+        <value xml:lang="pt">Atualizar configuração do Gateway de Pagamento Redsys</value>
+        <value xml:lang="vi">Sửa đổi cấu hình Cổng thanh toán Redsys</value>
+         <value xml:lang="zh">更新Redsys支付网关配置</value>
+        <value xml:lang="zh-TW">更新Redsys支付閘道配置</value>        
     </property>
     <property key="PageTitleUpdatePaymentGatewayConfigSecurePay">
         <value xml:lang="de">Bezahl-Schnittstelle SecurePay aktualisieren</value>

@@ -124,6 +124,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             SUCCESS_MESSAGE, SUCCESS_MESSAGE_LIST
     );
 
+    /**
+     * SCIPIO: List of the common system response field keys returnable in service results, as a (Hash)Set.
+     * Added 2018-11-23.
+     */
+    public static final Set<String> SYS_RESPONSE_FIELDS_SET = UtilMisc.unmodifiableHashSetCopy(SYS_RESPONSE_FIELDS);
+
     public static final String resource = "ServiceErrorUiLabels";
 
     // SCIPIO: new 2017-09-13

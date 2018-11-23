@@ -384,7 +384,7 @@ public class ServiceEventHandler implements EventHandler {
 
             // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...)
             // or because the service is just a direct DB operation
-            if (responseString.equals(ModelService.RESPOND_SUCCESS) && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_LIST_"))
+            if (ModelService.RESPOND_SUCCESS.equals(responseString) && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_LIST_"))
                     && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_"))) {
                 request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale));
 
@@ -395,9 +395,11 @@ public class ServiceEventHandler implements EventHandler {
                 String resultKey = rme.getKey();
                 Object resultValue = rme.getValue();
 
-                if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
-                        !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
-                        !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+                // SCIPIO: This is ridiculous
+                //if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
+                //        !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
+                //        !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+                if (resultKey != null && !ModelService.SYS_RESPONSE_FIELDS_SET.contains(resultKey)) {
                     request.setAttribute(resultKey, resultValue);
                 }
             }

@@ -900,7 +900,8 @@ public class ProductConfigWrapper implements Serializable {
                 ProductConfigWrapper.ensureExactEquals(this.configOption, other.configOption);
                 ProductConfigWrapper.ensureExactEquals(this.selected, other.selected);
                 ProductConfigWrapper.ensureExactEquals(this.available, other.available);
-                ProductConfigWrapper.ensureExactEquals(this.parentConfigItem, other.parentConfigItem);
+                // Skip, otherwise endless loop
+                //ProductConfigWrapper.ensureExactEquals(this.parentConfigItem, other.parentConfigItem);
                 ProductConfigWrapper.ensureExactEquals(this.comments, other.comments);
             } catch(IllegalStateException e) {
                 throw new IllegalStateException("ConfigOption field not equal: " + e.getMessage(), e);

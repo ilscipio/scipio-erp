@@ -343,7 +343,8 @@ public class ServiceEventHandler implements EventHandler {
                 result = dispatcher.runSync(serviceName, serviceContext);
             }
             */
-            result = invokeService(dispatcher, model, serviceName, serviceContext, mode);
+            result = invokeService(dispatcher, model, serviceName, serviceContext, mode,
+                    event, requestMap, request, response);
         } catch (ServiceAuthException e) {
             // not logging since the service engine already did
             request.setAttribute("_ERROR_MESSAGE_", e.getNonNestedMessage());
@@ -414,7 +415,8 @@ public class ServiceEventHandler implements EventHandler {
      * Refactored from {@link #invoke(Event, RequestMap, HttpServletRequest, HttpServletResponse)}.
      * Added 2018-11-23.
      */
-    protected Map<String, Object> invokeService(LocalDispatcher dispatcher, ModelService modelService, String serviceName, Map<String, Object> serviceContext, String mode) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+    protected Map<String, Object> invokeService(LocalDispatcher dispatcher, ModelService modelService, String serviceName, Map<String, Object> serviceContext, String mode,
+            Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         Map<String, Object> result = null;
         if (ASYNC.equalsIgnoreCase(mode)) {
             dispatcher.runAsync(serviceName, serviceContext);

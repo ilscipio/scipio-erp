@@ -28,6 +28,7 @@ import java.net.URL;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -63,10 +64,12 @@ import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
+import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
 import org.ofbiz.webapp.event.EventFactory;
 import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
+import org.ofbiz.webapp.event.EventHandlerWrapper;
 import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.view.ViewFactory;
@@ -986,8 +989,33 @@ public class RequestHandler {
     private String runEventImpl(HttpServletRequest request, HttpServletResponse response, List<ConfigXMLReader.ValueExpr> synchronizeExprList, int synchronizeObjIndex, // SCIPIO
             ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
         if (synchronizeExprList == null || synchronizeObjIndex >= synchronizeExprList.size()) {
-            // SCIPIO: stock case
-            EventHandler eventHandler = eventFactory.getEventHandler(event.type);
+            final EventHandler eventHandler = eventFactory.getEventHandler(event.type);
+            final List<EventHandlerWrapper> wrapperList = eventFactory.getEventHandlerWrappersForTrigger(trigger);
+            if (UtilValidate.isNotEmpty(wrapperList)) {
+                Iterator<EventHandlerWrapper> handlers = new DelegatingEventWrapper() {
+                    private int index = 0;
+                    @Override
+                    public boolean hasNext() {
+                        return (index < wrapperList.size());
+                    }
+                    @Override
+                    public EventHandlerWrapper next() {
+                        if (index < wrapperList.size()) {
+                            return wrapperList.get(index++);
+                        }
+                        return this;
+                    }
+                    @Override
+                    public void init(ServletContext context) throws EventHandlerException {
+                    }
+                    @Override
+                    public String invoke(Iterator<EventHandlerWrapper> handlers, Event event, RequestMap requestMap,
+                            HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+                        return eventHandler.invoke(event, requestMap, request, response);
+                    }
+                };
+                return handlers.next().invoke(handlers, event, requestMap, request, response);
+            }
             return eventHandler.invoke(event, requestMap, request, response);
         } else {
             Object synchronizeObj = synchronizeExprList.get(synchronizeObjIndex).getValue(request, response);
@@ -1001,7 +1029,11 @@ public class RequestHandler {
             }
         }
     }
-
+    
+    private static interface DelegatingEventWrapper extends Iterator<EventHandlerWrapper>, EventHandlerWrapper { // SCIPIO
+    }
+    
+    
     /** Returns the default error page for this request. */
     public String getDefaultErrorPage(HttpServletRequest request) {
         String errorpage = null;

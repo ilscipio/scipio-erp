@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -338,6 +340,7 @@ public class ConfigXMLReader {
         protected final Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
         protected final List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
         protected final String defaultViewLastView; // SCIPIO: added 2018-10-26
+        protected final Map<String, EventHandlerWrapperDef> eventHandlerWrapperMap; // SCIPIO: added 2018-11-23
 
         // SCIPIO: DEV NOTE:
         // If you add any members to this class, make sure to reflect it in ResolvedControllerConfig further below!
@@ -373,6 +376,7 @@ public class ConfigXMLReader {
             protected Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
             protected List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
             protected String defaultViewLastView; // SCIPIO: added 2018-10-26
+            protected Map<String, EventHandlerWrapperDef> eventHandlerWrapperMap = new LinkedHashMap<>(); // SCIPIO: added 2018-11-23
         }
 
         public ControllerConfig(URL url) throws WebAppConfigurationException {
@@ -422,6 +426,7 @@ public class ConfigXMLReader {
             this.allowViewSaveDefault = builder.allowViewSaveDefault;
             this.allowViewSaveViewNameFilters = builder.allowViewSaveViewNameFilters;
             this.defaultViewLastView = builder.defaultViewLastView;
+            this.eventHandlerWrapperMap = builder.eventHandlerWrapperMap;
         }
 
         /**
@@ -458,6 +463,7 @@ public class ConfigXMLReader {
                 this.allowViewSaveDefault = srcConfig.getAllowViewSaveDefault(); // SCIPIO: added 2018-06-13
                 this.allowViewSaveViewNameFilters = getOptList(srcConfig.getAllowViewSaveViewNameFilters()); // SCIPIO: added 2018-06-13
                 this.defaultViewLastView = srcConfig.getDefaultViewLastView();
+                this.eventHandlerWrapperMap = getOrderedOptMap(srcConfig.getEventHandlerWrapperMap());
             } else {
                 this.errorpage = srcConfig.errorpage;
                 this.protectView = srcConfig.protectView;
@@ -481,6 +487,7 @@ public class ConfigXMLReader {
                 this.allowViewSaveDefault = srcConfig.allowViewSaveDefault;
                 this.allowViewSaveViewNameFilters = srcConfig.allowViewSaveViewNameFilters;
                 this.defaultViewLastView = srcConfig.defaultViewLastView;
+                this.eventHandlerWrapperMap = srcConfig.eventHandlerWrapperMap;
             }
         }
 
@@ -681,6 +688,38 @@ public class ConfigXMLReader {
             return result;
         }
 
+        /**
+         * SCIPIO: Resolves and returns all event handler wrappers, by name.
+         * Added 2018-11-23.
+         */
+        public Map<String, EventHandlerWrapperDef> getEventHandlerWrapperMap() throws WebAppConfigurationException { // SCIPIO
+            MapContext<String, EventHandlerWrapperDef> result = MapContext.getMapContext();
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getEventHandlerWrapperMap());
+                    } else {
+                        result.push(controllerConfig.eventHandlerWrapperMap);
+                    }
+                }
+            }
+            result.push(eventHandlerWrapperMap);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getEventHandlerWrapperMap());
+                    } else {
+                        result.push(controllerConfig.eventHandlerWrapperMap);
+                    }
+                }
+            }
+            return result;
+        }
+        
         public Map<String, Event> getFirstVisitEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
@@ -1309,10 +1348,21 @@ public class ConfigXMLReader {
                 String type = handlerElement.getAttribute("type");
                 String className = handlerElement.getAttribute("class");
 
-                if ("view".equals(type)) {
-                    this.viewHandlerMap.put(name, className);
+                if ("request-handler-wrapper".equals(type)) { // SCIPIO
+                    String triggersStr = handlerElement.getAttribute("triggers");
+                    List<String> triggers;
+                    if (triggersStr.isEmpty() || "all".equals(triggersStr)) {
+                        triggers = null;
+                    } else {
+                        triggers = new ArrayList<>(Arrays.asList(triggersStr.split(",")));
+                    }
+                    this.eventHandlerWrapperMap.put(name, new EventHandlerWrapperDef(className, triggers));
                 } else {
-                    this.eventHandlerMap.put(name, className);
+                    if ("view".equals(type)) {
+                        this.viewHandlerMap.put(name, className);
+                    } else {
+                        this.eventHandlerMap.put(name, className);
+                    }
                 }
             }
         }
@@ -1466,6 +1516,27 @@ public class ConfigXMLReader {
                         + ", order=" + order.getName() + "]";
             }
         }
+        
+        public static class EventHandlerWrapperDef {
+            private final String className;
+            private final Collection<String> triggers;
+            
+            public EventHandlerWrapperDef(String className, Collection<String> triggers) {
+                this.className = className;
+                this.triggers = triggers;
+            }
+
+            public String getClassName() {
+                return className;
+            }
+
+            /**
+             * Returns the triggers, or null if meant to apply to all.
+             */
+            public Collection<String> getTriggers() {
+                return triggers;
+            }
+        }
     }
 
     /**
@@ -1527,6 +1598,11 @@ public class ConfigXMLReader {
             return eventHandlerMap;
         }
 
+        @Override
+        public Map<String, EventHandlerWrapperDef> getEventHandlerWrapperMap() throws WebAppConfigurationException { // SCIPIO
+            return eventHandlerWrapperMap;
+        }
+        
         @Override
         public Map<String, Event> getFirstVisitEventList() throws WebAppConfigurationException {
             return firstVisitEventList;
@@ -1605,6 +1681,10 @@ public class ConfigXMLReader {
     }
 
     public static class Event {
+        public static final List<String> TRIGGERS = UtilMisc.unmodifiableArrayList(
+                "firstvisit", "preprocessor", "security-auth", "request", "after-login", "before-logout"); // SCIPIO
+        public static final Set<String> TRIGGERS_SET = UtilMisc.unmodifiableHashSetCopy(TRIGGERS); // SCIPIO
+
         private static final int DEFAULT_TRANSACTION_TIMEOUT = 0; // SCIPIO
 
         // SCIPIO: 2018-11-07: All fields now final.

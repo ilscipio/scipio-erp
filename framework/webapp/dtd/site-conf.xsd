@@ -143,17 +143,34 @@ under the License.
         <xs:attribute name="type" default="request">
             <xs:annotation>
                 <xs:documentation>
-                    To keep it short, request is for action when view is for rendering
+                    To keep it short, request is for action when view is for rendering.
+
+                    SCIPIO: 2018-11-23: Now supports "request-handler-wrapper" type, which defines a "super" event handler
+                    which runs for all event types (service, java, etc.), and effectively wraps
+                    the regular "request" handlers. The scope parameter may be specified to limit
+                    the triggers for which this super handler will run. The class
+                    must implement org.ofbiz.webapp.event.EventHandlerWrapper.
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="request"/>
                     <xs:enumeration value="view"/>
+                    <xs:enumeration value="request-handler-wrapper"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="class" use="required"/>
+        <xs:attribute type="xs:string" name="triggers" default="all">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Currently works ONLY for "request-handler-wrapper": Restricts which event triggers
+                    this handler should apply to. Comma-separated list (no spaces). Possible values:
+                        all, firstvisit, preprocessor, security-auth, request, postprocessor, after-login, before-logout
+                    Added 2018-11-23.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="protect">
         <xs:annotation>

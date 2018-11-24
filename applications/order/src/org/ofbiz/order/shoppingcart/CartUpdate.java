@@ -44,8 +44,9 @@ public class CartUpdate implements AutoCloseable {
     private final HttpServletRequest request;
     private final CartUpdateStatus status;
     private boolean commitCalled = false;
+    private final String logSuffix;
     
-    public CartUpdate(HttpServletRequest request) {
+    public CartUpdate(HttpServletRequest request, String sectionName) {
         this.request = request;
         // DEV NOTE: could use a ThreadLocal in place of req attr, but this less likely to cause leaks in case of errors
         CartUpdateStatus status = getCartUpdateStatus(request);
@@ -56,9 +57,14 @@ public class CartUpdate implements AutoCloseable {
             status.nestedLevel++;
         }
         this.status = status;
+        this.logSuffix = (sectionName != null) ? " (" + sectionName  + ")" : "";
         if (status.debug) {
             Debug.logInfo("Begin cart update section (depth: " + status.nestedLevel + ")" + getLogSuffix(), module);
         }
+    }
+
+    public CartUpdate(HttpServletRequest request) {
+        this(request, null);
     }
 
     /**
@@ -149,7 +155,11 @@ public class CartUpdate implements AutoCloseable {
     }
     
     private String getLogSuffix() {
-        return "; threadId: " + Thread.currentThread().getId();
+        return logSuffix + "; threadId: " + Thread.currentThread().getId();
+    }
+
+    public boolean isDebug() {
+        return status.debug;
     }
     
     public static CartUpdateStatus getCartUpdateStatus(HttpServletRequest request) {

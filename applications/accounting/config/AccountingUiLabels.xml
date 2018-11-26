@@ -11537,6 +11537,23 @@
         <value xml:lang="vi">Thanh toán bằng cổng Bitcoin</value>
         <value xml:lang="zh-TW">用Bitcoin支付</value>
     </property>
+    <property key="AccountingPayWithLightning">
+        <value xml:lang="cs">Platba prostřednictvím Lightning (Bitcoin)</value>
+        <value xml:lang="de">Bezahlung mit Lightning (Bitcoin)</value>
+        <value xml:lang="en">Pay With Lightning (Bitcoin)</value>
+        <value xml:lang="es">Pagar con Lightning (Bitcoin)</value>
+        <value xml:lang="fr">Paiement avec Lightning (Bitcoin)</value>
+        <value xml:lang="it">Paga con Lightning (Bitcoin)</value>
+        <value xml:lang="ja">Lightning (Bitcoin)で支払</value>
+        <value xml:lang="nl">Betaal met Lightning (Bitcoin)</value>
+        <value xml:lang="pt">Pagar com Lightning (Bitcoin)</value>
+        <value xml:lang="pt-PT">&gt;Pagar Com Lightning (Bitcoin)</value>
+        <value xml:lang="ro">Plateste cu Lightning (Bitcoin)</value>
+        <value xml:lang="ru">Платить через Lightning (Bitcoin)</value>
+        <value xml:lang="th">ชำระเงินผ่าน Lightning (Bitcoin)</value>
+        <value xml:lang="vi">Thanh toán bằng cổng Lightning (Bitcoin)</value>
+        <value xml:lang="zh-TW">用Lightning (Bitcoin)支付</value>
+    </property>
     <property key="AccountingPayWithPayPal">
         <value xml:lang="cs">Platba prostřednictvím PayPal</value>
         <value xml:lang="de">Bezahlung mit PayPal</value>

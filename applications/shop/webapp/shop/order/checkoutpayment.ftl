@@ -322,12 +322,12 @@ jQuery(document).ready(function(){
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_LIGHTNING", "contentId":"content_LIGHTNING"})>
             <@field type="radio" id="checkOutPaymentId_LIGHTNING" name="checkOutPaymentId" value="EXT_LIGHTNING" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_LIGHTNING")) 
-              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithBitcoin /><#--tooltip=(getPayMethTypeDesc("EXT_LIGHTNING")!) -->
+              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithLightning /><#--tooltip=(getPayMethTypeDesc("EXT_LIGHTNING")!) -->
           </#if>
           <#if showDetails>
             <@section containerId="content_LIGHTNING" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=uiLabelMap.AccountingPayWithBitcoin-->
-              <@payMethInfoPanel title=uiLabelMap.AccountingPayWithBitcoin>
-                <p>${uiLabelMap.OrderPaymentDescBitcoin}</p>
+              <@payMethInfoPanel title=uiLabelMap.AccountingPayWithLightning>
+                <p>${uiLabelMap.OrderPaymentDescLightning}</p>
                 <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(cart.getCartCreatedTime(),cart.getDisplayGrandTotal()!0, cart.getCurrency(),"XBT",dispatcher,true)>
                 <p>${uiLabelMap.CommonAmount}: <@ofbizCurrency amount=xbtAmount?default(0.00) rounding="8" isoCode="XBT"/></p>
               </@payMethInfoPanel>

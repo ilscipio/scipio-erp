@@ -9766,6 +9766,14 @@
         <value xml:lang="de">Sie haben sich für eine Bitcoin Zahlung entschieden. Um die Transaktion abzuschließen überweisen Sie bitte ${bitcoinAmount} innerhalb der nächsten Stunde an die nachfolgende Adresse.</value>
         <value xml:lang="en">You selected Bitcoin payments for this transaction. To complete your payment please send ${bitcoinAmount} to the address below within the next hour.</value>
     </property>
+    <property key="OrderPaymentDescLightning">
+        <value xml:lang="de">Externe Lightning (Bitcoin) Zahlung.</value>
+        <value xml:lang="en">Pay with Lightning (Bitcoin) externally.</value>
+    </property>
+    <property key="OrderPaymentDescLightningNote">
+        <value xml:lang="de">Sie haben sich für eine Bitcoin Zahlung über Lightning Network entschieden. Um die Transaktion abzuschließen überweisen Sie bitte ${bitcoinAmount} innerhalb der nächsten Stunde an die unten stehende Adresse. Eine Lightning Wallet wird für die Transaktion benötigt.</value>
+        <value xml:lang="en">You selected Lightning Network (Bitcoin) payments for this transaction. To complete your payment please send ${bitcoinAmount} to the address below within the next hour. A lightning wallet is required for the transaction.</value>
+    </property>
     <property key="OrderPaymentDescCOD">
         <value xml:lang="de">Zahlung bei Lieferung.</value>
         <value xml:lang="en">Pay upon delivery of your item(s).</value>

@@ -822,8 +822,15 @@ public class ProductSearch {
     // ======================================================================
     // SCIPIO: 2017-08-18: added getters to most ProductSearchConstraint subclasses
 
+    /**
+     * ProductSearchConstraint.
+     * <p>
+     * SCIPIO: NOTE: These instances are now assumed to be immutable (final fields only).
+     */
     @SuppressWarnings("serial")
     public static abstract class ProductSearchConstraint implements java.io.Serializable {
+        // SCIPIO: 2018-11-27: All fields now final.
+
         public ProductSearchConstraint() { }
 
         public abstract void addConstraint(ProductSearchContext productSearchContext);
@@ -835,8 +842,9 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class CatalogConstraint extends ProductSearchConstraint {
         public static final String constraintName = "Catalog";
-        protected String prodCatalogId;
-        protected List<GenericValue> productCategories;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String prodCatalogId;
+        protected final List<GenericValue> productCategories;
 
         public CatalogConstraint(String prodCatalogId, List<GenericValue> productCategories) {
             this.prodCatalogId = prodCatalogId;
@@ -935,10 +943,11 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class CategoryConstraint extends ProductSearchConstraint {
         public static final String constraintName = "Category";
-        protected String productCategoryId;
-        protected boolean includeSubCategories;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String productCategoryId;
+        protected final boolean includeSubCategories;
         /** This is a tri-state variable: null = Include, true = Exclude, false = AlwaysInclude */
-        protected Boolean exclude;
+        protected final Boolean exclude;
 
         /**
          *
@@ -1067,9 +1076,10 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class FeatureConstraint extends ProductSearchConstraint {
         public static final String constraintName = "Feature";
-        protected String productFeatureId;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String productFeatureId;
         /** This is a tri-state variable: null = Include, true = Exclude, false = AlwaysInclude */
-        protected Boolean exclude;
+        protected final Boolean exclude;
 
         /**
          *
@@ -1179,9 +1189,10 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class FeatureCategoryConstraint extends ProductSearchConstraint {
         public static final String constraintName = "FeatureCategory";
-        protected String productFeatureCategoryId;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String productFeatureCategoryId;
         /** This is a tri-state variable: null = Include, true = Exclude, false = AlwaysInclude */
-        protected Boolean exclude;
+        protected final Boolean exclude;
 
         /**
          *
@@ -1289,9 +1300,10 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class FeatureGroupConstraint extends ProductSearchConstraint {
         public static final String constraintName = "FeatureGroup";
-        protected String productFeatureGroupId;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String productFeatureGroupId;
         /** This is a tri-state variable: null = Include, true = Exclude, false = AlwaysInclude */
-        protected Boolean exclude;
+        protected final Boolean exclude;
 
         /**
          *
@@ -1399,9 +1411,10 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class FeatureSetConstraint extends ProductSearchConstraint {
         public static final String constraintName = "Feature Set";
-        protected Set<String> productFeatureIdSet;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final Set<String> productFeatureIdSet;
         /** This is a tri-state variable: null = Include, true = Exclude, false = AlwaysInclude */
-        protected Boolean exclude;
+        protected final Boolean exclude;
 
         /**
          *
@@ -1522,11 +1535,12 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class KeywordConstraint extends ProductSearchConstraint {
         public static final String constraintName = "Keyword";
-        protected String keywordsString;
-        protected boolean anyPrefix;
-        protected boolean anySuffix;
-        protected boolean isAnd;
-        protected boolean removeStems;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String keywordsString;
+        protected final boolean anyPrefix;
+        protected final boolean anySuffix;
+        protected final boolean isAnd;
+        protected final boolean removeStems;
 
         public KeywordConstraint(String keywordsString, boolean anyPrefix, boolean anySuffix, Boolean removeStems, boolean isAnd) {
             this.keywordsString = keywordsString;
@@ -1677,8 +1691,9 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class LastUpdatedRangeConstraint extends ProductSearchConstraint {
         public static final String constraintName = "LastUpdatedRange";
-        protected Timestamp fromDate;
-        protected Timestamp thruDate;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final Timestamp fromDate;
+        protected final Timestamp thruDate;
 
         public LastUpdatedRangeConstraint(Timestamp fromDate, Timestamp thruDate) {
             this.fromDate = fromDate;
@@ -1747,9 +1762,10 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class StoreGroupPriceConstraint extends ProductSearchConstraint {
         public static final String constraintName = "StoreGroupPrice";
-        protected String productStoreGroupId;
-        protected String productPriceTypeId;
-        protected String currencyUomId;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String productStoreGroupId;
+        protected final String productPriceTypeId;
+        protected final String currencyUomId;
 
         public StoreGroupPriceConstraint(String productStoreGroupId, String productPriceTypeId, String currencyUomId) {
             this.productStoreGroupId = productStoreGroupId;
@@ -1852,9 +1868,10 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class ListPriceRangeConstraint extends ProductSearchConstraint {
         public static final String constraintName = "ListPriceRange";
-        protected BigDecimal lowPrice;
-        protected BigDecimal highPrice;
-        protected String currencyUomId;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final BigDecimal lowPrice;
+        protected final BigDecimal highPrice;
+        protected final String currencyUomId;
 
         public ListPriceRangeConstraint(BigDecimal lowPrice, BigDecimal highPrice, String currencyUomId) {
             this.lowPrice = lowPrice;
@@ -1991,7 +2008,8 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class SupplierConstraint extends ProductSearchConstraint {
         public static final String constraintName = "Supplier";
-        protected String supplierPartyId;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String supplierPartyId;
 
         public SupplierConstraint(String supplierPartyId) {
             this.supplierPartyId = supplierPartyId;
@@ -2057,6 +2075,7 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class ExcludeVariantsConstraint extends ProductSearchConstraint {
         public static final String constraintName = "ExcludeVariants";
+        // SCIPIO: 2018-11-27: All fields now final.
 
         public ExcludeVariantsConstraint() {
         }
@@ -2101,6 +2120,7 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class AvailabilityDateConstraint extends ProductSearchConstraint {
         public static final String constraintName = "AvailabilityDate";
+        // SCIPIO: 2018-11-27: All fields now final.
 
         public AvailabilityDateConstraint() {
         }
@@ -2145,9 +2165,10 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class GoodIdentificationConstraint extends ProductSearchConstraint {
         public static final String constraintName = "GoodIdentification";
-        protected String goodIdentificationTypeId;
-        protected String goodIdentificationValue;
-        protected Boolean include;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String goodIdentificationTypeId;
+        protected final String goodIdentificationValue;
+        protected final Boolean include;
 
         public GoodIdentificationConstraint(String goodIdentificationTypeId, String goodIdentificationValue, Boolean include) {
             this.goodIdentificationTypeId = goodIdentificationTypeId;
@@ -2263,8 +2284,9 @@ public class ProductSearch {
     @SuppressWarnings("serial")
     public static class ProductFieldConstraint extends ProductSearchConstraint {
         public static final String constraintName = "ProductField";
-        protected String keyword;
-        protected String productFieldName;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String keyword;
+        protected final String productFieldName;
 
         public ProductFieldConstraint(String keyword, String productFieldName) {
             this.keyword = keyword;
@@ -2347,6 +2369,7 @@ public class ProductSearch {
 
     @SuppressWarnings("serial")
     public static class SortKeywordRelevancy extends ResultSortOrder {
+        // SCIPIO: 2018-11-27: All fields now final.
         public SortKeywordRelevancy() {
         }
 
@@ -2382,8 +2405,9 @@ public class ProductSearch {
 
     @SuppressWarnings("serial")
     public static class SortProductField extends ResultSortOrder {
-        protected String fieldName;
-        protected boolean ascending;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String fieldName;
+        protected final boolean ascending;
 
         /** Some good field names to try might include:
          * [productName]
@@ -2443,17 +2467,27 @@ public class ProductSearch {
 
     @SuppressWarnings("serial")
     public static class SortProductPrice extends ResultSortOrder {
-        protected String productPriceTypeId;
-        protected String currencyUomId;
-        protected String productStoreGroupId;
-        protected boolean ascending;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String productPriceTypeId;
+        protected final String currencyUomId;
+        protected final String productStoreGroupId;
+        protected final boolean ascending;
 
         public SortProductPrice(String productPriceTypeId, boolean ascending) {
-            this.productPriceTypeId = productPriceTypeId;
-            this.ascending = ascending;
+            // SCIPIO
+            //this.productPriceTypeId = productPriceTypeId;
+            //this.ascending = ascending;
+            this(productPriceTypeId, null, null, ascending);
         }
 
         public SortProductPrice(String productPriceTypeId, String currencyUomId, String productStoreGroupId, boolean ascending) {
+            // SCIPIO: moved from setSortOrder, for final fields
+            if (currencyUomId == null) {
+                currencyUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
+            }
+            if (productStoreGroupId == null) {
+                productStoreGroupId = "_NA_";
+            }
             this.productPriceTypeId = productPriceTypeId;
             this.currencyUomId = currencyUomId;
             this.productStoreGroupId = productStoreGroupId;
@@ -2462,12 +2496,13 @@ public class ProductSearch {
 
         @Override
         public void setSortOrder(ProductSearchContext productSearchContext) {
-            if (this.currencyUomId == null) {
-                this.currencyUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
-            }
-            if (this.productStoreGroupId == null) {
-                this.productStoreGroupId = "_NA_";
-            }
+            // SCIPIO: Now in constructor, for final fields
+            //if (this.currencyUomId == null) {
+            //    this.currencyUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
+            //}
+            //if (this.productStoreGroupId == null) {
+            //    this.productStoreGroupId = "_NA_";
+            //}
 
             // SortProductPrice, this will be a bit more complex, need to add a ProductPrice member entity
             productSearchContext.dynamicViewEntity.addMemberEntity("SPPRC", "ProductPrice");
@@ -2542,8 +2577,9 @@ public class ProductSearch {
 
     @SuppressWarnings("serial")
     public static class SortProductFeature extends ResultSortOrder {
-        protected String productFeatureTypeId;
-        protected boolean ascending;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String productFeatureTypeId;
+        protected final boolean ascending;
 
         public SortProductFeature(String productFeatureTypeId, boolean ascending) {
             this.productFeatureTypeId = productFeatureTypeId;

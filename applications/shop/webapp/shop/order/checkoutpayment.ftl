@@ -370,6 +370,43 @@ jQuery(document).ready(function(){
             </@section>
           </#if>
         </#if>
+        
+        <#if productStorePaymentMethodTypeIdMap.EXT_STRIPE??>
+          <#if showSelect>
+            <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_STRIPE", "contentId":"content_STRIPE"})>
+            <@field type="radio" id="checkOutPaymentId_STRIPE" name="checkOutPaymentId" value="EXT_STRIPE" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_STRIPE")) 
+              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithStripe /><#--tooltip=(getPayMethTypeDesc("EXT_STRIPE")!) -->
+          </#if>
+          <#if showDetails>
+            <@section containerId="content_STRIPE" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=uiLabelMap.AccountingPayWithStripe-->
+              <@payMethInfoPanel title=uiLabelMap.AccountingPayWithStripe>
+                <#-- <p>${uiLabelMap.OrderPaymentDescStripe}</p> -->   
+                <#-- <iframe src="<@ofbizInterWebappUrl fullPath=true>/stripe/control/getStripeJs</@ofbizInterWebappUrl>" frameborder="0" width="100%" scrolling="no" style="overflow:hidden;"></iframe> -->
+                
+                <@render resource="component://stripe/widget/CommonScreens.xml#stripeJsAndElements" 
+                  ctxVars={
+                  	"stripePaymentMethodSetting" : productStorePaymentMethodSettingByTypeMap.EXT_STRIPE,
+                  	"paymentFormId" : "checkoutInfoForm"
+                  }/>
+              </@payMethInfoPanel>
+            </@section>
+          </#if>
+        </#if>
+
+		<#if productStorePaymentMethodTypeIdMap.EXT_REDSYS??>
+          <#if showSelect>
+            <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_REDSYS", "contentId":"content_REDSYS"})>
+            <@field type="radio" id="checkOutPaymentId_REDSYS" name="checkOutPaymentId" value="EXT_REDSYS" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_REDSYS")) 
+              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithRedsys />
+          </#if>
+          <#if showDetails>
+            <@section containerId="content_REDSYS" containerClass="+pay-meth-content" containerStyle="display:none;">
+              <@payMethInfoPanel title=uiLabelMap.AccountingPayWithRedsys>
+                <p>${uiLabelMap.OrderPaymentDescRedsys}</p>
+              </@payMethInfoPanel>
+            </@section>
+          </#if>
+        </#if>
 
         <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
           <#-- User's credit cards -->

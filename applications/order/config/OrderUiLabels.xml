@@ -9782,6 +9782,10 @@
         <value xml:lang="de">Externe PayPal Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
         <value xml:lang="en">Pay with Paypal externally. You will be redirected back to review your order afterward.</value>
     </property>
+    <property key="OrderPaymentDescRedsys">
+        <value xml:lang="de">Externe Redsys Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
+        <value xml:lang="en">Pay with Redsys externally. You will be redirected back to review your order afterward.</value>
+    </property>
     <property key="OrderPaymentDescWorldpay">
         <value xml:lang="de">Externe WorldPay Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
         <value xml:lang="en">Pay with Worldpay externally. You will be redirected back to review your order afterward.</value>

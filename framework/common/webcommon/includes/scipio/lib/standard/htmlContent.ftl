@@ -163,25 +163,26 @@ Creates a basic wrapper for code blocks.
                     
   * Parameters *
     type                    = (html|java|css|javascript|log, default:html)
+    style                   = Legacy HTML {{{style}}} attribute
     class                   = ((css-class)) Heading element CSS classes
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign code_defaultArgs = {
-  "type":"html", "class":"", "passArgs":{}
+  "type":"html", "class":"", "style":"", "passArgs":{}
 }>
 <#macro code args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.code_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <#local class = addClassArgDefault(class, "")>
-  <@code_markup type=type class=class origArgs=origArgs passArgs=passArgs><#nested></@code_markup>
+  <@code_markup type=type style=style class=class origArgs=origArgs passArgs=passArgs><#nested></@code_markup>
 </#macro>
 
 <#-- @code main markup - theme override -->
-<#macro code_markup type="" class="" origArgs={} passArgs={} catchArgs...>
-  <pre<@compiledClassAttribStr class=class />><code data-language="${escapeVal(type, 'html')}"><#rt>
+<#macro code_markup type="" style="" class="" origArgs={} passArgs={} catchArgs...>
+  <pre<@compiledClassAttribStr class=class />><code data-language="${escapeVal(type, 'html')}" <#if style?has_content> style="${escapeVal(style, 'html')}"</#if>><#rt>
     <#nested><#t>
   </code></pre><#lt>
 </#macro>
@@ -1931,7 +1932,7 @@ Creates a QR Code image link.
       <#local logo = Static["org.ofbiz.common.qrcode.QRCodeLogoRegistry"].getIdForLocation(delegator, logo)>
     </#if>
   </#if>
-  <@qrcode_markup id=id class=class text=text export=export logo=logo export=export 
+  <@qrcode_markup id=id class=class text=text export=export logo=logo export=export
     width=width height=height ecLevel=ecLevel format=format logoSize=logoSize logoMaxSize=logoMaxSize linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
 </#macro>
 

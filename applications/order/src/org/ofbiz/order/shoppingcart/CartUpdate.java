@@ -43,7 +43,7 @@ public class CartUpdate implements AutoCloseable {
     
     private final HttpServletRequest request;
     private final CartUpdateStatus status;
-    private boolean commitCalled = false;
+    private boolean localCommitCalled = false;
     private final String logSuffix;
     
     public CartUpdate(HttpServletRequest request, String sectionName) {
@@ -124,12 +124,13 @@ public class CartUpdate implements AutoCloseable {
                 Debug.logInfo("Committing modified shopping cart " + getLogCartDesc(cart) + getLogSuffix(), module);
             }
             ShoppingCartEvents.replaceCurrentCartObject(request, cart, true);
+            status.committed = true;
         } else {
             if (status.debug) {
                 Debug.logInfo("Delaying shopping cart commit (nested)" + getLogSuffix(), module);
             }
         }
-        commitCalled = true;
+        localCommitCalled = true;
         return cart;
     }
 
@@ -141,7 +142,7 @@ public class CartUpdate implements AutoCloseable {
             status.nestedLevel--;
         }
         if (ShoppingCart.DEBUG || Debug.verboseOn()) {
-            if (commitCalled) {
+            if (localCommitCalled) {
                 Debug.logInfo("End cart update section (depth: " + status.nestedLevel + ")" + getLogSuffix(), module);
             } else {
                 Debug.logWarning("End cart update section (depth: " + status.nestedLevel 
@@ -150,6 +151,25 @@ public class CartUpdate implements AutoCloseable {
         }
     }
 
+    /**
+     * Returns true if this section level called {@link #commit}, regardless of whether
+     * it was actually committed or not.
+     */
+    public boolean isLocalCommitCalled() {
+        return localCommitCalled;
+    }
+
+    /**
+     * Returns true if this OR a nested CartUpdate section committed and switched out the cart already.
+     */
+    public boolean isCommitted() {
+        return status.isCommitted();
+    }
+
+    public boolean isDebug() {
+        return status.debug;
+    }
+    
     private String getLogCartDesc(ShoppingCart cart) {
         return "@" + Integer.toHexString(System.identityHashCode(cart));
     }
@@ -158,9 +178,6 @@ public class CartUpdate implements AutoCloseable {
         return logSuffix + "; threadId: " + Thread.currentThread().getId();
     }
 
-    public boolean isDebug() {
-        return status.debug;
-    }
     
     public static CartUpdateStatus getCartUpdateStatus(HttpServletRequest request) {
         return (CartUpdateStatus) request.getAttribute("cartUpdateStatus");
@@ -175,6 +192,7 @@ public class CartUpdate implements AutoCloseable {
         private int nestedLevel = 1;
         private ShoppingCart cartForUpdate;
         private final boolean debug = (ShoppingCart.DEBUG || Debug.verboseOn());
+        private boolean committed = false;
         
         protected CartUpdateStatus(int nestedLevel, ShoppingCart cartForUpdate) {
             this.nestedLevel = nestedLevel;
@@ -191,6 +209,10 @@ public class CartUpdate implements AutoCloseable {
         
         public boolean isTopLevel() {
             return (nestedLevel <= 1);
+        }
+
+        public boolean isCommitted() {
+            return committed;
         }
     }
 }

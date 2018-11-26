@@ -187,15 +187,19 @@ code package.
                                   <#-- SCIPIO: only show alert after placed and not printable -->
                                   <#if orderHeader?has_content && !printable>
                                      ${offPayDesc}
+                                  <#else>
+                                    ${offPayDesc}
+                                  </#if>
+                                </@td>
+                            </@tr>
+                            <@tr>
+                                <@td colspan="4">
                                       <#if requestAttributes.paymentRequest?has_content>
-                                          <@qrcode text=requestAttributes.paymentRequest width=250 height=250/>
+                                          <@qrcode text=requestAttributes.paymentRequest width=200 height=200/>
                                           <@alert type="info" closable=false>
                                             <div style="word-break: break-all;">${requestAttributes.paymentRequest!""}</div>
                                           </@alert>
                                       </#if>
-                                  <#else>
-                                    ${offPayDesc}
-                                  </#if>
                                 </@td>
                             </@tr>
                             <#else>

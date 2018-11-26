@@ -5,5 +5,5 @@ code package.
 -->
 
 
-<@code type="log"><#list logLines as logLine><div class="${logLine.type!}">${logLine.line}</div></#list><#t>
+<@code type="log" style="word-break: break-all;"><#list logLines as logLine><div class="${logLine.type!}">${logLine.line}</div></#list><#t>
 </@code>

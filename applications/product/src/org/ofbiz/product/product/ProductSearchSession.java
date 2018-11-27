@@ -71,12 +71,27 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.stats.VisitHandler;
 
 /**
- *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
+ * Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
+ * <p>
+ * SCIPIO: WARNING: 2018-11-27: ProductSearchOptions instance in session is now assumed to be immutable.
+ * Do not call any of the methods on ProductSearchOptions that modify the 
+ * instance outside of a synchronized block on the product search lock object on a ProductSearchOptions copy -
+ * see {@link ProductSearchSession#processSearchParameters(Map, HttpServletRequest)} for example;
+ * to keep it simple, do not use any update methods other than <code>processSearchParameters</code>.
  */
 public class ProductSearchSession {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    /**
+     * Product search options recording class. Stored in session.
+     * <p>
+     * SCIPIO: WARNING: 2018-11-27: ProductSearchOptions instance in session is now assumed to be immutable.
+     * Do not call any of the methods on ProductSearchOptions that modify the 
+     * instance outside of a synchronized block on the product search lock object on a ProductSearchOptions copy -
+     * see {@link ProductSearchSession#processSearchParameters(Map, HttpServletRequest)} for example;
+     * to keep it simple, do not use any update methods other than <code>processSearchParameters</code>.
+     */
     @SuppressWarnings("serial")
     public static class ProductSearchOptions implements java.io.Serializable {
         /**

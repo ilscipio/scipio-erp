@@ -85,26 +85,26 @@ public class ProductSearchSession {
          */
         private static final ThreadLocal<ProductSearchOptions> currentOptions = new ThreadLocal<>();
 
-        protected List<ProductSearchConstraint> constraintList = null;
-        protected String topProductCategoryId = null;
-        protected ResultSortOrder resultSortOrder = new SortKeywordRelevancy(); // SCIPIO: 2018-11-27: Added init, moved from getResultSortOrder
-        protected Integer viewIndex = null;
-        protected Integer viewSize = null;
-        protected boolean changed = false;
-        protected String paging = "Y";
-        protected Integer previousViewSize = null;
+        // SCIPIO: 2018-11-27: Initializations moved to constructor
+   
+        protected List<ProductSearchConstraint> constraintList; // = null;
+        protected String topProductCategoryId; // = null;
+        protected ResultSortOrder resultSortOrder; // = new SortKeywordRelevancy(); // SCIPIO: 2018-11-27: Added init, moved from getResultSortOrder
+        protected Integer viewIndex; // = null;
+        protected Integer viewSize; // = null;
+        protected boolean changed; // = false;
+        protected String paging; // = "Y";
+        protected Integer previousViewSize; // = null;
 
-        public ProductSearchOptions() { }
+        public ProductSearchOptions() {
+            this.resultSortOrder = new SortKeywordRelevancy(); // SCIPIO: 2018-11-27: Added init, moved from getResultSortOrder
+            this.paging = "Y";
+        }
 
         /** Basic copy constructor */
         public ProductSearchOptions(ProductSearchOptions productSearchOptions) {
-            // SCIPIO
-            //this.constraintList = new LinkedList<>();
-            List<ProductSearchConstraint> constraintList = new LinkedList<>();
-            if (UtilValidate.isNotEmpty(productSearchOptions.constraintList)) {
-                constraintList.addAll(productSearchOptions.constraintList);
-            }
-            this.constraintList = constraintList;
+            // SCIPIO: rewrote constraintList copy
+            this.constraintList = (productSearchOptions.constraintList != null) ? new LinkedList<>(productSearchOptions.constraintList) : null;
             this.topProductCategoryId = productSearchOptions.topProductCategoryId;
             this.resultSortOrder = productSearchOptions.resultSortOrder;
             this.viewIndex = productSearchOptions.viewIndex;

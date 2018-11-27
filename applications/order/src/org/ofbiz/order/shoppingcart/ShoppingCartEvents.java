@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1296,12 +1297,12 @@ public class ShoppingCartEvents {
         boolean modifyCart = false;
         
         // if we just logged in set the UL
-        if (shouldCartLoginBeUpdated(session, cart.getUserLogin(), "userLogin") != null) { // SCIPIO: refactored
+        if (shouldCartLoginBeUpdated(session, cart.getUserLogin(), "userLogin", false) != null) { // SCIPIO: refactored
             modifyCart = true;
         }
 
         // same for autoUserLogin
-        if (shouldCartLoginBeUpdated(session, cart.getAutoUserLogin(), "autoUserLogin") != null) { // SCIPIO: refactored
+        if (shouldCartLoginBeUpdated(session, cart.getAutoUserLogin(), "autoUserLogin", false) != null) { // SCIPIO: refactored
             modifyCart = true;
         }
 
@@ -1309,7 +1310,7 @@ public class ShoppingCartEvents {
         if (cart.getLocale() == null || !locale.equals(cart.getLocale())) {
             modifyCart = true;
         }
-        
+
         if (modifyCart) {
             // SCIPIO: This is the original code, wrapped in synchronization
             // NOTE: We re-run all the checks because we're re-fetching the cart instance inside block
@@ -1318,38 +1319,60 @@ public class ShoppingCartEvents {
             synchronized (cartUpdate.getLockObject()) {
             cart = cartUpdate.getCartForUpdate();
             
-            // if we just logged in set the UL
-            GenericValue userLogin = shouldCartLoginBeUpdated(session, cart.getUserLogin(), "userLogin");
-            if (userLogin != null) {
-                modifyCart = true;
-                try {
-                    cart.setUserLogin(userLogin, dispatcher);
-                } catch (CartItemModifyException e) {
-                    Debug.logWarning(e, module);
-                }
-            }
-
-            // same for autoUserLogin
-            GenericValue autoUserLogin = shouldCartLoginBeUpdated(session, cart.getAutoUserLogin(), "autoUserLogin");
-            if (autoUserLogin != null) {
-                modifyCart = true;
-                if (cart.getUserLogin() == null) {
+            try {
+                // if we just logged in set the UL
+                Optional<GenericValue> userLoginOpt = shouldCartLoginBeUpdated(session, cart.getUserLogin(), "userLogin", true);
+                if (userLoginOpt != null) {
+                    modifyCart = true;
+                    GenericValue userLogin = userLoginOpt.orElse(null);
+                    if (cart.getUserLogin() != null) {
+                        Debug.logInfo("Replacing cart user login [userLoginId: " + cart.getUserLogin().getString("userLoginId")
+                                + ", partyId: " + cart.getUserLogin().getString("partyId") + "] with "
+                                + (userLogin == null ? "[null]" : "[userLoginId: " + userLogin.getString("userLoginId")
+                                + ", partyId: " + userLogin.getString("partyId") + "]"), module);
+                    }
                     try {
-                        cart.setAutoUserLogin(autoUserLogin, dispatcher);
+                        cart.setUserLogin(userLogin, dispatcher);
                     } catch (CartItemModifyException e) {
                         Debug.logWarning(e, module);
                     }
-                } else {
-                    cart.setAutoUserLogin(autoUserLogin);
                 }
-            }
     
-            // update the locale
-            if (cart.getLocale() == null || !locale.equals(cart.getLocale())) {
+                // same for autoUserLogin
+                Optional<GenericValue> autoUserLoginOpt = shouldCartLoginBeUpdated(session, cart.getAutoUserLogin(), "autoUserLogin", true);
+                if (autoUserLoginOpt != null) {
+                    modifyCart = true;
+                    GenericValue autoUserLogin = autoUserLoginOpt.orElse(null);
+                    if (cart.getUserLogin() != null) {
+                        Debug.logInfo("Replacing cart auto user login [userLoginId: " + cart.getUserLogin().getString("userLoginId")
+                                + ", partyId: " + cart.getUserLogin().getString("partyId") + "] with "
+                                + (autoUserLogin == null ? "[null]" : "[userLoginId: " + autoUserLogin.getString("userLoginId")
+                                + ", partyId: " + autoUserLogin.getString("partyId") + "]"), module);
+                    }
+                    if (cart.getUserLogin() == null) {
+                        try {
+                            cart.setAutoUserLogin(autoUserLogin, dispatcher);
+                        } catch (CartItemModifyException e) {
+                            Debug.logWarning(e, module);
+                        }
+                    } else {
+                        // SCIPIO
+                        //cart.setAutoUserLogin(autoUserLogin);
+                        cart.setAutoUserLoginAlways(autoUserLogin);
+                    }
+                }
+        
+                // update the locale
+                if (cart.getLocale() == null || !locale.equals(cart.getLocale())) {
+                    modifyCart = true;
+                    cart.setLocale(locale);
+                }
+            } catch(CartUserInvalidException e) {
+                Debug.logWarning("Invalid cart state: " + e.getMessage() + "; clearing cart", module);
+                cart = new WebShoppingCart(request);
                 modifyCart = true;
-                cart.setLocale(locale);
             }
-            
+
             if (modifyCart) {
                 cart = cartUpdate.commit(cart); // SCIPIO
             }
@@ -1365,14 +1388,50 @@ public class ShoppingCartEvents {
      * with the new value if it should be changed.
      * Refactored from {@link #keepCartUpdated(HttpServletRequest, HttpServletResponse)} 2018-11-27.
      */
-    private static GenericValue shouldCartLoginBeUpdated(HttpSession session, GenericValue cartUserLogin, String sessionUserLoginAttr) {
+    private static Optional<GenericValue> shouldCartLoginBeUpdated(HttpSession session, GenericValue cartUserLogin,
+            String sessionUserLoginAttr, boolean throwExInvalid) throws CartUserInvalidException {
         if (cartUserLogin == null) {
             GenericValue userLogin = (GenericValue) session.getAttribute(sessionUserLoginAttr);
             if (userLogin != null) {
-                return userLogin;
+                return Optional.ofNullable(userLogin);
+            }
+        } else {
+            // SCIPIO: 2018-11-27: new case: especially when server restarts, it's possible for stored session cart to contain
+            // "anonymous"; may also be possible to bypass UI logout in other ways.
+            // In such case can either TRY to change the user or kill the whole cart - for now, try just switching the user...
+            GenericValue userLogin = (GenericValue) session.getAttribute(sessionUserLoginAttr);
+            if ("anonymous".equals(cartUserLogin.get("userLoginId"))) { // treat null and anonymous roughly the same
+                return Optional.ofNullable(userLogin);
+            }
+            if (userLogin != null) {
+                if (!userLogin.get("userLoginId").equals(cartUserLogin.get("userLoginId"))) {
+                    if (throwExInvalid) {
+                        throw new CartUserInvalidException("Cart user '" + cartUserLogin.get("userLoginId") 
+                            + "' does not match logged-in user '" + userLogin.get("userLoginId")  + "'");
+                    } else {
+                        // This is bad thing to return, is only for the checks outside the synchronized block...
+                        return Optional.ofNullable(null);
+                    }
+                }
+            } else {
+                // If there is no login in session but cart has a login... this can't continue
+                if (throwExInvalid) {
+                    throw new CartUserInvalidException("Cart contains a user (" + cartUserLogin.get("userLoginId")
+                        + ") but there is no user logged-in");
+                } else {
+                    // This is bad thing to return, is only for the checks outside the synchronized block...
+                    return Optional.ofNullable(null);
+                }
             }
         }
         return null;
+    }
+    
+    @SuppressWarnings("serial")
+    private static class CartUserInvalidException extends RuntimeException { // SCIPIO
+        protected CartUserInvalidException(String message) {
+            super(message);
+        }
     }
     
     /** For GWP Promotions with multiple alternatives, selects an alternative to the current GWP */

@@ -1522,6 +1522,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
     }
 
+    /**
+     * SCIPIO: Sets autoUserLogin even if null - for internal use only.
+     */
+    protected void setAutoUserLoginAlways(GenericValue autoUserLogin) {
+        this.autoUserLogin = autoUserLogin;
+    }
+
     public void handleNewUser(LocalDispatcher dispatcher) throws CartItemModifyException {
         String partyId = this.getPartyId();
         if (UtilValidate.isNotEmpty(partyId)) {

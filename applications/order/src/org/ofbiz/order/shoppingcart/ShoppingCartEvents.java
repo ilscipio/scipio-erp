@@ -1327,10 +1327,12 @@ public class ShoppingCartEvents {
                     modifyCart = true;
                     GenericValue userLogin = userLoginOpt.orElse(null);
                     if (cart.getUserLogin() != null) {
-                        Debug.logInfo("Replacing cart userLogin [userLoginId: " + cart.getUserLogin().getString("userLoginId")
-                                + ", partyId: " + cart.getUserLogin().getString("partyId") + "] with "
-                                + (userLogin == null ? "[null]" : "[userLoginId: " + userLogin.getString("userLoginId")
-                                + ", partyId: " + userLogin.getString("partyId") + "]"), module);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Replacing cart userLogin [userLoginId: " + cart.getUserLogin().getString("userLoginId")
+                                    + ", partyId: " + cart.getUserLogin().getString("partyId") + "] with "
+                                    + (userLogin == null ? "[null]" : "[userLoginId: " + userLogin.getString("userLoginId")
+                                    + ", partyId: " + userLogin.getString("partyId") + "]"), module);
+                        }
                     }
                     try {
                         cart.setUserLogin(userLogin, dispatcher);
@@ -1348,10 +1350,12 @@ public class ShoppingCartEvents {
                     modifyCart = true;
                     GenericValue autoUserLogin = autoUserLoginOpt.orElse(null);
                     if (cart.getUserLogin() != null) {
-                        Debug.logInfo("Replacing cart autoUserLogin [userLoginId: " + cart.getUserLogin().getString("userLoginId")
-                                + ", partyId: " + cart.getUserLogin().getString("partyId") + "] with "
-                                + (autoUserLogin == null ? "[null]" : "[userLoginId: " + autoUserLogin.getString("userLoginId")
-                                + ", partyId: " + autoUserLogin.getString("partyId") + "]"), module);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Replacing cart autoUserLogin [userLoginId: " + cart.getUserLogin().getString("userLoginId")
+                                    + ", partyId: " + cart.getUserLogin().getString("partyId") + "] with "
+                                    + (autoUserLogin == null ? "[null]" : "[userLoginId: " + autoUserLogin.getString("userLoginId")
+                                    + ", partyId: " + autoUserLogin.getString("partyId") + "]"), module);
+                        }
                     }
                     if (cart.getUserLogin() == null) {
                         try {

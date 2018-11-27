@@ -1385,7 +1385,8 @@ public class ShoppingCartEvents {
 
     /**
      * SCIPIO: Checks if the given userLogin or autoUserLogin from cart should be updated, and returns non-null
-     * with the new value if it should be changed.
+     * with the new value if it should be changed (the value in the Optional may be null).
+     * <p>
      * Refactored from {@link #keepCartUpdated(HttpServletRequest, HttpServletResponse)} 2018-11-27.
      */
     private static Optional<GenericValue> shouldCartLoginBeUpdated(HttpSession session, GenericValue cartUserLogin,
@@ -1409,8 +1410,7 @@ public class ShoppingCartEvents {
                         throw new CartUserInvalidException("Cart user '" + cartUserLogin.get("userLoginId") 
                             + "' does not match logged-in user '" + userLogin.get("userLoginId")  + "'");
                     } else {
-                        // This is bad thing to return, is only for the checks outside the synchronized block...
-                        return Optional.ofNullable(null);
+                        return Optional.empty();
                     }
                 }
             } else {
@@ -1419,8 +1419,7 @@ public class ShoppingCartEvents {
                     throw new CartUserInvalidException("Cart contains a user (" + cartUserLogin.get("userLoginId")
                         + ") but there is no user logged-in");
                 } else {
-                    // This is bad thing to return, is only for the checks outside the synchronized block...
-                    return Optional.ofNullable(null);
+                    return Optional.empty();
                 }
             }
         }

@@ -29,13 +29,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilDateTime;
@@ -1394,7 +1394,7 @@ public class ShoppingCartEvents {
      * Refactored from {@link #keepCartUpdated(HttpServletRequest, HttpServletResponse)} 2018-11-27.
      */
     private static Optional<GenericValue> shouldCartLoginBeUpdated(HttpSession session, GenericValue cartUserLogin,
-            String sessionUserLoginAttr, boolean throwExInvalid) throws CartUserInvalidException {
+            String sessionUserLoginAttr, boolean noUserReplace) throws CartUserInvalidException {
         if (cartUserLogin == null) {
             GenericValue userLogin = (GenericValue) session.getAttribute(sessionUserLoginAttr);
             if (userLogin != null) {
@@ -1407,14 +1407,14 @@ public class ShoppingCartEvents {
             GenericValue userLogin = (GenericValue) session.getAttribute(sessionUserLoginAttr);
             if ("anonymous".equals(cartUserLogin.get("userLoginId"))) { // treat null and anonymous roughly the same
                 if (userLogin != null && "anonymous".equals(userLogin.get("userLoginId")) 
-                        && StringUtils.equals(userLogin.getString("partyId"), cartUserLogin.getString("partyId"))) {
+                        && Objects.equals(userLogin.getString("partyId"), cartUserLogin.getString("partyId"))) {
                     return null; // avoid needless setUserLogin calls if anon user has not changed
                 }
                 return Optional.ofNullable(userLogin);
             }
             if (userLogin != null) {
-                if (!userLogin.get("userLoginId").equals(cartUserLogin.get("userLoginId"))) {
-                    if (throwExInvalid) {
+                if (!Objects.equals(userLogin.get("userLoginId"), cartUserLogin.get("userLoginId"))) {
+                    if (noUserReplace) {
                         throw new CartUserInvalidException("Cart user '" + cartUserLogin.get("userLoginId") 
                             + "' does not match logged-in user '" + userLogin.get("userLoginId")  + "'");
                     } else {
@@ -1423,9 +1423,9 @@ public class ShoppingCartEvents {
                 }
             } else {
                 // If there is no login in session but cart has a login... this can't continue
-                if (throwExInvalid) {
+                if (noUserReplace) {
                     throw new CartUserInvalidException("Cart contains a user (" + cartUserLogin.get("userLoginId")
-                    + ") but there is no user logged-in");
+                        + ") but there is no user logged-in");
                 } else {
                     return Optional.ofNullable(userLogin);
                 }

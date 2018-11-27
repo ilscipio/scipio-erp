@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilDateTime;
@@ -1326,7 +1327,7 @@ public class ShoppingCartEvents {
                     modifyCart = true;
                     GenericValue userLogin = userLoginOpt.orElse(null);
                     if (cart.getUserLogin() != null) {
-                        Debug.logInfo("Replacing cart user login [userLoginId: " + cart.getUserLogin().getString("userLoginId")
+                        Debug.logInfo("Replacing cart userLogin [userLoginId: " + cart.getUserLogin().getString("userLoginId")
                                 + ", partyId: " + cart.getUserLogin().getString("partyId") + "] with "
                                 + (userLogin == null ? "[null]" : "[userLoginId: " + userLogin.getString("userLoginId")
                                 + ", partyId: " + userLogin.getString("partyId") + "]"), module);
@@ -1339,12 +1340,15 @@ public class ShoppingCartEvents {
                 }
     
                 // same for autoUserLogin
-                Optional<GenericValue> autoUserLoginOpt = shouldCartLoginBeUpdated(session, cart.getAutoUserLogin(), "autoUserLogin", true);
+                // SCIPIO: Only treat bad autoUserLogin as a cart clear if there is no cart userLogin,
+                // because autoUserLogin is ignored when userLogin is non-null
+                boolean autoUserLoginClear = (cart.getUserLogin() == null);
+                Optional<GenericValue> autoUserLoginOpt = shouldCartLoginBeUpdated(session, cart.getAutoUserLogin(), "autoUserLogin", autoUserLoginClear);
                 if (autoUserLoginOpt != null) {
                     modifyCart = true;
                     GenericValue autoUserLogin = autoUserLoginOpt.orElse(null);
                     if (cart.getUserLogin() != null) {
-                        Debug.logInfo("Replacing cart auto user login [userLoginId: " + cart.getUserLogin().getString("userLoginId")
+                        Debug.logInfo("Replacing cart autoUserLogin [userLoginId: " + cart.getUserLogin().getString("userLoginId")
                                 + ", partyId: " + cart.getUserLogin().getString("partyId") + "] with "
                                 + (autoUserLogin == null ? "[null]" : "[userLoginId: " + autoUserLogin.getString("userLoginId")
                                 + ", partyId: " + autoUserLogin.getString("partyId") + "]"), module);
@@ -1402,6 +1406,10 @@ public class ShoppingCartEvents {
             // In such case can either TRY to change the user or kill the whole cart - for now, try just switching the user...
             GenericValue userLogin = (GenericValue) session.getAttribute(sessionUserLoginAttr);
             if ("anonymous".equals(cartUserLogin.get("userLoginId"))) { // treat null and anonymous roughly the same
+                if (userLogin != null && "anonymous".equals(userLogin.get("userLoginId")) 
+                        && StringUtils.equals(userLogin.getString("partyId"), cartUserLogin.getString("partyId"))) {
+                    return null; // avoid needless setUserLogin calls if anon user has not changed
+                }
                 return Optional.ofNullable(userLogin);
             }
             if (userLogin != null) {
@@ -1410,16 +1418,16 @@ public class ShoppingCartEvents {
                         throw new CartUserInvalidException("Cart user '" + cartUserLogin.get("userLoginId") 
                             + "' does not match logged-in user '" + userLogin.get("userLoginId")  + "'");
                     } else {
-                        return Optional.empty();
+                        return Optional.ofNullable(userLogin);
                     }
                 }
             } else {
                 // If there is no login in session but cart has a login... this can't continue
                 if (throwExInvalid) {
                     throw new CartUserInvalidException("Cart contains a user (" + cartUserLogin.get("userLoginId")
-                        + ") but there is no user logged-in");
+                    + ") but there is no user logged-in");
                 } else {
-                    return Optional.empty();
+                    return Optional.ofNullable(userLogin);
                 }
             }
         }

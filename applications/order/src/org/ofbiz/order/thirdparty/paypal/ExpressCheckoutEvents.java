@@ -35,6 +35,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.order.shoppingcart.CartUpdate;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -53,7 +54,10 @@ public class ExpressCheckoutEvents {
         Locale locale = UtilHttp.getLocale(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
+        synchronized (cartUpdate.getLockObject()) {
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         CheckoutType checkoutType = determineCheckoutType(request);
         if (!checkoutType.equals(CheckoutType.NONE)) {
             String serviceName = null;
@@ -75,7 +79,12 @@ public class ExpressCheckoutEvents {
                 Debug.logError(ServiceUtil.getErrorMessage(result), module);
                 request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resourceErr, "AccountingPayPalCommunicationError", locale));
                 return "error";
+            } else {
+                cartUpdate.commit(cart); // SCIPIO
             }
+        }
+
+        }
         }
         return "success";
     }
@@ -153,7 +162,10 @@ public class ExpressCheckoutEvents {
         Locale locale = UtilHttp.getLocale(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
+        synchronized (cartUpdate.getLockObject()) {
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         CheckoutType checkoutType = determineCheckoutType(request);
         if (!checkoutType.equals(CheckoutType.NONE)) {
             String serviceName = null;
@@ -174,9 +186,13 @@ public class ExpressCheckoutEvents {
                 Debug.logError(ServiceUtil.getErrorMessage(result), module);
                 request.setAttribute("_EVENT_MESSAGE_", ServiceUtil.getErrorMessage(result));
                 return "error";
+            } else {
+                cartUpdate.commit(cart); // SCIPIO
             }
         }
 
+        }
+        }
         return "success";
     }
 
@@ -208,8 +224,15 @@ public class ExpressCheckoutEvents {
     }
 
     public static String expressCheckoutCancel(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
+        synchronized (cartUpdate.getLockObject()) {
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         cart.removeAttribute("payPalCheckoutToken");
+        
+        cartUpdate.commit(cart);
+        }
+        }
         return "success";
     }
 

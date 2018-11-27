@@ -1296,19 +1296,13 @@ public class ShoppingCartEvents {
         boolean modifyCart = false;
         
         // if we just logged in set the UL
-        if (cart.getUserLogin() == null) {
-            GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-            if (userLogin != null) {
-                modifyCart = true;
-            }
+        if (shouldCartLoginBeUpdated(session, cart.getUserLogin(), "userLogin") != null) { // SCIPIO: refactored
+            modifyCart = true;
         }
 
         // same for autoUserLogin
-        if (cart.getAutoUserLogin() == null) {
-            GenericValue autoUserLogin = (GenericValue) session.getAttribute("autoUserLogin");
-            if (autoUserLogin != null) {
-                modifyCart = true;
-            }
+        if (shouldCartLoginBeUpdated(session, cart.getAutoUserLogin(), "autoUserLogin") != null) { // SCIPIO: refactored
+            modifyCart = true;
         }
 
         // update the locale
@@ -1325,32 +1319,28 @@ public class ShoppingCartEvents {
             cart = cartUpdate.getCartForUpdate();
             
             // if we just logged in set the UL
-            if (cart.getUserLogin() == null) {
-                GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-                if (userLogin != null) {
-                    modifyCart = true;
+            GenericValue userLogin = shouldCartLoginBeUpdated(session, cart.getUserLogin(), "userLogin");
+            if (userLogin != null) {
+                modifyCart = true;
+                try {
+                    cart.setUserLogin(userLogin, dispatcher);
+                } catch (CartItemModifyException e) {
+                    Debug.logWarning(e, module);
+                }
+            }
+
+            // same for autoUserLogin
+            GenericValue autoUserLogin = shouldCartLoginBeUpdated(session, cart.getAutoUserLogin(), "autoUserLogin");
+            if (autoUserLogin != null) {
+                modifyCart = true;
+                if (cart.getUserLogin() == null) {
                     try {
-                        cart.setUserLogin(userLogin, dispatcher);
+                        cart.setAutoUserLogin(autoUserLogin, dispatcher);
                     } catch (CartItemModifyException e) {
                         Debug.logWarning(e, module);
                     }
-                }
-            }
-    
-            // same for autoUserLogin
-            if (cart.getAutoUserLogin() == null) {
-                GenericValue autoUserLogin = (GenericValue) session.getAttribute("autoUserLogin");
-                if (autoUserLogin != null) {
-                    modifyCart = true;
-                    if (cart.getUserLogin() == null) {
-                        try {
-                            cart.setAutoUserLogin(autoUserLogin, dispatcher);
-                        } catch (CartItemModifyException e) {
-                            Debug.logWarning(e, module);
-                        }
-                    } else {
-                        cart.setAutoUserLogin(autoUserLogin);
-                    }
+                } else {
+                    cart.setAutoUserLogin(autoUserLogin);
                 }
             }
     
@@ -1370,6 +1360,21 @@ public class ShoppingCartEvents {
         return "success";
     }
 
+    /**
+     * SCIPIO: Checks if the given userLogin or autoUserLogin from cart should be updated, and returns non-null
+     * with the new value if it should be changed.
+     * Refactored from {@link #keepCartUpdated(HttpServletRequest, HttpServletResponse)} 2018-11-27.
+     */
+    private static GenericValue shouldCartLoginBeUpdated(HttpSession session, GenericValue cartUserLogin, String sessionUserLoginAttr) {
+        if (cartUserLogin == null) {
+            GenericValue userLogin = (GenericValue) session.getAttribute(sessionUserLoginAttr);
+            if (userLogin != null) {
+                return userLogin;
+            }
+        }
+        return null;
+    }
+    
     /** For GWP Promotions with multiple alternatives, selects an alternative to the current GWP */
     public static String setDesiredAlternateGwpProductId(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");

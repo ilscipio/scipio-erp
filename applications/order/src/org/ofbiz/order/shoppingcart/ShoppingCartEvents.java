@@ -1409,11 +1409,14 @@ public class ShoppingCartEvents {
             // "anonymous"; may also be possible to bypass UI logout in other ways.
             // In such case can either TRY to change the user or kill the whole cart - for now, try just switching the user...
             GenericValue userLogin = (GenericValue) session.getAttribute(sessionUserLoginAttr);
-            if ("anonymous".equals(cartUserLogin.get("userLoginId"))) { // treat null and anonymous roughly the same
+            if ("anonymous".equals(cartUserLogin.get("userLoginId"))) {
                 if (userLogin != null && "anonymous".equals(userLogin.get("userLoginId")) 
                         && Objects.equals(userLogin.getString("partyId"), cartUserLogin.getString("partyId"))) {
                     return null; // avoid needless setUserLogin calls if anon user has not changed
                 }
+                // NOTE: For now we'll treat anonymous userLogin in cart the same as null;
+                // but it is possible issues come from this w.r.t. addresses, cart options, etc.
+                // so in the future this could be a CartUserInvalidException instead...
                 return Optional.ofNullable(userLogin);
             }
             if (userLogin != null) {

@@ -66,7 +66,13 @@ code package.
                     <#assign displayParty = placingParty/>
                     <#assign displayPartyNameResult = {}/>
                     <#if displayParty?has_content>
-                        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":(displayParty.partyId!), "compareDate":(orderDate!), "userLogin":userLogin!})/>
+                        <#-- SCIPIO: can't pass userLogin! because it becomes the empty string when userLogin missing
+                        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":(displayParty.partyId!), "compareDate":(orderDate!), "userLogin":userLogin!})/>-->
+                        <#assign dpnArgs = {"partyId":(displayParty.partyId!), "compareDate":(orderDate!)}>
+                        <#if userLogin??>
+                          <#assign dpnArgs = dpnArgs + {"userLogin":userLogin}>
+                        </#if>
+                        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", dpnArgs)>
                     </#if>
                     <#if displayPartyNameResult?has_content>
                         <@tr>

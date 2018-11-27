@@ -194,7 +194,7 @@ code package.
                             </@tr>
                             <@tr>
                                 <@td colspan="4">
-                                      <#if requestAttributes.paymentRequest?has_content>
+                                      <#if requestAttributes?has_content && requestAttributes.paymentRequest?has_content>
                                           <@qrcode text=requestAttributes.paymentRequest width=200 height=200/>
                                           <@alert type="info" closable=false>
                                             <div style="word-break: break-all;">${requestAttributes.paymentRequest!""}</div>

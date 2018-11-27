@@ -29,6 +29,7 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.product.product.ProductSearchSession;
 import org.ofbiz.webapp.stats.VisitHandler;
 
 /**
@@ -42,10 +43,13 @@ public class CartEventListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent event) {
-        //for this one do nothing when the session is created...
-        
+        HttpSession session = event.getSession();
+
         // SCIPIO: dedicated lock for shoppingCart instance; see WebShoppingCart
-        event.getSession().setAttribute("shoppingCartLock", ShoppingCart.createLockObject());
+        session.setAttribute("shoppingCartLock", ShoppingCart.createLockObject());
+
+        // SCIPIO: dedicated lock for product search
+        ProductSearchSession.createSetLockObject(session);
     }
 
     @Override

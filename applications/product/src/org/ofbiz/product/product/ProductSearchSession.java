@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -78,9 +79,15 @@ public class ProductSearchSession {
 
     @SuppressWarnings("serial")
     public static class ProductSearchOptions implements java.io.Serializable {
+        /**
+         * SCIPIO: Used to bypass the session variable lookup.
+         * Added 2018-11-27.
+         */
+        private static final ThreadLocal<ProductSearchOptions> currentOptions = new ThreadLocal<>();
+
         protected List<ProductSearchConstraint> constraintList = null;
         protected String topProductCategoryId = null;
-        protected ResultSortOrder resultSortOrder = null;
+        protected ResultSortOrder resultSortOrder = new SortKeywordRelevancy(); // SCIPIO: 2018-11-27: Added init, moved from getResultSortOrder
         protected Integer viewIndex = null;
         protected Integer viewSize = null;
         protected boolean changed = false;
@@ -91,10 +98,13 @@ public class ProductSearchSession {
 
         /** Basic copy constructor */
         public ProductSearchOptions(ProductSearchOptions productSearchOptions) {
-            this.constraintList = new LinkedList<>();
+            // SCIPIO
+            //this.constraintList = new LinkedList<>();
+            List<ProductSearchConstraint> constraintList = new LinkedList<>();
             if (UtilValidate.isNotEmpty(productSearchOptions.constraintList)) {
-                this.constraintList.addAll(productSearchOptions.constraintList);
+                constraintList.addAll(productSearchOptions.constraintList);
             }
+            this.constraintList = constraintList;
             this.topProductCategoryId = productSearchOptions.topProductCategoryId;
             this.resultSortOrder = productSearchOptions.resultSortOrder;
             this.viewIndex = productSearchOptions.viewIndex;
@@ -138,10 +148,11 @@ public class ProductSearchSession {
         }
 
         public ResultSortOrder getResultSortOrder() {
-            if (this.resultSortOrder == null) {
-                this.resultSortOrder = new SortKeywordRelevancy();
-                this.changed = true;
-            }
+            // SCIPIO: 2018-11-27: changed flag makes no sense here, plus this is thread-unfriendly
+            //if (this.resultSortOrder == null) {
+            //    this.resultSortOrder = new SortKeywordRelevancy();
+            //    this.changed = true;
+            //}
             return this.resultSortOrder;
         }
         public static ResultSortOrder getResultSortOrder(HttpServletRequest request) {
@@ -338,7 +349,7 @@ public class ProductSearchSession {
          */
         @SuppressWarnings("unchecked")
         protected static <T> List<T> extractConstraints(List<? extends ProductSearchConstraint> contraintList, Class<T> constraintCls) {
-            List<T> kwcList = new ArrayList<>();
+            List<T> kwcList = new LinkedList<>();
             if (contraintList != null) {
                 for(ProductSearchConstraint constraint : contraintList) {
                     if (constraintCls.isAssignableFrom(constraint.getClass())) kwcList.add((T) constraint);
@@ -348,15 +359,45 @@ public class ProductSearchSession {
         }
     }
 
+    public static ProductSearchOptions getProductSearchOptions(HttpServletRequest request) { // SCIPIO: new overload
+        return getProductSearchOptions(request.getSession());
+    }
+
+    // SCIPIO: TODO?: This overload should ultimately be deprecated and removed, but cannot do it now...
+    ///**
+    // * @deprecated SCIPIO: 2018-11-27: Use {@link #getProductSearchOptions(HttpServletRequest)} instead.
+    // */
+    //@Deprecated
     public static ProductSearchOptions getProductSearchOptions(HttpSession session) {
-        ProductSearchOptions productSearchOptions = (ProductSearchOptions) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_");
+        // SCIPIO: 2018-11-27: Update code may use thread-local to bypass lack of request argument
+        ProductSearchOptions productSearchOptions = ProductSearchOptions.currentOptions.get();
         if (productSearchOptions == null) {
-            productSearchOptions = new ProductSearchOptions();
-            session.setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", productSearchOptions);
+            productSearchOptions = (ProductSearchOptions) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_");
+            if (productSearchOptions == null) {
+                productSearchOptions = new ProductSearchOptions();
+                session.setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", productSearchOptions);
+            }
         }
         return productSearchOptions;
     }
 
+    public static ProductSearchOptions getProductSearchOptionsIfExist(HttpServletRequest request) { // SCIPIO
+        ProductSearchOptions productSearchOptions = ProductSearchOptions.currentOptions.get();
+        if (productSearchOptions == null) {
+            productSearchOptions = (ProductSearchOptions) request.getSession().getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_");
+        }
+        return productSearchOptions;
+    }
+
+    private static ProductSearchOptions getProductSearchOptionsCopyOrNew(HttpServletRequest request) { // SCIPIO
+        ProductSearchOptions options = getProductSearchOptionsIfExist(request);
+        return (options != null) ? new ProductSearchOptions(options) : new ProductSearchOptions();
+    }
+    
+    private static void setProductSearchOptions(HttpServletRequest request, ProductSearchOptions options) { // SCIPIO
+        request.getSession().setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", options);
+    }
+    
     public static void checkSaveSearchOptionsHistory(HttpSession session) {
         ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
         // if the options have changed since the last search, add it to the beginning of the search options history
@@ -607,11 +648,47 @@ public class ProductSearchSession {
     }
 
     public static void processSearchParameters(Map<String, Object> parameters, HttpServletRequest request) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        // SCIPIO: delegated and wrapped in synchronized
+        
+        // SCIPIO: alreadyRun check duplicated and modified from processSearchParametersCore
         Boolean alreadyRun = (Boolean) request.getAttribute("processSearchParametersAlreadyRun");
         if (Boolean.TRUE.equals(alreadyRun)) {
+            ProductSearchOptions productSearchOptions = getProductSearchOptions(request);
+            // SCIPIO: Optimize: here, check if any of these parameters have changed; if not, can skip expensive sync
+            // If not, we can skip expensive sync
+            ProductSearchOptions testOptions = new ProductSearchOptions();
+            testOptions.setViewIndex((String) parameters.get("VIEW_INDEX"));
+            testOptions.setViewSize((String) parameters.get("VIEW_SIZE"));
+            testOptions.setPaging((String) parameters.get("PAGING"));
+            if (testOptions.getViewIndex() == productSearchOptions.getViewIndex() &&
+                testOptions.getViewSize() == productSearchOptions.getViewSize() &&
+                Objects.equals(testOptions.getPaging(), productSearchOptions.getPaging())) {
+                return;
+            }
+        }
+        
+        synchronized (ProductSearchSession.getLockObj(request)) {
+            ProductSearchOptions options = getProductSearchOptionsCopyOrNew(request);
+            boolean ok = false;
+            try {
+                ProductSearchOptions.currentOptions.set(options);
+                processSearchParametersCore(parameters, request, alreadyRun);
+                ok = true;
+            } finally {
+                ProductSearchOptions.currentOptions.remove();
+                if (ok) { // (if no exceptions)
+                    setProductSearchOptions(request, options); // store result back in session
+                }
+            }
+        }
+    }
+
+    private static void processSearchParametersCore(Map<String, Object> parameters, HttpServletRequest request, Boolean alreadyRun) {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        //Boolean alreadyRun = (Boolean) request.getAttribute("processSearchParametersAlreadyRun"); // SCIPIO
+        if (Boolean.TRUE.equals(alreadyRun)) {
             // even if already run, check the VIEW_SIZE and VIEW_INDEX again, just for kicks
-            ProductSearchOptions productSearchOptions = getProductSearchOptions(request.getSession());
+            ProductSearchOptions productSearchOptions = getProductSearchOptions(request);
             productSearchOptions.setViewIndex((String) parameters.get("VIEW_INDEX"));
             productSearchOptions.setViewSize((String) parameters.get("VIEW_SIZE"));
             productSearchOptions.setPaging((String) parameters.get("PAGING"));
@@ -1006,7 +1083,7 @@ public class ProductSearchSession {
         String statusId = (String) requestParams.get("statusId");
 
         HttpSession session = request.getSession();
-        ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
+        ProductSearchOptions productSearchOptions = getProductSearchOptions(request);
 
         String addOnTopProdCategoryId = productSearchOptions.getTopProductCategoryId();
 
@@ -1506,5 +1583,33 @@ public class ProductSearchSession {
             Debug.logError(e, "Error in product search", module);
         }
         return categoryCount;
+    }
+    
+    /**
+     * SCIPIO: Gets the search session lock object from session.
+     * <p>
+     * NOTE: Also set by {@link org.ofbiz.order.shoppingcart.CartEventListener#sessionCreated(HttpSessionEvent)}.
+     * <p>
+     * Added 2018-11-27.
+     */
+    public static Object getLockObj(HttpServletRequest request) {
+        Object lockObj = request.getSession().getAttribute("_PRODUCT_SEARCH_LOCK_");
+        if (lockObj == null) {
+            Debug.logWarning("Product search session lock object not found in session; creating", module);
+            lockObj = createLockObject();
+            request.getSession().setAttribute("_PRODUCT_SEARCH_LOCK_", lockObj);
+        }
+        return lockObj;
+    }
+
+    @SuppressWarnings("serial")
+    public static Object createLockObject() { // SCIPIO
+        return new java.io.Serializable() {};
+    }
+
+    public static Object createSetLockObject(HttpSession session) { // SCIPIO
+        Object lockObj = createLockObject();
+        session.setAttribute("_PRODUCT_SEARCH_LOCK_", lockObj);
+        return lockObj;
     }
 }

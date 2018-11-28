@@ -458,6 +458,7 @@ public class WorkEffortSearch {
 
     @SuppressWarnings("serial")
     public static abstract class WorkEffortSearchConstraint implements java.io.Serializable {
+        // SCIPIO: 2018-11-27: All fields now final.
         public WorkEffortSearchConstraint() { }
 
         public abstract void addConstraint(WorkEffortSearchContext workEffortSearchContext);
@@ -469,9 +470,10 @@ public class WorkEffortSearch {
     @SuppressWarnings("serial")
     public static class WorkEffortAssocConstraint extends WorkEffortSearchConstraint {
         public static final String constraintName = "WorkEffortAssoc";
-        protected String workEffortId;
-        protected String workEffortAssocTypeId;
-        protected boolean includeSubWorkEfforts;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String workEffortId;
+        protected final String workEffortAssocTypeId;
+        protected final boolean includeSubWorkEfforts;
 
         public WorkEffortAssocConstraint(String workEffortId, String workEffortAssocTypeId, boolean includeSubWorkEfforts) {
             this.workEffortId = workEffortId;
@@ -630,7 +632,8 @@ public class WorkEffortSearch {
     @SuppressWarnings("serial")
     public static class WorkEffortReviewConstraint extends WorkEffortSearchConstraint {
         public static final String constraintName = "WorkEffortReview";
-        protected String reviewTextString;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String reviewTextString;
 
         public WorkEffortReviewConstraint(String reviewTextString) {
             this.reviewTextString = reviewTextString;
@@ -694,8 +697,9 @@ public class WorkEffortSearch {
     @SuppressWarnings("serial")
     public static class PartyAssignmentConstraint extends WorkEffortSearchConstraint {
         public static final String constraintName = "PartyAssignment";
-        protected String partyId;
-        protected String roleTypeId;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String partyId;
+        protected final String roleTypeId;
 
         public PartyAssignmentConstraint(String partyId, String roleTypeId) {
             this.partyId = partyId;
@@ -814,7 +818,8 @@ public class WorkEffortSearch {
     @SuppressWarnings("serial")
     public static class ProductSetConstraint extends WorkEffortSearchConstraint {
         public static final String constraintName = "ProductSet";
-        protected Set<String> productIdSet;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final Set<String> productIdSet;
 
         public ProductSetConstraint(Collection<String> productIdSet) {
             this.productIdSet = UtilMisc.makeSetWritable(productIdSet);
@@ -912,11 +917,12 @@ public class WorkEffortSearch {
     @SuppressWarnings("serial")
     public static class KeywordConstraint extends WorkEffortSearchConstraint {
         public static final String constraintName = "Keyword";
-        protected String keywordsString;
-        protected boolean anyPrefix;
-        protected boolean anySuffix;
-        protected boolean isAnd;
-        protected boolean removeStems;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String keywordsString;
+        protected final boolean anyPrefix;
+        protected final boolean anySuffix;
+        protected final boolean isAnd;
+        protected final boolean removeStems;
 
         public KeywordConstraint(String keywordsString, boolean anyPrefix, boolean anySuffix, Boolean removeStems, boolean isAnd) {
             this.keywordsString = keywordsString;
@@ -1047,8 +1053,9 @@ public class WorkEffortSearch {
     @SuppressWarnings("serial")
     public static class LastUpdatedRangeConstraint extends WorkEffortSearchConstraint {
         public static final String constraintName = "LastUpdatedRange";
-        protected Timestamp fromDate;
-        protected Timestamp thruDate;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final Timestamp fromDate;
+        protected final Timestamp thruDate;
 
         public LastUpdatedRangeConstraint(Timestamp fromDate, Timestamp thruDate) {
             this.fromDate = fromDate;
@@ -1144,6 +1151,7 @@ public class WorkEffortSearch {
 
     @SuppressWarnings("serial")
     public static abstract class ResultSortOrder implements java.io.Serializable {
+        // SCIPIO: 2018-11-27: All fields now final.
         public ResultSortOrder() {
         }
 
@@ -1155,6 +1163,7 @@ public class WorkEffortSearch {
 
     @SuppressWarnings("serial")
     public static class SortKeywordRelevancy extends ResultSortOrder {
+        // SCIPIO: 2018-11-27: All fields now final.
         public SortKeywordRelevancy() {
         }
 
@@ -1185,8 +1194,9 @@ public class WorkEffortSearch {
 
     @SuppressWarnings("serial")
     public static class SortWorkEffortField extends ResultSortOrder {
-        protected String fieldName;
-        protected boolean ascending;
+        // SCIPIO: 2018-11-27: All fields now final.
+        protected final String fieldName;
+        protected final boolean ascending;
 
         /** Some good field names to try might include:
          * [workEffortName]

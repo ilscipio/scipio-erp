@@ -385,8 +385,13 @@ public class ProductSearchSession {
         if (productSearchOptions == null) {
             productSearchOptions = (ProductSearchOptions) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_");
             if (productSearchOptions == null) {
-                productSearchOptions = new ProductSearchOptions();
-                session.setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", productSearchOptions);
+                synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
+                    productSearchOptions = (ProductSearchOptions) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_");
+                    if (productSearchOptions == null) {
+                        productSearchOptions = new ProductSearchOptions();
+                        session.setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", productSearchOptions);
+                    }
+                }
             }
         }
         return productSearchOptions;

@@ -29,6 +29,11 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * VerifyPickServices.
+ * <p>
+ * SCIPIO: 2018-11-28: All composed operations are now synchronized.
+ */
 public class VerifyPickServices {
 
     public static Map<String, Object> verifySingleItem(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -102,11 +107,13 @@ public class VerifyPickServices {
         VerifyPickSession pickSession = (VerifyPickSession) context.get("verifyPickSession");
         String orderId = (String) context.get("orderId");
         try {
+            synchronized (pickSession) { // SCIPIO
             shipmentId = pickSession.complete(orderId, locale);
             Map<String, Object> shipment = new HashMap<String, Object>();
             shipment.put("shipmentId", shipmentId);
             pickSession.clearAllRows();
             return shipment;
+            }
         } catch (GeneralException ex) {
             return ServiceUtil.returnError(ex.getMessage(), ex.getMessageList());
         }

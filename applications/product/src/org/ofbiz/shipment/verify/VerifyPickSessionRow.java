@@ -34,6 +34,12 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * VerifyPickSessionRow.
+ * <p>
+ * SCIPIO: WARNING: 2018-11-28: Do not modify this instance directly; must go through synchronized
+ * {@link VerifyPickSession} methods!
+ */
 @SuppressWarnings("serial")
 public class VerifyPickSessionRow implements Serializable {
 

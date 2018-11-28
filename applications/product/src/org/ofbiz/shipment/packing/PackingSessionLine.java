@@ -31,6 +31,12 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * PackingSessionLine.
+ * <p>
+ * SCIPIO: WARNING: 2018-11-28: Do not modify this instance directly; must go through synchronized
+ * {@link PackingSession} methods!
+ */
 @SuppressWarnings("serial")
 public class PackingSessionLine implements java.io.Serializable {
 

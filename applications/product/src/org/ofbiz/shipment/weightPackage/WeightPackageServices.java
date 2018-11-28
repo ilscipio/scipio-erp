@@ -34,6 +34,11 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * WeightPackageServices.
+ * <p>
+ * SCIPIO: 2018-11-28: All composed operations are now synchronized.
+ */
 public class WeightPackageServices {
 
     public static Map<String, Object> setPackageInfo(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -67,11 +72,13 @@ public class WeightPackageServices {
             for (GenericValue orderItem : orderItems) {
                 orderedItemQty = orderedItemQty.add(orderItem.getBigDecimal("quantity"));
             }
+            synchronized (weightPackageSession) { // SCIPIO
             int packageQuantity = weightPackageSession.getPackedLines(orderId).size();
             if ((orderedItemQty.intValue() - packageQuantity) > 0) {
                 weightPackageSession.createWeightPackageLine(orderId, packageWeight, packageLength, packageWidth, packageHeight, shipmentBoxTypeId);
             } else {
                 return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ProductErrorNumberOfPackageCannotBeGreaterThanTheNumberOfOrderedQuantity", locale));
+            }
             }
         } catch (GeneralException e) {
             return ServiceUtil.returnError(e.getMessage());
@@ -89,6 +96,8 @@ public class WeightPackageServices {
         BigDecimal packageHeight = (BigDecimal) context.get("packageHeight");
         String shipmentBoxTypeId = (String) context.get("shipmentBoxTypeId");
         Integer weightPackageSeqId = (Integer) context.get("weightPackageSeqId");
+
+        synchronized (weightPackageSession) { // SCIPIO
 
         // User can either enter all the dimensions or shipment box type, but not both
         if (UtilValidate.isNotEmpty(packageLength) || UtilValidate.isNotEmpty(packageWidth) || UtilValidate.isNotEmpty(packageHeight)) { // Check if user entered any dimensions
@@ -111,6 +120,8 @@ public class WeightPackageServices {
         weightPackageSession.setPackageWidth(packageWidth, weightPackageSeqId);
         weightPackageSession.setPackageHeight(packageHeight, weightPackageSeqId);
         weightPackageSession.setShipmentBoxTypeId(shipmentBoxTypeId, weightPackageSeqId);
+
+        }
 
         return ServiceUtil.returnSuccess();
     }
@@ -140,6 +151,8 @@ public class WeightPackageServices {
             newEstimatedShippingCost = BigDecimal.ZERO;
         }
 
+        synchronized (weightPackageSession) { // SCIPIO
+
         weightPackageSession.setDimensionUomId(dimensionUomId);
         weightPackageSession.setWeightUomId(weightUomId);
         weightPackageSession.setShipmentId(shipmentId);
@@ -161,7 +174,10 @@ public class WeightPackageServices {
         } catch (GeneralException e) {
             return ServiceUtil.returnError(e.getMessage(), e.getMessageList());
         }
+        
         return response;
+
+        }
     }
 
     public static Map<String, Object> completeShipment(DispatchContext dctx, Map<String, ? extends Object> context) {

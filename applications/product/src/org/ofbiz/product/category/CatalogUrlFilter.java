@@ -629,6 +629,9 @@ public class CatalogUrlFilter extends ContextFilter {
      * The caller should ensure the last path element is the same as the passed category ID.
      * <p>
      * trail is optional, will be fetched automatically.
+     * <p>
+     * NOTE: If non-null, the trail must be a copy already (not the unmodifiable original) - it may
+     * be modified in-place by this method!
      */
     public static void updateRequestAndTrail(HttpServletRequest request, String categoryId, String productId, List<String> pathElements, List<String> trail) {
         if (UtilValidate.isEmpty(categoryId)) {
@@ -648,11 +651,16 @@ public class CatalogUrlFilter extends ContextFilter {
                 CategoryWorker.setTrail(request, pathElements.get(1), pathElements.get(0));
                 //categoryId = pathElements.get(1); // SCIPIO: Assume caller did this
             } else if (pathElements.size() > 2) {
+                // SCIPIO: 2018-11-28: Always make a trail copy, because unmodifiable
                 if (trail == null) {
-                    trail = CategoryWorker.getTrail(request);
+                    trail = CategoryWorker.getTrailCopy(request);
                     if (trail == null) {
                         trail = new ArrayList<>();
                     }
+                // SCIPIO: Caller handles
+                //} else {
+                //    trail = new ArrayList<>(trail);
+                //}
                 }
 
                 if (trail.contains(pathElements.get(0))) {

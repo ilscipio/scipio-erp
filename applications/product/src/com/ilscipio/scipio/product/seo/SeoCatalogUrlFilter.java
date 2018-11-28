@@ -240,7 +240,8 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         // generate trail elements from productCategoryId
         if (UtilValidate.isNotEmpty(productCategoryId)) {
             // SCIPIO: 2017-11-07: factored out.
-            CatalogUrlFilter.getTrailElementsAndUpdateRequestAndTrail(request, delegator, productId, productCategoryId, trailCategoryIds, topCategoryId);
+            CatalogUrlFilter.getTrailElementsAndUpdateRequestAndTrail(request, delegator, productId, productCategoryId, 
+                    (trailCategoryIds != null) ? new ArrayList<>(trailCategoryIds) : null, topCategoryId);
         }
     }
 

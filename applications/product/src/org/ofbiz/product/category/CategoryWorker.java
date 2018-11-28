@@ -274,6 +274,11 @@ public final class CategoryWorker {
         setTrail(request, crumb);
     }
 
+    /**
+     * Adjust the category trail.
+     * <p>
+     * SCIPIO: NOTE: This method performs a copy of the trail, it does not try to modify it in-place.
+     */
     public static List<String> adjustTrail(List<String> origTrail, String currentCategoryId, String previousCategoryId) {
         List<String> trail = new ArrayList<>();
         if (origTrail != null) {
@@ -329,6 +334,8 @@ public final class CategoryWorker {
     /**
      * Gets the breadcrumb trail.
      * <p>
+     * SCIPIO: NOTE: 2018-11-28: The returned list is now unmodifiable (make copy, as {@link #adjustTrail(List, String, String)} already does).
+     * <p>
      * SCIPIO: NOTE: 2018-11-28: This no longer uses LinkedList.
      */
     public static List<String> getTrail(ServletRequest request) {
@@ -340,6 +347,14 @@ public final class CategoryWorker {
             crumb = UtilGenerics.checkList(session.getAttribute("_BREAD_CRUMB_TRAIL_"));
         }
         return crumb;
+    }
+    
+    /**
+     * SCIPIO: Version that returns a modifiable copy of the trail (or null no trail).
+     */
+    public static List<String> getTrailCopy(ServletRequest request) {
+        List<String> crumb = getTrail(request);
+        return (crumb != null) ? new ArrayList<>(crumb) : null;
     }
 
     /**
@@ -370,6 +385,11 @@ public final class CategoryWorker {
      */
     public static List<String> setTrail(ServletRequest request, List<String> crumb, boolean onlyIfNewInRequest) {
         HttpSession session = ((HttpServletRequest) request).getSession();
+        // SCIPIO: 2018-11-28: Trail must never be modified in-place (thread safety)
+        if (crumb instanceof ArrayList || crumb instanceof LinkedList) {
+            crumb = Collections.unmodifiableList(crumb);
+        }
+        
         if (onlyIfNewInRequest) {
             // SCIPIO: Check if was already set
             if (request.getAttribute("_BREAD_CRUMB_TRAIL_") == null) {

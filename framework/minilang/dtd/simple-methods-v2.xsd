@@ -806,6 +806,10 @@ under the License.
             <xs:documentation>
                 Copies a field to a servlet session attribute.
                 Valid only when the simple-method is called as an event, it is ignored otherwise.
+
+                SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+                to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+                It does not provide any form of thread safety or atomicity.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -2897,6 +2901,10 @@ under the License.
             <xs:documentation>
                 Copies the called service's OUT attribute to the specified session attribute.
                 Valid only when the script is run in an event.
+                
+                SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+                to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+                It does not provide any form of thread safety or atomicity.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>

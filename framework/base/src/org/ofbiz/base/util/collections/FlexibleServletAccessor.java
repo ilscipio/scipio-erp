@@ -33,7 +33,10 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
  * Used to flexibly access Map values, supporting the "." (dot) syntax for
  * accessing sub-map values and the "[]" (square bracket) syntax for accessing
  * list elements. See individual Map operations for more information.
- *
+ * <p>
+ * SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+ * to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+ * It does not provide any form of thread safety or atomicity.
  */
 @SuppressWarnings("serial")
 public class FlexibleServletAccessor<T> implements Serializable {
@@ -310,6 +313,13 @@ public class FlexibleServletAccessor<T> implements Serializable {
             }
         }
 
+        /**
+         * Session attribute put operation.
+         * <p>
+         * SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+         * to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+         * It does not provide any form of thread safety or atomicity.
+         */
         public void put(HttpSession session, T value) {
             if (fma == null) {
                 if (isListReference) {
@@ -347,6 +357,13 @@ public class FlexibleServletAccessor<T> implements Serializable {
             return UtilGenerics.<T>cast(theValue);
         }
 
+        /**
+         * Session attribute remove operation.
+         * <p>
+         * SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+         * to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+         * It does not provide any form of thread safety or atomicity.
+         */
         public T remove(HttpSession session) {
             if (fma != null) {
                 Object theObj = session.getAttribute(attributeName);

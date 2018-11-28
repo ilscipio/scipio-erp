@@ -26,7 +26,9 @@ menuContext = session.getAttribute("menuContext");
 Debug.logInfo("menuContext(0):" + menuContext, "");
 
 if (!menuContext) {
-    menuContext = [:];
+    // SCIPIO: not thread-safe
+    //menuContext = [:];
+    menuContext = new java.util.concurrent.ConcurrentHashMap();
     session.setAttribute("menuContext", menuContext);
 }
 context.menuContext = menuContext;

@@ -19,6 +19,8 @@
 package org.ofbiz.workeffort.workeffort;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +44,12 @@ public class WorkEffortSearchSession {
 
     @SuppressWarnings("serial")
     public static class WorkEffortSearchOptions implements java.io.Serializable {
+        /**
+         * SCIPIO: Used to bypass the session variable lookup.
+         * Added 2018-11-27.
+         */
+        private static final ThreadLocal<WorkEffortSearchOptions> currentOptions = new ThreadLocal<>();
+
         // SCIPIO: 2018-11-27: Moved initializations to constructor
         
         protected List<WorkEffortSearchConstraint> constraintList; // = null;
@@ -158,19 +166,99 @@ public class WorkEffortSearchSession {
     }
 
     public static WorkEffortSearchOptions getWorkEffortSearchOptions(HttpSession session) {
-        WorkEffortSearchOptions workEffortSearchOptions = (WorkEffortSearchOptions) session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_");
+        // SCIPIO: 2018-11-27: Check threadlocal first
+        //WorkEffortSearchOptions workEffortSearchOptions = (WorkEffortSearchOptions) session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_");
+        WorkEffortSearchOptions workEffortSearchOptions = WorkEffortSearchOptions.currentOptions.get();
         if (workEffortSearchOptions == null) {
-            workEffortSearchOptions = new WorkEffortSearchOptions();
-            session.setAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_", workEffortSearchOptions);
+            workEffortSearchOptions = (WorkEffortSearchOptions) session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_");
+            if (workEffortSearchOptions == null) {
+                synchronized (getLockObj(session)) {
+                    workEffortSearchOptions = (WorkEffortSearchOptions) session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_");
+                    if (workEffortSearchOptions == null) {
+                        workEffortSearchOptions = new WorkEffortSearchOptions();
+                        session.setAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_", workEffortSearchOptions);
+                    }
+                }
+            }
         }
         return workEffortSearchOptions;
     }
 
+    public static WorkEffortSearchOptions getWorkEffortSearchOptionsIfExist(HttpSession session) { // SCIPIO
+        WorkEffortSearchOptions workEffortSearchOptions = WorkEffortSearchOptions.currentOptions.get();
+        if (workEffortSearchOptions == null) {
+            workEffortSearchOptions = (WorkEffortSearchOptions) session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_");
+        }
+        return workEffortSearchOptions;
+    }
+    
+    /**
+     * SCIPIO: Provides a safe update section.
+     */
+    public static abstract class SearchOptionsUpdate<R> {
+        
+        private final HttpSession session;
+        
+        public SearchOptionsUpdate(HttpServletRequest request) {
+            this.session = request.getSession();
+        }
+        
+        private SearchOptionsUpdate(HttpSession session) {
+            this.session = session;
+        }
+        
+        public final R run() {
+            synchronized (getLockObj(session)) {
+                WorkEffortSearchOptions options = WorkEffortSearchOptions.currentOptions.get();
+                boolean topLevel = (options == null);
+                if (topLevel) {
+                    options = getWorkEffortSearchOptionsIfExist(session);
+                    options = (options != null) ? new WorkEffortSearchOptions(options) : new WorkEffortSearchOptions();
+                }
+                boolean ok = false;
+                try {
+                    if (topLevel) {
+                        WorkEffortSearchOptions.currentOptions.set(options);
+                    }
+
+                    R result = runCore();
+
+                    ok = true;
+                    
+                    return result;
+                } finally {
+                    if (topLevel) {
+                        WorkEffortSearchOptions.currentOptions.remove();
+                        if (ok) { // (if no exceptions)
+                            session.setAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_", options); // store result back in session
+                        }
+                    }
+                }
+            }
+        }
+        
+        protected abstract R runCore();
+    }
+    
     public static void processSearchParameters(Map<String, Object> parameters, HttpServletRequest request) {
         Boolean alreadyRun = (Boolean) request.getAttribute("processSearchParametersAlreadyRun");
         if (Boolean.TRUE.equals(alreadyRun)) {
             return;
         }
+        new SearchOptionsUpdate<Void>(request) {
+            @Override
+            protected Void runCore() {
+                processSearchParametersCore(parameters, request);
+                return null;
+            }
+        }.run();
+    }
+
+    private static void processSearchParametersCore(Map<String, Object> parameters, HttpServletRequest request) { // SCIPIO: Refactored into Core
+        //Boolean alreadyRun = (Boolean) request.getAttribute("processSearchParametersAlreadyRun"); // SCIPIO: kept above
+        //if (Boolean.TRUE.equals(alreadyRun)) {
+        //    return;
+        //}
         request.setAttribute("processSearchParametersAlreadyRun", Boolean.TRUE);
         HttpSession session = request.getSession();
         boolean constraintsChanged = false;
@@ -178,13 +266,13 @@ public class WorkEffortSearchSession {
         // clear search? by default yes, but if the clearSearch parameter is N then don't
         String clearSearchString = (String) parameters.get("clearSearch");
         if (!"N".equals(clearSearchString)) {
-            searchClear(session);
+            searchClearCore(session);
             constraintsChanged = true;
         } else {
             String removeConstraint = (String) parameters.get("removeConstraint");
             if (UtilValidate.isNotEmpty(removeConstraint)) {
                 try {
-                    searchRemoveConstraint(Integer.parseInt(removeConstraint), session);
+                    searchRemoveConstraintCore(Integer.parseInt(removeConstraint), session);
                     constraintsChanged = true;
                 } catch (Exception e) {
                     Debug.logError(e, "Error removing constraint [" + removeConstraint + "]", module);
@@ -195,7 +283,7 @@ public class WorkEffortSearchSession {
 //      add a Work Effort Review to the search
         if (UtilValidate.isNotEmpty(parameters.get("SEARCH_STRING_REVIEW_TEXT"))) {
             String reviewText = (String) parameters.get("SEARCH_STRING_REVIEW_TEXT");
-            searchAddConstraint(new WorkEffortSearch.WorkEffortReviewConstraint(reviewText), session);
+            searchAddConstraintCore(new WorkEffortSearch.WorkEffortReviewConstraint(reviewText), session);
             constraintsChanged = true;
         }
 //      add a Work Effort Assoc Type to the search
@@ -203,14 +291,14 @@ public class WorkEffortSearchSession {
             String workEffortId=(String) parameters.get("SEARCH_WORK_EFFORT_ID");
             String workEffortAssocTypeId=(String) parameters.get("workEffortAssocTypeId");
             boolean includeAllSubWorkEfforts =!"N".equalsIgnoreCase((String) parameters.get("SEARCH_SUB_WORK_EFFORTS"));
-            searchAddConstraint(new WorkEffortSearch.WorkEffortAssocConstraint(workEffortId,workEffortAssocTypeId,includeAllSubWorkEfforts), session);
+            searchAddConstraintCore(new WorkEffortSearch.WorkEffortAssocConstraint(workEffortId,workEffortAssocTypeId,includeAllSubWorkEfforts), session);
             constraintsChanged = true;
         }
 //      add a Work Effort Party Assignment to the search
         if (UtilValidate.isNotEmpty(parameters.get("partyId"))) {
             String partyId=(String) parameters.get("partyId");
             String roleTypeId=(String) parameters.get("roleTypeId");
-            searchAddConstraint(new WorkEffortSearch.PartyAssignmentConstraint(partyId,roleTypeId), session);
+            searchAddConstraintCore(new WorkEffortSearch.PartyAssignmentConstraint(partyId,roleTypeId), session);
             constraintsChanged = true;
         }
 
@@ -221,7 +309,7 @@ public class WorkEffortSearchSession {
             if (UtilValidate.isNotEmpty(parameters.get("productId_2"))) {
                 productSet.add((String) parameters.get("productId_2"));
             }
-            searchAddConstraint(new WorkEffortSearch.ProductSetConstraint(productSet), session);
+            searchAddConstraintCore(new WorkEffortSearch.ProductSetConstraint(productSet), session);
             constraintsChanged = true;
         }
 
@@ -236,7 +324,7 @@ public class WorkEffortSearchSession {
             if (UtilValidate.isNotEmpty(parameters.get("thruDate"))) {
                 thruDate = Timestamp.valueOf((String) parameters.get("thruDate"));
             }
-            searchAddConstraint(new WorkEffortSearch.LastUpdatedRangeConstraint(fromDate,thruDate), session);
+            searchAddConstraintCore(new WorkEffortSearch.LastUpdatedRangeConstraint(fromDate,thruDate), session);
             constraintsChanged = true;
         }
 
@@ -246,7 +334,7 @@ public class WorkEffortSearchSession {
             String searchOperator = (String) parameters.get("SEARCH_OPERATOR");
             // defaults to true/Y, ie anything but N is true/Y
             boolean anyPrefixSuffix = !"N".equals(parameters.get("SEARCH_ANYPRESUF"));
-            searchAddConstraint(new WorkEffortSearch.KeywordConstraint(keywordString, anyPrefixSuffix, anyPrefixSuffix, null, "AND".equals(searchOperator)), session);
+            searchAddConstraintCore(new WorkEffortSearch.KeywordConstraint(keywordString, anyPrefixSuffix, anyPrefixSuffix, null, "AND".equals(searchOperator)), session);
             constraintsChanged = true;
         }
         // set the sort order
@@ -255,10 +343,10 @@ public class WorkEffortSearchSession {
         boolean ascending = !"N".equals(sortAscending);
         if (sortOrder != null) {
             if ("SortKeywordRelevancy".equals(sortOrder)) {
-                searchSetSortOrder(new WorkEffortSearch.SortKeywordRelevancy(), session);
+                searchSetSortOrderCore(new WorkEffortSearch.SortKeywordRelevancy(), session);
             } else if (sortOrder.startsWith("SortWorkEffortField:")) {
                 String fieldName = sortOrder.substring("SortWorkEffortField:".length());
-                searchSetSortOrder(new WorkEffortSearch.SortWorkEffortField(fieldName, ascending), session);
+                searchSetSortOrderCore(new WorkEffortSearch.SortWorkEffortField(fieldName, ascending), session);
             }
         }
 
@@ -290,17 +378,42 @@ public class WorkEffortSearchSession {
         }
     }
 
-    public static void searchAddConstraint(WorkEffortSearchConstraint workEffortSearchConstraint, HttpSession session) {
+    public static void searchAddConstraint(WorkEffortSearchConstraint workEffortSearchConstraint, HttpSession session) { // SCIPIO: Refactored from non-Core method
+        new SearchOptionsUpdate<Void>(session) { // SCIPIO
+            @Override
+            protected Void runCore() {
+                searchAddConstraintCore(workEffortSearchConstraint, session);
+                return null;
+            }
+        }.run();
+    }
+    private static void searchAddConstraintCore(WorkEffortSearchConstraint workEffortSearchConstraint, HttpSession session) { // SCIPIO: Refactored from non-Core method
         WorkEffortSearchOptions.addConstraint(workEffortSearchConstraint, session);
     }
-    public static void searchSetSortOrder(ResultSortOrder resultSortOrder, HttpSession session) {
+    
+    public static void searchSetSortOrder(ResultSortOrder resultSortOrder, HttpSession session) { 
+        new SearchOptionsUpdate<Void>(session) { // SCIPIO
+            @Override
+            protected Void runCore() {
+                searchSetSortOrderCore(resultSortOrder, session);
+                return null;
+            }
+        }.run();
+    }
+    private static void searchSetSortOrderCore(ResultSortOrder resultSortOrder, HttpSession session) { // SCIPIO: Refactored from non-Core method
         WorkEffortSearchOptions.setResultSortOrder(resultSortOrder, session);
     }
+
     public static List<WorkEffortSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<WorkEffortSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            optionsHistoryList = new LinkedList<>();
-            session.setAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
+            synchronized (getLockObj(session)) { // SCIPIO
+                optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_"));
+                if (optionsHistoryList == null) {
+                    optionsHistoryList = Collections.emptyList();
+                    session.setAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
+                }
+            }
         }
         return optionsHistoryList;
     }
@@ -319,12 +432,32 @@ public class WorkEffortSearchSession {
         WorkEffortSearchOptions workEffortSearchOptions = WorkEffortSearchSession.getWorkEffortSearchOptions(session);
         // if the options have changed since the last search, add it to the beginning of the search options history
         if (workEffortSearchOptions.changed) {
-            List<WorkEffortSearchOptions> optionsHistoryList = WorkEffortSearchSession.getSearchOptionsHistoryList(session);
-            optionsHistoryList.add(0, new WorkEffortSearchOptions(workEffortSearchOptions));
-            workEffortSearchOptions.changed = false;
+            synchronized (getLockObj(session)) { // SCIPIO
+                List<WorkEffortSearchOptions> optionsHistoryList = WorkEffortSearchSession.getSearchOptionsHistoryList(session);
+                
+                // SCIPIO: Must clone the list
+                //optionsHistoryList.add(0, new WorkEffortSearchOptions(workEffortSearchOptions));
+                optionsHistoryList = new ArrayList<>(optionsHistoryList);
+                optionsHistoryList.add(0, new WorkEffortSearchOptions(workEffortSearchOptions));
+                session.setAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_", Collections.unmodifiableList(optionsHistoryList));
+
+                // SCIPIO: Don't edit in-place
+                //workEffortSearchOptions.changed = false;
+                session.setAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_", new WorkEffortSearchOptions(workEffortSearchOptions));
+            }
         }
     }
+    
     public static void searchRemoveConstraint(int index, HttpSession session) {
+        new SearchOptionsUpdate<Void>(session) { // SCIPIO
+            @Override
+            protected Void runCore() {
+                searchRemoveConstraintCore(index, session);
+                return null;
+            }
+        }.run();
+    }
+    private static void searchRemoveConstraintCore(int index, HttpSession session) { // SCIPIO: Refactored from non-Core method
         List<WorkEffortSearchConstraint> workEffortSearchConstraintList = WorkEffortSearchOptions.getConstraintList(session);
         if (workEffortSearchConstraintList == null) {
             return;
@@ -334,7 +467,43 @@ public class WorkEffortSearchSession {
             workEffortSearchConstraintList.remove(index);
         }
     }
+    
     public static void searchClear(HttpSession session) {
+        new SearchOptionsUpdate<Void>(session) { // SCIPIO
+            @Override
+            protected Void runCore() {
+                searchClearCore(session);
+                return null;
+            }
+        }.run();
+    }
+    private static void searchClearCore(HttpSession session) { // SCIPIO: Refactored from non-Core method
         WorkEffortSearchOptions.clearSearchOptions(session);
+    }
+    
+    /**
+     * SCIPIO: Gets the search session lock object from session.
+     * <p>
+     * Added 2018-11-27.
+     */
+    public static Object getLockObj(HttpSession session) { // SCIPIO
+        Object lockObj = session.getAttribute("_WORK_EFFORT_SEARCH_LOCK_");
+        if (lockObj == null) {
+            Debug.logWarning("WorkEffort search session lock object not found in session; creating", module);
+            lockObj = createLockObject();
+            session.setAttribute("_WORK_EFFORT_SEARCH_LOCK_", lockObj);
+        }
+        return lockObj;
+    }
+
+    @SuppressWarnings("serial")
+    public static Object createLockObject() { // SCIPIO
+        return new java.io.Serializable() {};
+    }
+
+    public static Object createSetLockObject(HttpSession session) { // SCIPIO
+        Object lockObj = createLockObject();
+        session.setAttribute("_WORK_EFFORT_SEARCH_LOCK_", lockObj);
+        return lockObj;
     }
 }

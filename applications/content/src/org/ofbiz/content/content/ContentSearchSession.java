@@ -37,6 +37,11 @@ import org.ofbiz.content.content.ContentSearch.ResultSortOrder;
 import org.ofbiz.content.content.ContentSearch.SortKeywordRelevancy;
 import org.ofbiz.entity.Delegator;
 
+/**
+ * ContentSearchSession.
+ * <p>
+ * SCIPIO: WARNING: FIXME?: This class is not thread-safe - see ProductSearchSession (and ProductSearch).
+ */
 public class ContentSearchSession {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

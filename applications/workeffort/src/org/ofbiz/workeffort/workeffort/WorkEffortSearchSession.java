@@ -30,7 +30,6 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.workeffort.workeffort.WorkEffortSearch.ResultSortOrder;
@@ -43,16 +42,23 @@ public class WorkEffortSearchSession {
 
     @SuppressWarnings("serial")
     public static class WorkEffortSearchOptions implements java.io.Serializable {
-        protected List<WorkEffortSearchConstraint> constraintList = null;
-        protected ResultSortOrder resultSortOrder = null;
-        protected Integer viewIndex = null;
-        protected Integer viewSize = null;
-        protected boolean changed = false;
-        public WorkEffortSearchOptions() { }
+        // SCIPIO: 2018-11-27: Moved initializations to constructor
+        
+        protected List<WorkEffortSearchConstraint> constraintList; // = null;
+        protected ResultSortOrder resultSortOrder; // = null;
+        protected Integer viewIndex; // = null;
+        protected Integer viewSize; // = null;
+        protected boolean changed; // = false;
+
+        public WorkEffortSearchOptions() { 
+            this.resultSortOrder = new SortKeywordRelevancy(); // SCIPIO: 2018-11-27
+        }
 
         /** Basic copy constructor */
         public WorkEffortSearchOptions(WorkEffortSearchOptions workEffortSearchOptions) {
-            this.constraintList = UtilMisc.makeListWritable(workEffortSearchOptions.constraintList);
+            // SCIPIO: Does not respect null
+            //this.constraintList = UtilMisc.makeListWritable(workEffortSearchOptions.constraintList);
+            this.constraintList = (workEffortSearchOptions.constraintList != null) ? new LinkedList<>(workEffortSearchOptions.constraintList) : null;
             this.resultSortOrder = workEffortSearchOptions.resultSortOrder;
             this.viewIndex = workEffortSearchOptions.viewIndex;
             this.viewSize = workEffortSearchOptions.viewSize;
@@ -77,10 +83,11 @@ public class WorkEffortSearchSession {
         }
 
         public ResultSortOrder getResultSortOrder() {
-            if (this.resultSortOrder == null) {
-                this.resultSortOrder = new SortKeywordRelevancy();
-                this.changed = true;
-            }
+            // SCIPIO: 2018-11-27: A mutable 'get' shouldn't flag as logically changed, and will mess with thread safety
+            //if (this.resultSortOrder == null) {
+            //    this.resultSortOrder = new SortKeywordRelevancy();
+            //    this.changed = true;
+            //}
             return this.resultSortOrder;
         }
         public static ResultSortOrder getResultSortOrder(HttpServletRequest request) {

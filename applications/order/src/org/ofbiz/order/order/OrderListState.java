@@ -20,9 +20,13 @@ package org.ofbiz.order.order;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -56,6 +60,14 @@ import org.ofbiz.entity.util.EntityQuery;
  * TODO: this can be generalized to use a set of State
  * objects, including Pagination. Think about design
  * patterns in Fowler.
+ * <p>
+ * SCIPIO: 2018-11-28: Entire class is modified to be read-only. 
+ * The {@link #update(HttpServletRequest)} method now returns a new instance.
+ * This is to ensure some measure of thread-safety and atomic updates and reads,
+ * though some updates may still be lost due to not synchronizing on the session read/write.
+ * Also {@link #getOrders} result has been modified.
+ * FIXME?: {@link #getInstance(HttpServletRequest)} and {@link #update(HttpServletRequest)} should lock
+ * on a dedicated session lock to prevent lost updates, but currently this makes practically no difference.
  */
 @SuppressWarnings("serial")
 public class OrderListState implements Serializable {
@@ -65,13 +77,15 @@ public class OrderListState implements Serializable {
     public static final String VIEW_SIZE_PARAM = "viewSize";
     public static final String VIEW_INDEX_PARAM = "viewIndex";
 
+    // SCIPIO: 2018-11-28: All fields now final.
+    
     // state variables
-    protected int viewSize;
-    protected int viewIndex;
-    protected Map<String, String> orderStatusState;
-    protected Map<String, String> orderTypeState;
-    protected Map<String, String> orderFilterState;
-    protected int orderListSize;
+    protected final int viewSize;
+    protected final int viewIndex;
+    protected final Map<String, String> orderStatusState;
+    protected final Map<String, String> orderTypeState;
+    protected final Map<String, String> orderFilterState;
+    //protected int orderListSize; // SCIPIO: REMOVED and now returned by getOrders method
 
     // parameter to ID maps
     protected static final Map<String, String> parameterToOrderStatusId;
@@ -113,9 +127,10 @@ public class OrderListState implements Serializable {
         // viewSize = 10;
         viewSize = UtilProperties.getPropertyAsInteger("order.properties", "order.paginate.defaultViewSize", 10);
         viewIndex = 0;
-        orderStatusState = new HashMap<>();
-        orderTypeState = new HashMap<>();
-        orderFilterState = new HashMap<>();
+        // SCIPIO: Local vars
+        Map<String, String> orderStatusState = new HashMap<>();
+        Map<String, String> orderTypeState = new HashMap<>();
+        Map<String, String> orderFilterState = new HashMap<>();
 
         // defaults (TODO: configuration)
         orderStatusState.put("viewcreated", "Y");
@@ -127,8 +142,40 @@ public class OrderListState implements Serializable {
         orderStatusState.put("viewrejected", "N");
         orderStatusState.put("viewcancelled", "N");
         orderTypeState.put("view_SALES_ORDER", "Y");
+        
+        this.orderStatusState = Collections.unmodifiableMap(orderStatusState);
+        this.orderTypeState = Collections.unmodifiableMap(orderTypeState);
+        this.orderFilterState = Collections.unmodifiableMap(orderFilterState);
+
+        //orderListSize = 0; // SCIPIO
     }
 
+    protected OrderListState(OrderListState other, HttpServletRequest request) { // SCIPIO: copy/update constructor
+        this.viewSize = other.viewSize;
+        this.viewIndex = 0; // SCIPIO: see changeOrderListStates
+        
+        Map<String, String> orderStatusState = new HashMap<>(other.orderStatusState);
+        Map<String, String> orderTypeState = new HashMap<>(other.orderTypeState);
+        Map<String, String> orderFilterState = new HashMap<>(other.orderFilterState);
+
+        changeOrderListStates(request, orderStatusState, orderTypeState, orderFilterState);
+        
+        this.orderStatusState = Collections.unmodifiableMap(orderStatusState);
+        this.orderTypeState = Collections.unmodifiableMap(orderTypeState);
+        this.orderFilterState = Collections.unmodifiableMap(orderFilterState);
+
+        //this.orderListSize = other.orderListSize;
+    }
+
+    protected OrderListState(OrderListState other, int viewSize, int viewIndex) { // SCIPIO: view copy/update constructor
+        this.viewSize = viewSize;
+        this.viewIndex = viewIndex;
+        this.orderStatusState = other.orderStatusState;
+        this.orderTypeState = other.orderTypeState;
+        this.orderFilterState = other.orderFilterState;
+        //this.orderListSize = other.orderListSize;
+    }
+    
     /**
      * Retrieves the current user's OrderListState from the session
      * or creates a new one with defaults.
@@ -142,24 +189,41 @@ public class OrderListState implements Serializable {
         }
         return status;
     }
-
+    
     /**
      * Given a request, decides what state to change.  If a parameter changeStatusAndTypeState
      * is present with value "Y", the status and type state will be updated.  Otherwise, if the
      * viewIndex and viewSize parameters are present, the pagination changes.
      */
-    public void update(HttpServletRequest request) {
+    public OrderListState update(HttpServletRequest request) { // SCIPIO: Now returns a new instance
+        OrderListState status = null;
         if ("Y".equals(request.getParameter("changeStatusAndTypeState"))) {
-            changeOrderListStates(request);
+            // SCIPIO
+            //changeOrderListStates(request);
+            status = new OrderListState(this, request);
         } else {
             String viewSizeParam = request.getParameter(VIEW_SIZE_PARAM);
             String viewIndexParam = request.getParameter(VIEW_INDEX_PARAM);
             if (UtilValidate.isNotEmpty(viewSizeParam) && UtilValidate.isNotEmpty(viewIndexParam)) {
-                changePaginationState(viewSizeParam, viewIndexParam);
+                // SCIPIO
+                //changePaginationState(viewSizeParam, viewIndexParam);
+                try {
+                    int viewSize = Integer.parseInt(viewSizeParam);
+                    int viewIndex = Integer.parseInt(viewIndexParam);
+                    status = new OrderListState(this, viewSize, viewIndex);
+                } catch (NumberFormatException e) {
+                    Debug.logWarning("Values of " + VIEW_SIZE_PARAM + " ["+viewSizeParam+"] and " + VIEW_INDEX_PARAM + " ["+viewIndexParam+"] must both be Integers. Not paginating order list.", module);
+                }
             }
         }
+        if (status != null) {
+            request.getSession().setAttribute(SESSION_KEY, status);
+            return status;
+        }
+        return this;
     }
 
+    /*
     private void changePaginationState(String viewSizeParam, String viewIndexParam) {
         try {
             viewSize = Integer.parseInt(viewSizeParam);
@@ -168,8 +232,10 @@ public class OrderListState implements Serializable {
             Debug.logWarning("Values of " + VIEW_SIZE_PARAM + " ["+viewSizeParam+"] and " + VIEW_INDEX_PARAM + " ["+viewIndexParam+"] must both be Integers. Not paginating order list.", module);
         }
     }
+    */
 
-    private void changeOrderListStates(HttpServletRequest request) {
+    private static void changeOrderListStates(HttpServletRequest request,
+            Map<String, String> orderStatusState, Map<String, String> orderTypeState, Map<String, String> orderFilterState) { // SCIPIO: now static and takes params
         for (String param : parameterToOrderStatusId.keySet()) {
             String value = request.getParameter(param);
             if ("Y".equals(value)) {
@@ -194,7 +260,7 @@ public class OrderListState implements Serializable {
                 orderFilterState.put(param, "N");
             }
         }
-        viewIndex = 0;
+        //viewIndex = 0; // SCIPIO: Handled by copy constructor
     }
 
 
@@ -205,8 +271,10 @@ public class OrderListState implements Serializable {
     public Map<String, String> getOrderTypeState() { return orderTypeState; }
     public Map<String, String> getorderFilterState() { return orderFilterState; }
 
+    /* SCIPIO: now immutable
     public void setStatus(String param, boolean b) { orderStatusState.put(param, (b ? "Y" : "N")); }
     public void setType(String param, boolean b) { orderTypeState.put(param, (b ? "Y" : "N")); }
+    */
 
     public boolean hasStatus(String param) { return ("Y".equals(orderStatusState.get(param))); }
     public boolean hasType(String param) { return ("Y".equals(orderTypeState.get(param))); }
@@ -223,15 +291,21 @@ public class OrderListState implements Serializable {
 
     public int getViewSize() { return viewSize; }
     public int getViewIndex() { return viewIndex; }
-    public int getSize() { return orderListSize; }
+    /**
+     * @deprecated SCIPIO: 2018-11-28: Always returns zero; use result from {@link #getOrders(String, Timestamp, String, Map)} instead.
+     */
+    @Deprecated
+    public int getSize() { return 0; } //return orderListSize; }
 
     public boolean hasPrevious() { return (viewIndex > 0); }
     public boolean hasNext() { return (viewIndex < getSize() / viewSize); }
 
     /**
      * Get the OrderHeaders corresponding to the state.
+     * <p>
+     * SCIPIO: 2018-11-28: This now returns an object having a getTotalOrders method instead of modifying the current instance with orderListSize.
      */
-    public List<GenericValue> getOrders(String facilityId, Timestamp fromDate, String intervalPeriod, Map<String, Object> context)
+    public OrdersResult getOrders(String facilityId, Timestamp fromDate, String intervalPeriod, Map<String, Object> context)
             throws GenericEntityException {
         Delegator delegator = (Delegator) context.get("delegator");
         TimeZone timeZone = (TimeZone) context.get("timeZone");
@@ -289,11 +363,129 @@ public class OrderListState implements Serializable {
         try (EntityListIterator iterator = eq.queryIterator()) {
             // get subset corresponding to pagination state
             List<GenericValue> orders = iterator.getPartialList(viewSize * viewIndex, viewSize);
-            orderListSize = iterator.getResultsSizeAfterPartialList();
-            return orders;
+            // SCIPIO: return instead
+            //orderListSize = iterator.getResultsSizeAfterPartialList();
+            //return orders;
+            int orderListSize = iterator.getResultsSizeAfterPartialList();
+            return new OrdersResult(orders, orderListSize);
         }
     }
 
+    public static class OrdersResult implements Serializable, List<GenericValue> { // SCIPIO
+        private final List<GenericValue> orders;
+        private final int orderListSize;
+
+        OrdersResult(List<GenericValue> orders, int orderListSize) {
+            this.orders = orders;
+            this.orderListSize = orderListSize;
+        }
+
+        public int getTotalOrders() {
+            return orderListSize;
+        }
+
+        @Override
+        public int size() {
+            return orders.size();
+        }
+        @Override
+        public boolean isEmpty() {
+            return orders.isEmpty();
+        }
+        @Override
+        public boolean contains(Object o) {
+            return orders.contains(o);
+        }
+        @Override
+        public Iterator<GenericValue> iterator() {
+            return orders.iterator();
+        }
+        @Override
+        public Object[] toArray() {
+            return orders.toArray();
+        }
+        @Override
+        public <T> T[] toArray(T[] a) {
+            return orders.toArray(a);
+        }
+        @Override
+        public boolean add(GenericValue e) {
+            return orders.add(e);
+        }
+        @Override
+        public boolean remove(Object o) {
+            return orders.remove(o);
+        }
+        @Override
+        public boolean containsAll(Collection<?> c) {
+            return orders.containsAll(c);
+        }
+        @Override
+        public boolean addAll(Collection<? extends GenericValue> c) {
+            return orders.addAll(c);
+        }
+        @Override
+        public boolean addAll(int index, Collection<? extends GenericValue> c) {
+            return orders.addAll(index, c);
+        }
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            return orders.removeAll(c);
+        }
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            return orders.retainAll(c);
+        }
+        @Override
+        public void clear() {
+            orders.clear();
+        }
+        @Override
+        public boolean equals(Object o) {
+            return orders.equals(o);
+        }
+        @Override
+        public int hashCode() {
+            return orders.hashCode();
+        }
+        @Override
+        public GenericValue get(int index) {
+            return orders.get(index);
+        }
+        @Override
+        public GenericValue set(int index, GenericValue element) {
+            return orders.set(index, element);
+        }
+        @Override
+        public void add(int index, GenericValue element) {
+            orders.add(index, element);
+        }
+        @Override
+        public GenericValue remove(int index) {
+            return orders.remove(index);
+        }
+        @Override
+        public int indexOf(Object o) {
+            return orders.indexOf(o);
+        }
+        @Override
+        public int lastIndexOf(Object o) {
+            return orders.lastIndexOf(o);
+        }
+        @Override
+        public ListIterator<GenericValue> listIterator() {
+            return orders.listIterator();
+        }
+        @Override
+        public ListIterator<GenericValue> listIterator(int index) {
+            return orders.listIterator(index);
+        }
+        @Override
+        public List<GenericValue> subList(int fromIndex, int toIndex) {
+            return orders.subList(fromIndex, toIndex);
+        }
+    }
+    
     @Override
     public String toString() {
         StringBuilder buff = new StringBuilder("OrderListState:\n\t");

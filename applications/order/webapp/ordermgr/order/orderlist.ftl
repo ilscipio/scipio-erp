@@ -63,7 +63,7 @@ code package.
 
 <#if hasPermission>
   <@section title=uiLabelMap.OrderOrderList id="findOrderList">        
-      <@paginate mode="content" url=makeOfbizUrl("orderlist") viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=state.getSize() altParam=true>
+      <@paginate mode="content" url=makeOfbizUrl("orderlist") viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=orderHeaderList.getTotalOrders() altParam=true><#-- SCIPIO: Replaced: listSize=state.getSize() -->
         <@table type="data-list" autoAltRows=true>
           <@thead>
           <@tr>

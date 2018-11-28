@@ -27,7 +27,7 @@ partyId = request.getParameter("partyId");
 facilityId = request.getParameter("facilityId");
 
 state = OrderListState.getInstance(request);
-state.update(request);
+state = state.update(request); // SCIPIO: 2018-11-28: now returns the instance to be used
 context.state = state;
 
 // check permission for each order type

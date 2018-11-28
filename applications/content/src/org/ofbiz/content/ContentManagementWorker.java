@@ -84,7 +84,9 @@ public final class ContentManagementWorker {
 
         Map<String, LifoSet<Object>> lookupCaches = UtilGenerics.checkMap(session.getAttribute("lookupCaches"));
         if (lookupCaches == null) {
-            lookupCaches = new HashMap<String, LifoSet<Object>>();
+            // SCIPIO: Thread safety
+            //lookupCaches = new HashMap<String, LifoSet<Object>>();
+            lookupCaches = new ConcurrentHashMap<>();
             session.setAttribute("lookupCaches", lookupCaches);
         }
         String entityName = pk.getEntityName();
@@ -157,7 +159,9 @@ public final class ContentManagementWorker {
         HttpSession session = request.getSession();
         Map<String, GenericEntity> currentEntityMap = UtilGenerics.checkMap(session.getAttribute("currentEntityMap"));
         if (currentEntityMap == null) {
-            currentEntityMap = new HashMap<String, GenericEntity>();
+            // SCIPIO: Thread safety
+            //currentEntityMap = new HashMap<String, GenericEntity>();
+            currentEntityMap = new ConcurrentHashMap<>();
             session.setAttribute("currentEntityMap", currentEntityMap);
         }
         currentEntityMap.put(entityName, ent);
@@ -186,7 +190,9 @@ public final class ContentManagementWorker {
         HttpSession session = request.getSession();
         Map<String, GenericPK> currentEntityMap = UtilGenerics.checkMap(session.getAttribute("currentEntityMap"));
         if (currentEntityMap == null) {
-            currentEntityMap = new HashMap<String, GenericPK>();
+            // SCIPIO: Thread safety
+            //currentEntityMap = new HashMap<String, GenericPK>();
+            currentEntityMap = new ConcurrentHashMap<>();
             session.setAttribute("currentEntityMap", currentEntityMap);
         }
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);

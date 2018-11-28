@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -83,6 +82,8 @@ public class ProductSearchSession {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    // SCIPIO: NOTE: 2018-11-27: All LinkedList changed to ArrayList (a few may have been already ArrayList).
+
     /**
      * Product search options recording class. Stored in session.
      * <p>
@@ -119,7 +120,7 @@ public class ProductSearchSession {
         /** Basic copy constructor */
         public ProductSearchOptions(ProductSearchOptions productSearchOptions) {
             // SCIPIO: rewrote constraintList copy
-            this.constraintList = (productSearchOptions.constraintList != null) ? new LinkedList<>(productSearchOptions.constraintList) : null;
+            this.constraintList = (productSearchOptions.constraintList != null) ? new ArrayList<>(productSearchOptions.constraintList) : null;
             this.topProductCategoryId = productSearchOptions.topProductCategoryId;
             this.resultSortOrder = productSearchOptions.resultSortOrder;
             this.viewIndex = productSearchOptions.viewIndex;
@@ -138,7 +139,7 @@ public class ProductSearchSession {
         public static void addConstraint(ProductSearchConstraint productSearchConstraint, HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
             if (productSearchOptions.constraintList == null) {
-                productSearchOptions.constraintList = new LinkedList<>();
+                productSearchOptions.constraintList = new ArrayList<>();
             }
             if (!productSearchOptions.constraintList.contains(productSearchConstraint)) {
                 productSearchOptions.constraintList.add(productSearchConstraint);
@@ -153,7 +154,7 @@ public class ProductSearchSession {
         public static void removeConstraintsByType(Class<? extends ProductSearchConstraint> constraintCls, HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
             if (productSearchOptions.constraintList == null) {
-                productSearchOptions.constraintList = new LinkedList<>();
+                productSearchOptions.constraintList = new ArrayList<>();
             }
             Iterator<ProductSearchConstraint> it = productSearchOptions.constraintList.iterator();
             while(it.hasNext()) {
@@ -324,7 +325,7 @@ public class ProductSearchSession {
 
         public List<String> searchGetConstraintStrings(boolean detailed, Delegator delegator, Locale locale) {
             List<ProductSearchConstraint> productSearchConstraintList = this.getConstraintList();
-            List<String> constraintStrings = new LinkedList<>();
+            List<String> constraintStrings = new ArrayList<>();
             if (productSearchConstraintList == null) {
                 return constraintStrings;
             }
@@ -364,7 +365,7 @@ public class ProductSearchSession {
          */
         @SuppressWarnings("unchecked")
         protected static <T> List<T> extractConstraints(List<? extends ProductSearchConstraint> contraintList, Class<T> constraintCls) {
-            List<T> kwcList = new LinkedList<>();
+            List<T> kwcList = new ArrayList<>();
             if (contraintList != null) {
                 for(ProductSearchConstraint constraint : contraintList) {
                     if (constraintCls.isAssignableFrom(constraint.getClass())) kwcList.add((T) constraint);
@@ -404,48 +405,95 @@ public class ProductSearchSession {
         return productSearchOptions;
     }
 
+    private static ProductSearchOptions getProductSearchOptionsIfExist(HttpSession session) { // SCIPIO
+        ProductSearchOptions productSearchOptions = ProductSearchOptions.currentOptions.get();
+        if (productSearchOptions == null) {
+            productSearchOptions = (ProductSearchOptions) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_");
+        }
+        return productSearchOptions;
+    }
+    
     private static ProductSearchOptions getProductSearchOptionsCopyOrNew(HttpServletRequest request) { // SCIPIO
         ProductSearchOptions options = getProductSearchOptionsIfExist(request);
         return (options != null) ? new ProductSearchOptions(options) : new ProductSearchOptions();
     }
-    
+
+    private static ProductSearchOptions getProductSearchOptionsCopyOrNew(HttpSession session) { // SCIPIO
+        ProductSearchOptions options = getProductSearchOptionsIfExist(session);
+        return (options != null) ? new ProductSearchOptions(options) : new ProductSearchOptions();
+    }
+
     private static void setProductSearchOptions(HttpServletRequest request, ProductSearchOptions options) { // SCIPIO
-        request.getSession().setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", options);
+        setProductSearchOptions(request.getSession(), options);
+    }
+
+    private static void setProductSearchOptions(HttpSession session, ProductSearchOptions options) { // SCIPIO
+        session.setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", options);
     }
     
     public static void checkSaveSearchOptionsHistory(HttpSession session) {
         ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
         // if the options have changed since the last search, add it to the beginning of the search options history
         if (productSearchOptions.changed) {
-            List<ProductSearchOptions> optionsHistoryList = getSearchOptionsHistoryList(session);
-            optionsHistoryList.add(0, new ProductSearchOptions(productSearchOptions));
-            productSearchOptions.changed = false;
+            synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
+                List<ProductSearchOptions> optionsHistoryList = getSearchOptionsHistoryList(session);
+
+                // SCIPIO: 2018-11-27: clone and re-store the list
+                //optionsHistoryList.add(0, new ProductSearchOptions(productSearchOptions));
+                optionsHistoryList = new ArrayList<>(optionsHistoryList);
+                optionsHistoryList.add(0, new ProductSearchOptions(productSearchOptions));
+                session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", Collections.unmodifiableList(optionsHistoryList));
+
+                // SCIPIO: 2018-11-27: Cannot edit in-place; make another copy and switch the instance
+                //productSearchOptions.changed = false;
+                setProductSearchOptions(session, new ProductSearchOptions(productSearchOptions));
+            }
         }
     }
+
+    /**
+     * getSearchOptionsHistoryList.
+     * <p>
+     * SCIPIO: NOTE: 2018-11-27: The returned list is now immutable.
+     */
     public static List<ProductSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<ProductSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            optionsHistoryList = new LinkedList<>();
-            session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
+            synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
+                optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"));
+                if (optionsHistoryList == null) {
+                    optionsHistoryList = Collections.emptyList(); // SCIPIO: enforce unmodifiable on this one
+                    session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
+                }
+            }
         }
         return optionsHistoryList;
     }
+
     public static void clearSearchOptionsHistoryList(HttpSession session) {
-        session.removeAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_");
+        synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
+            session.removeAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_");
+        }
     }
 
     public static void setCurrentSearchFromHistory(int index, boolean removeOld, HttpSession session) {
+        synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
         List<ProductSearchOptions> searchOptionsHistoryList = getSearchOptionsHistoryList(session);
         if (index < searchOptionsHistoryList.size()) {
             ProductSearchOptions productSearchOptions = searchOptionsHistoryList.get(index);
             if (removeOld) {
+                // SCIPIO: do not edit this list in-place
+                //searchOptionsHistoryList.remove(index);
+                searchOptionsHistoryList = new ArrayList<>(searchOptionsHistoryList);
                 searchOptionsHistoryList.remove(index);
+                session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", Collections.unmodifiableList(searchOptionsHistoryList));
             }
             if (productSearchOptions != null) {
                 session.setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", new ProductSearchOptions(productSearchOptions));
             }
         } else {
             throw new IllegalArgumentException("Could not set current search options to history index [" + index + "], only [" + searchOptionsHistoryList.size() + "] entries in the history list.");
+        }
         }
     }
 
@@ -617,7 +665,31 @@ public class ProductSearchSession {
     }
 
     public static void searchClear(HttpSession session) {
-        ProductSearchOptions.clearSearchOptions(session);
+        // SCIPIO: 2018-11-27: Wrapped in update section, because called directly from scripts
+        synchronized (ProductSearchSession.getLockObj(session)) {
+            ProductSearchOptions options = ProductSearchOptions.currentOptions.get();
+            boolean topLevel = (options == null);
+            if (topLevel) {
+                options = getProductSearchOptionsCopyOrNew(session);
+            }
+            boolean ok = false;
+            try {
+                if (topLevel) {
+                    ProductSearchOptions.currentOptions.set(options);
+                }
+
+                ProductSearchOptions.clearSearchOptions(session);
+
+                ok = true;
+            } finally {
+                if (topLevel) {
+                    ProductSearchOptions.currentOptions.remove();
+                    if (ok) { // (if no exceptions)
+                        setProductSearchOptions(session, options); // store result back in session
+                    }
+                }
+            }
+        }
     }
 
     public static List<String> searchGetConstraintStrings(boolean detailed, HttpSession session, Delegator delegator) {
@@ -681,18 +753,28 @@ public class ProductSearchSession {
                 return;
             }
         }
-        
+
         synchronized (ProductSearchSession.getLockObj(request)) {
-            ProductSearchOptions options = getProductSearchOptionsCopyOrNew(request);
+            ProductSearchOptions options = ProductSearchOptions.currentOptions.get();
+            boolean topLevel = (options == null);
+            if (topLevel) {
+                options = getProductSearchOptionsCopyOrNew(request);
+            }
             boolean ok = false;
             try {
-                ProductSearchOptions.currentOptions.set(options);
+                if (topLevel) {
+                    ProductSearchOptions.currentOptions.set(options);
+                }
+
                 processSearchParametersCore(parameters, request, alreadyRun);
+
                 ok = true;
             } finally {
-                ProductSearchOptions.currentOptions.remove();
-                if (ok) { // (if no exceptions)
-                    setProductSearchOptions(request, options); // store result back in session
+                if (topLevel) {
+                    ProductSearchOptions.currentOptions.remove();
+                    if (ok) { // (if no exceptions)
+                        setProductSearchOptions(request, options); // store result back in session
+                    }
                 }
             }
         }
@@ -1089,7 +1171,7 @@ public class ProductSearchSession {
         //int previousViewSize = 20;
         int previousViewSize = viewSize;
         Map<String, Object> requestParams = UtilHttp.getCombinedMap(request);
-        List<String> keywordTypeIds = new LinkedList<>();
+        List<String> keywordTypeIds = new ArrayList<>();
         if (requestParams.get("keywordTypeId") instanceof String) {
             keywordTypeIds.add((String) requestParams.get("keywordTypeId"));
         } else if (requestParams.get("keywordTypeId") instanceof List){
@@ -1127,7 +1209,7 @@ public class ProductSearchSession {
         highIndex = (viewIndex + 1) * viewSize;
 
         // ========== Do the actual search
-        List<String> productIds = new LinkedList<>();
+        List<String> productIds = new ArrayList<>();
         String visitId = VisitHandler.getVisitId(session);
         List<ProductSearchConstraint> productSearchConstraintList = ProductSearchOptions.getConstraintList(session);
         String noConditionFind = (String) requestParams.get("noConditionFind");
@@ -1145,7 +1227,7 @@ public class ProductSearchSession {
             if (UtilValidate.isNotEmpty(addOnTopProdCategoryId)) {
                 // always include the members of the addOnTopProdCategoryId
                 Timestamp now = UtilDateTime.nowTimestamp();
-                List<EntityCondition> addOnTopProdCondList = new LinkedList<>();
+                List<EntityCondition> addOnTopProdCondList = new ArrayList<>();
                 addOnTopProdCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, now)));
                 addOnTopProdCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, now));
                 addOnTopProdCondList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, addOnTopProdCategoryId));
@@ -1463,7 +1545,7 @@ public class ProductSearchSession {
                 .cursorScrollInsensitive()
                 .queryIterator()) {
 
-            featureCountList = new LinkedList<>();
+            featureCountList = new ArrayList<>();
             GenericValue searchResult = null;
             while ((searchResult = eli.next()) != null) {
                 featureCountList.add(UtilMisc.<String, String>toMap("productFeatureId", (String) searchResult.get("pfacProductFeatureId"), "productFeatureTypeId", (String) searchResult.get("pfcProductFeatureTypeId"), "description", (String) searchResult.get("pfcDescription"), "featureCount", Long.toString((Long) searchResult.get("featureCount"))));
@@ -1509,7 +1591,7 @@ public class ProductSearchSession {
 
         DynamicViewEntity dynamicViewEntity = productSearchContext.dynamicViewEntity;
         List<EntityCondition> entityConditionList = productSearchContext.entityConditionList;
-        List<String> fieldsToSelect = new LinkedList<>();
+        List<String> fieldsToSelect = new ArrayList<>();
 
         dynamicViewEntity.addMemberEntity("PPC", "ProductPrice");
         dynamicViewEntity.addAlias("PPC", "ppcProductPriceTypeId", "productPriceTypeId", null, null, null, null);
@@ -1565,7 +1647,7 @@ public class ProductSearchSession {
 
         DynamicViewEntity dynamicViewEntity = productSearchContext.dynamicViewEntity;
         List<EntityCondition> entityConditionList = productSearchContext.entityConditionList;
-        List<String> fieldsToSelect = new LinkedList<>();
+        List<String> fieldsToSelect = new ArrayList<>();
 
         dynamicViewEntity.addMemberEntity("PCMC", "ProductCategoryMember");
         dynamicViewEntity.addAlias("PCMC", "pcmcProductCategoryId", "productCategoryId", null, null, null, null);
@@ -1608,15 +1690,26 @@ public class ProductSearchSession {
      * Added 2018-11-27.
      */
     public static Object getLockObj(HttpServletRequest request) {
-        Object lockObj = request.getSession().getAttribute("_PRODUCT_SEARCH_LOCK_");
+        return getLockObj(request.getSession());
+    }
+
+    /**
+     * SCIPIO: Gets the search session lock object from session.
+     * <p>
+     * NOTE: Also set by {@link org.ofbiz.order.shoppingcart.CartEventListener#sessionCreated(HttpSessionEvent)}.
+     * <p>
+     * Added 2018-11-27.
+     */
+    public static Object getLockObj(HttpSession session) { // SCIPIO
+        Object lockObj = session.getAttribute("_PRODUCT_SEARCH_LOCK_");
         if (lockObj == null) {
             Debug.logWarning("Product search session lock object not found in session; creating", module);
             lockObj = createLockObject();
-            request.getSession().setAttribute("_PRODUCT_SEARCH_LOCK_", lockObj);
+            session.setAttribute("_PRODUCT_SEARCH_LOCK_", lockObj);
         }
         return lockObj;
     }
-
+    
     @SuppressWarnings("serial")
     public static Object createLockObject() { // SCIPIO
         return new java.io.Serializable() {};

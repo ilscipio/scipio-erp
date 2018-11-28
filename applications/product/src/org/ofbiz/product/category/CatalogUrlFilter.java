@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -379,7 +378,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 while(li.hasPrevious()) {
                     String trailCatId = li.previous();
                     if (categoryId.equals(trailCatId)) {
-                        trailElements = new LinkedList<String>();
+                        trailElements = new ArrayList<>();
                         trailElements.add(categoryId);
                         break;
                     }
@@ -389,7 +388,7 @@ public class CatalogUrlFilter extends ContextFilter {
                     while(li.hasPrevious()) {
                         String trailCatId = li.previous();
                         if (CategoryWorker.isCategoryChildOf(request, trailCatId, categoryId)) {
-                            trailElements = new LinkedList<String>();
+                            trailElements = new ArrayList<>();
                             trailElements.add(trailCatId);
                             trailElements.add(categoryId);
                             break;
@@ -406,7 +405,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 while(li.hasPrevious()) {
                     String trailCatId = li.previous();
                     if (CategoryWorker.isCategoryContainsProduct(request, trailCatId, productId)) {
-                        trailElements = new LinkedList<String>();
+                        trailElements = new ArrayList<>();
                         trailElements.add(trailCatId);
                         break;
                     }
@@ -526,7 +525,7 @@ public class CatalogUrlFilter extends ContextFilter {
      * SCIPIO: Stock code factored out from doGet.
      */
     public static List<String> getTrailElements(Delegator delegator, String productCategoryId, List<String> trailCategoryIds) {
-        List<String> trailElements = new LinkedList<String>();
+        List<String> trailElements = new ArrayList<>();
         trailElements.add(productCategoryId);
         String parentProductCategoryId = productCategoryId;
         while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
@@ -589,7 +588,7 @@ public class CatalogUrlFilter extends ContextFilter {
 
         List<String> trail = CategoryWorker.getTrail(request);
         if (trail == null) {
-            trail = new LinkedList<String>();
+            trail = new ArrayList<>();
         }
 
         // adjust trail
@@ -652,7 +651,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 if (trail == null) {
                     trail = CategoryWorker.getTrail(request);
                     if (trail == null) {
-                        trail = new LinkedList<String>();
+                        trail = new ArrayList<>();
                     }
                 }
 
@@ -853,7 +852,7 @@ public class CatalogUrlFilter extends ContextFilter {
             url = urlBuilder.toString();
         } else {
             if (UtilValidate.isEmpty(trail)) {
-                trail = new LinkedList<String>();
+                trail = new ArrayList<>();
             }
             url = CatalogUrlServlet.makeCatalogUrl(contextPath, trail, productId, productCategoryId, previousCategoryId);
         }
@@ -896,7 +895,7 @@ public class CatalogUrlFilter extends ContextFilter {
             url = urlBuilder.toString();
         } else {
             if (UtilValidate.isEmpty(trail)) {
-                trail = new LinkedList<String>();
+                trail = new ArrayList<>();
             }
             url = CatalogUrlServlet.makeCatalogUrl(contextPath, trail, productId, productCategoryId, previousCategoryId);
         }

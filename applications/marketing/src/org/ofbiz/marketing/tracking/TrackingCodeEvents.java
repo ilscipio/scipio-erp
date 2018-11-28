@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -303,7 +304,7 @@ public class TrackingCodeEvents {
             // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request,
             // otherwise may lose work done by servlets and filters
             //CategoryWorker.setTrail(request, new LinkedList<String>());
-            CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());
+            CategoryWorker.setTrailIfFirstInRequest(request, new ArrayList<>()); // SCIPIO: ArrayList
         }
 
         // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views

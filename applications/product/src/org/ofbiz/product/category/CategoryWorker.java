@@ -275,7 +275,7 @@ public final class CategoryWorker {
     }
 
     public static List<String> adjustTrail(List<String> origTrail, String currentCategoryId, String previousCategoryId) {
-        List<String> trail = new LinkedList<String>();
+        List<String> trail = new ArrayList<>();
         if (origTrail != null) {
             trail.addAll(origTrail);
         }
@@ -326,6 +326,11 @@ public final class CategoryWorker {
         return trail;
     }
 
+    /**
+     * Gets the breadcrumb trail.
+     * <p>
+     * SCIPIO: NOTE: 2018-11-28: This no longer uses LinkedList.
+     */
     public static List<String> getTrail(ServletRequest request) {
         HttpSession session = ((HttpServletRequest) request).getSession();
         // SCIPIO: 2016-13-22: Trail must also be checked in request attributes to ensure the request is consistent

@@ -184,8 +184,8 @@ public final class CatalogWorker {
             if (saveTrail) {
                 // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request,
                 // otherwise may lose work done by servlets and filters
-                //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
-                CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());
+                //CategoryWorker.setTrail(request, new ArrayList<>());
+                CategoryWorker.setTrailIfFirstInRequest(request, new ArrayList<>()); // SCIPIO: use ArrayList
             }
         }
         return prodCatalogId;

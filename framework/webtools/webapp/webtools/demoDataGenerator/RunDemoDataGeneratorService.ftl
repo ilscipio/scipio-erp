@@ -6,9 +6,8 @@
   	<#local fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#local>
   	<#if rawName?has_content && rawName == "dataGeneratorProviderId">
       	 <@field type="select" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name="dataGeneratorProviderId">
-		 	<option value="">---</option>
 		 	<#list dataGeneratorProviders as dataGeneratorProvider>
-		 		<option value="${dataGeneratorProvider.dataGeneratorProviderId}">${dataGeneratorProvider.dataGeneratorProviderName}</option>
+		 		<option value="${dataGeneratorProvider.dataGeneratorProviderId}" <#if "LOCAL" == dataGeneratorProvider.dataGeneratorProviderId>selected</#if>>${dataGeneratorProvider.dataGeneratorProviderName}</option>
 		 	</#list>
 		 </@field>
 	</#if>

@@ -111,15 +111,25 @@ if (product) {
 
     // set this as a last viewed
     LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
+    // SCIPIO: Thread safety: 2018-11-28: Fixes below make the session attribute immutable and safer.
+    // The synchronized block locks on the _previous_ list instance, and then changes the instance.
+    // FIXME?: Small chance of lost updates on first request because sync on HttpSession not officially supported,
+    // but odds are extremely low
     lastViewedProducts = session.getAttribute("lastViewedProducts");
+    synchronized(lastViewedProducts != null ? lastViewedProducts : session) {
+    lastViewedProducts = session.getAttribute("lastViewedProducts"); // SCIPIO: Re-read because other thread changed it
     if (!lastViewedProducts) {
         lastViewedProducts = [];
-        session.setAttribute("lastViewedProducts", lastViewedProducts);
+        //session.setAttribute("lastViewedProducts", lastViewedProducts); // SCIPIO: Moved below
+    } else {
+        lastViewedProducts = new ArrayList(lastViewedProducts); // SCIPIO: Make local copy
     }
     lastViewedProducts.remove(productId);
     lastViewedProducts.add(0, productId);
     while (lastViewedProducts.size() > LAST_VIEWED_TO_KEEP) {
         lastViewedProducts.remove(lastViewedProducts.size() - 1);
+    }
+    session.setAttribute("lastViewedProducts", lastViewedProducts); // SCIPIO: Safe publish
     }
 
     // make the productContentWrapper

@@ -13,23 +13,25 @@ code package.
   <#--if parentCategory.productCategoryId != category.productCategoryId>
     <#local pStr = "/~pcategory=" + parentCategory.productCategoryId>
   </#if-->
+  <#local shoppingCart = sessionAttributes.shoppingCart!>
+  <#local purchaseOrder = (shoppingCart.isPurchaseOrder())!false>
   <#if curCategoryId?? && curCategoryId == category.productCategoryId>
     <div class="browsecategorytext">
      <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")?has_content>
-       <#if sessionAttributes.shoppingCart?? && sessionAttributes.shoppingCart.isPurchaseOrder()>
-         <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")}</a>
+       <#if purchaseOrder>
+         <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")}</a>
        <#else>
          <a href="<@ofbizUrl>category?category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")}</a>
        </#if>
      <#elseif catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("DESCRIPTION")?has_content>
-       <#if sessionAttributes.shoppingCart?? && sessionAttributes.shoppingCart.isPurchaseOrder()>
-         <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")}</a>
+       <#if purchaseOrder>
+         <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")}</a>
        <#else>
          <a href="<@ofbizUrl>category?category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")}</a>
        </#if>
      <#else>
-      <#if sessionAttributes.shoppingCart?? && sessionAttributes.shoppingCart.isPurchaseOrder()>
-        <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.categoryName!}</a>
+      <#if purchaseOrder>
+        <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.categoryName!}</a>
       <#else>
         <a href="<@ofbizUrl>category?category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.categoryName?default(category.description)?default(category.productCategoryId)}</a>
       </#if>
@@ -38,20 +40,20 @@ code package.
   <#else>
     <div class="browsecategorytext">
      <#if catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")?has_content>
-      <#if sessionAttributes.shoppingCart?? && sessionAttributes.shoppingCart.isPurchaseOrder()>
-        <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")}</a>
+      <#if purchaseOrder>
+        <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")}</a>
       <#else>
         <a href="<@ofbizUrl>category?category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")}</a>
       </#if>
      <#elseif catContentWrappers[category.productCategoryId].get("DESCRIPTION")?has_content>
-      <#if sessionAttributes.shoppingCart?? && sessionAttributes.shoppingCart.isPurchaseOrder()>
-        <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")}</a>
+      <#if purchaseOrder>
+        <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")}</a>
       <#else>
         <a href="<@ofbizUrl>category?category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")}</a>
       </#if>
      <#else>
-      <#if sessionAttributes.shoppingCart?? && sessionAttributes.shoppingCart.isPurchaseOrder()>
-        <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${category.categoryName!}</a>
+      <#if purchaseOrder>
+        <a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${shoppingCart.partyId!}/~category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${category.categoryName!}</a>
       <#else>
         <a href="<@ofbizUrl>category?category_id=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${category.categoryName?default(category.description)?default(category.productCategoryId)}</a>
       </#if>

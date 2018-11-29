@@ -29,7 +29,7 @@ code package.
           <ul class="no-bullet">
             <#list orderHeaderStatuses as orderHeaderStatus>
               <#assign loopStatusItem = orderHeaderStatus.getRelatedOne("StatusItem", false)>
-              <#assign userlogin = orderHeaderStatus.getRelatedOne("UserLogin", false)>
+              <#--<#assign userlogin = orderHeaderStatus.getRelatedOne("UserLogin", false)>-->
             
               <li>${loopStatusItem.get("description",locale)} <#if orderHeaderStatus.statusDatetime?has_content>- <@formattedDateTime date=orderHeaderStatus.statusDatetime defaultVal="0000-00-00 00:00:00"/></#if>
                       &nbsp;

@@ -948,7 +948,12 @@ code package.
     <simple-method method-name="createUpdateUserLogin" short-description="Create and update a user login" login-required="false">
         <!-- Check if for this user still an anonymus user login exists and remove it -->
         <session-to-field field="user" session-name="userLogin"/>
-        <session-to-field field="cart" session-name="shoppingCart"/>
+        <!-- SCIPIO: don't do this
+        <session-to-field field="cart" session-name="shoppingCart"/>-->
+        <script lang="groovy"><![CDATA[
+            cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO
+            context.cart = cart;
+        ]]></script>
 
         <if>
             <condition>
@@ -1048,12 +1053,15 @@ code package.
 
     <simple-method method-name="getShipOptions" short-description="Get shipping options" login-required="false">
         <set field="dispatcher" from-field="parameters.dispatcher" type="Object"/>
+        <!-- SCIPIO: don't do this (groovy below)
         <set field="shoppingCart" from-field="parameters.shoppingCart"/>
         <if-empty field="shoppingCart">
             <session-to-field field="shoppingCart"/>
-        </if-empty>
+        </if-empty>-->
         <script>groovy:
                 import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
+                shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO
+                context.shoppingCart = shoppingCart;
                 shippingEstWpr = ShippingEstimateWrapper.getWrapper(dispatcher, shoppingCart, 0);
                 parameters.put("shippingEstWpr", shippingEstWpr);
         </script>

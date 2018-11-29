@@ -28,15 +28,13 @@ import org.ofbiz.entity.util.EntityUtil;
 
 createNewShipGroup = request.getParameter("createNewShipGroup");
 if ("Y".equals(createNewShipGroup)) {
-    CartUpdate cartUpdate = new CartUpdate(request);
+    CartUpdate cartUpdate = CartUpdate.updateSection(request);
     try { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
-            cart = cartUpdate.getCartForUpdate();
+        cart = cartUpdate.getCartForUpdate();
 
-            cart.addShipInfo();
+        cart.addShipInfo();
 
-            cart = cartUpdate.commit(cart); // SCIPIO
-        }
+        cart = cartUpdate.commit(cart); // SCIPIO
     } finally {
         cartUpdate.close();
     }

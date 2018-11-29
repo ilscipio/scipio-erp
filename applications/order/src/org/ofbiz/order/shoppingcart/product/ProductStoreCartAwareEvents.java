@@ -28,6 +28,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.order.shoppingcart.CartSync;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.WebShoppingCart;
@@ -104,7 +105,7 @@ public class ProductStoreCartAwareEvents {
         // - leave the old cart as-is (don't clear it, want to leave the auto-save list intact)
         // - but create a new cart (which will load from auto-save list if applicable) and put it in the session
 
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
         // this should always be different given the previous session productStoreId check, but just in case...
         if (!productStoreId.equals(cart.getProductStoreId())) {

@@ -228,7 +228,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * <p>
      * Added 2018-11-20.
      */
-    protected Serializable lockObj = createLockObject();
+    protected CartSync lockObj = createLockObject();
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -6218,34 +6218,29 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /**
-     * SCIPIO: Returns an object which can be used for locking across multiple cart instances. 
+     * SCIPIO: Returns an object which can be used for locking across multiple cart modifications. 
      * It is transferred over to new instances by the copy constructor.
-     * <p>
-     * NOTE: This object is expected to be stored as the session attribute "shoppingCartLock".
-     * If you lock on this object returned by {@link #getLockObject()}, then inside the synchronized block you
-     * must re-fetch the ShoppingCart instance in case another thread changed the cart reference.
      * <p>
      * Added 2018-11-20.
      */
-    public Object getLockObject() {
+    public CartSync getLockObject() {
         return lockObj;
     }
 
     /**
-     * SCIPIO: Sets an object which can be used for locking across multiple cart instances. 
+     * SCIPIO: Sets an object which can be used for locking across multiple cart modifications. 
      * It is transferred over to new instances by the copy constructor.
-     * NOTE: This object must implement Serializable.
      * Added 2018-11-20.
      */
-    public void setLockObject(Serializable lock) {
+    public void setLockObject(CartSync lock) {
         this.lockObj = lock;
     }
 
     /**
-     * SCIPIO: Create a new lock object for {@link #setLockObject(Serializable)} and the
+     * SCIPIO: Create a new lock object for {@link #setLockObject} and the
      * shoppingCartLock session attribute.
      */
-    public static Serializable createLockObject() {
-        return new Serializable() {};
+    public static CartSync createLockObject() {
+        return CartSync.create();
     }
 }

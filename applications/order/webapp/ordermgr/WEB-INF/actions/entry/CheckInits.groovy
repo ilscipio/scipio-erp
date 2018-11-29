@@ -67,16 +67,14 @@ if (partyId) {
     if (party) {
         contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
         if (contactMech) {
-            CartUpdate cartUpdate = new CartUpdate(request);
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
             try { // SCIPIO
-                synchronized (cartUpdate.getLockObject()) {
-                    shoppingCart = cartUpdate.getCartForUpdate();
-                    
-                    shoppingCart.setAllShippingContactMechId(contactMech.contactMechId);
-                    
-                    shoppingCart = cartUpdate.commit(shoppingCart);
-                    context.shoppingCart = shoppingCart;
-                }
+                shoppingCart = cartUpdate.getCartForUpdate();
+                
+                shoppingCart.setAllShippingContactMechId(contactMech.contactMechId);
+                
+                shoppingCart = cartUpdate.commit(shoppingCart);
+                context.shoppingCart = shoppingCart;
             } finally {
                 cartUpdate.close();
             }

@@ -482,14 +482,11 @@ code package.
         </if-not-empty>
 
         <!-- SCIPIO: Synchronized cart updates -->
+        <try>
         <script lang="groovy"><![CDATA[
             import org.ofbiz.order.shoppingcart.*;
-            CartUpdate cartUpdate = new CartUpdate(request);
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
             context.cartUpdate = cartUpdate;
-            context.cartLock = cartUpdate.getLockObject();
-        ]]></script>
-        <synchronized field="cartLock">
-        <script lang="groovy"><![CDATA[
             context.cart = cartUpdate.getCartForUpdate();
         ]]></script>
 
@@ -562,12 +559,16 @@ code package.
         <!-- set the partyId in the request -->
         <field-to-request field="partyId" request-name="partyId"/>
         
-        <!-- SCIPIO: Commit cart update (FIXME?: cartUpdate.close() should be outside synchronized in a finally block, but works for now) -->
+        <!-- SCIPIO: Commit cart update -->
         <script lang="groovy"><![CDATA[
-            cart = cartUpdate.commit(cart); // SCIPIO
-            cartUpdate.close();
+            cart = cartUpdate.commit(cart);
         ]]></script>
-        </synchronized>
+        <finally>
+            <script lang="groovy"><![CDATA[
+                context.cartUpdate?.close();
+            ]]></script>
+        </finally>
+        </try>
     </simple-method>
 
     <simple-method method-name="processShipOptions" short-description="Process Ship Options; to be called as a Request Event" login-required="false">
@@ -580,14 +581,11 @@ code package.
         </script>
        
         <!-- SCIPIO: Synchronized cart updates -->
+        <try>
         <script lang="groovy"><![CDATA[
             import org.ofbiz.order.shoppingcart.*;
-            CartUpdate cartUpdate = new CartUpdate(request);
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
             context.cartUpdate = cartUpdate;
-            context.cartLock = cartUpdate.getLockObject();
-        ]]></script>
-        <synchronized field="cartLock">
-        <script lang="groovy"><![CDATA[
             context.cart = cartUpdate.getCartForUpdate();
         ]]></script>
 
@@ -633,13 +631,17 @@ code package.
                </call-object-method>
            </if-not-empty>
         </if-not-empty>
-       
-        <!-- SCIPIO: Commit cart update (FIXME?: cartUpdate.close() should be outside synchronized in a finally block, but works for now) -->
+
+        <!-- SCIPIO: Commit cart update -->
         <script lang="groovy"><![CDATA[
-            cart = cartUpdate.commit(cart); // SCIPIO
-            cartUpdate.close();
+            cart = cartUpdate.commit(cart);
         ]]></script>
-        </synchronized>
+        <finally>
+            <script lang="groovy"><![CDATA[
+                context.cartUpdate?.close();
+            ]]></script>
+        </finally>
+        </try>
     </simple-method>
 
 </simple-methods>

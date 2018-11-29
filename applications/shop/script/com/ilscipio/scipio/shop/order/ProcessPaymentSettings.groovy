@@ -35,8 +35,8 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 //cart = ShoppingCartEvents.getCartObject(request);
-try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-synchronized (cartUpdate.getLockObject()) {
+CartUpdate cartUpdate = CartUpdate.updateSection(request);
+try { // SCIPIO
 cart = cartUpdate.getCartForUpdate();
     
 dispatcher = request.getAttribute("dispatcher");
@@ -88,7 +88,8 @@ if (errorMessages || errorMaps) {
 }
 
 cartUpdate.commit(cart); // SCIPIO
-}
+} finally {
+    cartUpdate.close();
 }
 
 return "success";

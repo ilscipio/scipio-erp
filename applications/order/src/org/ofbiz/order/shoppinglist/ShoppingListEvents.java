@@ -78,8 +78,7 @@ public class ShoppingListEvents {
         String shoppingListTypeId = request.getParameter("shoppingListTypeId");
         String selectedCartItems[] = request.getParameterValues("selectedItem");
         
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         if (UtilValidate.isEmpty(selectedCartItems)) {
@@ -94,7 +93,6 @@ public class ShoppingListEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         request.setAttribute("shoppingListId", shoppingListId);
         return "success";
@@ -190,8 +188,7 @@ public class ShoppingListEvents {
         String includeChild = request.getParameter("includeChild");
         String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         try {
@@ -202,7 +199,6 @@ public class ShoppingListEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -441,8 +437,7 @@ public class ShoppingListEvents {
     public static String saveCartToAutoSaveList(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         try {
@@ -452,7 +447,6 @@ public class ShoppingListEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -472,8 +466,7 @@ public class ShoppingListEvents {
 
         HttpSession session = request.getSession();
         
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         // safety check for missing required parameter.
@@ -552,7 +545,6 @@ public class ShoppingListEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -700,14 +692,12 @@ public class ShoppingListEvents {
             }
         }
         if (UtilValidate.isNotEmpty(autoSaveListId)) {
-            try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-            synchronized (cartUpdate.getLockObject()) {
+            try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
             ShoppingCart cart = cartUpdate.getCartForUpdate();
 
             cart.setAutoSaveListId(autoSaveListId);
 
             cartUpdate.commit(cart); // SCIPIO
-            }
             }
         }
         return "success";

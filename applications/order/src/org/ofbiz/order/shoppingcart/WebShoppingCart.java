@@ -18,7 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.order.shoppingcart;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,9 +71,9 @@ public class WebShoppingCart extends ShoppingCart {
         // NOTE: Ideally shoppingCartLock should only be set by session listeners (CartEventListener), but
         // is not present in ordermgr (FIXME?)
         // WARN: 2018-11-20: The behavior here is subject to change
-        Object shoppingCartLock = session.getAttribute("shoppingCartLock");
+        CartSync shoppingCartLock = (CartSync) session.getAttribute("shoppingCartLock");
         if (shoppingCartLock != null) {
-            this.setLockObject((Serializable) shoppingCartLock);
+            this.setLockObject(shoppingCartLock);
         } else {
             session.setAttribute("shoppingCartLock", this.getLockObject());
             Debug.logWarning("No shoppingCartLock found in session; creating", module);

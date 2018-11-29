@@ -28,9 +28,8 @@ import org.ofbiz.order.shoppingcart.shipping.*;
 
 // SCIPIO: FIXME: Having cart updates in a groovy script is very inefficient and not proper
 // and this probably triggers cart updates for no reason
-CartUpdate cartUpdate = new CartUpdate(request);
+CartUpdate cartUpdate = CartUpdate.updateSection(request);
 try { // SCIPIO
-synchronized (cartUpdate.getLockObject()) {
 //shoppingCart = session.getAttribute("shoppingCart");
 shoppingCart = cartUpdate.getCartForUpdate();
     
@@ -106,7 +105,7 @@ context.cartParties = cartParties;
 
 shoppingCart = cartUpdate.commit(shoppingCart); // SCIPIO
 context.shoppingCart = shoppingCart;
-}
+
 } finally {
     cartUpdate.close();
 }

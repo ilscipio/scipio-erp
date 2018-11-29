@@ -75,15 +75,13 @@ if (userLogin) {
         context.shipToFaxExtension = faxPartyContactMech.extension;
     }
     
-    CartUpdate cartUpdate = new CartUpdate(request);
+    CartUpdate cartUpdate = CartUpdate.updateSection(request);
     try { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
-            ShoppingCart cart = cartUpdate.getCartForUpdate();
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
 
-            cart.setAllShippingContactMechId(context.shipToContactMechId); // SCIPIO
+        cart.setAllShippingContactMechId(context.shipToContactMechId); // SCIPIO
 
-            cart = cartUpdate.commit(cart); // SCIPIO
-        }
+        cart = cartUpdate.commit(cart); // SCIPIO
     } finally {
         cartUpdate.close();
     }

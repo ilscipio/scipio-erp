@@ -59,28 +59,26 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
                     boolean committed = false;
                     String result;
                     try {
-                        try (CartUpdate cartUpdate = new CartUpdate(request, "CartSyncEventHandlerWrapper")) { // SCIPIO
-                            synchronized (cartUpdate.getLockObject()) {
-                                // NOTE: If there's no shoppingCart in session, there's nothing for the service to modify,
-                                // so we don't need to do anything - HOWEVER we still need the synchronized block
-                                // to (help) ensure the session attribute shoppingCart is not changed between the time
-                                // we check it here and the time the ServiceEventHandler re-reads the attribute
-                                if (prevRequestCart != null || request.getSession().getAttribute("shoppingCart") != null) {
-                                    ShoppingCart cart = cartUpdate.getCartForUpdate();
-                                    // NOTE: This will take priority over the session attribute shoppingCart
-                                    request.setAttribute("shoppingCart", cart);
-                                    result = handlers.next().invoke(handlers, event, requestMap, request, response);
-                                    if ("error".equals(result)) {
-                                        Debug.logWarning("Event service '" + serviceName 
-                                                + "' returned occur; discarding shoppingCart changes", module);
-                                    } else {
-                                        // TODO?: handle case where shoppingCart is also OUT...
-                                        // (for now, prefer avoid looking up the ModelService until tangible need)
-                                        cartUpdate.commit(cart);
-                                        committed = cartUpdate.isCommitted();
-                                    }
-                                    return result;
+                        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) {
+                            // NOTE: If there's no shoppingCart in session, there's nothing for the service to modify,
+                            // so we don't need to do anything - HOWEVER we still need the synchronized block
+                            // to (help) ensure the session attribute shoppingCart is not changed between the time
+                            // we check it here and the time the ServiceEventHandler re-reads the attribute
+                            if (prevRequestCart != null || request.getSession().getAttribute("shoppingCart") != null) {
+                                ShoppingCart cart = cartUpdate.getCartForUpdate();
+                                // NOTE: This will take priority over the session attribute shoppingCart
+                                request.setAttribute("shoppingCart", cart);
+                                result = handlers.next().invoke(handlers, event, requestMap, request, response);
+                                if ("error".equals(result)) {
+                                    Debug.logWarning("Event service '" + serviceName 
+                                            + "' returned occur; discarding shoppingCart changes", module);
+                                } else {
+                                    // TODO?: handle case where shoppingCart is also OUT...
+                                    // (for now, prefer avoid looking up the ModelService until tangible need)
+                                    cartUpdate.commit(cart);
+                                    committed = cartUpdate.isCommitted();
                                 }
+                                return result;
                             }
                         }
                     } finally {

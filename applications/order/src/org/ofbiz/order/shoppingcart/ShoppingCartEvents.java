@@ -93,8 +93,7 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String productPromoCodeId = request.getParameter("productPromoCodeId");
         if (UtilValidate.isNotEmpty(productPromoCodeId)) {
-            try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-            synchronized (cartUpdate.getLockObject()) {
+            try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
             ShoppingCart cart = cartUpdate.getCartForUpdate();
             
             String checkResult = cart.addProductPromoCode(productPromoCodeId, dispatcher);
@@ -104,7 +103,6 @@ public class ShoppingCartEvents {
             }
             
             cartUpdate.commit(cart);
-            }
             }
         }
         request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resource, "OrderPromoAppliedSuccessfully", UtilMisc.toMap("productPromoCodeId", productPromoCodeId), locale));
@@ -117,8 +115,7 @@ public class ShoppingCartEvents {
         String result = "error";
 
         if (!promoCodeId.isEmpty()) {
-            try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-            synchronized (cartUpdate.getLockObject()) {
+            try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
             ShoppingCart cart = cartUpdate.getCartForUpdate();
 
             cart.getProductPromoCodesEntered().clear();
@@ -165,7 +162,6 @@ public class ShoppingCartEvents {
             }
 
             }
-            }
         }
         return result;
     }
@@ -175,15 +171,13 @@ public class ShoppingCartEvents {
         String groupName = (String) parameters.get("groupName");
         String parentGroupNumber = (String) parameters.get("parentGroupNumber");
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         String groupNumber = cart.addItemGroup(groupName, parentGroupNumber);
         request.setAttribute("itemGroupNumber", groupNumber);
 
         cartUpdate.commit(cart);
-        }
         }
         return "success";
     }
@@ -194,15 +188,13 @@ public class ShoppingCartEvents {
         String indexStr = (String) parameters.get("lineIndex");
         int index = Integer.parseInt(indexStr);
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
         ShoppingCartItem cartItem = cart.findCartItem(index);
         cartItem.setItemGroup(itemGroupNumber, cart);
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -318,8 +310,7 @@ public class ShoppingCartEvents {
             itemDescription = null;
         }
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
             
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
@@ -728,7 +719,6 @@ public class ShoppingCartEvents {
         }
 
         }
-        }
 
         return "success";
     }
@@ -746,8 +736,7 @@ public class ShoppingCartEvents {
 
         boolean addAll = ("true".equals(request.getParameter("add_all")));
         
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
@@ -760,7 +749,6 @@ public class ShoppingCartEvents {
         }
         
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -779,8 +767,7 @@ public class ShoppingCartEvents {
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
@@ -793,7 +780,6 @@ public class ShoppingCartEvents {
         }
         
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -852,7 +838,7 @@ public class ShoppingCartEvents {
 
         cart.setOrderType("PURCHASE_ORDER");
 
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
@@ -865,15 +851,13 @@ public class ShoppingCartEvents {
     public static String quickCheckoutOrderWithDefaultOptions(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         // Set the cart's default checkout options for a quick checkout
         cart.setDefaultCheckoutOptions(dispatcher);
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -889,8 +873,7 @@ public class ShoppingCartEvents {
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
@@ -903,7 +886,6 @@ public class ShoppingCartEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -925,8 +907,7 @@ public class ShoppingCartEvents {
         BigDecimal totalQuantity;
         Locale locale = UtilHttp.getLocale(request);
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
@@ -939,7 +920,6 @@ public class ShoppingCartEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
 
         totalQuantity = (BigDecimal) result.get("totalQuantity");
@@ -961,8 +941,7 @@ public class ShoppingCartEvents {
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 
         //Delegate to the cart helper
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
@@ -975,7 +954,6 @@ public class ShoppingCartEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -995,8 +973,7 @@ public class ShoppingCartEvents {
         String selectedItems[] = request.getParameterValues("selectedItem");
         boolean removeSelected = ("true".equals(removeSelectedFlag) && selectedItems != null && selectedItems.length > 0);
         
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
@@ -1010,20 +987,17 @@ public class ShoppingCartEvents {
 
         cartUpdate.commit(cart); // SCIPIO
         }
-        }
         return "success";
     }
 
     /** Empty the shopping cart. */
     public static String clearCart(HttpServletRequest request, HttpServletResponse response) {
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         cart.clear();
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
 
         // if this was an anonymous checkout process, go ahead and clear the session and such now that the order is placed; we don't want this to mess up additional orders and such
@@ -1101,7 +1075,7 @@ public class ShoppingCartEvents {
     /** Totally wipe out the cart, removes all stored info. */
     public static String destroyCart(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         clearCart(request, response);
         session.removeAttribute("shoppingCart");
         session.removeAttribute("orderPartyId");
@@ -1127,7 +1101,7 @@ public class ShoppingCartEvents {
             //session.setAttribute("shoppingCart", cart);
             ShoppingCart prevCart = (ShoppingCart) session.getAttribute("shoppingCart");
             if (prevCart != cart) {
-                synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+                try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
                     prevCart = (ShoppingCart) session.getAttribute("shoppingCart");
                     if (prevCart != cart) {
                         if (prevCart != null) {
@@ -1141,7 +1115,7 @@ public class ShoppingCartEvents {
 
         boolean cartIsNew = false;
         if (cart == null) {
-            synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+            try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
                 // SCIPIO: check again inside synchronized block
                 cart = (ShoppingCart) session.getAttribute("shoppingCart");
                 if (cart == null) {
@@ -1158,8 +1132,7 @@ public class ShoppingCartEvents {
             boolean currencyChanged = (currencyUom != null && !currencyUom.equals(cart.getCurrency()));
             if (localeChanged || currencyChanged) {
                 try {
-                    try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-                    synchronized (cartUpdate.getLockObject()) {
+                    try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
                     ShoppingCart newCart = cartUpdate.getCartForUpdate(); // NOTE: this re-fetches the cart inside synchronized, in case ref changed
     
                     localeChanged = (locale != null && !locale.equals(newCart.getLocale()));
@@ -1179,7 +1152,6 @@ public class ShoppingCartEvents {
                     }
 
                     }
-                    }
                 } catch (CartItemModifyException e) {
                     Debug.logError(e, "Unable to modify currency in cart", module);
                 }
@@ -1191,27 +1163,6 @@ public class ShoppingCartEvents {
     /** Main get cart method, uses the locale and currency from the session */
     public static ShoppingCart getCartObject(HttpServletRequest request) {
         return getCartObject(request, null, null);
-    }
-
-    /** SCIPIO: Returns an object which should be used to lock on whether modifying the cart.
-     * Added 2018-11-20. */
-    public static Object getCartLockObject(HttpServletRequest request) {
-        Object lock = request.getSession(true).getAttribute("shoppingCartLock");
-        if (lock == null) {
-            // Check if cart has it but for some reason it's not in session
-            ShoppingCart cart = (ShoppingCart) request.getSession(true).getAttribute("shoppingCart");
-            if (cart != null) {
-                lock = cart.getLockObject();
-                request.getSession(true).setAttribute("shoppingCartLock", lock);
-                Debug.logWarning("shoppingCartLock not found in session; setting to lock object found in cart (" 
-                        + lock + ")", module); 
-            } else {
-                lock = ShoppingCart.createLockObject();
-                request.getSession(true).setAttribute("shoppingCartLock", lock);
-                Debug.logWarning("shoppingCartLock not found in session; creating", module); 
-            }
-        }
-        return lock;
     }
 
     /**
@@ -1228,7 +1179,7 @@ public class ShoppingCartEvents {
     }
 
     public static String switchCurrentCartObject(HttpServletRequest request, HttpServletResponse response) {
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         HttpSession session = request.getSession(true);
         String cartIndexStr = request.getParameter("cartIndex");
         int cartIndex = -1;
@@ -1266,7 +1217,7 @@ public class ShoppingCartEvents {
     }
 
     public static String clearCartFromList(HttpServletRequest request, HttpServletResponse response) {
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         HttpSession session = request.getSession(true);
         String cartIndexStr = request.getParameter("cartIndex");
         int cartIndex = -1;
@@ -1316,8 +1267,7 @@ public class ShoppingCartEvents {
             // SCIPIO: This is the original code, wrapped in synchronization
             // NOTE: We re-run all the checks because we're re-fetching the cart instance inside block
             modifyCart = false;
-            try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-            synchronized (cartUpdate.getLockObject()) {
+            try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
             cart = cartUpdate.getCartForUpdate();
             
             try {
@@ -1383,7 +1333,6 @@ public class ShoppingCartEvents {
 
             if (modifyCart) {
                 cart = cartUpdate.commit(cart); // SCIPIO
-            }
             }
             }
         }
@@ -1473,8 +1422,7 @@ public class ShoppingCartEvents {
             return "error";
         }
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         ShoppingCartItem cartLine = cart.findCartItem(alternateGwpLine);
@@ -1503,7 +1451,6 @@ public class ShoppingCartEvents {
         }
 
         }
-        }
 
         request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, cart line item found for #" + alternateGwpLine + " does not appear to be a valid promotional gift.");
         return "error";
@@ -1527,8 +1474,7 @@ public class ShoppingCartEvents {
             eventList.addAll(msg);
         }
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         for (i = 0; i < roleTypeId.length; i++) {
@@ -1540,7 +1486,6 @@ public class ShoppingCartEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
 
         request.removeAttribute("_EVENT_MESSAGE_LIST_");
@@ -1567,8 +1512,7 @@ public class ShoppingCartEvents {
             eventList.addAll(msg);
         }
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         for (i = 0; i < roleTypeId.length; i++) {
@@ -1581,7 +1525,6 @@ public class ShoppingCartEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
 
         request.removeAttribute("_EVENT_MESSAGE_LIST_");
@@ -1638,8 +1581,7 @@ public class ShoppingCartEvents {
         String agreementId = request.getParameter("agreementId");
         Map<String, Object> result;
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
@@ -1651,7 +1593,6 @@ public class ShoppingCartEvents {
 
         cartUpdate.commit(cart); // SCIPIO
         }
-        }
         return "success";
     }
 
@@ -1662,8 +1603,7 @@ public class ShoppingCartEvents {
         String currencyUomId = request.getParameter("currencyUomId");
         Map<String, Object> result;
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
@@ -1675,7 +1615,6 @@ public class ShoppingCartEvents {
 
         cartUpdate.commit(cart); // SCIPIO
         }
-        }
         return "success";
     }
 
@@ -1686,14 +1625,12 @@ public class ShoppingCartEvents {
     public static String setOrderName(HttpServletRequest request, HttpServletResponse response) {
         String orderName = request.getParameter("orderName");
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         cart.setOrderName(orderName);
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -1705,14 +1642,12 @@ public class ShoppingCartEvents {
     public static String setPoNumber(HttpServletRequest request, HttpServletResponse response) {
         String correspondingPoId = request.getParameter("correspondingPoId");
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         cart.setPoNumber(correspondingPoId);
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -1770,8 +1705,7 @@ public class ShoppingCartEvents {
             }
         }
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
 
         removeOrderTerm(request, response);
 
@@ -1780,7 +1714,6 @@ public class ShoppingCartEvents {
         cart.addOrderTerm(termTypeId, null, termValue, termDays, textValue, description);
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -1794,8 +1727,7 @@ public class ShoppingCartEvents {
             try {
                 Integer termIndex = Integer.parseInt(termIndexStr);
                 if (termIndex >= 0) {
-                    try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-                    synchronized (cartUpdate.getLockObject()) {
+                    try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
                     ShoppingCart cart = cartUpdate.getCartForUpdate();
   
                     List<GenericValue> orderTerms = cart.getOrderTerms();
@@ -1804,7 +1736,6 @@ public class ShoppingCartEvents {
                     }
 
                     cartUpdate.commit(cart); // SCIPIO
-                    }
                     }
                 }
             } catch (NumberFormatException e) {
@@ -1840,7 +1771,7 @@ public class ShoppingCartEvents {
             return "error";
         }
 
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
@@ -1879,7 +1810,7 @@ public class ShoppingCartEvents {
         // Make the cart read-only
         cart.setReadOnlyCart(true);
 
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
@@ -1964,7 +1895,7 @@ public class ShoppingCartEvents {
         // Since we only need the cart items, so set the order id as null
         cart.setOrderId(null);
 
-        synchronized (ShoppingCartEvents.getCartLockObject(request)) { // SCIPIO
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
@@ -1983,8 +1914,7 @@ public class ShoppingCartEvents {
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         String destroyCart = request.getParameter("destroyCart");
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         Map<String, Object> result = null;
@@ -2009,7 +1939,6 @@ public class ShoppingCartEvents {
 
         cartUpdate.commit(cart); // SCIPIO
         }
-        }
         return "success";
     }
 
@@ -2019,8 +1948,7 @@ public class ShoppingCartEvents {
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         String destroyCart = request.getParameter("destroyCart");
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         Map<String, Object> result = null;
@@ -2045,7 +1973,6 @@ public class ShoppingCartEvents {
 
         cartUpdate.commit(cart); // SCIPIO
         }
-        }
         return "success";
     }
 
@@ -2063,8 +1990,7 @@ public class ShoppingCartEvents {
             session.setAttribute("productStoreId", productStoreId);
         }
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         // TODO: re-factor and move this inside the ShoppingCart constructor
@@ -2197,7 +2123,6 @@ public class ShoppingCartEvents {
 
         cartUpdate.commit(cart); // SCIPIO
         }
-        }
         return "success";
     }
 
@@ -2244,14 +2169,12 @@ public class ShoppingCartEvents {
             }
         }
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         ProductPromoWorker.doPromotions(cart, manualPromotions, dispatcher);
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }
@@ -2285,8 +2208,7 @@ public class ShoppingCartEvents {
         if (rowCount < 1) {
             Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
         } else {
-            try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-            synchronized (cartUpdate.getLockObject()) {
+            try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
             ShoppingCart cart = cartUpdate.getCartForUpdate();
             ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
 
@@ -2386,7 +2308,6 @@ public class ShoppingCartEvents {
             // Determine where to send the browser
             return cart.viewCartOnAdd() ? "viewcart" : "success";
             }
-            }
         }
 
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: fetch cart for non-modifying case
@@ -2411,8 +2332,7 @@ public class ShoppingCartEvents {
         Locale locale = UtilHttp.getLocale(request);
         Map<String, Object> result = null;
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
             
@@ -2479,7 +2399,6 @@ public class ShoppingCartEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         return "success";
     }

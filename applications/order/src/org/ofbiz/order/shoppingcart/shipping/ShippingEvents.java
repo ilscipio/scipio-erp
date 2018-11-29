@@ -61,8 +61,7 @@ public class ShippingEvents {
     private static final String resource_error = "OrderErrorUiLabels"; // SCIPIO
 
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -92,7 +91,6 @@ public class ShippingEvents {
         ProductPromoWorker.doPromotions(cart, dispatcher);
 
         cartUpdate.commit(cart); // SCIPIO
-        }
         }
         // all done
         return "success";

@@ -54,8 +54,7 @@ public class ExpressCheckoutEvents {
         Locale locale = UtilHttp.getLocale(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         CheckoutType checkoutType = determineCheckoutType(request);
@@ -84,7 +83,6 @@ public class ExpressCheckoutEvents {
             }
         }
 
-        }
         }
         return "success";
     }
@@ -162,8 +160,7 @@ public class ExpressCheckoutEvents {
         Locale locale = UtilHttp.getLocale(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         CheckoutType checkoutType = determineCheckoutType(request);
@@ -191,7 +188,6 @@ public class ExpressCheckoutEvents {
             }
         }
 
-        }
         }
         return "success";
     }
@@ -224,14 +220,12 @@ public class ExpressCheckoutEvents {
     }
 
     public static String expressCheckoutCancel(HttpServletRequest request, HttpServletResponse response) {
-        try (CartUpdate cartUpdate = new CartUpdate(request)) { // SCIPIO
-        synchronized (cartUpdate.getLockObject()) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         cart.removeAttribute("payPalCheckoutToken");
         
         cartUpdate.commit(cart);
-        }
         }
         return "success";
     }

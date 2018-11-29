@@ -30,6 +30,12 @@ context.shipGroupSeqId = shipGroupSeqId;
 
 // Retrieve the map resident in session which stores order item quantities to receive
 itemQuantitiesToReceive = session.getAttribute("purchaseOrderItemQuantitiesToReceive");
+
+// SCIPIO: 2018-11-28: Synchronize on the quantities for thread safety (see also HashMap copy at very end)
+// FIXME?: Very first request (purchaseOrderItemQuantitiesToReceive==null) is subject to lost updates
+// because sync on HttpSession is not really supported, but in practice very unlikely
+synchronized (itemQuantitiesToReceive != null ? itemQuantitiesToReceive : session) {
+
 if (itemQuantitiesToReceive) {
     sessionShipmentId = itemQuantitiesToReceive._shipmentId;
     sessionOrderId = itemQuantitiesToReceive._orderId;
@@ -269,5 +275,8 @@ if (productIdToReceive) {
 
 // Put the tracking map back into the session, in case it has been reconstructed
 session.setAttribute("purchaseOrderItemQuantitiesToReceive", itemQuantitiesToReceive);
-context.itemQuantitiesToReceive = itemQuantitiesToReceive;
+context.itemQuantitiesToReceive = new HashMap(itemQuantitiesToReceive); // SCIPIO: Thread safety: need HashMap copy for safe render
 context.totalAvailableToReceive = totalAvailableToReceive;
+
+} // synchronized
+

@@ -20,6 +20,7 @@ package org.ofbiz.product.product;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -390,7 +391,7 @@ public class ProductEvents {
         // just store a new empty list in the session
         HttpSession session = request.getSession();
         if (session != null) {
-            session.setAttribute("lastViewedCategories", new LinkedList<>());
+            session.setAttribute("lastViewedCategories", new ArrayList<>()); // SCIPIO: now ArrayList
         }
         return "success";
     }
@@ -400,7 +401,7 @@ public class ProductEvents {
         // just store a new empty list in the session
         HttpSession session = request.getSession();
         if (session != null) {
-            session.setAttribute("lastViewedProducts", new LinkedList<>());
+            session.setAttribute("lastViewedProducts", new ArrayList<>()); // SCIPIO: now ArrayList
         }
         return "success";
     }
@@ -1054,10 +1055,10 @@ public class ProductEvents {
         Object compareListObj = session.getAttribute("productCompareList");
         List<GenericValue> compareList = null;
         if (compareListObj == null) {
-            compareList = new LinkedList<>();
+            compareList = new ArrayList<>(); // SCIPIO: now ArrayList
         } else if (!(compareListObj instanceof List<?>)) {
             Debug.logWarning("Session attribute productCompareList contains something other than the expected product list, overwriting.", module);
-            compareList = new LinkedList<>();
+            compareList = new ArrayList<>(); // SCIPIO: now ArrayList
         } else {
             compareList = UtilGenerics.cast(compareListObj);
         }
@@ -1143,7 +1144,7 @@ public class ProductEvents {
 
     public static String clearProductComparisonList(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        session.setAttribute("productCompareList", new LinkedList<>());
+        session.setAttribute("productCompareList", new ArrayList<>()); // SCIPIO: now ArrayList
         String eventMsg = UtilProperties.getMessage("ProductUiLabels", "ProductClearCompareListSuccess", UtilHttp.getLocale(request));
         request.setAttribute("_EVENT_MESSAGE_", eventMsg);
         return "success";

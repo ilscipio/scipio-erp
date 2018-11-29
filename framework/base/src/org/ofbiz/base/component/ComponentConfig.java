@@ -386,6 +386,45 @@ public final class ComponentConfig {
     }
 
     /**
+     * SCIPIO: Returns the given component config IF it is enabled, otherwise throws exception.
+     * Added 2018-10-29.
+     */
+    public static ComponentConfig getEnabledComponentConfig(String globalName) throws ComponentException {
+        ComponentConfig componentConfig = getEnabledComponentConfigOrNull(globalName);
+        if (componentConfig == null) {
+            throw new ComponentException.ComponentNotFoundException("No enabled component found named : " + globalName);
+        }
+        return componentConfig;
+    }
+
+    /**
+     * SCIPIO: Returns the given component config IF it is enabled, otherwise null.
+     * Added 2018-10-29.
+     */
+    public static ComponentConfig getEnabledComponentConfigOrNull(String globalName) {
+        return componentConfigCache.fromGlobalName(globalName);
+    }
+
+    /**
+     * SCIPIO: Returns true if the named component is present and enabled.
+     * Added 2018-10-29.
+     */
+    public static boolean isComponentEnabled(String globalName) {
+        return (componentConfigCache.fromGlobalName(globalName) != null);
+    }
+
+    /**
+     * SCIPIO: Returns true if the named component is present in the filesystem,
+     * without guarantee it is enabled.
+     * Added 2018-10-29.
+     * @see #isComponentEnabled(String)
+     */
+    public static boolean isComponentPresent(String globalName) {
+        return (componentConfigCache.fromGlobalName(globalName) != null) 
+                || (disabledComponentConfigCache.fromGlobalName(globalName) != null);
+    }
+
+    /**
      * SCIPIO: Special method for initialization only to set the global component order.
      * Public only by force - intended ONLY for use from {@link org.ofbiz.base.container.ComponentContainer}.
      */

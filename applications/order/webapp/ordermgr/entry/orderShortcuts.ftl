@@ -3,8 +3,11 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+<#include "ordercommon.ftl">
 
-<#assign shoppingCart = sessionAttributes.shoppingCart!>
+<#-- SCIPIO: Must use context or accessor
+<#assign shoppingCart = sessionAttributes.shoppingCart!>-->
+<#assign shoppingCart = getShoppingCart()!>
 
 <@section title=uiLabelMap.OrderOrderShortcuts>
     <@menu type="button">

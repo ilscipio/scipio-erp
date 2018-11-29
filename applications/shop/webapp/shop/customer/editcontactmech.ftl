@@ -35,9 +35,11 @@ code package.
 <#-- SCIPIO: If we are editing an address currently selected for shipping in cart, show this warning.
     This is mostly needed for checkout payment, but we'll just show for all cases to be safe. -->
 <#if contactMech??>
+  <#-- SCIPIO: Must use context or accessor
   <#if !cart?? && sessionAttributes.shoppingCart??>
     <#assign cart = sessionAttributes.shoppingCart>
-  </#if>
+  </#if>-->
+  <#assign cart = cart!getCartObject()!>
   <#if cart?? && cart.getAllShippingContactMechId()?seq_contains(contactMech.contactMechId)>
     <@commonMsg type="warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.ShopEditingShipAddressShipCostChange}</@commonMsg>
   </#if>

@@ -5,7 +5,9 @@ code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
-<#assign cart = sessionAttributes.shoppingCart!>
+<#-- SCIPIO: Must use context or accessor
+<#assign cart = sessionAttributes.shoppingCart!>-->
+<#assign cart = getShoppingCart()!>
 
 <@section>
   <div id="shippingFormServerError" class="errorMessage"></div>

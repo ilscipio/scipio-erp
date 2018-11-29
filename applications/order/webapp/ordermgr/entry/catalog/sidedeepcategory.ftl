@@ -3,6 +3,8 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+<#include "../ordercommon.ftl">
+
 <#-- variable setup and worker calls -->
 <#if (requestAttributes.topLevelList)??><#assign topLevelList = requestAttributes.topLevelList></#if>
 <#if (requestAttributes.curCategoryId)??><#assign curCategoryId = requestAttributes.curCategoryId></#if>
@@ -13,7 +15,9 @@ code package.
   <#--if parentCategory.productCategoryId != category.productCategoryId>
     <#local pStr = "/~pcategory=" + parentCategory.productCategoryId>
   </#if-->
-  <#local shoppingCart = sessionAttributes.shoppingCart!>
+  <#-- SCIPIO: Must use context or accessor
+  <#local shoppingCart = sessionAttributes.shoppingCart!>-->
+  <#local shoppingCart = getShoppingCart()!>
   <#local purchaseOrder = (shoppingCart.isPurchaseOrder())!false>
   <#if curCategoryId?? && curCategoryId == category.productCategoryId>
     <div class="browsecategorytext">

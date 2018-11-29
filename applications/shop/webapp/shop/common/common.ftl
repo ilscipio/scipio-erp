@@ -1,6 +1,12 @@
 
 <#-- SCIPIO: common shop-wide helper definitions and macros -->
 
+<#-- 2018-11-29: Returns shopping cart IF exists (for shop, almost always does)
+    Templates that are not sure if cart is in context or not MUST use this; do NOT access sessionAttributes.shoppingCart anymore! -->
+<#function getShoppingCart>
+    <#return shoppingCart!cart!Static["org.ofbiz.order.shoppingcart.ShoppingCartEvents"].getCartObjectIfExists(request!)!>
+</#function>
+
 <#macro addressUpdateLink address updateLink class="">
   <#local class = addClassArg(class, styles.action_update!)>
   <#local class = addClassArgDefault(class, styles.link_nav_inline!)>

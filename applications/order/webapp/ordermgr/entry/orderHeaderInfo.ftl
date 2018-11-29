@@ -3,8 +3,11 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+<#include "ordercommon.ftl">
 
-<#assign shoppingCart = sessionAttributes.shoppingCart!>
+<#-- SCIPIO: Must use context or accessor
+<#assign shoppingCart = sessionAttributes.shoppingCart!>-->
+<#assign shoppingCart = getShoppingCart()!>
 <#assign currencyUomId = shoppingCart.getCurrency()>
 <#assign partyId = shoppingCart.getPartyId()>
 <#assign partyMap = Static["org.ofbiz.party.party.PartyWorker"].getPartyOtherValues(request, partyId, "party", "person", "partyGroup")>

@@ -6,7 +6,9 @@ code package.
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <@section relHeadingLevel=+1>
-  <#assign shoppingCart = sessionAttributes.shoppingCart! />
+  <#-- SCIPIO: Must use context or accessor
+  <#assign shoppingCart = sessionAttributes.shoppingCart!>-->
+  <#assign shoppingCart = getShoppingCart()!>
 
     <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
     

@@ -868,6 +868,10 @@ public class ObjectType {
         if (value.getClass().isArray()) {
             return Array.getLength(value) == 0;
         }
+        // SCIPIO: Check Iterable (NOTE: inefficient, should probably be avoided)
+        if (value instanceof Iterable) {
+            return !((Iterable<?>) value).iterator().hasNext();
+        }
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("In ObjectType.isEmpty(Object value) returning false for " + value.getClass() + " Object.", module);

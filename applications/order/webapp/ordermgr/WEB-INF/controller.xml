@@ -21,7 +21,7 @@ code package.
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
     <!-- SCIPIO: Cart synchronization service event handler wrapper: automatically wraps in a safe CartUpdate section
         any service marked with the "shoppingCart.update" property, when called directly as an event (added 2018-11-26) -->
-    <handler name="shoppingCartSync" type="request-handler-wrapper" class="com.ilscipio.scipio.order.event.CartSyncEventHandlerWrapper"/>    <handler name="shoppingCartSync" type="request-handler-wrapper" class="com.ilscipio.scipio.order.event.CartSyncEventHandlerWrapper"/>
+    <handler name="shoppingCartSync" type="request-handler-wrapper" class="org.ofbiz.order.shoppingcart.CartSyncEventHandlerWrapper"/>
 
     <!-- Events to run on every request before security (chains exempt) -->
     <!--

@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.order.event;
+package org.ofbiz.order.shoppingcart;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.order.shoppingcart.CartUpdate;
-import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;

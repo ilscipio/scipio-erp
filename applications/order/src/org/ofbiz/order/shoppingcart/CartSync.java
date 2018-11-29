@@ -119,7 +119,7 @@ public class CartSync implements AutoCloseable, Serializable {
                 lock = (CartSync) session.getAttribute("shoppingCartLock");
                 if (lock == null) {
                     // Check if cart has it but for some reason it's not in session
-                    ShoppingCart cart = (ShoppingCart) request.getSession(true).getAttribute("shoppingCart");
+                    ShoppingCart cart = ShoppingCartEvents.getCartObjectIfExists(request);
                     if (cart != null) {
                         lock = cart.getLockObject();
                         request.getSession(true).setAttribute("shoppingCartLock", lock);

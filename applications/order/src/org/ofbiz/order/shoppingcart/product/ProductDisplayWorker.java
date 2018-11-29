@@ -43,6 +43,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
@@ -62,7 +63,7 @@ public final class ProductDisplayWorker {
     public static List<GenericValue> getRandomCartProductAssoc(ServletRequest request, boolean checkViewAllow) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        ShoppingCart cart = (ShoppingCart) httpRequest.getSession().getAttribute("shoppingCart");
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(httpRequest); // SCIPIO: Must use accessor, not this: (ShoppingCart) httpRequest.getSession().getAttribute("shoppingCart");
 
         if (cart == null || cart.size() <= 0) {
             return null;
@@ -236,7 +237,7 @@ public final class ProductDisplayWorker {
             }
 
             // remove all products that are already in the cart
-            ShoppingCart cart = (ShoppingCart) httpRequest.getSession().getAttribute("shoppingCart");
+            ShoppingCart cart = ShoppingCartEvents.getCartObjectIfExists(httpRequest); // SCIPIO: Must use accessor, not this: (ShoppingCart) httpRequest.getSession().getAttribute("shoppingCart");
             if (UtilValidate.isNotEmpty(cart)) {
                 for (ShoppingCartItem item : cart) {
                     String productId = item.getProductId();

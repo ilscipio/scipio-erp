@@ -362,7 +362,7 @@ public class CheckOutEvents {
     }
 
     public static String checkPaymentMethods(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
@@ -382,7 +382,7 @@ public class CheckOutEvents {
      */
     public static String checkPaymentMethodsBeforePayment(HttpServletRequest request, HttpServletResponse response) {
         /* SCIPIO: TODO?
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
@@ -402,7 +402,7 @@ public class CheckOutEvents {
     }
 
     public static Map<String, Map<String, Object>> getSelectedPaymentMethods(HttpServletRequest request) throws ServiceErrorException, GeneralException {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        ShoppingCart cart = ShoppingCartEvents.getCartObjectIfExists(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         Map<String, Map<String, Object>> selectedPaymentMethods = new HashMap<>();
 
         // SCIPIO: Allow override via request attribs
@@ -622,7 +622,7 @@ public class CheckOutEvents {
     }
     // Check for payment method and shipping method exist for checkout process of anonymous user
     public static String checkoutValidation(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         if (cart.isSalesOrder()) {
         List<GenericValue> paymentMethodTypes = cart.getPaymentMethodTypes();
         if (UtilValidate.isEmpty(paymentMethodTypes)) {
@@ -833,8 +833,8 @@ public class CheckOutEvents {
     }
 
     public static String checkOrderBlacklist(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
+        //HttpSession session = request.getSession();
+        ShoppingCart cart = ShoppingCartEvents.getCartObjectIfExists(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) session.getAttribute("shoppingCart");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(null, delegator, cart);
         String result;
@@ -1223,7 +1223,7 @@ public class CheckOutEvents {
 
     public static String determineNextFinalizeStep(HttpServletRequest request, HttpServletResponse response) {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         // flag anoymous checkout to bypass additional party settings
         boolean isAnonymousCheckout = false;
         if (userLogin != null && "anonymous".equals(userLogin.getString("userLoginId"))) {

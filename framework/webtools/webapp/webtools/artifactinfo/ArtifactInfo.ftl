@@ -5,11 +5,10 @@ code package.
 -->
 <#-- ToDo: Refactor - these artifacts seem like a copy and paste job to me. The only thing changing is really just the title... -->
 
-<#if sessionAttributes.recentArtifactInfoList?has_content>
+<#-- SCIPIO: simplified list -->
+<#if recentArtifactInfoList?has_content>
   <@panel title="Recently Viewed Artifacts:">
-    <#assign highRef = sessionAttributes.recentArtifactInfoList.size() - 1/>
-    <#if (highRef > 19)><#assign highRef = 19/></#if>
-    <ol><#list sessionAttributes.recentArtifactInfoList[0..highRef] as recentArtifactInfo>
+    <ol><#list recentArtifactInfoList as recentArtifactInfo>
         <li>${recentArtifactInfo.type}: <@displayArtifactInfoLink type=recentArtifactInfo.type uniqueId=recentArtifactInfo.uniqueId displayName=recentArtifactInfo.displayName/></li>
     </#list></ol>
   </@panel>

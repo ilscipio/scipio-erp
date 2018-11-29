@@ -50,17 +50,23 @@ if ("search".equals(parameters.findType)) {
     }
 }
 
-if (artifactInfo) {
-    artifactInfoMap = [type : artifactInfo.getType(), uniqueId : artifactInfo.getUniqueId(), displayName : artifactInfo.getDisplayName()];
-    // add to the recently viewed list
-    recentArtifactInfoList = session.getAttribute("recentArtifactInfoList");
-    if (!recentArtifactInfoList) {
-        recentArtifactInfoList = [];
-        session.setAttribute("recentArtifactInfoList", recentArtifactInfoList);
+recentArtifactInfoList = null;
+recentArtifactInfoList = session.getAttribute("recentArtifactInfoList");
+if (!recentArtifactInfoList) {
+    recentArtifactInfoList = [];
+    session.setAttribute("recentArtifactInfoList", recentArtifactInfoList);
+}
+
+synchronized (recentArtifactInfoList) { // SCIPIO: Thread safety
+    if (artifactInfo) {
+        artifactInfoMap = [type : artifactInfo.getType(), uniqueId : artifactInfo.getUniqueId(), displayName : artifactInfo.getDisplayName()];
+        // add to the recently viewed list
+        if (recentArtifactInfoList && recentArtifactInfoList.get(0).equals(artifactInfoMap)) {
+            // hmmm, I guess do nothing if it's already there
+        } else {
+            recentArtifactInfoList.add(0, artifactInfoMap);
+        }
     }
-    if (recentArtifactInfoList && recentArtifactInfoList.get(0).equals(artifactInfoMap)) {
-        // hmmm, I guess do nothing if it's already there
-    } else {
-        recentArtifactInfoList.add(0, artifactInfoMap);
-    }
+    // SCIPIO: Duplicate the list and limit length (previously done in screen)
+    context.recentArtifactInfoList = (recentArtifactInfoList.size() > 20) ? recentArtifactInfoList.subList(0, 20) : new ArrayList(recentArtifactInfoList);
 }

@@ -1165,6 +1165,18 @@ public class ShoppingCartEvents {
         return getCartObject(request, null, null);
     }
 
+    /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-29. */
+    public static ShoppingCart getCartObjectIfExists(HttpServletRequest request) {
+        ShoppingCart cart = (ShoppingCart) request.getAttribute("shoppingCart");
+        if (cart == null) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                cart = (ShoppingCart) session.getAttribute("shoppingCart");
+            }
+        }
+        return cart;
+    }
+
     /**
      * SCIPIO: Sets the cart in session (and request if applicable) immediately. 
      * NOTE: For synchronized updates, prefer using {@link CartUpdate} instead of this directly. Added 2018-11-20. */

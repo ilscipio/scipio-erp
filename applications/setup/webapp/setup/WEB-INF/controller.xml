@@ -185,27 +185,27 @@
         <!-- Specific request maps for setup accounting tabs -->
     <request-map uri="setupGlAccountsTab">
         <security https="true" auth="true" />        
-        <response name="success" type="view" value="SetupGlAccountsTab" />
+        <response name="success" type="view" value="SetupGlAccountsTab" allow-view-save="false"/>
         <response name="error" type="view" value="SetupAccountingTabError"/>
     </request-map>
     <request-map uri="setupFiscalPeriodsTab">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="SetupFiscalPeriodsTab" />
+        <response name="success" type="view" value="SetupFiscalPeriodsTab" allow-view-save="false"/>
         <response name="error" type="view" value="SetupAccountingTabError"/>
     </request-map>
     <request-map uri="setupAccountingTransactionsTab">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="SetupAccountingTransactionsTab" />
+        <response name="success" type="view" value="SetupAccountingTransactionsTab" allow-view-save="false"/>
         <response name="error" type="view" value="SetupAccountingTabError"/>
     </request-map>
     <request-map uri="setupJournalTab">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="SetupJournalTab" />
-        <response name="error" type="view" value="SetupAccountingTabError"/>
+        <response name="success" type="view" value="SetupJournalTab" allow-view-save="false"/>
+        <response name="error" type="view" value="SetupAccountingTabError" />
     </request-map>
     <request-map uri="setupTaxAuthTab">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="SetupTaxAuthTab" />
+        <response name="success" type="view" value="SetupTaxAuthTab" allow-view-save="false"/>
         <response name="error" type="view" value="SetupAccountingTabError"/>
     </request-map>
     

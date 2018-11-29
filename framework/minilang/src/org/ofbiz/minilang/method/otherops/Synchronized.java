@@ -83,7 +83,7 @@ public final class Synchronized extends MethodOperation {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("<if-not-empty ");
+        StringBuilder sb = new StringBuilder("<synchronized ");
         sb.append("field=\"").append(this.fieldFma).append("\"/>");
         return sb.toString();
     }

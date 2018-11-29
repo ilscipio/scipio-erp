@@ -213,7 +213,7 @@ code package.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShippingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditProductStoreShipSetup}">
                             <include-form name="ListProductStoreShipmentMeths" location="component://product/widget/catalog/ProductStoreForms.xml"/>
@@ -261,7 +261,7 @@ code package.
                 <entity-one entity-name="ShipmentCostEstimate" value-field="estimate" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShippingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet><!--  title="${uiLabelMap.PageTitleEditProductStoreShipmentCostEstimates}" -->
                             <include-form name="ListShipmentCostEstimates" location="component://product/widget/catalog/ProductStoreForms.xml"/>

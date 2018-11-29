@@ -599,6 +599,7 @@ code package.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Shipping" />
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ListShipmentMethodTypes"/>                
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
@@ -631,6 +632,25 @@ code package.
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productPriceRuleId} ${${extraFunctionName}}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">            
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO (11/30/2018): New carrier decorator -->
+    <screen name="CommonCarrierDecorator">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>                
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Carriers"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ListCarrierShipmentMethods"/>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <!-- <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productPriceRuleId} ${${extraFunctionName}}"/> -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">            

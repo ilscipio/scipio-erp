@@ -14,6 +14,7 @@ code package.
         <menu-item name="pricerules" title="${uiLabelMap.ProductPrices}"><link target="FindProductPriceRules"/></menu-item>
         <menu-item name="promos" title="${uiLabelMap.ProductPromotions}"><link target="FindProductPromo"/></menu-item>
         <menu-item name="subscriptions" title="${uiLabelMap.ProductSubscriptions}"><link target="FindSubscription"/></menu-item>
+        <menu-item name="carriers" title="${uiLabelMap.ProductCarriers}"><link target="ListCarrierShipmentMethods"/></menu-item>
         <!-- SCIPIO - Remove; will be replaced with content app features -->
         <!-- <menu-item name="Imagemanagement" title="${uiLabelMap.CommonMedia}"><link target="Imagemanagement"/></menu-item> -->
     </menu>
@@ -45,6 +46,10 @@ code package.
         </menu-item>
         <menu-item name="subscriptions">
             <sub-menu name="Subscriptions" include="SubscriptionSideBar"/>
+        </menu-item>
+        <!-- SCIPIO (11/30/2018): Moved specific carrier screens that are not bound to the store. -->
+        <menu-item name="carriers">
+            <sub-menu name="Carriers" include="CarrierSideBar"/>
         </menu-item>
         <!-- 
         <menu-item name="Imagemanagement">
@@ -165,9 +170,26 @@ code package.
     </menu>
 
     <menu name="ShippingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO (11/30/2018): Removed the ones not depending on store (carriers).   -->
         <menu-item name="ListShipmentMethodTypes" title="${uiLabelMap.ProductShipmentMethodTypes}">
             <link target="ListShipmentMethodTypes"/>
         </menu-item>
+        <menu-item name="EditProductStoreShipSetup" title="${uiLabelMap.ProductStoreShippingSetup}">
+            <link target="EditProductStoreShipSetup">
+                <parameter param-name="productStoreId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditProductStoreShipmentCostEstimates" title="${uiLabelMap.ProductViewEstimates}">
+            <link target="EditProductStoreShipmentCostEstimates">
+                <parameter param-name="productStoreId"/>
+            </link>
+        </menu-item>
+    </menu>
+    <menu name="ShippingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="ShippingTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="CarrierTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">        
         <menu-item name="ListQuantityBreaks" title="${uiLabelMap.ProductQuantityBreaks}">
             <link target="ListQuantityBreaks"/>
         </menu-item>
@@ -175,8 +197,8 @@ code package.
             <link target="ListCarrierShipmentMethods"/>
         </menu-item>
     </menu>
-    <menu name="ShippingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="ShippingTabBar" recursive="includes-only" />
+    <menu name="CarrierSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="CarrierTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="CategoryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -362,16 +384,11 @@ code package.
             </link>
         </menu-item>
         -->
-        <menu-item name="EditProductStoreShipSetup" title="${uiLabelMap.ProductShipping}">
-            <link target="EditProductStoreShipSetup">
+        <menu-item name="ListShipmentMethodTypes" title="${uiLabelMap.ProductShipping}">
+            <link target="ListShipmentMethodTypes">
                 <parameter param-name="productStoreId"/>
             </link>
-        </menu-item>
-        <menu-item name="EditProductStoreShipmentCostEstimates" title="${uiLabelMap.ProductViewEstimates}">
-            <link target="EditProductStoreShipmentCostEstimates">
-                <parameter param-name="productStoreId"/>
-            </link>
-        </menu-item>
+        </menu-item>        
         <!-- SCIPIO: Renamed to Payment Methods -->
         <menu-item name="EditProductStorePaySetup" title="${uiLabelMap.ProductPaymentMethods}">
             <link target="EditProductStorePaySetup">
@@ -434,8 +451,7 @@ code package.
         <menu-item name="EditProductStoreWebSites">
             <sub-menu name="WebSite" include="component://content/widget/content/ContentMenus.xml#WebSiteSideBar"/>
         </menu-item>
-        <!-- SCIPIO: sub-menu will only show, as fallback, IF one of the screens is still linked to somwhere -->
-        <menu-item name="EditProductStoreShipSetup">
+        <menu-item name="ListShipmentMethodTypes">
             <sub-menu name="Shipping" include="ShippingSideBar"/>
         </menu-item>
     </menu>

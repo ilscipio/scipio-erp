@@ -22,7 +22,7 @@ code package.
                 <entity-one entity-name="QuantityBreak" value-field="quantityBreak" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonShippingDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonCarrierDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="ListQuantityBreaks" location="component://product/widget/catalog/ShippingForms.xml"/>
@@ -66,7 +66,7 @@ code package.
     <screen name="ListCarrierShipmentMethods">
        <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListCarrierShipmentMethods"/>
+                <set field="titleProperty" value="PageTitleListCarrierShipmentMethods"/>                
                 <set field="activeSubMenuItem" value="ListCarrierShipmentMethods"/>
                 <set field="labelTitleProperty" value="ProductCarrierShipmentMethods"/>
 
@@ -76,7 +76,7 @@ code package.
                 <entity-one entity-name="CarrierShipmentMethod" value-field="carrierShipmentMethod" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonShippingDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonCarrierDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="ListCarrierShipmentMethods" location="component://product/widget/catalog/ShippingForms.xml"/>

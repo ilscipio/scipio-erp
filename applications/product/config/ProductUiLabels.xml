@@ -14407,6 +14407,13 @@
         <value xml:lang="zh">承运商</value>
         <value xml:lang="zh-TW">承運商</value>
     </property>
+    <property key="ProductCarriers">
+        <value xml:lang="de">Transportunternehmen</value>
+        <value xml:lang="en">Carriers</value>
+        <value xml:lang="es">Transportistas</value>
+        <value xml:lang="fr">Transporteurs</value>
+        <value xml:lang="it">Corrieres</value>
+    </property>
     <property key="ProductCarrierId">
         <value xml:lang="de">Produkt Transportunternehmen ID</value>
         <value xml:lang="en">ProductCarrierId</value>
@@ -31090,6 +31097,11 @@
         <value xml:lang="vi">Kiểu cách giao diện (css)</value>
         <value xml:lang="zh">风格页</value>
         <value xml:lang="zh-TW">樣式表</value>
+    </property>
+    <property key="ProductStoreShippingSetup">
+        <value xml:lang="de">Shipping Setup</value>
+        <value xml:lang="en">Shipping Setup</value>
+        <value xml:lang="es">Configuración de envíos</value>
     </property>
     <property key="ProductSubCats">
         <value xml:lang="de">Unterkategorien</value>

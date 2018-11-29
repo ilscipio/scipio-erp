@@ -39,7 +39,7 @@ if ("Y".equals(createNewShipGroup)) {
         cartUpdate.close();
     }
 } else {
-    cart = session.getAttribute("shoppingCart");
+    cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 }
 
 if (cart) {

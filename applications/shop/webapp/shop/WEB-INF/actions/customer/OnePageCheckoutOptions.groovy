@@ -20,7 +20,7 @@
  import org.ofbiz.order.shoppingcart.CheckOutHelper
 import org.ofbiz.order.shoppingcart.shipping.*;
 
-shoppingCart = session.getAttribute("shoppingCart");
+shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 
 // Reassign items requiring drop-shipping to new or existing drop-ship groups
 if (shoppingCart) {

@@ -24,7 +24,7 @@ import org.ofbiz.accounting.payment.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 orderPartyId = cart.getPartyId();
 currencyUomId = cart.getCurrency();
 context.cart = cart;

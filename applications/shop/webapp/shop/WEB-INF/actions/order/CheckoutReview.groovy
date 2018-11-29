@@ -28,7 +28,7 @@ import org.ofbiz.product.store.*;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 context.cart = cart;
 
 orderItems = cart.makeOrderItems();

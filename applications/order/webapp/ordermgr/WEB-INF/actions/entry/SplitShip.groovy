@@ -20,7 +20,7 @@
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 
-shoppingCart = session.getAttribute("shoppingCart");
+shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 partyId = shoppingCart.getPartyId();
 party = from("Party").where("partyId", partyId).cache(true).queryOne();
 productStoreId = ProductStoreWorker.getProductStoreId(request);

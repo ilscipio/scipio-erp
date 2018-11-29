@@ -44,7 +44,7 @@ if (productStore) {
         context.defaultSalesChannel = from("Enumeration").where("enumId", productStore.defaultSalesChannelEnumId).cache(true).queryOne();
 }
 // Get the Cart
-shoppingCart = session.getAttribute("shoppingCart");
+shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 context.shoppingCart = shoppingCart;
 
 salesChannels = from("Enumeration").where("enumTypeId", "ORDER_SALES_CHANNEL").orderBy("sequenceId").cache(true).queryList();

@@ -24,7 +24,7 @@ import org.ofbiz.order.shoppingcart.shipping.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
 
-shoppingCart = session.getAttribute("shoppingCart");
+shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 context.shoppingCart = shoppingCart;
 productStore = ProductStoreWorker.getProductStore(request);
 

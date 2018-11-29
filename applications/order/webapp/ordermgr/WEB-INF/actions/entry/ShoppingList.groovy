@@ -24,7 +24,7 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.order.shoppingcart.*;
 
-shoppingCart = session.getAttribute("shoppingCart");
+shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 partyId = shoppingCart.getPartyId();
 
 // Get the party's collection of Shopping Lists

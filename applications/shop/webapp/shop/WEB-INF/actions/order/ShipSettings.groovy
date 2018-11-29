@@ -26,7 +26,7 @@ import org.ofbiz.product.catalog.*;
 
 final module = "ShipSettings.groovy";
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 partyId = cart.getPartyId();
 context.cart = cart;
 

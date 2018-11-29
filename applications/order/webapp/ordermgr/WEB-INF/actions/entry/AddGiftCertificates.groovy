@@ -21,7 +21,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.product.store.ProductStoreWorker;
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 productStoreId = ProductStoreWorker.getProductStoreId(request);
 if (productStoreId == null) {
     productStoreId = cart.getProductStoreId();

@@ -12,7 +12,7 @@ if (!context.checkoutMode) {
     context.checkoutMode = "registered"
 }
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 cartSize = 0;
 if (cart != null) {
     cartSize = cart.size();

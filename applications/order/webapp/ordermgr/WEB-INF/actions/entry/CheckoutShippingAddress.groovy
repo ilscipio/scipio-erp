@@ -29,7 +29,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 
 // SCIPIO: NOTE: some patches so doesn't crash without userLogin
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 party = userLogin?.getRelatedOne("Party", false);
 partyId = party?.partyId;
 productStoreId = ProductStoreWorker.getProductStoreId(request);

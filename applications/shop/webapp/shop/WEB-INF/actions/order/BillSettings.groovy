@@ -26,7 +26,7 @@ import org.ofbiz.party.contact.*;
 
 // SCIPIO: Some fixes to prevent crash on missing userLogin
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 currencyUomId = cart.getCurrency();
 payType = parameters.paymentMethodType;
 if (!payType && parameters.useGc) {
